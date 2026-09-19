@@ -337,6 +337,48 @@
       },
       "message_id": 259,
       "sent_at": "2026-09-19T19:35:51.016066+00:00"
+    },
+    "71945272|guglielmo vicario|2.5|over": {
+      "status": "claimed",
+      "run_token": "35476569629:1",
+      "claimed_at": "2026-09-19T23:36:38.524381+00:00",
+      "signal": {
+        "signal_id": "71945272|guglielmo vicario|2.5|over",
+        "created_at": "2026-09-19T23:36:27Z",
+        "event_id": "71945272",
+        "match_date": "2026-09-20",
+        "kickoff_at": "2026-09-20T16:00:00Z",
+        "league": "serie-a",
+        "home_team": "Juventus Turin",
+        "away_team": "Atalanta BC",
+        "team": "Juventus Turin",
+        "opponent": "Atalanta BC",
+        "venue": "home",
+        "goalkeeper": "Guglielmo Vicario",
+        "bookmaker": "Bet365",
+        "line": "2.5",
+        "side": "over",
+        "odds_decimal": "2.7500",
+        "model_mean": "2.3670",
+        "model_probability": "0.414459",
+        "push_probability": "0.000000",
+        "fair_odds": "2.413",
+        "edge": "0.139761",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-09-19T23:36:25Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2"
+      }
     }
   }
 }
