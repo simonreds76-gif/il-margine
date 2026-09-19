@@ -1,6 +1,6 @@
 {
   "api_errors": [],
-  "deferred_not_due": 2,
+  "deferred_not_due": 6,
   "details": [
     {
       "detail": "fixtures_returned=3",
@@ -12,32 +12,24 @@
     },
     {
       "detail": "",
-      "goalkeeper": "David Soria",
-      "match": "Real Betis Seville vs Getafe CF",
-      "match_date": "2026-09-17",
+      "goalkeeper": "Frederik R\u00f8nnow",
+      "match": "Bayern Munich vs Union Berlin",
+      "match_date": "2026-09-18",
       "reason": "settled_fotmob",
-      "signal_id": "72478570|david soria|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "P\u00e9ter Gul\u00e1csi",
-      "match": "Malaga CF vs Villarreal CF",
-      "match_date": "2026-09-17",
-      "reason": "settled_fotmob",
-      "signal_id": "72478580|p\u00e9ter gul\u00e1csi|2.5|over"
+      "signal_id": "72513202|frederik r\u00f8nnow|4.5|over"
     }
   ],
-  "fotmob_requests_used": 6,
-  "generated_at": "2026-09-18T13:01:08Z",
+  "fotmob_requests_used": 4,
+  "generated_at": "2026-09-19T12:33:29Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 1,
-  "pending_total": 3,
+  "pending_total": 7,
   "reason_counts": {
     "fotmob_finished_fixture_not_found": 1,
-    "settled_fotmob": 2
+    "settled_fotmob": 1
   },
   "requests_used": 0,
-  "settled": 2,
+  "settled": 1,
   "status": "PARTIAL"
 }
