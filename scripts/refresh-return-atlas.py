@@ -102,6 +102,10 @@ def live_version():
 
 
 def publish(checkout, version, status, save):
+    # Authenticated curl requires an explicitly linked project even with --deployment.
+    # Public IDs only; CLI credentials stay in the user's existing secure store.
+    (checkout / '.vercel').mkdir(exist_ok=True)
+    write_json(checkout / '.vercel/project.json', {'projectId': PROJECT, 'orgId': TEAM, 'projectName': 'il-margine'})
     vercel = shutil.which('vercel.cmd') or shutil.which('vercel')
     if not vercel:
         raise RuntimeError('Vercel CLI unavailable')
