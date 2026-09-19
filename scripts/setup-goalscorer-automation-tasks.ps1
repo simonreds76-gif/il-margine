@@ -88,3 +88,6 @@ Write-Host ""
 Write-Host "Optional immediate test:"
 Write-Host "  powershell -ExecutionPolicy Bypass -NoProfile -File scripts\\goalscorer-live.ps1"
 Write-Host "  schtasks /Run /TN IlMargine-Goalscorer-Shadow-Settle"
+
+# Launch interactive scheduled jobs invisibly from process creation, not after a console flash.
+& (Join-Path $PSScriptRoot "install-hidden-task-launchers.ps1")

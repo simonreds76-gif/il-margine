@@ -173,3 +173,6 @@ try {
 } finally {
     $password = $null
 }
+
+# Launch interactive scheduled jobs invisibly from process creation, not after a console flash.
+& (Join-Path $PSScriptRoot "install-hidden-task-launchers.ps1")

@@ -191,3 +191,6 @@ Write-Host ""
 Write-Host "Optional immediate test:"
 Write-Host "  schtasks /Run /TN IlMargine-Daily"
 Write-Host "  schtasks /Run /TN IlMargine-Tennis-Close-Capture"
+
+# Launch interactive scheduled jobs invisibly from process creation, not after a console flash.
+& (Join-Path $PSScriptRoot "install-hidden-task-launchers.ps1")
