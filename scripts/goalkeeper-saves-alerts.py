@@ -63,7 +63,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--prepare',action='store_true');p.add_argument('--send',action='store_true');p.add_argument('--state',type=Path,default=STATE);p.add_argument('--ledger',type=Path,default=LEDGER);a=p.parse_args()
     if a.prepare == a.send: p.error('Choose exactly one of --prepare or --send')
     token = os.environ.get('GITHUB_RUN_ID','') + ':' + os.environ.get('GITHUB_RUN_ATTEMPT','')
-    bot=os.environ.get('OPS_ALERT_TELEGRAM_BOT_TOKEN','');chat=os.environ.get('OPS_ALERT_TELEGRAM_CHAT_ID','')
+    bot=os.environ.get('OPS_ALERT_TELEGRAM_BOT_TOKEN','').strip();chat=os.environ.get('OPS_ALERT_TELEGRAM_CHAT_ID','').strip()
     if not bot or not chat or token==':': raise SystemExit('GK alerts require the configured ops Telegram destination and a workflow run token')
     state=json.loads(a.state.read_text(encoding='utf-8')) if a.state.exists() else {'signals':{}}
     def save():
@@ -81,12 +81,22 @@ def main():
         try:
             r=requests.post(f'https://api.telegram.org/bot{bot}/sendMessage',json={'chat_id':chat,'text':message(item['signal']),'parse_mode':'HTML','disable_web_page_preview':True},timeout=20)
             payload=r.json()
-            if not r.ok or payload.get('ok') is not True: raise ValueError('Telegram rejected delivery')
+            # A structured rejection confirms that this attempt was not accepted.
+            # Never persist the response text or exception URL: either can expose credentials.
+            if payload.get('ok') is False:
+                item.update(status='delivery_rejected',error_kind='telegram_rejected',http_status=r.status_code)
+                failed+=1;save();print(f'GK alert rejected: HTTP {r.status_code}; review required');continue
+            if not r.ok or payload.get('ok') is not True: raise ValueError('Invalid Telegram response')
             item.update(status='sent',message_id=payload['result']['message_id'],sent_at=datetime.now(timezone.utc).isoformat());sent+=1
-        except Exception:
-            failed+=1 # Do not log the request URL: it contains the bot token.
+        except Exception as exc:
+            kind = ('timeout' if isinstance(exc, requests.exceptions.Timeout) else
+                    'connection_error' if isinstance(exc, requests.exceptions.ConnectionError) else
+                    'invalid_response' if isinstance(exc, (ValueError, KeyError, TypeError)) else 'delivery_error')
+            item['error_kind']=kind
+            failed+=1
+            print(f'GK alert delivery unconfirmed: {kind}; review required')
         save()
-    print(f'GK alerts: {sent} sent; {failed} unconfirmed; no automatic resend of ambiguous deliveries')
+    print(f'GK alerts: {sent} sent; {failed} failed or unconfirmed; no automatic resend of ambiguous deliveries')
     if failed: raise SystemExit(1)
 
 if __name__=='__main__':main()

@@ -46,4 +46,33 @@ class NewGkTests(unittest.TestCase):
    p=Path(folder)/'signals.csv';r={**self.row(datetime.now(timezone.utc)),'event_id':'1','candidate_status':'eligible_shadow','strongest_for_fixture':'yes'}
    shadow.append_signals(p,[r],'2026-09-19T10:00:00Z');r['odds_decimal']='1.8';n,rows=shadow.append_signals(p,[r],'2026-09-19T11:00:00Z')
    self.assertEqual(n,0);self.assertEqual(rows[0]['odds_decimal'],'2.2')
+ def run_delivery(self, response=None, error=None):
+  import tempfile,json,os,io
+  from contextlib import redirect_stdout
+  now=datetime.now(timezone.utc);state={};alerts.claim([self.row(now)],state,'test:1',now)
+  with tempfile.TemporaryDirectory() as folder:
+   path=Path(folder)/'state.json';path.write_text(json.dumps(state));output=io.StringIO()
+   env={'OPS_ALERT_TELEGRAM_BOT_TOKEN':'  fake-token\n','OPS_ALERT_TELEGRAM_CHAT_ID':' -123\r\n','GITHUB_RUN_ID':'test','GITHUB_RUN_ATTEMPT':'1'}
+   with patch.object(sys,'argv',['alerts','--send','--state',str(path)]),patch.dict(os.environ,env),patch.object(alerts.requests,'post',return_value=response,side_effect=error) as post,redirect_stdout(output):
+    if error or response.json.return_value.get('ok') is False:
+     with self.assertRaises(SystemExit): alerts.main()
+    else: alerts.main()
+    result=json.loads(path.read_text())['signals'][self.row(now)['signal_id']]
+    alerts.main() # A rerun must never retry a recorded attempt.
+    self.assertEqual(post.call_count,1)
+    self.assertEqual(post.call_args.args[0],'https://api.telegram.org/botfake-token/sendMessage')
+    self.assertEqual(post.call_args.kwargs['json']['chat_id'],'-123')
+   self.assertNotIn('fake-token',output.getvalue());self.assertNotIn('fake-token',json.dumps(result))
+   return result
+ def test_send_trims_credentials_and_records_confirmed_receipt(self):
+  response=Mock(ok=True,status_code=200);response.json.return_value={'ok':True,'result':{'message_id':123}}
+  result=self.run_delivery(response=response)
+  self.assertEqual(result['status'],'sent');self.assertEqual(result['message_id'],123)
+ def test_explicit_rejection_is_distinct_from_ambiguous_delivery(self):
+  response=Mock(ok=False,status_code=404);response.json.return_value={'ok':False,'description':'secret fake-token'}
+  result=self.run_delivery(response=response)
+  self.assertEqual(result['status'],'delivery_rejected');self.assertEqual(result['http_status'],404)
+ def test_timeout_stays_unconfirmed_without_leaking_token_or_resending(self):
+  result=self.run_delivery(error=alerts.requests.exceptions.ReadTimeout('https://api.telegram.org/botfake-token/sendMessage'))
+  self.assertEqual(result['status'],'delivery_unconfirmed');self.assertEqual(result['error_kind'],'timeout')
 if __name__=='__main__':unittest.main()
