@@ -96,6 +96,14 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/return-atlas/data/:version/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        source: "/return-atlas/assets/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
         source: "/brand/20260913/:path*",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },

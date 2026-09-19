@@ -11,6 +11,7 @@ const PRIMARY_LINKS = [
   { href: "/the-edge", label: "Methodology" },
   { href: "/penalty-takers", label: "Penalty takers" },
   { href: "/fair-odds-lab", label: "Fair Odds Lab" },
+  { href: "/return-atlas", label: "Return Atlas" },
   { href: "/track-record", label: "Track record" },
 ];
 const RESOURCE_LINKS = [
