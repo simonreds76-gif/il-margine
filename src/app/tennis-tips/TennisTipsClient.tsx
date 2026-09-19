@@ -249,27 +249,84 @@ export default function TennisTips({
       {/* Navigation is now in GlobalNav component in layout.tsx */}
 
       {/* Hero */}
-      <section className="public-hub-heading pt-5 pb-8 md:pb-10 border-b border-slate-800/50">
+      <section className="public-hub-heading pt-5 pb-4">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-0 block">
             <PageHomeLink />
             <span className="site-eyebrow block">Tennis Tips</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-3">
             Tennis Betting <span className="text-emerald-400">Tips</span>
           </h1>
-          <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
-            Independent tennis betting tips based on statistical pricing and match analysis. Browse our
-            published ATP and Grand Slam picks, compare the recorded bookmaker odds and stakes, and follow
-            every settled result. We look for value using surface-adjusted ratings and serve and return data;
-            picks are published when a price meets our criteria, rather than to fill a daily quota.
+          <p className="text-sm sm:text-base text-slate-400 max-w-3xl leading-relaxed">
+            ATP, Challenger and Grand Slam betting tips. Choose a competition to see the picks and their record.
           </p>
         </div>
       </section>
 
+      <section id="competition-filter" aria-label="Choose a tour or tournament" className="pt-5 pb-6 border-b border-slate-800/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm font-medium text-slate-300">Choose a tour or tournament <span className="font-normal text-slate-500">· Picks &amp; results</span></p>
+            <nav aria-label="On this page" className="flex flex-wrap gap-2 text-xs font-medium">
+              <a href="#picks" className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-emerald-300 hover:bg-emerald-400/20">Current picks ↓</a>
+              <a href="#competition-record" className="rounded-full border border-slate-700 px-3 py-2 text-slate-300 hover:border-emerald-400/50">Results &amp; ROI ↓</a>
+              <a href="#how-to-use" className="rounded-full border border-slate-700 px-3 py-2 text-slate-300 hover:border-emerald-400/50">How it works ↓</a>
+            </nav>
+          </div>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4 xl:grid-cols-5">
+            {categoryConfig.map((cat) => {
+              const catStats = getStatsForCategory(cat.id);
+              const isActive = activeCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  aria-pressed={isActive}
+                  aria-controls="picks competition-record recent-results"
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`flex min-w-0 items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all ${
+                    isActive
+                      ? `bg-slate-900/80 ${colorClasses[cat.color].border} text-slate-100`
+                      : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
+                  }`}
+                >
+                  <span className={`${logoMarkClassName} ${isActive ? "scale-105" : ""}`}>
+                    <Image
+                      src={cat.logoPath}
+                      alt=""
+                      width={36}
+                      height={36}
+                      className={`${logoImageClassName} ${cat.logoClassName}`}
+                    />
+                  </span>
+                  <div className="min-w-0">
+                    <span className="block text-sm font-medium leading-snug">{cat.name}</span>
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                      {catStats.total_bets > 0 ? (
+                        <>
+                          <span>{catStats.total_bets} bets</span>
+                          <span className={`${catStats.total_bets < 50 ? "text-slate-400/70" : roiToneClass(catStats.roi)} font-mono`}>
+                            {catStats.roi > 0 ? "+" : ""}{catStats.roi.toFixed(1)}% ROI
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-slate-500">0 bets</span>
+                      )}
+                    </div>
+                    <SampleSizeBadge settled={catStats.total_bets} compact className="mt-1.5" />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+        </div>
+      </section>
+
       {/* Active Picks - id for deep link from homepage */}
-      <section id="picks" className="py-12 md:py-16 border-b border-slate-800/50 scroll-mt-6">
+      <section id="picks" className="py-8 md:py-10 border-b border-slate-800/50 scroll-mt-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -277,7 +334,7 @@ export default function TennisTips({
               <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Current Picks</h2>
             </div>
           </div>
-          <p className="text-slate-500 text-xs mb-3">Stake in units (1u = your standard stake). We typically recommend 0.5u-2u per pick.</p>
+          <p className="text-slate-500 text-xs mb-3">Stakes shown in units · 1u = your standard stake.</p>
           <p className="text-slate-500 text-xs mb-6 italic">
             <strong className="text-slate-400 not-italic">ML (Moneyline):</strong> A straight win bet with no handicap attached.
           </p>
@@ -352,53 +409,9 @@ export default function TennisTips({
         </div>
       </section>
 
-      {/* Category Tabs */}
-      <section className="py-12 md:py-16 border-b border-slate-800/50">
+      {/* Detailed record */}
+      <section id="competition-record" className="scroll-mt-24 py-10 md:py-12 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
-            {categoryConfig.map((cat) => {
-              const catStats = getStatsForCategory(cat.id);
-              const isActive = activeCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={`flex min-w-[152px] items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all sm:min-w-[174px] ${
-                    isActive
-                      ? `bg-slate-900/80 ${colorClasses[cat.color].border} text-slate-100`
-                      : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
-                  }`}
-                >
-                  <span className={`${logoMarkClassName} ${isActive ? "scale-105" : ""}`}>
-                    <Image
-                      src={cat.logoPath}
-                      alt=""
-                      width={36}
-                      height={36}
-                      className={`${logoImageClassName} ${cat.logoClassName}`}
-                    />
-                  </span>
-                  <div className="min-w-0">
-                    <span className="block truncate font-medium">{cat.name}</span>
-                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-                      {catStats.total_bets > 0 ? (
-                        <>
-                          <span>{catStats.total_bets} bets</span>
-                          <span className={`${catStats.total_bets < 50 ? "text-slate-400/70" : roiToneClass(catStats.roi)} font-mono`}>
-                            {catStats.roi > 0 ? "+" : ""}{catStats.roi.toFixed(1)}% ROI
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-slate-500">0 bets</span>
-                      )}
-                    </div>
-                    <SampleSizeBadge settled={catStats.total_bets} compact className="mt-1.5" />
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
           <div className="mb-4 flex justify-end">
             <SampleSizeBadge settled={currentStats.total_bets} />
           </div>
@@ -425,67 +438,8 @@ export default function TennisTips({
         </div>
       </section>
 
-      <section className="py-12 md:py-16 border-b border-slate-800/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/55 p-6 sm:p-7">
-            <div className="mb-5">
-              <div className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">Our methodology</div>
-              <h2 className="mt-2 text-2xl sm:text-3xl font-semibold text-slate-100">How the model builds the card</h2>
-            </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
-                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">01</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Every match starts as fair odds</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400">
-                  We do not begin with a tip or a hunch. We begin by pricing the match. Surface-specific serve and
-                  return data are blended with Elo so the model captures both underlying level and actual conditions,
-                  then a point-by-point tennis engine turns that into fair moneyline, handicap and total prices.
-                </p>
-              </div>
-              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
-                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">02</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Raw output gets calibrated hard</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400">
-                  Raw probabilities are not enough, especially below the very top tier. We shrink thin samples, weight
-                  tournament class properly, and account for things like venue speed, recent workload, rust, form and
-                  matchup shape. The point is not to force fake monster edges; it is to stop the fair odds drifting
-                  away from tennis reality.
-                </p>
-              </div>
-              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
-                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">03</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">We only bet when the price is wrong</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400">
-                  Once our fair odds are set, we compare them to the live market and only move when the gap is worth
-                  taking. Sometimes that means moneyline, sometimes games, sometimes totals, and very often it means
-                  passing. The proof is not a lucky day; it is whether the number was strong enough to beat the market
-                  by the close.
-                </p>
-              </div>
-            </div>
-            <div className="mt-5 rounded-xl border border-slate-800/80 bg-slate-950/40 p-4 text-sm leading-6 text-slate-400">
-              Want the caveats behind the current surface model? Read the{" "}
-              <Link
-                href="/resources/clay-season-tennis-model-caveats"
-                className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300"
-              >
-                ATP clay model note
-              </Link>
-              {" "}and the{" "}
-              <Link
-                href="/resources/how-to-read-a-tipster-track-record"
-                className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300"
-              >
-                track-record guide
-              </Link>
-              {" "}before treating any short sample as proof.
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Recent Results */}
-      <section className="py-12 md:py-16 border-b border-slate-800/50">
+      <section id="recent-results" className="py-12 md:py-16 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
             <span className="text-xs font-mono text-emerald-400 mb-2 block">RESULTS</span>
@@ -569,6 +523,34 @@ export default function TennisTips({
       </section>
 
       <MonthlyBreakdownSection scope="tennis" />
+
+      <section id="how-to-use" className="scroll-mt-24 py-10 md:py-12 border-b border-slate-800/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="mb-5 text-2xl font-semibold text-slate-100">Reading a tennis pick</h2>
+          <div className="grid gap-4 md:grid-cols-3">
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono tracking-[0.18em] text-emerald-400">01</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Match winner or games</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">Moneyline (ML) means backing a player to win the match. A games handicap or total is a different bet: compare the exact selection and line, not just the player’s name.</p>
+              </div>
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono tracking-[0.18em] text-emerald-400">02</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Tour and sample size</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">ATP, Challenger and each Grand Slam have separate records. Use the competition cards to see the number of settled bets alongside ROI; a handful of results gives much less information than a longer record.</p>
+              </div>
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono tracking-[0.18em] text-emerald-400">03</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Odds and settlement</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">The listed odds are the price recorded at publication. Check your bookmaker’s rules for retirements and walkovers before betting: settlement can differ between bookmakers and markets. Each published pick keeps its own result.</p>
+              </div>
+          </div>
+          <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm">
+            <Link href="/the-edge" className="text-emerald-300 hover:underline">Our betting methodology →</Link>
+            <Link href="/resources/how-to-read-a-tipster-track-record" className="text-emerald-300 hover:underline">How to read the record →</Link>
+             <Link href="/resources/clay-season-tennis-model-caveats" className="text-emerald-300 hover:underline">Clay model notes →</Link>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>

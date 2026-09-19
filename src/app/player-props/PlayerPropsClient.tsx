@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/components/ProfitProgressionPanel";
@@ -269,35 +270,84 @@ export default function PlayerProps({
 
 
       {/* Hero */}
-      <section className="public-hub-heading pt-5 pb-8 md:pb-10 border-b border-slate-800/50">
+      <section className="public-hub-heading pt-5 pb-4">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-0 block">
             <PageHomeLink />
             <span className="site-eyebrow block">Player Props</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-3">
             Football Player Props <span className="text-emerald-400">Betting Tips</span>
           </h1>
-          <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
-            Independent football player props betting tips for shots, shots on target, tackles, fouls and cards.
-            Browse Premier League, Serie A, La Liga and Champions League selections below, with the player,
-            market, bookmaker odds and stake recorded for each pick. Our focus is finding value through role,
-            likely minutes and matchup analysis; the public record keeps both winning and losing results.
+          <p className="text-sm sm:text-base text-slate-400 max-w-3xl leading-relaxed">
+            Football player props: shots, fouls, tackles and cards. Choose a league to see the picks and their record.
           </p>
+        </div>
+      </section>
 
-          <div className="mt-6 flex flex-wrap gap-2">
-            <span className="rounded-full border border-slate-700/60 bg-slate-900/50 px-3 py-1.5 text-xs font-mono text-slate-400">Shots</span>
-            <span className="rounded-full border border-slate-700/60 bg-slate-900/50 px-3 py-1.5 text-xs font-mono text-slate-400">Shots on Target</span>
-            <span className="rounded-full border border-slate-700/60 bg-slate-900/50 px-3 py-1.5 text-xs font-mono text-slate-400">Fouls</span>
-            <span className="rounded-full border border-slate-700/60 bg-slate-900/50 px-3 py-1.5 text-xs font-mono text-slate-400">Tackles</span>
-            <span className="rounded-full border border-slate-700/60 bg-slate-900/50 px-3 py-1.5 text-xs font-mono text-slate-400">Cards</span>
+      <section id="competition-filter" aria-label="Choose a league" className="pt-5 pb-6 border-b border-slate-800/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm font-medium text-slate-300">Choose a league <span className="font-normal text-slate-500">· Picks &amp; results</span></p>
+            <nav aria-label="On this page" className="flex flex-wrap gap-2 text-xs font-medium">
+              <a href="#picks" className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-emerald-300 hover:bg-emerald-400/20">Current picks ↓</a>
+              <a href="#competition-record" className="rounded-full border border-slate-700 px-3 py-2 text-slate-300 hover:border-emerald-400/50">Results &amp; ROI ↓</a>
+              <a href="#how-to-use" className="rounded-full border border-slate-700 px-3 py-2 text-slate-300 hover:border-emerald-400/50">How it works ↓</a>
+            </nav>
           </div>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4 xl:grid-cols-5">
+            {leagueConfig.map((league) => {
+              const leagueStats = getStatsForLeague(league.id);
+              const isActive = activeLeague === league.id;
+              return (
+                <button
+                  key={league.id}
+                  type="button"
+                  aria-pressed={isActive}
+                  aria-controls="picks competition-record recent-results"
+                  onClick={() => setActiveLeague(league.id)}
+                  className={`flex min-w-0 items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all ${
+                    isActive
+                      ? `bg-slate-900/80 ${colorClasses[league.color].border} text-slate-100`
+                      : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
+                  }`}
+                >
+                  <span className={`${logoMarkClassName} ${isActive ? "scale-105" : ""}`}>
+                    <Image
+                      src={league.logoPath}
+                      alt=""
+                      width={36}
+                      height={36}
+                      className={`${logoImageClassName} ${league.logoClassName}`}
+                    />
+                  </span>
+                  <div className="min-w-0">
+                    <span className="block text-sm font-medium leading-snug">{league.name}</span>
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                      {leagueStats.total_bets > 0 ? (
+                        <>
+                          <span>{leagueStats.total_bets} bets</span>
+                          <span className={`${leagueStats.total_bets < 50 ? "text-slate-400/70" : roiToneClass(leagueStats.roi)} font-mono`}>
+                            {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}% ROI
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-slate-500">0 bets</span>
+                      )}
+                    </div>
+                    <SampleSizeBadge settled={leagueStats.total_bets} compact className="mt-1.5" />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
         </div>
       </section>
 
       {/* Active Picks - id for deep link from homepage */}
-      <section id="picks" className="py-12 md:py-16 border-b border-slate-800/50 scroll-mt-6">
+      <section id="picks" className="py-8 md:py-10 border-b border-slate-800/50 scroll-mt-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -325,53 +375,9 @@ export default function PlayerProps({
         </div>
       </section>
 
-      {/* League Tabs */}
-      <section id="competition-record" className="scroll-mt-24 py-12 md:py-16 border-b border-slate-800/50">
+      {/* Detailed record */}
+      <section id="competition-record" className="scroll-mt-24 py-10 md:py-12 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
-            {leagueConfig.map((league) => {
-              const leagueStats = getStatsForLeague(league.id);
-              const isActive = activeLeague === league.id;
-              return (
-                <button
-                  key={league.id}
-                  onClick={() => setActiveLeague(league.id)}
-                  className={`flex min-w-[152px] items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all sm:min-w-[174px] ${
-                    isActive
-                      ? `bg-slate-900/80 ${colorClasses[league.color].border} text-slate-100`
-                      : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
-                  }`}
-                >
-                  <span className={`${logoMarkClassName} ${isActive ? "scale-105" : ""}`}>
-                    <Image
-                      src={league.logoPath}
-                      alt=""
-                      width={36}
-                      height={36}
-                      className={`${logoImageClassName} ${league.logoClassName}`}
-                    />
-                  </span>
-                  <div className="min-w-0">
-                    <span className="block truncate font-medium">{league.name}</span>
-                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-                      {leagueStats.total_bets > 0 ? (
-                        <>
-                          <span>{leagueStats.total_bets} bets</span>
-                          <span className={`${leagueStats.total_bets < 50 ? "text-slate-400/70" : roiToneClass(leagueStats.roi)} font-mono`}>
-                            {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}% ROI
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-slate-500">0 bets</span>
-                      )}
-                    </div>
-                    <SampleSizeBadge settled={leagueStats.total_bets} compact className="mt-1.5" />
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
           <div className="mb-4 flex justify-end">
             <SampleSizeBadge settled={currentStats.total_bets} />
           </div>
@@ -398,48 +404,8 @@ export default function PlayerProps({
         </div>
       </section>
 
-      <section className="py-12 md:py-16 border-b border-slate-800/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/55 p-6 sm:p-7">
-            <div className="mb-5">
-              <div className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">Our methodology</div>
-              <h2 className="mt-2 text-2xl sm:text-3xl font-semibold text-slate-100">How the edge is built</h2>
-            </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
-                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">01</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Less efficient than main markets</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400">
-                  Match odds attract the sharpest pricing and the most attention. Props usually do not. The margins are
-                  wider, but the modelling is also thinner, which leaves more room for one bookmaker to hang a number
-                  that another would never copy.
-                </p>
-              </div>
-              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
-                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">02</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Role and matchup before averages</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400">
-                  A prop line only makes sense in context. We care about role, likely minutes, set-piece share, team
-                  shape, opponent tendencies and referee profile. A shots line for a high-volume winger means something
-                  very different from the same number on a full-back.
-                </p>
-              </div>
-              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
-                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">03</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Price before player name</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400">
-                  We are not trying to bet the most famous player on the slate. We are trying to take the best number.
-                  Sometimes that means a star in a strong spot; sometimes it means a less glamorous role player whose
-                  line has been copied without enough thought.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Recent Results */}
-      <section className="py-12 md:py-16 border-b border-slate-800/50">
+      <section id="recent-results" className="py-12 md:py-16 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
             <span className="text-xs font-mono text-emerald-400 mb-2 block">RESULTS</span>
@@ -468,6 +434,33 @@ export default function PlayerProps({
       </section>
 
       <MonthlyBreakdownSection scope="props" />
+
+      <section id="how-to-use" className="scroll-mt-24 py-10 md:py-12 border-b border-slate-800/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="mb-5 text-2xl font-semibold text-slate-100">Reading a player prop pick</h2>
+          <div className="grid gap-4 md:grid-cols-3">
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono tracking-[0.18em] text-emerald-400">01</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Player, market, line</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">A player prop is a bet on one player’s match statistics. Over 1.5 shots means two or more shots; shots on target is a separate market. Check the player and the exact line before comparing prices.</p>
+              </div>
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono tracking-[0.18em] text-emerald-400">02</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">The price matters</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">Each pick shows the bookmaker odds recorded when it was published. A shorter price changes the potential return, even when the player and line are identical. Open the fixture for its individual picks and results.</p>
+              </div>
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono tracking-[0.18em] text-emerald-400">03</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Compare the record</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">The league cards show settled bets and return on stakes, with sample-size labels. The full record includes wins, losses and voids; the results below the chart let you inspect individual selections.</p>
+              </div>
+          </div>
+          <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm">
+            <Link href="/the-edge" className="text-emerald-300 hover:underline">Our betting methodology →</Link>
+            <Link href="/resources/how-to-read-a-tipster-track-record" className="text-emerald-300 hover:underline">How to read the record →</Link>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>
