@@ -1,9 +1,57 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-19T04:42:44Z",
+  "generated_at": "2026-09-19T12:42:26Z",
   "league": "la-liga",
-  "row_count": 1,
+  "row_count": 4,
   "rows": [
+    {
+      "team": "Atlético Madrid",
+      "team_key": "atletico madrid",
+      "player_name": "Alejandro Grimaldo",
+      "player_key": "alejandro grimaldo",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-13"
+    },
+    {
+      "team": "Barcelona",
+      "team_key": "barcelona",
+      "player_name": "Lamine Yamal",
+      "player_key": "lamine yamal",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 4,
+      "observed_share": 0.5,
+      "observed_sample": 4.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 2,
+      "last_event_date": "2026-09-16"
+    },
+    {
+      "team": "Barcelona",
+      "team_key": "barcelona",
+      "player_name": "Raphinha",
+      "player_key": "raphinha",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 4,
+      "observed_share": 0.5,
+      "observed_sample": 4.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-16"
+    },
     {
       "team": "Villarreal",
       "team_key": "villarreal",

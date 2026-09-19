@@ -1,8 +1,31 @@
 {
-  "generated_at": "2026-09-19T11:50:18Z",
+  "generated_at": "2026-09-19T12:42:31Z",
   "source": "fair_odds_lab_settled_winners",
   "description": "Winning highlights from Fair Odds Lab research signals.",
   "highlights": [
+    {
+      "id": "2026-09-18-la-liga-espanyol-vs-elche-fer-niño",
+      "date": "2026-09-18",
+      "kickoff": "2026-09-18T19:00:00+00:00",
+      "competition": "La Liga",
+      "league": "la-liga",
+      "match": "Espanyol vs Elche",
+      "player": "Fer Niño",
+      "player_photo_url": "https://images.fotmob.com/image_resources/playerimages/1127224.png",
+      "team": "Elche",
+      "best_bookmaker": "Bet365",
+      "best_odds": 3.25,
+      "fair_odds": 3.07,
+      "model_chance_pct": 32.6,
+      "market_chance_pct": 30.8,
+      "price_gap_pp": 1.8,
+      "goals_scored": 2,
+      "super_sub_win": false,
+      "super_sub_replacement": "",
+      "super_sub_replacement_goals": 0,
+      "settled_at": "2026-09-19T12:42:19Z",
+      "settlement_note": "scored_2_goals"
+    },
     {
       "id": "2026-09-12-la-liga-osasuna-vs-espanyol-roberto-fernández",
       "date": "2026-09-12",
@@ -117,29 +140,6 @@
       "super_sub_replacement_goals": 0,
       "settled_at": "2026-09-06T12:56:26Z",
       "settlement_note": "scored_2_goals"
-    },
-    {
-      "id": "2026-09-05-bundesliga-werder-bremen-vs-rb-leipzig-marco-grull",
-      "date": "2026-09-05",
-      "kickoff": "2026-09-05T13:30:00Z",
-      "competition": "Germany - Bundesliga",
-      "league": "bundesliga",
-      "match": "Werder Bremen vs RB Leipzig",
-      "player": "Marco Grull",
-      "player_photo_url": "https://images.fotmob.com/image_resources/playerimages/1024292.png",
-      "team": "Werder Bremen",
-      "best_bookmaker": "Bet365",
-      "best_odds": 4.0,
-      "fair_odds": 3.11,
-      "model_chance_pct": 32.1,
-      "market_chance_pct": 25.0,
-      "price_gap_pp": 7.1,
-      "goals_scored": 1,
-      "super_sub_win": false,
-      "super_sub_replacement": "",
-      "super_sub_replacement_goals": 0,
-      "settled_at": "2026-09-06T12:56:24Z",
-      "settlement_note": "scored_1_goals"
     }
   ]
 }

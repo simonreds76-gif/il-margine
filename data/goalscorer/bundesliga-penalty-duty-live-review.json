@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-19T04:42:46Z",
+  "generated_at": "2026-09-19T12:42:05Z",
   "league": "bundesliga",
   "row_count": 1,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2971434393",
           "match_id": "5881171",
           "source_url": "https://www.fotmob.com/matches/union-berlin-vs-bayern-munchen/2o5txd#5881171",
-          "observed_at": "2026-09-19T04:42:44+00:00",
+          "observed_at": "2026-09-19T12:42:01+00:00",
           "event_date": "2026-09-18",
           "season": "2026/27",
           "team": "Bayern München",
@@ -80,10 +80,14 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20260913",
+      "20260914",
+      "20260915",
+      "20260916",
       "20260917",
       "20260918",
       "20260919"
     ],
-    "matches_checked": 1
+    "matches_checked": 3
   }
 }
