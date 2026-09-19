@@ -101,6 +101,15 @@ def live_version():
     return match.group(1)
 
 
+def obsolete_versions(versions, new_version, prior_version, live):
+    keep = {new_version, prior_version, live}
+    for version in sorted(versions, reverse=True):
+        if len(keep) >= 3:
+            break
+        keep.add(version)
+    return [version for version in versions if version not in keep and re.fullmatch(r'\d{8}-[a-f0-9]{12}', version)]
+
+
 def publish(checkout, version, status, save):
     # Authenticated curl requires an explicitly linked project even with --deployment.
     # Public IDs only; CLI credentials stay in the user's existing secure store.
@@ -227,6 +236,14 @@ def refresh(config, dry_run=False):
             data_path = Path('public') / new_manifest['indexUrl'].lstrip('/').rsplit('/', 1)[0]
             shutil.copytree(candidate / 'release' / data_path, checkout / data_path, dirs_exist_ok=True)
             shutil.copy2(candidate / 'release' / manifest_path, checkout / manifest_path)
+            # Bound deployed static-file growth; history remains recoverable in Git.
+            data_root = (checkout / 'public/return-atlas/data').resolve()
+            versions = [p.name for p in data_root.iterdir() if p.is_dir() and re.fullmatch(r'\d{8}-[a-f0-9]{12}', p.name)]
+            for version in obsolete_versions(versions, new_manifest['version'], old_manifest['version'], live_version()):
+                target = (data_root / version).resolve()
+                if target.parent != data_root:
+                    raise RuntimeError('Archive cleanup escaped its dedicated data directory')
+                run(['git', 'rm', '-r', '--', target.relative_to(checkout.resolve())], checkout)
             # Only archive data and its release pointer can be staged by this job.
             run(['git', 'add', '--', data_path, manifest_path], checkout)
             run(['git', 'commit', '-m', f'data: refresh Return Atlas through {new_manifest["through"]}'], checkout)

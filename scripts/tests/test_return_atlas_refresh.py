@@ -46,5 +46,11 @@ class PublicationGateTests(unittest.TestCase):
     def test_html_response_is_not_accepted_as_csv(self):
         with self.assertRaises(ValueError): refresh.source_csv(b'<html>Unavailable</html>', 2026)
 
+    def test_retention_keeps_candidate_previous_and_live(self):
+        versions = [f'202609{day:02d}-aaaaaaaaaaaa' for day in range(13, 20)]
+        obsolete = refresh.obsolete_versions(versions, versions[-1], versions[-2], versions[0])
+        self.assertEqual(obsolete, versions[1:-2])
+        self.assertNotIn('other-folder', refresh.obsolete_versions(['other-folder'], *versions[:3]))
+
 
 if __name__ == '__main__': unittest.main()

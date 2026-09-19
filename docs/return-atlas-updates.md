@@ -36,6 +36,11 @@ Git and Vercel use the user's existing authenticated CLI sessions.
    then promote. A failed build or pre-promotion check leaves the old site live.
    A post-promotion verification failure is reported and needs investigation.
 
+Keep three deployed archive versions, always preserving the candidate, previous
+release and current live version. Older static directories are removed only from
+the isolated checkout, after path validation, and remain recoverable in Git.
+This bounds deployment file growth as daily updates accumulate.
+
 Runtime: Python with openpyxl, Node, Git, Vercel CLI. All child processes use
 CREATE_NO_WINDOW; the existing Windows task remains launched by hidden WScript.
 The refresh has an OS-owned single-run lock. Run manually with:
