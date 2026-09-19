@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { BRAND } from "@/lib/brand";
+import ComplianceBar from "@/components/ComplianceBar";
 
 interface FooterProps {
   className?: string;
@@ -33,7 +34,8 @@ export default function Footer({ className = "" }: FooterProps) {
               <Link href="/privacy-policy" className="hover:text-white">Privacy Policy</Link>
               <Link href="/cookies-policy" className="hover:text-white">Cookies Policy</Link>
             </div>
-            <div className="flex flex-wrap justify-center gap-4 text-xs text-slate-300"><Link href="/the-edge">Our methodology</Link><Link href="/track-record">Track record</Link><Link href="/resources">Resources</Link></div><div className="text-xs text-slate-400">Independent betting analysis. Gamble responsibly. 18+ only.</div>
+            <div className="flex flex-wrap justify-center gap-4 text-xs text-slate-300"><Link href="/the-edge">Our methodology</Link><Link href="/track-record">Track record</Link><Link href="/resources">Resources</Link></div>
+            <ComplianceBar />
           </div>
         </div>
       </div>

@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import GlobalNav from "@/components/GlobalNav";
-import ComplianceBar from "@/components/ComplianceBar";
 import StructuredData from "@/components/StructuredData";
 import CookieBanner from "@/components/CookieBanner";
 import SpeedInsightsClient from "@/components/SpeedInsightsClient";
@@ -84,7 +83,6 @@ export default function RootLayout({
           <StructuredData />
           <GlobalNav />
           <PublicSiteFrame>{children}</PublicSiteFrame>
-          <ComplianceBar />
           <RouteScopedOverlays />
         </ChatProvider>
       </body>
