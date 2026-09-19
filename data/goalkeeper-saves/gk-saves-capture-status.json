@@ -2,39 +2,37 @@
   "capture_errors": [],
   "capture_mode": "close",
   "event_last_checked": {
-    "71945268": "2026-09-19T16:48:25Z",
-    "71945270": "2026-09-19T16:48:25Z",
-    "71945272": "2026-09-19T16:48:25Z",
-    "71945278": "2026-09-19T16:48:25Z",
-    "71945284": "2026-09-19T16:48:25Z",
-    "72036184": "2026-09-19T16:48:25Z",
-    "72036186": "2026-09-19T16:48:25Z",
-    "72036188": "2026-09-19T16:48:25Z",
-    "72036190": "2026-09-19T16:48:25Z",
-    "72036196": "2026-09-19T16:48:25Z",
-    "72036200": "2026-09-19T16:48:25Z",
-    "72221272": "2026-09-19T16:48:25Z",
-    "72221280": "2026-09-19T16:48:25Z",
-    "72221282": "2026-09-19T16:48:25Z",
-    "72221284": "2026-09-19T16:48:25Z",
-    "72478588": "2026-09-19T16:48:25Z",
-    "72478592": "2026-09-19T16:48:25Z",
-    "72478596": "2026-09-19T16:48:25Z",
-    "72478600": "2026-09-19T16:48:25Z",
-    "72478604": "2026-09-19T16:48:25Z",
-    "72513206": "2026-09-19T16:48:25Z",
-    "72513216": "2026-09-19T16:48:25Z"
+    "71945268": "2026-09-19T19:35:32Z",
+    "71945270": "2026-09-19T19:35:32Z",
+    "71945272": "2026-09-19T19:35:32Z",
+    "71945274": "2026-09-19T19:35:32Z",
+    "71945278": "2026-09-19T19:35:32Z",
+    "72036186": "2026-09-19T19:35:32Z",
+    "72036192": "2026-09-19T19:35:32Z",
+    "72036196": "2026-09-19T19:35:32Z",
+    "72221272": "2026-09-19T19:35:32Z",
+    "72221280": "2026-09-19T19:35:32Z",
+    "72221282": "2026-09-19T19:35:32Z",
+    "72221284": "2026-09-19T19:35:32Z",
+    "72478588": "2026-09-19T19:35:32Z",
+    "72478592": "2026-09-19T19:35:32Z",
+    "72478596": "2026-09-19T19:35:32Z",
+    "72478602": "2026-09-19T19:35:32Z",
+    "72478604": "2026-09-19T19:35:32Z",
+    "72513206": "2026-09-19T19:35:32Z",
+    "72513216": "2026-09-19T19:35:32Z",
+    "72513218": "2026-09-19T19:35:32Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 22,
-  "events_supported": 22,
-  "events_with_lines": 20,
-  "generated_at": "2026-09-19T16:48:25Z",
+  "events_selected": 20,
+  "events_supported": 20,
+  "events_with_lines": 18,
+  "generated_at": "2026-09-19T19:35:32Z",
   "last_publication_at": "2026-09-19T12:32:41Z",
   "league_coverage": {
     "bundesliga": {
-      "selected": 2,
-      "with_prices": 2
+      "selected": 3,
+      "with_prices": 3
     },
     "epl": {
       "selected": 4,
@@ -45,15 +43,15 @@
       "with_prices": 5
     },
     "ligue-1": {
-      "selected": 6,
-      "with_prices": 5
+      "selected": 3,
+      "with_prices": 2
     },
     "serie-a": {
       "selected": 5,
       "with_prices": 5
     }
   },
-  "market_inventory_rows_added": 1870,
+  "market_inventory_rows_added": 1705,
   "market_names_observed": [
     "1st Half Corners",
     "Alternative Corners",
@@ -150,107 +148,37 @@
   ],
   "publication_recovery": false,
   "request_budget": 4,
-  "requests_used": 4,
-  "rows_added": 217,
-  "rows_observed": 217,
+  "requests_used": 3,
+  "rows_added": 196,
+  "rows_observed": 196,
   "selected_events": [
     {
-      "away": "Lazio Rome",
-      "competition": "Italy - Serie A",
-      "home": "Venezia FC",
-      "id": 71945284,
-      "kickoff_at": "2026-09-19T18:45:00Z"
-    },
-    {
-      "away": "ESTAC Troyes",
-      "competition": "France - Ligue 1",
-      "home": "Angers SCO",
-      "id": 72036184,
-      "kickoff_at": "2026-09-19T18:45:00Z"
-    },
-    {
-      "away": "FC Lorient",
-      "competition": "France - Ligue 1",
-      "home": "Le Mans FC",
-      "id": 72036188,
-      "kickoff_at": "2026-09-19T18:45:00Z"
-    },
-    {
-      "away": "Stade Rennais FC",
-      "competition": "France - Ligue 1",
-      "home": "Olympique Lyon",
-      "id": 72036190,
-      "kickoff_at": "2026-09-19T18:45:00Z"
-    },
-    {
-      "away": "Le Havre AC",
-      "competition": "France - Ligue 1",
-      "home": "Toulouse FC",
-      "id": 72036200,
-      "kickoff_at": "2026-09-19T18:45:00Z"
-    },
-    {
-      "away": "RB Leipzig",
+      "away": "TSG Hoffenheim",
       "competition": "Germany - Bundesliga",
-      "home": "Bayer Leverkusen",
-      "id": 72513206,
-      "kickoff_at": "2026-09-20T13:30:00Z"
+      "home": "SC Paderborn 07",
+      "id": 72513218,
+      "kickoff_at": "2026-09-20T17:30:00Z"
     },
     {
-      "away": "Real Madrid",
-      "competition": "Spain - LaLiga",
-      "home": "Atletico Madrid",
-      "id": 72478588,
-      "kickoff_at": "2026-09-20T14:15:00Z"
-    },
-    {
-      "away": "Lille OSC",
-      "competition": "France - Ligue 1",
-      "home": "OGC Nice",
-      "id": 72036196,
-      "kickoff_at": "2026-09-20T15:15:00Z"
-    },
-    {
-      "away": "Manchester United",
-      "competition": "England - Premier League",
-      "home": "Fulham FC",
-      "id": 72221280,
-      "kickoff_at": "2026-09-20T15:30:00Z"
-    },
-    {
-      "away": "SV 07 Elversberg",
-      "competition": "Germany - Bundesliga",
-      "home": "Schalke 04",
-      "id": 72513216,
-      "kickoff_at": "2026-09-20T15:30:00Z"
-    },
-    {
-      "away": "Atalanta BC",
+      "away": "US Lecce",
       "competition": "Italy - Serie A",
-      "home": "Juventus Turin",
-      "id": 71945272,
-      "kickoff_at": "2026-09-20T16:00:00Z"
+      "home": "AC Milan",
+      "id": 71945274,
+      "kickoff_at": "2026-09-20T18:45:00Z"
     },
     {
-      "away": "Real Betis Seville",
-      "competition": "Spain - LaLiga",
-      "home": "RC Deportivo de A Coruna",
-      "id": 72478592,
-      "kickoff_at": "2026-09-20T16:30:00Z"
+      "away": "Paris Saint-Germain",
+      "competition": "France - Ligue 1",
+      "home": "Olympique Marseille",
+      "id": 72036192,
+      "kickoff_at": "2026-09-20T18:45:00Z"
     },
     {
-      "away": "Levante UD",
+      "away": "Real Sociedad San Sebastian",
       "competition": "Spain - LaLiga",
-      "home": "Villarreal CF",
-      "id": 72478604,
-      "kickoff_at": "2026-09-20T16:30:00Z"
-    },
-    {
-      "away": "FC Barcelona",
-      "competition": "Spain - LaLiga",
-      "home": "Sevilla FC",
-      "id": 72478600,
-      "kickoff_at": "2026-09-19T19:00:00Z"
+      "home": "Valencia CF",
+      "id": 72478602,
+      "kickoff_at": "2026-09-20T19:00:00Z"
     },
     {
       "away": "SSC Napoli",
@@ -307,8 +235,64 @@
       "home": "AJ Auxerre",
       "id": 72036186,
       "kickoff_at": "2026-09-20T13:00:00Z"
+    },
+    {
+      "away": "RB Leipzig",
+      "competition": "Germany - Bundesliga",
+      "home": "Bayer Leverkusen",
+      "id": 72513206,
+      "kickoff_at": "2026-09-20T13:30:00Z"
+    },
+    {
+      "away": "Real Madrid",
+      "competition": "Spain - LaLiga",
+      "home": "Atletico Madrid",
+      "id": 72478588,
+      "kickoff_at": "2026-09-20T14:15:00Z"
+    },
+    {
+      "away": "Lille OSC",
+      "competition": "France - Ligue 1",
+      "home": "OGC Nice",
+      "id": 72036196,
+      "kickoff_at": "2026-09-20T15:15:00Z"
+    },
+    {
+      "away": "Manchester United",
+      "competition": "England - Premier League",
+      "home": "Fulham FC",
+      "id": 72221280,
+      "kickoff_at": "2026-09-20T15:30:00Z"
+    },
+    {
+      "away": "SV 07 Elversberg",
+      "competition": "Germany - Bundesliga",
+      "home": "Schalke 04",
+      "id": 72513216,
+      "kickoff_at": "2026-09-20T15:30:00Z"
+    },
+    {
+      "away": "Atalanta BC",
+      "competition": "Italy - Serie A",
+      "home": "Juventus Turin",
+      "id": 71945272,
+      "kickoff_at": "2026-09-20T16:00:00Z"
+    },
+    {
+      "away": "Real Betis Seville",
+      "competition": "Spain - LaLiga",
+      "home": "RC Deportivo de A Coruna",
+      "id": 72478592,
+      "kickoff_at": "2026-09-20T16:30:00Z"
+    },
+    {
+      "away": "Levante UD",
+      "competition": "Spain - LaLiga",
+      "home": "Villarreal CF",
+      "id": 72478604,
+      "kickoff_at": "2026-09-20T16:30:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 20
+  "three_way_events": 18
 }
