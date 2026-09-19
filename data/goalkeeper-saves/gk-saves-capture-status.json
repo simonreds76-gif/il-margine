@@ -1,60 +1,64 @@
 {
   "capture_errors": [],
-  "capture_mode": "publication",
+  "capture_mode": "close",
   "event_last_checked": {
-    "71945266": "2026-09-19T12:32:41Z",
-    "71945268": "2026-09-19T12:32:41Z",
-    "71945280": "2026-09-19T12:32:41Z",
-    "71945282": "2026-09-19T12:32:41Z",
-    "71945284": "2026-09-19T12:32:41Z",
-    "72036184": "2026-09-19T12:32:41Z",
-    "72036188": "2026-09-19T12:32:41Z",
-    "72036190": "2026-09-19T12:32:41Z",
-    "72036198": "2026-09-19T12:32:41Z",
-    "72036200": "2026-09-19T12:32:41Z",
-    "72221276": "2026-09-19T12:32:41Z",
-    "72221278": "2026-09-19T12:32:41Z",
-    "72221286": "2026-09-19T12:32:41Z",
-    "72221288": "2026-09-19T12:32:41Z",
-    "72478586": "2026-09-19T12:32:41Z",
-    "72478590": "2026-09-19T12:32:41Z",
-    "72478596": "2026-09-19T12:32:41Z",
-    "72478600": "2026-09-19T12:32:41Z",
-    "72513204": "2026-09-19T12:32:41Z",
-    "72513208": "2026-09-19T12:32:41Z",
-    "72513210": "2026-09-19T12:32:41Z",
-    "72513212": "2026-09-19T12:32:41Z",
-    "72513214": "2026-09-19T12:32:41Z"
+    "71945268": "2026-09-19T13:24:08Z",
+    "71945270": "2026-09-19T13:24:08Z",
+    "71945278": "2026-09-19T13:24:08Z",
+    "71945280": "2026-09-19T13:24:08Z",
+    "71945284": "2026-09-19T13:24:08Z",
+    "72036184": "2026-09-19T13:24:08Z",
+    "72036186": "2026-09-19T13:24:08Z",
+    "72036188": "2026-09-19T13:24:08Z",
+    "72036190": "2026-09-19T13:24:08Z",
+    "72036198": "2026-09-19T13:24:08Z",
+    "72036200": "2026-09-19T13:24:08Z",
+    "72221272": "2026-09-19T13:24:08Z",
+    "72221276": "2026-09-19T13:24:08Z",
+    "72221278": "2026-09-19T13:24:08Z",
+    "72221282": "2026-09-19T13:24:08Z",
+    "72221284": "2026-09-19T13:24:08Z",
+    "72221286": "2026-09-19T13:24:08Z",
+    "72221288": "2026-09-19T13:24:08Z",
+    "72478586": "2026-09-19T13:24:08Z",
+    "72478590": "2026-09-19T13:24:08Z",
+    "72478596": "2026-09-19T13:24:08Z",
+    "72478600": "2026-09-19T13:24:08Z",
+    "72513204": "2026-09-19T13:24:08Z",
+    "72513208": "2026-09-19T13:24:08Z",
+    "72513210": "2026-09-19T13:24:08Z",
+    "72513212": "2026-09-19T13:24:08Z",
+    "72513214": "2026-09-19T13:24:08Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 23,
-  "events_supported": 23,
-  "events_with_lines": 23,
-  "generated_at": "2026-09-19T12:32:41Z",
+  "events_selected": 27,
+  "events_supported": 27,
+  "events_with_lines": 22,
+  "generated_at": "2026-09-19T13:24:08Z",
   "last_publication_at": "2026-09-19T12:32:41Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 5,
-      "with_prices": 5
+      "with_prices": 1
     },
     "epl": {
-      "selected": 4,
-      "with_prices": 4
+      "selected": 7,
+      "with_prices": 6
     },
     "la-liga": {
       "selected": 4,
       "with_prices": 4
     },
     "ligue-1": {
-      "selected": 5,
-      "with_prices": 5
+      "selected": 6,
+      "with_prices": 6
     },
     "serie-a": {
       "selected": 5,
       "with_prices": 5
     }
   },
-  "market_inventory_rows_added": 1946,
+  "market_inventory_rows_added": 2074,
   "market_names_observed": [
     "1st Half Corners",
     "Alternative Corners",
@@ -152,23 +156,9 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 4,
-  "rows_added": 235,
-  "rows_observed": 235,
+  "rows_added": 228,
+  "rows_observed": 228,
   "selected_events": [
-    {
-      "away": "Torino FC",
-      "competition": "Italy - Serie A",
-      "home": "Bologna FC",
-      "id": 71945266,
-      "kickoff_at": "2026-09-19T13:00:00Z"
-    },
-    {
-      "away": "Cagliari Calcio",
-      "competition": "Italy - Serie A",
-      "home": "Udinese Calcio",
-      "id": 71945282,
-      "kickoff_at": "2026-09-19T13:00:00Z"
-    },
     {
       "away": "SC Freiburg",
       "competition": "Germany - Bundesliga",
@@ -226,18 +216,53 @@
       "kickoff_at": "2026-09-19T14:15:00Z"
     },
     {
-      "away": "Malaga CF",
-      "competition": "Spain - LaLiga",
-      "home": "Getafe CF",
-      "id": 72478596,
-      "kickoff_at": "2026-09-20T12:00:00Z"
-    },
-    {
       "away": "Strasbourg Alsace",
       "competition": "France - Ligue 1",
       "home": "Paris FC",
       "id": 72036198,
       "kickoff_at": "2026-09-19T15:15:00Z"
+    },
+    {
+      "away": "Como 1907",
+      "competition": "Italy - Serie A",
+      "home": "Frosinone Calcio",
+      "id": 71945270,
+      "kickoff_at": "2026-09-20T13:00:00Z"
+    },
+    {
+      "away": "Genoa CFC",
+      "competition": "Italy - Serie A",
+      "home": "Parma Calcio",
+      "id": 71945278,
+      "kickoff_at": "2026-09-20T13:00:00Z"
+    },
+    {
+      "away": "Liverpool FC",
+      "competition": "England - Premier League",
+      "home": "AFC Bournemouth",
+      "id": 72221272,
+      "kickoff_at": "2026-09-20T13:00:00Z"
+    },
+    {
+      "away": "Crystal Palace",
+      "competition": "England - Premier League",
+      "home": "Leeds United",
+      "id": 72221282,
+      "kickoff_at": "2026-09-20T13:00:00Z"
+    },
+    {
+      "away": "Sunderland AFC",
+      "competition": "England - Premier League",
+      "home": "Manchester City",
+      "id": 72221284,
+      "kickoff_at": "2026-09-20T13:00:00Z"
+    },
+    {
+      "away": "Stade Brest 29",
+      "competition": "France - Ligue 1",
+      "home": "AJ Auxerre",
+      "id": 72036186,
+      "kickoff_at": "2026-09-20T13:00:00Z"
     },
     {
       "away": "Inter Milano",
@@ -315,8 +340,15 @@
       "home": "ACF Fiorentina",
       "id": 71945268,
       "kickoff_at": "2026-09-20T10:30:00Z"
+    },
+    {
+      "away": "Malaga CF",
+      "competition": "Spain - LaLiga",
+      "home": "Getafe CF",
+      "id": 72478596,
+      "kickoff_at": "2026-09-20T12:00:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 23
+  "three_way_events": 22
 }
