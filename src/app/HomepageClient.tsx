@@ -8,6 +8,7 @@ import BetMobileMeta from "@/components/BetMobileMeta";
 import PublicBetsTable from "@/components/PublicBetsTable";
 import ResultBadge from "@/components/ResultBadge";
 import TodaysEdge from "@/components/TodaysEdge";
+import SportIcon from "@/components/SportIcon";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import type { MonthRow } from "@/components/MonthlyBreakdown";
@@ -69,6 +70,7 @@ function MarketCard({
       ) : null}
       <div className="relative flex h-full flex-col">
         <div className="mb-3 flex items-center gap-2.5">
+          <SportIcon sport={market.id === "atp" ? "tennis" : market.id === "atg" ? "compare" : "football"} emblem className="h-9 w-9 text-emerald-200" />
           <h3 className="text-[15px] font-semibold text-slate-200">{market.name}</h3>
           <span
             className={`rounded-full border px-2.5 py-[2px] text-[10px] font-mono font-bold uppercase tracking-[0.14em] ${
@@ -291,8 +293,8 @@ export default function HomepageClient({
               <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">Independent <span className="text-emerald-300">betting analysis.</span></h1>
               <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Independent betting advice, backed by results. Explore profitable football and tennis picks, compare fair odds, check penalty takers and read our latest insights.</p>
               <div className="mt-6 flex flex-wrap items-center gap-3">
-                <Link href="/player-props" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-300 px-5 py-3 text-base font-semibold text-slate-950 transition hover:bg-emerald-200 sm:w-auto">Player Props Tips <span aria-hidden="true">→</span></Link>
-                <Link href="/tennis-tips" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-slate-600 bg-slate-900/40 px-5 py-3 text-base font-semibold text-slate-100 transition hover:border-slate-400 hover:bg-slate-900 sm:w-auto">ATP Tennis Tips <span aria-hidden="true">→</span></Link>
+                <Link href="/player-props" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-300 px-5 py-3 text-base font-semibold text-slate-950 transition hover:bg-emerald-200 sm:w-auto"><SportIcon sport="football" />Player Props Tips <span aria-hidden="true">→</span></Link>
+                <Link href="/tennis-tips" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-slate-600 bg-slate-900/40 px-5 py-3 text-base font-semibold text-slate-100 transition hover:border-slate-400 hover:bg-slate-900 sm:w-auto"><SportIcon sport="tennis" />ATP Tennis Tips <span aria-hidden="true">→</span></Link>
                 <a href="#monthly" className="home-record-link">Monthly results <span aria-hidden="true">↓</span></a>
               </div>
               <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-400">
@@ -406,6 +408,11 @@ export default function HomepageClient({
               return <MarketCard key={market.id} market={market} href={href} />;
             })}
           </div>
+          <Link href="/return-atlas" prefetch={false} className="mt-4 flex items-center gap-3 rounded-xl border border-emerald-300/20 bg-emerald-300/5 px-4 py-4 transition hover:border-emerald-300/50 hover:bg-emerald-300/10 focus-visible:outline-2 focus-visible:outline-emerald-300">
+            <SportIcon sport="tennis" className="h-8 w-8 text-emerald-200" />
+            <span className="min-w-0 flex-1"><span className="block text-sm font-semibold text-slate-100">Return Atlas</span><span className="mt-1 block text-sm text-slate-400">Explore ATP player ROI by season, surface, favourite and underdog.</span></span>
+            <span aria-hidden="true" className="text-xl text-emerald-300">↗</span>
+          </Link>
         </div>
       </section>
 

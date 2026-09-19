@@ -5,7 +5,7 @@ import { pathToFileURL, fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const root = process.env.RETURN_ATLAS_OUTPUT_ROOT || path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const input = process.argv[2];
 if (!input) throw new Error('Usage: node scripts/build-return-atlas.mjs <audited-preview-directory>');
 const checkedAt = process.argv[3];
@@ -20,7 +20,7 @@ const seen = new Set();
 for (const m of matches) {
   if (seen.has(m.id) || !playerIndex.has(m.p1) || !playerIndex.has(m.p2) ||
     ![m.p1, m.p2].includes(m.winner) || ![m.o1,m.o2].every(n=>Number.isFinite(n)&&n>1) ||
-    !surfaces.includes(m.surface) || !sources.includes(m.source) || m.status !== 'completed' || m.level !== 'ATP-main') {
+    !surfaces.includes(m.surface) || !sources.includes(m.source) || m.status !== 'completed' || m.level !== 'ATP-main' || m.date > checkedAt) {
     throw new Error(`Invalid or duplicate accepted record: ${m.id}`);
   }
   seen.add(m.id);

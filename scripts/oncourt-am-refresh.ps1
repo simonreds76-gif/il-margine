@@ -1,4 +1,4 @@
-﻿# Il Margine - AM Tennis Refresh
+# Il Margine - AM Tennis Refresh
 # Lighter daytime refresh: refresh today's OnCourt schedule/tours, then odds/fair-odds/shadow append.
 
 $ErrorActionPreference = "Stop"
@@ -372,6 +372,19 @@ try {
     & python scripts\pinnacle-capture-history.py --capture-mode daily 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "WARNING: Pinnacle history append failed (exit $LASTEXITCODE), continuing..."
+    }
+
+    # Return Atlas uses the existing hidden morning job, after all betting alerts.
+    # The machine-local config opts this host in; no secret belongs in this file.
+    $atlasConfigPath = "D:\IlMargine\return-atlas-automation\config.json"
+    $atlasRunnerPath = "D:\IlMargine\return-atlas-automation\checkout\scripts\refresh-return-atlas.py"
+    if (Test-Path -LiteralPath $atlasConfigPath) {
+        Log "=== Post-step: validated Return Atlas refresh ==="
+        $atlasExit = Invoke-LoggedProcess -FilePath "C:\Python314\python.exe" -ArgumentList @($atlasRunnerPath, "--config", $atlasConfigPath) -Label "Return Atlas automatic publication" -TimeoutSeconds 3600
+        if ($atlasExit -ne 0) {
+            Set-RunStatusFailure "ReturnAtlasRefreshFailed" "Return Atlas refresh failed; inspect D:\IlMargine\return-atlas-automation\status.json."
+            Log "WARNING: Return Atlas refresh failed (exit $atlasExit); the last validated public archive is retained."
+        }
     }
 
     Log "============================================"

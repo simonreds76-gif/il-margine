@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import SportIcon from "@/components/SportIcon";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/components/ProfitProgressionPanel";
@@ -277,8 +278,9 @@ export default function PlayerProps({
             <span className="site-eyebrow block">Player Props</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-3">
-            Football Player Props <span className="text-emerald-400">Betting Tips</span>
+          <h1 className="mb-3 flex items-center gap-3 text-3xl font-semibold text-slate-100 sm:text-4xl">
+            <SportIcon sport="football" emblem className="h-10 w-10 text-emerald-200 sm:h-12 sm:w-12" />
+            <span>Football Player Props <span className="text-emerald-400">Betting Tips</span></span>
           </h1>
           <p className="text-sm sm:text-base text-slate-400 max-w-3xl leading-relaxed">
             Football player props: shots, fouls, tackles and cards. Choose a league to see the picks and their record.

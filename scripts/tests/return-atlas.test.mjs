@@ -1,10 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { pathToFileURL } from 'node:url';
+import path from 'node:path';
 import { decodeAtlas } from '../../src/components/return-atlas/decode.mjs';
 import { observations, summarise } from '../../src/components/return-atlas/returns-core.mjs';
 
-const root = new URL('../../', import.meta.url);
+const root = process.env.RETURN_ATLAS_OUTPUT_ROOT ? pathToFileURL(path.resolve(process.env.RETURN_ATLAS_OUTPUT_ROOT) + path.sep) : new URL('../../', import.meta.url);
 const release = JSON.parse(fs.readFileSync(new URL('src/data/return-atlas-release.json', root)));
 const index = JSON.parse(fs.readFileSync(new URL('public' + release.indexUrl, root)));
 const data = decodeAtlas(index, release.checkedAt);

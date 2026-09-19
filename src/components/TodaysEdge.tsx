@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import SportIcon from "@/components/SportIcon";
 import { useMemo, useState } from "react";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import MarketBadge from "@/components/MarketBadge";
@@ -255,56 +255,5 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
 }
 
 function FilterIcon({ filter, active }: { filter: Filter; active: boolean }) {
-  const iconTone = `shrink-0 transition ${
-    active ? "text-emerald-300" : "text-slate-500 group-hover/filter:text-slate-300"
-  }`;
-
-  if (filter === "all") {
-    return (
-      <svg aria-hidden="true" viewBox="0 0 24 24" className={`h-4 w-4 ${iconTone}`} fill="none">
-        <rect x="3.5" y="4" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
-        <rect x="13.5" y="4" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
-        <rect x="3.5" y="14" width="7" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
-        <rect x="13.5" y="14" width="7" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
-      </svg>
-    );
-  }
-
-  if (filter === "props") {
-    return (
-      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 shrink-0" fill="none">
-        <circle cx="12" cy="12" r="9.25" fill="#F8FAFC" stroke="#57D196" strokeWidth="1.35" />
-        <path d="m12 6.75 3.7 2.7-1.42 4.35H9.72L8.3 9.45 12 6.75Z" fill="#111827" />
-        <path
-          d="M12 6.75V2.8M15.7 9.45l4.6-1.5m-6.02 5.85 2.85 3.92M9.72 13.8l-2.85 3.92M8.3 9.45l-4.6-1.5"
-          stroke="#111827"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.3"
-        />
-        <path
-          d="m9.2 3.2 2.8-.45 2.8.45M19.75 8.95l.9 2.7-.35 2.8M16.45 18.55l-2.25 1.7-2.2.7M7.55 18.55l-2.25-1.7-1.6-2.4M4.25 8.95l1.6-2.35 2.2-1.65"
-          stroke="#111827"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.15"
-        />
-      </svg>
-    );
-  }
-
-  return (
-    <Image
-      aria-hidden="true"
-      src="/icons/markets/tennis.svg"
-      alt=""
-      width={20}
-      height={20}
-      className={`h-5 w-5 shrink-0 transition ${
-        active
-          ? "opacity-100"
-          : "opacity-80 grayscale-[10%] group-hover/filter:opacity-100 group-hover/filter:grayscale-0"
-      }`}
-    />
-  );
+  return <SportIcon sport={filter === "props" ? "football" : filter === "tennis" ? "tennis" : "all"} className={`h-5 w-5 ${active ? "text-emerald-200" : "text-slate-400 group-hover/filter:text-slate-200"}`} />;
 }

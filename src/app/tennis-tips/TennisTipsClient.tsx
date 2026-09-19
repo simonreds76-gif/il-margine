@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import SportIcon from "@/components/SportIcon";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BetMobileMeta from "@/components/BetMobileMeta";
@@ -256,12 +257,13 @@ export default function TennisTips({
             <span className="site-eyebrow block">Tennis Tips</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-3">
-            Tennis Betting <span className="text-emerald-400">Tips</span>
+          <h1 className="flex items-center gap-3 text-3xl sm:text-4xl font-semibold text-slate-100 mb-3">
+            <SportIcon sport="tennis" className="h-10 w-10 sm:h-12 sm:w-12" /><span>Tennis Betting <span className="text-emerald-400">Tips</span></span>
           </h1>
           <p className="text-sm sm:text-base text-slate-400 max-w-3xl leading-relaxed">
             ATP, Challenger and Grand Slam betting tips. Choose a competition to see the picks and their record.
           </p>
+          <Link href="/return-atlas" prefetch={false} className="mt-4 inline-flex min-h-11 items-center gap-3 rounded-xl border border-emerald-300/20 bg-emerald-300/5 px-4 py-2 text-sm font-semibold text-emerald-200 transition hover:border-emerald-300/50 hover:bg-emerald-300/10">Explore ATP player ROI in Return Atlas <span aria-hidden="true">↗</span></Link>
         </div>
       </section>
 
@@ -364,9 +366,7 @@ export default function TennisTips({
                       <div className="min-w-0 flex-1">
                         <div className="mb-1 flex items-center justify-between gap-3">
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
-                          <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">
-                            PENDING
-                          </span>
+                          <ResultBadge status="pending" size="sm" />
                         </div>
                         <div className="font-medium text-slate-200 mb-1 leading-snug">
                           {pick.event}

@@ -146,9 +146,7 @@ function Crest({ team, category }: { team: string | null; category: string }) {
 function StatusCell({ bet, mode }: { bet: Bet; mode: Mode }) {
   if (mode === "pending") {
     return (
-      <span className="rounded bg-amber-500/20 px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wide text-amber-400">
-        Pending
-      </span>
+      <ResultBadge status="pending" size="sm" />
     );
   }
   return (
