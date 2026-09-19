@@ -1,73 +1,49 @@
-name: Team Fouls Source Agreement
-
+name: Manager data coverage probe (manual research branch only)
 on:
-  schedule:
-    - cron: "35 7 * * *"
   workflow_dispatch:
-
 permissions:
-  contents: write
-
-concurrency:
-  group: golden-with-speed-insights-branch-writes
-  cancel-in-progress: false
-
+  contents: read
 jobs:
-  accumulate:
+  probe:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     steps:
-      - uses: actions/checkout@v5
-        with:
-          ref: golden-with-speed-insights
-          token: ${{ github.token }}
-          fetch-depth: 1
-
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.11"
-
-      - name: Install HTTP dependency
-        run: pip install requests
-
-      - name: Accumulate deterministic FotMob agreement sample
-        run: |
-          python scripts/fouls-fotmob-definition-agreement.py \
-            --dates-per-league 1 \
-            --target-team-values 200 \
-            --target-within-one-pct 97 \
-            --allow-empty
-          python scripts/fouls-definition-agreement.py --allow-empty
-
-      - name: Probe configured Bet365 foul-market feed
-        if: github.event_name == 'workflow_dispatch'
+      - name: Check coach careers with at most four provider requests
         env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-        run: |
-          if [ -n "${ODDS_API_KEY:-}" ]; then
-            python scripts/probe-odds-api-football-foul-markets.py --bookmaker Bet365 --max-events 10
-          else
-            echo "::warning::ODDS_API_KEY missing; foul-market probe skipped."
-          fi
-
-      - name: Commit append-only agreement evidence
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
         shell: bash
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add \
-            data/football-form/team-fouls-fotmob-agreement.csv \
-            data/football-form/team-fouls-fotmob-agreement.json \
-            data/football-form/team-fouls-fotmob-agreement.md \
-            data/football-form/team-fouls-definition-agreement.json \
-            data/football-form/team-fouls-definition-agreement.md
-          if [ -f data/football-form/football-foul-market-probe.json ]; then
-            git add \
-              data/football-form/football-foul-market-probe.json \
-              data/football-form/football-foul-market-probe.md
-          fi
-          if git diff --cached --quiet; then
-            echo "FotMob agreement target already passed or no new comparable rows."
-            exit 0
-          fi
-          git commit -m "chore: accumulate team fouls source agreement"
-          bash scripts/ci-safe-push.sh golden-with-speed-insights
+          python3 - <<'PY'
+          import os,json,urllib.request,urllib.parse
+          from pathlib import Path
+          from datetime import datetime,timezone
+          key=os.environ.get('API_FOOTBALL_KEY','').strip()
+          if not key: raise SystemExit('Repository secret unavailable')
+          def get(path,params=None):
+              url='https://v3.football.api-sports.io/'+path
+              if params: url+='?'+urllib.parse.urlencode(params)
+              req=urllib.request.Request(url,headers={'x-apisports-key':key,'Accept':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=25) as response: return json.load(response)
+              except Exception as e: raise SystemExit('Request failed: '+type(e).__name__)
+          status=get('status')
+          quota=status.get('response',{}).get('requests',{})
+          out={'checked_at':datetime.now(timezone.utc).isoformat(),'quota_before':quota,'queries':[],'calls':1}
+          remaining=int(quota.get('limit_day',0))-int(quota.get('current',0))
+          if status.get('errors') or remaining<10:
+              out['blocked']='Status error or fewer than ten calls remaining'
+          else:
+              for name in ['Emery','Guardiola','Mourinho']:
+                  data=get('coachs',{'search':name});out['calls']+=1
+                  coaches=[{k:c.get(k) for k in ['id','name','firstname','lastname','team','career']} for c in data.get('response',[])]
+                  out['queries'].append({'search':name,'errors':data.get('errors'),'coaches':coaches})
+                  if data.get('errors'):break
+          Path('manager-probe.json').write_text(json.dumps(out,indent=2),encoding='utf-8')
+          print(json.dumps(out))
+          PY
+      - name: Retain public career results only
+        uses: actions/upload-artifact@v4
+        with:
+          name: manager-data-probe
+          path: manager-probe.json
+          retention-days: 7
