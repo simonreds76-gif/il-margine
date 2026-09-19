@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       gk_only:
-        description: "Recover GK prices and monitor only (2 Odds API calls; no digest or full rebuild)"
+        description: "Recover GK prices and monitor only (4 Odds API calls; no digest or full rebuild)"
         required: false
         default: false
         type: boolean
@@ -67,7 +67,7 @@ jobs:
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
-          python scripts/goalkeeper-saves-capture.py --days-ahead 1 --max-events 10 --capture-mode publication
+          python scripts/goalkeeper-saves-capture.py --days-ahead 2 --max-events 30 --kickoff-within-minutes 1440 --capture-mode publication
           python scripts/goalkeeper-saves-shadow.py
           python scripts/team-shots-live-snapshot.py
 
@@ -111,13 +111,13 @@ jobs:
           if [[ "$EVENT_NAME" == "schedule" && "$SCHEDULE_EXPR" != "15 8 * * *" ]]; then
             TEAM_ARGS+=(--days-ahead 2 --kickoff-within-minutes 1440 --max-events-per-league 10 --max-odds-requests-per-league 1 --max-odds-api-http-requests 9)
             CORNER_ARGS+=(--bucket-hours 1 --kickoff-within-minutes 90)
-            GK_ARGS+=(--days-ahead 1 --max-events 10 --kickoff-within-minutes 90 --capture-mode close)
-            echo "Team Shots: next 24 hours with shared discovery and the same 9-request ceiling; GK/corners retain the 90-minute close window."
+            GK_ARGS+=(--days-ahead 2 --max-events 30 --kickoff-within-minutes 1440 --capture-mode close)
+            echo "Team Shots: next 24 hours with shared discovery and the same 9-request ceiling; GK also scans 24 hours; corners retain the 90-minute close window."
           else
             TEAM_ARGS+=(--days-ahead 7 --max-events-per-league 20 --max-odds-requests-per-league 2 --max-odds-api-http-requests 50 --market-audit-out data/football-form/football-count-market-inventory.csv)
             CORNER_ARGS+=(--bucket-hours 6)
-            GK_ARGS+=(--days-ahead 7 --max-events 10 --capture-mode publication)
-            echo "Daily discovery mode: capturing publication prices for the seven-day board."
+            GK_ARGS+=(--days-ahead 2 --max-events 30 --kickoff-within-minutes 1440 --capture-mode publication)
+            echo "Daily discovery mode: team prices for seven days; GK prices for the next 24 hours."
           fi
           if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}${BETS_API_KEY:-}" ]; then
             python scripts/team-shots-scrape-odds.py "${TEAM_ARGS[@]}"
@@ -125,9 +125,8 @@ jobs:
             # every capture before scoring so fresh Bet365 prices are visible.
             python scripts/team-shots-odds-archive.py
             if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}" ]; then
-              # Hard cap: one discovery request plus one /odds/multi request.
-              # Predicted XIs remain blocked; only confirmed starting GKs can
-              # enter the append-only shadow ledger.
+              # GK hard cap: one discovery plus three ten-event batches.
+              # Expected and confirmed starting GKs can qualify; first odds stay locked.
               python scripts/goalkeeper-saves-capture.py "${GK_ARGS[@]}"
               python scripts/goalkeeper-saves-shadow.py
             else
@@ -195,6 +194,13 @@ jobs:
           OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
         run: python scripts/football-daily-signal-digest.py
 
+      - name: Claim new GK Telegram alerts
+        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && github.event.inputs.rebuild_only != 'true'
+        env:
+          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+        run: python scripts/goalkeeper-saves-alerts.py --prepare
+
       - name: Commit append-only evidence
         if: steps.season.outputs.active == 'true'
         shell: bash
@@ -254,6 +260,24 @@ jobs:
           # Preserve the exact committed evidence if publication fails.
           git format-patch -1 --stdout > "$RUNNER_TEMP/football-counts-evidence.patch"
           bash scripts/ci-safe-push.sh golden-with-speed-insights
+
+      - name: Notify newly committed GK signals
+        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && github.event.inputs.rebuild_only != 'true'
+        env:
+          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+        shell: bash
+        run: |
+          set +e
+          python scripts/goalkeeper-saves-alerts.py --send
+          alert_exit=$?
+          set -e
+          git add data/goalkeeper-saves/gk-saves-telegram-state.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: record GK Telegram delivery receipts"
+            bash scripts/ci-safe-push.sh golden-with-speed-insights
+          fi
+          exit "$alert_exit"
 
       - name: Preserve evidence after failure
         if: failure()
