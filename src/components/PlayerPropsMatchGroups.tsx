@@ -37,7 +37,6 @@ type MatchGroup = {
   away: string | null;
   matchDate: string | null;
   bets: Bet[];
-  totalStake: number;
   netProfit: number;
   won: number;
   lost: number;
@@ -92,7 +91,6 @@ function buildGroups(bets: Bet[], mode: Mode): MatchGroup[] {
         away: fixture?.away ?? null,
         matchDate: bet.match_date ?? null,
         bets: [],
-        totalStake: 0,
         netProfit: 0,
         won: 0,
         lost: 0,
@@ -102,7 +100,6 @@ function buildGroups(bets: Bet[], mode: Mode): MatchGroup[] {
       map.set(key, group);
     }
     group.bets.push(bet);
-    group.totalStake += Number(bet.stake) || 0;
     if (!group.matchDate && bet.match_date) group.matchDate = bet.match_date;
     if (bet.status === "won") group.won += 1;
     else if (bet.status === "lost") group.lost += 1;
@@ -274,14 +271,12 @@ function MatchCard({ group, mode, open, onToggle }: { group: MatchGroup; mode: M
           <span className="mt-0.5 block text-xs text-slate-500">{formatMatchDate(group.matchDate)}</span>
         </span>
         <span className="flex items-center gap-2 sm:gap-3">
-          <span className="rounded-full border border-slate-700 bg-slate-950/50 px-2.5 py-1 font-mono text-[11px] text-slate-300">
-            {group.bets.length} {group.bets.length === 1 ? "pick" : "picks"}
-          </span>
-          {mode === "pending" ? (
-            <span className="hidden rounded-full border border-slate-700 bg-slate-950/50 px-2.5 py-1 font-mono text-[11px] text-slate-300 sm:inline">
-              {formatStake(group.totalStake)}u stake
+          {group.bets.length > 1 && (
+            <span className="text-xs text-slate-400">
+              {group.bets.length} picks
             </span>
-          ) : (
+          )}
+          {mode === "settled" && (
             <>
               <RecordChip group={group} />
               <span className={`font-mono text-sm font-black tabular-nums ${netClass}`}>{formatNetUnits(group.netProfit)}</span>
@@ -317,9 +312,6 @@ export default function PlayerPropsMatchGroups({ bets, mode }: { bets: Bet[]; mo
 
   return (
     <div data-testid="player-props-match-groups" className="space-y-3">
-      <p className="text-xs text-slate-500">
-        Grouped by fixture for readability. Each pick is still settled individually in the public ledger.
-      </p>
       {groups.map((group) => (
         <MatchCard
           key={group.key}
