@@ -20,6 +20,14 @@ class NewGkTests(unittest.TestCase):
   seen={str(i):'2026-09-19T09:00:00Z' for i in range(1,31)}
   selected=capture.supported_events(events,max_events=30,kickoff_within_minutes=1440,now=now,last_seen=seen)
   self.assertTrue(set(range(31,42)).issubset({e['id'] for e in selected}));self.assertEqual(len(selected),30)
+ def test_batch_timeout_keeps_successful_batches_and_respects_four_calls(self):
+  import tempfile,json,os
+  now=datetime.now(timezone.utc);events=[{'id':i,'league':'France - Ligue 1','date':(now+timedelta(hours=4)).isoformat()} for i in range(1,31)]
+  with tempfile.TemporaryDirectory() as folder:
+   p=Path(folder);argv=['capture','--history',str(p/'h.csv'),'--status',str(p/'s.json'),'--market-inventory',str(p/'m.csv')]
+   with patch.object(sys,'argv',argv),patch.object(capture,'load_env'),patch.dict(os.environ,{'ODDS_API_KEY':'test'}),patch.object(capture,'request_json',side_effect=[events,[],capture.requests.exceptions.ReadTimeout(),[]]) as request,patch('builtins.print'):
+    capture.main()
+   d=json.loads((p/'s.json').read_text());self.assertEqual(request.call_count,4);self.assertEqual(d['status'],'PARTIAL_CAPTURE_FAILURE');self.assertEqual(d['requests_used'],4);self.assertEqual(sum(bool(x) for x in d['event_last_checked'].values()),20)
  def row(self,now):
   return {'signal_id':'fixture|keeper|3.5|over','created_at':now.isoformat(),'captured_at':now.isoformat(),'kickoff_at':(now+timedelta(hours=3)).isoformat(),'status':'pending','edge':'.1','odds_decimal':'2.2','fair_odds':'2','selection_policy':'near_even_value_v2','goalkeeper':'Keeper','home_team':'A','away_team':'B','side':'over','line':'3.5','lineup_status':'predicted_starter'}
  def test_claim_once_freezes_original_price_and_survives_rerun(self):
