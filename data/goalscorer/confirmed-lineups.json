@@ -432,7 +432,7 @@
         "Scott McTominay",
         "Giovane Nascimento"
       ],
-      "observed_at": "2026-09-20T17:38:57.177166+00:00",
+      "observed_at": "2026-09-20T18:11:35.358151+00:00",
       "changed_at": "2026-09-20T11:48:22.348510+00:00"
     },
     {
@@ -908,7 +908,7 @@
         "Florian Grillitsch"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-09-20T17:38:57.177166+00:00",
+      "observed_at": "2026-09-20T18:11:35.358151+00:00",
       "changed_at": "2026-09-20T14:12:33.109577+00:00"
     },
     {
@@ -1199,16 +1199,16 @@
       ],
       "home_subs": [
         "Pape Sarr",
-        "Edon Zhegrova",
         "Teun Koopmeiners",
+        "Edon Zhegrova",
+        "Nick Woltemade",
+        "Lloyd Kelly",
         "Carlo Pinsoglio",
         "Riccardo Radu",
         "Daniele Rugani",
         "Federico Gatti",
-        "Lloyd Kelly",
         "Filippo Pagnucco",
-        "Grady Makiobo",
-        "Nick Woltemade"
+        "Grady Makiobo"
       ],
       "home_substitute_entries": [
         {
@@ -1217,14 +1217,24 @@
           "role_group": "MID"
         },
         {
+          "name": "Teun Koopmeiners",
+          "player_id": "866516",
+          "role_group": "MID"
+        },
+        {
           "name": "Edon Zhegrova",
           "player_id": "862616",
           "role_group": "FW"
         },
         {
-          "name": "Teun Koopmeiners",
-          "player_id": "866516",
-          "role_group": "MID"
+          "name": "Nick Woltemade",
+          "player_id": "1106563",
+          "role_group": "FW"
+        },
+        {
+          "name": "Lloyd Kelly",
+          "player_id": "819215",
+          "role_group": "DEF"
         },
         {
           "name": "Carlo Pinsoglio",
@@ -1247,11 +1257,6 @@
           "role_group": "DEF"
         },
         {
-          "name": "Lloyd Kelly",
-          "player_id": "819215",
-          "role_group": "DEF"
-        },
-        {
           "name": "Filippo Pagnucco",
           "player_id": "1697407",
           "role_group": "MID"
@@ -1260,24 +1265,19 @@
           "name": "Grady Makiobo",
           "player_id": "2264152",
           "role_group": "MID"
-        },
-        {
-          "name": "Nick Woltemade",
-          "player_id": "1106563",
-          "role_group": "FW"
         }
       ],
       "away_subs": [
         "Giacomo Raspadori",
         "Gianluca Gaetano",
         "Gianluca Scamacca",
+        "Eljif Elmas",
         "Marco Sportiello",
         "Thomas Pompei",
         "Jacopo Mirra",
         "Relja Obrić",
         "Sead Kolašinac",
         "Davide Zappacosta",
-        "Eljif Elmas",
         "Mario Pašalić",
         "Nicola Zalewski"
       ],
@@ -1296,6 +1296,11 @@
           "name": "Gianluca Scamacca",
           "player_id": "721089",
           "role_group": "FW"
+        },
+        {
+          "name": "Eljif Elmas",
+          "player_id": "741049",
+          "role_group": "MID"
         },
         {
           "name": "Marco Sportiello",
@@ -1328,11 +1333,6 @@
           "role_group": "MID"
         },
         {
-          "name": "Eljif Elmas",
-          "player_id": "741049",
-          "role_group": "MID"
-        },
-        {
           "name": "Mario Pašalić",
           "player_id": "446266",
           "role_group": "MID"
@@ -1358,7 +1358,7 @@
         "Isak Hien",
         "Kamaldeen Sulemana"
       ],
-      "observed_at": "2026-09-20T17:38:57.177166+00:00",
+      "observed_at": "2026-09-20T18:11:35.358151+00:00",
       "changed_at": "2026-09-20T17:38:57.177166+00:00"
     },
     {
@@ -1370,9 +1370,9 @@
       "kickoff_utc": "2026-09-20T18:45:00Z",
       "home_team": "Milan",
       "away_team": "Lecce",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "4-3-3",
       "home_players": [
@@ -1392,11 +1392,11 @@
         "Wladimiro Falcone",
         "Danilo Veiga",
         "Jamil Siebert",
-        "Tiago Gabriel",
+        "Kialonda Gaspar",
         "Antonino Gallo",
         "Lassana Coulibaly",
         "Ivan Ilić",
-        "Oumar Ngom",
+        "Youssef Maleh",
         "Santiago Pierotti",
         "Nikola Štulić",
         "Joël Monteiro"
@@ -1559,15 +1559,15 @@
           "shirt_number": "5"
         },
         {
-          "name": "Tiago Gabriel",
+          "name": "Kialonda Gaspar",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-3-3",
           "position_id": 36,
-          "player_id": 1574492,
-          "shirt_number": "44"
+          "player_id": 1206806,
+          "shirt_number": "4"
         },
         {
           "name": "Antonino Gallo",
@@ -1603,15 +1603,15 @@
           "shirt_number": "20"
         },
         {
-          "name": "Oumar Ngom",
+          "name": "Youssef Maleh",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
           "formation": "4-3-3",
           "position_id": 77,
-          "player_id": 1332538,
-          "shirt_number": "79"
+          "player_id": 789243,
+          "shirt_number": "14"
         },
         {
           "name": "Santiago Pierotti",
@@ -1647,18 +1647,190 @@
           "shirt_number": "99"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Lorenzo Torriani",
+        "Pietro Terracciano",
+        "Fikayo Tomori",
+        "Filippo Terracciano",
+        "Matteo Gabbia",
+        "Sankhoun Diawara",
+        "Alphadjo Cissè",
+        "Ardon Jashari",
+        "Christian Comotto",
+        "Davide Bartesaghi",
+        "Ruben Loftus-Cheek",
+        "Yunus Musah",
+        "Diego Moreira",
+        "Francesco Camarda",
+        "Omari Hutchinson"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Lorenzo Torriani",
+          "player_id": "1642393",
+          "role_group": "GK"
+        },
+        {
+          "name": "Pietro Terracciano",
+          "player_id": "281762",
+          "role_group": "GK"
+        },
+        {
+          "name": "Fikayo Tomori",
+          "player_id": "749662",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Filippo Terracciano",
+          "player_id": "1163501",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Matteo Gabbia",
+          "player_id": "844996",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Sankhoun Diawara",
+          "player_id": "1669433",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Alphadjo Cissè",
+          "player_id": "1445650",
+          "role_group": "MID"
+        },
+        {
+          "name": "Ardon Jashari",
+          "player_id": "1163219",
+          "role_group": "MID"
+        },
+        {
+          "name": "Christian Comotto",
+          "player_id": "1787535",
+          "role_group": "MID"
+        },
+        {
+          "name": "Davide Bartesaghi",
+          "player_id": "1385856",
+          "role_group": "MID"
+        },
+        {
+          "name": "Ruben Loftus-Cheek",
+          "player_id": "604982",
+          "role_group": "MID"
+        },
+        {
+          "name": "Yunus Musah",
+          "player_id": "1137272",
+          "role_group": "MID"
+        },
+        {
+          "name": "Diego Moreira",
+          "player_id": "1342754",
+          "role_group": "FW"
+        },
+        {
+          "name": "Francesco Camarda",
+          "player_id": "1554575",
+          "role_group": "FW"
+        },
+        {
+          "name": "Omari Hutchinson",
+          "player_id": "1215652",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Alexandru Borbei",
+        "Marco Bleve",
+        "Ali Dembélé",
+        "Corrie Ndaba",
+        "Elijah Scott",
+        "Gaby Jean",
+        "Mohamed Kaba",
+        "Olaf Gorter",
+        "Oumar Ngom",
+        "Sadik Fofana",
+        "Amar Fatah",
+        "Konan N’Dri",
+        "Paco Esteban"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Alexandru Borbei",
+          "player_id": "1103196",
+          "role_group": "GK"
+        },
+        {
+          "name": "Marco Bleve",
+          "player_id": "506322",
+          "role_group": "GK"
+        },
+        {
+          "name": "Ali Dembélé",
+          "player_id": "1429871",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Corrie Ndaba",
+          "player_id": "1041508",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Elijah Scott",
+          "player_id": "1666206",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Gaby Jean",
+          "player_id": "1388474",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Mohamed Kaba",
+          "player_id": "1299869",
+          "role_group": "MID"
+        },
+        {
+          "name": "Olaf Gorter",
+          "player_id": "1414124",
+          "role_group": "MID"
+        },
+        {
+          "name": "Oumar Ngom",
+          "player_id": "1332538",
+          "role_group": "MID"
+        },
+        {
+          "name": "Sadik Fofana",
+          "player_id": "1285732",
+          "role_group": "MID"
+        },
+        {
+          "name": "Amar Fatah",
+          "player_id": "1311977",
+          "role_group": "FW"
+        },
+        {
+          "name": "Konan N’Dri",
+          "player_id": "1027594",
+          "role_group": "FW"
+        },
+        {
+          "name": "Paco Esteban",
+          "player_id": "1417101",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [],
       "away_unavailable": [
         "Medon Berisha",
         "Omri Gandelman",
         "Willem Geubbels"
       ],
-      "observed_at": "2026-09-20T17:38:57.177166+00:00",
-      "changed_at": "2026-09-20T11:48:22.348510+00:00"
+      "observed_at": "2026-09-20T18:11:35.358151+00:00",
+      "changed_at": "2026-09-20T18:11:35.358151+00:00"
     },
     {
       "fotmob_match_id": 5749687,
@@ -2119,7 +2291,7 @@
         "Elias Havel",
         "Lorenzo Venturino"
       ],
-      "observed_at": "2026-09-20T17:38:57.177166+00:00",
+      "observed_at": "2026-09-20T18:11:35.358151+00:00",
       "changed_at": "2026-09-20T14:12:33.109577+00:00"
     }
   ]

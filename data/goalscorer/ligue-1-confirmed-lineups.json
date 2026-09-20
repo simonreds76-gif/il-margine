@@ -413,7 +413,7 @@
         "Mamady Diambou",
         "Noah Edjouma"
       ],
-      "observed_at": "2026-09-20T17:39:15.547726+00:00",
+      "observed_at": "2026-09-20T18:11:58.863621+00:00",
       "changed_at": "2026-09-20T14:13:19.412290+00:00"
     },
     {
@@ -425,9 +425,9 @@
       "kickoff_utc": "2026-09-20T18:45:00Z",
       "home_team": "Marseille",
       "away_team": "Paris Saint-Germain",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-3-3",
       "home_players": [
@@ -439,9 +439,9 @@
         "Himad Abdelli",
         "Pierre-Emile Højbjerg",
         "Amine Harit",
-        "Angel Gomes",
+        "Amine Gouiri",
         "Igor Paixão",
-        "Amine Gouiri"
+        "Neal Maupay"
       ],
       "away_players": [
         "Matvey Safonov",
@@ -452,8 +452,8 @@
         "João Neves",
         "Vítinha",
         "Fabián Ruiz",
+        "Désiré Doué",
         "Ousmane Dembélé",
-        "Ferrán Torres",
         "Khvicha Kvaratskhelia"
       ],
       "home_starters": [
@@ -546,15 +546,15 @@
           "shirt_number": "77"
         },
         {
-          "name": "Angel Gomes",
+          "name": "Amine Gouiri",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 85,
-          "player_id": 848667,
-          "shirt_number": "7"
+          "player_id": 844437,
+          "shirt_number": "9"
         },
         {
           "name": "Igor Paixão",
@@ -568,15 +568,15 @@
           "shirt_number": "14"
         },
         {
-          "name": "Amine Gouiri",
+          "name": "Neal Maupay",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-2-3-1",
           "position_id": 115,
-          "player_id": 844437,
-          "shirt_number": "9"
+          "player_id": 391064,
+          "shirt_number": "11"
         }
       ],
       "away_starters": [
@@ -669,26 +669,26 @@
           "shirt_number": "8"
         },
         {
-          "name": "Ousmane Dembélé",
+          "name": "Désiré Doué",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-3-3",
           "position_id": 103,
-          "player_id": 692984,
-          "shirt_number": "10"
+          "player_id": 1339208,
+          "shirt_number": "14"
         },
         {
-          "name": "Ferrán Torres",
+          "name": "Ousmane Dembélé",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-3-3",
           "position_id": 105,
-          "player_id": 881771,
-          "shirt_number": "9"
+          "player_id": 692984,
+          "shirt_number": "10"
         },
         {
           "name": "Khvicha Kvaratskhelia",
@@ -702,10 +702,122 @@
           "shirt_number": "7"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Théo Vermot",
+        "Alexi Koum",
+        "Derek Cornelius",
+        "Kelyann Bezahaf",
+        "Ulisses Garcia",
+        "Angel Gomes",
+        "Faris Moumbagna",
+        "Keyliane Abdallah",
+        "Tadjidine Mmadi"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Théo Vermot",
+          "player_id": "1078904",
+          "role_group": "GK"
+        },
+        {
+          "name": "Alexi Koum",
+          "player_id": "1669618",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Derek Cornelius",
+          "player_id": "847629",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Kelyann Bezahaf",
+          "player_id": "1843428",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Ulisses Garcia",
+          "player_id": "520979",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Angel Gomes",
+          "player_id": "848667",
+          "role_group": "MID"
+        },
+        {
+          "name": "Faris Moumbagna",
+          "player_id": "952325",
+          "role_group": "FW"
+        },
+        {
+          "name": "Keyliane Abdallah",
+          "player_id": "1638922",
+          "role_group": "FW"
+        },
+        {
+          "name": "Tadjidine Mmadi",
+          "player_id": "1814264",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Lucas Chevalier",
+        "Ilya Zabarnyi",
+        "Lucas Beraldo",
+        "Lucas Digne",
+        "Dro Fernández",
+        "Senny Mayulu",
+        "Ferrán Torres",
+        "Maghnes Akliouche",
+        "Mika Godts"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Lucas Chevalier",
+          "player_id": "1177131",
+          "role_group": "GK"
+        },
+        {
+          "name": "Ilya Zabarnyi",
+          "player_id": "1140003",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Lucas Beraldo",
+          "player_id": "1255209",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Lucas Digne",
+          "player_id": "210111",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Dro Fernández",
+          "player_id": "1682313",
+          "role_group": "MID"
+        },
+        {
+          "name": "Senny Mayulu",
+          "player_id": "1574189",
+          "role_group": "MID"
+        },
+        {
+          "name": "Ferrán Torres",
+          "player_id": "881771",
+          "role_group": "FW"
+        },
+        {
+          "name": "Maghnes Akliouche",
+          "player_id": "1305618",
+          "role_group": "FW"
+        },
+        {
+          "name": "Mika Godts",
+          "player_id": "1396372",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
         "Geoffrey Kondogbia",
         "Tochukwu Nnadi"
@@ -713,8 +825,8 @@
       "away_unavailable": [
         "Achraf Hakimi"
       ],
-      "observed_at": "2026-09-20T17:39:15.547726+00:00",
-      "changed_at": "2026-09-17T22:09:36.840258+00:00"
+      "observed_at": "2026-09-20T18:11:58.863621+00:00",
+      "changed_at": "2026-09-20T18:11:58.863621+00:00"
     },
     {
       "fotmob_match_id": 5802942,
@@ -1128,7 +1240,7 @@
         "Tanguy Nianzou",
         "Hamza Igamane"
       ],
-      "observed_at": "2026-09-20T17:39:15.547726+00:00",
+      "observed_at": "2026-09-20T18:11:58.863621+00:00",
       "changed_at": "2026-09-20T17:39:15.547726+00:00"
     }
   ]

@@ -1,9 +1,11 @@
 {
-  "generated_at": "2026-09-20T17:40:02.106480Z",
+  "generated_at": "2026-09-20T18:12:44.791653Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
+    "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
-    "data/goalscorer/la-liga/goalscorer-live-comparison.csv"
+    "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
+    "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
   "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
   "edge_threshold_pp": 6.0,
@@ -32,14 +34,18 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 4,
+  "fixtures_evaluated": 3,
   "signals_qualifying": 0,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 4
+    "market_odds_above_cap": 1,
+    "model_market_gap_gt_10pp": 1,
+    "incomplete_prediction_roster": 1
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 0,
-    "added_by_league": {},
+    "eligible_rows": 1,
+    "added_by_league": {
+      "serie-a": 1
+    },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
