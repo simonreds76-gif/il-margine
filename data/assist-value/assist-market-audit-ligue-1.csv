@@ -1,489 +1,168 @@
 event_id,kickoff_at,bookmaker,league,home_team,away_team,market_name,is_assist_candidate,odds_count,sample_labels
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,ML,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Draw No Bet,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Double Chance,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Spread,false,14,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Totals,false,19,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Goals Over/Under,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Both Teams To Score,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,First Team To Score,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Odd/Even,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,ML HT,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Spread HT,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Totals HT,false,5,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Corners Spread,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Corners Totals,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Corners Totals HT,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Bookings Spread,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Anytime Goalscorer,false,49,Abakar Sylla | Adama Camara | Becket Godo | Benjamin Brantlind | Conrad Harder | Dario Essugo | Deivid Washington | Diego Coppola
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Odd/Even Away,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Clean Sheet Away,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Total Shots on Target Away,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Corners,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Corners Totals Away,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Player To Score or Assist,true,147,Abakar Sylla (Assist) (2) | Abakar Sylla (Score) (2) | Abakar Sylla (Score or Assist) (2) | Adama Camara (Assist) (1) | Adama Camara (Score) (1) | Adama Camara (Score or Assist) (1) | Becket Godo (Assist) (2) | Becket Godo (Score) (2)
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Winning Margin,false,10,1 (1) | 1 (2) | 2 (1) | 2 (2) | 3 (1) | 3 (2) | 4+ (1) | 4+ (2)
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Away Team Exact Goals,false,4,Strasbourg - 0 Goals | Strasbourg - 1 Goal | Strasbourg - 2 Goals | Strasbourg - 3+ Goals
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Number of Cards In Match,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Number of Goals In Match,false,3,2 or 3 goals | Over 3 goals | Under 2 goals
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Odd/Even Home,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Player Cards,false,153,Abakar Sylla (1st Card) | Abakar Sylla (Booked) | Abakar Sylla (Sent Off) | Adama Camara (1st Card) | Adama Camara (Booked) | Adama Camara (Sent Off) | Becket Godo (1st Card) | Becket Godo (Booked)
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Both Teams To Score HT,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Corners Race,false,4,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Total Shots Away,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,ML 2H,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Player Shots on Target,false,134,Abakar Sylla (2) | Abakar Sylla (2) | Adama Camara (1) | Adama Camara (1) | Adama Camara (1) | Becket Godo (2) | Becket Godo (2) | Becket Godo (2)
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Total Shots,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Player Shots,false,265,Abakar Sylla (2) | Abakar Sylla (2) | Abakar Sylla (2) | Adama Camara (1) | Adama Camara (1) | Adama Camara (1) | Adama Camara (1) | Adama Camara (1)
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Player to be Booked,false,51,Abakar Sylla (Booked) | Adama Camara (Booked) | Becket Godo (Booked) | Benjamin Brantlind (Booked) | Conrad Harder (Booked) | Dario Essugo (Booked) | Deivid Washington (Booked) | Diego Coppola (Booked)
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Teams to Score,false,4,Both Teams | No Goal | Paris FC Only | Strasbourg Only
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Total Shots on Target,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Total Shots on Target Home,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Away Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Bookings Totals Away,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Double Chance HT,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,European Handicap HT,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Total Shots Home,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Totals 2H,false,5,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Home Team Exact Goals,false,4,Paris FC - 0 Goals | Paris FC - 1 Goal | Paris FC - 2 Goals | Paris FC - 3+ Goals
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Last Match Corner,false,2,1 | 2
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Odd/Even HT,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Clean Sheet Home,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Both Teams To Score 2H,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Corners Totals Home,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Correct Score HT,false,23,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 1-0 | 1-1 | 1-2
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Total Corners,false,5,12 - 14 | 6 - 8 | 9 - 11 | Over 14 | Under 6
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Odd/Even 2H,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Multi Scorers,false,98,Abakar Sylla (2 or More) (2) | Abakar Sylla (3 or More) (2) | Adama Camara (2 or More) (1) | Adama Camara (3 or More) (1) | Becket Godo (2 or More) (2) | Becket Godo (3 or More) (2) | Benjamin Brantlind (2 or More) (2) | Benjamin Brantlind (3 or More) (2)
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Goal Method,false,86,Abakar Sylla (Header) (2) | Abakar Sylla (Outside the Box) (2) | Adama Camara (Header) (1) | Adama Camara (Outside the Box) (1) | Becket Godo (Header) (2) | Becket Godo (Outside the Box) (2) | Benjamin Brantlind (Header) (2) | Benjamin Brantlind (Outside the Box) (2)
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Last Team To Score,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Goalkeeper Saves,false,10,Filip Jorgensen | Filip Jorgensen | Filip Jorgensen | Filip Jorgensen | Filip Jorgensen | Kevin Trapp | Kevin Trapp | Kevin Trapp
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,First Match Corner,false,2,1 | 2
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Bookings Totals Home,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Multicorners,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Alternative Corners,false,6,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,1st Half Corners,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Correct Score,false,40,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 1-0 | 1-1
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Exact 2nd Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Team Goalscorer,false,102,Abakar Sylla (First) | Abakar Sylla (Last) | Adama Camara (First) | Adama Camara (Last) | Becket Godo (First) | Becket Godo (Last) | Benjamin Brantlind (First) | Benjamin Brantlind (Last)
-72036198,2026-09-19T15:15:00Z,Bet365,France - Ligue 1,Paris FC,Strasbourg Alsace,Exact 1st Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036198,2026-09-19T15:15:00Z,Bet365 (no latency),France - Ligue 1,Paris FC,Strasbourg Alsace,ML,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365 (no latency),France - Ligue 1,Paris FC,Strasbourg Alsace,Spread,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365 (no latency),France - Ligue 1,Paris FC,Strasbourg Alsace,Totals,false,1,
-72036198,2026-09-19T15:15:00Z,Bet365 (no latency),France - Ligue 1,Paris FC,Strasbourg Alsace,Bookings Totals,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,ML,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Draw No Bet,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Double Chance,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Spread,false,13,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Totals,false,18,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Spread,false,15,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Totals,false,19,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Goals Over/Under,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Both Teams To Score,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,First Team To Score,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Odd/Even,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,ML HT,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Spread HT,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Totals HT,false,5,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Team Total Home,false,4,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Team Total Home,false,5,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Team Total Away,false,5,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,European Handicap,false,5,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Corners Spread,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Corners Totals,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Corners Totals HT,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Bookings Spread,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Bookings Totals,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Anytime Goalscorer,false,46,Aboulaye Camara | Alexsandro Victor | Ali Abdi | Antoine Mendy | Axel Witsel | Ayase Ueda | Basar Onal | Benjamin Andre
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Odd/Even Home,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Total Shots,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Time of First Corner,false,2,Corner before 7:00 | No Corner before 7:00
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Corners,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Home Team Exact Goals,false,4,Nice - 0 Goals | Nice - 1 Goal | Nice - 2 Goals | Nice - 3+ Goals
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Double Chance HT,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Number of Goals In Match,false,3,2 or 3 goals | Over 3 goals | Under 2 goals
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Totals 2H,false,4,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Clean Sheet Away,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Number of Cards In Match,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Player To Score or Assist,true,138,Aboulaye Camara (Assist) (1) | Aboulaye Camara (Score) (1) | Aboulaye Camara (Score or Assist) (1) | Alexsandro Victor (Assist) (2) | Alexsandro Victor (Score) (2) | Alexsandro Victor (Score or Assist) (2) | Ali Abdi (Assist) (1) | Ali Abdi (Score) (1)
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Correct Score HT,false,21,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 1-0 | 1-1
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Corners Totals Home,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Clean Sheet Home,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Team Goalscorer,false,96,Aboulaye Camara (First) | Aboulaye Camara (Last) | Alexsandro Victor (First) | Alexsandro Victor (Last) | Ali Abdi (First) | Ali Abdi (Last) | Antoine Mendy (First) | Antoine Mendy (Last)
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Odd/Even HT,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Bookings Totals Away,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Exact 2nd Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Goal Method,false,82,Alexsandro Victor (Header) (2) | Alexsandro Victor (Outside the Box) (2) | Ali Abdi (Header) (1) | Ali Abdi (Outside the Box) (1) | Antoine Mendy (Header) (1) | Antoine Mendy (Outside the Box) (1) | Axel Witsel (Header) (1) | Axel Witsel (Outside the Box) (1)
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Multi Scorers,false,92,Aboulaye Camara (2 or More) (1) | Aboulaye Camara (3 or More) (1) | Alexsandro Victor (2 or More) (2) | Alexsandro Victor (3 or More) (2) | Ali Abdi (2 or More) (1) | Ali Abdi (3 or More) (1) | Antoine Mendy (2 or More) (1) | Antoine Mendy (3 or More) (1)
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Winning Margin,false,10,1 (1) | 1 (2) | 2 (1) | 2 (2) | 3 (1) | 3 (2) | 4+ (1) | 4+ (2)
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Player Cards,false,153,Aboulaye Camara (1st Card) | Aboulaye Camara (Booked) | Aboulaye Camara (Sent Off) | Alexsandro Victor (1st Card) | Alexsandro Victor (Booked) | Alexsandro Victor (Sent Off) | Ali Abdi (1st Card) | Ali Abdi (Booked)
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Alternative Corners,false,6,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,1st Half Corners,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Total Shots Home,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Total Shots on Target Home,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,First Match Corner,false,2,1 | 2
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Last Match Corner,false,2,1 | 2
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,ML 2H,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Multicorners,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Teams to Score,false,4,Both Teams | Lille Only | Nice Only | No Goal
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Bookings Totals Home,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Both Teams To Score 2H,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Player Shots,false,219,Aboulaye Camara (1) | Aboulaye Camara (1) | Aboulaye Camara (1) | Aboulaye Camara (1) | Alexsandro Victor (2) | Alexsandro Victor (2) | Alexsandro Victor (2) | Ali Abdi (1)
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Total Corners,false,5,12 - 14 | 6 - 8 | 9 - 11 | Over 14 | Under 6
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Last Team To Score,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Player Shots on Target,false,109,Aboulaye Camara (1) | Aboulaye Camara (1) | Alexsandro Victor (2) | Alexsandro Victor (2) | Ali Abdi (1) | Ali Abdi (1) | Antoine Mendy (1) | Axel Witsel (1)
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Total Shots Away,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,European Handicap HT,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Exact 1st Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Odd/Even 2H,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Odd/Even Away,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Away Team Exact Goals,false,4,Lille - 0 Goals | Lille - 1 Goal | Lille - 2 Goals | Lille - 3+ Goals
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Corners Race,false,4,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Total Shots on Target Away,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Away Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Both Teams To Score HT,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Corners Totals Home,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Corners Totals Away,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Correct Score,false,36,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 0-6 | 1-0
-72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Player to be Booked,false,51,Aboulaye Camara (Booked) | Alexsandro Victor (Booked) | Ali Abdi (Booked) | Antoine Mendy (Booked) | Arnaud Bodart (Booked) | Axel Witsel (Booked) | Ayase Ueda (Booked) | Basar Onal (Booked)
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,ML 2H,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Player To Score or Assist,true,138,Aboulaye Camara (Assist) (1) | Aboulaye Camara (Score) (1) | Aboulaye Camara (Score or Assist) (1) | Alexsandro Victor (Assist) (2) | Alexsandro Victor (Score) (2) | Alexsandro Victor (Score or Assist) (2) | Ali Abdi (Assist) (1) | Ali Abdi (Score) (1)
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Away Team Exact Goals,false,4,Lille - 0 Goals | Lille - 1 Goal | Lille - 2 Goals | Lille - 3+ Goals
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,1st Half Corners,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Multi Scorers,false,92,Aboulaye Camara (2 or More) (1) | Aboulaye Camara (3 or More) (1) | Alexsandro Victor (2 or More) (2) | Alexsandro Victor (3 or More) (2) | Ali Abdi (2 or More) (1) | Ali Abdi (3 or More) (1) | Antoine Mendy (2 or More) (1) | Antoine Mendy (3 or More) (1)
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Total Shots on Target Home,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Total Corners,false,5,12 - 14 | 6 - 8 | 9 - 11 | Over 14 | Under 6
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Both Teams To Score HT,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Clean Sheet Away,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Corners,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Total Shots,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,European Handicap HT,false,4,
 72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Total Shots on Target,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Winning Margin,false,10,1 (1) | 1 (2) | 2 (1) | 2 (2) | 3 (1) | 3 (2) | 4+ (1) | 4+ (2)
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Goal Method,false,82,Alexsandro Victor (Header) (2) | Alexsandro Victor (Outside the Box) (2) | Ali Abdi (Header) (1) | Ali Abdi (Outside the Box) (1) | Antoine Mendy (Header) (1) | Antoine Mendy (Outside the Box) (1) | Axel Witsel (Header) (1) | Axel Witsel (Outside the Box) (1)
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Corners Race,false,4,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Bookings Totals Home,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Number of Goals In Match,false,3,2 or 3 goals | Over 3 goals | Under 2 goals
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Player to be Booked,false,51,Aboulaye Camara (Booked) | Alexsandro Victor (Booked) | Ali Abdi (Booked) | Antoine Mendy (Booked) | Arnaud Bodart (Booked) | Axel Witsel (Booked) | Ayase Ueda (Booked) | Basar Onal (Booked)
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Last Match Corner,false,2,1 | 2
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Total Shots on Target Away,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Alternative Corners,false,6,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Correct Score,false,40,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 0-6 | 1-0
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Correct Score HT,false,22,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 1-0 | 1-1
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,First Match Corner,false,2,1 | 2
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Odd/Even HT,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Player Cards,false,153,Aboulaye Camara (1st Card) | Aboulaye Camara (Booked) | Aboulaye Camara (Sent Off) | Alexsandro Victor (1st Card) | Alexsandro Victor (Booked) | Alexsandro Victor (Sent Off) | Ali Abdi (1st Card) | Ali Abdi (Booked)
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Total Shots Away,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Time of First Corner,false,2,Corner before 7:00 | No Corner before 7:00
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Player Shots,false,224,Aboulaye Camara (1) | Aboulaye Camara (1) | Aboulaye Camara (1) | Aboulaye Camara (1) | Alexsandro Victor (2) | Alexsandro Victor (2) | Alexsandro Victor (2) | Ali Abdi (1)
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Player Shots on Target,false,115,Aboulaye Camara (1) | Aboulaye Camara (1) | Alexsandro Victor (2) | Alexsandro Victor (2) | Ali Abdi (1) | Ali Abdi (1) | Antoine Mendy (1) | Antoine Mendy (1)
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Team Goalscorer,false,96,Aboulaye Camara (First) | Aboulaye Camara (Last) | Alexsandro Victor (First) | Alexsandro Victor (Last) | Ali Abdi (First) | Ali Abdi (Last) | Antoine Mendy (First) | Antoine Mendy (Last)
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Odd/Even Home,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Both Teams To Score 2H,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Clean Sheet Home,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Last Team To Score,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Teams to Score,false,4,Both Teams | Lille Only | Nice Only | No Goal
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Total Shots Home,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Home Team Exact Goals,false,4,Nice - 0 Goals | Nice - 1 Goal | Nice - 2 Goals | Nice - 3+ Goals
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Odd/Even 2H,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Exact 1st Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Odd/Even Away,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Double Chance HT,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Exact 2nd Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Number of Cards In Match,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Multicorners,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Bookings Totals Away,false,1,
+72036196,2026-09-20T15:15:00Z,Bet365,France - Ligue 1,OGC Nice,Lille OSC,Totals 2H,false,5,
 72036196,2026-09-20T15:15:00Z,Bet365 (no latency),France - Ligue 1,OGC Nice,Lille OSC,ML,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365 (no latency),France - Ligue 1,OGC Nice,Lille OSC,Spread,false,1,
 72036196,2026-09-20T15:15:00Z,Bet365 (no latency),France - Ligue 1,OGC Nice,Lille OSC,Totals,false,1,
-72036196,2026-09-20T15:15:00Z,Bet365 (no latency),France - Ligue 1,OGC Nice,Lille OSC,Bookings Totals,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,ML,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Draw No Bet,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Double Chance,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Spread,false,13,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Totals,false,17,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Goals Over/Under,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Both Teams To Score,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,First Team To Score,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Odd/Even,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,ML HT,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Spread HT,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Totals HT,false,5,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Team Total Home,false,5,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Team Total Away,false,5,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,European Handicap,false,5,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Corners Spread,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Corners Totals,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Corners Totals HT,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Bookings Spread,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Bookings Totals,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Anytime Goalscorer,false,50,Adrien Monfray | Alexandre Philiponeau | Amadou Diakite | Amine El Ouazzani | Amine Sbai | Angel Gomez | Anis Ouzenadji | Anthony Bermont
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,European Handicap HT,false,4,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Odd/Even Home,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Goalkeeper Saves,false,10,Anthony Lopes | Anthony Lopes | Anthony Lopes | Anthony Lopes | Anthony Lopes | Patrick Beach | Patrick Beach | Patrick Beach
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Odd/Even Away,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Total Corners,false,5,12 - 14 | 6 - 8 | 9 - 11 | Over 14 | Under 6
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Total Shots,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Total Shots Home,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,1st Half Corners,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Multicorners,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Both Teams To Score HT,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Player Shots on Target,false,119,Adrien Monfray (2) | Adrien Monfray (2) | Alexandre Philiponeau (2) | Alexandre Philiponeau (2) | Amadou Diakite (2) | Amadou Diakite (2) | Amadou Diakite (2) | Amine El Ouazzani (1)
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Correct Score HT,false,22,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 1-0 | 1-1 | 1-2
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Home Team Exact Goals,false,4,Angers - 0 Goals | Angers - 1 Goal | Angers - 2 Goals | Angers - 3+ Goals
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,ML 2H,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Player To Score or Assist,true,150,Adrien Monfray (Assist) (2) | Adrien Monfray (Score) (2) | Adrien Monfray (Score or Assist) (2) | Alexandre Philiponeau (Assist) (2) | Alexandre Philiponeau (Score) (2) | Alexandre Philiponeau (Score or Assist) (2) | Amadou Diakite (Assist) (2) | Amadou Diakite (Score) (2)
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Exact 2nd Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Total Shots on Target Home,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Alternative Corners,false,6,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Corners,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Corners Totals Home,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Correct Score,false,40,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 1-0 | 1-1
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Team Goalscorer,false,104,Adrien Monfray (First) | Adrien Monfray (Last) | Alexandre Philiponeau (First) | Alexandre Philiponeau (Last) | Amadou Diakite (First) | Amadou Diakite (Last) | Amine El Ouazzani (First) | Amine El Ouazzani (Last)
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Total Shots Away,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Bookings Totals Away,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Clean Sheet Home,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Last Match Corner,false,2,1 | 2
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Number of Goals In Match,false,3,2 or 3 goals | Over 3 goals | Under 2 goals
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Total Shots on Target Away,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Corners Totals Away,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Multi Scorers,false,100,Adrien Monfray (2 or More) (2) | Adrien Monfray (3 or More) (2) | Alexandre Philiponeau (2 or More) (2) | Alexandre Philiponeau (3 or More) (2) | Amadou Diakite (2 or More) (2) | Amadou Diakite (3 or More) (2) | Amine El Ouazzani (2 or More) (1) | Amine El Ouazzani (3 or More) (1)
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Totals 2H,false,5,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Odd/Even 2H,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Number of Cards In Match,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Odd/Even HT,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,First Match Corner,false,2,1 | 2
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Bookings Totals Home,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Double Chance HT,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Away Team Exact Goals,false,4,Troyes - 0 Goals | Troyes - 1 Goal | Troyes - 2 Goals | Troyes - 3+ Goals
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Teams to Score,false,4,Angers Only | Both Teams | No Goal | Troyes Only
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Total Shots on Target,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Away Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Goal Method,false,74,Adrien Monfray (Header) (2) | Adrien Monfray (Outside the Box) (2) | Alexandre Philiponeau (Header) (2) | Alexandre Philiponeau (Outside the Box) (2) | Amadou Diakite (Header) (2) | Amadou Diakite (Outside the Box) (2) | Amine El Ouazzani (Header) (1) | Amine El Ouazzani (Outside the Box) (1)
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Winning Margin,false,10,1 (1) | 1 (2) | 2 (1) | 2 (2) | 3 (1) | 3 (2) | 4+ (1) | 4+ (2)
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Corners Race,false,4,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Exact 1st Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Last Team To Score,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Clean Sheet Away,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Both Teams To Score 2H,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Angers SCO,ESTAC Troyes,Player Shots,false,228,Adrien Monfray (2) | Adrien Monfray (2) | Adrien Monfray (2) | Alexandre Philiponeau (2) | Alexandre Philiponeau (2) | Alexandre Philiponeau (2) | Alexandre Philiponeau (2) | Amadou Diakite (2)
-72036184,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Angers SCO,ESTAC Troyes,ML,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Angers SCO,ESTAC Troyes,Spread,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Angers SCO,ESTAC Troyes,Totals,false,1,
-72036184,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Angers SCO,ESTAC Troyes,Bookings Totals,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,ML,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Draw No Bet,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Double Chance,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Spread,false,14,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Totals,false,18,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Goals Over/Under,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Both Teams To Score,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,First Team To Score,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Odd/Even,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,ML HT,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Totals HT,false,5,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Team Total Home,false,5,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Team Total Away,false,5,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,European Handicap,false,4,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Corners Spread,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Corners Totals,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Corners Totals HT,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Bookings Spread,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Bookings Totals,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Anytime Goalscorer,false,47,Adil Bourabaa | Alec Georgen | Alexandre Lauray | Antoine Rabillard | Arsene Kouassi | Arthur Avom | Billal Brahimi | Dame Gueye
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Player To Score or Assist,true,141,Adil Bourabaa (Assist) (1) | Adil Bourabaa (Score) (1) | Adil Bourabaa (Score or Assist) (1) | Alec Georgen (Assist) (2) | Alec Georgen (Score) (2) | Alec Georgen (Score or Assist) (2) | Alexandre Lauray (Assist) (1) | Alexandre Lauray (Score) (1)
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Team Goalscorer,false,98,Adil Bourabaa (First) | Adil Bourabaa (Last) | Alec Georgen (First) | Alec Georgen (Last) | Alexandre Lauray (First) | Alexandre Lauray (Last) | Antoine Rabillard (First) | Antoine Rabillard (Last)
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Both Teams To Score HT,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Bookings Totals Home,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Goal Method,false,82,Adil Bourabaa (Header) (1) | Adil Bourabaa (Outside the Box) (1) | Alec Georgen (Header) (2) | Alec Georgen (Outside the Box) (2) | Alexandre Lauray (Header) (1) | Alexandre Lauray (Outside the Box) (1) | Antoine Rabillard (Header) (1) | Antoine Rabillard (Outside the Box) (1)
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Player Cards,false,141,Adil Bourabaa (1st Card) | Adil Bourabaa (Booked) | Adil Bourabaa (Sent Off) | Alec Georgen (1st Card) | Alec Georgen (Booked) | Alec Georgen (Sent Off) | Alexandre Lauray (1st Card) | Alexandre Lauray (Booked)
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Total Shots on Target Home,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Odd/Even Home,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Exact 1st Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Total Shots,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Total Shots on Target,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Bookings Totals Away,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Clean Sheet Away,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Goalkeeper Saves,false,11,Ewan Hatfout | Ewan Hatfout | Ewan Hatfout | Ewan Hatfout | Ewan Hatfout | Ewan Hatfout | Landry Mvogo | Landry Mvogo
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Player Shots on Target,false,115,Adil Bourabaa (1) | Adil Bourabaa (1) | Alec Georgen (2) | Alec Georgen (2) | Alexandre Lauray (1) | Alexandre Lauray (1) | Antoine Rabillard (1) | Antoine Rabillard (1)
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,European Handicap HT,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Total Corners,false,5,12 - 14 | 6 - 8 | 9 - 11 | Over 14 | Under 6
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Corners Race,false,4,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Away Team Exact Goals,false,4,Lorient - 0 Goals | Lorient - 1 Goal | Lorient - 2 Goals | Lorient - 3+ Goals
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Home Team Exact Goals,false,4,Le Mans - 0 Goals | Le Mans - 1 Goal | Le Mans - 2 Goals | Le Mans - 3+ Goals
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Multicorners,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Odd/Even Away,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Player Shots,false,217,Adil Bourabaa (1) | Adil Bourabaa (1) | Adil Bourabaa (1) | Adil Bourabaa (1) | Alec Georgen (2) | Alec Georgen (2) | Alec Georgen (2) | Alexandre Lauray (1)
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Teams to Score,false,4,Both Teams | Le Mans Only | Lorient Only | No Goal
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Away Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Corners,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Total Shots Away,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Both Teams To Score 2H,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Last Team To Score,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,1st Half Corners,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Odd/Even 2H,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Multi Scorers,false,94,Adil Bourabaa (2 or More) (1) | Adil Bourabaa (3 or More) (1) | Alec Georgen (2 or More) (2) | Alec Georgen (3 or More) (2) | Alexandre Lauray (2 or More) (1) | Alexandre Lauray (3 or More) (1) | Antoine Rabillard (2 or More) (1) | Antoine Rabillard (3 or More) (1)
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Number of Cards In Match,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Alternative Corners,false,6,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,ML 2H,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Corners Totals Away,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Corners Totals Home,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Double Chance HT,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Exact 2nd Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,First Match Corner,false,2,1 | 2
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Number of Goals In Match,false,3,2 or 3 goals | Over 3 goals | Under 2 goals
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Last Match Corner,false,2,1 | 2
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Correct Score,false,39,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 0-6 | 1-0
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Correct Score HT,false,20,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 1-0 | 1-1 | 1-2
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Player to be Booked,false,47,Adil Bourabaa (Booked) | Alec Georgen (Booked) | Alexandre Lauray (Booked) | Antoine Rabillard (Booked) | Arsene Kouassi (Booked) | Arthur Avom (Booked) | Billal Brahimi (Booked) | Dame Gueye (Booked)
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Totals 2H,false,5,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Clean Sheet Home,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Odd/Even HT,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Total Shots Home,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Total Shots on Target Away,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Le Mans FC,FC Lorient,Winning Margin,false,10,1 (1) | 1 (2) | 2 (1) | 2 (2) | 3 (1) | 3 (2) | 4+ (1) | 4+ (2)
-72036188,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Le Mans FC,FC Lorient,ML,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Le Mans FC,FC Lorient,Spread,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Le Mans FC,FC Lorient,Totals,false,1,
-72036188,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Le Mans FC,FC Lorient,Bookings Totals,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,ML,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Draw No Bet,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Double Chance,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Spread,false,16,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Totals,false,21,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Goals Over/Under,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Both Teams To Score,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,First Team To Score,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Odd/Even,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,ML HT,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Spread HT,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Totals HT,false,5,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Team Total Home,false,6,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Team Total Away,false,5,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,European Handicap,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Corners Totals,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Corners Totals HT,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Bookings Spread,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Bookings Totals,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Anytime Goalscorer,false,44,Abdelhamid Ait Boudlal | Abner Vinicius | Adrien Thomasson | Alidu Seidu | Anthony Rouault | Arnaud Nordin | Boulaye Dia | Bryan Reynolds
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Bookings Totals Away,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Odd/Even HT,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Corners Totals Away,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Exact 2nd Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Alternative Corners,false,6,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Away Team Exact Goals,false,4,Rennes - 0 Goals | Rennes - 1 Goal | Rennes - 2 Goals | Rennes - 3+ Goals
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Total Shots on Target Home,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Corners,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Corners Race,false,4,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Last Team To Score,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Odd/Even Away,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,European Handicap HT,false,4,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Double Chance HT,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Home Team Exact Goals,false,4,Lyon - 0 Goals | Lyon - 1 Goal | Lyon - 2 Goals | Lyon - 3+ Goals
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Total Corners,false,5,12 - 14 | 6 - 8 | 9 - 11 | Over 14 | Under 6
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Bookings Totals Home,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Clean Sheet Away,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Goal Method,false,88,Abdelhamid Ait Boudlal (Header) (2) | Abdelhamid Ait Boudlal (Outside the Box) (2) | Abner Vinicius (Header) (1) | Abner Vinicius (Outside the Box) (1) | Adrien Thomasson (Header) (2) | Adrien Thomasson (Outside the Box) (2) | Alidu Seidu (Header) (2) | Alidu Seidu (Outside the Box) (2)
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Both Teams To Score HT,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Team Goalscorer,false,92,Abdelhamid Ait Boudlal (First) | Abdelhamid Ait Boudlal (Last) | Abner Vinicius (First) | Abner Vinicius (Last) | Adrien Thomasson (First) | Adrien Thomasson (Last) | Alidu Seidu (First) | Alidu Seidu (Last)
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Total Shots on Target,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,1st Half Corners,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Player Shots on Target,false,114,Abdelhamid Ait Boudlal (2) | Abdelhamid Ait Boudlal (2) | Abner Vinicius (1) | Abner Vinicius (1) | Abner Vinicius (1) | Adrien Thomasson (2) | Adrien Thomasson (2) | Adrien Thomasson (2)
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Odd/Even Home,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Number of Cards In Match,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Player To Score or Assist,true,132,Abdelhamid Ait Boudlal (Assist) (2) | Abdelhamid Ait Boudlal (Score) (2) | Abdelhamid Ait Boudlal (Score or Assist) (2) | Abner Vinicius (Assist) (1) | Abner Vinicius (Score) (1) | Abner Vinicius (Score or Assist) (1) | Adrien Thomasson (Assist) (2) | Adrien Thomasson (Score) (2)
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Corners Totals Home,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Correct Score,false,40,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 1-0 | 1-1
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Last Match Corner,false,2,1 | 2
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Number of Goals In Match,false,3,2 or 3 goals | Over 3 goals | Under 2 goals
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Odd/Even 2H,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Player Shots,false,231,Abdelhamid Ait Boudlal (2) | Abdelhamid Ait Boudlal (2) | Abdelhamid Ait Boudlal (2) | Abner Vinicius (1) | Abner Vinicius (1) | Abner Vinicius (1) | Abner Vinicius (1) | Abner Vinicius (1)
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Away Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,First Match Corner,false,2,1 | 2
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Total Shots on Target Away,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Both Teams To Score 2H,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Totals 2H,false,5,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Multi Scorers,false,88,Abdelhamid Ait Boudlal (2 or More) (2) | Abdelhamid Ait Boudlal (3 or More) (2) | Abner Vinicius (2 or More) (1) | Abner Vinicius (3 or More) (1) | Adrien Thomasson (2 or More) (2) | Adrien Thomasson (3 or More) (2) | Alidu Seidu (2 or More) (2) | Alidu Seidu (3 or More) (2)
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Multicorners,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Total Shots,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Total Shots Away,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Winning Margin,false,10,1 (1) | 1 (2) | 2 (1) | 2 (2) | 3 (1) | 3 (2) | 4+ (1) | 4+ (2)
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Exact 1st Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Goalkeeper Saves,false,11,Brice Samba | Brice Samba | Brice Samba | Brice Samba | Brice Samba | Brice Samba | Dominik Greif | Dominik Greif
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Teams to Score,false,4,Both Teams | Lyon Only | No Goal | Rennes Only
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Total Shots Home,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Correct Score HT,false,23,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 1-0 | 1-1 | 1-2
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Clean Sheet Home,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,ML 2H,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Time of First Corner,false,2,Corner before 7:00 | No Corner before 7:00
-72036190,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Olympique Lyon,Stade Rennais FC,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
-72036190,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Olympique Lyon,Stade Rennais FC,ML,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Olympique Lyon,Stade Rennais FC,Spread,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Olympique Lyon,Stade Rennais FC,Totals,false,1,
-72036190,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Olympique Lyon,Stade Rennais FC,Bookings Totals,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,ML,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Draw No Bet,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Double Chance,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Spread,false,15,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Totals,false,18,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Goals Over/Under,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Both Teams To Score,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,First Team To Score,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Odd/Even,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,ML HT,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Spread HT,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Totals HT,false,5,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Team Total Home,false,6,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Team Total Away,false,4,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,European Handicap,false,5,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Corners Spread,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Corners Totals,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Corners Totals HT,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Bookings Spread,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Bookings Totals,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Anytime Goalscorer,false,49,Abu Francis | Ahmed Touba | Alexis Vossah | Ally Samatta | Amir Richardson | Andy Logbo | Aron Donnum | Aymen Amaaouch
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Corners Totals Home,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Multicorners,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,1st Half Corners,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Number of Goals In Match,false,3,2 or 3 goals | Over 3 goals | Under 2 goals
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Player To Score or Assist,true,147,Abu Francis (Assist) (1) | Abu Francis (Score) (1) | Abu Francis (Score or Assist) (1) | Ahmed Touba (Assist) (2) | Ahmed Touba (Score) (2) | Ahmed Touba (Score or Assist) (2) | Alexis Vossah (Assist) (1) | Alexis Vossah (Score) (1)
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Total Shots on Target Home,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Clean Sheet Home,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Correct Score HT,false,23,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 1-0 | 1-1 | 1-2
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Goal Method,false,78,Abu Francis (Header) (1) | Abu Francis (Outside the Box) (1) | Alexis Vossah (Header) (1) | Alexis Vossah (Outside the Box) (1) | Ally Samatta (Header) (2) | Ally Samatta (Outside the Box) (2) | Amir Richardson (Header) (2) | Amir Richardson (Outside the Box) (2)
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Goalkeeper Saves,false,11,Guillaume Restes | Guillaume Restes | Guillaume Restes | Guillaume Restes | Guillaume Restes | Lionel M'Pasi-Nzau | Lionel M'Pasi-Nzau | Lionel M'Pasi-Nzau
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Player to be Booked,false,55,Abu Francis (Booked) | Ahmed Touba (Booked) | Alexis Vossah (Booked) | Alex Teixeira (Booked) | Ally Samatta (Booked) | Amir Richardson (Booked) | Andy Logbo (Booked) | Aron Donnum (Booked)
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Team Goalscorer,false,102,Abu Francis (First) | Abu Francis (Last) | Ahmed Touba (First) | Ahmed Touba (Last) | Alexis Vossah (First) | Alexis Vossah (Last) | Ally Samatta (First) | Ally Samatta (Last)
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Corners Totals Away,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Both Teams To Score 2H,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Bookings Totals Away,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Last Match Corner,false,2,1 | 2
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Odd/Even 2H,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Total Shots,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Away Team Exact Goals,false,4,Le Havre - 0 Goals | Le Havre - 1 Goal | Le Havre - 2 Goals | Le Havre - 3+ Goals
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Away Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Corners,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Player Shots on Target,false,120,Abu Francis (1) | Abu Francis (1) | Abu Francis (1) | Abu Francis (1) | Ahmed Touba (2) | Alexis Vossah (1) | Alexis Vossah (1) | Alexis Vossah (1)
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Multi Scorers,false,98,Abu Francis (2 or More) (1) | Abu Francis (3 or More) (1) | Ahmed Touba (2 or More) (2) | Ahmed Touba (3 or More) (2) | Alexis Vossah (2 or More) (1) | Alexis Vossah (3 or More) (1) | Ally Samatta (2 or More) (2) | Ally Samatta (3 or More) (2)
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Clean Sheet Away,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Home Team Exact Goals,false,4,Toulouse - 0 Goals | Toulouse - 1 Goal | Toulouse - 2 Goals | Toulouse - 3+ Goals
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Last Team To Score,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Player Cards,false,165,Abu Francis (1st Card) | Abu Francis (Booked) | Abu Francis (Sent Off) | Ahmed Touba (1st Card) | Ahmed Touba (Booked) | Ahmed Touba (Sent Off) | Alexis Vossah (1st Card) | Alexis Vossah (Booked)
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Odd/Even Away,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Total Shots on Target Away,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Winning Margin,false,10,1 (1) | 1 (2) | 2 (1) | 2 (2) | 3 (1) | 3 (2) | 4+ (1) | 4+ (2)
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,European Handicap HT,false,4,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Alternative Corners,false,6,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Double Chance HT,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Odd/Even HT,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Odd/Even Home,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Bookings Totals Home,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Corners Race,false,4,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,ML 2H,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Exact 2nd Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Player Shots,false,238,Abu Francis (1) | Abu Francis (1) | Abu Francis (1) | Abu Francis (1) | Abu Francis (1) | Abu Francis (1) | Abu Francis (1) | Ahmed Touba (2)
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Teams to Score,false,4,Both Teams | Le Havre Only | No Goal | Toulouse Only
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Total Shots Away,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Total Shots on Target,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Both Teams To Score HT,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Number of Cards In Match,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Exact 1st Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Correct Score,false,40,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 1-0 | 1-1
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,First Match Corner,false,2,1 | 2
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Total Corners,false,5,12 - 14 | 6 - 8 | 9 - 11 | Over 14 | Under 6
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Totals 2H,false,5,
-72036200,2026-09-19T18:45:00Z,Bet365,France - Ligue 1,Toulouse FC,Le Havre AC,Total Shots Home,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Toulouse FC,Le Havre AC,ML,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Toulouse FC,Le Havre AC,Spread,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Toulouse FC,Le Havre AC,Totals,false,1,
-72036200,2026-09-19T18:45:00Z,Bet365 (no latency),France - Ligue 1,Toulouse FC,Le Havre AC,Bookings Totals,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,ML,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Draw No Bet,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Double Chance,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Spread,false,17,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Totals,false,22,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Goals Over/Under,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Both Teams To Score,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,First Team To Score,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Odd/Even,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,ML HT,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Spread HT,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Totals HT,false,5,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Team Total Home,false,4,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Team Total Away,false,7,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,European Handicap,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Corners Totals,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Corners Totals HT,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Bookings Spread,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Bookings Totals,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Anytime Goalscorer,false,43,Achraf Hakimi | Alexi Koum | Amine Gouiri | Amine Harit | Angel Gomes | Bamo Meite | CJ Egan-Riley | Derek Cornelius
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Clean Sheet Away,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,First Match Corner,false,2,1 | 2
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Double Chance HT,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Odd/Even 2H,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Corners,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Bookings Totals Away,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Alternative Corners,false,6,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Odd/Even Away,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player Cards,false,144,Achraf Hakimi (1st Card) | Achraf Hakimi (Booked) | Achraf Hakimi (Sent Off) | Alessandro Longoni (1st Card) | Alessandro Longoni (Booked) | Alessandro Longoni (Sent Off) | Alexi Koum (1st Card) | Alexi Koum (Booked)
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Total Shots on Target,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Goal Method,false,86,Achraf Hakimi (Header) (2) | Achraf Hakimi (Outside the Box) (2) | Alexi Koum (Header) (1) | Alexi Koum (Outside the Box) (1) | Amine Gouiri (Header) (1) | Amine Gouiri (Outside the Box) (1) | Amine Harit (Header) (1) | Amine Harit (Outside the Box) (1)
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Total Shots Home,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Multicorners,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Totals 2H,false,5,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Total Shots on Target Away,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,1st Half Corners,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Corners Totals Away,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Corners Totals Home,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Last Match Corner,false,2,1 | 2
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player Fouls,false,150,Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Gouiri (1)
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player Shots on Target,false,113,Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Harit (1) | Amine Harit (1)
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Both Teams To Score 2H,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Exact 1st Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Winning Margin,false,10,1 (1) | 1 (2) | 2 (1) | 2 (2) | 3 (1) | 3 (2) | 4+ (1) | 4+ (2)
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Corners Race,false,4,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Exact 2nd Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Odd/Even Home,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Team Goalscorer,false,90,Achraf Hakimi (First) | Achraf Hakimi (Last) | Alexi Koum (First) | Alexi Koum (Last) | Amine Gouiri (First) | Amine Gouiri (Last) | Amine Harit (First) | Amine Harit (Last)
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Total Shots,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Number of Cards In Match,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Away Team Exact Goals,false,4,PSG - 0 Goals | PSG - 1 Goal | PSG - 2 Goals | PSG - 3+ Goals
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Last Team To Score,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Total Shots Away,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Teams to Score,false,4,Both Teams | Marseille Only | No Goal | PSG Only
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Away Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player To Score or Assist,true,129,Achraf Hakimi (Assist) (2) | Achraf Hakimi (Score) (2) | Achraf Hakimi (Score or Assist) (2) | Alexi Koum (Assist) (1) | Alexi Koum (Score) (1) | Alexi Koum (Score or Assist) (1) | Amine Gouiri (Assist) (1) | Amine Gouiri (Score) (1)
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Correct Score,false,40,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 0-6 | 0-7
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Number of Goals In Match,false,3,2 or 3 goals | Over 3 goals | Under 2 goals
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Odd/Even HT,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player Shots,false,224,Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Amine Gouiri (1) | Amine Gouiri (1)
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Multi Scorers,false,86,Achraf Hakimi (2 or More) (2) | Achraf Hakimi (3 or More) (2) | Alexi Koum (2 or More) (1) | Alexi Koum (3 or More) (1) | Amine Gouiri (2 or More) (1) | Amine Gouiri (3 or More) (1) | Amine Harit (2 or More) (1) | Amine Harit (3 or More) (1)
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Correct Score HT,false,24,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 0-6 | 1-0
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,ML 2H,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Total Corners,false,5,12 - 14 | 6 - 8 | 9 - 11 | Over 14 | Under 6
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Both Teams To Score HT,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,European Handicap HT,false,4,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Home Team Exact Goals,false,4,Marseille - 0 Goals | Marseille - 1 Goal | Marseille - 2 Goals | Marseille - 3+ Goals
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player Tackles,false,150,Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Harit (1)
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player to be Booked,false,48,Achraf Hakimi (Booked) | Alessandro Longoni (Booked) | Alexi Koum (Booked) | Amine Gouiri (Booked) | Amine Harit (Booked) | Angel Gomes (Booked) | Bamo Meite (Booked) | CJ Egan-Riley (Booked)
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Total Shots on Target Home,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Bookings Totals Home,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Goalkeeper Saves,false,12,Jeffrey de Lange | Jeffrey de Lange | Jeffrey de Lange | Jeffrey de Lange | Jeffrey de Lange | Jeffrey de Lange | Jeffrey de Lange | Matvey Safonov
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player To Be Fouled,false,143,Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Gouiri (1)
+72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Clean Sheet Home,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365 (no latency),France - Ligue 1,Olympique Marseille,Paris Saint-Germain,ML,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365 (no latency),France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Spread,false,1,
+72036192,2026-09-20T18:45:00Z,Bet365 (no latency),France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Totals,false,1,
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,ML,false,1,
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Draw No Bet,false,1,
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Double Chance,false,1,
@@ -502,148 +181,66 @@ event_id,kickoff_at,bookmaker,league,home_team,away_team,market_name,is_assist_c
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Corners Totals,false,2,
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Corners Totals HT,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Bookings Totals,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Bookings Spread,false,1,
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Anytime Goalscorer,false,44,Alvin Petit Dol | Aristide Zossou | Arthur Piedfort | Axel Tuanzebe | Bradley Locko | Cameron Archer | Christ Makosso | Clement Akpa
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Player Shots on Target,false,103,Alvin Petit Dol (1) | Alvin Petit Dol (1) | Aristide Zossou (1) | Aristide Zossou (1) | Arthur Piedfort (1) | Arthur Piedfort (1) | Axel Tuanzebe (1) | Axel Tuanzebe (1)
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Number of Goals In Match,false,3,2 or 3 goals | Over 3 goals | Under 2 goals
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Odd/Even Away,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Last Match Corner,false,2,1 | 2
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Home Team Exact Goals,false,4,Auxerre - 0 Goals | Auxerre - 1 Goal | Auxerre - 2 Goals | Auxerre - 3+ Goals
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Odd/Even 2H,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Team Goalscorer,false,92,Alvin Petit Dol (First) | Alvin Petit Dol (Last) | Aristide Zossou (First) | Aristide Zossou (Last) | Arthur Piedfort (First) | Arthur Piedfort (Last) | Axel Tuanzebe (First) | Axel Tuanzebe (Last)
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Totals 2H,false,5,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Winning Margin,false,10,1 (1) | 1 (2) | 2 (1) | 2 (2) | 3 (1) | 3 (2) | 4+ (1) | 4+ (2)
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Last Team To Score,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Total Shots on Target Home,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Total Shots Home,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Both Teams To Score 2H,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Time of First Corner,false,2,Corner before 7:00 | No Corner before 7:00
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Exact 2nd Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Total Shots Away,false,1,
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Corners Totals Home,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Goal Method,false,74,Alvin Petit Dol (Header) (1) | Alvin Petit Dol (Outside the Box) (1) | Aristide Zossou (Header) (1) | Aristide Zossou (Outside the Box) (1) | Arthur Piedfort (Header) (1) | Arthur Piedfort (Outside the Box) (1) | Axel Tuanzebe (Header) (1) | Axel Tuanzebe (Outside the Box) (1)
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Number of Cards In Match,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Multicorners,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Multi Scorers,false,88,Alvin Petit Dol (2 or More) (1) | Alvin Petit Dol (3 or More) (1) | Aristide Zossou (2 or More) (1) | Aristide Zossou (3 or More) (1) | Arthur Piedfort (2 or More) (1) | Arthur Piedfort (3 or More) (1) | Axel Tuanzebe (2 or More) (1) | Axel Tuanzebe (3 or More) (1)
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Player Shots,false,203,Alvin Petit Dol (1) | Alvin Petit Dol (1) | Alvin Petit Dol (1) | Aristide Zossou (1) | Aristide Zossou (1) | Aristide Zossou (1) | Aristide Zossou (1) | Aristide Zossou (1)
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Winning Margin,false,10,1 (1) | 1 (2) | 2 (1) | 2 (2) | 3 (1) | 3 (2) | 4+ (1) | 4+ (2)
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,First Match Corner,false,2,1 | 2
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Correct Score,false,40,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 0-6 | 1-0
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Double Chance HT,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Goal Method,false,74,Alvin Petit Dol (Header) (1) | Alvin Petit Dol (Outside the Box) (1) | Aristide Zossou (Header) (1) | Aristide Zossou (Outside the Box) (1) | Arthur Piedfort (Header) (1) | Arthur Piedfort (Outside the Box) (1) | Axel Tuanzebe (Header) (1) | Axel Tuanzebe (Outside the Box) (1)
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Time of First Corner,false,2,Corner before 7:00 | No Corner before 7:00
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Away Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Corners Totals Away,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Team Goalscorer,false,92,Alvin Petit Dol (First) | Alvin Petit Dol (Last) | Aristide Zossou (First) | Aristide Zossou (Last) | Arthur Piedfort (First) | Arthur Piedfort (Last) | Axel Tuanzebe (First) | Axel Tuanzebe (Last)
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Multicorners,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,European Handicap HT,false,4,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Totals 2H,false,5,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Bookings Totals Away,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Both Teams To Score 2H,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Correct Score HT,false,22,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 1-0 | 1-1
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Clean Sheet Home,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Alternative Corners,false,6,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Correct Score HT,false,21,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 1-0 | 1-1 | 1-2
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Home Team Exact Goals,false,4,Auxerre - 0 Goals | Auxerre - 1 Goal | Auxerre - 2 Goals | Auxerre - 3+ Goals
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Number of Goals In Match,false,3,2 or 3 goals | Over 3 goals | Under 2 goals
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Clean Sheet Away,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Player to be Booked,false,47,Alvin Petit Dol (Booked) | Aristide Zossou (Booked) | Arthur Piedfort (Booked) | Axel Tuanzebe (Booked) | Bradley Locko (Booked) | Cameron Archer (Booked) | Christ Makosso (Booked) | Clement Akpa (Booked)
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Total Shots on Target Away,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Total Corners,false,5,12 - 14 | 6 - 8 | 9 - 11 | Over 14 | Under 6
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Total Shots,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Exact 2nd Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Player Shots on Target,false,104,Alvin Petit Dol (1) | Alvin Petit Dol (1) | Aristide Zossou (1) | Aristide Zossou (1) | Arthur Piedfort (1) | Arthur Piedfort (1) | Axel Tuanzebe (1) | Axel Tuanzebe (1)
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Player Cards,false,141,Alvin Petit Dol (1st Card) | Alvin Petit Dol (Booked) | Alvin Petit Dol (Sent Off) | Aristide Zossou (1st Card) | Aristide Zossou (Booked) | Aristide Zossou (Sent Off) | Arthur Piedfort (1st Card) | Arthur Piedfort (Booked)
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Total Shots Home,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Both Teams To Score HT,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Exact 1st Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Multi Scorers,false,88,Alvin Petit Dol (2 or More) (1) | Alvin Petit Dol (3 or More) (1) | Aristide Zossou (2 or More) (1) | Aristide Zossou (3 or More) (1) | Arthur Piedfort (2 or More) (1) | Arthur Piedfort (3 or More) (1) | Axel Tuanzebe (2 or More) (1) | Axel Tuanzebe (3 or More) (1)
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Odd/Even 2H,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Total Shots on Target,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Total Shots on Target Home,false,1,
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Away Team Exact Goals,false,4,Brest - 0 Goals | Brest - 1 Goal | Brest - 2 Goals | Brest - 3+ Goals
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Corners Race,false,4,
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Odd/Even Home,false,1,
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,1st Half Corners,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Total Shots,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Total Shots on Target Away,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,European Handicap HT,false,4,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Bookings Totals Away,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Corners Totals Away,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Player To Score or Assist,true,132,Alvin Petit Dol (Assist) (1) | Alvin Petit Dol (Score) (1) | Alvin Petit Dol (Score or Assist) (1) | Aristide Zossou (Assist) (1) | Aristide Zossou (Score) (1) | Aristide Zossou (Score or Assist) (1) | Arthur Piedfort (Assist) (1) | Arthur Piedfort (Score) (1)
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Both Teams To Score HT,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Corners Race,false,4,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Exact 1st Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,ML 2H,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Total Corners,false,5,12 - 14 | 6 - 8 | 9 - 11 | Over 14 | Under 6
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Bookings Totals Home,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Corners,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Odd/Even HT,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Player to be Booked,false,47,Alvin Petit Dol (Booked) | Aristide Zossou (Booked) | Arthur Piedfort (Booked) | Axel Tuanzebe (Booked) | Bradley Locko (Booked) | Cameron Archer (Booked) | Christ Makosso (Booked) | Clement Akpa (Booked)
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Total Shots on Target,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Away Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Clean Sheet Away,false,1,
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Goalkeeper Saves,false,11,Egil Selvik | Egil Selvik | Egil Selvik | Egil Selvik | Egil Selvik | Egil Selvik | Mamadou Diop | Mamadou Diop
-72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Correct Score,false,40,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 0-6 | 1-0
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Player Shots,false,207,Alvin Petit Dol (1) | Alvin Petit Dol (1) | Alvin Petit Dol (1) | Aristide Zossou (1) | Aristide Zossou (1) | Aristide Zossou (1) | Aristide Zossou (1) | Aristide Zossou (1)
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,ML 2H,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Number of Cards In Match,false,1,
 72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Teams to Score,false,4,Auxerre Only | Both Teams | Brest Only | No Goal
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Alternative Corners,false,6,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Bookings Totals Home,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Corner Handicap,false,2,1 (-1) | Tie (1)
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Corners,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Last Match Corner,false,2,1 | 2
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Total Shots Away,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Last Team To Score,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Odd/Even Away,false,1,
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Player To Score or Assist,true,132,Alvin Petit Dol (Assist) (1) | Alvin Petit Dol (Score) (1) | Alvin Petit Dol (Score or Assist) (1) | Aristide Zossou (Assist) (1) | Aristide Zossou (Score) (1) | Aristide Zossou (Score or Assist) (1) | Arthur Piedfort (Assist) (1) | Arthur Piedfort (Score) (1)
+72036186,2026-09-20T13:00:00Z,Bet365,France - Ligue 1,AJ Auxerre,Stade Brest 29,Double Chance HT,false,1,
 72036186,2026-09-20T13:00:00Z,Bet365 (no latency),France - Ligue 1,AJ Auxerre,Stade Brest 29,ML,false,1,
 72036186,2026-09-20T13:00:00Z,Bet365 (no latency),France - Ligue 1,AJ Auxerre,Stade Brest 29,Spread,false,1,
 72036186,2026-09-20T13:00:00Z,Bet365 (no latency),France - Ligue 1,AJ Auxerre,Stade Brest 29,Totals,false,1,
-72036186,2026-09-20T13:00:00Z,Bet365 (no latency),France - Ligue 1,AJ Auxerre,Stade Brest 29,Bookings Totals,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,ML,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Draw No Bet,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Double Chance,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Spread,false,17,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Totals,false,22,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Goals Over/Under,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Both Teams To Score,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,First Team To Score,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Odd/Even,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,ML HT,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Spread HT,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Totals HT,false,5,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,European Handicap,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Corners Spread,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Corners Totals,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Corners Totals HT,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Anytime Goalscorer,false,43,Achraf Hakimi | Alexi Koum | Amine Gouiri | Amine Harit | Angel Gomes | Bamo Meite | CJ Egan-Riley | Derek Cornelius
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Totals 2H,false,5,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Odd/Even HT,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,First 10 Minutes (00:00 - 09:59),false,1,Goals (Over) (0.5)
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Half With Most Goals,false,3,1st Half | 2nd Half | Tie
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Multicorners,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Correct Score HT,false,23,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 0-6 | 1-0
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Total Shots Away,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Total Shots on Target Away,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Exact 1st Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Alternative Corners,false,6,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Team Goalscorer,false,90,Achraf Hakimi (First) | Achraf Hakimi (Last) | Alexi Koum (First) | Alexi Koum (Last) | Amine Gouiri (First) | Amine Gouiri (Last) | Amine Harit (First) | Amine Harit (Last)
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,1st Half Corners,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player Tackles,false,150,Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Harit (1)
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Odd/Even Home,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Last Match Corner,false,2,1 | 2
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player Fouls,false,149,Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Gouiri (1)
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Specials,false,2,To Win From Behind (1) | To Win From Behind (2)
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Number of Goals In Match,false,3,2 or 3 goals | Over 3 goals | Under 2 goals
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Odd/Even Away,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player To Be Fouled,false,143,Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Gouiri (1)
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Corners Race,false,4,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Total Shots Home,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Both Teams To Score HT,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Time of First Corner,false,2,Corner before 8:00 | No Corner before 8:00
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Corners Totals Away,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Exact 2nd Half Goals,false,6,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5+ Goals
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,First Match Corner,false,2,1 | 2
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Number of Cards In Match,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Odd/Even 2H,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Multi Scorers,false,86,Achraf Hakimi (2 or More) (2) | Achraf Hakimi (3 or More) (2) | Alexi Koum (2 or More) (1) | Alexi Koum (3 or More) (1) | Amine Gouiri (2 or More) (1) | Amine Gouiri (3 or More) (1) | Amine Harit (2 or More) (1) | Amine Harit (3 or More) (1)
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Bookings Totals Home,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Corners,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Home Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player Shots on Target,false,113,Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Gouiri (1) | Amine Harit (1) | Amine Harit (1)
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player To Score or Assist,true,129,Achraf Hakimi (Assist) (2) | Achraf Hakimi (Score) (2) | Achraf Hakimi (Score or Assist) (2) | Alexi Koum (Assist) (1) | Alexi Koum (Score) (1) | Alexi Koum (Score or Assist) (1) | Amine Gouiri (Assist) (1) | Amine Gouiri (Score) (1)
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Total Corners,false,5,12 - 14 | 6 - 8 | 9 - 11 | Over 14 | Under 6
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Total Shots,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Total Shots on Target Home,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Away Team Highest Scoring Half,false,3,1st Half | 2nd Half | Tie
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Bookings Totals Away,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Both Teams To Score 2H,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Clean Sheet Home,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player Shots,false,215,Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Achraf Hakimi (2) | Amine Gouiri (1) | Amine Gouiri (1)
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Teams to Score,false,4,Both Teams | Marseille Only | No Goal | PSG Only
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Corners Totals Home,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Home Team Exact Goals,false,4,Marseille - 0 Goals | Marseille - 1 Goal | Marseille - 2 Goals | Marseille - 3+ Goals
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Winning Margin,false,10,1 (1) | 1 (2) | 2 (1) | 2 (2) | 3 (1) | 3 (2) | 4+ (1) | 4+ (2)
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Exact Total Goals,false,8,0 Goals | 1 Goal | 2 Goals | 3 Goals | 4 Goals | 5 Goals | 6 Goals | 7+ Goals
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Correct Score,false,40,0-0 | 0-1 | 0-2 | 0-3 | 0-4 | 0-5 | 0-6 | 0-7
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Goalkeeper Saves,false,12,Jeffrey de Lange | Jeffrey de Lange | Jeffrey de Lange | Jeffrey de Lange | Jeffrey de Lange | Jeffrey de Lange | Jeffrey de Lange | Matvey Safonov
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player to be Booked,false,48,Achraf Hakimi (Booked) | Alessandro Longoni (Booked) | Alexi Koum (Booked) | Amine Gouiri (Booked) | Amine Harit (Booked) | Angel Gomes (Booked) | Bamo Meite (Booked) | CJ Egan-Riley (Booked)
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Away Team Exact Goals,false,4,PSG - 0 Goals | PSG - 1 Goal | PSG - 2 Goals | PSG - 3+ Goals
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Clean Sheet Away,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,European Handicap HT,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Last Team To Score,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,ML 2H,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Player Cards,false,144,Achraf Hakimi (1st Card) | Achraf Hakimi (Booked) | Achraf Hakimi (Sent Off) | Alessandro Longoni (1st Card) | Alessandro Longoni (Booked) | Alessandro Longoni (Sent Off) | Alexi Koum (1st Card) | Alexi Koum (Booked)
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Total Shots on Target,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Double Chance HT,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365,France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Goal Method,false,82,Achraf Hakimi (Header) (2) | Achraf Hakimi (Outside the Box) (2) | Amine Gouiri (Header) (1) | Amine Gouiri (Outside the Box) (1) | Amine Harit (Header) (1) | Amine Harit (Outside the Box) (1) | Angel Gomes (Header) (1) | Angel Gomes (Outside the Box) (1)
-72036192,2026-09-20T18:45:00Z,Bet365 (no latency),France - Ligue 1,Olympique Marseille,Paris Saint-Germain,ML,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365 (no latency),France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Spread,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365 (no latency),France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Totals,false,1,
-72036192,2026-09-20T18:45:00Z,Bet365 (no latency),France - Ligue 1,Olympique Marseille,Paris Saint-Germain,Bookings Totals,false,1,

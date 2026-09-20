@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-09-19T11:55:47Z
+generated_at_utc: 2026-09-20T12:16:15Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,15 +8,15 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 1886
-role_players_loaded: 540
+raw_odds_rows_loaded: 834
+role_players_loaded: 567
 
 Join
-shadow_rows_assist_only: 1886
-role_matched_rows: 325
-role_match_rate_pct: 17.23
+shadow_rows_assist_only: 834
+role_matched_rows: 142
+role_match_rate_pct: 17.03
 ambiguous_player_rows: 0
-unmatched_player_rows: 1561
+unmatched_player_rows: 692
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
@@ -24,44 +24,44 @@ It is not a betting model, not a public Fair Odds Lab lane, and not a value sign
 
 Top role-matched rows
  - Giacomo Calo | Frosinone Calcio vs Como 1907 | odds 5.0000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - Nadiem Amiri | Borussia Monchengladbach vs FSV Mainz | odds 4.5000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
  - David Raum | Bayer Leverkusen vs RB Leipzig | odds 4.5000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - Branco van den Boomen | Angers SCO vs ESTAC Troyes | odds 5.0000 | setpiece_last5 97.56 | corners_last5 97.14 | fk_last5 100.0
- - Dominik Szoboszlai | AFC Bournemouth vs Liverpool FC | odds 4.3330 | setpiece_last5 97.14 | corners_last5 95.0 | fk_last5 100.0
+ - Dominik Szoboszlai | AFC Bournemouth vs Liverpool FC | odds 4.3330 | setpiece_last5 95.65 | corners_last5 92.86 | fk_last5 100.0
  - Felix Keidel | Schalke 04 vs SV 07 Elversberg | odds 7.5000 | setpiece_last5 91.67 | corners_last5 100.0 | fk_last5 80.0
  - Adil Aouchiche | Schalke 04 vs SV 07 Elversberg | odds 5.5000 | setpiece_last5 84.62 | corners_last5 87.5 | fk_last5 80.0
  - Aleix Garcia | Bayer Leverkusen vs RB Leipzig | odds 3.5000 | setpiece_last5 83.33 | corners_last5 96.0 | fk_last5 54.55
- - Joris Chotard | AJ Auxerre vs Stade Brest 29 | odds 6.5000 | setpiece_last5 81.48 | corners_last5 95.0 | fk_last5 50.0
- - Can Uzun | Eintracht Frankfurt vs SC Freiburg | odds 6.0000 | setpiece_last5 76.47 | corners_last5 76.92 | fk_last5 75.0
+ - Joris Chotard | AJ Auxerre vs Stade Brest 29 | odds 6.0000 | setpiece_last5 81.48 | corners_last5 95.0 | fk_last5 50.0
  - Anton Stach | Leeds United vs Crystal Palace | odds 5.0000 | setpiece_last5 76.0 | corners_last5 76.47 | fk_last5 75.0
  - Raphael Obermair | SC Paderborn 07 vs TSG Hoffenheim | odds 7.0000 | setpiece_last5 70.59 | corners_last5 60.0 | fk_last5 85.71
- - Luis Milla | Frosinone Calcio vs Como 1907 | odds 2.6250 | setpiece_last5 65.38 | corners_last5 62.5 | fk_last5 100.0
- - Paulo Dybala | AS Roma vs Inter Milano | odds 3.7500 | setpiece_last5 63.16 | corners_last5 60.0 | fk_last5 75.0
- - Hugo Gonzalez | RC Celta de Vigo vs Racing Santander | odds 5.5000 | setpiece_last5 62.96 | corners_last5 60.87 | fk_last5 75.0
+ - Luis Milla | Frosinone Calcio vs Como 1907 | odds 2.7500 | setpiece_last5 65.38 | corners_last5 62.5 | fk_last5 100.0
  - Sergio Gomez | Valencia CF vs Real Sociedad San Sebastian | odds 5.0000 | setpiece_last5 62.79 | corners_last5 63.64 | fk_last5 60.0
- - Albert Gronbaek | Hamburger SV vs 1. FC Cologne | odds 5.5000 | setpiece_last5 62.5 | corners_last5 55.56 | fk_last5 71.43
- - Pascal Gross | Brighton & Hove Albion vs Arsenal FC | odds 7.5000 | setpiece_last5 62.07 | corners_last5 60.0 | fk_last5 62.5
- - Kevin De Bruyne | ACF Fiorentina vs SSC Napoli | odds 3.4000 | setpiece_last5 61.54 | corners_last5 58.33 | fk_last5 100.0
  - Emanuele Valeri | Parma Calcio vs Genoa CFC | odds 7.0000 | setpiece_last5 60.71 | corners_last5 53.33 | fk_last5 69.23
+ - Djibril Sow | Parma Calcio vs Genoa CFC | odds 9.0000 | setpiece_last5 54.17 | corners_last5 57.89 | fk_last5 50.0
+ - Marcus Tavernier | AFC Bournemouth vs Liverpool FC | odds 6.5000 | setpiece_last5 53.85 | corners_last5 57.14 | fk_last5 50.0
+ - Jonathan Clauss | OGC Nice vs Lille OSC | odds 5.0000 | setpiece_last5 53.57 | corners_last5 47.62 | fk_last5 71.43
+ - Granit Xhaka | Manchester City vs Sunderland AFC | odds 7.5000 | setpiece_last5 51.43 | corners_last5 47.37 | fk_last5 69.23
+ - Jon Ander Olasagasti | Villarreal CF vs Levante UD | odds 9.0000 | setpiece_last5 50.0 | corners_last5 64.71 | fk_last5 22.22
+ - Yeremy Pino | Leeds United vs Crystal Palace | odds 6.5000 | setpiece_last5 50.0 | corners_last5 45.45 | fk_last5 75.0
+ - Vladimir Coufal | SC Paderborn 07 vs TSG Hoffenheim | odds 3.7500 | setpiece_last5 48.39 | corners_last5 58.33 | fk_last5 16.67
+ - Filip Ugrinic | Valencia CF vs Real Sociedad San Sebastian | odds 6.5000 | setpiece_last5 48.0 | corners_last5 50.0 | fk_last5 33.33
 
 Unmatched sample
- - Alessandro Bastoni | AS Roma vs Inter Milano
- - Andy Diouf | AS Roma vs Inter Milano
- - Ange Bonny | AS Roma vs Inter Milano
- - Benjamin Pavard | AS Roma vs Inter Milano
- - Bryan Cristante | AS Roma vs Inter Milano
- - Carlos Augusto | AS Roma vs Inter Milano
- - Curtis Jones | AS Roma vs Inter Milano
- - Daniele Ghilardi | AS Roma vs Inter Milano
- - Devyne Rensch | AS Roma vs Inter Milano
- - Djed Spence | AS Roma vs Inter Milano
- - Donyell Malen | AS Roma vs Inter Milano
- - Emanuele Lulli | AS Roma vs Inter Milano
- - Evan N'Dicka | AS Roma vs Inter Milano
- - Gianluca Mancini | AS Roma vs Inter Milano
- - Henrikh Mkhitaryan | AS Roma vs Inter Milano
- - Konstantinos Koulierakis | AS Roma vs Inter Milano
- - Kouadio Kone | AS Roma vs Inter Milano
- - Lautaro Martinez | AS Roma vs Inter Milano
- - Leonardo Balerdi | AS Roma vs Inter Milano
- - Lorenzo Pellegrini | AS Roma vs Inter Milano
+ - Adrian Lahdo | Frosinone Calcio vs Como 1907
+ - Alberto Dossena | Frosinone Calcio vs Como 1907
+ - Alejandro Cichero | Frosinone Calcio vs Como 1907
+ - Aleksa Terzic | Frosinone Calcio vs Como 1907
+ - Alessio Zerbin | Frosinone Calcio vs Como 1907
+ - Alex Valle | Frosinone Calcio vs Como 1907
+ - Anastasios Douvikas | Frosinone Calcio vs Como 1907
+ - Anouar El Azzouzi | Frosinone Calcio vs Como 1907
+ - Anthony Oyono | Frosinone Calcio vs Como 1907
+ - Antonio Raimondo | Frosinone Calcio vs Como 1907
+ - Assane Diao | Frosinone Calcio vs Como 1907
+ - Ben Kone | Frosinone Calcio vs Como 1907
+ - Daniel Birligea | Frosinone Calcio vs Como 1907
+ - Enzo Tchato | Frosinone Calcio vs Como 1907
+ - Fares Ghedjemis | Frosinone Calcio vs Como 1907
+ - Florian Grillitsch | Frosinone Calcio vs Como 1907
+ - Francesco Gelli | Frosinone Calcio vs Como 1907
+ - Gabriele Bracaglia | Frosinone Calcio vs Como 1907
+ - Gabriele Calvani | Frosinone Calcio vs Como 1907
+ - Giorgi Kvernadze | Frosinone Calcio vs Como 1907
