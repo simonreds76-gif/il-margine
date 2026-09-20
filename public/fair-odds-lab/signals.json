@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-20T11:49:40.781615Z",
+  "generated_at": "2026-09-20T14:14:07.932664Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -35,18 +35,14 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 18,
+  "fixtures_evaluated": 10,
   "signals_qualifying": 0,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 26,
-    "model_probability_below_floor": 1,
-    "model_market_gap_gt_10pp": 1
+    "incomplete_prediction_roster": 16
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 1,
-    "added_by_league": {
-      "epl": 1
-    },
+    "eligible_rows": 0,
+    "added_by_league": {},
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
