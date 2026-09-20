@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-19T12:42:27Z",
+  "generated_at": "2026-09-20T04:58:59Z",
   "league": "bundesliga",
-  "row_count": 1,
+  "row_count": 3,
   "rows": [
     {
       "team": "Bayern München",
@@ -19,6 +19,38 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-09-18"
+    },
+    {
+      "team": "Borussia Mönchengladbach",
+      "team_key": "borussia m gladbach",
+      "player_name": "Kevin Diks",
+      "player_key": "kevin diks",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-19"
+    },
+    {
+      "team": "Borussia Mönchengladbach",
+      "team_key": "borussia m gladbach",
+      "player_name": "Shuto Machino",
+      "player_key": "shuto machino",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-19"
     }
   ]
 }
