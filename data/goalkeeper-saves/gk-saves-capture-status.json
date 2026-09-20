@@ -2,47 +2,40 @@
   "capture_errors": [],
   "capture_mode": "close",
   "event_last_checked": {
-    "71945272": "2026-09-20T13:41:41Z",
-    "71945274": "2026-09-20T13:41:41Z",
-    "72036192": "2026-09-20T13:41:41Z",
-    "72036196": "2026-09-20T13:41:41Z",
-    "72221280": "2026-09-20T13:41:41Z",
-    "72478588": "2026-09-20T13:41:41Z",
-    "72478592": "2026-09-20T13:41:41Z",
-    "72478602": "2026-09-20T13:41:41Z",
-    "72478604": "2026-09-20T13:41:41Z",
-    "72513216": "2026-09-20T13:41:41Z",
-    "72513218": "2026-09-20T13:41:41Z"
+    "71945274": "2026-09-20T16:59:08Z",
+    "72036192": "2026-09-20T16:59:08Z",
+    "72478602": "2026-09-20T16:59:08Z",
+    "72513218": "2026-09-20T16:59:08Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 11,
-  "events_supported": 11,
-  "events_with_lines": 10,
-  "generated_at": "2026-09-20T13:41:41Z",
+  "events_selected": 4,
+  "events_supported": 4,
+  "events_with_lines": 4,
+  "generated_at": "2026-09-20T16:59:08Z",
   "last_publication_at": "2026-09-20T13:05:31Z",
   "league_coverage": {
     "bundesliga": {
-      "selected": 2,
-      "with_prices": 2
-    },
-    "epl": {
       "selected": 1,
       "with_prices": 1
     },
+    "epl": {
+      "selected": 0,
+      "with_prices": 0
+    },
     "la-liga": {
-      "selected": 4,
-      "with_prices": 4
+      "selected": 1,
+      "with_prices": 1
     },
     "ligue-1": {
-      "selected": 2,
+      "selected": 1,
       "with_prices": 1
     },
     "serie-a": {
-      "selected": 2,
-      "with_prices": 2
+      "selected": 1,
+      "with_prices": 1
     }
   },
-  "market_inventory_rows_added": 958,
+  "market_inventory_rows_added": 348,
   "market_names_observed": [
     "1st Half Corners",
     "Alternative Corners",
@@ -103,7 +96,6 @@
     "Player Cards",
     "Player Fouls",
     "Player Headed Shots on Target",
-    "Player Passes",
     "Player Shots",
     "Player Shots on Target",
     "Player Shots on Target Outside Box",
@@ -120,18 +112,12 @@
     "Teams to Score",
     "Time of First Corner",
     "Total Corners",
-    "Total Offsides",
-    "Total Offsides Away",
-    "Total Offsides Home",
     "Total Shots",
     "Total Shots Away",
     "Total Shots Home",
     "Total Shots on Target",
     "Total Shots on Target Away",
     "Total Shots on Target Home",
-    "Total Tackles",
-    "Total Tackles Away",
-    "Total Tackles Home",
     "Totals",
     "Totals 2H",
     "Totals HT",
@@ -139,59 +125,10 @@
   ],
   "publication_recovery": false,
   "request_budget": 4,
-  "requests_used": 3,
-  "rows_added": 114,
-  "rows_observed": 114,
+  "requests_used": 2,
+  "rows_added": 43,
+  "rows_observed": 43,
   "selected_events": [
-    {
-      "away": "Real Madrid",
-      "competition": "Spain - LaLiga",
-      "home": "Atletico Madrid",
-      "id": 72478588,
-      "kickoff_at": "2026-09-20T14:15:00Z"
-    },
-    {
-      "away": "Lille OSC",
-      "competition": "France - Ligue 1",
-      "home": "OGC Nice",
-      "id": 72036196,
-      "kickoff_at": "2026-09-20T15:15:00Z"
-    },
-    {
-      "away": "Manchester United",
-      "competition": "England - Premier League",
-      "home": "Fulham FC",
-      "id": 72221280,
-      "kickoff_at": "2026-09-20T15:30:00Z"
-    },
-    {
-      "away": "SV 07 Elversberg",
-      "competition": "Germany - Bundesliga",
-      "home": "Schalke 04",
-      "id": 72513216,
-      "kickoff_at": "2026-09-20T15:30:00Z"
-    },
-    {
-      "away": "Atalanta BC",
-      "competition": "Italy - Serie A",
-      "home": "Juventus Turin",
-      "id": 71945272,
-      "kickoff_at": "2026-09-20T16:00:00Z"
-    },
-    {
-      "away": "Real Betis Seville",
-      "competition": "Spain - LaLiga",
-      "home": "RC Deportivo de A Coruna",
-      "id": 72478592,
-      "kickoff_at": "2026-09-20T16:30:00Z"
-    },
-    {
-      "away": "Levante UD",
-      "competition": "Spain - LaLiga",
-      "home": "Villarreal CF",
-      "id": 72478604,
-      "kickoff_at": "2026-09-20T16:30:00Z"
-    },
     {
       "away": "TSG Hoffenheim",
       "competition": "Germany - Bundesliga",
@@ -222,5 +159,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 10
+  "three_way_events": 4
 }
