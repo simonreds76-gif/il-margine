@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-20T04:58:51Z",
+  "generated_at": "2026-09-20T13:13:30Z",
   "league": "la-liga",
-  "row_count": 2,
+  "row_count": 5,
   "rows": [
     {
       "team": "Athletic Club",
@@ -21,6 +21,38 @@
       "last_event_date": "2026-09-19"
     },
     {
+      "team": "Barcelona",
+      "team_key": "barcelona",
+      "player_name": "Lamine Yamal",
+      "player_key": "lamine yamal",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 3,
+      "observed_share": 0.3333,
+      "observed_sample": 3.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-16"
+    },
+    {
+      "team": "Barcelona",
+      "team_key": "barcelona",
+      "player_name": "Raphinha",
+      "player_key": "raphinha",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 3,
+      "observed_share": 0.6667,
+      "observed_sample": 3.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-16"
+    },
+    {
       "team": "Celta Vigo",
       "team_key": "celta vigo",
       "player_name": "Hugo González",
@@ -35,6 +67,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-09-19"
+    },
+    {
+      "team": "Villarreal",
+      "team_key": "villarreal",
+      "player_name": "Pape Gueye",
+      "player_key": "pape gueye",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-17"
     }
   ]
 }
