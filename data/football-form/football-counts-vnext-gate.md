@@ -1,6 +1,6 @@
 # Football Counts vNext Gate
 
-- Generated: 2026-09-19T23:36:37Z
+- Generated: 2026-09-20T13:06:20Z
 - This snapshot cannot promote or route bets.
 
 ## Team Shots v4
@@ -8,12 +8,12 @@
 - Prospective status: **AUTHORIZED_SHADOW**
 - Market gate: **BLOCKED_PENDING_2026_27_TRUE_CLOSE_SAMPLE**
 - Promotion gate: **BLOCKED**
-- Prospective signals: 2 (1 settled / 1 pending)
+- Prospective signals: 2 (2 settled / 0 pending)
 - Warm-up tracking: 14 (14 settled / 0 pending), +0.32u, ROI +2.3%
-- Latest scan: **EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES**; 122 rows / 16 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
-- Blockers: {'early_market_gap_cap': 28, 'edge_below_3pct': 118, 'price_older_than_3h': 54}
-- P/L / ROI: -1.00u / -100.0%
-- True-close coverage: 0/1 (0.0%)
+- Latest scan: **EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES**; 64 rows / 8 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
+- Blockers: {'early_market_gap_cap': 8, 'edge_below_3pct': 64, 'price_older_than_3h': 32}
+- P/L / ROI: -2.00u / -100.0%
+- True-close coverage: 0/2 (0.0%)
 - Mean true-close CLV: -
 - Live routing: unchanged / disabled
 
@@ -22,12 +22,12 @@
 - Prospective status: **AUTHORIZED_SHADOW**
 - Market gate: **BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE**
 - Promotion gate: **BLOCKED**
-- Prospective signals: 39 (24 settled / 15 pending)
+- Prospective signals: 41 (33 settled / 8 pending)
 - Warm-up tracking: 36 (36 settled / 0 pending), -2.50u, ROI -7.0%
-- Latest scan: **NO_EDGE_AFTER_UNLOCK**; 78 rows / 15 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
-- Blockers: {'edge_below_3pct': 57, 'price_older_than_3h': 78}
-- P/L / ROI: -3.69u / -15.4%
-- True-close coverage: 7/24 (29.2%)
-- Mean true-close CLV: -1.44%
-- Side mix: {'over': 8, 'under': 31} (dominant 79.5%)
+- Latest scan: **ELIGIBLE_CANDIDATES_PRESENT**; 40 rows / 8 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
+- Blockers: {'edge_below_3pct': 27}
+- P/L / ROI: -0.08u / -0.2%
+- True-close coverage: 13/33 (39.4%)
+- Mean true-close CLV: -0.88%
+- Side mix: {'over': 9, 'under': 32} (dominant 78.0%)
 - Live routing: unchanged / disabled

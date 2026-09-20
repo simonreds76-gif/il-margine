@@ -2,8 +2,7 @@
   "categories": {
     "match_cards_total": {
       "bookmakers": [
-        "Bet365",
-        "Bet365 (no latency)"
+        "Bet365"
       ],
       "competitions": [
         "Bundesliga",
@@ -17,14 +16,14 @@
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 37,
-      "paired_price_events": 36,
-      "pairing_unknown_events": 37,
+      "events": 18,
+      "paired_price_events": 12,
+      "pairing_unknown_events": 18,
       "raw_market_names": [
         "Bookings Totals",
         "Number of Cards In Match"
       ],
-      "rows": 191,
+      "rows": 57,
       "status": "PAIRED_PRICES_OBSERVED"
     },
     "match_fouls_total": {
@@ -53,13 +52,13 @@
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 39,
+      "events": 18,
       "paired_price_events": 0,
-      "pairing_unknown_events": 39,
+      "pairing_unknown_events": 18,
       "raw_market_names": [
         "Player Cards"
       ],
-      "rows": 78,
+      "rows": 30,
       "status": "MARKET_NAME_ONLY"
     },
     "player_fouled": {
@@ -78,13 +77,13 @@
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 34,
+      "events": 16,
       "paired_price_events": 0,
-      "pairing_unknown_events": 34,
+      "pairing_unknown_events": 16,
       "raw_market_names": [
         "Player To Be Fouled"
       ],
-      "rows": 68,
+      "rows": 27,
       "status": "MARKET_NAME_ONLY"
     },
     "player_fouls_committed": {
@@ -103,13 +102,13 @@
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 34,
+      "events": 16,
       "paired_price_events": 0,
-      "pairing_unknown_events": 34,
+      "pairing_unknown_events": 16,
       "raw_market_names": [
         "Player Fouls"
       ],
-      "rows": 68,
+      "rows": 27,
       "status": "MARKET_NAME_ONLY"
     },
     "team_cards_total": {
@@ -128,14 +127,14 @@
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 36,
-      "paired_price_events": 36,
-      "pairing_unknown_events": 36,
+      "events": 18,
+      "paired_price_events": 12,
+      "pairing_unknown_events": 18,
       "raw_market_names": [
         "Bookings Totals Away",
         "Bookings Totals Home"
       ],
-      "rows": 144,
+      "rows": 60,
       "status": "PAIRED_PRICES_OBSERVED"
     },
     "team_fouls_total": {
@@ -149,7 +148,7 @@
       "status": "NOT_OBSERVED"
     }
   },
-  "generated_at": "2026-09-19T12:32:44Z",
+  "generated_at": "2026-09-20T13:05:34Z",
   "policy": {
     "definition_gate": "Bookmaker settlement definitions must be reconciled against the result source before ROI is scored.",
     "live_staking": "BLOCKED",

@@ -381,6 +381,48 @@
       },
       "message_id": 263,
       "sent_at": "2026-09-19T23:36:43.241878+00:00"
+    },
+    "72478604|péter gulácsi|1.5|over": {
+      "status": "claimed",
+      "run_token": "35512400361:1",
+      "claimed_at": "2026-09-20T13:06:26.917596+00:00",
+      "signal": {
+        "signal_id": "72478604|péter gulácsi|1.5|over",
+        "created_at": "2026-09-20T13:05:33Z",
+        "event_id": "72478604",
+        "match_date": "2026-09-20",
+        "kickoff_at": "2026-09-20T16:30:00Z",
+        "league": "la-liga",
+        "home_team": "Villarreal CF",
+        "away_team": "Levante UD",
+        "team": "Villarreal CF",
+        "opponent": "Levante UD",
+        "venue": "home",
+        "goalkeeper": "Péter Gulácsi",
+        "bookmaker": "Bet365",
+        "line": "1.5",
+        "side": "over",
+        "odds_decimal": "1.7270",
+        "model_mean": "2.3113",
+        "model_probability": "0.650247",
+        "push_probability": "0.000000",
+        "fair_odds": "1.538",
+        "edge": "0.122976",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-09-20T13:05:31Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2"
+      }
     }
   }
 }
