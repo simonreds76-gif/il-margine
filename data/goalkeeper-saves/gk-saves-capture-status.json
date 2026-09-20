@@ -1,30 +1,29 @@
 {
   "capture_errors": [],
-  "capture_mode": "publication",
+  "capture_mode": "close",
   "event_last_checked": {
-    "71945272": "2026-09-20T13:05:31Z",
-    "71945274": "2026-09-20T13:05:31Z",
-    "72036192": "2026-09-20T13:05:31Z",
-    "72036196": "2026-09-20T13:05:31Z",
-    "72221280": "2026-09-20T13:05:31Z",
-    "72478588": "2026-09-20T13:05:31Z",
-    "72478592": "2026-09-20T13:05:31Z",
-    "72478602": "2026-09-20T13:05:31Z",
-    "72478604": "2026-09-20T13:05:31Z",
-    "72513206": "2026-09-20T13:05:31Z",
-    "72513216": "2026-09-20T13:05:31Z",
-    "72513218": "2026-09-20T13:05:31Z"
+    "71945272": "2026-09-20T13:41:41Z",
+    "71945274": "2026-09-20T13:41:41Z",
+    "72036192": "2026-09-20T13:41:41Z",
+    "72036196": "2026-09-20T13:41:41Z",
+    "72221280": "2026-09-20T13:41:41Z",
+    "72478588": "2026-09-20T13:41:41Z",
+    "72478592": "2026-09-20T13:41:41Z",
+    "72478602": "2026-09-20T13:41:41Z",
+    "72478604": "2026-09-20T13:41:41Z",
+    "72513216": "2026-09-20T13:41:41Z",
+    "72513218": "2026-09-20T13:41:41Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 12,
-  "events_supported": 12,
-  "events_with_lines": 11,
-  "generated_at": "2026-09-20T13:05:31Z",
+  "events_selected": 11,
+  "events_supported": 11,
+  "events_with_lines": 10,
+  "generated_at": "2026-09-20T13:41:41Z",
   "last_publication_at": "2026-09-20T13:05:31Z",
   "league_coverage": {
     "bundesliga": {
-      "selected": 3,
-      "with_prices": 3
+      "selected": 2,
+      "with_prices": 2
     },
     "epl": {
       "selected": 1,
@@ -43,7 +42,7 @@
       "with_prices": 2
     }
   },
-  "market_inventory_rows_added": 1043,
+  "market_inventory_rows_added": 958,
   "market_names_observed": [
     "1st Half Corners",
     "Alternative Corners",
@@ -141,16 +140,9 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 3,
-  "rows_added": 125,
-  "rows_observed": 125,
+  "rows_added": 114,
+  "rows_observed": 114,
   "selected_events": [
-    {
-      "away": "RB Leipzig",
-      "competition": "Germany - Bundesliga",
-      "home": "Bayer Leverkusen",
-      "id": 72513206,
-      "kickoff_at": "2026-09-20T13:30:00Z"
-    },
     {
       "away": "Real Madrid",
       "competition": "Spain - LaLiga",
@@ -230,5 +222,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 11
+  "three_way_events": 10
 }
