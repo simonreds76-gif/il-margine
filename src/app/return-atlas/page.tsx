@@ -15,11 +15,13 @@ const description = "Explore ATP tennis players’ historical betting returns at
 const url = "https://ilmargine.bet/return-atlas";
 export const metadata: Metadata = {
   title, description, alternates: { canonical: url }, robots: { index: true, follow: true },
-  openGraph: { title, description, url, type: "website" },
-  twitter: { card: "summary_large_image", title, description },
+  openGraph: { title, description, url, type: "website", images: [{ url: `${url}/assets/share-20260920-square.png`, width: 1200, height: 1200, type: "image/png", alt: "Return Atlas — ATP tennis betting returns by player, season and surface" }] },
+  twitter: { card: "summary_large_image", title, description, images: [`${url}/assets/share-20260920-wide.png`] },
 };
 
 const date = (value: string) => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(value + "T12:00:00Z"));
+const archiveMatches = Object.values(release.coverage).reduce((total, year) => total + year.archive_completed_main_draw_matches, 0);
+const coveragePercent = (100 * release.matches / archiveMatches).toFixed(1);
 
 export default function ReturnAtlasPage() {
   return <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -36,12 +38,24 @@ export default function ReturnAtlasPage() {
       </header>
       <ReturnAtlasClient indexUrl={release.indexUrl} detailsBase={release.detailsBase} version={release.version} checkedAt={release.checkedAt} />
       <section className="atlas-about" aria-label="About Return Atlas">
-        <h2>ATP tennis betting history, player by player</h2>
-        <p>Explore {release.matches.toLocaleString("en-GB")} matched results across {release.players} players from {release.years[0]}–{release.years.at(-1)}. Every included bet uses a hypothetical one-unit stake. Betting against a player means backing their opponent at the opponent’s recorded odds.</p>
-        <p>Favourite and underdog describe the named player. Historical returns include winning and losing bets and do not predict future profits. Qualifying, Challenger, ITF, team events, unfinished matches and unresolved records are excluded. The latest included match date can be earlier than the date the archives were checked.</p>
+        <p className="about-eyebrow">THE RECORD BEHIND THE RETURNS</p>
+        <h2>ATP tennis betting history.<br />Every player has a different story.</h2>
+        <p className="about-intro">See how backing a player—or their opponent—would have performed at Pinnacle odds. Compare seasons, surfaces and results as favourite or underdog across ATP main-tour singles, including the Grand Slams.</p>
+        <dl className="about-numbers">
+          <div><dt>Matches with odds</dt><dd>{release.matches.toLocaleString("en-GB")}</dd></div>
+          <div><dt>Player records</dt><dd>{release.players.toLocaleString("en-GB")}</dd></div>
+          <div><dt>Seasons covered</dt><dd>{release.years[0]}–{release.years.at(-1)}</dd></div>
+        </dl>
+        <div className="about-guide">
+          <div><h3>Bet on or bet against</h3><p>Back the named player, or back their opponent at the opponent’s recorded price. Each view shows its own profit and ROI.</p></div>
+          <div><h3>Favourite or underdog</h3><p>Split the record by the named player’s position in the market. The labels describe that player, whichever side you back.</p></div>
+          <div><h3>The same stake, every time</h3><p>Every match uses a hypothetical 1-unit stake. Wins and losses both count, so you can compare records on the same basis.</p></div>
+        </div>
+        <details><summary>Which ATP matches are included?</summary><p>The current release includes <strong>{release.matches.toLocaleString("en-GB")} of {archiveMatches.toLocaleString("en-GB")} eligible completed matches in our results archive ({coveragePercent}%)</strong>. Coverage runs from {release.years[0]} to {date(release.through)}; it is not a complete record of every ATP match or player’s career.</p><p>Only completed main-draw singles with a verified result and Pinnacle prices for both players are included. Qualifying, Challenger, ITF, team events, exhibitions, Olympics, retirements, walkovers and unresolved records are excluded. Missing matches can affect returns and rankings.</p><p>Archives were checked on {date(release.checkedAt)}. That is separate from the latest included match date.</p></details>
         <details><summary className="cursor-pointer py-3 font-semibold text-slate-200">How is player ROI calculated?</summary><p>ROI is net profit divided by total stakes, expressed as a percentage. At a flat stake of 1u, a win at 2.50 returns 1.50u profit and a loss costs 1u. The table includes both, using the recorded price for the side you select.</p></details>
         <details><summary className="cursor-pointer py-3 font-semibold text-slate-200">What counts as a favourite or underdog?</summary><p>The favourite has the shorter of the two recorded prices; the underdog has the longer price. Equal prices appear in all matches but neither split. These labels always describe the named player, including when you choose to bet against them.</p></details>
         <details><summary className="cursor-pointer py-3 font-semibold text-slate-200">Are these Il Margine’s published tennis picks?</summary><p>No. This is a historical research tool showing what backing each player or opponent would have returned. Our <Link href="/tennis-tips" prefetch={false}>published tennis tips and results</Link> are tracked separately.</p></details>
+        <p className="about-note">Historical returns describe what happened. They do not predict future profits.</p>
         <Link href="/return-atlas/credits" prefetch={false}>Data &amp; photo credits →</Link>
       </section>
     </main>
