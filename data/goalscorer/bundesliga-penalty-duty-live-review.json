@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-20T13:13:15Z",
+  "generated_at": "2026-09-21T05:04:00Z",
   "league": "bundesliga",
-  "row_count": 3,
+  "row_count": 2,
   "rows": [
     {
       "date": "2026-09-19",
@@ -44,7 +44,7 @@
           "source_event_id": "2972039679",
           "match_id": "5881172",
           "source_url": "https://www.fotmob.com/matches/borussia-monchengladbach-vs-mainz-05/37gixo#5881172",
-          "observed_at": "2026-09-20T13:13:13+00:00",
+          "observed_at": "2026-09-21T05:03:50+00:00",
           "event_date": "2026-09-19",
           "season": "2026/27",
           "team": "Borussia Mönchengladbach",
@@ -110,7 +110,7 @@
           "source_event_id": "2971973629",
           "match_id": "5881172",
           "source_url": "https://www.fotmob.com/matches/borussia-monchengladbach-vs-mainz-05/37gixo#5881172",
-          "observed_at": "2026-09-20T13:13:13+00:00",
+          "observed_at": "2026-09-21T05:03:50+00:00",
           "event_date": "2026-09-19",
           "season": "2026/27",
           "team": "Borussia Mönchengladbach",
@@ -135,91 +135,16 @@
           "event_result": "missed"
         }
       ]
-    },
-    {
-      "date": "2026-09-18",
-      "league": "bundesliga",
-      "review_source": "fotmob_live",
-      "match": "Bayern München vs Union Berlin",
-      "team": "Bayern München",
-      "opponent": "Union Berlin",
-      "actual_taker": "Harry Kane",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "39",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Harry Kane",
-      "secondary_pre_match": "Arijon Ibrahimović",
-      "tertiary_pre_match": "Jamal Musiala",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Harry Kane took 1 penalty attempt and scored for Bayern München vs Union Berlin. Primary pre-match: Harry Kane (unknown). Secondary pre-match: Arijon Ibrahimović (unknown). No hierarchy change implied from this event.",
-      "context_generated_at": "2026-09-02",
-      "context_source_path": "data/goalscorer/bundesliga-penalty-takers.json",
-      "actual_taker_match_status": "Yes - started, off 77'",
-      "primary_on_pitch_at_penalty": "Yes - started, off 77'",
-      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
-      "tertiary_on_pitch_at_penalty": "Yes - started",
-      "actual_taker_on_pitch_at_penalty": "Yes - started, off 77'",
-      "event_evidence": [
-        {
-          "id": "fotmob|bundesliga|5881171|2971434393",
-          "source_event_id": "2971434393",
-          "match_id": "5881171",
-          "source_url": "https://www.fotmob.com/matches/union-berlin-vs-bayern-munchen/2o5txd#5881171",
-          "observed_at": "2026-09-20T13:13:13+00:00",
-          "event_date": "2026-09-18",
-          "season": "2026/27",
-          "team": "Bayern München",
-          "taker": "Harry Kane",
-          "primary": "Harry Kane",
-          "primary_on_pitch": true,
-          "on_pitch_proof": {
-            "player": "Harry Kane",
-            "minute": 39,
-            "method": "completed_lineup_timeline",
-            "player_id": 194165,
-            "bucket": "starters",
-            "substitutions": [
-              {
-                "type": "subout",
-                "time": 77
-              }
-            ],
-            "events": [],
-            "reason": "on_pitch"
-          },
-          "minute": 39,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Bayern München vs Union Berlin",
-          "event_result": "scored"
-        }
-      ]
     }
   ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20260914",
-      "20260915",
-      "20260916",
-      "20260917",
-      "20260918",
       "20260919",
-      "20260920"
+      "20260920",
+      "20260921"
     ],
-    "matches_checked": 6
+    "matches_checked": 8
   }
 }
