@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
 
-const title = "Betting Calculators | Returns & Kelly Criterion | Il Margine";
+const title = "Betting Calculators | Kelly, Fair Odds and Closing Line | Il Margine";
 const description =
-  "Track returns from our verified settled bets and size stakes with the Kelly Criterion. Includes bankroll, ROI, and fractional Kelly tools for sports betting.";
+  "Four betting calculators: flat-stake returns with simulated variance and drawdown, fractional Kelly stake sizing, no-vig fair odds using proportional, Shin and odds-ratio methods, and closing line value.";
 const url = `${BASE_URL}/calculator`;
 
 export const metadata: Metadata = {
   title,
   description,
+  keywords: [
+    "betting calculator",
+    "kelly criterion calculator",
+    "no vig calculator",
+    "fair odds calculator",
+    "closing line value calculator",
+    "bankroll drawdown calculator",
+  ],
   alternates: { canonical: url },
   openGraph: {
     type: "website",
