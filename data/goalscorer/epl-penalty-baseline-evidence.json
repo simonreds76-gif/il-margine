@@ -1,9 +1,25 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-20T13:13:30Z",
+  "generated_at": "2026-09-21T12:55:21Z",
   "league": "epl",
-  "row_count": 1,
+  "row_count": 2,
   "rows": [
+    {
+      "team": "Brighton & Hove Albion",
+      "team_key": "brighton",
+      "player_name": "Pascal Groß",
+      "player_key": "pascal gro",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-13"
+    },
     {
       "team": "Newcastle United",
       "team_key": "newcastle united",
