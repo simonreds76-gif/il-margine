@@ -1,6 +1,6 @@
 {
   "api_errors": [],
-  "deferred_not_due": 6,
+  "deferred_not_due": 0,
   "details": [
     {
       "detail": "fixtures_returned=3",
@@ -12,56 +12,64 @@
     },
     {
       "detail": "",
-      "goalkeeper": "Zion Suzuki",
-      "match": "Tottenham Hotspur vs Aston Villa",
-      "match_date": "2026-09-19",
+      "goalkeeper": "David de Gea",
+      "match": "ACF Fiorentina vs SSC Napoli",
+      "match_date": "2026-09-20",
       "reason": "settled_fotmob",
-      "signal_id": "72221290|zion suzuki|2.5|over"
+      "signal_id": "71945268|david de gea|3.5|over"
     },
     {
       "detail": "",
-      "goalkeeper": "Antonio Sivera",
-      "match": "Athletic Bilbao vs Deportivo Alaves",
-      "match_date": "2026-09-19",
+      "goalkeeper": "Lorenzo Palmisani",
+      "match": "Frosinone Calcio vs Como 1907",
+      "match_date": "2026-09-20",
       "reason": "settled_fotmob",
-      "signal_id": "72478586|antonio sivera|3.5|over"
+      "signal_id": "71945270|lorenzo palmisani|3.5|over"
     },
     {
       "detail": "",
-      "goalkeeper": "Josep Mart\u00ednez",
-      "match": "AS Roma vs Inter Milano",
-      "match_date": "2026-09-19",
+      "goalkeeper": "Maarten Vandevoordt",
+      "match": "Bayer Leverkusen vs RB Leipzig",
+      "match_date": "2026-09-20",
       "reason": "settled_fotmob",
-      "signal_id": "71945280|josep mart\u00ednez|3.5|over"
+      "signal_id": "72513206|maarten vandevoordt|3.5|over"
     },
     {
       "detail": "",
-      "goalkeeper": "Fabian Bredlow",
-      "match": "VfB Stuttgart vs Borussia Dortmund",
-      "match_date": "2026-09-19",
+      "goalkeeper": "Wladimiro Falcone",
+      "match": "AC Milan vs US Lecce",
+      "match_date": "2026-09-20",
       "reason": "settled_fotmob",
-      "signal_id": "72513204|fabian bredlow|2.5|over"
+      "signal_id": "71945274|wladimiro falcone|3.5|over"
     },
     {
       "detail": "",
-      "goalkeeper": "Christos Mandas",
-      "match": "Venezia FC vs Lazio Rome",
-      "match_date": "2026-09-19",
+      "goalkeeper": "Guglielmo Vicario",
+      "match": "Juventus Turin vs Atalanta BC",
+      "match_date": "2026-09-20",
       "reason": "settled_fotmob",
-      "signal_id": "71945284|christos mandas|2.5|over"
+      "signal_id": "71945272|guglielmo vicario|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "P\u00e9ter Gul\u00e1csi",
+      "match": "Villarreal CF vs Levante UD",
+      "match_date": "2026-09-20",
+      "reason": "settled_fotmob",
+      "signal_id": "72478604|p\u00e9ter gul\u00e1csi|1.5|over"
     }
   ],
-  "fotmob_requests_used": 12,
-  "generated_at": "2026-09-20T13:06:21Z",
+  "fotmob_requests_used": 14,
+  "generated_at": "2026-09-21T15:09:22Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 1,
-  "pending_total": 7,
+  "pending_total": 1,
   "reason_counts": {
     "fotmob_finished_fixture_not_found": 1,
-    "settled_fotmob": 5
+    "settled_fotmob": 6
   },
   "requests_used": 0,
-  "settled": 5,
+  "settled": 6,
   "status": "PARTIAL"
 }
