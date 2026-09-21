@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-21T12:55:51Z",
+  "generated_at": "2026-09-21T15:21:08Z",
   "league": "la-liga",
   "row_count": 7,
   "rows": [
@@ -25,15 +25,15 @@
       "team_key": "atletico madrid",
       "player_name": "Alejandro Grimaldo",
       "player_key": "alejandro grimaldo",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 2,
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
       "observed_share": 1.0,
-      "observed_sample": 2.0,
+      "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
         "fotmob_live"
       ],
-      "event_count": 2,
+      "event_count": 1,
       "last_event_date": "2026-09-20"
     },
     {
@@ -41,15 +41,15 @@
       "team_key": "barcelona",
       "player_name": "Lamine Yamal",
       "player_key": "lamine yamal",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 4,
-      "observed_share": 0.5,
-      "observed_sample": 4.0,
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 3,
+      "observed_share": 0.3333,
+      "observed_sample": 3.0,
       "evidence_source": "review_events",
       "review_sources": [
         "fotmob_live"
       ],
-      "event_count": 2,
+      "event_count": 1,
       "last_event_date": "2026-09-16"
     },
     {
@@ -58,9 +58,9 @@
       "player_name": "Raphinha",
       "player_key": "raphinha",
       "observed_player_penalties": 2,
-      "observed_team_penalties": 4,
-      "observed_share": 0.5,
-      "observed_sample": 4.0,
+      "observed_team_penalties": 3,
+      "observed_share": 0.6667,
+      "observed_sample": 3.0,
       "evidence_source": "review_events",
       "review_sources": [
         "fotmob_live"
