@@ -1,0 +1,852 @@
+{
+  "schema_version": 1,
+  "status": "committed",
+  "id": "887c1771fae4467385452bd035a1ff1a",
+  "league": "bundesliga",
+  "audit": {
+    "id": "887c1771fae4467385452bd035a1ff1a",
+    "at": "2026-09-21T11:46:50+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "bundesliga|Borussia M.Gladbach",
+    "reason": "Machino converted a penalty at minute 95 in the home match against Mainz, after coming in from the bench. Diks previosly missed an earlier penalty, he might still have the nod for future penalties but evidence is recommending to promote Machino at least as secondary.",
+    "before_entry": {
+      "primary": "Kevin Diks",
+      "secondary": "Kevin Stöger",
+      "tertiary": "Robin Hack",
+      "last_updated": "2026-09-01",
+      "source": "LigaInsider 2026/27 set-piece board",
+      "cross_check": "Bundesliga official penalty statistics",
+      "hierarchy_status": "conditional",
+      "confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "low"
+      },
+      "condition_note": "Diks leads the current available-player order, ahead of Stöger and Hack. LigaInsider also names Kleindienst among the leading takers. His availability and the next shared-lineup assignment need checking before a permanent change.",
+      "last_verified": {
+        "date": "2026-09-19",
+        "by": "Il Margine",
+        "method": "targeted_source_review"
+      },
+      "public_updated_at": "2026-09-19",
+      "latest_evidence": {
+        "id": "evt_20260919_borussia_mgladbach_source_review",
+        "date": "2026-09-19",
+        "type": "current_season_board_review",
+        "source_count": 1
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_borussia_m_gladbach_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_borussia_m_gladbach_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Kevin Diks converted a regular-time penalty. Diks converted a 90+4 regular-time penalty to win the match. The supporting ledger recorded Diks at 4/4 and Kevin Stöger at 0/1, with no recent evidence settling the remaining backup order.",
+          "sources": [
+            {
+              "label": "Bundesliga",
+              "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-fc-augsburg-spieltag-16-spielbericht-highlights-35510",
+              "date": "2026-01-11",
+              "note": "Kevin Diks converted a regular-time penalty."
+            },
+            {
+              "label": "Bundesliga",
+              "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-1-fc-union-berlin-spieltag-24-spielbericht-highlights-36208",
+              "date": "2026-02-28",
+              "note": "Diks converted a 90+4 regular-time penalty to win the match."
+            },
+            {
+              "label": "SetPieceTakers",
+              "url": "https://data.setpiecetakers.com/penalties/bundesliga",
+              "date": "2026-03-20",
+              "note": "The supporting ledger recorded Diks at 4/4 and Kevin Stöger at 0/1, with no recent evidence settling the remaining backup order."
+            },
+            {
+              "label": "Kicker",
+              "url": "https://www.kicker.de/bundesliga/elfmeter-schuetzen/2025-26/29",
+              "date": "2026-04-11",
+              "note": "Kicker recorded Kevin Diks at 4/4 from Bundesliga penalties through matchday 29, independently confirming the primary call."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_borussia-m-gladbach_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Diks was 4/4 in the league and is the clear incumbent. GladbachLive's local preseason review identifies Hack as the first alternative after a successful test-match penalty and his earlier 3/3 Bielefeld record. Stöger remains the experienced third candidate, but his 2026/27 playing time and recent miss lower confidence.",
+          "sources": [
+            {
+              "label": "Bundesliga",
+              "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-fc-augsburg-spieltag-16-spielbericht-highlights-35510",
+              "date": "2026-01-11",
+              "note": "Diks converted a regular-time penalty."
+            },
+            {
+              "label": "Bundesliga",
+              "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-1-fc-union-berlin-spieltag-24-spielbericht-highlights-36208",
+              "date": "2026-02-28",
+              "note": "Diks converted another late pressure penalty."
+            },
+            {
+              "label": "GladbachLive",
+              "url": "https://www.gladbachlive.de/news/elfer-raetsel-geloest-gladbachs-neue-hackordnung-vom-punkt-1331515",
+              "date": "2026-07-22",
+              "note": "Local report names Diks first and Hack as the first alternative, with Stöger still a candidate."
+            },
+            {
+              "label": "Kicker",
+              "url": "https://www.kicker.de/bundesliga/elfmeter-schuetzen/2025-26/29",
+              "date": "2026-04-11",
+              "note": "Recorded Diks at 4/4."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_borussia-m-gladbach_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Diks converted all four 2025/26 league penalties. Hack converted the 18 July friendly penalty and local reporting identifies him as the revised plan B. Stöger remains an experienced fallback but missed his latest relevant club attempt and has no later precedence over Hack.",
+          "sources": [
+            {
+              "label": "Borussia Mönchengladbach",
+              "url": "https://shop.borussia.de/de-de/c/home-trikot",
+              "date": "2026-07-30",
+              "note": "Source reviewed."
+            },
+            {
+              "label": "GladbachLive",
+              "url": "https://www.gladbachlive.de/news/elfer-raetsel-geloest-gladbachs-neue-hackordnung-vom-punkt-1331515",
+              "date": "2026-07-22",
+              "note": "Source reviewed."
+            },
+            {
+              "label": "Bundesliga",
+              "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-fc-augsburg-spieltag-16-spielbericht-highlights-35510",
+              "date": "2026-01-11",
+              "note": "Source reviewed."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260901_borussia-m-gladbach_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Borussia M.Gladbach penalty hierarchy updated",
+          "context": "Diks remains first choice, with Stöger now filed ahead of Hack in the backup order.",
+          "sources": [
+            {
+              "label": "LigaInsider 2026/27 set-piece board",
+              "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+              "date": "2026-08-31",
+              "note": "Current club-by-club penalty and set-piece hierarchy."
+            },
+            {
+              "label": "Bundesliga official penalty statistics",
+              "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+              "date": "2026-09-01",
+              "note": "Official current-season penalty event cross-check."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Diks remains first choice, with Stöger now filed ahead of Hack in the backup order."
+        },
+        {
+          "id": "evt_20260919_borussia_mgladbach_source_review",
+          "date": "2026-09-19",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Kleindienst remains part of Gladbach’s penalty picture",
+          "context": "Diks leads the current available-player order, ahead of Stöger and Hack. LigaInsider also names Kleindienst among the leading takers. His availability and the next shared-lineup assignment need checking before a permanent change.",
+          "editorial_note": "Diks leads the current available-player order, ahead of Stöger and Hack. LigaInsider also names Kleindienst among the leading takers. His availability and the next shared-lineup assignment need checking before a permanent change.",
+          "sources": [
+            {
+              "label": "LigaInsider penalty-role guide",
+              "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+              "date": "2026-09-19",
+              "note": "Published source reviewed on 19 September; source date is not a new match event."
+            }
+          ],
+          "detection": "manual_targeted_source_review",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-19T12:00:00Z"
+          },
+          "affects_hierarchy": true
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Kevin Diks",
+            "secondary": "Kevin Stöger",
+            "tertiary": "Tim Kleindienst"
+          },
+          "to": {
+            "primary": "Kevin Diks",
+            "secondary": "Kevin Stöger",
+            "tertiary": "Tim Kleindienst"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_borussia_m_gladbach_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "hierarchy_research_update",
+          "from": {
+            "primary": "Kevin Diks",
+            "secondary": "",
+            "tertiary": ""
+          },
+          "to": {
+            "primary": "Kevin Diks",
+            "secondary": "Robin Hack",
+            "tertiary": "Kevin Stöger"
+          },
+          "reason": "Diks was 4/4 in the league and is the clear incumbent. GladbachLive's local preseason review identifies Hack as the first alternative after a successful test-match penalty and his earlier 3/3 Bielefeld record. Stöger remains the experienced third candidate, but his 2026/27 playing time and recent miss lower confidence. Conditions: His tertiary role is contingent on making the matchday XI; Tim Kleindienst is the next practical candidate if Stöger is absent.",
+          "evidence_ids": [
+            "evt_20260728_borussia-m-gladbach_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Kevin Diks",
+            "secondary": "Robin Hack",
+            "tertiary": "Kevin Stöger"
+          },
+          "to": {
+            "primary": "Kevin Diks",
+            "secondary": "Robin Hack",
+            "tertiary": "Kevin Stöger"
+          },
+          "reason": "Diks converted all four 2025/26 league penalties. Hack converted the 18 July friendly penalty and local reporting identifies him as the revised plan B. Stöger remains an experienced fallback but missed his latest relevant club attempt and has no later precedence over Hack. The backup order is based on preseason reporting rather than a direct same-match competitive test.",
+          "evidence_ids": [
+            "evt_20260730_borussia-m-gladbach_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-09-01",
+          "season": "2026/27",
+          "change_type": "current_season_hierarchy_update",
+          "from": {
+            "primary": "Kevin Diks",
+            "secondary": "Robin Hack",
+            "tertiary": "Kevin Stöger"
+          },
+          "to": {
+            "primary": "Kevin Diks",
+            "secondary": "Kevin Stöger",
+            "tertiary": "Robin Hack"
+          },
+          "reason": "Diks remains first choice, with Stöger now filed ahead of Hack in the backup order.",
+          "evidence_ids": [
+            "evt_20260901_borussia-m-gladbach_current_review"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-09-01T12:00:00Z",
+          "article_slug": null
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": true,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Kevin Diks",
+        "secondary": "Kevin Stöger",
+        "tertiary": "Tim Kleindienst",
+        "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Kevin Diks",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9788/overview/borussia-monchengladbach",
+          "checked_at": "2026-09-02"
+        },
+        "secondary": {
+          "player": "Kevin Stöger",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9788/overview/borussia-monchengladbach",
+          "checked_at": "2026-09-02"
+        },
+        "tertiary": {
+          "player": "Robin Hack",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9788/overview/borussia-monchengladbach",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-19",
+        "by": "Il Margine",
+        "method": "targeted_source_review",
+        "outcome": "context_updated",
+        "sources": [
+          "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/"
+        ]
+      }
+    },
+    "after_entry": {
+      "primary": "Kevin Diks",
+      "secondary": "Shuto Machino",
+      "tertiary": "Kevin Stöger",
+      "last_updated": "2026-09-21",
+      "source": "LigaInsider 2026/27 set-piece board",
+      "cross_check": "Bundesliga official penalty statistics",
+      "hierarchy_status": "probable",
+      "confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "medium"
+      },
+      "condition_note": "First choice: Kevin Diks; Second choice: Shuto Machino; Third choice: Kevin Stöger.",
+      "last_verified": {
+        "date": "2026-09-21",
+        "by": "local_admin",
+        "method": "reviewed_manual_hierarchy_override"
+      },
+      "public_updated_at": "2026-09-21",
+      "latest_evidence": {
+        "id": "887c1771fae4467385452bd035a1ff1a",
+        "date": "2026-09-21",
+        "type": "current_season_board_review",
+        "source_count": 1
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_borussia_m_gladbach_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_borussia_m_gladbach_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Kevin Diks converted a regular-time penalty. Diks converted a 90+4 regular-time penalty to win the match. The supporting ledger recorded Diks at 4/4 and Kevin Stöger at 0/1, with no recent evidence settling the remaining backup order.",
+          "sources": [
+            {
+              "label": "Bundesliga",
+              "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-fc-augsburg-spieltag-16-spielbericht-highlights-35510",
+              "date": "2026-01-11",
+              "note": "Kevin Diks converted a regular-time penalty."
+            },
+            {
+              "label": "Bundesliga",
+              "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-1-fc-union-berlin-spieltag-24-spielbericht-highlights-36208",
+              "date": "2026-02-28",
+              "note": "Diks converted a 90+4 regular-time penalty to win the match."
+            },
+            {
+              "label": "SetPieceTakers",
+              "url": "https://data.setpiecetakers.com/penalties/bundesliga",
+              "date": "2026-03-20",
+              "note": "The supporting ledger recorded Diks at 4/4 and Kevin Stöger at 0/1, with no recent evidence settling the remaining backup order."
+            },
+            {
+              "label": "Kicker",
+              "url": "https://www.kicker.de/bundesliga/elfmeter-schuetzen/2025-26/29",
+              "date": "2026-04-11",
+              "note": "Kicker recorded Kevin Diks at 4/4 from Bundesliga penalties through matchday 29, independently confirming the primary call."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_borussia-m-gladbach_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Diks was 4/4 in the league and is the clear incumbent. GladbachLive's local preseason review identifies Hack as the first alternative after a successful test-match penalty and his earlier 3/3 Bielefeld record. Stöger remains the experienced third candidate, but his 2026/27 playing time and recent miss lower confidence.",
+          "sources": [
+            {
+              "label": "Bundesliga",
+              "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-fc-augsburg-spieltag-16-spielbericht-highlights-35510",
+              "date": "2026-01-11",
+              "note": "Diks converted a regular-time penalty."
+            },
+            {
+              "label": "Bundesliga",
+              "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-1-fc-union-berlin-spieltag-24-spielbericht-highlights-36208",
+              "date": "2026-02-28",
+              "note": "Diks converted another late pressure penalty."
+            },
+            {
+              "label": "GladbachLive",
+              "url": "https://www.gladbachlive.de/news/elfer-raetsel-geloest-gladbachs-neue-hackordnung-vom-punkt-1331515",
+              "date": "2026-07-22",
+              "note": "Local report names Diks first and Hack as the first alternative, with Stöger still a candidate."
+            },
+            {
+              "label": "Kicker",
+              "url": "https://www.kicker.de/bundesliga/elfmeter-schuetzen/2025-26/29",
+              "date": "2026-04-11",
+              "note": "Recorded Diks at 4/4."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_borussia-m-gladbach_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Diks converted all four 2025/26 league penalties. Hack converted the 18 July friendly penalty and local reporting identifies him as the revised plan B. Stöger remains an experienced fallback but missed his latest relevant club attempt and has no later precedence over Hack.",
+          "sources": [
+            {
+              "label": "Borussia Mönchengladbach",
+              "url": "https://shop.borussia.de/de-de/c/home-trikot",
+              "date": "2026-07-30",
+              "note": "Source reviewed."
+            },
+            {
+              "label": "GladbachLive",
+              "url": "https://www.gladbachlive.de/news/elfer-raetsel-geloest-gladbachs-neue-hackordnung-vom-punkt-1331515",
+              "date": "2026-07-22",
+              "note": "Source reviewed."
+            },
+            {
+              "label": "Bundesliga",
+              "url": "https://www.bundesliga.com/de/bundesliga/news/borussia-moenchengladbach-fc-augsburg-spieltag-16-spielbericht-highlights-35510",
+              "date": "2026-01-11",
+              "note": "Source reviewed."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260901_borussia-m-gladbach_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Borussia M.Gladbach penalty hierarchy updated",
+          "context": "Diks remains first choice, with Stöger now filed ahead of Hack in the backup order.",
+          "sources": [
+            {
+              "label": "LigaInsider 2026/27 set-piece board",
+              "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+              "date": "2026-08-31",
+              "note": "Current club-by-club penalty and set-piece hierarchy."
+            },
+            {
+              "label": "Bundesliga official penalty statistics",
+              "url": "https://www.bundesliga.com/de/bundesliga/statistiken/spieler/elfmeter",
+              "date": "2026-09-01",
+              "note": "Official current-season penalty event cross-check."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Diks remains first choice, with Stöger now filed ahead of Hack in the backup order."
+        },
+        {
+          "id": "evt_20260919_borussia_mgladbach_source_review",
+          "date": "2026-09-19",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Kleindienst remains part of Gladbach’s penalty picture",
+          "context": "Diks leads the current available-player order, ahead of Stöger and Hack. LigaInsider also names Kleindienst among the leading takers. His availability and the next shared-lineup assignment need checking before a permanent change.",
+          "editorial_note": "Diks leads the current available-player order, ahead of Stöger and Hack. LigaInsider also names Kleindienst among the leading takers. His availability and the next shared-lineup assignment need checking before a permanent change.",
+          "sources": [
+            {
+              "label": "LigaInsider penalty-role guide",
+              "url": "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/",
+              "date": "2026-09-19",
+              "note": "Published source reviewed on 19 September; source date is not a new match event."
+            }
+          ],
+          "detection": "manual_targeted_source_review",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-19T12:00:00Z"
+          },
+          "affects_hierarchy": true
+        },
+        {
+          "id": "887c1771fae4467385452bd035a1ff1a",
+          "date": "2026-09-21",
+          "type": "current_season_board_review",
+          "headline": "Kevin Diks leads the penalty order",
+          "editorial_note": "First choice: Kevin Diks; Second choice: Shuto Machino; Third choice: Kevin Stöger.",
+          "match": "",
+          "sources": [
+            {
+              "label": "Editorial verification",
+              "url": "https://www.goal.com/en/news/i-d-take-him-out-of-circulation-this-action-by-a-germany-star-leaves-didi-hamann-speechless/blt2f4256cc957ca72b",
+              "date": "2026-09-21",
+              "note": ""
+            }
+          ],
+          "review": {
+            "status": "approved",
+            "reviewed_by": "local_admin",
+            "reviewed_at": "2026-09-21T11:46:50+00:00"
+          },
+          "affects_hierarchy": true,
+          "detection": "local_admin",
+          "season": "2026/27"
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Kevin Diks",
+            "secondary": "Kevin Stöger",
+            "tertiary": "Tim Kleindienst"
+          },
+          "to": {
+            "primary": "Kevin Diks",
+            "secondary": "Kevin Stöger",
+            "tertiary": "Tim Kleindienst"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_borussia_m_gladbach_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "hierarchy_research_update",
+          "from": {
+            "primary": "Kevin Diks",
+            "secondary": "",
+            "tertiary": ""
+          },
+          "to": {
+            "primary": "Kevin Diks",
+            "secondary": "Robin Hack",
+            "tertiary": "Kevin Stöger"
+          },
+          "reason": "Diks was 4/4 in the league and is the clear incumbent. GladbachLive's local preseason review identifies Hack as the first alternative after a successful test-match penalty and his earlier 3/3 Bielefeld record. Stöger remains the experienced third candidate, but his 2026/27 playing time and recent miss lower confidence. Conditions: His tertiary role is contingent on making the matchday XI; Tim Kleindienst is the next practical candidate if Stöger is absent.",
+          "evidence_ids": [
+            "evt_20260728_borussia-m-gladbach_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Kevin Diks",
+            "secondary": "Robin Hack",
+            "tertiary": "Kevin Stöger"
+          },
+          "to": {
+            "primary": "Kevin Diks",
+            "secondary": "Robin Hack",
+            "tertiary": "Kevin Stöger"
+          },
+          "reason": "Diks converted all four 2025/26 league penalties. Hack converted the 18 July friendly penalty and local reporting identifies him as the revised plan B. Stöger remains an experienced fallback but missed his latest relevant club attempt and has no later precedence over Hack. The backup order is based on preseason reporting rather than a direct same-match competitive test.",
+          "evidence_ids": [
+            "evt_20260730_borussia-m-gladbach_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-09-01",
+          "season": "2026/27",
+          "change_type": "current_season_hierarchy_update",
+          "from": {
+            "primary": "Kevin Diks",
+            "secondary": "Robin Hack",
+            "tertiary": "Kevin Stöger"
+          },
+          "to": {
+            "primary": "Kevin Diks",
+            "secondary": "Kevin Stöger",
+            "tertiary": "Robin Hack"
+          },
+          "reason": "Diks remains first choice, with Stöger now filed ahead of Hack in the backup order.",
+          "evidence_ids": [
+            "evt_20260901_borussia-m-gladbach_current_review"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-09-01T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "id": "887c1771fae4467385452bd035a1ff1a",
+          "changed_at": "2026-09-21T11:46:50+00:00",
+          "change_type": "hierarchy_change",
+          "reason": "Machino converted a penalty at minute 95 in the home match against Mainz, after coming in from the bench. Diks previosly missed an earlier penalty, he might still have the nod for future penalties but evidence is recommending to promote Machino at least as secondary.",
+          "from": {
+            "primary": "Kevin Diks",
+            "secondary": "Kevin Stöger",
+            "tertiary": "Robin Hack"
+          },
+          "to": {
+            "primary": "Kevin Diks",
+            "secondary": "Shuto Machino",
+            "tertiary": "Kevin Stöger"
+          },
+          "evidence_ids": [
+            "887c1771fae4467385452bd035a1ff1a"
+          ]
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": false,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Kevin Diks",
+        "secondary": "Kevin Stöger",
+        "tertiary": "Tim Kleindienst",
+        "archive": "data/goalscorer/archive/2025-26/bundesliga-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Kevin Diks",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9788/overview/borussia-monchengladbach",
+          "checked_at": "2026-09-02"
+        },
+        "secondary": {
+          "player": "Shuto Machino",
+          "status": "confirmed",
+          "source_url": "https://www.goal.com/en/news/i-d-take-him-out-of-circulation-this-action-by-a-germany-star-leaves-didi-hamann-speechless/blt2f4256cc957ca72b",
+          "checked_at": "2026-09-21",
+          "method": "manual_editorial_attestation"
+        },
+        "tertiary": {
+          "player": "Kevin Stöger",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9788/overview/borussia-monchengladbach",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-19",
+        "by": "Il Margine",
+        "method": "targeted_source_review",
+        "outcome": "context_updated",
+        "sources": [
+          "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/"
+        ]
+      },
+      "unavailable_candidates": []
+    },
+    "before_entry_hash": "c886bc1197feb2f8a4eec59fb39afb98fa9cb73daabaf941254af26ee504ea3e",
+    "after_entry_hash": "4a3baaf1fed143addbe1948f71d63999f4f84304cb2fc403f78b58b8bebed76a",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Kevin Diks",
+        "secondary": "Shuto Machino",
+        "tertiary": "Kevin Stöger"
+      },
+      "reason": "Machino converted a penalty at minute 95 in the home match against Mainz, after coming in from the bench. Diks previosly missed an earlier penalty, he might still have the nod for future penalties but evidence is recommending to promote Machino at least as secondary.",
+      "updated_at": "2026-09-21T11:46:50+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null
+  },
+  "summary": {
+    "id": "887c1771fae4467385452bd035a1ff1a",
+    "at": "2026-09-21T11:46:50+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "bundesliga|Borussia M.Gladbach",
+    "reason": "Machino converted a penalty at minute 95 in the home match against Mainz, after coming in from the bench. Diks previosly missed an earlier penalty, he might still have the nod for future penalties but evidence is recommending to promote Machino at least as secondary.",
+    "before_entry_hash": "c886bc1197feb2f8a4eec59fb39afb98fa9cb73daabaf941254af26ee504ea3e",
+    "after_entry_hash": "4a3baaf1fed143addbe1948f71d63999f4f84304cb2fc403f78b58b8bebed76a",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Kevin Diks",
+        "secondary": "Shuto Machino",
+        "tertiary": "Kevin Stöger"
+      },
+      "reason": "Machino converted a penalty at minute 95 in the home match against Mainz, after coming in from the bench. Diks previosly missed an earlier penalty, he might still have the nod for future penalties but evidence is recommending to promote Machino at least as secondary.",
+      "updated_at": "2026-09-21T11:46:50+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null,
+    "before_hierarchy": {
+      "primary": "Kevin Diks",
+      "secondary": "Kevin Stöger",
+      "tertiary": "Robin Hack"
+    },
+    "after_hierarchy": {
+      "primary": "Kevin Diks",
+      "secondary": "Shuto Machino",
+      "tertiary": "Kevin Stöger"
+    }
+  },
+  "before_hierarchy_hash": "9139bec3543a7b6bfe6add4b8e72f1d48cb40a712091dbaa3b1f912eaebc994d",
+  "after_hierarchy_hash": "fbe2fa9a6833d500f5b8c795b1ae50d4d586ef2ac9a608d67b7f7b6294c3d1bf",
+  "before_state_hash": "68a3b310950e0a6c7a545c69f48383501baf14822c58ae8d4382bc5f13b974dd",
+  "after_state_hash": "eec7d14ab9965d824c35e4f78d8addfcd4b3c8335af84ed57f11af0fecfefbb9",
+  "after_revision": 8
+}

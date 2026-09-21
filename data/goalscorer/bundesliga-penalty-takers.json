@@ -1427,27 +1427,27 @@
   },
   "Borussia M.Gladbach": {
     "primary": "Kevin Diks",
-    "secondary": "Kevin Stöger",
-    "tertiary": "Robin Hack",
-    "last_updated": "2026-09-01",
+    "secondary": "Shuto Machino",
+    "tertiary": "Kevin Stöger",
+    "last_updated": "2026-09-21",
     "source": "LigaInsider 2026/27 set-piece board",
     "cross_check": "Bundesliga official penalty statistics",
-    "hierarchy_status": "conditional",
+    "hierarchy_status": "probable",
     "confidence": {
       "primary": "medium",
       "secondary": "medium",
-      "tertiary": "low"
+      "tertiary": "medium"
     },
-    "condition_note": "Diks leads the current available-player order, ahead of Stöger and Hack. LigaInsider also names Kleindienst among the leading takers. His availability and the next shared-lineup assignment need checking before a permanent change.",
+    "condition_note": "First choice: Kevin Diks; Second choice: Shuto Machino; Third choice: Kevin Stöger.",
     "last_verified": {
-      "date": "2026-09-19",
-      "by": "Il Margine",
-      "method": "targeted_source_review"
+      "date": "2026-09-21",
+      "by": "local_admin",
+      "method": "reviewed_manual_hierarchy_override"
     },
-    "public_updated_at": "2026-09-19",
+    "public_updated_at": "2026-09-21",
     "latest_evidence": {
-      "id": "evt_20260919_borussia_mgladbach_source_review",
-      "date": "2026-09-19",
+      "id": "887c1771fae4467385452bd035a1ff1a",
+      "date": "2026-09-21",
       "type": "current_season_board_review",
       "source_count": 1
     },
@@ -1656,6 +1656,30 @@
           "reviewed_at": "2026-09-19T12:00:00Z"
         },
         "affects_hierarchy": true
+      },
+      {
+        "id": "887c1771fae4467385452bd035a1ff1a",
+        "date": "2026-09-21",
+        "type": "current_season_board_review",
+        "headline": "Kevin Diks leads the penalty order",
+        "editorial_note": "First choice: Kevin Diks; Second choice: Shuto Machino; Third choice: Kevin Stöger.",
+        "match": "",
+        "sources": [
+          {
+            "label": "Editorial verification",
+            "url": "https://www.goal.com/en/news/i-d-take-him-out-of-circulation-this-action-by-a-germany-star-leaves-didi-hamann-speechless/blt2f4256cc957ca72b",
+            "date": "2026-09-21",
+            "note": ""
+          }
+        ],
+        "review": {
+          "status": "approved",
+          "reviewed_by": "local_admin",
+          "reviewed_at": "2026-09-21T11:46:50+00:00"
+        },
+        "affects_hierarchy": true,
+        "detection": "local_admin",
+        "season": "2026/27"
       }
     ],
     "change_log": [
@@ -1750,11 +1774,30 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-09-01T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "id": "887c1771fae4467385452bd035a1ff1a",
+        "changed_at": "2026-09-21T11:46:50+00:00",
+        "change_type": "hierarchy_change",
+        "reason": "Machino converted a penalty at minute 95 in the home match against Mainz, after coming in from the bench. Diks previosly missed an earlier penalty, he might still have the nod for future penalties but evidence is recommending to promote Machino at least as secondary.",
+        "from": {
+          "primary": "Kevin Diks",
+          "secondary": "Kevin Stöger",
+          "tertiary": "Robin Hack"
+        },
+        "to": {
+          "primary": "Kevin Diks",
+          "secondary": "Shuto Machino",
+          "tertiary": "Kevin Stöger"
+        },
+        "evidence_ids": [
+          "887c1771fae4467385452bd035a1ff1a"
+        ]
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -1773,13 +1816,14 @@
         "checked_at": "2026-09-02"
       },
       "secondary": {
-        "player": "Kevin Stöger",
+        "player": "Shuto Machino",
         "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/9788/overview/borussia-monchengladbach",
-        "checked_at": "2026-09-02"
+        "source_url": "https://www.goal.com/en/news/i-d-take-him-out-of-circulation-this-action-by-a-germany-star-leaves-didi-hamann-speechless/blt2f4256cc957ca72b",
+        "checked_at": "2026-09-21",
+        "method": "manual_editorial_attestation"
       },
       "tertiary": {
-        "player": "Robin Hack",
+        "player": "Kevin Stöger",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/9788/overview/borussia-monchengladbach",
         "checked_at": "2026-09-02"
@@ -1793,7 +1837,8 @@
       "sources": [
         "https://www.ligainsider.de/ligainsider_1381/uebersicht-die-standardschuetzen-der-saison-2026-27-416770/"
       ]
-    }
+    },
+    "unavailable_candidates": []
   },
   "Eintracht Frankfurt": {
     "primary": "Jonathan Burkardt",

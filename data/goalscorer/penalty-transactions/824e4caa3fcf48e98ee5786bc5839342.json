@@ -1,0 +1,842 @@
+{
+  "schema_version": 1,
+  "status": "committed",
+  "id": "824e4caa3fcf48e98ee5786bc5839342",
+  "league": "ligue-1",
+  "audit": {
+    "id": "824e4caa3fcf48e98ee5786bc5839342",
+    "at": "2026-09-21T11:57:20+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "ligue-1|Toulouse",
+    "reason": "Tengstedt converted a penalty at minute 49 in the home match against Le Havre, where he netted a brace. Strong evidence to have him as primary taker for Toulouse, also given the limited minutes Dønnum is having so far.",
+    "before_entry": {
+      "primary": "Aron Dønnum",
+      "secondary": "Cristian Cásseres Jr.",
+      "tertiary": "Yann Gboho",
+      "last_updated": "2026-07-30",
+      "source": "Toulouse FC",
+      "cross_check": "Ligue 1",
+      "hierarchy_status": "probable",
+      "confidence": {
+        "primary": "high",
+        "secondary": "low",
+        "tertiary": "low"
+      },
+      "condition_note": "Dønnum converted all three 2025/26 penalties. Cásseres is the only retained player with another Toulouse regular-time attempt, although he missed; Gboho is the practical attacking fallback. Neither backup is confirmed, and Gboho's evidence is mostly historical. Conditions: If Dønnum is absent, the first competitive penalty is hierarchy-setting. A new proven centre-forward should enter above Gboho and may enter above Cásseres.",
+      "last_verified": {
+        "date": "2026-09-02",
+        "by": "Il Margine",
+        "method": "current_squad_membership_audit"
+      },
+      "public_updated_at": "2026-09-02",
+      "latest_evidence": {
+        "id": "evt_20260901_toulouse_current_review",
+        "date": "2026-09-01",
+        "type": "current_season_board_review",
+        "source_count": 4
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_toulouse_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_toulouse_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Dønnum won and converted Toulouse's 85th-minute penalty. Recorded Dønnum at 3/3, Sidibé at 1/2, Magri at 0/1 and Cristian Cásseres Jr at 0/1. Toulouse officially confirmed Magri's departure.",
+          "sources": [
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/play/blog/2025/10/le-compte-rendu-de-tefece-stade-rennais-10eme-journee-de-ligue-1-mcdonald-s",
+              "date": "2025-10-29",
+              "note": "Dønnum won and converted Toulouse's 85th-minute penalty."
+            },
+            {
+              "label": "Ligue 1 Fantasy",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+              "date": "2026-05-11",
+              "note": "Recorded Dønnum at 3/3, Sidibé at 1/2, Magri at 0/1 and Cristian Cásseres Jr at 0/1."
+            },
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/play/blog/2026/05/des-departs-au-sein-de-l-effectif",
+              "date": "2026-05-19",
+              "note": "Toulouse officially confirmed Magri's departure."
+            },
+            {
+              "label": "L'Équipe",
+              "url": "https://www.lequipe.fr/Football/Actualites/-j-aurais-aime-que-l-histoire-se-termine-autrement-djibril-sidibe-annonce-son-depart-de-toulouse-avec-un-pincement-au-coeur/1700624",
+              "date": "2026-07-02",
+              "note": "Reported Sidibé's departure after his Toulouse contract expired."
+            },
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/play/blog/2026/03/le-compte-rendu-de-om-tefece-2-2-3-4-tab-quart-de-finale-de-coupe-de-france",
+              "date": "2026-03-04",
+              "note": "The Marseille cup tie ended in a shootout. Those kicks were excluded from the regular-time hierarchy."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_toulouse_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Sidibé and Magri have left. Dønnum is clear. Cásseres ranks second solely because he has a current-team attempt; Gboho is a practical attacking fallback with a mixed historical record. Neither backup is confirmed.",
+          "sources": [
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/play/blog/2025/10/le-compte-rendu-de-tefece-stade-rennais-10eme-journee-de-ligue-1-mcdonald-s",
+              "date": "2025-10-29",
+              "note": "Dønnum won and converted Toulouse's 85th-minute penalty."
+            },
+            {
+              "label": "Ligue 1 Fantasy",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+              "date": "2026-05-11",
+              "note": "Recorded Dønnum at 3/3, Sidibé at 1/2, Magri at 0/1 and Cristian Cásseres Jr at 0/1."
+            },
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/play/blog/2026/05/des-departs-au-sein-de-l-effectif",
+              "date": "2026-05-19",
+              "note": "Toulouse officially confirmed Magri's departure."
+            },
+            {
+              "label": "L'Équipe",
+              "url": "https://www.lequipe.fr/Football/Actualites/-j-aurais-aime-que-l-histoire-se-termine-autrement-djibril-sidibe-annonce-son-depart-de-toulouse-avec-un-pincement-au-coeur/1700624",
+              "date": "2026-07-02",
+              "note": "Reported Sidibé's departure after his Toulouse contract expired."
+            },
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/play/blog/2026/03/le-compte-rendu-de-om-tefece-2-2-3-4-tab-quart-de-finale-de-coupe-de-france",
+              "date": "2026-03-04",
+              "note": "The Marseille cup tie ended in a shootout. Those kicks were excluded from the regular-time hierarchy."
+            },
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/equipes/equipe-professionnelle/effectif",
+              "date": "2026-07-28",
+              "note": "The official 2026/27 roster lists Dønnum, Cásseres and Gboho and excludes departed Demba Diop."
+            },
+            {
+              "label": "Transfermarkt",
+              "url": "https://www.transfermarkt.com/yann-gboho/elfmetertore/spieler/463613",
+              "date": "2026-07-28",
+              "note": "Gboho's recorded historical penalty return is two scored and two missed, mostly at youth level."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_toulouse_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Dønnum converted all three 2025/26 penalties. Cásseres is the only retained player with another Toulouse regular-time attempt, although he missed; Gboho is the practical attacking fallback.",
+          "sources": [
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/play/blog/2025/10/le-compte-rendu-de-tefece-stade-rennais-10eme-journee-de-ligue-1-mcdonald-s",
+              "date": "2025-10-29",
+              "note": "Source reviewed."
+            },
+            {
+              "label": "Ligue 1",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+              "date": "2026-05-11",
+              "note": "Source reviewed."
+            },
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/equipes/equipe-professionnelle/effectif",
+              "date": "2026-07-30",
+              "note": "Source reviewed."
+            },
+            {
+              "label": "L'Équipe",
+              "url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+              "date": "2026-07-30",
+              "note": "Source reviewed."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260901_toulouse_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Toulouse hierarchy rechecked",
+          "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+          "sources": [
+            {
+              "label": "Ligue 1 official set-piece review",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+              "date": "2026-05-11",
+              "note": "Official 2025/26 role baseline retained only for players still at the same club; it is not treated as a current hierarchy by itself."
+            },
+            {
+              "label": "StatBunker Ligue 1 2026/27 penalties",
+              "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+              "date": "2026-09-01",
+              "note": "Current-season penalty event and taker cross-check."
+            },
+            {
+              "label": "Deux-Zero Ligue 1 2026/27 penalty archive",
+              "url": "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
+              "date": "2026-09-01",
+              "note": "Independent French current-season archive used to cross-check every recorded penalty taker and outcome."
+            },
+            {
+              "label": "Starting11 Ligue 1 set-piece and lineup tracker",
+              "url": "https://starting11.com/set-piece-takers/ligue-1",
+              "date": "2026-09-01",
+              "note": "Current squads, starting roles and retained penalty history used for lineup and membership checks, not as proof of an unobserved 2026/27 assignment."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Aron Donnum",
+            "secondary": "Djibril Sidibe",
+            "tertiary": "Frank Magri"
+          },
+          "to": {
+            "primary": "Aron Donnum",
+            "secondary": "Djibril Sidibe",
+            "tertiary": "Frank Magri"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_toulouse_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "hierarchy_research_update",
+          "from": {
+            "primary": "Aron Dønnum",
+            "secondary": "",
+            "tertiary": ""
+          },
+          "to": {
+            "primary": "Aron Dønnum",
+            "secondary": "Cristian Cásseres Jr.",
+            "tertiary": "Yann Gboho"
+          },
+          "reason": "Sidibé and Magri have left. Dønnum is clear. Cásseres ranks second solely because he has a current-team attempt; Gboho is a practical attacking fallback with a mixed historical record. Neither backup is confirmed. Conditions: If Dønnum is absent, the first competitive penalty should be treated as a hierarchy-setting event. A new centre-forward with penalty history should enter above Gboho and may enter above Cásseres.",
+          "evidence_ids": [
+            "evt_20260728_toulouse_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Aron Dønnum",
+            "secondary": "Cristian Cásseres Jr.",
+            "tertiary": "Yann Gboho"
+          },
+          "to": {
+            "primary": "Aron Dønnum",
+            "secondary": "Cristian Cásseres Jr.",
+            "tertiary": "Yann Gboho"
+          },
+          "reason": "Dønnum converted all three 2025/26 penalties. Cásseres is the only retained player with another Toulouse regular-time attempt, although he missed; Gboho is the practical attacking fallback. Neither backup is confirmed, and Gboho's evidence is mostly historical. Conditions: If Dønnum is absent, the first competitive penalty is hierarchy-setting. A new proven centre-forward should enter above Gboho and may enter above Cásseres.",
+          "evidence_ids": [
+            "evt_20260730_toulouse_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": true,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Aron Donnum",
+        "secondary": "Djibril Sidibe",
+        "tertiary": "Frank Magri",
+        "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Aron Dønnum",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9941/overview/toulouse",
+          "checked_at": "2026-09-02"
+        },
+        "secondary": {
+          "player": "Cristian Cásseres Jr.",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9941/overview/toulouse",
+          "checked_at": "2026-09-02"
+        },
+        "tertiary": {
+          "player": "Yann Gboho",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9941/overview/toulouse",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-01",
+        "by": "Il Margine",
+        "method": "current_season_multi_source_review",
+        "outcome": "order_unchanged",
+        "sources": [
+          "https://ligue1.com/fr/articles/l1_article_2916-",
+          "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+          "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
+          "https://starting11.com/set-piece-takers/ligue-1"
+        ]
+      }
+    },
+    "after_entry": {
+      "primary": "Casper Tengstedt",
+      "secondary": "Aron Dønnum",
+      "tertiary": "Cristian Cásseres Jr.",
+      "last_updated": "2026-09-21",
+      "source": "Toulouse FC",
+      "cross_check": "Ligue 1",
+      "hierarchy_status": "probable",
+      "confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "medium"
+      },
+      "condition_note": "First choice: Casper Tengstedt; Second choice: Aron Dønnum; Third choice: Cristian Cásseres Jr..",
+      "last_verified": {
+        "date": "2026-09-21",
+        "by": "local_admin",
+        "method": "reviewed_manual_hierarchy_override"
+      },
+      "public_updated_at": "2026-09-21",
+      "latest_evidence": {
+        "id": "824e4caa3fcf48e98ee5786bc5839342",
+        "date": "2026-09-21",
+        "type": "current_season_board_review",
+        "source_count": 1
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_toulouse_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_toulouse_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Dønnum won and converted Toulouse's 85th-minute penalty. Recorded Dønnum at 3/3, Sidibé at 1/2, Magri at 0/1 and Cristian Cásseres Jr at 0/1. Toulouse officially confirmed Magri's departure.",
+          "sources": [
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/play/blog/2025/10/le-compte-rendu-de-tefece-stade-rennais-10eme-journee-de-ligue-1-mcdonald-s",
+              "date": "2025-10-29",
+              "note": "Dønnum won and converted Toulouse's 85th-minute penalty."
+            },
+            {
+              "label": "Ligue 1 Fantasy",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+              "date": "2026-05-11",
+              "note": "Recorded Dønnum at 3/3, Sidibé at 1/2, Magri at 0/1 and Cristian Cásseres Jr at 0/1."
+            },
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/play/blog/2026/05/des-departs-au-sein-de-l-effectif",
+              "date": "2026-05-19",
+              "note": "Toulouse officially confirmed Magri's departure."
+            },
+            {
+              "label": "L'Équipe",
+              "url": "https://www.lequipe.fr/Football/Actualites/-j-aurais-aime-que-l-histoire-se-termine-autrement-djibril-sidibe-annonce-son-depart-de-toulouse-avec-un-pincement-au-coeur/1700624",
+              "date": "2026-07-02",
+              "note": "Reported Sidibé's departure after his Toulouse contract expired."
+            },
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/play/blog/2026/03/le-compte-rendu-de-om-tefece-2-2-3-4-tab-quart-de-finale-de-coupe-de-france",
+              "date": "2026-03-04",
+              "note": "The Marseille cup tie ended in a shootout. Those kicks were excluded from the regular-time hierarchy."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 5 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_toulouse_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Sidibé and Magri have left. Dønnum is clear. Cásseres ranks second solely because he has a current-team attempt; Gboho is a practical attacking fallback with a mixed historical record. Neither backup is confirmed.",
+          "sources": [
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/play/blog/2025/10/le-compte-rendu-de-tefece-stade-rennais-10eme-journee-de-ligue-1-mcdonald-s",
+              "date": "2025-10-29",
+              "note": "Dønnum won and converted Toulouse's 85th-minute penalty."
+            },
+            {
+              "label": "Ligue 1 Fantasy",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+              "date": "2026-05-11",
+              "note": "Recorded Dønnum at 3/3, Sidibé at 1/2, Magri at 0/1 and Cristian Cásseres Jr at 0/1."
+            },
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/play/blog/2026/05/des-departs-au-sein-de-l-effectif",
+              "date": "2026-05-19",
+              "note": "Toulouse officially confirmed Magri's departure."
+            },
+            {
+              "label": "L'Équipe",
+              "url": "https://www.lequipe.fr/Football/Actualites/-j-aurais-aime-que-l-histoire-se-termine-autrement-djibril-sidibe-annonce-son-depart-de-toulouse-avec-un-pincement-au-coeur/1700624",
+              "date": "2026-07-02",
+              "note": "Reported Sidibé's departure after his Toulouse contract expired."
+            },
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/play/blog/2026/03/le-compte-rendu-de-om-tefece-2-2-3-4-tab-quart-de-finale-de-coupe-de-france",
+              "date": "2026-03-04",
+              "note": "The Marseille cup tie ended in a shootout. Those kicks were excluded from the regular-time hierarchy."
+            },
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/equipes/equipe-professionnelle/effectif",
+              "date": "2026-07-28",
+              "note": "The official 2026/27 roster lists Dønnum, Cásseres and Gboho and excludes departed Demba Diop."
+            },
+            {
+              "label": "Transfermarkt",
+              "url": "https://www.transfermarkt.com/yann-gboho/elfmetertore/spieler/463613",
+              "date": "2026-07-28",
+              "note": "Gboho's recorded historical penalty return is two scored and two missed, mostly at youth level."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 7 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_toulouse_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Dønnum converted all three 2025/26 penalties. Cásseres is the only retained player with another Toulouse regular-time attempt, although he missed; Gboho is the practical attacking fallback.",
+          "sources": [
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/play/blog/2025/10/le-compte-rendu-de-tefece-stade-rennais-10eme-journee-de-ligue-1-mcdonald-s",
+              "date": "2025-10-29",
+              "note": "Source reviewed."
+            },
+            {
+              "label": "Ligue 1",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-fantasy-les-tireurs-de-penaltys-et-de-coups-de-pied-arretes-par-club-2526",
+              "date": "2026-05-11",
+              "note": "Source reviewed."
+            },
+            {
+              "label": "Toulouse FC",
+              "url": "https://www.toulousefc.com/equipes/equipe-professionnelle/effectif",
+              "date": "2026-07-30",
+              "note": "Source reviewed."
+            },
+            {
+              "label": "L'Équipe",
+              "url": "https://www.lequipe.fr/Football/ligue-1/page-tableau-des-transferts",
+              "date": "2026-07-30",
+              "note": "Source reviewed."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 4 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260901_toulouse_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Toulouse hierarchy rechecked",
+          "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+          "sources": [
+            {
+              "label": "Ligue 1 official set-piece review",
+              "url": "https://ligue1.com/fr/articles/l1_article_2916-",
+              "date": "2026-05-11",
+              "note": "Official 2025/26 role baseline retained only for players still at the same club; it is not treated as a current hierarchy by itself."
+            },
+            {
+              "label": "StatBunker Ligue 1 2026/27 penalties",
+              "url": "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+              "date": "2026-09-01",
+              "note": "Current-season penalty event and taker cross-check."
+            },
+            {
+              "label": "Deux-Zero Ligue 1 2026/27 penalty archive",
+              "url": "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
+              "date": "2026-09-01",
+              "note": "Independent French current-season archive used to cross-check every recorded penalty taker and outcome."
+            },
+            {
+              "label": "Starting11 Ligue 1 set-piece and lineup tracker",
+              "url": "https://starting11.com/set-piece-takers/ligue-1",
+              "date": "2026-09-01",
+              "note": "Current squads, starting roles and retained penalty history used for lineup and membership checks, not as proof of an unobserved 2026/27 assignment."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        },
+        {
+          "id": "824e4caa3fcf48e98ee5786bc5839342",
+          "date": "2026-09-21",
+          "type": "current_season_board_review",
+          "headline": "Casper Tengstedt leads the penalty order",
+          "editorial_note": "First choice: Casper Tengstedt; Second choice: Aron Dønnum; Third choice: Cristian Cásseres Jr..",
+          "match": "",
+          "sources": [
+            {
+              "label": "Editorial verification",
+              "url": "https://www.marca.com/en/soccer/ligue-1/toulouse-le-havre/2026/09/19/01_0109_20260919_427_141-live.html",
+              "date": "2026-09-21",
+              "note": ""
+            }
+          ],
+          "review": {
+            "status": "approved",
+            "reviewed_by": "local_admin",
+            "reviewed_at": "2026-09-21T11:57:20+00:00"
+          },
+          "affects_hierarchy": true,
+          "detection": "local_admin",
+          "season": "2026/27"
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Aron Donnum",
+            "secondary": "Djibril Sidibe",
+            "tertiary": "Frank Magri"
+          },
+          "to": {
+            "primary": "Aron Donnum",
+            "secondary": "Djibril Sidibe",
+            "tertiary": "Frank Magri"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_toulouse_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "hierarchy_research_update",
+          "from": {
+            "primary": "Aron Dønnum",
+            "secondary": "",
+            "tertiary": ""
+          },
+          "to": {
+            "primary": "Aron Dønnum",
+            "secondary": "Cristian Cásseres Jr.",
+            "tertiary": "Yann Gboho"
+          },
+          "reason": "Sidibé and Magri have left. Dønnum is clear. Cásseres ranks second solely because he has a current-team attempt; Gboho is a practical attacking fallback with a mixed historical record. Neither backup is confirmed. Conditions: If Dønnum is absent, the first competitive penalty should be treated as a hierarchy-setting event. A new centre-forward with penalty history should enter above Gboho and may enter above Cásseres.",
+          "evidence_ids": [
+            "evt_20260728_toulouse_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Aron Dønnum",
+            "secondary": "Cristian Cásseres Jr.",
+            "tertiary": "Yann Gboho"
+          },
+          "to": {
+            "primary": "Aron Dønnum",
+            "secondary": "Cristian Cásseres Jr.",
+            "tertiary": "Yann Gboho"
+          },
+          "reason": "Dønnum converted all three 2025/26 penalties. Cásseres is the only retained player with another Toulouse regular-time attempt, although he missed; Gboho is the practical attacking fallback. Neither backup is confirmed, and Gboho's evidence is mostly historical. Conditions: If Dønnum is absent, the first competitive penalty is hierarchy-setting. A new proven centre-forward should enter above Gboho and may enter above Cásseres.",
+          "evidence_ids": [
+            "evt_20260730_toulouse_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "id": "824e4caa3fcf48e98ee5786bc5839342",
+          "changed_at": "2026-09-21T11:57:20+00:00",
+          "change_type": "hierarchy_change",
+          "reason": "Tengstedt converted a penalty at minute 49 in the home match against Le Havre, where he netted a brace. Strong evidence to have him as primary taker for Toulouse, also given the limited minutes Dønnum is having so far.",
+          "from": {
+            "primary": "Aron Dønnum",
+            "secondary": "Cristian Cásseres Jr.",
+            "tertiary": "Yann Gboho"
+          },
+          "to": {
+            "primary": "Casper Tengstedt",
+            "secondary": "Aron Dønnum",
+            "tertiary": "Cristian Cásseres Jr."
+          },
+          "evidence_ids": [
+            "824e4caa3fcf48e98ee5786bc5839342"
+          ]
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": false,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Aron Donnum",
+        "secondary": "Djibril Sidibe",
+        "tertiary": "Frank Magri",
+        "archive": "data/goalscorer/archive/2025-26/ligue-1-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Casper Tengstedt",
+          "status": "confirmed",
+          "source_url": "https://www.marca.com/en/soccer/ligue-1/toulouse-le-havre/2026/09/19/01_0109_20260919_427_141-live.html",
+          "checked_at": "2026-09-21",
+          "method": "manual_editorial_attestation"
+        },
+        "secondary": {
+          "player": "Aron Dønnum",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9941/overview/toulouse",
+          "checked_at": "2026-09-02"
+        },
+        "tertiary": {
+          "player": "Cristian Cásseres Jr.",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9941/overview/toulouse",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-01",
+        "by": "Il Margine",
+        "method": "current_season_multi_source_review",
+        "outcome": "order_unchanged",
+        "sources": [
+          "https://ligue1.com/fr/articles/l1_article_2916-",
+          "https://www.statbunker.com/competitions/Penalties?comp_id=796",
+          "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
+          "https://starting11.com/set-piece-takers/ligue-1"
+        ]
+      },
+      "unavailable_candidates": []
+    },
+    "before_entry_hash": "5e679f81afccf24a650b6bd6e838bc844e34fc6f6959051a8ab7b0419f23c1a0",
+    "after_entry_hash": "979e9ffc14cbc27d5d69a627e79808ce12ab12dbc74abe50023fe2ad5051ece7",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Casper Tengstedt",
+        "secondary": "Aron Dønnum",
+        "tertiary": "Cristian Cásseres Jr."
+      },
+      "reason": "Tengstedt converted a penalty at minute 49 in the home match against Le Havre, where he netted a brace. Strong evidence to have him as primary taker for Toulouse, also given the limited minutes Dønnum is having so far.",
+      "updated_at": "2026-09-21T11:57:20+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null
+  },
+  "summary": {
+    "id": "824e4caa3fcf48e98ee5786bc5839342",
+    "at": "2026-09-21T11:57:20+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "ligue-1|Toulouse",
+    "reason": "Tengstedt converted a penalty at minute 49 in the home match against Le Havre, where he netted a brace. Strong evidence to have him as primary taker for Toulouse, also given the limited minutes Dønnum is having so far.",
+    "before_entry_hash": "5e679f81afccf24a650b6bd6e838bc844e34fc6f6959051a8ab7b0419f23c1a0",
+    "after_entry_hash": "979e9ffc14cbc27d5d69a627e79808ce12ab12dbc74abe50023fe2ad5051ece7",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Casper Tengstedt",
+        "secondary": "Aron Dønnum",
+        "tertiary": "Cristian Cásseres Jr."
+      },
+      "reason": "Tengstedt converted a penalty at minute 49 in the home match against Le Havre, where he netted a brace. Strong evidence to have him as primary taker for Toulouse, also given the limited minutes Dønnum is having so far.",
+      "updated_at": "2026-09-21T11:57:20+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null,
+    "before_hierarchy": {
+      "primary": "Aron Dønnum",
+      "secondary": "Cristian Cásseres Jr.",
+      "tertiary": "Yann Gboho"
+    },
+    "after_hierarchy": {
+      "primary": "Casper Tengstedt",
+      "secondary": "Aron Dønnum",
+      "tertiary": "Cristian Cásseres Jr."
+    }
+  },
+  "before_hierarchy_hash": "1ca7226285d66dae63129ee495fef5f7ee5771734ae2b38d73789632aa670d84",
+  "after_hierarchy_hash": "c27837ae5a1d3d231ecf2b2da16b34688843f712c73ee639f8313bcd50875de0",
+  "before_state_hash": "eec7d14ab9965d824c35e4f78d8addfcd4b3c8335af84ed57f11af0fecfefbb9",
+  "after_state_hash": "c05896d4c4acfba1b096508349ea6217fafd02bba6fd72c22421c4cc3438919d",
+  "after_revision": 9
+}

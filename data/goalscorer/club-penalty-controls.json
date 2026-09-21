@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 1,
+  "revision": 9,
   "clubs": {
     "ligue-1|Brest": {
       "locked": true,
@@ -11,6 +11,83 @@
       },
       "reason": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
       "updated_at": "2026-09-06T08:33:01+00:00",
+      "actor": "local_admin"
+    },
+    "la-liga|Elche": {
+      "locked": true,
+      "override": {
+        "primary": "Facundo Buonanotte",
+        "secondary": "Fer Niño",
+        "tertiary": "Germán Valera"
+      },
+      "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+      "updated_at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin"
+    },
+    "serie-a|Genoa": {
+      "locked": true,
+      "override": {
+        "primary": "Junior Messias",
+        "secondary": "Milutin Osmajic",
+        "tertiary": "Vitinha"
+      },
+      "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+      "updated_at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin"
+    },
+    "serie-a|Cagliari": {
+      "locked": true,
+      "override": {
+        "primary": "Daniel Maldini",
+        "secondary": "Alessandro Deiola",
+        "tertiary": "Yerry Mina"
+      },
+      "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+      "updated_at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin"
+    },
+    "la-liga|Atletico Madrid": {
+      "locked": true,
+      "override": {
+        "primary": "Julián Álvarez",
+        "secondary": "Alejandro Grimaldo",
+        "tertiary": "Alexander Sørloth"
+      },
+      "reason": "Promote Grimaldo to second choice following his penalty against Real Sociedad; retain Alvarez first and Sorloth third, as approved on 14 September.",
+      "updated_at": "2026-09-14T10:41:05+00:00",
+      "actor": "local_admin"
+    },
+    "la-liga|Celta Vigo": {
+      "locked": true,
+      "override": {
+        "primary": "Borja Iglesias",
+        "secondary": "Iago Aspas",
+        "tertiary": "Hugo Gonzalez"
+      },
+      "reason": "Iglesias and Aspas remains ahead if they are starting, Gonzalez promoted to back up plan after his penalty convertion against Santander",
+      "updated_at": "2026-09-21T11:07:09+00:00",
+      "actor": "local_admin"
+    },
+    "bundesliga|Borussia M.Gladbach": {
+      "locked": true,
+      "override": {
+        "primary": "Kevin Diks",
+        "secondary": "Shuto Machino",
+        "tertiary": "Kevin Stöger"
+      },
+      "reason": "Machino converted a penalty at minute 95 in the home match against Mainz, after coming in from the bench. Diks previosly missed an earlier penalty, he might still have the nod for future penalties but evidence is recommending to promote Machino at least as secondary.",
+      "updated_at": "2026-09-21T11:46:50+00:00",
+      "actor": "local_admin"
+    },
+    "ligue-1|Toulouse": {
+      "locked": true,
+      "override": {
+        "primary": "Casper Tengstedt",
+        "secondary": "Aron Dønnum",
+        "tertiary": "Cristian Cásseres Jr."
+      },
+      "reason": "Tengstedt converted a penalty at minute 49 in the home match against Le Havre, where he netted a brace. Strong evidence to have him as primary taker for Toulouse, also given the limited minutes Dønnum is having so far.",
+      "updated_at": "2026-09-21T11:57:20+00:00",
       "actor": "local_admin"
     }
   },
@@ -46,6 +123,237 @@
         "primary": "Kamory Doumbia",
         "secondary": "Ludovic Ajorque",
         "tertiary": "Kenny Lala"
+      }
+    },
+    {
+      "id": "feb728c3216d454ba24c68b55de7d0b0",
+      "at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "la-liga|Elche",
+      "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+      "before_entry_hash": "7f10f8a387279ac8b052e32428acf6d3f3e311c681d87cae91cfaf4e065dc630",
+      "after_entry_hash": "a6a6e213a873d9dcd16fa463acce02be6656e9b3aa071692940edb019b55d543",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Facundo Buonanotte",
+          "secondary": "Fer Niño",
+          "tertiary": "Germán Valera"
+        },
+        "reason": "Owner editorial review on 13 September 2026: Facundo Buonanotte → Fer Niño → Germán Valera.",
+        "updated_at": "2026-09-13T11:57:43+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Fer Niño",
+        "secondary": "Germán Valera",
+        "tertiary": "Ali Houary"
+      },
+      "after_hierarchy": {
+        "primary": "Facundo Buonanotte",
+        "secondary": "Fer Niño",
+        "tertiary": "Germán Valera"
+      }
+    },
+    {
+      "id": "33bfd58cb2c34981a86f1c63bd532510",
+      "at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "serie-a|Genoa",
+      "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+      "before_entry_hash": "96c950cc8d4b29bef8ae186ad9ccada82859aeae6d65282e3586d2234def742e",
+      "after_entry_hash": "f72ec33a80f28628e9dd3feda1d10c99249e528d2a5ca9ba73c3f69034cfcb14",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Junior Messias",
+          "secondary": "Milutin Osmajic",
+          "tertiary": "Vitinha"
+        },
+        "reason": "Owner editorial review on 13 September 2026: Junior Messias → Milutin Osmajic → Vitinha. Remove Lorenzo Colombo from the published hierarchy.",
+        "updated_at": "2026-09-13T11:57:43+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Lorenzo Colombo",
+        "secondary": "Junior Messias",
+        "tertiary": "Vitinha"
+      },
+      "after_hierarchy": {
+        "primary": "Junior Messias",
+        "secondary": "Milutin Osmajic",
+        "tertiary": "Vitinha"
+      }
+    },
+    {
+      "id": "02b247d3974b49adbc89c32aee1076ff",
+      "at": "2026-09-13T11:57:43+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "serie-a|Cagliari",
+      "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+      "before_entry_hash": "a8a75d25822c9994e0fdb6c7ec1d2839c8f53fd7c79862b4deb8b0801c5ed65e",
+      "after_entry_hash": "1bef4d075a8ee6d1bf983eb33ff58b56672f71082aa3536886612f034f0261d3",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Daniel Maldini",
+          "secondary": "Alessandro Deiola",
+          "tertiary": "Yerry Mina"
+        },
+        "reason": "Owner editorial review on 13 September 2026: Daniel Maldini → Alessandro Deiola → Yerry Mina. Remove Jacopo Fazzini from the published hierarchy.",
+        "updated_at": "2026-09-13T11:57:43+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Alessandro Deiola",
+        "secondary": "Jacopo Fazzini",
+        "tertiary": "Yerry Mina"
+      },
+      "after_hierarchy": {
+        "primary": "Daniel Maldini",
+        "secondary": "Alessandro Deiola",
+        "tertiary": "Yerry Mina"
+      }
+    },
+    {
+      "id": "faffafb51fae459b83f6b4d84d6a92bb",
+      "at": "2026-09-14T10:41:05+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "la-liga|Atletico Madrid",
+      "reason": "Promote Grimaldo to second choice following his penalty against Real Sociedad; retain Alvarez first and Sorloth third, as approved on 14 September.",
+      "before_entry_hash": "437e62ab918034a72637b89ae9dc1d7552868368320e78bdfd3d5264b4c2c7ce",
+      "after_entry_hash": "192ff079a37df12b92c9ec273f675cb5173e31c39e16df7bda0a197e106f4ae7",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Julián Álvarez",
+          "secondary": "Alejandro Grimaldo",
+          "tertiary": "Alexander Sørloth"
+        },
+        "reason": "Promote Grimaldo to second choice following his penalty against Real Sociedad; retain Alvarez first and Sorloth third, as approved on 14 September.",
+        "updated_at": "2026-09-14T10:41:05+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Julián Álvarez",
+        "secondary": "Ademola Lookman",
+        "tertiary": "Alexander Sørloth"
+      },
+      "after_hierarchy": {
+        "primary": "Julián Álvarez",
+        "secondary": "Alejandro Grimaldo",
+        "tertiary": "Alexander Sørloth"
+      }
+    },
+    {
+      "id": "33038b62576c473f82859873e7948fb8",
+      "at": "2026-09-21T11:07:09+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "la-liga|Celta Vigo",
+      "reason": "Iglesias and Aspas remains ahead if they are starting, Gonzalez promoted to back up plan after his penalty convertion against Santander",
+      "before_entry_hash": "c583caf422bf4756adedb4ce0edfc1731ffeb7ab4236b5f14f8e626a58b476b7",
+      "after_entry_hash": "c7481ca120a029d4475074711f9df41b891692d81dbd5a251f195e8d09fa08e9",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Borja Iglesias",
+          "secondary": "Iago Aspas",
+          "tertiary": "Hugo Gonzalez"
+        },
+        "reason": "Iglesias and Aspas remains ahead if they are starting, Gonzalez promoted to back up plan after his penalty convertion against Santander",
+        "updated_at": "2026-09-21T11:07:09+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Borja Iglesias",
+        "secondary": "Iago Aspas",
+        "tertiary": "Marcos Alonso"
+      },
+      "after_hierarchy": {
+        "primary": "Borja Iglesias",
+        "secondary": "Iago Aspas",
+        "tertiary": "Hugo Gonzalez"
+      }
+    },
+    {
+      "id": "887c1771fae4467385452bd035a1ff1a",
+      "at": "2026-09-21T11:46:50+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "bundesliga|Borussia M.Gladbach",
+      "reason": "Machino converted a penalty at minute 95 in the home match against Mainz, after coming in from the bench. Diks previosly missed an earlier penalty, he might still have the nod for future penalties but evidence is recommending to promote Machino at least as secondary.",
+      "before_entry_hash": "c886bc1197feb2f8a4eec59fb39afb98fa9cb73daabaf941254af26ee504ea3e",
+      "after_entry_hash": "4a3baaf1fed143addbe1948f71d63999f4f84304cb2fc403f78b58b8bebed76a",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Kevin Diks",
+          "secondary": "Shuto Machino",
+          "tertiary": "Kevin Stöger"
+        },
+        "reason": "Machino converted a penalty at minute 95 in the home match against Mainz, after coming in from the bench. Diks previosly missed an earlier penalty, he might still have the nod for future penalties but evidence is recommending to promote Machino at least as secondary.",
+        "updated_at": "2026-09-21T11:46:50+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Kevin Diks",
+        "secondary": "Kevin Stöger",
+        "tertiary": "Robin Hack"
+      },
+      "after_hierarchy": {
+        "primary": "Kevin Diks",
+        "secondary": "Shuto Machino",
+        "tertiary": "Kevin Stöger"
+      }
+    },
+    {
+      "id": "824e4caa3fcf48e98ee5786bc5839342",
+      "at": "2026-09-21T11:57:20+00:00",
+      "actor": "local_admin",
+      "action": "override",
+      "club_id": "ligue-1|Toulouse",
+      "reason": "Tengstedt converted a penalty at minute 49 in the home match against Le Havre, where he netted a brace. Strong evidence to have him as primary taker for Toulouse, also given the limited minutes Dønnum is having so far.",
+      "before_entry_hash": "5e679f81afccf24a650b6bd6e838bc844e34fc6f6959051a8ab7b0419f23c1a0",
+      "after_entry_hash": "979e9ffc14cbc27d5d69a627e79808ce12ab12dbc74abe50023fe2ad5051ece7",
+      "before_control": {},
+      "after_control": {
+        "locked": true,
+        "override": {
+          "primary": "Casper Tengstedt",
+          "secondary": "Aron Dønnum",
+          "tertiary": "Cristian Cásseres Jr."
+        },
+        "reason": "Tengstedt converted a penalty at minute 49 in the home match against Le Havre, where he netted a brace. Strong evidence to have him as primary taker for Toulouse, also given the limited minutes Dønnum is having so far.",
+        "updated_at": "2026-09-21T11:57:20+00:00",
+        "actor": "local_admin"
+      },
+      "reverts": null,
+      "before_hierarchy": {
+        "primary": "Aron Dønnum",
+        "secondary": "Cristian Cásseres Jr.",
+        "tertiary": "Yann Gboho"
+      },
+      "after_hierarchy": {
+        "primary": "Casper Tengstedt",
+        "secondary": "Aron Dønnum",
+        "tertiary": "Cristian Cásseres Jr."
       }
     }
   ]

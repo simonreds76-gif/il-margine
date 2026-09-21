@@ -1525,28 +1525,28 @@
   "Celta Vigo": {
     "primary": "Borja Iglesias",
     "secondary": "Iago Aspas",
-    "tertiary": "Marcos Alonso",
-    "last_updated": "2026-07-30",
+    "tertiary": "Hugo Gonzalez",
+    "last_updated": "2026-09-21",
     "source": "La Voz de Galicia",
     "cross_check": "Betfair España",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
+      "primary": "medium",
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Celta converted every 2025/26 regular-time penalty: Borja took four, Aspas two and Marcos Alonso one, making this the best-supported three-player depth chart. Aspas and Marcos remain credible deputies, but availability and match state can affect the assignment.",
+    "condition_note": "First choice: Borja Iglesias; Second choice: Iago Aspas; Third choice: Hugo Gonzalez.",
     "last_verified": {
-      "date": "2026-09-02",
-      "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "date": "2026-09-21",
+      "by": "local_admin",
+      "method": "reviewed_manual_hierarchy_override"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-21",
     "latest_evidence": {
-      "id": "evt_20260901_celta-vigo_current_review",
-      "date": "2026-09-01",
+      "id": "33038b62576c473f82859873e7948fb8",
+      "date": "2026-09-21",
       "type": "current_season_board_review",
-      "source_count": 2
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -1732,6 +1732,30 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "33038b62576c473f82859873e7948fb8",
+        "date": "2026-09-21",
+        "type": "current_season_board_review",
+        "headline": "Borja Iglesias leads the penalty order",
+        "editorial_note": "First choice: Borja Iglesias; Second choice: Iago Aspas; Third choice: Hugo Gonzalez.",
+        "match": "",
+        "sources": [
+          {
+            "label": "Editorial verification",
+            "url": "https://rccelta.es/en/equipo/actualidad/celta-vs-racing-de-santander-5-0-summary-and-goals-highlights-laliga-ea-sports-26-27/",
+            "date": "2026-09-21",
+            "note": ""
+          }
+        ],
+        "review": {
+          "status": "approved",
+          "reviewed_by": "local_admin",
+          "reviewed_at": "2026-09-21T11:07:09+00:00"
+        },
+        "affects_hierarchy": true,
+        "detection": "local_admin",
+        "season": "2026/27"
       }
     ],
     "change_log": [
@@ -1803,6 +1827,25 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "id": "33038b62576c473f82859873e7948fb8",
+        "changed_at": "2026-09-21T11:07:09+00:00",
+        "change_type": "hierarchy_change",
+        "reason": "Iglesias and Aspas remains ahead if they are starting, Gonzalez promoted to back up plan after his penalty convertion against Santander",
+        "from": {
+          "primary": "Borja Iglesias",
+          "secondary": "Iago Aspas",
+          "tertiary": "Marcos Alonso"
+        },
+        "to": {
+          "primary": "Borja Iglesias",
+          "secondary": "Iago Aspas",
+          "tertiary": "Hugo Gonzalez"
+        },
+        "evidence_ids": [
+          "33038b62576c473f82859873e7948fb8"
+        ]
       }
     ],
     "flags": {
@@ -1832,10 +1875,11 @@
         "checked_at": "2026-09-02"
       },
       "tertiary": {
-        "player": "Marcos Alonso",
+        "player": "Hugo Gonzalez",
         "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/9910/overview/celta-vigo",
-        "checked_at": "2026-09-02"
+        "source_url": "https://rccelta.es/en/equipo/actualidad/celta-vs-racing-de-santander-5-0-summary-and-goals-highlights-laliga-ea-sports-26-27/",
+        "checked_at": "2026-09-21",
+        "method": "manual_editorial_attestation"
       }
     },
     "last_reviewed": {
@@ -1847,7 +1891,8 @@
         "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
         "https://www.laliga.com/en-GB/laliga-easports/clubs"
       ]
-    }
+    },
+    "unavailable_candidates": []
   },
   "Deportivo La Coruna": {
     "primary": "Yeremay Hernández",

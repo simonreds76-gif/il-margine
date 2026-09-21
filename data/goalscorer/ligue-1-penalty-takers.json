@@ -6739,30 +6739,30 @@
     }
   },
   "Toulouse": {
-    "primary": "Aron Dønnum",
-    "secondary": "Cristian Cásseres Jr.",
-    "tertiary": "Yann Gboho",
-    "last_updated": "2026-07-30",
+    "primary": "Casper Tengstedt",
+    "secondary": "Aron Dønnum",
+    "tertiary": "Cristian Cásseres Jr.",
+    "last_updated": "2026-09-21",
     "source": "Toulouse FC",
     "cross_check": "Ligue 1",
     "hierarchy_status": "probable",
     "confidence": {
-      "primary": "high",
-      "secondary": "low",
-      "tertiary": "low"
+      "primary": "medium",
+      "secondary": "medium",
+      "tertiary": "medium"
     },
-    "condition_note": "Dønnum converted all three 2025/26 penalties. Cásseres is the only retained player with another Toulouse regular-time attempt, although he missed; Gboho is the practical attacking fallback. Neither backup is confirmed, and Gboho's evidence is mostly historical. Conditions: If Dønnum is absent, the first competitive penalty is hierarchy-setting. A new proven centre-forward should enter above Gboho and may enter above Cásseres.",
+    "condition_note": "First choice: Casper Tengstedt; Second choice: Aron Dønnum; Third choice: Cristian Cásseres Jr..",
     "last_verified": {
-      "date": "2026-09-02",
-      "by": "Il Margine",
-      "method": "current_squad_membership_audit"
+      "date": "2026-09-21",
+      "by": "local_admin",
+      "method": "reviewed_manual_hierarchy_override"
     },
-    "public_updated_at": "2026-09-02",
+    "public_updated_at": "2026-09-21",
     "latest_evidence": {
-      "id": "evt_20260901_toulouse_current_review",
-      "date": "2026-09-01",
+      "id": "824e4caa3fcf48e98ee5786bc5839342",
+      "date": "2026-09-21",
       "type": "current_season_board_review",
-      "source_count": 4
+      "source_count": 1
     },
     "evidence_log": [
       {
@@ -6984,6 +6984,30 @@
         },
         "affects_hierarchy": false,
         "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+      },
+      {
+        "id": "824e4caa3fcf48e98ee5786bc5839342",
+        "date": "2026-09-21",
+        "type": "current_season_board_review",
+        "headline": "Casper Tengstedt leads the penalty order",
+        "editorial_note": "First choice: Casper Tengstedt; Second choice: Aron Dønnum; Third choice: Cristian Cásseres Jr..",
+        "match": "",
+        "sources": [
+          {
+            "label": "Editorial verification",
+            "url": "https://www.marca.com/en/soccer/ligue-1/toulouse-le-havre/2026/09/19/01_0109_20260919_427_141-live.html",
+            "date": "2026-09-21",
+            "note": ""
+          }
+        ],
+        "review": {
+          "status": "approved",
+          "reviewed_by": "local_admin",
+          "reviewed_at": "2026-09-21T11:57:20+00:00"
+        },
+        "affects_hierarchy": true,
+        "detection": "local_admin",
+        "season": "2026/27"
       }
     ],
     "change_log": [
@@ -7055,11 +7079,30 @@
         "approved_by": "Il Margine",
         "approved_at": "2026-07-30T12:00:00Z",
         "article_slug": null
+      },
+      {
+        "id": "824e4caa3fcf48e98ee5786bc5839342",
+        "changed_at": "2026-09-21T11:57:20+00:00",
+        "change_type": "hierarchy_change",
+        "reason": "Tengstedt converted a penalty at minute 49 in the home match against Le Havre, where he netted a brace. Strong evidence to have him as primary taker for Toulouse, also given the limited minutes Dønnum is having so far.",
+        "from": {
+          "primary": "Aron Dønnum",
+          "secondary": "Cristian Cásseres Jr.",
+          "tertiary": "Yann Gboho"
+        },
+        "to": {
+          "primary": "Casper Tengstedt",
+          "secondary": "Aron Dønnum",
+          "tertiary": "Cristian Cásseres Jr."
+        },
+        "evidence_ids": [
+          "824e4caa3fcf48e98ee5786bc5839342"
+        ]
       }
     ],
     "flags": {
       "carryover_from_previous_season": false,
-      "weak_evidence": true,
+      "weak_evidence": false,
       "stale_override": null
     },
     "prior_season": {
@@ -7072,19 +7115,20 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
+        "player": "Casper Tengstedt",
+        "status": "confirmed",
+        "source_url": "https://www.marca.com/en/soccer/ligue-1/toulouse-le-havre/2026/09/19/01_0109_20260919_427_141-live.html",
+        "checked_at": "2026-09-21",
+        "method": "manual_editorial_attestation"
+      },
+      "secondary": {
         "player": "Aron Dønnum",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/9941/overview/toulouse",
         "checked_at": "2026-09-02"
       },
-      "secondary": {
-        "player": "Cristian Cásseres Jr.",
-        "status": "confirmed",
-        "source_url": "https://www.fotmob.com/teams/9941/overview/toulouse",
-        "checked_at": "2026-09-02"
-      },
       "tertiary": {
-        "player": "Yann Gboho",
+        "player": "Cristian Cásseres Jr.",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/9941/overview/toulouse",
         "checked_at": "2026-09-02"
@@ -7101,7 +7145,8 @@
         "https://www.deux-zero.com/ligue-1/penalties-tireurs-epreuve/joueur/6874",
         "https://starting11.com/set-piece-takers/ligue-1"
       ]
-    }
+    },
+    "unavailable_candidates": []
   },
   "Troyes": {
     "primary": "Renaud Ripart",

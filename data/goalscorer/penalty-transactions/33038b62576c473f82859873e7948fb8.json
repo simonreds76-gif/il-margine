@@ -1,0 +1,766 @@
+{
+  "schema_version": 1,
+  "status": "committed",
+  "id": "33038b62576c473f82859873e7948fb8",
+  "league": "la-liga",
+  "audit": {
+    "id": "33038b62576c473f82859873e7948fb8",
+    "at": "2026-09-21T11:07:09+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "la-liga|Celta Vigo",
+    "reason": "Iglesias and Aspas remains ahead if they are starting, Gonzalez promoted to back up plan after his penalty convertion against Santander",
+    "before_entry": {
+      "primary": "Borja Iglesias",
+      "secondary": "Iago Aspas",
+      "tertiary": "Marcos Alonso",
+      "last_updated": "2026-07-30",
+      "source": "La Voz de Galicia",
+      "cross_check": "Betfair España",
+      "hierarchy_status": "probable",
+      "confidence": {
+        "primary": "high",
+        "secondary": "medium",
+        "tertiary": "medium"
+      },
+      "condition_note": "Celta converted every 2025/26 regular-time penalty: Borja took four, Aspas two and Marcos Alonso one, making this the best-supported three-player depth chart. Aspas and Marcos remain credible deputies, but availability and match state can affect the assignment.",
+      "last_verified": {
+        "date": "2026-09-02",
+        "by": "Il Margine",
+        "method": "current_squad_membership_audit"
+      },
+      "public_updated_at": "2026-09-02",
+      "latest_evidence": {
+        "id": "evt_20260901_celta-vigo_current_review",
+        "date": "2026-09-01",
+        "type": "current_season_board_review",
+        "source_count": 2
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_celta_vigo_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_celta_vigo_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "The report recorded nine conversions from nine regular-time penalties: Borja Iglesias four, Iago Aspas two, Marcos Alonso one, and one each for two other players. It separately identified Copa shootout misses, which are excluded. The specialist review independently placed Borja Iglesias first. The guide listed Iago Aspas first with Marcos Alonso as an alternative. Newer direct evidence for Borja Iglesias is therefore required and correctly takes precedence.",
+          "sources": [
+            {
+              "label": "La Voz de Galicia",
+              "url": "https://www.lavozdegalicia.es/noticia/gradario/2026/06/05/celta-cerro-pasado-curso-pleno-100-penaltis/00031780687434837947976.htm",
+              "date": "2026-06-06",
+              "note": "The report recorded nine conversions from nine regular-time penalties: Borja Iglesias four, Iago Aspas two, Marcos Alonso one, and one each for two other players. It separately identified Copa shootout misses, which are excluded."
+            },
+            {
+              "label": "Betfair España",
+              "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-estos-son-los-lanzadores-de-los-20-equipos-160226-1245.html",
+              "date": "2026-02-16",
+              "note": "The specialist review independently placed Borja Iglesias first."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The guide listed Iago Aspas first with Marcos Alonso as an alternative. Newer direct evidence for Borja Iglesias is therefore required and correctly takes precedence."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_celta-vigo_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Retain the existing complete order. Celta's 2025/26 league review directly allocates penalty goals to Borja, Aspas and Marcos.",
+          "sources": [
+            {
+              "label": "La Voz de Galicia",
+              "url": "https://www.lavozdegalicia.es/noticia/gradario/2026/06/05/celta-cerro-pasado-curso-pleno-100-penaltis/00031780687434837947976.htm",
+              "date": "2026-06-06",
+              "note": "The report recorded nine conversions from nine regular-time penalties: Borja Iglesias four, Iago Aspas two, Marcos Alonso one, and one each for two other players. It separately identified Copa shootout misses, which are excluded."
+            },
+            {
+              "label": "Betfair España",
+              "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-estos-son-los-lanzadores-de-los-20-equipos-160226-1245.html",
+              "date": "2026-02-16",
+              "note": "The specialist review independently placed Borja Iglesias first."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The guide listed Iago Aspas first with Marcos Alonso as an alternative. Newer direct evidence for Borja Iglesias is therefore required and correctly takes precedence."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_celta-vigo_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Celta converted every 2025/26 regular-time penalty: Borja took four, Aspas two and Marcos Alonso one, making this the best-supported three-player depth chart.",
+          "sources": [
+            {
+              "label": "La Voz de Galicia",
+              "url": "https://www.lavozdegalicia.es/noticia/gradario/2026/06/05/celta-cerro-pasado-curso-pleno-100-penaltis/00031780687434837947976.htm",
+              "date": "2026-06-06",
+              "note": "The report recorded nine conversions from nine regular-time penalties: Borja Iglesias four, Iago Aspas two, Marcos Alonso one, and one each for two other players. It separately identified Copa shootout misses, which are excluded."
+            },
+            {
+              "label": "Betfair España",
+              "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-estos-son-los-lanzadores-de-los-20-equipos-160226-1245.html",
+              "date": "2026-02-16",
+              "note": "The specialist review independently placed Borja Iglesias first."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The guide listed Iago Aspas first with Marcos Alonso as an alternative. Newer direct evidence for Borja Iglesias is therefore required and correctly takes precedence."
+            },
+            {
+              "label": "La Voz de Galicia",
+              "url": "https://www.lavozdegalicia.es/amp/noticia/gradario/2026/06/05/celta-cerro-pasado-curso-pleno-100-penaltis/00031780687434837947976.htm",
+              "date": "2026-06-05",
+              "note": "Records four conversions for Borja, two for Aspas and one for Marcos Alonso in regular play."
+            },
+            {
+              "label": "Official club or LaLiga",
+              "url": "https://www.laliga.com/clubes/rc-celta/plantilla",
+              "date": "2026-07-30",
+              "note": "Current-squad-first check completed for Borja Iglesias, Iago Aspas, Marcos Alonso; all three are confirmed members at the cutoff."
+            },
+            {
+              "label": "Official club or LaLiga",
+              "url": "https://www.laliga.com/clubes/rc-celta/plantilla",
+              "date": "2026-07-30",
+              "note": "Current-squad-first check confirms Borja Iglesias, Iago Aspas, Marcos Alonso."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260901_celta-vigo_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Celta Vigo hierarchy rechecked",
+          "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+          "sources": [
+            {
+              "label": "Betfair Spain LaLiga penalty board",
+              "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+              "date": "2026-08-31",
+              "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+            },
+            {
+              "label": "LaLiga 2026/27 squads and match records",
+              "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+              "date": "2026-09-01",
+              "note": "Official current club and competition cross-check."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Borja Iglesias",
+            "secondary": "Iago Aspas",
+            "tertiary": "Marcos Alonso"
+          },
+          "to": {
+            "primary": "Borja Iglesias",
+            "secondary": "Iago Aspas",
+            "tertiary": "Marcos Alonso"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_celta_vigo_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Borja Iglesias",
+            "secondary": "Iago Aspas",
+            "tertiary": "Marcos Alonso"
+          },
+          "to": {
+            "primary": "Borja Iglesias",
+            "secondary": "Iago Aspas",
+            "tertiary": "Marcos Alonso"
+          },
+          "reason": "Retain the existing complete order. Celta's 2025/26 league review directly allocates penalty goals to Borja, Aspas and Marcos. Borja versus Aspas can still depend on on-pitch personnel.",
+          "evidence_ids": [
+            "evt_20260728_celta-vigo_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Borja Iglesias",
+            "secondary": "Iago Aspas",
+            "tertiary": "Marcos Alonso"
+          },
+          "to": {
+            "primary": "Borja Iglesias",
+            "secondary": "Iago Aspas",
+            "tertiary": "Marcos Alonso"
+          },
+          "reason": "Celta converted every 2025/26 regular-time penalty: Borja took four, Aspas two and Marcos Alonso one, making this the best-supported three-player depth chart. Aspas and Marcos remain credible deputies, but availability and match state can affect the assignment.",
+          "evidence_ids": [
+            "evt_20260730_celta-vigo_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": false,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Borja Iglesias",
+        "secondary": "Iago Aspas",
+        "tertiary": "Marcos Alonso",
+        "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Borja Iglesias",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9910/overview/celta-vigo",
+          "checked_at": "2026-09-02"
+        },
+        "secondary": {
+          "player": "Iago Aspas",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9910/overview/celta-vigo",
+          "checked_at": "2026-09-02"
+        },
+        "tertiary": {
+          "player": "Marcos Alonso",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9910/overview/celta-vigo",
+          "checked_at": "2026-09-02"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-01",
+        "by": "Il Margine",
+        "method": "current_season_multi_source_review",
+        "outcome": "order_unchanged",
+        "sources": [
+          "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+          "https://www.laliga.com/en-GB/laliga-easports/clubs"
+        ]
+      }
+    },
+    "after_entry": {
+      "primary": "Borja Iglesias",
+      "secondary": "Iago Aspas",
+      "tertiary": "Hugo Gonzalez",
+      "last_updated": "2026-09-21",
+      "source": "La Voz de Galicia",
+      "cross_check": "Betfair España",
+      "hierarchy_status": "probable",
+      "confidence": {
+        "primary": "medium",
+        "secondary": "medium",
+        "tertiary": "medium"
+      },
+      "condition_note": "First choice: Borja Iglesias; Second choice: Iago Aspas; Third choice: Hugo Gonzalez.",
+      "last_verified": {
+        "date": "2026-09-21",
+        "by": "local_admin",
+        "method": "reviewed_manual_hierarchy_override"
+      },
+      "public_updated_at": "2026-09-21",
+      "latest_evidence": {
+        "id": "33038b62576c473f82859873e7948fb8",
+        "date": "2026-09-21",
+        "type": "current_season_board_review",
+        "source_count": 1
+      },
+      "evidence_log": [
+        {
+          "id": "evt_20260710_celta_vigo_rollover",
+          "date": "2026-07-10",
+          "season": "2026/27",
+          "type": "editorial_note",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": null,
+          "sources": [],
+          "detection": "manual",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-10T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "The final 2025/26 order is carried into 2026/27 pending preseason re-verification."
+        },
+        {
+          "id": "evt_20260727_celta_vigo_research",
+          "date": "2026-07-27",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "The report recorded nine conversions from nine regular-time penalties: Borja Iglesias four, Iago Aspas two, Marcos Alonso one, and one each for two other players. It separately identified Copa shootout misses, which are excluded. The specialist review independently placed Borja Iglesias first. The guide listed Iago Aspas first with Marcos Alonso as an alternative. Newer direct evidence for Borja Iglesias is therefore required and correctly takes precedence.",
+          "sources": [
+            {
+              "label": "La Voz de Galicia",
+              "url": "https://www.lavozdegalicia.es/noticia/gradario/2026/06/05/celta-cerro-pasado-curso-pleno-100-penaltis/00031780687434837947976.htm",
+              "date": "2026-06-06",
+              "note": "The report recorded nine conversions from nine regular-time penalties: Borja Iglesias four, Iago Aspas two, Marcos Alonso one, and one each for two other players. It separately identified Copa shootout misses, which are excluded."
+            },
+            {
+              "label": "Betfair España",
+              "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-estos-son-los-lanzadores-de-los-20-equipos-160226-1245.html",
+              "date": "2026-02-16",
+              "note": "The specialist review independently placed Borja Iglesias first."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The guide listed Iago Aspas first with Marcos Alonso as an alternative. Newer direct evidence for Borja Iglesias is therefore required and correctly takes precedence."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-27T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260728_celta-vigo_research",
+          "date": "2026-07-28",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Retain the existing complete order. Celta's 2025/26 league review directly allocates penalty goals to Borja, Aspas and Marcos.",
+          "sources": [
+            {
+              "label": "La Voz de Galicia",
+              "url": "https://www.lavozdegalicia.es/noticia/gradario/2026/06/05/celta-cerro-pasado-curso-pleno-100-penaltis/00031780687434837947976.htm",
+              "date": "2026-06-06",
+              "note": "The report recorded nine conversions from nine regular-time penalties: Borja Iglesias four, Iago Aspas two, Marcos Alonso one, and one each for two other players. It separately identified Copa shootout misses, which are excluded."
+            },
+            {
+              "label": "Betfair España",
+              "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-estos-son-los-lanzadores-de-los-20-equipos-160226-1245.html",
+              "date": "2026-02-16",
+              "note": "The specialist review independently placed Borja Iglesias first."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The guide listed Iago Aspas first with Marcos Alonso as an alternative. Newer direct evidence for Borja Iglesias is therefore required and correctly takes precedence."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-28T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 3 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260730_celta-vigo_research",
+          "date": "2026-07-30",
+          "season": "2026/27",
+          "type": "multi_source_preseason_research",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "context": "Celta converted every 2025/26 regular-time penalty: Borja took four, Aspas two and Marcos Alonso one, making this the best-supported three-player depth chart.",
+          "sources": [
+            {
+              "label": "La Voz de Galicia",
+              "url": "https://www.lavozdegalicia.es/noticia/gradario/2026/06/05/celta-cerro-pasado-curso-pleno-100-penaltis/00031780687434837947976.htm",
+              "date": "2026-06-06",
+              "note": "The report recorded nine conversions from nine regular-time penalties: Borja Iglesias four, Iago Aspas two, Marcos Alonso one, and one each for two other players. It separately identified Copa shootout misses, which are excluded."
+            },
+            {
+              "label": "Betfair España",
+              "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-estos-son-los-lanzadores-de-los-20-equipos-160226-1245.html",
+              "date": "2026-02-16",
+              "note": "The specialist review independently placed Borja Iglesias first."
+            },
+            {
+              "label": "FutbolFantasy",
+              "url": "https://www.futbolfantasy.com/laliga/noticias/130781-guia-fantasy-del-balon-parado-de-laliga-25-26-y-estadisticas-recientes",
+              "date": "2025-08-11",
+              "note": "The guide listed Iago Aspas first with Marcos Alonso as an alternative. Newer direct evidence for Borja Iglesias is therefore required and correctly takes precedence."
+            },
+            {
+              "label": "La Voz de Galicia",
+              "url": "https://www.lavozdegalicia.es/amp/noticia/gradario/2026/06/05/celta-cerro-pasado-curso-pleno-100-penaltis/00031780687434837947976.htm",
+              "date": "2026-06-05",
+              "note": "Records four conversions for Borja, two for Aspas and one for Marcos Alonso in regular play."
+            },
+            {
+              "label": "Official club or LaLiga",
+              "url": "https://www.laliga.com/clubes/rc-celta/plantilla",
+              "date": "2026-07-30",
+              "note": "Current-squad-first check completed for Borja Iglesias, Iago Aspas, Marcos Alonso; all three are confirmed members at the cutoff."
+            },
+            {
+              "label": "Official club or LaLiga",
+              "url": "https://www.laliga.com/clubes/rc-celta/plantilla",
+              "date": "2026-07-30",
+              "note": "Current-squad-first check confirms Borja Iglesias, Iago Aspas, Marcos Alonso."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-07-30T12:00:00Z"
+          },
+          "affects_hierarchy": true,
+          "editorial_note": "Reviewed 6 source records for the 2026/27 hierarchy."
+        },
+        {
+          "id": "evt_20260901_celta-vigo_current_review",
+          "date": "2026-09-01",
+          "season": "2026/27",
+          "type": "current_season_board_review",
+          "penalty_kind": null,
+          "competition": null,
+          "match": null,
+          "headline": "Celta Vigo hierarchy rechecked",
+          "context": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order.",
+          "sources": [
+            {
+              "label": "Betfair Spain LaLiga penalty board",
+              "url": "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+              "date": "2026-08-31",
+              "note": "Current all-club primary and alternative order plus 2026/27 penalty events."
+            },
+            {
+              "label": "LaLiga 2026/27 squads and match records",
+              "url": "https://www.laliga.com/en-GB/laliga-easports/clubs",
+              "date": "2026-09-01",
+              "note": "Official current club and competition cross-check."
+            }
+          ],
+          "detection": "manual_multi_source_research",
+          "review": {
+            "status": "approved",
+            "reviewed_by": "Il Margine",
+            "reviewed_at": "2026-09-01T12:00:00Z"
+          },
+          "affects_hierarchy": false,
+          "editorial_note": "Current squad, league-wide role reporting and available 2026/27 penalty events were checked; no stronger evidence justified changing the filed order."
+        },
+        {
+          "id": "33038b62576c473f82859873e7948fb8",
+          "date": "2026-09-21",
+          "type": "current_season_board_review",
+          "headline": "Borja Iglesias leads the penalty order",
+          "editorial_note": "First choice: Borja Iglesias; Second choice: Iago Aspas; Third choice: Hugo Gonzalez.",
+          "match": "",
+          "sources": [
+            {
+              "label": "Editorial verification",
+              "url": "https://rccelta.es/en/equipo/actualidad/celta-vs-racing-de-santander-5-0-summary-and-goals-highlights-laliga-ea-sports-26-27/",
+              "date": "2026-09-21",
+              "note": ""
+            }
+          ],
+          "review": {
+            "status": "approved",
+            "reviewed_by": "local_admin",
+            "reviewed_at": "2026-09-21T11:07:09+00:00"
+          },
+          "affects_hierarchy": true,
+          "detection": "local_admin",
+          "season": "2026/27"
+        }
+      ],
+      "change_log": [
+        {
+          "changed_at": "2026-07-10",
+          "season": "2026/27",
+          "change_type": "season_rollover",
+          "from": {
+            "primary": "Borja Iglesias",
+            "secondary": "Iago Aspas",
+            "tertiary": "Marcos Alonso"
+          },
+          "to": {
+            "primary": "Borja Iglesias",
+            "secondary": "Iago Aspas",
+            "tertiary": "Marcos Alonso"
+          },
+          "reason": "Season rollover: 2025/26 final order carried forward; confidence reduced pending re-verification.",
+          "evidence_ids": [
+            "evt_20260710_celta_vigo_rollover"
+          ],
+          "detection": "manual",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-10T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-28",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Borja Iglesias",
+            "secondary": "Iago Aspas",
+            "tertiary": "Marcos Alonso"
+          },
+          "to": {
+            "primary": "Borja Iglesias",
+            "secondary": "Iago Aspas",
+            "tertiary": "Marcos Alonso"
+          },
+          "reason": "Retain the existing complete order. Celta's 2025/26 league review directly allocates penalty goals to Borja, Aspas and Marcos. Borja versus Aspas can still depend on on-pitch personnel.",
+          "evidence_ids": [
+            "evt_20260728_celta-vigo_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-28T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "changed_at": "2026-07-30",
+          "season": "2026/27",
+          "change_type": "preseason_reverification",
+          "from": {
+            "primary": "Borja Iglesias",
+            "secondary": "Iago Aspas",
+            "tertiary": "Marcos Alonso"
+          },
+          "to": {
+            "primary": "Borja Iglesias",
+            "secondary": "Iago Aspas",
+            "tertiary": "Marcos Alonso"
+          },
+          "reason": "Celta converted every 2025/26 regular-time penalty: Borja took four, Aspas two and Marcos Alonso one, making this the best-supported three-player depth chart. Aspas and Marcos remain credible deputies, but availability and match state can affect the assignment.",
+          "evidence_ids": [
+            "evt_20260730_celta-vigo_research"
+          ],
+          "detection": "manual_multi_source_research",
+          "approved_by": "Il Margine",
+          "approved_at": "2026-07-30T12:00:00Z",
+          "article_slug": null
+        },
+        {
+          "id": "33038b62576c473f82859873e7948fb8",
+          "changed_at": "2026-09-21T11:07:09+00:00",
+          "change_type": "hierarchy_change",
+          "reason": "Iglesias and Aspas remains ahead if they are starting, Gonzalez promoted to back up plan after his penalty convertion against Santander",
+          "from": {
+            "primary": "Borja Iglesias",
+            "secondary": "Iago Aspas",
+            "tertiary": "Marcos Alonso"
+          },
+          "to": {
+            "primary": "Borja Iglesias",
+            "secondary": "Iago Aspas",
+            "tertiary": "Hugo Gonzalez"
+          },
+          "evidence_ids": [
+            "33038b62576c473f82859873e7948fb8"
+          ]
+        }
+      ],
+      "flags": {
+        "carryover_from_previous_season": false,
+        "weak_evidence": false,
+        "stale_override": null
+      },
+      "prior_season": {
+        "label": "2025/26",
+        "primary": "Borja Iglesias",
+        "secondary": "Iago Aspas",
+        "tertiary": "Marcos Alonso",
+        "archive": "data/goalscorer/archive/2025-26/la-liga-penalty-takers.json"
+      },
+      "player_ids": {},
+      "squad_membership": {
+        "primary": {
+          "player": "Borja Iglesias",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9910/overview/celta-vigo",
+          "checked_at": "2026-09-02"
+        },
+        "secondary": {
+          "player": "Iago Aspas",
+          "status": "confirmed",
+          "source_url": "https://www.fotmob.com/teams/9910/overview/celta-vigo",
+          "checked_at": "2026-09-02"
+        },
+        "tertiary": {
+          "player": "Hugo Gonzalez",
+          "status": "confirmed",
+          "source_url": "https://rccelta.es/en/equipo/actualidad/celta-vs-racing-de-santander-5-0-summary-and-goals-highlights-laliga-ea-sports-26-27/",
+          "checked_at": "2026-09-21",
+          "method": "manual_editorial_attestation"
+        }
+      },
+      "last_reviewed": {
+        "date": "2026-09-01",
+        "by": "Il Margine",
+        "method": "current_season_multi_source_review",
+        "outcome": "order_unchanged",
+        "sources": [
+          "https://www.betfair.es/blog/futbol/futbol-espanol/laliga/quien-tira-los-penaltis-en-laliga-26-27-todo-lo-que-quieres-saber-120826-1377.html",
+          "https://www.laliga.com/en-GB/laliga-easports/clubs"
+        ]
+      },
+      "unavailable_candidates": []
+    },
+    "before_entry_hash": "c583caf422bf4756adedb4ce0edfc1731ffeb7ab4236b5f14f8e626a58b476b7",
+    "after_entry_hash": "c7481ca120a029d4475074711f9df41b891692d81dbd5a251f195e8d09fa08e9",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Borja Iglesias",
+        "secondary": "Iago Aspas",
+        "tertiary": "Hugo Gonzalez"
+      },
+      "reason": "Iglesias and Aspas remains ahead if they are starting, Gonzalez promoted to back up plan after his penalty convertion against Santander",
+      "updated_at": "2026-09-21T11:07:09+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null
+  },
+  "summary": {
+    "id": "33038b62576c473f82859873e7948fb8",
+    "at": "2026-09-21T11:07:09+00:00",
+    "actor": "local_admin",
+    "action": "override",
+    "club_id": "la-liga|Celta Vigo",
+    "reason": "Iglesias and Aspas remains ahead if they are starting, Gonzalez promoted to back up plan after his penalty convertion against Santander",
+    "before_entry_hash": "c583caf422bf4756adedb4ce0edfc1731ffeb7ab4236b5f14f8e626a58b476b7",
+    "after_entry_hash": "c7481ca120a029d4475074711f9df41b891692d81dbd5a251f195e8d09fa08e9",
+    "before_control": {},
+    "after_control": {
+      "locked": true,
+      "override": {
+        "primary": "Borja Iglesias",
+        "secondary": "Iago Aspas",
+        "tertiary": "Hugo Gonzalez"
+      },
+      "reason": "Iglesias and Aspas remains ahead if they are starting, Gonzalez promoted to back up plan after his penalty convertion against Santander",
+      "updated_at": "2026-09-21T11:07:09+00:00",
+      "actor": "local_admin"
+    },
+    "reverts": null,
+    "before_hierarchy": {
+      "primary": "Borja Iglesias",
+      "secondary": "Iago Aspas",
+      "tertiary": "Marcos Alonso"
+    },
+    "after_hierarchy": {
+      "primary": "Borja Iglesias",
+      "secondary": "Iago Aspas",
+      "tertiary": "Hugo Gonzalez"
+    }
+  },
+  "before_hierarchy_hash": "b2a5304bb7b56050b6815d70c8edbdf58ad6f6cead8a8e61af80728ac80800e3",
+  "after_hierarchy_hash": "1a1b680692a704b7fa426bd6819216b5cf9a60ae5080f1bd167190f0097f296e",
+  "before_state_hash": "05c6ee3f56026d18b9653b4bfd274159a477ce60073b334a204d7e97bfef8afd",
+  "after_state_hash": "68a3b310950e0a6c7a545c69f48383501baf14822c58ae8d4382bc5f13b974dd",
+  "after_revision": 7
+}
