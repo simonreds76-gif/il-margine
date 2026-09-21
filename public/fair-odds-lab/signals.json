@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-20T22:41:13.726190Z",
+  "generated_at": "2026-09-21T00:14:29.729672Z",
   "source_file": [
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
@@ -33,11 +33,9 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 1,
+  "fixtures_evaluated": 0,
   "signals_qualifying": 0,
-  "safety_exclusions": {
-    "incomplete_prediction_roster": 1
-  },
+  "safety_exclusions": {},
   "extreme_gap_quarantine": {
     "eligible_rows": 0,
     "added_by_league": {},
