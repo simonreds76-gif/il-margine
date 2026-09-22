@@ -1,25 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-21T15:21:08Z",
+  "generated_at": "2026-09-22T05:04:36Z",
   "league": "la-liga",
-  "row_count": 7,
+  "row_count": 2,
   "rows": [
-    {
-      "team": "Athletic Club",
-      "team_key": "athletic club",
-      "player_name": "Oihan Sancet",
-      "player_key": "oihan sancet",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-09-19"
-    },
     {
       "team": "Atlético Madrid",
       "team_key": "atletico madrid",
@@ -37,54 +21,6 @@
       "last_event_date": "2026-09-20"
     },
     {
-      "team": "Barcelona",
-      "team_key": "barcelona",
-      "player_name": "Lamine Yamal",
-      "player_key": "lamine yamal",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 3,
-      "observed_share": 0.3333,
-      "observed_sample": 3.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-09-16"
-    },
-    {
-      "team": "Barcelona",
-      "team_key": "barcelona",
-      "player_name": "Raphinha",
-      "player_key": "raphinha",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 3,
-      "observed_share": 0.6667,
-      "observed_sample": 3.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-09-16"
-    },
-    {
-      "team": "Celta Vigo",
-      "team_key": "celta vigo",
-      "player_name": "Hugo González",
-      "player_key": "hugo gonz lez",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-09-19"
-    },
-    {
       "team": "Real Sociedad",
       "team_key": "real sociedad",
       "player_name": "Carlos Soler",
@@ -99,22 +35,6 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-09-20"
-    },
-    {
-      "team": "Villarreal",
-      "team_key": "villarreal",
-      "player_name": "Pape Gueye",
-      "player_key": "pape gueye",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-09-17"
     }
   ]
 }
