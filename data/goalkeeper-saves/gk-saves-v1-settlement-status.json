@@ -9,67 +9,18 @@
       "match_date": "2026-09-16",
       "reason": "fotmob_finished_fixture_not_found",
       "signal_id": "72478578|unai sim\u00f3n|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "David de Gea",
-      "match": "ACF Fiorentina vs SSC Napoli",
-      "match_date": "2026-09-20",
-      "reason": "settled_fotmob",
-      "signal_id": "71945268|david de gea|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Lorenzo Palmisani",
-      "match": "Frosinone Calcio vs Como 1907",
-      "match_date": "2026-09-20",
-      "reason": "settled_fotmob",
-      "signal_id": "71945270|lorenzo palmisani|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Maarten Vandevoordt",
-      "match": "Bayer Leverkusen vs RB Leipzig",
-      "match_date": "2026-09-20",
-      "reason": "settled_fotmob",
-      "signal_id": "72513206|maarten vandevoordt|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Wladimiro Falcone",
-      "match": "AC Milan vs US Lecce",
-      "match_date": "2026-09-20",
-      "reason": "settled_fotmob",
-      "signal_id": "71945274|wladimiro falcone|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Guglielmo Vicario",
-      "match": "Juventus Turin vs Atalanta BC",
-      "match_date": "2026-09-20",
-      "reason": "settled_fotmob",
-      "signal_id": "71945272|guglielmo vicario|2.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "P\u00e9ter Gul\u00e1csi",
-      "match": "Villarreal CF vs Levante UD",
-      "match_date": "2026-09-20",
-      "reason": "settled_fotmob",
-      "signal_id": "72478604|p\u00e9ter gul\u00e1csi|1.5|over"
     }
   ],
-  "fotmob_requests_used": 14,
-  "generated_at": "2026-09-21T15:09:22Z",
+  "fotmob_requests_used": 1,
+  "generated_at": "2026-09-22T13:27:46Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 1,
   "pending_total": 1,
   "reason_counts": {
-    "fotmob_finished_fixture_not_found": 1,
-    "settled_fotmob": 6
+    "fotmob_finished_fixture_not_found": 1
   },
   "requests_used": 0,
-  "settled": 6,
-  "status": "PARTIAL"
+  "settled": 0,
+  "status": "BLOCKED"
 }
