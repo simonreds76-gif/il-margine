@@ -352,6 +352,11 @@ body {
 @media(prefers-reduced-motion:reduce) { .public-site .calc-tab, .public-site .calc-chip, .public-site .calc-fraction, .public-site .calc-method { transition:none; } }
 
 /* Keep controls within narrow phones and make comparison tables independently scrollable. */
+.public-site .calc-tab-label { display:flex; align-items:center; gap:10px; }
+.public-site .calc-stake-preset { display:inline-flex; position:relative; align-items:center; gap:8px; padding:13px 23px 13px 12px; min-height:50px; }
+.public-site .calc-stake-preset > span:not(.calc-preset-check) { font-size:16px; font-variant-numeric:tabular-nums; }
+.public-site .calc-preset-check { position:absolute; top:5px; right:7px; font-size:11px; color:#a4f3d6; }
+.public-site .calc-stake-preset:focus-visible { outline:2px solid #a4f3d6; outline-offset:3px; }
 .public-site .calc-controls { grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr)); }
 .public-site .calc-controls-three, .public-site .calc-price-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr)); }
 .public-site .calc-table-scroll { max-width:100%; overflow-x:auto; }

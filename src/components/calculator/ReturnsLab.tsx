@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import EditorialIcon from "@/components/EditorialIcon";
 import { FanChart, formatMoney } from "./Charts";
 import { parseNumber, simulateFlatStake } from "@/lib/calculator/math";
 
@@ -86,10 +87,11 @@ export default function ReturnsLab({ record }: { record: RecordSummary }) {
               <button
                 key={preset}
                 type="button"
-                className={`calc-chip${stake === preset ? " is-active" : ""}`}
+                aria-pressed={stake === preset}
+                className={`calc-chip calc-stake-preset${stake === preset ? " is-active" : ""}`}
                 onClick={() => setStakeInput(String(preset))}
               >
-                £{preset}
+                <EditorialIcon name="bankroll" className="h-5 w-5" /><span>£{preset}</span><span className="calc-preset-check" aria-hidden="true">{stake === preset ? "✓" : ""}</span>
               </button>
             ))}
             <label className="calc-inline-input">

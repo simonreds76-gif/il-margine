@@ -3,18 +3,18 @@ import fs from "fs";
 import path from "path";
 import Link from "next/link";
 import Footer from "@/components/Footer";
-import FaqAnswer from "@/components/FaqAnswer";
-import FaqOpenByHash from "@/components/FaqOpenByHash";
-import { parseFaqMd, questionSlug, type FaqSection } from "@/lib/parse-faq";
+import FaqBrowser from "@/components/FaqBrowser";
+import legacyAnchors from "@/data/faq-legacy-anchors.json";
+import "./faq.css";
+import { parseFaqMd, type FaqSection } from "@/lib/parse-faq";
 import { BASE_URL } from "@/lib/config";
 import PageHomeLink from "@/components/PageHomeLink";
-import EditorialIcon, { type EditorialIconName } from "@/components/EditorialIcon";
 import "@/components/editorial-surfaces.css";
 
 export const metadata: Metadata = {
   title: "Betting FAQ: Tips, Odds and Bankroll",
   description:
-    "A straight-talking sports betting FAQ covering player props, ATP tennis, value betting, ROI, bookmakers, bankroll management and how Il Margine works.",
+    "Answers about betting tips, changed odds, penalty takers, Return Atlas, fair odds, staking calculators and the Il Margine results record.",
   alternates: {
     canonical: `${BASE_URL}/faq`,
   },
@@ -47,17 +47,6 @@ function buildFaqSchema(sections: FaqSection[]) {
   };
 }
 
-const sectionIcons: Record<string, EditorialIconName> = {
-  "getting-started": "guide",
-  "betting-philosophy-and-approach": "method",
-  "markets-and-bet-types": "markets",
-  "bookmakers-and-execution": "compare",
-  "bankroll-management": "bankroll",
-  "technical-betting-concepts": "analysis",
-  "about-il-margine": "about",
-  "responsible-gambling": "responsible",
-};
-
 export default function FaqPage() {
   const mdPath = path.join(process.cwd(), "docs", "faq-content.md");
   const md = fs.readFileSync(mdPath, "utf8");
@@ -70,79 +59,20 @@ export default function FaqPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <FaqOpenByHash />
-      <section className="public-hub-heading pt-5 pb-8 md:pb-10 border-b border-slate-800/50">
+      <main className="public-hub-heading pt-5 pb-8 md:pb-10 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <PageHomeLink className="mb-8" />
 
           <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">QUESTIONS</span>
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">
-            Frequently Asked Questions
+            Your questions, answered.
           </h1>
           <p className="text-slate-400 text-base mb-8">
-            Straight answers on player props, tennis, pricing, bookmakers, staking and how we think about edge.
+            Using the picks, checking a price, reading the record. Practical answers about Il Margine and its research tools.
           </p>
 
-          {/* Section navigation - numbered list for clear structure */}
-          <nav
-            className="editorial-surface border p-5 sm:p-6 mb-12"
-            aria-label="FAQ sections"
-          >
-            <h2 className="text-xs font-mono font-semibold text-emerald-400 tracking-wider mb-4">
-              Jump to section
-            </h2>
-            <ol className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 list-none pl-0">
-              {sections.map((sec) => (
-                <li key={sec.id} className="flex items-center gap-3">
-                  <EditorialIcon name={sectionIcons[sec.id] ?? "guide"} />
-                  <a
-                    href={`#${sec.id}`}
-                    className="text-sm text-slate-300 hover:text-emerald-400 transition-colors py-1.5 rounded hover:bg-slate-700/40 -mx-1 px-1"
-                  >
-                    {sec.title}
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
-
-          {/* Accordion sections */}
-          <div className="space-y-12">
-            {sections.map((section) => (
-              <section
-                key={section.id}
-                id={section.id}
-                className="scroll-mt-24"
-              >
-                <h2 className="text-base font-semibold text-slate-100 mb-1 flex items-center gap-3">
-                  <EditorialIcon name={sectionIcons[section.id] ?? "guide"} className="h-10 w-10" />
-                  {section.title}
-                </h2>
-                <p className="text-slate-500 text-sm mb-5 pl-[52px]">{section.items.length} question{section.items.length !== 1 ? "s" : ""}</p>
-                <div className="space-y-3">
-                  {section.items.map((item, idx) => (
-                    <details
-                      key={idx}
-                      id={questionSlug(item.q)}
-                      className="editorial-disclosure group rounded-xl border overflow-hidden scroll-mt-24 hover:border-slate-600"
-                    >
-                      <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 text-left text-slate-200 hover:bg-slate-700/30 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 rounded-xl border-l-4 border-transparent group-open:border-emerald-500/80 group-open:bg-slate-700/20">
-                        <span className="flex-1 font-medium text-[15px] leading-snug">{item.q}</span>
-                        <span className="text-emerald-400 shrink-0 transition-transform duration-200 group-open:rotate-180" aria-hidden>
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
-                        </span>
-                      </summary>
-                      <div className="border-t border-slate-700/50 px-5 py-4 bg-slate-800/30 min-h-[1px]">
-                        <FaqAnswer text={item.a} />
-                      </div>
-                    </details>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
+          <p className="text-xs text-slate-400">Reviewed <time dateTime="2026-09-23">23 September 2026</time> · Answers reflect the current public tools.</p>
+          <FaqBrowser sections={sections} legacyAnchors={legacyAnchors} />
 
           <div className="mt-14 rounded-xl bg-slate-800/50 border border-slate-700/50 p-6 text-center shadow-sm">
             <p className="text-slate-400 text-sm mb-3">Still have questions?</p>
@@ -157,7 +87,7 @@ export default function FaqPage() {
             </Link>
           </div>
         </div>
-      </section>
+      </main>
       <Footer />
     </div>
   );

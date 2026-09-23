@@ -1,654 +1,219 @@
-﻿# Il Margine - Frequently Asked Questions (FAQ)
+# Il Margine FAQ
 
-## SECTION 1: GETTING STARTED
+Reviewed 23 September 2026.
+
+## SECTION 1: Getting started
 
 ### Q: What is Il Margine?
 
-**A:** Il Margine is a sports betting analysis site focused on markets where we believe our pricing can be stronger than the number on offer. The two core areas are **football player props** and **ATP tennis**.
+**A:** Il Margine publishes independent betting analysis: football player props, tennis selections, club penalty hierarchies, goalscorer fair odds, historical tennis returns and practical betting guides. The site is run by a former UK odds compiler.
 
-The idea is simple: we are not trying to have an opinion on every match on the board. We are trying to find prices that look wrong relative to the true probability of the event.
-
-That means looking for edges in places where the market is either structurally weaker, or where our own modelling and bookmaker-side experience give us a better read on the price.
-
----
-
-### Q: How do I follow Il Margine's betting tips?
-
-**A:** Everything starts on the website.
-
-1. Go to the relevant live page, usually [Player Props](/player-props) or [Tennis Tips](/tennis-tips).
-2. Check the current picks section for live selections.
-3. Read the market, price, bookmaker and stake.
-4. Place the bet only if you can still get a sensible version of the quoted number.
-5. Review settled bets on the same page rather than judging the process off one result.
-
-The goal is to follow good prices with discipline, not to chase action for its own sake.
-
----
+Start with the [current football picks](/player-props), [tennis picks](/tennis-tips) or [public track record](/track-record). Research tools have their own purpose; a model comparison is not automatically a published tip.
 
 ### Q: Do I need Telegram or a paid subscription to follow the tips?
 
-**A:** No. The live selections are published on the site.
+**A:** The current public picks and research pages are available on the website without a subscription or Telegram membership. You do not need to create an account to read them.
 
-There is no Telegram requirement or sign-up gate to see the current public football props and tennis picks.
+### Q: How do I follow Il Margine's betting tips?
 
----
+**A:** Check the exact selection, line, recorded odds, bookmaker and unit stake on the football or tennis picks page. Match those details against the market you can access. The quoted price records the selection; it does not promise that the bookmaker still offers it.
 
-### Q: What markets are live on the site right now?
+Settled selections remain on the picks pages; [Track record](/track-record) brings the results together.
 
-**A:** The live public pages are:
+### Q: The advertised odds have gone. Is the tip still worth taking?
 
-- **Football player props**
-- **ATP tennis**
+**A:** A lower price can reduce or remove the estimated edge. The selection alone cannot tell you whether the replacement price is worthwhile.
 
-Additional research markets remain internal until their evidence and settlement gates are strong enough for public use.
+For example, at a 50% estimated win probability, odds of 2.10 imply +5% expected value; 1.90 implies -5%. That assumes the estimate is right. A recorded winner does not make every price on it a good bet.
 
----
+### Q: Why are there no new picks or Fair Odds Lab comparisons today?
 
-### Q: How often do you post betting tips?
+**A:** Published picks depend on the available markets and our assessment of the price. There is no daily quota.
 
-**A:** We post when there is value, not when there is empty calendar space to fill.
+The [Fair Odds Lab](/fair-odds-lab) also needs fixtures, lineups and usable bookmaker prices. An empty shortlist can mean that none pass the checks, or that the inputs are not ready. Read the update message and try another date or league; zero comparisons do not prove there is no value in the market.
 
-Typical volume varies with the fixture list, the tournament schedule, and the quality of the prices on the board. Some days there are several bets. Some days there are none. That is normal.
-
----
-
-### Q: What time of day do you usually post tips?
-
-**A:** It depends on the market.
-
-- **Football player props** often come later because lineups, role changes and team news matter.
-- **ATP tennis** often appears earlier because prices can be attacked before the market fully settles.
-
-The key point is not the clock time. The key point is whether the number is still worth taking when you get to it.
-
----
-
-## SECTION 2: BETTING PHILOSOPHY AND APPROACH
+## SECTION 2: Betting philosophy and approach
 
 ### Q: What does "betting with mathematical edge" mean?
 
-**A:** It means your estimate of the true probability is higher than the probability implied by the bookmaker's price.
+**A:** It means the offered odds imply a lower chance of winning than our estimate. For a simple win-or-lose bet, expected return per unit is **estimated probability × decimal odds − 1**.
 
-Simple example:
+The estimate is the uncertain part. A formula can calculate an edge precisely without proving it exists. Our [methodology](/the-edge) explains how evidence, price comparison and recorded results fit together.
 
-- You think an event wins **55%** of the time.
-- The bookmaker offers **2.10**.
-- Odds of 2.10 imply about **47.6%**.
+### Q: Does a profitable month prove that the selections have an edge?
 
-If your estimate is sound, that is a value bet. It will still lose plenty of the time, but over a large enough sample it should make money.
+**A:** A profitable month is part of the evidence, but its size, stakes, odds and number of bets matter. A few large-priced winners can change a small sample substantially.
 
-That is what edge means: not certainty, not vibes, not "I fancy this one". Just probability versus price.
-
----
-
-### Q: Why do you focus on player props and tennis instead of mainstream match odds?
-
-**A:** The two markets are there for different reasons.
-
-**Player props** are there because they are often softer. Bookmakers lean more heavily on templates, generic averages and lighter manual oversight, which means role, matchup and game-state detail can move the true price more than the market reflects.
-
-**ATP tennis** is different. Tennis is generally a more efficient market than props, especially at the top end. We focus on it because we trust our pricing there: surface-adjusted ratings, serve and return data, event context, and years of bookmaker-side experience have gone into a model we have refined over a long period. The edge is not \"tennis is easy\". The edge is that we believe our read of specific tennis prices is strong enough to bet selectively.
-
-So the answer is not \"we only bet soft markets\". The answer is: we bet where we think we can price better than the number on the screen.
-
----
+Read the monthly results alongside the full [track record](/track-record), including losses. Historical profit cannot establish what the next month will return.
 
 ### Q: Why does ROI matter more than win rate?
 
-**A:** Because win rate on its own tells you very little about whether a bettor is actually profitable.
+**A:** Win rate leaves out the price and stake. Winning half your bets at 1.80 loses money at equal stakes; winning half at 2.20 makes money.
 
-You can win a high percentage of short-priced bets and still lose money. You can also win a lower percentage of bets at bigger prices and make money comfortably.
+Our record uses **profit divided by total stake**, expressed as a percentage. Read ROI with sample size and individual results, rather than using either ROI or win rate alone.
 
-What matters is the relationship between:
+### Q: Are the Fair Odds Lab's latest hits the full betting record?
 
-- your strike rate
-- your average odds
-- your total stake
-- your total profit
+**A:** No. Latest hits are selected winning highlights from the lab's tracked comparisons. They are not every comparison, and you cannot calculate the lab's overall ROI from them.
 
-That is why we care more about **ROI**, **closing line value**, and long-run sample quality than about headline win-rate marketing.
+Published football and tennis tips have a separate [public record](/track-record). Keep those selections separate from beta research comparisons and historical Return Atlas simulations.
 
----
-
-### Q: Why do you use units instead of cash amounts?
-
-**A:** Because followers do not all have the same bankroll.
-
-A 1-unit stake needs to scale cleanly whether someone is betting small or betting meaningfully. Units keep the recommendation consistent while letting each person size it to their own bankroll.
-
-As a rule of thumb, **1u should usually be around 1% of bankroll**. Public stakes will usually sit in the **0.5u to 2u** range, with bigger or smaller positions treated as exceptions rather than the norm.
-
----
-
-### Q: What is your staking plan?
-
-**A:** The broad framework is simple:
-
-- **0.5u** for thinner or more marginal edges
-- **1u** as the standard stake
-- **1.5u to 2u** for the stronger prices
-
-We do not treat every edge as equal, but we also do not pretend the answer to variance is wild staking.
-
-The job of staking is to express conviction without letting one result dominate the month.
-
----
-
-### Q: Do you recommend singles or accumulators?
-
-**A:** Singles.
-
-That is the cleanest way to preserve edge, measure performance honestly, and avoid compounding bookmaker margin across multiple legs.
-
-Accumulators are great for bookmaker marketing. They are much less useful if your actual aim is to bet with discipline and judge whether a process works.
-
----
-
-### Q: What does variance mean in betting?
-
-**A:** Variance is the gap between what should happen over the long run and what actually happens in the short run.
-
-Even a profitable approach can have:
-
-- losing weeks
-- ugly runs
-- a cluster of narrow losses
-- periods where the results lag behind the quality of the bets
-
-That is why serious betting has to be judged over a meaningful sample, not over three days of emotion.
-
----
-
-## SECTION 3: MARKETS AND BET TYPES
+## SECTION 3: Markets and bet types
 
 ### Q: What are player props in football betting?
 
-**A:** Player props are bets on individual player events rather than the final match result.
+**A:** These markets cover a player's contribution: shots, shots on target, fouls committed, fouls won, tackles or cards, for example. The market name, threshold, expected minutes and settlement rules all matter.
 
-Common examples include:
-
-- shots
-- shots on target
-- fouls committed
-- fouls won
-- tackles
-- cards
-- assists
-
-They are useful because role, minutes, matchup and game state often matter more than generic season averages, and those details are not always reflected properly in the line.
-
----
+Our [player props page](/player-props) records the precise selection. Fouls won and fouls committed are different events; shots and shots on target are different markets.
 
 ### Q: What is the difference between "Over 1.5 shots" and "2+ shots"?
 
-**A:** In practice, none.
+**A:** Both require at least two shots. They are equivalent only when the player, match period and settlement conditions also match. Check rules for a player who does not start, does not appear or leaves the pitch early.
 
-- **Over 1.5 shots** means the player needs **2 or more**.
-- **2+ shots** means the player needs **2 or more**.
+### Q: Why can my bookmaker settle a player bet differently?
 
-It is the same bet expressed in different language.
+**A:** Bookmakers can use different participation rules, statistical definitions and data providers. A player's appearance, a later statistics correction or a promotion can affect settlement.
 
----
+Check the rules attached to your bet. If our recorded selection appears wrong, send the event, market and supporting evidence through [Contact](/contact).
 
-### Q: What are game handicaps in tennis?
+### Q: How reliable is a club's penalty-taker order?
 
-**A:** A tennis handicap is a spread on total games won, not just on who wins the match.
+**A:** The [penalty pages](/penalty-takers) show an evidence-based hierarchy, not a guarantee of who takes the next kick. Availability, substitutions, a manager's decision and the players themselves can change the order.
 
-Example:
+Read the evidence and update date as well as the names. Taking one penalty does not automatically establish a permanent first choice.
 
-- Player A -3.5 games wins only if they finish at least 4 games clear overall.
+### Q: Does being the penalty taker make a player a good goalscorer bet?
 
-That matters because a player can win the match but still fail to cover, or lose the match but still cover on the positive handicap.
+**A:** Penalty duty can increase an estimated scoring chance, but the available odds still decide whether a price looks attractive. Starting status, expected minutes and open-play involvement also matter.
 
----
+Use the [Fair Odds Lab](/fair-odds-lab) to compare estimates and prices, and check whether the lineup is expected or confirmed. Its comparisons are beta research, not automatic recommendations.
 
-### Q: What does total games Over or Under mean in tennis?
+### Q: Does tennis coverage include Challengers, and what happens after a retirement?
 
-**A:** It is a bet on the combined number of games played in the match.
+**A:** The tennis picks page can include ATP and Challenger selections; check the competition on each pick. Return Atlas has a narrower scope: ATP main-tour singles, including Grand Slams, subject to its inclusion checks.
 
-Example:
+Retirement and walkover settlement depends on the bookmaker and market. Match winner, game handicap and total-games bets may be treated differently. Use the rules for your actual bet; Return Atlas excludes unfinished matches rather than simulating every bookmaker's retirement rules.
 
-- Over 21.5 games needs **22 or more** total games.
-- Under 21.5 games needs **21 or fewer** total games.
-
-Totals are shaped by hold strength, return pressure, surface speed, and how likely the sets are to stay competitive.
-
----
-
-### Q: What is an anytime goalscorer bet?
-
-**A:** It is a bet on a player to score at least one goal at any point in the match.
-
-It does not matter:
-
-- when the goal arrives
-- whether the team wins
-- whether the player scores once or more than once
-
-We are building this market carefully because publishable goalscorer picks need strong filtering. Raw EV alone is not enough.
-
----
-
-### Q: What is a bet builder?
-
-**A:** A bet builder combines multiple selections from the same match into one bet.
-
-The reason it can be interesting is correlation. Some legs clearly move together, but bookmakers do not always price that relationship perfectly. That is the part worth studying. The rest is just noise with extra margin attached.
-
----
-
-## SECTION 4: BOOKMAKERS AND EXECUTION
+## SECTION 4: Bookmakers and execution
 
 ### Q: Which bookmakers do you recommend?
 
-**A:** We keep the detailed breakdown on the [Bookmakers page](/bookmakers).
+**A:** Compare the price for the exact market, its settlement rules and whether you can place the intended stake. A bookmaker can be competitive in one market and expensive in another.
 
-In practice, we care about three things:
-
-- price
-- market coverage
-- how usable the account is over time
-
-A huge brand is not automatically useful, and a bookmaker with a decent welcome offer is not automatically worth serious long-term attention.
-
----
+The [Bookmaker Margin Index](/bookmakers) compares complete captured markets. Its capture date matters: it is a snapshot, not a continuously updated ranking or a promise of today's best odds.
 
 ### Q: What does "getting limited" mean?
 
-**A:** It means the bookmaker cuts the maximum amount you are allowed to stake.
+**A:** A bookmaker may reduce the maximum stake it accepts on your account or on a particular market. The advertised odds can remain visible even when you cannot place your intended amount.
 
-At first that might be mildly annoying. Later it can make the account close to useless for any serious staking. It is one of the core realities of beating soft recreational books over time.
-
-That is also why account management and bookmaker mix matter.
-
----
-
-### Q: Why don't you just use Pinnacle if it is sharper?
-
-**A:** Pinnacle is important as a benchmark, but it is not the whole answer.
-
-For our audience and our markets:
-
-- Pinnacle is not the main destination for football player props
-- UK access is more awkward than mainstream books
-- we often need the softer price, not the sharpest one
-
-So Pinnacle is extremely useful as a reference point, but not a substitute for having accounts where the actual bet is available at the right number.
-
----
+That affects the return you can obtain from following a published record. Our results use recorded stakes; they do not measure each reader's accepted stake or available price.
 
 ### Q: Do you use affiliate links with bookmakers?
 
-**A:** Some bookmaker links on the site may be affiliate links.
+**A:** Some bookmaker links may earn Il Margine a commission. That commercial relationship should be read separately from the price comparison and published results.
 
-If you use one of those links, we may receive a commission at no extra cost to you. That does **not** determine the recommendation. The rule is the other way round: if we would not genuinely want the bookmaker on the site, we should not be linking to it at all.
+Use the bookmaker's own terms for eligibility and offers. An affiliate link does not make a price competitive or a bet suitable for you.
 
----
+## SECTION 5: Bankroll management
 
-### Q: Should I use betting bots or automation tools?
+### Q: Why do you use units instead of cash amounts?
 
-**A:** Generally, no.
+**A:** Units let readers compare recorded stakes without assuming everyone bets the same cash amount. If someone defines 1u as £10, a 0.5u entry corresponds to £5.
 
-Automation sounds efficient, but for most followers it creates more problems than it solves:
-
-- worse account longevity
-- more obvious behaviour patterns
-- less flexibility around team news and price changes
-- more room for avoidable mistakes
-
-For this kind of betting, good judgement and good execution matter more than pretending speed solves everything.
-
----
-
-## SECTION 5: BANKROLL MANAGEMENT
-
-### Q: What is bankroll management and why does it matter?
-
-**A:** Bankroll management is the discipline that stops a good idea from being ruined by bad sizing.
-
-The core principle is simple: one bet should never be large enough to damage the whole month, let alone the whole bankroll.
-
-A sensible structure is:
-
-- keep a bankroll that can absorb drawdowns
-- size stakes in units, not emotion
-- avoid letting one "best bet" dominate your exposure
-
-Good betting ideas still fail if the staking is poor.
-
----
-
-### Q: Should I stake a percentage of bankroll or use fixed units?
-
-**A:** Use fixed units that are themselves tied to bankroll.
-
-That gives you the clarity of unit staking and the discipline of percentage sizing.
-
-A practical rule is:
-
-- 1u = about 1% of bankroll
-- review that sizing periodically rather than impulsively
-
-That way you do not wildly increase stakes when you feel hot or leave them unchanged when the bankroll has changed materially.
-
----
+A unit is a reporting convention, not a universal percentage of your finances. Published stakes and calculator presets are not personal staking instructions.
 
 ### Q: What should I do during a losing streak?
 
-**A:** Slow down emotionally, not mathematically.
+**A:** Do not increase stakes to recover losses. Stop if you reach your spending limit or feel under pressure to win money back.
 
-Do not:
+When reviewing a record, separate price changes, settlement errors and changes in the underlying analysis from ordinary variation. Calling a run "variance" does not establish that the original model was sound.
 
-- chase
-- double stakes to win it back
-- start taking random bets to feel active
-- judge the whole process off a bad run
+### Q: Does the Returns calculator show what I would actually have won?
 
-Do:
+**A:** No. It simulates independent bets using the record's strike rate and stake-weighted ROI, with one representative winning price. It does not replay the historical sequence at every actual price and stake.
 
-- check that you are following prices properly
-- check that your bankroll is still sized sensibly
-- review the quality of the bets, not just the outcomes
-- keep staking disciplined
+The shaded ranges describe those assumptions across 400 simulated runs. Real bets may be correlated, prices can disappear and the estimated edge can change. A run stops when the simulated bankroll cannot fund the next full stake.
 
-Bad runs are part of betting. Panic is optional.
+### Q: What do the £10, £50 and £100 calculator buttons mean?
 
----
+**A:** They select a hypothetical fixed cash stake per bet. You can enter another amount. Changing the stake rescales the simulation and changes risk relative to the starting bankroll; a larger amount is not automatically a better choice.
 
-### Q: Can I increase stakes when I am winning?
+The edge-capture control reduces positive ROI for illustration. It does not measure the prices or account restrictions you personally face.
 
-**A:** Yes, but only through your bankroll framework, not through emotion.
+### Q: Why use a fraction of Kelly rather than the full stake?
 
-If your bankroll grows and your unit size moves with it, that is normal compounding. If you suddenly double stakes because you feel in rhythm, that is usually just a faster route to giving the gains back.
+**A:** Kelly depends on the probability you enter being correct. An optimistic estimate can produce an excessive stake, even before you account for several bets sharing the same risk.
 
----
+The [Kelly calculator](/calculator) lets you compare fractions and change the probability governing the simulated outcomes. A smaller fraction reduces exposure but cannot turn a negative-value bet into a positive one.
 
-## SECTION 6: TECHNICAL BETTING CONCEPTS
-
-### Q: What is closing line value (CLV)?
-
-**A:** Closing line value is the difference between the price you took and the final market price before the event starts.
-
-If you took **2.10** and the market closes **1.95**, you beat the closing line. That is good process even if the individual bet loses.
-
-Over time, strong CLV is one of the best signs that you are taking the right side of the market rather than living off short-term luck.
-
----
-
-### Q: Why is closing line value such an important benchmark?
-
-**A:** Because the closing line is usually the most informed public price in the market.
-
-By the time a market closes, it has absorbed:
-
-- opening prices
-- modelled adjustments
-- public money
-- sharper money
-- team news, lineups and injuries
-
-That does not make the close perfect. It does make it a very strong benchmark. If you repeatedly beat that benchmark, you are usually finding prices before the market fully corrects. If you repeatedly lose to it, short-term wins can flatter a weak process.
-
-That is why serious bettors care so much about CLV. It is not a vanity metric. It is the best real-world audit trail most betting processes have.
-
----
-
-### Q: What does value mean in betting?
-
-**A:** Value means the odds are better than they should be.
-
-That is it.
-
-A bet can win and still be poor value. A bet can lose and still be good value. The quality of the bet comes from the price you took relative to the true probability, not from the emotional memory of the result.
-
----
-
-### Q: What is a soft market?
-
-**A:** A soft market is a market that is priced less efficiently than the sharpest, most liquid lines.
-
-Typical examples include:
-
-- football player props
-- lower-profile football markets
-- niche same-game combinations
-- selected secondary tennis markets or lower-attention event segments
-
-The point is not that an entire sport is soft. The point is that some markets and some slices of a market are more vulnerable to copied pricing, slow adjustment, or generic assumptions.
-
----
-
-### Q: What is arbitrage betting and do you do it?
-
-**A:** Arbitrage means backing all possible outcomes at different prices to lock in a guaranteed profit.
-
-We do not build the service around arbitrage. It is a different game:
-
-- lower edge per opportunity
-- faster account damage
-- more operational grind
-- less relevance to whether your own pricing is actually strong
-
-Our focus is value betting, not pure account farming.
-
----
-
-### Q: Should I hedge my bets?
-
-**A:** Usually no.
-
-Most hedging is just paying for emotional comfort. If the original bet was good, hedging often reduces long-run expected value.
-
-There are exceptions, but they are specific and rare. As a rule, make a good bet at a good price and let it stand.
-
----
+## SECTION 6: Technical betting concepts
 
 ### Q: What is expected value (EV)?
 
-**A:** Expected value is the average result of a bet if you could repeat it many times.
+**A:** For a simple win-or-lose bet, **EV = probability × decimal odds − 1**. At a 50% estimated win probability and odds of 2.10, that is 0.05, or +5% per unit staked.
 
-A simple shortcut in betting terms is:
+This is an expectation under the estimate, not the result of the next bet. Markets with pushes, partial settlements or commission require those outcomes and costs to be included.
 
-- **EV = (true probability x decimal odds) - 1**
+### Q: What is the difference between bookmaker margin and fair odds?
 
-If the answer is positive, the bet is positive EV. If the answer is negative, it is not a bet you should want long term.
+**A:** Convert each price in a complete, mutually exclusive market to implied probability using 1 / decimal odds. If their sum exceeds 100%, the excess is the overround. Two prices of 1.90 sum to approximately 105.26%.
 
----
+Removing margin gives an estimated market probability. It does not uncover a known true probability. The [Fair odds calculator](/calculator) compares proportional, Shin and odds-ratio adjustments so you can see how the method changes the answer.
 
-### Q: What is implied probability?
+### Q: What is closing line value (CLV)?
 
-**A:** It is the probability hidden inside the odds.
+**A:** CLV compares the odds you took with the market shortly before the event started. Beating that price can be useful evidence about timing and price quality, even when the bet loses.
 
-Formula:
+The [Closing line calculator](/calculator) distinguishes raw odds movement from a comparison against a margin-removed close. Enter both sides of the same two-outcome closing market. A weak benchmark or mismatched settlement rule can make the comparison misleading.
 
-- **implied probability = 1 / decimal odds**
+### Q: In Return Atlas, what does betting against a player mean?
 
-So odds of **2.00** imply **50%**. Odds of **1.80** imply about **55.6%**.
+**A:** It means backing that player's opponent to win, at the opponent's recorded odds. It does not mean an exchange lay bet or a fixed-liability strategy.
 
-That conversion is the starting point for almost every value judgement in betting.
+On a named player's record, "Bet against" shows what backing their opponents would have returned. You can switch sides within the player view in [Return Atlas](/return-atlas).
 
----
+### Q: What do favourite, underdog and minimum matches mean in Return Atlas?
 
-### Q: What is Elo and how do you use it in tennis?
+**A:** Favourite means the named player had shorter odds than their opponent; underdog means longer odds. Equal prices sit in All matches. These labels describe the named player, whichever side you back: "Bet against" a favourite means backing that favourite's opponent.
 
-**A:** Elo is a recursive rating system. After every match, a player gains or loses rating points based on three things:
+The minimum-match filter removes records with fewer included matches from the comparison. It helps avoid ranking a player on one or two results, but reaching the threshold does not prove their historical ROI will persist.
 
-- their prior rating
-- their opponent's rating
-- the gap between expected result and actual result
+### Q: Why can Return Atlas's latest match date be earlier than its check date?
 
-That sounds simple, but a useful tennis Elo is not one global number pasted onto every match.
+**A:** The check date records when the archive was checked; the latest included match is the newest result that passed the data and odds checks. They measure different things.
 
-A serious tennis implementation needs to think about:
+Return Atlas shows its coverage and exclusions on the page. It does not include every match simply because a result exists: an eligible completed match also needs a usable matched price. Historical ROI describes the included sample; it is not a forecast or a tip to back the leaderboard's top player.
 
-- **surface separation**: hard, clay and grass do not reward the same skills
-- **recency weighting**: a player's current level matters more than what he was two seasons ago
-- **opposition strength**: beating weak fields can inflate a rating if you do not control for level properly
-- **tier effects**: ATP main-tour results should not be treated the same as weaker-circuit results
-
-Even then, Elo is only one layer. Tennis pricing also needs hold and break dynamics, serve and return quality, matchup shape, event context and market comparison. Elo is useful because it is robust, transparent and hard to fake. It is not useful when people mistake it for a complete model.
-
----
-
-### Q: What makes a betting model well calibrated?
-
-**A:** A model is well calibrated when its probabilities mean what they say.
-
-If a model tags a large group of bets at **60%**, those bets should win roughly **60%** of the time over a big enough sample. If they win materially less or materially more, the model may still rank bets in the right order, but the probabilities themselves are not trustworthy.
-
-That distinction matters. A model can be:
-
-- **good at ranking** edges
-- but **poorly calibrated** in the size of those edges
-
-For betting, that affects:
-
-- stake sizing
-- expected value estimates
-- which markets qualify as real bets and which should stay as monitor-only signals
-
-Calibration is one of the main things that separates a clever model from a reliable one.
-
----
-
-### Q: How do you know a betting model is overfit?
-
-**A:** Overfitting usually shows up when a model explains the past too neatly and the future not nearly well enough.
-
-Typical warning signs are:
-
-- strong backtests that disappear out of sample
-- a strategy that only works in one narrow slice of history
-- too many tuned rules sitting on top of a weak core signal
-- unstable performance once pricing sources, player pools or league context change
-
-The answer is not one magic statistic. It is process discipline:
-
-- train on one period, test on another
-- use walk-forward testing instead of one lucky split
-- compare model prices to market closes
-- prefer robust edges that survive across seasons and conditions
-
-A good betting model should degrade gracefully when conditions change. An overfit one usually falls apart the moment the market stops looking exactly like the sample it learned from.
-
----
-
-### Q: If tennis is an efficient market, how can a model still have an edge?
-
-**A:** Because "efficient" does not mean "unbeatable." It means the market is harder to beat casually.
-
-Mainstream tennis prices are usually sharper than football props, but they are still built under practical constraints:
-
-- models have to generalise across hundreds of players
-- lower-attention events get less scrutiny
-- injury, schedule and surface transitions are hard to price perfectly
-- secondary markets can inherit assumptions from the main line
-
-That is where a specialised model can still compete, especially if it has been refined over a long period and tested against real prices rather than theory alone.
-
-For us, tennis is not a "soft market" story. It is a selective-pricing story. The edge comes from doing hard things slightly better than the market in the right spots, not from pretending the whole sport is asleep.
-
----
-
-### Q: What kind of models do you use?
-
-**A:** The process is systematic and data-led, but not reducible to one public formula.
-
-Broadly:
-
-- **player props** lean on role, volume, matchup, team context and market comparison
-- **tennis** leans on surface strength, serve and return profile, event context, market structure and price comparison
-- **anytime goalscorers** lean on role, minutes, shot share, penalty duties, lineup confirmation and price comparison
-
-The key point is not whether a model sounds clever. The key point is whether it produces better prices than the market often enough to matter, and whether those prices remain defensible once the sample moves from backtest to live tracking.
-
----
-
-## SECTION 7: ABOUT IL MARGINE
+## SECTION 7: About Il Margine
 
 ### Q: Who is behind Il Margine?
 
-**A:** The site is run by a former UK odds compiler with long bookmaker-side experience.
+**A:** Il Margine is run by a former UK odds compiler. Bookmaker-side experience informs the research, price comparisons and explanations published here.
 
-Why that matters: the process starts from how prices are actually built, where sportsbook models tend to be strongest, and where they are more likely to rely on shortcuts. That does not remove variance and it does not guarantee results, but it does shape where we choose to compete.
+Judge that work through the [methodology](/the-edge), supporting evidence and [recorded results](/track-record). Experience does not make every estimate correct.
 
----
+### Q: How can I report an incorrect result or penalty hierarchy?
 
-### Q: Why is it called "Il Margine"?
+**A:** Use the [Contact page](/contact) and include the page link, event or club, what looks wrong and a source we can check. For a penalty order, a manager's statement, match report or footage is more useful than an unsupported list of names.
 
-**A:** "Il Margine" means "the margin" in Italian.
-
-It fits the site for two reasons:
-
-- bookmaker margin is the part we are always trying to understand and overcome
-- betting edge is the gap between the true price and the offered one
-
-It is a cleaner name than the usual "winners" or "VIP tips" nonsense, and that is deliberate.
-
----
-
-### Q: How can I contact Il Margine?
-
-**A:** The direct route is [contact@ilmargine.bet](mailto:contact@ilmargine.bet) or the [Contact page](/contact).
-
-We are happy to respond to technical issues, business enquiries and sensible questions about the site. We are not going to give bespoke betting advice on random matches we have not published.
-
----
+Please avoid sending account passwords or other sensitive information. A reported correction needs to be checked before it changes a public record.
 
 ### Q: Can I share Il Margine tips on social media?
 
-**A:** Yes, as long as the source is clear.
+**A:** You can link to a public page or share a screenshot with clear attribution. Include the date and quoted odds where relevant, so an old selection is not presented as a currently available price. Please do not present Il Margine's work as your own.
 
-Linking to the site, sharing a screenshot with attribution, or discussing a published selection is fine. Passing the work off as your own is not.
-
----
-
-## SECTION 8: RESPONSIBLE GAMBLING
-
-### Q: How do I know if I have a gambling problem?
-
-**A:** If betting is starting to control your money, mood or behaviour, take that seriously.
-
-Common warning signs include:
-
-- staking more than you can afford to lose
-- chasing losses
-- hiding bets from other people
-- borrowing to keep betting
-- feeling unable to stop even when you want to
-
-If any of that sounds familiar, stop and get help. In the UK, services such as **GamCare**, **BeGambleAware** and **GAMSTOP** exist for exactly that reason.
-
----
-
-### Q: Should I treat betting as a way to make money?
-
-**A:** No. Betting should not be your income plan.
-
-Even profitable strategies have ugly variance, psychological pressure and long losing stretches. If you need the next bet to help with bills, your decision-making is already under the wrong kind of stress.
-
----
+## SECTION 8: Responsible gambling
 
 ### Q: What are sensible betting limits?
 
-**A:** Keep betting inside the part of your finances you can genuinely afford to lose.
+**A:** Set a spending limit using money you can afford to lose, separately from bills, savings and debt payments. Stop when you reach it. A model estimate, profitable record or calculator output is not a reason to raise that limit.
 
-Practical rules:
+### Q: Where can I get help if betting is becoming difficult to control?
 
-- separate betting bankroll from normal life money
-- set deposit limits before you need them
-- avoid betting money meant for bills, debt, or emergency savings
-- if you hit your loss limit, stop
+**A:** Chasing losses, borrowing to bet, hiding gambling or feeling unable to stop are reasons to seek support. You do not need to wait for a crisis.
 
-Responsible limits are not glamorous, but they are real.
+In the UK, [GamCare](https://www.gamcare.org.uk/) provides gambling support and the National Gambling Helpline on **0808 8020 133**. [GAMSTOP](https://www.gamstop.co.uk/) offers free self-exclusion from gambling websites and apps licensed in Great Britain.
 
----
+### Q: Should I treat betting as a way to make money?
 
-### Q: Is betting legal where I live?
-
-**A:** That depends on your country or state.
-
-Il Margine is a UK-based site, but gambling law is local. Check your own jurisdiction before you bet, especially if you are outside the UK.
-
----
+**A:** Do not rely on betting to pay essential expenses. The public record describes past outcomes; it cannot promise income. If you need a bet to win to meet a bill, step away from it and seek support if needed.
