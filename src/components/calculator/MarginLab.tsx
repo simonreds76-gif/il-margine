@@ -93,7 +93,7 @@ export default function MarginLab() {
           <p className="site-eyebrow">Mind the margin</p>
           <h2>Strip the margin out of a price</h2>
           <p className="calc-lede">
-            A posted price is a fair price plus the book&apos;s cut. Removing that cut gives the
+            A posted price includes the book&apos;s margin. Removing that margin gives
             an estimated market probability to compare with your own assessment. Three removal methods are shown because they disagree, and the disagreement is
             the interesting part.
           </p>
@@ -208,7 +208,7 @@ export default function MarginLab() {
 
           <div className="calc-subcard">
             <p className="site-eyebrow">Fair price by method</p>
-            <table className="calc-table">
+            <div className="calc-table-scroll" role="region" aria-label="Fair odds comparison by method" tabIndex={0}><table className="calc-table">
               <thead>
                 <tr>
                   <th scope="col">Outcome</th>
@@ -233,7 +233,7 @@ export default function MarginLab() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
             <p className="calc-note">
               On a balanced pair the three methods agree closely. On a lopsided one they separate, and
               the gap is larger than most claimed edges. Quote the method with the number, or the

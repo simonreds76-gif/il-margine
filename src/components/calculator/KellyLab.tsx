@@ -273,7 +273,7 @@ export default function KellyLab() {
 
         <div className="calc-subcard">
           <p className="site-eyebrow">What it costs to get there</p>
-          <table className="calc-table">
+          <div className="calc-table-scroll" role="region" aria-label="Kelly fraction drawdown comparison" tabIndex={0}><table className="calc-table">
             <thead>
               <tr>
                 <th scope="col">Fraction</th>
@@ -294,7 +294,7 @@ export default function KellyLab() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
           <p className="calc-note">
             Drawdown is measured from the running peak, which is what you actually feel. Full Kelly
             maximises expected log growth only with correct probabilities. Optimistic estimates can make it overbet.

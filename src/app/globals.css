@@ -350,3 +350,16 @@ body {
   .public-site .calc-headline-stats dd { font-size:20px; }
 }
 @media(prefers-reduced-motion:reduce) { .public-site .calc-tab, .public-site .calc-chip, .public-site .calc-fraction, .public-site .calc-method { transition:none; } }
+
+/* Keep controls within narrow phones and make comparison tables independently scrollable. */
+.public-site .calc-controls { grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr)); }
+.public-site .calc-controls-three, .public-site .calc-price-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr)); }
+.public-site .calc-table-scroll { max-width:100%; overflow-x:auto; }
+.public-site .calc-field, .public-site .calc-chart-frame, .public-site .calc-split > * { min-width:0; }
+.public-site .calc-edge-readout { grid-template-columns:minmax(0,1fr) auto; }
+.public-site .calc-edge-readout span { overflow-wrap:anywhere; }
+@media(max-width:640px) {
+  .public-site .calc-table { font-size:12px; }
+  .public-site .calc-table th, .public-site .calc-table td { padding:9px 5px; }
+  .public-site .calc-edge-check { padding:16px 14px; }
+}
