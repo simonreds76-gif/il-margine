@@ -26,10 +26,16 @@ const coveragePercent = (100 * release.matches / archiveMatches).toFixed(1);
 
 export default function ReturnAtlasPage() {
   return <div className="min-h-screen bg-[#0f1117] text-slate-100">
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+      '@context': 'https://schema.org', '@type': 'WebApplication', '@id': `${url}#application`,
+      name: 'Return Atlas Tennis', url, description, applicationCategory: 'SportsApplication',
+      operatingSystem: 'Web', isAccessibleForFree: true,
+      publisher: { '@type': 'Organization', name: 'Il Margine', url: 'https://ilmargine.bet' },
+    }) }} />
     <main className="return-atlas" data-look="ledger">
       <header className="hero page-heading">
         <div className="hero-copy">
-          <PageHomeLink />
+          <div className="atlas-edition-links"><PageHomeLink /><Link href="/football-atlas" prefetch={false}>Explore Football →</Link></div>
           <p className="eyebrow">Tennis research</p>
           <h1 className="product-wordmark"><span className="sr-only">Return Atlas: ATP Tennis Betting History</span><Image src={release.logoUrl} alt="" aria-hidden="true" width={2172} height={724} priority unoptimized /></h1>
           <p className="intro">Explore ATP players’ historical returns. Compare betting on or against a player by season, surface, odds range and favourite or underdog status.</p>
@@ -58,6 +64,7 @@ export default function ReturnAtlasPage() {
         <details><summary className="cursor-pointer py-3 font-semibold text-slate-200">How do odds-range filters work?</summary><p>Choose a preset range or enter your own minimum and maximum decimal odds. The range always describes the named player, even when betting against them. Rankings, profit curves and match counts update for that selection. In each player’s record, compare the odds bands side by side and select one to see the matches behind it.</p><p>Preset bands include the starting price and stop before the next band: 2.50 belongs to 2.50–3.00. Custom ranges include both limits. The minimum-match filter applies after the odds, season, surface and player-role filters. A high historical ROI from a small sample is not evidence of a repeatable edge.</p></details>
         <details><summary className="cursor-pointer py-3 font-semibold text-slate-200">Are these Il Margine’s published tennis picks?</summary><p>No. This is a historical research tool showing what backing each player or opponent would have returned. Our <Link href="/tennis-tips" prefetch={false}>published tennis tips and results</Link> are tracked separately.</p></details>
         <p className="about-note">Historical returns describe what happened. They do not predict future profits.</p>
+        <p><Link href="/faq#return-atlas" prefetch={false}>Return Atlas questions &amp; worked examples →</Link></p>
         <Link href="/return-atlas/credits" prefetch={false}>Data &amp; photo credits →</Link>
       </section>
     </main>

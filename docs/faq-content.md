@@ -166,24 +166,6 @@ Removing margin gives an estimated market probability. It does not uncover a kno
 
 The [Closing line calculator](/calculator) distinguishes raw odds movement from a comparison against a margin-removed close. Enter both sides of the same two-outcome closing market. A weak benchmark or mismatched settlement rule can make the comparison misleading.
 
-### Q: In Return Atlas, what does betting against a player mean?
-
-**A:** It means backing that player's opponent to win, at the opponent's recorded odds. It does not mean an exchange lay bet or a fixed-liability strategy.
-
-On a named player's record, "Bet against" shows what backing their opponents would have returned. You can switch sides within the player view in [Return Atlas](/return-atlas).
-
-### Q: What do favourite, underdog and minimum matches mean in Return Atlas?
-
-**A:** Favourite means the named player had shorter odds than their opponent; underdog means longer odds. Equal prices sit in All matches. These labels describe the named player, whichever side you back: "Bet against" a favourite means backing that favourite's opponent.
-
-The minimum-match filter removes records with fewer included matches from the comparison. It helps avoid ranking a player on one or two results, but reaching the threshold does not prove their historical ROI will persist.
-
-### Q: Why can Return Atlas's latest match date be earlier than its check date?
-
-**A:** The check date records when the archive was checked; the latest included match is the newest result that passed the data and odds checks. They measure different things.
-
-Return Atlas shows its coverage and exclusions on the page. It does not include every match simply because a result exists: an eligible completed match also needs a usable matched price. Historical ROI describes the included sample; it is not a forecast or a tip to back the leaderboard's top player.
-
 ## SECTION 7: About Il Margine
 
 ### Q: Who is behind Il Margine?
@@ -217,3 +199,53 @@ In the UK, [GamCare](https://www.gamcare.org.uk/) provides gambling support and 
 ### Q: Should I treat betting as a way to make money?
 
 **A:** Do not rely on betting to pay essential expenses. The public record describes past outcomes; it cannot promise income. If you need a bet to win to meet a bill, step away from it and seek support if needed.
+
+## SECTION 9: Return Atlas
+
+### Q: What is Return Atlas, and is it the same as your track record?
+
+**A:** Return Atlas is a historical betting research tool with [tennis](/return-atlas) and [football](/football-atlas) editions. It calculates what a constant one-unit bet on your chosen outcome would have returned at the recorded odds. You can compare ROI, profit, sample size and the matches behind a record.
+
+It is different from [Il Margine’s track record](/track-record), which measures our published selections and recorded stakes. Return Atlas does not claim that we tipped every match in its archive.
+
+### Q: Which Return Atlas editions can I use?
+
+**A:** The [ATP tennis edition](/return-atlas) is publicly available. It covers eligible completed main-tour singles, including Grand Slams, when the required result and Pinnacle prices can be matched. Read its coverage panel for the current period and exclusions; it is not every ATP match or a complete career database.
+
+[Return Atlas Football](/football-atlas) covers Europe’s top five domestic leagues: Premier League, Serie A, La Liga, Bundesliga and Ligue 1. Its results exclude domestic cups and European competitions. Explore team-win, draw and opponent-win returns, with club, season, venue and price filters.
+
+### Q: How is Return Atlas ROI calculated?
+
+**A:** Every included bet stakes **1 unit**. A winning bet at 2.50 makes 1.50u profit; a losing bet costs 1u. Net profit adds those outcomes, and **ROI = net profit ÷ total stakes × 100**.
+
+For example, ten bets stake 10u. If they return 12u including stakes, the net profit is 2u and ROI is 20%. A 20% ROI is a return on money staked, not 20% growth of a bankroll. The calculation does not compound stakes.
+
+### Q: How do I compare players within a particular odds range?
+
+**A:** In the tennis edition, choose whether to bet on or against the player, then combine the player’s market role, season, surface and odds range. The price filter always describes the named player’s odds, even when you back their opponent. Open a player to inspect the profit curve, price-band comparisons and match results.
+
+Preset ranges include the lower price and exclude the next band’s starting price: 2.50 belongs in 2.50–3.00. Custom minimum and maximum prices are inclusive. Read the filtered match count alongside ROI; selecting many small groups can produce striking results by chance.
+
+### Q: Can I combine several recent football seasons?
+
+**A:** The [football edition](/football-atlas) has latest 2, 3 and 5-season choices, plus a custom inclusive From/To season range. Recent windows include the latest partial season, and the exact seasons are shown.
+
+Returns are recalculated across the combined bets, rather than averaging the individual season percentages. The same period applies to the rankings, club record, chart and price-coverage count.
+
+### Q: In Return Atlas, what does betting against a player mean?
+
+**A:** It means backing that player's opponent to win, at the opponent's recorded odds. It does not mean an exchange lay bet or a fixed-liability strategy.
+
+On a named player's record, "Bet against" shows what backing their opponents would have returned. You can switch sides within the player view in [Return Atlas](/return-atlas).
+
+### Q: What do favourite, underdog and minimum matches mean in Return Atlas?
+
+**A:** Favourite means the named player had shorter odds than their opponent; underdog means longer odds. Equal prices sit in All matches. These labels describe the named player, whichever side you back: "Bet against" a favourite means backing that favourite's opponent.
+
+The minimum-match filter removes records with fewer included matches from the comparison. It helps avoid ranking a player on one or two results, but reaching the threshold does not prove their historical ROI will persist.
+
+### Q: Why can Return Atlas's latest match date be earlier than its check date?
+
+**A:** The check date records when the archive was checked; the latest included match is the newest result that passed the data and odds checks. They measure different things.
+
+Return Atlas shows its coverage and exclusions on the page. It does not include every match simply because a result exists: an eligible completed match also needs a usable matched price. Historical ROI describes the included sample; it is not a forecast or a tip to back the leaderboard's top player.

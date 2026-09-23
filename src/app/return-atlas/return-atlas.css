@@ -243,3 +243,9 @@ html:has(.return-atlas dialog[open]),body:has(.return-atlas dialog[open]){overfl
 .return-atlas .odds-menu-note{font-size:12px;line-height:1.7;color:#a2b9c5;margin:18px 0 0;padding-top:14px;border-top:1px solid #2d404b}
 .return-atlas dialog .odds-menu-groups{grid-template-columns:1fr}.return-atlas dialog .odds-choice-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media(max-width:767px){.return-atlas .odds-menu-groups{grid-template-columns:1fr;gap:22px}.return-atlas .odds-choice-grid,.return-atlas dialog .odds-choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.return-atlas .odds-menu{padding:14px}.return-atlas .odds-menu-top{gap:8px}.return-atlas .odds-choice{font-size:14px;padding:12px 10px;min-height:50px}.return-atlas .odds-picker-value strong{font-size:17px}}
+
+/* Match the Football lockup, keeping the TENNIS suffix fully inside the frame. */
+.return-atlas h1.product-wordmark{width:min(620px,100%);aspect-ratio:1900/405}
+.return-atlas .product-wordmark img{width:114.3%;left:-7.2%;top:-42%}
+
+.atlas-edition-links{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}.atlas-edition-links>a{display:inline-flex;align-items:center;min-height:44px;font-size:13px;color:#9be5c6}

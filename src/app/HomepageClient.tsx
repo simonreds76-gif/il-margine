@@ -10,6 +10,7 @@ import ResultBadge from "@/components/ResultBadge";
 import TodaysEdge from "@/components/TodaysEdge";
 import SportIcon from "@/components/SportIcon";
 import SportCta from "@/components/SportCta";
+import ReturnAtlasFeature from "@/components/ReturnAtlasFeature";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import type { MonthRow } from "@/components/MonthlyBreakdown";
@@ -292,7 +293,7 @@ export default function HomepageClient({
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">Football player props &amp; tennis</p>
               <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">Independent <span className="text-emerald-300">betting analysis.</span></h1>
-              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Independent betting advice, backed by results. Explore profitable football and tennis picks, compare fair odds, check penalty takers and read our latest insights.</p>
+              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Independent betting advice, backed by results. Explore profitable football and tennis picks, compare fair odds, check penalty takers, explore Return Atlas and read our latest insights.</p>
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <SportCta sport="football" />
                 <SportCta sport="tennis" />
@@ -314,6 +315,7 @@ export default function HomepageClient({
         </div>
       </section>
       <MonthlyBreakdownSection scope="combined" initialPayload={initialMonthly} />
+      <ReturnAtlasFeature />
       {recentBets.length > 0 ? (
         <section className="border-b border-slate-800/30 bg-[#0b0e13] py-9 md:py-12">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -409,11 +411,7 @@ export default function HomepageClient({
               return <MarketCard key={market.id} market={market} href={href} />;
             })}
           </div>
-          <Link href="/return-atlas" prefetch={false} className="mt-4 flex items-center gap-3 rounded-xl border border-emerald-300/20 bg-emerald-300/5 px-4 py-4 transition hover:border-emerald-300/50 hover:bg-emerald-300/10 focus-visible:outline-2 focus-visible:outline-emerald-300">
-            <SportIcon sport="tennis" className="h-8 w-8 text-emerald-200" />
-            <span className="min-w-0 flex-1"><span className="block text-sm font-semibold text-slate-100">Return Atlas</span><span className="mt-1 block text-sm text-slate-400">Explore ATP player ROI by season, surface, favourite and underdog.</span></span>
-            <span aria-hidden="true" className="text-xl text-emerald-300">↗</span>
-          </Link>
+
         </div>
       </section>
 

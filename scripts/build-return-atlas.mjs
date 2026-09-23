@@ -45,8 +45,9 @@ for (const p of players) {
   const details = matches.filter(m=>m.p1===p.id||m.p2===p.id).map(m=>[m.id,m.event,m.score]);
   fs.writeFileSync(path.join(out,'players',`${p.id}.json`),JSON.stringify({schema:1,version,playerId:p.id,matches:details}));
 }
-const logo = fs.readFileSync(path.join(source,'return-atlas-wordmark.png'));
-const logoName = 'wordmark-'+createHash('sha256').update(logo).digest('hex').slice(0,12)+'.png';
+// Branding belongs to the product, not the research export: daily refresh must retain the sport label.
+const logo = fs.readFileSync(new URL('../public/return-atlas/assets/wordmark-tennis-v2.png', import.meta.url));
+const logoName = 'wordmark-tennis-v2.png';
 fs.mkdirSync(path.join(root,'public/return-atlas/assets'),{recursive:true});
 fs.writeFileSync(path.join(root,'public/return-atlas/assets',logoName),logo);
 const credits = fs.readFileSync(path.join(source,'portrait-credits.html'),'utf8');

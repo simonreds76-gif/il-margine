@@ -12,7 +12,7 @@ import PageHomeLink from "@/components/PageHomeLink";
 import "@/components/editorial-surfaces.css";
 
 export const metadata: Metadata = {
-  title: "Betting FAQ: Tips, Odds and Bankroll",
+  title: "Betting FAQ: Return Atlas, Tips and Odds Explained",
   description:
     "Answers about betting tips, changed odds, penalty takers, Return Atlas, fair odds, staking calculators and the Il Margine results record.",
   alternates: {

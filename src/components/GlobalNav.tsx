@@ -5,14 +5,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { BRAND } from "@/lib/brand";
+import SportIcon from "./SportIcon";
 
 const TIP_LINKS = [{ href: "/tennis-tips", label: "Tennis tips" }, { href: "/player-props", label: "Player props" }];
 const PRIMARY_LINKS = [
   { href: "/the-edge", label: "Methodology" },
   { href: "/penalty-takers", label: "Penalty takers" },
   { href: "/fair-odds-lab", label: "Fair Odds Lab" },
-  { href: "/return-atlas", label: "Return Atlas" },
   { href: "/track-record", label: "Track record" },
+];
+const ATLAS_LINKS = [
+  { href: "/football-atlas", label: "Football", sport: "football" as const },
+  { href: "/return-atlas", label: "Tennis", sport: "tennis" as const },
 ];
 const RESOURCE_LINKS = [
   { href: "/resources", label: "All resources" },
@@ -66,7 +70,12 @@ export default function GlobalNav() {
           <summary className={`flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium hover:bg-slate-800/60 [&::-webkit-details-marker]:hidden ${TIP_LINKS.some((link) => active(link.href)) ? "text-emerald-300" : "text-slate-300"}`}>Tips <Chevron /></summary>
           <div className="absolute left-0 top-full mt-2 w-48 rounded-xl border border-slate-700 bg-slate-950 p-2 shadow-xl shadow-black/30">{TIP_LINKS.map((link) => <Link prefetch={false} key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full ${linkClass(link.href)}`}>{link.label}</Link>)}</div>
         </details>
-        {PRIMARY_LINKS.map((link) => <Link prefetch={false} key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={linkClass(link.href)}>{link.label}</Link>)}
+        {PRIMARY_LINKS.slice(0, 3).map((link) => <Link prefetch={false} key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={linkClass(link.href)}>{link.label}</Link>)}
+        <details name="desktop-site-navigation" onBlur={closeWhenFocusLeaves} className="group relative">
+          <summary className={`flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium hover:bg-slate-800/60 [&::-webkit-details-marker]:hidden ${ATLAS_LINKS.some((link) => active(link.href)) ? "text-emerald-300" : "text-slate-300"}`}>Return Atlas <Chevron /></summary>
+          <div className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-slate-700 bg-slate-950 p-2 shadow-xl shadow-black/30">{ATLAS_LINKS.map((link) => <Link prefetch={false} key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full gap-3 py-2 ${linkClass(link.href)}`}><SportIcon sport={link.sport} className="h-8 w-8"/><span>{link.label}<small className="block text-xs font-normal text-slate-400">{link.sport === "football" ? "Club returns & match history" : "Player returns & match history"}</small></span></Link>)}</div>
+        </details>
+        {PRIMARY_LINKS.slice(3).map((link) => <Link prefetch={false} key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={linkClass(link.href)}>{link.label}</Link>)}
         <details name="desktop-site-navigation" onBlur={closeWhenFocusLeaves} className="group relative">
           <summary className={`flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium hover:bg-slate-800/60 [&::-webkit-details-marker]:hidden ${resources.some((link) => active(link.href)) ? "text-emerald-300" : "text-slate-300"}`}>Resources <Chevron /></summary>
           <div className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-slate-700 bg-slate-950 p-2 shadow-xl shadow-black/30">{resources.map((link) => <Link prefetch={false} key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full ${linkClass(link.href)}`}>{link.label}</Link>)}</div>
@@ -77,10 +86,10 @@ export default function GlobalNav() {
           <svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" /></svg>Menu
         </summary>
         <div className="absolute inset-x-0 top-full max-h-[calc(100dvh-72px)] overflow-y-auto border-b border-slate-700 bg-[#0f1117] shadow-xl shadow-black/30">
-          <div className="mx-auto grid max-w-7xl gap-5 px-4 py-5 sm:grid-cols-3 sm:px-6">
-            {[{ label: "Tips", links: TIP_LINKS }, { label: "Explore", links: PRIMARY_LINKS }, { label: "Resources", links: resources }].map((group) => <div key={group.label}>
+          <div className="mx-auto grid max-w-7xl gap-5 px-4 py-5 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
+            {[{ label: "Tips", links: TIP_LINKS }, { label: "Explore", links: PRIMARY_LINKS }, { label: "Return Atlas", links: ATLAS_LINKS }, { label: "Resources", links: resources }].map((group) => <div key={group.label}>
               <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">{group.label}</p>
-              <ul className="space-y-1">{group.links.map((link) => <li key={link.href}><Link prefetch={false} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full min-h-11 rounded-xl px-3 py-3 text-sm font-medium ${active(link.href) ? "bg-emerald-400/10 text-emerald-200" : "text-slate-200 hover:bg-slate-800"}`}>{link.label}</Link></li>)}</ul>
+              <ul className="space-y-1">{group.links.map((link) => <li key={link.href}><Link prefetch={false} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full min-h-11 items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium ${active(link.href) ? "bg-emerald-400/10 text-emerald-200" : "text-slate-200 hover:bg-slate-800"}`}>{group.label === "Return Atlas" && <SportIcon sport={link.href === "/football-atlas" ? "football" : "tennis"} className="h-7 w-7"/>}{link.label}</Link></li>)}</ul>
             </div>)}
           </div>
         </div>

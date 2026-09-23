@@ -285,6 +285,7 @@ export default function PlayerProps({
           <p className="text-sm sm:text-base text-slate-400 max-w-3xl leading-relaxed">
             Football player props: shots, fouls, tackles and cards. Choose a league to see the picks and their record.
           </p>
+          <Link href="/football-atlas" prefetch={false} className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-emerald-300 hover:text-emerald-100"><SportIcon sport="football" className="h-6 w-6"/>Explore club betting returns in Return Atlas →</Link>
         </div>
       </section>
 

@@ -11,6 +11,7 @@ import {
 import { readWorldCupData, worldCupTeamUrl, WORLD_CUP_ARCHIVE_DATE, WORLD_CUP_PENALTIES_URL } from "@/lib/world-cup-penalties";
 import { fetchSeoTipSitemapState } from "@/lib/tip-seo-server";
 import returnAtlasRelease from "@/data/return-atlas-release.json";
+import footballAtlasRelease from "@/data/football-atlas-release.json";
 
 const STATIC_LAST_MODIFIED = new Date("2026-05-12T00:00:00Z");
 const RESOURCES_LAST_MODIFIED = new Date("2026-09-23T12:00:00Z");
@@ -51,6 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/track-record`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/bookmakers`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/fair-odds-lab`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "daily", priority: 0.8 },
+    { url: `${BASE_URL}/football-atlas`, lastModified: new Date(`${footballAtlasRelease.checkedAt.slice(0, 10)}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/return-atlas`, lastModified: new Date(`${returnAtlasRelease.checkedAt}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/penalty-takers`, lastModified: clubPenaltyLastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/penalty-takers/methodology`, lastModified: clubPenaltyLastModified, changeFrequency: "monthly", priority: 0.5 },

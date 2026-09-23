@@ -6,11 +6,11 @@ import EditorialIcon, { type EditorialIconName } from "./EditorialIcon";
 import FaqAnswer from "./FaqAnswer";
 import { questionSlug, type FaqSection } from "@/lib/parse-faq";
 
-const icons: EditorialIconName[] = ["guide", "method", "markets", "compare", "bankroll", "analysis", "about", "responsible"];
+const icons: EditorialIconName[] = ["guide", "method", "markets", "compare", "bankroll", "analysis", "about", "responsible", "analysis"];
 const popular = [
   ["The odds have changed", "The advertised odds have gone. Is the tip still worth taking?"],
   ["Penalty-taker evidence", "How reliable is a club's penalty-taker order?"],
-  ["Betting against a player", "In Return Atlas, what does betting against a player mean?"],
+  ["Return Atlas explained", "What is Return Atlas, and is it the same as your track record?"],
 ];
 const normalize = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
