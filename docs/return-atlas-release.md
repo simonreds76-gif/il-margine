@@ -25,7 +25,8 @@ On 19 September 2026, the latest accepted ATP main-tour singles result was 13 Se
 - ATP main draws only, completed matches, paired Pinnacle prices. Retirements, walkovers, qualifying, team events and unresolved matches are excluded.
 - Favourite/underdog refers to the named player's price relative to their opponent, not a fixed 2.00 threshold. Equal prices enter only All matches.
 - Bet against uses the opponent's actual odds. Role remains relative to the named player.
-- Odds ranges also describe the named player, on either betting side. Standard bands are (lower, upper], with no rounding before filtering. Custom bounds are inclusive and may be open-ended; invalid bounds must not update the displayed record.
+- Odds ranges also describe the named player, on either betting side. Standard bands are [lower, upper), with no rounding before filtering. Custom bounds are inclusive and may be open-ended; invalid bounds must not update the displayed record.
+- The expandable odds selector shows 14 contiguous bands in three visible groups, from below 1.20 to 10.00+. It uses native disclosure and buttons with selected states and Escape-to-close. The same bands appear in the player breakdown.
 - The leaderboard minimum applies after period, surface, role and odds filtering. Highlights respect the odds range too. A player's collapsible range table compares all standard bands under the current period, surface, role and betting side; choosing a band filters the profile only. Profile side/role changes preserve its odds selection.
 - Odds filtering runs entirely against the existing browser index. No extra provider calls, archive downloads, server functions or scheduled jobs are added. Coverage denominators remain independent of odds/role filters.
 - Each player panel offers independent side and role controls. Role cards show all/favourite/underdog ROI and sample counts together; changing either control updates the chart and ledger without closing the panel.

@@ -79,7 +79,7 @@ test('odds bands partition the complete archive without gaps, overlaps or strate
       const on = observations(data.matches, player.id, {oddsRange:band.id});
       const against = observations(data.matches, player.id, {oddsRange:band.id, side:'opponent'});
       assert.deepEqual(on.map(m => m.id), against.map(m => m.id));
-      const expected = all.filter(m => m.playerOdds > band.min && m.playerOdds <= band.max);
+      const expected = all.filter(m => m.playerOdds >= band.min && m.playerOdds < band.max);
       assert.deepEqual(on.map(m => m.id), expected.map(m => m.id));
       const profit = expected.reduce((sum,m) => sum + (m.winner === m.opponent ? m.opponentOdds - 1 : -1), 0);
       assert.ok(Math.abs(summarise(against).profit - profit) < 1e-8);
@@ -95,11 +95,11 @@ test('full-precision boundaries and custom inclusive ranges use the named player
     p1:i%2?'opponent':'player',p2:i%2?'player':'opponent',
     o1:i%2?1.9:price,o2:i%2?price:1.9,winner:'player'
   }));
-  assert.deepEqual(observations(fixtures,'player',{oddsRange:'1.20-1.50'}).map(r=>r.playerOdds),[1.205,1.21,1.5]);
+  assert.deepEqual(observations(fixtures,'player',{oddsRange:'1.20-1.50'}).map(r=>r.playerOdds),[1.2,1.205,1.21]);
   const custom={oddsRange:'custom',oddsMin:'1.21',oddsMax:'1.50'};
   assert.deepEqual(observations(fixtures,'player',custom).map(r=>r.playerOdds),[1.21,1.5]);
   assert.equal(summarise(observations(fixtures,'player',{...custom,side:'opponent'})).profit,-2);
-  assert.equal(observations(fixtures,'player',{oddsRange:'1.80-2.00',role:'underdog'}).length,2);
+  assert.equal(observations(fixtures,'player',{oddsRange:'1.80-2.00',role:'underdog'}).length,1);
   assert.equal(observations(fixtures,'player',{...custom,year:'2025'}).length,0);
   assert.equal(observations(fixtures,'player',{...custom,surface:'grass'}).length,0);
   assert.equal(observations(fixtures,'player',{oddsRange:'custom',oddsMin:2,oddsMax:2}).length,1);
@@ -111,4 +111,18 @@ test('full-precision boundaries and custom inclusive ranges use the named player
   assert.equal(observations(fixtures,'player',{oddsRange:'custom'}).length,fixtures.length);
   assert.equal(leaderboard(fixtures,[{id:'player',name:'Player'}],{...custom,minimum:3}).length,0);
   assert.equal(leaderboard(fixtures,[{id:'player',name:'Player'}],{...custom,minimum:2})[0].bets,2);
+});
+
+
+test('fourteen price bands include exact boundaries once, with finer long-price segmentation', () => {
+  assert.equal(ODDS_BANDS.length,14);
+  const prices=[1.001,1.1999,1.2,1.499,1.5,1.8,2,2.2,2.5,3,3.5,4,5,6,8,10,100];
+  const matches=prices.map((odds,i)=>({id:String(i),date:'2026-05-01',level:'ATP-main',status:'completed',p1:'p',p2:'q',o1:odds,o2:1.5,winner:'p'}));
+  for(const price of prices){
+    const bands=ODDS_BANDS.filter(b=>price>=b.min&&price<b.max);
+    assert.equal(bands.length,1,String(price));
+    assert.ok(observations(matches,'p',{oddsRange:bands[0].id}).some(m=>m.playerOdds===price));
+  }
+  assert.deepEqual(observations(matches,'p',{oddsRange:'2.50-3.00'}).map(m=>m.playerOdds),[2.5]);
+  assert.deepEqual(observations(matches,'p',{oddsRange:'10.00-plus'}).map(m=>m.playerOdds).sort((a,b)=>a-b),[10,100]);
 });

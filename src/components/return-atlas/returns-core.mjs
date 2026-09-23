@@ -16,26 +16,28 @@ export function recentlyActivePlayers(matches, players, asOf) {
 }
 
 const playerIndexes=new WeakMap();
-// Adjacent bands are (lower, upper]: full-precision prices cannot fall into gaps.
+// Bands are [lower, upper), so an exact boundary starts the next band.
 export const ODDS_BANDS = [
-  {id:'to-1.20', min:1, max:1.2, label:'Up to 1.20'},
-  {id:'1.20-1.50', min:1.2, max:1.5, label:'Over 1.20–1.50'},
-  {id:'1.50-1.80', min:1.5, max:1.8, label:'Over 1.50–1.80'},
-  {id:'1.80-2.00', min:1.8, max:2, label:'Over 1.80–2.00'},
-  {id:'2.00-2.50', min:2, max:2.5, label:'Over 2.00–2.50'},
-  {id:'2.50-3.50', min:2.5, max:3.5, label:'Over 2.50–3.50'},
-  {id:'3.50-5.00', min:3.5, max:5, label:'Over 3.50–5.00'},
-  {id:'over-5.00', min:5, max:Infinity, label:'Over 5.00'},
-];
-export const ODDS_PRESETS = [...ODDS_BANDS,
-  {id:'2.00-2.20', min:2, max:2.2, label:'Over 2.00–2.20'},
-  {id:'2.20-2.50', min:2.2, max:2.5, label:'Over 2.20–2.50'},
+  {id:'to-1.20', min:1, max:1.2, label:'Below 1.20', group:'Short prices'},
+  {id:'1.20-1.50', min:1.2, max:1.5, label:'1.20–1.50', group:'Short prices'},
+  {id:'1.50-1.80', min:1.5, max:1.8, label:'1.50–1.80', group:'Short prices'},
+  {id:'1.80-2.00', min:1.8, max:2, label:'1.80–2.00', group:'Short prices'},
+  {id:'2.00-2.20', min:2, max:2.2, label:'2.00–2.20', group:'Mid-range prices'},
+  {id:'2.20-2.50', min:2.2, max:2.5, label:'2.20–2.50', group:'Mid-range prices'},
+  {id:'2.50-3.00', min:2.5, max:3, label:'2.50–3.00', group:'Mid-range prices'},
+  {id:'3.00-3.50', min:3, max:3.5, label:'3.00–3.50', group:'Mid-range prices'},
+  {id:'3.50-4.00', min:3.5, max:4, label:'3.50–4.00', group:'Longer prices'},
+  {id:'4.00-5.00', min:4, max:5, label:'4.00–5.00', group:'Longer prices'},
+  {id:'5.00-6.00', min:5, max:6, label:'5.00–6.00', group:'Longer prices'},
+  {id:'6.00-8.00', min:6, max:8, label:'6.00–8.00', group:'Longer prices'},
+  {id:'8.00-10.00', min:8, max:10, label:'8.00–10.00', group:'Longer prices'},
+  {id:'10.00-plus', min:10, max:Infinity, label:'10.00+', group:'Longer prices'},
 ];
 export function resolveOddsRange({oddsRange='all', oddsMin='', oddsMax=''}={}) {
-  if (oddsRange === 'all') return {min:1, max:Infinity, exclusive:true, label:'Any odds'};
+  if (oddsRange === 'all') return {min:1, max:Infinity, exclusive:false, upperExclusive:false, label:'Any odds'};
   if (oddsRange !== 'custom') {
-    const preset = ODDS_PRESETS.find(band => band.id === oddsRange);
-    return preset ? {...preset, exclusive:true} : null;
+    const preset = ODDS_BANDS.find(band => band.id === oddsRange);
+    return preset ? {...preset, exclusive:false, upperExclusive:true} : null;
   }
   const empty = value => value === '' || value == null;
   const min = empty(oddsMin) ? 1 : Number(oddsMin);
@@ -44,7 +46,7 @@ export function resolveOddsRange({oddsRange='all', oddsMin='', oddsMax=''}={}) {
       (!empty(oddsMax) && (!Number.isFinite(max) || max <= 1)) || min > max) return null;
   const label = empty(oddsMin) && empty(oddsMax) ? 'Any odds'
     : empty(oddsMin) ? `Up to ${max}` : empty(oddsMax) ? `${min} and above` : `${min}–${max} inclusive`;
-  return {min, max, exclusive:empty(oddsMin), label};
+  return {min, max, exclusive:empty(oddsMin), upperExclusive:false, label};
 }
 export function oddsRangeLabel(filters) { return resolveOddsRange(filters)?.label ?? 'Invalid odds range'; }
 
@@ -76,7 +78,7 @@ export function observations(matches, playerId, filters = {}) {
     const won = match.winner === backedId;
     return { ...match, playerId, opponent, playerRole, playerOdds, opponentOdds, odds, won, profit: won ? odds - 1 : -1 };
   }).filter(row => (role === 'all' || row.playerRole === role) &&
-      (range.exclusive ? row.playerOdds > range.min : row.playerOdds >= range.min) && row.playerOdds <= range.max)
+      (range.exclusive ? row.playerOdds > range.min : row.playerOdds >= range.min) && (range.upperExclusive ? row.playerOdds < range.max : row.playerOdds <= range.max))
     .sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id));
 }
 
