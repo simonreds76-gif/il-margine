@@ -1,54 +1,20 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
-import Footer from "@/components/Footer";
+import InfoPage from "@/components/InfoPage";
 import { BASE_URL } from "@/lib/config";
-import PageHomeLink from "@/components/PageHomeLink";
-
+import CookieSettings from "@/components/CookieSettings";
 export const metadata: Metadata = {
-  title: "Cookies Policy",
-  description: "How Il Margine uses cookies. Essential cookies, and optional analytics and affiliate cookies when enabled, with consent.",
-  alternates: {
-    canonical: `${BASE_URL}/cookies-policy`,
-  },
-  robots: "index, follow",
+  title: "Cookies & browser choices", description: "See what is stored on your device and change your Google Analytics preference here.", alternates: { canonical: `${BASE_URL}/cookies-policy` }, robots: { index: true, follow: true },
+  openGraph: { title: "Cookies & browser choices", description: "See what is stored on your device and change your Google Analytics preference here.", url: `${BASE_URL}/cookies-policy`, images: [`${BASE_URL}/brand/20260913/social.png`] },
 };
-
-export default function CookiesPolicyPage() {
-  return (
-    <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <section className="pt-6 pb-10 md:pt-6 md:pb-12 border-b border-slate-800/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <PageHomeLink className="mb-8" />
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-8">Cookies Policy</h1>
-          <div className="prose prose-invert prose-slate max-w-none text-slate-300 space-y-4 text-sm leading-relaxed">
-            <p>
-              This page explains how we use cookies and similar technologies on ilmargine.bet. For how we handle
-              your personal data overall, see our{" "}
-              <Link href="/privacy-policy" className="text-emerald-400 hover:text-emerald-300 underline">
-                Privacy Policy
-              </Link>.
-            </p>
-            <h2 className="text-lg font-semibold text-slate-200 mt-8 mb-2">What are cookies?</h2>
-            <p>
-              Cookies are small text files stored on your device when you visit a website. They are widely used to
-              make sites work, remember preferences, or understand how visitors use the site.
-            </p>
-            <h2 className="text-lg font-semibold text-slate-200 mt-8 mb-2">Our use of cookies</h2>
-            <p>
-              We use <strong className="text-slate-200">analytics cookies</strong> (Google Analytics) only after you
-              accept our cookie banner. We do not set non-essential cookies until you click &ldquo;Accept&rdquo;.
-              Our site or hosting may set strictly necessary cookies (e.g. for security or preferences); we do not
-              use these for tracking.
-            </p>
-            <p>
-              If we add affiliate or other optional cookies in future, we will update this page and seek consent
-              where required.
-            </p>
-          </div>
-        </div>
-      </section>
-      <Footer />
-    </div>
-  );
+export default function Page() {
+  return <InfoPage title={"Cookies & browser choices"} intro={"See what is stored on your device and change your Google Analytics preference here."} icon="compare" path="/cookies-policy">
+<section className="info-card"><h2>The short version</h2><p>Google Analytics is optional and loads after you accept. We remember your choice in local storage. The site also uses Vercel’s cookieless traffic and performance measurement and ordinary hosting logs, which are separate from that choice.</p><p>Cookies are small browser files. Local storage is another way to remember information on your device; session storage normally lasts only for the current tab session. These technologies can have different purposes.</p></section>
+<CookieSettings />
+<section><h2>What this site stores</h2><div className="guide-table-wrap" role="region" aria-label="Browser storage inventory" tabIndex={0}><table><caption>Browser storage used by site features</caption><thead><tr><th scope="col">Storage</th><th scope="col">Purpose</th><th scope="col">When / duration</th></tr></thead><tbody><tr><th scope="row">Consent preference</th><td>Remembers whether Google Analytics is allowed.</td><td>After your choice; until you change it or clear site data.</td></tr><tr><th scope="row">Google Analytics cookies</th><td>Measure visits and site interactions. Names normally begin with _ga.</td><td>After acceptance; expiry depends on Google Analytics settings and renewal.</td></tr><tr><th scope="row">Referral storage</th><td>Remembers an AI referral source and avoids repeat reporting in the same session.</td><td>After analytics acceptance; first-touch storage remains until cleared, session storage ends with the tab session.</td></tr><tr><th scope="row">Interface preferences</th><td>Remember dismissed messages or whether a Roger introduction was shown.</td><td>When the feature is used; some persist until site data is cleared.</td></tr><tr><th scope="row">Security / authenticated features</th><td>Hosting protection or restricted administrator features may use necessary session information.</td><td>When required for the relevant feature.</td></tr></tbody></table></div></section>
+<section><h2>What switching Google Analytics off does</h2><p>The controls above save your new choice, clear accessible Google Analytics cookies set for this site and reload the page so an already loaded analytics script is stopped. They also clear our optional referral storage.</p><p>The choice applies to this browser. Repeat it on other browsers or devices. Clearing all site data also clears the saved preference, so the site may ask again. Browser settings can block or delete cookies independently; doing so may affect features.</p></section>
+<section><h2>Cookieless measurement is still measurement</h2><p>Vercel Web Analytics collects traffic information without analytics cookies, while Speed Insights measures page performance. These are currently separate from the Google Analytics switch. Hosting logs and server-side referral counts do not depend on that switch either.</p><p>Read the provider’s explanations of <a href="https://vercel.com/docs/analytics/privacy-policy">Web Analytics privacy</a> and <a href="https://vercel.com/docs/speed-insights/privacy-policy">Speed Insights privacy</a>, and our <Link href="/privacy-policy">privacy notice</Link> for the wider use of information.</p></section>
+<section><h2>Links to bookmakers and other services</h2><p>Following a link may take you to a service that uses its own cookies or referral tracking. Our browser preference cannot control another website. Read the destination’s notice before accepting its optional tracking.</p></section>
+<section><h2>Questions about a cookie?</h2><p>Send the cookie name and page address to <a href="mailto:contact@ilmargine.bet?subject=Cookie%20question">contact@ilmargine.bet</a>. Do not send the cookie value: it may contain an identifier or session information.</p></section>
+</InfoPage>;
 }
-

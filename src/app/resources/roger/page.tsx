@@ -1,109 +1,12 @@
-"use client";
-
-import { useEffect } from "react";
 import Link from "next/link";
-import Footer from "@/components/Footer";
-import { useChatContext } from "@/contexts/ChatContext";
-
-const SUGGESTED = [
-  "CPI of Miami in 2024?",
-  "How do underdogs do at Indian Wells?",
-  "Sinner's record vs left-handed players?",
-  "Who's won Indian Wells the most?",
-  "Dimitrov's record at Monte Carlo?",
-];
-
+import ResourceArticlePage from "@/components/ResourceArticlePage";
+import GuideBlocks from "@/components/GuideBlocks";
+import RogerGuideActions from "@/components/RogerGuideActions";
+import "@/components/resource-library.css";
 export default function RogerPage() {
-  const ctx = useChatContext();
-  const openChat = ctx?.openChat;
-  const openChatWithMessage = ctx?.openChatWithMessage;
-
-  useEffect(() => {
-    openChat?.();
-  }, [openChat]);
-
-  return (
-    <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <section className="pt-6 pb-12 md:pt-8 md:pb-16 border-b border-slate-800/50">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/resources"
-            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8"
-          >
-            <span>← Resources</span>
-          </Link>
-          <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">
-            TENNIS STATS CHATBOT · VERSION 1.0
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4">
-            Meet Roger
-          </h1>
-          <p className="text-lg text-slate-300 leading-relaxed mb-4">
-            Roger is our tennis stats chatbot, named in honour of Roger Federer. Ask about ATP head to head records, tournament history, serve stats, player records at venues, and more. Anything relevant to tennis to enhance your betting.
-          </p>
-          <p className="text-sm text-slate-500 leading-relaxed mb-2">
-            Limits may apply during peak usage.
-          </p>
-          <p className="text-sm text-slate-500 leading-relaxed mb-6">
-            Player records and head-to-head use full ATP history. Fav/dog ROI and betting stats are based on the last four years.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => openChat?.()}
-              className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
-            >
-              Open Roger
-            </button>
-            <Link
-              href="/tennis-tips"
-              className="inline-flex items-center gap-2 border border-slate-600 hover:border-slate-400 text-slate-200 font-medium px-6 py-3 rounded-lg transition-colors"
-            >
-              View Tennis Tips
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-12 md:py-16">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-semibold text-slate-100 mb-4">What you can ask</h2>
-          <ul className="space-y-2 text-slate-300">
-            <li>• Head-to-head records between any ATP players</li>
-            <li>• Player records at specific tournaments (Indian Wells, Roland Garros, etc.)</li>
-            <li>• Court pace (CPI) by tournament and year</li>
-            <li>• Serve and return stats by surface</li>
-            <li>• Record vs left-handed players or big servers</li>
-            <li>• Tournament winners, seeds, qualifiers, and recent form</li>
-            <li>• How favourites or underdogs do at a tournament (ROI, last 4 years)</li>
-          </ul>
-          <p className="text-sm text-slate-500 mt-4">
-            Any tips or views from Roger are based solely on our stats and data. Roger doesn&apos;t speculate beyond what the numbers show.
-          </p>
-
-          <h2 className="text-xl font-semibold text-slate-100 mt-10 mb-4">Try asking (click to get an answer)</h2>
-          <div className="space-y-2">
-            {SUGGESTED.map((q) => (
-              <button
-                key={q}
-                onClick={() => openChatWithMessage?.(q)}
-                className="block w-full text-left text-sm px-4 py-3 rounded-lg border border-slate-800/60 text-slate-300 hover:bg-slate-800/40 hover:border-emerald-500/30 transition-colors"
-              >
-                {q}
-              </button>
-            ))}
-          </div>
-
-          <p className="text-sm text-slate-500 mt-10">
-            Roger v1.0. We&apos;re iterating. Feedback, improvements, or bug reports?{" "}
-            <Link href="/contact" className="text-emerald-400 hover:text-emerald-300 underline">
-              Contact us
-            </Link>
-            .
-          </p>
-        </div>
-      </section>
-
-      <Footer />
-    </div>
-  );
+  return <ResourceArticlePage eyebrow="Tennis research assistant" title="Ask Roger a better tennis question" description="Get more useful answers by naming the player, surface and period. Roger helps explore tennis statistics; the numbers still need context and checking." canonicalPath="/resources/roger" dateModified="2026-09-23" icon="about" takeaway="Ask a question the data can answer. A head-to-head record is a description of past matches, not the probability of the next result." toc={[{id:"ask",label:"Start a conversation"},{id:"specific",label:"Make the question specific"},{id:"check",label:"Check the answer"},{id:"tools",label:"Choose the right tool"}]}>
+    <section id="ask" className="guide-section"><h2>Start with a player and a question</h2><p>Roger can help with ATP head-to-head results, tournament history and serve or return statistics. Ask for the surface, dates and match count that support the answer. Availability depends on the records held, and usage limits may apply.</p><RogerGuideActions /></section>
+    <GuideBlocks sections={[{id:"specific",title:"Make the question specific",table:{caption:"Replace a vague question with a checkable one",headings:["Instead of","Try asking"],rows:[["Is this player good on clay?","What is their clay match record, and over which seasons?"],["Who wins this match?","What is their head-to-head on this surface, and how many meetings is that?"],["Is this court fast?","Which serve or pace measure are you using, for what year?"]]},paragraphs:["A serve-based pace estimate is not necessarily an official Court Pace Index measurement. Ask how the number is defined before comparing two venues."]},{id:"check",title:"Read the answer with the sample attached",steps:[["Check the player and event","Similar names and tournament name changes can produce the wrong match. Include both player names when asking about a fixture."],["Check the period and surface","An all-career statistic and a current-season statistic answer different questions. Ask which one you are seeing."],["Check the count","A 75% win rate could mean three wins from four matches. The denominator matters."],["Check any price separately","A chatbot answer can be incomplete, outdated or mistaken. Use a current market for prices and the published selections page for the official tips."]],note:"Do not include passwords, account details or sensitive personal information. Questions are processed by an AI service to generate the answer."},{id:"tools",title:"Use the right tool for the job",paragraphs:["Return Atlas is the dedicated place to browse player ROI by season, surface and favourite or underdog status, with a visible match history. Roger is useful for asking a narrower statistics question and following it up.","If an answer looks wrong, send the question and the page or match concerned through Contact. A correction is more useful than treating confident wording as proof."]}]} />
+    <div className="guide-actions"><Link href="/return-atlas">Open Return Atlas ↗</Link><Link href="/tennis-tips">Published tennis tips ↗</Link><Link href="/contact">Report an issue ↗</Link></div>
+  </ResourceArticlePage>;
 }

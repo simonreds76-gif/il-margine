@@ -98,12 +98,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       : []),
     { url: `${BASE_URL}/the-edge`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/faq`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE_URL}/contact`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "yearly", priority: 0.5 },
+    { url: `${BASE_URL}/contact`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "yearly", priority: 0.5 },
     { url: `${BASE_URL}/llms.txt`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.4 },
     { url: `${BASE_URL}/llms-full.txt`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.3 },
-    { url: `${BASE_URL}/disclaimer`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${BASE_URL}/privacy-policy`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${BASE_URL}/cookies-policy`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/disclaimer`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/privacy-policy`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/cookies-policy`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "yearly", priority: 0.3 },
   ];
 
   return entries;

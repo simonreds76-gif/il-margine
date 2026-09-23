@@ -47,7 +47,7 @@ export default function ChatWidget() {
   const submit = useCallback((text: string) => {
     if (!text.trim() || isLoading) return;
     clearError();
-    track("roger_query", { query: text.trim() });
+    track("roger_query", { question_length: text.trim().length });
     sendMessage({ text });
     setInputValue("");
   }, [isLoading, clearError, sendMessage]);
@@ -132,7 +132,7 @@ export default function ChatWidget() {
                   Ask me anything about ATP tennis: player records, head to head, tournament history, court pace (CPI), serve stats, and more.
                 </p>
                 <p className="text-xs text-slate-500">
-                  Player records and H2H use full ATP history; fav/dog ROI covers the last 4 years. Any tips from Roger are based solely on our stats and data. Roger doesn&apos;t speculate.
+                  Ask for the surface, period and match count behind an answer. Coverage varies and AI answers can be mistaken. Use Return Atlas for browsable player ROI and the tennis tips page for published selections.
                 </p>
                 <div className="space-y-2">
                   <p className="text-[11px] text-slate-600 uppercase tracking-wider font-medium">Try asking:</p>

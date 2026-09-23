@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import EditorialIcon, { type EditorialIconName } from "@/components/EditorialIcon";
 import Footer from "@/components/Footer";
@@ -38,9 +38,9 @@ const CALCULATOR_FAQS = [
       "Published prices move. If a selection is posted at 2.10 and you take 1.95 an hour later, you have kept the position and given away most of the margin. Restricted accounts, one-bookmaker shopping and late entry all do the same thing. Setting capture below full is the realistic case for most people, but the appropriate setting depends on the prices actually obtained.",
   },
   {
-    question: "Why do you use a tenth of Kelly on props and a quarter on tennis?",
+    question: "How should I choose a Kelly fraction?",
     answer:
-      "Kelly is optimal only if the probability you feed it is correct. Player prop probabilities carry far more estimation error than tennis match prices, because minutes, role and line movement all shift the distribution. The fraction is a haircut on confidence, not on ambition. Move the estimate error slider on the Kelly tab to see what a two point overestimate does to full Kelly and what it does to a quarter.",
+      "The fractions are scenarios to compare, not universal stakes for a sport. Smaller fractions reduce exposure but cannot fix a wrong probability. Consider estimation error, odds, existing bets and the losses you could fund. Move the estimate-error slider to see how a probability overestimate changes the simulated outcomes.",
   },
   {
     question: "Which margin removal method should I use?",
@@ -50,7 +50,7 @@ const CALCULATOR_FAQS = [
   {
     question: "Does beating the closing line mean I am a winning bettor?",
     answer:
-      "It means you bought the selection cheaper than the market finished pricing it, which is the best single-bet evidence available. It is only meaningful against a market that is sharp at the off. Beating a soft closing line repeatedly tells you the book was slow to move, which is a real edge but a fragile one, and usually the fastest route to a restricted account.",
+      "Positive fair-close CLV means the taken price was above a margin-adjusted closing benchmark. Repeating that against a credible market is useful evidence about pricing, but it does not guarantee profit. Check matching settlement rules, capture times and coverage alongside actual results.",
   },
   {
     question: "What happens if the live results feed is down?",
@@ -126,8 +126,18 @@ function useRecordSummary(initialRecord: RecordSummary): RecordSummary {
   return recordSummary;
 }
 
+function subscribeTool(onChange: () => void) {
+  window.addEventListener("popstate", onChange);
+  window.addEventListener("calculator-tool-change", onChange);
+  return () => { window.removeEventListener("popstate", onChange); window.removeEventListener("calculator-tool-change", onChange); };
+}
+function readTool(): TabKey {
+  const requested = new URLSearchParams(window.location.search).get("tool");
+  return TABS.find(tab => tab.key === requested)?.key ?? "returns";
+}
+
 export default function CalculatorClient({ initialRecord }: { initialRecord: RecordSummary }) {
-  const [activeTab, setActiveTab] = useState<TabKey>("returns");
+  const activeTab = useSyncExternalStore(subscribeTool, readTool, () => "returns" as TabKey);
   const record = useRecordSummary(initialRecord);
 
   const faqSchema = JSON.stringify({
@@ -141,7 +151,10 @@ export default function CalculatorClient({ initialRecord }: { initialRecord: Rec
   });
 
   const selectTab = (key: TabKey) => {
-    setActiveTab(key);
+    const url = new URL(window.location.href);
+    url.searchParams.set("tool", key);
+    window.history.replaceState(null, "", url);
+    window.dispatchEvent(new Event("calculator-tool-change"));
     track("calculator_tab", { tab: key });
   };
 

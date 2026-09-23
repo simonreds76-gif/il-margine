@@ -1,52 +1,20 @@
-﻿import Link from "next/link";
-import Footer from "@/components/Footer";
-import PageHomeLink from "@/components/PageHomeLink";
+import type { Metadata } from "next";
+import Link from "next/link";
+import InfoPage from "@/components/InfoPage";
+import { BASE_URL } from "@/lib/config";
 
-export default function PrivacyPolicy() {
-  return (
-    <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <section className="pt-6 pb-10 md:pt-6 md:pb-12 border-b border-slate-800/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <PageHomeLink className="mb-8" />
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-8">Privacy Policy</h1>
-          <div className="prose prose-invert prose-slate max-w-none text-slate-300 space-y-4 text-sm leading-relaxed">
-            <p>
-              This policy describes how we handle your information when you use ilmargine.bet (and related domains).
-            </p>
-            <p>
-              <strong className="text-slate-200">Information we collect.</strong> When you visit the site we may log
-              technical data such as IP address, browser type and pages viewed. We use Google Analytics only if you
-              accept our cookie banner; that involves cookies and similar technologies. See our{" "}
-              <Link href="/cookies-policy" className="text-emerald-400 hover:text-emerald-300 underline">
-                Cookies policy
-              </Link>{" "}
-              for details.
-            </p>
-            <p>
-              <strong className="text-slate-200">How we use it.</strong> We use this to run and improve the site, and
-              to comply with the law. We do not sell your data.
-            </p>
-            <p>
-              <strong className="text-slate-200">Cookies.</strong> We use essential and, with your consent, analytics
-              cookies. You can accept or find out more via the cookie notice on the site.
-            </p>
-            <p>
-              <strong className="text-slate-200">Your rights.</strong> Under UK GDPR you have rights including access,
-              correction, deletion and the right to withdraw consent. To exercise them or ask questions, contact us at{" "}
-              <a href="mailto:contact@ilmargine.bet" className="text-emerald-400 hover:text-emerald-300 underline">
-                contact@ilmargine.bet
-              </a>.
-            </p>
-            <p>
-              <strong className="text-slate-200">Changes.</strong> We may update this policy; the latest version will
-              be on this page.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <Footer />
-    </div>
-  );
+export const metadata: Metadata = {
+  title: "Your privacy at Il Margine", description: "How information is used when you browse, contact us or ask Roger a tennis question.", alternates: { canonical: `${BASE_URL}/privacy-policy` }, robots: { index: true, follow: true },
+  openGraph: { title: "Your privacy at Il Margine", description: "How information is used when you browse, contact us or ask Roger a tennis question.", url: `${BASE_URL}/privacy-policy`, images: [`${BASE_URL}/brand/20260913/social.png`] },
+};
+export default function Page() {
+  return <InfoPage title={"Your privacy at Il Margine"} intro={"How information is used when you browse, contact us or ask Roger a tennis question."} icon="responsible" path="/privacy-policy">
+<section className="info-card"><h2>Who to contact</h2><p>This notice covers ilmargine.bet. Il Margine is responsible for the site’s use of information described here. For privacy questions or a request about your data, email <a href="mailto:contact@ilmargine.bet?subject=Privacy%20request">contact@ilmargine.bet</a>.</p><p>You can browse our public guides, picks and research pages without creating an account. We do not sell your personal information.</p></section>
+<section><h2>What we process and why</h2><ul><li><strong>Browsing and security:</strong> hosting services process requests and technical information such as IP address, browser, requested URL and errors to deliver and protect the site.</li><li><strong>Site measurement:</strong> Vercel Web Analytics and Speed Insights measure traffic and page performance. Google Analytics loads only after your acceptance and records page views, referrals and interactions such as calculator-tab or chatbot use.</li><li><strong>Emails:</strong> when you contact us, we receive your email address, message and any attachments. We use them to respond, investigate corrections or handle your enquiry.</li><li><strong>Roger:</strong> messages and conversation context are sent through our server to the AI provider, currently Groq, to generate answers. Do not include sensitive personal information. We record a question-length event in Google Analytics when it is enabled, not the text of your question.</li><li><strong>Telegram referrals:</strong> clicking our Telegram redirect can record the link source, time, country, device and browser category, and a pseudonymous visitor identifier derived from request information. This helps distinguish clicks and measure referrals; it is not a public profile.</li></ul><p>Our operational and security processing, responding to ordinary enquiries, and measuring service performance are based on our legitimate interests in running and improving the site, subject to your rights. Google Analytics storage and tracking are based on consent. We may also process information to meet legal obligations.</p></section>
+<section><h2>Cookies and your choice</h2><p>Your Google Analytics choice is remembered in your browser. You can turn it off from the <Link href="/cookies-policy#cookie-settings">cookie settings</Link>. Withdrawing consent stops future Google Analytics loading on that browser; it does not automatically erase data already processed.</p><p>Vercel’s cookieless traffic and performance measurement is separate from that choice. Our <Link href="/cookies-policy">cookie policy</Link> explains local storage and the distinction between cookies, analytics and hosting logs.</p></section>
+<section><h2>Service providers and external sites</h2><p>Providers involved in delivering these features include Vercel for hosting and measurement, Supabase for site data, Google for optional analytics, Groq for AI answers and our email provider for correspondence. They receive information needed for the relevant service.</p><p>Some processing may occur outside the UK. The arrangements depend on the provider and service; contact us for information about the safeguards relevant to a particular request. See the providers’ notices for their own processing: <a href="https://vercel.com/legal/privacy-notice">Vercel</a>, <a href="https://supabase.com/privacy">Supabase</a>, <a href="https://policies.google.com/privacy">Google</a> and <a href="https://groq.com/privacy-policy">Groq</a>.</p><p>If you follow a bookmaker or Telegram link, that service’s own privacy policy applies. An affiliate link may contain referral identifiers used by the destination.</p></section>
+<section><h2>How long information is kept</h2><p>Retention depends on the purpose and the service. Browser preferences remain until changed or cleared. Correspondence may be retained while an enquiry, correction, dispute or related record is needed. Technical logs and analytics follow the relevant service settings; they do not all share one deletion schedule.</p><p>We aim to keep personal information only as long as needed for its purpose or a legal requirement. Ask us about a specific record if you need its retention period or want it reviewed for deletion.</p></section>
+<section><h2>Your rights</h2><p>Depending on the circumstances, UK data protection law gives you rights to access, correct or erase personal data, restrict processing, object to processing based on legitimate interests, and receive certain data in a portable format. Where consent is used, you can withdraw it.</p><p>Email us with enough detail to locate the relevant information. We may need to verify identity before providing personal data. If you remain concerned, you can <a href="https://ico.org.uk/make-a-complaint/">raise a complaint with the Information Commissioner’s Office</a>.</p></section>
+<section><h2>Updates</h2><p>The date at the top identifies this version. We will update the notice when the site’s information practices change.</p></section>
+</InfoPage>;
 }
-

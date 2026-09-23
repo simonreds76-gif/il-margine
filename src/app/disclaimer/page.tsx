@@ -1,42 +1,20 @@
-﻿import Footer from "@/components/Footer";
-import PageHomeLink from "@/components/PageHomeLink";
+import type { Metadata } from "next";
+import Link from "next/link";
+import InfoPage from "@/components/InfoPage";
+import EditorialIcon from "@/components/EditorialIcon";
+import { BASE_URL } from "@/lib/config";
 
-export default function Disclaimer() {
-  return (
-    <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <section className="pt-6 pb-10 md:pt-6 md:pb-12 border-b border-slate-800/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <PageHomeLink className="mb-8" />
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-8">Disclaimer</h1>
-          <div className="prose prose-invert prose-slate max-w-none text-slate-300 space-y-4 text-sm leading-relaxed">
-            <p>
-              Past performance does not guarantee future results. All tips, analysis and statistics on this site are for
-              information and entertainment purposes only. They do not constitute legal, financial or betting advice.
-            </p>
-            <p>
-              You must be 18 or over to use this site and to gamble in the UK. Gambling can be addictive. Please bet
-              responsibly and only within your means. If you need support, visit{" "}
-              <a
-                href="https://www.begambleaware.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-emerald-400 hover:text-emerald-300 underline"
-              >
-                BeGambleAware.org
-              </a>
-              .
-            </p>
-            <p>
-              We are not responsible for any loss or damage arising from your use of the information on this site or
-              from following any selections. Odds and availability are subject to change. You are solely responsible
-              for your betting decisions.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <Footer />
-    </div>
-  );
+export const metadata: Metadata = {
+  title: "Using our analysis", description: "What our picks, research tools and historical results can—and cannot—tell you.", alternates: { canonical: `${BASE_URL}/disclaimer` }, robots: { index: true, follow: true },
+  openGraph: { title: "Using our analysis", description: "What our picks, research tools and historical results can—and cannot—tell you.", url: `${BASE_URL}/disclaimer`, images: [`${BASE_URL}/brand/20260913/social.png`] },
+};
+export default function Page() {
+  return <InfoPage title={"Using our analysis"} intro={"What our picks, research tools and historical results can—and cannot—tell you."} icon="responsible" path="/disclaimer">
+<section className="info-card"><h2>Independent analysis, with uncertainty</h2><p>Il Margine publishes betting selections, research, educational guides and tools. We are not a bookmaker and do not accept or settle bets. The content provides general information; it is not personalised financial advice or a guarantee of a betting outcome.</p><p>A selection can be well reasoned and still lose. Past results, profitable months and historical player returns do not guarantee future profits.</p></section>
+<section><h2>Prices, rules & availability</h2><p>Odds can change after publication. A recorded price may no longer be available to you, and bookmakers may apply different limits or promotional conditions. Check the exact market, line and settlement rules before placing a bet.</p><p>Player participation, substitutions, tennis retirements and void rules can affect settlement. Your bookmaker’s terms govern your actual bet; a displayed website result is not a decision on an account dispute.</p></section>
+<section><h2>Research is not the same as a published pick</h2><p>Fair Odds Lab contains model estimates and reference prices. A large price gap may reflect uncertainty or incorrect assumptions as well as possible value. Penalty hierarchies are evidence-based assessments, not a guarantee of who takes the next penalty.</p><p>Return Atlas describes historical betting scenarios in its included sample. Calculator paths are simulations under stated assumptions, not forecasts or a replay of the exact public record. Read the coverage, dates and explanations alongside the headline figures.</p><div className="guide-actions"><Link href="/the-edge">Our methodology ↗</Link><Link href="/track-record">Published track record ↗</Link></div></section>
+<section><h2>Corrections & responsibility</h2><p>Data can be delayed, incomplete or incorrect. If you identify a problem, send the page and supporting details through our <Link href="/contact">contact page</Link> so it can be reviewed.</p><p>You decide whether to bet and how much to risk. We do not promise uninterrupted access or error-free information. Nothing on this page excludes responsibilities that cannot lawfully be excluded.</p></section>
+<section><h2>External links & commercial relationships</h2><p>Some bookmaker links may be affiliate links, which can generate a payment to Il Margine. A link or mention does not make that operator the best price for a particular bet. External services have their own terms and privacy practices.</p></section>
+<section className="info-card"><EditorialIcon name="responsible" className="h-10 w-10" /><h2>18+ and within your means</h2><p>This site is intended for adults aged 18 and over. Follow the gambling laws where you are located. Never use money needed for living costs or borrow to gamble, and do not treat betting as a reliable income.</p><p>If gambling is causing harm, <a href="https://www.gamcare.org.uk/">GamCare</a> provides support. <a href="https://www.gamstop.co.uk/">GAMSTOP</a> offers self-exclusion from participating online gambling services licensed in Great Britain.</p></section>
+</InfoPage>;
 }
-

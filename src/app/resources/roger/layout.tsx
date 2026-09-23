@@ -4,7 +4,7 @@ import { BASE_URL } from "@/lib/config";
 export const metadata: Metadata = {
   title: "Roger ATP Tennis Stats Chatbot",
   description:
-    "Roger is our tennis stats chatbot. Ask about ATP head to head records, tournament history, serve stats, player records at venues, and more. Use tennis data to enhance your betting decisions.",
+    "Ask Roger specific ATP tennis questions about head-to-head records, tournament history and serve statistics. Learn how to check the sample, surface and dates behind an answer.",
   keywords: [
     "tennis stats chatbot",
     "ATP head to head",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Roger ATP Tennis Stats Chatbot",
     description:
-      "Ask Roger about ATP head to head, tournament records, serve stats, and more. Tennis data to enhance your betting.",
+      "Explore ATP head-to-head records, tournament history and serve statistics with Roger. Practical example questions and checks for understanding the answers.",
     url: `${BASE_URL}/resources/roger`,
     type: "website",
     images: [`${BASE_URL}/brand/20260913/social.png`],
