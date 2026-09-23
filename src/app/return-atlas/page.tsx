@@ -12,7 +12,7 @@ export const dynamic = "force-static";
 export const revalidate = false;
 
 const title = "Return Atlas: ATP Player ROI & Betting History";
-const description = "Explore ATP tennis players’ historical betting returns at Pinnacle odds. Compare favourites and underdogs, betting on or against, by season and surface.";
+const description = "Explore ATP tennis players’ historical betting returns at Pinnacle odds. Compare favourites and underdogs, betting on or against, by season, surface and odds range.";
 const url = "https://ilmargine.bet/return-atlas";
 export const metadata: Metadata = {
   title, description, alternates: { canonical: url }, robots: { index: true, follow: true },
@@ -32,7 +32,7 @@ export default function ReturnAtlasPage() {
           <PageHomeLink />
           <p className="eyebrow">Tennis research</p>
           <h1 className="product-wordmark"><span className="sr-only">Return Atlas: ATP Tennis Betting History</span><Image src={release.logoUrl} alt="" aria-hidden="true" width={2172} height={724} priority unoptimized /></h1>
-          <p className="intro">Explore ATP players’ historical returns. Compare betting on or against a player by season, surface and favourite or underdog status.</p>
+          <p className="intro">Explore ATP players’ historical returns. Compare betting on or against a player by season, surface, odds range and favourite or underdog status.</p>
           <div className="hero-meta"><span>ATP main tour</span><span>Pinnacle odds</span><span>1u per bet</span><a href="#how-it-works">How it works ↓</a></div>
           <p className="release-dates">Data checked {date(release.checkedAt)} <span aria-hidden="true">·</span> Latest included match {date(release.through)}</p>
         </div>
@@ -55,6 +55,7 @@ export default function ReturnAtlasPage() {
         <details><summary>Which ATP matches are included?</summary><p>The current release includes <strong>{release.matches.toLocaleString("en-GB")} of {archiveMatches.toLocaleString("en-GB")} eligible completed matches in our results archive ({coveragePercent}%)</strong>. Coverage runs from {release.years[0]} to {date(release.through)}; it is not a complete record of every ATP match or player’s career.</p><p>Only completed main-draw singles with a verified result and Pinnacle prices for both players are included. Qualifying, Challenger, ITF, team events, exhibitions, Olympics, retirements, walkovers and unresolved records are excluded. Missing matches can affect returns and rankings.</p><p>Archives were checked on {date(release.checkedAt)}. That is separate from the latest included match date.</p></details>
         <details><summary className="cursor-pointer py-3 font-semibold text-slate-200">How is player ROI calculated?</summary><p>ROI is net profit divided by total stakes, expressed as a percentage. At a flat stake of 1u, a win at 2.50 returns 1.50u profit and a loss costs 1u. The table includes both, using the recorded price for the side you select.</p></details>
         <details><summary className="cursor-pointer py-3 font-semibold text-slate-200">What counts as a favourite or underdog?</summary><p>The favourite has the shorter of the two recorded prices; the underdog has the longer price. Equal prices appear in all matches but neither split. These labels always describe the named player, including when you choose to bet against them.</p></details>
+        <details><summary className="cursor-pointer py-3 font-semibold text-slate-200">How do odds-range filters work?</summary><p>Choose a preset range or enter your own minimum and maximum decimal odds. The range always describes the named player, even when betting against them. Rankings, profit curves and match counts update for that selection. In each player’s record, compare the odds bands side by side and select one to see the matches behind it.</p><p>Preset bands exclude the lower boundary and include the upper boundary; custom ranges include both limits. The minimum-match filter applies after the odds, season, surface and player-role filters. A high historical ROI from a small sample is not evidence of a repeatable edge.</p></details>
         <details><summary className="cursor-pointer py-3 font-semibold text-slate-200">Are these Il Margine’s published tennis picks?</summary><p>No. This is a historical research tool showing what backing each player or opponent would have returned. Our <Link href="/tennis-tips" prefetch={false}>published tennis tips and results</Link> are tracked separately.</p></details>
         <p className="about-note">Historical returns describe what happened. They do not predict future profits.</p>
         <Link href="/return-atlas/credits" prefetch={false}>Data &amp; photo credits →</Link>

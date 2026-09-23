@@ -16,12 +16,46 @@ export function recentlyActivePlayers(matches, players, asOf) {
 }
 
 const playerIndexes=new WeakMap();
+// Adjacent bands are (lower, upper]: full-precision prices cannot fall into gaps.
+export const ODDS_BANDS = [
+  {id:'to-1.20', min:1, max:1.2, label:'Up to 1.20'},
+  {id:'1.20-1.50', min:1.2, max:1.5, label:'Over 1.20–1.50'},
+  {id:'1.50-1.80', min:1.5, max:1.8, label:'Over 1.50–1.80'},
+  {id:'1.80-2.00', min:1.8, max:2, label:'Over 1.80–2.00'},
+  {id:'2.00-2.50', min:2, max:2.5, label:'Over 2.00–2.50'},
+  {id:'2.50-3.50', min:2.5, max:3.5, label:'Over 2.50–3.50'},
+  {id:'3.50-5.00', min:3.5, max:5, label:'Over 3.50–5.00'},
+  {id:'over-5.00', min:5, max:Infinity, label:'Over 5.00'},
+];
+export const ODDS_PRESETS = [...ODDS_BANDS,
+  {id:'2.00-2.20', min:2, max:2.2, label:'Over 2.00–2.20'},
+  {id:'2.20-2.50', min:2.2, max:2.5, label:'Over 2.20–2.50'},
+];
+export function resolveOddsRange({oddsRange='all', oddsMin='', oddsMax=''}={}) {
+  if (oddsRange === 'all') return {min:1, max:Infinity, exclusive:true, label:'Any odds'};
+  if (oddsRange !== 'custom') {
+    const preset = ODDS_PRESETS.find(band => band.id === oddsRange);
+    return preset ? {...preset, exclusive:true} : null;
+  }
+  const empty = value => value === '' || value == null;
+  const min = empty(oddsMin) ? 1 : Number(oddsMin);
+  const max = empty(oddsMax) ? Infinity : Number(oddsMax);
+  if (!Number.isFinite(min) || (!empty(oddsMin) && min <= 1) ||
+      (!empty(oddsMax) && (!Number.isFinite(max) || max <= 1)) || min > max) return null;
+  const label = empty(oddsMin) && empty(oddsMax) ? 'Any odds'
+    : empty(oddsMin) ? `Up to ${max}` : empty(oddsMax) ? `${min} and above` : `${min}–${max} inclusive`;
+  return {min, max, exclusive:empty(oddsMin), label};
+}
+export function oddsRangeLabel(filters) { return resolveOddsRange(filters)?.label ?? 'Invalid odds range'; }
+
 function playerMatches(matches,id){
  if(!playerIndexes.has(matches)){const index=new Map();for(const m of matches)for(const p of new Set([m.p1,m.p2])){if(!index.has(p))index.set(p,[]);index.get(p).push(m);}playerIndexes.set(matches,index);}
  return playerIndexes.get(matches).get(id)||[];
 }
 export function observations(matches, playerId, filters = {}) {
   const { year = 'all', surface = 'all', role = 'all', side = 'player', priceSeries = 'all' } = filters;
+  const range = resolveOddsRange(filters);
+  if (!range) return [];
   const seen = new Set();
   return playerMatches(matches,playerId).filter(match => {
     if (seen.has(match.id)) return false;
@@ -40,8 +74,9 @@ export function observations(matches, playerId, filters = {}) {
     const backedId = side === 'opponent' ? opponent : playerId;
     const odds = side === 'opponent' ? opponentOdds : playerOdds;
     const won = match.winner === backedId;
-    return { ...match, playerId, opponent, playerRole, odds, won, profit: won ? odds - 1 : -1 };
-  }).filter(row => role === 'all' || row.playerRole === role)
+    return { ...match, playerId, opponent, playerRole, playerOdds, opponentOdds, odds, won, profit: won ? odds - 1 : -1 };
+  }).filter(row => (role === 'all' || row.playerRole === role) &&
+      (range.exclusive ? row.playerOdds > range.min : row.playerOdds >= range.min) && row.playerOdds <= range.max)
     .sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id));
 }
 
