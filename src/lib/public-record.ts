@@ -1,4 +1,5 @@
 import "server-only";
+import type { MarketStats } from "@/lib/supabase";
 import { buildMonthlyRows, type MonthlyBetRow } from "@/lib/monthly-record";
 
 import { getDisplayBetCategory } from "@/lib/bet-category";
@@ -85,6 +86,15 @@ async function withTimeout<T>(promise: PromiseLike<T>, label: string): Promise<T
   } finally {
     if (timer) clearTimeout(timer);
   }
+}
+
+export async function fetchRecordMarketStats(): Promise<MarketStats[] | null> {
+  if (!hasSupabaseAdminConfig()) return null;
+  const response = await withTimeout(getSupabaseAdmin().from("market_stats").select("*"), "Record totals");
+  // Throw on refresh failure so ISR retains the last successful HTML.
+  if (response.error) throw new Error("Failed to load record totals");
+  if (!Array.isArray(response.data) || response.data.length === 0) throw new Error("Record totals are empty");
+  return response.data as MarketStats[];
 }
 
 export async function fetchHomePayload() {

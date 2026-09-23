@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
 
-const title = "Privacy Policy | Il Margine";
+const title = "Privacy Policy";
 const url = `${BASE_URL}/privacy-policy`;
 
 export const metadata: Metadata = {

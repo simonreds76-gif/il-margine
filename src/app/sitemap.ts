@@ -13,7 +13,8 @@ import { fetchSeoTipSitemapState } from "@/lib/tip-seo-server";
 import returnAtlasRelease from "@/data/return-atlas-release.json";
 
 const STATIC_LAST_MODIFIED = new Date("2026-05-12T00:00:00Z");
-const RESOURCES_LAST_MODIFIED = new Date("2026-08-21T12:00:00Z");
+const RESOURCES_LAST_MODIFIED = new Date("2026-09-23T12:00:00Z");
+const REVIEW_LAST_MODIFIED = new Date("2026-09-23T12:00:00Z");
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -28,7 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const clubPenaltyLastModified = new Date(`${clubPenaltySeason.published_at}T12:00:00Z`);
 
   const entries: MetadataRoute.Sitemap = [
-    { url: BASE_URL, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 1 },
+    { url: BASE_URL, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "daily", priority: 1 },
     {
       url: `${BASE_URL}/tennis-tips`,
       lastModified: tipSeoState.latestByMarket.tennis ?? STATIC_LAST_MODIFIED,
@@ -47,11 +48,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily" as const,
       priority: 0.72,
     })),
-    { url: `${BASE_URL}/track-record`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${BASE_URL}/bookmakers`, lastModified: new Date("2026-08-31T12:00:00Z"), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE_URL}/fair-odds-lab`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 0.8 },
+    { url: `${BASE_URL}/track-record`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${BASE_URL}/bookmakers`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/fair-odds-lab`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "daily", priority: 0.8 },
     { url: `${BASE_URL}/return-atlas`, lastModified: new Date(`${returnAtlasRelease.checkedAt}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE_URL}/anytime-goalscorer`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 0.8 },
     { url: `${BASE_URL}/penalty-takers`, lastModified: clubPenaltyLastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/penalty-takers/methodology`, lastModified: clubPenaltyLastModified, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE_URL}/world-cup-2026-free-picks`, lastModified: new Date("2026-07-20T12:00:00Z"), changeFrequency: "monthly", priority: 0.85 },
@@ -92,12 +92,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly" as const,
       priority: resource.surface === "guide" ? 0.78 : 0.7,
     })),
-    { url: `${BASE_URL}/calculator`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${BASE_URL}/calculator`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.6 },
     ...(FAIR_ODDS_INDEXABLE
       ? [{ url: `${BASE_URL}/fair-odds`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily" as const, priority: 0.8 }]
       : []),
-    { url: `${BASE_URL}/the-edge`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE_URL}/faq`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/the-edge`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE_URL}/faq`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/contact`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "yearly", priority: 0.5 },
     { url: `${BASE_URL}/llms.txt`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.4 },
     { url: `${BASE_URL}/llms-full.txt`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.3 },

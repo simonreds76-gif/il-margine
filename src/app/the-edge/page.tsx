@@ -1,3 +1,4 @@
+import EditorialIcon from "@/components/EditorialIcon";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import PageHeading from "@/components/PageHeading";
@@ -17,10 +18,10 @@ export default function MethodologyPage() {
     </PageHeading>
     <PriceWorkbench />
     <div className="method-flow grid gap-4 md:grid-cols-2 xl:grid-cols-4">{STEPS.map(step => <article className="site-card" key={step.n}>
-      <span className="method-step-icon" aria-hidden="true">{({"01":"◎","02":"%","03":"⇄","04":"↗"})[step.n as "01" | "02" | "03" | "04"]}</span><span className="method-step-number">{step.n}</span><h2 className="mt-4 text-xl font-semibold">{step.title}</h2><p className="mt-3 text-sm text-slate-300">{step.body}</p>
+      <span className="method-step-icon" aria-hidden="true"><EditorialIcon name={({"01":"analysis","02":"markets","03":"compare","04":"bankroll"} as const)[step.n as "01" | "02" | "03" | "04"]} className="h-9 w-9" /></span><span className="method-step-number">{step.n}</span><h2 className="mt-4 text-xl font-semibold">{step.title}</h2><p className="mt-3 text-sm text-slate-300">{step.body}</p>
     </article>)}</div>
     <section className="site-section border-t border-slate-800 grid gap-8 lg:grid-cols-2">
-      <div><p className="site-eyebrow">Market context</p><h2 className="text-2xl font-semibold">Removing margin is a comparison tool.</h2><p className="mt-3 text-sm text-slate-300">For a complete set of mutually exclusive outcomes, dividing each implied probability by their sum gives a simple proportional no-margin estimate. It describes the market; it does not establish the true probability or an independent betting edge.</p><p className="mt-3 text-sm text-slate-400">Anytime goalscorer outcomes overlap: several players can score. Adding all their implied probabilities and normalising them as if only one player could win is not a valid way to remove the margin.</p></div>
+      <div><p className="site-eyebrow">Market context</p><h2 className="text-2xl font-semibold">Removing margin is a comparison tool.</h2><p className="mt-3 text-sm text-slate-300">For a complete set of mutually exclusive outcomes, dividing each implied probability by their sum gives a simple proportional no-margin estimate. It describes the market; it does not establish the true probability or an independent betting edge.</p><p className="mt-3 text-sm text-slate-400">Anytime goalscorer outcomes overlap: several players can score. Adding all their implied probabilities and normalising them as if only one player could win is not a valid way to remove the margin.</p><Link href="/calculator" className="site-text-link">Compare margin-removal methods in the calculator →</Link></div>
       <div><div className="margin-visual"><span className="site-eyebrow">Two-outcome illustration</span><h3>1.90 / 1.90</h3><div className="margin-bar"><span>50%</span><span>50%</span><i /></div><p>Implied total <strong>105.26%</strong> · overround <strong>5.26%</strong></p><div className="margin-result"><span>Proportional no-margin estimate</span><strong>2.00 / 2.00</strong></div><p>50% each after removing margin. This is the market’s estimate, not our player model.</p></div><div className="space-y-3">{[
         ["/fair-odds-lab", "Fair Odds Lab", "Compare goalscorer estimates with bookmaker prices and check the lineup status."],
         ["/penalty-takers", "Penalty taker evidence", "Review the order, deputies and supporting evidence for each club."],

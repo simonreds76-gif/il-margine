@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
 
-const title = "Football Player Props | Il Margine";
+const title = "Football Player Props";
 const description = "Football player-prop picks, posted prices and publicly settled results from Il Margine.";
 const url = `${BASE_URL}/player-props`;
 
@@ -15,13 +15,13 @@ export const metadata: Metadata = {
     locale: "en_GB",
     url,
     siteName: "Il Margine",
-    title,
+    title: `${title} | Il Margine`,
     description,
     images: [{ url: "/brand/20260913/social.png", width: 1200, height: 630, alt: "Il Margine - Football Player Props" }],
   },
   twitter: {
     card: "summary_large_image",
-    title,
+    title: `${title} | Il Margine`,
     description,
     images: ["/brand/20260913/social.png"],
   },

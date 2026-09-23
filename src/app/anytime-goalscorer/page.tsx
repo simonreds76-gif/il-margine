@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 
 export default function AnytimeGoalscorerPage() {
-  redirect("/fair-odds-lab");
+  permanentRedirect("/fair-odds-lab");
 }

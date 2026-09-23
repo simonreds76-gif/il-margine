@@ -15,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[1]
 # invalidation with a long time-based fallback, not minute-level regeneration.
 MIN_REVALIDATE_SECONDS = {
     "src/app/page.tsx": 86_400,
+    "src/app/track-record/page.tsx": 86_400,
+    "src/app/calculator/page.tsx": 86_400,
     "src/app/player-props/page.tsx": 86_400,
     "src/app/tennis-tips/page.tsx": 86_400,
     "src/app/tips/[slugId]/page.tsx": 86_400,

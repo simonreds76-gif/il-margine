@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
 import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 
-const title = "Tennis Betting Tips Today | ATP, Challenger & Grand Slams";
+const title = "Tennis Betting Tips: ATP & Challenger";
 const description =
   "Independent tennis betting tips with statistical match analysis. Browse ATP and Grand Slam picks, recorded odds, stakes and tracked results.";
 const url = `${BASE_URL}/tennis-tips`;

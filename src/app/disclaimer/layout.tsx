@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
 
-const title = "Disclaimer | Il Margine";
+const title = "Disclaimer";
 const url = `${BASE_URL}/disclaimer`;
 
 export const metadata: Metadata = {

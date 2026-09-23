@@ -92,14 +92,13 @@ export default function CookieBanner({ measurementId }: Props) {
   // Both choices persist; only Accept loads analytics.
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-sm p-4"
+      className="fixed bottom-0 left-0 right-0 z-[100] flex justify-center p-3 sm:justify-end sm:p-5 pointer-events-none"
       role="dialog"
-      aria-modal="true"
       aria-label="Cookie consent"
     >
-      <div className="w-full max-w-md rounded-xl border border-slate-700/60 bg-slate-900 p-6 shadow-2xl">
+      <div className="pointer-events-auto w-full max-w-md rounded-2xl border border-[#30434b] bg-[#111a20] p-5 shadow-xl">
         <h2 className="text-lg font-semibold text-slate-100 mb-2">We use cookies</h2>
-        <p className="text-sm text-slate-400 mb-6">
+        <p className="text-sm text-slate-400 mb-4">
           We use analytics cookies to improve the site and understand how you use it, including what you ask Roger, our tennis chatbot.{" "}
           <Link href="/cookies-policy" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline">
             Cookies policy

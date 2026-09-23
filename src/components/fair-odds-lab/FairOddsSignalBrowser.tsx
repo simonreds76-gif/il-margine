@@ -159,7 +159,7 @@ function SignalCard({
             <div className="text-[9px] font-black uppercase tracking-[0.16em] text-emerald-200/80">
               Il Margine
             </div>
-            <div className="mt-1 font-mono text-xl font-black text-emerald-100">
+            <div className="mt-1 tabular-nums text-xl font-black text-emerald-100">
               {formatOdds(signal.fairOdds)}
             </div>
           </div>
@@ -167,7 +167,7 @@ function SignalCard({
             <div className="text-[9px] font-black uppercase tracking-[0.16em] text-slate-500">
               Market
             </div>
-            <div className="mt-1 font-mono text-xl font-black text-slate-100">
+            <div className="mt-1 tabular-nums text-xl font-black text-slate-100">
               {formatOdds(signal.bestBookOdds)}
             </div>
           </div>
@@ -175,7 +175,7 @@ function SignalCard({
             <div className="text-[9px] font-black uppercase tracking-[0.16em] text-amber-100/80">
               Gap
             </div>
-            <div className="mt-1 font-mono text-xl font-black text-amber-100">
+            <div className="mt-1 tabular-nums text-xl font-black text-amber-100">
               +{gap.toFixed(1)} pp
             </div>
           </div>
@@ -212,11 +212,11 @@ function SignalCard({
 
       <div className="relative mt-3 text-xs leading-5 text-slate-500 lg:hidden">
         Model chance{" "}
-        <span className="font-mono font-semibold text-emerald-200">
+        <span className="tabular-nums font-semibold text-emerald-200">
           {formatPercent(signal.modelProbability)}
         </span>{" "}
         vs market{" "}
-        <span className="font-mono font-semibold text-slate-200">
+        <span className="tabular-nums font-semibold text-slate-200">
           {formatPercent(signal.bookmakerProbability)}
         </span>
         .

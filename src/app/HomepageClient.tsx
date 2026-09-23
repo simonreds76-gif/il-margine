@@ -85,7 +85,7 @@ function MarketCard({
         </div>
         <p className="text-[13px] leading-[1.65] text-slate-400 transition-colors duration-300 group-hover:text-slate-300">{market.description}</p>
         {active && market.profit ? (
-          <div className="mt-4 flex items-baseline gap-4 font-mono text-[12px]">
+          <div className="mt-4 flex items-baseline gap-4 tabular-nums text-[12px]">
             {market.bets ? <span className="tabular-nums text-slate-400">{market.bets} bets</span> : null}
             <span className="font-semibold tabular-nums text-[rgba(87,209,150,0.90)]">{market.profit}</span>
           </div>
@@ -324,7 +324,7 @@ export default function HomepageClient({
               </div>
               {last7DaysProfit != null && !last7Error && last7DaysCount > 0 ? (
                 <span
-                  className={`font-mono text-xs sm:text-sm ${
+                  className={`tabular-nums text-xs sm:text-sm ${
                     last7DaysProfit > 0 ? "text-[var(--brand-green)]" : last7DaysProfit < 0 ? "text-red-400" : "text-slate-300"
                   }`}
                 >

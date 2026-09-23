@@ -1,0 +1,11 @@
+.public-site .editorial-surface { border-color:#2a3745; background:linear-gradient(130deg,#151f29,#10171f); border-radius:18px; box-shadow:none; }
+.public-site .editorial-disclosure { border-color:#2a3745; background:#111b24; box-shadow:none; }
+.public-site .editorial-disclosure[open] { border-color:#527666; }
+.public-site .editorial-disclosure > summary:hover { background:#1a2a31; }
+.editorial-label { display:flex; align-items:center; gap:12px; min-width:0; }
+.editorial-label > svg { flex-shrink:0; }
+.editorial-resource-mark { margin-bottom:18px; }
+.editorial-steps { list-style:none; padding:0; display:grid; gap:12px; counter-reset:editorial-step; }
+.editorial-steps > li { display:flex; align-items:center; gap:14px; padding:14px; border:1px solid #2a3745; border-radius:12px; background:#111b24; counter-increment:editorial-step; }
+.editorial-steps > li::before { content:counter(editorial-step,decimal-leading-zero); color:#82dfb8; font-size:12px; font-variant-numeric:tabular-nums; }
+@media (min-width:768px) { .editorial-steps { grid-template-columns:1fr 1fr; } }

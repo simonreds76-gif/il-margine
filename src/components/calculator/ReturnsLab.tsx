@@ -21,7 +21,7 @@ export interface RecordSummary {
   roi: number;
   totalProfit: number;
   totalStake: number;
-  source: "live" | "fallback";
+  source: "live" | "fallback" | "stale";
 }
 
 export default function ReturnsLab({ record }: { record: RecordSummary }) {
@@ -267,6 +267,7 @@ export default function ReturnsLab({ record }: { record: RecordSummary }) {
         </p>
       ) : null}
 
+      {record.source === "stale" && <p className="calc-alert">Showing the last available settled record. The latest refresh could not be loaded.</p>}
       {record.source === "fallback" ? (
         <p className="calc-alert">
           Live results are unavailable right now, so these figures use the last recorded baseline.

@@ -4,6 +4,8 @@ import PageHomeLink from "@/components/PageHomeLink";
 import { BASE_URL } from "@/lib/config";
 import { RESOURCES, RESOURCE_CATEGORIES, type Resource, type ResourceCategory } from "@/lib/resources";
 import { CLUB_PENALTY_SEASON } from "@/lib/club-penalty-takers";
+import EditorialIcon, { type EditorialIconName } from "@/components/EditorialIcon";
+import "@/components/editorial-surfaces.css";
 
 type PageProps = {
   searchParams?: Promise<{ category?: string | string[] }>;
@@ -37,6 +39,20 @@ function formatResourceDate(datePublished?: string): string | null {
   }).format(new Date(`${datePublished}T12:00:00Z`));
 }
 
+const resourceIcons: Record<string, EditorialIconName> = {
+  "/resources/clay-season-tennis-model-caveats": "analysis",
+  "/resources/fair-odds-lab-explained": "compare",
+  "/resources/how-to-read-a-tipster-track-record": "guide",
+  "/resources/closing-line-value": "markets",
+  "/resources/kelly-criterion-sports-betting": "bankroll",
+  "/calculator": "analysis",
+  "/resources/roger": "about",
+};
+
+const categoryIcons: Partial<Record<ResourceCategory, EditorialIconName>> = {
+  "Lab Notes": "guide", "Value Betting": "method", "Tools": "analysis",
+};
+
 function ResourceCard({ resource, prominent = false }: { resource: Resource; prominent?: boolean }) {
   const dateLabel = formatResourceDate(resource.dateModified ?? resource.datePublished);
 
@@ -44,14 +60,16 @@ function ResourceCard({ resource, prominent = false }: { resource: Resource; pro
     <Link
       href={resource.href}
       className={[
-        "group relative flex h-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/55 transition duration-300 hover:-translate-y-0.5 hover:border-emerald-500/35 hover:bg-slate-900/75",
+        "editorial-surface group relative flex h-full overflow-hidden rounded-2xl border transition duration-300 hover:-translate-y-0.5 hover:border-emerald-500/35",
         prominent ? "min-h-[310px] p-7 sm:p-8" : "p-5 sm:p-6",
       ].join(" ")}
     >
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/45 to-transparent opacity-0 transition group-hover:opacity-100" />
       <div className="flex min-w-0 flex-1 flex-col">
+        <EditorialIcon name={resourceIcons[resource.href] ?? "guide"} className="editorial-resource-mark h-12 w-12" />
         <div className="mb-5 flex flex-wrap items-center gap-2">
-          <span className="rounded-md border border-emerald-400/15 bg-emerald-400/8 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-emerald-300">
+          <span className="inline-flex items-center gap-2 rounded-md border border-emerald-400/15 bg-emerald-400/8 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-emerald-300">
+            <EditorialIcon name={categoryIcons[resource.category] ?? "guide"} className="h-5 w-5" />
             {resource.category}
           </span>
           {dateLabel ? (
@@ -67,12 +85,12 @@ function ResourceCard({ resource, prominent = false }: { resource: Resource; pro
           {resource.title}
         </h2>
         <p className={[
-          "mt-4 flex-1 leading-relaxed text-slate-400",
+          "mb-6 mt-4 leading-relaxed text-slate-400",
           prominent ? "max-w-2xl text-base" : "text-sm",
         ].join(" ")}>
           {resource.excerpt ?? resource.description}
         </p>
-        <div className="mt-6 flex items-center justify-between border-t border-slate-800/80 pt-4">
+        <div className="mt-auto flex items-center justify-between gap-4 border-t border-slate-800/80 pt-4">
           <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate-500">
             {resource.minRead} min read
           </span>

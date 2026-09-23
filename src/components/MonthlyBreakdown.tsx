@@ -102,7 +102,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
               <div className="flex items-center justify-between gap-2">
                 <span className="font-medium text-slate-200">{formatMonth(r.month)}</span>
                 <span className="flex items-center gap-2">
-                  <span className={`font-mono font-medium ${Number(r.total_profit) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                  <span className={`tabular-nums font-medium ${Number(r.total_profit) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
                     {Number(r.total_profit) >= 0 ? "+" : ""}{Number(r.total_profit).toFixed(2)}u
                   </span>
                   <span className={`shrink-0 text-slate-400 transition-transform ${isOpen ? "rotate-180" : ""}`}>
@@ -113,7 +113,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
                 </span>
               </div>
               {isOpen && (
-                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 border-t border-slate-800/40 pt-2 font-mono text-xs text-slate-400">
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 border-t border-slate-800/40 pt-2 tabular-nums text-xs text-slate-400">
                   <span>{r.total_bets} bets</span>
                   <span>{r.wins}-{r.losses}</span>
                   <span>{formatStake(r.total_stake)}u staked</span>
@@ -143,13 +143,13 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
             {displayed.map((r) => (
               <tr key={r.month} className="border-b border-slate-800/40 last:border-b-0">
                 <td className="px-4 py-3 text-slate-200">{formatMonth(r.month)}</td>
-                <td className="px-4 py-3 text-right font-mono text-slate-300">{r.total_bets}</td>
-                <td className="px-4 py-3 text-right font-mono text-slate-300">{r.wins}-{r.losses}</td>
-                <td className="px-4 py-3 text-right font-mono text-slate-300">{formatStake(r.total_stake)}u</td>
-                <td className={`px-4 py-3 text-right font-mono font-medium ${Number(r.total_profit) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                <td className="px-4 py-3 text-right tabular-nums text-slate-300">{r.total_bets}</td>
+                <td className="px-4 py-3 text-right tabular-nums text-slate-300">{r.wins}-{r.losses}</td>
+                <td className="px-4 py-3 text-right tabular-nums text-slate-300">{formatStake(r.total_stake)}u</td>
+                <td className={`px-4 py-3 text-right tabular-nums font-medium ${Number(r.total_profit) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
                   {Number(r.total_profit) >= 0 ? "+" : ""}{Number(r.total_profit).toFixed(2)}u
                 </td>
-                <td className={`px-4 py-3 text-right font-mono font-medium ${Number(r.roi) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                <td className={`px-4 py-3 text-right tabular-nums font-medium ${Number(r.roi) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
                   {Number(r.roi) >= 0 ? "+" : ""}{Number(r.roi).toFixed(1)}%
                 </td>
               </tr>

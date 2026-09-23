@@ -10,7 +10,7 @@ import { BASE_URL } from "@/lib/config";
 import playerPortraits from "../../../data/goalscorer/lab-player-portraits.json";
 
 export const metadata: Metadata = {
-  title: "Goalscorer Fair Odds Lab | Starting XI & Bet365 Comparison",
+  title: "Goalscorer Fair Odds Lab: Lineups & Prices",
   description: "Compare model fair odds and Bet365 anytime goalscorer prices across expected and confirmed starting lineups, with penalty duties and price timestamps.",
   alternates: { canonical: "/fair-odds-lab" },
   openGraph: { title: "Goalscorer Fair Odds Lab | Il Margine", url: `${BASE_URL}/fair-odds-lab`, type: "website" },

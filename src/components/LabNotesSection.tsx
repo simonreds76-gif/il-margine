@@ -19,10 +19,10 @@ function LabNoteCard({ note }: { note: Resource }) {
   return (
     <Link
       href={note.href}
-      className="group block h-full rounded-xl border border-slate-800/60 bg-[#0c0f14] p-5 transition-colors hover:border-emerald-500/30 hover:bg-slate-900/60"
+      className="group block h-full site-card site-card-link"
     >
       <div className="flex flex-wrap items-center gap-3">
-        <time dateTime={note.datePublished} className="font-mono text-xs text-slate-400">
+        <time dateTime={note.datePublished} className="tabular-nums text-xs text-slate-400">
           {formatLabNoteDate(note.datePublished)}
         </time>
         <span className="rounded-full border border-slate-600/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-slate-300">

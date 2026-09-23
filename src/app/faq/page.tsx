@@ -8,9 +8,11 @@ import FaqOpenByHash from "@/components/FaqOpenByHash";
 import { parseFaqMd, questionSlug, type FaqSection } from "@/lib/parse-faq";
 import { BASE_URL } from "@/lib/config";
 import PageHomeLink from "@/components/PageHomeLink";
+import EditorialIcon, { type EditorialIconName } from "@/components/EditorialIcon";
+import "@/components/editorial-surfaces.css";
 
 export const metadata: Metadata = {
-  title: "Sports Betting FAQ | Player Props, Tennis, Bookmakers and Bankroll",
+  title: "Betting FAQ: Tips, Odds and Bankroll",
   description:
     "A straight-talking sports betting FAQ covering player props, ATP tennis, value betting, ROI, bookmakers, bankroll management and how Il Margine works.",
   alternates: {
@@ -45,6 +47,17 @@ function buildFaqSchema(sections: FaqSection[]) {
   };
 }
 
+const sectionIcons: Record<string, EditorialIconName> = {
+  "getting-started": "guide",
+  "betting-philosophy-and-approach": "method",
+  "markets-and-bet-types": "markets",
+  "bookmakers-and-execution": "compare",
+  "bankroll-management": "bankroll",
+  "technical-betting-concepts": "analysis",
+  "about-il-margine": "about",
+  "responsible-gambling": "responsible",
+};
+
 export default function FaqPage() {
   const mdPath = path.join(process.cwd(), "docs", "faq-content.md");
   const md = fs.readFileSync(mdPath, "utf8");
@@ -72,18 +85,16 @@ export default function FaqPage() {
 
           {/* Section navigation - numbered list for clear structure */}
           <nav
-            className="rounded-xl bg-slate-800/50 border border-slate-700/50 p-5 sm:p-6 mb-12 shadow-sm"
+            className="editorial-surface border p-5 sm:p-6 mb-12"
             aria-label="FAQ sections"
           >
             <h2 className="text-xs font-mono font-semibold text-emerald-400 tracking-wider mb-4">
               Jump to section
             </h2>
             <ol className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 list-none pl-0">
-              {sections.map((sec, index) => (
-                <li key={sec.id} className="flex items-baseline gap-2">
-                  <span className="text-slate-500 font-mono text-sm shrink-0 w-6" aria-hidden>
-                    {String(index + 1).padStart(2, " ")}.
-                  </span>
+              {sections.map((sec) => (
+                <li key={sec.id} className="flex items-center gap-3">
+                  <EditorialIcon name={sectionIcons[sec.id] ?? "guide"} />
                   <a
                     href={`#${sec.id}`}
                     className="text-sm text-slate-300 hover:text-emerald-400 transition-colors py-1.5 rounded hover:bg-slate-700/40 -mx-1 px-1"
@@ -97,24 +108,23 @@ export default function FaqPage() {
 
           {/* Accordion sections */}
           <div className="space-y-12">
-            {sections.map((section, index) => (
+            {sections.map((section) => (
               <section
                 key={section.id}
                 id={section.id}
                 className="scroll-mt-24"
               >
                 <h2 className="text-base font-semibold text-slate-100 mb-1 flex items-center gap-3">
-                  <span className="text-emerald-400/80 font-mono text-sm shrink-0 w-6">{index + 1}.</span>
-                  <span className="w-1 h-6 rounded-full bg-emerald-400/80 shrink-0" aria-hidden />
+                  <EditorialIcon name={sectionIcons[section.id] ?? "guide"} className="h-10 w-10" />
                   {section.title}
                 </h2>
-                <p className="text-slate-500 text-sm mb-5 pl-10">{section.items.length} question{section.items.length !== 1 ? "s" : ""}</p>
+                <p className="text-slate-500 text-sm mb-5 pl-[52px]">{section.items.length} question{section.items.length !== 1 ? "s" : ""}</p>
                 <div className="space-y-3">
                   {section.items.map((item, idx) => (
                     <details
                       key={idx}
                       id={questionSlug(item.q)}
-                      className="group rounded-xl bg-slate-800/50 border border-slate-700/50 overflow-hidden scroll-mt-24 shadow-sm hover:border-slate-600"
+                      className="editorial-disclosure group rounded-xl border overflow-hidden scroll-mt-24 hover:border-slate-600"
                     >
                       <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 text-left text-slate-200 hover:bg-slate-700/30 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 rounded-xl border-l-4 border-transparent group-open:border-emerald-500/80 group-open:bg-slate-700/20">
                         <span className="flex-1 font-medium text-[15px] leading-snug">{item.q}</span>

@@ -1,3 +1,4 @@
+import EditorialIcon from "@/components/EditorialIcon";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,7 +11,7 @@ import "./return-atlas.css";
 export const dynamic = "force-static";
 export const revalidate = false;
 
-const title = "Return Atlas | ATP Tennis Player ROI & Betting History";
+const title = "Return Atlas: ATP Player ROI & Betting History";
 const description = "Explore ATP tennis players’ historical betting returns at Pinnacle odds. Compare favourites and underdogs, betting on or against, by season and surface.";
 const url = "https://ilmargine.bet/return-atlas";
 export const metadata: Metadata = {
@@ -30,7 +31,7 @@ export default function ReturnAtlasPage() {
         <div className="hero-copy">
           <PageHomeLink />
           <p className="eyebrow">Tennis research</p>
-          <h1 className="product-wordmark"><Image src={release.logoUrl} alt="Return Atlas" width={2172} height={724} priority unoptimized /></h1>
+          <h1 className="product-wordmark"><span className="sr-only">Return Atlas: ATP Tennis Betting History</span><Image src={release.logoUrl} alt="" aria-hidden="true" width={2172} height={724} priority unoptimized /></h1>
           <p className="intro">Explore ATP players’ historical returns. Compare betting on or against a player by season, surface and favourite or underdog status.</p>
           <div className="hero-meta"><span>ATP main tour</span><span>Pinnacle odds</span><span>1u per bet</span><a href="#how-it-works">How it works ↓</a></div>
           <p className="release-dates">Data checked {date(release.checkedAt)} <span aria-hidden="true">·</span> Latest included match {date(release.through)}</p>
@@ -47,9 +48,9 @@ export default function ReturnAtlasPage() {
           <div><dt>Seasons covered</dt><dd>{release.years[0]}–{release.years.at(-1)}</dd></div>
         </dl>
         <div className="about-guide">
-          <div><h3>Bet on or bet against</h3><p>Back the named player, or back their opponent at the opponent’s recorded price. Each view shows its own profit and ROI.</p></div>
-          <div><h3>Favourite or underdog</h3><p>Split the record by the named player’s position in the market. The labels describe that player, whichever side you back.</p></div>
-          <div><h3>The same stake, every time</h3><p>Every match uses a hypothetical 1-unit stake. Wins and losses both count, so you can compare records on the same basis.</p></div>
+          <div><EditorialIcon name="compare" className="mb-3 h-10 w-10" /><h3>Bet on or bet against</h3><p>Back the named player, or back their opponent at the opponent’s recorded price. Each view shows its own profit and ROI.</p></div>
+          <div><EditorialIcon name="markets" className="mb-3 h-10 w-10" /><h3>Favourite or underdog</h3><p>Split the record by the named player’s position in the market. The labels describe that player, whichever side you back.</p></div>
+          <div><EditorialIcon name="bankroll" className="mb-3 h-10 w-10" /><h3>The same stake, every time</h3><p>Every match uses a hypothetical 1-unit stake. Wins and losses both count, so you can compare records on the same basis.</p></div>
         </div>
         <details><summary>Which ATP matches are included?</summary><p>The current release includes <strong>{release.matches.toLocaleString("en-GB")} of {archiveMatches.toLocaleString("en-GB")} eligible completed matches in our results archive ({coveragePercent}%)</strong>. Coverage runs from {release.years[0]} to {date(release.through)}; it is not a complete record of every ATP match or player’s career.</p><p>Only completed main-draw singles with a verified result and Pinnacle prices for both players are included. Qualifying, Challenger, ITF, team events, exhibitions, Olympics, retirements, walkovers and unresolved records are excluded. Missing matches can affect returns and rankings.</p><p>Archives were checked on {date(release.checkedAt)}. That is separate from the latest included match date.</p></details>
         <details><summary className="cursor-pointer py-3 font-semibold text-slate-200">How is player ROI calculated?</summary><p>ROI is net profit divided by total stakes, expressed as a percentage. At a flat stake of 1u, a win at 2.50 returns 1.50u profit and a loss costs 1u. The table includes both, using the recorded price for the side you select.</p></details>

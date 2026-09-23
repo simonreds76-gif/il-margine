@@ -3,6 +3,8 @@ import Footer from "@/components/Footer";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import MarginExplorer from "@/components/bookmakers/MarginExplorer";
 import PageHomeLink from "@/components/PageHomeLink";
+import EditorialIcon from "@/components/EditorialIcon";
+import "@/components/editorial-surfaces.css";
 import {
   NOT_MEASURED_MARKETS,
   type BookmakerMarginIndex,
@@ -309,10 +311,10 @@ export default function BookmakersPage() {
         {/* Key Concepts - 5 accordions */}
         <section className="mb-10">
           <h2 className="text-xl font-semibold text-emerald-400 mb-6">Understanding Bookmaker Markets</h2>
-          <div className="bg-[#1a1d24] rounded-xl border border-slate-800 overflow-hidden divide-y divide-slate-800">
+          <div className="editorial-surface rounded-xl border overflow-hidden divide-y divide-slate-800">
             <details className="group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span>Market Efficiency & Edge Identification</span>
+                <span className="editorial-label"><EditorialIcon name="analysis" /><span>Market Efficiency & Edge Identification</span></span>
                 <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                 </span>
@@ -329,7 +331,7 @@ export default function BookmakersPage() {
             </details>
             <details className="group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span>Market Margins</span>
+                <span className="editorial-label"><EditorialIcon name="compare" /><span>Market Margins</span></span>
                 <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                 </span>
@@ -362,7 +364,7 @@ export default function BookmakersPage() {
             </details>
             <details className="group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span>Account Restrictions</span>
+                <span className="editorial-label"><EditorialIcon name="responsible" /><span>Account Restrictions</span></span>
                 <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                 </span>
@@ -376,7 +378,7 @@ export default function BookmakersPage() {
             </details>
             <details className="group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span>Account Longevity Tactics</span>
+                <span className="editorial-label"><EditorialIcon name="bankroll" /><span>Account Longevity Tactics</span></span>
                 <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                 </span>
@@ -398,7 +400,7 @@ export default function BookmakersPage() {
             </details>
             <details className="group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span>Template Pricing Weakness</span>
+                <span className="editorial-label"><EditorialIcon name="markets" /><span>Template Pricing Weakness</span></span>
                 <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                 </span>
@@ -441,15 +443,15 @@ export default function BookmakersPage() {
         </section>
 
         {/* Account Strategy */}
-        <section className="bg-[#1a1d24] rounded-xl border border-slate-800 p-6 md:p-8 mb-10">
+        <section className="editorial-surface rounded-xl border p-6 md:p-8 mb-10">
           <h2 className="text-xl font-semibold text-emerald-400 mb-4">Recommended Approach</h2>
           <div className="text-slate-300 text-sm leading-relaxed space-y-4">
             <p><strong className="text-slate-100">Use the index as evidence, not a signup ranking.</strong> Choose the sport and exact market you intend to bet, compare complete prices, then check the current live line and settlement rules directly with the operator.</p>
-            <ol className="list-decimal pl-6 space-y-2">
-              <li>Match the same market and line across bookmakers.</li>
-              <li>Prefer the best price, not the bookmaker with the strongest promotion.</li>
-              <li>Treat thin samples as directional evidence only.</li>
-              <li>Keep stakes tied to bankroll and verified edge, never to bonus size.</li>
+            <ol className="editorial-steps">
+              <li><EditorialIcon name="compare" className="h-9 w-9" /><span>Match the same market and line across bookmakers.</span></li>
+              <li><EditorialIcon name="markets" className="h-9 w-9" /><span>Prefer the best price, not the bookmaker with the strongest promotion.</span></li>
+              <li><EditorialIcon name="analysis" className="h-9 w-9" /><span>Treat thin samples as directional evidence only.</span></li>
+              <li><EditorialIcon name="bankroll" className="h-9 w-9" /><span>Keep stakes tied to bankroll and verified edge, never to bonus size.</span></li>
             </ol>
             <p>Use multiple accounts to compare the same line and price before betting. See our <Link href="/track-record" className="text-emerald-400 hover:text-emerald-300 underline">Track Record</Link> for performance context.</p>
           </div>
@@ -458,10 +460,10 @@ export default function BookmakersPage() {
         {/* Betting Glossary - 8 categories */}
         <section className="mb-10">
           <h2 className="text-xl font-semibold text-emerald-400 mb-6">Industry Terminology You Need To Know</h2>
-          <div className="bg-[#1a1d24] rounded-xl border border-slate-800 overflow-hidden divide-y divide-slate-800">
+          <div className="editorial-surface rounded-xl border overflow-hidden divide-y divide-slate-800">
             <details className="group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span>Essential Betting Terms</span>
+                <span className="editorial-label"><EditorialIcon name="guide" /><span>Essential Betting Terms</span></span>
                 <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
               </summary>
               <div className="px-6 md:px-8 pb-4 pt-0">
@@ -482,7 +484,7 @@ export default function BookmakersPage() {
             </details>
             <details className="group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span>Market-Specific Terms</span>
+                <span className="editorial-label"><EditorialIcon name="markets" /><span>Market-Specific Terms</span></span>
                 <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
               </summary>
               <div className="px-6 md:px-8 pb-4 pt-0">
@@ -497,7 +499,7 @@ export default function BookmakersPage() {
             </details>
             <details className="group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span>Bookmaker-Specific Terms</span>
+                <span className="editorial-label"><EditorialIcon name="compare" /><span>Bookmaker-Specific Terms</span></span>
                 <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
               </summary>
               <div className="px-6 md:px-8 pb-4 pt-0">
@@ -513,7 +515,7 @@ export default function BookmakersPage() {
             </details>
             <details className="group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span>UK Betting Slang</span>
+                <span className="editorial-label"><EditorialIcon name="about" /><span>UK Betting Slang</span></span>
                 <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
               </summary>
               <div className="px-6 md:px-8 pb-4 pt-0">
@@ -531,7 +533,7 @@ export default function BookmakersPage() {
             </details>
             <details className="group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span>Advanced / Professional Terms</span>
+                <span className="editorial-label"><EditorialIcon name="analysis" /><span>Advanced / Professional Terms</span></span>
                 <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
               </summary>
               <div className="px-6 md:px-8 pb-4 pt-0">
@@ -548,7 +550,7 @@ export default function BookmakersPage() {
             </details>
             <details className="group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span>Risk & Bankroll Management</span>
+                <span className="editorial-label"><EditorialIcon name="bankroll" /><span>Risk & Bankroll Management</span></span>
                 <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
               </summary>
               <div className="px-6 md:px-8 pb-4 pt-0">
@@ -561,7 +563,7 @@ export default function BookmakersPage() {
             </details>
             <details className="group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span>Terminology Red Flags</span>
+                <span className="editorial-label"><EditorialIcon name="responsible" /><span>Terminology Red Flags</span></span>
                 <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
               </summary>
               <div className="px-6 md:px-8 pb-4 pt-0">
@@ -570,7 +572,7 @@ export default function BookmakersPage() {
             </details>
             <details className="group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span>Il Margine Preferences</span>
+                <span className="editorial-label"><EditorialIcon name="method" /><span>Il Margine Preferences</span></span>
                 <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
               </summary>
               <div className="px-6 md:px-8 pb-4 pt-0">
@@ -581,7 +583,7 @@ export default function BookmakersPage() {
         </section>
 
         {/* FAQ */}
-        <section className="bg-[#1a1d24] rounded-xl border border-slate-800 overflow-hidden mb-10">
+        <section className="editorial-surface rounded-xl border overflow-hidden mb-10">
           <h2 className="text-xl font-semibold text-emerald-400 p-6 md:p-8 pb-2">Common Questions</h2>
           <div className="divide-y divide-slate-800">
             {FAQ_ITEMS.map((item, i) => (

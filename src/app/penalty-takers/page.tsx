@@ -9,7 +9,7 @@ import {
 } from "@/lib/club-penalty-takers";
 import PenaltyTakersClient from "./PenaltyTakersClient";
 
-const PAGE_TITLE = `Penalty Takers ${CLUB_PENALTY_SEASON}: Premier League, Serie A, La Liga, Bundesliga & Ligue 1`;
+const PAGE_TITLE = `Penalty Takers ${CLUB_PENALTY_SEASON}: Top Five Leagues`;
 const PAGE_DESCRIPTION =
   `Penalty takers ${CLUB_PENALTY_SEASON} across Europe's top five leagues. Current first-choice and backup orders, transparent evidence status and dedicated club pages.`;
 const PAGE_URL = `${BASE_URL}/penalty-takers`;
