@@ -299,9 +299,13 @@ function MatchCard({ group, mode, open, onToggle }: { group: MatchGroup; mode: M
   );
 }
 
+const RESULTS_PAGE_SIZE = 24;
+
 export default function PlayerPropsMatchGroups({ bets, mode }: { bets: Bet[]; mode: Mode }) {
   const groups = useMemo(() => buildGroups(bets, mode), [bets, mode]);
   const [overrides, setOverrides] = useState<Record<string, boolean>>({});
+  const [visibleCount, setVisibleCount] = useState(RESULTS_PAGE_SIZE);
+  const visibleGroups = mode === "pending" ? groups : groups.slice(0, visibleCount);
 
   const defaultOpen = (group: MatchGroup) => (mode === "pending" ? true : isTodayOrFuture(group.matchDate));
   const isOpen = (group: MatchGroup) => overrides[group.key] ?? defaultOpen(group);
@@ -310,7 +314,7 @@ export default function PlayerPropsMatchGroups({ bets, mode }: { bets: Bet[]; mo
 
   return (
     <div data-testid="player-props-match-groups" className="space-y-3">
-      {groups.map((group) => (
+      {visibleGroups.map((group) => (
         <MatchCard
           key={group.key}
           group={group}
@@ -319,6 +323,34 @@ export default function PlayerPropsMatchGroups({ bets, mode }: { bets: Bet[]; mo
           onToggle={() => setOverrides((prev) => ({ ...prev, [group.key]: !isOpen(group) }))}
         />
       ))}
+      {mode === "settled" && groups.length > RESULTS_PAGE_SIZE ? (
+        <>
+          <div className="flex flex-wrap items-center justify-between gap-3 py-3">
+            <p className="text-sm text-slate-400" role="status">
+              Showing {visibleGroups.length} of {groups.length} matches
+            </p>
+            {visibleGroups.length < groups.length ? (
+              <button type="button" onClick={() => setVisibleCount((count) => count + RESULTS_PAGE_SIZE)}
+                className="rounded-xl border border-emerald-400/40 bg-emerald-400/10 px-5 py-3 text-sm font-semibold text-emerald-200 transition-colors hover:bg-emerald-400/20 focus-visible:outline-2 focus-visible:outline-emerald-300">
+                Show {Math.min(RESULTS_PAGE_SIZE, groups.length - visibleGroups.length)} older matches
+              </button>
+            ) : null}
+          </div>
+          {/* Native details keeps older match links in the initial HTML, including without JavaScript. */}
+          <details className="rounded-xl border border-slate-800 bg-slate-900/30 p-4" data-testid="older-match-links">
+            <summary className="cursor-pointer text-sm font-semibold text-emerald-300">Browse older match pages</summary>
+            <ul className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+              {groups.slice(RESULTS_PAGE_SIZE).map((group) => (
+                <li key={group.key}>
+                  <Link href={publicTipPath(group.bets[0])} prefetch={false} className="text-slate-300 hover:text-emerald-300 hover:underline">
+                    {group.event} <span className="text-xs text-slate-500">· {formatMatchDate(group.matchDate)}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </details>
+        </>
+      ) : null}
     </div>
   );
 }

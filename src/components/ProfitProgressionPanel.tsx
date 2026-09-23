@@ -1,7 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { BaselineMarketStats, calculateROI, calculateWinRate } from "@/lib/baseline";
+
+const ProfitProgressionChart = dynamic(() => import("./ProfitProgressionChart"), {
+  ssr: false,
+  loading: () => <div className="flex h-full items-center justify-center text-sm text-slate-400" role="status">Loading profit curve…</div>,
+});
 
 export type CategoryProgressionRow = {
   id: number;
@@ -15,7 +21,7 @@ export type CategoryProgressionRow = {
   profit_loss: number;
 };
 
-type ProgressionPoint = CategoryProgressionRow & {
+export type ProgressionPoint = CategoryProgressionRow & {
   index: number;
   cumulative: number;
   x: number;
@@ -26,30 +32,10 @@ type ProgressionPoint = CategoryProgressionRow & {
   archiveSteps?: number;
 };
 
-type ChartPoint = ProgressionPoint;
-
-type ChartModel = {
-  width: number;
-  height: number;
-  points: ChartPoint[];
-  archivePath: string;
-  archiveAreaPath: string;
-  livePath: string;
-  liveAreaPath: string;
-  bridgeX: number | null;
-  zeroY: number;
-};
-
 // Fixed anchor count keeps the archive line crisp regardless of how many
 // historical bets the baseline summarises. The archive is an aggregate, not
 // per-bet data, so it never needs hundreds of points.
 const ARCHIVE_ANCHORS = 56;
-// Share of the plot width reserved for the archive ramp when a live ledger
-// also exists. The archive represents roughly 20+ months of old record, so it
-// needs visual time to breathe; otherwise large PL/Serie A records look like a
-// sudden jump. Keep a live-ledger floor so verified picks remain inspectable.
-const ARCHIVE_MAX_WIDTH_FRACTION = 0.72;
-const ARCHIVE_MIN_WIDTH_FRACTION = 0.6;
 const UNIT_GBP = 100;
 
 function formatUnits(value: number, decimals = 2): string {
@@ -77,11 +63,6 @@ function formatShortDate(value: string | null, isArchive?: boolean, isOrigin?: b
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value.slice(0, 10);
   return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short" });
-}
-
-function buildPath(points: ChartPoint[]): string {
-  if (points.length === 0) return "";
-  return points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
 }
 
 function shouldShowArchive(stats?: BaselineMarketStats | null): stats is BaselineMarketStats {
@@ -185,81 +166,6 @@ function archiveSummary(stats?: BaselineMarketStats | null): { line: string } | 
   };
 }
 
-function getArchiveWidthFraction(hasArchive: boolean, liveCount: number): number {
-  if (!hasArchive) return 0;
-  if (liveCount <= 0) return 1;
-  const livePressure = Math.min(1, liveCount / 120);
-  return ARCHIVE_MAX_WIDTH_FRACTION - (ARCHIVE_MAX_WIDTH_FRACTION - ARCHIVE_MIN_WIDTH_FRACTION) * livePressure;
-}
-
-function buildChart(pointsRaw: Omit<ProgressionPoint, "x" | "y">[]): ChartModel {
-  const width = 720;
-  const height = 240;
-  const paddingX = 20;
-  const paddingTop = 22;
-  const paddingBottom = 24;
-
-  const archive = pointsRaw.filter((point) => point.isArchiveReconstruction);
-  const origin = pointsRaw.filter((point) => point.isOriginPoint);
-  const live = pointsRaw.filter((point) => !point.isArchiveReconstruction && !point.isOriginPoint);
-  const hasArchive = archive.length > 0;
-  const hasLive = live.length > 0;
-
-  if (!hasArchive && !hasLive) {
-    return { width, height, points: [], archivePath: "", archiveAreaPath: "", livePath: "", liveAreaPath: "", bridgeX: null, zeroY: height / 2 };
-  }
-
-  const cumulativeValues = pointsRaw.map((point) => point.cumulative);
-  const minValue = Math.min(0, ...cumulativeValues);
-  const maxValue = Math.max(0, ...cumulativeValues);
-  const span = Math.max(1, maxValue - minValue);
-  const plotWidth = width - paddingX * 2;
-  const plotHeight = height - paddingTop - paddingBottom;
-  const yOf = (cumulative: number) => paddingTop + ((maxValue - cumulative) / span) * plotHeight;
-
-  const archiveWidthFraction = getArchiveWidthFraction(hasArchive, live.length);
-  const leadWidth = hasArchive ? archiveWidthFraction * plotWidth : 0;
-  const liveStart = paddingX + leadWidth;
-  const liveWidth = plotWidth - leadWidth;
-
-  const archiveXY: ChartPoint[] = archive.map((point, index) => ({
-    ...point,
-    x: archive.length === 1 ? paddingX : paddingX + (index / (archive.length - 1)) * leadWidth,
-    y: yOf(point.cumulative),
-  }));
-  const originXY: ChartPoint[] = origin.map((point) => ({ ...point, x: paddingX, y: yOf(point.cumulative) }));
-  const liveXY: ChartPoint[] = live.map((point, index) => ({
-    ...point,
-    x: liveStart + ((index + 1) / live.length) * liveWidth,
-    y: yOf(point.cumulative),
-  }));
-
-  const bridge = archiveXY[archiveXY.length - 1] ?? originXY[0] ?? null;
-  const livePathPoints = bridge && liveXY.length > 0 ? [bridge, ...liveXY] : liveXY;
-  const zeroY = yOf(0);
-
-  const archivePath = buildPath(archiveXY);
-  const archiveAreaPath =
-    archiveXY.length > 1
-      ? `${archivePath} L ${archiveXY[archiveXY.length - 1].x.toFixed(1)} ${zeroY.toFixed(1)} L ${archiveXY[0].x.toFixed(1)} ${zeroY.toFixed(1)} Z`
-      : "";
-  const livePath = buildPath(livePathPoints);
-  const liveAreaPath = livePathPoints.length
-    ? `${livePath} L ${livePathPoints[livePathPoints.length - 1].x.toFixed(1)} ${zeroY.toFixed(1)} L ${livePathPoints[0].x.toFixed(1)} ${zeroY.toFixed(1)} Z`
-    : "";
-
-  return {
-    width,
-    height,
-    points: [...archiveXY, ...originXY, ...liveXY],
-    archivePath,
-    archiveAreaPath,
-    livePath,
-    liveAreaPath,
-    bridgeX: bridge?.x ?? null,
-    zeroY,
-  };
-}
 
 function HeroMetric({ units, positive }: { units: number; positive: boolean }) {
   return (
@@ -298,6 +204,19 @@ export default function ProfitProgressionPanel({
   activeName: string;
   archiveStats?: BaselineMarketStats | null;
 }) {
+  const chartContainer = useRef<HTMLDivElement>(null);
+  const [chartReady, setChartReady] = useState(false);
+  useEffect(() => {
+    if (!chartContainer.current || !("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        setChartReady(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: "200px" });
+    observer.observe(chartContainer.current);
+    return () => observer.disconnect();
+  }, []);
   const [activePointId, setActivePointId] = useState<number | null>(null);
   const rawPoints = useMemo(() => buildProgressionPoints(rows, archiveStats), [archiveStats, rows]);
   const livePoints = useMemo(() => rawPoints.filter((point) => !point.isArchiveReconstruction && !point.isOriginPoint), [rawPoints]);
@@ -327,17 +246,12 @@ export default function ProfitProgressionPanel({
     };
   }, [latestPoint?.cumulative, livePoints, rawPoints]);
 
-  const chart = useMemo(() => buildChart(rawPoints), [rawPoints]);
-  const activePoint = activeRawPoint ? chart.points.find((point) => point.id === activeRawPoint.id) ?? null : null;
   const positiveChart = metrics.cumulative >= 0;
   const liveStroke = positiveChart ? "#34d399" : "#fb7185";
-  const liveFill = positiveChart ? "rgba(16,185,129,0.16)" : "rgba(251,113,133,0.14)";
   const summary = archiveSummary(archiveStats);
 
   const liveCount = livePoints.length;
-  const liveNodeEvery = Math.max(1, Math.ceil(liveCount / 14));
-  const archiveNodeEvery = Math.max(1, Math.ceil(ARCHIVE_ANCHORS / 4));
-  const hasChart = chart.points.length > 0;
+  const hasChart = liveCount > 0 || shouldShowArchive(archiveStats);
 
   return (
     <div className="mt-4 overflow-hidden rounded-2xl border border-emerald-500/20 bg-[radial-gradient(circle_at_18%_0%,rgba(16,185,129,0.10),transparent_34%),linear-gradient(135deg,rgba(15,23,42,0.78),rgba(2,6,23,0.88))]">
@@ -351,77 +265,21 @@ export default function ProfitProgressionPanel({
             </p>
           </div>
 
-          <div className="relative h-[240px] rounded-xl border border-slate-800 bg-slate-950/55 p-2">
-            {hasChart ? (
-              <svg
-                viewBox={`0 0 ${chart.width} ${chart.height}`}
-                className="h-full w-full"
-                role="img"
-                aria-label={`${activeName} profit and loss progression`}
-                onMouseLeave={() => setActivePointId(null)}
-              >
-                <line x1="0" x2={chart.width} y1={chart.zeroY} y2={chart.zeroY} stroke="rgba(148,163,184,0.20)" strokeDasharray="2 6" />
-                {chart.bridgeX !== null && chart.archivePath ? (
-                  <line x1={chart.bridgeX} x2={chart.bridgeX} y1="14" y2={chart.height - 16} stroke="rgba(148,163,184,0.16)" strokeDasharray="3 5" />
-                ) : null}
-                {chart.archiveAreaPath ? <path d={chart.archiveAreaPath} fill="rgba(148,163,184,0.06)" /> : null}
-                {chart.liveAreaPath ? <path d={chart.liveAreaPath} fill={liveFill} /> : null}
-                {chart.archivePath ? (
-                  <path
-                    d={chart.archivePath}
-                    fill="none"
-                    stroke="rgba(148,163,184,0.85)"
-                    strokeDasharray="6 5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2.25"
-                  />
-                ) : null}
-                {chart.livePath ? (
-                  <path d={chart.livePath} fill="none" stroke={liveStroke} strokeLinecap="round" strokeLinejoin="round" strokeWidth="3.25" />
-                ) : null}
-                {chart.points.map((point, index) => {
-                  const isActive = activePoint?.id === point.id;
-                  const isArchive = Boolean(point.isArchiveReconstruction);
-                  const isOrigin = Boolean(point.isOriginPoint);
-                  const isLive = !isArchive && !isOrigin;
-                  const showArchiveNode =
-                    isArchive && (point.archiveStep === 0 || point.archiveStep === point.archiveSteps || (point.archiveStep ?? 0) % archiveNodeEvery === 0);
-                  const isLastLive = isLive && index === chart.points.length - 1;
-                  const showLiveNode = isLive && (isLastLive || livePoints.indexOf(point) % liveNodeEvery === 0);
-                  const visible = isActive || showArchiveNode || showLiveNode || isOrigin;
-                  return (
-                    <g key={`${point.id}-${index}`}>
-                      {visible ? (
-                        <circle
-                          cx={point.x}
-                          cy={point.y}
-                          r={isActive ? 6 : isLive ? 3.5 : 3}
-                          fill={isActive ? "#fbbf24" : isLive ? liveStroke : "#0b1220"}
-                          stroke={isActive ? "rgba(251,191,36,0.45)" : isLive ? `${liveStroke}88` : "rgba(148,163,184,0.85)"}
-                          strokeWidth={isActive ? 6 : 1.5}
-                          className="transition-all"
-                        />
-                      ) : null}
-                      <circle
-                        cx={point.x}
-                        cy={point.y}
-                        r={10}
-                        fill="transparent"
-                        className={isLive ? "cursor-pointer" : "cursor-help"}
-                        onMouseEnter={() => setActivePointId(point.id)}
-                        onClick={() => setActivePointId(point.id)}
-                      />
-                    </g>
-                  );
-                })}
-              </svg>
+          <div ref={chartContainer} data-testid="profit-chart-container" className="relative h-[240px] rounded-xl border border-slate-800 bg-slate-950/55 p-2">
+            {hasChart ? chartReady ? (
+              <ProfitProgressionChart points={rawPoints} activePointId={activeRawPoint?.id ?? null}
+                onSelect={setActivePointId} activeName={activeName} positive={positiveChart} />
+            ) : (
+              <div className="flex h-full items-center justify-center">
+                <button type="button" onClick={() => setChartReady(true)} className="rounded-lg border border-emerald-400/30 px-4 py-3 text-sm font-semibold text-emerald-300 hover:bg-emerald-400/10">
+                  Explore profit curve
+                </button>
+                <noscript><p className="p-3 text-sm text-slate-400">Enable JavaScript to explore the curve. The full totals and match links are available below.</p></noscript>
+              </div>
             ) : (
               <div className="flex h-full items-center justify-center text-center">
-                <div>
-                  <div className="text-sm font-semibold text-slate-300">No settled rows yet</div>
-                  <div className="mt-1 max-w-xs text-xs text-slate-500">The profit curve appears once this tab has settled picks.</div>
-                </div>
+                <div><div className="text-sm font-semibold text-slate-300">No settled rows yet</div>
+                  <div className="mt-1 max-w-xs text-xs text-slate-500">The profit curve appears once this tab has settled picks.</div></div>
               </div>
             )}
           </div>

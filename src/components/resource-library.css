@@ -27,8 +27,4 @@
 .resource-card-bottom { display:flex; justify-content:space-between; margin-top:auto; padding-top:17px; border-top:1px solid #2b4149; font-size:14px; color:#93e4bf; font-weight:650; }
 .resource-boards { border-top:1px solid #2f424b; margin-top:46px; padding-top:28px; }
 .resource-boards > p { color:#b9cbd2; font-size:16px; line-height:1.7; margin-top:10px; }
-.roger-guide-actions { display:grid; gap:12px; margin:24px 0; }
-.roger-guide-actions button { text-align:left; padding:15px 18px; border:1px solid #416359; background:#162d28; color:#b4f2d6; border-radius:12px; font-size:15px; cursor:pointer; }
-.roger-guide-actions button:hover { background:#244c3e; border-color:#a1dbbe; }
-.roger-guide-actions .roger-open { width:fit-content; font-weight:700; background:#27664b; color:#edfff5; }
 @media(max-width:700px) { .resource-paths { grid-template-columns:minmax(0,1fr); gap:10px; margin-bottom:32px; } .resource-paths a { padding:18px; display:grid; grid-template-columns:44px 1fr; column-gap:15px; } .resource-paths svg { grid-row:1/4; } .resource-paths span { margin:0 0 6px; } .resource-paths h2 { font-size:19px; margin-bottom:6px; } .resource-paths p { grid-column:2; } .resource-library-top { display:block; } .resource-search { width:100%; display:block; margin-top:20px; } .resource-card-grid { grid-template-columns:minmax(0,1fr); } .resource-card { padding:21px; } .resource-card h3 { font-size:22px; } }

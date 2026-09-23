@@ -17,7 +17,6 @@ export const RESOURCES: Resource[] = [
   }),
   { href: "/calculator", title: "Four betting calculators", description: "Try returns simulations, Kelly staking, margin removal and closing-line value with your own numbers.", minRead: 2, category: "Tools", surface: "tool", tag: "tools" },
   { href: "/return-atlas", title: "Return Atlas", description: "Explore ATP player betting history by season, surface and favourite or underdog status. Compare betting on the player with backing the opponent.", minRead: 2, category: "Tools", surface: "tool", tag: "tennis" },
-  { href: "/resources/roger", title: "Ask Roger about tennis", description: "Make a tennis statistics question specific: player, opponent, surface and period. See examples and learn how to check the answer.", minRead: 3, category: "Tools", surface: "tool", tag: "tennis", dateModified: GUIDE_REVIEW_DATE },
 ];
 export const RESOURCE_CATEGORIES = Array.from(new Set(RESOURCES.map(r => r.category)));
 export const CURRENTLY_WATCHING = "Surface, opponent quality and the price all matter. Use the tennis guides to turn a broad form claim into a question you can check.";

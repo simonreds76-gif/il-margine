@@ -127,7 +127,10 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // No redirects: /atp-tennis is a real page with canonical to /tennis-tips so Google indexes content, not a redirect.
+  async redirects() {
+    return [{ source: "/resources/roger", destination: "/return-atlas", permanent: true }];
+  },
+  // /atp-tennis remains a real page with a canonical to /tennis-tips.
   async rewrites() {
     return [
       // Bing Webmaster verification: serve XML with correct Content-Type at exact URL

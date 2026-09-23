@@ -420,7 +420,7 @@ export default function PlayerProps({
 
           {filteredRecent.length > 0 ? (
             <>
-              <PlayerPropsMatchGroups bets={filteredRecent} mode="settled" />
+              <PlayerPropsMatchGroups key={activeLeague} bets={filteredRecent} mode="settled" />
               {activeLeague === "all" && recentBets.length >= 500 ? (
                 <div className="mt-3 rounded-lg border border-slate-800 bg-slate-900/40 px-4 py-2 text-center">
                   <p className="text-xs text-slate-500">Showing the most recent settled player-prop feed; older settled bets remain in the record cards and progression.</p>

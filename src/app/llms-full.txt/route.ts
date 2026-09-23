@@ -20,7 +20,6 @@ export async function GET() {
     `- ${BASE_URL}/the-edge`,
     `- ${BASE_URL}/faq`,
     `- ${BASE_URL}/resources`,
-    `- ${BASE_URL}/resources/roger`,
     `- ${BASE_URL}/resources/closing-line-value`,
     `- ${BASE_URL}/resources/kelly-criterion-sports-betting`,
     `- ${BASE_URL}/calculator`,

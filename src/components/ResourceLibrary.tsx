@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { Resource } from "@/lib/resources";
 import EditorialIcon, { type EditorialIconName } from "./EditorialIcon";
 
-const icons: Record<string, EditorialIconName> = { "/resources/how-to-read-a-tipster-track-record": "guide", "/resources/closing-line-value": "markets", "/resources/kelly-criterion-sports-betting": "bankroll", "/resources/fair-odds-lab-explained": "compare", "/resources/clay-season-tennis-model-caveats": "analysis", "/calculator": "bankroll", "/return-atlas": "compare", "/resources/roger": "about" };
+const icons: Record<string, EditorialIconName> = { "/resources/how-to-read-a-tipster-track-record": "guide", "/resources/closing-line-value": "markets", "/resources/kelly-criterion-sports-betting": "bankroll", "/resources/fair-odds-lab-explained": "compare", "/resources/clay-season-tennis-model-caveats": "analysis", "/calculator": "bankroll", "/return-atlas": "compare" };
 function subscribe(update: () => void) {
   window.addEventListener("popstate", update); window.addEventListener("resource-category-change", update);
   return () => { window.removeEventListener("popstate", update); window.removeEventListener("resource-category-change", update); };

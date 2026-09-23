@@ -23,7 +23,6 @@ export async function GET() {
     `- The Edge: ${BASE_URL}/the-edge`,
     `- FAQ: ${BASE_URL}/faq`,
     `- Resources: ${BASE_URL}/resources`,
-    `- Roger (chat assistant): ${BASE_URL}/resources/roger`,
     "",
     "## Discovery",
     `- Sitemap: ${BASE_URL}/sitemap.xml`,

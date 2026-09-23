@@ -1,8 +1,10 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import ChatWidget from "@/components/ChatWidget";
-import WorldCupTelegramOverlay from "@/components/WorldCupTelegramOverlay";
+import dynamic from "next/dynamic";
+
+// Load the tournament overlay only on the routes that use it.
+const WorldCupTelegramOverlay = dynamic(() => import("@/components/WorldCupTelegramOverlay"));
 
 function shouldShowWorldCupTelegram(pathname: string | null): boolean {
   if (!pathname) return false;
@@ -17,10 +19,6 @@ export default function RouteScopedOverlays() {
 
   if (shouldShowWorldCupTelegram(pathname)) {
     return <WorldCupTelegramOverlay />;
-  }
-
-  if (pathname === "/resources/roger") {
-    return <ChatWidget />;
   }
 
   return null;
