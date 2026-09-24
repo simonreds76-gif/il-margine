@@ -29,6 +29,10 @@ Four samples had outcome updates within roughly two minutes of scheduled kickoff
 
 This establishes recent machine-readable Pinnacle availability across five leagues, not complete historical coverage or perfect provider accuracy. Hosted-run access and full-week reconciliation remain to be tested.
 
+### Full-week follow-up
+
+The subsequent bounded audit fetched all 48 completed fixtures' Pinnacle histories: EPL 10/10, La Liga 10/10, Serie A 10/10, Ligue 1 9/9 and Bundesliga 9/9 returned three complete outcome states active at the conservative pre-match cutoff, with plausible overround. History calls were spaced at least five seconds apart. This confirms one complete weekend of price-history coverage. Independent final-score reconciliation, delayed-start treatment, archive publication validation and a hosted execution test are still required before enabling automatic updates. No schedule was enabled.
+
 ## Proposed weekly cloud design
 
 1. Fetch completed fixtures by tournament for a rolling overlap window; cache catalogue IDs (17 EPL, 8 La Liga, 23 Serie A, 34 Ligue 1, 35 Bundesliga).
