@@ -1,0 +1,24 @@
+.edge{min-width:0;max-width:100%;padding:24px;border:1px solid #5fcda938;border-radius:24px;background:radial-gradient(ellipse at top left,#173f3438,transparent 55%),#0c1218;box-shadow:0 20px 60px #0003;color:#f2f6f7}
+.heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#90dec1;margin-bottom:4px}
+.heading h2{font-size:25px;font-weight:650;letter-spacing:-.035em;line-height:1.25}
+.active{display:flex;gap:6px;align-items:center;font-size:11px;color:#b4c7c8;margin-top:7px}
+.active>span{width:6px;height:6px;border-radius:50%;background:#6fddaf}
+.profit{text-align:right;padding-left:12px;border-left:1px solid #b7dbd51a;flex-shrink:0}
+.profit>span,.profit>small{display:block;font-size:10px;color:#a2b7c0}.profit>strong{display:block;font-size:21px;font-weight:650;font-variant-numeric:tabular-nums;color:#83e8bd;letter-spacing:-.03em;margin:2px 0}
+.filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:16px}
+.filters button{position:relative;min-width:0;display:flex;align-items:center;flex-direction:column;justify-content:center;gap:4px;padding:11px 4px;border-radius:14px;border:1px solid #accfdd1c;background:#14202a70;color:#d7e1e6;cursor:pointer;transition:background .15s,border-color .15s}
+.filters button:hover{background:#1d343b;border-color:#7ec9b078}.filters button[aria-pressed=true]{background:linear-gradient(145deg,#1b4f40,#102b27);border-color:#6fd2ad99;box-shadow:inset 0 1px 0 #bbffe222}
+.filterIcon{width:31px;height:31px;filter:drop-shadow(0 2px 5px #0004)}
+.filters button>span{font-size:12px;font-weight:600}.filters button>small{font-size:10px;color:#a9bcc5}.filters button[aria-pressed=true]>small{color:#99e6c6}
+.picks{display:grid;gap:10px}.pick{display:block;min-width:0;padding:15px 16px 10px;border:1px solid #accfdd24;border-radius:16px;background:linear-gradient(120deg,#14222b80,#0e151d);transition:border-color .15s,background .15s}
+.pick:hover{border-color:#6fd2ad80;background:#14262b}.pickHeading{display:flex;justify-content:space-between;align-items:center;gap:10px}.sportBadge{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500;color:#b7cbd0;min-width:0}.pickIcon{width:23px;height:23px}.date{font-weight:400;color:#a1b5c2}.open{color:#a3ddc8;font-size:17px}
+.pick h3{font-size:16px;font-weight:650;line-height:1.4;letter-spacing:-.02em;margin-top:9px;overflow-wrap:anywhere}.selection{font-size:14px;color:#b7d0d9;line-height:1.5;margin-top:2px;overflow-wrap:anywhere}
+.priceRow{display:flex;align-items:center;gap:16px;margin-top:14px}.priceRow small{display:block;font-size:10px;color:#9fb3c0;margin-bottom:2px}.priceRow strong{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.03em;line-height:1.2}.stake{border-left:1px solid #adcdd526;padding-left:16px}.stake strong{font-size:17px;font-weight:600;color:#b5e5d0}.stake strong span{font-size:12px;margin-left:1px}.bookmaker{margin-left:auto;flex-shrink:0;padding:6px;border-radius:9px;background:#080e1480;border:1px solid #accfdd14}
+.pickFooter{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px 10px;border-top:1px solid #aacad814;margin-top:12px;padding-top:8px;font-size:10px;color:#a0b1bd}.pickFooter>span{color:#91e3c2;font-weight:600;font-size:11px}
+.empty{padding:24px 18px;border:1px dashed #a3c8d438;border-radius:16px;background:#111b23;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px}.empty p{font-size:15px;font-weight:600}.empty>span{font-size:12px;color:#afc0c9;line-height:1.7;max-width:32ch}
+.footer{margin-top:16px}.fullCard{display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:10px 14px;border:1px solid #70d3ae45;border-radius:12px;background:#17382e80;color:#b1f3d9;font-size:13px;font-weight:600;transition:background .15s}.fullCard:hover{background:#204e3f}.fullCard>span{font-size:19px}
+.lastSettled{font-size:11px;line-height:1.65;color:#b6c5ce;margin:12px 2px 0}.lastSettled>span{color:#90a6b2;margin-right:5px}.lastSettled b{color:#8ce5be;font-weight:600;white-space:nowrap;margin-left:5px}.profit .negative,.lastSettled .negative{color:#fca5a5}
+.edge button:focus-visible,.edge a:focus-visible{outline:2px solid #a4f3d6;outline-offset:3px}
+@media(max-width:420px){.edge{padding:16px;border-radius:20px}.heading h2{font-size:23px}.profit>strong{font-size:20px}.pick{padding:13px 12px 10px}.priceRow{gap:12px}.stake{padding-left:12px}.bookmaker{padding:4px}.filters{gap:6px}.filters button>small{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.edge a,.edge button{transition:none}}

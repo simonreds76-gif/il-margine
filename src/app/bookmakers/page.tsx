@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Footer from "@/components/Footer";
 import PageHomeLink from "@/components/PageHomeLink";
 import EditorialIcon from "@/components/EditorialIcon";
@@ -28,8 +29,8 @@ export default function BookmakersPage() {
       <PageHomeLink className="mb-8" />
       <header className="bm-hero">
         <div>
-          <p className="bm-kicker">Independent betting advice · Price comparison</p>
-          <h1>UK bookmakers.<br /><span>Mind the margin.</span></h1>
+          <h1 className="sr-only">UK bookmakers. Mind the margin.</h1>
+          <Image className="bm-masthead" src="/brand/mind-the-margin-v1.webp" alt="Mind the Margin — UK bookmaker comparison by Il Margine" width={1440} height={480} priority unoptimized />
           <p className="bm-lead">Same match. Different prices. See which bookmakers built more margin into their football and tennis markets — and what that means when you compare a bet.</p>
           <nav aria-label="Bookmaker page sections" className="bm-jumps">
             <a href="#compare-margins" className="bm-primary"><EditorialIcon name="compare" />Compare bookmakers <span aria-hidden="true">↓</span></a>

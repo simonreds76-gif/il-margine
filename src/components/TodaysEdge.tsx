@@ -3,7 +3,7 @@
 import SportIcon from "@/components/SportIcon";
 import { useMemo, useState } from "react";
 import BookmakerLogo from "@/components/BookmakerLogo";
-import MarketBadge from "@/components/MarketBadge";
+import styles from "./TodaysEdge.module.css";
 import TrackedLink from "@/components/TrackedLink";
 import type { Bet, Bookmaker } from "@/lib/supabase";
 import { formatOdds, formatStake } from "@/lib/format";
@@ -107,153 +107,79 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
   };
 
   return (
-    <section
-      aria-labelledby="todays-edge-heading"
-      className="relative min-w-0 max-w-full overflow-hidden rounded-2xl border border-[rgba(87,209,150,0.24)] bg-[linear-gradient(145deg,rgba(12,23,24,0.98),rgba(8,11,17,0.98)_58%)] shadow-2xl shadow-black/35"
-    >
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/45 to-transparent" />
-      <div className="min-w-0 p-4 sm:p-6">
-        <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
-          <div className="min-w-0">
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-emerald-300/90">
-              Posted tips
-            </p>
-            <h2 id="todays-edge-heading" className="mt-1 text-xl font-semibold text-white">
-              Today&apos;s Edge
-            </h2>
-          </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <div className="rounded-lg border border-white/[0.07] bg-black/25 px-2.5 py-1.5 text-right shadow-inner shadow-black/25">
-              <span className="block font-mono text-[8px] font-bold uppercase tracking-[0.14em] text-slate-500">
-                7-day P/L
-              </span>
-              <span className={`mt-0.5 block font-mono text-xs font-black tabular-nums ${
-                last7Profit == null ? "text-slate-300" : last7Profit >= 0 ? "text-emerald-300" : "text-rose-300"
-              }`}>
-                {last7Profit == null ? "—" : `${last7Profit >= 0 ? "+" : ""}${last7Profit.toFixed(2)}u`}
-              </span>
-            </div>
-            <span className={`rounded-full border px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] ${
-              picks.length > 0
-                ? "border-emerald-300/25 bg-emerald-400/10 text-emerald-200"
-                : "border-slate-700 bg-slate-900/70 text-slate-400"
-            }`}>
-              {picks.length > 0 ? `${picks.length} active` : "No active picks"}
-            </span>
-          </div>
+    <section aria-labelledby="todays-edge-heading" className={styles.edge}>
+      <header className={styles.heading}>
+        <div>
+          <p className={styles.eyebrow}>Published selections</p>
+          <h2 id="todays-edge-heading">Today&apos;s Edge</h2>
+          <span className={styles.active}><span aria-hidden="true" />{picks.length} active {picks.length === 1 ? "pick" : "picks"}</span>
         </div>
-
-        <div
-          className="mt-4 grid min-w-0 grid-cols-3 gap-1 rounded-xl border border-white/[0.08] bg-black/30 p-1.5 shadow-inner shadow-black/50"
-          role="group"
-          aria-label="Filter active picks"
-        >
-          {([
-            ["all", "All"],
-            ["props", "Football props"],
-            ["tennis", "Tennis"],
-          ] as const).map(([id, label]) => (
-            <button
-              key={id}
-              type="button"
-              disabled={id !== "all" && counts[id] === 0}
-              aria-pressed={filter === id}
-              aria-label={`${label}, ${counts[id]} active ${counts[id] === 1 ? "pick" : "picks"}`}
-              onClick={() => setActiveFilter(id)}
-              className={`group/filter relative flex min-h-12 min-w-0 flex-col items-center justify-center gap-1 rounded-lg border px-1 py-2 text-[11px] font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#090d12] sm:min-h-14 sm:px-3 sm:text-xs ${
-                filter === id
-                  ? "border-emerald-300/35 bg-[linear-gradient(180deg,rgba(52,211,153,0.17),rgba(16,185,129,0.08))] text-emerald-50 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_5px_14px_rgba(0,0,0,0.4),0_0_18px_rgba(52,211,153,0.07)]"
-                  : "border-transparent bg-transparent text-slate-400 hover:border-white/[0.09] hover:bg-white/[0.04] hover:text-slate-100 disabled:cursor-not-allowed disabled:border-transparent disabled:bg-transparent disabled:text-slate-600 disabled:opacity-55 disabled:hover:border-transparent disabled:hover:bg-transparent disabled:hover:text-slate-600"
-              }`}
-            >
-              <span className="flex min-w-0 items-center justify-center gap-1.5">
-                <FilterIcon filter={id} active={filter === id} />
-                <span className="truncate">
-                  {id === "all" ? "All" : id === "props" ? "Football" : label}
-                </span>
-              </span>
-              <span className={`rounded-full px-1.5 py-0.5 font-mono text-[9px] font-black tabular-nums ${
-                filter === id ? "bg-emerald-300/12 text-emerald-200" : "bg-white/[0.04] text-slate-500 group-hover/filter:text-slate-300"
-              }`}>
-                {counts[id]}
-              </span>
-            </button>
-          ))}
+        <div className={styles.profit}>
+          <span>Last 7 days</span>
+          <strong className={last7Profit != null && last7Profit < 0 ? styles.negative : ""}>
+            {last7Profit == null ? "—" : `${last7Profit >= 0 ? "+" : ""}${last7Profit.toFixed(2)}u`}
+          </strong>
+          <small>Settled profit</small>
         </div>
+      </header>
 
+      <div className={styles.filters} role="group" aria-label="Filter active picks">
+        {([
+          ["all", "All picks"], ["props", "Football"], ["tennis", "Tennis"],
+        ] as const).map(([id, label]) => (
+          <button key={id} type="button" aria-pressed={filter === id}
+            aria-label={`${label}, ${counts[id]} active ${counts[id] === 1 ? "pick" : "picks"}`}
+            onClick={() => setActiveFilter(id)}>
+            <SportIcon sport={id === "props" ? "football" : id === "tennis" ? "tennis" : "all"} className={styles.filterIcon} />
+            <span>{label}</span>
+            <small>{counts[id] ? `${counts[id]} ${counts[id] === 1 ? "pick" : "picks"}` : "No active picks"}</small>
+          </button>
+        ))}
+      </div>
+
+      <div aria-live="polite" aria-atomic="true">
         {visible.length > 0 ? (
-          <div className="mt-3 divide-y divide-slate-800/80 overflow-hidden rounded-xl border border-slate-800/80 bg-[#090d12]/75">
+          <div className={styles.picks}>
             {visible.map((pick) => (
-              <TrackedLink
-                key={pick.id}
-                href={publicTipPath(pick)}
+              <TrackedLink key={pick.id} href={publicTipPath(pick)}
                 eventName="homepage_to_pick_click"
                 eventParams={{ bet_id: pick.id, market: pick.market, source: "todays_edge" }}
-                className="group block min-w-0 px-3.5 py-3.5 transition hover:bg-slate-800/35 sm:px-4"
-              >
-                <div className="grid min-w-0 gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-slate-400 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-3 sm:text-[11px] sm:tracking-[0.1em]">
-                  <div className="flex min-w-0 items-center gap-2">
-                    <MarketBadge
-                      market={pick.market}
-                      category={pick.category}
-                      event={pick.event}
-                      compact
-                      className="rounded-md border border-white/[0.06] bg-black/20 px-0.5"
-                    />
-                    <span className="truncate">{laneLabel(pick.market)} · {dateChip(pick.match_date)}</span>
-                  </div>
-                  <span className="text-slate-500 sm:shrink-0 sm:whitespace-nowrap sm:text-right sm:text-slate-400">{publishedTime(pick.posted_at)}</span>
-                </div>
-                <div className="mt-2 text-sm font-semibold leading-snug text-slate-100 group-hover:text-emerald-100">
-                  {pick.event}
-                </div>
-                <div className="mt-1 text-sm leading-snug text-slate-300">
-                  {pick.player ? `${pick.player} · ` : ""}{pick.selection}
-                </div>
-                <div className="mt-3 flex items-center gap-3">
-                  <span className="font-mono text-xl font-black tabular-nums text-white">{formatOdds(pick.odds)}</span>
-                  <span className="rounded-md border border-slate-700/70 bg-slate-900/70 px-2 py-1 font-mono text-xs text-emerald-200">
-                    {formatStake(pick.stake)}u
+                className={styles.pick}>
+                <div className={styles.pickHeading}>
+                  <span className={styles.sportBadge}>
+                    <SportIcon sport={pick.market === "props" ? "football" : "tennis"} className={styles.pickIcon} />
+                    {laneLabel(pick.market)} <span className={styles.date}>· {dateChip(pick.match_date)}</span>
                   </span>
-                  <div className="ml-auto max-w-20 overflow-hidden">
-                    <BookmakerLogo bookmaker={pick.bookmaker} size="sm" noLink />
-                  </div>
+                  <span className={styles.open} aria-hidden="true">↗</span>
                 </div>
+                <h3>{pick.event}</h3>
+                <p className={styles.selection}>{pick.player ? `${pick.player} · ` : ""}{pick.selection}</p>
+                <div className={styles.priceRow}>
+                  <div><small>Recorded odds</small><strong>{formatOdds(pick.odds)}</strong></div>
+                  <div className={styles.stake}><small>Stake</small><strong>{formatStake(pick.stake)}<span>u</span></strong></div>
+                  <div className={styles.bookmaker}><BookmakerLogo bookmaker={pick.bookmaker} size="sm" noLink /></div>
+                </div>
+                <div className={styles.pickFooter}><time dateTime={pick.posted_at}>{publishedTime(pick.posted_at)}</time><span>View tip →</span></div>
               </TrackedLink>
             ))}
           </div>
         ) : (
-          <div className="mt-4 rounded-xl border border-dashed border-slate-700/80 bg-slate-950/35 p-5">
-            <p className="font-semibold text-slate-200">
-              {picks.length === 0 ? "Nothing is priced badly enough right now." : `No ${filter === "props" ? "football props" : "tennis picks"} active.`}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-slate-400">
-              We post when the number is wrong, not to fill a daily quota.
-            </p>
+          <div className={styles.empty}>
+            <SportIcon sport={filter === "props" ? "football" : filter === "tennis" ? "tennis" : "all"} className="h-10 w-10" />
+            <p>{filter === "all" ? "No active selections" : `No active ${filter === "props" ? "football" : "tennis"} picks`}</p>
+            <span>New selections appear here when published. You can still browse past picks and results.</span>
           </div>
         )}
-
-        <div className="mt-4 flex min-w-0 flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
-          <TrackedLink
-            href={fullCardHref}
-            eventName={visible.length > 0 ? "today_edge_open_full_card" : "track_record_click"}
-            eventParams={{ source: "todays_edge", filter }}
-            className="text-sm font-semibold text-emerald-300 transition hover:text-emerald-200"
-          >
-            {visible.length > 0 ? "Open full card" : "See the public record"} →
-          </TrackedLink>
-          {lastSettled ? (
-            <span className="min-w-0 text-xs leading-5 text-slate-400 sm:truncate">
-              Last settled: {lastSettled.event} · {Number(lastSettled.profit_loss) >= 0 ? "+" : ""}
-              {Number(lastSettled.profit_loss || 0).toFixed(2)}u
-            </span>
-          ) : null}
-        </div>
       </div>
+
+      <footer className={styles.footer}>
+        <TrackedLink href={fullCardHref}
+          eventName={fullCardHref === "/track-record" ? "track_record_click" : "today_edge_open_full_card"}
+          eventParams={{ source: "todays_edge", filter }} className={styles.fullCard}>
+          {fullCardHref === "/track-record" ? "See the public record" : filter === "props" ? "All football picks" : filter === "tennis" ? "All tennis picks" : "Open full card"}<span aria-hidden="true">→</span>
+        </TrackedLink>
+        {lastSettled ? <p className={styles.lastSettled}><span>Last settled</span> {lastSettled.event} <b className={Number(lastSettled.profit_loss) < 0 ? styles.negative : ""}>{Number(lastSettled.profit_loss) >= 0 ? "+" : ""}{Number(lastSettled.profit_loss || 0).toFixed(2)}u</b></p> : null}
+      </footer>
     </section>
   );
-}
-
-function FilterIcon({ filter, active }: { filter: Filter; active: boolean }) {
-  return <SportIcon sport={filter === "props" ? "football" : filter === "tennis" ? "tennis" : "all"} className={`h-5 w-5 ${active ? "text-emerald-200" : "text-slate-400 group-hover/filter:text-slate-200"}`} />;
 }
