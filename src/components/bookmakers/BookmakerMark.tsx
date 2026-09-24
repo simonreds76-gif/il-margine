@@ -11,7 +11,7 @@ const CODES: Record<string, string> = {
 
 export default function BookmakerMark({ name }: { name: string }) {
   const key = name.toLowerCase().replace(/[^a-z0-9]/g, "");
-  const src = key === "virginbet" ? "/bookmakers/virginbet.png"
+  const src = key === "bwin" ? "/bookmakers/bwin.png" : key === "virginbet" ? "/bookmakers/virginbet.png"
     : CODES[key] ? `/bookmakers/comparison/${CODES[key]}.svg` : null;
   const needsLightBackground = ["vc", "oe", "pup"].includes(CODES[key]);
   return <span className={`flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 ${needsLightBackground ? "bg-slate-100 p-1" : "bg-slate-800"}`} aria-hidden="true">

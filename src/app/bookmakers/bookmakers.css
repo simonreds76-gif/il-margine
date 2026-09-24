@@ -1,0 +1,39 @@
+.bookmaker-page{--bm-mint:#a4f3d6;--bm-muted:#a0afbd;--bm-line:rgba(178,210,223,.13)}
+.bookmaker-page .bm-kicker{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--bm-mint)}
+.bookmaker-page .bm-hero{display:grid;grid-template-columns:1.25fr 1fr;align-items:center;gap:3rem;margin:1rem 0 3rem}
+.bookmaker-page h1{font-size:clamp(2.4rem,4.4vw,4.3rem);font-weight:650;letter-spacing:-.045em;line-height:1.08;margin:1rem 0 1.4rem}
+.bookmaker-page h1 span{color:var(--bm-mint)}
+.bookmaker-page .bm-lead{color:#c0cbd5;font-size:1.05rem;line-height:1.8;max-width:38rem}
+.bookmaker-page .bm-jumps{display:flex;align-items:center;flex-wrap:wrap;gap:1rem;margin-top:1.6rem;font-size:.85rem;font-weight:600}
+.bookmaker-page .bm-jumps a{min-height:44px;display:inline-flex;align-items:center;gap:.65rem}
+.bookmaker-page .bm-primary{background:#163a31;border:1px solid #5fcda965;border-radius:14px;padding:.7rem 1rem;color:#ddfff1}
+.bookmaker-page .bm-ticket{padding:1.5rem;border:1px solid #5fcda936;border-radius:24px;background:radial-gradient(ellipse at top right,#25594c50,transparent 70%),#111b20;box-shadow:0 20px 65px #0003}
+.bookmaker-page .bm-ticket-head{display:flex;align-items:center;gap:.8rem;font-weight:600}
+.bookmaker-page small{display:block;color:var(--bm-muted);font-size:.72rem;font-weight:400}
+.bookmaker-page .bm-ticket-prices{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:1.3rem 0;margin:1rem 0;border-block:1px dashed #b2d2df30}
+.bookmaker-page .bm-ticket-prices strong{display:block;margin-top:.4rem;font-size:1.4rem;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.bookmaker-page .bm-ticket-prices strong span{color:#627d88;font-weight:400}
+.bookmaker-page .bm-ticket-bar{display:flex;height:35px;overflow:hidden;border-radius:7px;font-size:.7rem;font-weight:600;align-items:stretch}
+.bookmaker-page .bm-ticket-bar span{flex:95;display:flex;align-items:center;padding-left:.75rem;background:#a4f3d6;color:#10291f}
+.bookmaker-page .bm-ticket-bar b{flex:5;min-width:32px;display:grid;place-items:center;background:#e4bc73;color:#302410}
+.bookmaker-page .bm-ticket p{font-size:.85rem;line-height:1.75;color:#b5c7cb;margin:1rem 0}
+.bookmaker-page .bm-ticket-foot{font-size:.7rem;color:#c9d5d9}
+.bookmaker-page .bm-section{margin:3rem 0;scroll-margin-top:110px}
+.bookmaker-page .bm-capture{display:flex;gap:.9rem;align-items:flex-start;padding:1rem 1.2rem;border:1px solid #e4bc7330;background:#e4bc7308;border-radius:16px;margin-bottom:1rem}
+.bookmaker-page .bm-capture strong{font-size:.85rem;color:#e8d8b8}.bookmaker-page .bm-capture p{margin-top:.25rem;font-size:.8rem;line-height:1.6;color:var(--bm-muted)}
+.bookmaker-page .bm-section-title{display:flex;gap:.85rem;align-items:center;margin-bottom:1.35rem}
+.bookmaker-page h2{font-size:clamp(1.5rem,2.5vw,2rem);font-weight:600;letter-spacing:-.025em}
+.bookmaker-page h3{font-size:1.1rem;font-weight:600;letter-spacing:-.015em}
+.bookmaker-page .bm-guide-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.bookmaker-page .bm-card{border:1px solid var(--bm-line);background:linear-gradient(140deg,#16242b,#10161c);border-radius:20px;padding:1.5rem}
+.bookmaker-page .bm-card h3{margin-top:1rem}.bookmaker-page .bm-card p,.bookmaker-page .bm-price-example p,.bookmaker-page .bm-steps p{font-size:.88rem;line-height:1.8;color:var(--bm-muted);margin:.65rem 0}
+.bookmaker-page .bm-card a{display:inline-block;color:var(--bm-mint);font-size:.8rem;margin-top:.6rem}.bookmaker-page .bm-card code{display:block;font-size:.72rem;overflow-wrap:anywhere;margin-top:1rem;color:#c1d1d9}
+.bookmaker-page .bm-price-example{margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;padding:1.6rem;border:1px solid var(--bm-line);border-radius:20px;background:#11191e}
+.bookmaker-page .bm-price-example h3{margin-top:.6rem}.bookmaker-page .bm-receipts{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}.bookmaker-page .bm-receipts div{padding:1rem;background:#0b1117;border-radius:14px;border:1px solid var(--bm-line)}
+.bookmaker-page .bm-receipts div:last-child{border-color:#5fcda960;background:#15352b}.bookmaker-page .bm-receipts strong{font-size:2rem;display:block;margin:.4rem 0;font-variant-numeric:tabular-nums}.bookmaker-page .bm-receipts span{font-size:.7rem;color:#b8c9cc}
+.bookmaker-page .bm-method{padding:1.5rem;border-block:1px solid var(--bm-line)}.bookmaker-page .bm-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5rem}.bookmaker-page .bm-steps li{display:flex;gap:.75rem}.bookmaker-page .bm-steps li>span{color:#5fcda9;font-size:.8rem;font-variant-numeric:tabular-nums;padding-top:.2rem}
+.bookmaker-page .bm-faq{border:1px solid var(--bm-line);border-radius:20px;overflow:hidden}.bookmaker-page .bm-faq details+details{border-top:1px solid var(--bm-line)}.bookmaker-page .bm-faq summary{padding:1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;cursor:pointer;font-weight:550;list-style:none}.bookmaker-page .bm-faq summary::-webkit-details-marker{display:none}.bookmaker-page .bm-faq summary span{color:var(--bm-mint)}.bookmaker-page .bm-faq details[open] summary span{transform:rotate(45deg)}.bookmaker-page .bm-faq p{padding:0 1.2rem 1.2rem;font-size:.9rem;line-height:1.8;color:var(--bm-muted);max-width:58rem}
+.bookmaker-page .bm-partners{border:1px solid var(--bm-line);border-radius:20px;padding:1.5rem;background:#10161c}.bookmaker-page .bm-partners h2{font-size:1.2rem;margin:.5rem 0}.bookmaker-page .bm-partners p:not(.bm-kicker){color:var(--bm-muted);font-size:.8rem;line-height:1.7;max-width:48rem}
+.bookmaker-page .bm-partner-links{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1rem}.bookmaker-page .bm-partner-links a{display:flex;gap:.75rem;align-items:center;border:1px solid var(--bm-line);border-radius:12px;padding:.7rem 1rem;font-size:.85rem}
+.bookmaker-page a:focus-visible,.bookmaker-page summary:focus-visible{outline:2px solid var(--bm-mint);outline-offset:4px}.bookmaker-page .font-mono{font-family:inherit;font-variant-numeric:tabular-nums}
+@media(max-width:800px){.bookmaker-page .bm-hero{grid-template-columns:1fr;gap:1.6rem}.bookmaker-page .bm-guide-grid,.bookmaker-page .bm-steps{grid-template-columns:1fr}.bookmaker-page .bm-price-example{grid-template-columns:1fr;gap:1rem}.bookmaker-page .bm-method{padding:1.25rem .2rem}.bookmaker-page .bm-section{margin:2.2rem 0}.bookmaker-page .bm-ticket{padding:1.2rem}}

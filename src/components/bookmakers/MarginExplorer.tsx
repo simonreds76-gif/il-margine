@@ -1,6 +1,8 @@
 "use client";
 
 import BookmakerMark from "@/components/bookmakers/BookmakerMark";
+import SportIcon from "@/components/SportIcon";
+import EditorialIcon from "@/components/EditorialIcon";
 
 import { useEffect, useMemo, useState, type KeyboardEvent } from "react";
 import MarginBenchmarkStrip from "@/components/bookmakers/MarginBenchmarkStrip";
@@ -35,27 +37,10 @@ const SPORT_LABELS: Record<string, string> = {
   tennis: "Tennis",
 };
 const DEFAULT_VISIBLE_ROWS = 8;
+const FEATURED_BOOKS = ["Bet365", "Sky Bet", "Paddy Power", "William Hill", "Ladbrokes", "Coral", "BetMGM", "Betfred"];
 
 function marketId(segment: MarginSegment) {
   return segment.market_family.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-}
-
-function SportGlyph({ sport }: { sport: string }) {
-  if (sport === "tennis") {
-    return (
-      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current">
-        <circle cx="12" cy="12" r="8.25" strokeWidth="1.7" />
-        <path d="M6.4 6.4c3.9 2.1 5.1 7.7 2.1 11.2M17.6 17.6c-3.9-2.1-5.1-7.7-2.1-11.2" strokeWidth="1.7" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current">
-      <circle cx="12" cy="12" r="8.25" strokeWidth="1.7" />
-      <path d="m12 7.3 3 2.2-1.15 3.5h-3.7L9 9.5l3-2.2Zm-3 2.2-3.2.2m8.05 3.3 1.8 2.65m-5.5-2.65-1.8 2.65m7.3 0-.25 2.7m-7.05-2.7.25 2.7" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
 }
 
 function MarginPanel({ segment }: { segment: MarginSegment }) {
@@ -64,12 +49,15 @@ function MarginPanel({ segment }: { segment: MarginSegment }) {
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [showAll, setShowAll] = useState(false);
   const [expandedName, setExpandedName] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [familiarOnly, setFamiliarOnly] = useState(false);
 
   const sortedRows = useMemo(
     () => stats ? sortMarginRows(stats.rows, sortKey, sortDirection) : [],
     [stats, sortKey, sortDirection],
   );
-  const visibleRows = showAll ? sortedRows : sortedRows.slice(0, DEFAULT_VISIBLE_ROWS);
+  const filteredRows = sortedRows.filter(row => (!familiarOnly || FEATURED_BOOKS.includes(row.name)) && row.name.toLowerCase().includes(query.trim().toLowerCase()));
+  const visibleRows = showAll ? filteredRows : filteredRows.slice(0, DEFAULT_VISIBLE_ROWS);
   const confidence = confidenceLabel(segment.events);
 
   if (!stats) return null;
@@ -99,7 +87,7 @@ function MarginPanel({ segment }: { segment: MarginSegment }) {
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-300">{segment.sport} snapshot</p>
           <h3 className="mt-1.5 text-2xl font-semibold tracking-tight text-white">{segment.market_family}</h3>
-          <p className="mt-1 text-sm text-slate-400">Complete fixed-odds prices only. Lower margin is better.</p>
+          <p className="mt-1 text-sm text-slate-400">Normalised margin · lower means less built into the market. Select a row for overround and samples.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2 text-xs">
           <span className={`rounded-full border px-3 py-1.5 font-semibold ${confidence.className}`}>{confidence.label} sample</span>
@@ -119,6 +107,19 @@ function MarginPanel({ segment }: { segment: MarginSegment }) {
       ) : (
         <>
           <MarginBenchmarkStrip stats={stats} />
+          <div className="mt-5">
+            <h4 className="flex items-center gap-2 text-sm font-semibold text-slate-200"><EditorialIcon name="compare" className="h-6 w-6" />Familiar UK names, measured in this market</h4>
+            <p className="mt-1 text-xs leading-5 text-slate-400">A shortcut to eight familiar brands. Rank is against the full measured field, regardless of partner status.</p>
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {FEATURED_BOOKS.map(name => {
+                const row = stats.rows.find(item => item.name === name);
+                return <button key={name} type="button" onClick={() => { setQuery(name); setFamiliarOnly(false); setExpandedName(name); }} className="min-w-0 rounded-xl border border-white/10 bg-white/[0.025] p-3 text-left transition-colors hover:border-emerald-300/40 focus-visible:outline-2 focus-visible:outline-emerald-300" aria-label={`Find ${name} in the ranking`}>
+                  <span className="flex items-center gap-2"><BookmakerMark name={name} /><span className="min-w-0 break-words text-xs font-semibold text-slate-200">{name}</span></span>
+                  <span className="mt-3 flex flex-wrap items-end justify-between gap-1"><strong className="text-lg tabular-nums text-white">{row ? `${row.normalized_hold_pct.toFixed(2)}%` : "—"}</strong><span className="text-[10px] text-slate-400">{row ? `${row.tied ? "Joint " : ""}#${row.displayRank} / ${stats.rows.length}` : "Not measured"}</span></span>
+                </button>;
+              })}
+            </div>
+          </div>
 
           {segment.events < 4 && (
             <p className="mt-3 rounded-xl border border-white/[0.07] bg-white/[0.025] px-3 py-2.5 text-xs leading-5 text-slate-400">
@@ -136,6 +137,12 @@ function MarginPanel({ segment }: { segment: MarginSegment }) {
             </p>
           )}
 
+          <div className="mt-5 flex flex-wrap items-end gap-3 rounded-xl border border-white/10 bg-black/15 p-3">
+            <label className="min-w-0 flex-1 text-xs text-slate-300" htmlFor="margin-book-search">Find a bookmaker<input id="margin-book-search" type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="e.g. Bet365 or William Hill" className="mt-1.5 block min-h-11 w-full rounded-lg border border-white/15 bg-[#0b1118] px-3 text-sm text-white focus-visible:outline-2 focus-visible:outline-emerald-300" /></label>
+            <button type="button" aria-pressed={familiarOnly} onClick={() => setFamiliarOnly(value => !value)} className={`min-h-11 rounded-lg border px-3 text-xs font-semibold ${familiarOnly ? "border-emerald-300/50 bg-emerald-300/10 text-emerald-200" : "border-white/15 text-slate-300"}`}>Familiar UK names</button>
+            {(query || familiarOnly) && <button type="button" onClick={() => {setQuery(""); setFamiliarOnly(false);}} className="min-h-11 px-2 text-xs text-emerald-200">Clear filters</button>}
+          </div>
+          <p className="mt-2 text-xs text-slate-400" aria-live="polite">{filteredRows.length} of {stats.rows.length} measured books · ranks and benchmarks always use the full field</p>
           <div className="mt-4">
             <MarginTable
               rows={visibleRows}
@@ -160,14 +167,15 @@ function MarginPanel({ segment }: { segment: MarginSegment }) {
               }}
             />
           </div>
+          {filteredRows.length === 0 && <p className="rounded-xl border border-white/10 p-5 text-sm text-slate-300">No measured bookmaker matches these filters. Clear them to restore the full comparison.</p>}
 
-          {sortedRows.length > DEFAULT_VISIBLE_ROWS && (
+          {filteredRows.length > DEFAULT_VISIBLE_ROWS && (
             <button
               type="button"
               onClick={() => setShowAll((current) => !current)}
               className="mt-3 flex min-h-11 w-full items-center justify-center rounded-xl border border-white/10 bg-white/[0.025] px-4 text-sm font-semibold text-slate-200 transition-colors hover:border-cyan-300/25 hover:bg-cyan-300/[0.05] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70"
             >
-              {showAll ? "Show top 8" : `Show all ${sortedRows.length} bookmakers`}
+              {showAll ? "Show fewer bookmakers" : `Show all ${filteredRows.length} bookmakers`}
             </button>
           )}
         </>
@@ -315,7 +323,7 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured, cov
                   onKeyDown={(event) => moveTab(event, index, [...availableSports], chooseSport, "margin-sport-")}
                   className={`flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/70 ${active ? "bg-emerald-300 text-[#04110c] shadow-[0_8px_28px_rgba(16,185,129,0.16)]" : "text-slate-400 hover:bg-white/[0.04] hover:text-white"}`}
                 >
-                  <SportGlyph sport={sport} />
+                  <SportIcon sport={sport} className="h-7 w-7" />
                   {SPORT_LABELS[sport]}
                 </button>
               );
@@ -325,7 +333,7 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured, cov
           <div id={`margin-markets-${selectedSport}`} className="min-w-0">
             <p className="mb-2 text-[9px] font-semibold uppercase tracking-[0.17em] text-slate-500">Choose market</p>
             <div className="overflow-x-auto pb-1">
-              <div role="tablist" aria-label={`${SPORT_LABELS[selectedSport]} measured markets`} className="flex min-w-max gap-2">
+              <div role="tablist" aria-label={`${SPORT_LABELS[selectedSport]} measured markets`} className="flex flex-wrap gap-2">
                 {currentSegments.map((segment, index) => {
                   const id = marketId(segment);
                   const active = selectedMarket === id;
@@ -391,7 +399,7 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured, cov
       </div>
 
       <div className="relative grid gap-4 border-t border-white/[0.07] bg-black/25 px-4 py-5 text-sm sm:grid-cols-3 sm:px-7">
-        <div><p className="font-semibold text-slate-100">What margin means</p><p className="mt-1 leading-6 text-slate-400">The estimated slice of every £1 staked that the bookmaker keeps. Lower is better.</p></div>
+        <div><p className="font-semibold text-slate-100">What margin means</p><p className="mt-1 leading-6 text-slate-400">Normalised margin is 1 − 1/book total. It describes the prices under proportional assumptions, not actual bookmaker profit.</p></div>
         <div><p className="font-semibold text-slate-100">Why markets are missing</p><p className="mt-1 leading-6 text-slate-400">Every mutually exclusive outcome must exist at the identical line. Over-only prices are not enough.</p></div>
         <div><p className="font-semibold text-slate-100">How to read the scale</p><p className="mt-1 leading-6 text-slate-400">Bars show position inside this market only. The white tick marks its median bookmaker.</p></div>
       </div>

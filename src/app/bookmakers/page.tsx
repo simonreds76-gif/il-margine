@@ -1,626 +1,79 @@
 import Link from "next/link";
 import Footer from "@/components/Footer";
-import BookmakerLogo from "@/components/BookmakerLogo";
-import MarginExplorer from "@/components/bookmakers/MarginExplorer";
 import PageHomeLink from "@/components/PageHomeLink";
 import EditorialIcon from "@/components/EditorialIcon";
-import "@/components/editorial-surfaces.css";
-import {
-  NOT_MEASURED_MARKETS,
-  type BookmakerMarginIndex,
-} from "@/lib/bookmakers/margin-index";
+import MarginExplorer from "@/components/bookmakers/MarginExplorer";
+import BookmakerMark from "@/components/bookmakers/BookmakerMark";
+import { NOT_MEASURED_MARKETS, capturedLabel, type BookmakerMarginIndex } from "@/lib/bookmakers/margin-index";
 import marginIndexJson from "../../../data/bookmakers/margin-index.json";
+import "./bookmakers.css";
 
-const MARGIN_INDEX = marginIndexJson as BookmakerMarginIndex;
-type BookmakerReview = {
-  id: string;
-  name: string;
-  stars: string;
-  rating: string;
-  propsScore: string;
-  tennisScore: string;
-  strengths: string[];
-  weaknesses: string[];
-  usageTips: string;
-  bestFor: string;
-  welcomeOffer?: string;
-  welcomeTerms?: string;
-  offerUrl?: string;
-};
-
-const PARTNER_IDS = new Set(["william-hill", "bwin", "betway"]);
-
-function isPartner(
-  bookmaker: BookmakerReview,
-): bookmaker is BookmakerReview & Required<Pick<BookmakerReview, "welcomeOffer" | "welcomeTerms" | "offerUrl">> {
-  return (
-    PARTNER_IDS.has(bookmaker.id) &&
-    Boolean(bookmaker.welcomeOffer && bookmaker.welcomeTerms && bookmaker.offerUrl)
-  );
-}
-
-const BOOKMAKERS: BookmakerReview[] = [
-  {
-    id: "william-hill",
-    name: "William Hill",
-    stars: "⭐⭐⭐⭐",
-    rating: "4/5",
-    propsScore: "8/10",
-    tennisScore: "7/10",
-    welcomeOffer: "Bet £10 Get £40 in Free Bets",
-    welcomeTerms: "New UK customers, promo code G40. Deposit & place £10 cash single bet (min odds 1/2) on sportsbook (excl. Virtuals). Get £40 in Free Bets (4x£10), valid 7 days, must use in full (£10 each). Not valid via PayPal, Neosurf, Paysafe, Apple Pay, NETELLER, Skrill, ecoPayz, Kalibra/Postpay or WH PLUS Card. One per customer. Full T&Cs apply.",
-    strengths: [
-      "Must-have in our rotation — we use it regularly for props and tennis",
-      "Stake limits hold up better than many UK books we've tested",
-      "Comprehensive player props across Premier League, Championship, major European leagues",
-      "Solid tennis markets on ATP 250+; game handicaps and totals competently priced",
-      "Reliable platform, withdrawal processing and liquidity",
-      "Good bet builder; correlation mispricing appears on lower-profile matches",
-      "Established operator — one of the books we rely on most",
-    ],
-    weaknesses: [
-      "Props margins 10-13% (in line with market)",
-      "Tennis coverage drops off below ATP 250",
-      "Platform can feel dated next to newer apps",
-    ],
-    usageTips: "William Hill is a must-have. We use it regularly for both player props and tennis. Limits have held up better than at several other UK books in our experience — we still get meaningful stakes on props and tennis months in. For props: strong coverage across Premier League, Championship, La Liga, Bundesliga, Serie A. Odds are competitive often enough that we always check them when line shopping. Bet builder markets are decent and correlation mispricing does appear, especially on lower-profile matches. For tennis: solid for ATP 250 and above; game handicaps and totals are competently priced and often within a few percent of sharp closing lines. Withdrawal processing is reliable. Open this account early and keep it in your core set. One of the books we'd replace last.",
-    bestFor: "Must-have — we use it often, limits hold up",
-    offerUrl: "/api/go/william-hill",
-  },
-  {
-    id: "bwin",
-    name: "Bwin",
-    stars: "⭐⭐⭐⭐",
-    rating: "4/5",
-    propsScore: "8/10",
-    tennisScore: "7/10",
-    welcomeOffer: "Bet £5 Get £20 in Free Bets",
-    welcomeTerms: "Min £5 bet on sports at odds 1/2+. 4×£5 free bets, valid 7 days, stake not returned. T&Cs apply.",
-    strengths: [
-      "Comprehensive player props across all major leagues",
-      "Established Entain sportsbook with broad mainstream coverage",
-      "Solid odds quality on props markets",
-      "Good bet builder functionality",
-      "Modern online platform",
-      "Reasonable tennis coverage on major events",
-    ],
-    weaknesses: [
-      "Pricing can overlap with other Entain brands",
-      "Tennis markets thin out below ATP 250 level",
-      "Props margins 10-13%",
-      "Stake limits tighten quickly on profitable accounts",
-    ],
-    usageTips: "Bwin is strongest as a football-props and mainstream-tennis account. Coverage is broad across the Premier League, Championship and major European leagues, while the bet builder is useful for price comparison. Tennis coverage is adequate from ATP 250 level upward but becomes thinner lower down the schedule. Check the exact line and price rather than assuming the group-wide number is best.",
-    bestFor: "Football props and mainstream tennis",
-    offerUrl: "/api/go/bwin",
-  },
-  {
-    id: "betway",
-    name: "Betway",
-    stars: "⭐⭐⭐⭐",
-    rating: "4/5",
-    propsScore: "8/10",
-    tennisScore: "6/10",
-    welcomeOffer: "Bet £10 Get £40 in Free Bets",
-    welcomeTerms: "New UK customers. Min £10 qualifying bet at odds 2.0+. Four £10 free bet tokens on settlement, 7-day expiry. Debit card deposits only. Token restrictions apply.",
-    strengths: [
-      "Established UK sportsbook with real depth on mainstream football markets",
-      "Props can be genuinely competitive and sometimes top-of-market on selected football lines",
-      "Cash Out is available across a wide range of pre-match and in-play bets",
-      "Strong mobile-first product and plenty of in-play focus",
-      "Good mainstream football coverage and promotional visibility",
-      "Tennis is covered well enough on ATP/WTA headline events",
-      "Useful extra line-shopping account even if you already have the core books",
-    ],
-    weaknesses: [
-      "The £10 → £40 welcome offer is less flexible than it first looks once you read the token rules",
-      "Free-bet tokens are tied to bet builders/accas with extra conditions",
-      "Not one of our first books for lower-tier tennis or Challenger work",
-      "Prices still need line-shopping rather than blind trust",
-      "Like most recreational books, it is not built to be a forever home for winning accounts",
-    ],
-    usageTips: "Compare Betway against other available books for the exact player, line and settlement rules. Check current odds, accepted stakes and offer terms before placing a bet; neither brand reputation nor a welcome offer establishes value.",
-    bestFor: "Football props, mobile betting, worthwhile line shopping",
-    offerUrl: "/api/go/betway",
-  },
+const index = marginIndexJson as BookmakerMarginIndex;
+const names = Array.from(new Set(index.segments?.flatMap(s => s.operators.map(o => o.name)) ?? []));
+const coverage = index.coverage ?? { target_operators: names.length, discovered_operators: names.length, payload_operators: names.length, qualified_operators: names.length, payload_operator_names: names, qualified_operator_names: names };
+const segments = coverage.payload_operators >= 10 ? index.segments ?? [] : [];
+const FAQ = [
+  { q: "Which UK bookmaker has the lowest margin?", a: "It depends on the market and when you look. Choose football or tennis, then a market, to see the measured order. These are dated observations from a small sample, not a permanent ranking of bookmakers. The lowest market margin also does not guarantee the best price on your selection." },
+  { q: "What is the difference between overround and margin?", a: "Add 1 divided by each decimal price to get the book total, B. Overround is (B − 1) × 100%. The ranking uses normalised margin, (1 − 1/B) × 100%, which puts that excess on a turnover basis under proportional pricing assumptions. Neither tells you the bookmaker’s actual profit or your personal expected loss." },
+  { q: "Are these today’s odds?", a: `No. This is an archived capture from ${capturedLabel(index.generated_at)}. Prices can change substantially. Check the current odds and settlement terms before making any comparison. We do not replace a missing quote with one from an older capture.` },
+  { q: "Why can’t every player-prop market be ranked?", a: "An over-only price cannot reveal the full market margin. We need both sides of the same line, from the same bookmaker and capture. Anytime goalscorer selections overlap, so adding their implied probabilities does not produce a valid market overround." },
+  { q: "Are exchange prices included?", a: "No. Exchange back and lay prices, available liquidity and commission require a different comparison. This table covers fixed-odds sportsbooks only; it does not treat an exchange as a zero-margin bookmaker." },
+  { q: "Do partner links affect the rankings?", a: "No. Rankings are calculated from the recorded prices. Partner links appear separately below and may earn Il Margine a commission. There are no paid positions in the margin table." },
 ];
-
-const COMPARISON_ROWS = [
-  { name: "William Hill", props: "8/10", tennis: "7/10", offer: "£40 free bets", bestFor: "Must-have — we use it often, limits hold up" },
-  { name: "Bwin", props: "8/10", tennis: "7/10", offer: "£5 → £20 free bets", bestFor: "Football props and mainstream tennis" },
-  { name: "Betway", props: "8/10", tennis: "6/10", offer: "£40 free bets", bestFor: "Football props, mobile betting, worthwhile line shopping" },
-];
-
-function BookmakerCard({ bm }: { bm: BookmakerReview & Required<Pick<BookmakerReview, "welcomeOffer" | "welcomeTerms" | "offerUrl">> }) {
-  return (
-    <article className="bg-[#1a1d24] rounded-xl border border-slate-800 overflow-hidden">
-      <div className="p-5 md:p-6">
-        <div className="flex flex-wrap items-center gap-3 mb-3">
-          <BookmakerLogo bookmaker={{ id: 0, name: bm.name, short_name: bm.name, affiliate_link: bm.offerUrl, active: true }} size="md" />
-          <div>
-            <h3 className="font-semibold text-slate-100">{bm.name}</h3>
-            <span className="text-xs text-slate-500">{bm.stars} · Props {bm.propsScore} · Tennis {bm.tennisScore}</span>
-          </div>
-        </div>
-        <div className="flex flex-col gap-3 border-t border-slate-800 pt-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-400">New UK customers</span>
-            <p className="mt-1 text-sm font-semibold text-slate-100">{bm.welcomeOffer}</p>
-          </div>
-          <a
-            href={bm.offerUrl}
-            target="_blank"
-            rel="sponsored nofollow noopener noreferrer"
-            className="inline-flex w-full items-center justify-center rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-400 sm:w-auto"
-          >
-            View {bm.name} offer →
-          </a>
-        </div>
-      </div>
-      {/* Expandable details */}
-      <details className="group border-t border-slate-800">
-        <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-5 md:px-6 py-3.5 text-sm rounded-b-xl hover:bg-slate-800/50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50">
-          <span className="text-slate-300 font-medium">Read full review — click to expand</span>
-          <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180" aria-hidden>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-          </span>
-        </summary>
-        <div className="px-5 md:px-6 pb-5 pt-0 space-y-4">
-          <div className="rounded-lg border border-slate-700/80 bg-slate-800/40 px-3 py-2">
-            <p className="text-[11px] leading-5 text-slate-500">{bm.welcomeTerms}</p>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400 mb-1.5">Strengths</p>
-              <ul className="list-disc pl-4 text-slate-400 text-sm space-y-0.5">
-                {bm.strengths.map((s, i) => <li key={i}>{s}</li>)}
-              </ul>
-            </div>
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Weaknesses</p>
-              <ul className="list-disc pl-4 text-slate-400 text-sm space-y-0.5">
-                {bm.weaknesses.map((w, i) => <li key={i}>{w}</li>)}
-              </ul>
-            </div>
-          </div>
-          <p className="text-slate-400 text-sm leading-relaxed">{bm.usageTips}</p>
-        </div>
-      </details>
-    </article>
-  );
-}
-
-const FAQ_ITEMS = [
-  { q: "Is the margin index live?", a: "No. It is a dated, one-off snapshot. We publish the capture time and sample size so the comparison is not mistaken for a live odds screen." },
-  { q: "Why are some prop markets not measured?", a: "A bookmaker margin needs every mutually exclusive outcome from the same bookmaker at the same line. An over-only player-prop price cannot produce a defensible margin, so we label it not measured rather than inventing one." },
-  { q: "What if odds are better elsewhere?", a: "Take the best available price after checking that the market, line and settlement rules are identical. Small price improvements compound materially over a large sample." },
-  { q: "Are welcome offers guaranteed value?", a: "No. Terms, qualifying odds, expiry and withdrawal conditions matter. Read the current operator terms and never place a poor-value bet solely to unlock a promotion." },
-  { q: "What happens when I get restricted?", a: "Stake limits reduce gradually, eventually hitting £5-20 maximum. The account remains active but becomes operationally useless for serious betting. Limits vary by account and market. Check the accepted stake and current terms; past availability does not guarantee future access.", linkToFaq: true },
-];
+const partners = [{ name: "William Hill", url: "/api/go/william-hill" }, { name: "Betway", url: "/api/go/betway" }, { name: "Bwin", url: "/api/go/bwin" }];
 
 export default function BookmakersPage() {
-  const snapshotOperatorNames = Array.from(new Set(
-    (MARGIN_INDEX.segments ?? []).flatMap((segment) =>
-      segment.operators.map((operator) =>
-        operator.name === "Bet365 (no latency)" ? "Bet365" : operator.name,
-      ),
-    ),
-  ));
-  const marginCoverage = MARGIN_INDEX.coverage ?? {
-    target_operators: snapshotOperatorNames.length,
-    discovered_operators: snapshotOperatorNames.length,
-    payload_operators: snapshotOperatorNames.length,
-    qualified_operators: snapshotOperatorNames.length,
-    payload_operator_names: snapshotOperatorNames,
-    qualified_operator_names: snapshotOperatorNames,
-  };
-  const hasBroadCoverage = marginCoverage.payload_operators >= 10;
-  const measuredSegments = (hasBroadCoverage ? MARGIN_INDEX.segments ?? [] : []).filter(
-    (segment) => segment.operators.length > 0,
-  );
-  const partnerBookmakers = BOOKMAKERS.filter(isPartner);
-
-  return (
-    <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <div className="public-hub-heading max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-8 md:pb-12">
-        <PageHomeLink className="mb-8" />
-
-        {/* Hero */}
-        <section className="mb-10 md:mb-12">
-          <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">BOOKMAKERS</span>
-          <h1 className="max-w-4xl text-4xl font-semibold tracking-[-0.035em] text-white sm:text-5xl lg:text-6xl">
-            UK Bookmaker Margin Index
-          </h1>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
-            Which UK bookmaker is cheapest, market by market. Measured from complete prices captured in a single snapshot — not estimates and not a live feed.
-          </p>
-          <p className="mt-4 text-sm text-slate-500">
-            18+ only. Gamble responsibly. <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400/80 hover:text-emerald-300 underline">begambleaware.org</a>
-          </p>
-        </section>
-
-        <MarginExplorer
-          generatedAt={MARGIN_INDEX.generated_at}
-          segments={measuredSegments}
-          notMeasured={NOT_MEASURED_MARKETS}
-          coverage={marginCoverage}
-          summary={MARGIN_INDEX.summary}
-        />
-
-        <section className="mb-12 grid gap-4 md:grid-cols-3">
-          <article className="rounded-2xl border border-slate-800 bg-[#141820] p-5">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-300">Complete markets only</p>
-            <h2 className="mt-2 text-lg font-semibold text-white">No over-only shortcuts</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-400">We calculate margin only when every mutually exclusive outcome is available from the same bookmaker at the identical line.</p>
-          </article>
-          <article className="rounded-2xl border border-slate-800 bg-[#141820] p-5">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-300">One dated capture</p>
-            <h2 className="mt-2 text-lg font-semibold text-white">Comparable, not live</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-400">Alternate lines are collapsed before comparison, so a bookmaker with more lines cannot gain artificial weight.</p>
-          </article>
-          <article className="rounded-2xl border border-slate-800 bg-[#141820] p-5">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-300">Read the evidence</p>
-            <h2 className="mt-2 text-lg font-semibold text-white">Samples stay visible</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-400">Every panel shows event and quote counts. Thin markets remain labelled instead of being blended into a misleading global league table.</p>
-          </article>
-        </section>
-
-        {/* Bookmaker offers */}
-        <section className="mb-12 rounded-[2rem] border border-emerald-300/15 bg-[linear-gradient(145deg,rgba(16,185,129,0.06),rgba(15,17,23,0.9)_44%)] p-5 sm:p-7">
-          <div className="mb-5 max-w-3xl">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-300">Current offers</p>
-            <h2 className="mt-2 text-2xl font-semibold text-white">Bookmakers we recommend</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-400">Three accounts we currently use for football props, tennis and price comparison.</p>
-          </div>
-          <div className="grid gap-3 md:grid-cols-3">
-            {partnerBookmakers.map((bm) => (
-              <article key={bm.id} className="flex flex-col rounded-2xl border border-slate-700/80 bg-[#11151c] p-4 shadow-[0_14px_40px_rgba(0,0,0,0.2)]">
-                <div className="flex items-center gap-3">
-                  <BookmakerLogo bookmaker={{ id: 0, name: bm.name, short_name: bm.name, affiliate_link: bm.offerUrl, active: true }} size="sm" />
-                  <div>
-                    <p className="font-semibold text-slate-100">{bm.name}</p>
-                  </div>
-                </div>
-                <p className="mt-4 text-sm font-semibold text-white">{bm.welcomeOffer}</p>
-                <p className="mt-1 text-xs leading-5 text-slate-500">New UK customers. Full operator terms apply.</p>
-                <a
-                  href={bm.offerUrl}
-                  target="_blank"
-                  rel="sponsored nofollow noopener noreferrer"
-                  className="mt-4 inline-flex items-center justify-center rounded-xl border border-emerald-400/25 bg-emerald-400/[0.09] px-4 py-2.5 text-sm font-semibold text-emerald-200 transition-colors hover:bg-emerald-400/[0.16]"
-                >
-                  View offer →
-                </a>
-              </article>
-            ))}
-          </div>
-          <p className="mt-4 text-[11px] leading-5 text-slate-600">Some outbound bookmaker links are affiliate links. 18+; full terms apply.</p>
-        </section>
-
-        {/* Full reviews */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-semibold text-white">Bookmaker reviews</h2>
-          <p className="mb-7 mt-2 max-w-3xl text-sm leading-6 text-slate-500">Practical notes on the three bookmakers currently featured on Il Margine.</p>
-          <div className="space-y-6">
-            {partnerBookmakers.map((bm) => (
-              <BookmakerCard key={bm.id} bm={bm} />
-            ))}
-          </div>
-        </section>
-
-        {/* Key Concepts - 5 accordions */}
-        <section className="mb-10">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-6">Understanding Bookmaker Markets</h2>
-          <div className="editorial-surface rounded-xl border overflow-hidden divide-y divide-slate-800">
-            <details className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span className="editorial-label"><EditorialIcon name="analysis" /><span>Market Efficiency & Edge Identification</span></span>
-                <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                </span>
-              </summary>
-              <div className="px-6 md:px-8 pb-4 pt-0">
-                <div className="text-slate-300 text-sm leading-relaxed space-y-3">
-                  <p>Not all markets are priced equally. Bookmakers allocate resources based on betting volume and risk exposure.</p>
-                  <p><strong className="text-slate-100">Efficient Markets:</strong> Premier League match odds are the clearest example. Teams of traders, real-time monitoring and heavy liquidity make those lines hard to beat consistently.</p>
-                  <p><strong className="text-slate-100">Softer Markets:</strong> Player props are the clearest soft market for us: template pricing, lighter oversight and wider margins. Bet builders can also misprice correlation.</p>
-                  <p><strong className="text-slate-100">Tennis sits in the middle.</strong> It is generally more efficient than props, but selected ATP and Challenger spots, especially in handicaps and totals, can still be worth betting when our model prices them better than the market.</p>
-                  <p>Our approach: we bet wherever we identify genuine edge. Props and selective tennis prices are the main focus, but for different reasons. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">Our methodology</Link> for methodology.</p>
-                </div>
-              </div>
-            </details>
-            <details className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span className="editorial-label"><EditorialIcon name="compare" /><span>Market Margins</span></span>
-                <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                </span>
-              </summary>
-              <div className="px-6 md:px-8 pb-4 pt-0">
-                <div className="text-slate-300 text-sm leading-relaxed space-y-3">
-                  <p>Understanding margins reveals where value opportunities exist:</p>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm border-collapse">
-                      <thead>
-                        <tr className="border-b border-slate-700">
-                          <th className="text-left py-2 pr-4 text-emerald-400/90 font-medium">Market Type</th>
-                          <th className="text-left py-2 pr-4 text-emerald-400/90 font-medium">Typical Margin</th>
-                          <th className="text-left py-2 pr-4 text-emerald-400/90 font-medium">Opportunity</th>
-                          <th className="text-left py-2 text-emerald-400/90 font-medium">Focus</th>
-                        </tr>
-                      </thead>
-                      <tbody className="text-slate-300">
-                        <tr className="border-b border-slate-800"><td className="py-2 pr-4">Premier League 1X2</td><td className="py-2 pr-4">3-5%</td><td className="py-2 pr-4">Low</td><td className="py-2">Occasionally</td></tr>
-                        <tr className="border-b border-slate-800"><td className="py-2 pr-4">Championship 1X2</td><td className="py-2 pr-4">5-7%</td><td className="py-2 pr-4">Low-Moderate</td><td className="py-2">Occasionally</td></tr>
-                        <tr className="border-b border-slate-800"><td className="py-2 pr-4">Player Props</td><td className="py-2 pr-4">10-15%</td><td className="py-2 pr-4">High</td><td className="py-2">Yes</td></tr>
-                        <tr className="border-b border-slate-800"><td className="py-2 pr-4">Tennis Match Odds</td><td className="py-2 pr-4">4-6%</td><td className="py-2 pr-4">Low</td><td className="py-2">Occasionally (selective)</td></tr>
-                        <tr className="border-b border-slate-800"><td className="py-2 pr-4">Tennis Handicaps</td><td className="py-2 pr-4">8-12%</td><td className="py-2 pr-4">Moderate-High</td><td className="py-2">Yes</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <p>Larger margins don&apos;t guarantee edge, but they create more room for mispricing.</p>
-                </div>
-              </div>
-            </details>
-            <details className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span className="editorial-label"><EditorialIcon name="responsible" /><span>Account Restrictions</span></span>
-                <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                </span>
-              </summary>
-              <div className="px-6 md:px-8 pb-4 pt-0">
-                <div className="text-slate-300 text-sm leading-relaxed space-y-3">
-                  <p>Bookmakers restrict profitable accounts. This is inevitable, not personal.</p>
-                  <p>Factors accelerating restrictions: consistent profitability, only betting props/niche markets, only odds ≥2.00, large stakes, withdrawing more than depositing. See <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ</Link> for guidance.</p>
-                </div>
-              </div>
-            </details>
-            <details className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span className="editorial-label"><EditorialIcon name="bankroll" /><span>Account Longevity Tactics</span></span>
-                <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                </span>
-              </summary>
-              <div className="px-6 md:px-8 pb-4 pt-0">
-                <div className="text-slate-300 text-sm leading-relaxed space-y-4">
-                  <p>Bookmakers flag accounts that only take value. Blending typical punters&apos; behaviour can extend lifespan:</p>
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li><strong className="text-slate-100">Mix in recreational bets:</strong> For every 3–4 value bets, place one bet at standard odds (e.g. match winner, favourite). Don&apos;t only bet when you spot edge.</li>
-                    <li><strong className="text-slate-100">Stick to popular markets:</strong> Premier League, Champions League, major events. Avoid obscure leagues unless you bet there regularly anyway.</li>
-                    <li><strong className="text-slate-100">Bet at normal times:</strong> Weekends, before kick-off. Avoid only betting during sharp odds moves.</li>
-                    <li><strong className="text-slate-100">Vary stakes:</strong> Use rounded amounts (10, 20, 25). Avoid odd decimals or constant max stakes.</li>
-                    <li><strong className="text-slate-100">Use bet builders and accas occasionally:</strong> Popular with casual punters. Small acca or correlated builder now and then helps.</li>
-                    <li><strong className="text-slate-100">Occasional in-play:</strong> Small random in-play bets mirror typical betting habits.</li>
-                  </ul>
-                  <p>Also: Deposit regularly. Delay withdrawals 2–3 weeks. Avoid patterns (same time, same league only). These tactics extend lifespan by 20–40%, not indefinitely. Restrictions are inevitable; plan rollover to new accounts.</p>
-                </div>
-              </div>
-            </details>
-            <details className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span className="editorial-label"><EditorialIcon name="markets" /><span>Template Pricing Weakness</span></span>
-                <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                </span>
-              </summary>
-              <div className="px-6 md:px-8 pb-4 pt-0">
-                <div className="text-slate-300 text-sm leading-relaxed space-y-3">
-                  <p>Most bookmakers use template pricing for player props, and far more generic automation on parts of the tennis board than the average bettor realises. Example: bookmaker pulls a player&apos;s last 10 matches, calculates an average, applies margin, and pushes out a number. What those shortcuts miss: opponent-specific factors, tactical matchups, referee tendencies, venue context, surface effects, and scheduling pressure. When your analysis captures those things and the template doesn&apos;t, price and true probability drift apart. That&apos;s where we operate. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">Our methodology</Link>.</p>
-                </div>
-              </div>
-            </details>
-          </div>
-        </section>
-
-        {/* Responsive comparison */}
-        <section className="mb-10">
-          <h2 className="text-xl font-semibold text-emerald-400">Quick Comparison</h2>
-          <p className="mt-2 text-sm text-slate-500">Our practical ratings for the three bookmakers featured on this page.</p>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {COMPARISON_ROWS.map((row) => (
-              <article key={row.name} className="rounded-2xl border border-slate-800 bg-[#141820] p-4">
-                <div className="flex items-center gap-3">
-                  <BookmakerLogo bookmaker={{ id: 0, name: row.name, short_name: row.name, affiliate_link: null, active: true }} size="sm" />
-                  <h3 className="font-semibold text-white">{row.name}</h3>
-                </div>
-                <dl className="mt-4 grid grid-cols-2 gap-2 text-xs">
-                  <div className="rounded-lg bg-black/20 p-2.5">
-                    <dt className="text-slate-600">Player props</dt>
-                    <dd className="mt-1 font-mono font-semibold text-slate-200">{row.props}</dd>
-                  </div>
-                  <div className="rounded-lg bg-black/20 p-2.5">
-                    <dt className="text-slate-600">Tennis</dt>
-                    <dd className="mt-1 font-mono font-semibold text-slate-200">{row.tennis}</dd>
-                  </div>
-                </dl>
-                <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-400/80">{row.offer}</p>
-                <p className="mt-2 text-xs leading-5 text-slate-500">{row.bestFor}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        {/* Account Strategy */}
-        <section className="editorial-surface rounded-xl border p-6 md:p-8 mb-10">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-4">Recommended Approach</h2>
-          <div className="text-slate-300 text-sm leading-relaxed space-y-4">
-            <p><strong className="text-slate-100">Use the index as evidence, not a signup ranking.</strong> Choose the sport and exact market you intend to bet, compare complete prices, then check the current live line and settlement rules directly with the operator.</p>
-            <ol className="editorial-steps">
-              <li><EditorialIcon name="compare" className="h-9 w-9" /><span>Match the same market and line across bookmakers.</span></li>
-              <li><EditorialIcon name="markets" className="h-9 w-9" /><span>Prefer the best price, not the bookmaker with the strongest promotion.</span></li>
-              <li><EditorialIcon name="analysis" className="h-9 w-9" /><span>Treat thin samples as directional evidence only.</span></li>
-              <li><EditorialIcon name="bankroll" className="h-9 w-9" /><span>Keep stakes tied to bankroll and verified edge, never to bonus size.</span></li>
-            </ol>
-            <p>Use multiple accounts to compare the same line and price before betting. See our <Link href="/track-record" className="text-emerald-400 hover:text-emerald-300 underline">Track Record</Link> for performance context.</p>
-          </div>
-        </section>
-
-        {/* Betting Glossary - 8 categories */}
-        <section className="mb-10">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-6">Industry Terminology You Need To Know</h2>
-          <div className="editorial-surface rounded-xl border overflow-hidden divide-y divide-slate-800">
-            <details className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span className="editorial-label"><EditorialIcon name="guide" /><span>Essential Betting Terms</span></span>
-                <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
-              </summary>
-              <div className="px-6 md:px-8 pb-4 pt-0">
-                <dl className="text-slate-300 text-sm space-y-3">
-                  <div><dt className="font-semibold text-emerald-400/90">Gubbing / Getting Gubbed</dt><dd>When a bookmaker restricts your account to minimal stake levels (£5-10 max). The inevitable end-point for consistent winners on recreational bookmakers.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Mug Punter / Recreational Bettor</dt><dd>Casual bettor who uses promotions, backs favourites in accumulators. Bookmakers&apos; ideal customer.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Sharp / Sharp Bettor</dt><dd>Professional or highly profitable bettor with analytical edge. If you&apos;re consistently sharp, you&apos;ll get gubbed.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Stake / Staking</dt><dd>The amount wagered. &quot;Max stake&quot; = maximum bookmaker allows; decreases as you win.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Void / Voided Bet</dt><dd>Bet cancelled with stake returned. Common in player props when player doesn&apos;t start.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Value Bet / +EV</dt><dd>Bet where your calculated probability exceeds the bookmaker&apos;s implied probability. Long-term profitability comes from consistent +EV.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">ROI</dt><dd>(Total Profit ÷ Total Staked) × 100. e.g. +20% = £20 profit per £100 wagered.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Units</dt><dd>Standardised bet sizing. 1 unit = your standard stake (typically 1-2% of bankroll).</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Closing Line Value (CLV)</dt><dd>Comparing odds you took vs final odds before event. Positive CLV indicates sharp betting.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Bankroll</dt><dd>Total funds dedicated to betting. Recommended: 40-50 units minimum.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Edge</dt><dd>Your advantage over bookmaker&apos;s odds. All profitable betting is edge exploitation.</dd></div>
-                </dl>
-              </div>
-            </details>
-            <details className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span className="editorial-label"><EditorialIcon name="markets" /><span>Market-Specific Terms</span></span>
-                <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
-              </summary>
-              <div className="px-6 md:px-8 pb-4 pt-0">
-                <dl className="text-slate-300 text-sm space-y-3">
-                  <div><dt className="font-semibold text-emerald-400/90">Player Props / Player Specials</dt><dd>Bets on individual player stats: shots on target, fouls, tackles, cards.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Handicap / Spread</dt><dd>Adjusting final score by a margin. e.g. -3.5 games in tennis.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Total / Over-Under</dt><dd>Bet on combined total exceeding or below a number.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Bet Builder / Same Game Parlay</dt><dd>Multiple selections from one match; all must win. Correlation mispricing common.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Anytime Goalscorer (ATG)</dt><dd>Bet on player to score at least one goal during the match.</dd></div>
-                </dl>
-              </div>
-            </details>
-            <details className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span className="editorial-label"><EditorialIcon name="compare" /><span>Bookmaker-Specific Terms</span></span>
-                <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
-              </summary>
-              <div className="px-6 md:px-8 pb-4 pt-0">
-                <dl className="text-slate-300 text-sm space-y-3">
-                  <div><dt className="font-semibold text-emerald-400/90">Enhanced Odds / Price Boost</dt><dd>Promotional odds better than standard. Always calculate true value.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Free Bet / Bonus Bet</dt><dd>Stake provided by bookmaker. &quot;Stake Not Returned&quot; (SNR) = winnings exclude original stake.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Cash Out</dt><dd>Settling bet before event finishes at current odds. Usually -EV but can help account profile.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">In-Play / Live Betting</dt><dd>Betting after event starts. Odds update in real-time.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Acca / Accumulator</dt><dd>Multiple bets combined; all must win. Margins compound — we don&apos;t recommend accas.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Each-Way (E/W)</dt><dd>Win + place bet. Common in horse racing.</dd></div>
-                </dl>
-              </div>
-            </details>
-            <details className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span className="editorial-label"><EditorialIcon name="about" /><span>UK Betting Slang</span></span>
-                <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
-              </summary>
-              <div className="px-6 md:px-8 pb-4 pt-0">
-                <dl className="text-slate-300 text-sm space-y-3">
-                  <div><dt className="font-semibold text-emerald-400/90">Ton / Century</dt><dd>£100 stake.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Pony</dt><dd>£25. Score = £20. Monkey = £500. Grand / K = £1,000.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Drifting</dt><dd>Odds increasing (getting longer).</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Shortening / Steaming In</dt><dd>Odds decreasing; usually sharp money.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Nap</dt><dd>Best bet of the day.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Odds On / Odds Against</dt><dd>Odds &lt;2.00 (favourite) vs &gt;2.00 (underdog).</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Rag / Jolly</dt><dd>Outsider vs favourite.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Certs / Banker</dt><dd>Perceived sure thing. No such thing — red flag if claimed.</dd></div>
-                </dl>
-              </div>
-            </details>
-            <details className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span className="editorial-label"><EditorialIcon name="analysis" /><span>Advanced / Professional Terms</span></span>
-                <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
-              </summary>
-              <div className="px-6 md:px-8 pb-4 pt-0">
-                <dl className="text-slate-300 text-sm space-y-3">
-                  <div><dt className="font-semibold text-emerald-400/90">Bookmaker Margin / Overround</dt><dd>Sum of implied probabilities exceeds 100%. e.g. 105% = 5% margin.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Implied vs True Probability</dt><dd>1 ÷ decimal odds = implied. True probability from your analysis. When true &gt; implied = value.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Expected Value (EV)</dt><dd>Average result if bet repeated. Positive EV = profitable long-term.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Variance / Sample Size</dt><dd>Short-term deviation from expected. Need 100+ bets, preferably 200+, for edge to show.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Kelly Criterion</dt><dd>Staking formula. Most use fractional Kelly (¼ or ½).</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Line Shopping</dt><dd>Comparing odds across bookmakers. Essential for maximising edge.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Steam Move / RLM</dt><dd>Sudden sharp odds movement; or odds moving opposite to public %.</dd></div>
-                </dl>
-              </div>
-            </details>
-            <details className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span className="editorial-label"><EditorialIcon name="bankroll" /><span>Risk & Bankroll Management</span></span>
-                <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
-              </summary>
-              <div className="px-6 md:px-8 pb-4 pt-0">
-                <dl className="text-slate-300 text-sm space-y-3">
-                  <div><dt className="font-semibold text-emerald-400/90">Bankroll Management</dt><dd>Bet sizes relative to total funds. Standard: 1-2% per bet, max 5% on highest confidence.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Unit System</dt><dd>1 unit = 1% of bankroll typically.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Risk of Ruin</dt><dd>Probability of losing entire bankroll. Proper management keeps it near zero.</dd></div>
-                </dl>
-              </div>
-            </details>
-            <details className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span className="editorial-label"><EditorialIcon name="responsible" /><span>Terminology Red Flags</span></span>
-                <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
-              </summary>
-              <div className="px-6 md:px-8 pb-4 pt-0">
-                <p className="text-slate-300 text-sm mb-2">Avoid services using: Lock / Sure Thing, Guaranteed Winner, Insider Information, Fixed Match, &quot;Triple your bankroll in 30 days&quot;. All are red flags.</p>
-              </div>
-            </details>
-            <details className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                <span className="editorial-label"><EditorialIcon name="method" /><span>Il Margine Preferences</span></span>
-                <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></span>
-              </summary>
-              <div className="px-6 md:px-8 pb-4 pt-0">
-                <p className="text-slate-300 text-sm">We say: player props, edge/value, expected value, long-term profitability, variance, sample size matters, bookmaker margin, account restrictions. We don&apos;t say: locks, sure things, guaranteed winners, can&apos;t lose, insider information.</p>
-              </div>
-            </details>
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <section className="editorial-surface rounded-xl border overflow-hidden mb-10">
-          <h2 className="text-xl font-semibold text-emerald-400 p-6 md:p-8 pb-2">Common Questions</h2>
-          <div className="divide-y divide-slate-800">
-            {FAQ_ITEMS.map((item, i) => (
-              <details key={i} className="group">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                  <span>{item.q}</span>
-                  <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                  </span>
-                </summary>
-                <div className="px-6 md:px-8 pb-4 pt-0">
-                  <p className="text-slate-400 text-sm leading-relaxed">
-                    {item.a}
-                    {"linkToFaq" in item && item.linkToFaq && (
-                      <> See our <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ page</Link> for detailed guidance on managing restrictions.</>
-                    )}
-                  </p>
-                </div>
-              </details>
-            ))}
-          </div>
-        </section>
-
-        <section className="mb-10 rounded-xl border border-slate-800 bg-[#151920] px-5 py-4">
-          <p className="text-xs leading-5 text-slate-500">Some bookmaker links are affiliate links, which may earn Il Margine a commission at no extra cost to you. Margin figures come from the dated price snapshot shown above.</p>
-        </section>
-
-        {/* Responsible Gambling */}
-        <section className="mb-10">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-4">Betting Responsibly</h2>
-          <p className="text-slate-300 text-sm leading-relaxed mb-3">Opening multiple bookmaker accounts is standard for professional bettors, but it requires discipline.</p>
-          <p className="text-slate-300 text-sm leading-relaxed mb-3"><strong className="text-slate-200">Guidelines:</strong> Only deposit money you can afford to lose. Set loss limits across all accounts. Never chase losses by opening more accounts. Track total exposure. Be aware that more accounts = more temptation.</p>
-          <p className="text-slate-300 text-sm leading-relaxed mb-3"><strong className="text-slate-200">If you&apos;re struggling:</strong> UK: 0808 8020 133 (National Gambling Helpline). BeGambleAware: <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline">begambleaware.org</a>. GamCare: <a href="https://www.gamcare.org.uk" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline">gamcare.org.uk</a>. Self-exclusion: GAMSTOP covers all UK-licensed operators.</p>
-          <p className="text-slate-400 text-sm">18+ only. Gamble responsibly.</p>
-        </section>
-      </div>
-      <Footer />
+  return <div className="bookmaker-page min-h-screen bg-[#0f1117] text-slate-100">
+    <div className="public-hub-heading mx-auto max-w-6xl px-4 pb-12 pt-5 sm:px-6 lg:px-8">
+      <PageHomeLink className="mb-8" />
+      <header className="bm-hero">
+        <div>
+          <p className="bm-kicker">Independent betting advice · Price comparison</p>
+          <h1>UK bookmakers.<br /><span>Mind the margin.</span></h1>
+          <p className="bm-lead">Same match. Different prices. See which bookmakers built more margin into their football and tennis markets — and what that means when you compare a bet.</p>
+          <nav aria-label="Bookmaker page sections" className="bm-jumps">
+            <a href="#compare-margins" className="bm-primary"><EditorialIcon name="compare" />Compare bookmakers <span aria-hidden="true">↓</span></a>
+            <a href="#understand-margins">Understand the numbers <span aria-hidden="true">↗</span></a>
+          </nav>
+        </div>
+        <aside className="bm-ticket" aria-label="Illustrative two-outcome market">
+          <div className="bm-ticket-head"><EditorialIcon name="markets" className="h-10 w-10" /><span>What’s inside the price?<small>Illustration · equally likely outcomes</small></span></div>
+          <div className="bm-ticket-prices"><div><small>Fair odds</small><strong>2.00 <span>/</span> 2.00</strong></div><div><small>Bookmaker odds</small><strong>1.90 <span>/</span> 1.90</strong></div></div>
+          <div className="bm-ticket-bar"><span>95% priced return</span><b>5%</b></div>
+          <p>At a true 50% win chance, a £10 bet at 1.90 returns £9.50 on average, including stake. The expected cost is <strong>50p</strong>.</p>
+          <span className="bm-ticket-foot">5.26% overround · 5.00% normalised margin</span>
+        </aside>
+      </header>
+      <section id="compare-margins" className="bm-section" aria-label="Bookmaker margin comparison">
+        <div className="bm-capture"><EditorialIcon name="analysis" /><div><strong>Dated evidence, not a live price board</strong><p>{capturedLabel(index.generated_at)} · {index.summary.events} events · {coverage.qualified_operators} bookmakers measured. Small samples show price differences, not lasting superiority.</p></div></div>
+        <MarginExplorer generatedAt={index.generated_at} segments={segments} notMeasured={NOT_MEASURED_MARKETS} coverage={coverage} summary={index.summary} />
+      </section>
+      <section id="understand-margins" className="bm-section">
+        <div className="bm-section-title"><EditorialIcon name="guide" className="h-11 w-11" /><div><p className="bm-kicker">Read the price, not the promotion</p><h2>Understand the numbers</h2></div></div>
+        <div className="bm-guide-grid">
+          <article className="bm-card"><EditorialIcon name="markets" /><h3>Overround</h3><p>Turn every decimal price into an implied probability, then add them. A book totalling 106% has a <strong>6% overround</strong>.</p><code>B = 1/home + 1/draw + 1/away</code></article>
+          <article className="bm-card"><EditorialIcon name="analysis" /><h3>The margin we rank</h3><p>Normalising that 106% book gives <strong>5.66%</strong>: 1 − 1/1.06. It is a pricing measure under proportional assumptions, not a report of the bookmaker’s profits.</p><Link href="/calculator">Try the margin calculator →</Link></article>
+          <article className="bm-card"><EditorialIcon name="compare" /><h3>Your selection still matters</h3><p>A bookmaker can have a lower overall margin but a shorter price on your team. Compare the exact selection, line and settlement rules before choosing where to bet.</p><Link href="/resources">Learn about fair odds and value →</Link></article>
+        </div>
+        <div className="bm-price-example">
+          <div><p className="bm-kicker">A difference you can count</p><h3>2.00 or 2.10? On £20, that is £2.</h3><p>Same winning selection, same stake: £40 returned at 2.00 or £42 at 2.10. Both include your stake. Shopping for a price improves the payout; it does not make the selection more likely to win.</p></div>
+          <div className="bm-receipts"><div><small>£20 at 2.00</small><strong>£40</strong><span>Total return if won</span></div><div><small>£20 at 2.10</small><strong>£42</strong><span>£2 more if won</span></div></div>
+        </div>
+      </section>
+      <section id="margin-method" className="bm-section bm-method">
+        <div className="bm-section-title"><EditorialIcon name="method" className="h-11 w-11" /><div><p className="bm-kicker">Behind the comparison</p><h2>How we measure it</h2></div></div>
+        <ol className="bm-steps">
+          <li><span>01</span><div><h3>Complete markets</h3><p>All mutually exclusive outcomes must be present from one bookmaker at the same line. Incomplete prices and exchange markets are excluded.</p></div></li>
+          <li><span>02</span><div><h3>One contribution per event</h3><p>We take the median across each bookmaker’s available alternate lines, then average events equally within each market. Extra lines do not add extra event weight.</p></div></li>
+          <li><span>03</span><div><h3>Show the limits</h3><p>Available line menus can differ between bookmakers. These market-family summaries are not a matched-line betting test. Each row shows its sample count; close positions in this small capture should not be overinterpreted.</p></div></li>
+        </ol>
+      </section>
+      <section className="bm-section" aria-labelledby="bm-faq"><div className="bm-section-title"><EditorialIcon name="about" className="h-11 w-11" /><h2 id="bm-faq">Before you compare</h2></div><div className="bm-faq">{FAQ.map(item => <details key={item.q}><summary>{item.q}<span aria-hidden="true">+</span></summary><p>{item.a}</p></details>)}</div></section>
+      <aside className="bm-partners" aria-label="Commercial partner links">
+        <div><p className="bm-kicker">Commercial links · separate from the rankings</p><h2>Partner bookmakers</h2><p>These links may earn Il Margine a commission. They do not affect the measured order above. Offers, eligibility and terms are set by the operator; check them on the destination site.</p></div>
+        <div className="bm-partner-links">{partners.map(p => <a key={p.name} href={p.url} rel="sponsored nofollow"><BookmakerMark name={p.name} /><span>{p.name}<small>Visit operator ↗</small></span></a>)}</div>
+      </aside>
     </div>
-  );
+    <Footer />
+  </div>;
 }

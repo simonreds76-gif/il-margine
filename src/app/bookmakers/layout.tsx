@@ -4,7 +4,7 @@ import { BASE_URL } from "@/lib/config";
 
 const title = "UK Bookmaker Margin Index | Football & Tennis";
 const description =
-  "Compare measured UK bookmaker margins by football and tennis market, with dated samples, transparent methodology, independent reviews and clearly labelled partner offers.";
+  "Compare UK bookmakers including Bet365, Sky Bet, Paddy Power and William Hill by football and tennis market. Dated margin rankings, sample sizes and practical price examples.";
 const url = `${BASE_URL}/bookmakers`;
 
 export const metadata: Metadata = {
