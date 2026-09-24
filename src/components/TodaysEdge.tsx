@@ -34,6 +34,11 @@ const londonTime = new Intl.DateTimeFormat("en-GB", {
   hour: "2-digit",
   minute: "2-digit",
   hour12: false,
+  timeZoneName: "short",
+});
+
+const publishedDate = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/London", day: "numeric", month: "short", year: "numeric",
 });
 
 function dateChip(value: string | null): string {
@@ -53,7 +58,7 @@ function publishedTime(value: string): string {
   const date = new Date(value);
   return Number.isNaN(date.getTime())
     ? "Published"
-    : `Posted ${londonDate.format(date)} · ${londonTime.format(date)}`;
+    : `Posted ${publishedDate.format(date)} · ${londonTime.format(date)}`;
 }
 
 function selectVisiblePicks(picks: EdgeBet[], filter: Filter): EdgeBet[] {

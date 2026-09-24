@@ -37,6 +37,7 @@ function formatAuditTimestamp(value: string | null | undefined): string | null {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
+    timeZoneName: "short",
   }).format(date);
 }
 

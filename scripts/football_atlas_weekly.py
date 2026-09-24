@@ -28,6 +28,12 @@ FORWARD_START = datetime(2026, 9, 21, tzinfo=UTC)
 MANIFEST = Path('src/data/football-atlas-release.json')
 
 
+class RateLimited(RuntimeError):
+    def __init__(self, retry_after):
+        super().__init__('OddsPapi endpoint cooldown')
+        self.retry_after = retry_after
+
+
 def fetch_json(url, params=None):
     # Exception URLs may include credentials. Never surface requests' raw errors.
     try:
@@ -36,6 +42,16 @@ def fetch_json(url, params=None):
         if response.status_code == 404 and url.endswith('/fixtures'):
             if response.json().get('error', {}).get('code') == 'FIXTURE_NOT_FOUND':
                 return []
+        if response.status_code == 429:
+            data = json.loads(response.content.decode('utf-8-sig'))
+            error = data.get('error', data)
+            if isinstance(error, dict) and error.get('code') == 'REQUEST_LIMIT_EXCEEDED':
+                raise RuntimeError('OddsPapi monthly request allowance exhausted')
+            wait = response.headers.get('Retry-After', '6')
+            delay = float(wait) if str(wait).replace('.', '', 1).isdigit() else 6
+            if delay > 60:
+                raise RuntimeError('OddsPapi requests a longer pause; retry the job later')
+            raise RateLimited(max(6, delay))
         if response.status_code != 200:
             raise RuntimeError(f'{url.split("?")[0]} returned HTTP {response.status_code}')
         return json.loads(response.content.decode('utf-8-sig'))
@@ -52,11 +68,19 @@ class OddsPapi:
         self.key, self.last, self.calls = key, {}, {}
 
     def get(self, endpoint, **params):
-        cooldown = 5.2 if endpoint == 'historical-odds' else 2.2
-        time.sleep(max(0, cooldown - (time.monotonic() - self.last.get(endpoint, 0))))
-        self.last[endpoint] = time.monotonic()
-        self.calls[endpoint] = self.calls.get(endpoint, 0) + 1
-        return fetch_json('https://api.oddspapi.io/v4/' + endpoint, {'apiKey': self.key, **params})
+        cooldown = 5.2 if endpoint == 'historical-odds' else 3.0
+        for attempt in range(3):
+            time.sleep(max(0, cooldown - (time.monotonic() - self.last.get(endpoint, 0))))
+            self.calls[endpoint] = self.calls.get(endpoint, 0) + 1
+            try:
+                return fetch_json('https://api.oddspapi.io/v4/' + endpoint, {'apiKey': self.key, **params})
+            except RateLimited as exc:
+                if attempt == 2:
+                    raise RuntimeError('OddsPapi rate limit persisted after bounded retries') from None
+                time.sleep(exc.retry_after * (attempt + 1))
+            finally:
+                # Provider cooldown starts when processing finishes, not request start.
+                self.last[endpoint] = time.monotonic()
 
     def quota(self):
         def balances(value):

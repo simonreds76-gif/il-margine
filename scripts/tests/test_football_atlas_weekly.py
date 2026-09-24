@@ -20,6 +20,18 @@ def history():
 
 
 class WeeklyAtlasTests(unittest.TestCase):
+    def test_rate_limit_retry_is_bounded_and_quota_is_not_retried(self):
+        api = w.OddsPapi('test-only-key')
+        with patch.object(w, 'fetch_json', side_effect=[w.RateLimited(6), []]) as fetch, patch.object(w.time, 'sleep'):
+            self.assertEqual(api.get('fixtures'), [])
+            self.assertEqual(fetch.call_count, 2)
+        with patch.object(w, 'fetch_json', side_effect=RuntimeError('monthly request allowance exhausted')) as fetch, patch.object(w.time, 'sleep'):
+            with self.assertRaisesRegex(RuntimeError,'monthly'): api.get('fixtures')
+            self.assertEqual(fetch.call_count, 1)
+        with patch.object(w, 'fetch_json', side_effect=w.RateLimited(6)) as fetch, patch.object(w.time, 'sleep'):
+            with self.assertRaisesRegex(RuntimeError,'bounded'): api.get('fixtures')
+            self.assertEqual(fetch.call_count, 3)
+
     def test_utf8_bom_calendar_response(self):
         class Response:
             status_code = 200
