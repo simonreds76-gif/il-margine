@@ -3,9 +3,9 @@ import { BASE_URL } from "@/lib/config";
 
 // The root layout applies the "%s | Il Margine" template, so the brand is not
 // repeated here. Search engines may still choose their own display title.
-const title = "Betting Calculators: Kelly, Fair Odds, CLV";
+const title = "Betting Calculators: Fair Odds, Kelly & Football";
 const description =
-  "Four betting calculators: flat-stake returns with simulated drawdown, fractional Kelly stake sizing, no-vig fair odds and closing line value.";
+  "Free betting calculators for fair odds, value, Kelly staking and simulated returns. Explore football double-chance and draw-no-bet pricing with worked examples.";
 const url = `${BASE_URL}/calculator`;
 
 export const metadata: Metadata = {

@@ -173,11 +173,12 @@ export default function CalculatorClient({ initialRecord }: { initialRecord: Rec
           <h1>The arithmetic, with the variance left in.</h1>
           <div className="page-intro">
             <p>
-              Four tools that do the sums we run before a bet goes out: what a record is worth at your
-              stake, how large that stake should be, what a price is worth once the margin comes off,
-              and whether you bought it cheaper than the market closed. Calculations run in your browser. Stake and probability inputs are not saved.
+              Compare fair prices, test staking assumptions and explore the range of possible returns.
+              Choose a calculator below, or open the football tool for double chance and draw no bet.
+              Calculations run in your browser. Stake and probability inputs are not saved.
             </p>
           </div>
+          <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-emerald-200"><Link prefetch={false} href="/tools" className="inline-flex min-h-11 items-center gap-2"><EditorialIcon name="tools" className="h-6 w-6" />All betting tools</Link><Link prefetch={false} href="/calculator/football" className="inline-flex min-h-11 items-center gap-2"><EditorialIcon name="football" className="h-6 w-6" />Double chance &amp; draw no bet →</Link><Link prefetch={false} href="/resources/odds-value-stakes" className="inline-flex min-h-11 items-center gap-2"><EditorialIcon name="guide" className="h-6 w-6" />Start with a worked example →</Link></div>
           <dl className="calc-headline-stats">
             <div>
               <dt>Settled bets behind the returns tool</dt>

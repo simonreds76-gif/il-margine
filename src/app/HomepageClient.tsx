@@ -293,7 +293,9 @@ export default function HomepageClient({
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">Football player props &amp; tennis</p>
               <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">Independent <span className="text-emerald-300">betting analysis.</span></h1>
-              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Independent betting advice, backed by results. Explore profitable football and tennis picks, compare fair odds, check penalty takers, explore Return Atlas and read our latest insights.</p>
+              <p className="mt-4 text-xl font-semibold tracking-tight text-emerald-200 sm:text-2xl">Sharp tools. Mathematical edge.</p>
+              <p className="mt-4 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">We combine statistical models, market expertise and specialist betting tools to identify value in football and tennis. Explore our published picks, investigate the numbers yourself and follow our results month by month.</p>
+              <nav aria-label="Explore our betting tools" className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-emerald-200">{[["/fair-odds-lab", "Fair Odds Lab"], ["/#return-atlas", "Return Atlas"], ["/penalty-takers", "Penalty takers"], ["/calculator", "Calculators"], ["/resources", "Insights"], ["/tools", "All tools →"]].map(([href, label]) => <Link prefetch={false} key={href} href={href} className="inline-flex min-h-11 items-center underline decoration-emerald-300/25 underline-offset-4 hover:decoration-emerald-200">{label}</Link>)}</nav>
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <SportCta sport="football" />
                 <SportCta sport="tennis" />
@@ -421,7 +423,7 @@ export default function HomepageClient({
           <div className="grid gap-3 sm:grid-cols-2">{[
             ["/track-record", "Review the results", "ROI, sample sizes and links to the full public histories."],
             ["/penalty-takers", "Penalty taker directory", "First choices, deputies and the evidence behind each order."],
-            ["/calculator", "Check the numbers", "Compare returns and staking assumptions."],
+            ["/tools", "Find your betting tool", "Fair prices, historical research and staking — choose the tool for your question."],
             ["/resources", "Understand the method", "Practical guides to probability, pricing and value."],
           ].map(([href,title,copy]) => <Link href={href} key={href} className="site-card site-card-link"><h3 className="font-semibold">{title} <span aria-hidden="true">↗</span></h3><p className="mt-2 text-sm text-slate-400">{copy}</p></Link>)}</div>
         </div>

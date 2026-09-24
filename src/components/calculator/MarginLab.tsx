@@ -48,7 +48,9 @@ const PRESETS = [
 export default function MarginLab() {
   const [prices, setPrices] = useState<string[]>(["1.90", "1.90"]);
   const [method, setMethod] = useState<DevigMethod>("shin");
-  const [yourPrice, setYourPrice] = useState("2.05");
+  const [yourPrice, setYourPrice] = useState("1.90");
+  const [outcome, setOutcome] = useState(0);
+  const selectedOutcome = Math.min(outcome, prices.length - 1);
 
   const numeric = prices.map((price) => parseNumber(price));
   const usable = numeric.length >= 2 && numeric.every((price) => price > 1);
@@ -74,11 +76,12 @@ export default function MarginLab() {
   const turnoverMargin = usable ? marginOnTurnoverPct(numeric) : 0;
 
   const yourOdds = parseNumber(yourPrice);
-  const fairFirst = result ? result.probabilities[0] : 0;
+  const fairFirst = result ? result.probabilities[selectedOutcome] : 0;
   const edgePct = result && yourOdds > 1 ? expectedValue(yourOdds, fairFirst) * 100 : 0;
 
   const applyPreset = (presetPrices: string[]) => {
     setPrices(presetPrices);
+    setOutcome(0);
     setYourPrice(presetPrices[0]);
   };
 
@@ -95,11 +98,11 @@ export default function MarginLab() {
           <p className="calc-lede">
             A posted price includes the book&apos;s margin. Removing that margin gives
             an estimated market probability to compare with your own assessment. Three removal methods are shown because they disagree, and the disagreement is
-            the interesting part.
+            worth checking. Start with the prices, then choose the outcome and available odds to compare below.
           </p>
         </div>
-        <Link href="/the-edge" className="calc-link">
-          How we use fair prices
+        <Link href="/resources/odds-value-stakes#margin" className="calc-link">
+          Work through a simple example
         </Link>
       </header>
 
@@ -144,7 +147,7 @@ export default function MarginLab() {
             </button>
           ) : null}
           {prices.length > 2 ? (
-            <button type="button" className="calc-chip" onClick={() => setPrices(prices.slice(0, -1))}>
+            <button type="button" className="calc-chip" onClick={() => { setPrices(prices.slice(0, -1)); setOutcome(0); setYourPrice(prices[0]); }}>
               Remove outcome
             </button>
           ) : null}
@@ -235,15 +238,15 @@ export default function MarginLab() {
               </tbody>
             </table></div>
             <p className="calc-note">
-              On a balanced pair the three methods agree closely. On a lopsided one they separate, and
-              the gap is larger than most claimed edges. Quote the method with the number, or the
-              number means very little.
+              On a balanced pair the methods agree closely. On an uneven market their differences can
+              be large enough to change an apparent edge. Keep the method alongside the estimate.
             </p>
           </div>
 
+          <label className="calc-field"><span className="calc-field-label">Outcome to compare</span><select className="calc-text-input" value={selectedOutcome} onChange={event => { const index = Number(event.target.value); setOutcome(index); setYourPrice(prices[index]); }}>{prices.map((_, index) => <option key={index} value={index}>Outcome {index + 1}</option>)}</select></label>
           <div className="calc-edge-check">
             <label className="calc-field">
-              <span className="calc-field-label">Best price you can actually get on outcome 1</span>
+              <span className="calc-field-label">Best price you can actually get on outcome {selectedOutcome + 1}</span>
               <input
                 type="number"
                 inputMode="decimal"
@@ -257,7 +260,7 @@ export default function MarginLab() {
             </label>
             <div className="calc-edge-readout" aria-live="polite">
               <span>Fair price, {METHODS.find((entry) => entry.key === method)?.label.toLowerCase()}</span>
-              <strong>{result.fairOdds[0].toFixed(3)}</strong>
+              <strong>{result.fairOdds[selectedOutcome].toFixed(3)}</strong>
               <span>Expected value at your price</span>
               <strong className={edgePct >= 0 ? "gain" : "loss"}>
                 {edgePct >= 0 ? "+" : ""}
@@ -265,8 +268,8 @@ export default function MarginLab() {
               </strong>
               <p>
                 {edgePct > 0
-                  ? "Positive against this reference market. It is only an edge if the reference is sharper than the book you are betting into."
-                  : "No value against this reference. Taking the price here means paying the margin."}
+                  ? "Positive against this estimated reference. That is useful only if the probability estimate is credible and the offered odds are available under matching rules."
+                  : "This price does not beat the selected fair reference. The estimate can still be wrong; a fair price is not a guaranteed outcome."}
               </p>
             </div>
           </div>

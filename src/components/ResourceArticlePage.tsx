@@ -24,7 +24,7 @@ export default function ResourceArticlePage({ eyebrow, title, description, canon
     <main className="guide-container guide-layout"><ResourceContentsNav items={toc} /><article className="guide-copy">
       {takeaway && <aside className="guide-takeaway"><div className="guide-label">The useful bit, first</div><p>{takeaway}</p></aside>}
       {children}
-      <section className="guide-related" aria-labelledby="related-guides"><div className="guide-label">Put it into practice</div><h2 id="related-guides">Keep learning</h2><div className="guide-related-grid"><Link href="/calculator"><EditorialIcon name="analysis" className="h-9 w-9" /><h3>Try the four betting calculators</h3></Link>{related.map(r => <Link key={r.href} href={r.href}><EditorialIcon name={r.href.includes("kelly") ? "bankroll" : r.href.includes("closing") ? "markets" : "guide"} className="h-9 w-9" /><h3>{r.title}</h3></Link>)}</div></section>
+      <section className="guide-related" aria-labelledby="related-guides"><div className="guide-label">Put it into practice</div><h2 id="related-guides">Keep learning</h2><div className="guide-related-grid"><Link href="/tools" prefetch={false}><EditorialIcon name="tools" className="h-9 w-9" /><h3>Find the right betting tool</h3></Link>{related.map(r => <Link key={r.href} href={r.href}><EditorialIcon name={r.href.includes("kelly") ? "bankroll" : r.href.includes("closing") ? "markets" : "guide"} className="h-9 w-9" /><h3>{r.title}</h3></Link>)}</div></section>
     </article></main><Footer />
   </div>;
 }

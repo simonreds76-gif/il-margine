@@ -30,7 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const clubPenaltyLastModified = new Date(`${clubPenaltySeason.published_at}T12:00:00Z`);
 
   const entries: MetadataRoute.Sitemap = [
-    { url: BASE_URL, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "daily", priority: 1 },
+    { url: BASE_URL, lastModified: new Date("2026-09-24T12:00:00Z"), changeFrequency: "daily", priority: 1 },
     {
       url: `${BASE_URL}/tennis-tips`,
       lastModified: tipSeoState.latestByMarket.tennis ?? STATIC_LAST_MODIFIED,
@@ -94,7 +94,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly" as const,
       priority: resource.surface === "guide" ? 0.78 : 0.7,
     })),
-    { url: `${BASE_URL}/calculator`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${BASE_URL}/tools`, lastModified: new Date("2026-09-24T12:00:00Z"), changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE_URL}/calculator/football`, lastModified: new Date("2026-09-24T12:00:00Z"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/calculator`, lastModified: new Date("2026-09-24T12:00:00Z"), changeFrequency: "monthly", priority: 0.6 },
     ...(FAIR_ODDS_INDEXABLE
       ? [{ url: `${BASE_URL}/fair-odds`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily" as const, priority: 0.8 }]
       : []),

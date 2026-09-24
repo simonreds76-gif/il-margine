@@ -1,0 +1,26 @@
+.public-site .football-calculator-links { display:flex; flex-wrap:wrap; gap:10px 24px; margin-top:22px; color:#98e7c5; font-size:14px; }
+.public-site .football-calculator-links a { display:inline-flex; min-height:44px; align-items:center; }
+.public-site .football-price-layout { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:24px; align-items:start; }
+.public-site .football-inputs { display:grid; gap:16px; border:0; padding:0; min-width:0; }
+.public-site .football-inputs legend,.public-site .football-methods legend { font-size:14px; color:#d5e8e1; font-weight:650; margin-bottom:18px; }
+.public-site .football-methods { min-width:0; border:0; margin-top:24px; padding:0; }
+.public-site .football-price-results { min-width:0; border:1px solid #36594e; border-radius:18px; padding:22px; background:linear-gradient(130deg,#172e29,#101d25); }
+.public-site .football-price-results h3 { font-size:22px; letter-spacing:-.02em; margin:10px 0 20px; }
+.public-site .football-probabilities { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.public-site .football-probabilities span { display:block; color:#b1c9cd; font-size:12px; }
+.public-site .football-probabilities strong { font-size:24px; font-variant-numeric:tabular-nums; }
+.public-site .football-fair-list { margin-top:20px; }
+.public-site .football-fair-list > div { display:flex; justify-content:space-between; align-items:center; gap:16px; border-top:1px solid #304840; padding:15px 0; }
+.public-site .football-fair-list dt { font-size:14px; font-weight:650; }
+.public-site .football-fair-list small { display:block; color:#abc2ca; font-size:12px; font-weight:400; margin-top:4px; }
+.public-site .football-fair-list dd { font-size:25px; color:#a0f0cd; font-weight:650; font-variant-numeric:tabular-nums; }
+.public-site .football-value { margin-top:24px; }
+.public-site .football-value h3 { font-size:20px; margin:12px 0 20px; }
+.public-site .football-value-inputs { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.public-site .football-value-inputs select { width:100%; min-width:0; padding-right:24px; }
+.public-site .football-value-output { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; padding:22px 0; }
+.public-site .football-value-output span { display:block; font-size:12px; color:#b5c7d0; }
+.public-site .football-value-output strong { display:block; margin-top:8px; font-size:28px; font-variant-numeric:tabular-nums; }
+.public-site .football-price-tool :is(input,select,button,a):focus-visible { outline:2px solid #a0f0cd; outline-offset:4px; }
+@media(max-width:760px) { .public-site .football-price-layout { grid-template-columns:minmax(0,1fr); } }
+@media(max-width:480px) { .public-site .football-value-inputs,.public-site .football-value-output { grid-template-columns:minmax(0,1fr); } .public-site .football-value-output > div { display:flex; align-items:center; justify-content:space-between; gap:16px; } .public-site .football-value-output strong { margin:0; white-space:nowrap; font-size:24px; } .public-site .football-price-results { padding:18px 14px; } }

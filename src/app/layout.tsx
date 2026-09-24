@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     default: "Il Margine | Independent Betting Analysis",
     template: "%s | Il Margine",
   },
-  description: "Independent betting analysis for football player props and tennis. Compare fair odds, explore our methodology and review published picks and results.",
+  description: "Independent betting analysis using statistical models and specialist tools. Explore football and tennis picks, fair odds, Return Atlas and our public results.",
   alternates: {
     canonical: BASE_URL,
   },
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     url: BASE_URL,
     siteName: "Il Margine",
     title: "Independent Betting Analysis | Tennis and Football Player Props",
-    description: "Independent analysis of tennis and football player props, with fair odds, published selections and a transparent results record.",
+    description: "Statistical models, market expertise and specialist betting tools. Explore football and tennis picks, investigate the numbers and follow our monthly results.",
     images: [
       {
         url: DEFAULT_SOCIAL_IMAGE,
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Independent Betting Analysis | Tennis and Football Player Props",
-    description: "Independent analysis of tennis and football player props, with fair odds, published selections and a transparent results record.",
+    description: "Statistical models, market expertise and specialist betting tools. Explore football and tennis picks, investigate the numbers and follow our monthly results.",
     images: [DEFAULT_SOCIAL_IMAGE],
   },
 };
