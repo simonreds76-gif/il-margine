@@ -29,7 +29,11 @@ const MARKET_CONFIG: Record<string, MarketConfig> = {
     containerClassName: "h-8 w-12",
     imageClassName: "max-h-8 w-12 object-contain",
   },
-  challenger: { src: "/icons/markets/tennis.svg", label: "Challenger" },
+  challenger: {
+    src: "/icons/markets/challenger-tour.png", label: "Challenger", wide: true,
+    containerClassName: "h-7 w-16 rounded bg-white p-1",
+    imageClassName: "max-h-6 w-14 object-contain",
+  },
   ausopen: {
     src: "/icons/markets/slams/australian-open.png",
     label: "Australian Open",
@@ -101,8 +105,8 @@ interface MarketBadgeProps {
 
 export default function MarketBadge({ market, category, event, showLabel = false, className = "", hideOnMobile = false, compact = false }: MarketBadgeProps) {
   const { src, label, invertForDark, wide, containerClassName, imageClassName } = getConfig(market, category ?? "", event);
-  const resolvedContainerClassName = compact ? "h-7 w-7" : containerClassName ?? (wide ? "h-7 w-9" : "h-7 w-7");
-  const resolvedImageClassName = compact ? "max-h-[1.25rem] max-w-[1.45rem] object-contain" : imageClassName ?? (wide ? "max-h-5 w-auto" : "max-h-5 max-w-5 object-contain");
+  const resolvedContainerClassName = compact && !wide ? "h-7 w-7" : containerClassName ?? (wide ? "h-7 w-9" : "h-7 w-7");
+  const resolvedImageClassName = compact && !wide ? "max-h-[1.25rem] max-w-[1.45rem] object-contain" : imageClassName ?? (wide ? "max-h-5 w-auto" : "max-h-5 max-w-5 object-contain");
 
   return (
     <span

@@ -22,3 +22,4 @@
 .edge button:focus-visible,.edge a:focus-visible{outline:2px solid #a4f3d6;outline-offset:3px}
 @media(max-width:420px){.edge{padding:16px;border-radius:20px}.heading h2{font-size:23px}.profit>strong{font-size:20px}.pick{padding:13px 12px 10px}.priceRow{gap:12px}.stake{padding-left:12px}.bookmaker{padding:4px}.filters{gap:6px}.filters button>small{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.edge a,.edge button{transition:none}}
+.sportBadge{flex-wrap:wrap;row-gap:2px}.date{white-space:nowrap}

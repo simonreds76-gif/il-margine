@@ -1,6 +1,7 @@
 "use client";
 
 import SportIcon from "@/components/SportIcon";
+import MarketBadge from "@/components/MarketBadge";
 import { useMemo, useState } from "react";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import styles from "./TodaysEdge.module.css";
@@ -53,10 +54,6 @@ function publishedTime(value: string): string {
   return Number.isNaN(date.getTime())
     ? "Published"
     : `Posted ${londonDate.format(date)} · ${londonTime.format(date)}`;
-}
-
-function laneLabel(market: string): string {
-  return market === "props" ? "Football props" : "Tennis";
 }
 
 function selectVisiblePicks(picks: EdgeBet[], filter: Filter): EdgeBet[] {
@@ -147,8 +144,8 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
                 className={styles.pick}>
                 <div className={styles.pickHeading}>
                   <span className={styles.sportBadge}>
-                    <SportIcon sport={pick.market === "props" ? "football" : "tennis"} className={styles.pickIcon} />
-                    {laneLabel(pick.market)} <span className={styles.date}>· {dateChip(pick.match_date)}</span>
+                    <MarketBadge market={pick.market} category={pick.category} event={pick.event} showLabel compact />
+                    <span className={styles.date}>· {dateChip(pick.match_date)}</span>
                   </span>
                   <span className={styles.open} aria-hidden="true">↗</span>
                 </div>

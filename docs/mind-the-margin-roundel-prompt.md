@@ -1,0 +1,7 @@
+# Mind the Margin roundel
+
+Generated with the built-in image tool on 24 September 2026. Transparent 600px WebP, 40KB; rendered at 96–180px. Replaces the large mascot banner.
+
+## Exact prompt
+
+Create a single premium logo asset for a British independent betting research website, Il Margine. Strongly inspired by the familiar London Underground station roundel: a vivid vermilion red circular ring interrupted across its centre by a deep navy horizontal station-name bar. Exact main lettering on the bar: 'MIND THE MARGIN' in crisp uppercase white transit-inspired sans-serif, readable at a small 220px display width. A clever visual pun on 'Mind the gap' and bookmaker margin. Circle stays strongly visible above and below the bar. The bar may extend a little beyond the circle on both sides. Small secondary maker signature 'IL MARGINE' underneath the circle in emerald green, subordinate and legible. No mascot, no face, no full company logo, no charts, no betting odds, no extra text or scenery. Visually beautiful, precise and distinctive, confident London sign character, clean flat colour with only the slightest crafted dimensional edge; absolutely no heavy neon glow, no 3D extrusion, no huge banner background. Compact near-square composition, generous transparent padding, genuinely transparent background for placement on #0f1117. Final standalone logo only, one variation. Ensure MIND THE MARGIN is spelled perfectly. All letterforms sharp and aligned. This is an editorial product badge, not a Transport for London affiliation badge.

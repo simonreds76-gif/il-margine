@@ -88,7 +88,7 @@ def database(state):
     return db
 
 
-def calendar(config, now, force=False):
+def calendar(config, now, force=False, fetcher=None):
     state = Path(config['stateDirectory'])
     path = state / 'calendar.json'
     if not force and path.exists():
@@ -104,7 +104,7 @@ def calendar(config, now, force=False):
         for league, (_, lid) in LEAGUES.items():
             season = f'{season_year}-{season_year+1}'
             url = f'https://football.goaloo.com/jsData/matchResult/json/{season}/s{lid}_en.json'
-            payload = get_json(url)
+            payload = (fetcher or get_json)(url)
             teams = {r[0]: r[1] for r in payload['TeamInfo']}
             rows = list(walk(payload['ScheduleList']))
             if len(rows) < 200:

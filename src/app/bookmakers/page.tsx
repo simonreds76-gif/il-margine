@@ -29,8 +29,10 @@ export default function BookmakersPage() {
       <PageHomeLink className="mb-8" />
       <header className="bm-hero">
         <div>
-          <h1 className="sr-only">UK bookmakers. Mind the margin.</h1>
-          <Image className="bm-masthead" src="/brand/mind-the-margin-v1.webp" alt="Mind the Margin — UK bookmaker comparison by Il Margine" width={1440} height={480} priority unoptimized />
+          <div className="bm-brand">
+            <Image className="bm-roundel" src="/brand/mind-the-margin-roundel-v1.webp" alt="Mind the Margin — Il Margine" width={600} height={600} priority unoptimized />
+            <div><p className="bm-kicker">Independent price comparison</p><h1>UK bookmakers.<span className="sr-only"> Mind the margin.</span></h1></div>
+          </div>
           <p className="bm-lead">Same match. Different prices. See which bookmakers built more margin into their football and tennis markets — and what that means when you compare a bet.</p>
           <nav aria-label="Bookmaker page sections" className="bm-jumps">
             <a href="#compare-margins" className="bm-primary"><EditorialIcon name="compare" />Compare bookmakers <span aria-hidden="true">↓</span></a>
