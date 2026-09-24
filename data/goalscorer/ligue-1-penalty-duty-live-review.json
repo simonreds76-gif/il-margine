@@ -1,17 +1,88 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-24T04:58:19Z",
+  "generated_at": "2026-09-24T14:10:21Z",
   "league": "ligue-1",
-  "row_count": 0,
-  "rows": [],
+  "row_count": 1,
+  "rows": [
+    {
+      "date": "2026-09-19",
+      "league": "ligue-1",
+      "review_source": "fotmob_live",
+      "match": "Toulouse vs Le Havre",
+      "team": "Toulouse",
+      "opponent": "Le Havre",
+      "actual_taker": "Casper Tengstedt",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "49",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Aron Dønnum",
+      "secondary_pre_match": "Cristian Cásseres Jr.",
+      "tertiary_pre_match": "Yann Gboho",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Casper Tengstedt took 1 penalty attempt and scored for Toulouse vs Le Havre. Primary pre-match: Aron Dønnum (unknown). Secondary pre-match: Cristian Cásseres Jr. (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
+      "actual_taker_match_status": "Yes - started, off 72'",
+      "primary_on_pitch_at_penalty": "No - bench",
+      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "tertiary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 72'",
+      "event_evidence": [
+        {
+          "id": "fotmob|ligue-1|5802944|2972406789",
+          "source_event_id": "2972406789",
+          "match_id": "5802944",
+          "source_url": "https://www.fotmob.com/matches/le-havre-vs-toulouse/37dzsx#5802944",
+          "observed_at": "2026-09-24T14:10:03+00:00",
+          "event_date": "2026-09-19",
+          "season": "2026/27",
+          "team": "Toulouse",
+          "taker": "Casper Tengstedt",
+          "primary": "Aron Dønnum",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Aron Dønnum",
+            "minute": 49,
+            "method": "completed_lineup_timeline",
+            "player_id": 823293,
+            "bucket": "subs",
+            "substitutions": [],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 49,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Toulouse vs Le Havre",
+          "event_result": "scored"
+        }
+      ]
+    }
+  ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20260918",
+      "20260919",
+      "20260920",
+      "20260921",
       "20260922",
       "20260923",
       "20260924"
     ],
-    "matches_checked": 0
+    "matches_checked": 9
   }
 }
