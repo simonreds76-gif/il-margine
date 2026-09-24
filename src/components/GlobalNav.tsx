@@ -41,7 +41,11 @@ export default function GlobalNav() {
   const showMonitorLink = process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
   const resources = showMonitorLink ? [...RESOURCE_LINKS, { href: "/model-monitor", label: "Model monitor" }] : RESOURCE_LINKS;
   const closeMenus = () => nav.current?.querySelectorAll<HTMLDetailsElement>("details[open]").forEach((menu) => { menu.open = false; });
-  const active = (href: string) => pathname === href || pathname.startsWith(href + "/");
+  const activeHref = [...TIP_LINKS, ...PRIMARY_LINKS, ...ATLAS_LINKS, ...resources]
+    .reduce<string | undefined>((best, { href }) =>
+      (pathname === href || pathname.startsWith(href + "/")) && href.length > (best?.length ?? 0) ? href : best,
+    undefined);
+  const active = (href: string) => href === activeHref;
   const linkClass = (href: string) => `inline-flex min-h-11 items-center rounded-xl border border-transparent px-3 text-sm font-semibold transition-colors ${active(href) ? "border-emerald-300/25 bg-emerald-300/10 text-emerald-200" : "text-slate-300 hover:border-emerald-300/20 hover:bg-emerald-300/10 hover:text-emerald-100"}`;
   const current = (href: string) => pathname === href ? "page" as const : active(href) ? "location" as const : undefined;
 
