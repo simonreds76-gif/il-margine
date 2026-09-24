@@ -22,4 +22,6 @@ Manual `workflow_dispatch` defaults to `dry_run=true`: download and validate wit
 
 ## Initial verification, 24 September 2026
 
-Live read-only run reconciled 61 completed fixtures from 14 September: EPL 11, Serie A 13, La Liga 19, Bundesliga 9, Ligue 1 9. Five fixture requests, no new archive rows. Separate real-history research validated 48 completed fixtures across all five leagues. Unit tests exercise strict pre-start prices, suspension, draw orientation, missing fixtures, encoding, immutable merges and idempotence. Activation and a hosted run must be confirmed separately.
+Live read-only run reconciled 61 completed fixtures from 14 September: EPL 11, Serie A 13, La Liga 19, Bundesliga 9, Ligue 1 9. Five fixture requests, no new archive rows. Separate real-history research validated 48 completed fixtures across all five leagues. Unit tests exercise strict pre-start prices, suspension, draw orientation, missing fixtures, encoding, immutable merges, idempotence and bounded rate-limit retries.
+
+PR #57 installed the schedule on `main`. Hosted publication-mode run [35987430258](https://github.com/simonreds76-gif/il-margine/actions/runs/35987430258) passed on 24 September: all 61 fixtures reconciled, zero additions, status `unchanged`, no Vercel deployment. This verifies the cloud no-change path; a future changed-data run still needs its first hosted publication confirmation. Telegram connection and the workflow failure-alert step were both verified. The project-scoped Vercel credential expires on 24 September 2027.
