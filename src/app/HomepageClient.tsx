@@ -8,7 +8,8 @@ import BetMobileMeta from "@/components/BetMobileMeta";
 import PublicBetsTable from "@/components/PublicBetsTable";
 import ResultBadge from "@/components/ResultBadge";
 import TodaysEdge from "@/components/TodaysEdge";
-import SportIcon from "@/components/SportIcon";
+import ToolEmblem, { emblemForHref } from "@/components/ToolEmblem";
+import "./home-discovery.css";
 import SportCta from "@/components/SportCta";
 import ReturnAtlasFeature from "@/components/ReturnAtlasFeature";
 import Footer from "@/components/Footer";
@@ -71,8 +72,8 @@ function MarketCard({
         />
       ) : null}
       <div className="relative flex h-full flex-col">
-        <div className="mb-3 flex items-center gap-2.5">
-          <SportIcon sport={market.id === "atp" ? "tennis" : market.id === "atg" ? "compare" : "football"} emblem className="h-9 w-9 text-emerald-200" />
+        <div className="home-market-art"><ToolEmblem name={market.id === "atp" ? "tennis" : market.id === "atg" ? "lab" : "football"} /><span className="home-discovery-arrow" aria-hidden="true">↗</span></div>
+        <div className="mb-3 flex flex-wrap items-center gap-2.5">
           <h3 className="text-[15px] font-semibold text-slate-200">{market.name}</h3>
           <span
             className={`rounded-full border px-2.5 py-[2px] text-[10px] font-mono font-bold uppercase tracking-[0.14em] ${
@@ -100,7 +101,7 @@ function MarketCard({
   }
 
   return (
-    <Link href={href} className="block h-full">
+    <Link prefetch={false} href={href} className="home-market-link block h-full">
       {card}
     </Link>
   );
@@ -425,7 +426,7 @@ export default function HomepageClient({
             ["/penalty-takers", "Penalty taker directory", "First choices, deputies and the evidence behind each order."],
             ["/tools", "Find your betting tool", "Fair prices, historical research and staking — choose the tool for your question."],
             ["/resources", "Understand the method", "Practical guides to probability, pricing and value."],
-          ].map(([href,title,copy]) => <Link href={href} key={href} className="site-card site-card-link"><h3 className="font-semibold">{title} <span aria-hidden="true">↗</span></h3><p className="mt-2 text-sm text-slate-400">{copy}</p></Link>)}</div>
+          ].map(([href,title,copy]) => <Link prefetch={false} href={href} key={href} className="site-card site-card-link home-approach-card"><div className="home-approach-art"><ToolEmblem name={emblemForHref(href)} /></div><div className="home-approach-copy"><h3 className="font-semibold">{title}</h3><p className="mt-2 text-sm text-slate-400">{copy}</p></div><span className="home-discovery-arrow" aria-hidden="true">↗</span></Link>)}</div>
         </div>
       </section>
       </main>

@@ -1,0 +1,53 @@
+.public-site .home-market-art {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 128px;
+  margin: -4px -4px 18px;
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 50% 60%, #63d8af19, transparent 70%);
+}
+.public-site .home-market-art .tool-emblem { width: 120px; height: 120px; }
+.public-site .home-discovery-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border: 1px solid #8be6c52b;
+  border-radius: 50%;
+  color: #a2eacf;
+  background: #07151066;
+}
+.public-site .home-market-art .home-discovery-arrow { position: absolute; right: 0; top: 0; }
+.public-site .home-approach-card {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  grid-template-rows: 1fr auto;
+  align-items: start;
+  gap: 16px;
+  position: relative;
+  padding: 24px 22px;
+}
+.public-site .home-approach-art {
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: radial-gradient(ellipse, #63d8af20, transparent 75%);
+}
+.public-site .home-approach-art .tool-emblem { width: 76px; height: 76px; }
+.public-site .home-approach-card .home-discovery-arrow { grid-column: 2; justify-self: end; }
+.public-site .home-approach-copy { min-width: 0; }
+.public-site .home-market-link:focus-visible,
+.public-site .home-approach-card:focus-visible { outline: 2px solid #91eccb; outline-offset: 5px; border-radius: 16px; }
+@media (min-width: 640px) and (max-width: 1199px) {
+  .public-site .home-approach-card { grid-template-columns: 1fr; }
+  .public-site .home-approach-art { justify-self: start; }
+  .public-site .home-approach-card .home-discovery-arrow { grid-column: 1; }
+}
+@media (max-width: 420px) {
+  .public-site .home-approach-card { grid-template-columns: 60px minmax(0, 1fr); gap: 12px; padding: 20px 16px; }
+  .public-site .home-approach-art .tool-emblem { width: 60px; height: 60px; }
+}
