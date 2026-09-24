@@ -27,4 +27,10 @@
 .resource-card-bottom { display:flex; justify-content:space-between; margin-top:auto; padding-top:17px; border-top:1px solid #2b4149; font-size:14px; color:#93e4bf; font-weight:650; }
 .resource-boards { border-top:1px solid #2f424b; margin-top:46px; padding-top:28px; }
 .resource-boards > p { color:#b9cbd2; font-size:16px; line-height:1.7; margin-top:10px; }
+.public-site .resource-card-top { padding:8px 16px; margin:-5px -5px 22px; min-height:126px; border-radius:12px; border:1px solid #2c484b; background:radial-gradient(ellipse at 20% 50%,#295b4b80,transparent 75%),#0e1a20; }
+.public-site .resource-card-top > .tool-emblem { width:106px; height:106px; }
+.public-site .resource-card-top > span:not(.tool-emblem) { border:1px solid #38564e; border-radius:20px; padding:6px 11px; color:#bbddd0; }
+.public-site .resource-paths .tool-emblem { width:86px; height:86px; margin:0 0 12px; }
+.public-site .resource-paths .tool-emblem + span { margin-top:0; }
+@media(max-width:700px) { .public-site .resource-paths a { grid-template-columns:64px minmax(0,1fr); } .public-site .resource-paths .tool-emblem { width:64px; height:64px; grid-row:1/4; margin:0; } }
 @media(max-width:700px) { .resource-paths { grid-template-columns:minmax(0,1fr); gap:10px; margin-bottom:32px; } .resource-paths a { padding:18px; display:grid; grid-template-columns:44px 1fr; column-gap:15px; } .resource-paths svg { grid-row:1/4; } .resource-paths span { margin:0 0 6px; } .resource-paths h2 { font-size:19px; margin-bottom:6px; } .resource-paths p { grid-column:2; } .resource-library-top { display:block; } .resource-search { width:100%; display:block; margin-top:20px; } .resource-card-grid { grid-template-columns:minmax(0,1fr); } .resource-card { padding:21px; } .resource-card h3 { font-size:22px; } }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import PageHomeLink from "@/components/PageHomeLink";
 import EditorialIcon from "@/components/EditorialIcon";
+import ToolEmblem, { emblemForHref } from "@/components/ToolEmblem";
 import { BASE_URL } from "@/lib/config";
 import { BETTING_TOOL_GROUPS, BETTING_STEPS } from "@/lib/betting-tools";
 import "./tools.css";
@@ -26,7 +27,7 @@ export default function ToolsPage() {
     <main className="site-container">
       <header className="page-heading tools-heading">
         <PageHomeLink />
-        <p className="site-eyebrow">The Il Margine toolkit</p>
+        <ToolEmblem name="tools" className="tool-heading-art" /><p className="site-eyebrow">The Il Margine toolkit</p>
         <h1>Better questions.<br /><span>Sharper betting tools.</span></h1>
         <p className="tools-deck">Check a price. Research a player or club. Understand the stake. Free tools that put the numbers behind a bet within reach.</p>
         <nav className="tools-jumps" aria-label="Tool categories">{BETTING_TOOL_GROUPS.map(group => <a key={group.id} href={`#${group.id}`}>{({ price: "Prices", research: "Research", stake: "Staking" } as Record<string, string>)[group.id]} <span aria-hidden="true">↓</span></a>)}</nav>
@@ -37,9 +38,9 @@ export default function ToolsPage() {
       </section>
       {BETTING_TOOL_GROUPS.map(group => <section key={group.id} id={group.id} className="tools-group" aria-labelledby={`${group.id}-title`}>
         <div className="tools-section-head"><div><p className="site-eyebrow">{group.question}</p><h2 id={`${group.id}-title`}>{group.title}</h2></div></div>
-        <div className="tools-grid">{group.tools.map(tool => <Link prefetch={false} key={tool.href} href={tool.href} className="tools-card"><div className="tools-card-top"><EditorialIcon name={tool.icon} className="h-11 w-11" /><span>{tool.badge}</span></div><h3>{tool.title}</h3><p>{tool.description}</p><span className="tools-card-action">{tool.action}<span aria-hidden="true">↗</span></span></Link>)}</div>
+        <div className="tools-grid">{group.tools.map(tool => <Link prefetch={false} key={tool.href} href={tool.href} className="tools-card"><div className="tools-card-art" data-emblem={emblemForHref(tool.href)}><span className="tools-card-badge">{tool.badge}</span><ToolEmblem name={emblemForHref(tool.href)} /><span className="tools-art-arrow" aria-hidden="true">↗</span></div><h3>{tool.title}</h3><p>{tool.description}</p><span className="tools-card-action">{tool.action}<span aria-hidden="true">↗</span></span></Link>)}</div>
       </section>)}
-      <section className="tools-evidence"><EditorialIcon name="guide" className="h-11 w-11" /><div><h2>Keep research and results in view.</h2><p>Historical returns describe a sample. Model probabilities are estimates. Our published selections have their own record, including losing bets.</p><div className="tools-jumps"><Link prefetch={false} href="/track-record">Published track record →</Link><Link prefetch={false} href="/resources">Practical betting guides →</Link><Link prefetch={false} href="/the-edge">Our methodology →</Link></div></div></section>
+      <section className="tools-evidence"><ToolEmblem name="record" className="tool-emblem--compact" /><div><h2>Keep research and results in view.</h2><p>Historical returns describe a sample. Model probabilities are estimates. Our published selections have their own record, including losing bets.</p><div className="tools-jumps"><Link prefetch={false} href="/track-record">Published track record →</Link><Link prefetch={false} href="/resources">Practical betting guides →</Link><Link prefetch={false} href="/the-edge">Our methodology →</Link></div></div></section>
     </main><Footer />
   </div>;
 }

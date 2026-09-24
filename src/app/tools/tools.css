@@ -28,5 +28,20 @@
 .public-site .tools-evidence h2 { font-size:22px; font-weight:650; }
 .public-site .tools-evidence p { max-width:750px; color:#b5c4cf; font-size:15px; line-height:1.8; margin-top:12px; }
 .public-site .tools-page a:focus-visible { outline:2px solid #a4f3d6; outline-offset:4px; }
+.public-site .tools-card { overflow:hidden; background:linear-gradient(145deg,#16212a,#10161e); }
+.public-site .tools-card-art { position:relative; display:flex; justify-content:center; align-items:center; min-height:174px; margin:-24px -24px 22px; padding:30px 24px 6px; isolation:isolate; border-bottom:1px solid #2b4445; background:radial-gradient(ellipse at 50% 70%,#275b4a80,transparent 72%),#101c22; }
+.public-site .tools-card-art::before { position:absolute; content:""; inset:0; z-index:-1; opacity:.24; background-image:linear-gradient(#476c663d 1px,transparent 1px),linear-gradient(90deg,#476c663d 1px,transparent 1px); background-size:28px 28px; mask-image:linear-gradient(transparent,#000); }
+.public-site .tools-card-art .tool-emblem { width:136px; height:136px; transition:transform .2s ease; }
+.public-site .tools-card-art .tool-emblem--margin { width:180px; }
+.public-site .tools-card-art[data-emblem="margin"] { background:radial-gradient(ellipse at 50% 70%,#253d6870,transparent 72%),#121c2a; }
+.public-site .tools-card-art[data-emblem="tennis"] { background:radial-gradient(ellipse at 50% 70%,#55633260,transparent 72%),#111f22; }
+.public-site .tools-card-badge { position:absolute; top:14px; left:18px; color:#b9ccc9; font-size:10px; letter-spacing:.045em; font-weight:600; }
+.public-site .tools-art-arrow { position:absolute; right:17px; bottom:17px; display:grid; place-items:center; width:32px; height:32px; border:1px solid #46655e; border-radius:50%; color:#b0f5d9; background:#10241e; transition:background .2s; }
+.public-site .tools-card:hover .tool-emblem { transform:translateY(-3px); }
+.public-site .tools-card:hover .tools-art-arrow { background:#285241; }
+.public-site .tools-group:is(#research,#stake) .tools-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+@media(min-width:901px) { .public-site .tools-group#research .tools-card { display:grid; grid-template-columns:144px minmax(0,1fr); column-gap:24px; } .public-site .tools-group#research .tools-card-art { grid-row:1/4; margin:-24px 0 -24px -24px; width:168px; min-height:244px; border-bottom:0; border-right:1px solid #2b4445; padding:30px 12px; } .public-site .tools-group#research .tools-card h3,.public-site .tools-group#research .tools-card p,.public-site .tools-group#research .tools-card-action { grid-column:2; } .public-site .tools-group#research .tools-card h3 { font-size:19px; } .public-site .tools-group#research .tools-card-badge { font-size:9px; left:12px; right:12px; } .public-site .tools-group#research .tools-art-arrow { display:none; } }
+@media(max-width:540px) { .public-site .tools-group:is(#research,#stake) .tools-grid { grid-template-columns:minmax(0,1fr); } }
+@media(prefers-reduced-motion:reduce) { .public-site .tools-card-art .tool-emblem,.public-site .tools-art-arrow { transition:none; } .public-site .tools-card:hover .tool-emblem { transform:none; } }
 @media(max-width:900px) { .public-site .tools-steps,.public-site .tools-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:540px) { .public-site .tools-grid { grid-template-columns:minmax(0,1fr); } .public-site .tools-start { padding:18px; } .public-site .tools-steps { gap:8px; } .public-site .tools-steps a { padding:13px; } .public-site .tools-evidence { gap:13px; } }

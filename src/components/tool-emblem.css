@@ -1,0 +1,8 @@
+.public-site .tool-emblem { display:inline-flex; width:112px; height:112px; flex-shrink:0; align-items:center; justify-content:center; vertical-align:middle; }
+.public-site .tool-emblem > img,.public-site .tool-emblem > svg { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 6px 9px #0005); }
+.public-site .tool-emblem--margin { width:144px; }
+.public-site .tool-emblem--compact { width:56px; height:56px; }
+.public-site .tool-heading-art { float:right; margin:0 0 18px 24px; width:128px; height:128px; }
+.public-site .guide-hero-title > .tool-emblem { width:100px; height:100px; }
+.public-site .guide-related .tool-emblem { width:64px; height:64px; margin-bottom:12px; }
+@media(max-width:600px) { .public-site .tool-heading-art { width:80px; height:80px; margin:0 0 12px 15px; } .public-site .guide-hero-title > .tool-emblem { width:68px; height:68px; } }

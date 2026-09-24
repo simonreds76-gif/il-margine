@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import EditorialIcon, { type EditorialIconName } from "@/components/EditorialIcon";
+import ToolEmblem, { type ToolEmblemName } from "@/components/ToolEmblem";
+import EditorialIcon from "@/components/EditorialIcon";
 import Footer from "@/components/Footer";
 import PageHomeLink from "@/components/PageHomeLink";
 import { track } from "@/lib/analytics";
@@ -14,11 +15,11 @@ import { summarizeCalculatorRecord, type RecordRow } from "@/lib/calculator/reco
 
 type TabKey = "returns" | "kelly" | "margin" | "clv";
 
-const TABS: Array<{ key: TabKey; label: string; hint: string; icon: EditorialIconName }> = [
-  { key: "returns", icon: "analysis", label: "Returns", hint: "Flat staking against our settled record" },
-  { key: "kelly", icon: "bankroll", label: "Kelly staking", hint: "Stake size, growth and drawdown" },
-  { key: "margin", icon: "markets", label: "Fair odds", hint: "Remove a bookmaker's margin" },
-  { key: "clv", icon: "compare", label: "Closing line", hint: "Measure a bet against the close" },
+const TABS: Array<{ key: TabKey; label: string; hint: string; icon: ToolEmblemName }> = [
+  { key: "returns", icon: "returns", label: "Returns", hint: "Flat staking against our settled record" },
+  { key: "kelly", icon: "kelly", label: "Kelly staking", hint: "Stake size, growth and drawdown" },
+  { key: "margin", icon: "price", label: "Fair odds", hint: "Remove a bookmaker's margin" },
+  { key: "clv", icon: "closing", label: "Closing line", hint: "Measure a bet against the close" },
 ];
 
 const CALCULATOR_FAQS = [
@@ -207,7 +208,7 @@ export default function CalculatorClient({ initialRecord }: { initialRecord: Rec
               className={`calc-tab${activeTab === tab.key ? " is-active" : ""}`}
               aria-current={activeTab === tab.key ? "page" : undefined}
             >
-              <strong className="calc-tab-label"><EditorialIcon name={tab.icon} className="h-7 w-7" />{tab.label}</strong>
+              <strong className="calc-tab-label"><ToolEmblem name={tab.icon} className="tool-emblem--compact" />{tab.label}</strong>
               <span>{tab.hint}</span>
             </button>
           ))}
