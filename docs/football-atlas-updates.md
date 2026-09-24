@@ -1,5 +1,16 @@
 # Football Atlas automatic updates
 
+## Current status: local tasks disabled
+
+On 24 September 2026 the owner rejected the requirement to keep the PC running.
+Both `IlMargine-Football-Atlas-Capture` and `IlMargine-Football-Atlas-Weekly`
+were disabled. The archive and implementation below are retained, but this is
+**not an active update schedule**. A weekly hosted archive pull is being reviewed.
+The live site keeps its last validated archive meanwhile. Do not re-enable the
+local schedule without a new instruction from the owner.
+
+## Retained implementation
+
 Enabled locally on 24 September 2026. Source code is versioned; runtime data and
 configuration live outside the website under `outputs/football-atlas-automation`
 in the Codex workspace. No new Vercel functions or cron jobs are introduced.
