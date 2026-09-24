@@ -336,8 +336,9 @@ def main():
         else:
             helper = legacy.load_module('atlas_commit_helpers', ROOT / 'scripts/refresh-return-atlas.py')
             run = helper.run
-            if run(['git', 'status', '--porcelain'], ROOT).strip():
-                raise ValueError('Publication checkout dirty')
+            dirty = run(['git', 'status', '--porcelain'], ROOT).strip()
+            if dirty:
+                raise ValueError('Publication checkout dirty: ' + dirty[:1000])
             if run(['git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH], ROOT).split()[0] != run(['git', 'rev-parse', 'HEAD'], ROOT).strip():
                 raise ValueError('Release branch advanced during collection; rerun against latest commit')
             live_html = helper.fetch('https://ilmargine.bet/football-atlas').decode()
