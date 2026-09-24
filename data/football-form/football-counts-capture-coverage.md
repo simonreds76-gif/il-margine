@@ -1,6 +1,6 @@
 # Football Counts Capture Coverage
 
-Generated: 2026-09-23T13:42:08Z
+Generated: 2026-09-24T13:36:03Z
 Lookback: 14 days
 
 This operational report covers every priced fixture, not only model selections.

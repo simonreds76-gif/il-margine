@@ -1,6 +1,6 @@
 # Football Form Layer Validation
 
-Generated: 2026-09-23T13:41:26+00:00
+Generated: 2026-09-24T13:35:33+00:00
 Status: **OK**
 
 ## Files
@@ -20,18 +20,18 @@ Status: **OK**
 
 | League | Latest date | Age days |
 | --- | --- | ---: |
-| bundesliga | 2026-09-20 | 3 |
-| epl | 2026-09-20 | 3 |
-| la-liga | 2026-09-20 | 3 |
-| ligue-1 | 2026-09-20 | 3 |
-| serie-a | 2026-09-20 | 3 |
+| bundesliga | 2026-09-20 | 4 |
+| epl | 2026-09-20 | 4 |
+| la-liga | 2026-09-20 | 4 |
+| ligue-1 | 2026-09-20 | 4 |
+| serie-a | 2026-09-20 | 4 |
 
 ### team-rolling-form.csv
 
 | League | Latest date | Age days |
 | --- | --- | ---: |
-| bundesliga | 2026-09-20 | 3 |
-| epl | 2026-09-20 | 3 |
-| la-liga | 2026-09-20 | 3 |
-| ligue-1 | 2026-09-20 | 3 |
-| serie-a | 2026-09-20 | 3 |
+| bundesliga | 2026-09-20 | 4 |
+| epl | 2026-09-20 | 4 |
+| la-liga | 2026-09-20 | 4 |
+| ligue-1 | 2026-09-20 | 4 |
+| serie-a | 2026-09-20 | 4 |
