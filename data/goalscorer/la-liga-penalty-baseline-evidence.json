@@ -1,7 +1,72 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-25T05:02:55Z",
+  "generated_at": "2026-09-25T14:30:58Z",
   "league": "la-liga",
-  "row_count": 0,
-  "rows": []
+  "row_count": 4,
+  "rows": [
+    {
+      "team": "Athletic Club",
+      "team_key": "athletic club",
+      "player_name": "Oihan Sancet",
+      "player_key": "oihan sancet",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-19"
+    },
+    {
+      "team": "Atlético Madrid",
+      "team_key": "atletico madrid",
+      "player_name": "Alejandro Grimaldo",
+      "player_key": "alejandro grimaldo",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-20"
+    },
+    {
+      "team": "Celta Vigo",
+      "team_key": "celta vigo",
+      "player_name": "Hugo González",
+      "player_key": "hugo gonz lez",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-19"
+    },
+    {
+      "team": "Real Sociedad",
+      "team_key": "real sociedad",
+      "player_name": "Carlos Soler",
+      "player_key": "carlos soler",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-09-20"
+    }
+  ]
 }
