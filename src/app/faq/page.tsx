@@ -14,7 +14,7 @@ import "@/components/editorial-surfaces.css";
 export const metadata: Metadata = {
   title: "Betting FAQ: Return Atlas, Tips and Odds Explained",
   description:
-    "Answers about betting tips, changed odds, penalty takers, Return Atlas, fair odds, staking calculators and the Il Margine results record.",
+    "Answers about betting tips, changed odds, penalty takers, Return Atlas, Tennis Matchup Lab, fair odds, staking calculators and the Il Margine results record.",
   alternates: {
     canonical: `${BASE_URL}/faq`,
   },
@@ -71,7 +71,7 @@ export default function FaqPage() {
             Using the picks, checking a price, reading the record. Practical answers about Il Margine and its research tools.
           </p>
 
-          <p className="text-xs text-slate-400">Reviewed <time dateTime="2026-09-23">23 September 2026</time> · Answers reflect the current public tools.</p>
+          <p className="text-xs text-slate-400">Reviewed <time dateTime="2026-09-26">26 September 2026</time> · Answers reflect the current public tools.</p>
           <FaqBrowser sections={sections} legacyAnchors={legacyAnchors} />
 
           <div className="mt-14 rounded-xl bg-slate-800/50 border border-slate-700/50 p-6 text-center shadow-sm">

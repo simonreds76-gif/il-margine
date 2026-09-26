@@ -1,4 +1,5 @@
 "use client";
+import TennisMatchupFeature from "@/components/TennisMatchupFeature";
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
@@ -300,7 +301,7 @@ export default function HomepageClient({
               <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">Independent <span className="text-emerald-300">betting analysis.</span></h1>
               <p className="mt-4 text-xl font-semibold tracking-tight text-emerald-200 sm:text-2xl">Sharp tools. Mathematical edge.</p>
               <p className="mt-4 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">We combine statistical models, market expertise and specialist betting tools to identify value in football and tennis. Explore our published picks, investigate the numbers yourself and follow our results month by month.</p>
-              <nav aria-label="Explore our betting tools" className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-emerald-200">{[["/fair-odds-lab", "Fair Odds Lab"], ["/#return-atlas", "Return Atlas"], ["/penalty-takers", "Penalty takers"], ["/calculator", "Calculators"], ["/resources", "Guides & insights"], ["/tools", "All tools →"]].map(([href, label]) => <Link prefetch={false} key={href} href={href} className="inline-flex min-h-11 items-center underline decoration-emerald-300/25 underline-offset-4 hover:decoration-emerald-200">{label}</Link>)}</nav>
+              <nav aria-label="Explore our betting tools" className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-emerald-200">{[["/fair-odds-lab", "Fair Odds Lab"], ["/#return-atlas", "Return Atlas"], ["/tennis-matchup", "Matchup Lab"], ["/penalty-takers", "Penalty takers"], ["/calculator", "Calculators"], ["/resources", "Guides & insights"], ["/tools", "All tools →"]].map(([href, label]) => <Link prefetch={false} key={href} href={href} className="inline-flex min-h-11 items-center underline decoration-emerald-300/25 underline-offset-4 hover:decoration-emerald-200">{label}</Link>)}</nav>
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <SportCta sport="football" />
                 <SportCta sport="tennis" />
@@ -323,6 +324,7 @@ export default function HomepageClient({
       </section>
       <MonthlyBreakdownSection scope="combined" initialPayload={initialMonthly} />
       <ReturnAtlasFeature />
+      <TennisMatchupFeature />
       {recentBets.length > 0 ? (
         <section className="border-b border-slate-800/30 bg-[#0b0e13] py-9 md:py-12">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

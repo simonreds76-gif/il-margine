@@ -2,9 +2,10 @@ import Image from "next/image";
 import { useId } from "react";
 import "./tool-emblem.css";
 
-export type ToolEmblemName = "price" | "football-price" | "margin" | "tennis" | "football" | "lab" | "penalty" | "kelly" | "returns" | "guide" | "record" | "closing" | "tools";
+export type ToolEmblemName = "matchup" | "price" | "football-price" | "margin" | "tennis" | "football" | "lab" | "penalty" | "kelly" | "returns" | "guide" | "record" | "closing" | "tools";
 
 const artwork: Partial<Record<ToolEmblemName, string>> = {
+  matchup: "/tennis-matchup/court-v1.webp",
   margin: "/brand/mind-the-margin-roundel-v1.webp",
   tennis: "/images/tools/tennis-v1.webp",
   football: "/images/tools/football-v1.webp",
@@ -12,6 +13,7 @@ const artwork: Partial<Record<ToolEmblemName, string>> = {
 };
 
 export function emblemForHref(href: string): ToolEmblemName {
+  if (href.includes("tennis-matchup")) return "matchup";
   if (href.includes("penalty")) return "penalty";
   if (href.includes("football-atlas")) return "football";
   if (href.includes("return-atlas") || href.includes("clay-season")) return "tennis";

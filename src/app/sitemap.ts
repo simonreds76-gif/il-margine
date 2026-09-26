@@ -1,3 +1,4 @@
+import matchupRelease from "@/data/tennis-matchup-release.json";
 import { MetadataRoute } from "next";
 import { BASE_URL, FAIR_ODDS_INDEXABLE } from "@/lib/config";
 import { RESOURCES } from "@/lib/resources";
@@ -30,6 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const clubPenaltyLastModified = new Date(`${clubPenaltySeason.published_at}T12:00:00Z`);
 
   const entries: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/tennis-matchup`, lastModified: new Date(`${matchupRelease.checkedAt}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },
     { url: BASE_URL, lastModified: new Date("2026-09-24T12:00:00Z"), changeFrequency: "daily", priority: 1 },
     {
       url: `${BASE_URL}/tennis-tips`,

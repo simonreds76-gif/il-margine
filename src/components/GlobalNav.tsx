@@ -20,6 +20,7 @@ const ATLAS_LINKS = [
 ];
 const RESOURCE_LINKS = [
   { href: "/tools", label: "All betting tools" },
+  { href: "/tennis-matchup", label: "Tennis Matchup Lab" },
   { href: "/calculator", label: "Betting calculators" },
   { href: "/calculator/football", label: "Double chance & draw no bet" },
   { href: "/bookmakers", label: "Mind the Margin" },
