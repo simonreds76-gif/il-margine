@@ -12,7 +12,7 @@ test('published player shards keep H2H totals and swapped statistics consistent'
   const shards=[a,b].map(i=>JSON.parse(fs.readFileSync(base+i+'.json','utf8')));
   assert.ok(shards.every(s=>s.version===index.version));
   const data={...index,matches:[...new Map(shards.flatMap(s=>s.matches).map(m=>[m.id,m])).values()]};
-  const f={asOf:index.asOf,months:'archive',surface:'outdoor-hard',country:'all',region:'all'};
+  const f={asOf:'2026-09-26',months:'archive',surface:'outdoor-hard',country:'all',region:'all'};
   const ar=rowsFor(data,a,{...f,opponent:b}),br=rowsFor(data,b,{...f,opponent:a});
   const sa=summary(ar),sb=summary(br);
   assert.equal(sa.n,7);assert.equal(sa.wins,5);assert.equal(sb.wins,2);

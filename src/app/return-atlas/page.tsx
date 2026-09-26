@@ -43,6 +43,11 @@ export default function ReturnAtlasPage() {
           <p className="release-dates">Data checked {date(release.checkedAt)} <span aria-hidden="true">·</span> Latest included match {date(release.through)}</p>
         </div>
       </header>
+      <aside className="atlas-matchup-link" aria-label="Compare tennis players">
+        <EditorialIcon name="compare" className="h-10 w-10 shrink-0" />
+        <div><h2>Go beyond the return</h2><p>Compare two players’ head-to-head, serve, return, aces and double faults by surface and location.</p></div>
+        <Link href="/tennis-matchup" prefetch={false}>Open Matchup Lab →</Link>
+      </aside>
       <ReturnAtlasClient indexUrl={release.indexUrl} detailsBase={release.detailsBase} version={release.version} checkedAt={release.checkedAt} />
       <section className="atlas-about" aria-label="About Return Atlas">
         <p className="about-eyebrow">THE RECORD BEHIND THE RETURNS</p>

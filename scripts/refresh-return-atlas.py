@@ -23,6 +23,8 @@ SITE = 'https://ilmargine.bet'
 TEAM = 'team_UgA9caW5xCBxDyssrOuTQz7S'
 PROJECT = 'prj_OnvAAAzkpLa5N9uZI3Iy2mwEj6IL'
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from matchup_refresh import prepare as prepare_matchup
 
 
 def run(args, cwd=None, env=None, timeout=600):
@@ -93,9 +95,9 @@ def source_csv(data, year):
     return len(rows)
 
 
-def live_version():
-    html = fetch(SITE + '/return-atlas').decode('utf-8')
-    match = re.search(r'/return-atlas/data/(\d{8}-[a-f0-9]{12})/index.json', html)
+def live_version(route='return-atlas'):
+    html = fetch(SITE + '/' + route).decode('utf-8')
+    match = re.search(r'/' + re.escape(route) + r'/data/(\d{8}-[a-f0-9]{12})/index.json', html)
     if not match:
         raise RuntimeError('Cannot verify the currently published archive')
     return match.group(1)
@@ -118,6 +120,7 @@ def publish(checkout, version, status, save):
     vercel = shutil.which('vercel.cmd') or shutil.which('vercel')
     if not vercel:
         raise RuntimeError('Vercel CLI unavailable')
+    prior_alias = json.loads(run([vercel, 'api', f'/v4/aliases/ilmargine.bet?teamId={TEAM}', '--raw'], checkout))['deploymentId']
     sha = run(['git', 'rev-parse', 'HEAD'], checkout).strip()
     if status.get('deploymentSha') == sha and status.get('deploymentId'):
         deployment_id = status['deploymentId']
@@ -152,11 +155,19 @@ def publish(checkout, version, status, save):
                            '--', '--fail', '--silent'], checkout, timeout=120)
     if not json.loads(candidate_index).get('matches'):
         raise RuntimeError('Candidate archive unavailable')
+    matchup = read_json(checkout / 'src/data/tennis-matchup-release.json')
+    page = run([vercel, 'curl', '/tennis-matchup', '--deployment', url, '--', '--fail', '--silent'], checkout, timeout=120)
+    manifest = run([vercel, 'curl', matchup['indexUrl'], '--deployment', url, '--', '--fail', '--silent'], checkout, timeout=120)
+    if matchup['version'] not in page or json.loads(manifest).get('totalMatches') != matchup['matches']:
+        raise RuntimeError('Candidate Matchup Lab failed snapshot validation')
     remote_sha = run(['git', 'ls-remote', 'origin', f'refs/heads/{BRANCH}'], checkout).split()[0]
     if remote_sha != sha:
         raise RuntimeError('Deployment branch advanced during build; refusing to promote older code')
+    current_alias = json.loads(run([vercel, 'api', f'/v4/aliases/ilmargine.bet?teamId={TEAM}', '--raw'], checkout))['deploymentId']
+    if current_alias != prior_alias:
+        raise RuntimeError('Production changed during build; refusing to replace a newer release')
     run([vercel, 'promote', url, '--yes'], checkout, timeout=180)
-    if live_version() != version:
+    if live_version() != version or live_version('tennis-matchup') != matchup['version']:
         raise RuntimeError('Promotion finished but public archive version has not been verified')
     status.update(status='published', publishedVersion=version, publishedAt=datetime.now(timezone.utc).isoformat(), deploymentUrl=url)
     save()
@@ -179,6 +190,7 @@ def refresh(config, dry_run=False):
         if run(['git', 'status', '--porcelain', '--untracked-files=no'], checkout).strip():
             raise RuntimeError('Isolated publication checkout has uncommitted changes; preserving it for review')
         run(['git', 'pull', '--ff-only', 'origin', BRANCH], checkout, timeout=180)
+        run(['git', 'sparse-checkout', 'add', 'public/tennis-matchup'], checkout)
         as_of = date.today().isoformat()
         current_year = date.today().year
         cache = state / 'source-cache'
@@ -197,7 +209,7 @@ def refresh(config, dry_run=False):
         candidate = state / 'candidate'
         (candidate / 'oncourt').mkdir(parents=True, exist_ok=True)
         source = Path(config['oncourt'])
-        files = [source / name for name in ['games_atp.csv', 'players_atp.csv', 'tours_atp.csv']]
+        files = [source / name for name in ['games_atp.csv', 'players_atp.csv', 'tours_atp.csv', 'stat_atp.csv']]
         fingerprints = [(p.stat().st_size, p.stat().st_mtime_ns) for p in files]
         if any(time.time() - p.stat().st_mtime > 30 * 3600 for p in files):
             raise RuntimeError('OnCourt export is older than 30 hours; public archive retained')
@@ -226,12 +238,30 @@ def refresh(config, dry_run=False):
             by_id = {r[0]: r for r in new_details['matches']}
             if any(by_id.get(r[0]) != r for r in old_details['matches']):
                 raise ValueError('Existing match description changed; review required')
+        matchup_old, matchup_new, matchup_changed = prepare_matchup(checkout, candidate, new_manifest, as_of)
+        status.update(matchupVersion=matchup_new['version'], matchupMatches=matchup_new['matches'], matchupChanged=matchup_changed)
+        status.pop('error', None)
+        status.pop('failedAt', None)
         status.update(checkedAt=datetime.now(timezone.utc).isoformat(), matches=new_manifest['matches'],
                       through=new_manifest['through'], newMatches=new_manifest['matches'] - old_manifest['matches'])
         if dry_run:
-            status.update(status='validated-dry-run', changed=changed)
+            status.update(status='validated-dry-run', changed=changed or matchup_changed)
             save()
             return status
+        stage_paths = []
+        if matchup_changed:
+            matchup_path = Path('public') / matchup_new['indexUrl'].lstrip('/').rsplit('/', 1)[0]
+            matchup_pointer = Path('src/data/tennis-matchup-release.json')
+            shutil.copytree(candidate / 'release' / matchup_path, checkout / matchup_path, dirs_exist_ok=True)
+            shutil.copy2(candidate / 'release' / matchup_pointer, checkout / matchup_pointer)
+            stage_paths.extend([matchup_path, matchup_pointer])
+            data_root = (checkout / 'public/tennis-matchup/data').resolve()
+            versions = [p.name for p in data_root.iterdir() if p.is_dir() and re.fullmatch(r'\d{8}-[a-f0-9]{12}', p.name)]
+            for version in obsolete_versions(versions, matchup_new['version'], matchup_old['version'], live_version('tennis-matchup')):
+                target = (data_root / version).resolve()
+                if target.parent != data_root:
+                    raise RuntimeError('Matchup cleanup escaped data directory')
+                run(['git', 'rm', '-r', '--', target.relative_to(checkout.resolve())], checkout)
         if changed:
             data_path = Path('public') / new_manifest['indexUrl'].lstrip('/').rsplit('/', 1)[0]
             shutil.copytree(candidate / 'release' / data_path, checkout / data_path, dirs_exist_ok=True)
@@ -244,13 +274,15 @@ def refresh(config, dry_run=False):
                 if target.parent != data_root:
                     raise RuntimeError('Archive cleanup escaped its dedicated data directory')
                 run(['git', 'rm', '-r', '--', target.relative_to(checkout.resolve())], checkout)
-            # Only archive data and its release pointer can be staged by this job.
-            run(['git', 'add', '--', data_path, manifest_path], checkout)
-            run(['git', 'commit', '-m', f'data: refresh Return Atlas through {new_manifest["through"]}'], checkout)
-            run(['git', 'push', 'origin', f'HEAD:{BRANCH}'], checkout, timeout=180)
+            stage_paths.extend([data_path, manifest_path])
         else:
             new_manifest = old_manifest
-        if live_version() != new_manifest['version']:
+        if stage_paths:
+            # Both static archives share one validated commit and deployment.
+            run(['git', 'add', '--', *stage_paths], checkout)
+            run(['git', 'commit', '-m', f'data: refresh tennis research through {new_manifest["through"]}'], checkout)
+            run(['git', 'push', 'origin', f'HEAD:{BRANCH}'], checkout, timeout=180)
+        if live_version() != new_manifest['version'] or live_version('tennis-matchup') != matchup_new['version']:
             # Also recovers a previous successful commit whose push was interrupted.
             run(['git', 'push', 'origin', f'HEAD:{BRANCH}'], checkout, timeout=180)
             publish(checkout, new_manifest['version'], status, save)

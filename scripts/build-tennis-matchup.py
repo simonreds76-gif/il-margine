@@ -61,7 +61,7 @@ def point_stats(row, side):
 def key(row):
     return tuple(row[k] for k in ['winner_id', 'loser_id', 'tour_id', 'round_id'])
 
-def build(atlas, oncourt, output, as_of):
+def build(atlas, oncourt, output, as_of, data_only=False):
     # Prevent accidental export into deployable site assets or overwriting source data.
     output = output.resolve()
     if 'public' in output.parts or output == oncourt.resolve() or output == atlas.resolve():
@@ -151,6 +151,8 @@ def build(atlas, oncourt, output, as_of):
         'atlasIndexHash':hashlib.sha256((atlas/'index.json').read_bytes()).hexdigest(),
         'dataHash':hashlib.sha256((output/'data.json').read_bytes()).hexdigest()}
     (output/'audit.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
+    if data_only:
+        return manifest
     ui = Path(__file__).resolve().parents[1]/'research/tennis-matchup'
     for name in ['index.html','panel.css','panel.mjs','core.mjs','identity.mjs']:
         shutil.copyfile(ui/name, output/name)
@@ -171,5 +173,6 @@ if __name__ == '__main__':
     parser.add_argument('--oncourt',type=Path,required=True)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--as-of',type=date.fromisoformat,required=True)
+    parser.add_argument('--data-only',action='store_true')
     args=parser.parse_args()
-    build(args.atlas,args.oncourt,args.output,args.as_of.isoformat())
+    build(args.atlas,args.oncourt,args.output,args.as_of.isoformat(),args.data_only)

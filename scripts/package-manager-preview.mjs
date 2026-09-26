@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import ts from 'typescript';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+if(!process.argv[2])throw new Error('Supply the private preview output directory');
+const dest=path.resolve(process.argv[2]);
+if(dest.split(path.sep).includes('public'))throw new Error('Manager preview must remain private');
+if(!fs.existsSync(path.join(dest,'data.json')))throw new Error('Build the joined archive first');
+const src=path.join(root,'research/manager-atlas');
+for(const name of ['index.html','style.css','panel.mjs'])fs.copyFileSync(path.join(src,name),path.join(dest,name));
+fs.writeFileSync(path.join(dest,'core.mjs'),fs.readFileSync(path.join(src,'core.mjs'),'utf8').replace('../../src/components/football-atlas/football-core.ts','./football-core.mjs'));
+fs.writeFileSync(path.join(dest,'football-core.mjs'),ts.transpileModule(fs.readFileSync(path.join(root,'src/components/football-atlas/football-core.ts'),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText);
+console.log('Manager preview packaged at',dest);

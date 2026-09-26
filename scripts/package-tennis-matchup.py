@@ -29,7 +29,9 @@ def package(source, root=ROOT):
             raise ValueError('Invalid winner or paired prices')
         if not ('2022-01-01' <= row['date'] < data['asOf']):
             raise ValueError('Date outside completed-match snapshot')
-    version = data['asOf'].replace('-', '') + '-' + hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest()[:12]
+    content = {key: data[key] for key in ('through', 'countries', 'players', 'portraits')}
+    content['matches'] = rows
+    version = data['asOf'].replace('-', '') + '-' + hashlib.sha256(json.dumps(content, sort_keys=True).encode()).hexdigest()[:12]
     target = root / 'public/tennis-matchup/data' / version
     target.mkdir(parents=True, exist_ok=True)
     shards = [[] for _ in players]

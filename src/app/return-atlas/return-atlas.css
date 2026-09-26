@@ -249,3 +249,5 @@ html:has(.return-atlas dialog[open]),body:has(.return-atlas dialog[open]){overfl
 .return-atlas .product-wordmark img{width:114.3%;left:-7.2%;top:-42%}
 
 .atlas-edition-links{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}.atlas-edition-links>a{display:inline-flex;align-items:center;min-height:44px;font-size:13px;color:#9be5c6}
+
+.public-site .return-atlas .atlas-matchup-link{display:flex;align-items:center;gap:1rem;padding:1.25rem;margin:0 0 1.5rem;border:1px solid #2c514a;border-radius:16px;background:#11221f}.public-site .return-atlas .atlas-matchup-link h2{font-size:1.1rem;margin:0 0 .3rem}.public-site .return-atlas .atlas-matchup-link p{margin:0;color:#a6bbc6;font-size:.9rem}.public-site .return-atlas .atlas-matchup-link a{margin-left:auto;white-space:nowrap;font-weight:700;color:#75e2b7;padding:.7rem;border-radius:10px;background:#193c33}@media(max-width:700px){.public-site .return-atlas .atlas-matchup-link{flex-wrap:wrap}.public-site .return-atlas .atlas-matchup-link>div{flex:1;min-width:200px}.public-site .return-atlas .atlas-matchup-link a{margin-left:0;white-space:normal}}

@@ -2,9 +2,15 @@
 
 Public route: `/tennis-matchup`. Approved for publication on 26 September 2026.
 
-The public page serves a dated, validated snapshot. It is not connected to the
-Return Atlas automatic publisher yet. Do not imply that a daily update occurred
-without rebuilding, validating and deploying a new release.
+The public page serves a dated, validated snapshot. The existing local Return Atlas morning publisher also rebuilds this archive from
+the same four OnCourt CSV exports, with no additional provider requests. It validates
+both archives before a single shared deployment. Unchanged content does not deploy;
+failed validation retains both last-good public snapshots and uses the existing
+morning-job failure alert. The PC must run the existing OnCourt refresh.
+
+Only new matches and previously missing statistics can be added automatically.
+Changes to existing prices, results or populated statistics require review. Three
+versioned snapshots are retained; the page stays entirely static on Vercel.
 
 ## Release a data update
 
