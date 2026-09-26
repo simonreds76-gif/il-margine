@@ -1,6 +1,6 @@
 # Assist Value Research Gates
 
-Generated: `2026-09-25T12:46:47Z`
+Generated: `2026-09-26T12:15:17Z`
 Lane status: **FROZEN_RESEARCH**
 Reactivation ready: **NO**
 
@@ -24,7 +24,7 @@ Reactivation ready: **NO**
 - Compared player appearances: 0
 - Assist agreement: 0.00%
 - Positive assist cases: 0; agreement 0.00%
-- Assist-complete instrumented fixtures: 104/104 (100.00%)
+- Assist-complete instrumented fixtures: 100/100 (100.00%)
 - Legacy pre-instrumentation fixtures excluded from completeness denominator: 0
 - Player matching coverage: 0.00%
 
