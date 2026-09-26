@@ -1,88 +1,17 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-25T14:30:03Z",
+  "generated_at": "2026-09-26T05:05:35Z",
   "league": "epl",
-  "row_count": 1,
-  "rows": [
-    {
-      "date": "2026-09-19",
-      "league": "epl",
-      "review_source": "fotmob_live",
-      "match": "Newcastle United vs Hull City",
-      "team": "Newcastle United",
-      "opponent": "Hull City",
-      "actual_taker": "Yoane Wissa",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 0,
-      "distinct_takers_in_match": 1,
-      "minute": "45",
-      "event_type": "AttemptSaved",
-      "event_result": "missed",
-      "primary_pre_match": "Yoane Wissa",
-      "secondary_pre_match": "Matias Fernandez-Pardo",
-      "tertiary_pre_match": "William Osula",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Yoane Wissa took 1 penalty attempt and missed for Newcastle United vs Hull City. Primary pre-match: Yoane Wissa (unknown). Secondary pre-match: Matias Fernandez-Pardo (unknown). No hierarchy change implied from this event.",
-      "context_generated_at": "2026-09-02",
-      "context_source_path": "data/goalscorer/epl-penalty-takers.json",
-      "actual_taker_match_status": "Yes - started",
-      "primary_on_pitch_at_penalty": "Yes - started",
-      "secondary_on_pitch_at_penalty": "Yes - started, off 74'",
-      "tertiary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
-      "actual_taker_on_pitch_at_penalty": "Yes - started",
-      "event_evidence": [
-        {
-          "id": "fotmob|epl|5795462|2971967899",
-          "source_event_id": "2971967899",
-          "match_id": "5795462",
-          "source_url": "https://www.fotmob.com/matches/hull-city-vs-newcastle-united/2ynv4j#5795462",
-          "observed_at": "2026-09-25T14:29:51+00:00",
-          "event_date": "2026-09-19",
-          "season": "2026/27",
-          "team": "Newcastle United",
-          "taker": "Yoane Wissa",
-          "primary": "Yoane Wissa",
-          "primary_on_pitch": true,
-          "on_pitch_proof": {
-            "player": "Yoane Wissa",
-            "minute": 45,
-            "method": "completed_lineup_timeline",
-            "player_id": 666857,
-            "bucket": "starters",
-            "substitutions": [],
-            "events": [],
-            "reason": "on_pitch"
-          },
-          "minute": 45,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Newcastle United vs Hull City",
-          "event_result": "missed"
-        }
-      ]
-    }
-  ],
+  "row_count": 0,
+  "rows": [],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20260919",
-      "20260920",
-      "20260921",
-      "20260922",
-      "20260923",
       "20260924",
-      "20260925"
+      "20260925",
+      "20260926"
     ],
-    "matches_checked": 9
+    "matches_checked": 0
   }
 }
