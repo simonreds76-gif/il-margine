@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import SportIcon from "@/components/SportIcon";
+import TipsHubIntro from "@/components/TipsHubIntro";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/components/ProfitProgressionPanel";
@@ -14,7 +14,6 @@ import PublicRecordMetricGrid from "@/components/PublicRecordMetricGrid";
 
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
-import PageHomeLink from "@/components/PageHomeLink";
 import { getDisplayBetCategory, normalizeBetCategory } from "@/lib/bet-category";
 
 type PlayerPropsClientProps = {
@@ -28,8 +27,7 @@ const darkLogoFilter =
   "[filter:brightness(0)_invert(1)_drop-shadow(0_0_5px_rgba(255,255,255,0.58))_drop-shadow(0_0_12px_rgba(87,209,150,0.2))]";
 const lowContrastLogoFilter =
   "[filter:brightness(1.9)_saturate(1.45)_contrast(1.15)_drop-shadow(0_0_5px_rgba(255,255,255,0.5))_drop-shadow(0_0_12px_rgba(87,209,150,0.18))]";
-const naturalLogoFilter =
-  "[filter:drop-shadow(0_0_4px_rgba(255,255,255,0.32))_drop-shadow(0_0_10px_rgba(87,209,150,0.12))]";
+const naturalLogoFilter = "";
 
 function roiToneClass(roi: number): string {
   if (roi > 0) return "text-emerald-400";
@@ -271,23 +269,7 @@ export default function PlayerProps({
 
 
       {/* Hero */}
-      <section className="public-hub-heading pt-5 pb-4">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-0 block">
-            <PageHomeLink />
-            <span className="site-eyebrow block">Player Props</span>
-          </div>
-
-          <h1 className="mb-3 flex items-center gap-3 text-3xl font-semibold text-slate-100 sm:text-4xl">
-            <SportIcon sport="football" emblem className="h-10 w-10 text-emerald-200 sm:h-12 sm:w-12" />
-            <span>Football Player Props <span className="text-emerald-400">Betting Tips</span></span>
-          </h1>
-          <p className="text-sm sm:text-base text-slate-400 max-w-3xl leading-relaxed">
-            Football player props: shots, fouls, tackles and cards. Choose a league to see the picks and their record.
-          </p>
-          <Link href="/football-atlas" prefetch={false} className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-emerald-300 hover:text-emerald-100"><SportIcon sport="football" className="h-6 w-6"/>Explore club betting returns in Return Atlas →</Link>
-        </div>
-      </section>
+      <TipsHubIntro sport="football" />
 
       <section id="competition-filter" aria-label="Choose a league" className="pt-5 pb-6 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -299,7 +281,7 @@ export default function PlayerProps({
               <a href="#how-to-use" className="rounded-full border border-slate-700 px-3 py-2 text-slate-300 hover:border-emerald-400/50">How it works ↓</a>
             </nav>
           </div>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="competition-card-grid">
             {leagueConfig.map((league) => {
               const leagueStats = getStatsForLeague(league.id);
               const isActive = activeLeague === league.id;
@@ -310,7 +292,7 @@ export default function PlayerProps({
                   aria-pressed={isActive}
                   aria-controls="picks competition-record recent-results"
                   onClick={() => setActiveLeague(league.id)}
-                  className={`flex min-w-0 items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all ${
+                  className={`competition-card flex min-w-0 items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all ${
                     isActive
                       ? `bg-slate-900/80 ${colorClasses[league.color].border} text-slate-100`
                       : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
@@ -401,7 +383,7 @@ export default function PlayerProps({
           <p className="mt-4 max-w-3xl text-xs leading-relaxed text-slate-500">
             Record cards use the full tracked category record. The recent selections table below is only a browsing
             sample from the wider settled player-prop feed, then filtered by the league tab you choose. The P/L
-            progression shows any pre-tracking baseline as a dashed aggregate summary, then uses settled public ledger
+            progression starts from an earlier aggregate balance, then uses settled public ledger
             rows for the selected tab.
           </p>
         </div>

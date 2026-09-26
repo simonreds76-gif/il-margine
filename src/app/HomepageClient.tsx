@@ -10,6 +10,7 @@ import ResultBadge from "@/components/ResultBadge";
 import TodaysEdge from "@/components/TodaysEdge";
 import ToolEmblem, { emblemForHref } from "@/components/ToolEmblem";
 import "./home-discovery.css";
+import RecordIcon from "@/components/RecordIcon";
 import SportCta from "@/components/SportCta";
 import ReturnAtlasFeature from "@/components/ReturnAtlasFeature";
 import Footer from "@/components/Footer";
@@ -247,14 +248,17 @@ export default function HomepageClient({
   const heroProofStats = [
     {
       label: "Overall ROI",
+      icon: "roi" as const,
       value: `${displayStats.overall.roi > 0 ? "+" : ""}${displayStats.overall.roi.toFixed(1)}%`,
     },
     {
       label: "Settled bets",
+      icon: "bets" as const,
       value: `${displayStats.overall.total_bets.toLocaleString()}`,
     },
     {
       label: "Tracking period",
+      icon: "calendar" as const,
       value: trackingPeriod,
     },
   ];
@@ -296,21 +300,21 @@ export default function HomepageClient({
               <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">Independent <span className="text-emerald-300">betting analysis.</span></h1>
               <p className="mt-4 text-xl font-semibold tracking-tight text-emerald-200 sm:text-2xl">Sharp tools. Mathematical edge.</p>
               <p className="mt-4 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">We combine statistical models, market expertise and specialist betting tools to identify value in football and tennis. Explore our published picks, investigate the numbers yourself and follow our results month by month.</p>
-              <nav aria-label="Explore our betting tools" className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-emerald-200">{[["/fair-odds-lab", "Fair Odds Lab"], ["/#return-atlas", "Return Atlas"], ["/penalty-takers", "Penalty takers"], ["/calculator", "Calculators"], ["/resources", "Insights"], ["/tools", "All tools →"]].map(([href, label]) => <Link prefetch={false} key={href} href={href} className="inline-flex min-h-11 items-center underline decoration-emerald-300/25 underline-offset-4 hover:decoration-emerald-200">{label}</Link>)}</nav>
+              <nav aria-label="Explore our betting tools" className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-emerald-200">{[["/fair-odds-lab", "Fair Odds Lab"], ["/#return-atlas", "Return Atlas"], ["/penalty-takers", "Penalty takers"], ["/calculator", "Calculators"], ["/resources", "Guides & insights"], ["/tools", "All tools →"]].map(([href, label]) => <Link prefetch={false} key={href} href={href} className="inline-flex min-h-11 items-center underline decoration-emerald-300/25 underline-offset-4 hover:decoration-emerald-200">{label}</Link>)}</nav>
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <SportCta sport="football" />
                 <SportCta sport="tennis" />
                 <a href="#monthly" className="home-record-link">Monthly results <span aria-hidden="true">↓</span></a>
               </div>
               <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-400">
-                {["Selected free picks", "Every result logged", "Transparent record"].map((item) => <span key={item} className="inline-flex items-center gap-2"><span aria-hidden="true" className="h-1 w-1 rounded-full bg-slate-500" />{item}</span>)}
+                {["Published betting picks", "Wins and losses included", "Explore the results"].map((item) => <span key={item} className="inline-flex items-center gap-2"><span aria-hidden="true" className="h-1 w-1 rounded-full bg-slate-500" />{item}</span>)}
               </div>
-              <div className="mt-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-4 sm:p-5">
-                <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{recordStatus === "historical" || !combinedStats ? "Historical performance baseline" : "Public performance record"}</p><Link href="/track-record" className="text-xs text-emerald-300 underline decoration-emerald-400/30 underline-offset-4 hover:text-emerald-200">View results</Link></div>
+              <div className="home-performance-proof mt-6 rounded-2xl border border-slate-800 p-4 sm:p-5">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{recordStatus === "historical" || !combinedStats ? "Earlier recorded results" : "Public performance record"}</p><Link href="/track-record" className="text-xs text-emerald-300 underline decoration-emerald-400/30 underline-offset-4 hover:text-emerald-200">View results</Link></div>
                 <dl className="grid grid-cols-3 gap-3">{heroProofStats.map((stat) => <div key={stat.label}>
-                  <dt className="text-xs leading-5 text-slate-400">{stat.label}</dt><dd className="mt-1.5 text-lg font-semibold tabular-nums tracking-tight text-slate-100 sm:text-2xl">{stat.value}</dd>
+                  <RecordIcon name={stat.icon} className="mb-3 h-7 w-7 text-emerald-200" /><dt className="text-xs leading-5 text-slate-400">{stat.label}</dt><dd className="mt-1.5 text-lg font-semibold tabular-nums tracking-tight text-slate-100 sm:text-2xl">{stat.value}</dd>
                 </div>)}</dl>
-                <p className="mt-3 text-xs text-slate-400">{recordStatus === "unavailable" ? "Record refresh unavailable. Previously loaded figures are retained; historical baseline shown if no current record has loaded." : recordStatus === "historical" ? "Historical figures recorded before database tracking. Current database results have not been included." : "Includes the historical baseline plus settled database results. Past performance is not a forecast."}</p>
+                <p className="mt-3 text-xs text-slate-400">{recordStatus === "unavailable" ? "The latest refresh is unavailable. These are the last available figures, which may exclude recent results." : recordStatus === "historical" ? "Earlier recorded results are shown. The latest results are unavailable and are not included." : "Recorded betting results, including wins and losses. Past performance is not a forecast."}</p><Link prefetch={false} href="/track-record#record-method" className="mt-2 inline-flex min-h-8 items-center text-xs text-emerald-200 underline underline-offset-4">How the record is compiled →</Link>
               </div>
             </div>
             <div className="lg:pt-1"><TodaysEdge picks={pendingBets} lastSettled={recentBets[0] ?? null} last7Profit={last7DaysProfit} /></div>

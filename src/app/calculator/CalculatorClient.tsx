@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useState, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import ToolEmblem, { type ToolEmblemName } from "@/components/ToolEmblem";
 import EditorialIcon from "@/components/EditorialIcon";
 import Footer from "@/components/Footer";
@@ -127,18 +128,7 @@ function useRecordSummary(initialRecord: RecordSummary): RecordSummary {
   return recordSummary;
 }
 
-function subscribeTool(onChange: () => void) {
-  window.addEventListener("popstate", onChange);
-  window.addEventListener("calculator-tool-change", onChange);
-  return () => { window.removeEventListener("popstate", onChange); window.removeEventListener("calculator-tool-change", onChange); };
-}
-function readTool(): TabKey {
-  const requested = new URLSearchParams(window.location.search).get("tool");
-  return TABS.find(tab => tab.key === requested)?.key ?? "returns";
-}
-
 export default function CalculatorClient({ initialRecord }: { initialRecord: RecordSummary }) {
-  const activeTab = useSyncExternalStore(subscribeTool, readTool, () => "returns" as TabKey);
   const record = useRecordSummary(initialRecord);
 
   const faqSchema = JSON.stringify({
@@ -151,20 +141,13 @@ export default function CalculatorClient({ initialRecord }: { initialRecord: Rec
     })),
   });
 
-  const selectTab = (key: TabKey) => {
-    const url = new URL(window.location.href);
-    url.searchParams.set("tool", key);
-    window.history.replaceState(null, "", url);
-    window.dispatchEvent(new Event("calculator-tool-change"));
-    track("calculator_tab", { tab: key });
-  };
 
   return (
     <div className="calc-page">
       <script
         type="application/ld+json"
         suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: faqSchema }}
+        dangerouslySetInnerHTML={{ __html: faqSchema.replace(/</g, "\\u003c") }}
       />
 
       <div className="site-container">
@@ -199,27 +182,9 @@ export default function CalculatorClient({ initialRecord }: { initialRecord: Rec
           </dl>
         </header>
 
-        <nav className="calc-tabs" aria-label="Calculator selection">
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => selectTab(tab.key)}
-              className={`calc-tab${activeTab === tab.key ? " is-active" : ""}`}
-              aria-current={activeTab === tab.key ? "page" : undefined}
-            >
-              <strong className="calc-tab-label"><ToolEmblem name={tab.icon} className="tool-emblem--compact" />{tab.label}</strong>
-              <span>{tab.hint}</span>
-            </button>
-          ))}
-        </nav>
-
-        <div className="calc-stage">
-          {activeTab === "returns" ? <ReturnsLab record={record} /> : null}
-          {activeTab === "kelly" ? <KellyLab /> : null}
-          {activeTab === "margin" ? <MarginLab /> : null}
-          {activeTab === "clv" ? <ClvLab /> : null}
-        </div>
+        <Suspense fallback={<CalculatorPanel activeTab={null} record={record} />}>
+          <QueryCalculatorPanel record={record} />
+        </Suspense>
 
         <section className="calc-section">
           <p className="site-eyebrow">House rules</p>
@@ -300,4 +265,44 @@ export default function CalculatorClient({ initialRecord }: { initialRecord: Rec
       <Footer />
     </div>
   );
+}
+
+function QueryCalculatorPanel({ record }: { record: RecordSummary }) {
+  const params = useSearchParams();
+  const activeTab = TABS.find(tab => tab.key === params.get("tool"))?.key ?? "returns";
+  return <CalculatorPanel activeTab={activeTab} record={record} />;
+}
+function CalculatorPanel({ activeTab, record }: { activeTab: TabKey | null; record: RecordSummary }) {
+  const selectTab = (key: TabKey) => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("tool", key);
+    window.history.replaceState(null, "", url);
+    track("calculator_tab", { tab: key });
+  };
+
+  return <>
+        <nav className="calc-tabs" aria-label="Calculator selection">
+          {TABS.map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => selectTab(tab.key)}
+              className={`calc-tab${activeTab === tab.key ? " is-active" : ""}`}
+              aria-current={activeTab === tab.key ? "page" : undefined}
+            >
+              <strong className="calc-tab-label"><ToolEmblem name={tab.icon} className="tool-emblem--compact" />{tab.label}</strong>
+              <span>{tab.hint}</span>
+            </button>
+          ))}
+        </nav>
+
+        <div className="calc-stage" aria-busy={activeTab === null}>
+          {activeTab === null && <div className="calc-query-placeholder"><p role="status">Loading your calculator…</p><noscript>Enable JavaScript to use the interactive calculators. The explanations and guides below are available without it.</noscript></div>}
+          {activeTab === "returns" ? <ReturnsLab record={record} /> : null}
+          {activeTab === "kelly" ? <KellyLab /> : null}
+          {activeTab === "margin" ? <MarginLab /> : null}
+          {activeTab === "clv" ? <ClvLab /> : null}
+        </div>
+
+  </>;
 }

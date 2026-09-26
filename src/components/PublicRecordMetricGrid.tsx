@@ -60,7 +60,7 @@ export default function PublicRecordMetricGrid({
     <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/35">
       <div className="flex flex-col gap-2 border-b border-slate-800 px-4 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-5">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-400">Selected record</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-400">Competition record</p>
           <h3 className="mt-1 text-lg font-semibold text-slate-100">{activeName}</h3>
         </div>
         <p className="text-xs text-slate-500">Settled stakes only</p>
@@ -83,7 +83,7 @@ export default function PublicRecordMetricGrid({
       <p className="border-t border-slate-800/80 px-4 py-3 text-[11px] leading-5 text-slate-500 sm:px-5">
         ROI = profit divided by total units staked.
         {hasArchiveBaseline
-          ? " Pre-ledger archive records use their documented 1u-equivalent baseline; newer selections use recorded stakes."
+          ? " Earlier aggregate results use a one-unit stake equivalent; newer bets use their recorded stakes."
           : " All figures use recorded settled stakes."}
       </p>
     </div>

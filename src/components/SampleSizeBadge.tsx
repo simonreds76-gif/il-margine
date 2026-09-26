@@ -8,7 +8,7 @@ export function sampleSizeLabel(settled: number, compact = false): string {
   if (settled <= 0) return "No settled bets";
   if (settled < 25) return compact ? "Early sample" : `Early sample · ${settled} bets`;
   if (settled < 50) return compact ? "Small sample" : `Small sample · ${settled} bets`;
-  return compact ? "Established" : `Established record · ${settled} bets`;
+  return compact ? (settled >= 500 ? "500+ bets" : settled >= 100 ? "100+ bets" : "50+ bets") : `${settled} settled bets`;
 }
 
 export default function SampleSizeBadge({
@@ -29,8 +29,9 @@ export default function SampleSizeBadge({
 
   return (
     <span
+      title="Sample size describes the number of settled bets, not proof of a lasting edge."
       className={`inline-flex items-center rounded-full border font-mono font-semibold uppercase ${
-        compact ? "px-2 py-0.5 text-[8px] tracking-[0.08em]" : "px-3 py-1.5 text-[10px] tracking-[0.12em]"
+        compact ? "px-2 py-0.5 text-[9px] tracking-[0.08em]" : "px-3 py-1.5 text-[10px] tracking-[0.12em]"
       } ${tone} ${className}`}
     >
       {sampleSizeLabel(settled, compact)}

@@ -226,7 +226,7 @@ export default function TrackRecordClient({ initialStats, initialMonthly }: {
   const statsNote = statsStatus === "live"
     ? "Updated from settled results in the public record feed."
     : statsStatus === "fallback"
-      ? "Historical baseline shown while the current record is unavailable."
+      ? "Earlier recorded results shown while the latest figures are unavailable."
       : "Showing the last available settled record; a refresh is temporarily unavailable.";
 
   return <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -242,7 +242,8 @@ export default function TrackRecordClient({ initialStats, initialMonthly }: {
           ["Profit / loss", `${displayStats.overall.total_profit > 0 ? "+" : ""}${displayStats.overall.total_profit.toFixed(2)}u`],
           ["Settled bets", formatBetCount(displayStats.overall.total_bets)],
         ].map(([label,value]) => <div key={label} className="site-card"><div className="flex items-center justify-between gap-3"><p className="site-eyebrow">{label}</p><EditorialIcon name={label === "Overall ROI" ? "analysis" : label === "Settled bets" ? "guide" : "bankroll"} className="h-5 w-5" /></div><p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight">{value}</p></div>)}</div>
-        <p className="mt-4 max-w-3xl text-xs text-slate-400">{statsStatus !== "fallback" ? "Includes the historical baseline and settled database results." : "Historical baseline shown until current database results are available."} Tracking began in October 2024. Returns use the recorded odds and stakes; they are not a forecast of future returns.</p>
+        <p className="mt-4 max-w-3xl text-xs text-slate-400">{statsStatus !== "fallback" ? "Includes earlier recorded results and the current betting record." : "Earlier recorded results shown; recent results are currently unavailable."} Tracking began in October 2024. Returns use the recorded odds and stakes; they are not a forecast of future returns.</p>
+        <details id="record-method" className="record-method mt-4 max-w-3xl scroll-mt-24"><summary className="cursor-pointer py-2 text-sm font-medium text-emerald-200">How this record is compiled</summary><p className="mt-2 text-sm leading-6 text-slate-400">The combined totals include earlier results preserved as aggregate summaries and the more recent record of individual bets. Earlier summaries do not provide a complete bet-by-bet audit trail; some category splits, win counts and stakes are reconstructed estimates. The individual history and monthly breakdown show the logged results available to inspect. We retain losing results as well as winning ones.</p></details>
         <section className="site-section" aria-labelledby="market-records">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3"><h2 id="market-records" className="text-2xl font-semibold">Explore the records</h2><span className="text-xs text-slate-400">{trackingRange}</span></div>
           <div className="grid gap-4 md:grid-cols-2">{([

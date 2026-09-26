@@ -82,22 +82,9 @@ type ChartModel = {
   zeroY: number;
 };
 
-// Share of the plot width reserved for the archive ramp when a live ledger
-// also exists. The archive represents roughly 20+ months of old record, so it
-// needs visual time to breathe; otherwise large PL/Serie A records look like a
-// sudden jump. Keep a live-ledger floor so verified picks remain inspectable.
-const ARCHIVE_MAX_WIDTH_FRACTION = 0.72;
-const ARCHIVE_MIN_WIDTH_FRACTION = 0.6;
 function buildPath(points: ChartPoint[]): string {
   if (points.length === 0) return "";
   return points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
-}
-
-function getArchiveWidthFraction(hasArchive: boolean, liveCount: number): number {
-  if (!hasArchive) return 0;
-  if (liveCount <= 0) return 1;
-  const livePressure = Math.min(1, liveCount / 120);
-  return ARCHIVE_MAX_WIDTH_FRACTION - (ARCHIVE_MAX_WIDTH_FRACTION - ARCHIVE_MIN_WIDTH_FRACTION) * livePressure;
 }
 
 function buildChart(pointsRaw: Omit<ProgressionPoint, "x" | "y">[]): ChartModel {
@@ -125,8 +112,7 @@ function buildChart(pointsRaw: Omit<ProgressionPoint, "x" | "y">[]): ChartModel 
   const plotHeight = height - paddingTop - paddingBottom;
   const yOf = (cumulative: number) => paddingTop + ((maxValue - cumulative) / span) * plotHeight;
 
-  const archiveWidthFraction = getArchiveWidthFraction(hasArchive, live.length);
-  const leadWidth = hasArchive ? archiveWidthFraction * plotWidth : 0;
+  const leadWidth = 0; // Aggregate balance is a single point, not a time series.
   const liveStart = paddingX + leadWidth;
   const liveWidth = plotWidth - leadWidth;
 

@@ -35,7 +35,7 @@ export default function Footer({ className = "" }: FooterProps) {
               <Link prefetch={false} href="/privacy-policy" className="hover:text-white">Privacy Policy</Link>
               <Link prefetch={false} href="/cookies-policy" className="hover:text-white">Cookies Policy</Link>
             </div>
-            <div className="flex flex-wrap justify-center gap-4 text-xs text-slate-300"><Link prefetch={false} href="/the-edge">Our methodology</Link><Link prefetch={false} href="/track-record">Track record</Link><Link prefetch={false} href="/tools">Betting tools</Link><Link prefetch={false} href="/resources">Resources</Link></div>
+            <div className="flex flex-wrap justify-center gap-4 text-xs text-slate-300"><Link prefetch={false} href="/the-edge">Our methodology</Link><Link prefetch={false} href="/track-record">Track record</Link><Link prefetch={false} href="/tools">Betting tools</Link><Link prefetch={false} href="/resources">Guides &amp; insights</Link></div>
             <ComplianceBar />
           </div>
         </div>

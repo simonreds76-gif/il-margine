@@ -3,8 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import SportIcon from "@/components/SportIcon";
-import SportCta from "@/components/SportCta";
+import TipsHubIntro from "@/components/TipsHubIntro";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BetMobileMeta from "@/components/BetMobileMeta";
@@ -14,7 +13,6 @@ import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/component
 import ResultBadge from "@/components/ResultBadge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
-import PageHomeLink from "@/components/PageHomeLink";
 import SampleSizeBadge from "@/components/SampleSizeBadge";
 import PublicRecordMetricGrid from "@/components/PublicRecordMetricGrid";
 import { normalizeBetCategory } from "@/lib/bet-category";
@@ -28,8 +26,7 @@ type TennisTipsClientProps = {
   initialProgressionRows?: CategoryProgressionRow[];
 };
 
-const naturalLogoFilter =
-  "[filter:drop-shadow(0_0_4px_rgba(255,255,255,0.32))_drop-shadow(0_0_10px_rgba(87,209,150,0.12))]";
+const naturalLogoFilter = "";
 
 function roiToneClass(roi: number): string {
   if (roi > 0) return "text-emerald-400";
@@ -60,7 +57,7 @@ export default function TennisTips({
   const categoryConfig = [
     { id: "all", name: "All Tennis", color: "emerald", logoPath: "/icons/markets/tennis.svg", logoClassName: naturalLogoFilter },
     { id: "atp", name: "ATP Tour", color: "blue", logoPath: "/icons/markets/atp-logo.png", logoClassName: naturalLogoFilter },
-    { id: "challenger", name: "Challenger", color: "amber", logoPath: "/icons/markets/tennis.svg", logoClassName: naturalLogoFilter },
+    { id: "challenger", name: "Challenger", color: "amber", logoPath: "/icons/markets/challenger-tour.png", logoClassName: naturalLogoFilter },
     { id: "ausopen", name: "Australian Open", color: "cyan", logoPath: "/icons/markets/slams/australian-open.png", logoClassName: naturalLogoFilter },
     { id: "rolandgarros", name: "Roland Garros", color: "rose", logoPath: "/icons/markets/slams/roland-garros.png", logoClassName: naturalLogoFilter },
     { id: "wimbledon", name: "Wimbledon", color: "green", logoPath: "/icons/markets/slams/wimbledon.png", logoClassName: naturalLogoFilter },
@@ -251,22 +248,7 @@ export default function TennisTips({
       {/* Navigation is now in GlobalNav component in layout.tsx */}
 
       {/* Hero */}
-      <section className="public-hub-heading pt-5 pb-4">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-0 block">
-            <PageHomeLink />
-            <span className="site-eyebrow block">Tennis Tips</span>
-          </div>
-
-          <h1 className="flex items-center gap-3 text-3xl sm:text-4xl font-semibold text-slate-100 mb-3">
-            <SportIcon sport="tennis" className="h-10 w-10 sm:h-12 sm:w-12" /><span>Tennis Betting <span className="text-emerald-400">Tips</span></span>
-          </h1>
-          <p className="text-sm sm:text-base text-slate-400 max-w-3xl leading-relaxed">
-            ATP, Challenger and Grand Slam betting tips. Choose a competition to see the picks and their record.
-          </p>
-          <div className="mt-5 max-w-md"><SportCta sport="tennis" href="/return-atlas" label="Explore Return Atlas" /></div>
-        </div>
-      </section>
+      <TipsHubIntro sport="tennis" />
 
       <section id="competition-filter" aria-label="Choose a tour or tournament" className="pt-5 pb-6 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -278,7 +260,7 @@ export default function TennisTips({
               <a href="#how-to-use" className="rounded-full border border-slate-700 px-3 py-2 text-slate-300 hover:border-emerald-400/50">How it works ↓</a>
             </nav>
           </div>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="competition-card-grid">
             {categoryConfig.map((cat) => {
               const catStats = getStatsForCategory(cat.id);
               const isActive = activeCategory === cat.id;
@@ -289,7 +271,7 @@ export default function TennisTips({
                   aria-pressed={isActive}
                   aria-controls="picks competition-record recent-results"
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`flex min-w-0 items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all ${
+                  className={`competition-card flex min-w-0 items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all ${
                     isActive
                       ? `bg-slate-900/80 ${colorClasses[cat.color].border} text-slate-100`
                       : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
@@ -433,7 +415,7 @@ export default function TennisTips({
           <p className="mt-4 max-w-3xl text-xs leading-relaxed text-slate-500">
             Record cards use the full tracked tennis category record. The recent selections table below is only a
             browsing sample from the latest 50 settled tennis picks, then filtered by the category tab you choose. The
-            P/L progression shows any pre-tracking baseline as a dashed aggregate summary, then uses settled public
+            P/L progression starts from an earlier aggregate balance, then uses settled public
             ledger rows for the selected tab.
           </p>
         </div>

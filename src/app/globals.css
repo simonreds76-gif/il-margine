@@ -368,3 +368,42 @@ body {
   .public-site .calc-table th, .public-site .calc-table td { padding:9px 5px; }
   .public-site .calc-edge-check { padding:16px 14px; }
 }
+
+/* Tips and public record: shared editorial treatment. */
+.public-site .tips-hub-intro { padding:24px 0 30px; }
+.public-site .tips-intro-layout { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:32px; align-items:center; }
+.public-site .tips-intro-title { display:flex; align-items:center; gap:18px; margin:10px 0 14px; }
+.public-site .tips-intro-title .tool-emblem { width:88px; height:88px; flex-shrink:0; }
+.public-site .tips-intro-title h1 { font-size:clamp(28px,3vw,42px); line-height:1.12; font-weight:650; letter-spacing:-.035em; color:#f2f6fa; }
+.public-site .tips-intro-title h1 span { color:#70e0b6; }
+.public-site .tips-intro-copy { max-width:730px; color:#b2c1cc; font-size:15px; line-height:1.8; }
+.public-site .tips-atlas-link { display:grid; grid-template-columns:48px minmax(0,1fr) 18px; gap:12px; align-items:center; padding:20px 16px; border:1px solid #6ed9b43b; border-radius:18px; background:linear-gradient(130deg,#1b302f,#111a23); color:#edf8f4; }
+.public-site .tips-atlas-link .tool-emblem { width:48px; height:48px; }
+.public-site .tips-atlas-link small { display:block; color:#81d8b9; font-size:10px; letter-spacing:.09em; text-transform:uppercase; margin-bottom:5px; }
+.public-site .tips-atlas-link strong { display:block; font-size:15px; }
+.public-site .tips-atlas-link span span { display:block; font-size:12px; line-height:1.6; color:#afc4cc; margin-top:6px; }
+.public-site .tips-atlas-link b { color:#81e6bd; font-size:23px; }
+.public-site .tips-atlas-link:hover { border-color:#80ebc4; }
+.public-site .competition-card-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+.public-site .competition-card { min-height:126px; position:relative; background:linear-gradient(140deg,#151f27,#10151d); border-color:#293640; padding:16px 12px; align-items:flex-start; }
+.public-site .competition-card[aria-pressed=true] { border-color:#75dfb7; box-shadow:inset 0 3px #75dfb7; background:linear-gradient(145deg,#18332d,#111d24); }
+.public-site .competition-card:hover { border-color:#75dfb790; }
+.public-site .competition-card img { filter:none; opacity:1; }
+.public-site .competition-card>span { width:44px; height:44px; padding:3px; border-radius:10px; background:#ffffff0b; }
+.public-site .competition-card:focus-visible,.public-site .tips-atlas-link:focus-visible { outline:2px solid #a4f3d6; outline-offset:4px; }
+.public-site .home-performance-proof { background:radial-gradient(ellipse at top right,#285d4730,transparent 70%),#101820; border-color:#395749; }
+.public-site .monthly-bar-track--signed { position:relative; display:block; height:110px; border:0; }
+.public-site .monthly-bar-track--signed::after { content:""; position:absolute; left:0; right:0; top:50%; border-top:1px solid #a9bac450; }
+.public-site .monthly-bar-track--signed span { position:absolute; left:50%; transform:translateX(-50%); min-height:0; }
+.public-site .monthly-bar-track--signed .positive { bottom:50%; }
+.public-site .monthly-bar-track--signed .negative { top:50%; border-radius:0 0 5px 5px; }
+.public-site .monthly-legend { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding:20px; border-top:1px solid #ffffff0b; }
+.public-site .monthly-legend strong { display:block; color:#d5e8e0; font-size:12px; }
+.public-site .monthly-legend span { display:block; color:#a2b7c5; font-size:12px; margin-top:4px; }
+.public-site .nav-group-label { margin:12px 12px 4px; color:#86aa9d; text-transform:uppercase; letter-spacing:.09em; font-size:10px; }
+.public-site .calc-query-placeholder { min-height:540px; padding:32px; border:1px solid #294039; border-radius:20px; background:#111b21; color:#b3cbbf; }
+.public-site .resource-library.query-pending .resource-card-grid,.public-site .resource-library.query-pending .resource-filters { visibility:hidden; }
+@media(max-width:900px) { .public-site .tips-intro-layout { grid-template-columns:1fr; gap:22px; }.public-site .tips-atlas-link { max-width:480px; }.public-site .competition-card-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media(max-width:600px) { .public-site .tips-intro-title { gap:12px; }.public-site .tips-intro-title .tool-emblem { width:64px; height:64px; }.public-site .tips-intro-copy { font-size:14px; }.public-site .competition-card-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }.public-site .competition-card { flex-direction:column; gap:10px; min-height:145px; padding:14px; }.public-site .monthly-legend { grid-template-columns:repeat(2,1fr); gap:14px; } }
+
+.public-site .competition-card:has(img[src*="challenger-tour"])>span { width:64px; background:#eef3f1; }

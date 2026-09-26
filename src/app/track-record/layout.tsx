@@ -4,7 +4,7 @@ import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 
 const title = "Track Record | Verified Betting Results";
 const description =
-  "Explore the Il Margine betting record: recorded stakes, ROI and settled results across football player props and tennis, including the historical baseline.";
+  "Explore the Il Margine betting record: recorded stakes, ROI and settled results across football player props and tennis.";
 const url = `${BASE_URL}/track-record`;
 
 export const metadata: Metadata = {

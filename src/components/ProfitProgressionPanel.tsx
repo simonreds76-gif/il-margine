@@ -32,10 +32,6 @@ export type ProgressionPoint = CategoryProgressionRow & {
   archiveSteps?: number;
 };
 
-// Fixed anchor count keeps the archive line crisp regardless of how many
-// historical bets the baseline summarises. The archive is an aggregate, not
-// per-bet data, so it never needs hundreds of points.
-const ARCHIVE_ANCHORS = 56;
 const UNIT_GBP = 100;
 
 function formatUnits(value: number, decimals = 2): string {
@@ -69,49 +65,14 @@ function shouldShowArchive(stats?: BaselineMarketStats | null): stats is Baselin
   return Boolean(stats && (stats.total_bets > 0 || Math.abs(stats.total_profit) > 0.0001));
 }
 
-function getArchiveMonthCount(stats: BaselineMarketStats): number {
-  const bets = Math.max(0, Math.round(stats.total_bets || 0));
-  return Math.max(20, Math.min(30, Math.round(bets / 30)));
-}
-
-function buildArchiveRamp(stats: BaselineMarketStats): Omit<ProgressionPoint, "x" | "y">[] {
-  const monthCount = getArchiveMonthCount(stats);
-  const target = Number(stats.total_profit) || 0;
-  const magnitude = Math.abs(target);
-  return Array.from({ length: ARCHIVE_ANCHORS + 1 }, (_, index) => {
-    const t = index / ARCHIVE_ANCHORS;
-    // Organic archive bridge: the endpoint is the real archive total, but the
-    // route is a bounded reconstruction with visible plateaus/pullbacks. It
-    // avoids both bad extremes: a fake pick-by-pick rollercoaster and a sterile
-    // straight mountain line.
-    const envelope = Math.sin(t * Math.PI);
-    const wave =
-      Math.sin(t * Math.PI * 5 + 0.65) * 0.085 +
-      Math.sin(t * Math.PI * 11 + 1.35) * 0.038 +
-      Math.sin(t * Math.PI * 2 - 0.45) * 0.028;
-    const corridor = 0.12;
-    const rawProgress = t + envelope * wave;
-    const lowerProgress = Math.max(0, t - corridor);
-    const upperProgress = Math.min(1, t + corridor);
-    const progress = index === 0 ? 0 : index === ARCHIVE_ANCHORS ? 1 : Math.min(upperProgress, Math.max(lowerProgress, rawProgress));
-    const cumulative = target >= 0 ? progress * magnitude : -progress * magnitude;
-    return {
-      id: -1000 - index,
-      date: null,
-      category: "archive",
-      event: "Archive record",
-      player: "",
-      selection: `Pre-tracking record | period ${Math.max(1, Math.ceil(t * monthCount))}/${monthCount}`,
-      status: "settled",
-      stake: 0,
-      profit_loss: 0,
-      index,
-      cumulative: roundUnits(cumulative),
-      isArchiveReconstruction: true,
-      archiveStep: index,
-      archiveSteps: ARCHIVE_ANCHORS,
-    };
-  });
+function buildArchiveBalance(stats: BaselineMarketStats): Omit<ProgressionPoint, "x" | "y">[] {
+  // An aggregate supports one opening balance, never an invented sequence.
+  return [{
+    id: -1000, date: null, category: "archive", event: "Earlier aggregate results",
+    player: "", selection: "Opening aggregate balance", status: "settled", stake: 0,
+    profit_loss: 0, index: 0, cumulative: roundUnits(Number(stats.total_profit) || 0),
+    isArchiveReconstruction: true,
+  }];
 }
 
 function buildOriginPoint(): Omit<ProgressionPoint, "x" | "y"> {
@@ -131,7 +92,7 @@ function buildOriginPoint(): Omit<ProgressionPoint, "x" | "y"> {
   };
 }
 
-function buildProgressionPoints(rows: CategoryProgressionRow[], archiveStats?: BaselineMarketStats | null): Omit<ProgressionPoint, "x" | "y">[] {
+export function buildProgressionPoints(rows: CategoryProgressionRow[], archiveStats?: BaselineMarketStats | null): Omit<ProgressionPoint, "x" | "y">[] {
   const sortedRows = rows
     .slice()
     .sort((a, b) => {
@@ -142,7 +103,7 @@ function buildProgressionPoints(rows: CategoryProgressionRow[], archiveStats?: B
       return a.id - b.id;
     });
 
-  const points: Omit<ProgressionPoint, "x" | "y">[] = shouldShowArchive(archiveStats) ? buildArchiveRamp(archiveStats) : [buildOriginPoint()];
+  const points: Omit<ProgressionPoint, "x" | "y">[] = shouldShowArchive(archiveStats) ? buildArchiveBalance(archiveStats) : [buildOriginPoint()];
   let cumulative = points[points.length - 1]?.cumulative ?? 0;
 
   sortedRows.forEach((row) => {
@@ -261,7 +222,7 @@ export default function ProfitProgressionPanel({
             <div className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-emerald-400/90">Profit curve</div>
             <h3 className="mt-1 text-lg font-semibold text-slate-100">{activeName} profit curve</h3>
             <p className="mt-1 text-xs leading-relaxed text-slate-500">
-              Dashed line is our archive record before public tracking; the solid line is the verified public ledger.
+              The opening balance includes earlier aggregate results. Each subsequent movement comes from an individual recorded bet; no earlier path is reconstructed.
             </p>
           </div>
 
@@ -290,8 +251,8 @@ export default function ProfitProgressionPanel({
               Public ledger
             </span>
             <span className="inline-flex items-center gap-2">
-              <span className="inline-block h-0 w-7 border-t-2 border-dashed border-slate-400/80" />
-              Archive record
+              <span className="inline-block h-2 w-2 rounded-full border border-slate-400" />
+              Opening aggregate balance
             </span>
           </div>
         </div>

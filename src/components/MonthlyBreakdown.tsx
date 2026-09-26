@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import RecordIcon from "./RecordIcon";
 import { formatStake } from "@/lib/format";
 
 export type MonthlyBreakdownScope = "combined" | "props" | "tennis";
@@ -25,7 +26,7 @@ const VIEW_BY_SCOPE: Record<MonthlyBreakdownScope, string> = {
 const SUBTITLE_BY_SCOPE: Record<MonthlyBreakdownScope, string> = {
   combined: "Tennis + player props combined",
   props: "Player props only",
-  tennis: "ATP tennis only",
+  tennis: "Tennis selections",
 };
 
 function formatMonth(ym: string): string {
@@ -74,18 +75,26 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
   const displayAll = showAll || expanded;
   const displayed = displayAll ? rows : rows.slice(0, INITIAL_ROWS);
   const hasMore = rows.length > INITIAL_ROWS;
+  const profitScale = Math.max(1, ...displayed.map(row => Math.abs(Number(row.total_profit))));
 
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0c0f14]">
-      <div className="border-b border-slate-800/40 px-5 py-4">
+      <div className="flex items-center gap-4 border-b border-slate-800/40 px-5 py-5"><RecordIcon name="calendar" className="h-10 w-10 shrink-0 text-emerald-200" /><div>
         <span className="block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
           Month by month
         </span>
         <h2 className="mt-2 text-2xl font-semibold text-slate-100">Monthly breakdown</h2>
-        <p className="mt-1 text-sm text-slate-400">{SUBTITLE_BY_SCOPE[scope]}</p>
-      </div>
-      <div className="monthly-bars" role="img" aria-label={displayed.slice().reverse().map(r => `${formatMonth(r.month)}: ${Number(r.total_profit).toFixed(2)} units`).join("; ")}>
-        {displayed.slice().reverse().map(r => { const profit = Number(r.total_profit); const scale = Math.max(1, ...displayed.map(m => Math.abs(Number(m.total_profit)))); return <div className="monthly-bar-column" key={r.month}><strong className={profit >= 0 ? "gain" : "loss"}>{profit >= 0 ? "+" : ""}{profit.toFixed(1)}u</strong><div className="monthly-bar-track"><span className={profit >= 0 ? "positive" : "negative"} style={{height: `${Math.max(2, Math.abs(profit) / scale * 100)}%`}} /></div><span>{formatMonth(r.month)}</span></div>; })}
+        <p className="mt-1 text-sm text-slate-400">{SUBTITLE_BY_SCOPE[scope]} · profit and loss in units</p>
+      </div></div>
+      <div className="monthly-bars" role="img" aria-label={displayed.slice().reverse().map(r => `${formatMonth(r.month)}: ${Number(r.total_profit).toFixed(1)} units`).join("; ")}>
+        {displayed.slice().reverse().map(row => {
+          const profit = Number(row.total_profit);
+          return <div className="monthly-bar-column" key={row.month}>
+            <strong className={profit >= 0 ? "gain" : "loss"}>{profit >= 0 ? "+" : ""}{profit.toFixed(1)}u</strong>
+            <div className="monthly-bar-track monthly-bar-track--signed"><span className={profit >= 0 ? "positive" : "negative"} style={{ height: `${Math.abs(profit) / profitScale * 48}%` }} /></div>
+            <span>{formatMonth(row.month)}</span>
+          </div>;
+        })}
       </div>
       {/* Mobile: tap to expand each month */}
       <div className="divide-y divide-slate-800/40 md:hidden">
@@ -115,7 +124,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
               {isOpen && (
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 border-t border-slate-800/40 pt-2 tabular-nums text-xs text-slate-400">
                   <span>{r.total_bets} bets</span>
-                  <span>{r.wins}-{r.losses}</span>
+                  <span>{r.wins} wins · {r.losses} losses</span>
                   <span>{formatStake(r.total_stake)}u staked</span>
                   <span className={Number(r.roi) >= 0 ? "text-emerald-400" : "text-red-400"}>
                     {Number(r.roi) >= 0 ? "+" : ""}{Number(r.roi).toFixed(1)}% ROI
@@ -157,15 +166,13 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
           </tbody>
         </table>
       </div>
-      <div className="border-t border-slate-800/40 px-4 py-3 text-xs text-slate-400">
-        <span className="font-medium text-slate-400">Guide:</span>{" "}
-        <span>
-          <strong className="font-semibold text-slate-300">W-L</strong> = wins-losses,{" "}
-          <strong className="font-semibold text-slate-300">Staked</strong> = total units risked,{" "}
-          <strong className="font-semibold text-slate-300">P/L</strong> = profit or loss in units,{" "}
-          <strong className="font-semibold text-slate-300">ROI</strong> = profit divided by staked.
-        </span>
+      <div className="monthly-legend">
+        <p><strong>W–L</strong><span>Wins and losses</span></p>
+        <p><strong>Staked</strong><span>Total units risked</span></p>
+        <p><strong>P/L</strong><span>Profit or loss in units</span></p>
+        <p><strong>ROI</strong><span>Profit ÷ stake × 100</span></p>
       </div>
+      <p className="px-5 pb-4 text-xs leading-5 text-slate-400">Bars show each month separately, above or below zero. For example, +5u from 100u staked is +5% ROI. A unit is a stake measure, not a fixed cash amount.</p>
       {hasMore && !displayAll && (
         <div className="border-t border-slate-800/40 px-4 py-3 text-center">
           <button
