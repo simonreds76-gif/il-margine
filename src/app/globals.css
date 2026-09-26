@@ -400,7 +400,7 @@ body {
 .public-site .monthly-legend { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding:20px; border-top:1px solid #ffffff0b; }
 .public-site .monthly-legend strong { display:block; color:#d5e8e0; font-size:12px; }
 .public-site .monthly-legend span { display:block; color:#a2b7c5; font-size:12px; margin-top:4px; }
-.public-site .nav-group-label { margin:12px 12px 4px; color:#86aa9d; text-transform:uppercase; letter-spacing:.09em; font-size:10px; }
+.public-navigation .nav-group-label { margin:12px 12px 4px; color:#86aa9d; text-transform:uppercase; letter-spacing:.09em; font-size:10px; }
 .public-site .calc-query-placeholder { min-height:540px; padding:32px; border:1px solid #294039; border-radius:20px; background:#111b21; color:#b3cbbf; }
 .public-site .resource-library.query-pending .resource-card-grid,.public-site .resource-library.query-pending .resource-filters { visibility:hidden; }
 @media(max-width:900px) { .public-site .tips-intro-layout { grid-template-columns:1fr; gap:22px; }.public-site .tips-atlas-link { max-width:480px; }.public-site .competition-card-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
