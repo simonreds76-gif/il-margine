@@ -3,6 +3,7 @@ import csv, hashlib, json, re, unicodedata, itertools, os
 from collections import Counter, defaultdict
 from datetime import date, timedelta, datetime, timezone
 from pathlib import Path
+from return_atlas_identity import source_player_id
 
 CONFIG = json.loads(Path(os.environ['RETURN_ATLAS_CONFIG']).read_text(encoding='utf-8-sig'))
 ROOT = Path(os.environ['RETURN_ATLAS_CANDIDATE'])
@@ -99,7 +100,9 @@ def build():
             game_key=(g['date'],g['tour_id'],g['round_id'],g['winner_id'],g['loser_id'])
             if game_key in seen_games: reject('duplicate_fixture');continue
             seen_games.add(game_key)
-            sid1='vbt-'+r['joueur1_id'];sid2='vbt-'+r['joueur2_id']; winner=sid1 if p1win else sid2
+            sid1=source_player_id(r['joueur1_id'],g['winner_id'] if p1win else g['loser_id'])
+            sid2=source_player_id(r['joueur2_id'],g['loser_id'] if p1win else g['winner_id'])
+            winner=sid1 if p1win else sid2
             for sid,name,ocid in [(sid1,r['joueur1'],g['winner_id'] if p1win else g['loser_id']),(sid2,r['joueur2'],g['loser_id'] if p1win else g['winner_id'])]:
                 if sid in canonical and norm(canonical[sid]['name'])!=norm(name): raise ValueError('Conflicting source player identity '+sid)
                 player_oc[ocid]=sid
