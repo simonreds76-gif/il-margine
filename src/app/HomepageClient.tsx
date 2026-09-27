@@ -298,7 +298,7 @@ export default function HomepageClient({
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">Football &amp; tennis</p>
               <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">Betting research,<br /><span className="text-emerald-300">built on evidence.</span></h1>
-              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Our tools open up the data behind teams, players and matchups, so you can reach your own conclusions. When our models identify value, we publish our picks with the reasoning behind them and a public record of wins and losses.</p>
+              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Il Margine combines independent betting analysis with specialist tools for football and tennis. Compare prices, investigate matchups and explore historical returns—or follow selections identified by our statistical models.</p>
               <div className="mt-6">
                 <Link prefetch={false} href="/tools" className="sport-cta"><span className="sport-cta-emblem"><ToolEmblem name="tools" className="h-full w-full" /></span><span className="sport-cta-label">Explore the tools</span><svg aria-hidden="true" viewBox="0 0 24 24" className="sport-cta-arrow" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12h15m-6-6 6 6-6 6" /></svg></Link>
               </div>
