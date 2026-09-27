@@ -15,6 +15,7 @@ const PRIMARY_LINKS = [
 ];
 const ATLAS_LINKS = [
   { href: "/football-atlas", label: "Club returns", description: "Club ROI & results", sport: "football" as const, heading: "Football" },
+  { href: "/manager-atlas", label: "Manager returns", description: "Manager ROI & H2H", sport: "football" as const, heading: "" },
   { href: "/return-atlas", label: "Player returns", description: "Player ROI & results", sport: "tennis" as const, heading: "Tennis" },
   { href: "/tennis-matchup", label: "Matchup Lab", description: "Head-to-head & player stats", sport: "tennis" as const, heading: "" },
 ];
@@ -35,7 +36,9 @@ function Chevron() {
 }
 
 function AtlasIcon({ href, sport }: { href: string; sport: "football" | "tennis" }) {
-  return href === "/tennis-matchup"
+  return href === "/manager-atlas"
+    ? <Image src="/manager-atlas/mark.svg" width={32} height={32} alt="" className="h-8 w-8 shrink-0" unoptimized />
+    : href === "/tennis-matchup"
     ? <Image src="/tennis-matchup/court-v1.webp" width={32} height={32} alt="" className="h-8 w-8 shrink-0 object-contain" unoptimized />
     : <SportIcon sport={sport} className="h-8 w-8 shrink-0" />;
 }

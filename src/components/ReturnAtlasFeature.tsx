@@ -19,6 +19,7 @@ export default function ReturnAtlasFeature() {
                 <p>Explore Europe’s top five domestic leagues: club returns by season, home and away, market role and odds range. League matches only; cups and European competitions are excluded.</p>
                 <ul><li>Team, draw or opponent win</li><li>Recent seasons combined</li><li>Club records and match breakdowns</li></ul>
                 <Link className="home-atlas-cta" href="/football-atlas" prefetch={false}><SportIcon sport="football" className="home-atlas-cta-icon"/>Explore football club returns <span aria-hidden="true">↗</span></Link>
+                <Link className="home-atlas-cta" href="/manager-atlas" prefetch={false}><Image src="/manager-atlas/mark.svg" width={28} height={28} alt="" unoptimized />Compare managers &amp; head-to-head returns <span aria-hidden="true">↗</span></Link>
             </article>
         </div>
         <footer><p>Historical research, separate from our published selections. Past returns do not establish a future edge.</p><Link href="/faq#return-atlas" prefetch={false}>How Return Atlas works →</Link></footer>

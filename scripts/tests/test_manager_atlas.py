@@ -31,4 +31,12 @@ class JoinTests(unittest.TestCase):
         self.assertFalse(data['fixtures']);self.assertEqual(audit['counts']['disputed_manager_assignment'],1)
         with self.assertRaisesRegex(ValueError,'registry review'):
             mod.join(self.atlas,[self.row],{},registry={'managers':[]})
+    def test_shared_name_resolves_by_club_and_date_not_global_alias(self):
+        registry={'contextualAliases':{'Luis García':[
+            {'club':'Espanyol','from':'2023-04-03','through':'2023-11-05','name':'Luis García Fernández'},
+            {'club':'Alaves','from':'2022-05-23','through':'2024-12-02','name':'Luis García Plaza'}]}}
+        self.assertEqual(mod.resolve_contextual_name('Luis García','Espanyol','2023-05-01',registry),'Luis García Fernández')
+        self.assertEqual(mod.resolve_contextual_name('Luis García','Alaves','2023-05-01',registry),'Luis García Plaza')
+        for club,date in [('Espanyol','2024-05-01'),('Other','2023-05-01')]:
+            with self.assertRaisesRegex(ValueError,'context requires review'):mod.resolve_contextual_name('Luis García',club,date,registry)
 if __name__=='__main__':unittest.main()

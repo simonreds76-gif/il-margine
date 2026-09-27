@@ -425,6 +425,15 @@ def publish(config, helper, version, path, status):
     archive = run([vercel, 'curl', '/' + path.relative_to('public').as_posix(), '--deployment', url, '--', '--fail', '--silent'], checkout)
     if json.loads(archive) != read(checkout / path):
         raise ValueError('Deployed archive differs from validated candidate')
+    manager_path = checkout / 'src/data/manager-atlas-release.json'
+    if manager_path.exists():
+        manager = read(manager_path)
+        manager_page = run([vercel, 'curl', '/manager-atlas', '--deployment', url, '--', '--fail', '--silent'], checkout)
+        if manager['version'] not in manager_page or re.search(r'<meta[^>]+name="robots"[^>]+content="[^"]*noindex', manager_page, re.I):
+            raise ValueError('Manager page pointer or indexability failed validation')
+        manager_data = run([vercel, 'curl', manager['indexUrl'], '--deployment', url, '--', '--fail', '--silent'], checkout)
+        if json.loads(manager_data) != read(checkout / 'public' / manager['indexUrl'].lstrip('/')):
+            raise ValueError('Deployed manager archive differs from validated candidate')
     if api('/v4/aliases/ilmargine.bet')['deploymentId'] != before or run(['git', 'ls-remote', 'origin', 'refs/heads/' + helper.BRANCH], checkout).split()[0] != sha:
         raise RuntimeError('Another release advanced; refusing to replace newer production')
     run([vercel, 'promote', url, '--yes', '--scope', 'simones-projects-fb02b6e0'], checkout, timeout=180)

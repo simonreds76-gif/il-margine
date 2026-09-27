@@ -13,11 +13,28 @@ export function managerRows(fixtures, manager, f, opponent='all', club='all') {
 }
 
 /** Market expectations concern the team's result, independent of the chosen bet. */
+export function matchMarket(row) {
+  const total=row.odds.reduce((s,p)=>s+1/p,0);
+  const teamIndex=row.venue==='home'?0:2;
+  const win=(1/row.odds[teamIndex])/total, draw=(1/row.odds[1])/total;
+  return {win,draw,opponent:(1/row.odds[2-teamIndex])/total,overround:total-1,points:3*win+draw};
+}
+
+/** Keep every non-empty record; communicate small samples without hiding them. */
+export function rankingMinimum() {
+  return 1;
+}
+
+export function isVerifiedActive(id, registry, today) {
+  const entry=registry?.entries?.[id];
+  return !!entry && entry.status==='active' && entry.checkedAt<=today && entry.reviewBy>=today;
+}
+
 export function marketContext(rows) {
   let expectedWins=0,expectedPoints=0,actualWins=0,actualPoints=0;
   for(const r of rows){
-    const total=r.odds.reduce((s,p)=>s+1/p,0), win=(1/r.teamOdds)/total, draw=(1/r.odds[1])/total;
-    expectedWins+=win;expectedPoints+=3*win+draw;
+    const p=matchMarket(r);
+    expectedWins+=p.win;expectedPoints+=p.points;
     actualWins+=Number(r.result==='W');actualPoints+=r.result==='W'?3:r.result==='D'?1:0;
   }
   return {expectedWins,expectedPoints,actualWins,actualPoints,excessWins:actualWins-expectedWins,excessPoints:actualPoints-expectedPoints};

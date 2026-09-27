@@ -13,6 +13,7 @@ export const BETTING_TOOL_GROUPS: Array<{
     { href: "/tennis-matchup", title: "Tennis Matchup Lab", description: "Compare H2H records, serve and return statistics, aces and double faults by surface and location.", action: "Compare tennis players", icon: "analysis", badge: "Player comparison" },
     { href: "/return-atlas", title: "Return Atlas · Tennis", description: "Explore player returns by season, surface, odds range and favourite or underdog status.", action: "Explore player records", icon: "analysis", badge: "Historical research" },
     { href: "/football-atlas", title: "Return Atlas · Football", description: "Compare club returns across five domestic leagues. Filter seasons, venue, role and prices.", action: "Explore club records", icon: "football", badge: "Historical research" },
+    { href: "/manager-atlas", title: "Return Atlas · Managers", description: "Follow managers across clubs, compare H2Hs and inspect team, draw and opponent returns at the recorded prices.", action: "Compare manager records", icon: "football", badge: "Manager research" },
     { href: "/fair-odds-lab", title: "Fair Odds Lab", description: "Inspect estimated goalscorer probabilities, lineup assumptions and the available price comparisons.", action: "Open the lab", icon: "method", badge: "Model research · beta" },
     { href: "/penalty-takers", title: "Penalty taker intelligence", description: "Find first choices, deputies and the dated evidence behind each club’s hierarchy.", action: "Check a hierarchy", icon: "guide", badge: "Evidence directory" },
   ] },

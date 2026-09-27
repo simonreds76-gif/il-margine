@@ -1,8 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { managerRows, marketContext, clubRecords, observedSpells, strategyReturns } from '../../research/manager-atlas/core.mjs';
-import { defaults, summary } from '../../src/components/football-atlas/football-core.ts';
+import { managerRows, matchMarket, marketContext, clubRecords, observedSpells, strategyReturns, rankingMinimum, isVerifiedActive } from '../../research/manager-atlas/core.mjs';
+import { defaults, summary, bands } from '../../src/components/football-atlas/football-core.ts';
 const fixture=(patch={})=>({id:'1',date:'2024-01-01',league:'premier-league',season:'2023-2024',home:'A',away:'B',homeManager:'x',awayManager:'y',hg:1,ag:1,odds:[2,3,4],basis:'closing',...patch});
+test('active rankings require current affirmative evidence, never infer status from old matches',()=>{
+ const entry={status:'active',checkedAt:'2026-09-27',reviewBy:'2026-10-04'};
+ const registry={entries:{active:entry,retired:{...entry,status:'retired'},dead:{...entry,status:'deceased'},unemployed:{...entry,status:'not-currently-coaching'}}};
+ assert.equal(isVerifiedActive('active',registry,'2026-09-27'),true);
+ for(const id of ['retired','dead','unemployed','unknown']) assert.equal(isVerifiedActive(id,registry,'2026-09-27'),false);
+ assert.equal(isVerifiedActive('active',registry,'2026-10-05'),false);
+ assert.equal(isVerifiedActive('active',registry,'2026-09-26'),false);
+ assert.equal(isVerifiedActive('active',undefined,'2026-09-27'),false);
+});
 test('draw settlement and opposite-manager orientation',()=>{
  const matches=[fixture()];
  assert.equal(summary(managerRows(matches,'x',defaults,'y')).profit,-1);
@@ -51,4 +60,33 @@ test('same-sample strategies settle draw and away wins at actual three-way price
  assert.equal(choices.find(c=>c.side==='opponent').profit,-2);
  assert.ok(choices.every(c=>c.bets===2));
  assert.equal(marketContext([]).excessWins,0);
+});
+
+test('Overall and H2H rankings retain one to four matches',()=>{
+ for(const n of [1,2,3,4]) {
+  const fixtures=Array.from({length:n},(_,i)=>fixture({id:String(i)}));
+  const count=managerRows(fixtures,'x',defaults,'y').length;
+  assert.ok(count>=rankingMinimum('y',100));
+  assert.ok(count>=rankingMinimum());
+ }
+ assert.equal(rankingMinimum(),1);
+});
+
+test('real match explanation uses the same quoted market and sums to 100%',()=>{
+ const [home]=managerRows([fixture()],'x',defaults);
+ const [away]=managerRows([fixture()],'y',{...defaults,side:'opponent'});
+ const h=matchMarket(home),a=matchMarket(away);
+ assert.ok(Math.abs(h.win+h.draw+h.opponent-1)<1e-12);
+ assert.equal(a.win,h.opponent);
+ assert.equal(a.opponent,h.win);
+ assert.equal(a.draw,h.draw);
+ assert.equal(marketContext([away]).expectedPoints,a.points);
+});
+
+test('odds-band boundaries belong to exactly one band',()=>{
+ for(const price of [1.01,1.2,1.5,1.8,2,2.2,2.5,3,3.5,4,5,6,8,10,15]) {
+  const matches=[fixture({odds:[price,3.5,6]})];
+  const counts=bands.map(b=>managerRows(matches,'x',{...defaults,min:b.min,max:b.max,upperExclusive:true}).length);
+  assert.equal(counts.reduce((a,b)=>a+b,0),1,`price ${price}`);
+ }
 });

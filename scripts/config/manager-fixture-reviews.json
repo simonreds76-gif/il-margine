@@ -1,0 +1,64 @@
+{
+  "6525fa7c998ec72b47": {
+    "providerMatchId": "5795367",
+    "date": "2026-08-22",
+    "league": "premier-league",
+    "home": "Nottingham Forest",
+    "away": "Leeds United",
+    "hg": 0,
+    "ag": 1,
+    "coaches": [
+      {
+        "id": "43009",
+        "name": "Oliver Glasner"
+      },
+      {
+        "id": "849545",
+        "name": "Daniel Farke"
+      }
+    ],
+    "reason": "Provider HTML points to a different cup fixture. Dated league match reports independently identify both managers.",
+    "evidence": [
+      "https://www.leedsunited.com/en/news/report-nottingham-forest-0-1-leeds-united",
+      "https://www.skysports.com/football/n-forest-vs-leeds/report/559449"
+    ],
+    "reviewedAt": "2026-09-27"
+  },
+  "7b304f9c547609ebe7": {
+    "providerMatchId": "5749676",
+    "date": "2026-09-13",
+    "league": "serie-a",
+    "home": "Napoli",
+    "away": "Bologna",
+    "hg": 1,
+    "ag": 0,
+    "coaches": [
+      {
+        "id": "129745",
+        "name": "Massimiliano Allegri"
+      },
+      {
+        "id": "853795",
+        "name": "Domenico Tedesco"
+      }
+    ],
+    "source": "https://www.fotmob.com/matches/bologna-vs-napoli/37x04l#5749676",
+    "checkedAt": "2026-09-27T11:46:59.748263+00:00",
+    "payloadSha256": "b688ebc467e1a4d801f01dd9b04a45273d278bab408a1377a194df12f448daa4",
+    "observedCoaches": [
+      {
+        "id": "129745",
+        "name": "Massimiliano Allegri"
+      },
+      {
+        "id": "22122",
+        "name": "Andrea Tarozzi"
+      }
+    ],
+    "reason": "Tarozzi was the touchline stand-in for suspended head coach Tedesco; retain the appointed head coach.",
+    "evidence": [
+      "https://www.ansa.it/sito/notizie/sport/calcio/2026/09/13/serie-a-tarozzi-siamo-sulla-strada-buona-dobbiamo-trovare-equilibrio_756229ac-0530-4c53-89e4-feb1469efadc.html"
+    ],
+    "reviewedAt": "2026-09-27"
+  }
+}

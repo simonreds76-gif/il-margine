@@ -18,6 +18,14 @@ NAME_ALIASES = {'Zdenek Zeman':'Zdeněk Zeman','Bruno Genesio':'Bruno Génésio'
 def norm(text):
     return re.sub('[^a-z0-9]', '', unicodedata.normalize('NFKD',text).encode('ascii','ignore').decode().lower())
 
+def resolve_contextual_name(name, club, date, registry):
+    """Disambiguate an observed source label only within reviewed club/date ranges."""
+    rules=(registry or {}).get('contextualAliases',{}).get(name)
+    if rules is None:return name
+    matches=[r['name'] for r in rules if club==r['club'] and r['from']<=date<=r['through']]
+    if len(matches)!=1:raise ValueError(f'Manager context requires review: {name}, {club}, {date}')
+    return matches[0]
+
 def join(atlas, source, aliases, registry=None, excluded_games=None):
     identities={}
     if registry:
@@ -57,7 +65,7 @@ def join(atlas, source, aliases, registry=None, excluded_games=None):
             elif m[0] in seen:reason='duplicate_fixture'
         if reason:
             counts[reason]+=len(rows);rejected.append({'game':r['game_id'],'reason':reason,'teams':[r['home_club_name'],r['away_club_name']]});continue
-        names=[NAME_ALIASES.get(r[k].strip(),r[k].strip()) for k in ['home_club_manager_name','away_club_manager_name']]
+        names=[resolve_contextual_name(NAME_ALIASES.get(r[k].strip(),r[k].strip()),key[2+i],key[1],registry) for i,k in enumerate(['home_club_manager_name','away_club_manager_name'])]
         ids=[]
         for name in names:
             if registry:
