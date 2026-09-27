@@ -52,6 +52,7 @@ jobs:
       - name: Check collector and archive invariants
         run: |
           python -m unittest discover -s scripts/tests -p test_football_atlas_weekly.py
+          python -m unittest discover -s scripts/tests -p 'test_manager*.py'
           node --experimental-strip-types --test scripts/tests/football-atlas.test.mjs
 
       - name: Download, reconcile and update Atlas
@@ -83,6 +84,7 @@ jobs:
           path: |
             ${{ runner.temp }}/football-atlas-state/publish-status.json
             ${{ runner.temp }}/football-atlas-state/collection.json
+            ${{ runner.temp }}/football-atlas-state/managers/refresh-report.json
           if-no-files-found: warn
           retention-days: 30
 
@@ -98,7 +100,7 @@ jobs:
           path = pathlib.Path(os.environ['RUNNER_TEMP']) / 'football-atlas-state/publish-status.json'
           data = json.loads(path.read_text()) if path.exists() else {}
           error = data.get('error', 'Cloud job failed before completing validation. Check the workflow log.')
-          text = 'Football Return Atlas weekly update failed.\n' + error[:1800] + '\nCheck publication status before retrying.\n' + os.environ['RUN_URL']
+          text = 'Football / Manager Return Atlas weekly update failed.\n' + error[:1800] + '\nCheck publication status before retrying.\n' + os.environ['RUN_URL']
           token, chat = os.environ.get('OPS_ALERT_TELEGRAM_BOT_TOKEN'), os.environ.get('OPS_ALERT_TELEGRAM_CHAT_ID')
           if not token or not chat:
               raise SystemExit('Telegram alert credentials missing')
