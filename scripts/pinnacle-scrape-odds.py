@@ -350,6 +350,28 @@ def scrape_pinnacle() -> list[dict]:
         print("ERROR: Failed to fetch tennis leagues from API.")
         return []
 
+    # Qualifiers may be absent from the active-league index. Check only events
+    # already scheduled by OnCourt, rather than scraping thousands of old leagues.
+    if PINNACLE_LEAGUES_ACTIVE_ONLY:
+        from tennis_qualifying_coverage import read_rows, current_tours, missing_qualifier_keys, fallback_leagues
+        data_dir = Path(__file__).resolve().parent.parent / "data"
+        today = datetime.now(timezone.utc).date()
+        tours = current_tours(read_rows(data_dir / "oncourt" / "tours_atp.csv"), today)
+        missing = missing_qualifier_keys(read_rows(data_dir / "oncourt" / "today_atp.csv"), tours, leagues, today)
+        if missing:
+            catalogue = _api_get(f"sports/{PINNACLE_SPORT_ID_TENNIS}/leagues?all=true", retries=1)
+            if isinstance(catalogue, list):
+                fallback = fallback_leagues(catalogue, missing)
+                known = {lg["id"] for lg in leagues}
+                extra = [lg for lid, lg in sorted(fallback.items()) if lid not in known]
+                if len(extra) <= 12:
+                    leagues.extend(extra)
+                    print(f"  Qualifying discovery: checking {len(extra)} extra leagues for {', '.join(sorted(missing))}.")
+                else:
+                    print("  WARNING: qualifying discovery ambiguous (over 12 leagues); retaining active markets only.")
+            else:
+                print("  WARNING: qualifying catalogue lookup failed; retaining active markets only.")
+
     target_leagues = [(lg["id"], lg["name"]) for lg in leagues if _should_include_league(lg.get("name", ""))]
     if VERBOSE:
         print(f"  {len(leagues)} total leagues, {len(target_leagues)} targeted:")

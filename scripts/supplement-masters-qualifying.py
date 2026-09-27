@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Backfill missing ATP Masters qualifying fixtures into ``oncourt_today``.
+"""Backfill missing ATP qualifying fixtures into ``oncourt_today``.
 
 OnCourt can publish the main-tour shell before its qualifying draw. Pinnacle may
 already carry those matches, which otherwise means the pricing pipeline silently
 sees zero qualifying fixtures. This script runs after the fresh Pinnacle scrape
-and adds only uniquely resolved, pre-match singles for a current Masters event.
+and adds only uniquely resolved, pre-match singles for a current ATP tournament.
 """
 
 from __future__ import annotations
@@ -31,24 +31,11 @@ import sackmann_tml_id_map as idmap
 
 
 DEFAULT_REPORT = ROOT / "data" / "backtest" / "masters-qualifying-coverage.json"
-MASTERS_ALIASES = {
-    "indian_wells": {"indian wells"},
-    "miami": {"miami"},
-    "monte_carlo": {"monte carlo", "montecarlo"},
-    "madrid": {"madrid"},
-    "rome": {"rome", "roma", "italian open", "internazionali bnl"},
-    "canada": {
-        "canada",
-        "canadian open",
-        "montreal",
-        "toronto",
-        "national bank open",
-        "rogers cup",
-    },
-    "cincinnati": {"cincinnati", "western southern"},
-    "shanghai": {"shanghai"},
-    "paris": {"paris"},
-}
+# Legacy filename/report retained for existing callers. Coverage includes ranks 2/3/4.
+from tennis_qualifying_coverage import (
+    event_key, current_tours, is_upcoming_quote, schedule_coverage,
+)
+
 
 
 def load_env(root: Path = ROOT) -> None:
@@ -82,14 +69,6 @@ def compact_name(value: str | None) -> str:
 def is_singles_name(value: str | None) -> bool:
     raw = str(value or "")
     return bool(raw.strip()) and "/" not in raw and "&" not in raw
-
-
-def event_key(value: str | None) -> str | None:
-    norm = normalize(value)
-    for key, aliases in MASTERS_ALIASES.items():
-        if any(alias in norm for alias in aliases):
-            return key
-    return None
 
 
 def is_qualifier_market(row: dict[str, str], target: date) -> bool:
@@ -157,32 +136,8 @@ def build_player_resolver(players: list[dict[str, Any]]):
 def find_current_masters_tours(
     rows: list[dict[str, str]], target: date
 ) -> dict[str, dict[str, Any]]:
-    candidates: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for row in rows:
-        try:
-            rank = int(row.get("rank") or 0)
-            tour_id = int(row.get("id") or 0)
-            tour_day = date.fromisoformat(str(row.get("date") or "")[:10])
-        except ValueError:
-            continue
-        key = event_key(row.get("name"))
-        if rank != 3 or not tour_id or key is None:
-            continue
-        if abs((tour_day - target).days) > 14:
-            continue
-        candidates[key].append(
-            {
-                "tour_id": tour_id,
-                "tour_name": str(row.get("name") or "").strip(),
-                "tour_date": tour_day.isoformat(),
-                "court_id": int(row.get("court_id") or 0),
-                "distance_days": abs((tour_day - target).days),
-            }
-        )
-    return {
-        key: sorted(values, key=lambda item: (item["distance_days"], -item["tour_id"]))[0]
-        for key, values in candidates.items()
-    }
+    # Compatibility function name for old callers/tests.
+    return current_tours(rows, target)
 
 
 def resolve_fixture_rows(
@@ -200,7 +155,7 @@ def resolve_fixture_rows(
         p2, method2 = resolve_player(str(row.get("player2_name") or ""))
         reason = None
         if tour is None:
-            reason = "current_masters_tour_not_found"
+            reason = "current_atp_tour_missing_or_ambiguous"
         elif p1 is None or p2 is None:
             reason = "player_name_unresolved"
         elif p1 == p2:
@@ -314,12 +269,14 @@ def write_report(path: Path, report: dict[str, Any]) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Supplement missing ATP Masters qualifying fixtures")
+    parser = argparse.ArgumentParser(description="Supplement missing ATP qualifying fixtures")
     parser.add_argument("--date", default=date.today().isoformat(), help="Target date (YYYY-MM-DD)")
     parser.add_argument("--pinnacle-file", default="", help="Override Pinnacle snapshot CSV")
     parser.add_argument("--players-file", default=str(ROOT / "data" / "oncourt" / "players_atp.csv"))
     parser.add_argument("--tours-file", default=str(ROOT / "data" / "oncourt" / "tours_atp.csv"))
     parser.add_argument("--report", default=str(DEFAULT_REPORT))
+    parser.add_argument("--schedule-file", default=str(ROOT / "data" / "oncourt" / "today_atp.csv"))
+    parser.add_argument("--max-snapshot-age-hours", type=float, default=2.0)
     parser.add_argument("--min-coverage", type=float, default=0.80)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
@@ -335,21 +292,37 @@ def main() -> int:
     if pinnacle_path is None or not pinnacle_path.exists():
         report.update({"status": "no_pinnacle_snapshot", "pinnacle_qualifier_matches": 0})
         write_report(Path(args.report), report)
-        print("Masters qualifier coverage: no Pinnacle snapshot; nothing to supplement.")
-        return 0
+        print("ATP qualifier coverage: no Pinnacle snapshot; cannot verify coverage.")
+        return 1
 
+    now = datetime.now(timezone.utc)
+    snapshot_age = (now.timestamp() - pinnacle_path.stat().st_mtime) / 3600
+    if not 0 <= snapshot_age <= args.max_snapshot_age_hours:
+        report.update({"status": "stale_pinnacle_snapshot", "snapshot_age_hours": snapshot_age})
+        write_report(Path(args.report), report)
+        print("ERROR: ATP qualifying coverage requires a fresh Pinnacle snapshot.")
+        return 1
     all_market_rows = read_csv(pinnacle_path)
-    market_rows = [row for row in all_market_rows if is_qualifier_market(row, target)]
+    candidates = [row for row in all_market_rows if is_qualifier_market(row, target)]
+    market_rows = [row for row in candidates if is_upcoming_quote(row, now)]
+    report["excluded_started_or_untimed_quotes"] = len(candidates) - len(market_rows)
     report["pinnacle_qualifier_matches"] = len(market_rows)
     report["events"] = sorted({str(row.get("league_name") or "") for row in market_rows})
-    if not market_rows:
-        report["status"] = "no_current_masters_qualifiers"
-        write_report(Path(args.report), report)
-        print("Masters qualifier coverage: no current/tomorrow Pinnacle Masters qualifying markets.")
-        return 0
-
     players = load_players(Path(args.players_file))
     tours = find_current_masters_tours(read_csv(Path(args.tours_file)), target)
+    coverage = schedule_coverage(read_csv(Path(args.schedule_file)), tours, all_market_rows,
+                                 build_player_resolver(players), target, now)
+    report["scheduled_tournament_coverage"] = coverage
+    report["missing_scheduled_prices"] = sum(row["missing_prices"] for row in coverage)
+    for row in coverage:
+        print(f"ATP qualifying: {row['tournament']}: {row['scheduled_qualifiers']} scheduled, "
+              f"{row['with_current_prices']} priced, {row['missing_prices']} awaiting Pinnacle prices.")
+    if not market_rows:
+        report["status"] = "awaiting_prices" if report["missing_scheduled_prices"] else "no_current_atp_qualifiers"
+        write_report(Path(args.report), report)
+        print("ATP qualifier coverage: no upcoming qualifying quotes to supplement. Missing prices are not a no-value verdict.")
+        return 0
+
     resolved, unresolved = resolve_fixture_rows(market_rows, build_player_resolver(players), tours)
     report.update(
         {
@@ -382,17 +355,18 @@ def main() -> int:
             "inserted_matches": len(inserted),
             "covered_matches": covered,
             "coverage_ratio": round(coverage, 6),
-            "status": "covered" if coverage >= args.min_coverage else "coverage_failed",
+            "status": ("schedule_covered_awaiting_prices" if report["missing_scheduled_prices"] else "covered")
+            if coverage >= args.min_coverage else "coverage_failed",
         }
     )
     write_report(Path(args.report), report)
     print(
-        "Masters qualifier coverage: "
+        "ATP qualifier coverage: "
         f"Pinnacle={len(market_rows)}, resolved={len(resolved)}, existing={existing_count}, "
         f"inserted={len(inserted)}, unresolved={len(unresolved)}, coverage={coverage:.1%}"
     )
     if coverage < args.min_coverage:
-        print(f"ERROR: Masters qualifying coverage below required {args.min_coverage:.0%}.")
+        print(f"ERROR: ATP qualifying coverage below required {args.min_coverage:.0%}.")
         return 1
     return 0
 
