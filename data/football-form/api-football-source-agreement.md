@@ -1,6 +1,6 @@
 # API-Football Source Agreement
 
-- Generated: 2026-09-26T13:09:35Z
+- Generated: 2026-09-27T14:01:49Z
 - Status: no_overlap
 - Fixture overlap: 0/0 API rows (0.0%)
 - Decision: diagnostic only; no new field is wired into a model by this report.
