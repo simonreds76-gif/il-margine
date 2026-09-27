@@ -37,7 +37,7 @@ function Chevron() {
 
 function AtlasIcon({ href, sport }: { href: string; sport: "football" | "tennis" }) {
   return href === "/manager-atlas"
-    ? <Image src="/manager-atlas/mark.svg" width={32} height={32} alt="" className="h-8 w-8 shrink-0" unoptimized />
+    ? <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-300/20 bg-emerald-300/10"><Image src="/manager-atlas/mark-v2.svg" width={30} height={30} alt="" unoptimized /></span>
     : href === "/tennis-matchup"
     ? <Image src="/tennis-matchup/court-v1.webp" width={32} height={32} alt="" className="h-8 w-8 shrink-0 object-contain" unoptimized />
     : <SportIcon sport={sport} className="h-8 w-8 shrink-0" />;
