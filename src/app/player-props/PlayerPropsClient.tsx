@@ -381,10 +381,8 @@ export default function PlayerProps({
           <ProfitProgressionPanel rows={filteredProgressionRows} activeName={activeName} archiveStats={archiveStats} />
 
           <p className="mt-4 max-w-3xl text-xs leading-relaxed text-slate-500">
-            Record cards use the full tracked category record. The recent selections table below is only a browsing
-            sample from the wider settled player-prop feed, then filtered by the league tab you choose. The P/L
-            progression starts from an earlier aggregate balance, then uses settled public ledger
-            rows for the selected tab.
+            The figures above cover the full reporting period for your selected league.
+            Browse recent results below, or explore the profit curve to inspect individual bets.
           </p>
         </div>
       </section>
@@ -396,8 +394,7 @@ export default function PlayerProps({
             <span className="text-xs font-mono text-emerald-400 mb-2 block">RESULTS</span>
             <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Recent Selections</h2>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-500">
-              This is a recent-results window, not the source of truth for the ROI card above. Older bets still count
-              in the category record even when they have rolled out of the wider settled feed.
+              The latest settled selections for your chosen league. Older results remain included in the totals above.
             </p>
           </div>
 

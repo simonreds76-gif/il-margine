@@ -224,7 +224,7 @@ export default function TrackRecordClient({ initialStats, initialMonthly }: {
 
   const trackingRange = getTrackingRangeLabel();
   const statsNote = statsStatus === "live"
-    ? "Updated from settled results in the public record feed."
+    ? "Updated with the latest settled results."
     : statsStatus === "fallback"
       ? "Earlier recorded results shown while the latest figures are unavailable."
       : "Showing the last available settled record; a refresh is temporarily unavailable.";
@@ -234,7 +234,7 @@ export default function TrackRecordClient({ initialStats, initialMonthly }: {
     <main>
       <div className="site-container">
         <PageHeading eyebrow="The public record" title="Track record">
-          <p>Published selections, recorded stakes and settled results. Review the sample behind the returns, including the losing bets.</p>
+          <p>Explore football and tennis returns, compare results by month and review individual selections.</p>
         </PageHeading>
         <p role="status" className="mb-4 text-sm text-slate-400">{statsNote}</p>
         <div className="grid gap-3 sm:grid-cols-3">{[
@@ -242,8 +242,8 @@ export default function TrackRecordClient({ initialStats, initialMonthly }: {
           ["Profit / loss", `${displayStats.overall.total_profit > 0 ? "+" : ""}${displayStats.overall.total_profit.toFixed(2)}u`],
           ["Settled bets", formatBetCount(displayStats.overall.total_bets)],
         ].map(([label,value]) => <div key={label} className="site-card"><div className="flex items-center justify-between gap-3"><p className="site-eyebrow">{label}</p><EditorialIcon name={label === "Overall ROI" ? "analysis" : label === "Settled bets" ? "guide" : "bankroll"} className="h-5 w-5" /></div><p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight">{value}</p></div>)}</div>
-        <p className="mt-4 max-w-3xl text-xs text-slate-400">{statsStatus !== "fallback" ? "Includes earlier recorded results and the current betting record." : "Earlier recorded results shown; recent results are currently unavailable."} Tracking began in October 2024. Returns use the recorded odds and stakes; they are not a forecast of future returns.</p>
-        <details id="record-method" className="record-method mt-4 max-w-3xl scroll-mt-24"><summary className="cursor-pointer py-2 text-sm font-medium text-emerald-200">How this record is compiled</summary><p className="mt-2 text-sm leading-6 text-slate-400">The combined totals include earlier results preserved as aggregate summaries and the more recent record of individual bets. Earlier summaries do not provide a complete bet-by-bet audit trail; some category splits, win counts and stakes are reconstructed estimates. The individual history and monthly breakdown show the logged results available to inspect. We retain losing results as well as winning ones.</p></details>
+        <p className="mt-4 max-w-3xl text-xs text-slate-400">Tracking since October 2024. ROI measures profit as a percentage of total stake. Past performance does not predict future returns.</p>
+        <details id="record-method" className="record-method mt-4 max-w-3xl scroll-mt-24"><summary className="cursor-pointer py-2 text-sm font-medium text-emerald-200">How the record is calculated</summary><p className="mt-2 text-sm leading-6 text-slate-400">Totals combine earlier period summaries with the individual results listed on the site. Some figures in the earlier summaries, including competition splits and win counts, are estimates; earlier stake totals assume one unit per bet. Profit charts carry the earlier profit forward as a starting total. Chart movements and monthly tables use the individual results available to inspect.</p></details>
         <section className="site-section" aria-labelledby="market-records">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3"><h2 id="market-records" className="text-2xl font-semibold">Explore the records</h2><span className="text-xs text-slate-400">{trackingRange}</span></div>
           <div className="grid gap-4 md:grid-cols-2">{([

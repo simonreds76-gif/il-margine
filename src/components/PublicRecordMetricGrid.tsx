@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type PublicRecordMetricGridProps = {
   activeName: string;
   totalBets: number;
@@ -82,9 +84,9 @@ export default function PublicRecordMetricGrid({
 
       <p className="border-t border-slate-800/80 px-4 py-3 text-[11px] leading-5 text-slate-500 sm:px-5">
         ROI = profit divided by total units staked.
-        {hasArchiveBaseline
-          ? " Earlier aggregate results use a one-unit stake equivalent; newer bets use their recorded stakes."
-          : " All figures use recorded settled stakes."}
+        {hasArchiveBaseline ? (
+          <> <Link href="/track-record#record-method" className="text-emerald-300 underline underline-offset-4">How the record is calculated</Link>.</>
+        ) : " Figures use recorded settled stakes."}
       </p>
     </div>
   );

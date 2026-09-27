@@ -162,7 +162,7 @@ export default async function WorldCupFreePicksPage() {
                 </div>
               ))}
             </div>
-            <p className="mt-4 text-xs leading-6 text-slate-500">ROI uses the recorded unit stakes from the public ledger. It is not reconstructed from a synthetic flat-stake history.</p>
+            <p className="mt-4 text-xs leading-6 text-slate-500">ROI is profit divided by total stake. Stakes and profit are shown in units.</p>
           </section>
         ) : null}
 

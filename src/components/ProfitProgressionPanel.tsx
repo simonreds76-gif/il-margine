@@ -53,7 +53,7 @@ function roundUnits(value: number): number {
 }
 
 function formatShortDate(value: string | null, isArchive?: boolean, isOrigin?: boolean): string {
-  if (isArchive) return "Archive record";
+  if (isArchive) return "Starting total";
   if (isOrigin) return "Tracking start";
   if (!value) return "Unknown date";
   const date = new Date(value);
@@ -68,8 +68,8 @@ function shouldShowArchive(stats?: BaselineMarketStats | null): stats is Baselin
 function buildArchiveBalance(stats: BaselineMarketStats): Omit<ProgressionPoint, "x" | "y">[] {
   // An aggregate supports one opening balance, never an invented sequence.
   return [{
-    id: -1000, date: null, category: "archive", event: "Earlier aggregate results",
-    player: "", selection: "Opening aggregate balance", status: "settled", stake: 0,
+    id: -1000, date: null, category: "archive", event: "Results brought forward",
+    player: "", selection: "Starting total", status: "settled", stake: 0,
     profit_loss: 0, index: 0, cumulative: roundUnits(Number(stats.total_profit) || 0),
     isArchiveReconstruction: true,
   }];
@@ -80,7 +80,7 @@ function buildOriginPoint(): Omit<ProgressionPoint, "x" | "y"> {
     id: -1,
     date: null,
     category: "origin",
-    event: "Public ledger start",
+    event: "Record start",
     player: "",
     selection: "Tracked record starts from 0",
     status: "settled",
@@ -222,7 +222,7 @@ export default function ProfitProgressionPanel({
             <div className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-emerald-400/90">Profit curve</div>
             <h3 className="mt-1 text-lg font-semibold text-slate-100">{activeName} profit curve</h3>
             <p className="mt-1 text-xs leading-relaxed text-slate-500">
-              The opening balance includes earlier aggregate results. Each subsequent movement comes from an individual recorded bet; no earlier path is reconstructed.
+              Follow cumulative profit in units and explore the recorded bets behind the curve.
             </p>
           </div>
 
@@ -248,11 +248,11 @@ export default function ProfitProgressionPanel({
           <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] text-slate-400">
             <span className="inline-flex items-center gap-2">
               <span className="inline-block h-[3px] w-7 rounded-full" style={{ backgroundColor: liveStroke }} />
-              Public ledger
+              Recorded bets
             </span>
             <span className="inline-flex items-center gap-2">
               <span className="inline-block h-2 w-2 rounded-full border border-slate-400" />
-              Opening aggregate balance
+              Starting total
             </span>
           </div>
         </div>
@@ -289,22 +289,22 @@ export default function ProfitProgressionPanel({
 
                 {activeRawPoint.isArchiveReconstruction ? (
                   <>
-                    <div className="mt-2 text-sm font-semibold text-slate-200">Archive record summary</div>
-                    <div className="mt-1 text-sm leading-relaxed text-slate-300">{summary?.line ?? "Pre-tracking aggregate record."}</div>
+                    <div className="mt-2 text-sm font-semibold text-slate-200">Results brought forward</div>
+                    <div className="mt-1 text-sm leading-relaxed text-slate-300">{summary?.line ?? "Profit from the earlier reporting period."}</div>
                     <div className="mt-3 inline-flex rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 font-mono text-[11px] text-slate-400">
-                      Aggregate - not individual bets
+                      Earlier period summary
                     </div>
                   </>
                 ) : activeRawPoint.isOriginPoint ? (
                   <>
-                    <div className="mt-2 text-sm font-semibold text-slate-200">Public ledger start</div>
-                    <div className="mt-1 text-sm leading-relaxed text-slate-300">Verified tracking starts from 0 for this tab.</div>
+                    <div className="mt-2 text-sm font-semibold text-slate-200">Record start</div>
+                    <div className="mt-1 text-sm leading-relaxed text-slate-300">The profit total starts at zero for this category.</div>
                   </>
                 ) : (
                   <>
                     <div className="mt-2 text-sm leading-snug text-slate-300">{activeRawPoint.event}</div>
                     <div className="mt-1 text-sm font-semibold leading-relaxed text-slate-100">
-                      {activeRawPoint.player ? `${activeRawPoint.player} - ${activeRawPoint.selection}` : activeRawPoint.selection}
+                      {activeRawPoint.player ? `${activeRawPoint.player}: ${activeRawPoint.selection}` : activeRawPoint.selection}
                     </div>
                     <div className="mt-3 flex flex-wrap gap-2 font-mono text-[11px]">
                       <span className="rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 text-slate-400">
