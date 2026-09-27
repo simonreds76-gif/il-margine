@@ -20,7 +20,7 @@ export default function Footer({ className = "" }: FooterProps) {
           >
             <Image
               src={BRAND.full}
-              alt="Il Margine — Independent betting analysis"
+              alt="Il Margine. Independent betting analysis"
               width={900}
               height={386}
               unoptimized

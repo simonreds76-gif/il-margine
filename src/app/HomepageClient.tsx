@@ -298,7 +298,7 @@ export default function HomepageClient({
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">Football &amp; tennis</p>
               <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">Betting research,<br /><span className="text-emerald-300">built on evidence.</span></h1>
-              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Il Margine combines independent betting analysis with specialist tools for football and tennis. Compare prices, investigate matchups and explore historical returns—or follow selections identified by our statistical models.</p>
+              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Il Margine combines independent betting analysis with specialist tools for football and tennis. Compare prices, investigate matchups and explore historical returns. Follow selections identified by our statistical models.</p>
               <div className="mt-6">
                 <Link prefetch={false} href="/tools" className="sport-cta"><span className="sport-cta-emblem"><ToolEmblem name="tools" className="h-full w-full" /></span><span className="sport-cta-label">Explore the tools</span><svg aria-hidden="true" viewBox="0 0 24 24" className="sport-cta-arrow" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12h15m-6-6 6 6-6 6" /></svg></Link>
               </div>
@@ -360,7 +360,7 @@ export default function HomepageClient({
                         </div>
                         <div className="mb-1 font-medium text-slate-200">{bet.event}</div>
                         <div className="mb-1 text-sm text-slate-300">
-                          {bet.player ? <span>{bet.player} - </span> : null}
+                          {bet.player ? <span>{bet.player}: </span> : null}
                           {bet.selection}
                         </div>
                       </div>
@@ -425,7 +425,7 @@ export default function HomepageClient({
           <div className="grid gap-3 sm:grid-cols-2">{[
             ["/track-record", "Review the results", "ROI, sample sizes and links to the full public histories."],
             ["/penalty-takers", "Penalty taker directory", "First choices, deputies and the evidence behind each order."],
-            ["/tools", "Find your betting tool", "Fair prices, historical research and staking — choose the tool for your question."],
+            ["/tools", "Find your betting tool", "Fair prices, historical research and staking. Choose the tool for your question."],
             ["/resources", "Understand the method", "Practical guides to probability, pricing and value."],
           ].map(([href,title,copy]) => <Link prefetch={false} href={href} key={href} className="site-card site-card-link home-approach-card"><div className="home-approach-art"><ToolEmblem name={emblemForHref(href)} /></div><div className="home-approach-copy"><h3 className="font-semibold">{title}</h3><p className="mt-2 text-sm text-slate-400">{copy}</p></div><span className="home-discovery-arrow" aria-hidden="true">↗</span></Link>)}</div>
         </div>
