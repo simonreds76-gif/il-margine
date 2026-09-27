@@ -95,6 +95,7 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      { source: "/manager-atlas/index-:version.json", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] },
       {
         source: "/football-atlas/index-:version.json",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],

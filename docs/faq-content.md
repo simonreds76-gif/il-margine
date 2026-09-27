@@ -290,3 +290,18 @@ Return Atlas shows its coverage and exclusions on the page. It does not include 
 **A:** No. Opponents, match length and small samples can all change the picture. Historical performance is context for your research, not a fair-odds model or a betting recommendation. Check how many matches support each figure and compare the actual price before making a decision.
 
 [Open Tennis Matchup Lab](/tennis-matchup).
+
+
+## SECTION 12: Manager Return Atlas
+
+### Q: Can I compare football managers and their head-to-head returns?
+
+**A:** Yes. [Manager Return Atlas](/manager-atlas) follows each manager across their included clubs. Choose a manager and an opposing manager to inspect their meetings, or leave the opponent blank for the wider record. Compare backing the team, the draw or the opponent at the recorded odds. Filter by league, seasons, home or away, favourite or underdog, and price range.
+
+### Q: What does the manager ROI actually mean?
+
+**A:** The tool risks one equal stake per match. Ten £10 bets risk £100 in total; £12 profit is +12% ROI. A team win bet loses when the match is drawn. High historical ROI is not proof of managerial ability or a future betting edge, especially with only two or three meetings. Small samples remain visible and labelled.
+
+### Q: Is the manager history updated automatically?
+
+**A:** A Tuesday cloud update runs after Football Return Atlas. New records must have verified results, prices and match-specific managers. Failed validation retains the last good archive; the latest included match date is shown on the page. A separate monthly review checks manager identities and activity. Five domestic leagues are covered, with incomplete historical coverage; cups and European competitions are excluded.

@@ -332,6 +332,11 @@ def main():
         old = legacy.read(ROOT / 'public' / manifest['indexUrl'].lstrip('/'))
         new, report = collect(old, manifest, state, datetime.now(UTC), OddsPapi(os.environ.get('ODDSPAPI_API_KEY')))
         if not args.publish:
+            # Validate managers against the current candidate prices without committing.
+            import manager_atlas_weekly
+            write_release(manifest,new,datetime.now(UTC))
+            manager_result=manager_atlas_weekly.refresh(state)
+            report['managers']={'added':manager_result['added'],'version':manager_result['manifest']['version']}
             report['status'] = 'dry-run-passed'
         else:
             helper = legacy.load_module('atlas_commit_helpers', ROOT / 'scripts/refresh-return-atlas.py')
@@ -342,6 +347,7 @@ def main():
             if run(['git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH], ROOT).split()[0] != run(['git', 'rev-parse', 'HEAD'], ROOT).strip():
                 raise ValueError('Release branch advanced during collection; rerun against latest commit')
             live_html = helper.fetch('https://ilmargine.bet/football-atlas').decode()
+            changed_paths=set()
             if report['newMatches']:
                 previous = manifest['indexUrl']
                 manifest, path = write_release(manifest, new, datetime.now(UTC))
@@ -359,13 +365,31 @@ def main():
                         relative = file.relative_to(ROOT).as_posix()
                         run(['git', 'rm', '--', relative], ROOT)
                         removed.append(relative)
-                run(['git', 'add', '--', path, MANIFEST], ROOT)
+                changed_paths.update({path.as_posix(),MANIFEST.as_posix(),*removed})
+            # One validated transaction and deployment for club and manager archives.
+            import manager_atlas_weekly
+            managers=manager_atlas_weekly.refresh(state)
+            report['managers']={'added':managers['added'],'version':managers['manifest']['version']}
+            manager_live_html=helper.fetch('https://ilmargine.bet/manager-atlas').decode()
+            if managers['changed']:
+                changed_paths.update(managers['paths'])
+                live_manager_paths=set(re.findall(r'/manager-atlas/index-[a-f0-9]{12}\.json',manager_live_html))
+                if not live_manager_paths:raise ValueError('Cannot identify live manager archive for retention')
+                keep=live_manager_paths|{managers['previous'],managers['manifest']['indexUrl']}
+                manager_root=(ROOT/'public/manager-atlas').resolve()
+                for archive in manager_root.glob('index-*.json'):
+                    if re.fullmatch(r'index-[a-f0-9]{12}\.json',archive.name) and '/manager-atlas/'+archive.name not in keep:
+                        if archive.resolve().parent!=manager_root:raise ValueError('Unsafe manager archive retention path')
+                        relative=archive.relative_to(ROOT).as_posix()
+                        run(['git','rm','--',relative],ROOT);changed_paths.add(relative)
+            if changed_paths:
+                run(['git', 'add', '--', *sorted(changed_paths)], ROOT)
                 staged = set(run(['git', 'diff', '--cached', '--name-only'], ROOT).splitlines())
-                if staged != {path.as_posix(), MANIFEST.as_posix(), *removed}:
+                if staged != changed_paths:
                     raise ValueError('Unexpected staged files')
-                run(['git', 'commit', '-m', f'data: update Football Atlas through {manifest["through"]}'], ROOT)
+                run(['git', 'commit', '-m', f'data: update Football and Manager Atlas through {manifest["through"]}'], ROOT)
                 run(['git', 'push', 'origin', 'HEAD:' + BRANCH], ROOT)
-            if report['newMatches'] or manifest['version'] not in live_html:
+            if changed_paths or manifest['version'] not in live_html or managers['manifest']['version'] not in manager_live_html:
                 publish(state, manifest, report)
             else:
                 report['status'] = 'unchanged'
