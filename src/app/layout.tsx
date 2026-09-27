@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     url: BASE_URL,
     siteName: "Il Margine",
     title: "Il Margine | Betting Research, Built on Evidence",
-    description: "Independent football and tennis research. Tools to investigate teams, players and matchups, plus model-led picks with a public record of wins and losses.",
+    description: "Independent betting analysis and specialist tools for football and tennis. Compare prices, investigate matchups and explore historical returns, alongside model-led selections.",
     images: [
       {
         url: DEFAULT_SOCIAL_IMAGE,
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Il Margine | Betting Research, Built on Evidence",
-    description: "Independent football and tennis research. Tools to investigate teams, players and matchups, plus model-led picks with a public record of wins and losses.",
+    description: "Independent betting analysis and specialist tools for football and tennis. Compare prices, investigate matchups and explore historical returns, alongside model-led selections.",
     images: [DEFAULT_SOCIAL_IMAGE],
   },
 };
