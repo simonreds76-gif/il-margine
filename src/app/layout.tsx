@@ -42,8 +42,8 @@ export const metadata: Metadata = {
     locale: "en_GB",
     url: BASE_URL,
     siteName: "Il Margine",
-    title: "Il Margine | The Numbers Behind Smarter Betting",
-    description: "Your football and tennis research platform. Compare fair odds, investigate matchups, explore historical returns and check bookmaker margins with specialist betting tools.",
+    title: "Il Margine | Betting Research, Built on Evidence",
+    description: "Independent football and tennis research. Tools to investigate teams, players and matchups, plus model-led picks with a public record of wins and losses.",
     images: [
       {
         url: DEFAULT_SOCIAL_IMAGE,
@@ -56,8 +56,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Il Margine | The Numbers Behind Smarter Betting",
-    description: "Your football and tennis research platform. Compare fair odds, investigate matchups, explore historical returns and check bookmaker margins with specialist betting tools.",
+    title: "Il Margine | Betting Research, Built on Evidence",
+    description: "Independent football and tennis research. Tools to investigate teams, players and matchups, plus model-led picks with a public record of wins and losses.",
     images: [DEFAULT_SOCIAL_IMAGE],
   },
 };
