@@ -12,7 +12,6 @@ import TodaysEdge from "@/components/TodaysEdge";
 import ToolEmblem, { emblemForHref } from "@/components/ToolEmblem";
 import "./home-discovery.css";
 import RecordIcon from "@/components/RecordIcon";
-import SportCta from "@/components/SportCta";
 import ReturnAtlasFeature from "@/components/ReturnAtlasFeature";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
@@ -297,18 +296,21 @@ export default function HomepageClient({
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,.92fr)] lg:gap-12">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">Football player props &amp; tennis</p>
-              <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">Independent <span className="text-emerald-300">betting analysis.</span></h1>
-              <p className="mt-4 text-xl font-semibold tracking-tight text-emerald-200 sm:text-2xl">Sharp tools. Mathematical edge.</p>
-              <p className="mt-4 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">We combine statistical models, market expertise and specialist betting tools to identify value in football and tennis. Explore our published picks, investigate the numbers yourself and follow our results month by month.</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">Football &amp; tennis · Tools, models &amp; research</p>
+              <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">The numbers behind <span className="text-emerald-300">smarter betting.</span></h1>
+              <p className="mt-4 text-xl font-semibold tracking-tight text-emerald-200 sm:text-2xl">Research the game. Understand the price.</p>
+              <p className="mt-4 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Il Margine brings specialist betting tools, statistical models and independent analysis into one research platform. Compare fair odds, investigate player and manager matchups, explore historical returns and check bookmaker margins. Build your own view of a bet—or follow our model-led selections, with wins and losses recorded publicly.</p>
+              <div className="mt-6">
+                <Link prefetch={false} href="/tools" className="sport-cta"><span className="sport-cta-emblem"><ToolEmblem name="tools" className="h-full w-full" /></span><span className="sport-cta-label">Explore the tools</span><svg aria-hidden="true" viewBox="0 0 24 24" className="sport-cta-arrow" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12h15m-6-6 6 6-6 6" /></svg></Link>
+              </div>
               <nav aria-label="Explore our betting tools" className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-emerald-200">{[["/fair-odds-lab", "Fair Odds Lab"], ["/#return-atlas", "Return Atlas"], ["/tennis-matchup", "Matchup Lab"], ["/penalty-takers", "Penalty takers"], ["/calculator", "Calculators"], ["/resources", "Guides & insights"], ["/tools", "All tools →"]].map(([href, label]) => <Link prefetch={false} key={href} href={href} className="inline-flex min-h-11 items-center underline decoration-emerald-300/25 underline-offset-4 hover:decoration-emerald-200">{label}</Link>)}</nav>
               <div className="mt-6 flex flex-wrap items-center gap-3">
-                <SportCta sport="football" />
-                <SportCta sport="tennis" />
+                <Link prefetch={false} href="/player-props" className="home-record-link">Football picks <span aria-hidden="true">→</span></Link>
+                <Link prefetch={false} href="/tennis-tips" className="home-record-link">Tennis picks <span aria-hidden="true">→</span></Link>
                 <a href="#monthly" className="home-record-link">Monthly results <span aria-hidden="true">↓</span></a>
               </div>
               <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-400">
-                {["Published betting picks", "Wins and losses included", "Explore the results"].map((item) => <span key={item} className="inline-flex items-center gap-2"><span aria-hidden="true" className="h-1 w-1 rounded-full bg-slate-500" />{item}</span>)}
+                {["Interactive research tools", "Independent statistical models", "Public betting record"].map((item) => <span key={item} className="inline-flex items-center gap-2"><span aria-hidden="true" className="h-1 w-1 rounded-full bg-slate-500" />{item}</span>)}
               </div>
               <div className="home-performance-proof mt-6 rounded-2xl border border-slate-800 p-4 sm:p-5">
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{recordStatus === "historical" || !combinedStats ? "Earlier recorded results" : "Public performance record"}</p><Link href="/track-record" className="text-xs text-emerald-300 underline decoration-emerald-400/30 underline-offset-4 hover:text-emerald-200">View results</Link></div>

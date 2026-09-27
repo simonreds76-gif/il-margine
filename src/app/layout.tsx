@@ -30,10 +30,10 @@ export const metadata: Metadata = {
     apple: [{ url: "/brand/20260913/icon-180.png", sizes: "180x180", type: "image/png" }],
   },
   title: {
-    default: "Il Margine | Independent Betting Analysis",
+    default: "Il Margine | Football & Tennis Betting Tools and Analysis",
     template: "%s | Il Margine",
   },
-  description: "Independent betting analysis using statistical models and specialist tools. Explore football and tennis picks, fair odds, Return Atlas and our public results.",
+  description: "Football and tennis betting tools, statistical models and independent research. Explore fair odds, player and manager matchups, historical returns and market margins.",
   alternates: {
     canonical: BASE_URL,
   },
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
     locale: "en_GB",
     url: BASE_URL,
     siteName: "Il Margine",
-    title: "Independent Betting Analysis | Tennis and Football Player Props",
-    description: "Statistical models, market expertise and specialist betting tools. Explore football and tennis picks, investigate the numbers and follow our monthly results.",
+    title: "Il Margine | The Numbers Behind Smarter Betting",
+    description: "Your football and tennis research platform. Compare fair odds, investigate matchups, explore historical returns and check bookmaker margins with specialist betting tools.",
     images: [
       {
         url: DEFAULT_SOCIAL_IMAGE,
@@ -56,8 +56,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Independent Betting Analysis | Tennis and Football Player Props",
-    description: "Statistical models, market expertise and specialist betting tools. Explore football and tennis picks, investigate the numbers and follow our monthly results.",
+    title: "Il Margine | The Numbers Behind Smarter Betting",
+    description: "Your football and tennis research platform. Compare fair odds, investigate matchups, explore historical returns and check bookmaker margins with specialist betting tools.",
     images: [DEFAULT_SOCIAL_IMAGE],
   },
 };

@@ -7,7 +7,7 @@ export default function StructuredData() {
     "@type": "WebSite",
     "name": "Il Margine",
     "url": BASE_URL,
-    "description": "Independent betting tips and analysis across tennis, player props and football markets, with a disciplined and data-driven approach.",
+    "description": "Football and tennis betting research tools, statistical models and independent analysis. Explore fair odds, player and manager matchups, historical returns, bookmaker margins and a public record of published selections.",
   };
   
   const organizationSchema = {
