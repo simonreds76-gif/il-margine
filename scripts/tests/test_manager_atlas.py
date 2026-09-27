@@ -20,4 +20,15 @@ class JoinTests(unittest.TestCase):
     def test_ambiguous_short_manager_name_is_excluded(self):
         data,audit=mod.join(self.atlas,[{**self.row,'home_club_manager_name':'Míchel'}],{})
         self.assertFalse(data['fixtures']);self.assertEqual(audit['counts']['ambiguous_manager_identity'],1)
+    def test_registry_ids_and_source_evidence_survive_display_alias(self):
+        registry={'managers':[{'id':'m1','name':'Coach Alpha','aliases':['Coach A']},{'id':'m2','name':'Coach B','aliases':[]}]}
+        data,audit=mod.join(self.atlas,[self.row],{},registry)
+        self.assertEqual(data['fixtures'][0]['homeManager'],'m1')
+        self.assertEqual(audit['provenance'][0]['home_source_label'],'Coach A')
+        self.assertEqual(audit['provenance'][0]['source_game_id'],'g')
+    def test_disputed_fixture_excluded_and_new_manager_requires_review(self):
+        data,audit=mod.join(self.atlas,[self.row],{},excluded_games={'g':'disputed'})
+        self.assertFalse(data['fixtures']);self.assertEqual(audit['counts']['disputed_manager_assignment'],1)
+        with self.assertRaisesRegex(ValueError,'registry review'):
+            mod.join(self.atlas,[self.row],{},registry={'managers':[]})
 if __name__=='__main__':unittest.main()

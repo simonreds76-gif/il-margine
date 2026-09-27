@@ -1,5 +1,5 @@
 import { defaults, summary, bands, leagues } from './football-core.mjs';
-import { managerRows } from './core.mjs';
+import { managerRows, marketContext, clubRecords, observedSpells, strategyReturns } from './core.mjs';
 const $=id=>document.getElementById(id), escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const units=n=>`${n>0?'+':''}${n.toFixed(2)}u`, pct=n=>`${n>0?'+':''}${n.toFixed(1)}%`, color=n=>n<0?'negative':'positive';
 let data, side='team', shown=50, current=[];
@@ -18,6 +18,16 @@ function chart(s){
  $('chart').innerHTML=`<defs><linearGradient id="profit-fill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#78dfb7" stop-opacity=".3"/><stop offset="1" stop-color="#78dfb7" stop-opacity=".02"/></linearGradient></defs>`+[min,0,max].map(v=>`<path d="M70 ${y(v)}H975" stroke="#33454e" ${v===0?'stroke-dasharray="5 5"':''}/><text x="60" y="${y(v)+5}" text-anchor="end">${v.toFixed(1)}u</text>`).join('')+`<path d="${path}L975 ${y(0)}L70 ${y(0)}Z" fill="url(#profit-fill)"/><path d="${path}" fill="none" stroke="#80e8c2" stroke-width="3"/><text x="70" y="267">${escape(current[0]?.date||'No matches')}</text><text x="975" y="267" text-anchor="end">${escape(current.at(-1)?.date||'')}</text>`;
  $('chart-caption').textContent=current.length?`${current.length} bets · ${units(s.profit)} final profit · ${s.drawdown.toFixed(2)}u maximum fall from a previous profit peak.`:'No priced matches meet this selection.';
 }
+function context(){
+ const s=marketContext(current),signed=n=>`${n>0?'+':''}${n.toFixed(1)}`;
+ $('market-stats').innerHTML=[['Wins above expectation',signed(s.excessWins),`${s.actualWins} wins; the recorded prices implied ${s.expectedWins.toFixed(1)}.`],['Points above expectation',signed(s.excessPoints),`${s.actualPoints} points; the recorded prices implied ${s.expectedPoints.toFixed(1)}.`]].map(([title,value,note])=>`<article class="stat"><span>${title}</span><strong class="${color(Number(value))}">${current.length?value:'—'}</strong><p>${note}</p></article>`).join('');
+ $('club-records').innerHTML=clubRecords(current).map(c=>`<tr><td>${escape(c.club)}<small>${c.first} to ${c.last}</small></td><td>${c.bets}</td><td>${c.results.W} / ${c.results.D} / ${c.results.L}</td><td class="${color(c.profit)}">${units(c.profit)}</td><td class="${color(c.roi)}">${pct(c.roi)}</td></tr>`).join('');
+ $('spells').innerHTML=observedSpells(current).map(c=>`<li><strong>${escape(c.club)}</strong><span>${c.first} → ${c.last}</span><small>${c.bets} selected matches</small></li>`).join('');
+ const labels={team:'Back manager’s team',draw:'Back the draw',opponent:'Back opponent'};
+ $('strategy-stats').innerHTML=strategyReturns(current).map(r=>`<article class="stat ${r.side===side?'selected-strategy':''}"><span>${labels[r.side]}</span><strong class="${color(r.profit)}">${units(r.profit)}</strong><small>${r.bets?pct(r.roi):'—'} ROI · ${r.wins} winning bets</small></article>`).join('');
+ const counts=current.reduce((acc,r)=>(acc[r.basis]=(acc[r.basis]||0)+1,acc),{});
+ $('price-coverage').textContent=`Selected sample: ${counts.closing||0} closing prices · ${counts['last-pre-match']||0} last pre-match prices. All three strategies use these same ${current.length} fixtures.`;
+}
 function render(){
  const manager=find($('manager').value),opponent=find($('opponent').value),f=filters();
  const invalid=($('manager').value.trim()&&!manager)||($('opponent').value.trim()&&!opponent);
@@ -26,7 +36,7 @@ function render(){
  $('record').hidden=!manager;$('swap').hidden=!manager||!opponent;
  if(manager){current=rows(manager.id,f,opponent?.id||'all');const s=summary(current);
   $('record-title').textContent=manager.name+(opponent?' vs '+opponent.name:'');
-  $('stats').innerHTML=[['Bets',String(s.bets),'1u per bet'],['Profit',units(s.profit),`${s.wins} winning / ${s.losses} losing bets`],['ROI',s.bets?pct(s.roi):'—','Profit divided by stakes'],['Team W / D / L',`${s.results.W} / ${s.results.D} / ${s.results.L}`,s.bets<30?'Small sample — interpret cautiously':'Results of the manager’s team']].map(([label,value,note])=>`<div class="stat"><span>${label}</span><strong>${value}</strong><small class="muted">${note}</small></div>`).join('');chart(s);ledger();
+  $('stats').innerHTML=[['Bets',String(s.bets),'1u per bet'],['Profit',units(s.profit),`${s.wins} winning / ${s.losses} losing bets`],['ROI',s.bets?pct(s.roi):'—','Profit divided by stakes'],['Team W / D / L',`${s.results.W} / ${s.results.D} / ${s.results.L}`,s.bets<30?'Small sample — interpret cautiously':'Results of the manager’s team']].map(([label,value,note])=>`<div class="stat"><span>${label}</span><strong>${value}</strong><small class="muted">${note}</small></div>`).join('');chart(s);ledger();context();
  }
  const ranking=data.managers.map(m=>({...m,...summary(rows(m.id,f,opponent?.id||'all'))})).filter(m=>m.bets>=Number($('minimum').value)).sort((a,b)=>b[$('sort').value]-a[$('sort').value]||b.bets-a.bets);
  $('rankings').innerHTML=ranking.slice(0,50).map(m=>`<tr><td><button data-manager="${escape(m.id)}">${escape(m.name)} →</button></td><td>${m.bets}</td><td>${m.results.W} / ${m.results.D} / ${m.results.L}</td><td class="${color(m.profit)}">${units(m.profit)}</td><td class="${color(m.roi)}">${pct(m.roi)}</td><td>${m.drawdown.toFixed(2)}u</td></tr>`).join('');
@@ -35,6 +45,8 @@ function render(){
 async function init(){
  const response=await fetch('data.json');if(!response.ok)throw Error('Archive unavailable');data=await response.json();data.names=Object.fromEntries(data.managers.map(m=>[m.id,m.name]));
  $('coverage').textContent=`${data.fixtures.length.toLocaleString('en-GB')} priced matches · ${data.managers.length} manager identities · ${data.fromDate} to ${data.through}`;
+ const exclusionLabels={disputed_manager_assignment:'disputed manager assignments',ambiguous_manager_identity:'ambiguous manager names',missing_manager:'missing managers',score_conflict:'conflicting scores',missing_or_ambiguous_atlas_fixture:'unmatched or duplicate price fixtures',unmapped_team:'unmapped clubs',missing_prices:'missing prices',ambiguous_manager_fixture:'duplicate manager fixtures',unknown_price_basis:'unknown price timing',duplicate_fixture:'duplicate fixtures'};
+ $('exclusions').textContent=Object.entries(data.coverage?.exclusions||{}).map(([k,v])=>`${v.toLocaleString('en-GB')} ${exclusionLabels[k]||k.replaceAll('_',' ')}`).join(' · ');
  $('managers').innerHTML=data.managers.map(m=>option(m.name,m.name)).join('');
  $('club').innerHTML+= [...new Set(data.fixtures.flatMap(m=>[m.home,m.away]))].sort().map(t=>option(t,t)).join('');
  $('league').innerHTML+=Object.entries(leagues).map(([k,v])=>option(k,v)).join('');
