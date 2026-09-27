@@ -57,7 +57,7 @@ const CALCULATOR_FAQS = [
   {
     question: "What happens if the live results feed is down?",
     answer:
-      "The Returns tab keeps the last available settled record if a refresh fails. If no current record has loaded, it uses the historical baseline and labels it clearly. The Kelly, Fair odds and Closing line tools use only the numbers you enter, so they work regardless.",
+      "The Returns tab keeps the last available results if a refresh fails. If current results have not loaded, it uses the earlier results summary and shows a notice. The Kelly, Fair odds and Closing line tools use the numbers you enter and remain available.",
   },
 ] as const;
 
