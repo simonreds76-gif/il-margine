@@ -10,7 +10,7 @@ export default function ReturnAtlasFeature() {
         <div className="home-atlas-editions">
             <article className="home-atlas-edition"><div className="home-atlas-status"><h3><Link href="/return-atlas" prefetch={false}><SportIcon sport="tennis" emblem className="home-atlas-sport-icon"/><span>ATP tennis betting history</span><span aria-hidden="true">↗</span></Link></h3><span>Explore now</span></div>
                 <div className="home-atlas-logo home-atlas-tennis-logo"><Image src="/return-atlas/assets/wordmark-tennis-v2.png" width={2172} height={724} alt="Return Atlas Tennis" unoptimized /></div>
-                <p>Which players returned a profit when backed—or opposed? Compare seasons, surfaces, favourites, underdogs and exact odds ranges using a constant one-unit stake.</p>
+                <p>Which players returned a profit when backed or opposed? Compare seasons, surfaces, favourites, underdogs and exact odds ranges using a constant one-unit stake.</p>
                 <ul><li>Search player records</li><li>Compare price ranges</li><li>Inspect profit curves and results</li></ul>
                 <nav className="home-atlas-routes" aria-label="Tennis research tools">
                     <Link className="home-atlas-route" href="/return-atlas" prefetch={false}>
