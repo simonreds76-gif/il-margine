@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import postcss from 'postcss';
 import sharp from 'sharp';
+import {buildManagerAtlasShare} from './build-manager-atlas-share.mjs';
 import {brandMark} from '../research/manager-atlas/identity.mjs';
 import {portraits as reviewed} from '../research/manager-atlas/portraits.mjs';
 const src='research/manager-atlas', dest='src/app/manager-atlas', assets='public/manager-atlas';
@@ -44,11 +45,10 @@ fs.copyFileSync('config/manager-atlas-activity.json',assets+'/activity.json');
 const css=postcss.parse(fs.readFileSync(src+'/style.css','utf8'));
 css.walkRules(rule=>{if(rule.parent.type==='atrule'&&/keyframes$/.test(rule.parent.name))return;rule.selectors=rule.selectors.map(s=>{if([':root','body','main','html'].includes(s))return '.manager-atlas';return '.manager-atlas '+s.replace(/^body\s+/,'').replace(/^main\s+/,'');});});
 fs.writeFileSync(dest+'/manager.css',css.toString()+'\n.manager-atlas{padding-top:20px;scroll-margin-top:90px}.manager-atlas [id]{scroll-margin-top:100px}.manager-atlas .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.manager-atlas .manager-faq{margin-top:32px}.manager-atlas .manager-faq p{line-height:1.8;color:var(--muted)}');
-const mark=brandMark().replace(/\s(?:width|height)="[^"]*"/g,'').replace('<svg ','<svg x="60" y="155" width="220" height="220" ');
 // Standalone SVGs need an XML namespace and their own colour: an <img> cannot
 // inherit currentColor from the surrounding link as the inline identity does.
 const standaloneMark=brandMark().replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" color="#9ae7c6" ');
 fs.writeFileSync(assets+'/mark.svg',standaloneMark);
 fs.writeFileSync(assets+'/mark-v2.svg',standaloneMark);
-await sharp(Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630"><rect width="1200" height="630" fill="#0b1510"/>${mark}<text x="325" y="240" fill="#edf1e8" font-family="Arial" font-size="76" font-weight="bold">Return Atlas</text><text x="330" y="310" fill="#9ae7c6" font-family="Arial" font-size="38" letter-spacing="8">MANAGERS</text><text x="80" y="470" fill="#edf1e8" font-family="Arial" font-size="30">Head-to-head. The odds. The returns.</text><text x="80" y="540" fill="#98aaa2" font-family="Arial" font-size="25">IL MARGINE · FOOTBALL RESEARCH</text></svg>`)).png().toFile(assets+'/share-v1.png');
+await buildManagerAtlasShare(assets);
 console.log('Packaged Manager Atlas UI, scoped styles and '+Object.keys(portraits).length+' portraits');

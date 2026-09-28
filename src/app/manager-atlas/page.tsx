@@ -10,9 +10,30 @@ import "./manager.css";
 export const dynamic = "force-static";
 export const revalidate = false;
 const url = "https://ilmargine.bet/manager-atlas";
-const title = "Return Atlas Managers: Football H2H, ROI & Betting History";
-const description = "Compare football managers’ head-to-head records and historical betting returns. Explore team, draw and opponent ROI by league, seasons, venue and odds range.";
-export const metadata: Metadata = { title, description, alternates: { canonical: url }, robots: { index: true, follow: true }, openGraph: { title, description, url, type: "website", images: [{ url: "/manager-atlas/share-v1.png", width: 1200, height: 630, alt: "Return Atlas Managers — head-to-head, the odds and the returns" }] }, twitter: { card: "summary_large_image", title, description, images: ["/manager-atlas/share-v1.png"] } };
+const title = "Football Manager H2H & Betting Returns";
+const shareTitle = `${title} | Return Atlas`;
+const description = "Compare football managers head to head. Explore past results and see what backing their team, the draw or their opponent returned at the recorded odds.";
+const shareImage = {
+  url: "https://ilmargine.bet/manager-atlas/share-v2.png",
+  width: 1200,
+  height: 630,
+  type: "image/png",
+  alt: "Return Atlas Managers by Il Margine. Compare managers, results and historical betting returns.",
+};
+export const metadata: Metadata = {
+  title,
+  description,
+  alternates: { canonical: url },
+  robots: { index: true, follow: true, "max-image-preview": "large" },
+  openGraph: {
+    title: shareTitle, description, url, siteName: "Il Margine",
+    locale: "en_GB", type: "website", images: [shareImage],
+  },
+  twitter: {
+    card: "summary_large_image", title: shareTitle, description,
+    images: [{ url: shareImage.url, alt: shareImage.alt }],
+  },
+};
 
 export default function ManagerAtlasPage() {
   const through = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(release.through + "T12:00:00Z"));
