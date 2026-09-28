@@ -50,6 +50,7 @@ const TEAM_LOGO_ALIASES: Record<string, string> = {
   "dr-congo": "congo-dr",
   "democratic-republic-of-congo": "congo-dr",
   "turkey": "turkiye",
+  "italia": "italy",
   "united-states": "usa",
   "united-states-of-america": "usa",
   "man-city": "manchester-city",
@@ -67,6 +68,11 @@ const TEAM_LOGO_ALIASES: Record<string, string> = {
   "psg": "paris-saint-germain",
   "rb-leipzig": "rasenballsport-leipzig",
   "borussia-monchengladbach": "borussia-m-gladbach",
+};
+
+// Additional national teams must not depend on World Cup qualification.
+const NATIONAL_TEAM_LOGOS: Record<string, string> = {
+  italy: "/team-logos/national/italy.png",
 };
 
 const WORLD_CUP_TEAM_KEYS = new Set([
@@ -195,6 +201,8 @@ function resolveManifestLogoPath(team: string, category: string): string | null 
 
 export function resolveTeamLogoPath(team: string | null, category: string): string | null {
   if (!team) return null;
+  const national = NATIONAL_TEAM_LOGOS[normalizeTeamKey(team)];
+  if (national) return national;
   if (category === "worldcup") return worldCupTeamLogoPath(team) ?? teamLogoPathFromCategory(team, category);
   const european = europeanLogos.teams.find((club) => club.aliases.some((alias) => normalizeText(alias) === normalizeText(team)));
   if (european) return european.logo_path;

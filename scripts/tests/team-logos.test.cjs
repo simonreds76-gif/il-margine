@@ -47,6 +47,16 @@ test('existing domestic and World Cup crests continue to resolve', () => {
   for (const [team, category] of [['Arsenal', 'pl'], ['Inter', 'seriea'], ['Barcelona', 'laliga'], ['PSG', 'ligue1'], ['Stuttgart', 'bundesliga'], ['England', 'worldcup']]) checkFile(team, category);
 });
 
+test('Italy resolves for Nations League tips without World Cup qualification', () => {
+  for (const category of ['other', 'all', 'props', 'worldcup', 'nationsleague']) {
+    for (const name of ['Italy', 'Italia']) {
+      assert.equal(checkFile(name, category), '/team-logos/national/italy.png');
+    }
+    assert.equal(checkFile('Turkey', category), '/team-logos/world-cup/turkiye.png');
+  }
+  assert.notEqual(resolveTeamLogoPath('Italy U21', 'other'), '/team-logos/national/italy.png');
+});
+
 test('Racing de Santander and AZ tip names resolve across competition categories', () => {
   for (const category of ['all', 'props', 'laliga', 'uel', 'football']) {
     for (const name of ['Racing de Santander', 'Racing Santander', 'Real Racing Club de Santander']) {
