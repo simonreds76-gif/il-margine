@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: url },
-  robots: { index: true, follow: true, maxImagePreview: "large" },
+  robots: { index: true, follow: true, "max-image-preview": "large" },
   openGraph: {
     title: shareTitle, description, url, siteName: "Il Margine",
     locale: "en_GB", type: "website", images: [shareImage],
