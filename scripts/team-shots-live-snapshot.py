@@ -33,6 +33,7 @@ SNAPSHOT_FILES = [
     "data/football-form/team-shots-opponent-shadow.csv",
     "data/football-form/team-shots-opponent-candidates.csv",
     "data/football-form/team-shots-opponent-status.json",
+    "data/football-form/team-shots-paired-reference-status.json",
 
     "data/team-shots/team-shots-calibration.txt",
     "data/team-shots/team-shots-calibration-params.json",

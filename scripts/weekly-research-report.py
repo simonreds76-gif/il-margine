@@ -1415,6 +1415,8 @@ def model_watchlist_summary() -> dict[str, Any]:
     for candidate in registry.get("candidates", []):
         if candidate.get("id") == "opponent_shots_20260912":
             candidate["forward_evidence"] = load_json(ROOT / "data/football-form/team-shots-opponent-status.json")
+        elif candidate.get("id") == "shots_market_offset_v1":
+            candidate["forward_evidence"] = load_json(ROOT / "data/football-form/team-shots-paired-reference-status.json")
     return registry
 
 
@@ -1432,6 +1434,14 @@ def model_watchlist_text(payload: dict[str, Any], *, tennis_only: bool = False) 
             forward_roi = evidence.get("roi")
             roi_text = f"{forward_roi:+.1%}" if forward_roi is not None else "-"
             lines.append(f"Opponent Shots [SHADOW]: forward {evidence.get('wins', 0)}W/{evidence.get('losses', 0)}L, ROI {roi_text}, pending {evidence.get('pending', 0)} | {status.get('review_status', 'UNAVAILABLE')} | scan {status.get('generated_at', 'missing')}")
+            continue
+        if candidate.get("id") == "shots_market_offset_v1":
+            status = candidate.get("forward_evidence") or {}
+            current = status if status.get("version") == "paired-market-offset-20260930-v2" else {}
+            evidence = current.get("models", {}).get("shots_market_offset_v1", {}).get("hypothetical_selections", {})
+            roi = evidence.get("roi")
+            roi_text = f"{roi:+.1%}" if roi is not None else "awaiting evidence"
+            lines.append(f"Calibrated Shots [ZERO-STAKE]: forward ROI {roi_text}, settled {evidence.get('settled', 0)}, pending {evidence.get('pending', 0)} | {current.get('status', 'SNAPSHOT_UNAVAILABLE')}")
             continue
         history = candidate.get("historical_replay") or {}
         label = candidate.get("label", "Unnamed candidate")

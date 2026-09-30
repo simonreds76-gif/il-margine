@@ -67,6 +67,19 @@
   ],
   "candidates": [
     {
+      "id": "shots_market_offset_v1",
+      "label": "Team Shots calibrated research",
+      "family": "football_counts",
+      "status": "FROZEN_PROSPECTIVE_RESEARCH",
+      "prospective_capture_status": "EXISTING_PAIRED_COLLECTOR",
+      "live_routing": false,
+      "actual_stake": 0,
+      "artifact": "data/team-shots/shots-market-offset-v1.json",
+      "ledger": "data/football-form/team-shots-paired-reference.jsonl",
+      "version": "paired-market-offset-20260930-v2",
+      "evaluation": "New cohort only. Compare matched probabilities with market and controls. Review 50/150 settled fixtures; no automatic promotion."
+    },
+    {
       "id": "shots_paired_reference_20260930",
       "label": "EMA20 v3 / v4 / Opponent paired comparison",
       "status": "FIXED_PROSPECTIVE_COMPARISON",
