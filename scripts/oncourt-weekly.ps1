@@ -284,7 +284,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Log "=== Post-step: ATP ML Research CLV audit ==="
-& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-volume200-archive.csv --detail-csv data\backtest\strict-clv-audit-volume200-2026.csv --summary-txt data\backtest\strict-clv-audit-volume200-2026.txt 2>&1 | ForEach-Object { Log $_ }
+& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-volume200-archive.csv --signal-date-from 2026-05-27 --policy-mode base --require-verified-kickoff --max-close-lag-minutes 720 --detail-csv data\backtest\strict-clv-audit-volume200-2026.csv --summary-txt data\backtest\strict-clv-audit-volume200-2026.txt --unmatched-csv data\backtest\strict-clv-audit-volume200-2026-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: ATP ML research CLV audit failed (exit $LASTEXITCODE), continuing..."
 }

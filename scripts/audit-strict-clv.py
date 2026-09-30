@@ -100,6 +100,8 @@ class HistoryRow:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Audit live strict scrape odds vs tennis-data Pinnacle closing odds.")
     parser.add_argument("--signals", default=str(DEFAULT_SIGNALS), help="Strict signal CSV to audit.")
+    parser.add_argument("--signal-date-from", type=date.fromisoformat, help="Inclusive signal-date cutoff for the evaluated policy cohort (YYYY-MM-DD).")
+    parser.add_argument("--policy-mode", choices=["base", "overlay"], help="Restrict to this policy; legacy blank modes count as base.")
     parser.add_argument("--bet-type", choices=["match", "spread"], default="match", help="Audit match or spread bets.")
     parser.add_argument("--xlsx", default=str(DEFAULT_XLSX), help="Tennis-data ATP XLSX with closing Pinnacle odds.")
     parser.add_argument("--detail-csv", default=str(DEFAULT_DETAIL_CSV), help="Detailed audit CSV output.")
@@ -945,6 +947,22 @@ def write_detail_csv(path: Path, rows: list[dict[str, Any]]) -> None:
             writer.writerow({k: row.get(k, "") for k in fields})
 
 
+def filter_signal_cohort(
+    rows: list[dict[str, Any]],
+    date_from: date | None = None,
+    policy_mode: str | None = None,
+) -> list[dict[str, Any]]:
+    """Filter before deduplication so other policy versions cannot replace a row."""
+    return [
+        row for row in rows
+        if (date_from is None or (
+            (signal_date := parse_iso_date(row.get("date"))) is not None
+            and signal_date >= date_from
+        ))
+        and (policy_mode is None or norm(row.get("policy_mode") or "base") == policy_mode)
+    ]
+
+
 def main() -> None:
     args = parse_args()
     signals_path = Path(args.signals) if Path(args.signals).is_absolute() else (ROOT / args.signals)
@@ -991,7 +1009,7 @@ def main() -> None:
             summary_txt_path.write_text(summary_text + "\n", encoding="utf-8")
         return
 
-    raw_rows = load_csv_rows(signals_path)
+    raw_rows = filter_signal_cohort(load_csv_rows(signals_path), args.signal_date_from, args.policy_mode)
     if not raw_rows:
         summary_text = "\n".join(
             [
@@ -1317,6 +1335,7 @@ def main() -> None:
         "Strict CLV Audit vs Captured/Closing Pinnacle Odds",
         f"Generated UTC: {date.today().isoformat()}",
         f"Signals file: {display_path(signals_path)}",
+        f"Signal-date cutoff: {args.signal_date_from or 'none'}; policy mode: {args.policy_mode or 'all'}",
         f"Audit bet type: {args.bet_type}",
         f"Fallback closing odds file: {fallback_label}",
         "",
