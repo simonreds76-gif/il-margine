@@ -19,6 +19,36 @@ def record(cid='x',prob=.6):
         line=10.5,bookmaker='Bet365',odds={'over':2.,'under':2.},models={m:dict(p_over=prob,mean=12.,minimum_edge=.05) for m in P.MODELS})
 
 class PairedTests(unittest.TestCase):
+    def test_frozen_calibration_is_exact_registered_transform(self):
+        pair={s:{'odds':v} for s,v in [('over',1.8),('under',2.1)]}
+        raw=dict(raw_p_over=.7,mean=13.,alpha=.1,feature_inputs={'prior_matches':20})
+        forecast=P.calibrated_forecast(raw,pair)
+        import math
+        q=(1/1.8)/(1/1.8+1/2.1)
+        z=math.log(q/(1-q))+.07481677660354566+.26634934409525224*(math.log(.7/.3)-math.log(q/(1-q)))
+        self.assertAlmostEqual(forecast['p_over'],1/(1+math.exp(-z)))
+        self.assertEqual(forecast['minimum_edge'],.03)
+        self.assertEqual(forecast['real_stake_units'],0)
+        self.assertIn('unavailable',P.calibrated_forecast({},pair))
+
+    def test_new_cohort_keeps_old_bytes_and_duplicate_contract_separate(self):
+        with tempfile.TemporaryDirectory() as td:
+            path=Path(td)/'ledger.jsonl'
+            old=dict(record(),version='paired-first-quote-20260930')
+            P.append_new(path,[old]); before=path.read_bytes()
+            fresh=dict(record(),version=P.VERSION)
+            rows,added=P.append_new(path,[fresh])
+            self.assertEqual(added,1)
+            self.assertTrue(path.read_bytes().startswith(before))
+            self.assertEqual(P.current_cohort(rows),[fresh])
+
+    def test_unresolved_selection_remains_pending_and_overdue(self):
+        row=record();P.select_first_scan([row],[])
+        early=P.summarize([row],[],NOW)['models']['shots_market_offset_v1']['hypothetical_selections']
+        late=P.summarize([row],[],NOW+timedelta(days=3))['models']['shots_market_offset_v1']['hypothetical_selections']
+        self.assertEqual((early['pending'],early['overdue'],early['roi']),(1,0,None))
+        self.assertEqual(late['overdue'],1)
+
     def test_model_changes_require_a_separate_cohort(self):
         P.check_fingerprint([{'model_fingerprint':'old'}],'old')
         with self.assertRaises(ValueError):

@@ -1,0 +1,22 @@
+{
+  "model": "shots_market_offset_v1",
+  "status": "FROZEN_RESEARCH_ONLY",
+  "activated_at": "2026-09-30T00:00:00Z",
+  "real_stake_units": 0,
+  "automatic_promotion": false,
+  "minimum_edge": 0.03,
+  "weight": 0.26634934409525224,
+  "intercept": 0.07481677660354566,
+  "training_cutoff_exclusive": "2026-09-12",
+  "training_fixtures": 344,
+  "training_contracts": 772,
+  "freeze_reason": "Retain the exact final diagnostic fold parameters. No refit or ROI optimisation after inspecting September.",
+  "diagnostic_sha256": "0af16fa03b801df73902beacd20c2dafc0899d58e0d237e56937c8e2f5baec59",
+  "market": "Bet365 TEAM_SHOTS paired half-lines; top five leagues; within 24h of kickoff; quote age <=6h; pair skew <=15min.",
+  "probability": "logit(market) + intercept + weight * (logit(Opponent raw) - logit(market)); proportional same-book de-vig.",
+  "review_milestones_fixtures": [
+    50,
+    150
+  ],
+  "historical_result": "Exposed retrospective research, not forward evidence; failed consistent improvement over market."
+}

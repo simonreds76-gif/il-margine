@@ -26,8 +26,9 @@ O = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = O
 spec.loader.exec_module(O)
 V, PUB = O.V, O.PUB
-MODELS = ('ema20_v3', 'v4', 'opponent')
-VERSION = 'paired-first-quote-20260930'
+MODELS = ('ema20_v3', 'v4', 'opponent', 'shots_market_offset_v1')
+CALIBRATION_PATH = ROOT/'data/team-shots/shots-market-offset-v1.json'
+VERSION = 'paired-market-offset-20260930-v2'
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
@@ -41,13 +42,39 @@ def model_fingerprint():
         'scripts/backtest-football-form-layer.py','scripts/team_shots_opponent.py',
         'scripts/team-shots-opponent-shadow.py','scripts/football_counts.py','scripts/football_market.py',
         'scripts/football_team_names.py','data/team-shots/team-shots-v4-params.json',
-        'data/team-shots/team-shots-v4-lock.json','data/team-shots/team-shots-opponent-config.json']
+        'data/team-shots/team-shots-v4-lock.json','data/team-shots/team-shots-opponent-config.json',
+        'data/team-shots/shots-market-offset-v1.json']
     values={name:hashlib.sha256((ROOT/name).read_text(encoding='utf8').encode()).hexdigest() for name in names}
     return hashlib.sha256(json.dumps(values,sort_keys=True).encode()).hexdigest()
 
 def check_fingerprint(existing, fingerprint):
     if any(r.get('model_fingerprint')!=fingerprint for r in existing):
         raise ValueError('Comparison model code or weights changed; review and register a new cohort before collecting')
+
+def calibrated_forecast(opponent, pair):
+    if 'raw_p_over' not in opponent:
+        return {'unavailable':'missing_opponent_raw_probability'}
+    config = json.loads(CALIBRATION_PATH.read_text(encoding='utf8'))
+    w, b = config['weight'], config['intercept']
+    if (config['status'] != 'FROZEN_RESEARCH_ONLY' or config['real_stake_units'] != 0
+        or config['automatic_promotion'] or not 0 <= w <= 1 or not -.5 <= b <= .5):
+        raise ValueError('Invalid frozen research calibration')
+    raw = opponent['raw_p_over']
+    over, under = (float(pair[s]['odds']) for s in ('over','under'))
+    if not 0 < raw < 1 or not all(math.isfinite(v) and v > 1 for v in (over,under)):
+        return {'unavailable':'invalid_paired_probability'}
+    market = (1/over)/(1/over+1/under)
+    logit = lambda p: math.log(p/(1-p))
+    z = logit(market)+b+w*(logit(raw)-logit(market))
+    return dict(mean=opponent['mean'],alpha=opponent['alpha'],raw_p_over=raw,
+        p_over=1/(1+math.exp(-z)),market_p_over=market,minimum_edge=config['minimum_edge'],
+        calibration_sha256=digest(CALIBRATION_PATH),
+        feature_inputs=opponent.get('feature_inputs'),count_model='opponent',real_stake_units=0)
+
+
+def current_cohort(records):
+    return [r for r in records if r.get('version') == VERSION]
+
 
 def contract(row):
     kickoff = row.get('kickoff') or PUB.parse_dt(row.get('kickoff_utc'))
@@ -135,6 +162,7 @@ def score(pairs, raw_odds, base, opponent_base, config, params, lock, match_odds
             if 'p_over' in forecasts['opponent']:
                 fixture=dict(date=source['kickoff'].date().isoformat(),league=source['league_slug'],home=O.key(source['home_team']),away=O.key(source['away_team']))
                 forecasts['opponent']['feature_inputs']=opponent_history.features(fixture,'shots','home' if is_home else 'away',cutoff.isoformat())
+            forecasts['shots_market_offset_v1']=calibrated_forecast(forecasts['opponent'],pair)
             for forecast in forecasts.values():
                 if 'p_over' in forecast and not (math.isfinite(forecast['p_over']) and 0<forecast['p_over']<1 and math.isfinite(forecast['mean'])):
                     raise ValueError('Nonfinite or invalid model output')
@@ -182,11 +210,11 @@ def append_new(path, fresh):
     existing=[]
     if path.exists():
         existing=[json.loads(line) for line in path.read_text(encoding='utf8').splitlines() if line.strip()]
-    seen={r['contract_id'] for r in existing}
+    seen={(r.get('version'),r['contract_id']) for r in existing}
     additions=[]
     for row in fresh:
-        if row['contract_id'] not in seen:
-            additions.append(row); seen.add(row['contract_id'])
+        if (row.get('version'),row['contract_id']) not in seen:
+            additions.append(row); seen.add((row.get('version'),row['contract_id']))
     if additions:
         path.parent.mkdir(parents=True,exist_ok=True)
         with path.open('a',encoding='utf8',newline='\n') as handle:
@@ -227,6 +255,8 @@ def summarize(ledger, base, now):
         report[model]={metric:mean(mean(x[metric] for x in items) for items in buckets.values()) if buckets else None
             for metric in ('brier','log_loss','market_brier','mean_error','absolute_error')}
         selected=[]
+        resolved_ids={r['contract_id'] for r,_ in settled}
+        pending=[r for r in ledger if r['models'][model].get('selected_side') and r['contract_id'] not in resolved_ids]
         for row,actual in settled:
             side=row['models'][model].get('selected_side')
             if side:
@@ -235,6 +265,9 @@ def summarize(ledger, base, now):
         report[model]['hypothetical_selections']=dict(settled=len(selected),
             wins=sum(x>0 for x in selected),losses=sum(x<0 for x in selected),
             pnl_units=sum(selected),roi=sum(selected)/len(selected) if selected else None,
+            stake_units=len(selected),pending=len(pending),
+            overdue=sum(PUB.parse_dt(r['kickoff_utc'])+timedelta(hours=48)<now for r in pending),
+            unavailable_contracts=sum('p_over' not in r['models'][model] for r in ledger),
             note='Selection cohorts can differ; compare forecast scores on the paired cohort above.')
     return dict(contracts=len(ledger),settled_contracts=len(settled),paired_contracts=len(common),
         paired_fixtures=len({(r['match_date'],r['league'],O.key(r['home_team']),O.key(r['away_team'])) for r,_ in common}),
@@ -264,11 +297,15 @@ def main():
         if (r['kickoff']!=pair['under']['kickoff'] or r['league_slug'] not in V.TOP_FIVE
             or not V.is_fixture_team(r['team'],r['home_team'],r['away_team'])
             or line is None or not math.isfinite(line) or line<0 or abs(line%1-.5)>1e-8
-            or any(not math.isfinite(pair[s]['odds']) for s in ('over','under'))):
+            or any(not math.isfinite(pair[s]['odds']) or pair[s]['odds']<=1 for s in ('over','under'))
+            or any((r['kickoff']-pair[s]['captured_at_dt']).total_seconds()>24*3600 for s in ('over','under'))
+            or abs((r['captured_at_dt']-pair['under']['captured_at_dt']).total_seconds())>900):
             rejected['unsupported_contract']+=1; continue
         pairs.append(pair)
     ledger_path=args.output_dir/'team-shots-paired-reference.jsonl'
     existing=[json.loads(s) for s in ledger_path.read_text(encoding='utf8').splitlines() if s.strip()] if ledger_path.exists() else []
+    historical=existing
+    existing=current_cohort(historical)
     fingerprint=model_fingerprint()
     check_fingerprint(existing,fingerprint)
     seen={r['contract_id'] for r in existing}
@@ -278,13 +315,17 @@ def main():
     records=score(pairs,raw,base,opponent_base,config,params,lock,PUB.load_csv(match_path),now) if pairs else []
     select_first_scan(records,existing)
     hashes={str(p.relative_to(ROOT)):digest(p) for p in [Path(__file__),ROOT/'scripts/team_shots_ema20_reference.py',ROOT/'scripts/team_shots_ema20_features.py',V.TEAM_PARAMS,V.TEAM_LOCK,O.CONFIG,ROOT/'scripts/publish-football-vnext-shadow.py',ROOT/'scripts/team_shots_opponent.py']}
+    hashes['calibration_sha256']=digest(CALIBRATION_PATH)
     hashes.update(base_sha256=digest(base_path),odds_sha256=digest(odds_path),match_odds_sha256=digest(match_path))
     for record in records:
         record['source_hashes']=hashes
         record['model_fingerprint']=fingerprint
     ledger,added=append_new(ledger_path,records)
+    ledger=current_cohort(ledger)
     status=summarize(ledger,base,now)
-    status.update(generated_at=PUB.fmt_dt(now),new_contracts=added,scan_exclusions=dict(rejected),
+    status.update(version=VERSION,model_fingerprint=fingerprint,calibration_sha256=digest(CALIBRATION_PATH),
+        preserved_prior_cohort_contracts=len(historical)-len(existing),
+        generated_at=PUB.fmt_dt(now),new_contracts=added,scan_exclusions=dict(rejected),
         latest_archived_capture=max((r.get('captured_at','') for r in raw),default=None),
         latest_result_date=max((r.get('date','') for r in base),default=None),
         raw_upcoming_rows=sum(bool((kickoff:=PUB.parse_dt(r.get('kickoff_at'))) and kickoff>now) for r in raw),

@@ -1415,6 +1415,8 @@ def model_watchlist_summary() -> dict[str, Any]:
     for candidate in registry.get("candidates", []):
         if candidate.get("id") == "opponent_shots_20260912":
             candidate["forward_evidence"] = load_json(ROOT / "data/football-form/team-shots-opponent-status.json")
+        elif candidate.get("id") == "shots_market_offset_v1":
+            candidate["forward_evidence"] = load_json(ROOT / "data/football-form/team-shots-paired-reference-status.json")
     return registry
 
 
