@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
 import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 
-const title = "Football Player Props: Shots, Fouls & Cards";
+const title = "Football Player Props Tips: Shots, Fouls & Cards";
 const description =
-  "Independent football player props tips: shots, fouls, tackles and cards. Browse match picks, recorded bookmaker odds, analysis and tracked results.";
+  "Football player props tips for shots, fouls, tackles and cards. Explore picks informed by statistical models, recorded odds and performance by league.";
 const url = `${BASE_URL}/player-props`;
 
 export const metadata: Metadata = {
