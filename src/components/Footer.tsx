@@ -33,12 +33,12 @@ export default function Footer({ className = "" }: FooterProps) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Follow Il Margine on X, @ilmarginebet (opens in a new tab)"
-              className="inline-flex min-h-11 items-center gap-3 rounded-full border border-emerald-300/25 bg-emerald-300/5 px-4 py-2 text-sm text-emerald-200 transition hover:border-emerald-300/60 hover:bg-emerald-300/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-300"
+              title="Follow @ilmarginebet on X"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full text-slate-300 transition hover:text-emerald-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
             >
-              <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 shrink-0" aria-hidden="true" focusable="false">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5" aria-hidden="true" focusable="false">
                 <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.835L0 1.154h7.594l5.243 6.932 6.064-6.933Zm-1.29 19.49h2.039L6.486 3.24H4.298l13.313 17.403Z" />
               </svg>
-              <span>Follow us on X <span className="ml-1 font-semibold">@ilmarginebet</span></span>
             </a>
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-slate-400">
               <Link prefetch={false} href="/faq" className="hover:text-white">Frequently Asked Questions</Link>
