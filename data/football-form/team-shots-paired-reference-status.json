@@ -1,0 +1,70 @@
+{
+  "contracts": 0,
+  "settled_contracts": 0,
+  "paired_contracts": 0,
+  "paired_fixtures": 0,
+  "conflicting_results": 0,
+  "models": {
+    "ema20_v3": {
+      "brier": null,
+      "log_loss": null,
+      "market_brier": null,
+      "mean_error": null,
+      "absolute_error": null,
+      "hypothetical_selections": {
+        "settled": 0,
+        "wins": 0,
+        "losses": 0,
+        "pnl_units": 0,
+        "roi": null,
+        "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+      }
+    },
+    "v4": {
+      "brier": null,
+      "log_loss": null,
+      "market_brier": null,
+      "mean_error": null,
+      "absolute_error": null,
+      "hypothetical_selections": {
+        "settled": 0,
+        "wins": 0,
+        "losses": 0,
+        "pnl_units": 0,
+        "roi": null,
+        "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+      }
+    },
+    "opponent": {
+      "brier": null,
+      "log_loss": null,
+      "market_brier": null,
+      "mean_error": null,
+      "absolute_error": null,
+      "hypothetical_selections": {
+        "settled": 0,
+        "wins": 0,
+        "losses": 0,
+        "pnl_units": 0,
+        "roi": null,
+        "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+      }
+    }
+  },
+  "real_stake_units": 0,
+  "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion.",
+  "statshub_status": "NOT_CONNECTED",
+  "clv_status": "NOT_YET_MEASURED",
+  "review_milestones_fixtures": [
+    50,
+    150
+  ],
+  "automatic_promotion": false,
+  "generated_at": "2026-09-30T11:17:11Z",
+  "new_contracts": 0,
+  "scan_exclusions": {},
+  "latest_archived_capture": "2026-09-20T16:59:07Z",
+  "latest_result_date": "2026-09-20",
+  "raw_upcoming_rows": 0,
+  "status": "WAITING_FOR_FRESH_PAIRED_MARKETS"
+}
