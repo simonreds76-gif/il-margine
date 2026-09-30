@@ -1,6 +1,6 @@
 # Weekly Research Lane Report
 
-- Generated: 2026-09-22T15:37:57Z
+- Generated: 2026-09-30T10:09:11Z
 - Overall read: observe live sample
 
 ## Football Counts vNext
@@ -63,7 +63,7 @@
 - Settled ledger: 85/86 settled, 20W/62L, -15.22u, ROI -17.9%.
 - Extreme-gap quarantine: 0/0 settled, +0.00u at 1u evaluation stakes, ROI -.
 - Extreme-gap by league: no rows registered yet.
-- Evidence freshness: FRESH (2026-09-18T17:53:39Z).
+- Evidence freshness: STALE (2026-09-18T17:53:39Z).
 - Decision: KEEP_RESEARCH | blockers: fifth fold pending, probability gate fail, market ROI gate unavailable, no matched closing prices, no settled extreme-gap rows.
 
 ## Assist Value V1 Research Gate
@@ -73,7 +73,7 @@
 - Settlement gate: FAIL | player-assist agreement 0.00%.
 - Market gate: FAIL | 1305 matched player prices across 8 calendar days.
 - Prospective ledger: 0/0 settled (target 100), +0.00u, ROI -.
-- Evidence freshness: FRESH (2026-09-22T15:37:46Z).
+- Evidence freshness: FRESH (2026-09-30T10:08:59Z).
 - Automation budget: Friday-Sunday 07:10 UTC, August-May; <= 10 Odds-API calls/run and <= 30 calls/week; zero database reads/writes.
 - No public output, staking, database writes or automatic promotion are authorised.
 
@@ -118,27 +118,27 @@
 
 - Status: PROSPECTIVE_SHADOW / NOT_SELLABLE
 - Venue coverage: 70/210 eligible.
-- Prospective evidence: 432/600 settled across 229/150 events; P/L -112.20u; ROI -26.0%; CLV -0.30% n=185.
+- Prospective evidence: 492/600 settled across 266/150 events; P/L -142.23u; ROI -28.9%; CLV -0.05% n=215.
 - Shadow only. This block never changes routing, stakes or public recommendations.
 
 ## Tennis Aces/DF Prospective Decision
 
 Tennis Aces/DF Weekly Decision Report
-Generated UTC: 2026-09-22T09:23:05Z
+Generated UTC: 2026-09-29T09:17:35Z
 Status: COLLECTING_EVIDENCE (never auto-promoted)
 
-Sample: 105/124 settled; 6 pending (1 due, 5 future, 0 unknown); 13 void
-Record: 53W/52L/0P
-P/L: +1.19u | ROI: +1.1%
-CLV: +3.64% mean; 31.6% positive; n=38
-Calibration: Brier 0.236223; predicted 58.5%; actual 50.5%; gap 8.1pp; n=105
-Feed: CORE_RUN_IN_PROGRESS; matched 0/0; two-way 0; over-only 0; public bettable 0
+Sample: 115/136 settled; 7 pending (1 due, 6 future, 0 unknown); 14 void
+Record: 57W/58L/0P
+P/L: -1.82u | ROI: -1.6%
+CLV: +3.54% mean; 29.6% positive; n=44
+Calibration: Brier 0.235271; predicted 59.1%; actual 49.6%; gap 9.5pp; n=115
+Feed: TWO_WAY_PRICES_MISSING; matched 845/879; two-way 0; over-only 879; public bettable 0
 
 By market:
-- aces: 38/41 settled, -2.65u, ROI -7.0%
-- double_faults: 67/83 settled, +3.84u, ROI +5.7%
+- aces: 38/43 settled, -2.65u, ROI -7.0%
+- double_faults: 77/93 settled, +0.83u, ROI +1.1%
 
-Blockers: settled sample 105/300; Slam coverage 1/2; CLV sample 38/300; one-sided price feed (0 two-way rows); pipeline health CORE_RUN_IN_PROGRESS
+Blockers: settled sample 115/300; Slam coverage 1/2; CLV sample 44/300; one-sided price feed (0 two-way rows); pipeline health TWO_WAY_PRICES_MISSING
 Promotion gate: Human review only after 300 settled lines across at least two Slams, non-negative ROI, mean CLV >= +1%, positive CLV >= 55%, at least 100 calibrated win/loss rows with Brier <= 0.25 and absolute calibration gap <= 5pp, plus approved price integrity and a healthy pipeline.
 
 Service Breaks v1 [INTERNAL]: OUTCOME_PASS | player ATP/WTA PASS | match ATP/WTA PASS | real price evidence NO_CAPTURE_OR_LEDGER_EVIDENCE | prospective 0 | strict 0 rows/0 settled/+0.00u/ROI - | Bet365-only 0 rows/0 settled/+0.00u/ROI - | count calibration 0/0 settled | NOT SELLABLE
@@ -166,4 +166,4 @@ Astra models SHADOW ONLY | Astra Aces: 57/83 settled, 24 pending, 28/200 fixture
 
 MODEL REVIEW WATCHLIST
 Astra Volume [RESEARCH]: historical replay ROI +7.25%, n=69 | prospective capture NOT_CONNECTED | review weekly; historical bets are not forward evidence.
-Opponent Shots [SHADOW]: forward 11W/24L, ROI -41.5%, pending 1 | COLLECTING_FIXED_POLICY | scan 2026-09-22T15:34:16Z
+Opponent Shots [SHADOW]: forward 11W/24L, ROI -41.5%, pending 1 | COLLECTING_FIXED_POLICY | scan 2026-09-30T10:06:00Z

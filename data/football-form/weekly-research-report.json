@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T15:37:57Z",
+  "generated_at": "2026-09-30T10:09:11Z",
   "team_shots_v3_ema20": {
     "label": "Team Shots V3 EMA20 Research",
     "model": "canonical_form_v3_ema20_nb",
@@ -179,7 +179,7 @@
     }
   },
   "football_counts_vnext": {
-    "generated_at": "2026-09-22T15:37:56Z",
+    "generated_at": "2026-09-30T10:09:09Z",
     "team_shots_v4": {
       "count_gate": "PASS",
       "prospective_status": "AUTHORIZED_SHADOW",
@@ -411,24 +411,24 @@
       },
       "database_writes": 0,
       "errors": [
-        "fixtures epl 2026-09-22: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "fixtures serie-a 2026-09-22: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "fixtures la-liga 2026-09-22: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "fixtures bundesliga 2026-09-22: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "fixtures ligue-1 2026-09-22: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "fixtures epl 2026-09-21: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "fixtures serie-a 2026-09-21: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "fixtures la-liga 2026-09-21: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "fixtures bundesliga 2026-09-21: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "fixtures ligue-1 2026-09-21: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "fixtures epl 2026-09-20: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "fixtures serie-a 2026-09-20: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "fixtures la-liga 2026-09-20: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "fixtures bundesliga 2026-09-20: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "fixtures ligue-1 2026-09-20: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}"
+        "fixtures epl 2026-09-29: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "fixtures serie-a 2026-09-29: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "fixtures la-liga 2026-09-29: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "fixtures bundesliga 2026-09-29: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "fixtures ligue-1 2026-09-29: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "fixtures epl 2026-09-28: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "fixtures serie-a 2026-09-28: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "fixtures la-liga 2026-09-28: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "fixtures bundesliga 2026-09-28: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "fixtures ligue-1 2026-09-28: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "fixtures epl 2026-09-27: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "fixtures serie-a 2026-09-27: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "fixtures la-liga 2026-09-27: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "fixtures bundesliga 2026-09-27: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "fixtures ligue-1 2026-09-27: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}"
       ],
       "fixtures_discovered": 0,
-      "generated_at": "2026-09-22T13:27:11Z",
+      "generated_at": "2026-09-29T14:52:53Z",
       "latest_fixture_date": null,
       "max_requests": 30,
       "new_rows": 0,
@@ -488,7 +488,7 @@
           "within_one_pct": 0.0
         }
       },
-      "generated_at": "2026-09-22T15:34:18Z",
+      "generated_at": "2026-09-30T10:06:03Z",
       "latest_api_fixture_date": null,
       "match_rate_pct": 0.0,
       "matched_fixtures": 0,
@@ -511,7 +511,7 @@
         "opening_1x2_closeness_vs_total_fouls_correlation": 0.20236620673672806,
         "total_shots_vs_total_fouls_correlation": -0.1826485756525495
       },
-      "generated_at": "2026-09-22T15:34:19Z",
+      "generated_at": "2026-09-30T10:06:03Z",
       "leg_structure": {
         "bundesliga": {
           "alpha_away_after_raw_frailty": 0.005185795899176435,
@@ -1176,7 +1176,7 @@
           "validation_matches": 1734
         }
       ],
-      "generated_at": "2026-09-22T15:34:47Z",
+      "generated_at": "2026-09-30T10:06:31Z",
       "market_gate": "BLOCKED_TEAM_FOULS_NOT_OBSERVED",
       "registered": {
         "ema_decay": 0.93,
@@ -1561,7 +1561,7 @@
           "validation_matches": 1734
         }
       ],
-      "generated_at": "2026-09-22T15:34:50Z",
+      "generated_at": "2026-09-30T10:06:35Z",
       "market_gate": "BLOCKED_TEAM_FOULS_NOT_OBSERVED",
       "registered": {
         "distribution": "poisson",
@@ -1610,7 +1610,7 @@
         "passed": false,
         "within_one_pct": 98.38709677419355
       },
-      "generated_at": "2026-09-22T15:34:50Z",
+      "generated_at": "2026-09-30T10:06:35Z",
       "requirements": {
         "independent_sources_required": [
           "api-football",
@@ -1747,7 +1747,7 @@
         "signals": 192,
         "pnl_units": 25.038,
         "as_of_date": "2026-08-22",
-        "generated_at": "2026-09-22T08:09:03+00:00",
+        "generated_at": "2026-09-28T21:51:46+00:00",
         "staked_units": 227.0,
         "evidence_period": "clean"
       },
@@ -1761,7 +1761,7 @@
         "signals": 17,
         "pnl_units": -4.526,
         "as_of_date": "2026-07-24",
-        "generated_at": "2026-09-22T08:09:06+00:00",
+        "generated_at": "2026-09-28T21:51:48+00:00",
         "staked_units": 28.0,
         "evidence_period": "clean"
       },
@@ -1775,7 +1775,7 @@
         "signals": 35,
         "pnl_units": -10.03,
         "as_of_date": "2026-07-13",
-        "generated_at": "2026-09-22T08:09:06+00:00",
+        "generated_at": "2026-09-28T21:51:49+00:00",
         "staked_units": 35.0,
         "evidence_period": "clean"
       },
@@ -1789,7 +1789,7 @@
         "signals": 17,
         "pnl_units": -3.114,
         "as_of_date": "2026-06-24",
-        "generated_at": "2026-09-22T08:09:06+00:00",
+        "generated_at": "2026-09-28T21:51:49+00:00",
         "staked_units": 17.0,
         "evidence_period": "clean"
       },
@@ -1804,11 +1804,11 @@
         "status": "OK",
         "pending": 0,
         "roi_pct": -3.6109,
-        "settled": 46,
-        "signals": 46,
+        "settled": 47,
+        "signals": 47,
         "pnl_units": -3.322,
-        "as_of_date": "2026-08-26",
-        "generated_at": "2026-09-22T08:09:04+00:00",
+        "as_of_date": "2026-09-26",
+        "generated_at": "2026-09-28T21:51:47+00:00",
         "staked_units": 92.0,
         "evidence_period": "clean"
       },
@@ -1818,17 +1818,17 @@
           "avg_clv_pct": null,
           "positive_clv_pct": null
         },
-        "wins": 24,
-        "losses": 37,
+        "wins": 35,
+        "losses": 44,
         "status": "OK",
-        "pending": 2,
-        "roi_pct": -13.8082,
-        "settled": 61,
-        "signals": 63,
-        "pnl_units": -8.423,
-        "as_of_date": "2026-09-22",
-        "generated_at": "2026-09-22T08:09:05+00:00",
-        "staked_units": 61.0,
+        "pending": 4,
+        "roi_pct": -5.3911,
+        "settled": 79,
+        "signals": 83,
+        "pnl_units": -4.259,
+        "as_of_date": "2026-09-29",
+        "generated_at": "2026-09-28T21:51:48+00:00",
+        "staked_units": 79.0,
         "evidence_period": "clean"
       },
       "volume_200": {
@@ -1837,17 +1837,17 @@
           "avg_clv_pct": null,
           "positive_clv_pct": null
         },
-        "wins": 53,
-        "losses": 55,
+        "wins": 56,
+        "losses": 63,
         "status": "OK",
         "pending": 4,
-        "roi_pct": -0.0991,
-        "settled": 108,
-        "signals": 112,
-        "pnl_units": -0.107,
-        "as_of_date": "2026-09-11",
-        "generated_at": "2026-09-22T08:09:04+00:00",
-        "staked_units": 108.0,
+        "roi_pct": -3.963,
+        "settled": 119,
+        "signals": 123,
+        "pnl_units": -4.716,
+        "as_of_date": "2026-09-28",
+        "generated_at": "2026-09-28T21:51:46+00:00",
+        "staked_units": 119.0,
         "evidence_period": "clean"
       }
     },
@@ -1855,22 +1855,22 @@
       "lanes": {
         "strict": {
           "status": "FRESH",
-          "age_days": 0.05,
-          "generated_at": "2026-09-22T08:09:03+00:00"
+          "age_days": 0.48,
+          "generated_at": "2026-09-28T21:51:46+00:00"
         },
         "spread_v1": {
           "status": "FRESH",
-          "age_days": 0.05,
-          "generated_at": "2026-09-22T08:09:04+00:00"
+          "age_days": 0.48,
+          "generated_at": "2026-09-28T21:51:47+00:00"
         },
         "volume_200": {
           "status": "FRESH",
-          "age_days": 0.05,
-          "generated_at": "2026-09-22T08:09:04+00:00"
+          "age_days": 0.48,
+          "generated_at": "2026-09-28T21:51:46+00:00"
         }
       },
       "status": "FRESH",
-      "oldest_generated_at": "2026-09-22T08:09:03+00:00"
+      "oldest_generated_at": "2026-09-28T21:51:46+00:00"
     },
     "gap_source_status": "OK",
     "gap_status": "SHADOW_ONLY_NO_LIVE_ROUTING_CHANGE",
@@ -2028,7 +2028,7 @@
         "passes": false,
         "profile": "volume_200",
         "verdict": "KEEP_COLLECTING",
-        "captured": 105,
+        "captured": 114,
         "by_surface": {
           "Clay": {
             "wins": 9,
@@ -2046,19 +2046,19 @@
             "positive_clv_pct": 28.57
           },
           "Hard": {
-            "wins": 45,
+            "wins": 48,
             "voids": 0,
-            "losses": 39,
-            "pending": 2,
-            "roi_pct": 16.78,
-            "settled": 84,
-            "signals": 86,
-            "clv_rows": 44,
-            "pnl_units": 14.098,
-            "avg_gap_pp": 12.37,
-            "avg_clv_pct": 0.3112,
-            "avg_value_pct": 28.1,
-            "positive_clv_pct": 54.55
+            "losses": 44,
+            "pending": 3,
+            "roi_pct": 12.18,
+            "settled": 92,
+            "signals": 95,
+            "clv_rows": 47,
+            "pnl_units": 11.209,
+            "avg_gap_pp": 12.27,
+            "avg_clv_pct": 0.2939,
+            "avg_value_pct": 27.07,
+            "positive_clv_pct": 53.19
           }
         },
         "historical": {
@@ -2149,71 +2149,71 @@
         },
         "description": "Volume 200 eligible, same-side, gap >10pp and <=15pp.",
         "performance": {
-          "wins": 54,
+          "wins": 57,
           "voids": 0,
-          "losses": 48,
-          "pending": 3,
-          "roi_pct": 12.98,
-          "settled": 102,
-          "signals": 105,
-          "clv_rows": 51,
-          "pnl_units": 13.24,
-          "avg_gap_pp": 12.3,
-          "avg_clv_pct": 0.2587,
-          "avg_value_pct": 27.15,
-          "positive_clv_pct": 50.98
+          "losses": 53,
+          "pending": 4,
+          "roi_pct": 9.41,
+          "settled": 110,
+          "signals": 114,
+          "clv_rows": 54,
+          "pnl_units": 10.351,
+          "avg_gap_pp": 12.22,
+          "avg_clv_pct": 0.2465,
+          "avg_value_pct": 26.37,
+          "positive_clv_pct": 50.0
         },
-        "quality_eligible": 63,
+        "quality_eligible": 71,
         "quality_performance": {
-          "wins": 35,
+          "wins": 37,
           "voids": 0,
-          "losses": 28,
-          "pending": 0,
-          "roi_pct": 19.91,
-          "settled": 63,
-          "signals": 63,
-          "clv_rows": 33,
-          "pnl_units": 12.542,
-          "avg_gap_pp": 12.38,
-          "avg_clv_pct": -0.0407,
-          "avg_value_pct": 27.92,
-          "positive_clv_pct": 48.48
+          "losses": 33,
+          "pending": 1,
+          "roi_pct": 12.9,
+          "settled": 70,
+          "signals": 71,
+          "clv_rows": 36,
+          "pnl_units": 9.028,
+          "avg_gap_pp": 12.27,
+          "avg_clv_pct": -0.034,
+          "avg_value_pct": 26.77,
+          "positive_clv_pct": 47.22
         },
-        "excluded_low_quality": 42,
+        "excluded_low_quality": 43,
         "max_gap_pp_inclusive": 15.0,
         "min_gap_pp_exclusive": 10.0
       }
     },
     "side_flip_by_surface": {
       "Clay": {
-        "wins": 63,
+        "wins": 70,
         "voids": 0,
-        "losses": 123,
-        "pending": 5,
-        "roi_pct": -9.02,
-        "settled": 186,
-        "signals": 191,
-        "clv_rows": 112,
-        "pnl_units": -16.77,
-        "avg_gap_pp": 8.49,
-        "avg_clv_pct": 0.0294,
-        "avg_value_pct": 105.39,
-        "positive_clv_pct": 33.04
+        "losses": 135,
+        "pending": 6,
+        "roi_pct": -9.18,
+        "settled": 205,
+        "signals": 211,
+        "clv_rows": 127,
+        "pnl_units": -18.82,
+        "avg_gap_pp": 8.34,
+        "avg_clv_pct": 0.025,
+        "avg_value_pct": 100.78,
+        "positive_clv_pct": 32.28
       },
       "Hard": {
-        "wins": 101,
+        "wins": 115,
         "voids": 0,
-        "losses": 174,
-        "pending": 9,
-        "roi_pct": -4.66,
-        "settled": 275,
-        "signals": 284,
-        "clv_rows": 172,
-        "pnl_units": -12.81,
-        "avg_gap_pp": 7.47,
-        "avg_clv_pct": 0.3394,
-        "avg_value_pct": 66.73,
-        "positive_clv_pct": 38.37
+        "losses": 188,
+        "pending": 13,
+        "roi_pct": -1.38,
+        "settled": 303,
+        "signals": 316,
+        "clv_rows": 189,
+        "pnl_units": -4.17,
+        "avg_gap_pp": 7.27,
+        "avg_clv_pct": 0.2741,
+        "avg_value_pct": 69.0,
+        "positive_clv_pct": 38.1
       }
     }
   },
@@ -2257,8 +2257,8 @@
   "tennis_rate_trend": {
     "model": "rate-trend-prospective-v1",
     "health": {
-      "stale_capture": 446,
-      "missing_timestamp_or_started": 244
+      "no_board_match": 10,
+      "incomplete_contract": 423
     },
     "status": "SHADOW_ONLY",
     "markets": {
@@ -2271,7 +2271,7 @@
         },
         "pending": 24,
         "settled": 57,
-        "age_days": 16,
+        "age_days": 23,
         "candidate": {
           "bets": 34,
           "brier": 0.26956440580069285,
@@ -2292,7 +2292,7 @@
         },
         "pending": 22,
         "settled": 56,
-        "age_days": 16,
+        "age_days": 23,
         "candidate": {
           "bets": 37,
           "brier": 0.22130724018980083,
@@ -2307,11 +2307,11 @@
     },
     "freshness": {
       "status": "FRESH",
-      "age_days": 0.0,
-      "generated_at": "2026-09-22T09:19:06.982313+00:00"
+      "age_days": 0.48,
+      "generated_at": "2026-09-28T21:46:16.038218+00:00"
     },
     "config_hash": "28f35b5a1c2b16cdd8c3ad1cbafe83787ddfdd193f4cc453491f6466d5d81912",
-    "generated_at": "2026-09-22T09:19:06.982313+00:00",
+    "generated_at": "2026-09-28T21:46:16.038218+00:00",
     "interpretation": "Paired full-board research; correlated lines are not independent bets. No ROI claim before prospective review.",
     "schema_version": 1,
     "automatic_promotion": false
@@ -2432,7 +2432,7 @@
         "evaluation": "Manual review after 150 settled fixtures and eight weeks; assess calibration, ROI, positive CLV and at least 70% true-close coverage.",
         "family": "football_counts",
         "forward_evidence": {
-          "generated_at": "2026-09-22T15:34:16Z",
+          "generated_at": "2026-09-30T10:06:00Z",
           "activated_at": "2026-09-12T21:09:03.018654+00:00",
           "status": "ACTIVE_SHADOW",
           "count_gate": "FIXED CANDIDATE",
@@ -2447,8 +2447,8 @@
             "roi": -0.41485714285714276,
             "wins": 11,
             "losses": 24,
-            "true_close_count": 3,
-            "mean_clv": 0.064375
+            "true_close_count": 9,
+            "mean_clv": 0.021458333333333333
           },
           "latest_scan": {
             "scored_rows": 0,
@@ -2459,7 +2459,7 @@
           "result_source": {
             "bundesliga": {
               "football_data_latest": "2026-09-20",
-              "lag_days": 2,
+              "lag_days": 9,
               "football_data_count": 36,
               "fotmob_count": 0,
               "fotmob_latest": null,
@@ -2469,12 +2469,12 @@
               "api_football_requests_remaining_after_league": 10,
               "api_football_error": null,
               "api_football_max_requests": 10,
-              "snapshot_date": "2026-09-22",
-              "snapshot_path": "data/results-snapshot/2026-09-22.json"
+              "snapshot_date": "2026-09-29",
+              "snapshot_path": "data/results-snapshot/2026-09-29.json"
             },
             "epl": {
               "football_data_latest": "2026-09-20",
-              "lag_days": 2,
+              "lag_days": 9,
               "football_data_count": 50,
               "fotmob_count": 0,
               "fotmob_latest": null,
@@ -2484,12 +2484,12 @@
               "api_football_requests_remaining_after_league": 10,
               "api_football_error": null,
               "api_football_max_requests": 10,
-              "snapshot_date": "2026-09-22",
-              "snapshot_path": "data/results-snapshot/2026-09-22.json"
+              "snapshot_date": "2026-09-29",
+              "snapshot_path": "data/results-snapshot/2026-09-29.json"
             },
             "la-liga": {
               "football_data_latest": "2026-09-20",
-              "lag_days": 2,
+              "lag_days": 9,
               "football_data_count": 69,
               "fotmob_count": 0,
               "fotmob_latest": null,
@@ -2499,43 +2499,43 @@
               "api_football_requests_remaining_after_league": 9,
               "api_football_error": null,
               "api_football_max_requests": 10,
-              "snapshot_date": "2026-09-22",
-              "snapshot_path": "data/results-snapshot/2026-09-22.json"
+              "snapshot_date": "2026-09-29",
+              "snapshot_path": "data/results-snapshot/2026-09-29.json"
             },
             "ligue-1": {
               "football_data_latest": "2026-09-20",
-              "lag_days": 2,
+              "lag_days": 9,
               "football_data_count": 45,
               "fotmob_count": 0,
               "fotmob_latest": null,
               "api_football_count": 0,
               "api_football_latest": null,
-              "api_football_requests_used": 1,
-              "api_football_requests_remaining_after_league": 8,
+              "api_football_requests_used": 0,
+              "api_football_requests_remaining_after_league": 9,
               "api_football_error": null,
-              "api_football_max_requests": 9,
-              "snapshot_date": "2026-09-22",
-              "snapshot_path": "data/results-snapshot/2026-09-22.json"
+              "api_football_max_requests": 10,
+              "snapshot_date": "2026-09-29",
+              "snapshot_path": "data/results-snapshot/2026-09-29.json"
             },
             "serie-a": {
               "football_data_latest": "2026-09-20",
-              "lag_days": 2,
+              "lag_days": 9,
               "football_data_count": 50,
               "fotmob_count": 0,
               "fotmob_latest": null,
               "api_football_count": 0,
               "api_football_latest": null,
               "api_football_requests_used": 0,
-              "api_football_requests_remaining_after_league": 8,
+              "api_football_requests_remaining_after_league": 9,
               "api_football_error": null,
               "api_football_max_requests": 10,
-              "snapshot_date": "2026-09-22",
-              "snapshot_path": "data/results-snapshot/2026-09-22.json"
+              "snapshot_date": "2026-09-29",
+              "snapshot_path": "data/results-snapshot/2026-09-29.json"
             }
           },
           "review_policy": "Review after 150 settled fixtures and at least 8 weeks; require positive ROI, at least 70% true closing coverage, positive mean CLV and calibration review. Manual promotion only.",
           "review_status": "COLLECTING_FIXED_POLICY",
-          "age_days": 9
+          "age_days": 17
         }
       }
     ],
@@ -2697,22 +2697,22 @@
   },
   "tennis_venue_ace_factor_v1": {
     "status": "PROSPECTIVE_SHADOW",
-    "pending": 31,
-    "roi_pct": -25.972222222222225,
-    "settled": 432,
-    "clv_rows": 185,
+    "pending": 43,
+    "roi_pct": -28.90853658536585,
+    "settled": 492,
+    "clv_rows": 215,
     "decision": "NOT_SELLABLE",
-    "pnl_units": -112.2,
+    "pnl_units": -142.23,
     "factor_max": 1.357331,
     "factor_min": 0.636276,
-    "registered": 563,
-    "brier_delta": -0.0023541080121342595,
-    "paired_rows": 432,
-    "mean_clv_pct": -0.29842162162162167,
+    "registered": 645,
+    "brier_delta": -0.0006766958760041075,
+    "paired_rows": 492,
+    "mean_clv_pct": -0.049255813953488395,
     "total_venues": 210,
-    "control_brier": 0.20654176838250463,
-    "candidate_brier": 0.20418766037037037,
-    "distinct_events": 229,
+    "control_brier": 0.20294039866055694,
+    "candidate_brier": 0.20226370278455283,
+    "distinct_events": 266,
     "eligible_venues": 70,
     "total_gate_count": 5,
     "passed_gate_count": 2,
@@ -2721,7 +2721,7 @@
     "promotion_target_events": 150
   },
   "tennis_most_aces_forecast": {
-    "brier": 0.421492091954023,
+    "brier": 0.421963228125,
     "notes": [
       "Outcome-only validation; no bookmaker prices, ROI, value or CLV.",
       "Parameters remain frozen until a registered review at 200 settled forecasts.",
@@ -2766,29 +2766,29 @@
         "predicted_draw_rate_pct": 0.0
       },
       "v3_aces_gaussian_copula_nb2_evidence_tiers_v3": {
-        "brier": 0.4056501061946903,
-        "logloss": 0.6828796150442478,
+        "brier": 0.40945867017543863,
+        "logloss": 0.6913411228070175,
         "rows_void": 6,
-        "accuracy_pct": 72.56637168141593,
-        "rows_pending": 36,
-        "rows_settled": 226,
-        "rows_registered": 372,
+        "accuracy_pct": 72.63157894736842,
+        "rows_pending": 43,
+        "rows_settled": 285,
+        "rows_registered": 438,
         "rows_quarantined": 104,
-        "actual_draw_rate_pct": 3.5398230088495577,
+        "actual_draw_rate_pct": 4.2105263157894735,
         "predicted_draw_rate_pct": 0.0
       }
     },
     "status": "INTEGRITY_REVIEW_REQUIRED",
-    "logloss": 0.7113462643678161,
+    "logloss": 0.7136337562499999,
     "rows_void": 8,
-    "accuracy_pct": 71.26436781609195,
-    "rows_pending": 36,
-    "rows_settled": 261,
-    "rows_registered": 409,
-    "generated_at_utc": "2026-09-22T09:16:54+00:00",
-    "player_count_mae": 3.29897265625,
+    "accuracy_pct": 71.5625,
+    "rows_pending": 43,
+    "rows_settled": 320,
+    "rows_registered": 475,
+    "generated_at_utc": "2026-09-28T21:43:56+00:00",
+    "player_count_mae": 3.2785253968253967,
     "rows_quarantined": 104,
-    "rows_quote_ready": 198,
+    "rows_quote_ready": 239,
     "paired_comparison": {
       "status": "EVIDENCE_BUILDING",
       "direct_brier": 0.3611204,
@@ -2803,9 +2803,9 @@
       "brier_delta_direct_minus_control": -0.062057599999999935,
       "logloss_delta_direct_minus_control": -0.07351160000000001
     },
-    "rows_price_blocked": 176,
+    "rows_price_blocked": 195,
     "temporal_validation": "HISTORICAL_KICKOFF_AND_FIRST_RESULT_TIMESTAMPS_UNAVAILABLE",
-    "actual_draw_rate_pct": 4.597701149425287,
+    "actual_draw_rate_pct": 5.0,
     "minimum_review_sample": 200,
     "can_claim_profitability": false,
     "predicted_draw_rate_pct": 0.0
@@ -2825,44 +2825,44 @@
   },
   "tennis_props_shadow_decision": {
     "clv": {
-      "rows": 38,
-      "mean_pct": 3.6387,
-      "coverage_pct": 30.65,
-      "positive_pct": 31.58
+      "rows": 44,
+      "mean_pct": 3.5392,
+      "coverage_pct": 32.35,
+      "positive_pct": 29.55
     },
     "feed": {
-      "state": "CORE_RUN_IN_PROGRESS",
-      "line_rows": 0,
-      "matched_rows": 0,
+      "state": "TWO_WAY_PRICES_MISSING",
+      "line_rows": 879,
+      "matched_rows": 845,
       "two_way_rows": 0,
-      "match_rate_pct": null,
-      "over_only_rows": 0,
-      "top_shadow_blocker": "canonical_comparison",
+      "match_rate_pct": 96.1,
+      "over_only_rows": 879,
+      "top_shadow_blocker": "NOT_BEST_AVAILABLE_LINE",
       "public_bettable_rows": 0
     },
     "lane": "aces_dfs_canonical_shadow",
-    "void": 13,
+    "void": 14,
     "gates": {
       "roi": {
-        "pass": true,
+        "pass": false,
         "target_pct": 0.0,
-        "observed_pct": 1.1333333333333342
+        "observed_pct": -1.5826086956521732
       },
       "mean_clv": {
         "pass": true,
         "target_pct": 1.0,
-        "observed_pct": 3.6387105263157893
+        "observed_pct": 3.539159090909091
       },
       "clv_coverage": {
         "pass": false,
         "target": 300,
-        "observed": 38,
-        "coverage_pct": 30.65
+        "observed": 44,
+        "coverage_pct": 32.35
       },
       "positive_clv": {
         "pass": false,
         "target_pct": 55.0,
-        "observed_pct": 31.57894736842105
+        "observed_pct": 29.545454545454547
       },
       "slam_coverage": {
         "pass": false,
@@ -2875,16 +2875,16 @@
       "settled_sample": {
         "pass": false,
         "target": 300,
-        "observed": 105
+        "observed": 115
       },
       "calibration_gap": {
         "pass": false,
         "maximum_pp": 5.0,
-        "observed_pp": 8.051698290964083
+        "observed_pp": 9.527798659267916
       },
       "pipeline_health": {
         "pass": false,
-        "state": "CORE_RUN_IN_PROGRESS",
+        "state": "TWO_WAY_PRICES_MISSING",
         "structural_error": true
       },
       "price_integrity": {
@@ -2895,29 +2895,29 @@
       "calibration_brier": {
         "pass": true,
         "maximum": 0.25,
-        "observed": 0.23622335506407927
+        "observed": 0.23527120483986363
       },
       "calibration_sample": {
         "pass": true,
         "target": 100,
-        "observed": 105
+        "observed": 115
       }
     },
     "record": {
-      "wins": 53,
-      "losses": 52,
+      "wins": 57,
+      "losses": 58,
       "pushes": 0
     },
     "status": "COLLECTING_EVIDENCE",
-    "pending": 6,
-    "roi_pct": 1.13,
-    "settled": 105,
+    "pending": 7,
+    "roi_pct": -1.58,
+    "settled": 115,
     "blockers": [
-      "settled sample 105/300",
+      "settled sample 115/300",
       "Slam coverage 1/2",
-      "CLV sample 38/300",
+      "CLV sample 44/300",
       "one-sided price feed (0 two-way rows)",
-      "pipeline health CORE_RUN_IN_PROGRESS"
+      "pipeline health TWO_WAY_PRICES_MISSING"
     ],
     "by_market": [
       {
@@ -2925,51 +2925,52 @@
         "roi_pct": -6.97,
         "settled": 38,
         "pnl_units": -2.65,
-        "registered": 41
+        "registered": 43
       },
       {
         "market": "double_faults",
-        "roi_pct": 5.73,
-        "settled": 67,
-        "pnl_units": 3.84,
-        "registered": 83
+        "roi_pct": 1.08,
+        "settled": 77,
+        "pnl_units": 0.83,
+        "registered": 93
       }
     ],
     "gate_rule": "Human review only after 300 settled lines across at least two Slams, non-negative ROI, mean CLV >= +1%, positive CLV >= 55%, at least 100 calibrated win/loss rows with Brier <= 0.25 and absolute calibration gap <= 5pp, plus approved price integrity and a healthy pipeline.",
-    "pnl_units": 1.19,
-    "registered": 124,
+    "pnl_units": -1.82,
+    "registered": 136,
     "calibration": {
-      "rows": 105,
-      "brier": 0.236223,
-      "actual_hit_pct": 50.48,
-      "absolute_gap_pp": 8.05,
+      "rows": 115,
+      "brier": 0.235271,
+      "actual_hit_pct": 49.57,
+      "absolute_gap_pp": 9.53,
       "pushes_excluded": true,
-      "predicted_hit_pct": 58.53
+      "predicted_hit_pct": 59.09
     },
     "pending_due": 1,
     "failed_gates": [
       "settled_sample",
       "slam_coverage",
+      "roi",
       "clv_coverage",
       "positive_clv",
       "calibration_gap",
       "price_integrity",
       "pipeline_health"
     ],
-    "generated_at": "2026-09-22T09:23:05Z",
-    "staked_units": 105.0,
+    "generated_at": "2026-09-29T09:17:35Z",
+    "staked_units": 115.0,
     "settled_slams": [
       "US Open"
     ],
-    "pending_future": 5,
+    "pending_future": 6,
     "pending_unknown": 0,
     "automatic_promotion": false
   },
   "tennis_evidence_source": {
     "status": "FRESH",
     "source": "supabase",
-    "generated_at": "2026-09-22T09:23:05Z",
-    "age_days": 0.26,
+    "generated_at": "2026-09-29T09:17:35Z",
+    "age_days": 1.04,
     "error": ""
   },
   "goalscorer_v2": {
@@ -3099,8 +3100,8 @@
     },
     "freshness": {
       "generated_at": "2026-09-18T17:53:39Z",
-      "age_days": 3.91,
-      "status": "FRESH"
+      "age_days": 11.68,
+      "status": "STALE"
     }
   },
   "assist_value_v1": {
@@ -3129,7 +3130,7 @@
       "roi_pct": null
     },
     "freshness": {
-      "generated_at": "2026-09-22T15:37:46Z",
+      "generated_at": "2026-09-30T10:08:59Z",
       "age_days": 0.0,
       "status": "FRESH"
     },
@@ -3172,12 +3173,21 @@
     "sellable": false
   },
   "automation_budget": {
-    "generated_at": "2026-09-22T15:37:56Z",
+    "generated_at": "2026-09-30T10:09:09Z",
     "workflow_directory": ".effective-default-branch/.github/workflows",
     "status": "PASS",
     "errors": [],
     "warnings": [],
     "providers": {
+      "oddspapi": {
+        "label": "OddsPapi account-specific archive allowance",
+        "source": "football_atlas_weekly.py: account quota check; 5 leagues, at most 200 fixtures each, 3 attempts per endpoint",
+        "note": "Conservative request envelope, not a purchased quota or a target. Cached and already published fixtures skip history requests.",
+        "max_requests_in_one_hour": 3018,
+        "max_requests_in_one_day": 3018,
+        "max_requests_per_week": 3018,
+        "status": "PASS"
+      },
       "odds_api_io": {
         "label": "Odds-API.io free plan",
         "requests_per_hour": 100,
@@ -3201,6 +3211,21 @@
       }
     },
     "github_workflows": [
+      {
+        "file": "football-atlas-weekly.yml",
+        "models": [
+          "football_atlas",
+          "manager_atlas"
+        ],
+        "season_gate": "completed domestic league fixtures; unchanged archives do not deploy",
+        "database_mode": "none; validated static archive publication",
+        "runs_per_week_max": 1,
+        "provider_requests_per_week_max": {
+          "oddspapi": 3018
+        },
+        "db_reads_per_week_max": 0,
+        "db_writes_per_week_max": 0
+      },
       {
         "file": "assist-value-shadow.yml",
         "models": [
@@ -3417,7 +3442,9 @@
   },
   "status": {
     "pause_required": false,
-    "stale_models": [],
+    "stale_models": [
+      "goalscorer_v2"
+    ],
     "read": "observe_live_sample"
   }
 }
