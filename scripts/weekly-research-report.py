@@ -1375,6 +1375,22 @@ def weighted_last90_delta(promotion: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def full_refresh_summary() -> dict[str, Any]:
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("full_refresh_reporting", ROOT / "scripts/tennis_full_refresh_reporting.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.load_summary(ROOT)
+
+
+def full_refresh_text(payload: dict[str, Any]) -> str:
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("full_refresh_reporting", ROOT / "scripts/tennis_full_refresh_reporting.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.text(payload.get("tennis_full_refresh") or {})
+
+
 def rate_trend_summary() -> dict[str, Any]:
     result = load_json(ROOT / "data/tennis-props/shadow/rate-trend-v1/report.json")
     if not result:
@@ -1476,6 +1492,7 @@ def build_payload() -> dict[str, Any]:
     tennis_model_evidence = tennis_model_evidence_summary()
     tennis_props_v3 = tennis_props_v3_snapshot()
     tennis_rate_trend = rate_trend_summary()
+    tennis_full_refresh = full_refresh_summary()
     tennis_props_v4 = load_json(TENNIS_PROPS_V4_JSON)
     tennis_breaks_v1 = load_json(TENNIS_BREAKS_V1_GATE)
     tennis_venue_ace_v1 = venue_ace_factor_v1_summary()
@@ -1496,6 +1513,7 @@ def build_payload() -> dict[str, Any]:
             if key in snapshot_model_evidence:
                 tennis_model_evidence[key] = snapshot_model_evidence[key]
         tennis_rate_trend = snapshot_sections.get("tennis_rate_trend") or tennis_rate_trend
+        tennis_full_refresh = snapshot_sections.get("tennis_full_refresh") or tennis_full_refresh
         tennis_props_v3 = snapshot_sections.get("tennis_props_v3") or tennis_props_v3
         tennis_props_v4 = snapshot_sections.get("tennis_props_v4") or tennis_props_v4
         tennis_venue_ace_v1 = snapshot_sections.get("tennis_venue_ace_factor_v1") or tennis_venue_ace_v1
@@ -1545,6 +1563,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_model_evidence": tennis_model_evidence,
         "tennis_props_v3": tennis_props_v3,
         "tennis_rate_trend": tennis_rate_trend,
+        "tennis_full_refresh": tennis_full_refresh,
         "model_review_watchlist": model_watchlist_summary(),
         "tennis_props_v4": tennis_props_v4,
         "tennis_breaks_v1": tennis_breaks_v1,
@@ -1846,6 +1865,7 @@ def render_report(payload: dict[str, Any]) -> str:
         ]
     )
     lines.extend(["", rate_trend_text(payload)])
+    lines.extend(["", full_refresh_text(payload)])
     lines.extend(["", model_watchlist_text(payload)])
     return "\n".join(lines)
 
@@ -2092,6 +2112,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         ]
     )
     lines.extend(["", rate_trend_text(payload)])
+    lines.extend(["", full_refresh_text(payload)])
     lines.extend(["", model_watchlist_text(payload)])
     return "\n".join(lines)
 
@@ -2333,6 +2354,7 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
         ]
     )
     lines.extend(["", rate_trend_text(payload)])
+    lines.extend(["", full_refresh_text(payload)])
     lines.extend(["", model_watchlist_text(payload, tennis_only=True)])
     return "\n".join(lines)
 
