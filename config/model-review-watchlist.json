@@ -67,6 +67,19 @@
   ],
   "candidates": [
     {
+      "id": "shots_paired_reference_20260930",
+      "label": "EMA20 v3 / v4 / Opponent paired comparison",
+      "status": "FIXED_PROSPECTIVE_COMPARISON",
+      "prospective_capture_status": "DAILY_EXISTING_FOOTBALL_COUNTS_WORKFLOW",
+      "live_routing": false,
+      "actual_stake": 0,
+      "artifact": "data/football-form/team-shots-paired-reference-status.json",
+      "ledger": "data/football-form/team-shots-paired-reference.jsonl",
+      "evidence": "docs/audits/football-reference-review-20260930.md",
+      "evaluation": "Use matched first-quote forecasts and independent fixture counts. Inspect bias, MAE, paired Brier/log loss and market scores. ROI is secondary and selection samples differ. Review at 50 and 150 settled fixtures; no automatic promotion. StatsHub and closing-price comparison are not yet connected.",
+      "family": "football_counts"
+    },
+    {
       "id": "astra_volume_context_v1",
       "label": "Astra Volume",
       "model_id": "astra-tennis-context-v2-raw-research",
