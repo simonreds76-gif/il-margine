@@ -10,6 +10,7 @@ import {
   type TennisResearchLaneId,
 } from "@/lib/tennis-monitor-files";
 import { StatusPill, cn } from "../shared";
+import TennisOverview from "@/components/model-monitor/TennisOverview";
 
 export const dynamic = "force-dynamic";
 
@@ -1592,10 +1593,11 @@ function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
   );
 }
 
-export default async function TennisMonitorPage() {
+export default async function TennisMonitorPage({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
   if (!TENNIS_MONITOR_ENABLED) {
     notFound();
   }
+  if ((await searchParams).view !== "diagnostics") return <TennisOverview />;
 
   const activeLanes = TENNIS_RESEARCH_LANES.map((id) => laneViews[id]);
   const legacyLanes = TENNIS_LEGACY_DISABLED_LANES.map((id) => laneViews[id]);
