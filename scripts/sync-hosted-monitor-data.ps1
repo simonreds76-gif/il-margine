@@ -100,6 +100,7 @@ $cornersFiles = @(
 )
 
 $settlementFiles = @(
+    "data/football-form/team-shots-paired-reference-status.json",
     "data/results-snapshot/latest.json",
     # Current 2026/27 football-count lanes. These are deliberately included in
     # normal localhost startup without pulling the much larger model archives.
