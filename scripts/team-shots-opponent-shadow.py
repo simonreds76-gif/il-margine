@@ -6,6 +6,7 @@ with fresh paired prices. Historical replay never writes this ledger.
 """
 from __future__ import annotations
 import json
+import math
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -117,6 +118,21 @@ def track(ledger, odds, config):
     settled = SETTLE.settle_team_shots(output,results)
     return output,settled,freshness
 
+def closing_values(rows):
+    """CLV is signed; zero is a valid observation, not missing evidence."""
+    values = []
+    for row in rows:
+        if str(row.get('true_close')).lower() != 'true':
+            continue
+        try:
+            value = float(row.get('published_to_close_clv'))
+        except (ValueError, TypeError):
+            continue
+        if math.isfinite(value):
+            values.append(value)
+    return values
+
+
 def main():
     config = json.loads(CONFIG.read_text(encoding='utf8'))
     now = datetime.now(timezone.utc)
@@ -137,7 +153,7 @@ def main():
     if rejected:
         explanation += 'Excluded archive rows: '+', '.join(f'{k}={v}' for k,v in sorted(rejected.items()))+'.'
     payload = dict(generated_at=PUB.fmt_dt(now),activated_at=config['activated_at'],status=config['status'],count_gate='FIXED CANDIDATE',market_gate='FORWARD COLLECTION ACTIVE',promotion_gate='BLOCKED',live_routing=False,prospective=dict(signals=len(ledger),settled=len(done),pending=len(ledger)-len(done),pnl_units=pnl,roi=pnl/len(done) if done else None),latest_scan=dict(scored_rows=len(candidates),scored_fixtures=len({r['match_id'] for r in candidates}),explanation=explanation),settled_this_run=settled,result_source=freshness,review_policy=config['review_policy'])
-    closes = [float(r['published_to_close_clv']) for r in done if str(r.get('true_close')).lower() == 'true' and PUB.pf(r.get('published_to_close_clv')) is not None]
+    closes = closing_values(done)
     age_days = (now-PUB.parse_dt(config['activated_at'])).days
     payload['prospective'].update(wins=sum(r['result']=='won' for r in done),losses=sum(r['result']=='lost' for r in done),true_close_count=len(closes),mean_clv=sum(closes)/len(closes) if closes else None)
     payload['review_status'] = 'MANUAL_REVIEW_DUE' if len(done)>=150 and age_days>=56 else 'COLLECTING_FIXED_POLICY'

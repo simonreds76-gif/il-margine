@@ -28,6 +28,12 @@ def candidates():
     return S.score_pairs(S.V.paired_rows(latest,S.PAIR_FIELDS),history(),CONFIG)[0]
 
 class ShadowTests(unittest.TestCase):
+    def test_closing_summary_keeps_zero_and_negative_clv(self):
+        values = [0, '0', -.02, '.04', '', None, 'nan', 'inf', 'bad']
+        rows = [dict(true_close=True, published_to_close_clv=value) for value in values]
+        rows.append(dict(true_close=False, published_to_close_clv=.9))
+        self.assertEqual(S.closing_values(rows), [0, 0, -.02, .04])
+
     def test_no_backdated_registration(self):
         rows=candidates()
         self.assertTrue(rows)
