@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <title>All football leagues</title>
+  <defs>
+    <linearGradient id="all-world" x1="12" y1="8" x2="44" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#254B43"/>
+      <stop offset="1" stop-color="#122B29"/>
+    </linearGradient>
+    <linearGradient id="all-ball" x1="34" y1="31" x2="55" y2="57" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B0F3DA"/>
+      <stop offset="1" stop-color="#00C998"/>
+    </linearGradient>
+  </defs>
+  <circle cx="27" cy="27" r="21" fill="url(#all-world)" stroke="#85E6C5" stroke-width="2"/>
+  <path d="M8.5 18H45.5M6 27H48M8.5 36H45.5" stroke="#85E6C5" stroke-opacity=".3" stroke-width="1.5"/>
+  <ellipse cx="27" cy="27" rx="10" ry="21" stroke="#85E6C5" stroke-opacity=".4" stroke-width="1.5"/>
+  <path d="M14 13.5L21 10.5L25 14L23 19L18 20L16 25L11 22L10 18L14 13.5Z" fill="#85E6C5"/>
+  <path d="M18 29L24 27L29 31L27 36L24 38L22 44L19 40L20 35L18 29Z" fill="#00C998"/>
+  <path d="M32 12L37 13L43 19L40 23L34 21L31 24L28 21L30 17L32 12Z" fill="#85E6C5"/>
+  <circle cx="44" cy="44" r="16" fill="#0F1117"/>
+  <circle cx="44" cy="44" r="13.5" fill="url(#all-ball)" stroke="#E7F5EF" stroke-width="1.5"/>
+  <path d="M44 37.5L50.2 42L47.8 49.2H40.2L37.8 42L44 37.5Z" fill="#12382F"/>
+  <path d="M44 37.5V30.5M50.2 42L56.9 39.8M47.8 49.2L52 54.8M40.2 49.2L36 54.8M37.8 42L31.1 39.8" stroke="#12382F" stroke-width="1.6" stroke-linejoin="round"/>
+</svg>

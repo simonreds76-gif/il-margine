@@ -54,7 +54,7 @@ export default function PlayerProps({
   const [loading, setLoading] = useState(!hasInitialPayload);
 
   const leagueConfig = [
-    { id: "all", name: "All Leagues", color: "emerald", logoPath: "/icons/markets/other-football.svg", logoClassName: naturalLogoFilter },
+    { id: "all", name: "All Leagues", color: "emerald", logoPath: "/icons/markets/all-football-leagues.svg", logoClassName: "" },
     { id: "pl", name: "Premier League", color: "purple", logoPath: "/league-logos/epl.png", logoClassName: lowContrastLogoFilter },
     { id: "seriea", name: "Serie A", color: "blue", logoPath: "/league-logos/serie-a.png", logoClassName: naturalLogoFilter },
     { id: "laliga", name: "La Liga", color: "red", logoPath: "/league-logos/la-liga.png", logoClassName: naturalLogoFilter },
@@ -62,7 +62,7 @@ export default function PlayerProps({
     { id: "ligue1", name: "Ligue 1", color: "cyan", logoPath: "/league-logos/ligue-1.png", logoClassName: darkLogoFilter },
     { id: "ucl", name: "Champions League", color: "amber", logoPath: "/icons/markets/ucl-official.svg", logoClassName: darkLogoFilter },
     { id: "worldcup", name: "World Cup", color: "emerald", logoPath: "/world-cup-trophy.svg", logoClassName: naturalLogoFilter },
-    { id: "other", name: "Other", color: "slate", logoPath: "/icons/markets/other-football.svg", logoClassName: naturalLogoFilter },
+    { id: "other", name: "Other competitions", color: "slate", logoPath: "/icons/markets/other-football-competitions.svg", logoClassName: "" },
   ];
 
   const colorClasses: Record<string, { border: string; text: string; bg: string; bar: string }> = {
@@ -327,6 +327,16 @@ export default function PlayerProps({
               );
             })}
           </div>
+
+          <Link
+            href="/football-atlas"
+            prefetch={false}
+            className="mt-5 flex w-fit max-w-full items-center gap-3 rounded-lg border border-emerald-300/20 bg-emerald-300/5 px-4 py-3 text-sm text-slate-200 transition-colors hover:border-emerald-300/50 hover:bg-emerald-300/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-300"
+          >
+            <Image src="/icons/markets/all-football-leagues.svg" alt="" width={32} height={32} className="shrink-0" />
+            <span><strong className="block font-semibold text-emerald-200">Explore Football Return Atlas</strong><span className="mt-0.5 block text-xs text-slate-400">Club betting history by league, odds and home or away</span></span>
+            <span aria-hidden="true" className="ml-1 text-lg text-emerald-200">↗</span>
+          </Link>
 
         </div>
       </section>
