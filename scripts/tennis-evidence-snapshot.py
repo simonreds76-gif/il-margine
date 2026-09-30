@@ -121,6 +121,7 @@ def build_snapshot() -> dict[str, Any]:
         "tennis_most_aces_prices": module.most_aces_price_summary(),
         "tennis_props_market_benchmark": module.tennis_props_market_benchmark(),
         "tennis_props_shadow_decision": module.tennis_props_shadow_decision(),
+        "tennis_props_pipeline_health": module.load_json(module.TENNIS_PROPS_PIPELINE_HEALTH),
     }
     stable = {
         "schema_version": SCHEMA_VERSION,
@@ -150,7 +151,9 @@ def read_json(path: Path) -> dict[str, Any]:
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    temporary = path.with_name(path.name + f".{os.getpid()}.tmp")
+    temporary.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    temporary.replace(path)
 
 
 def upload_snapshot(snapshot_key: str, payload: dict[str, Any]) -> bool:
@@ -209,6 +212,11 @@ def main() -> int:
     output = Path(args.output)
     previous = read_json(output)
     payload = build_snapshot()
+    # A local write is not an upload receipt. Retry failed uploads even if the
+    # next scheduled run has identical evidence.
+    uploaded_hash = previous.get("last_uploaded_payload_hash")
+    if uploaded_hash:
+        payload["last_uploaded_payload_hash"] = uploaded_hash
     write_json(output, payload)
     unchanged = previous.get("payload_hash") == payload.get("payload_hash")
     print(
@@ -216,10 +224,14 @@ def main() -> int:
         f"hash={payload['payload_hash'][:12]}, unchanged={str(unchanged).lower()}"
     )
     if args.supabase:
-        if unchanged:
+        if uploaded_hash == payload["payload_hash"]:
             print("Supabase upload skipped: evidence payload is unchanged.")
         elif upload_snapshot(args.snapshot_key, payload):
+            payload["last_uploaded_payload_hash"] = payload["payload_hash"]
+            write_json(output, payload)
             print(f"Uploaded tennis evidence snapshot '{args.snapshot_key}'.")
+        else:
+            return 1
     return 0
 
 

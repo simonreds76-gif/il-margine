@@ -17,6 +17,22 @@ SPEC.loader.exec_module(MODULE)
 
 
 class TennisEvidenceSnapshotTests(unittest.TestCase):
+    def test_failed_upload_retries_unchanged_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "snapshot.json"
+            payload = {"payload_hash": "same", "generated_at": "2026-09-30T10:00:00Z", "sections": {}}
+            MODULE.write_json(output, payload)
+            with patch.object(sys, "argv", ["snapshot", "--supabase", "--output", str(output)]), patch.object(MODULE, "build_snapshot", return_value=dict(payload)), patch.object(MODULE, "upload_snapshot", return_value=False) as upload:
+                self.assertEqual(MODULE.main(), 1)
+                upload.assert_called_once()
+            with patch.object(sys, "argv", ["snapshot", "--supabase", "--output", str(output)]), patch.object(MODULE, "build_snapshot", return_value=dict(payload)), patch.object(MODULE, "upload_snapshot", return_value=True) as upload:
+                self.assertEqual(MODULE.main(), 0)
+                upload.assert_called_once()
+            self.assertEqual(MODULE.read_json(output)["last_uploaded_payload_hash"], "same")
+            with patch.object(sys, "argv", ["snapshot", "--supabase", "--output", str(output)]), patch.object(MODULE, "build_snapshot", return_value=dict(payload)), patch.object(MODULE, "upload_snapshot") as upload:
+                self.assertEqual(MODULE.main(), 0)
+                upload.assert_not_called()
+
     def test_snapshot_contains_all_hosted_tennis_sections(self) -> None:
         payload = MODULE.build_snapshot()
         self.assertEqual(payload["schema_version"], 2)

@@ -22,7 +22,8 @@ if ([string]::IsNullOrWhiteSpace($env:CHALLENGER_ML_ENABLE)) { $env:CHALLENGER_M
 if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED)) { $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_BO3_ENABLED)) { $env:STRICT_CLAY_BO3_ENABLED = "1" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_GRASS_BO3_ENABLED)) { $env:STRICT_GRASS_BO3_ENABLED = "1" }
-if ([string]::IsNullOrWhiteSpace($env:STRICT_CPI_SPEED_SHADOW_ENABLED)) { $env:STRICT_CPI_SPEED_SHADOW_ENABLED = "1" }
+# Retired pending identity-clean gate regeneration; retained archives are diagnostic only.
+if ([string]::IsNullOrWhiteSpace($env:STRICT_CPI_SPEED_SHADOW_ENABLED)) { $env:STRICT_CPI_SPEED_SHADOW_ENABLED = "0" }
 if ([string]::IsNullOrWhiteSpace($env:CLAY_BO3_ML_ENABLE)) { $env:CLAY_BO3_ML_ENABLE = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_HARD_CALIBRATION_MODE)) { $env:STRICT_POLICY_HARD_CALIBRATION_MODE = "off" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_HARD_CALIBRATION_LIVE)) { $env:STRICT_HARD_CALIBRATION_LIVE = "0" }
@@ -336,6 +337,11 @@ try {
     }
 
     Log "=== Step 8a/8: Capture tennis props prices ==="
+    # Reuse the hosted job after a missed schedule; at most one fallback per UTC day.
+    $hostedCaptureExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\ensure-tennis-props-capture.py") -Label "hosted tennis props freshness recovery" -TimeoutSeconds 420
+    if ($hostedCaptureExit -ne 0) {
+        Log "WARNING: hosted tennis props recovery could not confirm fresh prices; comparison freshness checks remain enforced."
+    }
     $tennisPropsCaptureExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--as-of", (Get-Date -Format "yyyy-MM-dd"), "--capture-only") -Label "tennis props price capture" -TimeoutSeconds 540
     if ($tennisPropsCaptureExit -ne 0) {
         Log "WARNING: tennis props price capture failed/timed out (exit $tennisPropsCaptureExit), continuing..."
@@ -351,9 +357,18 @@ try {
     # Capture and settlement must survive a timeout in the independent,
     # historical projection-board build.
     Log "=== Step 8c/8: Tennis props comparison and settlement ==="
-    $tennisPropsCompareExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--as-of", (Get-Date -Format "yyyy-MM-dd"), "--comparison-only", "--skip-hosted-sync", "--skip-derived-boards") -Label "tennis props hosted-price comparison" -TimeoutSeconds 420
+    $tennisPropsCompareExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--as-of", (Get-Date -Format "yyyy-MM-dd"), "--comparison-only", "--skip-derived-boards") -Label "tennis props hosted-price comparison" -TimeoutSeconds 420
     if ($tennisPropsCompareExit -ne 0) {
         Log "WARNING: tennis props hosted-price comparison failed (exit $tennisPropsCompareExit), continuing..."
+        $propsHealth = $null
+        try { $propsHealth = Get-Content -LiteralPath (Join-Path $root "data\tennis-props\pipeline-health.json") -Raw | ConvertFrom-Json } catch {}
+        $priceFreshnessFailed = $null -eq $propsHealth -or
+            $propsHealth.as_of -ne (Get-Date -Format "yyyy-MM-dd") -or
+            $propsHealth.state -in @("CORE_RUN_IN_PROGRESS", "CORE_RUN_FAILED", "FEED_MISSING", "COMPARISON_MISSING", "BOARD_MATCH_FAILED") -or
+            [int]$propsHealth.fresh_upcoming_line_rows -lt [int]$propsHealth.upcoming_line_rows
+        if ($priceFreshnessFailed) {
+            Set-RunStatusFailure "TennisPropsRefreshFailed" "Tennis props prices/comparison are stale or unavailable. Inspect data/tennis-props/pipeline-health.json."
+        }
     }
 
     Log "=== Step 8c.1/8: Telegram tennis props delta ==="
