@@ -14,7 +14,7 @@ It uses the same frozen Opponent raw probability and same-book proportional
 market probability, retains first-scan no-bet decisions and selects at most one
 hypothetical 1u bet per model and fixture at the frozen 3% EV threshold.
 The controls keep their original rules. Both quotes must be before kickoff,
-within 24 hours of kickoff, fresh under the existing six-hour rule and within
+within 24 hours of kickoff, fresh under the existing three-hour rule and within
 15 minutes of each other. Features exclude the entire earlier quote day.
 
 Old cohort lines remain byte-for-byte in the append-only JSONL. The current

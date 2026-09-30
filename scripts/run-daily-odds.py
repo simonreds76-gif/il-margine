@@ -186,22 +186,25 @@ def main() -> int:
             env_overrides={"SPREAD_V1_ENABLE_CORRECTION_ONLY": "1"},
         )
 
-        cpi_speed_cmd = [
-            sys.executable,
-            str(ROOT / "scripts" / "strict-policy-report.py"),
-            "--append",
-            "--signal-profile",
-            "cpi_speed_shadow",
-        ]
-        if args.strict_report_date:
-            cpi_speed_cmd.extend(["--date", args.strict_report_date])
-        run_cmd(
-            cpi_speed_cmd,
-            label="6a/6 CPI speed-regime Shadow append",
-            fatal=False,
-            timeout_seconds=step_timeout,
-            env_overrides={"INTERNAL_RESEARCH_LANES": "1"},
-        )
+        if _env_bool("STRICT_CPI_SPEED_SHADOW_ENABLED", False):
+            cpi_speed_cmd = [
+                sys.executable,
+                str(ROOT / "scripts" / "strict-policy-report.py"),
+                "--append",
+                "--signal-profile",
+                "cpi_speed_shadow",
+            ]
+            if args.strict_report_date:
+                cpi_speed_cmd.extend(["--date", args.strict_report_date])
+            run_cmd(
+                cpi_speed_cmd,
+                label="6a/6 CPI speed-regime Shadow append",
+                fatal=False,
+                timeout_seconds=step_timeout,
+                env_overrides={"INTERNAL_RESEARCH_LANES": "1"},
+            )
+        else:
+            print("CPI speed shadow paused; retained history is available for audit.")
 
         run_cmd(
             [sys.executable, str(ROOT / "scripts" / "tennis-shadow-proof-report.py")],

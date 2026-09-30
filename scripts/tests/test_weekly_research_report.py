@@ -188,7 +188,10 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertIn("Goalscorer gaps [ZERO-STAKE]", message)
         self.assertIn("weekly verdict", message)
         self.assertIn("| capture ", message)
-        self.assertLessEqual(len(message), 4096)
+        chunks = REPORT["telegram_chunks"](message)
+        self.assertTrue(all(len(chunk) <= 4096 for chunk in chunks))
+        restored = "\n".join(chunk.split("\n", 1)[1] for chunk in chunks) if len(chunks) > 1 else chunks[0]
+        self.assertEqual(restored, message)
 
     def test_tennis_only_telegram_report_is_complete_and_compact(self) -> None:
         message = REPORT["tennis_telegram_text"](REPORT["build_payload"]())

@@ -14,12 +14,15 @@ import hashlib
 import importlib.util
 import json
 import os
+import sys
 import time
 import urllib.error
 import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from tennis_monitor_integrity import build_integrity
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -113,6 +116,7 @@ def build_snapshot() -> dict[str, Any]:
         # lag for months, so transport their compact summaries with the other
         # local evidence instead of reconstructing them on GitHub.
         "tennis_model_evidence": tennis_model_evidence,
+        "tennis_monitor_integrity": build_integrity(ROOT),
         "tennis_props_v3": module.tennis_props_v3_snapshot(),
         "tennis_rate_trend": module.rate_trend_summary(),
         "tennis_props_v4": module.load_json(module.TENNIS_PROPS_V4_JSON),

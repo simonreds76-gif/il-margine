@@ -289,7 +289,8 @@ def main():
     if not base_path.exists() or not odds_path.exists():
         raise SystemExit('Missing archive input; existing paired evidence retained')
     raw=PUB.load_csv(odds_path); base=PUB.load_csv(base_path)
-    fresh,rejected=O.fresh_prices(raw,config,now)
+    registered=[r for r in raw if r.get('bookmaker','').lower()=='bet365' and r.get('market')=='TEAM_SHOTS']
+    fresh,rejected=O.fresh_prices(registered,config,now)
     latest=PUB.latest_team_shots_odds(fresh,now)
     pairs=[]
     for pair in V.paired_rows(latest,O.PAIR_FIELDS):

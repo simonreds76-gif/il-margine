@@ -12,7 +12,7 @@
   "training_contracts": 772,
   "freeze_reason": "Retain the exact final diagnostic fold parameters. No refit or ROI optimisation after inspecting September.",
   "diagnostic_sha256": "0af16fa03b801df73902beacd20c2dafc0899d58e0d237e56937c8e2f5baec59",
-  "market": "Bet365 TEAM_SHOTS paired half-lines; top five leagues; within 24h of kickoff; quote age <=6h; pair skew <=15min.",
+  "market": "Bet365 TEAM_SHOTS paired half-lines; top five leagues; within 24h of kickoff; quote age <=3h; pair skew <=15min.",
   "probability": "logit(market) + intercept + weight * (logit(Opponent raw) - logit(market)); proportional same-book de-vig.",
   "review_milestones_fixtures": [
     50,
