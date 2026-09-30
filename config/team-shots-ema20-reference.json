@@ -1,0 +1,33 @@
+{
+  "source_commit": "5b6fc5331",
+  "inference_source_sha256": "276d3e28c0d6d429cce7da1a7cf761098249cb4faed9605a9c87d50ae2aa314e",
+  "feature_source_sha256": "5034ac531e7788183a83c20b68ca81b0f6901674633d85252ac7c102395f896e",
+  "inference_functions": [
+    "canonical_team_shots_ema20_lambda",
+    "clamp",
+    "ema20",
+    "ema20_prefer",
+    "enough_ema_history",
+    "estimate_alpha",
+    "market_game_state_adjustment",
+    "mean",
+    "negative_binomial_prob_over",
+    "pf",
+    "poisson_prob_over",
+    "quality_adjustment",
+    "venue_field"
+  ],
+  "feature_functions": [
+    "avg",
+    "numeric",
+    "parse_float",
+    "ratio",
+    "summarize_ema_window",
+    "summarize_window",
+    "weighted_avg"
+  ],
+  "selection_min_edge": 0.05,
+  "max_picks_per_fixture": 1,
+  "market_strength": "neutral, matching the historical live publisher",
+  "note": "New feature cutoff is the earlier paired quote date; future and duplicate rows rejected. Original probability math retained, safety changes are explicit."
+}

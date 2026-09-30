@@ -47,6 +47,7 @@ def main() -> int:
         "--corners-model", "corners-v3-shadow",
     )
     run(str(SCRIPTS / "football-counts-vnext-gate.py"))
+    run(str(SCRIPTS / "team-shots-paired-reference.py"))
     return 0
 
 
