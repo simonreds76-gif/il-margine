@@ -1,6 +1,7 @@
 ﻿import path from "node:path";
 
 const KNOWN_PROJECT_FILE_PATHS = {
+  "data/football-form/team-shots-paired-reference-status.json": path.join(process.cwd(), "data/football-form/team-shots-paired-reference-status.json"),
   "data/backtest/clay-prob-calibration.json": path.join(process.cwd(), "data/backtest/clay-prob-calibration.json"),
   "data/backtest/policy-profile-backtest-2022-2025.txt": path.join(process.cwd(), "data/backtest/policy-profile-backtest-2022-2025.txt"),
   "data/backtest/shadow-profile-comparison.txt": path.join(process.cwd(), "data/backtest/shadow-profile-comparison.txt"),
