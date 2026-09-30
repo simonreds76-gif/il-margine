@@ -32,6 +32,23 @@ VERSION = 'paired-first-quote-20260930'
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
 
+def model_fingerprint():
+    # Normalize checkout line endings so Windows and Linux agree. Changing
+    # weights, helpers or selection code requires a new registered experiment.
+    names=['scripts/team-shots-paired-reference.py','scripts/team_shots_ema20_reference.py',
+        'scripts/team_shots_ema20_features.py','scripts/publish-football-vnext-shadow.py',
+        'scripts/publish-football-research-picks.py','scripts/build-football-form-layer.py',
+        'scripts/backtest-football-form-layer.py','scripts/team_shots_opponent.py',
+        'scripts/team-shots-opponent-shadow.py','scripts/football_counts.py','scripts/football_market.py',
+        'scripts/football_team_names.py','data/team-shots/team-shots-v4-params.json',
+        'data/team-shots/team-shots-v4-lock.json','data/team-shots/team-shots-opponent-config.json']
+    values={name:hashlib.sha256((ROOT/name).read_text(encoding='utf8').encode()).hexdigest() for name in names}
+    return hashlib.sha256(json.dumps(values,sort_keys=True).encode()).hexdigest()
+
+def check_fingerprint(existing, fingerprint):
+    if any(r.get('model_fingerprint')!=fingerprint for r in existing):
+        raise ValueError('Comparison model code or weights changed; review and register a new cohort before collecting')
+
 def contract(row):
     kickoff = row.get('kickoff') or PUB.parse_dt(row.get('kickoff_utc'))
     return '|'.join([kickoff.isoformat(),row.get('league_slug') or row['league'],
@@ -252,6 +269,8 @@ def main():
         pairs.append(pair)
     ledger_path=args.output_dir/'team-shots-paired-reference.jsonl'
     existing=[json.loads(s) for s in ledger_path.read_text(encoding='utf8').splitlines() if s.strip()] if ledger_path.exists() else []
+    fingerprint=model_fingerprint()
+    check_fingerprint(existing,fingerprint)
     seen={r['contract_id'] for r in existing}
     pairs=[p for p in pairs if contract(p['over']) not in seen]
     opponent_base=O.read_base(base_path) if pairs else []
@@ -260,7 +279,9 @@ def main():
     select_first_scan(records,existing)
     hashes={str(p.relative_to(ROOT)):digest(p) for p in [Path(__file__),ROOT/'scripts/team_shots_ema20_reference.py',ROOT/'scripts/team_shots_ema20_features.py',V.TEAM_PARAMS,V.TEAM_LOCK,O.CONFIG,ROOT/'scripts/publish-football-vnext-shadow.py',ROOT/'scripts/team_shots_opponent.py']}
     hashes.update(base_sha256=digest(base_path),odds_sha256=digest(odds_path),match_odds_sha256=digest(match_path))
-    for record in records: record['source_hashes']=hashes
+    for record in records:
+        record['source_hashes']=hashes
+        record['model_fingerprint']=fingerprint
     ledger,added=append_new(ledger_path,records)
     status=summarize(ledger,base,now)
     status.update(generated_at=PUB.fmt_dt(now),new_contracts=added,scan_exclusions=dict(rejected),

@@ -19,6 +19,11 @@ def record(cid='x',prob=.6):
         line=10.5,bookmaker='Bet365',odds={'over':2.,'under':2.},models={m:dict(p_over=prob,mean=12.,minimum_edge=.05) for m in P.MODELS})
 
 class PairedTests(unittest.TestCase):
+    def test_model_changes_require_a_separate_cohort(self):
+        P.check_fingerprint([{'model_fingerprint':'old'}],'old')
+        with self.assertRaises(ValueError):
+            P.check_fingerprint([{'model_fingerprint':'old'}],'changed_weights')
+
     def test_append_preserves_original_and_retains_no_bet(self):
         with tempfile.TemporaryDirectory() as td:
             path=Path(td)/'ledger.jsonl'; original=record(prob=.5)
