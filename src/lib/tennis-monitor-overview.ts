@@ -7,12 +7,15 @@ export type TennisOverviewRow = {
   wins: number | null; losses: number | null; roi: number | null; pnl: number | null;
   stake: number | null; closes: number | null; date: string | null; fixtures: number | null;
   reportDate: string | null; cohort: string | null;
+  overdue: number | null; recentPending: number | null; latestSignal: string | null;
 };
 export function tennisOverviewRows(snapshot: EvidenceObject): TennisOverviewRow[] {
   const sections = object(snapshot.sections);
   const lanes = object(object(sections.tennis_model_evidence).lanes);
+  const integrity = object(object(sections.tennis_monitor_integrity).lanes);
   function row(id: string, name: string, data: EvidenceObject, group: TennisOverviewRow["group"], status: string, note: string): TennisOverviewRow {
     const record = object(data.record);
+    const laneHealth = object(integrity[id]);
     return { id, name, group, status, note,
       settled: numeric(data.settled), pending: numeric(data.pending),
       wins: numeric(data.wins ?? record.wins), losses: numeric(data.losses ?? record.losses),
@@ -20,11 +23,13 @@ export function tennisOverviewRows(snapshot: EvidenceObject): TennisOverviewRow[
       closes: numeric(object(data.clv).rows ?? data.clv_rows ?? data.clv_coverage), date: typeof data.as_of_date === "string" ? data.as_of_date : null,
       reportDate: typeof data.generated_at === "string" ? data.generated_at : null,
       cohort: typeof data.evidence_period === "string" ? data.evidence_period : null,
+      overdue: numeric(laneHealth.overdue), recentPending: numeric(laneHealth.recent_pending),
+      latestSignal: typeof laneHealth.latest_signal_date === "string" ? laneHealth.latest_signal_date : null,
       fixtures: numeric(data.independent_fixtures) };
   }
   const result = [
-    row("strict", "Strict ML", object(lanes.strict), "tracked", "Established tracker", "Existing moneyline policy. Old results do not establish current form; inspect the evidence date."),
-    row("volume_200", "Volume 200", object(lanes.volume_200), "tracked", "Expansion tracker", "Reported separately from Strict. Closing-price evidence is required before judging the edge."),
+    row("strict", "Strict policy", object(lanes.strict), "tracked", "Hard-court Masters", "High-confidence hard-court Masters selections. The record includes eligible moneyline and handicap bets. An old last-selection date does not mean the daily refresh failed."),
+    row("volume_200", "Volume 200", object(lanes.volume_200), "research", "ATP moneyline research", "Current ATP moneyline research policy, reported separately from Strict. Price coverage and probability accuracy must support any claim of an edge."),
     row("challenger", "Challenger ML v2", object(lanes.challenger), "research", "Research only", "Hypothetical one-unit results. Real stake is zero. The rejected original batch is excluded."),
     row("spread_v1", "Spread v1", object(lanes.spread_v1), "research", "Research only", "Handicap selections are a separate record from moneyline bets."),
     row("aces_dfs", "Aces and double faults", object(sections.tennis_props_shadow_decision), "research", "Research only", `Price coverage: ${String(object(object(sections.tennis_props_shadow_decision).feed).state ?? "unavailable").replaceAll("_", " ").toLowerCase()}.`),

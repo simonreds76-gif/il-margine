@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import ShotsCalibrationPanel from "@/components/model-monitor/ShotsCalibrationPanel";
 import FootballVnextShadowPanel, { type FootballVnextGate } from "@/components/model-monitor/FootballVnextShadowPanel";
 import { parseMonitorCsv } from "@/lib/monitor-csv";
 import {
@@ -32,6 +33,7 @@ export default async function TeamShotsMonitorPage() {
       <main className="mx-auto flex max-w-7xl flex-col gap-4">
         <MonitorNav current="team-shots" />
         <FootballLaneNav current="team-shots" />
+        <ShotsCalibrationPanel />
         <HeroCard title="Team Shots v4" eyebrow="Current 2026/27 evidence">
           <span className="text-slate-300">One registered research selection per fixture, including matchday 1-3 rows.</span>{" "}
           <span className="text-slate-500">Results, total staked, P/L and ROI stay visible while promotion remains gated.</span>

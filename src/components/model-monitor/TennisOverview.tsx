@@ -13,10 +13,11 @@ function ModelCard({ row }: { row: TennisOverviewRow }) {
       <div><dt className="text-xs text-slate-400">Profit / loss</dt><dd className={tone(row.pnl)}>{value(row.pnl, "u", 2)}</dd></div>
       <div><dt className="text-xs text-slate-400">Settled selections</dt><dd>{value(row.settled)}</dd></div>
       <div><dt className="text-xs text-slate-400">Wins / losses</dt><dd>{row.wins === null || row.losses === null ? "Unavailable" : `${row.wins} / ${row.losses}`}</dd></div>
-      <div><dt className="text-xs text-slate-400">Pending observations</dt><dd>{value(row.pending)}</dd></div>
+      <div><dt className="text-xs text-slate-400">Unresolved in ROI cohort</dt><dd>{value(row.pending)}</dd></div>
       <div><dt className="text-xs text-slate-400">Closing-price rows</dt><dd>{value(row.closes)}</dd></div>
     </dl>
     {row.fixtures !== null && <p className="mt-4 text-sm text-amber-200">{row.fixtures} independent fixtures in the paired experiment</p>}
+    {row.overdue !== null && <p className="mt-4 text-sm leading-6 text-amber-200">Full archive: {value(row.recentPending)} recent unresolved, {value(row.overdue)} overdue by more than 48 hours. Overdue entries need settlement evidence; they are not automatically voided. Latest selection: {row.latestSignal ?? "unavailable"}.</p>}
     <div className="mt-4 border-t border-slate-800 pt-3 text-xs leading-5 text-slate-400"><p>Report cutoff: {row.date ?? "not supplied"}{row.stake !== null ? ` · ${value(row.stake, "u", 2)} recorded stakes` : ""}</p>{row.reportDate && <p>Report generated: {row.reportDate}</p>}{row.cohort && <p>Cohort: {row.cohort === "clean" ? "current-policy reporting period" : row.cohort}. A cutoff is not the latest match date.</p>}</div>
   </article>;
 }
@@ -28,6 +29,12 @@ export default async function TennisOverview() {
   const rows = snapshot ? tennisOverviewRows(snapshot) : [];
   const sections = object(snapshot?.sections);
   const health = object(sections.tennis_props_pipeline_health);
+  const integrity = object(sections.tennis_monitor_integrity);
+  const generation = object(integrity.generation);
+  const closing = object(integrity.closing_capture);
+  const props = object(integrity.props);
+  const captureAge = typeof health.latest_capture_utc === "string" ? (checkedAt - Date.parse(health.latest_capture_utc)) / 36e5 : Infinity;
+  const issueLanes = object(integrity.lanes);
   return <main className="min-h-screen bg-slate-950 px-4 py-8 text-slate-100"><div className="mx-auto max-w-6xl">
     <p className="text-xs font-semibold uppercase tracking-widest text-emerald-300">Private model monitor</p>
     <h1 className="mt-3 text-3xl font-semibold">Tennis models, clearly separated</h1>
@@ -36,7 +43,15 @@ export default async function TennisOverview() {
     <div className={`mb-6 rounded-xl border p-4 ${stale ? "border-amber-700 text-amber-200" : "border-slate-700 text-slate-300"}`}>
       <p>{snapshot ? `Evidence snapshot: ${generated ?? "unknown"}${stale ? ". Needs refresh." : "."}` : "Evidence unavailable. Missing data is not zero profit or zero signals."}</p>
       {typeof health.state === "string" && <p className="mt-2 text-sm">Props feed: {health.state.replaceAll("_", " ").toLowerCase()}. Latest capture: {String(health.latest_capture_utc ?? "unknown")}.</p>}
+      {generation.completed_at != null && <p className="mt-2 text-sm">Last signal refresh: {String(generation.completed_at)}. Result: {String(generation.status ?? "unknown")}. Closing-price capture: {String(closing.state ?? "unknown")} at {String(closing.utc_time ?? "unknown")}.</p>}
+      {(!Number.isFinite(captureAge) || captureAge > 6) && <p className="mt-2 text-sm text-amber-200">Props prices need a fresh capture. An old snapshot does not establish currently available odds.</p>}
+      {props.two_way_rows === 0 && <p className="mt-2 text-sm text-amber-200">{String(props.one_sided_rows ?? 0)} ace and double-fault milestone prices. A single back price is normal for these markets. We can measure model value at that price; market margin removal is unavailable without the opposite side.</p>}
+      {typeof props.quarantined_most_aces === "number" && props.quarantined_most_aces > 0 && <p className="mt-2 text-sm text-amber-200">Most aces: {props.quarantined_most_aces} observations remain quarantined and excluded from usable evidence.</p>}
     </div>
+    <details className="mb-6 rounded-xl border border-slate-700 p-4"><summary className="cursor-pointer text-sm font-semibold">Unresolved settlement issues</summary><p className="mt-3 text-xs text-slate-400">Retained archive entries older than 48 hours. Missing results do not justify inventing a settlement.</p><div className="mt-3 space-y-3">{Object.entries(issueLanes).flatMap(([lane, raw]) => {
+      const issues = object(raw).issues;
+      return Array.isArray(issues) ? issues.map((entry, index) => { const issue = object(entry); return <p key={`${lane}-${index}`} className="text-sm leading-6 text-slate-300">{lane.replaceAll("_", " ")} · {String(issue.date)} · {String(issue.player1)} vs {String(issue.player2)}<br/><span className="text-xs text-slate-400">{String(issue.settlement_note || issue.settlement_status)}</span></p>; }) : [];
+    })}</div></details>
     {([ ["tracked", "Established trackers"], ["research", "Research results"] ] as const).map(([group, title]) => <section key={group} id={group} className="mb-9 scroll-mt-24"><h2 className="mb-4 text-xl font-semibold">{title}</h2><div className="grid gap-4 lg:grid-cols-2">{rows.filter(row => row.group === group).map(row => <ModelCard key={row.id} row={row} />)}</div></section>)}
     <section id="blocked" className="mb-9 scroll-mt-24"><details className="rounded-xl border border-amber-900/70 p-5"><summary className="cursor-pointer text-lg font-semibold text-amber-200">Blocked or not connected ({rows.filter(row => row.group === "blocked").length})</summary><p className="mt-3 text-sm text-slate-400">These are outstanding research tasks, not active betting recommendations.</p><div className="mt-4 divide-y divide-slate-800">{rows.filter(row => row.group === "blocked").map(row => <article key={row.id} className="py-4"><div className="flex flex-wrap justify-between gap-2"><h3 className="font-semibold">{row.name}</h3><span className="text-sm text-amber-200">{row.status}</span></div><p className="mt-2 text-sm leading-6 text-slate-300">{row.note}</p>{row.reportDate && <p className="mt-2 text-xs text-slate-400">Report generated: {row.reportDate}</p>}</article>)}</div></details></section>
     <details className="rounded-xl border border-slate-800 p-4 text-sm text-slate-400"><summary className="cursor-pointer text-slate-200">Inactive models and record definitions</summary><p className="mt-3">Old vNext experiments, the invalidated hard-court calibration, the original Challenger batch and paused CPI research are excluded from this dashboard’s current results. Grass and clay seasonal histories remain in the detailed ledgers. Historical files are retained for audit.</p><p className="mt-3">One unit is a standard stake. ROI is profit divided by recorded stakes. Research profits are hypothetical. Void or pushed selections can make settled totals differ from wins plus losses. Missing metrics remain unavailable.</p></details>
