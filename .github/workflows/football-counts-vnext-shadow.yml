@@ -170,6 +170,8 @@ jobs:
             # Refresh reason-coded scan telemetry even when the heavier daily
             # settlement stack is intentionally skipped.
             python scripts/football-counts-vnext-gate.py
+            # Same archived prices and fixed models; no new API requests.
+            python scripts/team-shots-paired-reference.py
           fi
           python scripts/team-shots-live-snapshot.py
           python scripts/corners-live-snapshot.py
@@ -241,6 +243,15 @@ jobs:
           fi
           # These controls come from the same bounded Bet365 payload as Team
           git add -f data/football-form/team-shots-opponent-shadow.csv data/football-form/team-shots-opponent-candidates.csv data/football-form/team-shots-opponent-status.json
+          # Save first-quote forecasts on hourly scans as well as daily runs.
+          # Empty scans can have a status file without a ledger yet.
+          for paired_evidence in \
+            data/football-form/team-shots-paired-reference.jsonl \
+            data/football-form/team-shots-paired-reference-status.json; do
+            if [[ -f "$paired_evidence" ]]; then
+              git add -f "$paired_evidence"
+            fi
+          done
           # Shots, so retaining them adds no API calls. Stage them on both full
           # and near-kickoff runs. `-f` is required for the 1X2 CSV because the
           # broad football-form CSV ignore rule predates this evidence file.
