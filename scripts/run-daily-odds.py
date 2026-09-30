@@ -116,7 +116,7 @@ def main() -> int:
 
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "supplement-masters-qualifying.py")],
-        label="2/6 Masters qualifying schedule coverage",
+        label="2/6 ATP qualifying schedule and price coverage",
         fatal=True,
         timeout_seconds=min(step_timeout, 180),
     )

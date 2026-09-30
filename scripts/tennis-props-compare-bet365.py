@@ -791,6 +791,47 @@ def within_date_drift(line_date: str, row: dict[str, str], max_days: int) -> boo
     return drift is not None and drift <= max_days
 
 
+def undated_pair_candidates(line: dict[str, str], rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    """A TBD board date is generation time, not a confirmed fixture date.
+
+    Accept only a full, unambiguous pair in the same tour and tournament within
+    the board's three-day horizon. Reordered full names are safe; surname-only
+    guesses and placeholder players are not. Confirmed dates keep old rules.
+    """
+    def full_name(value: object) -> tuple[str, ...]:
+        return tuple(sorted(norm_name(value).split()))
+
+    if any(is_placeholder_player(line.get(key)) or len(full_name(line.get(key))) < 2
+           for key in ("player", "opponent")):
+        return []
+    try:
+        event_date = date.fromisoformat(line.get("date", ""))
+    except ValueError:
+        return []
+    tournament = norm_name(line.get("tournament"))
+    if not tournament:
+        return []
+    candidates = []
+    for row in rows:
+        if row.get("schedule_status") != "tbd" or row.get("scheduled_date"):
+            continue
+        source = str(row.get("schedule_source") or row.get("source") or "")
+        if source != "oncourt_draw_undated" and not source.startswith("oncourt_today"):
+            continue
+        try:
+            generated = date.fromisoformat(row.get("generation_date", ""))
+        except ValueError:
+            continue
+        if not 0 <= (event_date - generated).days <= 3:
+            continue
+        if (str(row.get("tour", "")).upper() == str(line.get("tour", "")).upper()
+                and norm_name(row.get("tournament")) == tournament
+                and all(full_name(row.get(key)) == full_name(line.get(key))
+                        for key in ("player", "opponent"))):
+            candidates.append(row)
+    return candidates
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", default=date.today().isoformat())
@@ -889,6 +930,13 @@ def main() -> None:
         board_row = board.get(key)
         if board_row is not None:
             match_source = "exact"
+        if board_row is None:
+            candidates = undated_pair_candidates(line, board_rows)
+            if len(candidates) == 1:
+                board_row = candidates[0]
+                match_source = "undated_pair_market_schedule"
+            elif len(candidates) > 1:
+                unmatched_reason = "AMBIGUOUS_UNDATED_PAIR"
         if board_row is None and not requires_exact_pair and is_placeholder_player(line_player) and line_opponent:
             player_only_key = (line_date, line_tour, norm_name(line_opponent))
             candidates = board_by_player.get(player_only_key, [])
@@ -1098,7 +1146,7 @@ def main() -> None:
         rows.append(
             {
                 **line,
-                "date": str((board_row or {}).get("date") or line_date),
+                "date": line_date if match_source == "undated_pair_market_schedule" else str((board_row or {}).get("date") or line_date),
                 "tour": str((board_row or {}).get("tour") or line_tour),
                 "tournament": str((board_row or {}).get("tournament") or line.get("tournament") or ""),
                 "surface": str((board_row or {}).get("surface") or ""),
