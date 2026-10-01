@@ -1,0 +1,9 @@
+export type Outcome = { roi: number | null; profit: number; wins: number; expectedWins: number; withoutBest: number | null; positive: boolean };
+export type RecordSummary = { count: number; firstDate: string | null; lastDate: string | null; outcomes: Outcome[] };
+export type Manager = { id: string | null; name: string; portrait: string | null; status: string; checkedAt: string };
+export type Club = { name: string; providerId: string; crest: string | null; manager: Manager | null };
+export type FixtureCard = { id: string; league: string; round: string; kickoff: string; home: Club; away: Club; clubs: RecordSummary; managers: RecordSummary; shared: number; alignment: number[] };
+export type FixtureBoard = { schema: number; version: string; checkedAt: string; expiresAt: string; historyCutoff: string; footballThrough: string; managerThrough: string; windowEnd: string; evidenceUrl: string; fixtures: FixtureCard[] };
+export type EvidenceRow = { id: string; date: string; league: string; home: string; away: string; score: number[]; odds: number[]; basis: string; firstWasHome: boolean; winner: number; profits: number[]; expected: number[] };
+export type FixtureEvidence = { managers: EvidenceRow[]; clubs: EvidenceRow[] };
+export type EvidencePayload = { version: string; fixtures: Record<string, FixtureEvidence> };

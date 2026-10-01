@@ -1,3 +1,4 @@
+import fixtureBoard from "@/data/atlas-fixtures.json";
 import managerRelease from "@/data/manager-atlas-release.json";
 import matchupRelease from "@/data/tennis-matchup-release.json";
 import { MetadataRoute } from "next";
@@ -32,6 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const clubPenaltyLastModified = new Date(`${clubPenaltySeason.published_at}T12:00:00Z`);
 
   const entries: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/football-atlas/fixtures`, lastModified: new Date(fixtureBoard.checkedAt), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/manager-atlas`, lastModified: new Date(`${managerRelease.through}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/tennis-matchup`, lastModified: new Date(`${matchupRelease.checkedAt}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },
     { url: BASE_URL, lastModified: new Date("2026-09-24T12:00:00Z"), changeFrequency: "daily", priority: 1 },
