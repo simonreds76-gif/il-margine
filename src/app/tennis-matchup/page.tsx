@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/Footer";
+import MatchdayPromo from "@/components/MatchdayPromo";
 import { BASE_URL } from "@/lib/config";
 import { MATCHUP_FAQS } from "@/lib/tennis-matchup-faq";
 import release from "@/data/tennis-matchup-release.json";
@@ -29,6 +30,7 @@ export default function TennisMatchupPage(){
     <div className="intro-note"><span className="note-dot"/><p><strong>Start with two players.</strong> Compare their profiles against all opponents, or switch to their meetings against each other. Open a match to inspect the numbers behind it.</p></div>
     <div className="matchup-freshness"><span>Snapshot <time dateTime={release.checkedAt}>{readable(release.checkedAt)}</time></span><span>Latest result <time dateTime={release.through}>{readable(release.through)}</time></span><span>{release.matches.toLocaleString("en-GB")} archive matches · 2022 onward</span></div>
     <MatchupClient indexUrl={release.indexUrl}/>
+    <MatchdayPromo compact />
     <noscript><p>Enable JavaScript to select players and compare their records. The guide, coverage details and FAQs below are available without it.</p></noscript>
     <section className="matchup-faq" id="faq" aria-labelledby="matchup-faq-title"><p className="eyebrow">GET MORE FROM THE NUMBERS</p><h2 id="matchup-faq-title">Tennis Matchup Lab FAQs</h2><p>What the tool shows, how to use the filters, and where the evidence ends.</p>{MATCHUP_FAQS.map(({question,answer})=><details key={question}><summary>{question}</summary><p>{answer}</p></details>)}</section>
     <section className="matchup-next"><h2>Keep the price and the record in view.</h2><p>Compare playing profiles here, investigate historical betting returns in Return Atlas, or read our published tennis selections.</p><nav aria-label="Related tennis research"><Link prefetch={false} href="/return-atlas">Tennis Return Atlas →</Link><Link prefetch={false} href="/tennis-tips">Tennis tips & results →</Link><Link prefetch={false} href="/resources/odds-value-stakes">Understand odds and value →</Link></nav></section>

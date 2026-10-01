@@ -21,7 +21,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
   <g font-family="Arial, Helvetica, sans-serif">
     <text x="192" y="112" font-size="20" font-weight="700" letter-spacing="4" fill="#a3cab8">RETURN ATLAS</text>
     <text x="188" y="183" font-size="76" font-weight="700" letter-spacing="-3" fill="#f3f8f5">Matchday<tspan fill="#8ce8bd">.</tspan></text>
-    <text x="72" y="300" font-size="48" font-weight="700" letter-spacing="-1.3" fill="#f3f8f5">The record before kickoff.</text>
+    <text x="72" y="300" font-size="44" font-weight="700" letter-spacing="-1.3" fill="#f3f8f5">Past meetings. Real odds.</text>
     <text x="74" y="349" font-size="25" fill="#b9cfca">Upcoming football fixtures. Manager and club history.</text>
     <g font-size="18" font-weight="700" fill="#a5eac9">
       <rect x="74" y="399" width="190" height="52" rx="12" fill="#1b372c" stroke="#426858"/>

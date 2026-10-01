@@ -1,12 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import SportIcon from './SportIcon';
+import MatchdayPromo from './MatchdayPromo';
 import './return-atlas-feature.css';
 
 /** Lightweight, server-rendered promotion: no archive download or chart runtime. */
 export default function ReturnAtlasFeature() {
     return <section id="return-atlas" className="home-atlas" aria-labelledby="home-atlas-title"><div className="home-atlas-inner">
         <header><div><p className="home-atlas-eyebrow">Research beyond the picks</p><h2 id="home-atlas-title">Return <span>Atlas</span></h2></div><p>Explore historical betting returns at the recorded odds. Compare ROI, profit and sample size, then open the matches behind the numbers.</p></header>
+        <MatchdayPromo />
         <div className="home-atlas-editions">
             <article className="home-atlas-edition"><div className="home-atlas-status"><h3><Link href="/return-atlas" prefetch={false}><SportIcon sport="tennis" emblem className="home-atlas-sport-icon"/><span>ATP tennis betting history</span><span aria-hidden="true">↗</span></Link></h3><span>Explore now</span></div>
                 <div className="home-atlas-logo home-atlas-tennis-logo"><Image src="/return-atlas/assets/wordmark-tennis-v2.png" width={2172} height={724} alt="Return Atlas Tennis" unoptimized /></div>
