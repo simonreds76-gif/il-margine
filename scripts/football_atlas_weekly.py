@@ -337,6 +337,8 @@ def main():
             write_release(manifest,new,datetime.now(UTC))
             manager_result=manager_atlas_weekly.refresh(state)
             report['managers']={'added':manager_result['added'],'version':manager_result['manifest']['version']}
+            import atlas_fixture_board
+            report['fixtureBoard'] = atlas_fixture_board.refresh(state)['report']
             report['status'] = 'dry-run-passed'
         else:
             helper = legacy.load_module('atlas_commit_helpers', ROOT / 'scripts/refresh-return-atlas.py')
@@ -382,6 +384,13 @@ def main():
                         if archive.resolve().parent!=manager_root:raise ValueError('Unsafe manager archive retention path')
                         relative=archive.relative_to(ROOT).as_posix()
                         run(['git','rm','--',relative],ROOT);changed_paths.add(relative)
+            # Refresh the bounded fixture/roster snapshot even in weeks with no new history.
+            # It uses the same transaction and deployment, with no visitor-time API work.
+            import atlas_fixture_board
+            board = atlas_fixture_board.refresh(state)
+            report['fixtureBoard'] = board['report']
+            if board['changed']:
+                changed_paths.update(board['paths'])
             if changed_paths:
                 run(['git', 'add', '--', *sorted(changed_paths)], ROOT)
                 staged = set(run(['git', 'diff', '--cached', '--name-only'], ROOT).splitlines())
@@ -389,7 +398,14 @@ def main():
                     raise ValueError('Unexpected staged files')
                 run(['git', 'commit', '-m', f'data: update Football and Manager Atlas through {manifest["through"]}'], ROOT)
                 run(['git', 'push', 'origin', 'HEAD:' + BRANCH], ROOT)
-            if changed_paths or manifest['version'] not in live_html or managers['manifest']['version'] not in manager_live_html:
+            needs_publish = bool(changed_paths) or manifest['version'] not in live_html or managers['manifest']['version'] not in manager_live_html
+            if not needs_publish:
+                try:
+                    board_live_html = helper.fetch('https://ilmargine.bet/football-atlas/fixtures').decode()
+                except (OSError, RuntimeError):
+                    board_live_html = ''
+                needs_publish = board['report']['version'] not in board_live_html
+            if needs_publish:
                 publish(state, manifest, report)
             else:
                 report['status'] = 'unchanged'

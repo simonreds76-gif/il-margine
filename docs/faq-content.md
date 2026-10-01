@@ -1,6 +1,6 @@
 # Il Margine FAQ
 
-Reviewed 26 September 2026.
+Updated 1 October 2026.
 
 ## SECTION 1: Getting started
 
@@ -201,6 +201,14 @@ In the UK, [GamCare](https://www.gamcare.org.uk/) provides gambling support and 
 **A:** Do not rely on betting to pay essential expenses. The public record describes past outcomes; it cannot promise income. If you need a bet to win to meet a bill, step away from it and seek support if needed.
 
 ## SECTION 9: Return Atlas
+
+### Q: How do I use Return Atlas Matchday?
+
+**A:** Open [Return Atlas Matchday](/football-atlas/fixtures), then choose a league or search for a team to find an upcoming fixture. Each card shows two records: previous meetings between the managers, including at other clubs, and previous meetings between the clubs. Compare the historical returns for a home win, draw or away win, then open the card to see the matches, results and recorded odds behind each figure. Every calculation uses the same stake per match.
+
+### Q: What does Both positive mean?
+
+**A:** It finds fixtures where the same outcome was profitable in both records, with at least three previous meetings in each. For example, a draw must show positive ROI in both the manager and club history. Positive draw returns in one and positive away win returns in the other do not qualify. Some matches can appear in both records, so the returns are not added together. It is a way to find history worth investigating, not a prediction or a bet recommendation. The odds available now still matter.
 
 ### Q: What is Return Atlas, and is it the same as your track record?
 

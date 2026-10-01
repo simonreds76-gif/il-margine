@@ -9,6 +9,7 @@ import tempfile
 
 sys.path.insert(0, str(Path(__file__).parents[1]))
 import football_atlas_weekly as w
+import atlas_fixture_board as fb
 
 NOW = datetime(2026, 9, 22, 18, tzinfo=timezone.utc)
 
@@ -121,6 +122,143 @@ class WeeklyAtlasTests(unittest.TestCase):
         self.assertEqual(old,prior);self.assertEqual(new['fixtures'][0],old['fixtures'][0]);self.assertEqual(new['fixtures'][-1][-1],2)
         with self.assertRaisesRegex(ValueError,'Duplicate'):
             w.merge_archive(new,[(f,[2.5,3.2,3.1],'id1')])
+
+
+class FixtureBoardTests(unittest.TestCase):
+    def row(self, **changes):
+        return dict(id='h1', date='2026-09-12', league='premier-league', home='Chelsea', away='Arsenal',
+                    hg=0, ag=2, odds=[3.5, 3.2, 2.1], basis='closing', homeManager='chelsea',
+                    awayManager='arsenal', **changes)
+
+    def fixture(self):
+        return dict(id='f1', kickoff='2026-09-25T15:00:00+00:00', league='premier-league', round='7',
+                    home={'name': 'Arsenal', 'manager': {'id': 'arsenal'}},
+                    away={'name': 'Chelsea', 'manager': {'id': 'chelsea'}})
+
+    def test_reversed_venue_follows_current_side_at_actual_prices(self):
+        row = fb.orient(self.row(), False)
+        self.assertEqual(row['odds'], [2.1, 3.2, 3.5])
+        self.assertEqual(row['winner'], 0)
+        self.assertEqual(row['profits'], [1.1, -1, -1])
+        self.assertAlmostEqual(sum(row['expected']), 1)
+        self.assertAlmostEqual(row['expected'][0], (1/2.1)/(1/3.5+1/3.2+1/2.1))
+
+    def test_draw_has_its_own_price_and_profit(self):
+        row = {**self.row(), 'hg': 1, 'ag': 1}
+        for orientation in [True, False]:
+            out = fb.orient(row, orientation)
+            self.assertEqual(out['winner'], 1)
+            self.assertEqual(out['profits'], [-1, 2.2, -1])
+
+    def test_three_meeting_highlight_is_not_a_changed_roi(self):
+        row = fb.orient(self.row(), False)
+        two, three = fb.summarize([row]*2), fb.summarize([row]*3)
+        self.assertFalse(two['outcomes'][0]['positive'])
+        self.assertTrue(three['outcomes'][0]['positive'])
+        self.assertEqual(two['outcomes'][0]['roi'], three['outcomes'][0]['roi'])
+        self.assertEqual(three['outcomes'][0]['withoutBest'], 2.2)
+        self.assertIsNone(fb.summarize([])['outcomes'][0]['roi'])
+
+    def test_duplicates_cutoff_and_missing_odds(self):
+        row = self.row()
+        invalid = [{**row, 'id': 'today', 'date': NOW.date().isoformat()},
+                   {**row, 'id': 'future', 'date': '2027-01-01'},
+                   {**row, 'id': 'missing', 'odds': None}, {**row, 'id': 'unfinished', 'hg': None}]
+        self.assertEqual(fb.valid_history([row, row, *invalid], NOW), [row])
+        with self.assertRaisesRegex(ValueError, 'Conflicting'):
+            fb.valid_history([row, {**row, 'hg': 3}], NOW)
+
+    def test_manager_follows_across_clubs_and_shared_match_counts_once(self):
+        common = self.row()
+        other = {**common, 'id': 'other', 'home': 'Brighton', 'away': 'Everton'}
+        cards, evidence = fb.build([self.fixture()], [common, common], [common, other], NOW, {})
+        self.assertEqual(cards[0]['clubs']['count'], 1)
+        self.assertEqual(cards[0]['managers']['count'], 2)
+        self.assertEqual(cards[0]['shared'], 1)
+        self.assertEqual(evidence['f1']['managers'][0]['profits'][0], 1.1)
+
+    def test_inconsistent_shared_price_blocks_board(self):
+        with self.assertRaisesRegex(ValueError, 'Shared match'):
+            fb.build([self.fixture()], [self.row()], [{**self.row(), 'odds': [3.5, 3.2, 2.2]}], NOW, {})
+
+    def test_unverified_manager_keeps_club_history_only(self):
+        fixture = self.fixture(); fixture['home']['manager'] = None
+        cards, _ = fb.build([fixture], [self.row()], [self.row()], NOW, {})
+        self.assertEqual(cards[0]['managers']['count'], 0)
+        self.assertEqual(cards[0]['clubs']['count'], 1)
+        self.assertEqual(cards[0]['alignment'], [])
+
+    def roster(self):
+        return {'details': {'id': 1}, 'squad': {'squad': [{'title': 'coach', 'members': [
+            {'id': 7, 'name': 'Full Name', 'dateOfBirth': '1970-01-02', 'role': {'key': 'coach'}}]}]}}
+
+    def test_reviewed_id_and_dob_resolve_alternate_name(self):
+        registry = {'managers': [{'id': 'm1', 'name': 'Short Name'}]}
+        cross = {'7': {'managerId': 'm1', 'names': ['Full Name'], 'birthDate': '1970-01-02'}}
+        out = fb.resolve_manager(self.roster(), 1, registry, cross, {}, NOW)
+        self.assertEqual(out['id'], 'm1')
+        cross['7']['birthDate'] = '1981-01-02'
+        self.assertIsNone(fb.resolve_manager(self.roster(), 1, registry, cross, {}, NOW)['id'])
+        with self.assertRaisesRegex(ValueError, 'identity mismatch'):
+            fb.resolve_manager(self.roster(), 2, registry, cross, {}, NOW)
+
+    def test_ambiguous_name_never_guesses(self):
+        reg = {'managers': [{'id': 'm1', 'name': 'Full Name'}, {'id': 'm2', 'name': 'Full Name'}]}
+        self.assertIsNone(fb.resolve_manager(self.roster(), 1, reg, {}, {}, NOW)['id'])
+
+    def test_calendar_excludes_started_postponed_and_out_of_window(self):
+        m = {'id': 1, 'home': {'id': 1, 'name': 'Arsenal'}, 'away': {'id': 2, 'name': 'Chelsea'},
+             'status': {'utcTime': (NOW+timedelta(days=1)).isoformat()}}
+        excluded = [{**m, 'id': str(i+2), 'status': {**m['status'], **change}}
+                    for i, change in enumerate([{'started': True}, {'finished': True}, {'cancelled': True},
+                                               {'reason': {'short': 'Postponed'}}, {'utcTime': (NOW-timedelta(hours=1)).isoformat()},
+                                               {'utcTime': (NOW+timedelta(days=22)).isoformat()}])]
+        payload = {'details': {'id': 47}, 'fixtures': {'allMatches': [m, *excluded, *([excluded[0]]*200)]}}
+        self.assertEqual(len(fb.league_fixtures(payload, 'premier-league', NOW, {}, ['Arsenal', 'Chelsea'])), 1)
+        payload['fixtures']['allMatches'] = [m]
+        with self.assertRaisesRegex(ValueError, 'Incomplete'):
+            fb.league_fixtures(payload, 'premier-league', NOW, {}, ['Arsenal', 'Chelsea'])
+
+    def test_provider_failure_preserves_last_good_published_files(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            files = {'src/data/football-atlas-release.json': {'indexUrl': '/f.json'},
+                     'src/data/manager-atlas-release.json': {'indexUrl': '/m.json'},
+                     'public/f.json': {}, 'public/m.json': {},
+                     'scripts/config/football-atlas-clubs.json': {},
+                     'scripts/config/manager-atlas-identities.json': {},
+                     'scripts/config/manager-fotmob-identities.json': {},
+                     'public/manager-atlas/portraits.json': {}, 'src/data/atlas-fixtures.json': {'version': 'last-good'}}
+            for name, data in files.items(): fb.atomic(root/name, data)
+            with patch.object(fb, 'ROOT', root), patch.object(fb.requests, 'get', side_effect=fb.requests.RequestException('offline')):
+                with self.assertRaises(fb.requests.RequestException): fb.refresh(root/'private-state', now=NOW)
+            self.assertEqual(fb.read(root/'src/data/atlas-fixtures.json'), {'version': 'last-good'})
+            self.assertFalse((root/'public/football-atlas/fixtures').exists())
+
+    def test_cached_rerun_is_idempotent_and_retains_previous_evidence(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); state = root/'private-state'
+            files = {'src/data/football-atlas-release.json': {'indexUrl': '/f.json', 'version': 'f', 'through': '2026-09-20'},
+                     'src/data/manager-atlas-release.json': {'indexUrl': '/m.json', 'version': 'm', 'through': '2026-09-20'},
+                     'public/f.json': {'teams': [], 'leagues': [], 'fixtures': [], 'crests': {}},
+                     'public/m.json': {'columns': [], 'rows': []},
+                     'scripts/config/football-atlas-clubs.json': {},
+                     'scripts/config/manager-atlas-identities.json': {'managers': []},
+                     'scripts/config/manager-fotmob-identities.json': {},
+                     'public/manager-atlas/portraits.json': {}}
+            for name, data in files.items(): fb.atomic(root/name, data)
+            for identity in fb.LEAGUES.values():
+                fb.atomic(state/f'fixture-board/provider/leagues-{identity}.json', {'checkedAt': NOW.isoformat(),
+                    'payload': {'details': {'id': identity}, 'fixtures': {'allMatches': [{'status': {'finished': True}}]*200}}})
+            with patch.object(fb, 'ROOT', root), patch.object(fb.requests, 'get') as request:
+                first = fb.refresh(state, offline=True, now=NOW)
+                prior = root/'public/football-atlas/fixtures/evidence-000000000000.json'
+                fb.atomic(prior, {'version': 'previous'})
+                second = fb.refresh(state, offline=True, now=NOW+timedelta(hours=1))
+            self.assertEqual(first['report']['version'], second['report']['version'])
+            self.assertFalse(second['changed'])
+            self.assertTrue(prior.exists())
+            request.assert_not_called()
 
 
 if __name__ == '__main__': unittest.main()

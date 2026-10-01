@@ -1,3 +1,4 @@
+import fixtureBoard from "@/data/atlas-fixtures.json";
 import managerRelease from "@/data/manager-atlas-release.json";
 import matchupRelease from "@/data/tennis-matchup-release.json";
 import { MetadataRoute } from "next";
@@ -32,9 +33,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const clubPenaltyLastModified = new Date(`${clubPenaltySeason.published_at}T12:00:00Z`);
 
   const entries: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/football-atlas/fixtures`, lastModified: new Date(fixtureBoard.checkedAt), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/manager-atlas`, lastModified: new Date(`${managerRelease.through}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/tennis-matchup`, lastModified: new Date(`${matchupRelease.checkedAt}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },
-    { url: BASE_URL, lastModified: new Date("2026-09-24T12:00:00Z"), changeFrequency: "daily", priority: 1 },
+    { url: BASE_URL, lastModified: new Date("2026-10-01T12:00:00Z"), changeFrequency: "daily", priority: 1 },
     {
       url: `${BASE_URL}/tennis-tips`,
       lastModified: tipSeoState.latestByMarket.tennis ?? STATIC_LAST_MODIFIED,
@@ -105,7 +107,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ? [{ url: `${BASE_URL}/fair-odds`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily" as const, priority: 0.8 }]
       : []),
     { url: `${BASE_URL}/the-edge`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE_URL}/faq`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/faq`, lastModified: new Date("2026-10-01T12:00:00Z"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/contact`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "yearly", priority: 0.5 },
     { url: `${BASE_URL}/llms.txt`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.4 },
     { url: `${BASE_URL}/llms-full.txt`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.3 },

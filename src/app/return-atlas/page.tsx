@@ -5,6 +5,7 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import PageHomeLink from "@/components/PageHomeLink";
 import ReturnAtlasClient from "@/components/return-atlas/ReturnAtlasClient";
+import MatchdayPromo from "@/components/MatchdayPromo";
 import release from "@/data/return-atlas-release.json";
 import "./return-atlas.css";
 
@@ -49,6 +50,7 @@ export default function ReturnAtlasPage() {
         <Link href="/tennis-matchup" prefetch={false}>Open Matchup Lab →</Link>
       </aside>
       <ReturnAtlasClient indexUrl={release.indexUrl} detailsBase={release.detailsBase} version={release.version} checkedAt={release.checkedAt} />
+      <MatchdayPromo compact />
       <section className="atlas-about" aria-label="About Return Atlas">
         <p className="about-eyebrow">THE RECORD BEHIND THE RETURNS</p>
         <h2>ATP tennis betting history.<br />Every player has a different story.</h2>

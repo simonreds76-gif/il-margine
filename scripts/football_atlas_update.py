@@ -434,11 +434,22 @@ def publish(config, helper, version, path, status):
         manager_data = run([vercel, 'curl', manager['indexUrl'], '--deployment', url, '--', '--fail', '--silent'], checkout)
         if json.loads(manager_data) != read(checkout / 'public' / manager['indexUrl'].lstrip('/')):
             raise ValueError('Deployed manager archive differs from validated candidate')
+    fixture_path = checkout / 'src/data/atlas-fixtures.json'
+    if fixture_path.exists():
+        board = read(fixture_path)
+        board_page = run([vercel, 'curl', '/football-atlas/fixtures', '--deployment', url, '--', '--fail', '--silent'], checkout)
+        if f'data-version="{board["version"]}"' not in board_page:
+            raise ValueError('Fixture board candidate version mismatch')
+        board_evidence = run([vercel, 'curl', board['evidenceUrl'], '--deployment', url, '--', '--fail', '--silent'], checkout)
+        if json.loads(board_evidence) != read(checkout / 'public' / board['evidenceUrl'].lstrip('/')):
+            raise ValueError('Fixture evidence differs from validated candidate')
     if api('/v4/aliases/ilmargine.bet')['deploymentId'] != before or run(['git', 'ls-remote', 'origin', 'refs/heads/' + helper.BRANCH], checkout).split()[0] != sha:
         raise RuntimeError('Another release advanced; refusing to replace newer production')
     run([vercel, 'promote', url, '--yes', '--scope', 'simones-projects-fb02b6e0'], checkout, timeout=180)
     if json.loads(helper.fetch('https://ilmargine.bet/' + path.relative_to('public').as_posix())) != read(checkout / path):
         raise RuntimeError('Live archive validation failed; investigate promotion')
+    if fixture_path.exists() and f'data-version="{board["version"]}"' not in helper.fetch('https://ilmargine.bet/football-atlas/fixtures').decode():
+        raise RuntimeError('Live fixture board validation failed; investigate promotion')
     status.update(status='published', deploymentUrl=url, publishedAt=datetime.now(UTC).isoformat())
     write(state / 'publish-status.json', status)
 
