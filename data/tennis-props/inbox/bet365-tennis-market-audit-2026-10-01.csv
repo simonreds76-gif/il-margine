@@ -1,259 +1,473 @@
 captured_at,event_id,kickoff_at,bookmaker,league,home,away,market_name,odds_count,sample_labels
-2026-10-01T09:12:02Z,75103550,2026-10-01T12:30:00Z,Bet365,"ATP - Beijing, China","Bublik, Alexander","Mensik, Jakub",ML,1,"{'home': '2.37', 'away': '1.57'}"
-2026-10-01T09:12:02Z,75103550,2026-10-01T12:30:00Z,Bet365,"ATP - Beijing, China","Bublik, Alexander","Mensik, Jakub",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75103550,2026-10-01T12:30:00Z,Bet365,"ATP - Beijing, China","Bublik, Alexander","Mensik, Jakub",Team Total (Aces) Home,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75103550,2026-10-01T12:30:00Z,Bet365,"ATP - Beijing, China","Bublik, Alexander","Mensik, Jakub",Team Total (Double Faults) Away,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75103550,2026-10-01T12:30:00Z,Bet365,"ATP - Beijing, China","Bublik, Alexander","Mensik, Jakub",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75103550,2026-10-01T12:30:00Z,Bet365,"ATP - Beijing, China","Bublik, Alexander","Mensik, Jakub",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75103550,2026-10-01T12:30:00Z,Bet365,"ATP - Beijing, China","Bublik, Alexander","Mensik, Jakub",Totals (Games),1,hdp=22.5
-2026-10-01T09:12:02Z,75103550,2026-10-01T12:30:00Z,Bet365,"ATP - Beijing, China","Bublik, Alexander","Mensik, Jakub",Spread (Games),1,hdp=2.5
-2026-10-01T09:12:02Z,75103550,2026-10-01T12:30:00Z,Bet365,"ATP - Beijing, China","Bublik, Alexander","Mensik, Jakub",Team Total (Aces) Away,8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75103550,2026-10-01T12:30:00Z,Bet365,"ATP - Beijing, China","Bublik, Alexander","Mensik, Jakub",Team Total (Games) Away,1,hdp=12.5
-2026-10-01T09:12:02Z,75103550,2026-10-01T12:30:00Z,Bet365,"ATP - Beijing, China","Bublik, Alexander","Mensik, Jakub",Team Total (Games) Home,1,hdp=12.5
-2026-10-01T09:12:02Z,75103550,2026-10-01T12:30:00Z,Bet365,"ATP - Beijing, China","Bublik, Alexander","Mensik, Jakub",Totals (Aces),9,hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5 | hdp=24.5
-2026-10-01T09:12:02Z,75103550,2026-10-01T12:30:00Z,Bet365,"ATP - Beijing, China","Bublik, Alexander","Mensik, Jakub",Totals (Double Faults),8,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
-2026-10-01T09:12:02Z,75103540,2026-10-01T11:00:00Z,Bet365,"ATP - Beijing, China","Tien, Learner","Hurkacz, Hubert",ML,1,"{'home': '1.57', 'away': '2.37'}"
-2026-10-01T09:12:02Z,75103540,2026-10-01T11:00:00Z,Bet365,"ATP - Beijing, China","Tien, Learner","Hurkacz, Hubert",Spread (Games),1,hdp=-2.5
-2026-10-01T09:12:02Z,75103540,2026-10-01T11:00:00Z,Bet365,"ATP - Beijing, China","Tien, Learner","Hurkacz, Hubert",Totals (Double Faults),8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75103540,2026-10-01T11:00:00Z,Bet365,"ATP - Beijing, China","Tien, Learner","Hurkacz, Hubert",Totals (Games),1,hdp=22.5
-2026-10-01T09:12:02Z,75103540,2026-10-01T11:00:00Z,Bet365,"ATP - Beijing, China","Tien, Learner","Hurkacz, Hubert",Totals (Aces),9,hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5 | hdp=24.5
-2026-10-01T09:12:02Z,75103540,2026-10-01T11:00:00Z,Bet365,"ATP - Beijing, China","Tien, Learner","Hurkacz, Hubert",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75103540,2026-10-01T11:00:00Z,Bet365,"ATP - Beijing, China","Tien, Learner","Hurkacz, Hubert",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75103540,2026-10-01T11:00:00Z,Bet365,"ATP - Beijing, China","Tien, Learner","Hurkacz, Hubert",Team Total (Aces) Away,9,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75103540,2026-10-01T11:00:00Z,Bet365,"ATP - Beijing, China","Tien, Learner","Hurkacz, Hubert",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
-2026-10-01T09:12:02Z,75103540,2026-10-01T11:00:00Z,Bet365,"ATP - Beijing, China","Tien, Learner","Hurkacz, Hubert",Team Total (Double Faults) Home,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75103540,2026-10-01T11:00:00Z,Bet365,"ATP - Beijing, China","Tien, Learner","Hurkacz, Hubert",Team Total (Games) Away,1,hdp=12.5
-2026-10-01T09:12:02Z,75103540,2026-10-01T11:00:00Z,Bet365,"ATP - Beijing, China","Tien, Learner","Hurkacz, Hubert",Team Total (Games) Home,1,hdp=12.5
-2026-10-01T09:12:02Z,75103540,2026-10-01T11:00:00Z,Bet365,"ATP - Beijing, China","Tien, Learner","Hurkacz, Hubert",Team Total (Double Faults) Away,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
-2026-10-01T09:12:02Z,75104900,2026-10-01T11:00:00Z,Bet365,"WTA - Beijing, China","Lys, Eva","Sun, Xinran",ML,1,"{'home': '1.44', 'away': '2.75'}"
-2026-10-01T09:12:02Z,75104900,2026-10-01T11:00:00Z,Bet365,"WTA - Beijing, China","Lys, Eva","Sun, Xinran",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75104900,2026-10-01T11:00:00Z,Bet365,"WTA - Beijing, China","Lys, Eva","Sun, Xinran",Totals (Games),1,hdp=21.5
-2026-10-01T09:12:02Z,75104900,2026-10-01T11:00:00Z,Bet365,"WTA - Beijing, China","Lys, Eva","Sun, Xinran",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75104900,2026-10-01T11:00:00Z,Bet365,"WTA - Beijing, China","Lys, Eva","Sun, Xinran",Spread (Games),1,hdp=-3.5
-2026-10-01T09:12:02Z,75104900,2026-10-01T11:00:00Z,Bet365,"WTA - Beijing, China","Lys, Eva","Sun, Xinran",Team Total (Games) Away,1,hdp=11.5
-2026-10-01T09:12:02Z,75104900,2026-10-01T11:00:00Z,Bet365,"WTA - Beijing, China","Lys, Eva","Sun, Xinran",Team Total (Games) Home,1,hdp=12.5
-2026-10-01T09:12:02Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",ML,1,"{'home': '3.20', 'away': '1.36'}"
-2026-10-01T09:12:02Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Team Total (Aces) Away,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Team Total (Games) Home,1,hdp=9.5
-2026-10-01T09:12:02Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Totals (Games),1,hdp=20.5
-2026-10-01T09:12:02Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Spread (Games),1,hdp=4.5
-2026-10-01T09:12:02Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Team Total (Games) Away,1,hdp=12.5
-2026-10-01T09:12:02Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Totals (Aces),7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051480,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",ML,1,"{'home': '1.61', 'away': '2.30'}"
-2026-10-01T09:12:02Z,75051480,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051480,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Totals (Aces),6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051480,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Totals (Games),1,hdp=21.5
-2026-10-01T09:12:02Z,75051480,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051480,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051480,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Team Total (Double Faults) Away,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
-2026-10-01T09:12:02Z,75051480,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051480,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Team Total (Games) Away,1,hdp=11.5
-2026-10-01T09:12:02Z,75051480,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Team Total (Games) Home,1,hdp=12.5
-2026-10-01T09:12:02Z,75051480,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051480,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Totals (Double Faults),9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051480,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Spread (Games),1,hdp=-2.5
-2026-10-01T09:12:02Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",ML,1,"{'home': '4.33', 'away': '1.22'}"
-2026-10-01T09:12:02Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Totals (Double Faults),8,hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Totals (Aces),7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Team Total (Games) Away,1,hdp=12.5
-2026-10-01T09:12:02Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Team Total (Double Faults) Home,9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Team Total (Games) Home,1,hdp=7.5
-2026-10-01T09:12:02Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Totals (Games),1,hdp=19.5
-2026-10-01T09:12:02Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Spread (Games),1,hdp=5.5
-2026-10-01T09:12:02Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Team Total (Double Faults) Away,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",ML,1,"{'home': '10.00', 'away': '1.06'}"
-2026-10-01T09:12:02Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Team Total (Aces) Home,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Team Total (Double Faults) Away,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Totals (Double Faults),8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Totals (Games),1,hdp=17.5
-2026-10-01T09:12:02Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Spread (Games),1,hdp=6.5
-2026-10-01T09:12:02Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Team Total (Double Faults) Home,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
-2026-10-01T09:12:02Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Totals (Aces),5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051478,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",ML,1,"{'home': '2.37', 'away': '1.57'}"
-2026-10-01T09:12:02Z,75051478,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051478,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Totals (Games),1,hdp=20.5
-2026-10-01T09:12:02Z,75051478,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051478,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Spread (Games),1,hdp=3.5
-2026-10-01T09:12:02Z,75051478,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Team Total (Games) Away,1,hdp=12.5
-2026-10-01T09:12:02Z,75051478,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Team Total (Games) Home,1,hdp=11.5
-2026-10-01T09:12:02Z,75051522,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",ML,1,"{'home': '4.33', 'away': '1.22'}"
-2026-10-01T09:12:02Z,75051522,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051522,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051522,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Team Total (Aces) Away,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051522,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Team Total (Double Faults) Away,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051522,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Team Total (Games) Away,1,hdp=12.5
-2026-10-01T09:12:02Z,75051522,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Totals (Games),1,hdp=19.5
-2026-10-01T09:12:02Z,75051522,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Totals (Double Faults),8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051522,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Spread (Games),1,hdp=5.5
-2026-10-01T09:12:02Z,75051522,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051522,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Team Total (Double Faults) Home,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051522,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Team Total (Games) Home,1,hdp=7.5
-2026-10-01T09:12:02Z,75051522,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Totals (Aces),8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",ML,1,"{'home': '2.37', 'away': '1.57'}"
-2026-10-01T09:12:02Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Totals (Double Faults),9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Team Total (Double Faults) Home,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Totals (Aces),6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Totals (Games),1,hdp=20.5
-2026-10-01T09:12:02Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Spread (Games),1,hdp=3.5
-2026-10-01T09:12:02Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Team Total (Aces) Home,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Team Total (Double Faults) Away,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Team Total (Games) Away,1,hdp=12.5
-2026-10-01T09:12:02Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Team Total (Games) Home,1,hdp=11.5
-2026-10-01T09:12:02Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",ML,1,"{'home': '1.30', 'away': '3.50'}"
-2026-10-01T09:12:02Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Team Total (Aces) Away,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Team Total (Games) Away,1,hdp=8.5
-2026-10-01T09:12:02Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Totals (Aces),5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Totals (Games),1,hdp=19.5
-2026-10-01T09:12:02Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Spread (Games),1,hdp=-4.5
-2026-10-01T09:12:02Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Team Total (Double Faults) Away,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Team Total (Games) Home,1,hdp=12.5
-2026-10-01T09:12:02Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Totals (Double Faults),8,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
-2026-10-01T09:12:02Z,75051524,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",ML,1,"{'home': '1.53', 'away': '2.50'}"
-2026-10-01T09:12:02Z,75051524,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Team Total (Double Faults) Home,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
-2026-10-01T09:12:02Z,75051524,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Team Total (Games) Away,1,hdp=11.5
-2026-10-01T09:12:02Z,75051524,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051524,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Totals (Double Faults),9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051524,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051524,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Spread (Games),1,hdp=-3.5
-2026-10-01T09:12:02Z,75051524,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Team Total (Double Faults) Away,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051524,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Team Total (Games) Home,1,hdp=12.5
-2026-10-01T09:12:02Z,75051524,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Totals (Games),1,hdp=21.5
-2026-10-01T09:12:02Z,75051528,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",ML,1,"{'home': '1.44', 'away': '2.75'}"
-2026-10-01T09:12:02Z,75051528,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051528,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Team Total (Aces) Home,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051528,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Team Total (Double Faults) Away,9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051528,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051528,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Totals (Aces),9,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051528,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Totals (Games),1,hdp=20.5
-2026-10-01T09:12:02Z,75051528,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051528,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Spread (Games),1,hdp=-3.5
-2026-10-01T09:12:02Z,75051528,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Team Total (Double Faults) Home,9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051528,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Team Total (Games) Away,1,hdp=10.5
-2026-10-01T09:12:02Z,75051528,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Team Total (Games) Home,1,hdp=12.5
-2026-10-01T09:12:02Z,75051528,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Totals (Double Faults),8,hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051520,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",ML,1,"{'home': '1.36', 'away': '3.20'}"
-2026-10-01T09:12:02Z,75051520,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Spread (Games),1,hdp=-4.5
-2026-10-01T09:12:02Z,75051520,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Team Total (Double Faults) Away,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051520,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Team Total (Double Faults) Home,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051520,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Team Total (Games) Away,1,hdp=9.5
-2026-10-01T09:12:02Z,75051520,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Team Total (Games) Home,1,hdp=12.5
-2026-10-01T09:12:02Z,75051520,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051520,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Totals (Double Faults),8,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
-2026-10-01T09:12:02Z,75051520,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051520,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Totals (Games),1,hdp=20.5
-2026-10-01T09:12:02Z,75051504,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",ML,1,"{'home': '1.66', 'away': '2.20'}"
-2026-10-01T09:12:02Z,75051504,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051504,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Totals (Games),1,hdp=22.5
-2026-10-01T09:12:02Z,75051504,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051504,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Spread (Games),1,hdp=-2.5
-2026-10-01T09:12:02Z,75051504,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Team Total (Games) Away,1,hdp=12.5
-2026-10-01T09:12:02Z,75051504,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Team Total (Games) Home,1,hdp=12.5
-2026-10-01T09:12:02Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",ML,1,"{'home': '1.25', 'away': '4.00'}"
-2026-10-01T09:12:02Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Totals (Games),1,hdp=20.5
-2026-10-01T09:12:02Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Team Total (Aces) Home,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Team Total (Games) Away,1,hdp=8.5
-2026-10-01T09:12:02Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Totals (Double Faults),9,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
-2026-10-01T09:12:02Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Spread (Games),1,hdp=-4.5
-2026-10-01T09:12:02Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Team Total (Aces) Away,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Team Total (Double Faults) Away,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Team Total (Games) Home,1,hdp=12.5
-2026-10-01T09:12:02Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Totals (Aces),8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",ML,1,"{'home': '1.22', 'away': '4.33'}"
-2026-10-01T09:12:02Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Totals (Aces),8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Team Total (Aces) Away,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
-2026-10-01T09:12:02Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Team Total (Double Faults) Away,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
-2026-10-01T09:12:02Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Team Total (Games) Home,1,hdp=12.5
-2026-10-01T09:12:02Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Team Total (Aces) Home,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Team Total (Double Faults) Home,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Team Total (Games) Away,1,hdp=9.5
-2026-10-01T09:12:02Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Totals (Double Faults),8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Totals (Games),1,hdp=20.5
-2026-10-01T09:12:02Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Spread (Games),1,hdp=-4.5
-2026-10-01T09:12:02Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",ML,1,"{'home': '17.00', 'away': '1.02'}"
-2026-10-01T09:12:02Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Spread (Games),1,hdp=7.5
-2026-10-01T09:12:02Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Team Total (Double Faults) Away,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Team Total (Double Faults) Home,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
-2026-10-01T09:12:02Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Totals (Double Faults),7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Totals (Games),1,hdp=16.5
-2026-10-01T09:12:02Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",ML,1,"{'home': '3.75', 'away': '1.28'}"
-2026-10-01T09:12:02Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Team Total (Aces) Away,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Team Total (Aces) Home,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Team Total (Games) Home,1,hdp=10.5
-2026-10-01T09:12:02Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Totals (Aces),8,hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5 | hdp=24.5
-2026-10-01T09:12:02Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Spread (Games),1,hdp=4.5
-2026-10-01T09:12:02Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Team Total (Games) Away,1,hdp=12.5
-2026-10-01T09:12:02Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Totals (Games),1,hdp=21.5
-2026-10-01T09:12:02Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",ML,1,"{'home': '2.00', 'away': '1.80'}"
-2026-10-01T09:12:02Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Spread (Games),1,hdp=0.5
-2026-10-01T09:12:02Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Totals (Games),1,hdp=23.5
-2026-10-01T09:12:02Z,75051516,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",ML,1,"{'home': '1.14', 'away': '5.50'}"
-2026-10-01T09:12:02Z,75051516,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Team Total (Double Faults) Away,8,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
-2026-10-01T09:12:02Z,75051516,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051516,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Spread (Games),1,hdp=-6.5
-2026-10-01T09:12:02Z,75051516,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Team Total (Aces) Away,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051516,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Team Total (Aces) Home,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051516,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Totals (Aces),7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051516,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Team Total (Double Faults) Home,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
-2026-10-01T09:12:02Z,75051516,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Team Total (Games) Home,1,hdp=12.5
-2026-10-01T09:12:02Z,75051516,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Totals (Games),1,hdp=17.5
-2026-10-01T09:12:02Z,75051516,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Totals (Double Faults),9,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
-2026-10-01T09:12:02Z,75051516,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Team Total (Games) Away,1,hdp=5.5
-2026-10-01T09:12:02Z,75051516,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051526,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",ML,1,"{'home': '2.20', 'away': '1.66'}"
-2026-10-01T09:12:02Z,75051526,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Totals (Aces),8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051526,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
-2026-10-01T09:12:02Z,75051526,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051526,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Team Total (Games) Away,1,hdp=12.5
-2026-10-01T09:12:02Z,75051526,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
-2026-10-01T09:12:02Z,75051526,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
-2026-10-01T09:12:02Z,75051526,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Totals (Double Faults),9,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
-2026-10-01T09:12:02Z,75051526,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Spread (Games),1,hdp=2.5
-2026-10-01T09:12:02Z,75051526,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Team Total (Aces) Away,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
-2026-10-01T09:12:02Z,75051526,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Team Total (Double Faults) Away,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
-2026-10-01T09:12:02Z,75051526,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Team Total (Games) Home,1,hdp=11.5
-2026-10-01T09:12:02Z,75051526,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Totals (Games),1,hdp=22.5
-2026-10-01T09:12:02Z,75104896,2026-10-01T09:30:00Z,Bet365,"WTA - Beijing, China","Parks, Alycia","Zhu, Lin",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75104894,2026-10-01T10:20:00Z,Bet365,"WTA - Beijing, China","Gao, Xinyu","Udvardy, Panna",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051240,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Munar, Jaume","Faria, Jaime",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051228,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Humbert, Ugo","Lehecka, Jiri",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051534,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Kartal, Sonay","Wang, Xinyu",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051538,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Zheng, Qinwen","Kalinskaya, Anna",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051394,2026-10-02T03:00:00Z,Bet365,"ATP - Beijing, China","Molcan, Alex","Khachanov, Karen",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051556,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Krueger, Ashlyn","Li, Ann",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051532,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Rybakina, Elena","Charaeva, Alina",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051374,2026-10-02T03:00:00Z,Bet365,"ATP - Beijing, China","de Minaur, Alex","Halys, Quentin",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051536,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Bouzkova, Marie","Birrell, Kimberly",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051552,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Volynets, Katie","Mertens, Elise",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051560,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Siniakova, Katerina","Svitolina, Elina",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051550,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Ostapenko, Jelena","Badosa, Paula",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051558,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Sakkari, Maria","Hunter, Storm",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051232,2026-10-02T03:10:00Z,Bet365,"ATP - Tokyo, Japan","Vacherot, Valentin","Tsitsipas, Stefanos",<NO_BET365_MARKETS_RETURNED>,0,
-2026-10-01T09:12:02Z,75051234,2026-10-02T08:10:00Z,Bet365,"ATP - Tokyo, Japan","Fils, Arthur","Tiafoe, Frances",<NO_BET365_MARKETS_RETURNED>,0,
+2026-10-01T15:31:11Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",ML,1,"{'home': '3.20', 'away': '1.36'}"
+2026-10-01T15:31:11Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Totals (Games),1,hdp=20.5
+2026-10-01T15:31:11Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Spread (Games),1,hdp=4.5
+2026-10-01T15:31:11Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Team Total (Games) Home,1,hdp=9.5
+2026-10-01T15:31:11Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Team Total (Aces) Away,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051506,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Tjen, Janice","Shnaider, Diana",Totals (Aces),7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",ML,1,"{'home': '4.33', 'away': '1.22'}"
+2026-10-01T15:31:11Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Totals (Games),1,hdp=19.5
+2026-10-01T15:31:11Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Spread (Games),1,hdp=5.5
+2026-10-01T15:31:11Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Totals (Double Faults),8,hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Totals (Aces),7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Team Total (Double Faults) Away,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Team Total (Double Faults) Home,9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051518,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Fruhvirtova, Linda","Samsonova, Liudmila",Team Total (Games) Home,1,hdp=7.5
+2026-10-01T15:31:11Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",ML,1,"{'home': '10.00', 'away': '1.06'}"
+2026-10-01T15:31:11Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Totals (Aces),5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Totals (Double Faults),8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Spread (Games),1,hdp=6.5
+2026-10-01T15:31:11Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Team Total (Double Faults) Away,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Totals (Games),1,hdp=17.5
+2026-10-01T15:31:11Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Team Total (Aces) Home,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Team Total (Double Faults) Home,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75051530,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Yuan, Yue","Andreeva, Mirra",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",ML,1,"{'home': '2.30', 'away': '1.61'}"
+2026-10-01T15:31:11Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Team Total (Double Faults) Away,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Totals (Games),1,hdp=21.5
+2026-10-01T15:31:11Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Totals (Double Faults),9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Spread (Games),1,hdp=2.5
+2026-10-01T15:31:11Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Totals (Aces),6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Team Total (Double Faults) Home,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Team Total (Aces) Home,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Team Total (Games) Home,1,hdp=11.5
+2026-10-01T15:31:11Z,75051502,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Golubic, Viktorija","Stearns, Peyton",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",ML,1,"{'home': '1.30', 'away': '3.50'}"
+2026-10-01T15:31:11Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Totals (Games),1,hdp=20.5
+2026-10-01T15:31:11Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Totals (Aces),5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Totals (Double Faults),8,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
+2026-10-01T15:31:11Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Spread (Games),1,hdp=-4.5
+2026-10-01T15:31:11Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Team Total (Aces) Away,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Team Total (Double Faults) Away,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051476,2026-10-02T03:00:00Z,Bet365,"WTA - Beijing, China","Potapova, Anastasia","Kraus, Sinja",Team Total (Games) Away,1,hdp=9.5
+2026-10-01T15:31:11Z,75051504,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",ML,1,"{'home': '1.66', 'away': '2.20'}"
+2026-10-01T15:31:11Z,75051504,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Team Total (Aces) Home,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051504,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Totals (Games),1,hdp=22.5
+2026-10-01T15:31:11Z,75051504,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Totals (Double Faults),9,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
+2026-10-01T15:31:11Z,75051504,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051504,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Spread (Games),1,hdp=-2.5
+2026-10-01T15:31:11Z,75051504,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Totals (Aces),8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051504,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Team Total (Double Faults) Away,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051504,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051504,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051504,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051504,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051504,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Alexandrova, Ekaterina","Sasnovich, Aliaksandra",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051232,2026-10-02T03:10:00Z,Bet365,"ATP - Tokyo, Japan","Vacherot, Valentin","Tsitsipas, Stefanos",ML,1,"{'home': '2.10', 'away': '1.72'}"
+2026-10-01T15:31:11Z,75051232,2026-10-02T03:10:00Z,Bet365,"ATP - Tokyo, Japan","Vacherot, Valentin","Tsitsipas, Stefanos",Team Total (Double Faults) Away,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75051232,2026-10-02T03:10:00Z,Bet365,"ATP - Tokyo, Japan","Vacherot, Valentin","Tsitsipas, Stefanos",Totals (Games),1,hdp=23.5
+2026-10-01T15:31:11Z,75051232,2026-10-02T03:10:00Z,Bet365,"ATP - Tokyo, Japan","Vacherot, Valentin","Tsitsipas, Stefanos",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051232,2026-10-02T03:10:00Z,Bet365,"ATP - Tokyo, Japan","Vacherot, Valentin","Tsitsipas, Stefanos",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051232,2026-10-02T03:10:00Z,Bet365,"ATP - Tokyo, Japan","Vacherot, Valentin","Tsitsipas, Stefanos",Team Total (Aces) Away,8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051232,2026-10-02T03:10:00Z,Bet365,"ATP - Tokyo, Japan","Vacherot, Valentin","Tsitsipas, Stefanos",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051232,2026-10-02T03:10:00Z,Bet365,"ATP - Tokyo, Japan","Vacherot, Valentin","Tsitsipas, Stefanos",Team Total (Double Faults) Home,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051232,2026-10-02T03:10:00Z,Bet365,"ATP - Tokyo, Japan","Vacherot, Valentin","Tsitsipas, Stefanos",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051232,2026-10-02T03:10:00Z,Bet365,"ATP - Tokyo, Japan","Vacherot, Valentin","Tsitsipas, Stefanos",Totals (Aces),8,hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5 | hdp=24.5 | hdp=29.5
+2026-10-01T15:31:11Z,75051232,2026-10-02T03:10:00Z,Bet365,"ATP - Tokyo, Japan","Vacherot, Valentin","Tsitsipas, Stefanos",Totals (Double Faults),8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051232,2026-10-02T03:10:00Z,Bet365,"ATP - Tokyo, Japan","Vacherot, Valentin","Tsitsipas, Stefanos",Spread (Games),1,hdp=1.5
+2026-10-01T15:31:11Z,75051232,2026-10-02T03:10:00Z,Bet365,"ATP - Tokyo, Japan","Vacherot, Valentin","Tsitsipas, Stefanos",Team Total (Aces) Home,8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",ML,1,"{'home': '1.28', 'away': '3.75'}"
+2026-10-01T15:31:11Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Spread (Games),1,hdp=-4.5
+2026-10-01T15:31:11Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Totals (Double Faults),9,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
+2026-10-01T15:31:11Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Totals (Games),1,hdp=20.5
+2026-10-01T15:31:11Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Totals (Aces),9,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Team Total (Aces) Away,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Team Total (Double Faults) Away,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Team Total (Double Faults) Home,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Team Total (Games) Away,1,hdp=8.5
+2026-10-01T15:31:11Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051500,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Noskova, Linda","Ruse, Elena-Gabriela",Team Total (Aces) Home,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051478,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",ML,1,"{'home': '2.37', 'away': '1.57'}"
+2026-10-01T15:31:11Z,75051478,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Team Total (Aces) Away,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051478,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Totals (Games),1,hdp=21.5
+2026-10-01T15:31:11Z,75051478,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Totals (Double Faults),9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051478,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051478,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Spread (Games),1,hdp=2.5
+2026-10-01T15:31:11Z,75051478,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Totals (Aces),5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051478,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051478,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051478,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Team Total (Games) Home,1,hdp=11.5
+2026-10-01T15:31:11Z,75051478,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051478,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Team Total (Aces) Home,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051478,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Yastremska, Dayana","Chwalinska, Maja",Team Total (Double Faults) Away,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75051240,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Munar, Jaume","Faria, Jaime",ML,1,"{'home': '1.57', 'away': '2.37'}"
+2026-10-01T15:31:11Z,75051240,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Munar, Jaume","Faria, Jaime",Spread (Games),1,hdp=-2.5
+2026-10-01T15:31:11Z,75051240,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Munar, Jaume","Faria, Jaime",Team Total (Aces) Away,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051240,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Munar, Jaume","Faria, Jaime",Team Total (Aces) Home,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051240,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Munar, Jaume","Faria, Jaime",Team Total (Double Faults) Away,9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051240,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Munar, Jaume","Faria, Jaime",Team Total (Double Faults) Home,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75051240,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Munar, Jaume","Faria, Jaime",Totals (Games),1,hdp=22.5
+2026-10-01T15:31:11Z,75051240,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Munar, Jaume","Faria, Jaime",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051240,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Munar, Jaume","Faria, Jaime",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051240,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Munar, Jaume","Faria, Jaime",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051240,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Munar, Jaume","Faria, Jaime",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051240,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Munar, Jaume","Faria, Jaime",Totals (Aces),8,hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5 | hdp=24.5
+2026-10-01T15:31:11Z,75051240,2026-10-02T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Munar, Jaume","Faria, Jaime",Totals (Double Faults),8,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
+2026-10-01T15:31:11Z,75051526,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",ML,1,"{'home': '2.20', 'away': '1.66'}"
+2026-10-01T15:31:11Z,75051526,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051526,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Totals (Double Faults),9,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
+2026-10-01T15:31:11Z,75051526,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051526,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Spread (Games),1,hdp=1.5
+2026-10-01T15:31:11Z,75051526,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051526,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051526,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Team Total (Games) Home,1,hdp=11.5
+2026-10-01T15:31:11Z,75051526,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Totals (Aces),8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051526,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Totals (Games),1,hdp=21.5
+2026-10-01T15:31:11Z,75051526,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Team Total (Aces) Away,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051526,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Team Total (Double Faults) Away,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051526,2026-10-02T04:10:00Z,Bet365,"WTA - Beijing, China","Preston, Taylah","Parry, Diane",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051524,2026-10-02T05:20:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",ML,1,"{'home': '1.53', 'away': '2.50'}"
+2026-10-01T15:31:11Z,75051524,2026-10-02T05:20:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Team Total (Double Faults) Away,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051524,2026-10-02T05:20:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051524,2026-10-02T05:20:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Totals (Double Faults),9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051524,2026-10-02T05:20:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051524,2026-10-02T05:20:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Spread (Games),1,hdp=-3.5
+2026-10-01T15:31:11Z,75051524,2026-10-02T05:20:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Team Total (Double Faults) Home,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75051524,2026-10-02T05:20:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Team Total (Games) Away,1,hdp=11.5
+2026-10-01T15:31:11Z,75051524,2026-10-02T05:20:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051524,2026-10-02T05:20:00Z,Bet365,"WTA - Beijing, China","Paolini, Jasmine","Snigur, Daria",Totals (Games),1,hdp=21.5
+2026-10-01T15:31:11Z,75051234,2026-10-02T08:10:00Z,Bet365,"ATP - Tokyo, Japan","Fils, Arthur","Tiafoe, Frances",ML,1,"{'home': '1.36', 'away': '3.20'}"
+2026-10-01T15:31:11Z,75051234,2026-10-02T08:10:00Z,Bet365,"ATP - Tokyo, Japan","Fils, Arthur","Tiafoe, Frances",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051234,2026-10-02T08:10:00Z,Bet365,"ATP - Tokyo, Japan","Fils, Arthur","Tiafoe, Frances",Spread (Games),1,hdp=-3.5
+2026-10-01T15:31:11Z,75051234,2026-10-02T08:10:00Z,Bet365,"ATP - Tokyo, Japan","Fils, Arthur","Tiafoe, Frances",Team Total (Aces) Home,8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051234,2026-10-02T08:10:00Z,Bet365,"ATP - Tokyo, Japan","Fils, Arthur","Tiafoe, Frances",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051234,2026-10-02T08:10:00Z,Bet365,"ATP - Tokyo, Japan","Fils, Arthur","Tiafoe, Frances",Totals (Double Faults),8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051234,2026-10-02T08:10:00Z,Bet365,"ATP - Tokyo, Japan","Fils, Arthur","Tiafoe, Frances",Totals (Games),1,hdp=22.5
+2026-10-01T15:31:11Z,75051234,2026-10-02T08:10:00Z,Bet365,"ATP - Tokyo, Japan","Fils, Arthur","Tiafoe, Frances",Team Total (Aces) Away,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051234,2026-10-02T08:10:00Z,Bet365,"ATP - Tokyo, Japan","Fils, Arthur","Tiafoe, Frances",Team Total (Double Faults) Away,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75051234,2026-10-02T08:10:00Z,Bet365,"ATP - Tokyo, Japan","Fils, Arthur","Tiafoe, Frances",Team Total (Double Faults) Home,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051234,2026-10-02T08:10:00Z,Bet365,"ATP - Tokyo, Japan","Fils, Arthur","Tiafoe, Frances",Team Total (Games) Away,1,hdp=11.5
+2026-10-01T15:31:11Z,75051234,2026-10-02T08:10:00Z,Bet365,"ATP - Tokyo, Japan","Fils, Arthur","Tiafoe, Frances",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051234,2026-10-02T08:10:00Z,Bet365,"ATP - Tokyo, Japan","Fils, Arthur","Tiafoe, Frances",Totals (Aces),9,hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5 | hdp=24.5
+2026-10-01T15:31:11Z,75051480,2026-10-02T07:10:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",ML,1,"{'home': '1.61', 'away': '2.30'}"
+2026-10-01T15:31:11Z,75051480,2026-10-02T07:10:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Totals (Aces),6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051480,2026-10-02T07:10:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Spread (Games),1,hdp=-2.5
+2026-10-01T15:31:11Z,75051480,2026-10-02T07:10:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Team Total (Double Faults) Away,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75051480,2026-10-02T07:10:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Team Total (Games) Away,1,hdp=11.5
+2026-10-01T15:31:11Z,75051480,2026-10-02T07:10:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051480,2026-10-02T07:10:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Totals (Games),1,hdp=21.5
+2026-10-01T15:31:11Z,75051480,2026-10-02T07:10:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Totals (Double Faults),9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051480,2026-10-02T07:10:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051480,2026-10-02T07:10:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051480,2026-10-02T07:10:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051480,2026-10-02T07:10:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051480,2026-10-02T07:10:00Z,Bet365,"WTA - Beijing, China","Bartunkova, Nikola","Frech, Magdalena",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051394,2026-10-02T05:00:00Z,Bet365,"ATP - Beijing, China","Molcan, Alex","Khachanov, Karen",ML,1,"{'home': '4.50', 'away': '1.20'}"
+2026-10-01T15:31:11Z,75051394,2026-10-02T05:00:00Z,Bet365,"ATP - Beijing, China","Molcan, Alex","Khachanov, Karen",Totals (Double Faults),6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051394,2026-10-02T05:00:00Z,Bet365,"ATP - Beijing, China","Molcan, Alex","Khachanov, Karen",Totals (Games),1,hdp=21.5
+2026-10-01T15:31:11Z,75051394,2026-10-02T05:00:00Z,Bet365,"ATP - Beijing, China","Molcan, Alex","Khachanov, Karen",Spread (Games),1,hdp=4.5
+2026-10-01T15:31:11Z,75051394,2026-10-02T05:00:00Z,Bet365,"ATP - Beijing, China","Molcan, Alex","Khachanov, Karen",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051394,2026-10-02T05:00:00Z,Bet365,"ATP - Beijing, China","Molcan, Alex","Khachanov, Karen",Team Total (Double Faults) Home,4,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5
+2026-10-01T15:31:11Z,75051394,2026-10-02T05:00:00Z,Bet365,"ATP - Beijing, China","Molcan, Alex","Khachanov, Karen",Totals (Aces),8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051394,2026-10-02T05:00:00Z,Bet365,"ATP - Beijing, China","Molcan, Alex","Khachanov, Karen",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051394,2026-10-02T05:00:00Z,Bet365,"ATP - Beijing, China","Molcan, Alex","Khachanov, Karen",Team Total (Aces) Away,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051394,2026-10-02T05:00:00Z,Bet365,"ATP - Beijing, China","Molcan, Alex","Khachanov, Karen",Team Total (Double Faults) Away,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75051394,2026-10-02T05:00:00Z,Bet365,"ATP - Beijing, China","Molcan, Alex","Khachanov, Karen",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051394,2026-10-02T05:00:00Z,Bet365,"ATP - Beijing, China","Molcan, Alex","Khachanov, Karen",Team Total (Games) Home,1,hdp=8.5
+2026-10-01T15:31:11Z,75051394,2026-10-02T05:00:00Z,Bet365,"ATP - Beijing, China","Molcan, Alex","Khachanov, Karen",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051528,2026-10-02T06:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",ML,1,"{'home': '1.50', 'away': '2.62'}"
+2026-10-01T15:31:11Z,75051528,2026-10-02T06:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051528,2026-10-02T06:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Totals (Aces),9,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051528,2026-10-02T06:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Totals (Double Faults),8,hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051528,2026-10-02T06:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Team Total (Games) Away,1,hdp=10.5
+2026-10-01T15:31:11Z,75051528,2026-10-02T06:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051528,2026-10-02T06:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Team Total (Double Faults) Home,9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051528,2026-10-02T06:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051528,2026-10-02T06:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Totals (Games),1,hdp=20.5
+2026-10-01T15:31:11Z,75051528,2026-10-02T06:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051528,2026-10-02T06:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Spread (Games),1,hdp=-3.5
+2026-10-01T15:31:11Z,75051528,2026-10-02T06:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Team Total (Aces) Home,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051528,2026-10-02T06:00:00Z,Bet365,"WTA - Beijing, China","Tauson, Clara","Kudermetova, Polina",Team Total (Double Faults) Away,9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",ML,1,"{'home': '2.20', 'away': '1.66'}"
+2026-10-01T15:31:11Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Team Total (Aces) Home,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Totals (Games),1,hdp=23.5
+2026-10-01T15:31:11Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Totals (Double Faults),8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Spread (Games),1,hdp=1.5
+2026-10-01T15:31:11Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Team Total (Aces) Away,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Totals (Aces),9,hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5 | hdp=24.5
+2026-10-01T15:31:11Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Team Total (Double Faults) Away,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Team Total (Double Faults) Home,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051242,2026-10-02T07:00:00Z,Bet365,"ATP - Tokyo, Japan","Jacquet, Kyrian","Darderi, Luciano",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",ML,1,"{'home': '1.20', 'away': '4.50'}"
+2026-10-01T15:31:11Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Totals (Aces),8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Spread (Games),1,hdp=-4.5
+2026-10-01T15:31:11Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Team Total (Aces) Home,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Totals (Double Faults),8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Totals (Games),1,hdp=21.5
+2026-10-01T15:31:11Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Team Total (Aces) Away,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
+2026-10-01T15:31:11Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Team Total (Double Faults) Away,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Team Total (Double Faults) Home,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75134816,2026-10-02T07:00:00Z,Bet365,"ATP - Beijing, China","Medvedev, Daniil","Carreno Busta, Pablo",Team Total (Games) Away,1,hdp=8.5
+2026-10-01T15:31:11Z,75051516,2026-10-02T07:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",ML,1,"{'home': '1.11', 'away': '6.50'}"
+2026-10-01T15:31:11Z,75051516,2026-10-02T07:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051516,2026-10-02T07:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Spread (Games),1,hdp=-5.5
+2026-10-01T15:31:11Z,75051516,2026-10-02T07:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Team Total (Aces) Home,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051516,2026-10-02T07:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Team Total (Games) Away,1,hdp=6.5
+2026-10-01T15:31:11Z,75051516,2026-10-02T07:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051516,2026-10-02T07:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Totals (Games),1,hdp=18.5
+2026-10-01T15:31:11Z,75051516,2026-10-02T07:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Team Total (Aces) Away,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051516,2026-10-02T07:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Team Total (Double Faults) Away,9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051516,2026-10-02T07:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Team Total (Double Faults) Home,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75051516,2026-10-02T07:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051516,2026-10-02T07:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Totals (Aces),7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051516,2026-10-02T07:00:00Z,Bet365,"WTA - Beijing, China","Muchova, Karolina","Boulter, Katie",Totals (Double Faults),9,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
+2026-10-01T15:31:11Z,75051520,2026-10-02T06:30:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",ML,1,"{'home': '1.36', 'away': '3.20'}"
+2026-10-01T15:31:11Z,75051520,2026-10-02T06:30:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Team Total (Double Faults) Home,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051520,2026-10-02T06:30:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Totals (Games),1,hdp=20.5
+2026-10-01T15:31:11Z,75051520,2026-10-02T06:30:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051520,2026-10-02T06:30:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051520,2026-10-02T06:30:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Spread (Games),1,hdp=-4.5
+2026-10-01T15:31:11Z,75051520,2026-10-02T06:30:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051520,2026-10-02T06:30:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Totals (Aces),6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051520,2026-10-02T06:30:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Totals (Double Faults),8,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
+2026-10-01T15:31:11Z,75051520,2026-10-02T06:30:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Team Total (Aces) Away,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051520,2026-10-02T06:30:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Team Total (Aces) Home,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051520,2026-10-02T06:30:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Team Total (Double Faults) Away,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051520,2026-10-02T06:30:00Z,Bet365,"WTA - Beijing, China","Bejlek, Sara","Inglis, Maddison",Team Total (Games) Away,1,hdp=9.5
+2026-10-01T15:31:11Z,75051228,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Humbert, Ugo","Lehecka, Jiri",ML,1,"{'home': '2.62', 'away': '1.50'}"
+2026-10-01T15:31:11Z,75051228,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Humbert, Ugo","Lehecka, Jiri",Team Total (Aces) Home,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051228,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Humbert, Ugo","Lehecka, Jiri",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051228,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Humbert, Ugo","Lehecka, Jiri",Totals (Double Faults),7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051228,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Humbert, Ugo","Lehecka, Jiri",Spread (Games),1,hdp=2.5
+2026-10-01T15:31:11Z,75051228,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Humbert, Ugo","Lehecka, Jiri",Team Total (Aces) Away,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051228,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Humbert, Ugo","Lehecka, Jiri",Team Total (Double Faults) Away,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75051228,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Humbert, Ugo","Lehecka, Jiri",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051228,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Humbert, Ugo","Lehecka, Jiri",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051228,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Humbert, Ugo","Lehecka, Jiri",Totals (Aces),8,hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5 | hdp=24.5
+2026-10-01T15:31:11Z,75051228,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Humbert, Ugo","Lehecka, Jiri",Totals (Games),1,hdp=23.5
+2026-10-01T15:31:11Z,75051228,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Humbert, Ugo","Lehecka, Jiri",Team Total (Double Faults) Home,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051228,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Humbert, Ugo","Lehecka, Jiri",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",ML,1,"{'home': '3.75', 'away': '1.28'}"
+2026-10-01T15:31:11Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Spread (Games),1,hdp=4.5
+2026-10-01T15:31:11Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Team Total (Aces) Home,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Team Total (Games) Home,1,hdp=10.5
+2026-10-01T15:31:11Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Totals (Aces),8,hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5 | hdp=24.5
+2026-10-01T15:31:11Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Team Total (Aces) Away,7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051382,2026-10-02T12:30:00Z,Bet365,"ATP - Beijing, China","Bu, Yunchaokete","Djokovic, Novak",Totals (Games),1,hdp=21.5
+2026-10-01T15:31:11Z,75051238,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Shapovalov, Denis","Tabilo, Alejandro",ML,1,"{'home': '1.57', 'away': '2.37'}"
+2026-10-01T15:31:11Z,75051238,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Shapovalov, Denis","Tabilo, Alejandro",Team Total (Double Faults) Away,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75051238,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Shapovalov, Denis","Tabilo, Alejandro",Totals (Games),1,hdp=22.5
+2026-10-01T15:31:11Z,75051238,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Shapovalov, Denis","Tabilo, Alejandro",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051238,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Shapovalov, Denis","Tabilo, Alejandro",Spread (Games),1,hdp=-2.5
+2026-10-01T15:31:11Z,75051238,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Shapovalov, Denis","Tabilo, Alejandro",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051238,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Shapovalov, Denis","Tabilo, Alejandro",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051238,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Shapovalov, Denis","Tabilo, Alejandro",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051238,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Shapovalov, Denis","Tabilo, Alejandro",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051238,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Shapovalov, Denis","Tabilo, Alejandro",Totals (Aces),8,hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5 | hdp=24.5
+2026-10-01T15:31:11Z,75051238,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Shapovalov, Denis","Tabilo, Alejandro",Totals (Double Faults),9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051238,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Shapovalov, Denis","Tabilo, Alejandro",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051238,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Shapovalov, Denis","Tabilo, Alejandro",Team Total (Aces) Home,9,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051236,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Alcaraz, Carlos","Arnaldi, Matteo",ML,1,"{'home': '1.05', 'away': '11.00'}"
+2026-10-01T15:31:11Z,75051236,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Alcaraz, Carlos","Arnaldi, Matteo",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051236,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Alcaraz, Carlos","Arnaldi, Matteo",Spread (Games),1,hdp=-5.5
+2026-10-01T15:31:11Z,75051236,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Alcaraz, Carlos","Arnaldi, Matteo",Team Total (Games) Away,1,hdp=6.5
+2026-10-01T15:31:11Z,75051236,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Alcaraz, Carlos","Arnaldi, Matteo",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051236,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Alcaraz, Carlos","Arnaldi, Matteo",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051236,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Alcaraz, Carlos","Arnaldi, Matteo",Totals (Games),1,hdp=18.5
+2026-10-01T15:31:11Z,75051534,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Kartal, Sonay","Wang, Xinyu",ML,1,"{'home': '1.80', 'away': '2.00'}"
+2026-10-01T15:31:11Z,75051534,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Kartal, Sonay","Wang, Xinyu",Spread (Games),1,hdp=-1.5
+2026-10-01T15:31:11Z,75051534,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Kartal, Sonay","Wang, Xinyu",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051534,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Kartal, Sonay","Wang, Xinyu",Totals (Games),1,hdp=21.5
+2026-10-01T15:31:11Z,75051534,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Kartal, Sonay","Wang, Xinyu",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051522,2026-10-02T08:10:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",ML,1,"{'home': '4.00', 'away': '1.25'}"
+2026-10-01T15:31:11Z,75051522,2026-10-02T08:10:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051522,2026-10-02T08:10:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Totals (Aces),8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051522,2026-10-02T08:10:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Totals (Games),1,hdp=20.5
+2026-10-01T15:31:11Z,75051522,2026-10-02T08:10:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051522,2026-10-02T08:10:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051522,2026-10-02T08:10:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Spread (Games),1,hdp=4.5
+2026-10-01T15:31:11Z,75051522,2026-10-02T08:10:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Team Total (Aces) Away,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051522,2026-10-02T08:10:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051522,2026-10-02T08:10:00Z,Bet365,"WTA - Beijing, China","Timofeeva, Maria","Osaka, Naomi",Team Total (Games) Home,1,hdp=8.5
+2026-10-01T15:31:11Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",ML,1,"{'home': '15.00', 'away': '1.03'}"
+2026-10-01T15:31:11Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Team Total (Aces) Away,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Totals (Double Faults),7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Totals (Games),1,hdp=17.5
+2026-10-01T15:31:11Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Spread (Games),1,hdp=6.5
+2026-10-01T15:31:11Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Team Total (Aces) Home,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Team Total (Double Faults) Away,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Team Total (Double Faults) Home,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75051482,2026-10-02T11:00:00Z,Bet365,"WTA - Beijing, China","Zarazua, Renata","Sabalenka, Aryna",Totals (Aces),6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051536,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bouzkova, Marie","Birrell, Kimberly",ML,1,"{'home': '1.44', 'away': '2.75'}"
+2026-10-01T15:31:11Z,75051536,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bouzkova, Marie","Birrell, Kimberly",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051536,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bouzkova, Marie","Birrell, Kimberly",Team Total (Double Faults) Away,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051536,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bouzkova, Marie","Birrell, Kimberly",Spread (Games),1,hdp=-3.5
+2026-10-01T15:31:11Z,75051536,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bouzkova, Marie","Birrell, Kimberly",Team Total (Double Faults) Home,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051536,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bouzkova, Marie","Birrell, Kimberly",Team Total (Games) Away,1,hdp=10.5
+2026-10-01T15:31:11Z,75051536,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bouzkova, Marie","Birrell, Kimberly",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051536,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bouzkova, Marie","Birrell, Kimberly",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051536,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bouzkova, Marie","Birrell, Kimberly",Totals (Double Faults),8,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
+2026-10-01T15:31:11Z,75051536,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bouzkova, Marie","Birrell, Kimberly",Totals (Games),1,hdp=20.5
+2026-10-01T15:31:11Z,75051554,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bencic, Belinda","Zakharova, Anastasia",ML,1,"{'home': '1.22', 'away': '4.33'}"
+2026-10-01T15:31:11Z,75051554,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bencic, Belinda","Zakharova, Anastasia",Spread (Games),1,hdp=-5.5
+2026-10-01T15:31:11Z,75051554,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bencic, Belinda","Zakharova, Anastasia",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051554,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bencic, Belinda","Zakharova, Anastasia",Totals (Aces),6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051554,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bencic, Belinda","Zakharova, Anastasia",Totals (Games),1,hdp=19.5
+2026-10-01T15:31:11Z,75051554,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bencic, Belinda","Zakharova, Anastasia",Team Total (Aces) Away,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051554,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bencic, Belinda","Zakharova, Anastasia",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051554,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bencic, Belinda","Zakharova, Anastasia",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051554,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bencic, Belinda","Zakharova, Anastasia",Team Total (Double Faults) Away,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051554,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bencic, Belinda","Zakharova, Anastasia",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051554,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bencic, Belinda","Zakharova, Anastasia",Team Total (Games) Away,1,hdp=7.5
+2026-10-01T15:31:11Z,75051554,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bencic, Belinda","Zakharova, Anastasia",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051554,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Bencic, Belinda","Zakharova, Anastasia",Totals (Double Faults),8,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
+2026-10-01T15:31:11Z,75051532,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rybakina, Elena","Charaeva, Alina",ML,1,"{'home': '1.05', 'away': '11.00'}"
+2026-10-01T15:31:11Z,75051532,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rybakina, Elena","Charaeva, Alina",Spread (Games),1,hdp=-6.5
+2026-10-01T15:31:11Z,75051532,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rybakina, Elena","Charaeva, Alina",Team Total (Aces) Home,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051532,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rybakina, Elena","Charaeva, Alina",Team Total (Double Faults) Away,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051532,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rybakina, Elena","Charaeva, Alina",Totals (Aces),7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051532,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rybakina, Elena","Charaeva, Alina",Totals (Double Faults),9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051532,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rybakina, Elena","Charaeva, Alina",Totals (Games),1,hdp=17.5
+2026-10-01T15:31:11Z,75051532,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rybakina, Elena","Charaeva, Alina",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051532,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rybakina, Elena","Charaeva, Alina",Team Total (Double Faults) Home,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051532,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rybakina, Elena","Charaeva, Alina",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051532,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rybakina, Elena","Charaeva, Alina",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051374,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","de Minaur, Alex","Halys, Quentin",ML,1,"{'home': '1.28', 'away': '3.75'}"
+2026-10-01T15:31:11Z,75051374,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","de Minaur, Alex","Halys, Quentin",Totals (Games),1,hdp=22.5
+2026-10-01T15:31:11Z,75051374,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","de Minaur, Alex","Halys, Quentin",Team Total (Double Faults) Home,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75051374,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","de Minaur, Alex","Halys, Quentin",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051374,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","de Minaur, Alex","Halys, Quentin",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051374,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","de Minaur, Alex","Halys, Quentin",Totals (Double Faults),8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051374,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","de Minaur, Alex","Halys, Quentin",Spread (Games),1,hdp=-3.5
+2026-10-01T15:31:11Z,75051374,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","de Minaur, Alex","Halys, Quentin",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051374,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","de Minaur, Alex","Halys, Quentin",Team Total (Aces) Away,8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051374,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","de Minaur, Alex","Halys, Quentin",Team Total (Double Faults) Away,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051374,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","de Minaur, Alex","Halys, Quentin",Team Total (Games) Away,1,hdp=10.5
+2026-10-01T15:31:11Z,75051374,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","de Minaur, Alex","Halys, Quentin",Totals (Aces),8,hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5 | hdp=24.5
+2026-10-01T15:31:11Z,75051374,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","de Minaur, Alex","Halys, Quentin",Team Total (Aces) Home,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051538,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Zheng, Qinwen","Kalinskaya, Anna",ML,1,"{'home': '1.53', 'away': '2.50'}"
+2026-10-01T15:31:11Z,75051538,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Zheng, Qinwen","Kalinskaya, Anna",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051538,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Zheng, Qinwen","Kalinskaya, Anna",Team Total (Double Faults) Away,9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051538,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Zheng, Qinwen","Kalinskaya, Anna",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051538,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Zheng, Qinwen","Kalinskaya, Anna",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051538,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Zheng, Qinwen","Kalinskaya, Anna",Totals (Double Faults),8,hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051538,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Zheng, Qinwen","Kalinskaya, Anna",Totals (Games),1,hdp=21.5
+2026-10-01T15:31:11Z,75051538,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Zheng, Qinwen","Kalinskaya, Anna",Spread (Games),1,hdp=-3.5
+2026-10-01T15:31:11Z,75051538,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Zheng, Qinwen","Kalinskaya, Anna",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051538,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Zheng, Qinwen","Kalinskaya, Anna",Team Total (Aces) Home,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051538,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Zheng, Qinwen","Kalinskaya, Anna",Totals (Aces),8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051556,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Krueger, Ashlyn","Li, Ann",ML,1,"{'home': '2.10', 'away': '1.72'}"
+2026-10-01T15:31:11Z,75051556,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Krueger, Ashlyn","Li, Ann",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051556,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Krueger, Ashlyn","Li, Ann",Team Total (Aces) Home,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051556,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Krueger, Ashlyn","Li, Ann",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051556,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Krueger, Ashlyn","Li, Ann",Totals (Aces),8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051556,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Krueger, Ashlyn","Li, Ann",Totals (Games),1,hdp=22.5
+2026-10-01T15:31:11Z,75051556,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Krueger, Ashlyn","Li, Ann",Spread (Games),1,hdp=1.5
+2026-10-01T15:31:11Z,75051556,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Krueger, Ashlyn","Li, Ann",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051556,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Krueger, Ashlyn","Li, Ann",Team Total (Double Faults) Away,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051556,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Krueger, Ashlyn","Li, Ann",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051556,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Krueger, Ashlyn","Li, Ann",Totals (Double Faults),8,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
+2026-10-01T15:31:11Z,75051508,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Jovic, Iva","Dart, Harriet",ML,1,"{'home': '1.08', 'away': '8.00'}"
+2026-10-01T15:31:11Z,75051508,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Jovic, Iva","Dart, Harriet",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051508,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Jovic, Iva","Dart, Harriet",Totals (Games),1,hdp=17.5
+2026-10-01T15:31:11Z,75051508,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Jovic, Iva","Dart, Harriet",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051508,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Jovic, Iva","Dart, Harriet",Spread (Games),1,hdp=-6.5
+2026-10-01T15:31:11Z,75051508,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Jovic, Iva","Dart, Harriet",Team Total (Games) Away,1,hdp=5.5
+2026-10-01T15:31:11Z,75051508,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Jovic, Iva","Dart, Harriet",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051380,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","Zverev, Alexander","Shang, Juncheng",ML,1,"{'home': '1.11', 'away': '6.50'}"
+2026-10-01T15:31:11Z,75051380,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","Zverev, Alexander","Shang, Juncheng",Spread (Games),1,hdp=-4.5
+2026-10-01T15:31:11Z,75051380,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","Zverev, Alexander","Shang, Juncheng",Team Total (Games) Away,1,hdp=8.5
+2026-10-01T15:31:11Z,75051380,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","Zverev, Alexander","Shang, Juncheng",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051380,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","Zverev, Alexander","Shang, Juncheng",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051380,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","Zverev, Alexander","Shang, Juncheng",Totals (Games),1,hdp=20.5
+2026-10-01T15:31:11Z,75051380,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","Zverev, Alexander","Shang, Juncheng",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051552,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Volynets, Katie","Mertens, Elise",ML,1,"{'home': '2.00', 'away': '1.80'}"
+2026-10-01T15:31:11Z,75051552,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Volynets, Katie","Mertens, Elise",Team Total (Aces) Home,4,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051552,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Volynets, Katie","Mertens, Elise",Team Total (Double Faults) Away,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051552,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Volynets, Katie","Mertens, Elise",Totals (Double Faults),9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051552,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Volynets, Katie","Mertens, Elise",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051552,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Volynets, Katie","Mertens, Elise",Team Total (Double Faults) Home,5,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5
+2026-10-01T15:31:11Z,75051552,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Volynets, Katie","Mertens, Elise",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051552,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Volynets, Katie","Mertens, Elise",Totals (Aces),6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051552,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Volynets, Katie","Mertens, Elise",Totals (Games),1,hdp=22.5
+2026-10-01T15:31:11Z,75051552,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Volynets, Katie","Mertens, Elise",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051552,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Volynets, Katie","Mertens, Elise",Spread (Games),1,hdp=0.5
+2026-10-01T15:31:11Z,75051560,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Siniakova, Katerina","Svitolina, Elina",ML,1,"{'home': '3.50', 'away': '1.30'}"
+2026-10-01T15:31:11Z,75051560,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Siniakova, Katerina","Svitolina, Elina",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051560,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Siniakova, Katerina","Svitolina, Elina",Team Total (Double Faults) Away,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051560,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Siniakova, Katerina","Svitolina, Elina",Team Total (Double Faults) Home,9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051560,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Siniakova, Katerina","Svitolina, Elina",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051560,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Siniakova, Katerina","Svitolina, Elina",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051560,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Siniakova, Katerina","Svitolina, Elina",Totals (Double Faults),9,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
+2026-10-01T15:31:11Z,75051560,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Siniakova, Katerina","Svitolina, Elina",Spread (Games),1,hdp=4.5
+2026-10-01T15:31:11Z,75051560,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Siniakova, Katerina","Svitolina, Elina",Team Total (Games) Home,1,hdp=8.5
+2026-10-01T15:31:11Z,75051560,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Siniakova, Katerina","Svitolina, Elina",Totals (Games),1,hdp=19.5
+2026-10-01T15:31:11Z,75051510,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rakhimova, Kamilla","Fernandez, Leylah",ML,1,"{'home': '3.50', 'away': '1.30'}"
+2026-10-01T15:31:11Z,75051510,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rakhimova, Kamilla","Fernandez, Leylah",Spread (Games),1,hdp=4.5
+2026-10-01T15:31:11Z,75051510,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rakhimova, Kamilla","Fernandez, Leylah",Team Total (Games) Home,1,hdp=8.5
+2026-10-01T15:31:11Z,75051510,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rakhimova, Kamilla","Fernandez, Leylah",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051510,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rakhimova, Kamilla","Fernandez, Leylah",Totals (Aces),7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051510,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rakhimova, Kamilla","Fernandez, Leylah",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051510,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rakhimova, Kamilla","Fernandez, Leylah",Team Total (Double Faults) Away,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051510,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rakhimova, Kamilla","Fernandez, Leylah",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051510,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rakhimova, Kamilla","Fernandez, Leylah",Team Total (Aces) Home,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051510,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rakhimova, Kamilla","Fernandez, Leylah",Team Total (Double Faults) Home,8,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051510,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rakhimova, Kamilla","Fernandez, Leylah",Totals (Double Faults),9,hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5
+2026-10-01T15:31:11Z,75051510,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rakhimova, Kamilla","Fernandez, Leylah",Totals (Games),1,hdp=19.5
+2026-10-01T15:31:11Z,75051510,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Rakhimova, Kamilla","Fernandez, Leylah",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051550,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Ostapenko, Jelena","Badosa, Paula",ML,1,"{'home': '2.37', 'away': '1.57'}"
+2026-10-01T15:31:11Z,75051550,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Ostapenko, Jelena","Badosa, Paula",Team Total (Aces) Away,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051550,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Ostapenko, Jelena","Badosa, Paula",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051550,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Ostapenko, Jelena","Badosa, Paula",Totals (Aces),8,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051550,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Ostapenko, Jelena","Badosa, Paula",Team Total (Games) Home,1,hdp=11.5
+2026-10-01T15:31:11Z,75051550,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Ostapenko, Jelena","Badosa, Paula",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051550,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Ostapenko, Jelena","Badosa, Paula",Team Total (Double Faults) Away,10,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051550,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Ostapenko, Jelena","Badosa, Paula",Team Total (Double Faults) Home,9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051550,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Ostapenko, Jelena","Badosa, Paula",Team Total (Games) Away,1,hdp=12.5
+2026-10-01T15:31:11Z,75051550,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Ostapenko, Jelena","Badosa, Paula",Totals (Double Faults),7,hdp=4.5 | hdp=7.5 | hdp=9.5 | hdp=11.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051550,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Ostapenko, Jelena","Badosa, Paula",Totals (Games),1,hdp=20.5
+2026-10-01T15:31:11Z,75051550,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Ostapenko, Jelena","Badosa, Paula",Spread (Games),1,hdp=3.5
+2026-10-01T15:31:11Z,75051550,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Ostapenko, Jelena","Badosa, Paula",Team Total (Aces) Home,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051558,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Sakkari, Maria","Hunter, Storm",ML,1,"{'home': '1.50', 'away': '2.62'}"
+2026-10-01T15:31:11Z,75051558,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Sakkari, Maria","Hunter, Storm",Totals (Double Faults),9,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051558,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Sakkari, Maria","Hunter, Storm",Totals 1st Set,6,hdp=6.5 | hdp=7.5 | hdp=8.5 | hdp=9.5 | hdp=10.5 | hdp=12.5
+2026-10-01T15:31:11Z,75051558,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Sakkari, Maria","Hunter, Storm",Team Total (Double Faults) Away,7,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051558,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Sakkari, Maria","Hunter, Storm",Team Total (Games) Away,1,hdp=11.5
+2026-10-01T15:31:11Z,75051558,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Sakkari, Maria","Hunter, Storm",Totals (Aces),7,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051558,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Sakkari, Maria","Hunter, Storm",Team Total (Double Faults) Home,6,hdp=0.5 | hdp=1.5 | hdp=2.5 | hdp=4.5 | hdp=7.5 | hdp=9.5
+2026-10-01T15:31:11Z,75051558,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Sakkari, Maria","Hunter, Storm",Totals (Games),1,hdp=21.5
+2026-10-01T15:31:11Z,75051558,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Sakkari, Maria","Hunter, Storm",Team Total (Games) Home,1,hdp=12.5
+2026-10-01T15:31:11Z,75051558,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Sakkari, Maria","Hunter, Storm",Set Betting,4,label=2-0 (1) | label=2-0 (2) | label=2-1 (1) | label=2-1 (2)
+2026-10-01T15:31:11Z,75051558,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Sakkari, Maria","Hunter, Storm",Spread (Games),1,hdp=-3.5
+2026-10-01T15:31:11Z,75051558,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Sakkari, Maria","Hunter, Storm",Team Total (Aces) Away,5,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5
+2026-10-01T15:31:11Z,75051558,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Sakkari, Maria","Hunter, Storm",Team Total (Aces) Home,6,hdp=0.5 | hdp=2.5 | hdp=4.5 | hdp=9.5 | hdp=14.5 | hdp=19.5
+2026-10-01T15:31:11Z,75051392,2026-10-02T11:00:00Z,Bet365,"ATP - Beijing, China","Hurkacz, Hubert","Gea, Arthur",<NO_BET365_MARKETS_RETURNED>,0,
+2026-10-01T15:31:11Z,75051230,2026-10-03T02:00:00Z,Bet365,"ATP - Tokyo, Japan","Berrettini, Matteo","Vallejo, Adolfo Daniel",<NO_BET365_MARKETS_RETURNED>,0,
+2026-10-01T15:31:11Z,75051514,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Gao, Xinyu","Swiatek, Iga",<NO_BET365_MARKETS_RETURNED>,0,
+2026-10-01T15:31:11Z,75051546,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Gauff, Coco","Osorio, Camila",<NO_BET365_MARKETS_RETURNED>,0,
+2026-10-01T15:31:11Z,75051376,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","Rublev, Andrey","Safiullin, Roman",<NO_BET365_MARKETS_RETURNED>,0,
+2026-10-01T15:31:11Z,75051548,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Sun, Xinran","Bucsa, Cristina",<NO_BET365_MARKETS_RETURNED>,0,
+2026-10-01T15:31:11Z,75051512,2026-10-03T03:00:00Z,Bet365,"WTA - Beijing, China","Vekic, Donna","Zhu, Lin",<NO_BET365_MARKETS_RETURNED>,0,
+2026-10-01T15:31:11Z,75051372,2026-10-03T03:00:00Z,Bet365,"ATP - Beijing, China","Cerundolo, Francisco","Mensik, Jakub",<NO_BET365_MARKETS_RETURNED>,0,
