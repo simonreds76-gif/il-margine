@@ -8,6 +8,7 @@ import { BRAND } from "@/lib/brand";
 import SportIcon from "./SportIcon";
 
 const TIP_LINKS = [{ href: "/tennis-tips", label: "Tennis tips" }, { href: "/player-props", label: "Player props" }];
+const MATCHDAY = { href: "/football-atlas/fixtures", label: "Matchday" };
 const PRIMARY_LINKS = [
   { href: "/penalty-takers", label: "Penalty takers" },
   { href: "/fair-odds-lab", label: "Fair Odds Lab" },
@@ -35,6 +36,10 @@ function Chevron() {
   return <svg aria-hidden="true" className="h-4 w-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="m6 9 6 6 6-6" /></svg>;
 }
 
+function MatchdayMark() {
+  return <Image src="/football-atlas/matchday/mark-v1.svg" width={28} height={28} alt="" className="h-7 w-7 shrink-0" unoptimized />;
+}
+
 function AtlasIcon({ href, sport }: { href: string; sport: "football" | "tennis" }) {
   return href === "/manager-atlas"
     ? <Image src="/manager-atlas/mark-v2.svg" width={32} height={32} alt="" className="h-8 w-8 shrink-0 object-contain" unoptimized />
@@ -49,12 +54,12 @@ export default function GlobalNav() {
   const showMonitorLink = process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
   const resources = showMonitorLink ? [...RESOURCE_LINKS, { href: "/model-monitor", label: "Model monitor" }] : RESOURCE_LINKS;
   const closeMenus = () => nav.current?.querySelectorAll<HTMLDetailsElement>("details[open]").forEach((menu) => { menu.open = false; });
-  const activeHref = [...TIP_LINKS, ...PRIMARY_LINKS, ...ATLAS_LINKS, ...resources]
+  const activeHref = [MATCHDAY, ...TIP_LINKS, ...PRIMARY_LINKS, ...ATLAS_LINKS, ...resources]
     .reduce<string | undefined>((best, { href }) =>
       (pathname === href || pathname.startsWith(href + "/")) && href.length > (best?.length ?? 0) ? href : best,
     undefined);
   const active = (href: string) => href === activeHref;
-  const linkClass = (href: string) => `inline-flex min-h-11 items-center rounded-xl border border-transparent px-3 text-sm font-semibold transition-colors ${active(href) ? "border-emerald-300/25 bg-emerald-300/10 text-emerald-200" : "text-slate-300 hover:border-emerald-300/20 hover:bg-emerald-300/10 hover:text-emerald-100"}`;
+  const linkClass = (href: string) => `inline-flex min-h-11 items-center whitespace-nowrap rounded-xl border border-transparent px-3 text-sm font-semibold transition-colors ${active(href) ? "border-emerald-300/25 bg-emerald-300/10 text-emerald-200" : "text-slate-300 hover:border-emerald-300/20 hover:bg-emerald-300/10 hover:text-emerald-100"}`;
   const current = (href: string) => pathname === href ? "page" as const : active(href) ? "location" as const : undefined;
 
   useEffect(() => {
@@ -79,13 +84,14 @@ export default function GlobalNav() {
 
   return <nav ref={nav} aria-label="Main navigation" onKeyDown={escapeMenu} className="public-navigation sticky top-0 z-50 border-b border-slate-800 bg-[#0f1117]/95 backdrop-blur-sm">
     <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 xl:h-20">
-      <Link prefetch={false} href="/" aria-label="Il Margine home" onClick={closeMenus} className="flex min-h-11 shrink-0 items-center rounded-lg"><Image src={BRAND.compact} alt="Il Margine" width={700} height={168} className="h-auto w-[196px] max-w-full object-contain lg:w-[210px] xl:w-[240px]" priority unoptimized /></Link>
+      <Link prefetch={false} href="/" aria-label="Il Margine home" onClick={closeMenus} className="flex min-h-11 shrink-0 items-center rounded-lg"><Image src={BRAND.compact} alt="Il Margine" width={700} height={168} className="h-auto w-[166px] min-[360px]:w-[196px] max-w-full object-contain lg:w-[210px] xl:w-[240px]" priority unoptimized /></Link>
       <div className="hidden items-center gap-1 xl:flex">
         <details name="desktop-site-navigation" onBlur={closeWhenFocusLeaves} className="group relative">
           <summary className={`flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium hover:bg-slate-800/60 [&::-webkit-details-marker]:hidden ${TIP_LINKS.some((link) => active(link.href)) ? "text-emerald-300" : "text-slate-300"}`}>Tips <Chevron /></summary>
           <div className="absolute left-0 top-full mt-2 w-48 rounded-xl border border-slate-700 bg-slate-950 p-2 shadow-xl shadow-black/30">{TIP_LINKS.map((link) => <Link prefetch={false} key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={`flex w-full ${linkClass(link.href)}`}>{link.label}</Link>)}</div>
         </details>
         {PRIMARY_LINKS.slice(0, 2).map((link) => <Link prefetch={false} key={link.href} href={link.href} onClick={closeMenus} aria-current={current(link.href)} className={linkClass(link.href)}>{link.label}</Link>)}
+        <Link prefetch={false} href={MATCHDAY.href} onClick={closeMenus} aria-current={current(MATCHDAY.href)} className={`gap-1.5 ${linkClass(MATCHDAY.href)}`}><MatchdayMark />{MATCHDAY.label}</Link>
         <details name="desktop-site-navigation" onBlur={closeWhenFocusLeaves} className="group relative">
           <summary className={`flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium hover:bg-slate-800/60 [&::-webkit-details-marker]:hidden ${ATLAS_LINKS.some((link) => active(link.href)) ? "text-emerald-300" : "text-slate-300"}`}>Return Atlas <Chevron /></summary>
           <div className="absolute right-0 top-full mt-2 w-72 rounded-xl border border-slate-700 bg-slate-950 p-2 shadow-xl shadow-black/30">{ATLAS_LINKS.map((link) => <div key={link.href}>
@@ -104,6 +110,9 @@ export default function GlobalNav() {
           <svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" /></svg>Menu
         </summary>
         <div className="absolute inset-x-0 top-full max-h-[calc(100dvh-72px)] overflow-y-auto border-b border-slate-700 bg-[#0f1117] shadow-xl shadow-black/30">
+          <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6">
+            <Link prefetch={false} href={MATCHDAY.href} onClick={closeMenus} aria-current={current(MATCHDAY.href)} className="flex min-h-16 items-center gap-3 rounded-xl border border-emerald-300/25 bg-emerald-300/10 px-4 py-3 text-emerald-200"><MatchdayMark /><span className="text-base font-semibold">{MATCHDAY.label}<small className="block text-xs font-normal text-slate-300">Upcoming fixtures &amp; H2H returns</small></span><span className="ml-auto" aria-hidden="true">↗</span></Link>
+          </div>
           <div className="mx-auto grid max-w-7xl gap-5 px-4 py-5 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
             {[{ label: "Tips", links: TIP_LINKS }, { label: "Explore", links: PRIMARY_LINKS }, { label: "Return Atlas", links: ATLAS_LINKS }, { label: "Tools & guides", links: resources }].map((group) => <div key={group.label}>
               <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">{group.label}</p>

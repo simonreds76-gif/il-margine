@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import Footer from "@/components/Footer";
 import release from "@/data/manager-atlas-release.json";
 import { MANAGER_ATLAS_FAQS } from "@/lib/manager-atlas-faq";
@@ -41,7 +42,7 @@ export default function ManagerAtlasPage() {
   const schema = [{ "@context": "https://schema.org", "@type": "WebApplication", name: "Return Atlas Managers", url, description, applicationCategory: "SportsApplication", operatingSystem: "Any", isAccessibleForFree: true }, { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: MANAGER_ATLAS_FAQS.map(({ question, answer }) => ({ "@type": "Question", name: question, acceptedAnswer: { "@type": "Answer", text: answer } })) }];
   return <><main className="manager-atlas">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
-    <Link className="manager-fixtures-entry" href="/football-atlas/fixtures" prefetch={false}><span><strong>The record before kickoff</strong><small>See upcoming fixtures with manager and club H2H returns</small></span><span aria-hidden="true">↗</span></Link>
+    <Link className="manager-fixtures-entry" href="/football-atlas/fixtures" prefetch={false}><Image src="/football-atlas/matchday/mark-v1.svg" alt="" width={42} height={42} unoptimized className="shrink-0" /><span><strong>Return Atlas Matchday</strong><small>See upcoming fixtures with manager and club H2H returns</small></span><span aria-hidden="true" className="ml-auto">↗</span></Link>
     <ManagerClient html={html} indexUrl={release.indexUrl} />
     <noscript><p>Enable JavaScript to filter the archive and compare managers. Coverage, explanations and FAQs remain available below.</p></noscript>
     <section className="manager-faq" id="manager-faq"><p className="eyebrow">UNDERSTAND THE RECORD</p><h2>Manager Return Atlas FAQs</h2>{MANAGER_ATLAS_FAQS.map(({ question, answer }) => <details key={question}><summary>{question}</summary><p>{answer}</p></details>)}</section>
