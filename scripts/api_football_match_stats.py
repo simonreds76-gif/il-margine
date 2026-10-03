@@ -12,6 +12,7 @@ from __future__ import annotations
 from collections import defaultdict
 from datetime import date
 import os
+import math
 from typing import Dict, Iterable, List, Optional
 
 import requests
@@ -46,15 +47,17 @@ def _season_for_day(day: date) -> int:
 
 
 def _safe_int(value: object) -> Optional[int]:
-    if value is None:
+    # Counts and provider IDs are whole, non-negative numbers. Never truncate
+    # malformed counts or treat an unavailable value as an observed zero.
+    if value is None or isinstance(value, bool):
         return None
     try:
-        text = str(value).strip()
-        if not text:
-            return None
-        return int(float(text))
+        parsed = float(str(value).strip())
     except (TypeError, ValueError):
         return None
+    if not math.isfinite(parsed) or parsed < 0 or not parsed.is_integer():
+        return None
+    return int(parsed)
 
 
 def _extract_stat_int(stat_rows: Iterable[dict], names: Iterable[str]) -> Optional[int]:
@@ -68,15 +71,14 @@ def _extract_stat_int(stat_rows: Iterable[dict], names: Iterable[str]) -> Option
 
 
 def _stats_for_team(stats_response: List[dict], team_id: Optional[int], fallback_index: int) -> list[dict]:
-    """Return the correct team's stats without trusting API response order."""
-    if team_id is not None:
-        for row in stats_response:
-            candidate_id = _safe_int((row.get("team") or {}).get("id"))
-            if candidate_id == team_id:
-                return row.get("statistics") or []
-    if 0 <= fallback_index < len(stats_response):
-        return stats_response[fallback_index].get("statistics") or []
-    return []
+    """Return uniquely identified team stats; response order is not identity."""
+    if team_id is None:
+        return []
+    matches = [row for row in stats_response
+               if _safe_int((row.get("team") or {}).get("id")) == team_id]
+    if len(matches) != 1:
+        return []
+    return matches[0].get("statistics") or []
 
 
 def _sum_optional(left: Optional[int], right: Optional[int]) -> Optional[int]:
