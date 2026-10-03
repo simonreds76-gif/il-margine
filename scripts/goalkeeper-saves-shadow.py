@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from football_team_names import football_form_team_key
+from goalkeeper_forecast_evidence import archive as archive_forecast_inputs, source_hashes
 from goalkeeper_saves_live import (
     ROOT,
     build_features,
@@ -223,6 +224,7 @@ def build_candidates(
         opponent = away if side == "home" else home if side == "away" else ""
         venue = side
         model_mean = None
+        features = None
         priced: dict[str, float] = {}
         diagnostics: dict[str, Any] = {}
         data_issues: list[str] = []
@@ -275,6 +277,9 @@ def build_candidates(
         rows.append(
             {
                 "generated_at": generated_at,
+                "_research_features": list(features) if features is not None else None,
+                "_research_quote": dict(price_row),
+                "_research_lineup": fixture,
                 "event_id": price_row.get("event_id", ""),
                 "match_date": match_day.isoformat(),
                 "kickoff_at": price_row.get("kickoff_at", ""),
@@ -460,15 +465,27 @@ def main() -> None:
 
     now = datetime.now(UTC).replace(microsecond=0)
     generated_at = now.isoformat().replace("+00:00", "Z")
+    lineups = lineup_paths()
+    input_hashes = source_hashes([args.params, args.form, args.history, *lineups,
+        Path(__file__), ROOT / "scripts/goalkeeper_saves_live.py",
+        ROOT / "scripts/football_counts.py", ROOT / "scripts/football_team_names.py",
+        ROOT / "scripts/goalkeeper_forecast_evidence.py"])
     params = json.loads(args.params.read_text(encoding="utf-8"))
     prices = latest_price_rows(read_csv(args.history), now)
     candidates = apply_starter_tracking_policy(build_candidates(
         prices,
         load_team_histories(args.form),
         params,
-        load_lineup_index(lineup_paths()),
+        load_lineup_index(lineups),
         generated_at,
     ))
+    evidence_folder = args.signals.parent / "forecast-inputs"
+    try:
+        input_capture = archive_forecast_inputs(evidence_folder, candidates, params, input_hashes)
+    except (OSError, ValueError, TypeError) as exc:
+        input_capture = {"status": "BLOCKED", "reason": type(exc).__name__, "saved": 0}
+    evidence_folder.mkdir(parents=True, exist_ok=True)
+    (evidence_folder / "status.json").write_text(json.dumps(input_capture, indent=2) + "\n", encoding="utf-8")
     existing_candidates = apply_starter_tracking_policy(read_csv(args.candidates))
     board_preserved = should_preserve_candidate_board(existing_candidates, candidates, now)
     effective_candidates = existing_candidates if board_preserved else candidates
@@ -494,6 +511,7 @@ def main() -> None:
         provisional_count=len(provisional),
     )
     args.report.parent.mkdir(parents=True, exist_ok=True)
+    payload["forecast_input_capture"] = input_capture
     args.report.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     evidence = payload["evidence"]
     current = payload["current"]
