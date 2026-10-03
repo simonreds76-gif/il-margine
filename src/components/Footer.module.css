@@ -1,9 +1,10 @@
-.footer { border-top: 1px solid #263a36; background: radial-gradient(ellipse at 0 0, #11221d 0, transparent 52%), #0a1014; color: #bdcad0; }
+.footer { isolation: isolate; border-top: 1px solid #263a36; background: radial-gradient(ellipse at 0 0, #11221d 0, transparent 52%), #0a1014; color: #bdcad0; }
 .container { max-width: 1280px; margin: 0 auto; padding: 48px 24px 24px; }
 .main { display: grid; gap: 36px; }
 .brand { max-width: 320px; }
 .logo { display: block; width: 300px; max-width: 100%; border-radius: 4px; }
-.logo img { display: block; width: 100%; height: auto; }
+/* Let the footer show through the artwork's dark matte without redrawing the brand. */
+.logo img { display: block; width: 100%; height: auto; mix-blend-mode: lighten; }
 .social { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-top: 12px; margin-left: -10px; border-radius: 50%; }
 .groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 24px; }
 .group { min-width: 0; }
