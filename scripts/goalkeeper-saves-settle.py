@@ -11,7 +11,6 @@ import argparse
 import csv
 import json
 import os
-import re
 from collections import Counter, defaultdict
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
@@ -19,16 +18,14 @@ from typing import Any
 
 import requests
 
-from verified_player_targets import archive_observed_targets
+from verified_player_targets import archive_observed_targets, stat_values, count
 from football_team_names import football_form_team_key
 from goalkeeper_saves_live import ROOT, parse_float, person_match_score
 
 
 BASE_URL = "https://v3.football.api-sports.io"
 FOTMOB_MATCHES_URL = "https://www.fotmob.com/api/data/matches"
-FOTMOB_MATCH_URL = "https://www.fotmob.com/api/data/match"
-FOTMOB_WEB_BASE = "https://www.fotmob.com"
-FOTMOB_NEXT_DATA_RE = re.compile(r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>')
+FOTMOB_MATCH_URL = "https://www.fotmob.com/api/data/matchDetails"
 FOTMOB_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122 Safari/537.36",
     "Accept": "application/json, text/plain, */*",
@@ -140,16 +137,25 @@ def request_fotmob_json(url: str, params: dict[str, Any]) -> dict[str, Any]:
 
 
 def request_fotmob_match_payload(match_id: int) -> dict[str, Any]:
-    metadata = request_fotmob_json(FOTMOB_MATCH_URL, {"id": match_id})
-    page_url = str(metadata.get("pageUrl") or "").strip()
-    if not page_url:
-        raise ValueError(f"FotMob match {match_id} has no pageUrl")
-    response = requests.get(f"{FOTMOB_WEB_BASE}{page_url}", headers=FOTMOB_HEADERS, timeout=30)
-    response.raise_for_status()
-    match = FOTMOB_NEXT_DATA_RE.search(response.text)
-    if not match:
-        raise ValueError(f"FotMob match {match_id} has no __NEXT_DATA__ payload")
-    return json.loads(match.group(1))
+    # A fragment on a team-pair page is not sent to the server. Its HTML can
+    # therefore describe a newer meeting than the requested historical match.
+    page = request_fotmob_json(FOTMOB_MATCH_URL, {"matchId": match_id})
+    if str((page.get("general") or {}).get("matchId")) != str(match_id):
+        raise ValueError(f"FotMob requested match {match_id} identity mismatch")
+    return {"props": {"pageProps": page}}
+
+
+def validate_fotmob_fixture(payload: dict[str, Any], fixture: dict[str, Any], day: str) -> None:
+    general = payload["props"]["pageProps"].get("general") or {}
+    if (str(general.get("matchId")) != str(fixture.get("id"))
+            or str(general.get("matchTimeUTCDate") or "")[:10] != day
+            or general.get("finished") is not True):
+        raise ValueError("FotMob fixture ID, date or completed status mismatch")
+    for side in ("home", "away"):
+        expected = (fixture.get(side) or {}).get("id")
+        actual = (general.get(side + "Team") or {}).get("id")
+        if not expected or str(expected) != str(actual):
+            raise ValueError("FotMob fixture team identity mismatch")
 
 
 def fotmob_fixtures(payload: dict[str, Any], league: str) -> list[dict[str, Any]]:
@@ -165,9 +171,13 @@ def fotmob_fixtures(payload: dict[str, Any], league: str) -> list[dict[str, Any]
 
 
 def fotmob_fixture_match(row: dict[str, Any], home: str, away: str) -> bool:
-    source_home = football_form_team_key((row.get("home") or {}).get("longName") or (row.get("home") or {}).get("name"))
-    source_away = football_form_team_key((row.get("away") or {}).get("longName") or (row.get("away") or {}).get("name"))
-    return source_home == football_form_team_key(home) and source_away == football_form_team_key(away)
+    aliases = {"lille osc": "lille", "estac troyes": "troyes"}
+    def key(value: object) -> str:
+        normalized = football_form_team_key(value)
+        return aliases.get(normalized, normalized)
+    source_home = key((row.get("home") or {}).get("longName") or (row.get("home") or {}).get("name"))
+    source_away = key((row.get("away") or {}).get("longName") or (row.get("away") or {}).get("name"))
+    return source_home == key(home) and source_away == key(away)
 
 
 def fotmob_player_saves(payload: dict[str, Any], goalkeeper: str) -> tuple[int | None, dict[str, Any]]:
@@ -219,6 +229,15 @@ def fotmob_player_saves(payload: dict[str, Any], goalkeeper: str) -> tuple[int |
         if str(shot.get("period") or "").casefold() in {"penaltyshootout", "penalty shootout"}:
             continue
         saves.add(str(shot.get("id") or f"row-{index}"))
+    named_stats = (content.get("playerStats") or {}).get(str(keeper_id))
+    if named_stats:
+        try:
+            explicit = count(stat_values(named_stats).get("saves"))
+        except ValueError:
+            return None, {"error": "fotmob_conflicting_player_totals"}
+        if explicit is not None and explicit != len(saves):
+            return None, {"error": "fotmob_save_totals_disagree", "player_id": keeper_id,
+                          "explicit_saves": explicit, "event_saves": len(saves)}
     return len(saves), {
         "player_id": keeper_id,
         "player_name": player.get("name"),
@@ -427,11 +446,11 @@ def main() -> None:
                 unresolved.append(signal)
                 continue
             try:
+                fotmob_requests_used += 1
                 date_cache[day_text] = request_fotmob_json(
                     FOTMOB_MATCHES_URL,
                     {"date": day_text.replace("-", "")},
                 )
-                fotmob_requests_used += 1
             except Exception as exc:
                 record(signal, "fotmob_fixture_request_failed", str(exc)[:240])
                 unresolved.append(signal)
@@ -452,13 +471,15 @@ def main() -> None:
             unresolved.append(signal)
             continue
         if match_id not in match_cache:
-            if fotmob_requests_used + 2 > args.max_fotmob_requests:
+            if fotmob_requests_used + 1 > args.max_fotmob_requests:
                 record(signal, "fotmob_request_budget_exhausted")
                 unresolved.append(signal)
                 continue
             try:
-                match_cache[match_id] = request_fotmob_match_payload(match_id)
-                fotmob_requests_used += 2
+                fotmob_requests_used += 1
+                fetched = request_fotmob_match_payload(match_id)
+                validate_fotmob_fixture(fetched, fixture, day_text)
+                match_cache[match_id] = fetched
                 # Reuse the existing response; target collection adds no requests.
                 try:
                     target_capture.append(archive_observed_targets(
