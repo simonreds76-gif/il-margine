@@ -104,6 +104,7 @@ test('penalty data reuses its date formatter and preserves date output',async()=
   'server-only':{},'react':{cache:f=>f},
   '@/lib/config':{BASE_URL:'https://ilmargine.bet'},
   '@/lib/player-name-matching':compile(fs.readFileSync(path.join(root,'src/lib/player-name-matching.ts'),'utf8')),
+  '@/lib/football-club-names':compile(fs.readFileSync(path.join(root,'src/lib/football-club-names.ts'),'utf8')),
   '../../data/goalscorer/penalty-player-portraits.json':JSON.parse(fs.readFileSync(path.join(root,'data/goalscorer/penalty-player-portraits.json'),'utf8')),
   '@/lib/project-file-paths':{getKnownProjectFilePath:p=>path.join(root,p)},
   '../../data/goalscorer/club-penalty-season.json':JSON.parse(fs.readFileSync(path.join(root,'data/goalscorer/club-penalty-season.json'),'utf8')),
