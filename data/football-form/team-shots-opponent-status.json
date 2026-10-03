@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T14:25:27Z",
+  "generated_at": "2026-10-03T18:16:09Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -12,11 +12,11 @@
     "pending": 0,
     "pnl_units": -14.519999999999996,
     "roi": -0.41485714285714276,
+    "void": 1,
     "wins": 11,
     "losses": 24,
     "true_close_count": 9,
-    "mean_clv": 0.021458333333333333,
-    "void": 1
+    "mean_clv": 0.021458333333333333
   },
   "latest_scan": {
     "scored_rows": 0,
@@ -103,7 +103,5 @@
   },
   "review_policy": "Review after 150 settled fixtures and at least 8 weeks; require positive ROI, at least 70% true closing coverage, positive mean CLV and calibration review. Manual promotion only.",
   "review_status": "COLLECTING_FIXED_POLICY",
-  "age_days": 20,
-  "settlement_updated_at": "2026-10-03T17:46:42.346239+00:00",
-  "resolution_note": "The original September 16 Levante v Athletic research contract is void after the verified postponement. The rescheduled game requires a new forecast and price; no match statistics are fabricated."
+  "age_days": 20
 }
