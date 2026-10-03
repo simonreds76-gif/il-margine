@@ -43,13 +43,22 @@ export default function Footer({ className = "" }: FooterProps) {
             <Link prefetch={false} href="/" aria-label="Il Margine home" className={styles.logo}>
               <Image src={BRAND.full} alt="Il Margine. Independent betting analysis" width={900} height={386} unoptimized sizes="(max-width: 359px) 288px, 300px" />
             </Link>
-            <a href="https://x.com/ilmarginebet" target="_blank" rel="noopener noreferrer"
-              aria-label="Follow Il Margine on X, @ilmarginebet (opens in a new tab)"
-              title="Follow @ilmarginebet on X" className={styles.social}>
-              <svg viewBox="0 0 24 24" fill="currentColor" width="19" height="19" aria-hidden="true" focusable="false">
-                <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.835L0 1.154h7.594l5.243 6.932 6.064-6.933Zm-1.29 19.49h2.039L6.486 3.24H4.298l13.313 17.403Z" />
-              </svg>
-            </a>
+            <nav aria-label="Social media" className={styles.socials}>
+              <a href="https://x.com/ilmarginebet" target="_blank" rel="noopener noreferrer"
+                aria-label="Follow Il Margine on X, @ilmarginebet (opens in a new tab)"
+                title="Follow @ilmarginebet on X" className={styles.social}>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="19" height="19" aria-hidden="true" focusable="false">
+                  <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.835L0 1.154h7.594l5.243 6.932 6.064-6.933Zm-1.29 19.49h2.039L6.486 3.24H4.298l13.313 17.403Z" />
+                </svg>
+              </a>
+              <a href="/go/telegram?source=footer" target="_blank" rel="noopener noreferrer"
+                aria-label="Il Margine alerts on Telegram (opens in a new tab)"
+                title="Il Margine alerts on Telegram" className={styles.social}>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="21" height="21" aria-hidden="true" focusable="false">
+                  <path d="M21.8 3.6 18.6 20c-.2 1.2-.9 1.5-1.9.9l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9-8.1c.4-.4-.1-.6-.6-.2L6.1 13.8l-4.8-1.5c-1-.3-1-1 .2-1.5L20.3 3.5c.9-.3 1.7.2 1.5 1.1Z" />
+                </svg>
+              </a>
+            </nav>
           </div>
           <nav aria-label="Footer" className={styles.groups}>
             {groups.map((group) => (
