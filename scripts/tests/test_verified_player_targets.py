@@ -34,6 +34,14 @@ def sample():
 
 
 class VerifiedTargetsTests(unittest.TestCase):
+    def test_role_codes_are_explicit_not_guessed(self):
+        p=sample();team=p['props']['pageProps']['content']['lineup']['homeTeam']
+        team['formation']='4-3-3'
+        team['starters'][1].update(positionId=36, usualPlayingPositionId=1)
+        rows=M.extract(p,'x');role=next(r for r in rows if r['player_id']==2)
+        self.assertEqual((role['lineup_position_id'],role['usual_position_id'],role['team_formation']),(36,1,'4-3-3'))
+        self.assertIsNone(next(r for r in rows if r['player_id']==3)['lineup_position_id'])
+
     def test_explicit_roles_and_unused_bench(self):
         rows = M.extract(sample(),'source')
         self.assertEqual(len(rows),22)

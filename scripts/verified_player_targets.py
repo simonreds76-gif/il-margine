@@ -101,6 +101,11 @@ def extract(payload, source_hash):
                 rows.append({'match_id':general['matchId'],'kickoff':general.get('matchTimeUTCDate'),'league':general.get('leagueName'),
                     'team_id':team['id'],'team':team['name'],'opponent_id':opponent['id'],'player_id':pid,'player':player.get('name'),
                     'started':started,'is_goalkeeper':is_keeper,'minutes':minutes,'shots':explicit_shots,
+                    # Published position codes are retained without guessing their meaning.
+                    # These describe the completed match, not known pre-match roles.
+                    'lineup_position_id':count(person.get('positionId')),
+                    'usual_position_id':count(person.get('usualPlayingPositionId')),
+                    'team_formation':team.get('formation'),
                     'shots_on_target':explicit_sot,'verified_event_shots':event_shots,'verified_event_sot':event_sot,
                     'shot_evidence_status':event_status,'target_conflict':conflict,'saves':saves,'goals_conceded':conceded,
                     'event_saves':event_saves,'team_sot_minus_goals_proxy':proxy,
