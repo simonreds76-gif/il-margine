@@ -11,7 +11,7 @@ class ModelReviewWatchlistTests(unittest.TestCase):
   return p
 
  def test_frozen_volume_is_separate_from_strict_and_forward_evidence(self):
-  registry=M['model_watchlist_summary']();c=registry['candidates'][0];h=c['historical_replay']
+  registry=M['model_watchlist_summary']();c=next(c for c in registry['candidates'] if c['id']=='astra_volume_context_v1');h=c['historical_replay']
   self.assertFalse(registry['automatic_promotion']);self.assertFalse(c['live_routing']);self.assertEqual(c['actual_stake'],0)
   self.assertEqual(c['profile'],'volume_200_hard');self.assertEqual(h['bets'],h['wins']+h['losses'])
   self.assertAlmostEqual(h['roi_pct'],100*h['profit_units']/h['stake_units'])
@@ -22,11 +22,19 @@ class ModelReviewWatchlistTests(unittest.TestCase):
   for fn in ['render_report','telegram_text','tennis_telegram_text']:
    text=M[fn](p)
    self.assertIn('Astra Volume [RESEARCH]',text);self.assertIn('historical replay ROI +7.25%, n=69',text)
-   self.assertIn('prospective capture NOT_CONNECTED',text)
+   self.assertIn('prospective capture CONNECTED_AWAITING_FIRST_CAPTURE',text)
    self.assertIn('historical bets are not forward evidence',text)
 
  def test_missing_register_is_not_reported_as_healthy(self):
   self.assertIn('UNAVAILABLE',M['model_watchlist_text']({}))
+
+ def test_forward_summary_does_not_inherit_historical_roi(self):
+  p=self.payload()
+  p['tennis_context_forward']={'capture':{'status':'CONNECTED_AWAITING_FIRST_RUN'},'settled_fixtures':0,'candidate':{'settled':0,'wins':0,'losses':0,'roi_pct':None,'pending':0}}
+  for fn in ['render_report','telegram_text','tennis_telegram_text']:
+   text=M[fn](p)
+   self.assertIn('ROI not yet settled',text)
+   self.assertIn('69 historical replay bets excluded',text)
 
  def test_register_includes_both_football_and_tennis_families(self):
   ids={r['id'] for r in M['model_watchlist_summary']()['families']}

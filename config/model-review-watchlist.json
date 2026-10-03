@@ -104,7 +104,7 @@
       "model_sha256": "d2fa88cb767faa7a4a2659e9d415eac239801c246703c2836308c1904af66c9a",
       "profile": "volume_200_hard",
       "status": "FROZEN_VOLUME_RESEARCH",
-      "prospective_capture_status": "NOT_CONNECTED",
+      "prospective_capture_status": "CONNECTED_AWAITING_FIRST_CAPTURE",
       "live_routing": false,
       "actual_stake": 0,
       "historical_replay": {
@@ -120,8 +120,9 @@
       },
       "artifact": "data/tennis-ml-research/context-20260909/fixed-history/candidate-2026-raw.json",
       "evidence": "docs/audits/tennis-context-fixed-calibration-20260909.md",
-      "next_action": "Connect append-only pre-match capture with the frozen raw-probability basis and 14 context features, exact historical profile rules, timestamps and separate settlements. Verify input parity before enabling collection. Do not relabel the 69 replay bets as forward evidence.",
-      "evaluation": "Assess Volume independently of Strict; retain fixed policy and weights. Track sample size, W/L, flat and tier ROI, CLV coverage, calibration, uncertainty and freshness. Selection of this lane followed inspection of 2026 results and requires genuinely new evidence."
+      "next_action": "Verify first actual pre-match append after the next daily/admin forecast. Inspect capture status, exact-fixture settlements and paired scores weekly; first 50/100 settled fixtures are review milestones. Keep 69 historical replay bets separate; no promotion or stake change.",
+      "evaluation": "Assess Volume independently of Strict; retain fixed policy and weights. Track sample size, W/L, flat and tier ROI, CLV coverage, calibration, uncertainty and freshness. Selection of this lane followed inspection of 2026 results and requires genuinely new evidence.",
+      "forward_report": "data/tennis-ml-research/context-forward-v1/report.json"
     },
     {
       "id": "opponent_shots_20260912",
