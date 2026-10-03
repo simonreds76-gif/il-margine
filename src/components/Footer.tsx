@@ -41,9 +41,8 @@ export default function Footer({ className = "" }: FooterProps) {
         <div className={styles.main}>
           <div className={styles.brand}>
             <Link prefetch={false} href="/" aria-label="Il Margine home" className={styles.logo}>
-              <Image src={BRAND.compact} alt="Il Margine" width={700} height={168} unoptimized sizes="220px" />
+              <Image src={BRAND.full} alt="Il Margine. Independent betting analysis" width={900} height={386} unoptimized sizes="(max-width: 359px) 288px, 300px" />
             </Link>
-            <p>Independent betting research and specialist tools for football and tennis.</p>
             <a href="https://x.com/ilmarginebet" target="_blank" rel="noopener noreferrer"
               aria-label="Follow Il Margine on X, @ilmarginebet (opens in a new tab)"
               title="Follow @ilmarginebet on X" className={styles.social}>
