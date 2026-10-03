@@ -193,8 +193,21 @@ def fotmob_player_saves(payload: dict[str, Any], goalkeeper: str) -> tuple[int |
     if keeper_id <= 0:
         return None, {"error": "fotmob_goalkeeper_id_missing"}
 
+    shotmap = content.get("shotmap")
+    shots = shotmap.get("shots") if isinstance(shotmap, dict) else None
+    # An absent/incomplete event feed is not evidence of zero saves. An
+    # explicit player-stat zero can be supplied by the existing API fallback.
+    if not isinstance(shots, list) or not shots:
+        return None, {"error": "fotmob_shotmap_unavailable"}
+    if any(not isinstance(shot, dict) or not shot.get("eventType") for shot in shots):
+        return None, {"error": "fotmob_shotmap_incomplete"}
+    for shot in shots:
+        if (str(shot.get("eventType") or "").casefold() == "attemptsaved"
+                and not shot.get("isBlocked") and not shot.get("isSavedOffLine")
+                and not shot.get("keeperId")):
+            return None, {"error": "fotmob_save_keeper_missing"}
+
     saves: set[str] = set()
-    shots = ((content.get("shotmap") or {}).get("shots") or [])
     for index, shot in enumerate(shots):
         if str(shot.get("eventType") or "").casefold() != "attemptsaved":
             continue
@@ -236,10 +249,13 @@ def player_saves(payload: dict[str, Any], goalkeeper: str) -> tuple[int | None, 
                 games = stats.get("games") or {}
                 goals = stats.get("goals") or {}
                 saves = goals.get("saves")
-                try:
-                    actual = int(float(saves))
-                except (TypeError, ValueError):
+                parsed_saves = parse_float(saves)
+                if (isinstance(saves, bool) or parsed_saves is None
+                        or parsed_saves < 0 or not parsed_saves.is_integer()):
                     continue
+                if str(games.get("position") or "").upper() not in {"G", "GK"}:
+                    continue
+                actual = int(parsed_saves)
                 matches.append(
                     (
                         score,
