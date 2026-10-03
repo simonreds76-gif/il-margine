@@ -379,7 +379,8 @@ def report_payload(
     board_preserved: bool = False,
     provisional_count: int = 0,
 ) -> dict[str, Any]:
-    settled = [row for row in signals if str(row.get("status") or "").lower() in {"won", "lost", "push", "void"}]
+    settled = [row for row in signals if str(row.get("status") or "").lower() in {"won", "lost", "push"}]
+    voids = sum(str(row.get("status") or "").lower() == "void" for row in signals)
     pending = [row for row in signals if str(row.get("status") or "").lower() == "pending"]
     pnl = sum(parse_float(row.get("pnl_units")) or 0.0 for row in settled)
     staked = sum(parse_float(row.get("stake_units")) or 0.0 for row in settled if row.get("status") not in {"push", "void"})
@@ -424,6 +425,7 @@ def report_payload(
             "signals": len(signals),
             "pending": len(pending),
             "settled": len(settled),
+            "void": voids,
             "pnl_units": round(pnl, 4),
             "roi": round(pnl / staked, 6) if staked else None,
             "clv_matched": len(clv_values),

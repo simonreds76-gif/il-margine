@@ -28,6 +28,12 @@ def candidates():
     return S.score_pairs(S.V.paired_rows(latest,S.PAIR_FIELDS),history(),CONFIG)[0]
 
 class ShadowTests(unittest.TestCase):
+    def test_reviewed_void_cannot_reopen_or_acquire_another_match_result(self):
+        original={'result':'void','pnl_units':0,'match_id':'original-postponed-contract','book_odds':2.1}
+        with patch.object(S.SETTLE,'load_results_snapshot',return_value=({}, {}, None, None)),patch.object(S.SETTLE,'load_manual_settlement_results',return_value={}):
+            rows,settled,_=S.track([original],[],CONFIG)
+        self.assertEqual(rows,[original]);self.assertEqual(settled,0)
+
     def test_closing_summary_keeps_zero_and_negative_clv(self):
         values = [0, '0', -.02, '.04', '', None, 'nan', 'inf', 'bad']
         rows = [dict(true_close=True, published_to_close_clv=value) for value in values]
