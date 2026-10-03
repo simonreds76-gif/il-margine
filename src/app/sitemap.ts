@@ -21,6 +21,12 @@ const RESOURCES_LAST_MODIFIED = new Date("2026-09-23T12:00:00Z");
 const REVIEW_LAST_MODIFIED = new Date("2026-09-23T12:00:00Z");
 export const revalidate = 3600;
 
+// Editorial dates are deliberate content changes, never the current request time.
+function contentDate(editorialDate: string, ...dataDates: (string | Date | undefined)[]): Date {
+  return new Date(Math.max(new Date(editorialDate).getTime(), ...dataDates
+    .map((value) => value ? new Date(value).getTime() : NaN).filter(Number.isFinite)));
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const worldCupData = await readWorldCupData().catch(() => null);
   const worldCupLastModified = new Date(`${WORLD_CUP_ARCHIVE_DATE}T12:00:00Z`);
@@ -34,9 +40,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const entries: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/football-atlas/fixtures`, lastModified: new Date(fixtureBoard.checkedAt), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE_URL}/manager-atlas`, lastModified: new Date(`${managerRelease.through}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE_URL}/tennis-matchup`, lastModified: new Date(`${matchupRelease.checkedAt}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },
-    { url: BASE_URL, lastModified: new Date("2026-10-01T12:00:00Z"), changeFrequency: "daily", priority: 1 },
+    { url: `${BASE_URL}/manager-atlas`, lastModified: contentDate("2026-10-01", managerRelease.contentUpdatedAt), changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/tennis-matchup`, lastModified: contentDate("2026-10-01", matchupRelease.checkedAt), changeFrequency: "weekly", priority: 0.8 },
+    { url: BASE_URL, lastModified: contentDate("2026-10-03", ...Object.values(tipSeoState.latestByMarket)), changeFrequency: "daily", priority: 1 },
     {
       url: `${BASE_URL}/tennis-tips`,
       lastModified: tipSeoState.latestByMarket.tennis ?? STATIC_LAST_MODIFIED,
@@ -55,10 +61,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily" as const,
       priority: 0.72,
     })),
-    { url: `${BASE_URL}/track-record`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${BASE_URL}/track-record`, lastModified: contentDate("2026-09-23", ...Object.values(tipSeoState.latestByMarket)), changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/bookmakers`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/fair-odds-lab`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "daily", priority: 0.8 },
-    { url: `${BASE_URL}/football-atlas`, lastModified: new Date(`${footballAtlasRelease.checkedAt.slice(0, 10)}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/football-atlas`, lastModified: contentDate("2026-10-01", footballAtlasRelease.checkedAt), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/return-atlas`, lastModified: new Date(`${returnAtlasRelease.checkedAt}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/penalty-takers`, lastModified: clubPenaltyLastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/penalty-takers/methodology`, lastModified: clubPenaltyLastModified, changeFrequency: "monthly", priority: 0.5 },

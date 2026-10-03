@@ -252,8 +252,8 @@ export async function fetchSeoTipSitemapState(): Promise<{
   for (const row of latestResponse.data ?? []) {
     const market = row.market as "tennis" | "props";
     if (market !== "tennis" && market !== "props") continue;
-    const fallback = new Date().toISOString();
-    const date = new Date(maxTimestamp([row.posted_at, row.settled_at], fallback));
+      const date = new Date(maxTimestamp([row.posted_at, row.settled_at], ""));
+      if (!Number.isFinite(date.getTime())) continue;
     if (!latestByMarket[market] || date > latestByMarket[market]!) {
       latestByMarket[market] = date;
     }

@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import math
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -33,7 +34,11 @@ def package(data, root=ROOT):
     folder=root/'public/manager-atlas';folder.mkdir(parents=True,exist_ok=True)
     path=folder/f'index-{version}.json';path.write_bytes(raw)
     manifest={'version':version,'indexUrl':f'/manager-atlas/{path.name}','through':data['through'],'fromDate':data['fromDate'],'matches':len(data['fixtures']),'managers':len(data['managers']),'bytes':len(raw),'atlasVersion':data['atlasVersion']}
-    mp=root/'src/data/manager-atlas-release.json';mp.parent.mkdir(parents=True,exist_ok=True);mp.write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
+    mp=root/'src/data/manager-atlas-release.json'
+    previous=json.loads(mp.read_text(encoding='utf-8')) if mp.exists() else {}
+    # Repacking identical content must not manufacture a new sitemap date.
+    manifest['contentUpdatedAt']=(previous.get('contentUpdatedAt') or '2026-09-27') if previous.get('version')==version else datetime.now(timezone.utc).isoformat()
+    mp.parent.mkdir(parents=True,exist_ok=True);mp.write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
     return manifest,path.relative_to(root)
 
 if __name__=='__main__':

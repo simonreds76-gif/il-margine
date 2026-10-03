@@ -114,7 +114,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
         <div>
           <p className={styles.eyebrow}>Published selections</p>
           <h2 id="todays-edge-heading">Today&apos;s Edge</h2>
-          <span className={styles.active}><span aria-hidden="true" />{picks.length} active {picks.length === 1 ? "pick" : "picks"}</span>
+          {picks.length > 0 && <span className={styles.active}><span aria-hidden="true" />{picks.length} active {picks.length === 1 ? "pick" : "picks"}</span>}
         </div>
         <div className={styles.profit}>
           <span>Last 7 days</span>
@@ -125,7 +125,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
         </div>
       </header>
 
-      <div className={styles.filters} role="group" aria-label="Filter active picks">
+      {picks.length > 0 && <div className={styles.filters} role="group" aria-label="Filter active picks">
         {([
           ["all", "All picks"], ["props", "Football"], ["tennis", "Tennis"],
         ] as const).map(([id, label]) => (
@@ -137,7 +137,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
             <small>{counts[id] ? `${counts[id]} ${counts[id] === 1 ? "pick" : "picks"}` : "No active picks"}</small>
           </button>
         ))}
-      </div>
+      </div>}
 
       <div aria-live="polite" aria-atomic="true">
         {visible.length > 0 ? (
@@ -167,9 +167,8 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
           </div>
         ) : (
           <div className={styles.empty}>
-            <SportIcon sport={filter === "props" ? "football" : filter === "tennis" ? "tennis" : "all"} className="h-10 w-10" />
-            <p>{filter === "all" ? "No active selections" : `No active ${filter === "props" ? "football" : "tennis"} picks`}</p>
-            <span>New selections appear here when published. You can still browse past picks and results.</span>
+            <p>{picks.length === 0 || filter === "all" ? "No active selections right now" : `No active ${filter === "props" ? "football" : "tennis"} picks`}</p>
+            <span>New picks appear here when published. Explore the latest results below.</span>
           </div>
         )}
       </div>
