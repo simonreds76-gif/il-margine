@@ -218,6 +218,13 @@ if ($injuredExit -ne 0) {
 # same two season pages every night.
 Log "=== Step 5/10: CPI surface-speed refresh skipped (weekly refresh) ==="
 
+# Freeze the existing daily history before comparisons need its verified prices.
+Log "=== Step 6a/10: Append Pinnacle history capture (daily) ==="
+& python scripts\pinnacle-capture-history.py --capture-mode daily 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: Pinnacle history append failed (exit $LASTEXITCODE), continuing..."
+}
+
 # Step 6: Pinnacle odds + fair odds
 Log "=== Step 6/10: Pinnacle odds + fair odds ==="
 $step6Exit = Invoke-LoggedProcessWithRetry -FilePath "python" -ArgumentList @("scripts\run-daily-odds.py", "--skip-strict-report") -Label "Pinnacle/fair-odds" -TimeoutSeconds $dailyOddsTimeoutSeconds -Attempts 1
@@ -233,12 +240,6 @@ if (-not $step6Synced) {
     Log "ERROR: Pinnacle/fair-odds completed without confirming daily_fair_odds sync"
     Set-RunStatusFailure "DailyOddsSyncMissing" "Pinnacle/fair-odds completed without confirming daily_fair_odds sync"
     exit 1
-}
-
-Log "=== Step 6b/10: Append Pinnacle history capture (daily) ==="
-& python scripts\pinnacle-capture-history.py --capture-mode daily 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: Pinnacle history append failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Step 6c/10: Tennis count-markets research board ==="
