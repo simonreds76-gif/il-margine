@@ -21,6 +21,7 @@ import requests
 from verified_player_targets import archive_observed_targets, stat_values, count
 from football_team_names import football_form_team_key
 from goalkeeper_saves_live import ROOT, parse_float, person_match_score
+from football_fixture_resolutions import apply_reviewed_voids
 
 
 BASE_URL = "https://v3.football.api-sports.io"
@@ -385,6 +386,9 @@ def main() -> None:
         write_report(args.report, {"generated_at": generated_at, "status": "NO_SIGNALS", "settled": 0, "reason_counts": {}})
         print("No goalkeeper-save shadow signals to settle.")
         return
+    reviewed_voids = apply_reviewed_voids(signals, ROOT, goalkeeper=True)
+    if reviewed_voids:
+        write_csv(args.signals, fields, signals)
     pending = [row for row in signals if str(row.get("status") or "").lower() == "pending"]
     now_dt = datetime.now(UTC)
     deferred = [row for row in pending if not signal_is_due(row, now_dt)]
@@ -399,6 +403,7 @@ def main() -> None:
                 "pending_due": 0,
                 "deferred_not_due": len(deferred),
                 "settled": 0,
+                "reviewed_voids": reviewed_voids,
                 "requests_used": 0,
                 "max_requests": args.max_requests,
                 "reason_counts": {"not_due": len(deferred)} if deferred else {},

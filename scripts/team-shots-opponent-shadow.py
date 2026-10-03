@@ -16,6 +16,7 @@ import sys
 from team_shots_opponent import ROOT, key, read_base, history_before, mean_for
 from football_counts import prob_over
 from football_market import blend_logit, proportional_devig
+from football_fixture_resolutions import apply_reviewed_voids
 
 def module(name, filename):
     spec = importlib.util.spec_from_file_location(name, ROOT/'scripts'/filename)
@@ -105,9 +106,13 @@ def register(existing, candidates, config, now):
     return V.merge_shadow_ledger(existing,fresh)
 
 def track(ledger, odds, config):
+    apply_reviewed_voids(ledger, ROOT)
     index = CLV.build_odds_index(odds)
     output = []
     for original in ledger:
+        if original.get('result')=='void':
+            output.append(dict(original))
+            continue
         tracked = CLV.build_pick_row(original,index,allow_canonical_only=False,allowed_leagues=set(config['allowed_leagues']),config_valid=True,config_error='')
         # Keep first published terms and all provenance; CLV adds only observations.
         row = {**original,**tracked}
@@ -115,7 +120,7 @@ def track(ledger, odds, config):
         output.append(row)
     results,freshness,_,_ = SETTLE.load_results_snapshot(None)
     results.update(SETTLE.load_manual_settlement_results(SETTLE.OVERRIDES_PATH))
-    settled = SETTLE.settle_team_shots(output,results)
+    settled = SETTLE.settle_team_shots([r for r in output if r.get('result')!='void'],results)
     return output,settled,freshness
 
 def closing_values(rows):
@@ -148,18 +153,20 @@ def main():
     SETTLE.write_csv(LEDGER,ledger,extras=V.FIELDS)
     SETTLE.write_csv(CANDIDATES,candidates,extras=V.FIELDS)
     done = [r for r in ledger if SETTLE.is_settled(r)]
+    voids = sum(r.get('result')=='void' for r in ledger)
     pnl = sum(float(r.get('pnl_units') or 0) for r in done)
     explanation = f'{len(pairs)} fresh paired contracts; {len(candidates)} sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. '
     if rejected:
         explanation += 'Excluded archive rows: '+', '.join(f'{k}={v}' for k,v in sorted(rejected.items()))+'.'
     payload = dict(generated_at=PUB.fmt_dt(now),activated_at=config['activated_at'],status=config['status'],count_gate='FIXED CANDIDATE',market_gate='FORWARD COLLECTION ACTIVE',promotion_gate='BLOCKED',live_routing=False,prospective=dict(signals=len(ledger),settled=len(done),pending=len(ledger)-len(done),pnl_units=pnl,roi=pnl/len(done) if done else None),latest_scan=dict(scored_rows=len(candidates),scored_fixtures=len({r['match_id'] for r in candidates}),explanation=explanation),settled_this_run=settled,result_source=freshness,review_policy=config['review_policy'])
     closes = closing_values(done)
+    payload['prospective'].update(void=voids,pending=len(ledger)-len(done)-voids)
     age_days = (now-PUB.parse_dt(config['activated_at'])).days
     payload['prospective'].update(wins=sum(r['result']=='won' for r in done),losses=sum(r['result']=='lost' for r in done),true_close_count=len(closes),mean_clv=sum(closes)/len(closes) if closes else None)
     payload['review_status'] = 'MANUAL_REVIEW_DUE' if len(done)>=150 and age_days>=56 else 'COLLECTING_FIXED_POLICY'
     payload['age_days'] = age_days
     STATUS.write_text(json.dumps(payload,indent=2,default=str)+'\n',encoding='utf8')
-    print(f"Opponent shots: {len(ledger)} registered, {len(done)} settled, {len(ledger)-len(done)} pending; {len(pairs)} paired markets")
+    print(f"Opponent shots: {len(ledger)} registered, {len(done)} settled, {voids} void, {len(ledger)-len(done)-voids} pending; {len(pairs)} paired markets")
 
 if __name__ == '__main__':
     main()
