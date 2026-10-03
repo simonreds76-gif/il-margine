@@ -58,7 +58,8 @@ class ProspectiveIntegrity(unittest.TestCase):
                     with M['lock'](Path(tmp)): pass
 
     def test_settlement_rejects_wrong_event_and_does_not_rewrite_forecasts(self):
-        record={'id':'one','row':dict(self.row,match_start_utc='2026-09-05T10:00:00Z')}
+        record={'id':'one','registered_at':'2026-09-05T09:00:00Z',
+                'row':dict(self.row,capture_ts='2026-09-05T08:30:00Z',match_start_utc='2026-09-05T10:00:00Z')}
         before=copy.deepcopy(record)
         candidate={'tourney_date':'20260905','tourney_name':'Other Event','score':'6-4 6-4'}
         key=('ATP',2026,M['SETTLE']['pair_key']('A Player','B Player'))
@@ -70,6 +71,39 @@ class ProspectiveIntegrity(unittest.TestCase):
             M['settle']([record],Path('unused'),outcomes,self.now)
             self.assertEqual(outcomes['one']['actual'],10)
             self.assertEqual(record,before)
+
+    def test_local_us_open_date_and_saved_start_reconcile_old_calendar_label(self):
+        record={'id':'one','registered_at':'2026-09-05T10:00:00Z',
+                'row':dict(self.row,date='2026-09-06',capture_ts='2026-09-05T09:00:00Z',match_start_utc='2026-09-06T01:00:00Z')}
+        self.assertEqual(M['accepted_result_dates'](record),{'20260905','20260906'})
+        record['row']['match_start_utc']='2026-09-05T21:00:00Z'
+        self.assertEqual(M['accepted_result_dates'](record),{'20260905'})
+        record['row'].update(date='2026-10-01',tournament='Beijing',match_start_utc='2026-10-02T02:00:00Z')
+        self.assertEqual(M['accepted_result_dates'](record),{'20261002'})
+
+    def test_unverified_dates_and_post_start_records_are_not_settled(self):
+        record={'id':'one','registered_at':'2026-09-05T10:00:00Z','row':dict(self.row)}
+        for change in ({'date':'2026-09-09'}, {'capture_ts':'2026-09-05T17:00:00Z'},
+                       {'match_start_utc':'2026-09-05T16:00:00'},
+                       {'tournament':'Unknown','date':'2026-09-06'}):
+            self.assertFalse(M['accepted_result_dates']({**record,'row':{**record['row'],**change}}))
+        self.assertFalse(M['accepted_result_dates']({**record,'registered_at':'2026-09-05T17:00:00Z'}))
+        self.assertFalse(M['accepted_result_dates']({**record,'registered_at':''}))
+
+    def test_ambiguous_results_future_starts_and_prior_outcomes_are_preserved(self):
+        record={'id':'one','registered_at':'2026-09-05T08:00:00Z',
+                'row':dict(self.row,capture_ts='2026-09-05T07:00:00Z',match_start_utc='2026-09-05T10:00:00Z')}
+        key=('ATP',2026,M['SETTLE']['pair_key']('A Player','B Player'))
+        candidate={'tourney_date':'20260905','tourney_name':'US Open','score':'6-4 6-4','w_ace':'10'}
+        with patch.dict(M['SETTLE'],load_oncourt_index=lambda *_:{key:[candidate,dict(candidate,w_ace='11')]}):
+            outcomes={};M['settle']([record],Path('unused'),outcomes,self.now)
+            self.assertEqual(outcomes,{})
+        with patch.dict(M['SETTLE'],load_oncourt_index=lambda *_:{key:[candidate]}):
+            outcomes={};M['settle']([record],Path('unused'),outcomes,self.now-timedelta(hours=3))
+            self.assertEqual(outcomes,{})
+            outcomes={'one':{'status':'settled','actual':3}}
+            M['settle']([record],Path('unused'),outcomes,self.now)
+            self.assertEqual(outcomes['one']['actual'],3)
 
     def test_many_lines_never_count_as_many_independent_fixtures(self):
         predictions={side:{'p_conditional':.5,'ev':.05} for side in ('OVER','UNDER')}
