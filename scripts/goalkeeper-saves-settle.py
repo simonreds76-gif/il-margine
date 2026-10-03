@@ -19,6 +19,7 @@ from typing import Any
 
 import requests
 
+from verified_player_targets import archive_observed_targets
 from football_team_names import football_form_team_key
 from goalkeeper_saves_live import ROOT, parse_float, person_match_score
 
@@ -412,6 +413,7 @@ def main() -> None:
     unresolved: list[dict[str, str]] = []
     date_cache: dict[str, dict[str, Any]] = {}
     match_cache: dict[int, dict[str, Any]] = {}
+    target_capture: list[dict[str, Any]] = []
     for signal in pending:
         league = str(signal.get("league") or "")
         day_text = str(signal.get("match_date") or "")[:10]
@@ -457,6 +459,14 @@ def main() -> None:
             try:
                 match_cache[match_id] = request_fotmob_match_payload(match_id)
                 fotmob_requests_used += 2
+                # Reuse the existing response; target collection adds no requests.
+                try:
+                    target_capture.append(archive_observed_targets(
+                        match_cache[match_id], args.signals.parent / "verified-player-targets", match_id))
+                except (ValueError, TypeError, KeyError, OSError) as exc:
+                    # An optional research archive must never decide a bet result.
+                    target_capture.append({"status": "rejected", "match_id": match_id,
+                                           "reason": str(exc)[:240]})
             except Exception as exc:
                 record(signal, "fotmob_match_request_failed", str(exc)[:240])
                 unresolved.append(signal)
@@ -561,6 +571,7 @@ def main() -> None:
         "settled": settled,
         "requests_used": requests_used,
         "max_requests": args.max_requests,
+        "verified_player_targets": target_capture,
         "fotmob_requests_used": fotmob_requests_used,
         "max_fotmob_requests": args.max_fotmob_requests,
         "reason_counts": dict(sorted(reasons.items())),
