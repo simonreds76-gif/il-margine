@@ -1,5 +1,6 @@
 import teamLogoManifest from "../../data/goalscorer/team-logo-map.json";
 import europeanLogos from "../../data/team-logos/europe.json";
+import { correctFootballClubNames } from "./football-club-names";
 
 type TeamEntry = {
   team_key?: string;
@@ -127,7 +128,7 @@ const WORLD_CUP_TEAM_KEYS = new Set([
 ]);
 
 export function normalizeText(value: string): string {
-  return value
+  return correctFootballClubNames(value)
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/&/g, " and ")

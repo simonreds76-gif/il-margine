@@ -135,6 +135,7 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      { source: "/penalty-takers/la-liga/villareal", destination: "/penalty-takers/la-liga/villarreal", permanent: true },
       { source: "/resources/roger", destination: "/return-atlas", permanent: true },
       ...[
         ["aston-villa-evt_20260901_aston-villa_departure", "aston-villa"],

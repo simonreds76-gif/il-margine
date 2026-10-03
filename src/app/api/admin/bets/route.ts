@@ -6,6 +6,7 @@ import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { postPlayerPropTipToTelegram } from "@/lib/player-props-telegram";
 import { slugifyTip } from "@/lib/slugify";
 import { tipPreviewPath } from "@/lib/tip-seo";
+import { correctFootballClubNames } from "@/lib/football-club-names";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const COOKIE_NAME = "admin_session";
@@ -65,6 +66,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Server misconfigured: add SUPABASE_SERVICE_ROLE_KEY in Vercel." }, { status: 500 });
   }
   const body = await req.json();
+  if (body.market === "props" && typeof body.event === "string") {
+    body.event = correctFootballClubNames(body.event);
+  }
   const { data, error } = await supabase
     .from("bets")
     .insert([body])
@@ -133,6 +137,10 @@ export async function PATCH(req: Request) {
     .single();
   if (previousError || !previousBet) {
     return NextResponse.json({ error: previousError?.message || "Bet not found" }, { status: 404 });
+  }
+
+  if ((updates.market ?? previousBet.market) === "props" && typeof updates.event === "string") {
+    updates.event = correctFootballClubNames(updates.event);
   }
 
   const { data: updatedBet, error } = await supabase
