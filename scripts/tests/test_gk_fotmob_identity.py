@@ -1,9 +1,11 @@
 import importlib.util
 from pathlib import Path
 import unittest
+import sys
 from unittest.mock import patch
 
 SCRIPT=Path(__file__).resolve().parents[1]/'goalkeeper-saves-settle.py'
+sys.path.insert(0,str(SCRIPT.parent))
 spec=importlib.util.spec_from_file_location('gk_identity_settler',SCRIPT)
 settle=importlib.util.module_from_spec(spec);spec.loader.exec_module(settle)
 
