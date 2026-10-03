@@ -131,15 +131,43 @@ def source_manifest(source, tours, now, max_age_hours):
     return manifest, None
 
 
+def accepted_result_dates(record):
+    """Use the saved start and known venue calendar, never an arbitrary date window."""
+    from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+    row = record['row']
+    start = stamp(row.get('match_start_utc'))
+    registered = stamp(record.get('registered_at'))
+    captured = stamp(row.get('capture_ts'))
+    day = SETTLE['parse_signal_date'](row.get('date'))
+    if not start or not registered or not captured or not day:
+        return set()
+    if registered >= start or captured >= start or abs((day-start.date()).days) > 1:
+        return set()
+    dates = {start.date()}
+    zone = {'us open': 'America/New_York', 'beijing': 'Asia/Shanghai'}.get(
+        MODEL['tournament_identity'](row.get('tournament')))
+    if zone:
+        try:
+            dates.add(start.astimezone(ZoneInfo(zone)).date())
+        except ZoneInfoNotFoundError:
+            return set()
+    elif day != start.date():
+        # Unknown venue/date conventions require review rather than guessing.
+        return set()
+    return {day.strftime('%Y%m%d') for day in dates}
+
+
 def settle(records, source, outcomes, now):
-    pending = [r for r in records if r['id'] not in outcomes and stamp(r['row']['match_start_utc']) < now]
+    pending = [r for r in records if r['id'] not in outcomes
+               and stamp(r['row'].get('match_start_utc'))
+               and stamp(r['row']['match_start_utc']) < now and accepted_result_dates(r)]
     index = SETTLE['load_oncourt_index'](source, [r['row'] for r in pending])
     for record in pending:
         row = record['row']
         key = (row['tour'], int(row['date'][:4]), SETTLE['pair_key'](row['player'], row['opponent']))
-        # Exact day and normalized event only. Ambiguity remains pending.
+        dates = accepted_result_dates(record)
         candidates = [c for c in index.get(key, [])
-                      if str(c.get('tourney_date')).replace('-', '')[:8] == row['date'].replace('-', '')
+                      if str(c.get('tourney_date')).replace('-', '')[:8] in dates
                       and MODEL['tournament_identity'](c.get('tourney_name')) == MODEL['tournament_identity'](row['tournament'])]
         unique = {digest(c): c for c in candidates}
         if len(unique) != 1:
@@ -152,7 +180,8 @@ def settle(records, source, outcomes, now):
             if actual is None:
                 continue
             result = {'status': 'settled', 'actual': actual}
-        outcomes[record['id']] = dict(result, settled_at=now.isoformat(), source='oncourt', source_hash=digest(candidate))
+        outcomes[record['id']] = dict(result, settled_at=now.isoformat(), source='oncourt', source_hash=digest(candidate),
+                                      source_result_date=candidate['tourney_date'], scheduled_start_utc=row['match_start_utc'])
 
 
 def report(records, outcomes, health, config, now):
