@@ -1391,6 +1391,21 @@ def full_refresh_text(payload: dict[str, Any]) -> str:
     return module.text(payload.get("tennis_full_refresh") or {})
 
 
+def context_forward_text(payload: dict[str, Any]) -> str:
+    result = payload.get("tennis_context_forward") or {}
+    if not result:
+        return "Astra Volume: forward evidence snapshot missing; the 69 historical replay bets are separate."
+    candidate = result.get("candidate") or {}
+    roi = candidate.get("roi_pct")
+    roi_text = f"{roi:+.2f}%" if roi is not None else "not yet settled"
+    capture = result.get("capture") or {}
+    return (f"Astra Volume PAPER ONLY: {candidate.get('wins', 0)}W/{candidate.get('losses', 0)}L, "
+            f"ROI {roi_text}, {candidate.get('pending', 0)} pending ({candidate.get('overdue', 0)} overdue). "
+            f"Paired fixtures settled {result.get('settled_fixtures', 0)}; review at 50 and 100. "
+            f"Capture {capture.get('status', 'UNKNOWN')} at {capture.get('checked_at', 'unknown')}. "
+            "No closing-price coverage; 69 historical replay bets excluded.")
+
+
 def rate_trend_summary() -> dict[str, Any]:
     result = load_json(ROOT / "data/tennis-props/shadow/rate-trend-v1/report.json")
     if not result:
@@ -1493,6 +1508,7 @@ def build_payload() -> dict[str, Any]:
     tennis_props_v3 = tennis_props_v3_snapshot()
     tennis_rate_trend = rate_trend_summary()
     tennis_full_refresh = full_refresh_summary()
+    tennis_context_forward = load_json(ROOT / "data/tennis-ml-research/context-forward-v1/report.json")
     tennis_props_v4 = load_json(TENNIS_PROPS_V4_JSON)
     tennis_breaks_v1 = load_json(TENNIS_BREAKS_V1_GATE)
     tennis_venue_ace_v1 = venue_ace_factor_v1_summary()
@@ -1514,6 +1530,7 @@ def build_payload() -> dict[str, Any]:
                 tennis_model_evidence[key] = snapshot_model_evidence[key]
         tennis_rate_trend = snapshot_sections.get("tennis_rate_trend") or tennis_rate_trend
         tennis_full_refresh = snapshot_sections.get("tennis_full_refresh") or tennis_full_refresh
+        tennis_context_forward = snapshot_sections.get("tennis_context_forward") or tennis_context_forward
         tennis_props_v3 = snapshot_sections.get("tennis_props_v3") or tennis_props_v3
         tennis_props_v4 = snapshot_sections.get("tennis_props_v4") or tennis_props_v4
         tennis_venue_ace_v1 = snapshot_sections.get("tennis_venue_ace_factor_v1") or tennis_venue_ace_v1
@@ -1564,6 +1581,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_props_v3": tennis_props_v3,
         "tennis_rate_trend": tennis_rate_trend,
         "tennis_full_refresh": tennis_full_refresh,
+        "tennis_context_forward": tennis_context_forward,
         "model_review_watchlist": model_watchlist_summary(),
         "tennis_props_v4": tennis_props_v4,
         "tennis_breaks_v1": tennis_breaks_v1,
@@ -1865,7 +1883,7 @@ def render_report(payload: dict[str, Any]) -> str:
         ]
     )
     lines.extend(["", rate_trend_text(payload)])
-    lines.extend(["", full_refresh_text(payload)])
+    lines.extend(["", full_refresh_text(payload), context_forward_text(payload)])
     lines.extend(["", model_watchlist_text(payload)])
     return "\n".join(lines)
 
@@ -2112,7 +2130,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         ]
     )
     lines.extend(["", rate_trend_text(payload)])
-    lines.extend(["", full_refresh_text(payload)])
+    lines.extend(["", full_refresh_text(payload), context_forward_text(payload)])
     lines.extend(["", model_watchlist_text(payload)])
     return "\n".join(lines)
 
@@ -2354,7 +2372,7 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
         ]
     )
     lines.extend(["", rate_trend_text(payload)])
-    lines.extend(["", full_refresh_text(payload)])
+    lines.extend(["", full_refresh_text(payload), context_forward_text(payload)])
     lines.extend(["", model_watchlist_text(payload, tennis_only=True)])
     return "\n".join(lines)
 
