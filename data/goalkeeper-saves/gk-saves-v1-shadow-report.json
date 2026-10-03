@@ -15,11 +15,12 @@
     "clv": 0.043999,
     "clv_matched": 13,
     "pending": 1,
-    "pnl_units": 14.5905,
-    "roi": 0.561173,
+    "pnl_units": 15.5905,
+    "roi": 0.599635,
     "settled": 52,
     "settlement_sources": {
-      "fotmob_named_keeper_shotmap": 52
+      "fotmob_named_keeper_shotmap": 49,
+      "sofascore_published_keeper_total_verified_20261003": 3
     },
     "signals": 53,
     "true_close_coverage": 0.25
@@ -35,5 +36,12 @@
   },
   "selection_rule": "retain every positive-EV line on the value ladder; track one predicted/confirmed starting goalkeeper line per fixture with edge >=5%, price 1.70-3.00, closest to even money",
   "sellable": false,
+  "settlement_correction": {
+    "at": "2026-10-03T15:37:20.943106+00:00",
+    "audit": "data/goalkeeper-saves/settlement-corrections-20261003.json",
+    "count": 3,
+    "prices_or_models_changed": false,
+    "result_changes": 1
+  },
   "status": "SIGNALS_COLLECTING"
 }

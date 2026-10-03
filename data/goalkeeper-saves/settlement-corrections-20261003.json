@@ -1,0 +1,86 @@
+{
+  "reviewed_at": "2026-10-03T15:37:20.943106+00:00",
+  "base_sha": "4ee99505c97bb07ee22071e4ce7222774a8d5e28",
+  "policy": "Named keeper totals cross-checked against the user-designated Sofascore source. These are settlement corrections, not new selections or model changes.",
+  "corrections": [
+    {
+      "signal_id": "72221170|alisson becker|4.5|over",
+      "actual_saves": 3,
+      "match_id": "5795371",
+      "source_url": "https://www.sofascore.com/news/liverpool-draw-late-at-newcastle-key-stats",
+      "source_statement": "Alisson finished with three saves",
+      "match_date": "2026-08-23",
+      "before": {
+        "actual_saves": "2",
+        "status": "lost",
+        "result": "lost",
+        "pnl_units": "-0.5000",
+        "settled_at": "2026-09-01T09:10:00Z",
+        "settlement_source": "fotmob_named_keeper_shotmap"
+      },
+      "after": {
+        "actual_saves": "3",
+        "status": "lost",
+        "result": "lost",
+        "pnl_units": "-0.5000",
+        "settled_at": "2026-10-03T15:37:20.943106+00:00",
+        "settlement_source": "sofascore_published_keeper_total_verified_20261003"
+      },
+      "fotmob_explicit_payload_sha256": "bae1c3400f2d03daf812850eacb56d875417b7d152a93cfea24f0f0dba93c822",
+      "verification": "Sofascore published named-player total agrees with exact-match FotMob playerStats. Event-derived total disagrees; preserve it in before evidence."
+    },
+    {
+      "signal_id": "72513180|loris karius|4.5|over",
+      "actual_saves": 5,
+      "match_id": "5881158",
+      "source_url": "https://www.sofascore.com/news/schalke-0-0-bayern-tahs-8-6-sofascore-rating",
+      "source_statement": "The goalkeeper made five saves",
+      "match_date": "2026-09-05",
+      "before": {
+        "actual_saves": "4",
+        "status": "lost",
+        "result": "lost",
+        "pnl_units": "-0.5000",
+        "settled_at": "2026-09-07T10:44:54Z",
+        "settlement_source": "fotmob_named_keeper_shotmap"
+      },
+      "after": {
+        "actual_saves": "5",
+        "status": "won",
+        "result": "won",
+        "pnl_units": "0.5000",
+        "settled_at": "2026-10-03T15:37:20.943106+00:00",
+        "settlement_source": "sofascore_published_keeper_total_verified_20261003"
+      },
+      "fotmob_explicit_payload_sha256": "63fe6d0522c4488aa79121e9d27eb72d4f14209a5e6aeda1bcb4eefaa6bbce6b",
+      "verification": "Sofascore published named-player total agrees with exact-match FotMob playerStats. Event-derived total disagrees; preserve it in before evidence."
+    },
+    {
+      "signal_id": "71945284|christos mandas|2.5|over",
+      "actual_saves": 7,
+      "match_id": "5749689",
+      "source_url": "https://www.sofascore.com/news/venezia-0-2-lazio-mandas-shines-as-zaccagni-noslin-seal-it",
+      "source_statement": "He saved seven shots, including the 17th-minute penalty from Yeboah",
+      "match_date": "2026-09-19",
+      "before": {
+        "actual_saves": "6",
+        "status": "won",
+        "result": "won",
+        "pnl_units": "0.4545",
+        "settled_at": "2026-09-20T13:06:21Z",
+        "settlement_source": "fotmob_named_keeper_shotmap"
+      },
+      "after": {
+        "actual_saves": "7",
+        "status": "won",
+        "result": "won",
+        "pnl_units": "0.4545",
+        "settled_at": "2026-10-03T15:37:20.943106+00:00",
+        "settlement_source": "sofascore_published_keeper_total_verified_20261003"
+      },
+      "fotmob_explicit_payload_sha256": "a694cff9a04a4a28b478839345ac0464904e509a9979223b3087068b1b87d324",
+      "verification": "Sofascore published named-player total agrees with exact-match FotMob playerStats. Event-derived total disagrees; preserve it in before evidence."
+    }
+  ],
+  "existing_forecasts_prices_stakes_preserved": true
+}
