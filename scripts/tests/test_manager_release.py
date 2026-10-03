@@ -17,6 +17,14 @@ class ReleaseTests(unittest.TestCase):
             self.assertEqual(pack.unpack(json.loads(raw))['fixtures'],data['fixtures'])
             self.assertNotIn('privateSource',raw)
             self.assertEqual(manifest['version'],pack.package(data,Path(tmp))[0]['version'])
+            self.assertEqual(manifest['contentUpdatedAt'],pack.package(data,Path(tmp))[0]['contentUpdatedAt'])
+            saved=Path(tmp)/'src/data/manager-atlas-release.json'
+            previous=json.loads(saved.read_text());previous['contentUpdatedAt']='2026-09-27'
+            saved.write_text(json.dumps(previous))
+            data['fixtures'][0]['hg']=3
+            changed,_=pack.package(data,Path(tmp))
+            self.assertNotEqual(changed['version'],manifest['version'])
+            self.assertNotEqual(changed['contentUpdatedAt'],'2026-09-27')
     def test_bad_fixtures_cannot_publish(self):
         for field,value in [('odds',[2,0,4]),('basis','unknown'),('homeManager','b'),('awayManager','missing'),('hg',None)]:
             data=self.archive();data['fixtures'][0][field]=value

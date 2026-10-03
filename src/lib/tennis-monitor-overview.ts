@@ -46,7 +46,14 @@ export function tennisOverviewRows(snapshot: EvidenceObject): TennisOverviewRow[
   result.push(row("venue", "Venue ace adjustment", object(sections.tennis_venue_ace_factor_v1), "research", "Research only", "Venue experiment. Its recorded selection ROI alone does not measure improvement over the baseline."));
   const mostAces = object(sections.tennis_most_aces_forecast);
   result.push(row("most_aces", "Most aces", { pending: mostAces.rows_pending, generated_at: mostAces.generated_at_utc }, "blocked", "Integrity review", `Forecast observations settled: ${numeric(mostAces.rows_settled) ?? "unavailable"}; quarantined: ${numeric(mostAces.rows_quarantined) ?? "unavailable"}. These are not priced model bets and do not establish ROI.`));
-  result.push(row("astra_volume", "Astra Volume", {}, "blocked", "Tracking not connected", "The 69-bet replay is historical research. No forward ROI is available until the frozen collector is connected."));
+  const contextForward = object(sections.tennis_context_forward);
+  const contextCapture = object(contextForward.capture);
+  const contextStatus = String(contextCapture.status ?? "Tracking status unavailable").replaceAll("_", " ").toLowerCase();
+  result.push(row("astra_volume", "Astra Volume", {
+    ...object(contextForward.candidate), independent_fixtures: contextForward.independent_fixtures,
+    generated_at: contextForward.generated_at,
+  }, Object.keys(contextForward).length && contextCapture.status !== "BLOCKED" ? "research" : "blocked", contextStatus,
+  "Frozen model, paper stakes only. These are new forecasts captured before play. The 69 historical replay bets are excluded. Closing prices are not yet collected. Review after 50 and 100 settled fixtures."));
   const v3 = object(sections.tennis_props_v3);
   result.push(row("props_v3", "Aces v3", { ...object(v3.evidence), generated_at: v3.generated_at }, "blocked", "Needs review", "Inspect the saved report date, capture and settlement before restarting this experiment."));
   const v4 = object(sections.tennis_props_v4);

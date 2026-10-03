@@ -134,7 +134,21 @@ const nextConfig: NextConfig = {
     ];
   },
   async redirects() {
-    return [{ source: "/resources/roger", destination: "/return-atlas", permanent: true }];
+    return [
+      { source: "/resources/roger", destination: "/return-atlas", permanent: true },
+      ...[
+        ["aston-villa-evt_20260901_aston-villa_departure", "aston-villa"],
+        ["leeds-evt_20260901_leeds_departure", "leeds"],
+        ["manchester-city-evt_20260901_manchester-city_departure", "manchester-city"],
+        ["fulham-evt_20260901_fulham_departure", "fulham"],
+        ["newcastle-united-evt_20260901_newcastle-united_current_review", "newcastle-united"],
+        ["bournemouth-evt_20260901_bournemouth_current_review", "bournemouth"],
+      ].map(([oldSlug, slug]) => ({
+        source: `/penalty-takers/epl/${oldSlug}`,
+        destination: `/penalty-takers/epl/${slug}`,
+        permanent: true,
+      })),
+    ];
   },
   // /atp-tennis remains a real page with a canonical to /tennis-tips.
   async rewrites() {
