@@ -1,6 +1,7 @@
 import "server-only";
 import penaltyPortraits from "../../data/goalscorer/penalty-player-portraits.json";
 import { foldNameText } from "@/lib/player-name-matching";
+import { correctFootballClubNames } from "@/lib/football-club-names";
 
 import { cache } from "react";
 import { promises as fs } from "node:fs";
@@ -268,7 +269,7 @@ export function buildClubPenaltyWatchNote(team: ClubPenaltyTeam): string {
 }
 
 export function normalizeClubPenaltyKey(value: string): string {
-  return cleanClubPenaltyText(value)
+  return correctFootballClubNames(cleanClubPenaltyText(value))
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/&/g, " and ")
@@ -349,7 +350,7 @@ function mapTeam(
   options: { archived?: boolean; leagueCheckedAt?: string } = {},
 ): ClubPenaltyTeam {
   const entry = asTeamRow(entryValue);
-  const team = cleanClubPenaltyText(teamName);
+  const team = correctFootballClubNames(cleanClubPenaltyText(teamName));
   const slug = clubPenaltySlug(team);
   const relativeUrl = clubPenaltyTeamRelativeUrl(league.key, slug);
   const lastUpdated = cleanClubPenaltyText(entry.last_updated || entry.last_verified?.date);

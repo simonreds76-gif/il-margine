@@ -5,7 +5,7 @@ import { getSupabaseAdmin, hasSupabaseAdminConfig } from "@/lib/supabase-server"
 import {
   assessTipSeoReadiness,
   parseTipPreviewSlug,
-  tipFixtureHash,
+  matchesTipFixtureHash,
   tipFixtureKey,
   tipPreviewPath,
   type TipSeoAssessment,
@@ -143,7 +143,7 @@ export const fetchSeoTipFixture = cache(async (slug: string): Promise<SeoTipFixt
     rows = await fetchFixtureDayRows(parsed.market, parsed.matchDate);
     const grouped = new Map<string, SeoTipBet[]>();
     for (const bet of rows) {
-      if (tipFixtureHash(bet) !== parsed.fixtureHash) continue;
+      if (!matchesTipFixtureHash(bet, parsed.fixtureHash)) continue;
       const key = tipFixtureKey(bet);
       const group = grouped.get(key) ?? [];
       group.push(bet);

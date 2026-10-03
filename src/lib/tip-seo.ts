@@ -133,6 +133,17 @@ export function tipFixtureHash(
   return (hash >>> 0).toString(36).padStart(7, "0").slice(-7);
 }
 
+/** Keep already shared fixture URLs working after the Villarreal ledger correction. */
+export function matchesTipFixtureHash(
+  tip: Pick<TipSeoCandidate, "market" | "event" | "match_date">,
+  hash: string,
+): boolean {
+  if (tipFixtureHash(tip) === hash) return true;
+  if (tip.market !== "props" || !/\bvillarreal\b/i.test(tip.event || "")) return false;
+  const legacyEvent = String(tip.event).replace(/\bvillarreal\b/gi, "Villareal");
+  return tipFixtureHash({ ...tip, event: legacyEvent }) === hash;
+}
+
 export function tipPreviewSlug(
   tip: Pick<TipSeoCandidate, "market" | "event" | "match_date">,
 ): string {

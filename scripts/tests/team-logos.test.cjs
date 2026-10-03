@@ -7,10 +7,14 @@ const { createRequire } = require('node:module');
 const ts = require('typescript');
 const root = path.resolve(__dirname, '../..');
 const source = path.join(root, 'src/lib/team-logos.ts');
+const names = { exports: {} };
+vm.runInNewContext(ts.transpileModule(fs.readFileSync(path.join(root, 'src/lib/football-club-names.ts'), 'utf8'), {
+  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+}).outputText, { module: names, exports: names.exports });
 const moduleResult = { exports: {} };
 vm.runInNewContext(ts.transpileModule(fs.readFileSync(source, 'utf8'), {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
-}).outputText, { module: moduleResult, exports: moduleResult.exports, require: createRequire(source) });
+}).outputText, { module: moduleResult, exports: moduleResult.exports, require: (name) => name === './football-club-names' ? names.exports : createRequire(source)(name) });
 const { resolveTeamLogoPath } = moduleResult.exports;
 const europe = require('../../data/team-logos/europe.json');
 
@@ -22,6 +26,12 @@ function checkFile(team, category) {
   assert.ok(bytes.readUInt32BE(16) >= 32 && bytes.readUInt32BE(20) >= 32, `${team}: too small`);
   return logo;
 }
+
+test('Villarreal spelling aliases resolve to the same real crest', () => {
+  for (const category of ['laliga', 'all', 'props', 'ucl']) {
+    assert.equal(checkFile('Villareal', category), checkFile('Villarreal', category));
+  }
+});
 
 test('every 2026/27 Champions League club resolves to a real local crest', () => {
   assert.equal(europe.champions_league_2026_27.length, 36);
