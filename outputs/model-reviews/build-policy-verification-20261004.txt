@@ -1,0 +1,7 @@
+Deployment build-policy verification only. This file contains no model results.
+
+This follow-up is intentionally confined to the completed build-policy test
+branch. It is not merged into the model or website branches. Its purpose is to
+confirm that a model-review-only change is skipped by Vercel's Ignored Build Step
+after the branch has a successful preview. The published website, model inputs,
+model parameters, stakes, schedules and database contents are unchanged.
