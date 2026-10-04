@@ -1,27 +1,12 @@
 {
-  "api_errors": [],
   "deferred_not_due": 0,
-  "details": [
-    {
-      "detail": "fixtures_returned=3",
-      "goalkeeper": "Unai Sim\u00f3n",
-      "match": "Levante UD vs Athletic Bilbao",
-      "match_date": "2026-09-16",
-      "reason": "fotmob_finished_fixture_not_found",
-      "signal_id": "72478578|unai sim\u00f3n|3.5|over"
-    }
-  ],
-  "fotmob_requests_used": 1,
-  "generated_at": "2026-10-03T13:27:28Z",
-  "max_fotmob_requests": 50,
+  "generated_at": "2026-10-04T14:07:23Z",
   "max_requests": 10,
-  "pending_due": 1,
-  "pending_total": 1,
-  "reason_counts": {
-    "fotmob_finished_fixture_not_found": 1
-  },
+  "pending_due": 0,
+  "pending_total": 0,
+  "reason_counts": {},
   "requests_used": 0,
+  "reviewed_voids": 0,
   "settled": 0,
-  "status": "BLOCKED",
-  "verified_player_targets": []
+  "status": "NOTHING_DUE"
 }
