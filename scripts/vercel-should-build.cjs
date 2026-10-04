@@ -7,9 +7,9 @@
  *   exit 0 = skip this deployment build
  *   exit 1 = proceed with the build
  *
- * The rule is intentionally conservative: only known live-data artifact paths
- * are skipped. Any unknown path, source code, config, static import, or mixed
- * commit builds by default.
+ * Only reviewed live-data artifacts and offline model maintenance are skipped.
+ * Unknown paths, website inputs and mixed changes build by default. Compare the
+ * complete change range, including the first preview of a multi-commit branch.
  */
 
 const { execFileSync } = require("node:child_process");
@@ -38,55 +38,77 @@ if (commitMessage.includes("[force build]")) {
 }
 
 function parseFileList(output) {
-  return output
-    .split(/\r?\n/)
-    .map((file) => file.trim().replaceAll("\\", "/"))
-    .filter(Boolean);
+  return output.split("\0").filter(Boolean);
 }
 
-function readChangedFiles(args) {
-  return parseFileList(
-    execFileSync("git", args, {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-    }),
-  );
+function git(...args) {
+  return execFileSync("git", args, {
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+    timeout: 15000,
+  });
 }
 
-let changedFiles = [];
-let usedSingleCommitFallback = false;
+function changedSince(base) {
+  git("merge-base", "--is-ancestor", base, currentSha);
+  // Include both ends of renames: moving website code to an offline path builds.
+  return parseFileList(git("diff", "--no-renames", "--name-only", "-z", base, currentSha));
+}
+
+let changedFiles;
 if (previousSha) {
   try {
-    changedFiles = readChangedFiles(["diff", "--name-only", previousSha, currentSha]);
+    changedFiles = changedSince(previousSha);
   } catch (error) {
-    log(`initial git diff failed: ${error.message.split(/\r?\n/)[0]}`);
-
-    if (commitRef) {
+    log(`previous deployment comparison unavailable: ${error.message.split(/\r?\n/)[0]}`);
+    if (process.env.VERCEL === "1" && commitRef) {
       try {
-        execFileSync("git", ["fetch", "--no-tags", "--deepen=1000", "origin", commitRef], {
-          encoding: "utf8",
-          stdio: ["ignore", "pipe", "pipe"],
-        });
-        changedFiles = readChangedFiles(["diff", "--name-only", previousSha, currentSha]);
-        log("diff succeeded after deepening Vercel's shallow checkout");
-      } catch (fetchError) {
-        log(`history deepen fallback failed: ${fetchError.message.split(/\r?\n/)[0]}`);
+        git("fetch", "--no-tags", "--deepen=200", "origin", commitRef);
+        changedFiles = changedSince(previousSha);
+      } catch {
+        log("previous deployment still unavailable after bounded history fetch");
       }
     }
+    // A missing/rewritten previous deployment must not hide website changes.
+    if (!changedFiles) build("cannot verify the previous deployment range; building defensively");
   }
-} else {
-  log("VERCEL_GIT_PREVIOUS_SHA missing; inspecting the current commit instead");
 }
 
-if (changedFiles.length === 0) {
+if (!previousSha) {
+  const baseBranches = ["golden-with-speed-insights", "codex/fair-odds-daily-pitch-20260908"];
+  // New feature branches have no previous successful preview. Fetch their two
+  // maintained bases rather than assuming the last commit represents the PR.
+  if (process.env.VERCEL === "1") {
+    try {
+      git("fetch", "--no-tags", "--depth=200", "origin", ...baseBranches.map(
+        (branch) => `+refs/heads/${branch}:refs/remotes/origin/${branch}`,
+      ));
+    } catch {
+      build("cannot refresh first-preview bases; building defensively");
+    }
+  }
+  const bases = [];
+  for (const branch of baseBranches) {
+    try {
+      bases.push(git("merge-base", currentSha, `refs/remotes/origin/${branch}`).trim());
+    } catch { /* Unknown bases are never replaced with a last-commit guess. */ }
+  }
+  if (bases.length === 0) build("no verified first-preview base; building defensively");
+  let base = bases[0];
+  for (const candidate of bases.slice(1)) {
+    try {
+      git("merge-base", "--is-ancestor", base, candidate);
+      base = candidate;
+    } catch {
+      try { git("merge-base", "--is-ancestor", candidate, base); }
+      catch { build("ambiguous first-preview bases; building defensively"); }
+    }
+  }
   try {
-    // Last resort for single-commit artifact pushes. This avoids rebuilding
-    // known live-data commits just because Vercel did not clone enough history.
-    changedFiles = readChangedFiles(["diff-tree", "--no-commit-id", "--name-only", "-r", currentSha]);
-    usedSingleCommitFallback = true;
-    log("using current-commit diff fallback because previous SHA is unavailable");
-  } catch (treeError) {
-    build(`git diff failed after fallbacks; building defensively: ${treeError.message}`);
+    changedFiles = changedSince(base);
+    log(`first preview: checking all changes since ${base.slice(0, 12)}`);
+  } catch {
+    build("cannot verify first-preview change range; building defensively");
   }
 }
 
@@ -95,6 +117,18 @@ if (changedFiles.length === 0) {
 }
 
 const SKIP_PATTERNS = [
+  // Offline Python jobs and their tests run on the model worker/GitHub, not in
+  // Next.js. Their generated public assets still build when those assets change.
+  // Do not widen this to all scripts: prebuild audits, asset generators and the
+  // downloadable goalscorer/tennis review packs are website dependencies.
+  /^scripts\/(goalkeeper[-_]|team[-_]shots[-_])[a-z0-9_-]+\.py$/,
+  /^scripts\/(football-count(s)?-|football_count)[a-z0-9_-]+\.py$/,
+  /^scripts\/(backfill|fit|publish|run)-football-vnext-[a-z0-9-]+\.py$/,
+  /^scripts\/(capture-api-football-counts|probe-odds-api-goalkeeper-saves|reconcile-team-shots-sources|weekly-research-report|tennis_ml_research_v1)\.py$/,
+  /^scripts\/tests\/test_[a-z0-9_]+\.py$/,
+  /^config\/model-review-watchlist\.json$/,
+  /^outputs\/model-reviews\//,
+
   // Goalscorer live polling artifacts. Fair Odds Lab reads Blob first; these
   // committed files are fallback/live-monitor artifacts and should not rebuild
   // the app on every poll.
@@ -158,10 +192,7 @@ function isSkippable(file) {
 const buildRelevantFiles = changedFiles.filter((file) => !isSkippable(file));
 
 if (buildRelevantFiles.length === 0) {
-  if (usedSingleCommitFallback && !commitMessage.toLowerCase().startsWith("chore:")) {
-    build("single-commit fallback only skips chore artifact commits; building defensively");
-  }
-  skip(`all ${changedFiles.length} changed path(s) are live-data artifacts; skipping build`);
+  skip(`all ${changedFiles.length} changed path(s) are live-data artifacts or offline model maintenance; skipping build`);
 }
 
 log("building due to:", buildRelevantFiles.slice(0, 12).join(", "));
