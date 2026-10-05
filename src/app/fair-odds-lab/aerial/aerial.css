@@ -7,3 +7,17 @@
 
 .aerial-beta{display:inline-block;border:1px solid #658778;border-radius:5px;padding:3px 6px;margin-left:8px;font-size:9px;letter-spacing:.08em;vertical-align:middle}.aerial-scroll-hint{display:none}@media(max-width:760px){.aerial-scroll-hint{display:block;font-size:11px!important;color:#c6ded6!important}}
 
+.aerial-next{margin-top:48px;padding-top:30px;border-top:1px solid var(--aerial-line)}
+.aerial-next h2{font-size:28px;letter-spacing:-.035em;font-weight:700;margin:8px 0 22px}
+.aerial-next .aerial-related{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0}
+.aerial-page .aerial-tool-card{display:flex;flex-direction:column;min-width:0;padding:22px;border:1px solid #39554f;border-radius:18px;background:radial-gradient(ellipse at 0 0,#245c4633,transparent 75%),#111e25;text-decoration:none;color:var(--aerial-ink);box-shadow:inset 0 1px #bdebdc09;transition:border-color .15s,background .15s}
+.aerial-tool-heading{display:flex;align-items:center;gap:14px;min-height:64px}
+.aerial-tool-heading strong{font-size:19px;line-height:1.2;letter-spacing:-.02em}
+.aerial-tool-heading .aerial-tool-art{display:inline-flex;width:60px;height:60px;flex-shrink:0;object-fit:contain}
+.aerial-tool-description{display:block;font-size:13px;line-height:1.65;color:#b5c7cd;margin:16px 0 22px}
+.aerial-tool-action{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding:10px 10px 10px 16px;min-height:48px;border-radius:11px;border:1px solid #618d7d;background:#19372f;color:#c2f5dc;font-size:13px;font-weight:700}
+.aerial-tool-arrow{display:grid;place-items:center;flex-shrink:0;width:30px;height:30px;border-radius:8px;background:#a5e8c8;color:#153a2e}
+.aerial-page .aerial-tool-card:hover,.aerial-page .aerial-tool-card:focus-visible{border-color:#9cdbbf;background-color:#172c2b}
+.aerial-tool-card:hover .aerial-tool-action,.aerial-tool-card:focus-visible .aerial-tool-action{background:#244d3d;border-color:#a5e8c8}
+@media(max-width:850px){.aerial-next .aerial-related{grid-template-columns:1fr}.aerial-page .aerial-tool-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;padding:20px}.aerial-tool-heading{grid-column:1}.aerial-tool-description{grid-column:1;margin:0 0 0 74px;max-width:420px}.aerial-tool-action{grid-column:2;grid-row:1 / 3;align-self:center;min-width:170px;margin:0}}
+@media(max-width:500px){.aerial-page .aerial-tool-card{display:flex;padding:20px;gap:0}.aerial-tool-heading strong{font-size:20px}.aerial-tool-description{margin:12px 0 20px}.aerial-tool-action{align-self:stretch;min-width:0}.aerial-next h2{font-size:26px}}
