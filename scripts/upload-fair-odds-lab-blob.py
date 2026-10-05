@@ -82,6 +82,13 @@ def main() -> None:
             continue
         uploaded[label] = upload_file(client, label, path, pathname, args.cache_seconds)
 
+    # Aerial consumes existing lineup files; its failure never blocks Lab publication.
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('aerial_refresh', ROOT / 'scripts/refresh-aerial.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.publish(client)
+
     if uploaded:
         print("Fair Odds Lab Blob upload complete.")
         if "signals" in uploaded:
@@ -92,3 +99,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

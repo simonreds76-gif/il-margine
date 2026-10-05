@@ -103,3 +103,9 @@ fi
 if ((${#artifacts[@]} > 0)); then
   git add -f -- "${artifacts[@]}" 2>/dev/null || true
 fi
+
+# Keep the compact Aerial archive and its collection cooldown in the cloud branch.
+if [[ -d data/aerial ]]; then
+  git add -- data/aerial
+fi
+
