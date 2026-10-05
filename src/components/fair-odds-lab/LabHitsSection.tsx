@@ -4,6 +4,7 @@ import { AbstractJersey } from "./AbstractJersey";
 import { BookmakerLogo } from "./BookmakerLogo";
 import { LogoBadge } from "./LogoBadge";
 import { HitPortrait } from "./HitPortrait";
+import { LabIcon } from "./LabIcon";
 import { DisclosureCue } from "./DisclosureCue";
 import type { LabHighlight, Signal } from "./types";
 const asText = (v: unknown) => typeof v === "string" ? v : "";
@@ -276,28 +277,28 @@ function HitTicket({ highlight }: { highlight: LabHighlight }) {
 }
 
 export function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
-  if (!highlights.length) return null;
   const visibleHighlights = highlights.slice(0, 6);
 
   return (
     <details id="lab-hits" className="mt-4 scroll-mt-24 rounded-2xl border border-emerald-900/60 bg-[#102725] p-5">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden focus-visible:outline-2 focus-visible:outline-emerald-300">
-        <div>
+        <div className="ip-section-title"><span className="ip-section-mark"><LabIcon kind="hits"/></span><div>
           <div className="text-[11px] font-black uppercase tracking-[0.22em] text-emerald-300">
             Recorded winning comparisons
           </div>
           <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-50">
             Latest hits
           </h2>
-        </div>
+        </div></div>
 
-        <span className="ip-summary-actions text-sm text-emerald-200"><span>Latest {visibleHighlights.length} hits</span><DisclosureCue /></span>
+        <span className="ip-summary-actions text-sm text-emerald-200"><span>{visibleHighlights.length ? `Latest ${visibleHighlights.length} hits` : "Awaiting results"}</span><DisclosureCue /></span>
       </summary>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-500">
         Recorded bookmaker prices above our estimated fair odds. Super Sub wins name the replacement who scored.
         Winning examples only; not the complete performance record.
       </p>
 
+      {!visibleHighlights.length && <p className="mt-4 text-sm text-slate-300">Recorded examples are not available in this update. Check again after the results feed refreshes.</p>}
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {visibleHighlights.map((highlight) => (
           <HitTicket key={highlight.id} highlight={highlight} />
@@ -306,4 +307,3 @@ export function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
     </details>
   );
 }
-
