@@ -10,6 +10,7 @@ export const BETTING_TOOL_GROUPS: Array<{
     { href: "/bookmakers", title: "Mind the Margin", description: "Compare measured bookmaker margins within the same market and see the sample behind each figure.", action: "Compare bookmakers", icon: "compare", badge: "Market comparison" },
   ] },
   { id: "research", title: "Research the selection", question: "What does the evidence say?", tools: [
+    { href: "/fair-odds-lab/aerial", title: "Aerial Matchup", description: "Compare starting XI heights, aerial contests, headed shots and team delivery before kickoff.", action: "Explore aerial matchups", icon: "football", badge: "Lineup research · beta" },
     { href: "/tennis-matchup", title: "Tennis Matchup Lab", description: "Compare H2H records, serve and return statistics, aces and double faults by surface and location.", action: "Compare tennis players", icon: "analysis", badge: "Player comparison" },
     { href: "/return-atlas", title: "Return Atlas · Tennis", description: "Explore player returns by season, surface, odds range and favourite or underdog status.", action: "Explore player records", icon: "analysis", badge: "Historical research" },
     { href: "/football-atlas", title: "Return Atlas · Football", description: "Compare club returns across five domestic leagues. Filter seasons, venue, role and prices.", action: "Explore club records", icon: "football", badge: "Historical research" },
@@ -29,3 +30,4 @@ export const BETTING_STEPS = [
   { title: "Assess the value", detail: "Test the available price against an estimate.", href: "/resources/odds-value-stakes#value", icon: "method" as const },
   { title: "Choose the stake", detail: "Allow for uncertainty and potential losses.", href: "/resources/odds-value-stakes#stake", icon: "bankroll" as const },
 ];
+

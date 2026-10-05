@@ -39,6 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const clubPenaltyLastModified = new Date(`${clubPenaltySeason.published_at}T12:00:00Z`);
 
   const entries: MetadataRoute.Sitemap = [
+      { url: `${BASE_URL}/fair-odds-lab/aerial`, lastModified: new Date("2026-10-05T12:00:00Z"), changeFrequency: "daily", priority: 0.7 },
     { url: `${BASE_URL}/football-atlas/fixtures`, lastModified: new Date(fixtureBoard.checkedAt), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/manager-atlas`, lastModified: contentDate("2026-10-01", managerRelease.contentUpdatedAt), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/tennis-matchup`, lastModified: contentDate("2026-10-01", matchupRelease.checkedAt), changeFrequency: "weekly", priority: 0.8 },
@@ -124,3 +125,4 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return entries;
 }
+
