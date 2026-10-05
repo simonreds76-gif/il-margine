@@ -156,7 +156,7 @@ export function DailyPitchBoard({ initial, boardUrl, asOf, preview = false, high
   const missingOdds = upcoming.filter(row => row.p.bookmakerOdds === null).length;
   const staleOdds = upcoming.filter(row => row.p.bookmakerOdds !== null && !row.c.fresh).length;
   const checkedPlayers = upcoming.filter(row => row.c.ev !== null).length;
-  return <div id="im-pitch-lab"><div className="ip-main"><PageHomeLink /><div className="ip-head"><div><div className="ip-eyebrow">INDEPENDENT GOALSCORER ANALYSIS</div><h1>Fair Odds <span>Lab</span></h1><p className="ip-sub">Explore the lineups. Compare our fair odds with Bet365. Open a player for the detail.</p></div><div className="ip-headlinks"><span className="ip-beta">Free beta</span><a href="#lab-hits">Latest hits ↗</a></div></div>
+  return <div id="im-pitch-lab"><div className="ip-main"><PageHomeLink /><div className="ip-head"><div><div className="ip-eyebrow">INDEPENDENT GOALSCORER ANALYSIS</div><h1>Fair Odds <span>Lab</span></h1><p className="ip-sub">Explore the lineups. Compare our fair odds with Bet365. Open a player for the detail.</p></div><div className="ip-headlinks"><span className="ip-beta">Free beta</span><a href="#lab-hits">Latest hits ↗</a><a href="/fair-odds-lab/aerial">Aerial Matchup ↗</a></div></div>
     <nav className="ip-section-nav" aria-label="Fair Odds Lab sections">{[["lab-signals", "Price comparisons"], ["lab-matches", "Matches & odds"], ["lab-hits", "Latest hits"], ["lab-guide", "How to read it"]].map(([id, label]) => <a key={id} href={`#${id}`} onClick={event => { event.preventDefault(); openSection(id); history.replaceState(null, "", `#${id}`); }}>{label}{id === "lab-signals" && <span>{shortlist.length}</span>}</a>)}</nav>
     {preview && <p role="status" className="ip-pennews">Design preview · illustrative prices, not current markets</p>}
     <nav className="ip-leagues" aria-label="Competition">
@@ -186,3 +186,4 @@ export function DailyPitchBoard({ initial, boardUrl, asOf, preview = false, high
     <p className="ip-footnote">Fair odds are model estimates. Expected lineups and penalty duties may change. A player scoring and a qualifying replacement scoring are different outcomes; promotion coverage is not included in the named-player probability.</p>
   </div></div>;
 }
+
