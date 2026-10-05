@@ -1,7 +1,7 @@
 import { defaults, summary, bands, leagues } from './football-core.mjs';
 import { portraits as reviewedPortraits } from './portraits.mjs';
 import { icon, brandMark } from './identity.mjs';
-import { managerRows, matchMarket, marketContext, clubRecords, observedSpells, strategyReturns, rankingMinimum, isVerifiedActive } from './core.mjs';
+import { managerRows, matchMarket, marketContext, clubRecords, observedSpells, strategyReturns, rankingMinimum, isVerifiedActive, activeReviewDue } from './core.mjs';
 const $=id=>document.getElementById(id), escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const units=n=>`${n>0?'+':''}${n.toFixed(2)}u`, pct=n=>`${n>0?'+':''}${n.toFixed(1)}%`, color=n=>n<0?'negative':'positive';
 let chartMode='profit', chartValues=[], chartGeometry;
@@ -82,7 +82,8 @@ function render(){
  $('rankings').innerHTML=ranking.slice(0,rankShown).map((m,i)=>`<tr${m.id===manager?.id?' class="selected-row"':''}><td><button data-manager="${escape(m.id)}"><span class="rank-number">${String(i+1).padStart(2,'0')}</span>${avatar(m,true)}<span>${escape(m.name)}</span>${icon('arrow')}</button></td><td>${m.bets}${m.bets<10?'<small class="sample-label">Very small sample</small>':m.bets<30?'<small class="sample-label">Small sample</small>':''}</td><td><span class="result-wins">${m.results.W}</span> / ${m.results.D} / ${m.results.L}</td><td class="${color(m.profit)}">${units(m.profit)}</td><td class="${color(m.roi)} roi-cell">${pct(m.roi)}</td><td>${m.drawdown.toFixed(2)}u</td></tr>`).join('');
  $('more-rankings').hidden=rankShown>=ranking.length;
  $('rank-count').textContent=`Showing ${Math.min(rankShown,ranking.length)} of ${ranking.length} qualifying managers. ${opponent?'H2H includes pairings from one recorded meeting. A few meetings cannot establish a reliable edge.':'Includes every manager with at least one matching fixture. Small samples are labelled, not hidden.'} Search any manager above to inspect their record.`;
- $('activity-note').textContent=activeOnly?(activity&&today<=activity.reviewBy?`Showing ${candidates.length} managers with a verified active coaching role. Choose Full historical archive to include past managers.`:'The active-manager list is being reviewed. Choose Full historical archive to explore every record.'):'Showing current and past managers.';
+ const reviewsDue=candidates.filter(m=>activeReviewDue(m.id,activity,today)).length;
+ $('activity-note').textContent=activeOnly?(activity?`Showing ${candidates.length} managers active at their last check.${reviewsDue?' Some roles are due for review; their records remain available.':''} Choose Full historical archive for all managers.`:'Manager status could not load. Choose Full historical archive to see the records.'):'Showing current and past managers.';
 }
 async function init(){
  document.addEventListener('error',event=>{
@@ -96,7 +97,7 @@ async function init(){
  const response=await fetch('data.json');if(!response.ok)throw Error('Archive unavailable');data=await response.json();data.names=Object.fromEntries(data.managers.map(m=>[m.id,m.name]));
  try{const r=await fetch('portraits-auto.json');if(r.ok)portraits={...await r.json(),...reviewedPortraits};}catch{/* Keep reviewed portraits and the explicit unavailable icon. */}
  try{const r=await fetch('activity.json');if(r.ok)activity=await r.json();}catch{/* Unknown status stays out of the active ranking. */}
- if($('activity-review-details'))$('activity-review-details').textContent=activity?`Manager roles last checked ${activity.asOf}. The active list includes only roles we have verified; it is not a complete list of everyone still coaching. Other managers remain searchable in the full archive.`:'';
+ if($('activity-review-details'))$('activity-review-details').textContent=activity?`Manager status list updated ${activity.asOf}. Roles are checked individually. A review date does not remove a manager or their match history. Confirmed departures update this list; other managers remain searchable in the full archive.`:'';
  const dateLabel=value=>new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(value+'T12:00:00Z'));
  $('coverage').textContent=`League match history from ${dateLabel(data.fromDate)} to ${dateLabel(data.through)}. Coverage varies by manager and league.`;
  $('freshness-date').textContent=dateLabel(data.through);
