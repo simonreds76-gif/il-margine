@@ -1,6 +1,6 @@
 # Football Count Market Coverage
 
-Generated: 2026-10-04T14:07:10Z
+Generated: 2026-10-05T17:11:45Z
 
 This report measures what the configured odds feed actually exposes. A bookmaker offering a market on its website does not prove the aggregator returns it.
 
