@@ -94,3 +94,9 @@ test('moving a website file to an offline model path must build', () => {
   git('commit', '-m', 'move file');
   expect({ previous, current: git('rev-parse', 'HEAD'), message: 'move file' }, 1);
 });
+
+test("Aerial cloud data skips but its interface still builds", () => {
+  expect(commit(["data/aerial/history.json.gz", "data/aerial/health.json", "public/fair-odds-lab/aerial.json", "scripts/aerial_data.py"]), 0);
+  expect(commit(["src/components/aerial/AerialBoard.tsx", "data/aerial/health.json"]), 1);
+});
+

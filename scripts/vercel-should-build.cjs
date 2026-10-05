@@ -117,6 +117,10 @@ if (changedFiles.length === 0) {
 }
 
 const SKIP_PATTERNS = [
+  // Aerial state is published to Blob by the existing football worker.
+  /^data\/aerial\//,
+  /^public\/fair-odds-lab\/aerial\.json$/,
+  /^scripts\/(aerial_data|aerial_source|refresh-aerial)\.py$/,
   // Offline Python jobs and their tests run on the model worker/GitHub, not in
   // Next.js. Their generated public assets still build when those assets change.
   // Do not widen this to all scripts: prebuild audits, asset generators and the
@@ -200,3 +204,4 @@ if (buildRelevantFiles.length > 12) {
   log(`and ${buildRelevantFiles.length - 12} more build-relevant path(s)`);
 }
 process.exit(1);
+
