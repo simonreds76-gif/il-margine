@@ -16,6 +16,7 @@ const groups = [
   ] },
   { title: "Betting tools", links: [
     { label: "Fair Odds Lab", href: "/fair-odds-lab" },
+    { label: "Air Control", href: "/fair-odds-lab/aerial", detail: "Height, headers & delivery" },
     { label: "Penalty takers", href: "/penalty-takers" },
     { label: "Mind the Margin", href: "/bookmakers", detail: "Bookmaker margins" },
     { label: "Betting calculators", href: "/calculator" },

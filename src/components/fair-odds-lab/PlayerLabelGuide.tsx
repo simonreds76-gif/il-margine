@@ -1,3 +1,4 @@
+import { LabIcon } from "./LabIcon";
 import { DisclosureCue } from "./DisclosureCue";
 
 const groups = [
@@ -23,7 +24,7 @@ const groups = [
 
 export function PlayerLabelGuide() {
   return <details id="lab-guide" className="ip-label-guide">
-    <summary><span className="ip-guide-heading"><span className="ip-eyebrow">A QUICK GUIDE</span><strong>Read the prices with confidence</strong><small>What the two prices, colours and player labels mean</small></span><DisclosureCue /></summary>
+    <summary><span className="ip-section-title"><span className="ip-section-mark"><LabIcon kind="guide"/></span><span className="ip-guide-heading"><span className="ip-eyebrow">A QUICK GUIDE</span><strong>Read the prices with confidence</strong><small>What the two prices, colours and player labels mean</small></span></span><DisclosureCue /></summary>
     <div className="ip-guide-body">
       <div className="ip-guide-example">
         <div className="ip-guide-example-copy"><span className="ip-eyebrow">AN EXAMPLE · NOT A CURRENT PICK</span><h3>Same player. Two prices.</h3><p>Compare our estimate with the odds you can get at Bet365.</p></div>
@@ -31,7 +32,7 @@ export function PlayerLabelGuide() {
         <p className="ip-guide-takeaway"><span className="ip-status-chip positive">Better price</span>Here, Bet365 pays more than our estimated fair price. Decimal odds of 3.50 return £3.50 per £1 if the bet wins, including your stake.</p>
       </div>
       <div className="ip-guide-groups">{groups.map(group => <section key={group.number}><header><span>{group.number}</span><h3>{group.title}</h3></header><dl>{group.items.map(([label, tone, description]) => <div key={label}><dt><span className={`ip-status-chip ${tone}`}>{label}</span></dt><dd>{description}</dd></div>)}</dl></section>)}</div>
-      <div className="ip-margin-note"><strong>Our fair odds ≠ bookmaker odds with the margin removed</strong><p>Our price comes from a player scoring estimate. Removing bookmaker margin needs every outcome in the same market — for example, both “scores” and “does not score”. Different players can all score, so adding their anytime goalscorer prices together does not give a valid market margin.</p><a href="/the-edge">Explore fair odds &amp; bookmaker margin →</a></div><p className="ip-guide-tip">Tap any player to see their odds, penalty role and last update. All times are UK time.</p>
+      <div className="ip-margin-note"><strong>Our fair odds ≠ bookmaker odds with the margin removed</strong><p>Our price comes from a player scoring estimate. Removing bookmaker margin needs every outcome in the same market, for example, both “scores” and “does not score”. Different players can all score, so adding their anytime goalscorer prices together does not give a valid market margin.</p><a href="/the-edge">Explore fair odds &amp; bookmaker margin →</a></div><p className="ip-guide-tip">Tap any player to see their odds, penalty role and last update. All times are UK time.</p>
     </div>
   </details>;
 }
