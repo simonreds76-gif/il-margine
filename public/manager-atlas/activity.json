@@ -1,6 +1,6 @@
 {
-  "asOf": "2026-09-27",
-  "reviewBy": "2026-10-05",
+  "asOf": "2026-10-05",
+  "reviewBy": "2026-11-02",
   "scope": "Verified coaching roles from checked 2026/27 rosters and subsequent announcements. Coverage is incomplete, especially outside the five leagues. Missing entries are unknown, never automatically retired. All historical records remain searchable.",
   "entries": {
     "mgr-0644": {
@@ -195,13 +195,18 @@
     },
     "mgr-0094": {
       "name": "Carlos Cuesta",
-      "status": "active",
+      "status": "unknown",
+      "club": "Parma",
       "evidence": {
-        "url": "https://www.legaseriea.it/serie-a/news/gli-allenatori-della-serie-a-enilive-2026-27",
-        "published": "2026-07-03"
+        "url": "https://www.parmacalcio1913.com/en/main-news/nota-del-club-carlos-cuesta/",
+        "published": "2026-09-27",
+        "sha256": "ad31fec61867b9dd3d2a2d2907f3c2ae1d9b741cf211daae55ca951c12c44766"
       },
-      "checkedAt": "2026-09-27",
-      "reviewBy": "2026-10-05"
+      "checkedAt": "2026-10-05",
+      "reviewBy": "2026-11-02",
+      "roleEvent": "departure",
+      "effectiveDate": "2026-09-27",
+      "note": "Departure from Parma verified; subsequent employment is not established. This does not imply retirement."
     },
     "mgr-0232": {
       "name": "Gian Piero Gasperini",
@@ -754,6 +759,49 @@
       },
       "checkedAt": "2026-09-27",
       "reviewBy": "2026-10-05"
+    },
+    "mgr-0023": {
+      "name": "Alberto Gilardino",
+      "status": "active",
+      "club": "Parma",
+      "evidence": {
+        "url": "https://www.parmacalcio1913.com/en/main-news/alberto-gilardino-e-il-nuovo-allenatore-del-parma-calcio/",
+        "published": "2026-09-29",
+        "sha256": "09560c25be40494132d1e83879141b2628fa2e3c3721f8aa897b58d08fc501c4"
+      },
+      "checkedAt": "2026-10-05",
+      "reviewBy": "2026-11-02",
+      "roleEvent": "appointment",
+      "effectiveDate": "2026-09-29"
+    },
+    "mgr-0032": {
+      "name": "Alexander Blessin",
+      "status": "active",
+      "club": "Borussia Mönchengladbach",
+      "evidence": {
+        "url": "https://www.bundesliga.com/de/bundesliga/news/alexander-blessin-gladbach-trainer-fix-nachfolger-eugen-polanski-39297",
+        "published": "2026-09-22",
+        "sha256": "52c6fd455bebd5b702d64034441acf426a2dcc4506d9b601006e2052ba76f53c"
+      },
+      "checkedAt": "2026-10-05",
+      "reviewBy": "2026-11-02",
+      "roleEvent": "appointment",
+      "effectiveDate": "2026-09-22"
+    },
+    "mgr-0280": {
+      "name": "Javier Aguirre",
+      "status": "active",
+      "club": "Valencia",
+      "evidence": {
+        "url": "https://www.valenciacf.com/comunicado-oficial-javier-aguirre",
+        "published": "2026-09-23",
+        "sha256": "0a674bc415b2ea246a6bc15dd4616cde62529a64fe3f64f70cd3ee031a1c4707"
+      },
+      "checkedAt": "2026-10-05",
+      "reviewBy": "2026-11-02",
+      "roleEvent": "appointment",
+      "effectiveDate": "2026-09-23"
     }
-  }
+  },
+  "reviewPolicy": "Monthly review. Keep last verified active roles visible when a review is overdue; never infer a departure from reviewBy. Individual checkedAt dates remain the dates of their evidence reviews."
 }

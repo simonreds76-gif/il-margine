@@ -25,9 +25,17 @@ export function rankingMinimum() {
   return 1;
 }
 
+const validDate=value=>typeof value==='string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0,10)===value;
+
+export function activeReviewDue(id, registry, today) {
+  const entry=registry?.entries?.[id];
+  return isVerifiedActive(id,registry,today) && (!validDate(entry.reviewBy) || entry.reviewBy<today);
+}
+
 export function isVerifiedActive(id, registry, today) {
   const entry=registry?.entries?.[id];
-  return !!entry && entry.status==='active' && entry.checkedAt<=today && entry.reviewBy>=today;
+  // A review deadline marks freshness, not the end of a coaching role.
+  return !!entry && entry.status==='active' && validDate(entry.checkedAt) && entry.checkedAt<=today;
 }
 
 export function marketContext(rows) {
