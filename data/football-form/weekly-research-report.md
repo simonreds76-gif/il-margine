@@ -1,6 +1,6 @@
 # Weekly Research Lane Report
 
-- Generated: 2026-09-30T10:09:11Z
+- Generated: 2026-10-06T17:22:01Z
 - Overall read: observe live sample
 
 ## Football Counts vNext
@@ -8,17 +8,17 @@
 - Team Shots v4: count PASS; prospective AUTHORIZED_SHADOW; promotion BLOCKED.
 - Team Shots v4 evidence: 2 signals, 2 settled, -2.00u, ROI -100.0%, true-close CLV -.
 - Team Shots v4 warm-up tracking (not bets): 14 signals, 14 settled / 0 pending, +0.32u, ROI +2.3%.
-- Team Shots v4 latest scan: NO_SCORED_CANDIDATES; 0 rows / 0 fixtures scored; 0 fixtures passed edge but were warm-up blocked; blockers -.
+- Team Shots v4 latest scan: EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES; 32 rows / 8 fixtures scored; 0 fixtures passed edge but were warm-up blocked; blockers {'early_market_gap_cap': 8, 'edge_below_3pct': 30}.
 - Corners v3: count PASS; prospective AUTHORIZED_SHADOW; promotion BLOCKED.
-- Corners v3 evidence: 41 signals, 41 settled, +0.39u, ROI +1.0%, true-close CLV +0.1%.
+- Corners v3 evidence: 57 signals, 41 settled, +0.39u, ROI +1.0%, true-close CLV +0.1%.
 - Corners v3 warm-up tracking (not bets): 36 signals, 36 settled / 0 pending, -2.50u, ROI -7.0%.
-- Corners v3 latest scan: NO_SCORED_CANDIDATES; 0 rows / 0 fixtures scored; 0 fixtures passed edge but were warm-up blocked; blockers -.
+- Corners v3 latest scan: NO_EDGE_AFTER_UNLOCK; 132 rows / 25 fixtures scored; 0 fixtures passed edge but were warm-up blocked; blockers {'edge_below_3pct': 92, 'price_older_than_3h': 132}.
 - Corners v4 G0 research: FAIL; 6901/10889 enriched; latest holdout MAE delta -0.0074; real-market Brier delta +0.0090 on n=431; line gates 0/5 passed; failed 7.5, 8.5, 9.5, 10.5, 11.5, 12.5.
 - Neither experiment changes live routing or stakes.
 - API-Football count archive: 0 fixtures; latest -; last run 15/30 requests.
 - Cross-provider agreement: 0/0 API fixtures matched; status no_overlap.
 - Team Fouls: F1 COUNT_GATE_FAIL_MARKET_BLOCKED; F2 COUNT_GATE_FAIL_EXTERNAL_GATES_BLOCKED; M2 WAIT_OR_FAIL; market prices BLOCKED; signals disabled.
-- Goalkeeper Saves v1: count PASS on 42,958 observations; discovery OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED (10 probe Over lines); latest capture NO_GOALKEEPER_SAVE_LINES (0 events selected / 0 rows / 0 with 1X2); prospective SIGNALS_COLLECTING with 0 priced lines, 0 eligible, 0 predicted-XI research rows, 53 signals and 52 settled; blockers {}; ROI +56.1%, CLV +4.4% n=13; promotion BLOCKED.
+- Goalkeeper Saves v1: count PASS on 42,958 observations; discovery OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED (10 probe Over lines); latest capture NO_GOALKEEPER_SAVE_LINES (0 events selected / 0 rows / 0 with 1X2); prospective SIGNALS_COLLECTING with 0 priced lines, 0 eligible, 0 predicted-XI research rows, 53 signals and 52 settled; blockers {}; ROI +60.0%, CLV +4.4% n=13; promotion BLOCKED.
 - New provider fields remain diagnostic-only until source definitions and coverage are accepted.
 
 ## Team Shots V3 EMA20 Research
@@ -28,7 +28,7 @@
 - Blocked leagues: -
 - Canonical-only fixtures: blocked
 - Last-90 segment gate: 1140 rows, current MAE 3.7320, V3 MAE 3.6413, improvement +2.4%
-- Live CLV sample: 72 published, 72 settled
+- Live CLV sample: 79 published, 79 settled
 - Avg published-to-close CLV: +0.3%
 - P/L sample: +10.93u
 - Action: continue
@@ -73,7 +73,7 @@
 - Settlement gate: FAIL | player-assist agreement 0.00%.
 - Market gate: FAIL | 1305 matched player prices across 8 calendar days.
 - Prospective ledger: 0/0 settled (target 100), +0.00u, ROI -.
-- Evidence freshness: FRESH (2026-09-30T10:08:59Z).
+- Evidence freshness: FRESH (2026-10-06T17:21:53Z).
 - Automation budget: Friday-Sunday 07:10 UTC, August-May; <= 10 Odds-API calls/run and <= 30 calls/week; zero database reads/writes.
 - No public output, staking, database writes or automatic promotion are authorised.
 
@@ -105,40 +105,40 @@
 
 ## Tennis Props v3 Prospective Evidence
 
-- Snapshot: 2026-07-29T11:37:47Z
+- Snapshot: 2026-10-06T09:18:48Z
 - ATP aces gate: PASS on Clay, Hard
 - Holdout MAE improvement: +3.33%
-- Prospective sample: 0 settled, 1 pending, 0 events
-- P/L: +0.00u; ROI +0.00%
-- CLV: +0.00% across 0 rows
-- Sellability: BLOCKED - settled 0/300; events 0/100; CLV coverage 0/300; mean CLV +0.00%/+1.00%
+- Prospective sample: 40 settled, 4 pending, 39 events
+- P/L: -8.06u; ROI -20.15%
+- CLV: +6.00% across 15 rows
+- Sellability: BLOCKED - settled 40/300; events 39/100; CLV coverage 15/300; ROI -20.15%/+0.00%
 - Scope remains ATP aces on verified Hard/Clay only; shadow-only until every real-price gate passes.
 
 ## Venue Ace Factor v1
 
 - Status: PROSPECTIVE_SHADOW / NOT_SELLABLE
 - Venue coverage: 70/210 eligible.
-- Prospective evidence: 492/600 settled across 266/150 events; P/L -142.23u; ROI -28.9%; CLV -0.05% n=215.
+- Prospective evidence: 582/600 settled across 296/150 events; P/L -170.56u; ROI -29.3%; CLV -0.07% n=286.
 - Shadow only. This block never changes routing, stakes or public recommendations.
 
 ## Tennis Aces/DF Prospective Decision
 
 Tennis Aces/DF Weekly Decision Report
-Generated UTC: 2026-09-29T09:17:35Z
+Generated UTC: 2026-10-06T09:19:40Z
 Status: COLLECTING_EVIDENCE (never auto-promoted)
 
-Sample: 115/136 settled; 7 pending (1 due, 6 future, 0 unknown); 14 void
-Record: 57W/58L/0P
-P/L: -1.82u | ROI: -1.6%
-CLV: +3.54% mean; 29.6% positive; n=44
-Calibration: Brier 0.235271; predicted 59.1%; actual 49.6%; gap 9.5pp; n=115
-Feed: TWO_WAY_PRICES_MISSING; matched 845/879; two-way 0; over-only 879; public bettable 0
+Sample: 132/170 settled; 18 pending (2 due, 16 future, 0 unknown); 20 void
+Record: 64W/68L/0P
+P/L: -5.06u | ROI: -3.8%
+CLV: +3.11% mean; 29.9% positive; n=67
+Calibration: Brier 0.237374; predicted 58.9%; actual 48.5%; gap 10.4pp; n=132
+Feed: MILESTONE_SHADOW_READY; matched 622/743; two-way 0; over-only 743; public bettable 0
 
 By market:
-- aces: 38/43 settled, -2.65u, ROI -7.0%
-- double_faults: 77/93 settled, +0.83u, ROI +1.1%
+- aces: 43/54 settled, -7.65u, ROI -17.8%
+- double_faults: 89/116 settled, +2.59u, ROI +2.9%
 
-Blockers: settled sample 115/300; Slam coverage 1/2; CLV sample 44/300; one-sided price feed (0 two-way rows); pipeline health TWO_WAY_PRICES_MISSING
+Blockers: settled sample 132/300; Slam coverage 1/2; CLV sample 67/300; one-sided price feed (0 two-way rows)
 Promotion gate: Human review only after 300 settled lines across at least two Slams, non-negative ROI, mean CLV >= +1%, positive CLV >= 55%, at least 100 calibrated win/loss rows with Brier <= 0.25 and absolute calibration gap <= 5pp, plus approved price integrity and a healthy pipeline.
 
 Service Breaks v1 [INTERNAL]: OUTCOME_PASS | player ATP/WTA PASS | match ATP/WTA PASS | real price evidence NO_CAPTURE_OR_LEDGER_EVIDENCE | prospective 0 | strict 0 rows/0 settled/+0.00u/ROI - | Bet365-only 0 rows/0 settled/+0.00u/ROI - | count calibration 0/0 settled | NOT SELLABLE
@@ -162,8 +162,49 @@ Service Breaks v1 [INTERNAL]: OUTCOME_PASS | player ATP/WTA PASS | match ATP/WTA
 - The next real evidence is CLV and settled live sample. Until 50 settled picks, do not overreact to wins/losses.
 
 
-Astra models SHADOW ONLY | Astra Aces: 57/83 settled, 24 pending, 28/200 fixtures | Astra DF: 56/80 settled, 22 pending, 28/200 fixtures | Astra Aces: baseline ROI -10.8% (33 contracts), Astra ROI -9.9% (34 contracts) | Astra DF: baseline ROI +13.2% (37 contracts), Astra ROI +24.2% (37 contracts) | data FRESH; 8 weeks/4 tournaments minimum, manual review before promotion.
+Astra models SHADOW ONLY | Astra Aces: 860/1103 settled, 179 pending, 116/200 fixtures | Astra DF: 1017/1271 settled, 187 pending, 119/200 fixtures | Astra Aces: baseline ROI -56.4% (112 contracts), Astra ROI -43.0% (100 contracts) | Astra DF: baseline ROI -20.8% (118 contracts), Astra ROI -3.8% (137 contracts) | data FRESH; 8 weeks/4 tournaments minimum, manual review before promotion.
+
+Full input refresh | paper tracking only
+Evidence: 2026-10-06T09:17:57.429883+00:00
+Collector needs attention: frozen_implementation_changed:scripts/tennis-props-rate-trend-prospective.py
+Aces: 571 settled quotes, 0 pending, 0 overdue; 56/200 settled matches, 2/4 tournaments, 5/56 days.
+Current: ROI -55.6%, -24.46u, W/L/P 12/32/0, 44u settled stake.
+Refreshed: ROI -56.0%, -20.17u, W/L/P 10/26/0, 36u settled stake.
+Double faults: 643 settled quotes, 0 pending, 0 overdue; 53/200 settled matches, 2/4 tournaments, 5/56 days.
+Current: ROI -38.2%, -16.04u, W/L/P 12/30/0, 42u settled stake.
+Refreshed: ROI -47.5%, -27.09u, W/L/P 14/43/0, 57u settled stake.
+Milestones with selected paper bets (current / refreshed):
+ATP aces 1+: +10.0%, +0.10u, 1 settled/0 pending / pending, +0.00u, 0 settled/0 pending
+ATP aces 3+: -55.7%, -1.67u, 3 settled/0 pending / -55.7%, -1.67u, 3 settled/0 pending
+ATP aces 5+: -32.5%, -1.95u, 6 settled/0 pending / -31.9%, -2.23u, 7 settled/0 pending
+ATP aces 10+: +16.2%, +1.62u, 10 settled/0 pending / +65.8%, +3.29u, 5 settled/0 pending
+ATP aces 15+: -100.0%, -4.00u, 4 settled/0 pending / -100.0%, -4.00u, 4 settled/0 pending
+ATP aces 20+: -100.0%, -4.00u, 4 settled/0 pending / -100.0%, -4.00u, 4 settled/0 pending
+ATP aces 25+: -100.0%, -2.00u, 2 settled/0 pending / -100.0%, -1.00u, 1 settled/0 pending
+ATP aces 30+: -100.0%, -1.00u, 1 settled/0 pending / -100.0%, -1.00u, 1 settled/0 pending
+WTA aces 1+: +44.0%, +0.44u, 1 settled/0 pending / +44.0%, +0.44u, 1 settled/0 pending
+WTA aces 3+: -100.0%, -2.00u, 2 settled/0 pending / -100.0%, -1.00u, 1 settled/0 pending
+WTA aces 5+: -100.0%, -5.00u, 5 settled/0 pending / -100.0%, -4.00u, 4 settled/0 pending
+WTA aces 10+: -100.0%, -2.00u, 2 settled/0 pending / -100.0%, -3.00u, 3 settled/0 pending
+WTA aces 15+: -100.0%, -2.00u, 2 settled/0 pending / -100.0%, -2.00u, 2 settled/0 pending
+WTA aces 20+: -100.0%, -1.00u, 1 settled/0 pending / pending, +0.00u, 0 settled/0 pending
+ATP DF 1+: +24.0%, +0.72u, 3 settled/0 pending / -5.8%, -0.23u, 4 settled/0 pending
+ATP DF 2+: -43.8%, -1.75u, 4 settled/0 pending / -12.1%, -0.85u, 7 settled/0 pending
+ATP DF 3+: +65.0%, +3.25u, 5 settled/0 pending / -8.3%, -0.75u, 9 settled/0 pending
+ATP DF 5+: -100.0%, -4.00u, 4 settled/0 pending / -100.0%, -8.00u, 8 settled/0 pending
+ATP DF 8+: pending, +0.00u, 0 settled/0 pending / -100.0%, -1.00u, 1 settled/0 pending
+WTA DF 1+: +16.0%, +0.16u, 1 settled/0 pending / +16.0%, +0.16u, 1 settled/0 pending
+WTA DF 2+: -25.8%, -1.03u, 4 settled/0 pending / -25.8%, -1.03u, 4 settled/0 pending
+WTA DF 3+: -12.8%, -0.64u, 5 settled/0 pending / -12.8%, -0.64u, 5 settled/0 pending
+WTA DF 5+: -45.8%, -2.75u, 6 settled/0 pending / -45.8%, -2.75u, 6 settled/0 pending
+WTA DF 8+: -100.0%, -7.00u, 7 settled/0 pending / -100.0%, -6.00u, 6 settled/0 pending
+WTA DF 10+: -100.0%, -3.00u, 3 settled/0 pending / -100.0%, -4.00u, 4 settled/0 pending
+WTA DF 12+: pending, +0.00u, 0 settled/0 pending / -100.0%, -2.00u, 2 settled/0 pending
+One paper unit per selected line. Milestones on the same match are correlated. No automatic promotion.
+Astra Volume PAPER ONLY: 1W/1L, ROI +73.00%, 1 pending (0 overdue). Paired fixtures settled 7; review at 50 and 100. Capture CAPTURED at 2026-10-06T09:12:37.639412+00:00. No closing-price coverage; 69 historical replay bets excluded.
 
 MODEL REVIEW WATCHLIST
-Astra Volume [RESEARCH]: historical replay ROI +7.25%, n=69 | prospective capture NOT_CONNECTED | review weekly; historical bets are not forward evidence.
-Opponent Shots [SHADOW]: forward 11W/24L, ROI -41.5%, pending 1 | COLLECTING_FIXED_POLICY | scan 2026-09-30T10:06:00Z
+Calibrated Shots [ZERO-STAKE]: forward ROI awaiting evidence, settled 0, pending 0 | WAITING_FOR_FRESH_PAIRED_MARKETS
+EMA20 v3 / v4 / Opponent paired comparison [RESEARCH]: historical replay ROI unknown, n=? | prospective capture DAILY_EXISTING_FOOTBALL_COUNTS_WORKFLOW | review weekly; historical bets are not forward evidence.
+Astra Volume [RESEARCH]: historical replay ROI +7.25%, n=69 | prospective capture CONNECTED_FIRST_CAPTURE_VERIFIED | review weekly; historical bets are not forward evidence.
+Opponent Shots [SHADOW]: forward 11W/24L, ROI -41.5%, pending 0 | COLLECTING_FIXED_POLICY | scan 2026-10-06T17:18:53Z
