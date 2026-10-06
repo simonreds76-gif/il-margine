@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T16:16:09Z",
+  "generated_at": "2026-10-06T21:13:54Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -44,7 +44,8 @@
       "blocked_rows": 32,
       "blocker_rows": {
         "early_market_gap_cap": 8,
-        "edge_below_3pct": 30
+        "edge_below_3pct": 30,
+        "price_older_than_3h": 32
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 5,
