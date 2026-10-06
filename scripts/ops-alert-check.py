@@ -20,6 +20,8 @@ ENV_FILES = [ROOT / ".env.local", ROOT / "env.local"]
 FOOTBALL_VNEXT_GATE = ROOT / "data" / "football-form" / "football-counts-vnext-gate.json"
 VERCEL_ISR_POLICY_GUARD = ROOT / "scripts" / "audit-vercel-isr-policy.py"
 LONDON_TZ = ZoneInfo("Europe/London")
+sys.path.insert(0, str(ROOT / "scripts"))
+from football_capture_health import load_candidates, load_json, verified_empty_window
 PINNACLE_PIPELINE = "pinnacle-capture-history"
 PINNACLE_SLOT_START = time(hour=8, minute=0)
 PINNACLE_SLOT_END = time(hour=23, minute=30)
@@ -246,6 +248,17 @@ def load_football_model_alerts(path: Path = FOOTBALL_VNEXT_GATE, *, warnings: bo
         scan = lane.get("latest_scan") or {}
         if not scan.get("operational_alert_required"):
             continue
+        # Reconcile a saved legacy gate against its own capture time. A later
+        # capture, failed feed or overlapping peer fixture cannot clear it.
+        if model == "team_shots_v4" and scan.get("operational_alert_code") == "POST_UNLOCK_NO_SCORED_CANDIDATES" and scan.get("scored_rows") == 0:
+            data_root = path.parent.parent
+            empty_window = verified_empty_window(
+                load_json(data_root / "team-shots" / "team-shots-scrape-last-run.json"),
+                load_candidates(path.parent / "football-counts-vnext-candidates.csv"),
+                payload.get("generated_at"),
+            )
+            if empty_window:
+                continue
         # A frozen, unrouted research lane rejecting supplied prices needs model
         # review, not an outage notification. Keep the diagnostic and Telegram
         # warning; missing captures, live-lane faults and unknown alerts still fail.

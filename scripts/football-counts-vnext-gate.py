@@ -13,6 +13,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from football_market import blend_logit
+from football_capture_health import load_json, verified_empty_window
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,6 +26,7 @@ DEFAULT_CORNERS_LIVE = ROOT / "data" / "football-form" / "corners-v3-shadow-clv.
 DEFAULT_CANDIDATES = ROOT / "data" / "football-form" / "football-counts-vnext-candidates.csv"
 DEFAULT_JSON = ROOT / "data" / "football-form" / "football-counts-vnext-gate.json"
 DEFAULT_REPORT = ROOT / "data" / "football-form" / "football-counts-vnext-gate.md"
+DEFAULT_TEAM_CAPTURE = ROOT / "data" / "team-shots" / "team-shots-scrape-last-run.json"
 
 
 def load_csv(path: Path) -> list[dict[str, str]]:
@@ -185,6 +187,7 @@ def build_payload(
     team_live_rows: list[dict[str, str]] | None = None,
     corners_live_rows: list[dict[str, str]] | None = None,
     candidate_rows: list[dict[str, str]] | None = None,
+    team_capture: dict | None = None,
 ) -> dict[str, Any]:
     team_pass = team_count_gate(team_rows, team_report)
     corners_pass = corners_count_gate(corners_rows, corners_report)
@@ -199,6 +202,16 @@ def build_payload(
     corners_scan = candidate_diagnostics(candidates, "corners_v3")
     reconcile_cross_model_alert(team_scan, corners_scan)
     reconcile_cross_model_alert(corners_scan, team_scan)
+    generated_at = datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    empty_window = verified_empty_window(team_capture or {}, candidate_rows, generated_at)
+    if empty_window and team_scan["scored_rows"] == 0:
+        team_scan.update(
+            state="EXPECTED_EMPTY_CAPTURE_WINDOW",
+            explanation="The successful Team Shots scan found no supported fixtures in its capture window. Stored corners rows are outside that window.",
+            operational_alert_required=False,
+            operational_alert_code=None,
+            capture_window_evidence=empty_window,
+        )
     team_close_coverage = team_live["true_close_coverage"]
     team_mean_clv = team_live["mean_true_close_clv"]
     team_roi = team_live["roi"]
@@ -222,7 +235,7 @@ def build_payload(
         and corners_live["dominant_side_share"] <= 0.80
     )
     return {
-        "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "generated_at": generated_at,
         "team_shots_v4": {
             "count_gate": "PASS" if team_pass else "FAIL",
             "prospective_status": "AUTHORIZED_SHADOW" if team_pass else "BLOCKED",
@@ -334,6 +347,7 @@ def main() -> int:
     parser.add_argument("--team-live", type=Path, default=DEFAULT_TEAM_LIVE)
     parser.add_argument("--corners-live", type=Path, default=DEFAULT_CORNERS_LIVE)
     parser.add_argument("--candidates", type=Path, default=DEFAULT_CANDIDATES)
+    parser.add_argument("--team-capture", type=Path, default=DEFAULT_TEAM_CAPTURE)
     parser.add_argument("--json", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     args = parser.parse_args()
@@ -346,6 +360,7 @@ def main() -> int:
         load_csv(args.team_live),
         load_csv(args.corners_live),
         load_csv(args.candidates),
+        load_json(args.team_capture),
     )
     apply_team_rule_feasibility(
         payload, load_csv(args.candidates),
