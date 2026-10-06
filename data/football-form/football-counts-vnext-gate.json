@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T18:49:52Z",
+  "generated_at": "2026-10-06T00:57:32Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -35,8 +35,8 @@
       "dominant_side_share": 0.928571
     },
     "latest_scan": {
-      "state": "NO_SCORED_CANDIDATES",
-      "explanation": "No paired current market rows reached model scoring. Check capture coverage and fixture joins.",
+      "state": "POST_UNLOCK_NO_SCORED_CANDIDATES",
+      "explanation": "The peer football-count lane reached matchday 4+, but this lane produced no scored candidates. Check current price capture and fixture joins.",
       "scored_rows": 0,
       "scored_fixtures": 0,
       "eligible_rows": 0,
@@ -47,8 +47,8 @@
       "matchday_min": null,
       "matchday_max": null,
       "next_unlock": null,
-      "operational_alert_required": false,
-      "operational_alert_code": null,
+      "operational_alert_required": true,
+      "operational_alert_code": "POST_UNLOCK_NO_SCORED_CANDIDATES",
       "rule_feasibility": {
         "affected_rows": 0,
         "rows_capable_of_minimum_edge": 0,
@@ -96,17 +96,20 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "NO_SCORED_CANDIDATES",
-      "explanation": "No paired current market rows reached model scoring. Check capture coverage and fixture joins.",
-      "scored_rows": 0,
-      "scored_fixtures": 0,
+      "state": "NO_EDGE_AFTER_UNLOCK",
+      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
+      "scored_rows": 10,
+      "scored_fixtures": 2,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 0,
-      "blocker_rows": {},
+      "blocked_rows": 10,
+      "blocker_rows": {
+        "edge_below_3pct": 8,
+        "price_older_than_3h": 10
+      },
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": null,
-      "matchday_max": null,
+      "matchday_min": 5,
+      "matchday_max": 6,
       "next_unlock": null,
       "operational_alert_required": false,
       "operational_alert_code": null

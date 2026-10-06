@@ -1,6 +1,6 @@
 # Football Counts vNext Gate
 
-- Generated: 2026-10-05T18:49:52Z
+- Generated: 2026-10-06T00:57:32Z
 - This snapshot cannot promote or route bets.
 
 ## Team Shots v4
@@ -10,7 +10,7 @@
 - Promotion gate: **BLOCKED**
 - Prospective signals: 2 (2 settled / 0 pending)
 - Warm-up tracking: 14 (14 settled / 0 pending), +0.32u, ROI +2.3%
-- Latest scan: **NO_SCORED_CANDIDATES**; 0 rows / 0 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
+- Latest scan: **POST_UNLOCK_NO_SCORED_CANDIDATES**; 0 rows / 0 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
 - Blockers: -
 - P/L / ROI: -2.00u / -100.0%
 - True-close coverage: 0/2 (0.0%)
@@ -24,8 +24,8 @@
 - Promotion gate: **BLOCKED**
 - Prospective signals: 41 (41 settled / 0 pending)
 - Warm-up tracking: 36 (36 settled / 0 pending), -2.50u, ROI -7.0%
-- Latest scan: **NO_SCORED_CANDIDATES**; 0 rows / 0 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
-- Blockers: -
+- Latest scan: **NO_EDGE_AFTER_UNLOCK**; 10 rows / 2 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
+- Blockers: {'edge_below_3pct': 8, 'price_older_than_3h': 10}
 - P/L / ROI: +0.39u / +1.0%
 - True-close coverage: 20/41 (48.8%)
 - Mean true-close CLV: +0.07%
