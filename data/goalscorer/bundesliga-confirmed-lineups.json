@@ -2,21 +2,314 @@
   "fixtures": [
     {
       "fotmob_match_id": 5881180,
+      "fotmob_page_url": "/matches/werder-bremen-vs-borussia-dortmund/2tqnt6#5881180",
+      "home_fotmob_team_id": 9789,
+      "away_fotmob_team_id": 8697,
       "match_date": "2026-10-09",
       "kickoff_utc": "2026-10-09T18:30:00Z",
       "home_team": "Borussia Dortmund",
       "away_team": "Werder Bremen",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-4-2-1",
+      "away_formation": "3-4-3",
+      "home_players": [
+        "Gregor Kobel",
+        "Joane Gadou",
+        "Waldemar Anton",
+        "Ramy Bensebaini",
+        "Luca Reggiani",
+        "Joey Veerman",
+        "Felix Nmecha",
+        "Daniel Svensson",
+        "Ethan Nwaneri",
+        "Maximilian Beier",
+        "Serhou Guirassy"
+      ],
+      "away_players": [
+        "Alexander Schlager",
+        "Amos Pieper",
+        "Marco Friedl",
+        "Olivier Deman",
+        "Arthur",
+        "Ludovit Reis",
+        "Youri Regeer",
+        "Marco Grüll",
+        "Eren Dinkçi",
+        "Niclas Füllkrug",
+        "Chuki"
+      ],
+      "home_starters": [
+        {
+          "name": "Gregor Kobel",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-2-1",
+          "position_id": 11,
+          "player_id": 764018,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Joane Gadou",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 33,
+          "player_id": 1479742,
+          "shirt_number": "22"
+        },
+        {
+          "name": "Waldemar Anton",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 35,
+          "player_id": 664970,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Ramy Bensebaini",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 37,
+          "player_id": 559065,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Luca Reggiani",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 62,
+          "player_id": 1845173,
+          "shirt_number": "49"
+        },
+        {
+          "name": "Joey Veerman",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 64,
+          "player_id": 792429,
+          "shirt_number": "25"
+        },
+        {
+          "name": "Felix Nmecha",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66,
+          "player_id": 966019,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Daniel Svensson",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 68,
+          "player_id": 1209228,
+          "shirt_number": "24"
+        },
+        {
+          "name": "Ethan Nwaneri",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84,
+          "player_id": 1254234,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Maximilian Beier",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86,
+          "player_id": 1047667,
+          "shirt_number": "14"
+        },
+        {
+          "name": "Serhou Guirassy",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-2-1",
+          "position_id": 105,
+          "player_id": 448540,
+          "shirt_number": "9"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Alexander Schlager",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-3",
+          "position_id": 11,
+          "player_id": 450739,
+          "shirt_number": "30"
+        },
+        {
+          "name": "Amos Pieper",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 33,
+          "player_id": 765998,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Marco Friedl",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 35,
+          "player_id": 767789,
+          "shirt_number": "32"
+        },
+        {
+          "name": "Olivier Deman",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 37,
+          "player_id": 969856,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Arthur",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 72,
+          "player_id": 1353457,
+          "shirt_number": "13"
+        },
+        {
+          "name": "Ludovit Reis",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 74,
+          "player_id": 869326,
+          "shirt_number": "15"
+        },
+        {
+          "name": "Youri Regeer",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 76,
+          "player_id": 1111980,
+          "shirt_number": "44"
+        },
+        {
+          "name": "Marco Grüll",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 78,
+          "player_id": 1024292,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Eren Dinkçi",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 103,
+          "player_id": 1146376,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Niclas Füllkrug",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 105,
+          "player_id": 276791,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Chuki",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 107,
+          "player_id": 1315344,
+          "shirt_number": "20"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-10-06T16:46:39.293657+00:00",
-      "changed_at": "2026-10-06T01:17:24.472999+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Emre Can",
+        "Filippo Mane",
+        "Nico Schlotterbeck",
+        "Giannis Konstantelias",
+        "Julian Ryerson",
+        "Justin Lerma"
+      ],
+      "away_unavailable": [
+        "Skelly Alvero",
+        "Moussa N'Diaye",
+        "Felix Agu",
+        "Jens Stage",
+        "Senne Lynen",
+        "Justin Njinmah",
+        "Keke Topp",
+        "Salim Musah"
+      ],
+      "observed_at": "2026-10-06T21:36:54.547976+00:00",
+      "changed_at": "2026-10-06T21:36:54.547976+00:00"
     }
   ]
 }
