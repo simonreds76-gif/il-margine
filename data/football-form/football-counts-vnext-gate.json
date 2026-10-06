@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T00:57:32Z",
+  "generated_at": "2026-10-06T15:15:58Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -35,24 +35,27 @@
       "dominant_side_share": 0.928571
     },
     "latest_scan": {
-      "state": "POST_UNLOCK_NO_SCORED_CANDIDATES",
-      "explanation": "The peer football-count lane reached matchday 4+, but this lane produced no scored candidates. Check current price capture and fixture joins.",
-      "scored_rows": 0,
-      "scored_fixtures": 0,
+      "state": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
+      "explanation": "For all 32 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.11%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
+      "scored_rows": 32,
+      "scored_fixtures": 8,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 0,
-      "blocker_rows": {},
+      "blocked_rows": 32,
+      "blocker_rows": {
+        "early_market_gap_cap": 8,
+        "edge_below_3pct": 30
+      },
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": null,
-      "matchday_max": null,
+      "matchday_min": 5,
+      "matchday_max": 6,
       "next_unlock": null,
       "operational_alert_required": true,
-      "operational_alert_code": "POST_UNLOCK_NO_SCORED_CANDIDATES",
+      "operational_alert_code": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
       "rule_feasibility": {
-        "affected_rows": 0,
+        "affected_rows": 32,
         "rows_capable_of_minimum_edge": 0,
-        "maximum_allowed_edge": null,
+        "maximum_allowed_edge": 0.021062786390673605,
         "minimum_edge": 0.03,
         "raw_gap_cap": 0.12,
         "model_weight": 0.18
@@ -66,19 +69,19 @@
     "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 41,
+      "signals": 57,
       "settled": 41,
-      "pending": 0,
+      "pending": 16,
       "pnl_units": 0.394,
       "roi": 0.00961,
       "true_close_n": 20,
       "true_close_coverage": 0.487805,
       "mean_true_close_clv": 0.000672,
       "side_counts": {
-        "over": 9,
-        "under": 32
+        "over": 13,
+        "under": 44
       },
-      "dominant_side_share": 0.780488
+      "dominant_side_share": 0.77193
     },
     "warmup_tracking": {
       "signals": 36,
@@ -96,20 +99,19 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "NO_EDGE_AFTER_UNLOCK",
-      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 10,
-      "scored_fixtures": 2,
-      "eligible_rows": 0,
-      "eligible_fixtures": 0,
-      "blocked_rows": 10,
+      "state": "ELIGIBLE_CANDIDATES_PRESENT",
+      "explanation": "At least one candidate passed every locked shadow gate.",
+      "scored_rows": 132,
+      "scored_fixtures": 25,
+      "eligible_rows": 40,
+      "eligible_fixtures": 16,
+      "blocked_rows": 92,
       "blocker_rows": {
-        "edge_below_3pct": 8,
-        "price_older_than_3h": 10
+        "edge_below_3pct": 92
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 5,
-      "matchday_max": 6,
+      "matchday_max": 8,
       "next_unlock": null,
       "operational_alert_required": false,
       "operational_alert_code": null

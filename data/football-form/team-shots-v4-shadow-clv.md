@@ -1,6 +1,6 @@
 # Team-Shots CLV Monitor: `team_shots_v4`
 
-Generated: 2026-10-05T17:11:59Z
+Generated: 2026-10-06T15:15:55Z
 Picks input: `data/football-form/team-shots-v4-shadow-signals.csv`
 Odds input: `data/team-shots/team-shots-odds-history.csv`
 
