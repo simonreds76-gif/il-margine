@@ -155,6 +155,21 @@ function Invoke-LoggedProcessWithRetry {
     return 1
 }
 
+function Invoke-NightlyV4Alerts([int]$PropsRefreshExit) {
+    if ($PropsRefreshExit -ne 0) {
+        Log "v4 alerts skipped: tonight's props refresh did not complete."
+        return
+    }
+    # The fast AM pass settles v4 but does not register forecasts. Check alerts
+    # here, immediately after their nightly producer, while quotes are fresh.
+    Log "=== Step 6d/10: Fresh v4 paper selection alerts ==="
+    $v4AlertExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--paper-signals-only") -Label "nightly v4 paper selection alerts" -TimeoutSeconds 90
+    if ($v4AlertExit -ne 0) {
+        Log "ERROR: nightly v4 selection alert check failed (exit $v4AlertExit)."
+        Set-RunStatusFailure "TennisV4AlertFailed" "Nightly v4 paper alert check failed; inspect the selection-alert status."
+    }
+}
+
 function Set-RunStatusFailure([string]$Type, [string]$Message) {
     $script:runStatusFinal = "failed"
     $script:runStatusErrorType = $Type
@@ -248,6 +263,8 @@ if ($tennisPropsExit -ne 0) {
     Log "ERROR: tennis count-markets board failed/timed out (exit $tennisPropsExit); continuing remaining diagnostics"
     Set-RunStatusFailure "TennisPropsFailed" "tennis count-markets board failed/timed out (exit $tennisPropsExit)"
 }
+
+Invoke-NightlyV4Alerts -PropsRefreshExit $tennisPropsExit
 
 # Step 7: Strict policy report + overlay comparison (auto-append CSVs)
 Log "=== Step 7/10: Strict policy report (--append --compare-overlay) ==="
