@@ -294,6 +294,7 @@
         "Diego Murillo",
         "Aarón Ochoa",
         "Jens-Lys Cajuste",
+        "Juan Cruz",
         "Julen Lobete"
       ],
       "away_unavailable": [
@@ -301,7 +302,7 @@
         "Javi Hernández",
         "Kike García"
       ],
-      "observed_at": "2026-10-07T17:25:14.987194+00:00",
+      "observed_at": "2026-10-07T23:03:43.815221+00:00",
       "changed_at": "2026-10-06T21:36:47.526640+00:00"
     },
     {
@@ -598,6 +599,7 @@
         "Joan García",
         "Andreas Christensen",
         "Frenkie de Jong",
+        "Raphinha",
         "Roony Bardghji"
       ],
       "away_unavailable": [
@@ -606,7 +608,7 @@
         "Juanmi",
         "Martín Satriano"
       ],
-      "observed_at": "2026-10-07T17:25:14.987194+00:00",
+      "observed_at": "2026-10-07T23:03:43.815221+00:00",
       "changed_at": "2026-10-07T17:25:14.987194+00:00"
     },
     {
@@ -624,7 +626,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-07T17:25:14.987194+00:00",
+      "observed_at": "2026-10-07T23:03:43.815221+00:00",
       "changed_at": "2026-10-07T01:31:23.907258+00:00"
     },
     {
@@ -928,15 +930,319 @@
         "Unai Eguiluz",
         "Nico Williams"
       ],
-      "observed_at": "2026-10-07T17:25:14.987194+00:00",
+      "observed_at": "2026-10-07T23:03:43.815221+00:00",
       "changed_at": "2026-10-07T14:16:23.325468+00:00"
     },
     {
       "fotmob_match_id": 5868089,
+      "fotmob_page_url": "/matches/real-madrid-vs-villarreal/2xnfqu#5868089",
+      "home_fotmob_team_id": 8633,
+      "away_fotmob_team_id": 10205,
       "match_date": "2026-10-10",
       "kickoff_utc": "2026-10-10T19:00:00Z",
       "home_team": "Real Madrid",
       "away_team": "Villarreal",
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-2-3-1",
+      "away_formation": "4-2-3-1",
+      "home_players": [
+        "Thibaut Courtois",
+        "Denzel Dumfries",
+        "Raúl Asencio",
+        "Antonio Rüdiger",
+        "Marc Cucurella",
+        "Eduardo Camavinga",
+        "Aurélien Tchouaméni",
+        "Arda Güler",
+        "Jude Bellingham",
+        "Vinícius Júnior",
+        "Endrick"
+      ],
+      "away_players": [
+        "Péter Gulácsi",
+        "Alex Freeman",
+        "Pau Navarro",
+        "Renato Veiga",
+        "Sergi Cardona",
+        "Pape Gueye",
+        "Nathan Saliba",
+        "Nicolas Pépé",
+        "Alberto Moleiro",
+        "Georges Mikautadze",
+        "Ayoze Pérez"
+      ],
+      "home_starters": [
+        {
+          "name": "Thibaut Courtois",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 170323,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Denzel Dumfries",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 593118,
+          "shirt_number": "24"
+        },
+        {
+          "name": "Raúl Asencio",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 1580528,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Antonio Rüdiger",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 276738,
+          "shirt_number": "22"
+        },
+        {
+          "name": "Marc Cucurella",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 873289,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Eduardo Camavinga",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 1015185,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Aurélien Tchouaméni",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 914458,
+          "shirt_number": "14"
+        },
+        {
+          "name": "Arda Güler",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 1253890,
+          "shirt_number": "15"
+        },
+        {
+          "name": "Jude Bellingham",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 1077894,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Vinícius Júnior",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 846033,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Endrick",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 1406729,
+          "shirt_number": "9"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Péter Gulácsi",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 151001,
+          "shirt_number": "25"
+        },
+        {
+          "name": "Alex Freeman",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 1338696,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Pau Navarro",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 1531887,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Renato Veiga",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 1343750,
+          "shirt_number": "12"
+        },
+        {
+          "name": "Sergi Cardona",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 1059657,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Pape Gueye",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 844544,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Nathan Saliba",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1216798,
+          "shirt_number": "24"
+        },
+        {
+          "name": "Nicolas Pépé",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 575735,
+          "shirt_number": "19"
+        },
+        {
+          "name": "Alberto Moleiro",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 1184694,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Georges Mikautadze",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 1117069,
+          "shirt_number": "9"
+        },
+        {
+          "name": "Ayoze Pérez",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 479020,
+          "shirt_number": "22"
+        }
+      ],
+      "home_subs": [],
+      "home_substitute_entries": [],
+      "away_subs": [],
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Éder Militao",
+        "Ibrahima Konaté",
+        "Federico Valverde",
+        "Kylian Mbappé",
+        "Rodrygo"
+      ],
+      "away_unavailable": [
+        "Tajon Buchanan",
+        "Ilias Akhomach"
+      ],
+      "observed_at": "2026-10-07T23:03:43.815221+00:00",
+      "changed_at": "2026-10-07T23:03:43.815221+00:00"
+    },
+    {
+      "fotmob_match_id": 5868083,
+      "match_date": "2026-10-11",
+      "kickoff_utc": "2026-10-11T12:00:00Z",
+      "home_team": "Elche",
+      "away_team": "Celta Vigo",
       "home_status": "Lineup Pending",
       "away_status": "Lineup Pending",
       "lineup_type": "pending",
@@ -946,8 +1252,62 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-07T17:25:14.987194+00:00",
-      "changed_at": "2026-10-07T01:31:23.907258+00:00"
+      "observed_at": "2026-10-07T23:03:43.815221+00:00",
+      "changed_at": "2026-10-07T23:03:43.815221+00:00"
+    },
+    {
+      "fotmob_match_id": 5868087,
+      "match_date": "2026-10-11",
+      "kickoff_utc": "2026-10-11T19:00:00Z",
+      "home_team": "Racing Santander",
+      "away_team": "Valencia",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-10-07T23:03:43.815221+00:00",
+      "changed_at": "2026-10-07T23:03:43.815221+00:00"
+    },
+    {
+      "fotmob_match_id": 5868082,
+      "match_date": "2026-10-11",
+      "kickoff_utc": "2026-10-11T16:30:00Z",
+      "home_team": "Real Betis",
+      "away_team": "Osasuna",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-10-07T23:03:43.815221+00:00",
+      "changed_at": "2026-10-07T23:03:43.815221+00:00"
+    },
+    {
+      "fotmob_match_id": 5868090,
+      "match_date": "2026-10-11",
+      "kickoff_utc": "2026-10-11T14:15:00Z",
+      "home_team": "Real Sociedad",
+      "away_team": "Deportivo A Coruña",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-10-07T23:03:43.815221+00:00",
+      "changed_at": "2026-10-07T23:03:43.815221+00:00"
     }
   ]
 }
