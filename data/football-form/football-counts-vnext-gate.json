@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T01:01:44Z",
+  "generated_at": "2026-10-07T15:36:12Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -36,25 +36,25 @@
     },
     "latest_scan": {
       "state": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
-      "explanation": "For all 32 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.11%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
-      "scored_rows": 32,
-      "scored_fixtures": 8,
+      "explanation": "For all 78 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.11%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
+      "scored_rows": 86,
+      "scored_fixtures": 21,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 32,
+      "blocked_rows": 86,
       "blocker_rows": {
-        "early_market_gap_cap": 8,
-        "edge_below_3pct": 30,
-        "price_older_than_3h": 32
+        "early_market_gap_cap": 16,
+        "edge_below_3pct": 83,
+        "price_older_than_3h": 2
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 5,
-      "matchday_max": 6,
+      "matchday_max": 8,
       "next_unlock": null,
       "operational_alert_required": true,
       "operational_alert_code": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
       "rule_feasibility": {
-        "affected_rows": 32,
+        "affected_rows": 78,
         "rows_capable_of_minimum_edge": 0,
         "maximum_allowed_edge": 0.021062786390673605,
         "minimum_edge": 0.03,
@@ -100,16 +100,15 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "NO_EDGE_AFTER_UNLOCK",
-      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 132,
-      "scored_fixtures": 25,
-      "eligible_rows": 0,
-      "eligible_fixtures": 0,
-      "blocked_rows": 132,
+      "state": "ELIGIBLE_CANDIDATES_PRESENT",
+      "explanation": "At least one candidate passed every locked shadow gate.",
+      "scored_rows": 142,
+      "scored_fixtures": 27,
+      "eligible_rows": 39,
+      "eligible_fixtures": 16,
+      "blocked_rows": 103,
       "blocker_rows": {
-        "edge_below_3pct": 92,
-        "price_older_than_3h": 132
+        "edge_below_3pct": 103
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 5,
