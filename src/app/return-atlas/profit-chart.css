@@ -1,0 +1,40 @@
+.return-atlas .interactive-profit { padding:24px; margin:24px 0; }
+.return-atlas .profit-chart-heading { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:16px; }
+.return-atlas .profit-eyebrow { display:block; font-size:10px; letter-spacing:.14em; color:var(--accent); margin-bottom:8px; }
+.return-atlas .profit-chart-heading h3 { font-size:20px; margin:0; }
+.return-atlas .profit-view { display:flex; padding:4px; border:1px solid var(--line); background:#0c141b; border-radius:10px; }
+.return-atlas .profit-view button { min-height:40px; padding:8px 14px; border-radius:7px; background:transparent; color:var(--muted); font-size:13px; }
+.return-atlas .profit-view button[aria-pressed=true] { background:#203d35; color:#adf5d8; box-shadow:inset 0 0 0 1px #426756; }
+.return-atlas .interactive-profit .profit-context { color:var(--muted); font-size:12px; line-height:1.65; margin:16px 0 24px; }
+.return-atlas .profit-plot { display:grid; grid-template-columns:52px minmax(0,1fr); height:220px; gap:8px; }
+.return-atlas .profit-plot svg { width:100%; height:100%; overflow:visible; touch-action:pan-y; cursor:crosshair; }
+.return-atlas .profit-scale { display:flex; flex-direction:column; justify-content:space-between; text-align:right; padding:4px 0; font-size:12px; color:var(--muted); font-variant-numeric:tabular-nums; }
+.return-atlas .profit-axis { display:flex; justify-content:space-between; gap:8px; margin:12px 0 20px 60px; font-size:11px; color:var(--muted); }
+.return-atlas .profit-axis span:nth-child(2) { text-align:center; }
+.return-atlas .profit-axis span:last-child { text-align:right; }
+.return-atlas .profit-scrubber { display:grid; grid-template-columns:44px minmax(0,1fr) 44px; gap:14px; align-items:center; padding-top:16px; border-top:1px solid var(--line); }
+.return-atlas .profit-scrubber button { background:#1a2a33; border:1px solid #344650; border-radius:9px; min-height:44px; font-size:18px; }
+.return-atlas .profit-scrubber button:disabled { opacity:.35; cursor:default; }
+.return-atlas .profit-scrubber label { display:block; min-width:0; color:var(--muted); font-size:12px; }
+.return-atlas .profit-scrubber input { display:block; width:100%; margin:4px 0 0; min-height:30px; accent-color:var(--accent); cursor:pointer; }
+.return-atlas .profit-inspection { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:18px; padding:18px; margin-top:14px; border:1px solid #35524d; border-radius:12px; background:linear-gradient(115deg,#162b2a,#14212b); min-height:118px; }
+.return-atlas .profit-inspection time { display:block; color:var(--muted); font-size:12px; margin-bottom:7px; }
+.return-atlas .profit-inspection strong { display:block; font-size:14px; line-height:1.5; }
+.return-atlas .profit-inspection small { display:block; color:var(--muted); font-size:12px; line-height:1.6; margin-top:5px; }
+.return-atlas .profit-readout { text-align:right; font-variant-numeric:tabular-nums; }
+.return-atlas .profit-readout strong { font-size:24px; letter-spacing:-.6px; white-space:nowrap; }
+.return-atlas .profit-readout span { color:var(--muted); font-size:11px; }
+.return-atlas .interactive-profit .profit-hint { margin:16px 0 0; font-size:12px; color:var(--muted); line-height:1.7; }
+.return-atlas .profit-hint span { display:block; }
+.return-atlas .profit-hint strong { color:var(--text); font-weight:500; }
+@media(max-width:560px) {
+  .return-atlas .interactive-profit { padding:18px 12px; }
+  .return-atlas .profit-view { width:100%; }
+  .return-atlas .profit-view button { flex:1; min-height:44px; }
+  .return-atlas .profit-plot { grid-template-columns:44px minmax(0,1fr); gap:6px; height:200px; }
+  .return-atlas .profit-axis { margin-left:50px; font-size:11px; }
+  .return-atlas .profit-axis span:nth-child(2) { display:none; }
+  .return-atlas .profit-inspection { grid-template-columns:1fr; gap:12px; padding:14px; min-height:194px; }
+  .return-atlas .profit-readout { display:flex; align-items:baseline; gap:8px; text-align:left; }
+  .return-atlas .profit-scrubber { gap:10px; }
+}

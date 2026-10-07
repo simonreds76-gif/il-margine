@@ -9,6 +9,7 @@ import { MATCHUP_FAQS } from "@/lib/tennis-matchup-faq";
 import release from "@/data/tennis-matchup-release.json";
 import MatchupClient from "./MatchupClient";
 import "./matchup.css";
+import "./comparison.css";
 
 export const dynamic="force-static";
 const title="Tennis Matchup Lab: H2H, Aces & Player Statistics";

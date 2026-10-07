@@ -1,0 +1,78 @@
+/* The existing shell and calculations stay shared. Compact research components. */
+.public-site .matchup-lab .comparison-filters { margin-top:18px; border:1px solid var(--line); border-radius:10px; background:#111c23; }
+.public-site .matchup-lab .comparison-filters>summary { padding:13px 15px; font-size:13px; color:var(--ink); }
+.public-site .matchup-lab .comparison-filters>summary small { display:block; color:var(--muted); font-size:12px; font-weight:400; margin:4px 0 0 16px; }
+.public-site .matchup-lab .comparison-filters .filters { margin:0; padding:4px 15px 16px; }
+.public-site .matchup-lab .controls>.compare { display:block; margin:16px 0 0 auto; }
+.public-site .matchup-lab .control-coverage { margin-top:12px; }
+.public-site .matchup-lab .control-coverage>summary { padding:8px 0; font-size:12px; color:var(--muted); min-height:40px; }
+.public-site .matchup-lab .controls input:invalid:not(:focus) { border-color:#3a505e; }
+.public-site .matchup-lab .controls input:user-invalid:not(:focus) { border-color:var(--coral); }
+.public-site .matchup-lab .player-card { padding:18px; }
+.public-site .matchup-lab .player-card .identity h2 { min-height:0; }
+.public-site .matchup-lab .player-card .player-record { margin-top:14px; }
+.public-site .matchup-lab .comparison-nav { display:flex; flex-wrap:wrap; gap:8px; margin:20px 0 0; }
+.public-site .matchup-lab .comparison-nav a { display:flex; align-items:center; gap:8px; border:1px solid var(--line); border-radius:10px; min-height:44px; padding:9px 13px; font-size:13px; color:var(--ink); background:#141f27; text-decoration:none; }
+.public-site .matchup-lab .comparison-nav a:hover { border-color:#688a83; background:#1b3030; }
+.public-site .matchup-lab .comparison-nav svg { width:24px; height:24px; flex-shrink:0; }
+.public-site .matchup-lab .section[id] { scroll-margin-top:104px; }
+.public-site .matchup-lab .compact-odds { border:1px solid #36505a; border-radius:14px; background:#131f27; overflow:hidden; }
+.public-site .matchup-lab .compact-odds th,.public-site .matchup-lab .compact-odds td { padding:16px 20px; }
+.public-site .matchup-lab .compact-odds thead th { background:#1a2c32; }
+.public-site .matchup-lab .compact-odds thead th:first-child { width:44%; }
+.public-site .matchup-lab .compact-odds thead th small { display:block; font-size:12px; line-height:1.5; color:var(--muted); font-weight:400; margin-top:6px; }
+.public-site .matchup-lab .compact-odds td { font-size:26px; font-weight:650; color:var(--player-colour); font-variant-numeric:tabular-nums; }
+.public-site .matchup-lab .compact-odds .derived-result { background:#172b2d; }
+.public-site .matchup-lab .comparison-label { display:flex; align-items:center; gap:12px; font-size:14px; line-height:1.5; }
+.public-site .matchup-lab .comparison-label svg { width:28px; height:28px; flex-shrink:0; }
+.public-site .matchup-lab .comparison-label small { display:block; font-weight:400; font-size:12px; color:var(--muted); }
+.public-site .matchup-lab .comparison-caption { font-size:12px; line-height:1.7; color:var(--muted); margin:12px 0; }
+.public-site .matchup-lab .comparison-explainer { border-bottom:1px solid var(--line); }
+.public-site .matchup-lab .comparison-explainer summary { padding:12px 0; font-size:13px; color:var(--mint); }
+.public-site .matchup-lab .comparison-explainer p { font-size:13px; line-height:1.7; color:var(--muted); }
+.public-site .matchup-lab .comparison-explainer strong { color:var(--ink); }
+.public-site .matchup-lab .comparison-rates { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.public-site .matchup-lab .comparison-rates p>span:last-child { display:block; margin-top:8px; }
+.public-site .matchup-lab .comparison-metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; align-items:start; }
+.public-site .matchup-lab .comparison-metric { border:1px solid var(--line); border-radius:14px; background:linear-gradient(120deg,#15232b,#111c24); overflow:hidden; }
+.public-site .matchup-lab .comparison-metric header { display:flex; align-items:center; gap:12px; padding:20px 20px 6px; }
+.public-site .matchup-lab .comparison-metric h3 { margin:0; font-size:15px; line-height:1.5; }
+.public-site .matchup-lab .comparison-metric header p { color:var(--muted); margin:4px 0 0; font-size:12px; line-height:1.6; }
+.public-site .matchup-lab .paired-stat { padding:12px 20px; }
+.public-site .matchup-lab .paired-stat>div:first-child { display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-bottom:9px; }
+.public-site .matchup-lab .paired-stat strong { font-size:20px; font-variant-numeric:tabular-nums; color:var(--player-colour); white-space:nowrap; }
+.public-site .matchup-lab .comparison-track { height:6px; border-radius:10px; background:#293c47; overflow:hidden; }
+.public-site .matchup-lab .comparison-track span { height:100%; display:block; border-radius:10px; background:var(--player-colour); }
+.public-site .matchup-lab .comparison-metric details { border-top:1px solid var(--line); margin-top:9px; }
+.public-site .matchup-lab .comparison-metric summary { padding:12px 20px; font-size:12px; color:var(--muted); }
+.public-site .matchup-lab .metric-coverage { padding:0 20px; }
+.public-site .matchup-lab .metric-coverage p,.public-site .matchup-lab .scale-note { font-size:12px; line-height:1.7; color:var(--muted); }
+.public-site .matchup-lab .scale-note { padding:0 20px; }
+@media(max-width:700px) {
+  .public-site .matchup-lab .comparison-metrics { grid-template-columns:1fr; }
+  .public-site .matchup-lab .compact-odds th,.public-site .matchup-lab .compact-odds td { padding:13px 10px; }
+  .public-site .matchup-lab .compact-odds thead th:first-child { width:43%; }
+  .public-site .matchup-lab .compact-odds thead .player-chip { font-size:12px!important; align-items:flex-start; }
+  .public-site .matchup-lab .compact-odds thead .player-chip i { display:none; }
+  .public-site .matchup-lab .compact-odds thead th small { font-size:11px; }
+  .public-site .matchup-lab .compact-odds td { font-size:22px; }
+  .public-site .matchup-lab .comparison-label { font-size:12px; gap:6px; }
+  .public-site .matchup-lab .comparison-label svg { width:22px; height:22px; }
+  .public-site .matchup-lab .comparison-label small { font-size:11px; }
+}
+@media(max-width:560px) {
+  .public-site .matchup-lab .record-modes { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:18px; }
+  .public-site .matchup-lab .record-modes legend { font-size:12px; }
+  .public-site .matchup-lab .record-modes label { font-size:12px; padding:10px 8px; gap:4px 5px; grid-template-columns:16px 1fr; }
+  .public-site .matchup-lab .record-modes small { font-size:11px; line-height:1.5; }
+  .public-site .matchup-lab .player-pickers input { font-size:16px; }
+  .public-site .matchup-lab .controls>.compare { width:100%; }
+  .public-site .matchup-lab .comparison-nav { display:grid; grid-template-columns:1fr 1fr; }
+  .public-site .matchup-lab .comparison-nav a { font-size:12px; padding:9px; }
+  .public-site .matchup-lab .player-card { padding:12px; }
+  .public-site .matchup-lab .player-card .player-record { margin-top:10px; }
+  .public-site .matchup-lab .player-card .identity h2 { min-height:42px; }
+  .public-site .matchup-lab .player-card .identity img { margin-bottom:8px; }
+  .public-site .matchup-lab .comparison-rates { grid-template-columns:1fr; gap:0; }
+  .public-site .matchup-lab .comparison-filters .filters { padding:4px 10px 12px; }
+}
