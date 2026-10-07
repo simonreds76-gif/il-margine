@@ -44,9 +44,10 @@ DEFAULT_FAIR_ODDS_TOTALS_SOURCE = "auto"
 SURFACE_BY_COURT = {
     "1": "Hard",
     "2": "Clay",
-    "3": "Grass",
-    "4": "Hard",
+    "3": "Hard",
+    "4": "Carpet",
     "5": "Grass",
+    "6": "Hard",
 }
 ROUND_BY_ID = {
     "4": "R128",
@@ -130,7 +131,7 @@ def load_current_event_rows(
     raw_games = _read_current_event_rows(ONCOURT_DIR / f"games_{tour_lower}.csv", tour_ids)
     names = load_oncourt_player_names(tour_lower.upper())
     stats, games, excluded = clean_event_rows(raw_stats, raw_games, names)
-    CURRENT_EVENT_EXCLUSIONS[tour_lower] = excluded
+    CURRENT_EVENT_EXCLUSIONS[tour_lower + ":" + ",".join(sorted(tour_ids))] = excluded
     rows = (stats, games)
     _CURRENT_EVENT_ROWS_CACHE[cache_key] = rows
     return rows
@@ -546,7 +547,7 @@ def _clipped_ratio_factor(
     low: float,
     high: float,
 ) -> float:
-    if not baseline_rate or baseline_rate <= 0 or current_rate <= 0 or weight <= 0:
+    if not baseline_rate or baseline_rate <= 0 or current_rate < 0 or weight <= 0:
         return 1.0
     # Use a log-scale nudge so early event samples cannot force the whole board
     # into identical cap values. Venue history and player/opponent rates remain
@@ -804,174 +805,113 @@ def load_current_tournament_stats(schedules: list[dict[str, str]], as_of: date) 
     }
 
 
-def load_current_tournament_environment(
-    schedules: list[dict[str, str]],
-    as_of: date,
-    factors: dict[tuple[str, str, str], dict[str, str]],
-    surface_baselines: dict[tuple[str, str, str], dict[str, str]],
-) -> dict[tuple[str, str, str], dict[str, str]]:
-    """Same-edition tournament speed/volatility adjustment.
-
-    This is deliberately conservative: completed matches nudge aces, DFs, and
-    breaks toward how the event is playing this year, but venue history remains
-    the base until the current sample is large enough.
-    """
-    meta_by_event: dict[tuple[str, str, str], dict[str, str]] = {}
-    for row in schedules:
-        tour = str(row.get("tour") or "").upper()
-        tour_id = str(row.get("tour_id") or "").strip()
-        tournament = str(row.get("tournament") or "").strip()
-        surface = str(row.get("surface") or "").strip()
-        phase = event_phase(row.get("round_id_raw"))
-        if tour in {"ATP", "WTA"} and tour_id and tournament and surface and phase:
-            meta_by_event[(tour, tour_id, phase)] = {
-                "tournament": tournament,
-                "surface": surface,
-            }
-    if not meta_by_event:
+def previous_event_editions(current, tours):
+    """Same event, country, court type and category; at most one edition per year."""
+    start = parse_date(current.get("date"))
+    name = scheduled_tournament_name(current.get("name"))
+    if not start or not name or not current.get("country"):
         return {}
+    groups = defaultdict(list)
+    for tid, row in tours.items():
+        when = parse_date(row.get("date"))
+        if (when and start.year - 3 <= when.year < start.year
+                and scheduled_tournament_name(row.get("name")) == name
+                and all(str(row.get(k) or "") == str(current.get(k) or "") for k in ("country", "court_id", "rank"))):
+            groups[when.year].append((tid, row))
+    return {tid: row for rows in groups.values() if len(rows) == 1 for tid, row in rows}
 
-    totals: dict[tuple[str, str, str], dict[str, float]] = defaultdict(lambda: defaultdict(float))
-    tour_ids_by_tour: dict[str, set[str]] = defaultdict(set)
-    for tour, tour_id, phase in meta_by_event:
-        tour_ids_by_tour[tour].add(tour_id)
 
-    for tour, tour_ids in tour_ids_by_tour.items():
-        tour_lower = tour.lower()
-        stat_rows, game_rows = load_current_event_rows(tour_lower, tour_ids)
-        stat_index: dict[tuple[str, str, str, str], dict[str, str]] = {}
-        for row in stat_rows:
-            tour_id = str(row.get("tour_id") or "").strip()
-            key = (
-                str(row.get("winner_id") or "").strip(),
-                str(row.get("loser_id") or "").strip(),
-                tour_id,
-                str(row.get("round_id") or "").strip(),
-            )
-            stat_index.setdefault(key, row)
-
-        for game in game_rows:
-            tour_id = str(game.get("tour_id") or "").strip()
-            match_date = parse_date(game.get("date"))
-            if match_date is None or match_date >= as_of:
-                continue
-            winner_id = str(game.get("winner_id") or "").strip()
-            loser_id = str(game.get("loser_id") or "").strip()
-            round_id = str(game.get("round_id") or "").strip()
-            phase = event_phase(round_id)
-            if (tour, tour_id, phase) not in meta_by_event:
-                continue
-            if not winner_id or not loser_id or winner_id == loser_id:
-                continue
-            stat = stat_index.get((winner_id, loser_id, tour_id, round_id))
-            if not stat:
-                continue
-            svpt = oncourt_service_points(stat, "w") + oncourt_service_points(stat, "l")
-            if svpt <= 0:
-                continue
-            match_games = parse_score_total_games(game.get("result"))
-            sets_played, first_set_tb, match_tb = parse_score_tiebreaks(game.get("result"))
-            breaks = parse_int(stat.get("w_bpw")) + parse_int(stat.get("l_bpw"))
-            bucket = totals[(tour, tour_id, phase)]
-            bucket["latest_result_date"] = max(str(bucket.get("latest_result_date", "")), match_date.isoformat())
-            bucket["matches"] += 1
-            bucket["aces"] += parse_int(stat.get("w_ace")) + parse_int(stat.get("l_ace"))
-            bucket["dfs"] += parse_int(stat.get("w_df")) + parse_int(stat.get("l_df"))
-            bucket["svpt"] += svpt
-            bucket["breaks"] += breaks
-            bucket["match_games"] += match_games
-            bucket["sets"] += sets_played
-            bucket["first_set_tiebreaks"] += first_set_tb
-            bucket["match_tiebreaks"] += match_tb
-
-    out: dict[tuple[str, str, str], dict[str, str]] = {}
-    for key, values in totals.items():
-        tour, tour_id, phase = key
-        meta = meta_by_event.get(key) or {}
-        tournament = meta.get("tournament") or ""
-        surface = meta.get("surface") or ""
-        matches = int(values.get("matches", 0))
-        svpt = values.get("svpt", 0.0)
-        if matches <= 0 or svpt <= 0:
+def environment_match_totals(stats, games, as_of, editions):
+    index = {(r["winner_id"], r["loser_id"], r["tour_id"], r["round_id"]): r for r in stats}
+    result = []
+    for game in games:
+        when = parse_date(game.get("date")); tid = game.get("tour_id"); phase = event_phase(game.get("round_id"))
+        edition = editions.get(tid, {}); start = parse_date(edition.get("date"))
+        if not when or when >= as_of or not start or not -14 <= (when-start).days <= 35 or not phase:
             continue
-        factor = factors.get((tour, tournament, surface)) or surface_baseline_factor(
-            tour=tour,
-            tournament=tournament,
-            surface=surface,
-            surface_baselines=surface_baselines,
-        )
-        weight = current_env_weight(matches)
-        current_ace_rate = values.get("aces", 0.0) / svpt
-        current_df_rate = values.get("dfs", 0.0) / svpt
-        match_games = values.get("match_games", 0.0)
-        current_break_rate = values.get("breaks", 0.0) / match_games if match_games > 0 else 0.0
-        current_first_set_tb_rate = values.get("first_set_tiebreaks", 0.0) / matches if matches > 0 else 0.0
-        current_match_tb_rate = values.get("match_tiebreaks", 0.0) / matches if matches > 0 else 0.0
-        baseline_ace = parse_float(factor.get("ace_rate")) or parse_float(factor.get("tour_surface_baseline_ace"))
-        baseline_df = parse_float(factor.get("df_rate")) or parse_float(factor.get("tour_surface_baseline_df"))
-        baseline_first_set_tb = parse_float(factor.get("first_set_tiebreak_rate")) or parse_float(factor.get("tour_surface_baseline_first_set_tiebreak"))
-        baseline_match_tb = parse_float(factor.get("match_tiebreak_rate")) or parse_float(factor.get("tour_surface_baseline_match_tiebreak"))
-        baseline_break = 0.235 if tour == "ATP" else 0.285
-        ace_factor = _clipped_ratio_factor(
-            current_rate=current_ace_rate,
-            baseline_rate=baseline_ace,
-            weight=weight,
-            low=CURRENT_ENV_ACE_DF_MIN,
-            high=CURRENT_ENV_ACE_DF_MAX,
-        )
-        df_factor = _clipped_ratio_factor(
-            current_rate=current_df_rate,
-            baseline_rate=baseline_df,
-            weight=weight,
-            low=CURRENT_ENV_ACE_DF_MIN,
-            high=CURRENT_ENV_ACE_DF_MAX,
-        )
-        break_factor = _clipped_ratio_factor(
-            current_rate=current_break_rate,
-            baseline_rate=baseline_break,
-            weight=weight,
-            low=CURRENT_ENV_BREAK_MIN,
-            high=CURRENT_ENV_BREAK_MAX,
-        )
-        first_set_tiebreak_factor = _clipped_ratio_factor(
-            current_rate=current_first_set_tb_rate,
-            baseline_rate=baseline_first_set_tb,
-            weight=weight,
-            low=CURRENT_ENV_TIEBREAK_MIN,
-            high=CURRENT_ENV_TIEBREAK_MAX,
-        )
-        match_tiebreak_factor = _clipped_ratio_factor(
-            current_rate=current_match_tb_rate,
-            baseline_rate=baseline_match_tb,
-            weight=weight,
-            low=CURRENT_ENV_TIEBREAK_MIN,
-            high=CURRENT_ENV_TIEBREAK_MAX,
-        )
-        out[key] = {
-            "phase": phase,
-            "tournament": tournament,
-            "baseline_source": "venue_history" if (tour, tournament, surface) in factors else "tour_surface",
-            "latest_result_date": str(values.get("latest_result_date", "")),
-            "matches": str(matches),
-            "svpt": str(int(svpt)),
-            "match_games": str(int(match_games)),
-            "weight": f"{weight:.3f}",
-            "ace_rate": f"{current_ace_rate:.5f}",
-            "df_rate": f"{current_df_rate:.5f}",
-            "break_rate": f"{current_break_rate:.5f}" if current_break_rate > 0 else "",
-            "first_set_tiebreak_rate": f"{current_first_set_tb_rate:.5f}" if current_first_set_tb_rate > 0 else "",
-            "match_tiebreak_rate": f"{current_match_tb_rate:.5f}" if current_match_tb_rate > 0 else "",
-            "ace_factor": f"{ace_factor:.4f}",
-            "df_factor": f"{df_factor:.4f}",
-            "break_factor": f"{break_factor:.4f}",
-            "first_set_tiebreak_factor": f"{first_set_tiebreak_factor:.4f}",
-            "match_tiebreak_factor": f"{match_tiebreak_factor:.4f}",
-            "sample_flag": "LIVE_OK" if matches >= 8 else "LIVE_LOW_SAMPLE",
-        }
-    for key, meta in meta_by_event.items():
-        if key not in out:
-            out[key] = {"phase": key[2], "tournament": meta["tournament"], "matches": "0", "svpt": "0", "weight": "0", "ace_factor": "1.0000", "df_factor": "1.0000", "sample_flag": "NO_COMPLETED_SINGLES_IN_PHASE", "latest_result_date": ""}
+        stat = index.get(tuple(game.get(k) for k in ("winner_id", "loser_id", "tour_id", "round_id")))
+        if not stat:
+            continue
+        points = oncourt_service_points(stat, "w") + oncourt_service_points(stat, "l")
+        if points <= 0:
+            continue
+        _, first_tb, match_tb = parse_score_tiebreaks(game.get("result"))
+        bw, bl = parse_float(stat.get("w_bpw")), parse_float(stat.get("l_bpw"))
+        result.append(dict(phase=phase, date=when.isoformat(), year=start.year, matches=1, svpt=points,
+                           aces=int(stat["w_ace"])+int(stat["l_ace"]), dfs=int(stat["w_df"])+int(stat["l_df"]),
+                           match_games=parse_score_total_games(game.get("result")),
+                           breaks=bw+bl if bw is not None and bl is not None else None,
+                           first_set_tiebreaks=first_tb, match_tiebreaks=match_tb))
+    return result
+
+
+def load_current_tournament_environment(schedules, as_of, factors, surface_baselines):
+    """Compare this edition with this event's last three years, never a generic surface.
+
+    Qualifying contributes to the event adjustment, against earlier qualifying;
+    main-draw matches use earlier main draws. Expected counts are weighted by the
+    current phase's service points/games so the draw mix cannot create the factor.
+    Existing smoothing and caps are unchanged. Base player/surface models remain
+    separate from this tournament-conditions adjustment.
+    """
+    meta = {}
+    for row in schedules:
+        tour = str(row.get("tour") or "").upper(); tid = str(row.get("tour_id") or "")
+        phase = event_phase(row.get("round_id_raw"))
+        if tour in {"ATP", "WTA"} and tid and phase:
+            meta[(tour, tid)] = dict(tournament=row.get("tournament", ""), surface=row.get("surface", ""))
+    out = {}
+    for (tour, tid), info in meta.items():
+        editions = load_oncourt_tours(tour); current = editions.get(tid, {})
+        previous = previous_event_editions(current, editions)
+        current_rows = environment_match_totals(*load_current_event_rows(tour.lower(), {tid}), as_of, {tid:current})
+        prior_rows = environment_match_totals(*load_current_event_rows(tour.lower(), set(previous)), as_of, previous) if previous else []
+        refs = {}
+        for phase in ("qualifying", "main_draw"):
+            history = [r for r in prior_rows if r['phase'] == phase]
+            points = sum(r['svpt'] for r in history)
+            if len(history) < 20 or points < 1500:
+                continue
+            games = sum(r['match_games'] for r in history)
+            valid_breaks = [r for r in history if r['breaks'] is not None]
+            refs[phase] = dict(matches=len(history), svpt=points, years=sorted({r['year'] for r in history}),
+                               ace_rate=sum(r['aces'] for r in history)/points,
+                               df_rate=sum(r['dfs'] for r in history)/points,
+                               break_rate=sum(r['breaks'] for r in valid_breaks)/sum(r['match_games'] for r in valid_breaks) if len(valid_breaks)>=20 and sum(r['match_games'] for r in valid_breaks)>0 else None,
+                               first_set_tiebreak_rate=sum(r['first_set_tiebreaks'] for r in history)/len(history),
+                               match_tiebreak_rate=sum(r['match_tiebreaks'] for r in history)/len(history))
+        used = [r for r in current_rows if r['phase'] in refs]
+        matches=len(used); points=sum(r['svpt'] for r in used); games=sum(r['match_games'] for r in used)
+        weight=current_env_weight(matches)
+        expected_ace=sum(r['svpt']*refs[r['phase']]['ace_rate'] for r in used)
+        expected_df=sum(r['svpt']*refs[r['phase']]['df_rate'] for r in used)
+        ace=sum(r['aces'] for r in used); df=sum(r['dfs'] for r in used)
+        break_rows=[r for r in used if r['breaks'] is not None and refs[r['phase']]['break_rate'] is not None]
+        expected_break=sum(r['match_games']*refs[r['phase']]['break_rate'] for r in break_rows)
+        def factor(actual, expected, low, high, count=matches):
+            return _clipped_ratio_factor(current_rate=actual, baseline_rate=expected, weight=current_env_weight(count), low=low, high=high)
+        row = dict(tournament=info['tournament'], baseline_source='same_event_prior_editions' if refs else 'no_usable_event_history',
+                   reference_policy='Same event/court/country/category, prior three calendar years; qualifying and main-draw references matched separately.',
+                   matches=str(matches), available_matches=str(len(current_rows)), svpt=str(int(points)), match_games=str(int(games)), weight=f'{weight:.3f}',
+                   qualifying_matches=str(sum(r['phase']=='qualifying' for r in used)), main_draw_matches=str(sum(r['phase']=='main_draw' for r in used)),
+                   excluded_without_phase_history=str(len(current_rows)-matches), historical_phases=refs,
+                   latest_result_date=max((r['date'] for r in used), default=''),
+                   ace_rate=f'{ace/points:.5f}' if points else '', df_rate=f'{df/points:.5f}' if points else '',
+                   reference_ace_rate=f'{expected_ace/points:.5f}' if points else '', reference_df_rate=f'{expected_df/points:.5f}' if points else '',
+                   ace_factor=f'{factor(ace,expected_ace,CURRENT_ENV_ACE_DF_MIN,CURRENT_ENV_ACE_DF_MAX):.4f}',
+                   df_factor=f'{factor(df,expected_df,CURRENT_ENV_ACE_DF_MIN,CURRENT_ENV_ACE_DF_MAX):.4f}',
+                   break_factor=f'{factor(sum(r["breaks"] for r in break_rows),expected_break,CURRENT_ENV_BREAK_MIN,CURRENT_ENV_BREAK_MAX,len(break_rows)):.4f}',
+                   first_set_tiebreak_factor=f'{factor(sum(r["first_set_tiebreaks"] for r in used),sum(refs[r["phase"]]["first_set_tiebreak_rate"] for r in used),CURRENT_ENV_TIEBREAK_MIN,CURRENT_ENV_TIEBREAK_MAX):.4f}',
+                   match_tiebreak_factor=f'{factor(sum(r["match_tiebreaks"] for r in used),sum(refs[r["phase"]]["match_tiebreak_rate"] for r in used),CURRENT_ENV_TIEBREAK_MIN,CURRENT_ENV_TIEBREAK_MAX):.4f}',
+                   first_set_tiebreak_rate=f'{sum(r["first_set_tiebreaks"] for r in used)/matches:.5f}' if matches else '',
+                   match_tiebreak_rate=f'{sum(r["match_tiebreaks"] for r in used)/matches:.5f}' if matches else '',
+                   sample_flag='LIVE_OK' if matches>=8 else 'LIVE_LOW_SAMPLE' if matches else 'NO_USABLE_EVENT_REFERENCE' if current_rows else 'NO_COMPLETED_SINGLES')
+        for schedule in schedules:
+            phase=event_phase(schedule.get('round_id_raw'))
+            if schedule.get('tour','').upper()==tour and str(schedule.get('tour_id'))==tid and phase:
+                out[(tour,tid,phase)]={**row,'phase':'qualifying_and_main_draw','forecast_phase':phase}
     return out
+
 
 
 def _chunked(values: list[str], size: int) -> list[list[str]]:
@@ -1585,7 +1525,7 @@ def main() -> None:
         "source",
     ]
     write_csv(Path(args.out), rows, fieldnames)
-    report = {"as_of": args.as_of, "version": "completed-singles-by-phase-v1", "cutoff": "results dated strictly before as_of", "excluded": CURRENT_EVENT_EXCLUSIONS, "events": [{"tour": key[0], "tour_id": key[1], **value} for key, value in current_tournament_environment.items()]}
+    report = {"as_of": args.as_of, "version": "same-event-phase-reference-v2", "cutoff": "results dated strictly before as_of", "excluded": CURRENT_EVENT_EXCLUSIONS, "events": [{"tour": key[0], "tour_id": key[1], **value} for key, value in current_tournament_environment.items()]}
     report_path = Path(args.out).with_suffix(".environment.json")
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(f"Saved {len(rows)} rows: {args.out}")

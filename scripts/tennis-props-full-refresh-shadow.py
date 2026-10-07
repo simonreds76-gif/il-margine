@@ -18,7 +18,14 @@ ROOT=C.ROOT
 P=runpy.run_path(str(ROOT/'scripts/tennis-props-rate-trend-prospective.py'))
 V=runpy.run_path(str(ROOT/'scripts/tennis-props-v3-live.py'))
 
-def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
+def sha(path):
+    data = path.read_bytes()
+    if path.suffix == '.py':
+        data = data.replace(b'\r\n', b'\n')
+    return hashlib.sha256(data).hexdigest()
+def record_key(row, config):
+    return P['digest']([P['contract_key'](row), config.get('implementation_revision', 'original')])
+
 def board_key(r): return (r['tour'],P['norm'](r['player']),P['norm'](r['opponent']),P['MODEL']['tournament_identity'](r['tournament']),r['date'],r['surface'])
 def index(rows):
     result={}
@@ -98,11 +105,15 @@ def summarize(records,outcomes,health,config,now):
     current, archived = revision_records(records, config.get('implementation_revision'))
     result=P['report'](current,outcomes,health,config,now)
     result['implementation_revision'] = config.get('implementation_revision', 'original')
-    result['archived_revision'] = P['report'](archived,outcomes,{},config,now) if archived else None
-    if result['archived_revision']:
-        result['archived_revision']['config_hash'] = config['supersedes_config_hash']
-        result['archived_revision']['implementation_revision'] = 'original'
-    result['revision_note'] = 'Completed singles and separate qualifying/main-draw conditions. Earlier observations are retained separately; weights and stakes are unchanged.'
+    archives=[]
+    for config_hash in sorted({r['config_hash'] for r in archived}):
+        cohort=[r for r in archived if r['config_hash']==config_hash]
+        saved=P['report'](cohort,outcomes,{},config,now)
+        saved.update(config_hash=config_hash,implementation_revision=cohort[0].get('implementation_revision','original'))
+        archives.append(saved)
+    result['archived_revisions'] = archives
+    result['archived_revision'] = archives[0] if len(archives)==1 else None
+    result['revision_note'] = 'Tournament adjustment now uses this event’s previous editions. Qualifying is included against prior qualifying. Earlier forecasts are retained separately; fitted weights and stakes are unchanged.'
     records = current
     for market,group in result['markets'].items():
         rows=[r for r in records if r['row']['market']==market]
@@ -141,7 +152,7 @@ def main():
             # One named data-integrity repair, with the prior registration retained.
             (args.out/'registration-history').mkdir(parents=True, exist_ok=True)
             P['atomic_json'](args.out/'registration-history'/f"{reg['config_hash']}.json", reg)
-            P['atomic_json'](args.out/'report-before-integrity-repair.json', P['read_json'](args.out/'report.json', {}))
+            P['atomic_json'](args.out/'registration-history'/f"{reg['config_hash']}-report.json", P['read_json'](args.out/'report.json', {}))
             reg = None
         if not reg:P['atomic_json'](args.out/'registration.json',dict(registered_at=now.isoformat(),config_hash=P['digest'](config),config=config))
         records=P['ledger'](args.out/'observations.jsonl');outcomes=P['read_json'](args.out/'outcomes.json',{});health=Counter();failure=None
@@ -153,7 +164,7 @@ def main():
                 if P['norm'](row.get('bookmaker'))!='bet365':reason='unsupported_bookmaker'
                 if row.get('surface') not in ('Hard','Clay'):reason='unvalidated_surface'
                 if reason:health[reason]+=1
-                elif P['contract_key'](row) in seen:health['already_registered']+=1
+                elif record_key(row, config) in seen:health['already_registered']+=1
                 else:eligible.append(row)
             if eligible:
                 folder,meta=prepare(args.out,now,config)
@@ -162,7 +173,7 @@ def main():
                     registered=datetime.now(timezone.utc);reason=P['eligibility'](row,registered);key=board_key(row)
                     if reason:health[reason]+=1;continue
                     if key not in boards['control'] or key not in boards['candidate']:health['no_exact_paired_board']+=1;continue
-                    contract=P['contract_key'](row)
+                    contract=record_key(row, config)
                     if contract in seen:continue
                     field='projected_aces' if row['market']=='aces' else 'projected_dfs'
                     means={a:float(boards[a][key][field]) for a in boards}

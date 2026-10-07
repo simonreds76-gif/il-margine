@@ -4,9 +4,15 @@ from collections import Counter, defaultdict
 
 
 def revision_transition_allowed(previous_hash, config):
-    return (config.get("implementation_revision") == "completed-singles-by-phase-v1"
-            and previous_hash == "82a9d822d2a17fdb9acf88db8779d0d4648fc28679a4d28fa290a358ecd13294"
-            and config.get("supersedes_config_hash") == previous_hash)
+    allowed = {
+        "completed-singles-by-phase-v1": {"82a9d822d2a17fdb9acf88db8779d0d4648fc28679a4d28fa290a358ecd13294"},
+        "same-event-phase-reference-v2": {
+            "82a9d822d2a17fdb9acf88db8779d0d4648fc28679a4d28fa290a358ecd13294",
+            "190de593f4a85e44ce9e02cc265923eb665f8bd6b8306bdf953f02a9b5ca3966",
+        },
+    }
+    registered = config.get("supersedes_config_hashes", [config.get("supersedes_config_hash")])
+    return previous_hash in allowed.get(config.get("implementation_revision"), set()) and previous_hash in registered
 
 
 def revision_records(records, revision):

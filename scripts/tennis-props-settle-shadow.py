@@ -5,9 +5,11 @@ from __future__ import annotations
 
 import argparse
 import csv
+import importlib.util
 from collections import defaultdict
 from datetime import date, datetime, timezone
 from pathlib import Path
+import math
 import re
 import unicodedata
 
@@ -105,6 +107,23 @@ FIELDNAMES = [
     "pnl",
     "settled_at_utc",
     "settlement_note",
+    "duplicate_of_signal_id",
+    "quarantine_reason",
+    "quarantined_at_utc",
+    "original_settlement_status",
+    "original_result",
+    "original_pnl",
+    "original_settlement_note",
+    "original_settled_at_utc",
+    "original_clv_pct",
+    "original_closing_odds",
+    "original_closing_ts_utc",
+    "model",
+    "model_id",
+    "model_name",
+    "model_version",
+    "variant",
+    "variant_id",
     "control_projection_mean",
     "candidate_projection_mean",
     "control_p_over_no_push",
@@ -179,6 +198,16 @@ def parse_float(value: object) -> float | None:
         return float(text)
     except (TypeError, ValueError):
         return None
+
+
+def reconcile_break_decisions(rows: list[dict[str, str]]) -> int:
+    """Use the tracker's evidence identity rules in standalone settlement."""
+    spec = importlib.util.spec_from_file_location("props_break_decision_identity", ROOT / "scripts" / "tennis-props-shadow-tracker.py")
+    if spec is None or spec.loader is None:
+        raise RuntimeError("Cannot load tennis break decision identity")
+    tracker = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tracker)
+    return tracker.reconcile_duplicate_break_decisions(rows) + tracker.reconcile_duplicate_generic_contracts(rows)
 
 
 def parse_year(value: object) -> int | None:
@@ -289,7 +318,7 @@ def enrich_closing_price(
         "clv_method",
     ):
         signal[field] = ""
-    if signal.get("decision_mode") == BREAK_CALIBRATION_MODE:
+    if signal.get("decision_mode") == BREAK_CALIBRATION_MODE or signal.get("quarantine_reason"):
         return False
     match_start = parse_utc_datetime(signal.get("match_start_utc"))
     entry_ts = parse_utc_datetime(signal.get("capture_ts")) or parse_utc_datetime(signal.get("logged_at_utc"))
@@ -340,6 +369,22 @@ def is_void_score(score: object) -> bool:
     return any(token in text for token in ("RET", "W/O", "WO", "DEF", "ABD"))
 
 
+def stat_count(value: object) -> int | None:
+    """Missing/corrupt counts must not turn into fabricated settled results."""
+    parsed = parse_float(value)
+    if parsed is None or not math.isfinite(parsed) or parsed < 0 or not parsed.is_integer():
+        return None
+    return int(parsed)
+
+
+def converted_breaks(row: dict[str, str], server_prefix: str) -> int | None:
+    faced = stat_count(row.get(f"{server_prefix}_bpFaced"))
+    saved = stat_count(row.get(f"{server_prefix}_bpSaved"))
+    if faced is None or saved is None or saved > faced:
+        return None
+    return faced - saved
+
+
 def market_count(row: dict[str, str], player_norm: str, market: str) -> tuple[int | None, str]:
     winner = norm_text(row.get("winner_name"))
     loser = norm_text(row.get("loser_name"))
@@ -349,42 +394,38 @@ def market_count(row: dict[str, str], player_norm: str, market: str) -> tuple[in
         return None, "player_not_in_match"
     lower = market.lower().replace(" ", "_")
     if lower == "match_aces":
-        left = parse_float(row.get("w_ace"))
-        right = parse_float(row.get("l_ace"))
+        left = stat_count(row.get("w_ace"))
+        right = stat_count(row.get("l_ace"))
         if left is None or right is None:
             return None, "missing_match_ace_stats"
         return int(round(left + right)), "ok"
     if lower == "match_double_faults":
-        left = parse_float(row.get("w_df"))
-        right = parse_float(row.get("l_df"))
+        left = stat_count(row.get("w_df"))
+        right = stat_count(row.get("l_df"))
         if left is None or right is None:
             return None, "missing_match_df_stats"
         return int(round(left + right)), "ok"
     if lower == "match_breaks":
-        winner_breaks = parse_float(row.get("l_bpFaced"))
-        winner_saved = parse_float(row.get("l_bpSaved"))
-        loser_breaks = parse_float(row.get("w_bpFaced"))
-        loser_saved = parse_float(row.get("w_bpSaved"))
-        if None in {winner_breaks, winner_saved, loser_breaks, loser_saved}:
-            return None, "missing_match_break_stats"
-        total = max(0.0, winner_breaks - winner_saved) + max(0.0, loser_breaks - loser_saved)
-        return int(round(total)), "ok"
+        winner_breaks = converted_breaks(row, "l")
+        loser_breaks = converted_breaks(row, "w")
+        if winner_breaks is None or loser_breaks is None:
+            return None, "missing_or_invalid_match_break_stats"
+        return winner_breaks + loser_breaks, "ok"
     if lower in {"aces", "ace", "player_aces"}:
         raw = row.get("w_ace") if is_winner else row.get("l_ace")
     elif lower in {"double_faults", "double_fault", "dfs", "df"}:
         raw = row.get("w_df") if is_winner else row.get("l_df")
     elif lower == "player_breaks":
-        faced = parse_float(row.get("l_bpFaced") if is_winner else row.get("w_bpFaced"))
-        saved = parse_float(row.get("l_bpSaved") if is_winner else row.get("w_bpSaved"))
-        if faced is None or saved is None:
-            return None, "missing_player_break_stats"
-        return int(round(max(0.0, faced - saved))), "ok"
+        breaks = converted_breaks(row, "l" if is_winner else "w")
+        if breaks is None:
+            return None, "missing_or_invalid_player_break_stats"
+        return breaks, "ok"
     else:
         return None, "unsupported_market"
-    parsed = parse_float(raw)
+    parsed = stat_count(raw)
     if parsed is None:
-        return None, "missing_service_stat"
-    return int(round(parsed)), "ok"
+        return None, "missing_or_invalid_service_stat"
+    return parsed, "ok"
 
 
 def result_for(actual: int, line: float, side: str) -> str:
@@ -468,8 +509,8 @@ def load_oncourt_index(
             for row in read_csv(oncourt_dir / f"tours_{suffix}.csv")
             if row.get("id")
         }
-        candidate_games: list[tuple[dict[str, str], tuple[str, str, str], tuple[str, int, tuple[str, str]]]] = []
-        stat_keys: set[tuple[str, str, str]] = set()
+        candidate_games: list[tuple[dict[str, str], tuple[str, str, str, str], tuple[str, int, tuple[str, str]]]] = []
+        stat_keys: set[tuple[str, str, str, str]] = set()
         for game in iter_csv(oncourt_dir / f"games_{suffix}.csv"):
             game_date = parse_signal_date(game.get("date"))
             if game_date is None or game_date.year not in relevant_years:
@@ -502,17 +543,19 @@ def load_oncourt_index(
                 winner_id,
                 loser_id,
                 str(game.get("tour_id") or "").strip(),
+                str(game.get("round_id") or "").strip(),
             )
             stat_keys.add(stat_key)
             candidate_games.append((game, stat_key, lookup_key))
 
-        stats: dict[tuple[str, str, str], dict[str, str]] = {}
+        stats: dict[tuple[str, str, str, str], dict[str, str]] = {}
         if stat_keys:
             for stat in iter_csv(oncourt_dir / f"stat_{suffix}.csv"):
                 stat_key = (
                     str(stat.get("winner_id") or "").strip(),
                     str(stat.get("loser_id") or "").strip(),
                     str(stat.get("tour_id") or "").strip(),
+                    str(stat.get("round_id") or "").strip(),
                 )
                 if stat_key in stat_keys:
                     stats.setdefault(stat_key, stat)
@@ -529,6 +572,7 @@ def load_oncourt_index(
                     "winner_name": winner_name,
                     "loser_name": loser_name,
                     "tourney_name": tours.get(stat_key[2], stat_key[2]),
+                    "round_id": stat_key[3],
                     "tourney_date": game_date.strftime("%Y%m%d") if game_date else "",
                     "score": str(game.get("result") or ""),
                     "w_ace": str(stat.get("w_ace") or ""),
@@ -581,8 +625,6 @@ def choose_candidate(signal: dict[str, str], candidates: list[dict[str, str]]) -
             for row in candidates
             if parse_sackmann_date(row.get("tourney_date")) == signal_date
         ]
-        if len(same_day) == 1:
-            return same_day[0]
         same_day_overlapped = [
             row for row in same_day if tournament_overlap(tournament, row.get("tourney_name", ""))
         ]
@@ -728,6 +770,7 @@ def main() -> int:
 
     signals_path = Path(args.signals)
     rows = [normalize_legacy_break_row(row) for row in read_csv(signals_path)]
+    duplicates_quarantined = reconcile_break_decisions(rows)
     if not rows:
         write_performance(Path(args.performance), rows)
         print(f"No shadow rows to settle: {signals_path}")
@@ -820,7 +863,7 @@ def main() -> int:
 
     write_csv(signals_path, rows)
     write_performance(Path(args.performance), rows)
-    print(f"Settled/voided now: {settled_now}; CLV rows refreshed: {clv_updated}; still pending checked: {still_pending}; total rows: {len(rows)}")
+    print(f"Settled/voided now: {settled_now}; CLV rows refreshed: {clv_updated}; still pending checked: {still_pending}; total rows: {len(rows)}; duplicate decisions quarantined: {duplicates_quarantined}")
     return 0
 
 

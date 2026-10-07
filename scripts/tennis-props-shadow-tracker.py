@@ -2,7 +2,8 @@
 """Append Bet365 tennis aces/DF comparison rows to a shadow evidence file.
 
 This records only model-vs-line edges that pass a simple confidence/value gate.
-It does not publish picks and it does not rewrite settled rows.
+It does not publish picks. Duplicate decisions remain as quarantined void rows
+with their previous settlement evidence, so they cannot inflate ROI.
 """
 
 from __future__ import annotations
@@ -10,6 +11,7 @@ from __future__ import annotations
 import argparse
 import csv
 from datetime import datetime, timezone, date
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 import re
 import unicodedata
@@ -26,6 +28,8 @@ BREAK_SINGLE_SOURCE_MODE = "breaks_single_source_shadow"
 BREAK_PROSPECTIVE_MODES = {BREAK_PROSPECTIVE_MODE, BREAK_SINGLE_SOURCE_MODE}
 BREAK_GATE_VERSION = "breaks_v1_p1"
 BREAK_MIN_VALUE_PCT = 3.0
+GENERIC_COUNT_MARKETS = {"aces", "double_faults", "match_aces", "match_double_faults"}
+MODEL_IDENTITY_FIELDS = ("model", "model_id", "model_name", "model_version", "variant", "variant_id", "gate_version")
 
 FIELDNAMES = [
     "signal_id",
@@ -111,6 +115,23 @@ FIELDNAMES = [
     "pnl",
     "settled_at_utc",
     "settlement_note",
+    "duplicate_of_signal_id",
+    "quarantine_reason",
+    "quarantined_at_utc",
+    "original_settlement_status",
+    "original_result",
+    "original_pnl",
+    "original_settlement_note",
+    "original_settled_at_utc",
+    "original_clv_pct",
+    "original_closing_odds",
+    "original_closing_ts_utc",
+    "model",
+    "model_id",
+    "model_name",
+    "model_version",
+    "variant",
+    "variant_id",
 ]
 
 
@@ -155,6 +176,11 @@ def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
 
 
 def signal_id(row: dict[str, str], side: str) -> str:
+    if is_break_market(row) and str(row.get("decision_mode") or "").strip() in BREAK_PROSPECTIVE_MODES:
+        return f"break-v2|{prospective_decision_key(row)}"
+    contract = generic_contract_key(row, side)
+    if contract:
+        return f"count-v2|{contract}"
     if (row.get("scope") or "").strip().lower() == "match_total":
         pair = sorted((norm_text(row.get("player")), norm_text(row.get("opponent"))))
         return "|".join(
@@ -181,6 +207,29 @@ def signal_id(row: dict[str, str], side: str) -> str:
     return "|".join(parts)
 
 
+def generic_contract_key(row: dict[str, str], side: str | None = None) -> str | None:
+    """One count contract per identified event/model; distinct lines stay distinct."""
+    market = str(row.get("market") or "").strip().lower()
+    if market not in GENERIC_COUNT_MARKETS:
+        return None
+    event_id = str(row.get("event_id") or "").strip()
+    bookmaker = norm_text(row.get("bookmaker"))
+    tournament = norm_text(row.get("tournament"))
+    tour = str(row.get("tour") or "").upper()
+    edition = str(row.get("date") or "")[:4]
+    pair = sorted((norm_text(row.get("player")), norm_text(row.get("opponent"))))
+    selected_side = str(side or row.get("side") or row.get("shadow_side") or "").upper()
+    try:
+        line = Decimal(str(row.get("line") or ""))
+    except InvalidOperation:
+        return None
+    if not all((event_id, bookmaker, tournament, tour, edition, *pair)) or not line.is_finite() or selected_side not in {"OVER", "UNDER"}:
+        return None
+    subject = "match" if market.startswith("match_") else norm_text(row.get("player"))
+    model = [f"{field}={str(row.get(field) or '').strip()}" for field in MODEL_IDENTITY_FIELDS if str(row.get(field) or "").strip()]
+    return "|".join((event_id, bookmaker, tour, tournament, edition, *pair, market, subject, str(line.normalize()), selected_side, *model))
+
+
 def matching_signal_key(row: dict[str, str]) -> str:
     """Compare historical entries without rewriting their stored signal IDs."""
     from player_name_matching import fold_name_text
@@ -196,10 +245,21 @@ def prospective_decision_key(row: dict[str, str]) -> str:
     pair = sorted((norm_text(fold_name_text(row.get("player"))), norm_text(fold_name_text(row.get("opponent")))))
     market = norm_text(row.get("market"))
     subject = "match" if market == "match breaks" else norm_text(fold_name_text(row.get("player")))
+    event_id = str(row.get("event_id") or "").strip()
+    bookmaker = norm_text(row.get("bookmaker"))
+    tournament = norm_text(row.get("tournament"))
+    event_date = str(row.get("date") or "").strip()
+    # Provider IDs survive rescheduling. Keep the bookmaker, tournament and
+    # edition namespace; unverified fixture identity falls back to exact dates.
+    fixture = f"event:{event_id}" if event_id and bookmaker and tournament else f"date:{event_date}"
     return "|".join(
         [
-            row.get("date") or "",
+            "v2",
+            fixture,
+            bookmaker,
             (row.get("tour") or "").upper(),
+            tournament,
+            event_date[:4],
             *pair,
             market,
             subject,
@@ -248,7 +308,7 @@ def update_break_market_observation(existing: dict[str, str], observed: dict[str
         if (entry_p_over >= 0.5) != (latest_p_over >= 0.5):
             status.append("market_favourite_flip")
 
-    existing["decision_key"] = existing.get("decision_key") or prospective_decision_key(existing)
+    existing["decision_key"] = prospective_decision_key(existing)
     existing["entry_novig_p_over"] = fmt_float(entry_p_over, 6)
     existing["latest_line"] = str(observed.get("line") or "")
     existing["latest_over_odds"] = str(observed.get("over_odds") or "")
@@ -264,7 +324,7 @@ def update_break_market_observation(existing: dict[str, str], observed: dict[str
 def normalize_break_prospective_fields(row: dict[str, str]) -> dict[str, str]:
     if not is_break_market(row) or str(row.get("decision_mode") or "").strip() not in BREAK_PROSPECTIVE_MODES:
         return row
-    row["decision_key"] = row.get("decision_key") or prospective_decision_key(row)
+    row["decision_key"] = prospective_decision_key(row)
     entry_p_over = parse_float(row.get("entry_novig_p_over"))
     if entry_p_over is None:
         entry_p_over = novig_p_over(row)
@@ -295,15 +355,59 @@ def reconcile_duplicate_break_decisions(rows: list[dict[str, str]]) -> int:
         original = decision_rows[0]
         for duplicate in decision_rows[1:]:
             update_break_market_observation(original, duplicate)
-            if str(duplicate.get("settlement_status") or "").lower() == "void" and str(duplicate.get("settlement_note") or "").startswith("duplicate_reprice_of:"):
+            if str(duplicate.get("settlement_status") or "").lower() == "void" and (
+                duplicate.get("quarantine_reason")
+                or str(duplicate.get("settlement_note") or "").startswith("duplicate_reprice_of:")
+            ):
                 continue
+            for field in ("settlement_status", "result", "pnl", "settlement_note", "settled_at_utc", "clv_pct", "closing_odds", "closing_ts_utc"):
+                duplicate[f"original_{field}"] = duplicate.get(field, "")
+            rescheduled = duplicate.get("date") != original.get("date")
+            duplicate["duplicate_of_signal_id"] = original.get("signal_id", "")
+            duplicate["quarantine_reason"] = "duplicate_rescheduled_decision" if rescheduled else "duplicate_reprice_decision"
+            duplicate["quarantined_at_utc"] = now
+            duplicate["trackable_shadow"] = "false"
             duplicate["settlement_status"] = "void"
             duplicate["result"] = "void"
             duplicate["pnl"] = "0.000"
             duplicate["settled_at_utc"] = duplicate.get("settled_at_utc") or now
-            duplicate["settlement_note"] = f"duplicate_reprice_of:{original.get('signal_id', '')}"
+            reason = "duplicate_reschedule_of" if rescheduled else "duplicate_reprice_of"
+            duplicate["settlement_note"] = f"{reason}:{original.get('signal_id', '')}"
             voided += 1
     return voided
+
+
+def reconcile_duplicate_generic_contracts(rows: list[dict[str, str]]) -> int:
+    groups: dict[str, list[dict[str, str]]] = {}
+    for row in rows:
+        key = generic_contract_key(row)
+        if key:
+            row["decision_key"] = key
+            groups.setdefault(key, []).append(row)
+    count = 0
+    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    for contracts in groups.values():
+        contracts.sort(key=lambda row: (row.get("logged_at_utc") or row.get("capture_ts") or "", row.get("capture_ts") or ""))
+        original = next((row for row in contracts if not row.get("quarantine_reason")), contracts[0])
+        for duplicate in contracts:
+            if duplicate is original or duplicate.get("quarantine_reason"):
+                continue
+            for field in ("settlement_status", "result", "pnl", "settlement_note", "settled_at_utc", "clv_pct", "closing_odds", "closing_ts_utc"):
+                duplicate[f"original_{field}"] = duplicate.get(field, "")
+            duplicate["duplicate_of_signal_id"] = original.get("signal_id", "")
+            duplicate["quarantine_reason"] = "duplicate_rescheduled_contract" if duplicate.get("date") != original.get("date") else "duplicate_count_contract"
+            duplicate["quarantined_at_utc"] = now
+            duplicate["trackable_shadow"] = "false"
+            duplicate["settlement_status"] = "void"
+            duplicate["result"] = "void"
+            duplicate["pnl"] = "0.000"
+            duplicate["settled_at_utc"] = duplicate.get("settled_at_utc") or now
+            duplicate["settlement_note"] = f"duplicate_contract_of:{original.get('signal_id', '')}"
+            # Preserve original CLV above, while preventing generic reports
+            # from treating this retained duplicate as another observation.
+            duplicate["clv_pct"] = ""
+            count += 1
+    return count
 
 
 def refresh_break_market_movements(
@@ -459,6 +563,7 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
     sid = signal_id(row, "CALIBRATION" if is_break_calibration else side)
     return {
         "signal_id": sid,
+        **{field: row.get(field, "") for field in MODEL_IDENTITY_FIELDS},
         "logged_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "date": row.get("date", ""),
         "tour": (row.get("tour") or "").upper(),
@@ -611,7 +716,7 @@ def main() -> int:
 
     signals_path = Path(args.signals)
     existing = [normalize_existing_row(row) for row in read_csv(signals_path)]
-    duplicates_voided = reconcile_duplicate_break_decisions(existing)
+    duplicates_voided = reconcile_duplicate_break_decisions(existing) + reconcile_duplicate_generic_contracts(existing)
     if args.movement_history:
         history_path = Path(args.movement_history)
         repriced = refresh_break_market_movements(existing, read_csv(history_path))
@@ -625,10 +730,17 @@ def main() -> int:
 
     comparison = Path(args.comparison) if args.comparison else PROPS_DIR / f"comparison-{args.date}.csv"
     if not comparison.exists():
+        if duplicates_voided:
+            write_csv(signals_path, existing)
+            write_performance(Path(args.performance), existing)
         print(f"Comparison file not found: {comparison}")
         return 0
 
     existing_by_id = {row.get("signal_id", ""): row for row in existing if row.get("signal_id")}
+    existing_contracts = {
+        key for row in existing if not row.get("quarantine_reason")
+        for key in [generic_contract_key(row)] if key
+    }
     existing_matching_keys = {matching_signal_key(row) for row in existing}
     existing_break_decisions = {
         prospective_decision_key(row): row
@@ -648,6 +760,12 @@ def main() -> int:
         signal = build_signal(row, comparison, args)
         if signal is None:
             continue
+        contract = generic_contract_key(signal)
+        if contract:
+            if contract in existing_contracts:
+                continue
+            signal["decision_key"] = contract
+            existing_contracts.add(contract)
         if is_break_market(signal) and str(signal.get("decision_mode") or "").strip() in BREAK_PROSPECTIVE_MODES:
             key = prospective_decision_key(signal)
             existing_break_decisions[key] = signal
