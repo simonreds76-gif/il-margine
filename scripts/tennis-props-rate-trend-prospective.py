@@ -244,6 +244,10 @@ def report(records, outcomes, health, config, now, *, include_cohorts=True):
         payload['quote_cohorts'] = {cohort: report([r for r in records if quote_cohort(r) == cohort], outcomes,
                                                 {}, config, now, include_cohorts=False)['markets']
                                    for cohort in ('two_way', 'over_only')}
+        payload['history_versions'] = {version: report(
+            [r for r in records if r['row'].get('history_version', 'legacy-unversioned') == version],
+            outcomes, {}, config, now, include_cohorts=False)['markets']
+            for version in sorted({r['row'].get('history_version', 'legacy-unversioned') for r in records})}
     return payload
 
 

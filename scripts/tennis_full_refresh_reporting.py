@@ -120,7 +120,8 @@ def load_summary(root):
 def text(summary):
     if not summary.get('markets'):
         return 'Full input refresh: ' + summary.get('status', 'SOURCE_MISSING') + '; performance unavailable.'
-    lines = ['Full input refresh | paper tracking only',
+    retired = summary.get('status') == 'SOURCE_UPGRADE_APPLIED_SETTLING'
+    lines = ['Input upgrade applied | retained paper comparison' if retired else 'Full input refresh | paper tracking only',
              'Evidence: ' + str(summary.get('generated_at', 'unknown'))]
     try:
         age = datetime.now(timezone.utc) - datetime.fromisoformat(summary['generated_at'].replace('Z', '+00:00'))
@@ -128,6 +129,8 @@ def text(summary):
             lines.append('STALE: source evidence is over 48 hours old.')
     except (KeyError, ValueError, TypeError):
         lines.append('Source freshness unavailable.')
+    if retired:
+        lines.append('Current OnCourt history is the standard input. New comparison capture retired; pending forecasts still settle.')
     if summary.get('error') or summary.get('status') == 'BLOCKED':
         lines.append('Collector needs attention: ' + str(summary.get('error') or summary['status']))
     if summary.get('implementation_revision'):
@@ -142,7 +145,7 @@ def text(summary):
         for arm in ARMS:
             m = group.get(arm, {})
             roi = f"{m['roi_pct']:+.1f}%" if m.get('roi_pct') is not None else 'awaiting settlement'
-            lines.append(f"{'Current' if arm == 'control' else 'Refreshed'}: ROI {roi}, {m.get('pnl_units', 0):+.2f}u, W/L/P {m.get('wins', 0)}/{m.get('losses', 0)}/{m.get('pushes', 0)}, {m.get('stake_units', 0)}u settled stake.")
+            lines.append(f"{'Old history' if arm == 'control' else 'Updated history'}: ROI {roi}, {m.get('pnl_units', 0):+.2f}u, W/L/P {m.get('wins', 0)}/{m.get('losses', 0)}/{m.get('pushes', 0)}, {m.get('stake_units', 0)}u settled stake.")
     lines.append('Milestones with selected paper bets (current / refreshed):')
     for row in summary.get('milestones', []):
         if not any(row[a]['selected'] for a in ARMS):

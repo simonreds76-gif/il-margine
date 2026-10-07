@@ -1364,6 +1364,12 @@ def main() -> None:
     args = parser.parse_args()
 
     as_of = datetime.strptime(args.as_of, "%Y-%m-%d").date()
+    history = {"version": "explicit-research-input", "as_of": args.as_of}
+    if Path(args.baseline).resolve() == DEFAULT_BASELINE.resolve():
+        from tennis_props_current_history import ensure_current
+        history = ensure_current(ROOT, args.as_of)
+        if history['state'] != 'CURRENT':
+            raise ValueError('Current player history unavailable: ' + history.get('reason', 'unknown'))
     baseline = load_baseline(Path(args.baseline))
     activity = load_activity(Path(args.activity))
     baseline_names = baseline_names_by_tour(baseline)
@@ -1429,7 +1435,12 @@ def main() -> None:
         normalize_match_break_totals(row_a, row_b)
         rows.extend([row_a, row_b])
 
+    for row in rows:
+        row['history_version'] = history['version']
+        row['history_as_of'] = history['as_of']
+        row['history_fingerprint'] = history.get('output_hashes', {}).get('player-props-baseline.csv', '')
     fieldnames = [
+        "history_version", "history_as_of", "history_fingerprint",
         "date",
         "generation_date",
         "scheduled_date",

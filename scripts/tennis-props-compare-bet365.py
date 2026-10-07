@@ -883,6 +883,15 @@ def main() -> None:
         )
         return
     board_rows = read_csv(Path(args.board))
+    if Path(args.board).resolve() == DEFAULT_BOARD.resolve():
+        from tennis_props_current_history import history_health
+        history = history_health(ROOT / 'data/tennis-props', args.date)
+        if history['state'] != 'CURRENT':
+            raise ValueError('Current player history unavailable: ' + history.get('reason', 'unknown'))
+        if any(row.get('history_version') != history['version'] or row.get('history_as_of') != args.date
+               or row.get('history_fingerprint') != history['output_hashes']['player-props-baseline.csv']
+               for row in board_rows):
+            raise ValueError('Projection board does not match current player history; rebuild it first')
     totals_gate = read_json(Path(args.totals_gate))
     breaks_gate = read_json(Path(args.breaks_gate))
     board = {
@@ -1150,6 +1159,9 @@ def main() -> None:
                 "tour": str((board_row or {}).get("tour") or line_tour),
                 "tournament": str((board_row or {}).get("tournament") or line.get("tournament") or ""),
                 "surface": str((board_row or {}).get("surface") or ""),
+                "history_version": str((board_row or {}).get("history_version") or "legacy-unversioned"),
+                "history_as_of": str((board_row or {}).get("history_as_of") or ""),
+                "history_fingerprint": str((board_row or {}).get("history_fingerprint") or ""),
                 "player": line_player,
                 "opponent": line_opponent,
                 "event_id": str(line.get("event_id") or ""),
@@ -1215,6 +1227,7 @@ def main() -> None:
     apply_break_shadow_gates(rows, now_utc)
 
     fieldnames = [
+        "history_version", "history_as_of", "history_fingerprint",
         "date",
         "tour",
         "tournament",

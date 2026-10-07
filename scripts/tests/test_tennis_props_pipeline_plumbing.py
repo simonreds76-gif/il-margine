@@ -6,6 +6,7 @@ import importlib.util
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -508,7 +509,8 @@ class DailyMarketSelectionTests(unittest.TestCase):
         self.assertIn("--comparison-only", am_script)
         self.assertIn("--skip-derived-boards", am_script)
         self.assertLess(am_script.index("--capture-only"), am_script.index("build-tennis-props-board.py"))
-        self.assertIn("--skip-hosted-sync", am_script)
+        # Morning/admin comparisons must see the newest existing hosted capture.
+        self.assertNotIn("--skip-hosted-sync", am_script)
         self.assertIn('"--require-ready", "--new-only"', am_script)
         self.assertIn('"scripts\\tennis-evidence-snapshot.py", "--supabase"', am_script)
         self.assertIn('"--days-ahead", "3"', am_script)
@@ -584,6 +586,13 @@ class HostedSyncTests(unittest.TestCase):
 
 
 class PipelineHealthTests(unittest.TestCase):
+    def setUp(self):
+        # These cases isolate price-feed plumbing. Current-history failures have
+        # their own regression cases; do not depend on the developer's data.
+        current = patch('tennis_props_current_history.history_health', return_value={'state':'CURRENT'})
+        current.start()
+        self.addCleanup(current.stop)
+
     def test_capture_without_comparison_is_structural_error(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp)

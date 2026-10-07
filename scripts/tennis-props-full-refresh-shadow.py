@@ -138,9 +138,25 @@ def summarize(records,outcomes,health,config,now):
     return result
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--comparison',type=Path,required=True);parser.add_argument('--out',type=Path,default=ROOT/'data/tennis-props/shadow/full-refresh-v1');parser.add_argument('--config',type=Path,default=ROOT/'config/tennis-props-full-refresh-v1.json');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--comparison',type=Path,required=True);parser.add_argument('--out',type=Path,default=ROOT/'data/tennis-props/shadow/full-refresh-v1');parser.add_argument('--config',type=Path,default=ROOT/'config/tennis-props-full-refresh-v1.json');parser.add_argument('--settle-only',action='store_true');args=parser.parse_args()
     config=P['read_json'](args.config,None);now=datetime.now(timezone.utc)
     with P['lock'](args.out):
+        if args.settle_only:
+            reg=P['read_json'](args.out/'registration.json',None)
+            if not reg:
+                print('No retained input-refresh comparison to settle');return 0
+            config=reg['config']
+            records=P['ledger'](args.out/'observations.jsonl')
+            outcomes=P['read_json'](args.out/'outcomes.json',{})
+            P['settle'](records,ROOT/'data/oncourt',outcomes,now)
+            P['atomic_json'](args.out/'outcomes.json',outcomes)
+            result=summarize(records,outcomes,{'settlement_only':True},config,now)
+            result.update(status='SOURCE_UPGRADE_APPLIED_SETTLING',capture_enabled=False,
+                revision_note='Current OnCourt history is now the standard input. Earlier comparison forecasts are retained and settled; no new stale-history comparison forecasts are added.')
+            P['atomic_json'](args.out/'report.json',result)
+            print(json.dumps({'status':result['status'],'markets':result['markets']}));return 0
+        if config.get('capture_enabled') is False:
+            raise ValueError('Input upgrade applied; this comparison is retained for --settle-only')
         # Validate the installed files before accepting the explicitly registered repair.
         for path, digest in config['implementation_hashes'].items():
             if sha(ROOT/path) != digest:
