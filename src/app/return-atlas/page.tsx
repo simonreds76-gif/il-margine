@@ -9,6 +9,7 @@ import ReturnAtlasClient from "@/components/return-atlas/ReturnAtlasClient";
 import MatchdayPromo from "@/components/MatchdayPromo";
 import release from "@/data/return-atlas-release.json";
 import "./return-atlas.css";
+import "./profit-chart.css";
 
 export const dynamic = "force-static";
 export const revalidate = false;
