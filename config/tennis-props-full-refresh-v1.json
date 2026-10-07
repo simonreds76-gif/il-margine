@@ -29,17 +29,17 @@
   "v3_model": "data/tennis-props/models/v3-atp-aces-live.txt",
   "implementation_hashes": {
     "scripts/tennis_props_full_refresh.py": "21f2d8b6bf53928bfce42218581a3f4691fbedf0dc27bb9d9a7cc70fd94f368f",
-    "scripts/tennis-props-full-refresh-shadow.py": "6512b42ac829d93d24f587cbcffd859ce4c41cd1b01e2ce3f16480aee34801d2",
+    "scripts/tennis-props-full-refresh-shadow.py": "93b3553426d12d27747bc866e11f82562848e2ac005052c467360f70e1217794",
     "scripts/tennis_props_model.py": "02571fa2662fdfee4f70a1f2edb97bae9d68b9596c60bfab154a0ed15b624afd",
     "scripts/tennis-props-baseline.py": "82f2d566347330e7c4cb43340978c0c435e8e7c7309d293747582f2963974a93",
-    "scripts/build-tennis-props-board.py": "a26538d48c57a5f6520e3317861a51025ff9a8b029aeadbf0d8b25d1b09c7245",
+    "scripts/build-tennis-props-board.py": "c3c6e149bdf1d157a08026e90c52c6a66bbde3998465e832b87e7e3b7796b592",
     "scripts/tennis-props-v3-live.py": "f3d913e5bdd3922affcbd267267dcfb4f2987f9bd1b1d42989fbc2cb83daae84",
-    "scripts/tennis-props-rate-trend-prospective.py": "6de6eceea7876f88e44f97d4504ca5aac93521fa9c716fc0482ffa7b1758429c",
+    "scripts/tennis-props-rate-trend-prospective.py": "0db7f28c1d9d61519d65aa9d0210665432338c5be864b84d95bbf395579f7252",
     "scripts/tennis-props-fresh-data-challenger.py": "84e583a71400ba76d2950ccb430d92909f5cbe04c44a44a3fba87a088cc1116e",
     "scripts/tennis-props-settle-shadow.py": "98fa8a195f4d3a23accb375621be8b32db0760c456e6875886a79a7d478271bc",
     "data/tennis-props/models/v3-atp-aces-live.txt": "1534d8e35fa7b4a19f1639d05905c75e25f725231573518e047d081800189451",
     "scripts/tennis_event_integrity.py": "a85325462cec6cb2e3c2ab13184ae8eeefe47f718340cb5cbfe17cecbea12c2d",
-    "scripts/tennis-props-shadow-tracker.py": "c9fdd04708f40066c4a3d75dcac67d20774bad0a9e2d3f4593d40de3c1c67216",
+    "scripts/tennis-props-shadow-tracker.py": "2276046325a001cb8c6b7b579475daa7d9d75aa3aa6add2333560e2ecf3c885f",
     "src/lib/tennis_prob.py": "9e33edaee28ebad5cecd377caa7b4fdaf1f849a6440a1b4c2df78b3ed14ab8f2",
     "scripts/tennis_source_contract.py": "3b1977e22be1fd0ef1e0e635288cacb8347974fcf74a336fa3f57a9cfe871d3e"
   },
@@ -51,5 +51,7 @@
   "revision_reason": "Verified court reference table and reject unknown surfaces rather than inventing Clay; observed model weights and stake policy unchanged. Preserve earlier quoted cohorts.",
   "supersedes_config_hashes": [
     "2a0130a79ff868a21f36abfbf51682144992558103b64899ae214729a78de633"
-  ]
+  ],
+  "capture_enabled": false,
+  "retirement_reason": "Validated current history is now the normal props input. Retain and settle prior forecasts; stop redundant old-history comparisons."
 }

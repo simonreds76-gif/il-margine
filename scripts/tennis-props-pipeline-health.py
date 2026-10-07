@@ -107,6 +107,7 @@ def build_health(
     signals_path: Path,
     *,
     now: datetime | None = None,
+    baseline_directory: Path | None = None,
 ) -> dict[str, object]:
     now_utc = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
     line_rows = read_csv(lines_path)
@@ -191,6 +192,8 @@ def build_health(
     else:
         break_state = "NO_QUALIFYING_EDGE"
 
+    from tennis_props_current_history import history_health
+    current_history = history_health(ROOT / "data/tennis-props", as_of) if baseline_directory is None else None
     structural_error = False
     if not line_rows:
         state = "FEED_MISSING"
@@ -238,7 +241,24 @@ def build_health(
     if structural_error and break_line_rows:
         break_state = "PIPELINE_UNHEALTHY"
 
+    if current_history and current_history.get('output_hashes'):
+        stale_inputs = [row for row in current_comparisons
+                       if row.get('market') in ('aces', 'double_faults') and row.get('matched_board') == 'yes'
+                       and (row.get('history_version') != current_history.get('version')
+                            or row.get('history_as_of') != as_of
+                            or row.get('history_fingerprint') != current_history['output_hashes'].get('player-props-baseline.csv'))]
+        if stale_inputs:
+            state = 'PLAYER_HISTORY_COMPARISON_STALE'
+            structural_error = True
+            actionable_shadow = actionable_public = 0
+            if break_line_rows: break_state = 'PIPELINE_UNHEALTHY'
+    if current_history is not None and current_history['state'] != 'CURRENT':
+        state = 'PLAYER_HISTORY_BLOCKED'
+        structural_error = True
+        actionable_shadow = actionable_public = 0
+        if break_line_rows: break_state = "PIPELINE_UNHEALTHY"
     return {
+        "player_history": current_history,
         "generated_at": now_utc.isoformat(timespec="seconds"),
         "as_of": as_of,
         "state": state,

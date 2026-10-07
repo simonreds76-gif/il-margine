@@ -2322,6 +2322,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
   const showAllLines = resolvedSearchParams.showAll === "1";
   const showHiddenLines = resolvedSearchParams.showHidden === "1";
 
+  const historyHealthPromise = readJson(path.join(PROPS_DIR, "pipeline-health.json"));
   const [
     boardRows,
     boardStamp,
@@ -2418,6 +2419,9 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
     fileStamp(MOST_ACES_FORECAST_REPORT_PATH),
   ]);
 
+  const historyHealth = record((await historyHealthPromise).player_history);
+  const historySources = record(historyHealth.sources);
+  const historyReady = historyHealth.state === "CURRENT" && historyHealth.as_of === londonDateIso();
   const comparisonRows = latestComparisonPath ? await readCsv(latestComparisonPath) : [];
   const lineRows = latestLinesPath ? await readCsv(latestLinesPath) : [];
   const betsbkLineRows = latestBetsbkLinesPath ? await readCsv(latestBetsbkLinesPath) : [];
@@ -2434,7 +2438,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
   const decisionRows = sortedComparison.filter(isMatchTotalComparisonRow);
   const breakRows = sortedComparison.filter((row) => row.market === "player_breaks" || row.market === "match_breaks");
   const matchedDecisionRows = decisionRows.filter((row) => row.matched_board === "yes");
-  const bettableRows = matchedDecisionRows.filter(isBettableComparisonRow);
+  const bettableRows = matchedDecisionRows.filter(row => historyReady && isBettableComparisonRow(row));
   const nearMissRows = matchedDecisionRows
     .filter((row) => !isBettableComparisonRow(row) && (
       (row.main_line === "true" && effectiveLineQuality(row) === "complete")
@@ -2480,6 +2484,12 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           </div>
         </HeroCard>
 
+        <section aria-label="Player history coverage" className="my-5 rounded-2xl border border-slate-700 bg-slate-950/50 p-5">
+          <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-semibold text-white">Player history coverage</h2><span className={historyReady ? "text-sm text-emerald-300" : "text-sm text-amber-300"}>{historyReady ? "Current inputs verified" : "Refresh required"}</span></div>
+          <p className="mt-2 text-sm text-slate-300">ATP results through {String(record(historySources.atp).latest_appended ?? "unverified")} · WTA results through {String(record(historySources.wta).latest_appended ?? "unverified")}</p>
+          <p className="mt-2 text-xs leading-5 text-slate-400">The normal refresh rebuilds player statistics from completed OnCourt matches. Qualifying and Challenger matches also update activity. New forecasts retain their input version; old forecasts keep their original results.</p>
+        </section>
+
         <section className="my-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-7">
           <StatCard label="Verdict" value={bettableRows.length ? `${bettableRows.length} BET NOW` : "NO BET"} detail={`${nearMissRows.length} near miss / ${blockedExamples.length} blocked`} tone={bettableRows.length ? "text-emerald-300" : "text-amber-300"} />
           <StatCard label="Bet365 lines" value={String(decisionRows.length)} detail={`${matchedDecisionRows.length} matched / ${lineRows.length} raw rows`} tone={decisionRows.length ? "text-cyan-300" : "text-slate-400"} />
@@ -2490,9 +2500,10 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
           <StatCard label="Market benchmark" value={String(marketBenchmark.observations)} detail={`${marketBenchmark.settled} settled / ${marketBenchmark.pending} pending`} tone={marketBenchmark.observations ? "text-cyan-300" : "text-slate-400"} />
         </section>
 
-        <div className="mb-6">
-          <TotalsStage0Panel gate={totalsGate} stamp={totalsGateStamp} />
-        </div>
+        <details className="mb-6 rounded-2xl border border-slate-800 p-4">
+          <summary className="cursor-pointer text-sm font-semibold text-slate-300">Archived match total experiment</summary>
+          <div className="mt-4"><TotalsStage0Panel gate={totalsGate} stamp={totalsGateStamp} /></div>
+        </details>
 
         <section className="mb-6 grid gap-3 rounded-2xl border border-slate-800 bg-slate-950/40 p-4 text-xs text-slate-400 md:grid-cols-4">
           <div><span className="text-slate-500">Board:</span> <span className="text-slate-200">{boardStamp}</span></div>
@@ -2580,6 +2591,9 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
 
             <MarketBenchmarkPanel rows={marketObservationRows} stamp={marketObservationReportStamp} />
 
+            <details className="rounded-2xl border border-slate-800 p-4">
+              <summary className="cursor-pointer font-semibold text-slate-300">Archived model development and earlier validation</summary>
+              <p className="my-3 text-sm text-slate-400">Historical experiments and retained test results. Current collectors and pending forecasts are shown separately above.</p>
             <ResearchGatesPanel
               evidence={derivativesEvidence}
               evidenceStamp={derivativesEvidenceStamp}
@@ -2596,6 +2610,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
               propsV3ShadowRows={propsV3ShadowRows}
               propsV3ShadowStamp={propsV3ShadowStamp}
             />
+            </details>
 
             <FeedDiagnosticsPanel
               lineRows={lineRows}

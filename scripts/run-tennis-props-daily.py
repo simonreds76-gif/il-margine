@@ -328,6 +328,11 @@ def run_shadow_tracking(as_of: str) -> None:
         "Freeze and settle paired rate-trend prospective research",
         fatal=False, timeout_seconds=300,
     )
+    run(
+        [sys.executable, str(ROOT / "scripts/tennis-props-full-refresh-shadow.py"),
+         "--comparison", str(comparison), "--settle-only"],
+        "Settle retained input-refresh comparison", fatal=False, timeout_seconds=180,
+    )
     if has_market_rows(comparison):
         run(
             [
@@ -596,32 +601,10 @@ def main() -> int:
         fatal=True,
     )
     run(
-        [
-            sys.executable,
-            str(ROOT / "scripts" / "tennis-props-baseline.py"),
-            "--as-of",
-            args.as_of,
-            "--start-year",
-            str(args.start_year),
-            "--end-year",
-            str(args.end_year),
-        ],
-        "Build player aces/DF baselines",
-        fatal=True,
-    )
-    run(
-        [
-            sys.executable,
-            str(ROOT / "scripts" / "tennis-props-activity.py"),
-            "--as-of",
-            args.as_of,
-            "--start-year",
-            str(args.start_year),
-            "--end-year",
-            str(args.end_year),
-        ],
-        "Build coverage-inclusive tennis props activity",
-        fatal=True,
+        [sys.executable, str(ROOT / "scripts/tennis_props_current_history.py"),
+         "--as-of", args.as_of, "--publish"],
+        "Refresh validated current player histories and activity",
+        fatal=True, timeout_seconds=300,
     )
     run(
         [

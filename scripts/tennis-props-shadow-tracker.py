@@ -32,6 +32,7 @@ GENERIC_COUNT_MARKETS = {"aces", "double_faults", "match_aces", "match_double_fa
 MODEL_IDENTITY_FIELDS = ("model", "model_id", "model_name", "model_version", "variant", "variant_id", "gate_version")
 
 FIELDNAMES = [
+    "history_version", "history_as_of", "history_fingerprint",
     "signal_id",
     "logged_at_utc",
     "date",
@@ -564,6 +565,9 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
     return {
         "signal_id": sid,
         **{field: row.get(field, "") for field in MODEL_IDENTITY_FIELDS},
+        "history_version": row.get("history_version", "legacy-unversioned"),
+        "history_as_of": row.get("history_as_of", ""),
+        "history_fingerprint": row.get("history_fingerprint", ""),
         "logged_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "date": row.get("date", ""),
         "tour": (row.get("tour") or "").upper(),
