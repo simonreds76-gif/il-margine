@@ -72,6 +72,7 @@ export default function ReturnAtlasPage() {
         <details><summary className="cursor-pointer py-3 font-semibold text-slate-200">Are these Il Margine’s published tennis picks?</summary><p>No. This is a historical research tool showing what backing each player or opponent would have returned. Our <Link href="/tennis-tips" prefetch={false}>published tennis tips and results</Link> are tracked separately.</p></details>
         <p className="about-note">Historical returns describe what happened. They do not predict future profits.</p>
         <p><Link href="/faq#return-atlas" prefetch={false}>Return Atlas questions &amp; worked examples →</Link></p>
+        <p><Link href="/resources/tennis-retirement-rules" prefetch={false}>A player retires? Compare bookmaker settlement rules →</Link></p>
         <Link href="/return-atlas/credits" prefetch={false}>Data &amp; photo credits →</Link>
       </section>
     </main>

@@ -23,7 +23,10 @@ import {
   type NotMeasuredMarket,
 } from "@/lib/bookmakers/margin-index";
 
+import type { TennisEventComparison } from "@/lib/bookmakers/event-comparisons";
+
 type MarginExplorerProps = {
+  tennisEvents?: TennisEventComparison[];
   generatedAt: string | null;
   segments: MarginSegment[];
   notMeasured: NotMeasuredMarket[];
@@ -47,7 +50,7 @@ function MarginPanel({ segment }: { segment: MarginSegment }) {
   const stats = useMemo(() => deriveSegmentStats(segment), [segment]);
   const [sortKey, setSortKey] = useState<MarginSortKey>("margin");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
-  const [showAll, setShowAll] = useState(false);
+  const [showAll, setShowAll] = useState(true);
   const [expandedName, setExpandedName] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [familiarOnly, setFamiliarOnly] = useState(false);
@@ -109,9 +112,9 @@ function MarginPanel({ segment }: { segment: MarginSegment }) {
           <MarginBenchmarkStrip stats={stats} />
           <div className="mt-5">
             <h4 className="flex items-center gap-2 text-sm font-semibold text-slate-200"><EditorialIcon name="compare" className="h-6 w-6" />Familiar UK names, measured in this market</h4>
-            <p className="mt-1 text-xs leading-5 text-slate-400">A shortcut to eight familiar brands. Rank is against the full measured field, regardless of partner status.</p>
+            <p className="mt-1 text-xs leading-5 text-slate-400">Compare familiar brands at a glance. The table below includes every measured bookmaker.</p>
             <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {FEATURED_BOOKS.map(name => {
+              {FEATURED_BOOKS.filter(name => stats.rows.some(row => row.name === name)).map(name => {
                 const row = stats.rows.find(item => item.name === name);
                 return <button key={name} type="button" onClick={() => { setQuery(name); setFamiliarOnly(false); setExpandedName(name); }} className="min-w-0 rounded-xl border border-white/10 bg-white/[0.025] p-3 text-left transition-colors hover:border-emerald-300/40 focus-visible:outline-2 focus-visible:outline-emerald-300" aria-label={`Find ${name} in the ranking`}>
                   <span className="flex items-center gap-2"><BookmakerMark name={name} /><span className="min-w-0 break-words text-xs font-semibold text-slate-200">{name}</span></span>
@@ -123,7 +126,7 @@ function MarginPanel({ segment }: { segment: MarginSegment }) {
 
           {segment.events < 4 && (
             <p className="mt-3 rounded-xl border border-white/[0.07] bg-white/[0.025] px-3 py-2.5 text-xs leading-5 text-slate-400">
-              Snapshot depth: {segment.events} events and {segment.operators[0]?.samples ?? 0} complete price sets per book. Gaps under 0.50pp are de-emphasised at this depth.
+              Based on {segment.events === 1 ? "this match only" : `${segment.events} captured matches`}. This compares the recorded prices, not a bookmaker’s long term value.
             </p>
           )}
           {segment.operators.length <= 4 && (
@@ -184,7 +187,9 @@ function MarginPanel({ segment }: { segment: MarginSegment }) {
   );
 }
 
-export default function MarginExplorer({ generatedAt, segments, notMeasured, coverage, summary }: MarginExplorerProps) {
+export default function MarginExplorer({ generatedAt, segments, notMeasured, coverage, summary, tennisEvents = [] }: MarginExplorerProps) {
+  const [eventIndex, setEventIndex] = useState(0);
+  const selectedEvent = tennisEvents[eventIndex];
   const listedBooks = Array.from(new Set([...(coverage?.payload_operator_names ?? []), ...(coverage?.not_discovered ?? [])])).sort();
   const measured = useMemo(() => segments.filter((segment) => segment.operators.length > 0), [segments]);
   const availableSports = SPORT_ORDER.filter((sport) => measured.some((segment) => segment.sport_slug === sport));
@@ -212,9 +217,10 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured, cov
 
   const currentSegments = measured.filter((segment) => segment.sport_slug === selectedSport);
   const currentMissing = notMeasured.filter((market) => market.sport_slug === selectedSport);
-  const activeSegment = measured.find(
+  const aggregateSegment = measured.find(
     (segment) => segment.sport_slug === selectedSport && marketId(segment) === selectedMarket,
   );
+  const activeSegment = selectedSport === "tennis" && selectedEvent ? selectedEvent.segment : aggregateSegment;
   const coverageIncomplete = Boolean(coverage && coverage.payload_operators < Math.min(10, coverage.target_operators));
 
   function chooseMarket(segment: MarginSegment) {
@@ -283,9 +289,9 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured, cov
             <div className="bg-[#091016] px-4 py-3">
               <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-500">Coverage</p>
               <p className="mt-1 font-mono text-lg font-semibold tabular-nums text-emerald-100">
-                {coverage?.payload_operators ?? 0}/{listedBooks.length}
+                {activeSegment?.operators.length ?? 0}
               </p>
-              <p className="text-[9px] text-slate-500">books returned prices</p>
+              <p className="text-[9px] text-slate-500">books in this comparison</p>
             </div>
           </div>
         </div>
@@ -293,7 +299,7 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured, cov
           <span className="rounded-full border border-white/[0.08] bg-black/20 px-3 py-1.5">{summary?.events ?? "-"} captured events</span>
           <span className="rounded-full border border-white/[0.08] bg-black/20 px-3 py-1.5">{availableSports.length} sports</span>
           <span className="rounded-full border border-white/[0.08] bg-black/20 px-3 py-1.5">{measured.length} measured markets</span>
-          <span className="rounded-full border border-white/[0.08] bg-black/20 px-3 py-1.5">One-off snapshot</span>
+          <span className="rounded-full border border-white/[0.08] bg-black/20 px-3 py-1.5">Dated snapshot</span>
         </div>
       </div>
 
@@ -372,7 +378,11 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured, cov
       </div>
 
       <div className="relative px-4 py-5 sm:px-7">
-        {activeSegment && <MarginPanel key={`${activeSegment.sport_slug}-${activeSegment.market_family}`} segment={activeSegment} />}
+        {selectedSport === "tennis" && tennisEvents.length > 0 && <div className="bm-event-picker mb-5">
+          <label htmlFor="tennis-captured-match">Compare the same match</label><select id="tennis-captured-match" value={eventIndex} onChange={event => setEventIndex(Number(event.target.value))}>{tennisEvents.map((item, i) => <option key={item.source} value={i}>{item.label} · {item.segment.operators.length} bookmakers</option>)}</select>
+          <p>Every complete bookmaker quote captured for this match. Availability varies by event. <a href="/resources/tennis-retirement-rules">Compare retirement rules too ↗</a></p>
+        </div>}
+        {activeSegment && <MarginPanel key={`${activeSegment.sport_slug}-${activeSegment.market_family}-${selectedSport === "tennis" ? eventIndex : "aggregate"}`} segment={activeSegment} />}
         <MarginMatrix segments={currentSegments} sportLabel={SPORT_LABELS[selectedSport]} />
         <details className="mt-5 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
           <summary className="min-h-8 cursor-pointer text-sm font-semibold text-slate-200">Bookmaker coverage · {listedBooks.length} listed</summary>
