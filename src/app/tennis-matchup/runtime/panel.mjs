@@ -20,6 +20,12 @@ let sorted=[];
 const labels=new Map();
 const fields=['months','as-of','surface','region','country'];
 function filters(){return {mode:root.querySelector('[name=record-mode]:checked').value,months:$('months').value,asOf:$('as-of').value,surface:$('surface').value,region:$('region').value,country:$('country').value};}
+function updateFilterSummary(){
+  const f=filters();
+  const parts=[$('months').selectedOptions[0].textContent,SURFACES[f.surface]||'All surfaces',f.country!=='all'?$('country').selectedOptions[0]?.textContent:f.region==='all'?'All locations':f.region];
+  if(f.asOf&&f.asOf!==data.asOf)parts.push('Before '+date(f.asOf));
+  $('filter-summary').textContent=parts.join(' · ');
+}
 function label(player){return `${player.name} (${player.country})`;}
 function populateCountries(){
   const current=$('country').value;
@@ -69,7 +75,7 @@ function updateSuggestions(input,list){
 }
 function render(){
   const f=filters();
-  $('filter-summary').textContent=[$('months').selectedOptions[0].textContent,SURFACES[f.surface]||'All surfaces',f.country!=='all'?$('country').selectedOptions[0].textContent:f.region==='all'?'All locations':f.region].join(' · ');
+  updateFilterSummary();
   if(selected.length!==2 || !f.asOf || f.asOf<'2022-01-02' || f.asOf>data.asOf)return;
   const players=selected.map(i=>data.players[i]);
   const h2h=f.mode==='h2h';
@@ -144,7 +150,7 @@ try {
   populateCountries();
   $('as-of').addEventListener('invalid',()=>{$('filter-drawer').open=true;});
   $('controls').addEventListener('submit',event=>{event.preventDefault();applyPlayers();});
-  const refresh=()=>{if(!$('player-a').value.trim()||!$('player-b').value.trim()){pauseComparison();return;}if($('controls').reportValidity())applyPlayers();};
+  const refresh=()=>{updateFilterSummary();if(!$('player-a').value.trim()||!$('player-b').value.trim()){pauseComparison();return;}if($('controls').reportValidity())applyPlayers();};
   root.querySelectorAll('[name=record-mode]').forEach(input=>input.addEventListener('change',refresh));
   fields.forEach(id=>$(id).addEventListener('change',()=>{if(id==='region')populateCountries();refresh();}));
   $('swap').addEventListener('click',()=>{const a=$('player-a').value;$('player-a').value=$('player-b').value;$('player-b').value=a;refresh();});

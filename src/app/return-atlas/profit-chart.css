@@ -38,3 +38,8 @@
   .return-atlas .profit-readout { display:flex; align-items:baseline; gap:8px; text-align:left; }
   .return-atlas .profit-scrubber { gap:10px; }
 }
+@media(max-width:360px) {
+  .return-atlas .detail-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .return-atlas .detail-stat:last-child { grid-column:1/-1; display:flex; align-items:baseline; gap:12px; }
+  .return-atlas .detail-stat:last-child>span { min-height:0; }
+}
