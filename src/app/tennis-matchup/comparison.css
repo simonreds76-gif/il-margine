@@ -1,4 +1,8 @@
 /* The existing shell and calculations stay shared. Compact research components. */
+.public-site .matchup-lab .player-returns-link { display:flex; align-items:center; gap:8px; min-height:44px; padding:9px 12px; margin-top:14px; border:1px solid #36534f; border-radius:10px; background:#142a28; color:var(--mint); font-size:13px; text-decoration:none; }
+.public-site .matchup-lab .player-returns-link svg { width:24px; height:24px; flex-shrink:0; }
+.public-site .matchup-lab .player-returns-link:hover { border-color:#7bd9b2; background:#1b3630; }
+.public-site .matchup-lab .player-returns-link:focus-visible { outline:2px solid var(--mint); outline-offset:3px; }
 .public-site .matchup-lab .comparison-filters { margin-top:18px; border:1px solid var(--line); border-radius:10px; background:#111c23; }
 .public-site .matchup-lab .comparison-filters>summary { padding:13px 15px; font-size:13px; color:var(--ink); }
 .public-site .matchup-lab .comparison-filters>summary small { display:block; color:var(--muted); font-size:12px; font-weight:400; margin:4px 0 0 16px; }

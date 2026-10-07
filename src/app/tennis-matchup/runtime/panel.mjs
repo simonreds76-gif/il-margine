@@ -1,4 +1,5 @@
 import {compactOddsComparison,comparisonMetrics} from './comparison.mjs';
+import {atlasResearchHref} from '../../../components/return-atlas/research-links.mjs';
 import {symbol} from './identity.mjs';
 import {SURFACES,rowsFor,summary,startDate,recordedCount} from './core.mjs';
 
@@ -33,9 +34,9 @@ function populateCountries(){
   $('country').innerHTML='<option value="all">All countries</option>'+countries.map(c=>`<option value="${esc(c.code)}">${esc(c.name)}</option>`).join('');
   if(countries.some(c=>c.code===current)) $('country').value=current;
 }
-function playerCard(player,s,i) {
+function playerCard(player,s,i,companion,surface) {
   const portrait=data.portraits[player.id]?.url;
-  return `<article class="player-card side-${i}"><div class="identity">${portrait?`<img src="${esc(portrait)}" width="72" height="72" alt="" decoding="async">`:'<span class="portrait-empty" aria-hidden="true">'+esc(player.initials)+'</span>'}<div><p class="eyebrow">${esc(player.country)} · PLAYER ${i+1}</p><h2>${esc(player.name)}</h2></div></div><div class="player-record"><strong>${s.wins}<small> W</small> <span>/</span> ${s.losses}<small> L</small></strong><span>${num(s.n)} matches ${s.n<15?'<b class="sample">Small sample</b>':''}</span></div><p>${s.n?`${date(s.first)} – ${date(s.last)}`:'No matches in this selection'}</p></article>`;
+  return `<article class="player-card side-${i}"><div class="identity">${portrait?`<img src="${esc(portrait)}" width="72" height="72" alt="" decoding="async">`:'<span class="portrait-empty" aria-hidden="true">'+esc(player.initials)+'</span>'}<div><p class="eyebrow">${esc(player.country)} · PLAYER ${i+1}</p><h2>${esc(player.name)}</h2></div></div><div class="player-record"><strong>${s.wins}<small> W</small> <span>/</span> ${s.losses}<small> L</small></strong><span>${num(s.n)} matches ${s.n<15?'<b class="sample">Small sample</b>':''}</span></div><p>${s.n?`${date(s.first)} – ${date(s.last)}`:'No matches in this selection'}</p><a class="player-returns-link" href="${esc(atlasResearchHref(player.id,companion.id,surface))}" aria-label="View ${esc(player.name)} betting returns in Return Atlas">${symbol('odds')}<span>Betting returns <span aria-hidden="true">↗</span></span></a></article>`;
 }
 function surfaceCell(s){return `<td class="${s.n<15?'thin':''}"><strong>${pct(s.winRate)}</strong><span>${s.wins} wins · ${s.losses} losses</span><small>${s.n} ${s.n===1?'match':'matches'}${s.n>0&&s.n<15?' · small sample':''}</small></td>`;}
 function countLabel(stats,key){const count=recordedCount(stats,key);return count===null?'—':num(count);}
@@ -86,7 +87,7 @@ function render(){
   const location=f.country!=='all'?data.countries.find(c=>c.code===f.country)?.name:f.region==='all'?'All regions':f.region;
   const scope=`${recordLabel} · ${location} · ${SURFACES[f.surface]||'All surfaces'} · ${date(startDate(f.asOf,f.months))} to before ${date(f.asOf)}`;
   $('selection').textContent=scope;
-  $('results').innerHTML=`<div class="player-grid">${players.map((p,i)=>playerCard(p,summaries[i],i)).join('')}</div>
+  $('results').innerHTML=`<div class="player-grid">${players.map((p,i)=>playerCard(p,summaries[i],i,players[1-i],f.surface)).join('')}</div>
   <nav class="comparison-nav" aria-label="Comparison sections"><a href="#comparison-odds">${symbol('odds')}<span>Results &amp; odds</span></a><a href="#comparison-profile">${symbol('serve')}<span>Serve &amp; return</span></a><a href="#comparison-courts">${symbol('court')}<span>Courts</span></a><a href="#comparison-matches">${symbol('history')}<span>Matches</span></a></nav>
   <section class="section" id="comparison-odds"><div class="section-heading">${icon('region')}<div><p class="eyebrow">RESULTS &amp; PRE-MATCH ODDS</p><h2>Did the results beat the odds?</h2></div></div><p class="section-copy">Compare actual wins with the number suggested by the recorded prices.</p>${compactOddsComparison(players,summaries)}</section>
   <section class="section" id="comparison-profile"><div class="section-heading">${icon('serve')}<div><p class="eyebrow">THE PLAYING PROFILE</p><h2>Serve, return and the points between.</h2></div></div><p class="section-copy">Compare point rates and average aces and double faults. Open each statistic for totals and sample size.</p>${comparisonMetrics(players,summaries)}</section>

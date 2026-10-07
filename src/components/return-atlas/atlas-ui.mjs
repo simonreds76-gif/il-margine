@@ -1,4 +1,5 @@
 import { mountProfitChart } from './profit-chart.mjs';
+import { atlasResearchHref, readAtlasResearch } from './research-links.mjs';
 import { observations, summarise, leaderboard, recentlyActivePlayers, ODDS_BANDS, resolveOddsRange, oddsRangeLabel } from './returns-core.mjs';
 
 // This isolated DOM renderer owns only its mount node; shared navigation stays in React.
@@ -31,6 +32,8 @@ async function loadRecord(id,role,all,side,detailOdds){
 }
 const defaults={year:'all',surface:'all',role:'favourite',side:'player',minimum:30,search:'',sort:'roi',direction:'desc',activity:'recent',oddsRange:'all',oddsMin:'',oddsMax:''};
 const state={...defaults};
+const research=readAtlasResearch(window.location.search,players);
+if(research.ids.length)Object.assign(state,{surface:research.surface,role:'all',activity:'all',minimum:0});
 const surfaces={'outdoor-hard':'Outdoor hard',clay:'Clay',grass:'Grass','indoor-hard':'Indoor hard'};
 const colours={'outdoor-hard':'#8cbfdf',clay:'#de9a78',grass:'#9cc79a','indoor-hard':'#b0a2e3'};
 const byId=Object.fromEntries(players.map(player=>[player.id,player]));
@@ -45,6 +48,19 @@ const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const roleName=role=>role==='all'?'All matches':role==='favourite'?'Favourite':'Underdog';
 const portraitFor=player=>portraits[player.id];
 const avatar=player=>`<span class="avatar tone-${player.index%3} ${portraitFor(player)?'has-portrait':''}" aria-hidden="true"><span>${player.initials}</span>${portraitFor(player)?`<img src="${escape(portraitFor(player).url)}" alt="" width="96" height="96" loading="lazy" decoding="async" data-portrait>`:''}</span>`;
+function researchPanel(active){
+ if(!research.ids.length)return research.missing?'<p class="research-notice" role="status">The linked player is not in this archive. Search the available records below.</p>':'';
+ return `<section class="research-handoff" aria-label="Players from Matchup Lab"><div><span class="research-eyebrow">FROM MATCHUP LAB</span><p>${state.year==='all'?'All recorded seasons':state.year} · All opponents · ${surfaces[state.surface]||'All surfaces'}</p></div><div class="research-player-links">${research.ids.map(id=>`<button type="button" data-research-player="${escape(id)}" aria-pressed="${id===active}">${avatar(byId[id])}<span>${escape(byId[id].name)}<small>${id===active?'Viewing returns':'View betting returns'}</small></span><span aria-hidden="true">↗</span></button>`).join('')}</div>${research.missing?'<p role="status">One linked player is not available in this archive.</p>':''}</section>`;
+}
+function bindResearch(scope){
+ bindPortraits(scope);
+ scope.querySelectorAll('[data-research-player]').forEach(button=>button.addEventListener('click',()=>{
+  const id=button.dataset.researchPlayer;
+  const url=atlasResearchHref(id,research.ids.find(other=>other!==id),state.surface);
+  window.history.replaceState(window.history.state,'',url);
+  openPlayer(id,'all');
+ }));
+}
 function bindPortraits(scope){scope.querySelectorAll('[data-portrait]').forEach(img=>{const failed=()=>{img.hidden=true;img.parentElement.classList.remove('has-portrait');};img.addEventListener('error',failed,{once:true});if(img.complete&&!img.naturalWidth)failed();});}
 function chart(values, small=false){
  const width=small?110:580,height=small?36:190,pad=small?2:14;
@@ -126,6 +142,7 @@ function render(){
  bind();
 }
 function bind(){
+ const handoff=document.createElement('div');handoff.innerHTML=researchPanel();app.prepend(handoff);bindResearch(handoff);
  app.querySelector('.atlas-filter-drawer')?.addEventListener('toggle',event=>{filtersOpen=event.currentTarget.open;});
  bindOddsControls(app,state,(next,focus)=>{Object.assign(state,next);page=0;const scroll=window.scrollY;render();app.querySelector(focus)?.focus({preventScroll:true});window.scrollTo(0,scroll);});
  app.querySelectorAll('[data-side]').forEach(el=>el.addEventListener('click',()=>{state.side=el.dataset.side;page=0;const scroll=window.scrollY;render();app.querySelector(`[data-side="${state.side}"]`).focus({preventScroll:true});window.scrollTo(0,scroll);}));
@@ -145,6 +162,7 @@ function bind(){
 }
 function globalFilters(){return state;}
 function openPlayer(id,detailRole,allMatches=false,detailSide,detailOdds={}){
+ if(!Object.hasOwn(byId,id))return;
  if(!loadedPlayers.has(id)){loadRecord(id,detailRole,allMatches,detailSide,detailOdds);return;}
 
  const state={...globalFilters(),...(detailRole?{role:detailRole}:{}),...(detailSide?{side:detailSide}:{}),...detailOdds};
@@ -152,6 +170,7 @@ function openPlayer(id,detailRole,allMatches=false,detailSide,detailOdds={}){
  const parts=['all','favourite','underdog'].map(role=>({role,...summarise(observations(matches,id,{...state,role}))}));
  const segments=`<section class="detail-segmentation" aria-label="Returns by player price status"><h3>${state.side==='opponent'?'Bet against':'Bet on'} ${escape(player.name)}</h3><div class="detail-role-options" role="group" aria-label="Player record price status">${parts.map(p=>`<button type="button" data-detail-role="${p.role}" title="${roleDescription[p.role]}" aria-pressed="${state.role===p.role}">${roleIcon(p.role)}<span class="role-selected-mark" aria-hidden="true">✓</span><span class="role-title">${p.role==='all'?'All matches':p.role==='favourite'?'As favourite':'As underdog'}</span><strong class="${tone(p.roi)}">${number(p.roi)}${p.roi===null?'':'%'}</strong><small>${p.bets} ${p.bets===1?'bet':'bets'}</small></button>`).join('')}</div><p>Favourite = the shorter price of the two players. These groups always describe ${escape(player.name)}.</p></section>`;
  root.querySelector('#atlas-player-detail').innerHTML=`<p class="detail-eyebrow">RETURN ATLAS / PLAYER RECORD</p><div class="detail-head">${avatar(player)}<div><h2 id="detail-title">${player.name}</h2><p>${state.year==='all'?'2022–2026':state.year} · ${state.surface==='all'?'All surfaces':surfaces[state.surface]} · ${roleName(state.role)}</p></div></div>${strategySwitch(state.side,player.name,true)}${segments}<div class="detail-odds-controls">${oddsControls(state)}</div><p class="selection-caption"><strong>${state.side==='opponent'?'Betting AGAINST':'Betting ON'} ${escape(player.name)}${state.role==='all'?' · all matches':' as '+state.role}</strong> · Player’s odds: ${escape(oddsRangeLabel(state))} · 1u per match · Pinnacle odds</p><p class="selection-caption">${state.side==='opponent'?`Each bet backs ${escape(player.name)}’s opponent. The Favourite / Underdog filters describe ${escape(player.name)}; wins and losses below describe your bets.`:`Each bet backs ${escape(player.name)}. Wins and losses below describe your bets.`}</p><p class="player-coverage">${playerCoverage(id)}</p>${oddsBreakdown(id,state)}<div class="detail-stats"><div class="detail-stat"><span>${state.side==='opponent'?'ROI betting against':'ROI betting on'}</span><strong class="${tone(summary.roi)}">${number(summary.roi)}${summary.roi===null?'':'%'}</strong></div><div class="detail-stat"><span>Net profit</span><strong class="${tone(summary.profit)}">${number(summary.profit)}u</strong></div><div class="detail-stat"><span>Bets</span><strong>${summary.bets}</strong>${summary.bets>0&&summary.bets<30?'<span class="sample-note">Small sample</span>':''}<small style="display:block;color:var(--muted);margin-top:5px">${summary.wins}–${summary.losses} W–L</small></div></div><section class="chart-block interactive-profit" data-profit-chart aria-label="Interactive profit history"></section><section class="season-record"><h3>Season by season</h3><div class="detail-ledger"><table><thead><tr><th>Year</th><th>Bets</th><th>Bet W–L</th><th>Profit</th><th>ROI</th></tr></thead><tbody>${metadata.years.filter(y=>state.year==='all'||String(y)===state.year).map(y=>{const a=summarise(observations(matches,id,{...state,year:String(y)}));return `<tr><td>${y}</td><td>${a.bets}</td><td>${a.wins}–${a.losses}</td><td class="${tone(a.profit)}">${number(a.profit)}u</td><td class="${tone(a.roi)}">${number(a.roi)}${a.roi===null?'':'%'}</td></tr>`;}).join('')}</tbody></table></div><p class="selection-caption">Largest winning bet: ${number(Math.max(0,...rows.filter(r=>r.won).map(r=>r.profit)))}u. A single long-priced winner can strongly affect ROI.</p></section><h3 class="detail-subtitle">Behind the return <span style="font-size:11px;font-weight:400;color:var(--muted)">· ${allMatches?'all matching':`latest ${Math.min(30,rows.length)}`} matches</span></h3><div class="detail-ledger"><table aria-label="Player historical match ledger"><thead><tr><th>Date / opponent</th><th class="ledger-event">Court</th><th>Odds backed</th><th>Bet W/L</th><th>Profit</th></tr></thead><tbody>${(allMatches?[...rows]:rows.slice(-30)).reverse().map(r=>`<tr><td><span style="display:block;color:var(--muted);font-size:9px;margin-bottom:5px">${r.date}</span>${escape(byId[r.opponent].name)}<small class="ledger-context">Bet on: ${escape(state.side==='opponent'?byId[r.opponent].name:player.name)}<br>Player’s odds: ${r.playerOdds}<br>${escape(r.event)} · ${r.score}<br>${r.source==='Valuebetennis'?'Last pre-match odds':r.source==='Il Margine capture'?'Pre-match captured odds':'Archived odds snapshot'}</small></td><td class="ledger-event">${surfaces[r.surface]}</td><td>${r.odds.toFixed(2)}</td><td class="${r.won?'positive':'negative'}">${r.won?'W':'L'}</td><td class="${tone(r.profit)}">${number(r.profit,2)}u</td></tr>`).join('')||'<tr><td colspan="5">No matching records.</td></tr>'}</tbody></table></div>${!allMatches&&rows.length>30?`<button class="show-history" data-show-all>Show all ${rows.length} matches ↓</button>`:''}<p class="details-demo">Historical returns from recorded Pinnacle odds. Scores show the winner first. <a href="/return-atlas/credits" target="_blank" rel="noopener">Data &amp; photo credits</a>.</p>`;
+ if(research.ids.length){const handoff=document.createElement('div');handoff.innerHTML=researchPanel(id);root.querySelector('#atlas-player-detail').prepend(handoff);bindResearch(handoff);}
  mountProfitChart(dialog.querySelector('[data-profit-chart]'),rows,byId,{side:state.side,drawdown:summary.drawdown});
  const changeOdds=(next,focus)=>{
   const scroll=dialog.scrollTop;
@@ -170,6 +189,7 @@ root.querySelector('.close-dialog').addEventListener('click',()=>dialog.close())
 dialog.addEventListener('click',event=>{if(event.target===dialog&&event.clientX<dialog.getBoundingClientRect().left)dialog.close();});
 dialog.addEventListener('close',()=>{loadSequence++;app.querySelector(`[data-player="${selected}"]`)?.focus({preventScroll:true});});
 render();
+if(research.ids.length)openPlayer(research.ids[0],'all');
 return ()=>{destroyed=true;loadSequence++;if(dialog.open)dialog.close();root.replaceChildren();};
 
 }
