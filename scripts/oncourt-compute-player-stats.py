@@ -3,7 +3,7 @@ Phase 2.1 / 2.4: Compute hold% and return% by player and surface (last 12 months
 then upsert into Supabase player_surface_stats.
 
 Formulas (from fair-odds-plan):
-  hold_pct  = (W1S + W2S) / (FSOF + W2SOF)  -> (w_w1s + w_w2s) / (w_fsof + w_w2sof)
+  hold_pct  = (W1S + W2S) / FSOF  -> (w_w1s + w_w2s) / (w_fsof)
   return_pct = RPW / RPWOF                   -> w_rpw / w_rpwof
 
 Reads from local CSVs (run after extract/sync so data is present).
@@ -17,6 +17,8 @@ Run: python scripts/oncourt-compute-player-stats.py [--dry-run]
 import os
 import sys
 import csv
+import json
+from tennis_source_contract import service_points, validate_profiles, validated_stat_rows, VERSION
 from datetime import datetime, timedelta
 from collections import defaultdict
 
@@ -144,19 +146,8 @@ def main():
                 pass
 
     def _court_to_surface(court_name):
-        """Map OnCourt court name to canonical surface so we don't split Red Clay vs Clay etc."""
-        if not court_name:
-            return "N/A"
-        c = court_name.upper()
-        if "CLAY" in c or "TERRE" in c:
-            return "Clay"
-        if "GRASS" in c:
-            return "Grass"
-        if "INDOOR" in c and "HARD" in c:
-            return "I.hard"
-        if "HARD" in c or "DECOTURF" in c or "ACRYLIC" in c:
-            return "Hard"
-        return court_name
+        from tennis_source_contract import canonical_surface
+        return canonical_surface(court_name)
 
     tour_id_to_surface = {}
     tour_id_to_weight = {}
@@ -184,9 +175,11 @@ def main():
         if not (w and l and t is not None):
             continue
         dt = parse_date(r.get("date"))
-        if dt is None:
+        if dt is None or dt >= datetime.now().date():
             continue
         surface = tour_id_to_surface.get(t, "N/A")
+        if surface == "N/A":
+            continue
         weight = tour_id_to_weight.get(t, 0.80)
         if dt >= cutoff:
             game_key_to_info[(w, l, t, rd)] = (dt, surface, weight)
@@ -197,6 +190,8 @@ def main():
 
     print("Loading stat...")
     stat_rows = load_csv(stat_path)
+    stat_rows, source_exclusions = validated_stat_rows(stat_rows, set(game_key_to_info_long))
+    print("  Source count validation:", source_exclusions)
 
     # Aggregate per (player_id, surface): 12m and long window
     agg = defaultdict(lambda: {"hold_num": 0, "hold_den": 0, "return_num": 0, "return_den": 0, "matches": 0})
@@ -214,13 +209,13 @@ def main():
             continue
         _date, surface, class_weight = game_key_to_info.get(key) or game_key_to_info_long[key]
 
-        w_fsof = _int(r, "w_fsof")
+        w_fsof = service_points(r, "w_")
         w_w2sof = _int(r, "w_w2sof")
         w_w1s = _int(r, "w_w1s")
         w_w2s = _int(r, "w_w2s")
         w_rpw = _int(r, "w_rpw")
         w_rpwof = _int(r, "w_rpwof")
-        l_fsof = _int(r, "l_fsof")
+        l_fsof = service_points(r, "l_")
         l_w2sof = _int(r, "l_w2sof")
         l_w1s = _int(r, "l_w1s")
         l_w2s = _int(r, "l_w2s")
@@ -230,16 +225,16 @@ def main():
         for ag, use in [(agg, in_12m), (agg_long, in_long)]:
             if not use:
                 continue
-            if w_fsof + w_w2sof > 0:
+            if w_fsof > 0:
                 ag[(w, surface)]["hold_num"] += (w_w1s + w_w2s) * class_weight
-                ag[(w, surface)]["hold_den"] += (w_fsof + w_w2sof) * class_weight
+                ag[(w, surface)]["hold_den"] += (w_fsof) * class_weight
             if w_rpwof > 0:
                 ag[(w, surface)]["return_num"] += w_rpw * class_weight
                 ag[(w, surface)]["return_den"] += w_rpwof * class_weight
             ag[(w, surface)]["matches"] += class_weight
-            if l_fsof + l_w2sof > 0:
+            if l_fsof > 0:
                 ag[(l, surface)]["hold_num"] += (l_w1s + l_w2s) * class_weight
-                ag[(l, surface)]["hold_den"] += (l_fsof + l_w2sof) * class_weight
+                ag[(l, surface)]["hold_den"] += (l_fsof) * class_weight
             if l_rpwof > 0:
                 ag[(l, surface)]["return_num"] += l_rpw * class_weight
                 ag[(l, surface)]["return_den"] += l_rpwof * class_weight

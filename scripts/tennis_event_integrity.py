@@ -5,6 +5,7 @@ from collections import Counter, defaultdict
 
 def revision_transition_allowed(previous_hash, config):
     allowed = {
+        "source-contract-v3": {'2a0130a79ff868a21f36abfbf51682144992558103b64899ae214729a78de633'},
         "completed-singles-by-phase-v1": {"82a9d822d2a17fdb9acf88db8779d0d4648fc28679a4d28fa290a358ecd13294"},
         "same-event-phase-reference-v2": {
             "82a9d822d2a17fdb9acf88db8779d0d4648fc28679a4d28fa290a358ecd13294",

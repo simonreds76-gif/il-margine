@@ -13,8 +13,9 @@ Architecture:
 
   Decomposed:
     p_a = first_serve_pct_A * first_serve_win_rate_A_vs_B_return
-        + (1 - first_serve_pct_A) * (1 - df_rate_A) * second_serve_win_rate_A_vs_B_return
-        + (1 - first_serve_pct_A) * df_rate_A * 0  (DF = point lost)
+        + (1 - first_serve_pct_A) * second_serve_win_rate_A_vs_B_return
+
+  Second-serve wins are measured over all opportunities, including double faults.
 
   Where:
     first_serve_win_rate_A_vs_B = adjusted for B's return quality vs first serves
@@ -321,9 +322,10 @@ def compute_matchup_point_probs(
     # ── Does the server have decomposed stats? ──
     if not server.has_decomposed:
         # Fallback: keep units consistent (point-level only).
-        # hold_pct is game-level, so invert to SPW first.
+        # The legacy column name hold_pct carries SERVICE POINT wins.
+        # Callers and the source contract both supply point-level probabilities.
         if server.hold_pct is not None:
-            spw = _estimate_spw_from_hold(server.hold_pct)
+            spw = server.hold_pct
             if returner.return_pct is not None:
                 rpw_opponent = max(0.15, min(0.55, returner.return_pct))
                 rpw_avg = avg.get("return_pct", 0.36)
@@ -347,9 +349,9 @@ def compute_matchup_point_probs(
     # ── Decomposed calculation ──
     fs_pct = server.first_serve_pct   # P(first serve in)
     fs_win = server.first_serve_win_pct  # P(win | first serve in)
-    ss_win = server.second_serve_win_pct  # P(win | second serve, in play)
-    df_rate = server.df_rate or 0.035  # P(double fault on second serve attempt)
-    ace_rate = server.ace_rate or avg.get("ace_rate", 0.08)
+    ss_win = server.second_serve_win_pct  # P(win | second-serve opportunity, including DFs)
+    df_rate = server.df_rate if server.df_rate is not None else 0.035  # P(double fault on second serve attempt)
+    ace_rate = server.ace_rate if server.ace_rate is not None else avg.get("ace_rate", 0.08)
 
     ret_pct = returner.return_pct     # Returner's overall return point win rate
 
@@ -402,29 +404,10 @@ def compute_matchup_point_probs(
     fs_win_adj = max(0.40, min(0.90, fs_win_adj))
     ss_win_adj = max(0.25, min(0.70, ss_win_adj))
 
-    # ── Compute serve point win probability ──
-    # P(win point on serve) =
-    #   P(1st in) * P(win | 1st in, adjusted) +
-    #   P(1st out) * P(2nd in) * P(win | 2nd in, adjusted) +
-    #   P(1st out) * P(DF) * 0
-    #
-    # Where P(2nd in) = 1 - P(DF | 1st out)
-    # Approximate: df_rate is per total serve point, not per second serve.
-    # P(DF | 2nd serve needed) ≈ df_rate / (1 - fs_pct)  but capped
-
-    p_first_out = 1.0 - fs_pct
-    if p_first_out > 0:
-        p_df_given_second = min(0.30, df_rate / p_first_out)  # cap at 30%
-    else:
-        p_df_given_second = df_rate
-
-    p_second_in = 1.0 - p_df_given_second
-
-    p_serve_win = (
-        fs_pct * fs_win_adj +                          # first serve in → adjusted win rate
-        p_first_out * p_second_in * ss_win_adj +       # second serve in → adjusted win rate
-        p_first_out * p_df_given_second * 0.0          # double fault → lose point
-    )
+    # second_serve_win_pct = wins / ALL second-serve opportunities.
+    # Its denominator already includes double faults. Subtracting DF again
+    # penalises the same lost point twice.
+    p_serve_win = fs_pct * fs_win_adj + (1.0 - fs_pct) * ss_win_adj
 
     # ── Pressure adjustment (small) ──
     # Players who save more break points than expected hold slightly better

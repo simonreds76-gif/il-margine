@@ -96,16 +96,7 @@ SURFACE_LEAGUE_AVG = {
     "SpeedNeutral": 0.64,
     "SpeedSlow": 0.62,
 }
-SURFACE_AVG_HOLD = {
-    "Hard": 0.4342,
-    "Clay": 0.4189,
-    "Grass": 0.5053,
-    "I.hard": 0.5099,
-    "N/A": 0.44,
-    "SpeedFast": 0.5053,
-    "SpeedNeutral": 0.4342,
-    "SpeedSlow": 0.4189,
-}
+SURFACE_AVG_HOLD = dict(SURFACE_LEAGUE_AVG)  # actual service-point scale
 SURFACE_AVG_RETURN = {
     "Hard": 0.3467,
     "Clay": 0.3643,
@@ -514,21 +505,8 @@ def _to_date(v: Any) -> date | None:
 
 
 def _court_to_surface(court_name: str, tennis_surface: str | None = None) -> str:
-    c = (court_name or "").strip().upper()
-    t = (tennis_surface or "").strip().upper()
-    if "CLAY" in c or "TERRE" in c or "CLAY" in t:
-        return "Clay"
-    if "GRASS" in c or "GRASS" in t:
-        return "Grass"
-    if "INDOOR" in c and "HARD" in c:
-        return "I.hard"
-    if "I.HARD" in c:
-        return "I.hard"
-    if "HARD" in c or "DECOTURF" in c or "ACRYLIC" in c or "HARD" in t:
-        return "Hard"
-    if "CARPET" in c or "CARPET" in t:
-        return "I.hard"
-    return "N/A"
+    from tennis_source_contract import canonical_surface
+    return canonical_surface(court_name or tennis_surface)
 
 
 def _is_supported_tour(name: str, rank: int | None) -> bool:
@@ -2499,9 +2477,12 @@ def _load_player_activity_years(
 
 
 def _load_stat_map(path: Path) -> dict[tuple[int, int, int, int], deque[tuple[int, ...]]]:
+    from tennis_source_contract import stat_problem
     stat_map: dict[tuple[int, int, int, int], deque[tuple[int, ...]]] = defaultdict(deque)
     with open(path, "r", encoding="utf-8-sig", newline="") as f:
         for row in csv.DictReader(f):
+            if stat_problem(row):
+                continue
             w = _int(row.get("winner_id"))
             l = _int(row.get("loser_id"))
             t = _int(row.get("tour_id"))
@@ -2601,7 +2582,7 @@ def _history_from_oncourt(
                 l_fs = stat_row[13] if len(stat_row) >= 14 else 0
                 winner_stats = (
                     w_w1s + w_w2s,
-                    w_fsof + w_w2sof,
+                    w_fsof,
                     w_rpw,
                     w_rpwof,
                     w_fs,
@@ -2612,7 +2593,7 @@ def _history_from_oncourt(
                 )
                 loser_stats = (
                     l_w1s + l_w2s,
-                    l_fsof + l_w2sof,
+                    l_fsof,
                     l_rpw,
                     l_rpwof,
                     l_fs,

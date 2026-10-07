@@ -40,6 +40,8 @@ continues to work unchanged.
 import os
 import sys
 import csv
+import json
+from tennis_source_contract import service_points, validate_profiles, validated_stat_rows, VERSION
 from datetime import datetime, timedelta
 from collections import defaultdict
 
@@ -146,7 +148,7 @@ def new_agg():
     """Create a fresh aggregation bucket with all stat accumulators."""
     return {
         # Existing (hold/return)
-        "hold_num": 0, "hold_den": 0,     # hold% = (w1s+w2s) / (fsof+w2sof)
+        "hold_num": 0, "hold_den": 0,     # hold% = (w1s+w2s) / fsof
         "return_num": 0, "return_den": 0,  # return% = rpw / rpwof
 
         # Serve decomposition
@@ -157,7 +159,7 @@ def new_agg():
         "second_won": 0,           # points won on second serve (w_w2s)
         "aces": 0,                 # aces
         "dfs": 0,                  # double faults
-        "total_serve_pts": 0,      # total serve points played (svpt or fsof+w2sof)
+        "total_serve_pts": 0,      # total serve points played (svpt or fsof)
 
         # Return decomposition (derived from opponent's serve stats)
         "ret_vs_first_won": 0,     # return points won vs opponent's first serve
@@ -223,18 +225,8 @@ def main():
                 pass
 
     def _court_to_surface(court_name):
-        if not court_name:
-            return "N/A"
-        c = court_name.upper()
-        if "CLAY" in c or "TERRE" in c:
-            return "Clay"
-        if "GRASS" in c:
-            return "Grass"
-        if "INDOOR" in c and "HARD" in c:
-            return "I.hard"
-        if "HARD" in c or "DECOTURF" in c or "ACRYLIC" in c:
-            return "Hard"
-        return court_name
+        from tennis_source_contract import canonical_surface
+        return canonical_surface(court_name)
 
     tour_id_to_surface = {}
     tour_id_to_weight = {}
@@ -262,9 +254,11 @@ def main():
         if not (w and l and t is not None):
             continue
         dt = parse_date(r.get("date"))
-        if dt is None:
+        if dt is None or dt >= datetime.now().date():
             continue
         surface = tour_id_to_surface.get(t, "N/A")
+        if surface == "N/A":
+            continue
         weight = tour_id_to_weight.get(t, 0.80)
         game_key_to_any_info[(w, l, t, rd)] = (dt, surface, weight)
         if dt >= cutoff:
@@ -277,6 +271,8 @@ def main():
     # ── Load stat rows ──
     print("Loading stat...")
     stat_rows = load_csv(stat_path)
+    stat_rows, source_exclusions = validated_stat_rows(stat_rows, set(game_key_to_info_long))
+    print("  Source count validation:", source_exclusions)
     print(f"  Stat rows: {len(stat_rows):,}")
 
     max_stat_date = None
@@ -415,7 +411,7 @@ def main():
             dfs = _get_stat(r, prefix, "df") if has_df else 0
             first_in = _get_stat(r, prefix, "1stin") if has_1stin else 0
             first_won = _get_stat(r, prefix, "1stwon") if has_1stwon else 0
-            svpt = _get_stat(r, prefix, "svpt") if has_svpt else (fsof + w2sof)
+            svpt = service_points(r, prefix)
             bp_saved = _get_stat(r, prefix, "bpsaved") if has_bp_saved else 0
             bp_faced = _get_stat(r, prefix, "bpfaced") if has_bp_saved else 0
             bp_won = _get_stat(r, prefix, "bpw") if has_bp_won else 0
@@ -442,9 +438,9 @@ def main():
                 k = (pid, surface)
 
                 # Existing hold/return
-                if ps["fsof"] + ps["w2sof"] > 0:
+                if ps["svpt"] > 0:
                     ag[k]["hold_num"] += (ps["w1s"] + ps["w2s"]) * class_weight
-                    ag[k]["hold_den"] += (ps["fsof"] + ps["w2sof"]) * class_weight
+                    ag[k]["hold_den"] += (ps["svpt"]) * class_weight
                 if ps["rpwof"] > 0:
                     ag[k]["return_num"] += ps["rpw"] * class_weight
                     ag[k]["return_den"] += ps["rpwof"] * class_weight
@@ -581,6 +577,12 @@ def main():
             print(f"    ret vs 1st win%: {r.get('ret_vs_first_win_pct', '?')}")
             print(f"    ret vs 2nd win%: {r.get('ret_vs_second_win_pct', '?')}")
 
+    validate_profiles(out)
+    if "--output-json" in sys.argv:
+        output_path = sys.argv[sys.argv.index("--output-json") + 1]
+        with open(output_path, "w", encoding="utf-8") as handle:
+            json.dump({"source_contract": VERSION, "rows": out}, handle, allow_nan=False)
+
     if do_dry_run:
         print("\nDry run done. Run without --dry-run to upsert.")
         return
@@ -657,6 +659,9 @@ def main():
             print(f"  {min(i + BATCH, len(out)):,} / {len(out):,}")
     print("  player_surface_stats: done.")
 
+    from tennis_source_contract import write_profile_contract
+    write_profile_contract(out)
+    print("  Current profile contract written; older database rows retained and excluded from model inputs")
     print("\nAll done.")
 
 
