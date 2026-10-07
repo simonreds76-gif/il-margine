@@ -26,6 +26,7 @@ const groups = [
     { label: "Football player props", href: "/player-props" },
     { label: "Tennis tips", href: "/tennis-tips" },
     { label: "Track record", href: "/track-record" },
+    { label: "Tennis retirement rules", href: "/resources/tennis-retirement-rules" },
     { label: "Guides", href: "/resources" },
   ] },
   { title: "About", links: [

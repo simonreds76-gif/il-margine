@@ -23,6 +23,7 @@ export type NotMeasuredMarket = {
 };
 
 export type BookmakerMarginIndex = {
+  capture?: { raw_capture_sha256?: string };
   generated_at: string | null;
   status: string;
   capture_mode?: string;
