@@ -49,6 +49,24 @@ class ReportingTests(unittest.TestCase):
         a=self.row('a');b=copy.deepcopy(a);b['row']['tour']='WTA';c=copy.deepcopy(a);c['row']['market']='double_faults'
         self.assertEqual(len(M.breakdown([a,b,c],{})),3)
 
+    def test_revision_reports_preserve_history_without_pooling(self):
+        with tempfile.TemporaryDirectory() as d:
+            folder=Path(d);old=self.row('old');new=self.row('new')
+            old.update(config_hash='old-config',previous_hash='')
+            old['hash']=M.digest(old)
+            new.update(config_hash='new-config',implementation_revision='repair-v1',previous_hash=old['hash'])
+            new['hash']=M.digest(new)
+            (folder/'observations.jsonl').write_text('\n'.join(json.dumps(r) for r in (old,new)),encoding='utf-8')
+            report=dict(markets={'aces':{'registered':1}},config_hash='new-config',implementation_revision='repair-v1',archived_revision=dict(markets={'aces':{'registered':1}},config_hash='old-config'))
+            (folder/'report.json').write_text(json.dumps(report),encoding='utf-8')
+            (folder/'outcomes.json').write_text(json.dumps({'old':{'status':'settled','actual':3}}),encoding='utf-8')
+            result=M.build(folder)
+            self.assertEqual(result['milestones'][0]['control']['settled'],0)
+            self.assertEqual(result['archived_revision']['milestones'][0]['control']['settled'],1)
+            report['archived_revision']['config_hash']='wrong'
+            (folder/'report.json').write_text(json.dumps(report),encoding='utf-8')
+            with self.assertRaisesRegex(ValueError,'Unregistered archived'):M.build(folder)
+
     def test_corrupt_ledger_is_rejected(self):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d)

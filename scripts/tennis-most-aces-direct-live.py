@@ -431,7 +431,8 @@ def main() -> int:
         for row in read_csv(ONCOURT / "tours_atp.csv")
     }
     sides = side_index(read_csv(args.side_board))
-    booster = lgb.Booster(model_file=str(model_path))
+    # Text-mode loading normalises Windows CRLF without altering any learned weights.
+    booster = lgb.Booster(model_str=model_path.read_text(encoding="utf-8"))
     temperature = number(validation.get("temperature"), 1.0)
     generated = datetime.now(timezone.utc).isoformat(timespec="seconds")
     output: list[dict[str, str]] = []

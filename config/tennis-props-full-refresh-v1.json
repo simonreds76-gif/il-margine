@@ -1,0 +1,50 @@
+{
+  "id": "full-refresh-prospective-v1",
+  "markets": [
+    "aces",
+    "double_faults"
+  ],
+  "min_ev": 0.03,
+  "max_source_age_hours": 48,
+  "review_min_days": 56,
+  "review_min_fixtures_per_market": 200,
+  "review_min_tournaments": 4,
+  "automatic_promotion": false,
+  "recent_rate_trend": "OFF",
+  "surfaces": [
+    "Hard",
+    "Clay"
+  ],
+  "bookmaker": "Bet365",
+  "alpha": {
+    "ATP": {
+      "aces": 0.1800339589347608,
+      "double_faults": 0.1
+    },
+    "WTA": {
+      "aces": 0.5,
+      "double_faults": 0.2
+    }
+  },
+  "v3_model": "data/tennis-props/models/v3-atp-aces-live.txt",
+  "implementation_hashes": {
+    "scripts/tennis_props_full_refresh.py": "8f23a0306c948ac0986c3b1ea3847c14527b06070f52f02e5618d425894ab05f",
+    "scripts/tennis-props-full-refresh-shadow.py": "0e959bed1e8718c30848eb55c6754eb63de2c183b6b679c60359b0a17539a976",
+    "scripts/tennis_props_model.py": "1a58b6623aae37428041cf8ecebe2393bf3c07f638605d325befadac4e1aeb27",
+    "scripts/tennis-props-baseline.py": "0e2f65556596972634a8cf0b1565c5fb0e07cf20fe03df1bcd6c0ccfa16ba161",
+    "scripts/build-tennis-props-board.py": "9c48797ea918b92e6b0d74fff614835a9031029c0fab900bc15b39d16111a5e6",
+    "scripts/tennis-props-v3-live.py": "1d7600ae5f5379a606e84b25b89b9715b044a121e5b3cb077cb0c9773f3397c6",
+    "scripts/tennis-props-rate-trend-prospective.py": "50346902bee099f59bcf93327984c3c34deb587d80a2c9957a0b2bfd8e7360d9",
+    "scripts/tennis-props-fresh-data-challenger.py": "84e583a71400ba76d2950ccb430d92909f5cbe04c44a44a3fba87a088cc1116e",
+    "scripts/tennis-props-settle-shadow.py": "98fa8a195f4d3a23accb375621be8b32db0760c456e6875886a79a7d478271bc",
+    "data/tennis-props/models/v3-atp-aces-live.txt": "1534d8e35fa7b4a19f1639d05905c75e25f725231573518e047d081800189451",
+    "scripts/tennis_event_integrity.py": "b4bc69215ef7c266609b566dedc57957f9408846c97d7d6a38c32054ef7b0582"
+  },
+  "selection_policy": "Each quoted contract uses one hypothetical unit when that arm exceeds 3% EV. Only actually quoted sides are eligible. Correlated milestones are not independent bets.",
+  "control": "ATP Hard/Clay aces v3; canonical WTA aces and ATP/WTA double faults.",
+  "candidate": "Same models, appended OnCourt input refresh, no trend multiplier.",
+  "evaluation": "Count error deduplicated per fixture/player; quote Brier across real contracts; ROI descriptive until manual review.",
+  "implementation_revision": "completed-singles-by-phase-v1",
+  "supersedes_config_hash": "82a9d822d2a17fdb9acf88db8779d0d4648fc28679a4d28fa290a358ecd13294",
+  "revision_reason": "Correct current tournament samples: exclude unfinished matches, doubles, conflicting rows and missing counts; keep qualifying separate from the main draw. No fitted weights or stakes changed."
+}

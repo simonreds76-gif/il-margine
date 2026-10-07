@@ -77,11 +77,20 @@ def build(folder):
         previous = own
         records.append(row)
     outcomes = json.loads((folder / 'outcomes.json').read_text(encoding='utf-8'))
+    from tennis_event_integrity import revision_records
+    records, archived = revision_records(records, report.get('implementation_revision'))
+    archive_report = report.get('archived_revision') or {}
+    if len(archived) != sum(m['registered'] for m in archive_report.get('markets', {}).values()):
+        raise ValueError('Archived report and ledger differ')
+    if any(r['config_hash'] != archive_report.get('config_hash') for r in archived):
+        raise ValueError('Unregistered archived experiment configuration')
     if len(records) != sum(m['registered'] for m in report['markets'].values()):
         raise ValueError('Report and ledger differ; rerun after the collector completes')
     if any(r['config_hash'] != report['config_hash'] for r in records):
         raise ValueError('Mixed experiment configuration')
     result = {k: v for k, v in report.items() if k != 'pending_rows'}
+    if archived:
+        result['archived_revision'] = dict(archive_report, milestones=breakdown(archived, outcomes))
     result.update(milestones=breakdown(records, outcomes), reporting_version=1,
                   reporting_generated_at=datetime.now(timezone.utc).isoformat(),
                   ledger_head=previous)
@@ -116,6 +125,11 @@ def text(summary):
         lines.append('Source freshness unavailable.')
     if summary.get('error') or summary.get('status') == 'BLOCKED':
         lines.append('Collector needs attention: ' + str(summary.get('error') or summary['status']))
+    if summary.get('implementation_revision'):
+        lines.append('Current data version: ' + summary['implementation_revision'])
+    if summary.get('archived_revision'):
+        old = sum(g.get('registered', 0) for g in summary['archived_revision']['markets'].values())
+        lines.append(f'{old} earlier quotes are retained in the separate pre-repair record.')
     for market, group in summary['markets'].items():
         name = 'Aces' if market == 'aces' else 'Double faults'
         lines.append(f"{name}: {group.get('settled', 0)} settled quotes, {group.get('pending', 0)} pending, {group.get('overdue', 0)} overdue; {group.get('independent_fixtures', 0)}/200 settled matches, {group.get('tournaments', 0)}/4 tournaments, {group.get('age_days', 0)}/56 days.")
