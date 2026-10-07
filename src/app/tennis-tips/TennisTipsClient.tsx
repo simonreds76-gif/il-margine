@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TipsHubIntro from "@/components/TipsHubIntro";
+import TipsCompetitionToolbar from "@/components/TipsCompetitionToolbar";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BetMobileMeta from "@/components/BetMobileMeta";
@@ -252,14 +253,7 @@ export default function TennisTips({
 
       <section id="competition-filter" aria-label="Choose a tour or tournament" className="pt-5 pb-6 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm font-medium text-slate-300">Choose a tour or tournament <span className="font-normal text-slate-500">· Picks &amp; results</span></p>
-            <nav aria-label="On this page" className="flex flex-wrap gap-2 text-xs font-medium">
-              <a href="#picks" className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-emerald-300 hover:bg-emerald-400/20">Current picks ↓</a>
-              <a href="#competition-record" className="rounded-full border border-slate-700 px-3 py-2 text-slate-300 hover:border-emerald-400/50">Results &amp; ROI ↓</a>
-              <a href="#how-to-use" className="rounded-full border border-slate-700 px-3 py-2 text-slate-300 hover:border-emerald-400/50">How it works ↓</a>
-            </nav>
-          </div>
+          <TipsCompetitionToolbar sport="tennis" />
           <div className="competition-card-grid">
             {categoryConfig.map((cat) => {
               const catStats = getStatsForCategory(cat.id);
@@ -524,6 +518,10 @@ export default function TennisTips({
                 <h3 className="mt-3 text-base font-semibold text-slate-100">Odds and settlement</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-400">The listed odds are the price recorded at publication. Check your bookmaker’s rules for retirements and walkovers before betting: settlement can differ between bookmakers and markets. Each published pick keeps its own result.</p>
               </div>
+          </div>
+          <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm">
+            <Link href="/tennis-matchup" className="site-button">Explore Tennis Matchup Lab <span aria-hidden="true">↗</span></Link>
+            <Link href="/resources/tennis-retirement-rules" className="site-button">Compare tennis retirement rules <span aria-hidden="true">↗</span></Link>
           </div>
           <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm">
             <Link href="/the-edge" className="text-emerald-300 hover:underline">Our betting methodology →</Link>

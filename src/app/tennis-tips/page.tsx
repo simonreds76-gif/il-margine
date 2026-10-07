@@ -1,4 +1,3 @@
-import Link from "next/link";
 import TennisTipsClient from "./TennisTipsClient";
 import { fetchMarketPayload } from "@/lib/public-record";
 
@@ -13,14 +12,11 @@ export default async function TennisTips() {
   });
 
   return (
-    <>
-    <div className="mx-auto max-w-7xl px-4 py-4 text-sm text-slate-300"><Link prefetch={false} href="/tennis-matchup" className="inline-flex min-h-11 items-center gap-2 text-emerald-200">Research a matchup: H2H, aces and serve statistics →</Link></div>
     <TennisTipsClient
       initialPendingBets={payload.pending}
       initialRecentBets={payload.recent}
       initialStats={payload.stats}
       initialProgressionRows={payload.progression}
     />
-    </>
   );
 }
