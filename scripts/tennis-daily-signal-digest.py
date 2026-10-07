@@ -19,7 +19,7 @@ import sys
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from player_name_matching import fold_name_text
 
@@ -226,11 +226,26 @@ def gap_replacement_signal(row: dict[str, str], target_date: str) -> Signal | No
         key=(target_date, *pair, norm(selected), "ml"),
     )
 
-def props_signals(target_date: str) -> list[Signal]:
+def fresh_prematch_prop(row: dict[str, str], now: datetime) -> bool:
+    """Recheck saved quotes at send time; a morning comparison can be replayed later."""
+    try:
+        capture = datetime.fromisoformat(str(row.get("capture_ts", "")).replace("Z", "+00:00"))
+        start = datetime.fromisoformat(str(row.get("match_start_utc", "")).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return False
+    if not capture.tzinfo or not start.tzinfo:
+        return False
+    return is_pending(row) and capture <= now < start and now - capture <= timedelta(hours=6)
+
+
+def props_signals(target_date: str, *, now: datetime | None = None) -> list[Signal]:
+    now = now or datetime.now(UTC)
     path = PROPS / f"comparison-{target_date}.csv"
     signals: list[Signal] = []
     for row in read_csv(path):
         if (row.get("date") or "").strip() != target_date:
+            continue
+        if not fresh_prematch_prop(row, now):
             continue
         is_bettable = (row.get("bettable") or "").strip().lower() in {"1", "true", "yes"}
         is_shadow = (row.get("trackable_shadow") or "").strip().lower() in {"1", "true", "yes"}

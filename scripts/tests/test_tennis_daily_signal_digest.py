@@ -4,6 +4,7 @@ import importlib.util
 import sys
 import tempfile
 import unittest
+from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import patch
 
@@ -17,6 +18,29 @@ SPEC.loader.exec_module(MODULE)
 
 
 class TennisDailySignalDigestTests(unittest.TestCase):
+    def test_props_quote_is_rechecked_when_sending(self):
+        now = datetime(2026, 10, 7, 12, tzinfo=UTC)
+        row = {"capture_ts": "2026-10-07T06:00:00Z", "match_start_utc": "2026-10-07T17:00:00Z"}
+        self.assertTrue(MODULE.fresh_prematch_prop(row, now))
+        for change in (
+            {"capture_ts": "2026-10-07T05:59:59Z"},
+            {"capture_ts": "2026-10-07T12:00:01Z"},
+            {"capture_ts": ""}, {"capture_ts": "2026-10-07T10:00:00"},
+            {"match_start_utc": "2026-10-07T12:00:00Z"},
+            {"match_start_utc": ""}, {"match_start_utc": "2026-10-07T17:00:00"},
+            {"settlement_status": "settled"}, {"settlement_status": "void"},
+        ):
+            with self.subTest(change=change):
+                self.assertFalse(MODULE.fresh_prematch_prop({**row, **change}, now))
+
+    def test_stale_bettable_and_shadow_rows_never_reach_digest(self):
+        row = {"date": "2026-10-07", "player": "A", "opponent": "B", "market": "aces",
+               "line": "4.5", "over_odds": "2.1", "capture_ts": "2026-10-07T05:00:00Z",
+               "match_start_utc": "2026-10-07T17:00:00Z", "recommended_side": "OVER",
+               "shadow_side": "OVER"}
+        with patch.object(MODULE, "read_csv", return_value=[dict(row, bettable="true"), dict(row, trackable_shadow="true")]):
+            self.assertEqual(MODULE.props_signals("2026-10-07", now=datetime(2026, 10, 7, 12, tzinfo=UTC)), [])
+
     def test_special_letters_do_not_resend_existing_alerts(self):
         original = '2026-09-13|tomas machac|łukasz kubot|łukasz kubot|ml'
         plain = '2026-09-13|lukasz kubot|tomas machac|lukasz kubot|ml'
@@ -176,10 +200,11 @@ class TennisDailySignalDigestTests(unittest.TestCase):
                 "bettable": "false",
                 "recommended_side": "",
                 "match_start_utc": "2026-07-29T17:00:00Z",
+                "capture_ts": "2026-07-29T11:00:00Z",
             }
         ]
         try:
-            signals = MODULE.props_signals("2026-07-29")
+            signals = MODULE.props_signals("2026-07-29", now=datetime(2026, 7, 29, 12, tzinfo=UTC))
         finally:
             MODULE.read_csv = original_read_csv
 
@@ -207,10 +232,11 @@ class TennisDailySignalDigestTests(unittest.TestCase):
                 "bettable": "false",
                 "recommended_side": "",
                 "match_start_utc": "2026-08-11T17:00:00Z",
+                "capture_ts": "2026-08-11T11:00:00Z",
             }
         ]
         try:
-            signals = MODULE.props_signals("2026-08-11")
+            signals = MODULE.props_signals("2026-08-11", now=datetime(2026, 8, 11, 12, tzinfo=UTC))
         finally:
             MODULE.read_csv = original_read_csv
 
@@ -252,13 +278,15 @@ class TennisDailySignalDigestTests(unittest.TestCase):
             "fair_under_odds": "2.2",
             "trackable_shadow": "true",
             "bettable": "false",
+            "match_start_utc": "2026-09-03T17:00:00Z",
+            "capture_ts": "2026-09-03T11:00:00Z",
         }
         MODULE.read_csv = lambda _path: [
             {**base, "line": "3.5", "over_odds": "1.9", "shadow_side": "OVER"},
             {**base, "line": "4.5", "under_odds": "2.0", "shadow_side": "UNDER"},
         ]
         try:
-            signals = MODULE.props_signals("2026-09-03")
+            signals = MODULE.props_signals("2026-09-03", now=datetime(2026, 9, 3, 12, tzinfo=UTC))
         finally:
             MODULE.read_csv = original_read_csv
 
