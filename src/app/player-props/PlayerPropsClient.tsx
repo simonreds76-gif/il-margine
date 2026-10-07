@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TipsHubIntro from "@/components/TipsHubIntro";
+import TipsCompetitionToolbar from "@/components/TipsCompetitionToolbar";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/components/ProfitProgressionPanel";
@@ -273,14 +274,7 @@ export default function PlayerProps({
 
       <section id="competition-filter" aria-label="Choose a league" className="pt-5 pb-6 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm font-medium text-slate-300">Choose a league <span className="font-normal text-slate-500">· Picks &amp; results</span></p>
-            <nav aria-label="On this page" className="flex flex-wrap gap-2 text-xs font-medium">
-              <a href="#picks" className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-emerald-300 hover:bg-emerald-400/20">Current picks ↓</a>
-              <a href="#competition-record" className="rounded-full border border-slate-700 px-3 py-2 text-slate-300 hover:border-emerald-400/50">Results &amp; ROI ↓</a>
-              <a href="#how-to-use" className="rounded-full border border-slate-700 px-3 py-2 text-slate-300 hover:border-emerald-400/50">How it works ↓</a>
-            </nav>
-          </div>
+          <TipsCompetitionToolbar sport="football" />
           <div className="competition-card-grid">
             {leagueConfig.map((league) => {
               const leagueStats = getStatsForLeague(league.id);
@@ -327,16 +321,6 @@ export default function PlayerProps({
               );
             })}
           </div>
-
-          <Link
-            href="/football-atlas"
-            prefetch={false}
-            className="mt-5 flex w-fit max-w-full items-center gap-3 rounded-lg border border-emerald-300/20 bg-emerald-300/5 px-4 py-3 text-sm text-slate-200 transition-colors hover:border-emerald-300/50 hover:bg-emerald-300/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-300"
-          >
-            <Image src="/icons/markets/all-football-leagues.svg" alt="" width={32} height={32} className="shrink-0" />
-            <span><strong className="block font-semibold text-emerald-200">Explore Football Return Atlas</strong><span className="mt-0.5 block text-xs text-slate-400">Club betting history by league, odds and home or away</span></span>
-            <span aria-hidden="true" className="ml-1 text-lg text-emerald-200">↗</span>
-          </Link>
 
         </div>
       </section>
