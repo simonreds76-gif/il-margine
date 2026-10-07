@@ -18,12 +18,12 @@ const BRAND_TILES: Record<string, string> = {
   unibet: "#111111", betway: "#111111", boylesports: "#003b7a",
   betvictor: "#ffffff", "10bet": "#ffffff", pricedup: "#ffffff",
   bwin: "#ffffff", akbets: "#101010", betahoy: "#004c84",
-  betgoodwin: "#102444", quinnbet: "#006c43", starsports: "#123e6d",
+  betgoodwin: "#102444", quinnbet: "#006c43", starsports: "#123e6d", betfairsportsbook: "#ffb80c",
 };
 
 export default function BookmakerMark({ name }: { name: string }) {
   const key = name.toLowerCase().replace(/[^a-z0-9]/g, "");
-  const src = key === "bwin" ? "/bookmakers/bwin.png" : key === "virginbet" ? "/bookmakers/virginbet.png"
+  const src = key === "bwin" ? "/bookmakers/bwin.png" : key === "virginbet" ? "/bookmakers/virginbet.png" : key === "betfairsportsbook" ? "/bookmakers/betfair-official.png"
     : CODES[key] ? `/bookmakers/comparison/${CODES[key]}.svg` : null;
   const needsLightBackground = ["vc", "oe", "pup"].includes(CODES[key]);
   return <span className={`bookmaker-brand-mark flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/15 shadow-[0_3px_10px_rgba(0,0,0,.18)] ${needsLightBackground ? "p-0.5" : ""}`} style={{backgroundColor: BRAND_TILES[key] ?? "#14212b"}} aria-hidden="true">

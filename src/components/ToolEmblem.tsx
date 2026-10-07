@@ -18,7 +18,7 @@ export function emblemForHref(href: string): ToolEmblemName {
   if (href.includes("tennis-matchup")) return "matchup";
   if (href.includes("penalty")) return "penalty";
   if (href.includes("football-atlas")) return "football";
-  if (href.includes("return-atlas") || href.includes("clay-season")) return "tennis";
+  if (href.includes("return-atlas") || href.includes("clay-season") || href.includes("tennis-retirement")) return "tennis";
   if (href.includes("bookmakers")) return "margin";
   if (href.includes("calculator/football")) return "football-price";
   if (href.includes("kelly")) return "kelly";

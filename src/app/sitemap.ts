@@ -1,4 +1,5 @@
 import fixtureBoard from "@/data/atlas-fixtures.json";
+import bookmakerSnapshot from "../../data/bookmakers/margin-index.json";
 import managerRelease from "@/data/manager-atlas-release.json";
 import matchupRelease from "@/data/tennis-matchup-release.json";
 import { MetadataRoute } from "next";
@@ -17,7 +18,7 @@ import returnAtlasRelease from "@/data/return-atlas-release.json";
 import footballAtlasRelease from "@/data/football-atlas-release.json";
 
 const STATIC_LAST_MODIFIED = new Date("2026-05-12T00:00:00Z");
-const RESOURCES_LAST_MODIFIED = new Date("2026-09-23T12:00:00Z");
+const RESOURCES_LAST_MODIFIED = new Date("2026-10-07T12:00:00Z");
 const REVIEW_LAST_MODIFIED = new Date("2026-09-23T12:00:00Z");
 export const revalidate = 3600;
 
@@ -63,7 +64,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.72,
     })),
     { url: `${BASE_URL}/track-record`, lastModified: contentDate("2026-09-23", ...Object.values(tipSeoState.latestByMarket)), changeFrequency: "weekly", priority: 0.9 },
-    { url: `${BASE_URL}/bookmakers`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/bookmakers`, lastModified: contentDate("2026-10-07", bookmakerSnapshot.generated_at), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/fair-odds-lab`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "daily", priority: 0.8 },
     { url: `${BASE_URL}/football-atlas`, lastModified: contentDate("2026-10-01", footballAtlasRelease.checkedAt), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/return-atlas`, lastModified: new Date(`${returnAtlasRelease.checkedAt}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },

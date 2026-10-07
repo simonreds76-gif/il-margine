@@ -8,6 +8,7 @@ export interface Resource {
 }
 const order = ["how-to-read-a-tipster-track-record", "closing-line-value", "kelly-criterion-sports-betting", "fair-odds-lab-explained", "clay-season-tennis-model-caveats"];
 export const RESOURCES: Resource[] = [
+  { href: "/resources/tennis-retirement-rules", title: "Tennis retirement rules by bookmaker", description: "Win, lose or refund? Compare 14 UK bookmakers’ match winner rules, tournament exceptions and retirement promotions.", minRead: 7, category: "Value Betting", surface: "guide", tag: "tennis", datePublished: "2026-10-07", dateModified: "2026-10-07", featured: true },
   { href: "/resources/odds-value-stakes", title: "From odds to value: four checks before a bet", description: "Read the odds, remove the margin, assess value and choose a stake. One practical path through the numbers, with tools to try.", minRead: 6, category: "Value Betting", surface: "guide", tag: "method", datePublished: "2026-09-24", dateModified: "2026-09-24", featured: true },
   ...order.map((slug): Resource => {
     const guide = RESOURCE_GUIDES[slug];
