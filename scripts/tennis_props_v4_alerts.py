@@ -187,4 +187,3 @@ def write_json(path: Path, payload: dict) -> None:
     temporary = path.with_suffix('.tmp')
     temporary.write_text(json.dumps(payload, indent=2)+'\n', encoding='utf-8')
     temporary.replace(path)
-
