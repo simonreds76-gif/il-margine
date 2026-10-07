@@ -24,6 +24,9 @@ DEFAULT_ONCOURT = ROOT / "data" / "oncourt"
 BREAK_CALIBRATION_MODE = "breaks_calibration_unfiltered"
 
 FIELDNAMES = [
+    "history_version",
+    "history_as_of",
+    "history_fingerprint",
     "signal_id",
     "logged_at_utc",
     "date",
@@ -357,11 +360,13 @@ def enrich_closing_price(
 
 def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    # Settlement owns outcomes, not the forecast's provenance or extension fields.
+    fields = list(dict.fromkeys([*FIELDNAMES, *(key for row in rows for key in row)]))
     with path.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=FIELDNAMES, extrasaction="ignore")
+        writer = csv.DictWriter(f, fieldnames=fields)
         writer.writeheader()
         for row in rows:
-            writer.writerow({field: row.get(field, "") for field in FIELDNAMES})
+            writer.writerow({field: row.get(field, "") for field in fields})
 
 
 def is_void_score(score: object) -> bool:

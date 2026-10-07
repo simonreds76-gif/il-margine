@@ -169,11 +169,12 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 
 def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    fields = list(dict.fromkeys([*FIELDNAMES, *(key for row in rows for key in row)]))
     with path.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=FIELDNAMES, extrasaction="ignore")
+        writer = csv.DictWriter(f, fieldnames=fields)
         writer.writeheader()
         for row in rows:
-            writer.writerow({field: row.get(field, "") for field in FIELDNAMES})
+            writer.writerow({field: row.get(field, "") for field in fields})
 
 
 def signal_id(row: dict[str, str], side: str) -> str:

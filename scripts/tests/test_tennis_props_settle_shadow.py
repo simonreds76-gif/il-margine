@@ -15,6 +15,29 @@ SETTLE = runpy.run_path(
 
 
 class TennisPropsSettlementTests(unittest.TestCase):
+    def test_tracker_settler_roundtrip_retains_provenance_without_relabelling_legacy(self):
+        tracker = runpy.run_path(str(ROOT / "scripts" / "tennis-props-shadow-tracker.py"))
+        rows = [
+            {"signal_id": "new", "history_version": "current-v1", "history_as_of": "2026-10-07",
+             "history_fingerprint": "frozen-input-hash", "future_provenance": "retained",
+             "selected_odds": "2.10", "projection_mean": "5.441", "settlement_status": "pending"},
+            {"signal_id": "legacy", "selected_odds": "1.90", "settlement_status": "settled",
+             "actual": "5", "profit_units": "0.9"},
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ledger.csv"
+            for writer in (tracker["write_csv"], SETTLE["write_csv"], tracker["write_csv"]):
+                writer(path, rows)
+                rows = SETTLE["read_csv"](path)
+        self.assertEqual(rows[0]["history_version"], "current-v1")
+        self.assertEqual(rows[0]["history_as_of"], "2026-10-07")
+        self.assertEqual(rows[0]["history_fingerprint"], "frozen-input-hash")
+        self.assertEqual(rows[0]["future_provenance"], "retained")
+        self.assertEqual(rows[0]["projection_mean"], "5.441")
+        self.assertEqual(rows[0]["selected_odds"], "2.10")
+        self.assertEqual(rows[1]["history_version"], "")
+        self.assertEqual(rows[1]["profit_units"], "0.9")
+
     @staticmethod
     def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
