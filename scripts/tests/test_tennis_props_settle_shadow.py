@@ -247,5 +247,60 @@ class TennisPropsSettlementTests(unittest.TestCase):
             self.assertIn(field, SETTLE["FIELDNAMES"])
 
 
+    def test_same_day_different_tournament_is_not_accepted(self) -> None:
+        signal = {"date": "2026-09-02", "tournament": "US Open"}
+        candidate = {"tourney_date": "20260902", "tourney_name": "Cincinnati"}
+        self.assertIsNone(SETTLE["choose_candidate"](signal, [candidate]))
+
+
+    def test_corrupt_counts_cannot_settle_or_crash(self) -> None:
+        for invalid in ("-1", "2.5", "NaN", "inf", "-inf"):
+            for market, field in (("aces", "w_ace"), ("double_faults", "w_df"),
+                                  ("player_breaks", "l_bpFaced"), ("match_breaks", "l_bpFaced")):
+                with self.subTest(value=invalid, market=market):
+                    row = {
+                        "winner_name": "Player One", "loser_name": "Player Two",
+                        "w_bpFaced": "3", "w_bpSaved": "2", "l_bpFaced": "4", "l_bpSaved": "2",
+                        field: invalid,
+                    }
+                    self.assertIsNone(SETTLE["market_count"](row, "player one", market)[0])
+
+
+    def test_impossible_break_stats_fall_back_instead_of_fabricating_zero(self) -> None:
+        signal = {"date": "2026-09-02", "tournament": "US Open", "player": "Player One", "market": "player_breaks"}
+        bad = {
+            "winner_name": "Player One", "loser_name": "Player Two",
+            "tourney_date": "20260902", "tourney_name": "US Open", "score": "6-4 6-4",
+            "l_bpFaced": "2", "l_bpSaved": "3", "_settlement_source": "oncourt",
+        }
+        good = dict(bad, l_bpFaced="5", l_bpSaved="3", _settlement_source="sackmann")
+        candidate, actual, note = SETTLE["resolve_count_candidate"](signal, [bad], [good])
+        self.assertEqual(actual, 2)
+        self.assertEqual(candidate["_settlement_source"], "sackmann")
+        self.assertEqual(note, "ok")
+
+
+    def test_zero_is_a_valid_service_count(self) -> None:
+        row = {"winner_name": "Player One", "loser_name": "Player Two", "w_ace": "0"}
+        self.assertEqual(SETTLE["market_count"](row, "player one", "aces"), (0, "ok"))
+
+
+    def test_same_opponents_in_two_rounds_use_the_correct_statistics(self) -> None:
+        signal = {"date": "2026-09-03", "tour": "ATP", "tournament": "US Open",
+                  "player": "Player One", "opponent": "Player Two", "market": "aces"}
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp)
+            self.write_csv(source / "players_atp.csv", [{"id": "1", "name": "Player One"}, {"id": "2", "name": "Player Two"}])
+            self.write_csv(source / "tours_atp.csv", [{"id": "99", "name": "US Open"}])
+            game = {"winner_id": "1", "loser_id": "2", "tour_id": "99", "round_id": "1", "date": "2026-09-01", "result": "6-4 6-4"}
+            self.write_csv(source / "games_atp.csv", [game, dict(game, round_id="2", date="2026-09-03")])
+            stat = {"winner_id": "1", "loser_id": "2", "tour_id": "99", "round_id": "1", "w_ace": "2"}
+            self.write_csv(source / "stat_atp.csv", [stat, dict(stat, round_id="2", w_ace="12")])
+            index = SETTLE["load_oncourt_index"](source, [signal])
+        candidates = index[("ATP", 2026, SETTLE["pair_key"]("Player One", "Player Two"))]
+        candidate = SETTLE["choose_candidate"](signal, candidates)
+        self.assertEqual(SETTLE["market_count"](candidate, "player one", "aces"), (12, "ok"))
+
+
 if __name__ == "__main__":
     unittest.main()

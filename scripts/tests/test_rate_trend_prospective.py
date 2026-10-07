@@ -25,8 +25,32 @@ class ProspectiveIntegrity(unittest.TestCase):
             self.assertIsNotNone(M['eligibility'](dict(self.row,**change),self.now))
 
     def test_invalid_probabilities_and_incomplete_odds_fail(self):
-        for change in ({'fair_p_over':'NaN'}, {'fair_p_over':'.8'}, {'under_odds':''}, {'projection_mean':'-1'}):
+        for change in ({'fair_p_over':'NaN'}, {'fair_p_over':'.8'}, {'under_odds':'NaN'}, {'under_odds':'1'}, {'over_odds':''}, {'projection_mean':'-1'}):
             self.assertIsNotNone(M['eligibility'](dict(self.row,**change),self.now))
+
+    def test_milestone_uses_only_offered_side(self):
+        row = dict(self.row, under_odds='', price_pair_status='over_only')
+        self.assertIsNone(M['eligibility'](row, self.now))
+        predictions = M['paired_predictions'](row, 1.0, {'alpha': {'ATP': {'aces': .35}}})
+        for arm in ('control','candidate'):
+            self.assertEqual(set(predictions[arm]), {'OVER'})
+            self.assertNotEqual(M['policy'](predictions[arm], .03), 'UNDER')
+
+    def test_two_way_formula_is_preserved(self):
+        config = {'alpha': {'ATP': {'aces': .35}}}
+        predictions = M['paired_predictions'](self.row, 1.1, config)
+        for side in ('OVER','UNDER'):
+            expected = M['MODEL']['prediction'](9*1.1, dict(self.row, side=side, selected_odds=self.row[side.lower()+'_odds']), config)
+            self.assertEqual(predictions['candidate'][side], expected)
+        self.assertAlmostEqual(predictions['control']['OVER']['ev'], .55*1.9-1)
+
+    def test_report_separates_milestones_from_legacy_two_way(self):
+        predictions = {'OVER': {'p_conditional': .5, 'ev': .05}}
+        record = dict(id='one', fixture_key='same', row=dict(self.row, under_odds=''), registered_at=self.now.isoformat(),
+                      control=predictions, candidate=predictions, control_side='OVER', candidate_side='OVER')
+        result = M['report']([record], {'one': {'status':'settled','actual':10}}, {}, {'markets':['aces'],'id':'test'}, self.now)
+        self.assertEqual(result['quote_cohorts']['over_only']['aces']['settled'], 1)
+        self.assertEqual(result['quote_cohorts']['two_way']['aces']['settled'], 0)
 
     def test_provider_ids_and_postponements_do_not_duplicate(self):
         self.assertEqual(M['contract_key'](self.row), M['contract_key'](dict(self.row,event_id='new',date='2026-09-06')))

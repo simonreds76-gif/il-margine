@@ -100,10 +100,15 @@ def eligibility(row, now, max_age_hours=6):
         return 'missing_identity_or_surface'
     if row.get('distribution') != 'negative_binomial':
         return 'unsupported_distribution'
-    values = {k: numeric(row.get(k)) for k in ('projection_mean', 'line', 'over_odds', 'under_odds', 'fair_p_over', 'fair_p_under', 'fair_p_push')}
+    values = {k: numeric(row.get(k)) for k in ('projection_mean', 'line', 'over_odds', 'fair_p_over', 'fair_p_under', 'fair_p_push')}
     if any(v is None for v in values.values()):
         return 'incomplete_contract'
-    if values['projection_mean'] <= 0 or values['line'] < 0 or min(values['over_odds'], values['under_odds']) <= 1:
+    if values['projection_mean'] <= 0 or values['line'] < 0 or values['over_odds'] <= 1:
+        return 'invalid_contract'
+    # A missing Under quote is legitimate for milestone markets. A supplied
+    # malformed quote is not; never invent its odds or use it for selection.
+    under = str(row.get('under_odds') or '').strip()
+    if under and (numeric(under) is None or numeric(under) <= 1):
         return 'invalid_contract'
     probs = [values[k] for k in ('fair_p_over', 'fair_p_under', 'fair_p_push')]
     if any(p < 0 or p > 1 for p in probs) or abs(sum(probs)-1) > .001:
@@ -112,8 +117,29 @@ def eligibility(row, now, max_age_hours=6):
 
 
 def policy(predictions, threshold):
-    side = max(('OVER', 'UNDER'), key=lambda s: predictions[s]['ev'])
+    if not predictions:
+        return None
+    side = max(predictions, key=lambda s: predictions[s]['ev'])
     return side if predictions[side]['ev'] >= threshold else None
+
+
+def paired_predictions(row, multiplier, config):
+    predictions = {'control': {}, 'candidate': {}}
+    for side in ('OVER', 'UNDER'):
+        odds = numeric(row.get(side.lower()+'_odds'))
+        if odds is None or odds <= 1:
+            continue
+        quoted = dict(row, side=side, selected_odds=odds)
+        predictions['candidate'][side] = MODEL['prediction'](float(row['projection_mean'])*multiplier, quoted, config)
+        p, push = float(row['fair_p_'+side.lower()]), float(row['fair_p_push'])
+        loss = float(row['fair_p_'+('under' if side=='OVER' else 'over')])
+        predictions['control'][side] = dict(mean=float(row['projection_mean']), p_win=p, p_push=push,
+                                            p_conditional=p/(1-push) if push<1 else .5, ev=p*(odds-1)-loss)
+    return predictions
+
+
+def quote_cohort(record):
+    return 'two_way' if numeric(record['row'].get('under_odds')) else 'over_only'
 
 
 def source_manifest(source, tours, now, max_age_hours):
@@ -184,7 +210,7 @@ def settle(records, source, outcomes, now):
                                       source_result_date=candidate['tourney_date'], scheduled_start_utc=row['match_start_utc'])
 
 
-def report(records, outcomes, health, config, now):
+def report(records, outcomes, health, config, now, *, include_cohorts=True):
     markets = {}
     for market in config['markets']:
         group = [r for r in records if r['row']['market'] == market]
@@ -211,9 +237,14 @@ def report(records, outcomes, health, config, now):
                                independent_fixtures=len(fixtures), tournaments=len(tournaments), age_days=age_days,
                                review_floor_met=len(fixtures)>=200 and len(tournaments)>=4 and age_days>=56,
                                **metrics)
-    return dict(schema_version=1, generated_at=now.isoformat(), model=config['id'], status='SHADOW_ONLY',
+    payload = dict(schema_version=1, generated_at=now.isoformat(), model=config['id'], status='SHADOW_ONLY',
                 automatic_promotion=False, config_hash=digest(config), health=health, markets=markets,
                 interpretation='Paired full-board research; correlated lines are not independent bets. No ROI claim before prospective review.')
+    if include_cohorts:
+        payload['quote_cohorts'] = {cohort: report([r for r in records if quote_cohort(r) == cohort], outcomes,
+                                                {}, config, now, include_cohorts=False)['markets']
+                                   for cohort in ('two_way', 'over_only')}
+    return payload
 
 
 def main():
@@ -284,14 +315,7 @@ def main():
                 if multiplier is None:
                     health[reason] += 1
                     continue
-                predictions = {'control':{}, 'candidate':{}}
-                for side in ('OVER','UNDER'):
-                    quoted = dict(row, side=side, selected_odds=row[side.lower()+'_odds'])
-                    predictions['candidate'][side] = MODEL['prediction'](float(row['projection_mean'])*multiplier, quoted, config)
-                    p, push = float(row['fair_p_'+side.lower()]), float(row['fair_p_push'])
-                    loss = float(row['fair_p_'+('under' if side=='OVER' else 'over')])
-                    predictions['control'][side] = dict(mean=float(row['projection_mean']),p_win=p,p_push=push,
-                                                        p_conditional=p/(1-push) if push<1 else .5,ev=p*(float(quoted['selected_odds'])-1)-loss)
+                predictions = paired_predictions(row, multiplier, config)
                 fixture = digest([tour, row['date'][:4], MODEL['tournament_identity'](row['tournament']), sorted([player,opponent])])
                 append(args.out/'observations.jsonl', records, dict(id=key, fixture_key=fixture, registered_at=registered_at.isoformat(),
                        config_hash=digest(config), input_hash=input_hash, source_manifest=manifest, capture_hash=digest(row), row=row, features=features,

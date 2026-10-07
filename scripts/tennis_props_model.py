@@ -8,6 +8,12 @@ from functools import lru_cache
 import json
 import math
 from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from src.lib.tennis_prob import expected_match_service_points
 
 DEFAULT_COUNT_DISPERSION_ALPHA = {
     ("ATP", "aces"): 0.35,
@@ -30,7 +36,6 @@ SLAM_COUNT_BIAS_CORRECTION = {
     ("WTA", "Wimbledon"): {"aces": 0.000, "dfs": 0.231},
 }
 
-ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_TIEBREAK_CALIBRATION_PATH = ROOT / "data" / "tennis-props" / "tiebreak-calibration.json"
 DEFAULT_BREAK_GATE_PATH = ROOT / "data" / "tennis-props" / "backtest" / "breaks-stage0-gate.json"
 _TIEBREAK_CALIBRATION_OVERRIDE: dict[str, object] | None = None
@@ -53,6 +58,10 @@ class Projection:
     expected_service_games: float
     ace_rate: float
     df_rate: float
+    ace_rate_pre_opponent: float
+    opponent_return_ratio: float
+    opponent_return_factor: float
+    ace_count_correction: float
     break_rate: float
     broken_rate: float
     player_service_point_win: float
@@ -576,6 +585,9 @@ def project_player(
     slam_matches: int,
     same_tournament_row: dict[str, str] | None = None,
     current_tournament_env_row: dict[str, str] | None = None,
+    service_points_mode: str = "incumbent",
+    ace_return_exponent: float = 0.6,
+    apply_slam_bias_correction: bool = True,
 ) -> Projection:
     tour_norm = tour.lower()
     ace_prior_weight = 400.0 if tour_norm == "atp" else 600.0
@@ -698,12 +710,26 @@ def project_player(
     current_env_match_tiebreak_factor = _float(current_env_row.get("match_tiebreak_factor"), 1.0) or 1.0
     if current_env_weight > 0 and current_env_matches > 0:
         notes.append(f"EVENT_ENV_N{current_env_matches}")
-    ret_factor = _clip((prior_ret_first / max(0.18, opp_ret_first)) ** 0.6, 0.76, 1.22)
+    opponent_return_ratio = prior_ret_first / max(0.18, opp_ret_first)
+    ret_factor = _clip(opponent_return_ratio ** ace_return_exponent, 0.76, 1.22)
 
-    ace_rate_adj = _clip(ace_rate * slam_ace_factor * current_env_ace_factor * ret_factor, 0.002, 0.28)
+    ace_rate_pre_opponent = ace_rate * slam_ace_factor * current_env_ace_factor
+    ace_rate_adj = _clip(ace_rate_pre_opponent * ret_factor, 0.002, 0.28)
     df_rate_adj = _clip(df_rate * slam_df_factor * current_env_df_factor, 0.002, 0.16)
+    best_of = 5 if str(factor_row.get("tournament") or "").strip() in {"Australian Open", "Roland Garros", "Wimbledon", "US Open"} and tour.upper() == "ATP" else 3
     expected_service_games = max(4.0, expected_match_games * 0.5)
     expected_service_points = expected_service_games * _clip(svpt_per_svg, 4.8, 8.6)
+    if service_points_mode == "matchup_recursion":
+        workload = expected_match_service_points(
+            player_service_point_win,
+            opponent_service_point_win,
+            best_of=best_of,
+        )
+        expected_service_games = max(4.0, workload.player_a_games)
+        expected_service_points = max(20.0, workload.player_a_points)
+        notes.append("SERVICE_POINTS_RECURSION_SHADOW")
+    elif service_points_mode != "incumbent":
+        raise ValueError(f"Unsupported service_points_mode: {service_points_mode}")
 
     # Breaks are game-count props, so estimate them from both sides: a player's
     # return break rate and the opponent's broken rate. Keep it market-research
@@ -727,7 +753,6 @@ def project_player(
     expected_breaks_for = break_rate_adj * expected_service_games
     expected_broken = broken_rate_adj * expected_service_games
     expected_total_breaks = expected_breaks_for + expected_broken
-    best_of = 5 if str(factor_row.get("tournament") or "").strip() in {"Australian Open", "Roland Garros", "Wimbledon", "US Open"} and tour.upper() == "ATP" else 3
     first_set_tiebreak_base_prob = _set_tiebreak_prob(player_service_point_win, opponent_service_point_win, True)
     venue_first_set_tiebreak_factor = _float(factor_row.get("first_set_tiebreak_factor"), 1.0) or 1.0
     venue_match_tiebreak_factor = _float(factor_row.get("match_tiebreak_factor"), 1.0) or 1.0
@@ -786,8 +811,10 @@ def project_player(
     )
     tournament = str(factor_row.get("tournament") or "").strip()
     correction = SLAM_COUNT_BIAS_CORRECTION.get((tour.upper(), tournament))
-    if correction:
-        expected_aces = max(0.0, expected_aces + _clip(correction.get("aces", 0.0), -0.90, 0.90))
+    ace_count_correction = 0.0
+    if correction and apply_slam_bias_correction:
+        ace_count_correction = _clip(correction.get("aces", 0.0), -0.90, 0.90)
+        expected_aces = max(0.0, expected_aces + ace_count_correction)
         expected_dfs = max(0.0, expected_dfs + _clip(correction.get("dfs", 0.0), -0.70, 0.70))
 
     l12 = player_rows.get("L12M") or {}
@@ -846,6 +873,10 @@ def project_player(
         expected_service_games=expected_service_games,
         ace_rate=ace_rate_adj,
         df_rate=df_rate_adj,
+        ace_rate_pre_opponent=ace_rate_pre_opponent,
+        opponent_return_ratio=opponent_return_ratio,
+        opponent_return_factor=ret_factor,
+        ace_count_correction=ace_count_correction,
         break_rate=break_rate_adj,
         broken_rate=broken_rate_adj,
         player_service_point_win=player_service_point_win,
