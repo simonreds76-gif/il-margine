@@ -121,7 +121,7 @@ class DailyPaperSummaryTests(unittest.TestCase):
 
     def test_existing_post_settlement_step_enables_summary(self):
         source=(SCRIPTS/'oncourt-am-refresh.ps1').read_text(encoding='utf-8')
-        self.assertEqual(source.count('"--new-only", "--paper-summary"'),1)
+        self.assertEqual(source.count('"--new-only", "--paper-summary", "--paper-signals"'),1)
 
     def test_summary_failure_does_not_block_existing_digest(self):
         spec=importlib.util.spec_from_file_location('digest_paper_failure',SCRIPTS/'tennis-daily-signal-digest.py')

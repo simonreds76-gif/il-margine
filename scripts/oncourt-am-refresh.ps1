@@ -372,7 +372,7 @@ try {
     }
 
     Log "=== Step 8c.1/8: Telegram tennis props delta ==="
-    $propsDigestExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--require-ready", "--new-only", "--paper-summary") -Label "daily tennis Telegram props delta" -TimeoutSeconds 90
+    $propsDigestExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--require-ready", "--new-only", "--paper-summary", "--paper-signals") -Label "daily tennis Telegram props delta" -TimeoutSeconds 90
     if ($propsDigestExit -ne 0) {
         Log "WARNING: daily tennis Telegram props delta failed/timed out (exit $propsDigestExit); evidence collection remains valid."
     }
