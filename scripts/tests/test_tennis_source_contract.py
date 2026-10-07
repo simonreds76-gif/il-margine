@@ -77,6 +77,18 @@ class SourceContractTests(TestCase):
         self.assertEqual(once[0].total_games,19)
         self.assertEqual(model._build_recent_matches(1,[row,{**row,'date':'2026-10-05'}],date(2026,10,7)),[])
 
+    def test_live_decomposed_profiles_reject_old_denominators(self):
+        from live_model_v2 import LiveModelV2
+        model=LiveModelV2('https://example.test','test')
+        row=dict(player_id=1,surface='Hard',first_serve_pct=.6,
+                 first_serve_win_pct=.75,second_serve_win_pct=.5,hold_pct=.46)
+        response=mock.Mock(status_code=200)
+        response.json.return_value=[row]
+        with mock.patch('requests.get',return_value=response), \
+             mock.patch('tennis_source_contract.current_profile_rows',side_effect=lambda rows:rows):
+            with self.assertRaisesRegex(ValueError,'denominators'):
+                model.load_data(set(),set(),{})
+
     def test_second_serve_probability_matches_count_identity(self):
         points,first_in,first_won,second_won=100,60,45,20
         p=first_in/points*(first_won/first_in)+(1-first_in/points)*(second_won/(points-first_in))

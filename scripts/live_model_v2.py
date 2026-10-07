@@ -135,8 +135,9 @@ class LiveModelV2:
         except Exception as e:
             print(f"  Warning: player_surface_stats_v2 fetch failed ({e}). Matchup model will use fallback.")
 
-        from tennis_source_contract import current_profile_rows
+        from tennis_source_contract import current_profile_rows, validate_profiles
         v2_rows = current_profile_rows(v2_rows)
+        validate_profiles(v2_rows)
         self.v2_stats = {
             (int(r["player_id"]), (r.get("surface") or "N/A").strip()): r
             for r in v2_rows if r.get("player_id") is not None
