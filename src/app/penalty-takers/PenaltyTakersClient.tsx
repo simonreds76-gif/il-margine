@@ -3,7 +3,7 @@ import { buildPenaltyDirectory } from "@/lib/club-penalty-takers";
 import Link from "next/link";
 import ClubPenaltyLatestUpdates from "@/components/ClubPenaltyLatestUpdates";
 import Footer from "@/components/Footer";
-import PageHomeLink from "@/components/PageHomeLink";
+import PageHeading from "@/components/PageHeading";
 import type { ClubPenaltyLeague, ClubPenaltyNewsItem, ClubPenaltySeason } from "@/lib/club-penalty-takers";
 
 type Props = { leagues: ClubPenaltyLeague[]; totalTeams: number; season: ClubPenaltySeason; latestNews: ClubPenaltyNewsItem[] };
@@ -100,26 +100,8 @@ export default function PenaltyTakersClient({ leagues, totalTeams, season, lates
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <main className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-        <section className="pt-5 pb-6 md:pb-8">
-          <PageHomeLink className="mb-4" />
-          <div className="penalty-page-heading">
-            <div className="max-w-4xl">
-              <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">The club directory</div>
-              <h1 className="mt-4 text-4xl font-semibold tracking-[-0.035em] text-slate-100 sm:text-6xl">
-                Club penalty takers <span className="text-emerald-400">{season.label}</span>
-              </h1>
-              <p className="mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
-                Five dedicated league boards, {totalTeams} current clubs and transparent evidence status. Final {season.previous_label} orders were only a starting point; live-season penalties and lineup context now drive every update.
-              </p>
-              <div className="mt-7 flex flex-wrap gap-2">
-                <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-200">{totalTeams} current clubs</span>
-                <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-100">Live evidence monitoring</span>
-                <span className="rounded-full border border-slate-700 bg-slate-950/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-slate-300">{archivedCount} relegated records retained</span>
-              </div>
-            </div>
-          </div>
-        </section>
+      <main className="penalty-hub mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+        <PageHeading eyebrow="The club directory" title={`Club penalty takers ${season.label}`} icon="penalty" meta={<span className="penalty-heading-facts">{totalTeams} current clubs · {archivedCount} relegated records retained</span>}><p>Find first choices and deputies across {totalTeams} clubs. Open a team for its penalty order, recent changes and match evidence.</p></PageHeading>
 
         <PenaltyDirectory leagues={buildPenaltyDirectory(leagues)} hasUpdates={latestNews.length > 0} />
 

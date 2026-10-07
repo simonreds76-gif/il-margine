@@ -22,6 +22,7 @@
 
 html {
   -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -70,6 +71,12 @@ body {
 .public-site { --page-width: 1280px; --page-gutter: 16px; }
 .public-site :where(.max-w-6xl, .max-w-7xl) { max-width: var(--page-width); }
 .public-site .site-container { width: 100%; max-width: var(--page-width); margin-inline: auto; padding-inline: var(--page-gutter); }
+.public-site .guide-container { width: 100%; max-width: var(--page-width); margin-inline: auto; padding-inline: var(--page-gutter); }
+.public-site .guide-copy { max-width: 850px; }
+.public-site .aerial-page { width: 100%; max-width: var(--page-width); padding: 0 var(--page-gutter) 64px; margin-inline: auto; }
+.public-site #im-pitch-lab .ip-main { width: 100%; max-width: var(--page-width); padding: 0 var(--page-gutter) 32px; margin-inline: auto; }
+.public-site .guide-actions a { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.public-site .guide-actions { min-width: 0; }
 .public-site .site-section { padding-block: 36px; }
 .public-site .page-heading { padding-block: 20px 28px; }
 .public-site .page-home-link { margin-bottom: 16px; }

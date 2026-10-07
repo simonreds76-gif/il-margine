@@ -7,7 +7,7 @@
 @container(max-width:390px){#im-pitch-lab .ip-row:has(>.ip-player:nth-child(4)) .ip-price{flex-direction:column;gap:0;min-width:40px}#im-pitch-lab .ip-row:has(>.ip-player:nth-child(4)) .ip-book{border-left:0;padding-left:0}#im-pitch-lab .ip-row:has(>.ip-player:nth-child(4)){min-height:132px}}
 
 #im-pitch-lab {max-width:1280px;margin:auto;border-radius:0;color-scheme:dark}
-#im-pitch-lab h1 {font-size:clamp(30px,4vw,46px);letter-spacing:-.04em;font-weight:650;line-height:1.1;margin:0}
+#im-pitch-lab .ip-head h1 {font-size:clamp(30px,4vw,46px);letter-spacing:-.04em;font-weight:650;line-height:1.1;margin:0}
 #im-pitch-lab .ip-controls{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin-bottom:14px}
 #im-pitch-lab .ip-controls label{display:flex;flex-direction:column;gap:5px;color:var(--ip-muted);font-size:12px}
 #im-pitch-lab select{background:var(--ip-panel);color:var(--ip-ink);border:1px solid var(--ip-line);padding:9px;border-radius:8px;font-size:16px;max-width:100%}

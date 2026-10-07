@@ -71,6 +71,7 @@ function render(){
  const invalid=($('manager').value.trim()&&!manager)||($('opponent').value.trim()&&!opponent);
  $('status').textContent=invalid?'Choose an exact manager name from the suggestions.':manager&&manager.id===opponent?.id?'Choose two different managers.':'';
  if(invalid||manager?.id===opponent?.id&&manager){$('record').hidden=true;$('rankings').innerHTML='';$('rank-count').textContent='Correct the manager selection to see rankings.';$('more-rankings').hidden=true;current=[];return;}
+ if($('active-filter-count')){const ids=['club','league','season','venue','role','band'];const count=ids.filter(id=>$(id).value!=='all').length;$('active-filter-count').textContent=count?`(${count} applied)`:'';}
  $('record').hidden=!manager;$('swap').hidden=!manager||!opponent;
  if(manager){portraitsFor(manager,opponent);current=rows(manager.id,f,opponent?.id||'all');const s=summary(current);
   $('record-title').textContent=manager.name+(opponent?' vs '+opponent.name:'');
@@ -93,7 +94,7 @@ async function init(){
   if(frame){frame.classList.remove('has-photo');frame.classList.add('no-photo');frame.title='Portrait unavailable';frame.innerHTML=icon('manager');}
  },true);
  document.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon));
- $('brand-mark').innerHTML=brandMark();
+ if($('brand-mark'))$('brand-mark').innerHTML=brandMark();
  const response=await fetch('data.json');if(!response.ok)throw Error('Archive unavailable');data=await response.json();data.names=Object.fromEntries(data.managers.map(m=>[m.id,m.name]));
  try{const r=await fetch('portraits-auto.json');if(r.ok)portraits={...await r.json(),...reviewedPortraits};}catch{/* Keep reviewed portraits and the explicit unavailable icon. */}
  try{const r=await fetch('activity.json');if(r.ok)activity=await r.json();}catch{/* Unknown status stays out of the active ranking. */}
@@ -104,7 +105,7 @@ async function init(){
  $('archive-count').textContent=data.fixtures.length.toLocaleString('en-GB');
  $('manager-count').textContent=data.managers.length.toLocaleString('en-GB');
  $('photo-count').textContent=`${Object.keys(portraits).length} managers have credited photos. A neutral manager symbol marks portraits not yet available.`;
- $('hero-portraits').innerHTML=['Pep Guardiola','Jürgen Klopp','Carlo Ancelotti'].map(name=>data.managers.find(m=>m.name===name)).filter(Boolean).map(m=>`<figure class="hero-portrait">${portraits[m.id]?`<img src="${escape(portraits[m.id].file)}" alt="" width="160" height="200" decoding="async">`:avatar(m)}<figcaption>${escape(m.name)}<small>IN THE ARCHIVE</small></figcaption></figure>`).join('');
+ if($('hero-portraits'))$('hero-portraits').innerHTML=['Pep Guardiola','Jürgen Klopp','Carlo Ancelotti'].map(name=>data.managers.find(m=>m.name===name)).filter(Boolean).map(m=>`<figure class="hero-portrait">${portraits[m.id]?`<img src="${escape(portraits[m.id].file)}" alt="" width="160" height="200" decoding="async">`:avatar(m)}<figcaption>${escape(m.name)}<small>IN THE ARCHIVE</small></figcaption></figure>`).join('');
  const exclusionLabels={disputed_manager_assignment:'disputed manager assignments',ambiguous_manager_identity:'ambiguous manager names',missing_manager:'missing managers',score_conflict:'conflicting scores',missing_or_ambiguous_atlas_fixture:'unmatched or duplicate price fixtures',unmapped_team:'unmapped clubs',missing_prices:'missing prices',ambiguous_manager_fixture:'duplicate manager fixtures',unknown_price_basis:'unknown price timing',duplicate_fixture:'duplicate fixtures'};
  $('exclusions').textContent=Object.entries(data.coverage?.exclusions||{}).map(([k,v])=>`${v.toLocaleString('en-GB')} ${exclusionLabels[k]||k.replaceAll('_',' ')}`).join(' · ');
  $('photo-credits').innerHTML=Object.values(portraits).map(p=>`<li><a href="${escape(p.source)}">${escape(p.name)} photo</a> — ${escape(p.credit)} · <a href="${escape(p.licenseUrl)}">${escape(p.license)}</a>. ${escape(p.changes)}</li>`).join('');
