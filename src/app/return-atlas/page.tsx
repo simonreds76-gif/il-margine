@@ -1,3 +1,4 @@
+import RelatedLinks from "@/components/RelatedLinks";
 import AtlasPageHeader from "@/components/AtlasPageHeader";
 import frame from "@/components/ResearchPage.module.css";
 import EditorialIcon from "@/components/EditorialIcon";
@@ -59,10 +60,14 @@ export default function ReturnAtlasPage() {
         <details><summary className="cursor-pointer py-3 font-semibold text-slate-200">How do odds-range filters work?</summary><p>Choose a preset range or enter your own minimum and maximum decimal odds. The range always describes the named player, even when betting against them. Rankings, profit curves and match counts update for that selection. In each player’s record, compare the odds bands side by side and select one to see the matches behind it.</p><p>Preset bands include the starting price and stop before the next band: 2.50 belongs to 2.50–3.00. Custom ranges include both limits. The minimum-match filter applies after the odds, season, surface and player-role filters. A high historical ROI from a small sample is not evidence of a repeatable edge.</p></details>
         <details><summary className="cursor-pointer py-3 font-semibold text-slate-200">Are these Il Margine’s published tennis picks?</summary><p>No. This is a historical research tool showing what backing each player or opponent would have returned. Our <Link href="/tennis-tips" prefetch={false}>published tennis tips and results</Link> are tracked separately.</p></details>
         <p className="about-note">Historical returns describe what happened. They do not predict future profits.</p>
-        <p><Link href="/faq#return-atlas" prefetch={false}>Return Atlas questions &amp; worked examples →</Link></p>
-        <p><Link href="/resources/tennis-retirement-rules" prefetch={false}>A player retires? Compare bookmaker settlement rules →</Link></p>
         <Link href="/return-atlas/credits" prefetch={false}>Data &amp; photo credits →</Link>
       </section>
+      <RelatedLinks title="Explore the player behind the return." links={[
+        { href: "/tennis-matchup", title: "Tennis Matchup Lab", description: "Compare playing profiles and previous meetings." },
+        { href: "/tennis-tips", title: "Tennis tips & results", description: "Published selections and competition records." },
+        { href: "/resources/tennis-retirement-rules", title: "Tennis retirement rules", description: "Check how bookmakers settle an unfinished match." },
+        { href: "/faq#return-atlas", title: "Return Atlas explained", description: "Answers and worked examples for the archive.", icon: "guide" },
+      ]} />
     </main>
     <Footer />
   </div>;

@@ -1,7 +1,7 @@
 import AtlasPageHeader from "@/components/AtlasPageHeader";
 import frame from "@/components/ResearchPage.module.css";
 import type { Metadata } from "next";
-import Link from "next/link";
+import RelatedLinks from "@/components/RelatedLinks";
 import Footer from "@/components/Footer";
 import release from "@/data/manager-atlas-release.json";
 import { MANAGER_ATLAS_FAQS } from "@/lib/manager-atlas-faq";
@@ -59,6 +59,11 @@ export default function ManagerAtlasPage() {
     <ManagerClient html={html} indexUrl={release.indexUrl} />
     <noscript><p>Enable JavaScript to filter the archive and compare managers. Coverage, explanations and FAQs remain available below.</p></noscript>
     <section className="manager-faq" id="manager-faq"><p className="eyebrow">UNDERSTAND THE RECORD</p><h2>Manager Return Atlas FAQs</h2>{MANAGER_ATLAS_FAQS.map(({ question, answer }) => <details key={question}><summary>{question}</summary><p>{answer}</p></details>)}</section>
-    <p><Link href="/football-atlas" prefetch={false}>Explore club returns →</Link> · <Link href="/tools" prefetch={false}>All betting tools →</Link> · <Link href="/track-record" prefetch={false}>Our published results →</Link></p>
+    <RelatedLinks title="Follow the record into the next fixture." links={[
+      { href: "/football-atlas/fixtures", title: "Matchday", description: "Upcoming fixtures with manager and club histories." },
+      { href: "/football-atlas", title: "Football Return Atlas", description: "Explore club returns by season, venue and odds." },
+      { href: "/tools", title: "All betting tools", description: "Find the right tool for your question." },
+      { href: "/track-record", title: "Our published results", description: "Inspect the full record of our selections." },
+    ]} />
   </main><Footer /></>;
 }

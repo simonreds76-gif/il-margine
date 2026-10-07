@@ -1,0 +1,24 @@
+:global(.public-site) .header { padding: 20px 0 28px; margin: 0; border: 0; background: none; color: #f1f5f9; }
+:global(.public-site) .header .breadcrumb { display: flex; align-items: center; gap: 10px; min-height: 44px; margin: 0 0 12px; color: #93a6b6; font-size: 12px; }
+.header .breadcrumb a { display: inline-flex; align-items: center; min-height: 44px; color: #b5c8d5; text-decoration: none; flex: none; }
+.header .breadcrumb > span:last-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.header .identity { display: flex; align-items: flex-start; gap: 18px; min-height: 84px; padding-top: 5px; }
+:global(.public-site) .header .mark { width: 72px; height: 72px; margin: 0; flex: none; }
+.header .identity > div { min-width: 0; }
+:global(.public-site) .header h1 { margin: 0; max-width: 980px; font-family: inherit; font-size: 44px; font-weight: 750; line-height: 1.1; letter-spacing: -.045em; color: #f1f5f9; text-wrap: balance; }
+:global(.public-site) .header .category { font-size: 11px; line-height: 1.6; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #a5e9ca; margin: 8px 0 0; }
+:global(.public-site) .header .intro { max-width: 800px; min-height: 54px; font-size: 16px; line-height: 1.7; color: #b4c4cf; margin: 16px 0 0; }
+.header .intro > p { margin: 0; font: inherit; line-height: inherit; color: inherit; }
+.header .meta { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 12px; color: #93a6b6; margin-top: 16px; }
+.header .actions { margin-top: 18px; }
+.header .actions > * { margin-top: 0; }
+@media(max-width:639px) {
+  :global(.public-site) .header { padding: 12px 0 24px; }
+  :global(.public-site) .header .breadcrumb { display: none; }
+  .header .identity { gap: 12px; min-height: 56px; padding-top: 0; }
+  :global(.public-site) .header .mark { width: 52px; height: 52px; }
+  :global(.public-site) .header h1 { font-size: 34px; }
+  :global(.public-site) .header .category { font-size: 10px; margin-top: 6px; }
+  :global(.public-site) .header .intro { font-size: 14px; line-height: 1.6; min-height: 0; margin-top: 12px; }
+}
+@media(max-width:359px) { :global(.public-site) .header h1 { font-size: 30px; } }

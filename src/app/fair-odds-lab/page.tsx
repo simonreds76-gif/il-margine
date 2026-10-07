@@ -2,7 +2,7 @@ import Footer from "@/components/Footer";
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { Metadata } from "next";
-import Link from "next/link";
+import RelatedLinks from "@/components/RelatedLinks";
 import { DailyPitchBoard } from "@/components/fair-odds-lab/DailyPitchBoard";
 import { emptyBoard, isDailyBoard } from "@/components/fair-odds-lab/daily-board-data";
 import { LabHitsSection } from "@/components/fair-odds-lab/LabHitsSection";
@@ -69,8 +69,13 @@ export default async function FairOddsLabPage({ searchParams }: { searchParams?:
         priceGapPp: 100 / h.fair_odds - 100 / h.best_odds,
       }))} />
     } />
-    <div className="mx-auto max-w-[1220px] px-4 pb-10 sm:px-6">
-      <div className="mt-7 flex flex-wrap gap-5 text-sm text-slate-300"><Link href="/resources/fair-odds-lab-explained" className="underline underline-offset-4">How fair odds work</Link><Link href="/" className="underline underline-offset-4">Il Margine</Link></div>
+    <div className="site-container pb-10">
+      <RelatedLinks title="Put the price in context." links={[
+        { href: "/resources/fair-odds-lab-explained", title: "How fair odds work", description: "Understand the estimate and compare the same market.", icon: "price" },
+        { href: "/fair-odds-lab/aerial", title: "Air Control", description: "Explore height, aerial profiles and delivery." },
+        { href: "/penalty-takers", title: "Penalty taker intelligence", description: "Check first choices, deputies and the evidence." },
+        { href: "/tools", title: "All betting tools", description: "Explore research, pricing and staking tools." },
+      ]} />
     </div>
   </main><Footer /></>;
 }

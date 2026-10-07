@@ -1,7 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import Footer from "@/components/Footer";
-import PageHomeLink from "@/components/PageHomeLink";
+import PageHeading from "@/components/PageHeading";
 import EditorialIcon from "@/components/EditorialIcon";
 import MarginRemovalCalculator from "@/components/bookmakers/MarginRemovalCalculator";
 import { loadTennisEventComparisons } from "@/lib/bookmakers/event-comparisons";
@@ -28,34 +27,20 @@ const partners = [{ name: "William Hill", url: "/api/go/william-hill" }, { name:
 
 export default function BookmakersPage() {
   return <><div className="bookmaker-page min-h-screen bg-[#0f1117] text-slate-100">
-    <div className="public-hub-heading mx-auto max-w-6xl px-4 pb-12 pt-5 sm:px-6 lg:px-8">
-      <PageHomeLink className="mb-8" />
-      <header className="bm-hero">
-        <div>
-          <div className="bm-brand">
-            <Image className="bm-roundel" src="/brand/mind-the-margin-roundel-v1.webp" alt="Mind the Margin — Il Margine" width={600} height={600} priority unoptimized />
-            <div><p className="bm-kicker">Independent price comparison</p><h1>UK bookmakers.<span className="sr-only"> Mind the margin.</span></h1></div>
-          </div>
-          <p className="bm-lead">Same match. Different prices. See which bookmakers built more margin into their football and tennis markets, and what that means when you compare a bet.</p>
-          <nav aria-label="Bookmaker page sections" className="bm-jumps">
-            <a href="#compare-margins" className="bm-primary"><EditorialIcon name="compare" />Compare bookmakers <span aria-hidden="true">↓</span></a>
-            <a href="#remove-margin"><EditorialIcon name="bankroll" />Remove the margin <span aria-hidden="true">↗</span></a>
-            <Link href="/resources/tennis-retirement-rules"><EditorialIcon name="guide" />Tennis retirement rules <span aria-hidden="true">↗</span></Link>
-          </nav>
-        </div>
-        <aside className="bm-ticket" aria-label="Illustrative two-outcome market">
+    <main className="site-container pb-12">
+      <PageHeading eyebrow="Independent price comparison" title="UK bookmakers. Mind the margin." icon="margin" parent={{href:"/tools",label:"Betting tools"}} actions={<nav aria-label="Bookmaker page sections" className="bm-jumps"><a href="#compare-margins"><EditorialIcon name="compare" />Compare bookmakers <span aria-hidden="true">↓</span></a><a href="#remove-margin"><EditorialIcon name="bankroll" />Remove the margin <span aria-hidden="true">↓</span></a><Link href="/resources/tennis-retirement-rules"><EditorialIcon name="guide" />Tennis retirement rules <span aria-hidden="true">↗</span></Link></nav>}><p>Same match. Different prices. See which bookmakers built more margin into their football and tennis markets, and what that means when you compare a bet.</p></PageHeading>
+      <section id="compare-margins" className="bm-section" aria-label="Bookmaker margin comparison">
+        <div className="bm-capture"><EditorialIcon name="analysis" /><div><strong>Dated evidence, not a live price board</strong><p>{capturedLabel(index.generated_at)} · {index.summary.events} events · {coverage.qualified_operators} bookmakers measured. Small samples show price differences, not lasting superiority.</p></div></div>
+        <MarginExplorer generatedAt={index.generated_at} segments={segments} notMeasured={NOT_MEASURED_MARKETS} coverage={coverage} summary={index.summary} tennisEvents={loadTennisEventComparisons(index.generated_at, index.capture?.raw_capture_sha256)} />
+      </section>
+      <MarginRemovalCalculator />
+      <aside className="bm-ticket" aria-label="Illustrative two-outcome market">
           <div className="bm-ticket-head"><EditorialIcon name="markets" className="h-10 w-10" /><span>What’s inside the price?<small>Illustration · equally likely outcomes</small></span></div>
           <div className="bm-ticket-prices"><div><small>Fair odds</small><strong>2.00 <span>/</span> 2.00</strong></div><div><small>Bookmaker odds</small><strong>1.90 <span>/</span> 1.90</strong></div></div>
           <div className="bm-ticket-bar"><span>95% priced return</span><b>5%</b></div>
           <p>At a true 50% win chance, a £10 bet at 1.90 returns £9.50 on average, including stake. The expected cost is <strong>50p</strong>.</p>
           <span className="bm-ticket-foot">5.26% overround · 5.00% normalised margin</span>
         </aside>
-      </header>
-      <section id="compare-margins" className="bm-section" aria-label="Bookmaker margin comparison">
-        <div className="bm-capture"><EditorialIcon name="analysis" /><div><strong>Dated evidence, not a live price board</strong><p>{capturedLabel(index.generated_at)} · {index.summary.events} events · {coverage.qualified_operators} bookmakers measured. Small samples show price differences, not lasting superiority.</p></div></div>
-        <MarginExplorer generatedAt={index.generated_at} segments={segments} notMeasured={NOT_MEASURED_MARKETS} coverage={coverage} summary={index.summary} tennisEvents={loadTennisEventComparisons(index.generated_at, index.capture?.raw_capture_sha256)} />
-      </section>
-      <MarginRemovalCalculator />
       <section id="understand-margins" className="bm-section">
         <div className="bm-section-title"><EditorialIcon name="guide" className="h-11 w-11" /><div><p className="bm-kicker">Read the price, not the promotion</p><h2>Understand the numbers</h2></div></div>
         <div className="bm-guide-grid">
@@ -81,6 +66,6 @@ export default function BookmakersPage() {
         <div><p className="bm-kicker">Commercial links · separate from the rankings</p><h2>Partner bookmakers</h2><p>These links may earn Il Margine a commission. They do not affect the measured order above. Offers, eligibility and terms are set by the operator; check them on the destination site.</p></div>
         <div className="bm-partner-links">{partners.map(p => <a key={p.name} href={p.url} rel="sponsored nofollow"><BookmakerMark name={p.name} /><span>{p.name}<small>Visit operator ↗</small></span></a>)}</div>
       </aside>
-    </div>
+    </main>
   </div><Footer /></>;
 }

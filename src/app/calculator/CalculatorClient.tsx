@@ -4,9 +4,9 @@ import { useCallback, useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import ToolEmblem, { type ToolEmblemName } from "@/components/ToolEmblem";
-import EditorialIcon from "@/components/EditorialIcon";
 import Footer from "@/components/Footer";
-import PageHomeLink from "@/components/PageHomeLink";
+import PageHeading from "@/components/PageHeading";
+import RelatedLinks from "@/components/RelatedLinks";
 import { track } from "@/lib/analytics";
 import ReturnsLab, { type RecordSummary } from "@/components/calculator/ReturnsLab";
 import KellyLab from "@/components/calculator/KellyLab";
@@ -151,18 +151,8 @@ export default function CalculatorClient({ initialRecord }: { initialRecord: Rec
       />
 
       <div className="site-container">
-        <header className="page-heading calc-heading">
-          <PageHomeLink />
-          <p className="site-eyebrow">Calculators and staking tools</p>
-          <h1>The arithmetic, with the variance left in.</h1>
-          <div className="page-intro">
-            <p>
-              Compare fair prices, test staking assumptions and explore the range of possible returns.
-              Choose a calculator below, or open the football tool for double chance and draw no bet.
-              Calculations run in your browser. Stake and probability inputs are not saved.
-            </p>
-          </div>
-          <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-emerald-200"><Link prefetch={false} href="/tools" className="inline-flex min-h-11 items-center gap-2"><EditorialIcon name="tools" className="h-6 w-6" />All betting tools</Link><Link prefetch={false} href="/calculator/football" className="inline-flex min-h-11 items-center gap-2"><EditorialIcon name="football" className="h-6 w-6" />Double chance &amp; draw no bet →</Link><Link prefetch={false} href="/resources/odds-value-stakes" className="inline-flex min-h-11 items-center gap-2"><EditorialIcon name="guide" className="h-6 w-6" />Start with a worked example →</Link></div>
+        <PageHeading eyebrow="Calculators and staking tools" title="The arithmetic, with the variance left in." icon="tools" parent={{href:"/tools",label:"Betting tools"}}><p>Compare fair prices, test staking assumptions and explore the range of possible returns. Choose a calculator below, or open the football tool for double chance and draw no bet. Calculations run in your browser. Stake and probability inputs are not saved.</p></PageHeading>
+
           <dl className="calc-headline-stats">
             <div>
               <dt>Settled bets behind the returns tool</dt>
@@ -180,11 +170,12 @@ export default function CalculatorClient({ initialRecord }: { initialRecord: Rec
               <dd>400</dd>
             </div>
           </dl>
-        </header>
+
 
         <Suspense fallback={<CalculatorPanel activeTab={null} record={record} />}>
           <QueryCalculatorPanel record={record} />
         </Suspense>
+    <RelatedLinks links={[{href:"/tools",title:"All betting tools",description:"Explore pricing, research and staking tools.",icon:"tools"},{href:"/calculator/football",title:"Double chance & draw no bet",description:"Account for the draw in football prices.",icon:"football-price"},{href:"/resources/odds-value-stakes",title:"Start with a worked example",description:"Follow a bet from odds to probability and stake.",icon:"price"}]} />
 
         <section className="calc-section">
           <p className="site-eyebrow">House rules</p>

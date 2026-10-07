@@ -1,14 +1,14 @@
 ﻿import type { Metadata } from "next";
 import fs from "fs";
 import path from "path";
-import Link from "next/link";
 import Footer from "@/components/Footer";
 import FaqBrowser from "@/components/FaqBrowser";
 import legacyAnchors from "@/data/faq-legacy-anchors.json";
 import "./faq.css";
 import { parseFaqMd, type FaqSection } from "@/lib/parse-faq";
 import { BASE_URL } from "@/lib/config";
-import PageHomeLink from "@/components/PageHomeLink";
+import PageHeading from "@/components/PageHeading";
+import RelatedLinks from "@/components/RelatedLinks";
 import "@/components/editorial-surfaces.css";
 
 export const metadata: Metadata = {
@@ -59,33 +59,14 @@ export default function FaqPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <main className="public-hub-heading pt-5 pb-8 md:pb-10 border-b border-slate-800/50">
+      <main className="pb-8 md:pb-10 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <PageHomeLink className="mb-8" />
-
-          <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">QUESTIONS</span>
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">
-            Your questions, answered.
-          </h1>
-          <p className="text-slate-400 text-base mb-8">
-            Using the picks, checking a price, reading the record. Practical answers about Il Margine and its research tools.
-          </p>
+          <PageHeading eyebrow="Questions" title="Your questions, answered." icon="guide"><p>Using the picks, checking a price, reading the record. Practical answers about Il Margine and its research tools.</p></PageHeading>
 
           <p className="text-xs text-slate-400">Updated <time dateTime="2026-10-01">1 October 2026</time> · Answers reflect the current public tools.</p>
           <FaqBrowser sections={sections} legacyAnchors={legacyAnchors} />
 
-          <div className="mt-14 rounded-xl bg-slate-800/50 border border-slate-700/50 p-6 text-center shadow-sm">
-            <p className="text-slate-400 text-sm mb-3">Still have questions?</p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-medium text-sm"
-            >
-              Contact us
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          </div>
+          <RelatedLinks title="Still have questions?" links={[{href:"/contact",title:"Contact Il Margine",description:"Ask a question, report an error or share evidence.",icon:"guide"},{href:"/resources",title:"Explore the guides",description:"Worked examples for odds, value and staking.",icon:"tools"}]} />
         </div>
       </main>
       <Footer />

@@ -233,7 +233,7 @@ export default function TrackRecordClient({ initialStats, initialMonthly }: {
     <FaqSchema />
     <main>
       <div className="site-container">
-        <PageHeading eyebrow="The public record" title="Track record">
+        <PageHeading icon="record" eyebrow="The public record" title="Track record">
           <p>Explore football and tennis returns, compare results by month and review individual selections.</p>
         </PageHeading>
         <p role="status" className="mb-4 text-sm text-slate-400">{statsNote}</p>

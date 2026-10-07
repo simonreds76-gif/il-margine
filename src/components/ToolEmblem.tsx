@@ -2,9 +2,11 @@ import Image from "next/image";
 import { useId } from "react";
 import "./tool-emblem.css";
 
-export type ToolEmblemName = "aerial" | "matchup" | "price" | "football-price" | "margin" | "tennis" | "football" | "lab" | "penalty" | "kelly" | "returns" | "guide" | "record" | "closing" | "tools";
+export type ToolEmblemName = "aerial" | "matchday" | "managers" | "rules" | "matchup" | "price" | "football-price" | "margin" | "tennis" | "football" | "lab" | "penalty" | "kelly" | "returns" | "guide" | "record" | "closing" | "tools";
 
 const artwork: Partial<Record<ToolEmblemName, string>> = {
+  matchday: "/football-atlas/matchday/mark-v1.svg",
+  managers: "/manager-atlas/mark-v2.svg",
   aerial: "/aerial/mark.webp",
   matchup: "/tennis-matchup/court-v1.webp",
   margin: "/brand/mind-the-margin-roundel-v1.webp",
@@ -14,6 +16,11 @@ const artwork: Partial<Record<ToolEmblemName, string>> = {
 };
 
 export function emblemForHref(href: string): ToolEmblemName {
+  if (href.includes("football-atlas/fixtures")) return "matchday";
+  if (href.includes("manager-atlas")) return "managers";
+  if (href.includes("tennis-retirement")) return "rules";
+  if (href.includes("tennis-tips")) return "tennis";
+  if (href.includes("player-props")) return "football";
   if (href.includes("fair-odds-lab/aerial")) return "aerial";
   if (href.includes("tennis-matchup")) return "matchup";
   if (href.includes("penalty")) return "penalty";
@@ -42,6 +49,7 @@ export default function ToolEmblem({ name, className = "" }: { name: ToolEmblemN
     {src ? <Image src={src} width={320} height={320} alt="" unoptimized /> : <svg viewBox="0 0 120 120" fill="none" focusable="false">
       <defs><linearGradient id={`${id}-mint`} x1="22" y1="10" x2="96" y2="110" gradientUnits="userSpaceOnUse"><stop stopColor="#c3ffe7" /><stop offset=".5" stopColor="#63d8af" /><stop offset="1" stopColor="#218466" /></linearGradient><linearGradient id={`${id}-white`} x1="20" y1="12" x2="105" y2="108" gradientUnits="userSpaceOnUse"><stop stopColor="#fff" /><stop offset="1" stopColor="#a7c3ce" /></linearGradient></defs>
       <g strokeLinecap="round" strokeLinejoin="round">
+        {name === "rules" && <><path d="M16 17h60l20 20v66H16Z" fill={white}/><path d="M76 17v20h20" fill={mint}/><path d="M30 36h28M30 50h42M30 64h23" stroke={ink} strokeWidth="5"/><circle cx="82" cy="82" r="25" fill={mint} stroke={ink} strokeWidth="3"/><path d="M67 62c16 9 16 31 0 40M97 62c-16 9-16 31 0 40" stroke={white} strokeWidth="4"/></>}
         {name === "price" && <><rect x="14" y="17" width="88" height="87" rx="15" fill={white} /><rect x="23" y="27" width="70" height="24" rx="6" fill={ink} /><path d="M30 41h22m9-7h24m-24 8h16" stroke="#95ebcc" strokeWidth="4" /><rect x="24" y="62" width="68" height="30" rx="7" fill={mint} /><path d="m51 84 16-15" stroke={ink} strokeWidth="4" /><circle cx="48" cy="70" r="4" fill={ink} /><circle cx="70" cy="84" r="4" fill={ink} /></>}
         {name === "football-price" && <><rect x="10" y="23" width="100" height="75" rx="12" fill={mint} /><rect x="18" y="31" width="84" height="59" rx="6" fill={ink} /><path d="M46 31v59m28-59v59" stroke="#72bfae" strokeWidth="2" /><text x="32" y="69" textAnchor="middle" fontSize="25" fontWeight="700" fill="#f3fff9">1</text><text x="60" y="69" textAnchor="middle" fontSize="23" fontWeight="700" fill="#a4f3d6">X</text><text x="88" y="69" textAnchor="middle" fontSize="25" fontWeight="700" fill="#f3fff9">2</text><path d="M28 105h34m-10-6 10 6-10 6" stroke={white} strokeWidth="4" /></>}
         {name === "lab" && <><path d="M47 13h28m-22 0v34L24 91c-5 8 0 16 9 16h54c9 0 14-8 9-16L69 47V13" stroke={white} strokeWidth="7" /><path d="m43 72-13 22c-2 4 0 7 5 7h49c5 0 7-3 5-7L76 72c-13-8-20 9-33 0Z" fill={mint} /><circle cx="55" cy="89" r="5" fill={ink} /><circle cx="69" cy="81" r="3" fill={ink} /><circle cx="60" cy="60" r="4" fill={mint} /><circle cx="86" cy="33" r="5" fill={mint} /></>}

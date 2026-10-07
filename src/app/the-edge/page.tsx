@@ -13,7 +13,7 @@ const STEPS = [
 
 export default function MethodologyPage() {
   return <div className="min-h-screen bg-[#0f1117] text-slate-100"><main className="site-container">
-    <PageHeading eyebrow="The Edge · Our methodology" title="How we find the value.">
+    <PageHeading icon="lab" eyebrow="The Edge · Our methodology" title="How we find the value.">
       <p>The player matters. The price matters just as much. Our approach connects match research, fair odds and a public record of what happens next.</p>
     </PageHeading>
     <PriceWorkbench />

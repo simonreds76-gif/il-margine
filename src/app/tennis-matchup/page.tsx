@@ -1,7 +1,7 @@
+import RelatedLinks from "@/components/RelatedLinks";
 import AtlasPageHeader from "@/components/AtlasPageHeader";
 import frame from "@/components/ResearchPage.module.css";
 import type { Metadata } from "next";
-import Link from "next/link";
 import Footer from "@/components/Footer";
 import MatchdayPromo from "@/components/MatchdayPromo";
 import { BASE_URL } from "@/lib/config";
@@ -31,6 +31,11 @@ export default function TennisMatchupPage(){
     <MatchdayPromo compact />
     <noscript><p>Enable JavaScript to select players and compare their records. The guide, coverage details and FAQs below are available without it.</p></noscript>
     <section className="matchup-faq" id="faq" aria-labelledby="matchup-faq-title"><p className="eyebrow">GET MORE FROM THE NUMBERS</p><h2 id="matchup-faq-title">Tennis Matchup Lab FAQs</h2><p>What the tool shows, how to use the filters, and where the evidence ends.</p>{MATCHUP_FAQS.map(({question,answer})=><details key={question}><summary>{question}</summary><p>{answer}</p></details>)}</section>
-    <section className="matchup-next"><h2>Keep the price and the record in view.</h2><p>Compare playing profiles here, investigate historical betting returns in Return Atlas, or read our published tennis selections.</p><nav aria-label="Related tennis research"><Link prefetch={false} href="/return-atlas">Tennis Return Atlas →</Link><Link prefetch={false} href="/tennis-tips">Tennis tips & results →</Link><Link prefetch={false} href="/resources/tennis-retirement-rules">Tennis retirement rules →</Link><Link prefetch={false} href="/resources/odds-value-stakes">Understand odds and value →</Link></nav></section>
+    <RelatedLinks id="explore-tennis" title="Keep the price and the record in view." description="Explore the player profile, compare historical returns and check the rules behind your bet." label="Related tennis research" links={[
+      {href:"/return-atlas",title:"Tennis Return Atlas",description:"Player returns by season, surface and odds.",icon:"tennis"},
+      {href:"/tennis-tips",title:"Tennis tips & results",description:"Published selections and competition records.",icon:"tennis"},
+      {href:"/resources/tennis-retirement-rules",title:"Tennis retirement rules",description:"Check when a bookmaker pays, loses or refunds a bet.",icon:"rules"},
+      {href:"/resources/odds-value-stakes",title:"Understand odds and value",description:"Work through a price, its probability and the stake.",icon:"price"},
+    ]} />
   </main><Footer/></>;
 }

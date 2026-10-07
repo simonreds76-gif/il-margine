@@ -1,3 +1,4 @@
+import RelatedLinks from "@/components/RelatedLinks";
 import AtlasPageHeader from "@/components/AtlasPageHeader";
 import frame from "@/components/ResearchPage.module.css";
 import type { Metadata } from 'next';
@@ -28,5 +29,10 @@ export default function FootballAtlasPage() {
  <details><summary>How do the odds ranges work?</summary><p>The odds range always refers to the named team’s win price, even when backing the draw or the opponent. Preset ranges include the lower bound and exclude the upper: 2.50 belongs to 2.50–3.00. Custom ranges include both bounds. Missing odds remain visible in the coverage count before role and odds filtering.</p></details>
  <details><summary>Why are double chance and Asian handicaps not included?</summary><p>They require their own recorded prices. Team −0.5 has the same settlement as a team win, but its quoted price can differ. Team +0.5 wins on a draw as well as a team win. We do not turn 1X2 odds into invented historical double-chance or handicap returns.</p><p><Link prefetch={false} href="/calculator/football">Use the double-chance and draw-no-bet calculator</Link> to estimate fair prices from a complete 1X2 market. These benchmarks are separate from the historical returns here.</p></details>
  <details><summary>What can a high historical ROI tell me?</summary><p>It shows what happened in the selected matches. A small sample, a few large winners or missing prices can dominate the result. Comparing many clubs and filters also makes chance standouts more likely. Use the full ledger, sample size and drawdown alongside ROI; historical leaders are not forecasts or published picks.</p></details>
- <p className="fa-filter-note"><Link href="/faq#return-atlas" prefetch={false}>Return Atlas questions &amp; worked examples →</Link></p><p className="fa-filter-note">The archive check date and latest included match date are shown above. Updates are published after validation; this is not a live odds feed.</p></section></main><Footer /></div>;
+ <p className="fa-filter-note"><Link href="/faq#return-atlas" prefetch={false}>Return Atlas questions &amp; worked examples →</Link></p><p className="fa-filter-note">The archive check date and latest included match date are shown above. Updates are published after validation; this is not a live odds feed.</p></section><RelatedLinks title="Keep researching the fixture." links={[
+  { href: "/football-atlas/fixtures", title: "Matchday", description: "See upcoming fixtures alongside past meetings." },
+  { href: "/manager-atlas", title: "Manager Return Atlas", description: "Follow managers across clubs and compare their head to head records." },
+  { href: "/calculator/football", title: "Football fair odds", description: "Explore double chance and draw no bet prices." },
+  { href: "/player-props", title: "Football tips & results", description: "Published player selections by competition." },
+]} /></main><Footer /></div>;
 }

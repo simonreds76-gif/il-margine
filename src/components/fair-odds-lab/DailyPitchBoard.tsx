@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import PageHomeLink from "@/components/PageHomeLink";
+import PageHeading from "@/components/PageHeading";
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { LabIcon, type LabIconKind } from "./LabIcon";
 import { DisclosureCue } from "./DisclosureCue";
@@ -157,7 +157,7 @@ export function DailyPitchBoard({ initial, boardUrl, asOf, preview = false, high
   const missingOdds = upcoming.filter(row => row.p.bookmakerOdds === null).length;
   const staleOdds = upcoming.filter(row => row.p.bookmakerOdds !== null && !row.c.fresh).length;
   const checkedPlayers = upcoming.filter(row => row.c.ev !== null).length;
-  return <div id="im-pitch-lab"><div className="ip-main"><PageHomeLink /><div className="ip-head"><div><div className="ip-eyebrow">INDEPENDENT GOALSCORER ANALYSIS</div><h1>Fair Odds <span>Lab</span></h1><p className="ip-sub">Explore the lineups. Compare our fair odds with Bet365. Open a player for the detail.</p></div><div className="ip-headlinks"><span className="ip-beta">Free beta</span></div></div>
+  return <div id="im-pitch-lab"><div className="ip-main"><PageHeading eyebrow="Independent goalscorer analysis · free beta" title="Fair Odds Lab" icon="lab" parent={{href:"/tools",label:"Betting tools"}}><p>Explore the lineups. Compare our fair odds with Bet365. Open a player for the detail.</p></PageHeading>
     <a className="ip-air-control" href="/fair-odds-lab/aerial">
       <div className="ip-air-copy"><span className="ip-eyebrow">LINEUP RESEARCH</span><h2>Air <em>Control.</em></h2><strong>Height, headers and delivery.</strong><p>Compare the expected XIs, then revisit the confirmed teams.</p></div>
       <span className="ip-air-cta"><span className="ip-air-emblem"><Image src="/aerial/mark.webp" width={88} height={88} alt=""/><span className="ip-air-arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 18 18 6M6 6h12v12"/></svg></span></span><span className="ip-air-label">Explore Air Control</span></span>
