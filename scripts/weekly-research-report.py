@@ -2239,8 +2239,8 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
         )
     if props_v4 and not props_v4.get("_error"):
         lines.append(
-            "Aces Over v4 [PRE_FIT]: "
-            f"{props_v4.get('rows_settled', 0)}/{props_v4.get('minimum_prefit_settled', 200)} settled | "
+            f"Aces Over v4 [{props_v4.get('status', 'PRE_FIT')}]: "
+            f"{props_v4.get('rows_settled', 0)} settled across input versions | "
             f"{props_v4.get('rows_registered', 0)} registered | "
             f"CLV {number(props_v4.get('clv_mean_pct')):+.2f}% "
             f"n={props_v4.get('clv_coverage', 0)} | no tips before gate"
