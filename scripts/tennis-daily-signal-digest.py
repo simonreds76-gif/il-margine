@@ -557,6 +557,8 @@ def main() -> int:
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--paper-summary", action="store_true", help="Include the once-daily ace paper-model progress report.")
     parser.add_argument("--paper-summary-only", action="store_true", help="Send only the ace paper-model summary, without repeating selections.")
+    parser.add_argument("--paper-signals", action="store_true", help="Include fresh qualifying v4 paper selections, deduplicated across days.")
+    parser.add_argument("--paper-signals-only", action="store_true", help="Check only fresh v4 paper selections without replaying the normal digest.")
     parser.add_argument(
         "--new-only",
         action="store_true",
@@ -582,6 +584,21 @@ def main() -> int:
                 raise
             print(f"WARNING: paper ace summary failed; continuing the normal selection digest: {exc}", file=sys.stderr)
         if args.paper_summary_only:
+            return 0
+
+    if args.paper_signals or args.paper_signals_only:
+        from tennis_props_v4_alerts import selection_alerts
+        try:
+            selection_alerts(
+                ROOT, args.date,
+                lambda messages: dispatch(messages, repository=args.repository, workflow=args.workflow, ref=args.ref),
+                print_only=args.print_only,
+            )
+        except (OSError, ValueError, RuntimeError) as exc:
+            if args.paper_signals_only:
+                raise
+            print(f"WARNING: v4 paper selection alerts failed; continuing the normal digest: {exc}", file=sys.stderr)
+        if args.paper_signals_only:
             return 0
 
     if args.require_ready and not signal_generation_is_ready(Path(args.ready_state), args.date):
