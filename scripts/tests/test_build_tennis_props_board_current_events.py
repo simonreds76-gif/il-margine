@@ -20,6 +20,11 @@ SPEC.loader.exec_module(MODULE)
 
 
 class CurrentTournamentAliasTests(unittest.TestCase):
+    def setUp(self):
+        patcher = mock.patch.object(MODULE, "court_surfaces", return_value={"1": "Hard", "2": "Clay", "3": "Hard", "5": "Grass"})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
     def test_current_atp_clay_events_are_supported(self) -> None:
         aliases = {
             "Nordea Open - Bastad": "Bastad",

@@ -135,6 +135,8 @@ class LiveModelV2:
         except Exception as e:
             print(f"  Warning: player_surface_stats_v2 fetch failed ({e}). Matchup model will use fallback.")
 
+        from tennis_source_contract import current_profile_rows
+        v2_rows = current_profile_rows(v2_rows)
         self.v2_stats = {
             (int(r["player_id"]), (r.get("surface") or "N/A").strip()): r
             for r in v2_rows if r.get("player_id") is not None
@@ -297,6 +299,10 @@ class LiveModelV2:
         cutoff = before_date - timedelta(days=21)
         matches = []
 
+        # A fixture between two monitored players can arrive in both the
+        # winner and loser API queries. Count it once; hold conflicting copies.
+        from tennis_source_contract import unique_fixture_rows
+        games = unique_fixture_rows(games)
         for g in games:
             # Parse date
             d = g.get("date")
@@ -335,7 +341,7 @@ class LiveModelV2:
             except (ValueError, TypeError):
                 pass
 
-            surface = self.tour_to_surface.get(tid, "Hard") if tid else "Hard"
+            surface = self.tour_to_surface.get(tid, "N/A") if tid else "N/A"
 
             matches.append(RecentMatch(
                 match_date=d,

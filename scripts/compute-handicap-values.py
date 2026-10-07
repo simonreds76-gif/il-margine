@@ -152,18 +152,8 @@ def _parse_point_prob(value) -> float | None:
 
 
 def _court_to_surface(court_name: str | None) -> str:
-    if not court_name:
-        return "N/A"
-    c = court_name.upper()
-    if "CLAY" in c or "TERRE" in c:
-        return "Clay"
-    if "GRASS" in c:
-        return "Grass"
-    if "INDOOR" in c and "HARD" in c:
-        return "I.hard"
-    if "HARD" in c or "DECOTURF" in c or "ACRYLIC" in c:
-        return "Hard"
-    return "N/A"
+    from tennis_source_contract import canonical_surface
+    return canonical_surface(court_name)
 
 
 def _clamp(x: float, lo: float, hi: float) -> float:

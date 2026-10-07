@@ -200,7 +200,7 @@ SHRINKAGE_N = 40
 SURFACE_LEAGUE_AVG = {"Hard": 0.64, "Clay": 0.62, "Grass": 0.67, "I.hard": 0.64, "N/A": 0.64}
 
 # Raw-scale priors from player_surface_stats distribution (fallbacks; overridden by DB-derived priors)
-SURFACE_AVG_HOLD = {"Hard": 0.4342, "Clay": 0.4189, "Grass": 0.5053, "I.hard": 0.5099, "N/A": 0.44}
+SURFACE_AVG_HOLD = dict(SURFACE_LEAGUE_AVG)  # actual service-point scale
 SURFACE_AVG_RETURN = {"Hard": 0.3467, "Clay": 0.3643, "Grass": 0.3166, "I.hard": 0.3413, "N/A": 0.35}
 
 TOURNAMENT_TOTAL_WEIGHT = 0.20
@@ -1674,19 +1674,8 @@ def main():
     courts = {int(c["id"]): (c.get("name") or "N/A").strip() for c in r.json() if c.get("id") is not None}
 
     def _court_to_surface(court_name):
-        """Map OnCourt court name to canonical surface (Hard, Clay, Grass, I.hard) for stats lookup."""
-        if not court_name:
-            return "N/A"
-        c = court_name.upper()
-        if "CLAY" in c or "TERRE" in c:
-            return "Clay"
-        if "GRASS" in c:
-            return "Grass"
-        if "INDOOR" in c and "HARD" in c:
-            return "I.hard"
-        if "HARD" in c or "DECOTURF" in c or "ACRYLIC" in c:
-            return "Hard"
-        return court_name  # keep as-is if no match (e.g. "Carpet" -> N/A later)
+        from tennis_source_contract import canonical_surface
+        return canonical_surface(court_name)
 
     tour_to_surface = {}
     for tid, cid in tours.items():
@@ -1776,7 +1765,14 @@ def main():
             if len(data) < 1000:
                 break
 
+    from tennis_source_contract import current_profile_rows
+    stats_rows = current_profile_rows(stats_rows)
+
     stats = {(int(r["player_id"]), (r.get("surface") or "N/A").strip()): r for r in stats_rows}
+
+    from tennis_source_contract import validate_profiles
+    active_ids = {int(f[k]) for f in fixtures for k in ("player1_id", "player2_id") if f.get(k) is not None}
+    validate_profiles([r for r in stats_rows if int(r["player_id"]) in active_ids])
 
     # Surface priors in raw player_surface_stats scale (weighted by point counts)
     surface_hold_prior = dict(SURFACE_AVG_HOLD)
@@ -2876,6 +2872,9 @@ def main():
         except (TypeError, ValueError):
             tid = None
         surface = (tour_to_surface.get(tid) or "N/A") if tid is not None else "N/A"
+        if surface not in {"Hard", "I.hard", "Clay", "Grass"}:
+            print(f"  Excluded unsupported court: tour={tid}, surface={surface}")
+            continue
         surface_counts[surface] = surface_counts.get(surface, 0) + 1
         tour_name = tour_name_by_id.get(tid, "")
         series_bucket = _series_bucket_from_tour(tour_name, tour_rank_by_id.get(tid))

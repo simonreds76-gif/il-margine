@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Build an internal ATP/WTA aces and double-fault projection board."""
 
 from __future__ import annotations
@@ -20,6 +20,7 @@ from tennis_props_names import (
     norm_name as normalize_player_name,
     resolve_baseline_name,
 )
+from tennis_source_contract import court_surfaces, canonical_surface
 from tennis_props_model import (
     count_line_probabilities,
     project_player,
@@ -643,6 +644,7 @@ def oncourt_schedule_rows(
     days_ahead: int = 1,
 ) -> list[dict[str, str]]:
     tour_lower = tour_code.lower()
+    surfaces = court_surfaces(ONCOURT_DIR / "courts.csv", combine_hard=True)
     player_names = load_oncourt_player_names(tour_lower)
     tours = load_oncourt_tours(tour_lower)
     board_dt = parse_date(board_date) or date.today()
@@ -654,6 +656,9 @@ def oncourt_schedule_rows(
         tour = tours.get(str(row.get("tour_id") or "").strip()) or {}
         if not is_supported_main_tour(tour):
             continue
+        surface = surfaces.get(str(tour.get("court_id") or ""), "N/A")
+        if surface == "N/A":
+            raise ValueError("Unknown OnCourt court for supported event " + str(tour.get("id")))
         row_date = parse_date(row.get("date"))
         if row_date:
             if row_date < board_dt or row_date > horizon_dt:
@@ -694,7 +699,7 @@ def oncourt_schedule_rows(
                 "tournament": tournament,
                 "round": round_label(row.get("round_id"), tournament),
                 "round_id_raw": str(row.get("round_id") or "").strip(),
-                "surface": SURFACE_BY_COURT.get(str(tour.get("court_id") or ""), "Clay"),
+                "surface": surface,
                 "player1": p1,
                 "player2": p2,
                 "player1_id": str(row.get("player1_id") or "").strip(),
@@ -715,6 +720,9 @@ def wta_schedule_rows(path: Path) -> list[dict[str, str]]:
         tournament = canonical_tournament_name(row.get("tournament")) or str(row.get("tournament") or "").strip()
         if not tournament:
             continue
+        surface = canonical_surface(row.get("surface"), combine_hard=True)
+        if surface == "N/A":
+            raise ValueError("External WTA schedule requires a known court surface")
         scheduled_date = str(row.get("date") or "").strip()
         rows.append(
             {
@@ -729,7 +737,7 @@ def wta_schedule_rows(path: Path) -> list[dict[str, str]]:
                 "tournament": tournament,
                 "round": str(row.get("round") or "").strip(),
                 "round_id_raw": str(row.get("round_id") or "").strip(),
-                "surface": str(row.get("surface") or "Clay").strip() or "Clay",
+                "surface": surface,
                 "player1": p1,
                 "player2": p2,
                 "player1_id": str(row.get("player1_id") or "").strip(),
