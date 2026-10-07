@@ -1,10 +1,11 @@
 .footer { isolation: isolate; border-top: 1px solid #263a36; background: radial-gradient(ellipse at 0 0, #11221d 0, transparent 52%), #0a1014; color: #bdcad0; }
-.container { max-width: 1280px; margin: 0 auto; padding: 48px 24px 24px; }
-.main { display: grid; gap: 36px; }
-.brand { max-width: 320px; }
-.logo { display: block; width: 300px; max-width: 100%; border-radius: 4px; }
+.container { max-width: 1280px; margin: 0 auto; padding: 32px 24px 24px; }
+.main { display: grid; gap: 28px; }
+.brand { max-width: 224px; }
+.logo { display: block; width: 200px; max-width: 100%; border-radius: 4px; }
 /* Let the footer show through the artwork's dark matte without redrawing the brand. */
 .logo img { display: block; width: 100%; height: auto; mix-blend-mode: lighten; }
+.tagline { display: block; margin-top: 8px; color: #f5f7f6; font-size: 13px; font-weight: 500; line-height: 1.5; }
 .socials { display: flex; align-items: center; gap: 8px; margin-top: 12px; margin-left: -10px; }
 .social { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; }
 .groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 24px; }
@@ -24,12 +25,13 @@
 .support > div { justify-content: flex-start; }
 @media (min-width: 700px) {
   .container { padding: 48px 32px 24px; }
+  .logo { width: 224px; }
   .groups { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
   .bottom { flex-direction: row; justify-content: space-between; align-items: center; gap: 24px; }
   .support > div { justify-content: flex-end; }
 }
 @media (min-width: 1120px) {
-  .main { grid-template-columns: 300px minmax(0, 1fr); gap: 40px; }
+  .main { grid-template-columns: 224px minmax(0, 1fr); gap: 40px; }
   .legal { flex-direction: row; align-items: center; gap: 28px; }
 }
 @media (max-width: 359px) {
