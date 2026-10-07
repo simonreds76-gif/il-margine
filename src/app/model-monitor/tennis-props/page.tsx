@@ -1724,19 +1724,30 @@ function AcesOverV4Panel({
   rows,
   report,
   stamp,
+  historyVersion,
 }: {
   rows: CsvRow[];
   report: JsonRecord;
   stamp: string;
+  historyVersion: string;
 }) {
-  const status = String(report.status || "NOT STARTED");
-  const registered = numeric(report.rows_registered ?? rows.length);
-  const settled = numeric(report.rows_settled);
-  const scored = numeric(report.rows_scored);
+  const current = rows.filter((row) => historyVersion && row.history_version === historyVersion);
+  const earlier = rows.filter((row) => !historyVersion || row.history_version !== historyVersion);
+  const settledRows = current.filter((row) => row.settlement_status === "settled");
+  const postfit = settledRows.filter((row) => row.phase === "WALK_FORWARD");
+  const paper = settledRows.filter((row) => row.phase === "WALK_FORWARD" && row.v4_signal === "true" && ["win", "loss", "push"].includes(row.result) && Number.isFinite(Number.parseFloat(row.pnl)));
+  const paperProfit = paper.reduce((sum, row) => sum + Number.parseFloat(row.pnl), 0);
+  const paperRoi = paper.length ? paperProfit / paper.length * 100 : null;
+  const paperRecord = `${paper.filter((row) => row.result === "win").length}W / ${paper.filter((row) => row.result === "loss").length}L / ${paper.filter((row) => row.result === "push").length} push`;
+  const status = current.some((row) => row.phase === "WALK_FORWARD") ? "WALK_FORWARD" : "PRE_FIT";
+  const registered = current.length;
+  const settled = settledRows.length;
+  const scored = settledRows.filter((row) => ["0", "1"].includes(row.outcome_over)).length;
   const target = numeric(report.minimum_prefit_settled || 200);
-  const promotionSample = numeric(report.promotion_sample);
-  const clvCoverage = numeric(report.clv_coverage);
-  const clvMean = Number(report.clv_mean_pct);
+  const promotionSample = postfit.length;
+  const clvRows = current.filter((row) => Number.isFinite(Number.parseFloat(row.price_clv_pct)));
+  const clvCoverage = clvRows.length;
+  const clvMean = clvRows.length ? clvRows.reduce((sum, row) => sum + Number.parseFloat(row.price_clv_pct), 0) / clvRows.length : Number.NaN;
   const acceptRate = Number(report.ladder_accept_rate_pct);
   const integrity = record(report.integrity);
   const progress = target > 0 ? Math.min(100, settled / target * 100) : 0;
@@ -1753,12 +1764,12 @@ function AcesOverV4Panel({
   return (
     <SectionCard
       title="ATP Aces Over v4"
-      subtitle={`Registered market-anchored challenger. v3 remains frozen and live routing is unchanged. Updated ${stamp}.`}
+      subtitle={`Corrected-input paper record. Earlier inputs are kept separate. Daily progress goes to the private Telegram chat. Updated ${stamp}.`}
     >
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
         <MetricTile label="Status" value={status.replaceAll("_", " ")} sub="shadow only" tone={status === "PRE_FIT" ? "text-amber-300" : "text-cyan-300"} />
-        <MetricTile label="Registered" value={String(registered)} sub={`${settled}/${target} settled before first fit`} tone="text-cyan-300" />
-        <MetricTile label="Scored" value={String(scored)} sub={`${numeric(report.rows_pushed)} pushes / ${numeric(report.rows_pending)} pending`} tone="text-slate-100" />
+        <MetricTile label="Registered" value={String(registered)} sub={`${settled} settled using corrected inputs`} tone="text-cyan-300" />
+        <MetricTile label="Scored" value={String(scored)} sub={`${settledRows.filter((row) => row.outcome_over === "push").length} pushes / ${current.filter((row) => row.settlement_status === "pending").length} pending`} tone="text-slate-100" />
         <MetricTile label="Ladder health" value={Number.isFinite(acceptRate) ? `${acceptRate.toFixed(1)}%` : "-"} sub={`${numeric(report.ladder_groups_accepted)}/${numeric(report.ladder_groups_seen)} accepted`} tone={acceptRate >= 95 ? "text-emerald-300" : "text-amber-300"} />
         <MetricTile label="Genuine CLV" value={Number.isFinite(clvMean) ? `${clvMean >= 0 ? "+" : ""}${clvMean.toFixed(2)}%` : "-"} sub={`${clvCoverage}/${registered} later closes`} tone={Number.isFinite(clvMean) && clvMean >= 0 ? "text-emerald-300" : "text-slate-400"} />
         <MetricTile label="Promotion sample" value={String(promotionSample)} sub="600 rows + all gates required" tone="text-slate-400" />
@@ -1768,21 +1779,28 @@ function AcesOverV4Panel({
         <div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-cyan-400" style={{ width: `${progress}%` }} />
       </div>
       <div className="mt-2 flex flex-wrap justify-between gap-2 text-[11px] text-slate-500">
-        <span>PRE_FIT collection {progress.toFixed(1)}%</span>
+        <span>Corrected-input collection {settled}/{target} settled</span>
         <span>Integrity: {numeric(integrity.player_key_collisions)} player collisions / {numeric(integrity.open_as_close_rows)} open-as-close</span>
       </div>
 
       {promotionSample > 0 ? (
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
-          <MetricTile label="v3 Brier" value={fmt(String(report.brier_v3), 4)} tone="text-slate-100" />
-          <MetricTile label="v4 Brier" value={fmt(String(report.brier_v4), 4)} tone="text-cyan-300" />
-          <MetricTile label="Market Brier" value={fmt(String(report.brier_market), 4)} tone="text-slate-100" />
+          <MetricTile label="v3 Brier" value={fmt(String(meanNumeric(postfit, "v3_brier")), 4)} tone="text-slate-100" />
+          <MetricTile label="v4 Brier" value={fmt(String(meanNumeric(postfit, "v4_brier")), 4)} tone="text-cyan-300" />
+          <MetricTile label="Market Brier" value={fmt(String(meanNumeric(postfit, "market_brier")), 4)} tone="text-slate-100" />
         </div>
       ) : (
         <div className="mt-4 rounded-2xl border border-amber-500/20 bg-amber-500/8 px-4 py-3 text-xs leading-relaxed text-amber-100/80">
-          No v4 tips and no v4 performance claim yet. Until 200 settled registrations, v4 is mathematically identical to v3; these rows establish an honest, frozen baseline for the later walk-forward test.
+          Still collecting the corrected-input sample. Fitting needs 200 settled forecasts from before the forecast month, using the same inputs and frozen model. Earlier-input records do not fill that requirement.
         </div>
       )}
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <MetricTile label="Paper record" value={paper.length ? paperRecord : "Awaiting results"} sub={`${paper.length} qualifying selections settled`} tone="text-cyan-300" />
+        <MetricTile label="Paper profit" value={paper.length ? `${paperProfit >= 0 ? "+" : ""}${paperProfit.toFixed(2)}u` : "Not started"} sub="One equal paper stake per selection" tone="text-slate-100" />
+        <MetricTile label="Paper ROI" value={paperRoi == null ? "Not started" : `${paperRoi >= 0 ? "+" : ""}${paperRoi.toFixed(2)}%`} sub="Profit divided by settled paper stake" tone="text-slate-100" />
+      </div>
+      <p className="mt-3 text-xs text-slate-400">Earlier inputs: {earlier.length} forecasts, {earlier.filter((row) => row.settlement_status === "settled").length} settled, {earlier.filter((row) => row.settlement_status === "pending").length} pending. These remain in the history below and are excluded from the corrected-input figures above.</p>
 
       {recent.length ? (
         <div className="mt-4 grid gap-2 lg:grid-cols-2">
@@ -1803,7 +1821,7 @@ function AcesOverV4Panel({
                       <div key={row.observation_id} className="px-4 py-3">
                         <div className="flex items-start justify-between gap-3">
                           <div>
-                            <div className="text-[10px] font-black uppercase tracking-[0.14em] text-cyan-300">{row.player} player market</div>
+                            <div className="text-[10px] font-black uppercase tracking-[0.14em] text-cyan-300">{row.player} player market · {historyVersion && row.history_version === historyVersion ? "Corrected inputs" : "Earlier inputs"}</div>
                             <div className="mt-1 font-mono text-sm font-black text-slate-100">Over {fmt(row.line, 1)} @ {fmt(row.selected_odds, 2)}</div>
                           </div>
                           <MiniBadge label={(row.settlement_status || "pending").toUpperCase()} tone={row.settlement_status === "settled" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300" : "border-amber-500/25 bg-amber-500/10 text-amber-300"} />
@@ -2587,7 +2605,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
 
             <ModelTrackerPanel rows={modelSummaryRows} stamp={modelSummaryStamp} />
 
-            <AcesOverV4Panel rows={propsV4Rows} report={propsV4Report} stamp={propsV4Stamp} />
+            <AcesOverV4Panel rows={propsV4Rows} report={propsV4Report} stamp={propsV4Stamp} historyVersion={String(historyHealth.version || "")} />
 
             <MarketBenchmarkPanel rows={marketObservationRows} stamp={marketObservationReportStamp} />
 

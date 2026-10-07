@@ -555,6 +555,8 @@ def main() -> int:
     parser.add_argument("--require-ready", action="store_true")
     parser.add_argument("--print-only", action="store_true")
     parser.add_argument("--force", action="store_true")
+    parser.add_argument("--paper-summary", action="store_true", help="Include the once-daily ace paper-model progress report.")
+    parser.add_argument("--paper-summary-only", action="store_true", help="Send only the ace paper-model summary, without repeating selections.")
     parser.add_argument(
         "--new-only",
         action="store_true",
@@ -566,6 +568,21 @@ def main() -> int:
         date.fromisoformat(args.date)
     except ValueError as exc:
         raise SystemExit(f"Invalid --date: {args.date}") from exc
+
+    if args.paper_summary or args.paper_summary_only:
+        from tennis_props_daily_summary import daily_summary
+        try:
+            daily_summary(
+                ROOT, args.date,
+                lambda messages: dispatch(messages, repository=args.repository, workflow=args.workflow, ref=args.ref),
+                print_only=args.print_only,
+            )
+        except (OSError, ValueError, RuntimeError) as exc:
+            if args.paper_summary_only:
+                raise
+            print(f"WARNING: paper ace summary failed; continuing the normal selection digest: {exc}", file=sys.stderr)
+        if args.paper_summary_only:
+            return 0
 
     if args.require_ready and not signal_generation_is_ready(Path(args.ready_state), args.date):
         print(f"Telegram digest skipped: signal generation is not ready for {args.date}.")
