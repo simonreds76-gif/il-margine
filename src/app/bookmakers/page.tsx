@@ -37,6 +37,7 @@ export default function BookmakersPage() {
           <nav aria-label="Bookmaker page sections" className="bm-jumps">
             <a href="#compare-margins" className="bm-primary"><EditorialIcon name="compare" />Compare bookmakers <span aria-hidden="true">↓</span></a>
             <a href="#understand-margins">Understand the numbers <span aria-hidden="true">↗</span></a>
+            <Link href="/resources/tennis-retirement-rules"><EditorialIcon name="guide" />Tennis retirement rules <span aria-hidden="true">↗</span></Link>
           </nav>
         </div>
         <aside className="bm-ticket" aria-label="Illustrative two-outcome market">

@@ -185,6 +185,7 @@ function MarginPanel({ segment }: { segment: MarginSegment }) {
 }
 
 export default function MarginExplorer({ generatedAt, segments, notMeasured, coverage, summary }: MarginExplorerProps) {
+  const listedBooks = Array.from(new Set([...(coverage?.payload_operator_names ?? []), ...(coverage?.not_discovered ?? [])])).sort();
   const measured = useMemo(() => segments.filter((segment) => segment.operators.length > 0), [segments]);
   const availableSports = SPORT_ORDER.filter((sport) => measured.some((segment) => segment.sport_slug === sport));
   const initialSport = availableSports[0] ?? "football";
@@ -282,7 +283,7 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured, cov
             <div className="bg-[#091016] px-4 py-3">
               <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-500">Coverage</p>
               <p className="mt-1 font-mono text-lg font-semibold tabular-nums text-emerald-100">
-                {coverage?.payload_operators ?? 0}/{coverage?.target_operators ?? 0}
+                {coverage?.payload_operators ?? 0}/{listedBooks.length}
               </p>
               <p className="text-[9px] text-slate-500">books returned prices</p>
             </div>
@@ -300,7 +301,7 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured, cov
         <div className="relative border-b border-amber-300/15 bg-amber-300/[0.055] px-4 py-4 sm:px-7">
           <p className="text-sm font-semibold text-amber-100">Incomplete bookmaker coverage</p>
           <p className="mt-1 max-w-4xl text-xs leading-5 text-slate-300">
-            Only {coverage.payload_operators} of {coverage.target_operators} target bookmakers returned complete prices. Rankings stay limited to the measured books.
+            Only {coverage.payload_operators} of {listedBooks.length} listed bookmakers returned prices. Rankings stay limited to complete markets from the measured books.
           </p>
         </div>
       )}
@@ -374,10 +375,10 @@ export default function MarginExplorer({ generatedAt, segments, notMeasured, cov
         {activeSegment && <MarginPanel key={`${activeSegment.sport_slug}-${activeSegment.market_family}`} segment={activeSegment} />}
         <MarginMatrix segments={currentSegments} sportLabel={SPORT_LABELS[selectedSport]} />
         <details className="mt-5 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
-          <summary className="min-h-8 cursor-pointer text-sm font-semibold text-slate-200">Bookmaker coverage · {coverage?.target_operators ?? 22} listed</summary>
+          <summary className="min-h-8 cursor-pointer text-sm font-semibold text-slate-200">Bookmaker coverage · {listedBooks.length} listed</summary>
           <p className="mt-2 text-xs leading-5 text-slate-400">Coverage belongs to this capture. Missing prices are never carried forward from an older snapshot.</p>
           <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {Array.from(new Set([...(coverage?.payload_operator_names ?? []), ...(coverage?.not_discovered ?? [])])).sort().map((name) => <li key={name} className="flex items-center gap-3 rounded-xl border border-white/[0.07] p-3">
+            {listedBooks.map((name) => <li key={name} className="flex items-center gap-3 rounded-xl border border-white/[0.07] p-3">
               <BookmakerMark name={name} /><span className="min-w-0"><span className="block text-sm font-medium text-slate-100">{name}</span><span className="block text-xs text-slate-400">{coverage?.not_discovered?.includes(name) ? "No prices returned" : "Prices captured"}</span></span>
             </li>)}
           </ul>

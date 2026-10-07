@@ -1,0 +1,45 @@
+.retirement-types { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:24px 0; }
+.retirement-types > div { border:1px solid #344a50; border-radius:16px; padding:20px; background:linear-gradient(140deg,#162b2b,#111b24); }
+.retirement-type-number { color:#9deccb; font-size:13px; font-weight:800; letter-spacing:.1em; }
+.retirement-types h3 { margin:9px 0; font-size:18px; }
+.retirement-types p { margin:0; font-size:14px; line-height:1.7; }
+.retirement-filters { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:18px; border:1px solid #42645c; border-radius:16px; background:#142c28; }
+.retirement-filters label { color:#bce4d8; font-size:12px; font-weight:650; }
+.retirement-filters input,.retirement-filters select { display:block; width:100%; min-width:0; min-height:46px; border:1px solid #526770; border-radius:9px; background:#0d161f; color:#eff6f5; margin-top:7px; padding:10px 12px; font-size:16px; }
+.retirement-filters :focus-visible,.retirement-card summary:focus-visible,.retirement-faq summary:focus-visible { outline:2px solid #a0ebcd; outline-offset:4px; }
+.guide-copy .retirement-count { font-size:12px; color:#abc3cf; margin:12px 0 20px; }
+.retirement-cards { display:grid; gap:16px; }
+.retirement-card { border:1px solid #344852; border-radius:17px; overflow:hidden; background:#121c25; padding:20px; }
+.retirement-card header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+.retirement-brand { display:flex; align-items:center; gap:12px; min-width:0; }
+.retirement-brand h3 { font-size:19px; margin:0; }
+.retirement-badge { border:1px solid #536874; border-radius:20px; padding:3px 10px; color:#cfdee7; font-size:11px; font-weight:650; }
+.retirement-card--protection .retirement-badge { border-color:#457564; color:#a4ecd0; background:#173b30; }
+.retirement-card--set .retirement-badge { border-color:#52698d; color:#c4d8fa; background:#1b2b47; }
+.retirement-card--point .retirement-badge { border-color:#837249; color:#eddbac; background:#352e1e; }
+.guide-copy .retirement-threshold { font-size:13px; color:#9fb5c1; margin:12px 0; }
+.retirement-outcomes { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border:1px solid #293e48; border-radius:11px; background:#0c161e; margin:0; }
+.retirement-outcomes > div { padding:12px; }
+.retirement-outcomes > div + div { border-left:1px solid #293e48; }
+.retirement-outcomes dt { font-size:11px; line-height:1.55; color:#a4bac8; margin-bottom:7px; }
+.retirement-outcomes dd { margin:0; color:#eaf4f1; font-size:14px; font-weight:650; line-height:1.5; }
+.retirement-outcomes dd.retirement-loss { color:#f2b5a6; }
+.guide-copy .retirement-rule-note { margin:14px 0; font-size:13px; line-height:1.75; color:#c2d1da; }
+.retirement-card details { border-top:1px solid #2e414a; padding-top:10px; font-size:13px; }
+.retirement-card summary,.retirement-faq summary { display:flex; justify-content:space-between; align-items:center; gap:15px; cursor:pointer; list-style:none; color:#a5e5cc; min-height:34px; }
+.retirement-card summary::-webkit-details-marker,.retirement-faq summary::-webkit-details-marker { display:none; }
+.retirement-card details p { margin:12px 0; }
+.retirement-sources { display:flex; flex-wrap:wrap; gap:10px 20px; font-size:12px; }
+.guide-copy .retirement-coverage { font-size:13px; color:#a5b9c6; margin-top:20px; }
+.retirement-empty { padding:24px; border:1px solid #344852; border-radius:12px; }
+.retirement-empty button { text-decoration:underline; color:#a4ecd0; cursor:pointer; }
+.retirement-example-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.retirement-example-grid > div { border:1px solid #3e5c58; background:linear-gradient(145deg,#18332e,#131d28); padding:19px; border-radius:15px; }
+.retirement-example-grid h3 { font-size:17px; margin:0 0 17px; }
+.retirement-example-grid dl { margin:0; }
+.retirement-example-grid dl > div { display:flex; justify-content:space-between; align-items:baseline; gap:14px; border-top:1px solid #35504b; padding:10px 0; font-size:12px; }
+.retirement-example-grid dd { margin:0; white-space:nowrap; color:#b3efd6; font-size:14px; font-weight:700; }
+.retirement-faq details { border-bottom:1px solid #31434c; padding:16px 0; }
+.retirement-faq summary { color:#edf5f2; font-weight:600; line-height:1.6; }
+.retirement-faq p { margin:14px 0 0; font-size:15px; }
+@media(max-width:600px) { .retirement-types,.retirement-example-grid { grid-template-columns:1fr; } .retirement-filters { grid-template-columns:1fr; padding:15px; } .retirement-card { padding:16px; } .retirement-outcomes { grid-template-columns:1fr; } .retirement-outcomes > div { display:grid; grid-template-columns:1.2fr 1fr; gap:16px; align-items:center; } .retirement-outcomes > div + div { border-left:0; border-top:1px solid #293e48; } .retirement-outcomes dt { margin:0; } .retirement-types > div { padding:17px; } }
