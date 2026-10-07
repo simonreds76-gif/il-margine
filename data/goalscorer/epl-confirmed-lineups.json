@@ -304,7 +304,7 @@
         "Harry Wilson",
         "Mateo Joseph"
       ],
-      "observed_at": "2026-10-07T14:16:09.017638+00:00",
+      "observed_at": "2026-10-07T17:25:01.584627+00:00",
       "changed_at": "2026-10-07T14:16:09.017638+00:00"
     },
     {
@@ -322,7 +322,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-07T14:16:09.017638+00:00",
+      "observed_at": "2026-10-07T17:25:01.584627+00:00",
       "changed_at": "2026-10-07T01:31:12.385574+00:00"
     },
     {
@@ -631,7 +631,7 @@
         "Justin Kluivert",
         "Amine Adli"
       ],
-      "observed_at": "2026-10-07T14:16:09.017638+00:00",
+      "observed_at": "2026-10-07T17:25:01.584627+00:00",
       "changed_at": "2026-10-07T14:16:09.017638+00:00"
     },
     {
@@ -932,26 +932,321 @@
         "Kenny Tete",
         "Tom Cairney"
       ],
-      "observed_at": "2026-10-07T14:16:09.017638+00:00",
+      "observed_at": "2026-10-07T17:25:01.584627+00:00",
       "changed_at": "2026-10-07T14:16:09.017638+00:00"
     },
     {
       "fotmob_match_id": 5795473,
+      "fotmob_page_url": "/matches/tottenham-hotspur-vs-manchester-united/2xqo0r#5795473",
+      "home_fotmob_team_id": 10260,
+      "away_fotmob_team_id": 8586,
       "match_date": "2026-10-10",
       "kickoff_utc": "2026-10-10T16:30:00Z",
       "home_team": "Manchester United",
       "away_team": "Tottenham Hotspur",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-2-3-1",
+      "away_formation": "4-2-3-1",
+      "home_players": [
+        "Senne Lammens",
+        "Diogo Dalot",
+        "Harry Maguire",
+        "Lisandro Martínez",
+        "Luke Shaw",
+        "Youri Tielemans",
+        "Mason Mount",
+        "Bryan Mbeumo",
+        "Bruno Fernandes",
+        "Patrick Dorgu",
+        "Matheus Cunha"
+      ],
+      "away_players": [
+        "Antonín Kinský",
+        "Archie Gray",
+        "Tosin Adarabioyo",
+        "Marcos Senesi",
+        "Andrew Robertson",
+        "Rodrigo Bentancur",
+        "Sandro Tonali",
+        "Sávio",
+        "Mateus Fernandes",
+        "Omar Marmoush",
+        "Dominic Solanke"
+      ],
+      "home_starters": [
+        {
+          "name": "Senne Lammens",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 1178602,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Diogo Dalot",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 751550,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Harry Maguire",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 255610,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Lisandro Martínez",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 847983,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Luke Shaw",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 362694,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Youri Tielemans",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 465960,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Mason Mount",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 750032,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Bryan Mbeumo",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 923312,
+          "shirt_number": "19"
+        },
+        {
+          "name": "Bruno Fernandes",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 422685,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Patrick Dorgu",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 1526560,
+          "shirt_number": "13"
+        },
+        {
+          "name": "Matheus Cunha",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 863098,
+          "shirt_number": "10"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Antonín Kinský",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 1341475,
+          "shirt_number": "31"
+        },
+        {
+          "name": "Archie Gray",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 1323305,
+          "shirt_number": "14"
+        },
+        {
+          "name": "Tosin Adarabioyo",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 683402,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Marcos Senesi",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 785411,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Andrew Robertson",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 357880,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Rodrigo Bentancur",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 620618,
+          "shirt_number": "30"
+        },
+        {
+          "name": "Sandro Tonali",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 867414,
+          "shirt_number": "16"
+        },
+        {
+          "name": "Sávio",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 1174337,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Mateus Fernandes",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 1356312,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Omar Marmoush",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 839204,
+          "shirt_number": "22"
+        },
+        {
+          "name": "Dominic Solanke",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 591734,
+          "shirt_number": "19"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-10-07T14:16:09.017638+00:00",
-      "changed_at": "2026-10-07T01:31:12.385574+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Karl Darlow",
+        "Tom Heaton",
+        "Matthijs de Ligt",
+        "Noussair Mazraoui",
+        "Kobbie Mainoo",
+        "Manuel Ugarte",
+        "Amad Diallo",
+        "Benjamin Šeško",
+        "Marcus Rashford"
+      ],
+      "away_unavailable": [
+        "Dejan Kulusevski",
+        "Jan Paul van Hecke",
+        "Micky van de Ven",
+        "Pedro Porro",
+        "Xavi Simons",
+        "Mykhaylo Mudryk",
+        "Wilson Odobert"
+      ],
+      "observed_at": "2026-10-07T17:25:01.584627+00:00",
+      "changed_at": "2026-10-07T17:25:01.584627+00:00"
     },
     {
       "fotmob_match_id": 5795474,
@@ -1262,7 +1557,7 @@
         "Yankuba Minteh",
         "Zadok Yohanna"
       ],
-      "observed_at": "2026-10-07T14:16:09.017638+00:00",
+      "observed_at": "2026-10-07T17:25:01.584627+00:00",
       "changed_at": "2026-10-07T14:16:09.017638+00:00"
     }
   ]
