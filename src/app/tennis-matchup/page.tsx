@@ -1,5 +1,6 @@
+import AtlasPageHeader from "@/components/AtlasPageHeader";
+import frame from "@/components/ResearchPage.module.css";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import MatchdayPromo from "@/components/MatchdayPromo";
@@ -21,14 +22,11 @@ export default function TennisMatchupPage(){
   const schema=[{"@context":"https://schema.org","@type":"WebApplication",name:"Tennis Matchup Lab",url:`${BASE_URL}/tennis-matchup`,description,applicationCategory:"SportsApplication",operatingSystem:"Any",isAccessibleForFree:true},
     {"@context":"https://schema.org","@type":"FAQPage",mainEntity:MATCHUP_FAQS.map(({question,answer})=>({"@type":"Question",name:question,acceptedAnswer:{"@type":"Answer",text:answer}}))},
     {"@context":"https://schema.org","@type":"BreadcrumbList",itemListElement:[{ "@type":"ListItem",position:1,name:"Home",item:BASE_URL},{"@type":"ListItem",position:2,name:"Betting tools",item:`${BASE_URL}/tools`},{"@type":"ListItem",position:3,name:"Tennis Matchup Lab",item:`${BASE_URL}/tennis-matchup`}]}];
-  return <><main className="matchup-lab">
+  return <><main className={`matchup-lab ${frame.page}`}>
     <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(schema).replace(/</g,"\\u003c")}}/>
-    <nav className="matchup-breadcrumb" aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><Link href="/tools">Betting tools</Link><span>/</span><span>Tennis Matchup Lab</span></nav>
-    <header className="hero"><div><div className="product-signature"><div><span className="product-parent">IL MARGINE / TENNIS RESEARCH</span><strong>Matchup <span>Lab</span></strong></div></div>
-      <h1>Tennis players.<br/>A clearer <em>matchup.</em></h1><p className="lead">Compare head-to-head results, serve and return statistics, aces and double faults. Explore how the record changes by surface and location.</p></div>
-      <div className="hero-mark" aria-hidden="true"><Image src="/tennis-matchup/court-v1.webp" width={640} height={640} alt="" priority unoptimized/></div></header>
-    <div className="intro-note"><span className="note-dot"/><p><strong>Start with two players.</strong> Compare their profiles against all opponents, or switch to their meetings against each other. Open a match to inspect the numbers behind it.</p></div>
-    <div className="matchup-freshness"><span>Snapshot <time dateTime={release.checkedAt}>{readable(release.checkedAt)}</time></span><span>Latest result <time dateTime={release.through}>{readable(release.through)}</time></span><span>{release.matches.toLocaleString("en-GB")} archive matches · 2022 onward</span></div>
+    <AtlasPageHeader edition="matchup" description="Compare ATP players through past meetings, serve and return stats, aces and double faults. Filter by surface or location.">
+      <details className={frame.help}><summary>How it works &amp; coverage</summary><p>Start with two players. Compare their profiles against all opponents, or switch to their meetings against each other. Open a match to inspect the numbers behind it.</p><p>Snapshot {readable(release.checkedAt)}. Latest result {readable(release.through)}. {release.matches.toLocaleString("en-GB")} archive matches from 2022 onward. <a href="#faq">Read the FAQs ↓</a></p></details>
+    </AtlasPageHeader>
     <MatchupClient indexUrl={release.indexUrl}/>
     <MatchdayPromo compact />
     <noscript><p>Enable JavaScript to select players and compare their records. The guide, coverage details and FAQs below are available without it.</p></noscript>

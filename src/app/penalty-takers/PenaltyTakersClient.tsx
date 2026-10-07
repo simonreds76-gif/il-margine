@@ -100,7 +100,7 @@ export default function PenaltyTakersClient({ leagues, totalTeams, season, lates
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <main className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+      <main className="penalty-hub mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         <section className="pt-5 pb-6 md:pb-8">
           <PageHomeLink className="mb-4" />
           <div className="penalty-page-heading">
@@ -109,10 +109,10 @@ export default function PenaltyTakersClient({ leagues, totalTeams, season, lates
               <h1 className="mt-4 text-4xl font-semibold tracking-[-0.035em] text-slate-100 sm:text-6xl">
                 Club penalty takers <span className="text-emerald-400">{season.label}</span>
               </h1>
-              <p className="mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
-                Five dedicated league boards, {totalTeams} current clubs and transparent evidence status. Final {season.previous_label} orders were only a starting point; live-season penalties and lineup context now drive every update.
+              <p className="penalty-heading-copy mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
+                Find first choices and deputies across {totalTeams} clubs. Open a team for its penalty order, recent changes and match evidence.
               </p>
-              <div className="mt-7 flex flex-wrap gap-2">
+              <div className="penalty-heading-facts mt-7 flex flex-wrap gap-2">
                 <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-200">{totalTeams} current clubs</span>
                 <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-100">Live evidence monitoring</span>
                 <span className="rounded-full border border-slate-700 bg-slate-950/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-slate-300">{archivedCount} relegated records retained</span>

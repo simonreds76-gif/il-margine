@@ -1,9 +1,9 @@
+import AtlasPageHeader from "@/components/AtlasPageHeader";
+import frame from "@/components/ResearchPage.module.css";
 import EditorialIcon from "@/components/EditorialIcon";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/Footer";
-import PageHomeLink from "@/components/PageHomeLink";
 import ReturnAtlasClient from "@/components/return-atlas/ReturnAtlasClient";
 import MatchdayPromo from "@/components/MatchdayPromo";
 import release from "@/data/return-atlas-release.json";
@@ -33,22 +33,10 @@ export default function ReturnAtlasPage() {
       operatingSystem: 'Web', isAccessibleForFree: true,
       publisher: { '@type': 'Organization', name: 'Il Margine', url: 'https://ilmargine.bet' },
     }) }} />
-    <main className="return-atlas" data-look="ledger">
-      <header className="hero page-heading">
-        <div className="hero-copy">
-          <div className="atlas-edition-links"><PageHomeLink /><Link href="/football-atlas" prefetch={false}>Explore Football →</Link></div>
-          <p className="eyebrow">Tennis research</p>
-          <h1 className="product-wordmark"><span className="sr-only">Return Atlas: ATP Tennis Betting History</span><Image src={release.logoUrl} alt="" aria-hidden="true" width={2172} height={724} priority unoptimized /></h1>
-          <p className="intro">Explore ATP players’ historical returns. Compare betting on or against a player by season, surface, odds range and favourite or underdog status.</p>
-          <div className="hero-meta"><span>ATP main tour</span><span>Pinnacle odds</span><span>1u per bet</span><a href="#how-it-works">How it works ↓</a></div>
-          <p className="release-dates">Data checked {date(release.checkedAt)} <span aria-hidden="true">·</span> Latest included match {date(release.through)}</p>
-        </div>
-      </header>
-      <aside className="atlas-matchup-link" aria-label="Compare tennis players">
-        <EditorialIcon name="compare" className="h-10 w-10 shrink-0" />
-        <div><h2>Go beyond the return</h2><p>Compare two players’ head-to-head, serve, return, aces and double faults by surface and location.</p></div>
-        <Link href="/tennis-matchup" prefetch={false}>Open Matchup Lab →</Link>
-      </aside>
+    <main className={`return-atlas ${frame.page}`} data-look="ledger">
+      <AtlasPageHeader edition="tennis" description="Compare what backing or opposing an ATP player returned. Explore past matches by season, surface and odds.">
+        <details className={frame.help}><summary>How it works &amp; coverage</summary><p>ATP main tour. Pinnacle odds. One unit per bet. Data checked {date(release.checkedAt)}. Latest included match {date(release.through)}.</p><p>Choose a player or explore the rankings. Open a record to inspect its matches and profit curve. For serve, return and head to head statistics, <Link href="/tennis-matchup" prefetch={false}>open Matchup Lab</Link>.</p><a href="#how-it-works">Read the full guide ↓</a></details>
+      </AtlasPageHeader>
       <ReturnAtlasClient indexUrl={release.indexUrl} detailsBase={release.detailsBase} version={release.version} checkedAt={release.checkedAt} />
       <MatchdayPromo compact />
       <section className="atlas-about" aria-label="About Return Atlas">
