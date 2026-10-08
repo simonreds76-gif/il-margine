@@ -1,12 +1,12 @@
 import { defaults, summary, bands, leagues } from './football-core.mjs';
 import { portraits as reviewedPortraits } from './portraits.mjs';
 import { icon, brandMark } from './identity.mjs';
-import { managerRows, matchMarket, marketContext, clubRecords, observedSpells, strategyReturns, rankingMinimum, isVerifiedActive, activeReviewDue } from './core.mjs';
+import { managerRows, managerHistory, resultRecord, matchMarket, marketContext, clubRecords, observedSpells, strategyReturns, rankingMinimum, isVerifiedActive, activeReviewDue } from './core.mjs';
 export async function mountManagers(root,indexUrl,signal){
 const $=id=>root.querySelector(`[id="${id}"]`), escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const units=n=>`${n>0?'+':''}${n.toFixed(2)}u`, pct=n=>`${n>0?'+':''}${n.toFixed(1)}%`, color=n=>n<0?'negative':'positive';
+const units=n=>`${n>0?'+':''}${n.toFixed(2)}u`, pct=n=>`${n>0?'+':''}${(Math.round(n*100)/100).toFixed(1)}%`, color=n=>n<0?'negative':'positive';
 let chartMode='profit', chartValues=[], chartGeometry;
-let data, activity, portraits={...reviewedPortraits}, side='team', shown=50, rankShown=50, current=[];
+let data, activity, portraits={...reviewedPortraits}, side='team', shown=50, rankShown=50, current=[], history=[];
 const option=(value,label)=>`<option value="${escape(value)}">${escape(label)}</option>`;
 function avatar(manager,compact=false){
  const photo=portraits[manager.id];
@@ -28,8 +28,8 @@ function filters(){const b=bands[Number($('band').value)];return {...defaults,si
 const find=name=>data.managers.find(m=>m.name.toLowerCase()===name.trim().toLowerCase());
 function rows(id,f,opp){return managerRows(data.fixtures,id,f,opp,$('club').value);}
 function ledger(){
- $('ledger').innerHTML=current.slice().reverse().slice(0,shown).map(m=>`<tr><td>${escape(m.date)}</td><td><b>${escape(m.home)} – ${escape(m.away)}</b><div class="ledger-coaches">${[m.homeManager,m.awayManager].map(id=>`<span>${avatar({id,name:data.names[id]},true)}${escape(data.names[id])}</span>`).join('<em>vs</em>')}</div></td><td><span class="score-pill">${m.hg}–${m.ag}</span></td><td>${escape(side==='draw'?'Draw':side==='team'?m.team:m.opponent)}</td><td>${m.price.toFixed(2)}<small>${m.basis==='closing'?'Closing':'Last pre-match'}</small></td><td class="${color(m.profit)}">${units(m.profit)}</td></tr>`).join('');
- $('more').hidden=shown>=current.length;$('ledger-title').textContent=`Match ledger · ${current.length} bets · newest first`;
+ $('ledger').innerHTML=history.slice().reverse().slice(0,shown).map(m=>`<tr><td>${escape(m.date)}</td><td><b>${escape(m.home)} – ${escape(m.away)}</b><div class="ledger-coaches">${[m.homeManager,m.awayManager].map(id=>`<span>${avatar({id,name:data.names[id]},true)}${escape(data.names[id])}</span>`).join('<em>vs</em>')}</div></td><td><span class="score-pill">${m.hg}–${m.ag}</span></td><td>${escape(side==='draw'?'Draw':side==='team'?m.team:m.opponent)}</td><td>${m.price===null?'Unavailable':m.price.toFixed(2)}<small>${m.price===null?'No recorded odds':m.basis==='bet365-last-pre-match'?'bet365 fallback':m.basis==='closing'?'Pinnacle closing':'Pinnacle pre-match'}</small></td><td class="${m.profit===null?'muted':color(m.profit)}">${m.profit===null?'Excluded from ROI':units(m.profit)}</td></tr>`).join('');
+ $('more').hidden=shown>=history.length;$('ledger-title').textContent=`Match ledger · ${history.length} meetings · ${current.length} priced bets · newest first`;
 }
 function chartReadout(index){
  const i=Math.max(0,Math.min(current.length,Number(index)||0)),row=current[i-1],value=chartValues[i]||0;
@@ -65,7 +65,7 @@ function context(){
  const labels={team:'Back manager’s team',draw:'Back the draw',opponent:'Back opponent'};
  $('strategy-stats').innerHTML=strategyReturns(current).map(r=>`<article class="stat ${r.side===side?'selected-strategy':''}"><span>${labels[r.side]}</span><strong class="${color(r.roi)}">${r.bets?pct(r.roi):'—'} <em>ROI</em></strong><small class="strategy-profit">${units(r.profit)} profit · ${r.wins} winning bets</small><p>${r.side==='draw'?'Only a draw wins this bet.':'A draw loses this bet.'}</p></article>`).join('');
  const counts=current.reduce((acc,r)=>(acc[r.basis]=(acc[r.basis]||0)+1,acc),{});
- $('price-coverage').textContent=`Selected sample: ${counts.closing||0} closing prices · ${counts['last-pre-match']||0} last pre-match prices. All three strategies use these same ${current.length} fixtures.`;
+ $('price-coverage').textContent=`Selected sample: ${counts.closing||0} Pinnacle closing · ${counts['last-pre-match']||0} Pinnacle pre-match · ${counts['bet365-last-pre-match']||0} bet365 fallback prices. ${history.length-current.length?`${history.length-current.length} meeting(s) without odds count in W/D/L only. `:''}All three strategies use these same ${current.length} fixtures.`;
 }
 function render(){
  const manager=find($('manager').value),opponent=find($('opponent').value),f=filters();
@@ -74,14 +74,14 @@ function render(){
  if(invalid||manager?.id===opponent?.id&&manager){$('record').hidden=true;$('rankings').innerHTML='';$('rank-count').textContent='Correct the manager selection to see rankings.';$('more-rankings').hidden=true;current=[];return;}
  if($('active-filter-count')){const ids=['club','league','season','venue','role','band'];const count=ids.filter(id=>$(id).value!=='all').length;$('active-filter-count').textContent=count?`(${count} applied)`:'';}
  $('record').hidden=!manager;$('swap').hidden=!manager||!opponent;
- if(manager){portraitsFor(manager,opponent);current=rows(manager.id,f,opponent?.id||'all');const s=summary(current);
+ if(manager){portraitsFor(manager,opponent);current=rows(manager.id,f,opponent?.id||'all');history=managerHistory(data.fixtures,manager.id,f,opponent?.id||'all',$('club').value);const s=summary(current),record=resultRecord(history);
   $('record-title').textContent=manager.name+(opponent?' vs '+opponent.name:'');
-  $('stats').innerHTML=[['ROI',s.bets?pct(s.roi):'—','Profit as a percentage of all stakes'],['Profit',units(s.profit),'If 1u = £10, '+new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP'}).format(s.profit*10)+' profit / loss'],['Bets',String(s.bets),`${s.wins} winning / ${s.losses} losing bets`],['Team W / D / L',`${s.results.W} / ${s.results.D} / ${s.results.L}`,s.bets<30?'Small sample — interpret cautiously':'Results of the manager’s team']].map(([label,value,note])=>`<div class="stat"><span>${label}</span><strong>${value}</strong><small class="muted">${note}</small></div>`).join('');chart(s);ledger();context();
+  $('stats').innerHTML=[['ROI',s.bets?pct(s.roi):'—','Profit as a percentage of all stakes'],['Profit',units(s.profit),'If 1u = £10, '+new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP'}).format(s.profit*10)+' profit / loss'],['Bets',String(s.bets),`${s.wins} winning / ${s.losses} losing bets`],['Team W / D / L',`${record.W} / ${record.D} / ${record.L}`,`${history.length} meetings · ${s.bets} with recorded odds`]].map(([label,value,note])=>`<div class="stat"><span>${label}</span><strong>${value}</strong><small class="muted">${note}</small></div>`).join('');chart(s);ledger();context();
  }
  const activeOnly=$('activity').value==='active',today=new Date().toISOString().slice(0,10);
  const candidates=data.managers.filter(m=>!activeOnly||isVerifiedActive(m.id,activity,today));
  const ranking=candidates.map(m=>({...m,...summary(rows(m.id,f,opponent?.id||'all'))})).filter(m=>m.bets>=rankingMinimum()).sort((a,b)=>b[$('sort').value]-a[$('sort').value]||b.bets-a.bets);
- $('rankings').innerHTML=ranking.slice(0,rankShown).map((m,i)=>`<tr${m.id===manager?.id?' class="selected-row"':''}><td><button data-manager="${escape(m.id)}"><span class="rank-number">${String(i+1).padStart(2,'0')}</span>${avatar(m,true)}<span>${escape(m.name)}</span>${icon('arrow')}</button></td><td>${m.bets}${m.bets<10?'<small class="sample-label">Very small sample</small>':m.bets<30?'<small class="sample-label">Small sample</small>':''}</td><td><span class="result-wins">${m.results.W}</span> / ${m.results.D} / ${m.results.L}</td><td class="${color(m.profit)}">${units(m.profit)}</td><td class="${color(m.roi)} roi-cell">${pct(m.roi)}</td><td>${m.drawdown.toFixed(2)}u</td></tr>`).join('');
+ $('rankings').innerHTML=ranking.slice(0,rankShown).map((m,i)=>`<tr${m.id===manager?.id?' class="selected-row"':''}><td><button data-manager="${escape(m.id)}"><span class="rank-number">${String(i+1).padStart(2,'0')}</span>${avatar(m,true)}<span>${escape(m.name)}</span>${icon('arrow')}</button></td><td>${m.bets}${m.bets<10?'<small class="sample-label">Very small sample</small>':m.bets<30?'<small class="sample-label">Small sample</small>':''}</td><td><span class="result-wins">${m.results.W}</span> / ${m.results.D} / ${m.results.L}<small>Priced matches</small></td><td class="${color(m.profit)}">${units(m.profit)}</td><td class="${color(m.roi)} roi-cell">${pct(m.roi)}</td><td>${m.drawdown.toFixed(2)}u</td></tr>`).join('');
  $('more-rankings').hidden=rankShown>=ranking.length;
  $('rank-count').textContent=`Showing ${Math.min(rankShown,ranking.length)} of ${ranking.length} qualifying managers. ${opponent?'H2H includes pairings from one recorded meeting. A few meetings cannot establish a reliable edge.':'Includes every manager with at least one matching fixture. Small samples are labelled, not hidden.'} Search any manager above to inspect their record.`;
  const reviewsDue=candidates.filter(m=>activeReviewDue(m.id,activity,today)).length;

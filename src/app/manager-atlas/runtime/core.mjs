@@ -1,4 +1,28 @@
-import { observations, seasonMatches, latestSeason, summary } from '../../../components/football-atlas/football-core.ts';
+import { observations, eligible, seasonMatches, latestSeason, summary } from '../../../components/football-atlas/football-core.ts';
+
+/** Results survive absent prices; price-dependent filters require recorded odds. */
+export function managerHistory(fixtures, manager, f, opponent='all', club='all') {
+  const priced=managerRows(fixtures,manager,f,opponent,club);
+  if(f.role!=='all'||f.min>1||f.max!==Infinity)return priced;
+  const latest=latestSeason(fixtures);
+  const selected=fixtures.filter(m=>{
+    const home=m.homeManager===manager,away=m.awayManager===manager;
+    return (home||away)&&(opponent==='all'||(home?m.awayManager:m.homeManager)===opponent)
+      &&(club==='all'||(home?m.away:m.home)===club)&&seasonMatches(m.season,f.season,latest);
+  });
+  const pricedById=new Map(priced.map(r=>[r.id,r]));
+  const teams=new Set(selected.map(m=>m.homeManager===manager?m.home:m.away));
+  return [...teams].flatMap(team=>eligible(selected.filter(m=>(m.homeManager===manager?m.home:m.away)===team),team,{...f,season:'all'}).map(m=>{
+    if(pricedById.has(m.id))return pricedById.get(m.id);
+    const home=m.homeManager===manager;
+    return {...m,team,opponent:home?m.away:m.home,venue:home?'home':'away',price:null,profit:null,
+      result:m.hg===m.ag?'D':(home?m.hg>m.ag:m.ag>m.hg)?'W':'L'};
+  })).sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id));
+}
+
+export function resultRecord(rows) {
+  return rows.reduce((r,m)=>(r[m.result]++,r),{W:0,D:0,L:0});
+}
 
 export function managerRows(fixtures, manager, f, opponent='all', club='all') {
   const latest=latestSeason(fixtures);

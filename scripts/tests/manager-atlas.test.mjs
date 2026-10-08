@@ -1,9 +1,36 @@
 import test from 'node:test';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-import { managerRows, matchMarket, marketContext, clubRecords, observedSpells, strategyReturns, rankingMinimum, isVerifiedActive, activeReviewDue } from '../../research/manager-atlas/core.mjs';
+import { managerRows, managerHistory, resultRecord, matchMarket, marketContext, clubRecords, observedSpells, strategyReturns, rankingMinimum, isVerifiedActive, activeReviewDue } from '../../research/manager-atlas/core.mjs';
 import { defaults, summary, bands } from '../../src/components/football-atlas/football-core.ts';
 const fixture=(patch={})=>({id:'1',date:'2024-01-01',league:'premier-league',season:'2023-2024',home:'A',away:'B',homeManager:'x',awayManager:'y',hg:1,ag:1,odds:[2,3,4],basis:'closing',...patch});
+test('unpriced results stay in H2H without becoming losing bets or changing ROI',()=>{
+ const matches=[fixture({hg:2,ag:0}),fixture({id:'unpriced',hg:0,ag:1,odds:null,basis:null})];
+ const history=managerHistory(matches,'x',defaults,'y');
+ assert.deepEqual(resultRecord(history),{W:1,D:0,L:1});
+ assert.equal(history.find(r=>r.id==='unpriced').profit,null);
+ assert.equal(summary(managerRows(matches,'x',defaults,'y')).roi,100);
+ for(const f of [{...defaults,role:'favourite'},{...defaults,min:1.5},{...defaults,max:3}])
+  assert.equal(managerHistory(matches,'x',f,'y').length,1);
+ assert.deepEqual(resultRecord(managerHistory(matches,'y',defaults,'x')),{W:1,D:0,L:1});
+ assert.equal(managerHistory(matches,'x',{...defaults,venue:'away'},'y').length,0);
+});
+test('published Gasperini Fabregas fixture record includes December Roma win and labelled prices',()=>{
+ const read=p=>JSON.parse(fs.readFileSync(new URL(p,import.meta.url),'utf8'));
+ const release=read('../../src/data/manager-atlas-release.json');
+ const data=read('../../public'+release.indexUrl);
+ const fixtures=data.rows.map(row=>Object.fromEntries(data.columns.map((c,i)=>[c,row[i]])));
+ const history=managerHistory(fixtures,'mgr-0096',defaults,'mgr-0232');
+ assert.equal(history.length,4);assert.deepEqual(resultRecord(history),{W:2,D:0,L:2});
+ const december=history.find(r=>r.date==='2025-12-15');
+ assert.equal(december.home,'Roma');assert.equal(december.homeManager,'mgr-0232');
+ assert.deepEqual(december.odds,[2.2,3,3.7]);assert.equal(december.basis,'bet365-last-pre-match');
+ assert.ok(Math.abs(summary(managerRows(fixtures,'mgr-0096',defaults,'mgr-0232')).roi-113.25)<1e-8);
+ assert.ok(Math.abs(summary(managerRows(fixtures,'mgr-0232',defaults,'mgr-0096')).roi-3.5)<1e-8);
+ const withoutPrices=fixtures.map(r=>r.id===december.id?{...r,odds:null,basis:null}:r);
+ assert.equal(managerHistory(withoutPrices,'mgr-0096',defaults,'mgr-0232').length,4);
+ assert.ok(Math.abs(summary(managerRows(withoutPrices,'mgr-0096',defaults,'mgr-0232')).roi-184.3333333333)<1e-6);
+});
 test('review deadlines preserve the last verified roster without claiming fresh evidence',()=>{
  const entry={status:'active',checkedAt:'2026-09-27',reviewBy:'2026-10-04'};
  const registry={entries:{active:entry,retired:{...entry,status:'retired'},dead:{...entry,status:'deceased'},unemployed:{...entry,status:'not-currently-coaching'}}};

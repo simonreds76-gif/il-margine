@@ -106,7 +106,7 @@ def main():
             p.write_text(json.dumps(row,ensure_ascii=False),encoding='utf-8')
         return json.loads(p.read_text(encoding='utf-8'))
     existing={r['id']:r for r in archive['fixtures']}
-    candidates=[r for r in atlas['fixtures'] if r[0] not in existing and r[1]>'2026-05-24' and all(isinstance(v,(int,float)) and 1<v<1001 for v in r[8:11]) and r[11] in (1,2)]
+    candidates=[r for r in atlas['fixtures'] if r[0] not in existing and r[1]>'2026-05-24']
     candidates.sort(key=lambda r:(r[1],r[0]))
     pending=[];added=[];days={};new_coaches={};failures=[]
     try:
@@ -128,7 +128,8 @@ def main():
             except ValueError as e:
                 pending.append({'id':f[0],'reason':str(e),'home':home,'away':away,'coaches':row['coaches']});continue
             if ids[0]==ids[1]:raise ValueError('Same manager on both sides')
-            added.append({'id':f[0],'date':date,'league':league,'season':atlas['seasons'][f[3]],'home':home,'away':away,'hg':f[6],'ag':f[7],'odds':f[8:11],'basis':'closing' if f[11]==1 else 'last-pre-match','homeManager':ids[0],'awayManager':ids[1]})
+            priced=all(type(v) in (int,float) and 1<v<1001 for v in f[8:11]) and f[11] in (1,2,3)
+            added.append({'id':f[0],'date':date,'league':league,'season':atlas['seasons'][f[3]],'home':home,'away':away,'hg':f[6],'ag':f[7],'odds':f[8:11] if priced else None,'basis':({1:'closing',2:'last-pre-match',3:'bet365-last-pre-match'}[f[11]]) if priced else None,'homeManager':ids[0],'awayManager':ids[1]})
             for i,mid in enumerate(ids):new_coaches[row['coaches'][i]['id']]={'managerId':mid,'name':row['coaches'][i]['name']}
             if len(added)%20==0:print('Validated',len(added),'pending',len(pending),'requests',requests_count,flush=True)
     except Exception as e:failures.append(str(e))
