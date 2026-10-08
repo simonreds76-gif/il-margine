@@ -95,13 +95,14 @@
   "model_fingerprint": "934de9b700fe013c26d54fefa1c5ccfa82af2f0bd98748b242cda712d9ad3e0d",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 0,
-  "generated_at": "2026-10-08T02:16:19Z",
+  "generated_at": "2026-10-08T15:41:37Z",
   "new_contracts": 0,
   "scan_exclusions": {
-    "stale_price": 208
+    "stale_price": 208,
+    "outside_capture_window": 188
   },
-  "latest_archived_capture": "2026-10-07T15:35:51Z",
+  "latest_archived_capture": "2026-10-08T15:41:04Z",
   "latest_result_date": "2026-09-20",
-  "raw_upcoming_rows": 208,
+  "raw_upcoming_rows": 396,
   "status": "WAITING_FOR_FRESH_PAIRED_MARKETS"
 }
