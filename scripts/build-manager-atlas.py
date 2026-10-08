@@ -60,8 +60,6 @@ def join(atlas, source, aliases, registry=None, excluded_games=None):
         else:
             m=matches[0]
             if (m[6],m[7])!=(int(r['home_club_goals']),int(r['away_club_goals'])):reason='score_conflict'
-            elif not all(isinstance(p,(int,float)) and 1<p<1001 for p in m[8:11]):reason='missing_prices'
-            elif m[11] not in (1,2):reason='unknown_price_basis'
             elif m[0] in seen:reason='duplicate_fixture'
         if reason:
             counts[reason]+=len(rows);rejected.append({'game':r['game_id'],'reason':reason,'teams':[r['home_club_name'],r['away_club_name']]});continue
@@ -77,10 +75,12 @@ def join(atlas, source, aliases, registry=None, excluded_games=None):
             manager_names[ident]=name;ids.append(ident)
         if ids[0]==ids[1]:raise ValueError('Same manager on both teams')
         seen.add(m[0]);counts['joined']+=1
+        priced=all(type(p) in (int,float) and 1<p<1001 for p in m[8:11]) and m[11] in (1,2,3)
+        if not priced:counts['results_without_prices']+=1
         provenance.append({'fixture':m[0],'source_game_id':r['game_id'],'home_source_label':r['home_club_manager_name'],'away_source_label':r['away_club_manager_name'],'home_id':ids[0],'away_id':ids[1]})
         result.append({'id':m[0],'date':m[1],'league':key[0],'season':atlas['seasons'][m[3]],
-                       'home':key[2],'away':key[3],'hg':m[6],'ag':m[7],'odds':m[8:11],
-                       'basis':'closing' if m[11]==1 else 'last-pre-match',
+                       'home':key[2],'away':key[3],'hg':m[6],'ag':m[7],'odds':m[8:11] if priced else None,
+                       'basis':({1:'closing',2:'last-pre-match',3:'bet365-last-pre-match'}[m[11]]) if priced else None,
                        'homeManager':ids[0],'awayManager':ids[1]})
     return {'schema':1,'managers':[{'id':k,'name':v} for k,v in sorted(manager_names.items(),key=lambda item:item[1])],
             'fixtures':sorted(result,key=lambda r:(r['date'],r['id']))}, {'counts':dict(counts),'excluded':rejected,'provenance':provenance}
@@ -99,7 +99,7 @@ def main():
     with args.source.open(encoding='utf-8-sig',newline='') as handle:data,audit=join(json.loads(path.read_text(encoding='utf-8')),list(csv.DictReader(handle)),aliases,registry,excluded)
     data.update(atlasVersion=release['version'],through=max(m['date'] for m in data['fixtures']),fromDate=min(m['date'] for m in data['fixtures']))
     audit.update(sourceSha256=hashlib.sha256(args.source.read_bytes()).hexdigest(),atlasVersion=release['version'],publicationReady=False)
-    data['coverage']={'exclusions':{k:v for k,v in audit['counts'].items() if k!='joined'},'basis':dict(Counter(m['basis'] for m in data['fixtures'])),'currentSeasonConnected':False}
+    data['coverage']={'exclusions':{k:v for k,v in audit['counts'].items() if k not in ('joined','results_without_prices')},'basis':dict(Counter(m['basis'] for m in data['fixtures'])),'currentSeasonConnected':False}
     output.mkdir(parents=True,exist_ok=True)
     (output/'data.json').write_text(json.dumps(data,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     (output/'audit.json').write_text(json.dumps(audit,ensure_ascii=False,indent=2),encoding='utf-8')

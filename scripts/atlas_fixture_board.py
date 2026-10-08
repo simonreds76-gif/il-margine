@@ -109,9 +109,6 @@ def valid_history(rows, cutoff):
             continue
         if not (isinstance(row['hg'], int) and isinstance(row['ag'], int) and min(row['hg'], row['ag']) >= 0):
             continue
-        odds = row.get('odds')
-        if not odds or len(odds) != 3 or not all(isinstance(p, (int, float)) and 1 < p <= 1000 for p in odds):
-            continue
         if row['id'] in seen and seen[row['id']] != row:
             raise ValueError('Conflicting historical fixture: ' + row['id'])
         seen[row['id']] = row
@@ -119,28 +116,31 @@ def valid_history(rows, cutoff):
 
 
 def orient(row, first_is_home):
-    prices = row['odds'] if first_is_home else list(reversed(row['odds']))
+    raw = row.get('odds')
+    priced = raw and len(raw) == 3 and all(type(p) in (int, float) and 1 < p <= 1000 for p in raw) and row.get('basis') in ('closing', 'last-pre-match', 'bet365-last-pre-match')
+    prices = (raw if first_is_home else list(reversed(raw))) if priced else None
     winner = 1 if row['hg'] == row['ag'] else (0 if (row['hg'] > row['ag']) == first_is_home else 2)
-    book = sum(1 / p for p in prices)
+    book = sum(1 / p for p in prices) if prices else None
     return {'id': row['id'], 'date': row['date'], 'league': row['league'], 'home': row['home'], 'away': row['away'],
-            'score': [row['hg'], row['ag']], 'odds': prices, 'basis': row['basis'],
+            'score': [row['hg'], row['ag']], 'odds': prices, 'basis': row['basis'] if priced else None,
             'firstWasHome': first_is_home, 'winner': winner,
-            'profits': [round(p - 1 if i == winner else -1, 4) for i, p in enumerate(prices)],
-            'expected': [(1 / p) / book for p in prices]}
+            'profits': [round(p - 1 if i == winner else -1, 4) for i, p in enumerate(prices)] if prices else None,
+            'expected': [(1 / p) / book for p in prices] if prices else None}
 
 
 def summarize(rows):
-    n = len(rows)
+    priced = [r for r in rows if r['odds'] is not None]
+    n = len(priced)
     outcomes = []
     for i in range(3):
-        values = [r['profits'][i] for r in rows]
+        values = [r['profits'][i] for r in priced]
         profit = sum(values)
-        wins = sum(r['winner'] == i for r in rows)
+        wins = sum(r['winner'] == i for r in priced)
         outcomes.append({'roi': round(100 * profit / n, 2) if n else None, 'profit': round(profit, 3), 'wins': wins,
-                         'expectedWins': round(sum(r['expected'][i] for r in rows), 2),
+                         'expectedWins': round(sum(r['expected'][i] for r in priced), 2),
                          'withoutBest': round(profit - max(values), 3) if values and max(values) > 0 else None,
                          'positive': n >= 3 and profit > 0.000001})
-    return {'count': n, 'firstDate': min((r['date'] for r in rows), default=None),
+    return {'count': n, 'meetings': len(rows), 'results': [sum(r['winner'] == i for r in rows) for i in range(3)], 'firstDate': min((r['date'] for r in rows), default=None),
             'lastDate': max((r['date'] for r in rows), default=None), 'outcomes': outcomes}
 
 
@@ -164,7 +164,7 @@ def build(fixtures, clubs, managers, now, crests):
             if hm['id'] == am['id']:
                 raise ValueError('Same current manager on both sides')
             manager_rows = [orient(r, r['homeManager'] == hm['id']) for r in manager_index[pair_key(hm['id'], am['id'])]]
-        shared_ids = {r['id'] for r in club_rows} & {r['id'] for r in manager_rows}
+        shared_ids = {r['id'] for r in club_rows if r['odds'] is not None} & {r['id'] for r in manager_rows if r['odds'] is not None}
         club_by_id = {r['id']: r for r in club_rows}
         for r in manager_rows:
             if r['id'] in shared_ids and any(r[k] != club_by_id[r['id']][k] for k in ('odds', 'winner', 'profits')):
@@ -241,7 +241,7 @@ def refresh(state, *, offline=False, now=None, days=21):
     club_rows = [{'id': r[0], 'date': r[1], 'league': football['leagues'][r[2]],
                   'home': football['teams'][r[4]], 'away': football['teams'][r[5]], 'hg': r[6], 'ag': r[7],
                   'odds': r[8:11] if r[8] is not None else None,
-                  'basis': 'closing' if r[11] == 1 else 'last-pre-match'} for r in football['fixtures']]
+                  'basis': {1:'closing',2:'last-pre-match',3:'bet365-last-pre-match'}.get(r[11])} for r in football['fixtures']]
     manager_rows = [dict(zip(manager_data['columns'], r)) for r in manager_data['rows']]
     cards, evidence = build(fixtures, club_rows, manager_rows, now, football['crests'])
     checked = min(dt(t) for t in source_times.values())

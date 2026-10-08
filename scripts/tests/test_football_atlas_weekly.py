@@ -164,7 +164,7 @@ class FixtureBoardTests(unittest.TestCase):
         invalid = [{**row, 'id': 'today', 'date': NOW.date().isoformat()},
                    {**row, 'id': 'future', 'date': '2027-01-01'},
                    {**row, 'id': 'missing', 'odds': None}, {**row, 'id': 'unfinished', 'hg': None}]
-        self.assertEqual(fb.valid_history([row, row, *invalid], NOW), [row])
+        self.assertEqual(fb.valid_history([row, row, *invalid], NOW), [row, invalid[2]])
         with self.assertRaisesRegex(ValueError, 'Conflicting'):
             fb.valid_history([row, {**row, 'hg': 3}], NOW)
 
@@ -176,6 +176,17 @@ class FixtureBoardTests(unittest.TestCase):
         self.assertEqual(cards[0]['managers']['count'], 2)
         self.assertEqual(cards[0]['shared'], 1)
         self.assertEqual(evidence['f1']['managers'][0]['profits'][0], 1.1)
+
+    def test_unpriced_meetings_neither_dilute_roi_nor_unlock_positive_highlights(self):
+        priced=fb.orient(self.row(),False)
+        missing=fb.orient({**self.row(),'id':'missing','odds':None,'basis':None,'hg':2,'ag':0},False)
+        result=fb.summarize([priced,priced,missing])
+        self.assertEqual(result['meetings'],3)
+        self.assertEqual(result['count'],2)
+        self.assertEqual(result['results'],[2,0,1])
+        self.assertEqual(result['outcomes'][0]['roi'],110)
+        self.assertFalse(result['outcomes'][0]['positive'])
+        self.assertIsNone(missing['profits'])
 
     def test_inconsistent_shared_price_blocks_board(self):
         with self.assertRaisesRegex(ValueError, 'Shared match'):

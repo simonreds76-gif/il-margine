@@ -9,6 +9,13 @@ spec=importlib.util.spec_from_file_location('pack',Path(__file__).parents[1]/'pa
 pack=importlib.util.module_from_spec(spec);spec.loader.exec_module(pack)
 
 class ReleaseTests(unittest.TestCase):
+    def test_unpriced_results_roundtrip_and_cannot_claim_price_timing(self):
+        data=self.archive();data['fixtures'][0].update(odds=None,basis=None)
+        with tempfile.TemporaryDirectory() as tmp:
+            _,path=pack.package(data,Path(tmp))
+            self.assertEqual(pack.unpack(json.loads((Path(tmp)/path).read_text()))['fixtures'],data['fixtures'])
+        data['fixtures'][0]['basis']='closing'
+        with self.assertRaises(ValueError):pack.validate(data)
     def archive(self):
         return {'fromDate':'2026-09-20','through':'2026-09-20','atlasVersion':'abc','managers':[{'id':'a','name':'A'},{'id':'b','name':'B'}],'coverage':{'privateSource':'must-not-leak'},'fixtures':[{'id':'fixture','date':'2026-09-20','league':'premier-league','season':'2026-2027','home':'Home','away':'Away','hg':2,'ag':1,'odds':[2.5,3.2,3.1],'basis':'closing','homeManager':'a','awayManager':'b'}]}
     def test_roundtrip_preserves_prices_and_manager_orientation(self):
