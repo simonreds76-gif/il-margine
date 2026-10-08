@@ -302,28 +302,321 @@
       "away_unavailable": [
         "Joe Rodon",
         "Harry Wilson",
+        "Jean-Mattéo Bahoya",
         "Mateo Joseph"
       ],
-      "observed_at": "2026-10-07T23:03:18.936828+00:00",
+      "observed_at": "2026-10-08T14:24:22.043384+00:00",
       "changed_at": "2026-10-07T14:16:09.017638+00:00"
     },
     {
       "fotmob_match_id": 5795466,
+      "fotmob_page_url": "/matches/brentford-vs-aston-villa/3dciw4#5795466",
+      "home_fotmob_team_id": 10252,
+      "away_fotmob_team_id": 9937,
       "match_date": "2026-10-10",
       "kickoff_utc": "2026-10-10T14:00:00Z",
       "home_team": "Aston Villa",
       "away_team": "Brentford",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-2-3-1",
+      "away_formation": "4-2-3-1",
+      "home_players": [
+        "Zion Suzuki",
+        "Aaron Wan-Bissaka",
+        "Victor Nilsson Lindelöf",
+        "Tyrone Mings",
+        "Matteo Ruggeri",
+        "Boubacar Kamara",
+        "João Gomes",
+        "John McGinn",
+        "Johan Manzambi",
+        "Emiliano Buendía",
+        "Nicolas Jackson"
+      ],
+      "away_players": [
+        "Caoimhín Kelleher",
+        "Michael Kayode",
+        "Jannik Schuster",
+        "Kristoffer Ajer",
+        "Keane Lewis-Potter",
+        "Mamadou Sangaré",
+        "Vitaly Janelt",
+        "Jaidon Anthony",
+        "Yehor Yarmoliuk",
+        "Kevin Schade",
+        "Igor Thiago"
+      ],
+      "home_starters": [
+        {
+          "name": "Zion Suzuki",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 1053679,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Aaron Wan-Bissaka",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 760320,
+          "shirt_number": "29"
+        },
+        {
+          "name": "Victor Nilsson Lindelöf",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 258269,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Tyrone Mings",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 419664,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Matteo Ruggeri",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 1051097,
+          "shirt_number": "13"
+        },
+        {
+          "name": "Boubacar Kamara",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 816325,
+          "shirt_number": "8"
+        },
+        {
+          "name": "João Gomes",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1174672,
+          "shirt_number": "35"
+        },
+        {
+          "name": "John McGinn",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 356406,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Johan Manzambi",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 1520063,
+          "shirt_number": "44"
+        },
+        {
+          "name": "Emiliano Buendía",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 610184,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Nicolas Jackson",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 1197347,
+          "shirt_number": "11"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Caoimhín Kelleher",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 776689,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Michael Kayode",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 1429912,
+          "shirt_number": "33"
+        },
+        {
+          "name": "Jannik Schuster",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 1572340,
+          "shirt_number": "44"
+        },
+        {
+          "name": "Kristoffer Ajer",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 552718,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Keane Lewis-Potter",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 1010426,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Mamadou Sangaré",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 1185211,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Vitaly Janelt",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 688273,
+          "shirt_number": "27"
+        },
+        {
+          "name": "Jaidon Anthony",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 1171140,
+          "shirt_number": "19"
+        },
+        {
+          "name": "Yehor Yarmoliuk",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 1157236,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Kevin Schade",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 1083796,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Igor Thiago",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 1302005,
+          "shirt_number": "9"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-10-07T23:03:18.936828+00:00",
-      "changed_at": "2026-10-07T01:31:12.385574+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Marco Bizot",
+        "Pau Torres",
+        "Ian Maatsen",
+        "Modou Kéba Cissé",
+        "Amadou Onana",
+        "Leon Goretzka"
+      ],
+      "away_unavailable": [
+        "Dango Ouattara",
+        "Nathan Collins",
+        "Sepp van den Berg",
+        "Antoni Milambo",
+        "Mathias Jensen",
+        "Mikkel Damsgaard",
+        "Joshua Dasilva"
+      ],
+      "observed_at": "2026-10-08T14:24:22.043384+00:00",
+      "changed_at": "2026-10-08T14:24:22.043384+00:00"
     },
     {
       "fotmob_match_id": 5795467,
@@ -629,9 +922,10 @@
         "Alex Scott",
         "Junior Kroupi",
         "Justin Kluivert",
-        "Amine Adli"
+        "Amine Adli",
+        "David Brooks"
       ],
-      "observed_at": "2026-10-07T23:03:18.936828+00:00",
+      "observed_at": "2026-10-08T14:24:22.043384+00:00",
       "changed_at": "2026-10-07T14:16:09.017638+00:00"
     },
     {
@@ -932,7 +1226,7 @@
         "Kenny Tete",
         "Tom Cairney"
       ],
-      "observed_at": "2026-10-07T23:03:18.936828+00:00",
+      "observed_at": "2026-10-08T14:24:22.043384+00:00",
       "changed_at": "2026-10-07T14:16:09.017638+00:00"
     },
     {
@@ -1245,7 +1539,7 @@
         "Mykhaylo Mudryk",
         "Wilson Odobert"
       ],
-      "observed_at": "2026-10-07T23:03:18.936828+00:00",
+      "observed_at": "2026-10-08T14:24:22.043384+00:00",
       "changed_at": "2026-10-07T17:25:01.584627+00:00"
     },
     {
@@ -1557,26 +1851,311 @@
         "Yankuba Minteh",
         "Zadok Yohanna"
       ],
-      "observed_at": "2026-10-07T23:03:18.936828+00:00",
+      "observed_at": "2026-10-08T14:24:22.043384+00:00",
       "changed_at": "2026-10-07T14:16:09.017638+00:00"
     },
     {
       "fotmob_match_id": 5795469,
+      "fotmob_page_url": "/matches/crystal-palace-vs-nottingham-forest/3bfk5h#5795469",
+      "home_fotmob_team_id": 9826,
+      "away_fotmob_team_id": 10203,
       "match_date": "2026-10-11",
       "kickoff_utc": "2026-10-11T13:00:00Z",
       "home_team": "Crystal Palace",
       "away_team": "Nottingham Forest",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-4-2-1",
+      "away_formation": "3-4-2-1",
+      "home_players": [
+        "Walter Benítez",
+        "Chris Richards",
+        "Óscar Mingueza",
+        "Jaydee Canvot",
+        "Darío Osorio",
+        "Quinten Timber",
+        "Adam Wharton",
+        "Tyrick Mitchell",
+        "Daichi Kamada",
+        "Yéremi Pino",
+        "Jørgen Strand Larsen"
+      ],
+      "away_players": [
+        "Matz Sels",
+        "Jair Cunha",
+        "Ousmane Diomande",
+        "Murillo",
+        "Daniel Muñoz",
+        "Xaver Schlager",
+        "James McAtee",
+        "Neco Williams",
+        "Dan Ndoye",
+        "Morgan Gibbs-White",
+        "Liam Delap"
+      ],
+      "home_starters": [
+        {
+          "name": "Walter Benítez",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-2-1",
+          "position_id": 11,
+          "player_id": 448897,
+          "shirt_number": "44"
+        },
+        {
+          "name": "Chris Richards",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 33,
+          "player_id": 950829,
+          "shirt_number": "26"
+        },
+        {
+          "name": "Óscar Mingueza",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 35,
+          "player_id": 952095,
+          "shirt_number": "30"
+        },
+        {
+          "name": "Jaydee Canvot",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 37,
+          "player_id": 1664722,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Darío Osorio",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 62,
+          "player_id": 1329007,
+          "shirt_number": "24"
+        },
+        {
+          "name": "Quinten Timber",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 64,
+          "player_id": 970563,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Adam Wharton",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66,
+          "player_id": 1296650,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Tyrick Mitchell",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 68,
+          "player_id": 1120224,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Daichi Kamada",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84,
+          "player_id": 621515,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Yéremi Pino",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86,
+          "player_id": 1047676,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Jørgen Strand Larsen",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-2-1",
+          "position_id": 105,
+          "player_id": 821100,
+          "shirt_number": "22"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Matz Sels",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-2-1",
+          "position_id": 11,
+          "player_id": 181069,
+          "shirt_number": "26"
+        },
+        {
+          "name": "Jair Cunha",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 33,
+          "player_id": 1391209,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Ousmane Diomande",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 35,
+          "player_id": 1425182,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Murillo",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 37,
+          "player_id": 1458711,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Daniel Muñoz",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 62,
+          "player_id": 859282,
+          "shirt_number": "27"
+        },
+        {
+          "name": "Xaver Schlager",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 64,
+          "player_id": 620027,
+          "shirt_number": "21"
+        },
+        {
+          "name": "James McAtee",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66,
+          "player_id": 1107648,
+          "shirt_number": "24"
+        },
+        {
+          "name": "Neco Williams",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 68,
+          "player_id": 1078788,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Dan Ndoye",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84,
+          "player_id": 1022649,
+          "shirt_number": "14"
+        },
+        {
+          "name": "Morgan Gibbs-White",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86,
+          "player_id": 789502,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Liam Delap",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-2-1",
+          "position_id": 105,
+          "player_id": 1113903,
+          "shirt_number": "19"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-10-07T23:03:18.936828+00:00",
-      "changed_at": "2026-10-07T23:03:18.936828+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Dean Henderson",
+        "Axel Disasi",
+        "Chadi Riad",
+        "Anan Khalaili",
+        "Jean-Philippe Mateta"
+      ],
+      "away_unavailable": [
+        "Nicolò Savona"
+      ],
+      "observed_at": "2026-10-08T14:24:22.043384+00:00",
+      "changed_at": "2026-10-08T14:24:22.043384+00:00"
     },
     {
       "fotmob_match_id": 5795470,
@@ -1593,7 +2172,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-07T23:03:18.936828+00:00",
+      "observed_at": "2026-10-08T14:24:22.043384+00:00",
       "changed_at": "2026-10-07T23:03:18.936828+00:00"
     },
     {
@@ -1611,7 +2190,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-07T23:03:18.936828+00:00",
+      "observed_at": "2026-10-08T14:24:22.043384+00:00",
       "changed_at": "2026-10-07T23:03:18.936828+00:00"
     }
   ]
