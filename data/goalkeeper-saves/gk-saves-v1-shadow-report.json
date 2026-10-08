@@ -14,7 +14,7 @@
     "priced_lines": 5,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 2
+    "value_ladder_lines": 1
   },
   "evidence": {
     "clv": 0.043999,
@@ -33,14 +33,14 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-08T16:56:39.305753+00:00",
+    "checked_at": "2026-10-08T22:27:38.076529+00:00",
     "counts": {
-      "not_fresh_prematch": 21
+      "offers_saved": 21
     },
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "saved": 2,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-10-08T16:56:38Z",
+  "generated_at": "2026-10-08T22:27:37Z",
   "live_routing": false,
   "promotion": {
     "mean_true_close_clv_required": 0.005,
