@@ -1,5 +1,5 @@
 import {compactOddsComparison,comparisonMetrics} from './comparison.mjs';
-import {atlasResearchHref} from '../../../components/return-atlas/research-links.mjs';
+import {atlasResearchHref,readMatchupResearch} from '../../../components/return-atlas/research-links.mjs';
 import {symbol} from './identity.mjs';
 import {SURFACES,rowsFor,summary,startDate,recordedCount} from './core.mjs';
 
@@ -157,6 +157,16 @@ try {
   $('swap').addEventListener('click',()=>{const a=$('player-a').value;$('player-a').value=$('player-b').value;$('player-b').value=a;refresh();});
   $('coverage').textContent=`Data checked ${date(data.asOf)}. Latest included result: ${date(data.through)}. ${num(data.totalMatches)} matches in the archive. Your filters determine how many are shown.`;
   $('loading').hidden=true;$('tool').hidden=false;
+  const requested=readMatchupResearch(location.search,data.players);
+  if(requested.ready){
+    const players=requested.ids.map(id=>data.players.find(p=>p.id===id));
+    $('player-a').value=label(players[0]);$('player-b').value=label(players[1]);
+    root.querySelector(`[name=record-mode][value=${requested.mode}]`).checked=true;
+    $('months').value=requested.months;$('surface').value=requested.surface;
+    await applyPlayers();
+  } else if(requested.missing || requested.ids.length){
+    $('selection').textContent='This saved pairing is not fully available in the current archive. Choose both players to compare their records.';
+  }
 
 } catch(error) {
   if(signal.aborted)return;

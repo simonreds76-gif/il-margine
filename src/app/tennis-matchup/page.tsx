@@ -1,4 +1,5 @@
 import RelatedLinks from "@/components/RelatedLinks";
+import TennisMatchdayPromo from "@/components/TennisMatchdayPromo";
 import AtlasPageHeader from "@/components/AtlasPageHeader";
 import frame from "@/components/ResearchPage.module.css";
 import type { Metadata } from "next";
@@ -28,6 +29,7 @@ export default function TennisMatchupPage(){
     <AtlasPageHeader edition="matchup" description="Compare ATP players through past meetings, serve and return stats, aces and double faults. Filter by surface or location.">
       <details className={frame.help}><summary>How it works &amp; coverage</summary><p>Start with two players. Compare their profiles against all opponents, or switch to their meetings against each other. Open a match to inspect the numbers behind it.</p><p>Snapshot {readable(release.checkedAt)}. Latest result {readable(release.through)}. {release.matches.toLocaleString("en-GB")} archive matches from 2022 onward. <a href="#faq">Read the FAQs ↓</a></p></details>
     </AtlasPageHeader>
+    <TennisMatchdayPromo />
     <MatchupClient indexUrl={release.indexUrl}/>
     <MatchdayPromo compact />
     <noscript><p>Enable JavaScript to select players and compare their records. The guide, coverage details and FAQs below are available without it.</p></noscript>

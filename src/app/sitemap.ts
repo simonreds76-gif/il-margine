@@ -68,6 +68,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/fair-odds-lab`, lastModified: REVIEW_LAST_MODIFIED, changeFrequency: "daily", priority: 0.8 },
     { url: `${BASE_URL}/football-atlas`, lastModified: contentDate("2026-10-01", footballAtlasRelease.checkedAt), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/return-atlas`, lastModified: new Date(`${returnAtlasRelease.checkedAt}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/tennis-matchday`, lastModified: contentDate("2026-10-09", matchupRelease.checkedAt), changeFrequency: "daily", priority: 0.8 },
     { url: `${BASE_URL}/penalty-takers`, lastModified: clubPenaltyLastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/penalty-takers/methodology`, lastModified: clubPenaltyLastModified, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE_URL}/world-cup-2026-free-picks`, lastModified: new Date("2026-07-20T12:00:00Z"), changeFrequency: "monthly", priority: 0.85 },
@@ -108,7 +109,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly" as const,
       priority: resource.surface === "guide" ? 0.78 : 0.7,
     })),
-    { url: `${BASE_URL}/tools`, lastModified: new Date("2026-09-24T12:00:00Z"), changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE_URL}/tools`, lastModified: new Date("2026-10-09T12:00:00Z"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/calculator/football`, lastModified: new Date("2026-09-24T12:00:00Z"), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/calculator`, lastModified: new Date("2026-09-24T12:00:00Z"), changeFrequency: "monthly", priority: 0.6 },
     ...(FAIR_ODDS_INDEXABLE

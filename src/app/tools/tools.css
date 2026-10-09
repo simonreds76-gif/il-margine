@@ -45,3 +45,4 @@
 @media(prefers-reduced-motion:reduce) { .public-site .tools-card-art .tool-emblem,.public-site .tools-art-arrow { transition:none; } .public-site .tools-card:hover .tool-emblem { transform:none; } }
 @media(max-width:900px) { .public-site .tools-steps,.public-site .tools-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:540px) { .public-site .tools-grid { grid-template-columns:minmax(0,1fr); } .public-site .tools-start { padding:18px; } .public-site .tools-steps { gap:8px; } .public-site .tools-steps a { padding:13px; } .public-site .tools-evidence { gap:13px; } }
+.public-site .tools-directory{scroll-margin-top:110px}.public-site .tools-start{margin-top:46px}.public-site .tools-guide-description{max-width:650px;margin-top:12px;color:#aebfca;font-size:14px;line-height:1.7}

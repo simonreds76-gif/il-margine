@@ -27,14 +27,16 @@ export default function ToolsPage() {
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
     <main className="site-container">
       <PageHeading eyebrow="The Il Margine toolkit" title="Better questions. Sharper betting tools." icon="tools" actions={<nav className="tools-jumps" aria-label="Tool categories">{BETTING_TOOL_GROUPS.map(group => <a key={group.id} href={`#${group.id}`}>{({ price: "Prices", research: "Research", stake: "Staking" } as Record<string, string>)[group.id]} <span aria-hidden="true">↓</span></a>)}</nav>}><p>Check a price. Research a player or club. Understand the stake. Free tools that put the numbers behind a bet within reach.</p></PageHeading>
-      <section className="tools-start" aria-labelledby="tools-start-title">
-        <div className="tools-section-head"><div><p className="site-eyebrow">New to the numbers?</p><h2 id="tools-start-title">One bet, four useful questions.</h2></div><Link prefetch={false} href="/resources/odds-value-stakes" className="site-text-link">Follow the worked example →</Link></div>
-        <ol className="tools-steps">{BETTING_STEPS.map((step, i) => <li key={step.title}><Link prefetch={false} href={step.href}><div className="tools-step-top"><EditorialIcon name={step.icon} className="h-8 w-8" /><span>0{i + 1}</span></div><h3>{step.title}</h3><p>{step.detail}</p></Link></li>)}</ol>
-      </section>
+      <div id="tool-directory" className="tools-directory">
       {BETTING_TOOL_GROUPS.map(group => <section key={group.id} id={group.id} className="tools-group" aria-labelledby={`${group.id}-title`}>
         <div className="tools-section-head"><div><p className="site-eyebrow">{group.question}</p><h2 id={`${group.id}-title`}>{group.title}</h2></div></div>
         <div className="tools-grid">{group.tools.map(tool => <Link prefetch={false} key={tool.href} href={tool.href} className="tools-card"><div className="tools-card-art" data-emblem={emblemForHref(tool.href)}><span className="tools-card-badge">{tool.badge}</span><ToolEmblem name={emblemForHref(tool.href)} /><span className="tools-art-arrow" aria-hidden="true">↗</span></div><h3>{tool.title}</h3><p>{tool.description}</p><span className="tools-card-action">{tool.action}<span aria-hidden="true">↗</span></span></Link>)}</div>
       </section>)}
+      </div>
+      <section className="tools-start" aria-labelledby="tools-start-title">
+        <div className="tools-section-head"><div><p className="site-eyebrow">Guide · New to the numbers?</p><h2 id="tools-start-title">Understand the numbers behind a bet.</h2><p className="tools-guide-description">A short explanation of odds, margin, value and staking, with a worked example.</p></div><Link prefetch={false} href="/resources/odds-value-stakes" className="site-text-link">Read the guide →</Link></div>
+        <ol className="tools-steps">{BETTING_STEPS.map((step, i) => <li key={step.title}><Link prefetch={false} href={step.href}><div className="tools-step-top"><EditorialIcon name={step.icon} className="h-8 w-8" /><span>0{i + 1}</span></div><h3>{step.title}</h3><p>{step.detail}</p></Link></li>)}</ol>
+      </section>
       <RelatedLinks title="Keep research and results in view." description="Explore the published record and the methods behind our research." links={[
  {href:"/track-record",title:"Published track record",description:"Football and tennis results, returns and monthly performance.",icon:"record"},
  {href:"/resources",title:"Practical betting guides",description:"Clear explanations with worked examples.",icon:"guide"},

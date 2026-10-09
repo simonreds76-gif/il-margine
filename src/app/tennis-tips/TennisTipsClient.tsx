@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TipsHubIntro from "@/components/TipsHubIntro";
+import TennisMatchdayPromo from "@/components/TennisMatchdayPromo";
 import TipsCompetitionToolbar from "@/components/TipsCompetitionToolbar";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
@@ -531,6 +532,7 @@ export default function TennisTips({
         </div>
       </section>
 
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8"><TennisMatchdayPromo /></div>
       <Footer />
     </div>
   );
