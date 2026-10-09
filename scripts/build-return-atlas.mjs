@@ -14,7 +14,7 @@ const source = path.resolve(input);
 const { players, matches, metadata, eligibleRecords } = await import(pathToFileURL(path.join(source, 'real-data.mjs')));
 const { portraits } = await import(pathToFileURL(path.join(source, 'portraits.mjs')));
 const surfaces = ['outdoor-hard', 'clay', 'grass', 'indoor-hard'];
-const sources = ['Valuebetennis', 'Tennis-Data', 'Il Margine capture', 'Valuebetennis opening'];
+const sources = ['Valuebetennis', 'Tennis-Data', 'Il Margine capture', 'Valuebetennis opening', 'TennisExplorer'];
 const playerIndex = new Map(players.map((p, i) => [p.id, i]));
 const seen = new Set();
 for (const m of matches) {
@@ -51,8 +51,11 @@ const logoName = 'wordmark-tennis-v2.png';
 fs.mkdirSync(path.join(root,'public/return-atlas/assets'),{recursive:true});
 fs.writeFileSync(path.join(root,'public/return-atlas/assets',logoName),logo);
 const credits = fs.readFileSync(path.join(source,'portrait-credits.html'),'utf8');
-const creditBody = credits.match(/<section>([\s\S]+)<\/main>/)?.[0].replace(/<\/main>$/,'');
+let creditBody = credits.match(/<section>([\s\S]+)<\/main>/)?.[0].replace(/<\/main>$/,'');
 if (!creditBody || !creditBody.includes('creativecommons.org/licenses/by/4.0/')) throw new Error('Missing credits');
+if (matches.some(m=>m.source==='TennisExplorer') && !creditBody.includes('Reviewed Pinnacle replacements')) {
+  creditBody += '<section><h2>Reviewed Pinnacle replacements</h2><p>Specific erroneous archive quotes were replaced with the same bookmaker’s historical match prices checked on <a href="https://www.tennisexplorer.com/">TennisExplorer</a>. These are archived Pinnacle snapshots, without a verified closing timestamp.</p></section>';
+}
 const manifest = {version,indexUrl:publicPath+'/index.json',detailsBase:publicPath+'/players',logoUrl:'/return-atlas/assets/'+logoName,checkedAt,through:metadata.through,matches:matches.length,players:players.length,photoCount:Object.keys(portraits).length,years:metadata.years,coverage:metadata.coverage,creditsHtml:creditBody,indexBytes:Buffer.byteLength(content),indexGzipBytes:gzipSync(content).length};
 fs.mkdirSync(path.join(root,'src/data'),{recursive:true});
 fs.writeFileSync(path.join(root,'src/data/return-atlas-release.json'),JSON.stringify(manifest,null,2)+'\n');

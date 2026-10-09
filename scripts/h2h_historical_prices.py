@@ -6,6 +6,7 @@ import re
 import unicodedata
 from collections import Counter, defaultdict
 from datetime import date
+from vbt_price_integrity import reviewed_price, suspicious_close
 
 
 def norm(value):
@@ -32,6 +33,11 @@ def compatible_score(recorded, source):
 
 
 def paired_prices(row):
+    reviewed = reviewed_price(row)
+    if reviewed:
+        return reviewed['sourceOdds'], 'reviewed'
+    if suspicious_close(row):
+        return None, None
     # Fixed snapshot priority, never the biggest price or the winning selection.
     for snapshot in ('cloture', 'ouverture'):
         try:
@@ -75,7 +81,7 @@ def fill_prices(results, players, paths):
                 counts['source_pair_rows'] += 1
                 prices, snapshot = paired_prices(row)
                 if prices is None:
-                    counts['missing_source_prices'] += 1; continue
+                    counts['suspicious_closing_price' if suspicious_close(row) else 'missing_source_prices'] += 1; continue
                 if row['vainqueur_id'] not in (row['joueur1_id'],row['joueur2_id']): continue
                 win = int(row['vainqueur_id'] == row['joueur2_id'])
                 oriented = score(row['score'])
@@ -102,6 +108,9 @@ def fill_prices(results, players, paths):
                 result = matches[0]
                 source = f"https://www.valuebetennis.com/datasets/valuebetennis-matchs-{row['date'][:4]}.csv"
                 basis = 'Pinnacle historical '+('opening' if snapshot=='ouverture' else 'last recorded pre-match')+' odds via Valuebetennis.'
+                if snapshot == 'reviewed':
+                    reviewed = reviewed_price(row)
+                    source, basis = reviewed['source'], reviewed['basis']
                 quote = dict(o1=prices[win], o2=prices[1-win], priceSource=source, priceBasis=basis)
                 candidates[result['id']][(row['match_id'],prices[win],prices[1-win],snapshot)] = quote
     for result in results:
