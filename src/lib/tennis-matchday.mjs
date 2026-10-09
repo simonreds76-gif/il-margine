@@ -4,6 +4,16 @@ const normal = text => String(text ?? '').normalize('NFD').replace(/\p{M}/gu, ''
 const knownPlayer = name => name && !/\b(tba|tbd|winner|qualifier|bye)\b|[/&]/i.test(name);
 const day = (time, zone) => new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(time);
 
+// A schedule can remain useful for a day; an old quote must not look current.
+export const QUOTE_MAX_AGE_MS = 2 * 3600000;
+export function matchdayQuote(fixture, now = new Date()) {
+  const quote = fixture.quote, captured = Date.parse(quote?.capturedAt);
+  if (!quote || !Number.isFinite(captured) || captured > now.getTime() + 300000
+    || now.getTime() - captured >= QUOTE_MAX_AGE_MS || Date.parse(fixture.start) <= now.getTime()
+    || quote.odds.length !== 2 || !quote.odds.every(p => Number.isFinite(p) && p > 1)) return null;
+  return quote;
+}
+
 export function matchdayHref(a, b) {
   return '/tennis-matchup?' + new URLSearchParams({ player: a, compare: b, record: 'h2h', history: 'archive' });
 }
@@ -37,7 +47,8 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
     const meetings = a === undefined || b === undefined ? null : history.matches
       .filter(m => m[0] < cutoff && ((m[1] === a && m[2] === b) || (m[1] === b && m[2] === a)))
       .map(m => ({ date: m[0], winner: (m[3] === 0 ? m[1] : m[2]) === a ? 0 : 1,
-        odds: m[1] === a ? [m[4], m[5]] : [m[5], m[4]], surface: m[6], score: m[7], event: m[8] }));
+        odds: m[1] === a ? [m[4], m[5]] : [m[5], m[4]], surface: m[6], score: m[7], event: m[8] }))
+      .sort((x, y) => x.date.localeCompare(y.date) || String(x.event).localeCompare(String(y.event)));
     const wins = meetings ? [meetings.filter(m => m.winner === 0).length, meetings.filter(m => m.winner === 1).length] : null;
     const priced = meetings?.filter(m => m.odds.every(p => Number.isFinite(p) && p > 1)) ?? [];
     const profit = [0, 1].map(side => priced.reduce((sum, m) => sum + (m.winner === side ? m.odds[side] - 1 : -1), 0));
@@ -45,7 +56,9 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
       event: row.league_name.replace(/^ATP\s+Challenger\s+|^ATP\s+/i, ''), qualifying: /qualifying|qualification|\bqual\b/i.test(row.league_name),
       players, wins, meetings: meetings?.length ?? null, priced: priced.length,
       roi: profit.map(p => priced.length ? Math.round(1000 * p / priced.length) / 10 : null),
-      profit: profit.map(p => Math.round(p * 100) / 100), recent: meetings?.slice(-3).reverse() ?? [],
+      profit: profit.map(p => Math.round(p * 1000) / 1000), history: meetings?.slice().reverse() ?? [],
+      quote: capturedAt && [row.odds1, row.odds2].every(p => p !== null && p !== '' && Number.isFinite(Number(p)) && Number(p) > 1)
+        ? { capturedAt, bookmaker: 'Pinnacle', odds: [Number(row.odds1), Number(row.odds2)] } : null,
       href: a !== undefined && b !== undefined ? matchdayHref(players[0].id, players[1].id) : null, ambiguous: false };
     pairs.set(pairKey, fixture); fixtures.push(fixture);
   }
