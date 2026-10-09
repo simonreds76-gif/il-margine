@@ -28,7 +28,7 @@ function MeetingHistory({ fixture: f }: { fixture: TennisFixture }) {
         {m.priceBasis && <p className={styles.historyKey}>{m.priceBasis}</p>}
       </li>;
     })}</ol>
-    <div className={styles.historyTotal}><p>{f.priced} priced {f.priced === 1 ? 'meeting' : 'meetings'} · £{f.priced * 10} staked on each player</p><dl>{f.players.map((p, i) => <div key={p.name}><dt>{surname(p.name)}</dt><dd>{cash(f.profit[i] * 10)}<small>{percent(f.roi[i])} ROI</small></dd></div>)}</dl></div>
+    <div className={styles.historyTotal}><p>{f.priced} priced {f.priced === 1 ? 'meeting' : 'meetings'} · £{f.priced * 10} staked on each player</p><dl>{f.players.map((p, i) => <div key={p.name}><dt>{surname(p.name)}</dt><dd>{f.priced ? cash(f.profit[i] * 10) : 'Not available'}<small>{percent(f.roi[i])} ROI</small></dd></div>)}</dl></div>
   </details>;
 }
 
@@ -62,8 +62,9 @@ function FixtureCard({ fixture: f, now }: { fixture: TennisFixture; now: Date })
     <div className={styles.record}>
       <div className={styles.recordLabel}><span>ARCHIVE H2H</span><small>{f.meetings === null ? 'Player coverage missing' : f.meetings === 0 ? 'No recorded meetings' : `${f.meetings} ${f.meetings === 1 ? 'meeting' : 'meetings'} · all courts`}</small></div>
       {f.wins && f.meetings ? <><div className={styles.score}><strong>{f.wins[0]}<small>{surname(f.players[0].name)} wins</small></strong><div className={styles.bars} aria-label={`${f.players[0].name} ${f.wins[0]} wins, ${f.players[1].name} ${f.wins[1]} wins`}><span style={{ flex: f.wins[0] || .03 }} /><span style={{ flex: f.wins[1] || .03 }} /></div><strong>{f.wins[1]}<small>{surname(f.players[1].name)} wins</small></strong></div>
-        <div className={styles.returns}><span><Icon name="record" />H2H ROI<small>{f.priced} priced {f.priced === 1 ? 'match' : 'matches'}</small></span>{f.roi.map((value, i) => <strong key={i} className={value !== null && value > 0 ? styles.positive : styles.neutral}>{percent(value)}<small>{surname(f.players[i].name)}</small></strong>)}</div>
-        <p className={styles.roiKey}>Backing each player separately in every recorded meeting.</p>
+        <div className={styles.returns}><span><Icon name="record" />H2H ROI<small>Odds for {f.priced} of {f.meetings} meetings</small></span>{f.roi.map((value, i) => <strong key={i} className={value !== null && value > 0 ? styles.positive : styles.neutral}>{percent(value)}<small>{surname(f.players[i].name)}</small></strong>)}</div>
+        {f.priced < f.meetings && <p className={styles.explanation}><strong>Odds missing for {f.meetings - f.priced} {f.meetings - f.priced === 1 ? 'meeting' : 'meetings'}.</strong> {f.priced ? `ROI uses only the ${f.priced} with recorded odds.` : 'ROI is unavailable.'} All {f.meetings} meetings count in the H2H score.</p>}
+        <p className={styles.roiKey}>Backing each player separately in every meeting with recorded odds.</p>
         {bothPositive && <p className={styles.explanation}>{oneWin >= 0 && winningPrice ? `${surname(f.players[oneWin].name)}’s win at ${price(winningPrice)} covered ${f.priced - 1} losing ${f.priced - 1 === 1 ? 'bet' : 'bets'}.` : 'A win at long odds can cover several losses.'} Both historical returns can be positive.</p>}
         {limited && <p className={styles.sample}>Only {f.meetings} {f.meetings === 1 ? 'meeting' : 'meetings'}. One result can change the ROI sharply.</p>}</> : <p className={styles.noHistory}>{f.meetings === null ? 'We do not yet have a profile for both players in this pairing. Explore other players in Matchup Lab.' : 'No completed meetings found in our available competitive archive. You can still compare the players’ wider profiles.'}</p>}
     </div>
