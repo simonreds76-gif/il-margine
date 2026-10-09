@@ -3,6 +3,10 @@ import csv
 import tempfile
 import unittest
 from pathlib import Path
+import sys
+from unittest.mock import patch
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 spec=importlib.util.spec_from_file_location('prices',Path(__file__).resolve().parents[1]/'h2h_historical_prices.py')
 prices=importlib.util.module_from_spec(spec);spec.loader.exec_module(prices)
@@ -50,3 +54,14 @@ class HistoricalPriceTests(unittest.TestCase):
             self.assertIsNone(run([row,{**row,'cote1_ouverture':'3.0'}],dict(result))['o1'])
             preserved=run([row],{**result,'o1':1.6,'o2':2.6})
             self.assertEqual((preserved['o1'],preserved['o2']),(1.6,2.6))
+            # A reviewed pair is in source order; the H2H ledger is winner-first.
+            review = dict(sourceId='123', sourceDate='2023-04-01',
+                          sourcePlayerIds=['1','2'], oldSourceOdds=[2.8,1.5],
+                          sourceOdds=[3.32,1.38], source='https://example.test/verified',
+                          basis='Pinnacle archived snapshot; closing time unverified')
+            corrected_source = {**row,'cote1_cloture':'2.8','cote2_cloture':'1.5'}
+            with patch('vbt_price_integrity.corrections', return_value={'123':review}):
+                corrected = run([corrected_source], dict(result))
+            self.assertEqual((corrected['o1'],corrected['o2']),(1.38,3.32))
+            self.assertEqual(corrected['priceSource'],review['source'])
+            self.assertEqual(corrected['priceBasis'],review['basis'])

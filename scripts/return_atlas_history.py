@@ -4,6 +4,7 @@ from collections import Counter, defaultdict
 from datetime import date, timedelta, datetime, timezone
 from pathlib import Path
 from return_atlas_identity import source_player_id
+from vbt_price_integrity import reviewed_price, suspicious_close
 
 CONFIG = json.loads(Path(os.environ['RETURN_ATLAS_CONFIG']).read_text(encoding='utf-8-sig'))
 ROOT = Path(os.environ['RETURN_ATLAS_CANDIDATE'])
@@ -88,6 +89,11 @@ def build():
             try: odds=[float(r['cote1_'+price_field]),float(r['cote2_'+price_field])]
             except ValueError: reject('missing_paired_prices');continue
             if not all(1<o<1001 for o in odds): reject('invalid_prices');continue
+            reviewed = reviewed_price(r)
+            if reviewed:
+                odds = reviewed['sourceOdds']
+            elif y != 2021 and suspicious_close(r):
+                reject('suspicious_closing_price');continue
             if r['surface'] not in surfaces: reject('unknown_surface');continue
             day=r['date'][:10]; pair=tuple(sorted([norm(r['joueur1']),norm(r['joueur2'])]))
             candidates=[g for g in games.get(pair,[]) if abs((date.fromisoformat(g['date'])-date.fromisoformat(day)).days)<=1 and norm(g['tour']['name'])==norm(r['tournoi']) and g['round_id']==r['tour']]
@@ -116,6 +122,9 @@ def build():
             elif checked: counts['secondary_archive_confirmed']+=1
             else: counts['secondary_archive_unmatched']+=1
             matches.append({'id':'vbt-'+r['match_id'],'date':day,'p1':sid1,'p2':sid2,'o1':odds[0],'o2':odds[1],'winner':winner,'surface':surfaces[r['surface']],'status':'completed','level':'ATP-main','event':r['tournoi'],'round':r['tour'],'score':oriented,'scoreOrientation':'winner-first','source':'Valuebetennis opening' if y == 2021 else 'Valuebetennis','priceBasis':'Pinnacle opening' if y == 2021 else 'Pinnacle last recorded pre-match','resultArchive':'OnCourt','secondaryConfirmed':bool(checked)})
+            if reviewed:
+                matches[-1].update(source='TennisExplorer', priceBasis=reviewed['basis'])
+                counts['reviewed_price_correction']+=1
             counts['accepted']+=1;first=min(first or day,day);last=max(last or day,day)
         audit[str(y)]={**counts,'first':first,'last':last,'archive_completed_main_draw_matches':eligible[str(y)]}
     # Supplement missing matches with the saved same-bookmaker workbook series.
