@@ -230,15 +230,21 @@ class WeeklyAtlasTests(unittest.TestCase):
             run(['git','init','-q'], root)
             run(['git','config','user.email','test@example.invalid'], root)
             run(['git','config','user.name','Test'], root)
-            for path in ('old-manager.json', 'old-board.json', 'manifest.json', 'unrelated.txt'):
+            for path in ('old-manager.json', 'old-board.json', 'manifest.json', 'unchanged.json', 'unrelated.txt'):
                 (root/path).write_text('old\n')
+            archive = ''.join(f'fixture-{i}: recorded price\n' for i in range(80))
+            (root/'old-manager.json').write_text(archive)
             run(['git','add','.'], root); run(['git','commit','-qm','Initial archives'], root)
             run(['git','rm','--','old-manager.json'], root)
             (root/'old-board.json').unlink()
-            (root/'new-manager.json').write_text('new\n'); (root/'manifest.json').write_text('new\n')
+            (root/'new-manager.json').write_text(archive + 'new fixture\n'); (root/'manifest.json').write_text('new\n')
             expected = {'old-manager.json','old-board.json','new-manager.json','manifest.json'}
             w.stage_release(run, root, expected)
-            self.assertEqual(set(run(['git','diff','--cached','--name-only'], root).splitlines()), expected)
+            self.assertNotIn('old-manager.json', run(['git','diff','--cached','--name-only'], root).splitlines())
+            self.assertEqual(set(run(['git','diff','--cached','--no-renames','--name-only'], root).splitlines()), expected)
+            w.stage_release(run, root, expected | {'unchanged.json'})
+            with self.assertRaisesRegex(ValueError, 'missing=.*never-existed'):
+                w.stage_release(run, root, expected | {'never-existed.json'})
             (root/'unrelated.txt').write_text('changed\n'); run(['git','add','unrelated.txt'], root)
             with self.assertRaisesRegex(ValueError,'Unexpected staged'):
                 w.stage_release(run, root, expected)

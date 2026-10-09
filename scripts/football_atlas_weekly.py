@@ -357,9 +357,16 @@ def stage_release(run, root, changed_paths):
     to_stage = tracked | {path for path in changed_paths if (root / path).exists()}
     if to_stage:
         run(['git', 'add', '--all', '--', *sorted(to_stage)], root)
-    staged = set(run(['git', 'diff', '--cached', '--name-only'], root).splitlines())
-    if staged != changed_paths:
-        raise ValueError('Unexpected staged files')
+    # Content-addressed replacements often look like renames to Git. Count both
+    # old and new paths explicitly so a legitimate deletion is not "missing".
+    staged = set(run(['git', 'diff', '--cached', '--no-renames', '--name-only'], root).splitlines())
+    # Writers return all their output paths, including byte-identical files.
+    # Such files have no staged diff; only tracked, unchanged paths may be absent.
+    unexpected = staged - changed_paths
+    missing = changed_paths - staged - tracked
+    remaining = set(run(['git', 'diff', '--no-renames', '--name-only', '--', *sorted(changed_paths)], root).splitlines())
+    if unexpected or missing or remaining:
+        raise ValueError(f'Unexpected staged files: extra={sorted(unexpected)}, missing={sorted(missing)}, unstaged={sorted(remaining)}')
 
 
 def main():
