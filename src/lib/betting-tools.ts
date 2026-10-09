@@ -10,6 +10,7 @@ export const BETTING_TOOL_GROUPS: Array<{
     { href: "/bookmakers", title: "Mind the Margin", description: "Compare measured bookmaker margins within the same market and see the sample behind each figure.", action: "Compare bookmakers", icon: "compare", badge: "Market comparison" },
   ] },
   { id: "research", title: "Research the selection", question: "What does the evidence say?", tools: [
+    { href: "/football-atlas/fixtures", title: "Football Matchday", description: "Explore upcoming fixtures through club and manager H2H records, with historical returns for home, draw and away outcomes.", action: "Explore football fixtures", icon: "football", badge: "Fixture research" },
     { href: "/fair-odds-lab/aerial", title: "Air Control", description: "Compare starting XI heights, aerial contests, headed shots and team delivery before kickoff.", action: "Explore Air Control", icon: "football", badge: "Lineup research · beta" },
     { href: "/tennis-matchup", title: "Tennis Matchup Lab", description: "Compare H2H records, serve and return statistics, aces and double faults by surface and location.", action: "Compare tennis players", icon: "analysis", badge: "Player comparison" },
     { href: "/tennis-matchday", title: "Tennis Matchday", description: "Start with upcoming tennis fixtures. See past meetings and returns, then open both players in Matchup Lab.", action: "Explore the next matches", icon: "analysis", badge: "Daily fixture research" },

@@ -7,19 +7,22 @@ import { getTennisMatchday } from '@/lib/tennis-matchday-data';
 import TennisMatchdayClient from './TennisMatchdayClient';
 import styles from './matchday.module.css';
 
-// Preview only. The existing capture is read through a shared hourly cache.
+// The existing capture is read through a shared hourly cache.
 export const revalidate = 3600;
-export const metadata: Metadata = { title: 'Tennis Matchday: Upcoming Matches & H2H',
-  description: 'Explore upcoming tennis matches, previous meetings and historical betting returns. Open both players in Matchup Lab and Return Atlas.',
+const title = 'Tennis Matchday: Upcoming Matches & H2H';
+const description = 'Explore upcoming tennis matches, previous meetings and historical betting returns. Open both players in Matchup Lab and Return Atlas.';
+export const metadata: Metadata = { title, description,
   alternates: { canonical: '/tennis-matchday' },
-  robots: { index: false, follow: false } };
+  robots: { index: true, follow: true },
+  openGraph: { title, description, url: '/tennis-matchday', type: 'website', images: ['/tennis-matchday/opengraph-image'] },
+  twitter: { card: 'summary_large_image', title, description, images: ['/tennis-matchday/opengraph-image'] } };
 
 const faqs = [
   ['What am I looking at?', 'Upcoming singles matches from our recorded schedule, with the previous meetings found in Matchup Lab. Use the H2H as a starting point, then compare the players and explore their wider records. This board is research, not a list of recommended bets.'],
   ['Is this the complete career H2H?', 'No. The record uses completed ATP main draw matches with prices in our archive from 2022 onward. Qualifying, Challenger, team events and retirements are not included in that history. An empty record means no meetings were found in this archive, not that the players have never met.'],
   ['What does the return percentage mean?', 'It shows the profit or loss from staking the same amount on that player in every priced meeting shown, using each match’s recorded odds. A return of +20% means £20 profit for every £100 staked across those matches. The two players are separate betting strategies. Past returns do not establish value in today’s price.'],
   ['Why do some Challenger matches have no comparison?', 'The upcoming schedule includes available Challenger and qualifying singles. Our historical research currently covers ATP main draws, so some players and previous meetings are outside its scope. Those fixtures remain visible with their coverage clearly marked.'],
-  ['How often does it update?', 'The preview reuses our existing Pinnacle schedule capture and checks it through an hourly cache, without downloading extra bookmaker odds. Times are provisional and shown in UK time. Started matches disappear from the board; a capture older than 24 hours is withheld. Historical results update with the existing tennis archive refresh. This is not an official order of play or a complete tennis calendar.'],
+  ['How often does it update?', 'The fixture board checks our existing schedule feed through an hourly cache. Times are provisional and shown in UK time. Started matches disappear from the board; a capture older than 24 hours is withheld. Historical results update with the tennis archive refresh. This is not an official order of play or a complete tennis calendar.'],
 ];
 
 export default async function TennisMatchdayPage() {
