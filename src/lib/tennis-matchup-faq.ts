@@ -5,7 +5,7 @@ export const MATCHUP_FAQS = [
   },
   {
     "question": "Is this a complete career head-to-head record?",
-    "answer": "No. The archive covers completed ATP main-draw singles from 2022 onward where prices for both players are available. It excludes Challenger, qualifying, team events, retirements and other unfinished matches. Your filters narrow that sample further, so the result can differ from an official career H2H."
+    "answer": "No. The archive covers completed ATP main-draw singles from 2021 onward where prices for both players are available. It excludes Challenger, qualifying, team events, retirements and other unfinished matches. Your filters narrow that sample further, so the result can differ from an official career H2H."
   },
   {
     "question": "How do I use the surface and location filters?",
@@ -17,7 +17,7 @@ export const MATCHUP_FAQS = [
   },
   {
     "question": "What is the chance suggested by the odds?",
-    "answer": "It is an estimate calculated from both players’ recorded pre-match prices after removing the bookmaker’s margin. A 60% chance means about 6 wins in 10 similar matches. These historical prices are not live odds and are not always the final price before play."
+    "answer": "It is an estimate calculated from both players’ recorded pre-match prices after removing the bookmaker’s margin. A 60% chance means about 6 wins in 10 similar matches. The 2021 archive uses Pinnacle opening prices. These historical prices are not live odds and are not always the final price before play."
   },
   {
     "question": "Do aces and double faults show totals or averages?",

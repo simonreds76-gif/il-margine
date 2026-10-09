@@ -71,7 +71,7 @@ def build(atlas, oncourt, output, as_of, data_only=False):
     tours = {r['id']: r for r in read(oncourt/'tours_atp.csv')}
     games = defaultdict(list)
     for r in read(oncourt/'games_atp.csv'):
-        if r['date'] < '2022-01-01': continue
+        if r['date'] < '2021-01-01': continue
         if r['winner_id'] not in people or r['loser_id'] not in people: continue
         pair = tuple(sorted([norm(people[r['winner_id']]['name']), norm(people[r['loser_id']]['name'])]))
         games[pair].append(r)

@@ -14,7 +14,7 @@ const source = path.resolve(input);
 const { players, matches, metadata, eligibleRecords } = await import(pathToFileURL(path.join(source, 'real-data.mjs')));
 const { portraits } = await import(pathToFileURL(path.join(source, 'portraits.mjs')));
 const surfaces = ['outdoor-hard', 'clay', 'grass', 'indoor-hard'];
-const sources = ['Valuebetennis', 'Tennis-Data', 'Il Margine capture'];
+const sources = ['Valuebetennis', 'Tennis-Data', 'Il Margine capture', 'Valuebetennis opening'];
 const playerIndex = new Map(players.map((p, i) => [p.id, i]));
 const seen = new Set();
 for (const m of matches) {

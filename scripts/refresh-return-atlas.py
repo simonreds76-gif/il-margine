@@ -195,7 +195,7 @@ def refresh(config, dry_run=False):
         current_year = date.today().year
         cache = state / 'source-cache'
         cache.mkdir(exist_ok=True)
-        for year in range(2025, current_year + 1):
+        for year in [2021, *range(2025, current_year + 1)]:
             target = cache / f'valuebetennis-{year}.csv'
             stamp = cache / f'{year}-checked.txt'
             if target.exists() and (year < current_year or (stamp.exists() and stamp.read_text() == as_of)):

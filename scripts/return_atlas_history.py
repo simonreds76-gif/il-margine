@@ -10,7 +10,7 @@ ROOT = Path(os.environ['RETURN_ATLAS_CANDIDATE'])
 REPO = ROOT / 'oncourt'
 PREVIEW = ROOT / 'preview'
 AS_OF = os.environ.get('RETURN_ATLAS_AS_OF', date.today().isoformat())
-YEARS = range(2022, date.fromisoformat(AS_OF).year + 1)
+YEARS = range(2021, date.fromisoformat(AS_OF).year + 1)
 ARCHIVES = Path(CONFIG['archives'])
 SOURCE_CACHE = Path(CONFIG['stateDirectory']) / 'source-cache'
 for directory in [ROOT/'data', PREVIEW]: directory.mkdir(parents=True, exist_ok=True)
@@ -41,11 +41,11 @@ def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
 from functools import lru_cache
 def build():
     players={r['id']:r for r in read(REPO/'players_atp.csv') if '/' not in r['name']}
-    tours={r['id']:r for r in read(REPO/'tours_atp.csv') if r['date']>='2021-12-15' and r['rank'] in ['2','3','4'] and no_team(r['name'])}
+    tours={r['id']:r for r in read(REPO/'tours_atp.csv') if r['date']>='2020-12-15' and r['rank'] in ['2','3','4'] and no_team(r['name'])}
     games=defaultdict(list)
     eligible=Counter()
     for r in read(REPO/'games_atp.csv'):
-        if not ('2022-01-01'<=r['date']<=AS_OF) or r['tour_id'] not in tours: continue
+        if not ('2021-01-01'<=r['date']<=AS_OF) or r['tour_id'] not in tours: continue
         if r['winner_id'] not in players or r['loser_id'] not in players or int(r['round_id'])<4: continue
         tour=tours[r['tour_id']]
         if not complete(r['result'],3 if tour['rank']=='4' else 2): continue
@@ -64,10 +64,10 @@ def build():
     canonical={}; player_oc={}; matches=[]; audit={}; quarantine=[]; seen=set(); seen_games=set(); files=[]
     surfaces={'dur':'outdoor-hard','terre battue':'clay','gazon':'grass','dur int\ufffdrieur':'indoor-hard','dur intérieur':'indoor-hard'}
     for y in YEARS:
-        path=ARCHIVES/'outputs/atp-returns-design-20260919/data'/f'valuebetennis-atp-{y}.csv' if y<2025 else SOURCE_CACHE/f'valuebetennis-{y}.csv'
+        path=ARCHIVES/'outputs/atp-returns-design-20260919/data'/f'valuebetennis-atp-{y}.csv' if 2022<=y<2025 else SOURCE_CACHE/f'valuebetennis-{y}.csv'
         files.append({'path':str(path),'sha256':sha(path),'source':f'https://www.valuebetennis.com/datasets/valuebetennis-matchs-{y}.csv'})
         counts=Counter(); first=None; last=None
-        for r in read(path,',' if y<2025 else ';'):
+        for r in read(path,',' if 2022<=y<2025 else ';'):
             if r['genre']!='atp' or r['categorie'] not in ['Main tour','Masters','Grand Chelem']: continue
             counts['source_atp_category_rows']+=1
             def reject(reason):
@@ -83,7 +83,9 @@ def build():
             oriented=' '.join(f'{a}-{b}' if p1win else f'{b}-{a}' for a,b in (ss or []))
             source_complete=complete(oriented,3 if r['categorie']=='Grand Chelem' else 2)
             if source_complete: counts['completed_source_rows']+=1
-            try: odds=[float(r['cote1_cloture']),float(r['cote2_cloture'])]
+            # The 2021 source contains opening prices, not closing prices.
+            price_field = 'ouverture' if y == 2021 else 'cloture'
+            try: odds=[float(r['cote1_'+price_field]),float(r['cote2_'+price_field])]
             except ValueError: reject('missing_paired_prices');continue
             if not all(1<o<1001 for o in odds): reject('invalid_prices');continue
             if r['surface'] not in surfaces: reject('unknown_surface');continue
@@ -113,7 +115,7 @@ def build():
             if extra and not checked: counts['secondary_archive_disagreement']+=1
             elif checked: counts['secondary_archive_confirmed']+=1
             else: counts['secondary_archive_unmatched']+=1
-            matches.append({'id':'vbt-'+r['match_id'],'date':day,'p1':sid1,'p2':sid2,'o1':odds[0],'o2':odds[1],'winner':winner,'surface':surfaces[r['surface']],'status':'completed','level':'ATP-main','event':r['tournoi'],'round':r['tour'],'score':oriented,'scoreOrientation':'winner-first','source':'Valuebetennis','priceBasis':'Pinnacle last recorded pre-match','resultArchive':'OnCourt','secondaryConfirmed':bool(checked)})
+            matches.append({'id':'vbt-'+r['match_id'],'date':day,'p1':sid1,'p2':sid2,'o1':odds[0],'o2':odds[1],'winner':winner,'surface':surfaces[r['surface']],'status':'completed','level':'ATP-main','event':r['tournoi'],'round':r['tour'],'score':oriented,'scoreOrientation':'winner-first','source':'Valuebetennis opening' if y == 2021 else 'Valuebetennis','priceBasis':'Pinnacle opening' if y == 2021 else 'Pinnacle last recorded pre-match','resultArchive':'OnCourt','secondaryConfirmed':bool(checked)})
             counts['accepted']+=1;first=min(first or day,day);last=max(last or day,day)
         audit[str(y)]={**counts,'first':first,'last':last,'archive_completed_main_draw_matches':eligible[str(y)]}
     # Supplement missing matches with the saved same-bookmaker workbook series.
@@ -198,7 +200,7 @@ def build():
             surf={'1':'outdoor-hard','2':'clay','3':'indoor-hard','5':'grass'}.get(g['tour']['court_id'])
             for oid in [g['winner_id'],g['loser_id']]:
                 if oid in player_oc: eligible_records.append([player_oc[oid],g['date'],surf])
-    metadata={'years':list(YEARS),'through':max(m['date'] for m in matches),'matches':len(matches),'players':len(canonical),'source':SOURCE,'licence':'Valuebetennis CC BY 4.0; supplemental Tennis-Data archive reviewed locally','priceBasis':'Pinnacle: last pre-match plus archived snapshots','coverage':audit,'supplementAudit':dict(supplement),'files':files,'resultArchives':[{'path':str(REPO/p),'sha256':sha(REPO/p)} for p in ['games_atp.csv','players_atp.csv','tours_atp.csv']],'limitations':[f'{date.fromisoformat(AS_OF).year} is a partial season. Coverage excludes missing prices, unresolved joins and incomplete scores.','Valuebetennis closing means the provider’s last recorded pre-match price; it can differ from the final market tick. Tennis-Data snapshots have no verified closing timestamp and are labelled separately.','OnCourt result agreement is not a guarantee of upstream source independence. Sackmann is a supplementary check and its local 2026 file ends during Roland Garros.']}
+    metadata={'years':list(YEARS),'through':max(m['date'] for m in matches),'matches':len(matches),'players':len(canonical),'source':SOURCE,'licence':'Valuebetennis CC BY 4.0; supplemental Tennis-Data archive reviewed locally','priceBasis':'Pinnacle: opening prices for 2021; later last pre-match prices and archived snapshots','coverage':audit,'supplementAudit':dict(supplement),'files':files,'resultArchives':[{'path':str(REPO/p),'sha256':sha(REPO/p)} for p in ['games_atp.csv','players_atp.csv','tours_atp.csv']],'limitations':[f'{date.fromisoformat(AS_OF).year} is a partial season. Coverage excludes missing prices, unresolved joins and incomplete scores.','Valuebetennis closing means the provider’s last recorded pre-match price; it can differ from the final market tick. Tennis-Data snapshots have no verified closing timestamp and are labelled separately.','OnCourt result agreement is not a guarantee of upstream source independence. Sackmann is a supplementary check and its local 2026 file ends during Roland Garros.']}
     (ROOT/'data'/'audit.json').write_text(json.dumps(metadata,ensure_ascii=False,indent=2),encoding='utf-8')
     uncovered=[{'date':g['date'],'event':g['tour']['name'],'winner':players[g['winner_id']]['name'],'loser':players[g['loser_id']]['name']} for entries in games.values() for g in entries if (g['date'],g['tour_id'],g['round_id'],g['winner_id'],g['loser_id']) not in seen_games]
     (ROOT/'data'/'uncovered-results.json').write_text(json.dumps(uncovered,indent=2),encoding='utf-8')

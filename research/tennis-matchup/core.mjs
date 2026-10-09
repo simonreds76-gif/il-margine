@@ -9,12 +9,12 @@ export const METRICS = {
 export const SURFACES = {'outdoor-hard':'Outdoor hard','indoor-hard':'Indoor hard',clay:'Clay',grass:'Grass'};
 
 export function startDate(asOf, months) {
-  if (months === 'archive') return '2022-01-01';
+  if (months === 'archive') return '2021-01-01';
   const end = new Date(`${asOf}T00:00:00Z`);
   const first = new Date(Date.UTC(end.getUTCFullYear(),end.getUTCMonth()-Number(months),1));
   const lastDay = new Date(Date.UTC(first.getUTCFullYear(),first.getUTCMonth()+1,0)).getUTCDate();
   first.setUTCDate(Math.min(end.getUTCDate(),lastDay));
-  return [first.toISOString().slice(0,10),'2022-01-01'].sort().at(-1);
+  return [first.toISOString().slice(0,10),'2021-01-01'].sort().at(-1);
 }
 
 export function marketProbability(own, other) {

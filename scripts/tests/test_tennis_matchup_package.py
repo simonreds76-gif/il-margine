@@ -34,6 +34,13 @@ class PublicSnapshotTests(unittest.TestCase):
             self.assertNotIn('audit',index)
             self.assertNotIn('source',shards[0]['matches'][0])
 
+    def test_accepts_verified_2021_history(self):
+        with tempfile.TemporaryDirectory() as root:
+            data = self.sample()
+            data["matches"][0]["date"] = "2021-06-15"
+            release = self.publish(root, data)
+            self.assertEqual(release["matches"], 2)
+
     def test_rejects_same_day_or_invalid_odds(self):
         for field,value in [('date','2026-09-26'),('o1',0),('p1',8)]:
             with self.subTest(field=field), tempfile.TemporaryDirectory() as root:
