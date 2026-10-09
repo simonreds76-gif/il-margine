@@ -102,3 +102,10 @@ test('quotes expire independently of the schedule and stop at the start time', (
   assert.equal(matchdayQuote({ ...f, start: now.toISOString() }, now), null);
   assert.equal(matchdayQuote({ ...f, quote: { ...f.quote, capturedAt: '2026-10-09T11:00:00Z' } }, now), null);
 });
+
+test('additional older results count towards H2H while only paired prices count towards ROI',()=>{
+ const h={...history,results:[['2016-01-01',1,0,0,null,null,'clay','6-4 6-4','Challenger'],['2017-01-01',0,1,0,2,2,'clay','6-4 6-4','ATP']]};
+ const f=buildTennisMatchday([row],h,now).fixtures[0];
+ assert.equal(f.meetings,4);assert.equal(f.priced,3);assert.deepEqual(f.wins,[2,2]);
+ assert.deepEqual(f.profit,[1.5,0]);assert.deepEqual(f.roi,[50,0]);assert.equal(f.history.length,4);
+});

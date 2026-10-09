@@ -12,6 +12,7 @@ def load_snapshot(root, release):
     index_path = root / 'public' / release['indexUrl'].lstrip('/')
     index = read(index_path)
     rows = {}
+    results = {}
     for i in range(len(index['players'])):
         shard = read(index_path.parent / f'{i}.json')
         if shard['version'] != index['version'] or shard['player'] != i:
@@ -20,9 +21,15 @@ def load_snapshot(root, release):
             if row['id'] in rows and rows[row['id']] != row:
                 raise ValueError('Conflicting Matchup shards')
             rows[row['id']] = row
+        for row in shard.get('results',[]):
+            if row['id'] in results and results[row['id']] != row:
+                raise ValueError('Conflicting H2H shards')
+            results[row['id']] = row
     if len(rows) != index['totalMatches']:
         raise ValueError('Incomplete Matchup snapshot')
-    return {**index, 'matches': list(rows.values())}
+    if len(results) != index.get('additionalResults',0) or rows.keys() & results.keys():
+        raise ValueError('Incomplete or duplicate H2H snapshot')
+    return {**index, 'matches': list(rows.values()), 'results':list(results.values())}
 
 
 def canonical(data):
@@ -37,6 +44,29 @@ def canonical(data):
 
 def validate(old, new):
     previous, candidate = canonical(old), canonical(new)
+    old_extra=canonical({**old,'matches':old.get('results',[])})
+    new_extra=canonical({**new,'matches':new.get('results',[])})
+    if len(new_extra)-len(old_extra)>400:
+        raise ValueError('Large H2H backfill requires review')
+    # Price arrival may move an extra into the established ATP archive. Compare
+    # fixture identities and oriented results rather than dropping integrity checks.
+    for mid,before in old_extra.items():
+        after=new_extra.get(mid)
+        if after is None:
+            def equivalent(row):
+                return (row['date']==before['date'] and {row['p1'],row['p2']}=={before['p1'],before['p2']}
+                    and row['score']==before['score'] and row['event']==before['event']
+                    and [row['p1'],row['p2']][row['winner']]==[before['p1'],before['p2']][before['winner']])
+            replacements=[r for r in candidate.values() if equivalent(r)]
+            if len(replacements)!=1: raise ValueError(f'H2H meeting disappeared: {mid}')
+            after=replacements[0]
+        else:
+            for field in ('stats1','stats2'):
+                if before.get(field) and any(v is not None and (after.get(field) or {}).get(k)!=v for k,v in before[field].items()):
+                    raise ValueError(f'Existing H2H statistics changed: {mid}')
+            for field in ('date','p1','p2','winner','score','event','surface','competition','o1','o2'):
+                if before.get(field) is not None and after.get(field)!=before[field]:
+                    raise ValueError(f'Existing H2H record changed: {mid} ({field})')
     if len(candidate) - len(previous) > 400:
         raise ValueError('Large Matchup backfill requires review')
     for mid, before in previous.items():
@@ -50,7 +80,7 @@ def validate(old, new):
             elif value is not None and after.get(field) != value:
                 raise ValueError(f'Existing Matchup record changed: {mid} ({field})')
     # A new check date alone does not justify another deployment.
-    return previous != candidate or any(old[k] != new[k] for k in ('players', 'portraits', 'countries'))
+    return previous != candidate or old_extra != new_extra or any(old[k] != new[k] for k in ('players', 'portraits', 'countries'))
 
 
 def prepare(checkout, candidate, atlas_release, as_of):

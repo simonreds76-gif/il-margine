@@ -8,13 +8,13 @@ export const METRICS = {
 };
 export const SURFACES = {'outdoor-hard':'Outdoor hard','indoor-hard':'Indoor hard',clay:'Clay',grass:'Grass'};
 
-export function startDate(asOf, months) {
-  if (months === 'archive') return '2021-01-01';
+export function startDate(asOf, months, from = '2021-01-01') {
+  if (months === 'archive') return from;
   const end = new Date(`${asOf}T00:00:00Z`);
   const first = new Date(Date.UTC(end.getUTCFullYear(),end.getUTCMonth()-Number(months),1));
   const lastDay = new Date(Date.UTC(first.getUTCFullYear(),first.getUTCMonth()+1,0)).getUTCDate();
   first.setUTCDate(Math.min(end.getUTCDate(),lastDay));
-  return [first.toISOString().slice(0,10),'2021-01-01'].sort().at(-1);
+  return [first.toISOString().slice(0,10),from].sort().at(-1);
 }
 
 export function marketProbability(own, other) {
@@ -23,8 +23,9 @@ export function marketProbability(own, other) {
 }
 
 export function rowsFor(data, player, filters) {
-  const start = startDate(filters.asOf, filters.months);
-  return data.matches.filter(m => (m.p1===player || m.p2===player)
+  const h2h = filters.opponent !== undefined;
+  const start = startDate(filters.asOf, filters.months, h2h ? data.historyFrom : undefined);
+  return [...data.matches,...(h2h ? data.results ?? [] : [])].filter(m => (m.p1===player || m.p2===player)
     && (filters.opponent===undefined || (m.p1===player?m.p2:m.p1)===filters.opponent)
     && m.date>=start && m.date<filters.asOf
     && (filters.surface==='all' || m.surface===filters.surface)

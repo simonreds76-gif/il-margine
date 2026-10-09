@@ -27,7 +27,7 @@ export default function TennisMatchupPage(){
   return <><main className={`matchup-lab ${frame.page}`}>
     <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(schema).replace(/</g,"\\u003c")}}/>
     <AtlasPageHeader edition="matchup" description="Compare ATP players through past meetings, serve and return stats, aces and double faults. Filter by surface or location.">
-      <details className={frame.help}><summary>How it works &amp; coverage</summary><p>Start with two players. Compare their profiles against all opponents, or switch to their meetings against each other. Open a match to inspect the numbers behind it.</p><p>Snapshot {readable(release.checkedAt)}. Latest result {readable(release.through)}. {release.matches.toLocaleString("en-GB")} archive matches from 2021 onward. <a href="#faq">Read the FAQs ↓</a></p></details>
+      <details className={frame.help}><summary>How it works &amp; coverage</summary><p>Start with two players. Compare their profiles against all opponents, or switch to their meetings against each other. Open a match to inspect the numbers behind it.</p><p>Snapshot {readable(release.checkedAt)}. Latest result {readable(release.through)}. {release.matches.toLocaleString("en-GB")} priced ATP profile matches from 2021 onward. H2H also includes earlier competitive meetings, with coverage shown for each pairing. <a href="#faq">Read the FAQs ↓</a></p></details>
     </AtlasPageHeader>
     <TennisMatchdayPromo />
     <MatchupClient indexUrl={release.indexUrl}/>

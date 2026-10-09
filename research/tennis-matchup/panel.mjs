@@ -93,7 +93,7 @@ function updateSuggestions(input,list){
 }
 function render(){
   const f=filters();
-  if(selected.length!==2 || !f.asOf || f.asOf<'2021-01-02' || f.asOf>data.asOf)return;
+  if(selected.length!==2 || !f.asOf || f.asOf<'1990-01-02' || f.asOf>data.asOf)return;
   const players=selected.map(i=>data.players[i]);
   const h2h=f.mode==='h2h';
   const forPlayer=(slot,surface=f.surface)=>({...f,surface,...(h2h?{opponent:selected[1-slot]}:{})});
@@ -101,7 +101,7 @@ function render(){
   const rows=selected.map((i,slot)=>rowsFor(data,i,forPlayer(slot)));
   const summaries=rows.map(summary);
   const location=f.country!=='all'?data.countries.find(c=>c.code===f.country)?.name:f.region==='all'?'All regions':f.region;
-  const scope=`${recordLabel} · ${location} · ${SURFACES[f.surface]||'All surfaces'} · ${date(startDate(f.asOf,f.months))} to before ${date(f.asOf)}`;
+  const scope=`${recordLabel} · ${location} · ${SURFACES[f.surface]||'All surfaces'} · ${date(startDate(f.asOf,f.months,h2h?data.historyFrom:undefined))} to before ${date(f.asOf)}`;
   $('selection').textContent=scope;
   $('results').innerHTML=`<div class="player-grid">${players.map((p,i)=>playerCard(p,summaries[i],i,recordLabel)).join('')}</div>
   <section class="section"><div class="section-heading">${icon('region')}<div><p class="eyebrow">RESULTS &amp; PRE-MATCH ODDS</p><h2>Results versus pre-match odds</h2></div></div><p class="section-copy">Read down each player’s column: what happened, what the odds suggested, and the difference between them.</p>${oddsComparison(players,summaries)}<p class="footnote">We remove the bookmaker’s margin to estimate the chance suggested by the odds. These are recorded pre-match prices, not necessarily closing prices. They are not our model’s predictions.</p></section>

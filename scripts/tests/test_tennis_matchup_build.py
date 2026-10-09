@@ -10,6 +10,12 @@ module=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
 class MatchupBuildTests(unittest.TestCase):
+    def test_completed_score_rejects_walkovers_retirements_and_partial_sets(self):
+        for score in ['6-4 6-4','6-4 5-7 6-4','6-4 6-4 6-4','7-6(2) 7-6(5)']:
+            self.assertTrue(module.completed(score),score)
+        for score in ['6-2 ret.','w/o','6-2 3-2','6-2 6-2 1-0','4-2 4-1 4-0']:
+            self.assertFalse(module.completed(score),score)
+
     def test_normalization_is_exact_full_name_not_surname_guess(self):
         self.assertEqual(module.norm('João-Sousa'),module.norm('Joao Sousa'))
         self.assertNotEqual(module.norm('J. Sousa'),module.norm('Joao Sousa'))
