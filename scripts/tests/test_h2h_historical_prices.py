@@ -37,8 +37,16 @@ class HistoricalPriceTests(unittest.TestCase):
             joined=run([row],dict(result))
             self.assertEqual((joined['o1'],joined['o2']),(1.5,2.8))
             self.assertIn('opening',joined['priceBasis'])
-            for field,value in [('vainqueur_id','1'),('score','4-6 4-6'),('date','2023-04-05'),('tournoi','Other'),('surface','gazon'),('tour','5'),('joueur2','Different Player')]:
+            for field,value in [('vainqueur_id','1'),('score','4-6 4-6'),('date','2023-04-12'),('tournoi','Other'),('surface','gazon'),('tour','5'),('joueur2','Different Player')]:
                 self.assertIsNone(run([{**row,field:value}],dict(result))['o1'],field)
+            self.assertEqual(run([{**row,'date':'2023-03-30'}],dict(result))['o1'],1.5)
+            self.assertIsNone(run([{**row,'date':'2023-03-30','score':'4-6 6-6'}],dict(result))['o1'])
+            self.assertEqual(run([{**row,'surface':'dur'}],dict(result))['o1'],1.5)
+            players[1]['id']='oc-22'
+            self.assertEqual(run([row],dict(result))['o1'],1.5)
+            players.append(dict(id='oc-999',name='Second Player'))
+            self.assertIsNone(run([row],dict(result))['o1'])
+            players.pop();players[1]['id']='vbt-2'
             self.assertIsNone(run([row,{**row,'cote1_ouverture':'3.0'}],dict(result))['o1'])
             preserved=run([row],{**result,'o1':1.6,'o2':2.6})
             self.assertEqual((preserved['o1'],preserved['o2']),(1.6,2.6))
