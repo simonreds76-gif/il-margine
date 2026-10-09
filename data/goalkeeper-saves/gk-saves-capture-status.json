@@ -2,63 +2,53 @@
   "capture_errors": [],
   "capture_mode": "publication",
   "event_last_checked": {
-    "71945292": "2026-10-09T02:33:42Z",
-    "71945294": "2026-10-09T02:33:42Z",
-    "71945300": "2026-10-09T02:33:42Z",
-    "72036202": "2026-10-09T02:33:42Z",
-    "72036204": "2026-10-09T02:33:42Z",
-    "72036206": "2026-10-09T02:33:42Z",
-    "72036208": "2026-10-09T02:33:42Z",
-    "72036210": "2026-10-09T02:33:42Z",
-    "72036214": "2026-10-09T02:33:42Z",
-    "72221292": "2026-10-09T02:33:42Z",
-    "72221294": "2026-10-09T02:33:42Z",
-    "72221296": "2026-10-09T02:33:42Z",
-    "72221304": "2026-10-09T02:33:42Z",
-    "72221308": "2026-10-09T02:33:42Z",
-    "72221310": "2026-10-09T02:33:42Z",
-    "72478606": "2026-10-09T02:33:42Z",
-    "72478612": "2026-10-09T02:33:42Z",
-    "72478616": "2026-10-09T02:33:42Z",
-    "72478620": "2026-10-09T02:33:42Z",
-    "72478622": "2026-10-09T02:33:42Z",
-    "72513220": "2026-10-09T02:33:42Z",
-    "72513222": "2026-10-09T02:33:42Z",
-    "72513224": "2026-10-09T02:33:42Z",
-    "72513228": "2026-10-09T02:33:42Z",
-    "72513230": "2026-10-09T02:33:42Z",
-    "72513232": "2026-10-09T02:33:42Z",
-    "72513236": "2026-10-09T02:33:42Z"
+    "71945292": "2026-10-09T15:20:53Z",
+    "72036204": "2026-10-09T15:20:53Z",
+    "72036206": "2026-10-09T15:20:53Z",
+    "72221292": "2026-10-09T15:20:53Z",
+    "72221294": "2026-10-09T15:20:53Z",
+    "72221296": "2026-10-09T15:20:53Z",
+    "72221304": "2026-10-09T15:20:53Z",
+    "72221310": "2026-10-09T15:20:53Z",
+    "72478606": "2026-10-09T15:20:53Z",
+    "72478616": "2026-10-09T15:20:53Z",
+    "72478620": "2026-10-09T15:20:53Z",
+    "72513220": "2026-10-09T15:20:53Z",
+    "72513224": "2026-10-09T15:20:53Z",
+    "72513228": "2026-10-09T15:20:53Z",
+    "72513230": "2026-10-09T15:20:53Z",
+    "72513232": "2026-10-09T15:20:53Z",
+    "72513236": "2026-10-09T15:20:53Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 27,
-  "events_supported": 27,
-  "events_with_lines": 26,
-  "generated_at": "2026-10-09T02:33:42Z",
-  "last_publication_at": "2026-10-09T02:33:42Z",
+  "events_selected": 17,
+  "events_supported": 17,
+  "events_with_lines": 16,
+  "generated_at": "2026-10-09T15:20:53Z",
+  "last_publication_at": "2026-10-09T15:20:53Z",
   "league_coverage": {
     "bundesliga": {
-      "selected": 7,
-      "with_prices": 7
-    },
-    "epl": {
       "selected": 6,
       "with_prices": 6
     },
-    "la-liga": {
+    "epl": {
       "selected": 5,
       "with_prices": 5
     },
-    "ligue-1": {
-      "selected": 6,
-      "with_prices": 5
-    },
-    "serie-a": {
+    "la-liga": {
       "selected": 3,
       "with_prices": 3
+    },
+    "ligue-1": {
+      "selected": 2,
+      "with_prices": 1
+    },
+    "serie-a": {
+      "selected": 1,
+      "with_prices": 1
     }
   },
-  "market_inventory_rows_added": 2269,
+  "market_inventory_rows_added": 1454,
   "market_names_observed": [
     "1st Half Corners",
     "Alternative Corners",
@@ -153,12 +143,33 @@
     "Totals HT",
     "Winning Margin"
   ],
-  "publication_recovery": true,
+  "publication_recovery": false,
   "request_budget": 4,
-  "requests_used": 4,
-  "rows_added": 276,
-  "rows_observed": 276,
+  "requests_used": 3,
+  "rows_added": 168,
+  "rows_observed": 168,
   "selected_events": [
+    {
+      "away": "Werder Bremen",
+      "competition": "Germany - Bundesliga",
+      "home": "Borussia Dortmund",
+      "id": 72513220,
+      "kickoff_at": "2026-10-09T18:30:00Z"
+    },
+    {
+      "away": "Olympique Lyon",
+      "competition": "France - Ligue 1",
+      "home": "Racing Club De Lens",
+      "id": 72036204,
+      "kickoff_at": "2026-10-09T18:45:00Z"
+    },
+    {
+      "away": "Espanyol Barcelona",
+      "competition": "Spain - LaLiga",
+      "home": "Malaga CF",
+      "id": 72478616,
+      "kickoff_at": "2026-10-09T19:00:00Z"
+    },
     {
       "away": "Leeds United",
       "competition": "England - Premier League",
@@ -256,99 +267,8 @@
       "home": "Lille OSC",
       "id": 72036206,
       "kickoff_at": "2026-10-10T15:15:00Z"
-    },
-    {
-      "away": "Parma Calcio",
-      "competition": "Italy - Serie A",
-      "home": "Inter Milano",
-      "id": 71945294,
-      "kickoff_at": "2026-10-10T16:00:00Z"
-    },
-    {
-      "away": "Getafe CF",
-      "competition": "Spain - LaLiga",
-      "home": "FC Barcelona",
-      "id": 72478612,
-      "kickoff_at": "2026-10-10T16:30:00Z"
-    },
-    {
-      "away": "Eintracht Frankfurt",
-      "competition": "Germany - Bundesliga",
-      "home": "RB Leipzig",
-      "id": 72513222,
-      "kickoff_at": "2026-10-10T16:30:00Z"
-    },
-    {
-      "away": "Tottenham Hotspur",
-      "competition": "England - Premier League",
-      "home": "Manchester United",
-      "id": 72221308,
-      "kickoff_at": "2026-10-10T16:30:00Z"
-    },
-    {
-      "away": "Angers SCO",
-      "competition": "France - Ligue 1",
-      "home": "Stade Brest 29",
-      "id": 72036202,
-      "kickoff_at": "2026-10-10T18:45:00Z"
-    },
-    {
-      "away": "Paris FC",
-      "competition": "France - Ligue 1",
-      "home": "FC Lorient",
-      "id": 72036208,
-      "kickoff_at": "2026-10-10T18:45:00Z"
-    },
-    {
-      "away": "Toulouse FC",
-      "competition": "France - Ligue 1",
-      "home": "AS Monaco",
-      "id": 72036210,
-      "kickoff_at": "2026-10-10T18:45:00Z"
-    },
-    {
-      "away": "Le Mans FC",
-      "competition": "France - Ligue 1",
-      "home": "Paris Saint-Germain",
-      "id": 72036214,
-      "kickoff_at": "2026-10-10T18:45:00Z"
-    },
-    {
-      "away": "Frosinone Calcio",
-      "competition": "Italy - Serie A",
-      "home": "SSC Napoli",
-      "id": 71945300,
-      "kickoff_at": "2026-10-10T18:45:00Z"
-    },
-    {
-      "away": "Villarreal CF",
-      "competition": "Spain - LaLiga",
-      "home": "Real Madrid",
-      "id": 72478622,
-      "kickoff_at": "2026-10-10T19:00:00Z"
-    },
-    {
-      "away": "Werder Bremen",
-      "competition": "Germany - Bundesliga",
-      "home": "Borussia Dortmund",
-      "id": 72513220,
-      "kickoff_at": "2026-10-09T18:30:00Z"
-    },
-    {
-      "away": "Olympique Lyon",
-      "competition": "France - Ligue 1",
-      "home": "Racing Club De Lens",
-      "id": 72036204,
-      "kickoff_at": "2026-10-09T18:45:00Z"
-    },
-    {
-      "away": "Espanyol Barcelona",
-      "competition": "Spain - LaLiga",
-      "home": "Malaga CF",
-      "id": 72478616,
-      "kickoff_at": "2026-10-09T19:00:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 26
+  "three_way_events": 16
 }
