@@ -238,7 +238,10 @@ def refresh(config, dry_run=False):
             by_id = {r[0]: r for r in new_details['matches']}
             if any(by_id.get(r[0]) != r for r in old_details['matches']):
                 raise ValueError('Existing match description changed; review required')
-        matchup_old, matchup_new, matchup_changed = prepare_matchup(checkout, candidate, new_manifest, as_of)
+        historical_prices = [Path(config['archives']) / 'outputs/atp-returns-design-20260919/data' / f'valuebetennis-atp-{year}.csv'
+                             if 2022 <= year < 2025 else cache / f'valuebetennis-{year}.csv'
+                             for year in range(2021, current_year + 1)]
+        matchup_old, matchup_new, matchup_changed = prepare_matchup(checkout, candidate, new_manifest, as_of, historical_prices)
         status.update(matchupVersion=matchup_new['version'], matchupMatches=matchup_new['matches'], matchupChanged=matchup_changed)
         status.pop('error', None)
         status.pop('failedAt', None)

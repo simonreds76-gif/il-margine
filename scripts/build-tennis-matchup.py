@@ -2,6 +2,7 @@
 import argparse
 import csv
 import hashlib
+import importlib.util
 import json
 import re
 import shutil
@@ -75,7 +76,7 @@ def completed(score):
         wins[a<b] += 1
     return wins[0] == needed and wins[1] < needed
 
-def build(atlas, oncourt, output, as_of, data_only=False):
+def build(atlas, oncourt, output, as_of, data_only=False, historical_prices=(), retained_prices=None):
     # Prevent accidental export into deployable site assets or overwriting source data.
     output = output.resolve()
     if 'public' in output.parts or output == oncourt.resolve() or output == atlas.resolve():
@@ -203,6 +204,19 @@ def build(atlas, oncourt, output, as_of, data_only=False):
         supplemental.append(row)
     if {k for k in prices if k[0] in player_map and k[1] in player_map} - {tuple(m['id'][3:].split('-')) for m in supplemental if m['o1'] is not None}:
         raise ValueError('Verified historical price evidence was not applied; review required')
+    # Retain previously published paired prices even when a source later changes.
+    for row in supplemental:
+        before = (retained_prices or {}).get(row['id'])
+        if before and row['o1'] is None:
+            a,b = (index['players'][row[k]]['id'] for k in ('p1','p2'))
+            if (row['date'],row['score'],a,b) != (before['date'],before['score'],before['p1'],before['p2']):
+                raise ValueError('Retained historical price identity changed')
+            row.update({k:before[k] for k in ('o1','o2','priceSource','priceBasis') if k in before})
+    historical_audit = {}
+    if historical_prices:
+        spec = importlib.util.spec_from_file_location('h2h_prices', Path(__file__).with_name('h2h_historical_prices.py'))
+        historical = importlib.util.module_from_spec(spec); spec.loader.exec_module(historical)
+        historical_audit = historical.fill_prices(supplemental,index['players'],historical_prices)
     audit['supplemental_meetings'] = len(supplemental)
     audit['supplemental_priced'] = sum(m['o1'] is not None for m in supplemental)
     if len({m['id'] for m in matches}) != len(matches): raise ValueError('Duplicate output match')
@@ -218,6 +232,7 @@ def build(atlas, oncourt, output, as_of, data_only=False):
     manifest = {'asOf':as_of,'audit':dict(audit),'matches':len(matches),'excludedContext':exclusions,
         'sourceHashes':{name:hashlib.sha256((oncourt/name).read_bytes()).hexdigest() for name in
          ['players_atp.csv','games_atp.csv','tours_atp.csv','stat_atp.csv']},
+        'historicalPriceImport':historical_audit,
         'verifiedPriceHash':hashlib.sha256(price_file.read_bytes()).hexdigest() if price_file.exists() else None,
         'atlasIndexHash':hashlib.sha256((atlas/'index.json').read_bytes()).hexdigest(),
         'dataHash':hashlib.sha256((output/'data.json').read_bytes()).hexdigest()}
