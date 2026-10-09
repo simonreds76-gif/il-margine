@@ -18,6 +18,7 @@ const ATLAS_LINKS = [
   { href: "/football-atlas", label: "Club returns", description: "Club ROI & results", sport: "football" as const, heading: "Football" },
   { href: "/manager-atlas", label: "Manager returns", description: "Manager ROI & H2H", sport: "football" as const, heading: "" },
   { href: "/return-atlas", label: "Player returns", description: "Player ROI & results", sport: "tennis" as const, heading: "Tennis" },
+  { href: "/tennis-matchday", label: "Tennis Matchday", description: "Upcoming matches & H2H", sport: "tennis" as const, heading: "" },
   { href: "/tennis-matchup", label: "Matchup Lab", description: "Head-to-head & player stats", sport: "tennis" as const, heading: "" },
 ];
 const RESOURCE_LINKS = [
@@ -41,7 +42,9 @@ function MatchdayMark() {
 }
 
 function AtlasIcon({ href, sport }: { href: string; sport: "football" | "tennis" }) {
-  return href === "/manager-atlas"
+  return href === "/tennis-matchday"
+    ? <Image src="/tennis-matchday/mark.svg" width={32} height={32} alt="" className="h-8 w-8 shrink-0 object-contain" unoptimized />
+    : href === "/manager-atlas"
     ? <Image src="/manager-atlas/mark-v2.svg" width={32} height={32} alt="" className="h-8 w-8 shrink-0 object-contain" unoptimized />
     : href === "/tennis-matchup"
     ? <Image src="/tennis-matchup/court-v1.webp" width={32} height={32} alt="" className="h-8 w-8 shrink-0 object-contain" unoptimized />

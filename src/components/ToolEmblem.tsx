@@ -2,10 +2,11 @@ import Image from "next/image";
 import { useId } from "react";
 import "./tool-emblem.css";
 
-export type ToolEmblemName = "aerial" | "matchday" | "managers" | "rules" | "matchup" | "price" | "football-price" | "margin" | "tennis" | "football" | "lab" | "penalty" | "kelly" | "returns" | "guide" | "record" | "closing" | "tools";
+export type ToolEmblemName = "aerial" | "matchday" | "tennis-matchday" | "managers" | "rules" | "matchup" | "price" | "football-price" | "margin" | "tennis" | "football" | "lab" | "penalty" | "kelly" | "returns" | "guide" | "record" | "closing" | "tools";
 
 const artwork: Partial<Record<ToolEmblemName, string>> = {
   matchday: "/football-atlas/matchday/mark-v1.svg",
+  "tennis-matchday": "/tennis-matchday/mark.svg",
   managers: "/manager-atlas/mark-v2.svg",
   aerial: "/aerial/mark.webp",
   matchup: "/tennis-matchup/court-v1.webp",
@@ -16,6 +17,7 @@ const artwork: Partial<Record<ToolEmblemName, string>> = {
 };
 
 export function emblemForHref(href: string): ToolEmblemName {
+  if (href.includes("tennis-matchday")) return "tennis-matchday";
   if (href.includes("football-atlas/fixtures")) return "matchday";
   if (href.includes("manager-atlas")) return "managers";
   if (href.includes("tennis-retirement")) return "rules";

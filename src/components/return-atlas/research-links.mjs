@@ -19,3 +19,11 @@ export function readAtlasResearch(search, players) {
     missing: requested.some(id => !known.has(id)),
   };
 }
+
+export function readMatchupResearch(search, players) {
+  const params = new URLSearchParams(search);
+  const result = readAtlasResearch(search, players);
+  return { ...result, ready: result.ids.length === 2 && !result.missing,
+    mode: params.get('record') === 'h2h' ? 'h2h' : 'profiles',
+    months: params.get('history') === 'archive' ? 'archive' : '24' };
+}

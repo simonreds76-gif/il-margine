@@ -8,10 +8,11 @@ interface FooterProps { className?: string; }
 
 const groups = [
   { title: "Return Atlas", links: [
-    { label: "Matchday", href: "/football-atlas/fixtures" },
+    { label: "Football Matchday", href: "/football-atlas/fixtures" },
     { label: "Football club returns", href: "/football-atlas" },
     { label: "Football manager returns", href: "/manager-atlas" },
     { label: "Tennis player returns", href: "/return-atlas" },
+    { label: "Tennis Matchday", href: "/tennis-matchday" },
     { label: "Tennis Matchup Lab", href: "/tennis-matchup" },
   ] },
   { title: "Betting tools", links: [

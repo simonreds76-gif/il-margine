@@ -9,6 +9,7 @@ const editions = [
   { id: "football", href: "/football-atlas", label: "Football", image: "/images/tools/football-v1.webp" },
   { id: "managers", href: "/manager-atlas", label: "Managers", image: "/manager-atlas/mark-v2.svg" },
   { id: "tennis", href: "/return-atlas", label: "Tennis", image: "/images/tools/tennis-v1.webp" },
+  { id: "tennis-matchday", href: "/tennis-matchday", label: "Tennis Matchday", image: "/tennis-matchday/mark.svg" },
   { id: "matchup", href: "/tennis-matchup", label: "Matchup Lab", image: "/tennis-matchup/court-v1.webp" },
 ] as const;
 
@@ -31,7 +32,7 @@ export default function AtlasPageHeader({ edition, description, children }: {
     </div>
     <p className={styles.description}>{description}</p>
     <nav className={styles.editions} aria-label="Return Atlas tools">
-      {editions.map(item => <Link key={item.id} href={item.href} prefetch={false} aria-label={item.id === "matchup" ? "Tennis Matchup Lab" : undefined} aria-current={edition === item.id ? "page" : undefined}><Image src={item.image} alt="" width={24} height={24} unoptimized /><span>{item.id === "matchup" ? "Matchup" : item.label}</span></Link>)}
+      {editions.map(item => <Link key={item.id} href={item.href} prefetch={false} aria-label={item.id === "matchup" ? "Tennis Matchup Lab" : item.label} aria-current={edition === item.id ? "page" : undefined}><Image src={item.image} alt="" width={24} height={24} unoptimized /><span>{item.id === "matchup" ? "Matchup" : item.id === "tennis-matchday" ? "Daily H2H" : item.label}</span></Link>)}
     </nav>
     {children}
   </header>;
