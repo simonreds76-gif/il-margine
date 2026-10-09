@@ -45,6 +45,16 @@ def paired_prices(row):
 
 def fill_prices(results, players, paths):
     by_pair = defaultdict(list)
+    ids_by_name = defaultdict(list)
+    published_ids = {p['id'] for p in players}
+    for p in players: ids_by_name[norm(p['name'])].append(p['id'])
+    def published_id(source_id, name):
+        candidate = 'vbt-'+source_id
+        if candidate in published_ids: return candidate
+        aliases = ids_by_name[norm(name)]
+        # An existing OnCourt identity may predate its source-feed ID. Never
+        # replace one known Valuebetennis identity with another by name.
+        return aliases[0] if len(aliases)==1 and aliases[0].startswith('oc-') else candidate
     for result in results:
         if result['o1'] is None and result['o2'] is None:
             pair = tuple(sorted(players[result[k]]['id'] for k in ('p1', 'p2')))
@@ -59,7 +69,7 @@ def fill_prices(results, players, paths):
             header = handle.readline(); handle.seek(0)
             for row in csv.DictReader(handle, delimiter=';' if ';' in header else ','):
                 if row['genre'] != 'atp': continue
-                ids = ['vbt-'+row['joueur1_id'], 'vbt-'+row['joueur2_id']]
+                ids = [published_id(row['joueur'+str(i)+'_id'],row['joueur'+str(i)]) for i in (1,2)]
                 possible = by_pair.get(tuple(sorted(ids)), [])
                 if not possible: continue
                 counts['source_pair_rows'] += 1
@@ -73,10 +83,15 @@ def fill_prices(results, players, paths):
                 if win: oriented = [(b,a) for a,b in oriented]
                 matches = []
                 for result in possible:
-                    if abs((date.fromisoformat(result['date'])-date.fromisoformat(row['date'][:10])).days)>1: continue
+                    days = abs((date.fromisoformat(result['date'])-date.fromisoformat(row['date'][:10])).days)
+                    if days>7: continue
+                    # A changed scheduled date is accepted only with an exact
+                    # completed score as well as the same event, round and winner.
+                    if days>1 and score(result['score']) != oriented: continue
                     if norm(result['event']) != norm(row['tournoi']): continue
                     if result['id'].split('-')[-1] != row['tour']: continue
-                    if result['surface'] != surfaces.get(row['surface']): continue
+                    source_surface = surfaces.get(row['surface'])
+                    if result['surface'] != source_surface and {result['surface'],source_surface} != {'indoor-hard','outdoor-hard'}: continue
                     source_score = ' '.join(a+'-'+b for a,b in oriented) if win else row['score']
                     if re.search(r'ret|walk|w/o|abn|def',row['score'],re.I): continue
                     if players[result['p1']]['id'] != ids[win] or not compatible_score(result['score'],source_score): continue

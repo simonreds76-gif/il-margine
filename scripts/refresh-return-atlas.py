@@ -195,7 +195,7 @@ def refresh(config, dry_run=False):
         current_year = date.today().year
         cache = state / 'source-cache'
         cache.mkdir(exist_ok=True)
-        for year in [2021, *range(2025, current_year + 1)]:
+        for year in range(2021, current_year + 1):
             target = cache / f'valuebetennis-{year}.csv'
             stamp = cache / f'{year}-checked.txt'
             if target.exists() and (year < current_year or (stamp.exists() and stamp.read_text() == as_of)):
@@ -238,9 +238,7 @@ def refresh(config, dry_run=False):
             by_id = {r[0]: r for r in new_details['matches']}
             if any(by_id.get(r[0]) != r for r in old_details['matches']):
                 raise ValueError('Existing match description changed; review required')
-        historical_prices = [Path(config['archives']) / 'outputs/atp-returns-design-20260919/data' / f'valuebetennis-atp-{year}.csv'
-                             if 2022 <= year < 2025 else cache / f'valuebetennis-{year}.csv'
-                             for year in range(2021, current_year + 1)]
+        historical_prices = [cache / f'valuebetennis-{year}.csv' for year in range(2021, current_year + 1)]
         matchup_old, matchup_new, matchup_changed = prepare_matchup(checkout, candidate, new_manifest, as_of, historical_prices)
         status.update(matchupVersion=matchup_new['version'], matchupMatches=matchup_new['matches'], matchupChanged=matchup_changed)
         status.pop('error', None)
