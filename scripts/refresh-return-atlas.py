@@ -190,7 +190,7 @@ def refresh(config, dry_run=False):
         if run(['git', 'status', '--porcelain', '--untracked-files=no'], checkout).strip():
             raise RuntimeError('Isolated publication checkout has uncommitted changes; preserving it for review')
         run(['git', 'pull', '--ff-only', 'origin', BRANCH], checkout, timeout=180)
-        run(['git', 'sparse-checkout', 'add', 'public/tennis-matchup'], checkout)
+        run(['git', 'sparse-checkout', 'add', 'public/tennis-matchup', 'config'], checkout)
         as_of = date.today().isoformat()
         current_year = date.today().year
         cache = state / 'source-cache'
