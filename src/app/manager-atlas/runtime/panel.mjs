@@ -1,4 +1,4 @@
-import { defaults, summary, bands, leagues } from './football-core.mjs';
+import { defaults, summary, bands, leagues, priceBasisLabel } from './football-core.mjs';
 import { portraits as reviewedPortraits } from './portraits.mjs';
 import { icon, brandMark } from './identity.mjs';
 import { managerRows, managerHistory, resultRecord, matchMarket, marketContext, clubRecords, observedSpells, strategyReturns, rankingMinimum, isVerifiedActive, activeReviewDue } from './core.mjs';
@@ -28,7 +28,7 @@ function filters(){const b=bands[Number($('band').value)];return {...defaults,si
 const find=name=>data.managers.find(m=>m.name.toLowerCase()===name.trim().toLowerCase());
 function rows(id,f,opp){return managerRows(data.fixtures,id,f,opp,$('club').value);}
 function ledger(){
- $('ledger').innerHTML=history.slice().reverse().slice(0,shown).map(m=>`<tr><td>${escape(m.date)}</td><td><b>${escape(m.home)} – ${escape(m.away)}</b><div class="ledger-coaches">${[m.homeManager,m.awayManager].map(id=>`<span>${avatar({id,name:data.names[id]},true)}${escape(data.names[id])}</span>`).join('<em>vs</em>')}</div></td><td><span class="score-pill">${m.hg}–${m.ag}</span></td><td>${escape(side==='draw'?'Draw':side==='team'?m.team:m.opponent)}</td><td>${m.price===null?'Unavailable':m.price.toFixed(2)}<small>${m.price===null?'No recorded odds':m.basis==='bet365-last-pre-match'?'bet365 fallback':m.basis==='closing'?'Pinnacle closing':'Pinnacle pre-match'}</small></td><td class="${m.profit===null?'muted':color(m.profit)}">${m.profit===null?'Excluded from ROI':units(m.profit)}</td></tr>`).join('');
+ $('ledger').innerHTML=history.slice().reverse().slice(0,shown).map(m=>`<tr><td>${escape(m.date)}</td><td><b>${escape(m.home)} – ${escape(m.away)}</b><div class="ledger-coaches">${[m.homeManager,m.awayManager].map(id=>`<span>${avatar({id,name:data.names[id]},true)}${escape(data.names[id])}</span>`).join('<em>vs</em>')}</div></td><td><span class="score-pill">${m.hg}–${m.ag}</span></td><td>${escape(side==='draw'?'Draw':side==='team'?m.team:m.opponent)}</td><td>${m.price===null?'Unavailable':m.price.toFixed(2)}<small>${m.price===null?'No recorded odds':priceBasisLabel(m.basis)}</small></td><td class="${m.profit===null?'muted':color(m.profit)}">${m.profit===null?'Excluded from ROI':units(m.profit)}</td></tr>`).join('');
  $('more').hidden=shown>=history.length;$('ledger-title').textContent=`Match ledger · ${history.length} meetings · ${current.length} priced bets · newest first`;
 }
 function chartReadout(index){
@@ -65,7 +65,7 @@ function context(){
  const labels={team:'Back manager’s team',draw:'Back the draw',opponent:'Back opponent'};
  $('strategy-stats').innerHTML=strategyReturns(current).map(r=>`<article class="stat ${r.side===side?'selected-strategy':''}"><span>${labels[r.side]}</span><strong class="${color(r.roi)}">${r.bets?pct(r.roi):'—'} <em>ROI</em></strong><small class="strategy-profit">${units(r.profit)} profit · ${r.wins} winning bets</small><p>${r.side==='draw'?'Only a draw wins this bet.':'A draw loses this bet.'}</p></article>`).join('');
  const counts=current.reduce((acc,r)=>(acc[r.basis]=(acc[r.basis]||0)+1,acc),{});
- $('price-coverage').textContent=`Selected sample: ${counts.closing||0} Pinnacle closing · ${counts['last-pre-match']||0} Pinnacle pre-match · ${counts['bet365-last-pre-match']||0} bet365 fallback prices. ${history.length-current.length?`${history.length-current.length} meeting(s) without odds count in W/D/L only. `:''}All three strategies use these same ${current.length} fixtures.`;
+ $('price-coverage').textContent=`Selected sample: ${counts.closing||0} Pinnacle closing · ${counts['last-pre-match']||0} Pinnacle pre-match · ${(counts['bet365-last-pre-match']||0)+(counts['bet365-closing']||0)+(counts['bet365-pre-match']||0)} bet365 fallback prices. ${history.length-current.length?`${history.length-current.length} meeting(s) without odds count in W/D/L only. `:''}All three strategies use these same ${current.length} fixtures.`;
 }
 function render(){
  const manager=find($('manager').value),opponent=find($('opponent').value),f=filters();

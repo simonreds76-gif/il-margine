@@ -75,12 +75,12 @@ def join(atlas, source, aliases, registry=None, excluded_games=None):
             manager_names[ident]=name;ids.append(ident)
         if ids[0]==ids[1]:raise ValueError('Same manager on both teams')
         seen.add(m[0]);counts['joined']+=1
-        priced=all(type(p) in (int,float) and 1<p<1001 for p in m[8:11]) and m[11] in (1,2,3)
+        priced=all(type(p) in (int,float) and 1<p<1001 for p in m[8:11]) and m[11] in (1,2,3,4,5)
         if not priced:counts['results_without_prices']+=1
         provenance.append({'fixture':m[0],'source_game_id':r['game_id'],'home_source_label':r['home_club_manager_name'],'away_source_label':r['away_club_manager_name'],'home_id':ids[0],'away_id':ids[1]})
         result.append({'id':m[0],'date':m[1],'league':key[0],'season':atlas['seasons'][m[3]],
                        'home':key[2],'away':key[3],'hg':m[6],'ag':m[7],'odds':m[8:11] if priced else None,
-                       'basis':({1:'closing',2:'last-pre-match',3:'bet365-last-pre-match'}[m[11]]) if priced else None,
+                       'basis':({1:'closing',2:'last-pre-match',3:'bet365-last-pre-match',4:'bet365-closing',5:'bet365-pre-match'}[m[11]]) if priced else None,
                        'homeManager':ids[0],'awayManager':ids[1]})
     return {'schema':1,'managers':[{'id':k,'name':v} for k,v in sorted(manager_names.items(),key=lambda item:item[1])],
             'fixtures':sorted(result,key=lambda r:(r['date'],r['id']))}, {'counts':dict(counts),'excluded':rejected,'provenance':provenance}

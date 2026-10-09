@@ -34,7 +34,7 @@ def main():
     if extra.exists():
         for team,entry in json.loads(extra.read_text()).items():
             if (ROOT/'public'/entry['path'].lstrip('/')).is_file():crests[team]=entry['path']
-    compact={'teams':teams,'crests':crests,'leagues':leagues,'seasons':seasons,'fixtures':[[m['id'],m['date'],leagues.index(m['league']),seasons.index(m['season']),ti[m['home']],ti[m['away']],m['hg'],m['ag'],*(m['odds'] or [None,None,None]),1 if m['basis']=='closing' else 2 if m['basis']=='last-pre-match' else 0] for m in fixtures]}
+    compact={'teams':teams,'crests':crests,'leagues':leagues,'seasons':seasons,'fixtures':[[m['id'],m['date'],leagues.index(m['league']),seasons.index(m['season']),ti[m['home']],ti[m['away']],m['hg'],m['ag'],*(m['odds'] or [None,None,None]),{'closing':1,'last-pre-match':2,'bet365-last-pre-match':3,'bet365-closing':4,'bet365-pre-match':5}.get(m['basis'],0)] for m in fixtures]}
     compact['teams']=[DISPLAY.get(t,t) for t in teams]
     assert len(set(compact['teams']))==len(teams),'Display-name collision'
     compact['crests']={DISPLAY.get(t,t):url for t,url in crests.items()}

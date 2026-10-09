@@ -19,9 +19,10 @@ class JoinTests(unittest.TestCase):
         self.assertIsNone(data['fixtures'][0]['basis'])
         self.assertEqual(audit['counts']['results_without_prices'],1)
     def test_reviewed_fallback_is_never_labelled_pinnacle_closing(self):
-        self.atlas['fixtures'][0][11]=3
-        data,_=mod.join(self.atlas,[self.row],{})
-        self.assertEqual(data['fixtures'][0]['basis'],'bet365-last-pre-match')
+        for code,basis in [(3,'bet365-last-pre-match'),(4,'bet365-closing'),(5,'bet365-pre-match')]:
+            self.atlas['fixtures'][0][11]=code
+            data,_=mod.join(self.atlas,[self.row],{})
+            self.assertEqual(data['fixtures'][0]['basis'],basis)
     def test_conflicting_score_and_duplicate_are_not_guessed(self):
         wrong={**self.row,'home_club_goals':'3'}
         data,audit=mod.join(self.atlas,[wrong],{})
