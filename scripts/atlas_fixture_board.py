@@ -117,7 +117,7 @@ def valid_history(rows, cutoff):
 
 def orient(row, first_is_home):
     raw = row.get('odds')
-    priced = raw and len(raw) == 3 and all(type(p) in (int, float) and 1 < p <= 1000 for p in raw) and row.get('basis') in ('closing', 'last-pre-match', 'bet365-last-pre-match')
+    priced = raw and len(raw) == 3 and all(type(p) in (int, float) and 1 < p <= 1000 for p in raw) and row.get('basis') in ('closing', 'last-pre-match', 'bet365-last-pre-match', 'bet365-closing', 'bet365-pre-match')
     prices = (raw if first_is_home else list(reversed(raw))) if priced else None
     winner = 1 if row['hg'] == row['ag'] else (0 if (row['hg'] > row['ag']) == first_is_home else 2)
     book = sum(1 / p for p in prices) if prices else None
@@ -241,7 +241,7 @@ def refresh(state, *, offline=False, now=None, days=21):
     club_rows = [{'id': r[0], 'date': r[1], 'league': football['leagues'][r[2]],
                   'home': football['teams'][r[4]], 'away': football['teams'][r[5]], 'hg': r[6], 'ag': r[7],
                   'odds': r[8:11] if r[8] is not None else None,
-                  'basis': {1:'closing',2:'last-pre-match',3:'bet365-last-pre-match'}.get(r[11])} for r in football['fixtures']]
+                  'basis': {1:'closing',2:'last-pre-match',3:'bet365-last-pre-match',4:'bet365-closing',5:'bet365-pre-match'}.get(r[11])} for r in football['fixtures']]
     manager_rows = [dict(zip(manager_data['columns'], r)) for r in manager_data['rows']]
     cards, evidence = build(fixtures, club_rows, manager_rows, now, football['crests'])
     checked = min(dt(t) for t in source_times.values())

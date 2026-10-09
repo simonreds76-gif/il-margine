@@ -2,8 +2,16 @@ import test from 'node:test';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import { managerRows, managerHistory, resultRecord, matchMarket, marketContext, clubRecords, observedSpells, strategyReturns, rankingMinimum, isVerifiedActive, activeReviewDue } from '../../research/manager-atlas/core.mjs';
-import { defaults, summary, bands } from '../../src/components/football-atlas/football-core.ts';
+import { defaults, summary, bands, priceBases, priceBasisLabel } from '../../src/components/football-atlas/football-core.ts';
 const fixture=(patch={})=>({id:'1',date:'2024-01-01',league:'premier-league',season:'2023-2024',home:'A',away:'B',homeManager:'x',awayManager:'y',hg:1,ag:1,odds:[2,3,4],basis:'closing',...patch});
+
+test('fallback timing and bookmaker survive decoding into display labels',()=>{
+ assert.equal(priceBasisLabel(priceBases[4]),'bet365 closing');
+ assert.equal(priceBasisLabel(priceBases[5]),'bet365 pre-match');
+ assert.equal(priceBasisLabel(priceBases[3]),'bet365 fallback');
+ assert.equal(priceBasisLabel(null),'No recorded odds');
+ assert.equal(priceBasisLabel('unrecognised'),'No recorded odds');
+});
 test('unpriced results stay in H2H without becoming losing bets or changing ROI',()=>{
  const matches=[fixture({hg:2,ag:0}),fixture({id:'unpriced',hg:0,ag:1,odds:null,basis:null})];
  const history=managerHistory(matches,'x',defaults,'y');

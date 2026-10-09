@@ -1,4 +1,10 @@
 export type Side = 'team' | 'draw' | 'opponent';
+export const priceBases: Record<number, string> = { 1: 'closing', 2: 'last-pre-match', 3: 'bet365-last-pre-match', 4: 'bet365-closing', 5: 'bet365-pre-match' };
+export function priceBasisLabel(basis: string | null): string {
+    return ({ closing: 'Pinnacle closing', 'last-pre-match': 'Pinnacle pre-match',
+        'bet365-last-pre-match': 'bet365 fallback', 'bet365-closing': 'bet365 closing',
+        'bet365-pre-match': 'bet365 pre-match' } as Record<string, string>)[basis ?? ''] ?? 'No recorded odds';
+}
 export type Role = 'all' | 'favourite' | 'underdog';
 export type Fixture = {
     id: string;

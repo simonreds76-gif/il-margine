@@ -128,8 +128,8 @@ def main():
             except ValueError as e:
                 pending.append({'id':f[0],'reason':str(e),'home':home,'away':away,'coaches':row['coaches']});continue
             if ids[0]==ids[1]:raise ValueError('Same manager on both sides')
-            priced=all(type(v) in (int,float) and 1<v<1001 for v in f[8:11]) and f[11] in (1,2,3)
-            added.append({'id':f[0],'date':date,'league':league,'season':atlas['seasons'][f[3]],'home':home,'away':away,'hg':f[6],'ag':f[7],'odds':f[8:11] if priced else None,'basis':({1:'closing',2:'last-pre-match',3:'bet365-last-pre-match'}[f[11]]) if priced else None,'homeManager':ids[0],'awayManager':ids[1]})
+            priced=all(type(v) in (int,float) and 1<v<1001 for v in f[8:11]) and f[11] in (1,2,3,4,5)
+            added.append({'id':f[0],'date':date,'league':league,'season':atlas['seasons'][f[3]],'home':home,'away':away,'hg':f[6],'ag':f[7],'odds':f[8:11] if priced else None,'basis':({1:'closing',2:'last-pre-match',3:'bet365-last-pre-match',4:'bet365-closing',5:'bet365-pre-match'}[f[11]]) if priced else None,'homeManager':ids[0],'awayManager':ids[1]})
             for i,mid in enumerate(ids):new_coaches[row['coaches'][i]['id']]={'managerId':mid,'name':row['coaches'][i]['name']}
             if len(added)%20==0:print('Validated',len(added),'pending',len(pending),'requests',requests_count,flush=True)
     except Exception as e:failures.append(str(e))

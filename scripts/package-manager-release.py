@@ -24,7 +24,7 @@ def validate(data):
             if f['basis'] is not None:raise ValueError('Unpriced result cannot claim a price basis')
         else:
             if len(f['odds'])!=3 or any(type(p) not in (int,float) or not math.isfinite(p) or not 1<p<1001 for p in f['odds']):raise ValueError('Invalid three-way prices')
-            if f['basis'] not in ('closing','last-pre-match','bet365-last-pre-match'):raise ValueError('Unknown price basis')
+            if f['basis'] not in ('closing','last-pre-match','bet365-last-pre-match','bet365-closing','bet365-pre-match'):raise ValueError('Unknown price basis')
         if any(type(f[k]) is not int or not 0<=f[k]<=30 for k in ('hg','ag')):raise ValueError('Invalid final score')
     if data['through']!=max(f['date'] for f in data['fixtures']):raise ValueError('Wrong archive date')
 
