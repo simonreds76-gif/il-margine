@@ -89,6 +89,23 @@ class AtlasUpdateTests(unittest.TestCase):
 
 
 class ScopedPublicationTests(unittest.TestCase):
+    def test_post_promotion_propagation_retries_only_stale_responses(self):
+        calls = []
+        def fetch(url):
+            calls.append(url)
+            return b'current' if url == 'archive' or calls.count(url) == 3 else b'old'
+        with patch.object(u.time, 'sleep') as sleep:
+            u.verify_live(fetch, {'archive': lambda body: body == b'current', 'page': lambda body: body == b'current'})
+        self.assertEqual(calls.count('archive'), 1)
+        self.assertEqual(calls.count('page'), 3)
+        self.assertEqual(sleep.call_count, 2)
+
+    def test_persistent_stale_response_still_fails(self):
+        with patch.object(u.time, 'monotonic', side_effect=[0, 181]), patch.object(u.time, 'sleep') as sleep:
+            with self.assertRaisesRegex(RuntimeError, 'propagation wait: page'):
+                u.verify_live(lambda url: b'old', {'page': lambda body: body == b'current'})
+        sleep.assert_not_called()
+
     def publication(self, *, corrupt=False, wrong_target=False, advanced=False):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
