@@ -4,6 +4,8 @@ import importlib.util
 from pathlib import Path
 import tempfile
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location('update', Path(__file__).parents[1] / 'football_atlas_update.py')
 u = importlib.util.module_from_spec(spec)
@@ -84,6 +86,84 @@ class AtlasUpdateTests(unittest.TestCase):
             self.assertEqual(u.extract_quotes([match],[{**market,**patch}],*args[2:]),[])
         self.assertEqual(u.extract_quotes([{**match,'isLive':True}],[market],*args[2:]),[])
         self.assertEqual(u.extract_quotes([match],[market],*args[2:4],NOW),[])
+
+
+class ScopedPublicationTests(unittest.TestCase):
+    def publication(self, *, corrupt=False, wrong_target=False, advanced=False):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            state = root / 'state'
+            state.mkdir()
+            payloads = {
+                '/football-atlas/index-test.json': {'fixtures': [[1, 2]]},
+                '/manager-atlas/index-test.json': {'fixtures': [[3, 4]]},
+                '/football-atlas/fixtures/evidence-test.json': {'fixtures': [5]},
+            }
+            for route, data in payloads.items():
+                destination = root / 'public' / route.lstrip('/')
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                u.write(destination, data)
+            (root / 'src/data').mkdir(parents=True)
+            u.write(root / 'src/data/manager-atlas-release.json', {'version': 'manager-test', 'indexUrl': '/manager-atlas/index-test.json'})
+            u.write(root / 'src/data/atlas-fixtures.json', {'version': 'board-test', 'evidenceUrl': '/football-atlas/fixtures/evidence-test.json'})
+            deployment = {'id': 'dpl_test', 'readyState': 'READY', 'projectId': 'project', 'ownerId': 'team',
+                          'target': 'preview' if wrong_target else 'production', 'meta': {'githubCommitSha': 'sha'}, 'url': 'test.vercel.app'}
+            u.write(state / 'deployment-state.json', {'sha': 'sha', 'id': 'dpl_test'})
+            calls = []
+            promoted = False
+            def run(args, *positional, **kwargs):
+                nonlocal promoted
+                calls.append(args)
+                if args[:2] == ['git', 'rev-parse']:
+                    return 'sha\n'
+                if args[:2] == ['git', 'ls-remote']:
+                    return ('new-sha' if advanced else 'sha') + '\tbranch\n'
+                if args[1] == 'api':
+                    route = args[2].split('?')[0]
+                    if route == '/v4/aliases/ilmargine.bet':
+                        return u.json.dumps({'deploymentId': 'dpl_test' if promoted else 'dpl_old'})
+                    if route == '/v13/deployments/dpl_test':
+                        return u.json.dumps(deployment)
+                    if route == '/v10/projects/project/promote/dpl_test':
+                        self.assertIn('POST', args)
+                        promoted = True
+                        return ''  # Vercel may return an empty successful response.
+                if args[1] == 'curl':
+                    self.assertNotIn('--deployment', args)
+                    self.assertTrue(args[2].startswith('https://test.vercel.app/'))
+                    route = args[2].removeprefix('https://test.vercel.app')
+                    if route in payloads:
+                        return u.json.dumps({} if corrupt else payloads[route])
+                    return {'/football-atlas': 'football-test', '/manager-atlas': 'manager-test',
+                            '/football-atlas/fixtures': 'data-version="board-test"'}[route]
+                self.fail(f'Unexpected command: {args}')
+            def fetch(url):
+                route = url.removeprefix('https://ilmargine.bet')
+                return (u.json.dumps(payloads[route]) if route in payloads else 'data-version="board-test"').encode()
+            helper = SimpleNamespace(run=run, fetch=fetch, PROJECT='project', TEAM='team', BRANCH='branch')
+            status = {}
+            with patch.object(u.shutil, 'which', return_value='vercel'):
+                if corrupt or wrong_target or advanced:
+                    with self.assertRaises((ValueError, RuntimeError)):
+                        u.publish({'checkout': root, 'stateDirectory': state}, helper, 'football-test', Path('public/football-atlas/index-test.json'), status)
+                    self.assertFalse(promoted)
+                else:
+                    u.publish({'checkout': root, 'stateDirectory': state}, helper, 'football-test', Path('public/football-atlas/index-test.json'), status)
+                    self.assertTrue(promoted)
+                    self.assertEqual(status['status'], 'published')
+                    self.assertEqual(len([args for args in calls if args[1] == 'curl']), 6)
+
+    def test_scoped_token_route_verifies_all_archives_before_promotion(self):
+        self.publication()
+
+    def test_bad_archive_never_promotes(self):
+        self.publication(corrupt=True)
+
+    def test_preview_target_never_promotes(self):
+        self.publication(wrong_target=True)
+
+    def test_newer_branch_never_gets_replaced(self):
+        self.publication(advanced=True)
 
 
 if __name__ == '__main__':

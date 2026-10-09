@@ -397,7 +397,8 @@ def publish(config, helper, version, path, status):
             request = state / 'deploy-request.json'
             write(request, body)
             args += ['-X', 'POST', '--input', request]
-        return json.loads(run(args, checkout, timeout=120))
+        response = run(args, checkout, timeout=120)
+        return json.loads(response) if response.strip() else {}
     before = api('/v4/aliases/ilmargine.bet')['deploymentId']
     sha = run(['git', 'rev-parse', 'HEAD'], checkout).strip()
     prior_path = state / 'deployment-state.json'
@@ -418,38 +419,54 @@ def publish(config, helper, version, path, status):
             raise RuntimeError('Candidate build failed/timed out; live release retained')
         time.sleep(30)
         deployment = api('/v13/deployments/' + deployment['id'])
+    if (deployment.get('projectId') != helper.PROJECT or deployment.get('ownerId') != helper.TEAM
+            or deployment.get('target') != 'production'
+            or deployment.get('meta', {}).get('githubCommitSha') != sha):
+        raise ValueError('Candidate deployment project, team, target or commit mismatch')
     url = 'https://' + deployment['url']
-    page = run([vercel, 'curl', '/football-atlas', '--deployment', url, '--', '--fail', '--silent'], checkout)
+    def candidate_get(route):
+        # Full URLs resolve the deployment directly. The path + --deployment form
+        # calls /user first, which is unavailable to a project-scoped CI token.
+        return run([vercel, 'curl', url + route, '--', '--fail', '--silent'], checkout)
+    page = candidate_get('/football-atlas')
     if version not in page or re.search(r'<meta[^>]+name="robots"[^>]+content="[^"]*noindex', page, re.I):
         raise ValueError('Candidate metadata/archive pointer failed validation')
-    archive = run([vercel, 'curl', '/' + path.relative_to('public').as_posix(), '--deployment', url, '--', '--fail', '--silent'], checkout)
+    archive = candidate_get('/' + path.relative_to('public').as_posix())
     if json.loads(archive) != read(checkout / path):
         raise ValueError('Deployed archive differs from validated candidate')
     manager_path = checkout / 'src/data/manager-atlas-release.json'
     if manager_path.exists():
         manager = read(manager_path)
-        manager_page = run([vercel, 'curl', '/manager-atlas', '--deployment', url, '--', '--fail', '--silent'], checkout)
+        manager_page = candidate_get('/manager-atlas')
         if manager['version'] not in manager_page or re.search(r'<meta[^>]+name="robots"[^>]+content="[^"]*noindex', manager_page, re.I):
             raise ValueError('Manager page pointer or indexability failed validation')
-        manager_data = run([vercel, 'curl', manager['indexUrl'], '--deployment', url, '--', '--fail', '--silent'], checkout)
+        manager_data = candidate_get(manager['indexUrl'])
         if json.loads(manager_data) != read(checkout / 'public' / manager['indexUrl'].lstrip('/')):
             raise ValueError('Deployed manager archive differs from validated candidate')
     fixture_path = checkout / 'src/data/atlas-fixtures.json'
     if fixture_path.exists():
         board = read(fixture_path)
-        board_page = run([vercel, 'curl', '/football-atlas/fixtures', '--deployment', url, '--', '--fail', '--silent'], checkout)
+        board_page = candidate_get('/football-atlas/fixtures')
         if f'data-version="{board["version"]}"' not in board_page:
             raise ValueError('Fixture board candidate version mismatch')
-        board_evidence = run([vercel, 'curl', board['evidenceUrl'], '--deployment', url, '--', '--fail', '--silent'], checkout)
+        board_evidence = candidate_get(board['evidenceUrl'])
         if json.loads(board_evidence) != read(checkout / 'public' / board['evidenceUrl'].lstrip('/')):
             raise ValueError('Fixture evidence differs from validated candidate')
     if api('/v4/aliases/ilmargine.bet')['deploymentId'] != before or run(['git', 'ls-remote', 'origin', 'refs/heads/' + helper.BRANCH], checkout).split()[0] != sha:
         raise RuntimeError('Another release advanced; refusing to replace newer production')
-    run([vercel, 'promote', url, '--yes', '--scope', 'simones-projects-fb02b6e0'], checkout, timeout=180)
+    # Same promotion endpoint used by the CLI, without its personal-user lookup.
+    api(f'/v10/projects/{helper.PROJECT}/promote/{deployment["id"]}', {})
+    deadline = time.monotonic() + 180
+    while api('/v4/aliases/ilmargine.bet')['deploymentId'] != deployment['id']:
+        if time.monotonic() > deadline:
+            raise RuntimeError('Production alias did not reach validated deployment; investigate promotion')
+        time.sleep(5)
     if json.loads(helper.fetch('https://ilmargine.bet/' + path.relative_to('public').as_posix())) != read(checkout / path):
         raise RuntimeError('Live archive validation failed; investigate promotion')
     if fixture_path.exists() and f'data-version="{board["version"]}"' not in helper.fetch('https://ilmargine.bet/football-atlas/fixtures').decode():
         raise RuntimeError('Live fixture board validation failed; investigate promotion')
+    if manager_path.exists() and json.loads(helper.fetch('https://ilmargine.bet' + manager['indexUrl'])) != read(checkout / 'public' / manager['indexUrl'].lstrip('/')):
+        raise RuntimeError('Live manager archive validation failed; investigate promotion')
     status.update(status='published', deploymentUrl=url, publishedAt=datetime.now(UTC).isoformat())
     write(state / 'publish-status.json', status)
 

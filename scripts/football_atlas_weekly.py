@@ -324,10 +324,8 @@ def publish(state, manifest, report):
     token = os.environ.get('VERCEL_TOKEN')
     if not token:
         raise ValueError('Project-scoped VERCEL_TOKEN is missing')
-    # CLI token remains in the process only, never in an artifact or repository file.
+    # The CLI reads VERCEL_TOKEN from its environment; never put it in argv.
     def authenticated_run(args, cwd=None, **kwargs):
-        if Path(str(args[0])).name in ('vercel', 'vercel.cmd'):
-            args = [args[0], '--token', token, *args[1:]]
         try:
             return run(args, cwd, **kwargs)
         except RuntimeError as exc:
