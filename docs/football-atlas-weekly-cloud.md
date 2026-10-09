@@ -18,6 +18,8 @@ The publisher checks for unrelated modified files both before collecting data an
 
 A failed validation keeps the previous public archive. A failure after promotion is reported as such for investigation. The existing operations Telegram bot sends a link to the failed GitHub run. The workflow keeps validation reports for 30 days.
 
+Candidate checks use authenticated full deployment URLs. Promotion uses the explicit project deployment API and waits for the production alias to match. These routes support the restricted project token without a personal-user lookup; project, team, production target, commit and all three Atlas datasets are checked before publication.
+
 Required repository secrets: `ODDSPAPI_API_KEY`, `FOOTBALL_ATLAS_VERCEL_TOKEN` (project-scoped credential), and the existing `OPS_ALERT_TELEGRAM_BOT_TOKEN` / `OPS_ALERT_TELEGRAM_CHAT_ID`. Never store secrets in code, cache or reports. Rotate the Vercel token before expiry.
 
 Manual `workflow_dispatch` defaults to `dry_run=true`: download and validate without committing, building or promoting. Disable the workflow in GitHub Actions to stop scheduled updates. The older Windows capture tasks remain disabled.

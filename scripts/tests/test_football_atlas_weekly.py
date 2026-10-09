@@ -219,7 +219,8 @@ class WeeklyAtlasTests(unittest.TestCase):
             self.assertIn(b'archive.csv', git(root, 'status', '--porcelain'))
             attrs.write_text((w.ROOT / '.gitattributes').read_text())
             self.assertNotIn(b'archive.csv', git(root, 'status', '--porcelain'))
-            csv.write_bytes(b'match,price\r\n1,3.00\r\n')
+            # Change size too so coarse filesystem timestamps cannot mask the edit.
+            csv.write_bytes(b'match,price\r\n1,3.125\r\n')
             self.assertIn(b'archive.csv', git(root, 'status', '--porcelain'))
 
     def test_release_stages_both_retention_deletion_types_and_rejects_unrelated_files(self):
