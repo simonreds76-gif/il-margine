@@ -1,0 +1,62 @@
+Historical H2H price recovery, 9 October 2026, second pass
+
+Based on release commit 550ec0a, including the latest daily refresh.
+Previous Matchup version: 20261009-948b4890784b.
+Candidate Matchup version: 20261009-d272e22dd297.
+
+85,557 recorded meetings retained, including 14,652 core ATP profile matches.
+8,029 previously unpriced meetings recovered; 70,251 now have paired prices.
+Missing: 23,335 to 15,306 (27.27% to 17.89%).
+Since 2021: 3,992 to 1,698 missing of 50,003 meetings (3.40%).
+Since 2021 ATP main draw: 41 to 16 unpriced.
+Other recent gaps: Challenger 326, qualifying 407, team competitions 410, ITF 539.
+These are price-coverage figures for recorded meetings, not claims of complete career coverage.
+
+Additions after overlap removal
+1,955 from explicitly reviewed full/short name variants in the Ali Mohammadi
+2014-2025 TennisExplorer archive. Exact paired identity, date within one day,
+winner, completed set score, event and surface required. Twelve deterministic
+quotes checked directly on TennisExplorer; all agreed.
+4,004 from E. Hallmar's older moneyline archive. Exact identities, tournament
+window, betting date within one day, winner, surface, set count, sets won and
+both players' game totals required. Ambiguous matches held out. Fixed bookmaker
+priority starts with Pinnacle Sports, Bookmaker and 5Dimes, then OddsPortal.
+Never select the biggest or most profitable quote after the result. American
+prices and stored implied probabilities independently reconcile. Two impossible
+market totals excluded. Source has no precise capture timestamps; do not call
+these verified closing quotes. OddsPortal-labelled rows do not identify a book.
+2,070 from TennisData.app 2021-2026 files. Both abbreviated names, full final
+score, winner, date within one day, event and surface required. Learned source
+player IDs had no conflicting identities. Neither bookmaker nor exact capture
+time is specified by the provider, which is explicit in each quote's priceBasis.
+
+Source checks
+TennisData: 38,671 overlapping priced matches; median absolute difference in
+normalised winner probability 1.24 percentage points. This is a compatibility
+check, not proof that every price is correct. 215 overlapping records differ by
+more than 10 percentage points and require separate source-timing investigation.
+Older archive: 49,162 matched quoted rows (multiple books can quote one fixture),
+median absolute probability difference 1.03 percentage points.
+
+Integrity and maintenance
+All earlier results, dates, identities, stats and existing prices preserved.
+No added fixtures, changed forecasting models, stakes or settled betting records.
+Source links, identity evidence, original market format and file hashes retained
+in config/tennis-h2h-verified-prices.json. Existing daily builder reads this file,
+checks exact date/score agreement and retains priced supplemental records.
+No additional polling, API subscriptions or per-visitor workload introduced.
+Tennis Matchday's history projection rebuilt from the same validated archive.
+Raw source tables stay private, outside the website checkout.
+
+Important outstanding audit
+Some existing Valuebetennis prices disagree sharply with two independent
+archives. Andres Martin vs Thanasi Kokkinakis, Atlanta 26 July 2022, is one
+concrete example: existing 1.012 / 49.35 versus Bet365 6.00 / 1.12 in both
+TennisData and TennisExplorer's archived data (match 2149495).
+Do not use the historical datasets for a new Challenger backtest until these
+source-timing anomalies are investigated. This backfill does not silently
+overwrite existing benchmark prices or establish improved model ROI.
+
+Private evidence
+outputs/tennis-odds-gap-recovery-pass2-20261009 contains source hashes, accepted
+aliases, old/new coverage, added quotes, validation and price disagreements.
