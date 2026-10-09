@@ -383,6 +383,24 @@ def refresh(config, dry_run=False):
     return status
 
 
+def verify_live(fetch, checks, timeout=180):
+    """Allow bounded edge propagation after promotion; never accept stale data."""
+    pending = dict(checks)
+    deadline = time.monotonic() + timeout
+    while pending:
+        for url, validate in list(pending.items()):
+            try:
+                if validate(fetch(url)):
+                    del pending[url]
+            except (OSError, ValueError, RuntimeError):
+                pass
+        if not pending:
+            return
+        if time.monotonic() >= deadline:
+            raise RuntimeError('Live validation still failed after propagation wait: ' + ', '.join(pending))
+        time.sleep(10)
+
+
 def publish(config, helper, version, path, status):
     checkout, state = Path(config['checkout']), Path(config['stateDirectory'])
     run = helper.run
@@ -461,12 +479,15 @@ def publish(config, helper, version, path, status):
         if time.monotonic() > deadline:
             raise RuntimeError('Production alias did not reach validated deployment; investigate promotion')
         time.sleep(5)
-    if json.loads(helper.fetch('https://ilmargine.bet/' + path.relative_to('public').as_posix())) != read(checkout / path):
-        raise RuntimeError('Live archive validation failed; investigate promotion')
-    if fixture_path.exists() and f'data-version="{board["version"]}"' not in helper.fetch('https://ilmargine.bet/football-atlas/fixtures').decode():
-        raise RuntimeError('Live fixture board validation failed; investigate promotion')
-    if manager_path.exists() and json.loads(helper.fetch('https://ilmargine.bet' + manager['indexUrl'])) != read(checkout / 'public' / manager['indexUrl'].lstrip('/')):
-        raise RuntimeError('Live manager archive validation failed; investigate promotion')
+    checks = {'https://ilmargine.bet/' + path.relative_to('public').as_posix():
+              lambda data: json.loads(data) == read(checkout / path)}
+    if fixture_path.exists():
+        checks['https://ilmargine.bet/football-atlas/fixtures'] = lambda data: f'data-version="{board["version"]}"' in data.decode()
+    if manager_path.exists():
+        checks['https://ilmargine.bet' + manager['indexUrl']] = lambda data: json.loads(data) == read(checkout / 'public' / manager['indexUrl'].lstrip('/'))
+    verify_live(helper.fetch, checks)
+    if api('/v4/aliases/ilmargine.bet')['deploymentId'] != deployment['id']:
+        raise RuntimeError('Production changed during live verification; investigate release')
     status.update(status='published', deploymentUrl=url, publishedAt=datetime.now(UTC).isoformat())
     write(state / 'publish-status.json', status)
 
