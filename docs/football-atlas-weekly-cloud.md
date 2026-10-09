@@ -4,15 +4,17 @@ The GitHub workflow runs Tuesday at 08:35 UTC (09:35 British Summer Time). It ch
 
 ## Data and validation
 
-- Five OddsPapi tournament requests cover the Premier League, Serie A, La Liga, Bundesliga and Ligue 1. The historical endpoint supplies Pinnacle regulation-time home/draw/away prices for newly completed matches. It is throttled to one request per 5.2 seconds.
+- Five OddsPapi tournament requests cover the Premier League, Serie A, La Liga, Bundesliga and Ligue 1. Each new history request asks for Pinnacle and bet365 together (one request, throttled to one per 5.2 seconds). A complete, valid Pinnacle regulation-time home/draw/away market remains first choice. When it is unavailable or fails price validation, a complete valid bet365 market is used and labelled as a fallback. Never mix outcomes between bookmakers or choose whichever price was higher.
 - Goaloo season calendars provide final results. A match must also be finished in OddsPapi, at least six hours old, and reconcile by competition, explicitly mapped teams and kickoff. This cross-check confirms completion and identity, not two independent score feeds. Published score corrections require review.
 - Select the last active state strictly before the earlier scheduled/credible actual kickoff. Suspended, missing, conflicting, implausible or uncertain-timing prices fail validation. These observations are labelled **last pre-match**, not certified exchange closing prices.
-- Reconcile all completed fixtures in both directions; a partial provider response cannot silently drop matches. Inspect up to a 35-day recovery window. Never substitute another bookmaker or rewrite earlier published results/prices.
+- Reconcile all completed fixtures in both directions; a partial provider response cannot silently drop matches. Inspect up to a 35-day recovery window. If neither bookmaker passes the same strict pre-match, suspension, timing and complete-market checks, stop with an error and retain the last good release. Never rewrite earlier published results/prices. Reviewed historical backfills already in the archive remain unchanged.
 - Cache downloaded history privately in GitHub Actions. Retain provenance and SHA-256 of the full provider response. These files are not deployed with the website.
 
 ## Publication
 
 Only changed, validated data creates a release commit and candidate Vercel deployment. Verify the candidate page is indexable, uses the correct archive and serves exactly the validated JSON before promotion. Check live ancestry, branch head and live alias to avoid overwriting another release. Preserve the current and previous archive files; remove only older content-addressed Atlas archive files. No change means no Vercel build.
+
+The publisher checks for unrelated modified files both before collecting data and before writing a release. CSV files retain their exact source bytes through `.gitattributes`; this avoids false dirty-checkout failures on Linux when historical CSVs have CRLF endings. Actual content changes still fail the check. Existing successful Pinnacle caches are reused; only an unusable older cache needs a combined-bookmaker request. Reports identify each selected bookmaker, price basis and why Pinnacle was rejected when a fallback was used.
 
 A failed validation keeps the previous public archive. A failure after promotion is reported as such for investigation. The existing operations Telegram bot sends a link to the failed GitHub run. The workflow keeps validation reports for 30 days.
 
