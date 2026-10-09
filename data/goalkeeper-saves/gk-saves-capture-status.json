@@ -1,54 +1,58 @@
 {
   "capture_errors": [],
-  "capture_mode": "publication",
+  "capture_mode": "close",
   "event_last_checked": {
-    "71945292": "2026-10-09T15:20:53Z",
-    "72036204": "2026-10-09T15:20:53Z",
-    "72036206": "2026-10-09T15:20:53Z",
-    "72221292": "2026-10-09T15:20:53Z",
-    "72221294": "2026-10-09T15:20:53Z",
-    "72221296": "2026-10-09T15:20:53Z",
-    "72221304": "2026-10-09T15:20:53Z",
-    "72221310": "2026-10-09T15:20:53Z",
-    "72478606": "2026-10-09T15:20:53Z",
-    "72478616": "2026-10-09T15:20:53Z",
-    "72478620": "2026-10-09T15:20:53Z",
-    "72513220": "2026-10-09T15:20:53Z",
-    "72513224": "2026-10-09T15:20:53Z",
-    "72513228": "2026-10-09T15:20:53Z",
-    "72513230": "2026-10-09T15:20:53Z",
-    "72513232": "2026-10-09T15:20:53Z",
-    "72513236": "2026-10-09T15:20:53Z"
+    "71945292": "2026-10-09T16:34:49Z",
+    "71945294": "2026-10-09T16:34:49Z",
+    "72036204": "2026-10-09T16:34:49Z",
+    "72036206": "2026-10-09T16:34:49Z",
+    "72221292": "2026-10-09T16:34:49Z",
+    "72221294": "2026-10-09T16:34:49Z",
+    "72221296": "2026-10-09T16:34:49Z",
+    "72221304": "2026-10-09T16:34:49Z",
+    "72221308": "2026-10-09T16:34:49Z",
+    "72221310": "2026-10-09T16:34:49Z",
+    "72478606": "2026-10-09T16:34:49Z",
+    "72478612": "2026-10-09T16:34:49Z",
+    "72478616": "2026-10-09T16:34:49Z",
+    "72478620": "2026-10-09T16:34:49Z",
+    "72513220": "2026-10-09T16:34:49Z",
+    "72513222": "2026-10-09T16:34:49Z",
+    "72513224": "2026-10-09T16:34:49Z",
+    "72513228": "2026-10-09T16:34:49Z",
+    "72513230": "2026-10-09T16:34:49Z",
+    "72513232": "2026-10-09T16:34:49Z",
+    "72513236": "2026-10-09T16:34:49Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 17,
-  "events_supported": 17,
-  "events_with_lines": 16,
-  "generated_at": "2026-10-09T15:20:53Z",
+  "events_selected": 21,
+  "events_supported": 21,
+  "events_with_lines": 20,
+  "generated_at": "2026-10-09T16:34:49Z",
   "last_publication_at": "2026-10-09T15:20:53Z",
   "league_coverage": {
     "bundesliga": {
+      "selected": 7,
+      "with_prices": 7
+    },
+    "epl": {
       "selected": 6,
       "with_prices": 6
     },
-    "epl": {
-      "selected": 5,
-      "with_prices": 5
-    },
     "la-liga": {
-      "selected": 3,
-      "with_prices": 3
+      "selected": 4,
+      "with_prices": 4
     },
     "ligue-1": {
       "selected": 2,
       "with_prices": 1
     },
     "serie-a": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 2,
+      "with_prices": 2
     }
   },
-  "market_inventory_rows_added": 1454,
+  "market_inventory_rows_added": 1802,
   "market_names_observed": [
     "1st Half Corners",
     "Alternative Corners",
@@ -145,9 +149,9 @@
   ],
   "publication_recovery": false,
   "request_budget": 4,
-  "requests_used": 3,
-  "rows_added": 168,
-  "rows_observed": 168,
+  "requests_used": 4,
+  "rows_added": 219,
+  "rows_observed": 219,
   "selected_events": [
     {
       "away": "Werder Bremen",
@@ -155,6 +159,34 @@
       "home": "Borussia Dortmund",
       "id": 72513220,
       "kickoff_at": "2026-10-09T18:30:00Z"
+    },
+    {
+      "away": "Parma Calcio",
+      "competition": "Italy - Serie A",
+      "home": "Inter Milano",
+      "id": 71945294,
+      "kickoff_at": "2026-10-10T16:00:00Z"
+    },
+    {
+      "away": "Getafe CF",
+      "competition": "Spain - LaLiga",
+      "home": "FC Barcelona",
+      "id": 72478612,
+      "kickoff_at": "2026-10-10T16:30:00Z"
+    },
+    {
+      "away": "Eintracht Frankfurt",
+      "competition": "Germany - Bundesliga",
+      "home": "RB Leipzig",
+      "id": 72513222,
+      "kickoff_at": "2026-10-10T16:30:00Z"
+    },
+    {
+      "away": "Tottenham Hotspur",
+      "competition": "England - Premier League",
+      "home": "Manchester United",
+      "id": 72221308,
+      "kickoff_at": "2026-10-10T16:30:00Z"
     },
     {
       "away": "Olympique Lyon",
@@ -270,5 +302,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 16
+  "three_way_events": 20
 }
