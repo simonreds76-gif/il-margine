@@ -61,6 +61,20 @@ def point_stats(row, side):
 def key(row):
     return tuple(row[k] for k in ['winner_id', 'loser_id', 'tour_id', 'round_id'])
 
+def completed(score):
+    """Completed conventional singles only, including old best-of-five formats."""
+    text = re.sub(r'\(\d+\)', '', score).strip()
+    if not re.fullmatch(r'\d+-\d+(?:\s+\d+-\d+)*', text): return False
+    sets = [tuple(map(int, part.split('-'))) for part in text.split()]
+    wins = [0, 0]
+    needed = 3 if len(sets) > 3 or sum(a > b for a,b in sets) == 3 else 2
+    for a,b in sets:
+        hi,lo = max(a,b),min(a,b)
+        if max(wins) >= needed or not ((hi==6 and lo<=4) or (hi==7 and lo in (5,6)) or (hi>7 and hi-lo==2)):
+            return False
+        wins[a<b] += 1
+    return wins[0] == needed and wins[1] < needed
+
 def build(atlas, oncourt, output, as_of, data_only=False):
     # Prevent accidental export into deployable site assets or overwriting source data.
     output = output.resolve()
@@ -69,9 +83,16 @@ def build(atlas, oncourt, output, as_of, data_only=False):
     index = json.loads((atlas/'index.json').read_text(encoding='utf-8'))
     people = {r['id']: r for r in read(oncourt/'players_atp.csv')}
     tours = {r['id']: r for r in read(oncourt/'tours_atp.csv')}
+    identities = defaultdict(list)
+    for pid, person in people.items():
+        if '/' not in person['name']: identities[norm(person['name'])].append(pid)
+    player_map = {}
+    for i, p in enumerate(index['players']):
+        ids = identities[norm(p['name'])]
+        if len(ids) == 1: player_map[ids[0]] = i
     games = defaultdict(list)
     for r in read(oncourt/'games_atp.csv'):
-        if r['date'] < '2021-01-01': continue
+        if r['winner_id'] not in player_map or r['loser_id'] not in player_map: continue
         if r['winner_id'] not in people or r['loser_id'] not in people: continue
         pair = tuple(sorted([norm(people[r['winner_id']]['name']), norm(people[r['loser_id']]['name'])]))
         games[pair].append(r)
@@ -86,6 +107,7 @@ def build(atlas, oncourt, output, as_of, data_only=False):
             if mid in details and details[mid] != (event, score): raise ValueError('Conflicting match details')
             details[mid] = (event, score)
     audit, matches, exclusions = Counter(), [], []
+    priced_keys = set()
     for row in index['matches']:
         mid, day, ai, bi, oa, ob, winner, surface, source = row
         a, b = index['players'][ai], index['players'][bi]
@@ -113,6 +135,7 @@ def build(atlas, oncourt, output, as_of, data_only=False):
             exclusions.append({'id': mid, 'reason': reason})
         else:
             g = candidates[0]; t = tours[g['tour_id']]
+            priced_keys.add(key(g))
             if g['date'] >= as_of:
                 audit['on_or_after_cutoff'] += 1
                 continue
@@ -136,10 +159,57 @@ def build(atlas, oncourt, output, as_of, data_only=False):
             else:
                 audit['missing_stats' if not ss else 'ambiguous_stats'] += 1
         matches.append(record)
+    # Additional completed competitive meetings are H2H-only. Never expand the
+    # priced ATP profile cohort or infer odds from outcomes.
+    supplemental = []
+    price_file = Path(__file__).resolve().parents[1]/'config/tennis-h2h-verified-prices.json'
+    verified = json.loads(price_file.read_text(encoding='utf-8')) if price_file.exists() else []
+    prices = {tuple(p['key']):p for p in verified}
+    if len(prices) != len(verified): raise ValueError('Duplicate historical price evidence')
+    all_games = [g for group in games.values() for g in group]
+    counts = Counter(key(g) for g in all_games)
+    priced_pairs = defaultdict(list)
+    for m in matches: priced_pairs[tuple(sorted((m['p1'],m['p2'])))].append(m)
+    for g in all_games:
+        k = key(g); t = tours.get(g['tour_id'], {})
+        if k in priced_keys or not ('1990-01-01' <= g['date'] < as_of): continue
+        if counts[k] != 1 or t.get('rank') not in ('0','1','2','3','4','5'): continue
+        if re.search(r'junior|exhibition|next.?gen|laver|hopman|diriyah', t.get('name',''), re.I): continue
+        if not completed(g['result']): continue
+        ai, bi = player_map[g['winner_id']], player_map[g['loser_id']]
+        # Quarantine possible duplicates when the priced context could not be
+        # reconciled uniquely. A missing join must never create a second meeting.
+        if any({m['p1'],m['p2']} == {ai,bi} and abs((date.fromisoformat(m['date'])-date.fromisoformat(g['date'])).days)<=1
+               and (norm(m['event'])==norm(t.get('name','')) or scores(m['score'])==scores(g['result'])) for m in priced_pairs[tuple(sorted((ai,bi)))]):
+            audit['supplemental_possible_duplicate'] += 1
+            continue
+        competition = 'Qualifying' if int(g['round_id'])<4 else {'0':'ITF','1':'Challenger','5':'Team competition'}.get(t['rank'],'ATP main draw')
+        row = dict(id='oc-'+ '-'.join(k),date=g['date'],p1=ai,p2=bi,winner=0,o1=None,o2=None,
+            surface=SURFACES.get(t.get('court_id'),'unknown'),event=t['name'],score=g['result'],
+            country=t.get('country'),region=REGION_OF.get(t.get('country')),eventKey=g['tour_id'],
+            stats1=None,stats2=None,competition=competition)
+        evidence = prices.get(k)
+        if evidence:
+            if evidence['date']!=g['date'] or evidence['score']!=g['result']:
+                raise ValueError('Historical price evidence no longer matches result')
+            row.update(o1=evidence['winnerOdds'],o2=evidence['loserOdds'],priceSource=evidence['source'],priceBasis=evidence['basis'])
+        ss = stats.get(k, [])
+        if len(ss)==1:
+            row['stats1'],row['stats2']=point_stats(ss[0],'w'),point_stats(ss[0],'l')
+            for serving,receiving in [(row['stats1'],row['stats2']),(row['stats2'],row['stats1'])]:
+                sv,ret=serving['serve'],receiving['return']
+                if sv and ret and (sv[1]!=ret[1] or sv[0]+ret[0]!=sv[1]):
+                    serving['serve']=None;receiving['return']=None
+        supplemental.append(row)
+    if {k for k in prices if k[0] in player_map and k[1] in player_map} - {tuple(m['id'][3:].split('-')) for m in supplemental if m['o1'] is not None}:
+        raise ValueError('Verified historical price evidence was not applied; review required')
+    audit['supplemental_meetings'] = len(supplemental)
+    audit['supplemental_priced'] = sum(m['o1'] is not None for m in supplemental)
     if len({m['id'] for m in matches}) != len(matches): raise ValueError('Duplicate output match')
-    countries = sorted({m['country'] for m in matches if m['region']})
+    countries = sorted({m['country'] for m in matches+supplemental if m['region']})
     payload = {'schema':1, 'asOf':as_of, 'through':max(m['date'] for m in matches),
         'players':index['players'], 'portraits':index.get('portraits',{}), 'matches': matches,
+        'results':supplemental, 'historyFrom':min(m['date'] for m in matches+supplemental),
         'countries':[{'code':c,'name':COUNTRY_NAMES.get(c,c),'region':REGION_OF[c]} for c in countries],
         'audit': dict(audit), 'atlasVersion':atlas.name,
         'priceBasis':'Recorded Pinnacle prices; mixed pre-match archive snapshots, not uniform closing odds.'}
@@ -148,6 +218,7 @@ def build(atlas, oncourt, output, as_of, data_only=False):
     manifest = {'asOf':as_of,'audit':dict(audit),'matches':len(matches),'excludedContext':exclusions,
         'sourceHashes':{name:hashlib.sha256((oncourt/name).read_bytes()).hexdigest() for name in
          ['players_atp.csv','games_atp.csv','tours_atp.csv','stat_atp.csv']},
+        'verifiedPriceHash':hashlib.sha256(price_file.read_bytes()).hexdigest() if price_file.exists() else None,
         'atlasIndexHash':hashlib.sha256((atlas/'index.json').read_bytes()).hexdigest(),
         'dataHash':hashlib.sha256((output/'data.json').read_bytes()).hexdigest()}
     (output/'audit.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')

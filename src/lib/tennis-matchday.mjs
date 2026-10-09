@@ -44,10 +44,10 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
     const players = [a, b].map((i, side) => i === undefined ? { id: null, name: side ? row.player2_name : row.player1_name, portrait: null }
       : { id: history.players[i].id, name: history.players[i].name, portrait: history.players[i].portrait });
     const cutoff = [now.toISOString().slice(0, 10), new Date(start).toISOString().slice(0, 10), history.asOf].sort()[0];
-    const meetings = a === undefined || b === undefined ? null : history.matches
+    const meetings = a === undefined || b === undefined ? null : [...history.matches,...(history.results ?? [])]
       .filter(m => m[0] < cutoff && ((m[1] === a && m[2] === b) || (m[1] === b && m[2] === a)))
       .map(m => ({ date: m[0], winner: (m[3] === 0 ? m[1] : m[2]) === a ? 0 : 1,
-        odds: m[1] === a ? [m[4], m[5]] : [m[5], m[4]], surface: m[6], score: m[7], event: m[8] }))
+        odds: m[1] === a ? [m[4], m[5]] : [m[5], m[4]], surface: m[6], score: m[7], event: m[8], competition: m[9] ?? null, priceBasis: m[10] ?? null }))
       .sort((x, y) => x.date.localeCompare(y.date) || String(x.event).localeCompare(String(y.event)));
     const wins = meetings ? [meetings.filter(m => m.winner === 0).length, meetings.filter(m => m.winner === 1).length] : null;
     const priced = meetings?.filter(m => m.odds.every(p => Number.isFinite(p) && p > 1)) ?? [];

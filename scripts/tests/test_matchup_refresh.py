@@ -10,6 +10,16 @@ class RefreshTests(unittest.TestCase):
         self.data = {'players':[{'id':'a'},{'id':'b'}], 'portraits':{}, 'countries':[],
                      'matches':[{'id':'m','date':'2026-09-20','p1':0,'p2':1,'o1':2,'o2':2,
                                  'stats1':{'aces':[3,60]},'stats2':None}]}
+    def test_extra_results_are_retained_and_priced_without_rewriting_outcomes(self):
+        old=deepcopy(self.data)
+        old['results']=[dict(id='old',date='2016-01-01',p1=0,p2=1,winner=0,o1=None,o2=None,score='6-4 6-4',event='Test',surface='clay',competition='Challenger')]
+        new=deepcopy(old);new['results'][0].update(o1=2,o2=2)
+        self.assertTrue(validate(old,new))
+        new['results'][0]['winner']=1
+        with self.assertRaises(ValueError):validate(old,new)
+        new=deepcopy(old);new['results']=[]
+        with self.assertRaises(ValueError):validate(old,new)
+
     def test_date_only_does_not_deploy(self):
         new=deepcopy(self.data);new['asOf']='2026-09-27'
         self.assertFalse(validate(self.data,new))

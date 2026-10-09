@@ -34,6 +34,16 @@ class PublicSnapshotTests(unittest.TestCase):
             self.assertNotIn('audit',index)
             self.assertNotIn('source',shards[0]['matches'][0])
 
+    def test_old_unpriced_result_is_separate_and_partial_prices_are_rejected(self):
+        with tempfile.TemporaryDirectory() as root:
+            data=self.sample()
+            data['results']=[dict(id='old',date='2016-01-01',p1=0,p2=1,winner=1,o1=None,o2=None,competition='Challenger')]
+            release=self.publish(root,data)
+            self.assertEqual(release['matches'],2)
+            self.assertEqual(release['additionalResults'],1)
+            data['results'][0]['o1']=2
+            with self.assertRaises(ValueError):self.publish(root,data)
+
     def test_accepts_verified_2021_history(self):
         with tempfile.TemporaryDirectory() as root:
             data = self.sample()

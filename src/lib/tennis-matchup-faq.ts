@@ -5,7 +5,7 @@ export const MATCHUP_FAQS = [
   },
   {
     "question": "Is this a complete career head-to-head record?",
-    "answer": "No. The archive covers completed ATP main-draw singles from 2021 onward where prices for both players are available. It excludes Challenger, qualifying, team events, retirements and other unfinished matches. Your filters narrow that sample further, so the result can differ from an official career H2H."
+    "answer": "H2H includes the available completed competitive singles history for both players, including older ATP, Challenger, ITF, qualifying and team matches. Results without prices still count in H2H, but only priced meetings enter the odds comparison. Exhibitions, juniors, retirements and unfinished matches are excluded. Player profiles use the separate priced ATP archive since 2021. Coverage and filters can therefore differ from official career totals."
   },
   {
     "question": "How do I use the surface and location filters?",

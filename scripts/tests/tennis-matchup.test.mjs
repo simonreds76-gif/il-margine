@@ -86,3 +86,13 @@ test('full archive includes 2021 while recent windows retain their cutoff',()=>{
  assert.deepEqual(rowsFor(data,0,{...filters,months:'archive'}).map(m=>m.id),['older','recent']);
  assert.deepEqual(rowsFor(data,0,filters).map(m=>m.id),['recent']);
 });
+
+ test('full H2H includes older unpriced results without changing profiles or market sample',()=>{
+  const d={historyFrom:'2016-01-01',matches:[{id:'new',date:'2025-01-01',p1:0,p2:1,winner:0,o1:2,o2:2,surface:'clay'}],results:[{id:'old',date:'2016-01-01',p1:0,p2:1,winner:1,o1:null,o2:null,surface:'clay'}]};
+  const f={asOf:'2026-01-01',months:'archive',surface:'all',region:'all',country:'all'};
+  const rows=rowsFor(d,0,{...f,opponent:1}), result=summary(rows);
+  assert.equal(rows.length,2);assert.equal(result.wins,1);assert.equal(result.losses,1);
+  assert.equal(result.priced,1);assert.equal(result.expected,.5);assert.equal(result.actual,1);
+  assert.equal(rowsFor(d,0,f).length,1);
+  assert.equal(rowsFor(d,1,{...f,opponent:0}).filter(r=>r.won).length,1);
+});
