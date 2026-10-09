@@ -79,3 +79,10 @@ test('cluster resampling is deterministic and reverses with swapped players',()=
   assert.deepEqual(a,residualRange(rows));
   assert.ok(Math.abs(a[0]+b[1])<1e-10);assert.ok(Math.abs(a[1]+b[0])<1e-10);
 });
+
+test('full archive includes 2021 while recent windows retain their cutoff',()=>{
+ const data={matches:[match('older','2021-06-15'),match('recent','2026-09-20')]};
+ assert.equal(startDate('2026-09-26','archive'),'2021-01-01');
+ assert.deepEqual(rowsFor(data,0,{...filters,months:'archive'}).map(m=>m.id),['older','recent']);
+ assert.deepEqual(rowsFor(data,0,filters).map(m=>m.id),['recent']);
+});

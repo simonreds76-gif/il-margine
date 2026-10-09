@@ -27,7 +27,7 @@ def package(source, root=ROOT):
             raise ValueError('Invalid player reference')
         if row['winner'] not in (0, 1) or not all(isinstance(row[key], (int, float)) and 1 < row[key] < 1001 for key in ('o1', 'o2')):
             raise ValueError('Invalid winner or paired prices')
-        if not ('2022-01-01' <= row['date'] < data['asOf']):
+        if not ('2021-01-01' <= row['date'] < data['asOf']):
             raise ValueError('Date outside completed-match snapshot')
     content = {key: data[key] for key in ('through', 'countries', 'players', 'portraits')}
     content['matches'] = rows
