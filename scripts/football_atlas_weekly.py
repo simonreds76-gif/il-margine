@@ -351,6 +351,17 @@ def publish(state, manifest, report):
     legacy.publish(config, helper, manifest['version'], Path('public') / manifest['indexUrl'].lstrip('/'), report)
 
 
+def stage_release(run, root, changed_paths):
+    """Include filesystem deletions and deletions already staged by retention."""
+    tracked = set(run(['git', 'ls-files', '--', *sorted(changed_paths)], root).splitlines())
+    to_stage = tracked | {path for path in changed_paths if (root / path).exists()}
+    if to_stage:
+        run(['git', 'add', '--all', '--', *sorted(to_stage)], root)
+    staged = set(run(['git', 'diff', '--cached', '--name-only'], root).splitlines())
+    if staged != changed_paths:
+        raise ValueError('Unexpected staged files')
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--state-directory', type=Path, required=True)
@@ -432,10 +443,7 @@ def main():
             if board['changed']:
                 changed_paths.update(board['paths'])
             if changed_paths:
-                run(['git', 'add', '--', *sorted(changed_paths)], ROOT)
-                staged = set(run(['git', 'diff', '--cached', '--name-only'], ROOT).splitlines())
-                if staged != changed_paths:
-                    raise ValueError('Unexpected staged files')
+                stage_release(run, ROOT, changed_paths)
                 run(['git', 'commit', '-m', f'data: update Football and Manager Atlas through {manifest["through"]}'], ROOT)
                 run(['git', 'push', 'origin', 'HEAD:' + BRANCH], ROOT)
             needs_publish = bool(changed_paths) or manifest['version'] not in live_html or managers['manifest']['version'] not in manager_live_html
