@@ -1,4 +1,6 @@
 data/tennis-props/models/*.txt text eol=lf
 *.ts text eol=lf
 *.tsx text eol=lf
-*.csv text eol=lf
+# Preserve generated/source CSV bytes. Historical CRLF blobs must not appear
+# modified solely because a Linux runner applies a new newline conversion.
+*.csv -text

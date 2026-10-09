@@ -1,8 +1,11 @@
 import copy
+import gzip
+import json
 from datetime import datetime, timedelta, timezone
 import importlib.util
 from pathlib import Path
 import sys
+import subprocess
 import unittest
 from unittest.mock import patch
 import tempfile
@@ -118,10 +121,106 @@ class WeeklyAtlasTests(unittest.TestCase):
         old=dict(teams=['Arsenal','Chelsea'],leagues=['premier-league'],seasons=['2026-2027'],fixtures=[['old','2026-09-15',0,0,0,1,1,0,2.5,3.2,3.1,1]])
         prior=copy.deepcopy(old)
         f=dict(id='g1',league='premier-league',home='Arsenal',away='Chelsea',kickoff=NOW.isoformat(),score=[2,1],season='2026-2027')
-        new=w.merge_archive(old,[(f,[2.5,3.2,3.1],'id1')])
+        new=w.merge_archive(old,[(f,[2.5,3.2,3.1],'id1',2)])
         self.assertEqual(old,prior);self.assertEqual(new['fixtures'][0],old['fixtures'][0]);self.assertEqual(new['fixtures'][-1][-1],2)
         with self.assertRaisesRegex(ValueError,'Duplicate'):
-            w.merge_archive(new,[(f,[2.5,3.2,3.1],'id1')])
+            w.merge_archive(new,[(f,[2.5,3.2,3.1],'id1',2)])
+
+    def test_fallback_is_complete_and_never_cherry_picks_prices(self):
+        better = history()
+        better['101']['players']['0'][0]['price'] = 2.6
+        picked = w.select_market({'pinnacle': history(), 'bet365': better}, NOW)
+        self.assertEqual((picked['bookmaker'], picked['code']), ('pinnacle', 2))
+        partial = history(); del partial['102']
+        picked = w.select_market({'pinnacle': partial, 'bet365': better}, NOW)
+        self.assertEqual((picked['bookmaker'], picked['basis'], picked['code']), ('bet365', 'bet365-last-pre-match', 3))
+        self.assertEqual(picked['odds'], [2.6, 3.2, 3.1])
+        self.assertIn('Missing', picked['rejected']['pinnacle'])
+        other_partial = history(); del other_partial['101']
+        with self.assertRaisesRegex(ValueError, 'No validated'):
+            w.select_market({'pinnacle': partial, 'bet365': other_partial}, NOW)
+
+    def test_fallback_must_pass_the_same_timing_and_suspension_checks(self):
+        for invalid in ('suspended', 'in-play', 'conflicting', 'impossible'):
+            with self.subTest(invalid=invalid):
+                h = history()
+                if invalid == 'suspended': h['102']['players']['0'][0]['active'] = False
+                if invalid == 'in-play': h['102']['players']['0'][0]['createdAt'] = NOW.isoformat()
+                if invalid == 'conflicting': h['102']['players']['0'].append({**h['102']['players']['0'][0], 'price': 4})
+                if invalid == 'impossible': h['102']['players']['0'][0]['price'] = 1.01
+                with self.assertRaisesRegex(ValueError, 'No validated'):
+                    w.select_market({'bet365': h}, NOW)
+
+    def test_one_history_request_caches_both_books_and_checks_fixture_identity(self):
+        p = dict(fixtureId='id1', startTime=NOW.isoformat())
+        class API:
+            def __init__(self): self.calls = []
+            def get(self, endpoint, **kwargs):
+                self.calls.append((endpoint, kwargs))
+                return {'fixtureId': 'id1', 'bookmakers': {'bet365': {'markets': {'101': {'outcomes': history()}}}}}
+        api = API()
+        with tempfile.TemporaryDirectory() as directory:
+            selected, digest = w.historical_market(api, p, NOW, Path(directory), NOW)
+            again, same = w.historical_market(api, p, NOW, Path(directory), NOW)
+            self.assertEqual(selected, again); self.assertEqual(digest, same)
+            self.assertEqual(len(api.calls), 1)
+            self.assertEqual(api.calls[0][1]['bookmakers'], 'pinnacle,bet365')
+            self.assertEqual(selected['code'], 3)
+            with self.assertRaisesRegex(ValueError, 'fixture mismatch'):
+                w.historical_market(api, {**p, 'fixtureId': 'id2'}, NOW, Path(directory), NOW)
+
+    def test_legacy_cache_is_reused_or_upgraded_only_when_needed(self):
+        from unittest.mock import Mock
+        p = dict(fixtureId='id1', startTime=NOW.isoformat())
+        saved = {'fixtureId': 'id1', 'signature': [p['startTime'], None, None],
+                 'bookmaker': 'pinnacle', 'outcomes': history(), 'responseSha256': 'old'}
+        with tempfile.TemporaryDirectory() as directory:
+            cache = Path(directory) / 'id1.json.gz'
+            cache.write_bytes(gzip.compress(json.dumps(saved).encode()))
+            api = Mock()
+            self.assertEqual(w.historical_market(api, p, NOW, Path(directory), NOW)[1], 'old')
+            api.get.assert_not_called()
+            saved['outcomes'] = {}
+            cache.write_bytes(gzip.compress(json.dumps(saved).encode()))
+            api.get.return_value = {'fixtureId': 'id1', 'bookmakers': {'bet365': {'markets': {'101': {'outcomes': history()}}}}}
+            self.assertEqual(w.historical_market(api, p, NOW, Path(directory), NOW)[0]['bookmaker'], 'bet365')
+            api.get.assert_called_once()
+
+    def test_collection_fallback_reaches_archive_and_does_not_replace_existing_prices(self):
+        f = dict(id='g1', league='premier-league', home='Arsenal', away='Chelsea', kickoff=NOW.isoformat(), status=-1, score=[2,1], season='2026-2027')
+        p = dict(fixtureId='id1', tournamentId=17, sportId=10, participant1Name='Arsenal', participant2Name='Chelsea', startTime=NOW.isoformat(), statusId=2)
+        old = dict(teams=['Arsenal','Chelsea'], leagues=list(w.TOURNAMENTS), seasons=['2026-2027'], fixtures=[])
+        class API:
+            calls = {}
+            def quota(self): return 200
+            def get(self, endpoint, **kwargs):
+                if endpoint == 'fixtures': return [p] if kwargs['tournamentId'] == 17 else []
+                return {'fixtureId':'id1', 'bookmakers':{'bet365':{'markets':{'101':{'outcomes':history()}}}}}
+        with tempfile.TemporaryDirectory() as directory, patch.object(w.legacy, 'calendar', return_value=[f]):
+            new, report = w.collect(old, {'through':'2026-09-20'}, Path(directory), NOW+timedelta(days=1), API())
+            self.assertEqual(new['fixtures'][0][8:], [2.5,3.2,3.1,3])
+            self.assertEqual(report['priceSources'], {'pinnacle':0, 'bet365':1})
+            self.assertEqual(report['provenance'][0]['bookmaker'], 'bet365')
+            again, report = w.collect(new, {'through':'2026-09-22'}, Path(directory), NOW+timedelta(days=1), API())
+            self.assertEqual(again, new); self.assertEqual(report['newMatches'], 0)
+
+    def test_csv_byte_preservation_fixes_linux_checkout_without_hiding_real_changes(self):
+        def git(root, *args):
+            return subprocess.check_output(['git', '-c', 'core.autocrlf=false', '-C', str(root), *args], stderr=subprocess.STDOUT)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            git(root, 'init', '-q')
+            git(root, 'config', 'user.email', 'test@example.invalid'); git(root, 'config', 'user.name', 'Test')
+            attrs = root / '.gitattributes'; csv = root / 'archive.csv'
+            attrs.write_text('*.csv -text\n'); csv.write_bytes(b'match,price\r\n1,2.50\r\n')
+            git(root, 'add', '.'); git(root, 'commit', '-qm', 'Raw archive')
+            attrs.write_text('*.csv text eol=lf\n')
+            git(root, 'add', '.gitattributes'); git(root, 'commit', '-qm', 'Reproduce old rule')
+            self.assertIn(b'archive.csv', git(root, 'status', '--porcelain'))
+            attrs.write_text((w.ROOT / '.gitattributes').read_text())
+            self.assertNotIn(b'archive.csv', git(root, 'status', '--porcelain'))
+            csv.write_bytes(b'match,price\r\n1,3.00\r\n')
+            self.assertIn(b'archive.csv', git(root, 'status', '--porcelain'))
 
 
 class FixtureBoardTests(unittest.TestCase):

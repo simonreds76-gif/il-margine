@@ -1,4 +1,4 @@
-"""Cloud-only, weekly Pinnacle archive ingestion and validated Atlas publication.
+"""Weekly Pinnacle-first archive ingestion with a validated bet365 fallback.
 
 OddsPapi supplies historical 1X2 state; Goaloo independently supplies finished
 league results. Existing published prices/results are immutable. No PC capture.
@@ -26,6 +26,8 @@ BRANCH = 'codex/fair-odds-daily-pitch-20260908'
 TOURNAMENTS = {'premier-league': 17, 'serie-a': 23, 'la-liga': 8, 'bundesliga': 35, 'ligue-1': 34}
 FORWARD_START = datetime(2026, 9, 21, tzinfo=UTC)
 MANIFEST = Path('src/data/football-atlas-release.json')
+BOOKMAKERS = ('pinnacle', 'bet365')
+PRICE_BASES = {'pinnacle': ('last-pre-match', 2), 'bet365': ('bet365-last-pre-match', 3)}
 
 
 class RateLimited(RuntimeError):
@@ -162,12 +164,56 @@ def prices_at_cutoff(outcomes, cutoff):
     return quotes, provenance
 
 
+def select_market(histories, cutoff):
+    """Use one complete bookmaker market. A fallback never repairs individual legs."""
+    rejected = {}
+    for bookmaker in BOOKMAKERS:
+        try:
+            odds, detail = prices_at_cutoff(histories.get(bookmaker, {}), cutoff)
+        except (ValueError, KeyError, TypeError) as exc:
+            rejected[bookmaker] = str(exc) if isinstance(exc, ValueError) else 'Malformed outcome history'
+            continue
+        basis, code = PRICE_BASES[bookmaker]
+        return {'bookmaker': bookmaker, 'basis': basis, 'code': code,
+                'odds': odds, 'prices': detail, 'rejected': rejected}
+    raise ValueError('No validated pre-match market: ' + '; '.join(f'{b}: {r}' for b, r in rejected.items()))
+
+
+def historical_market(api, fixture, cutoff, history_dir, now):
+    """Reuse validated cache; fetch both books in one request when history is needed."""
+    cache = history_dir / (fixture['fixtureId'] + '.json.gz')
+    signature = [fixture['startTime'], fixture.get('trueStartTime'), fixture.get('updatedAt')]
+    saved = json.loads(gzip.decompress(cache.read_bytes())) if cache.exists() else {}
+    if saved.get('signature') == signature and saved.get('fixtureId') == fixture['fixtureId']:
+        # Keep the existing Pinnacle-only cache useful; upgrade it only if unusable.
+        histories = saved.get('histories') or {saved.get('bookmaker'): saved.get('outcomes', {})}
+        try:
+            return select_market(histories, cutoff), saved['responseSha256']
+        except ValueError:
+            if saved.get('requestedBookmakers') == list(BOOKMAKERS):
+                raise
+    raw = api.get('historical-odds', fixtureId=fixture['fixtureId'], bookmakers=','.join(BOOKMAKERS))
+    if raw.get('fixtureId') != fixture['fixtureId']:
+        raise ValueError('Historical odds fixture mismatch')
+    histories = {book: raw.get('bookmakers', {}).get(book, {}).get('markets', {}).get('101', {}).get('outcomes', {})
+                 for book in BOOKMAKERS}
+    saved = {'signature': signature, 'fixtureId': fixture['fixtureId'], 'market': 101,
+             'requestedBookmakers': list(BOOKMAKERS), 'histories': histories, 'downloadedAt': now.isoformat(),
+             'responseSha256': hashlib.sha256(json.dumps(raw, sort_keys=True).encode()).hexdigest()}
+    selected = select_market(histories, cutoff)
+    # Failed/partial responses are not cached as a successful collection.
+    cache.write_bytes(gzip.compress(json.dumps(saved).encode()))
+    return selected, saved['responseSha256']
+
+
 def merge_archive(old, additions):
     new = copy.deepcopy(old)
     keys = stored_keys(old)
     if len(additions) > 180:
         raise ValueError('More than 180 new matches; review backfill')
-    for f, odds, source_id in additions:
+    for f, odds, source_id, basis_code in additions:
+        if basis_code not in (2, 3):
+            raise ValueError('Unsupported weekly price basis')
         key = fixture_key(f)
         if key in keys:
             raise ValueError('Duplicate addition or attempted replacement')
@@ -178,7 +224,7 @@ def merge_archive(old, additions):
             raise ValueError('New club requires name/crest review')
         new['fixtures'].append(['papi-' + source_id, key[3], new['leagues'].index(f['league']),
                                 new['seasons'].index(f['season']), new['teams'].index(f['home']),
-                                new['teams'].index(f['away']), *f['score'], *odds, 2])
+                                new['teams'].index(f['away']), *f['score'], *odds, basis_code])
     new['fixtures'].sort(key=lambda r: (r[1], r[0]))
     if len({r[0] for r in new['fixtures']}) != len(new['fixtures']):
         raise ValueError('Duplicate fixture ID')
@@ -236,31 +282,21 @@ def collect(old, manifest, state, now, api):
                 continue
             if not re.fullmatch(r'id\d+', p['fixtureId']):
                 raise ValueError('Unexpected fixture ID format')
-            cache = history_dir / (p['fixtureId'] + '.json.gz')
-            signature = [p['startTime'], p.get('trueStartTime'), p.get('updatedAt')]
-            h = json.loads(gzip.decompress(cache.read_bytes())) if cache.exists() else {}
-            if h.get('signature') != signature:
-                raw = api.get('historical-odds', fixtureId=p['fixtureId'], bookmakers='pinnacle')
-                if raw.get('fixtureId') != p['fixtureId']:
-                    raise ValueError('Historical odds fixture mismatch')
-                outcomes = raw.get('bookmakers', {}).get('pinnacle', {}).get('markets', {}).get('101', {}).get('outcomes', {})
-                h = {'signature': signature, 'fixtureId': p['fixtureId'], 'bookmaker': 'pinnacle', 'market': 101,
-                     'outcomes': outcomes, 'downloadedAt': now.isoformat(),
-                     'responseSha256': hashlib.sha256(json.dumps(raw, sort_keys=True).encode()).hexdigest()}
-                cache.write_bytes(gzip.compress(json.dumps(h).encode()))
-            odds, detail = prices_at_cutoff(h['outcomes'], cutoff)
-            additions.append((f, odds, p['fixtureId']))
+            selected, response_hash = historical_market(api, p, cutoff, history_dir, now)
+            additions.append((f, selected['odds'], p['fixtureId'], selected['code']))
             counts[league]['new'] += 1
             provenance.append({'fixtureId': p['fixtureId'], 'resultId': f['id'], 'home': f['home'], 'away': f['away'],
-                               'score': f['score'], 'cutoff': cutoff.isoformat(), 'prices': detail,
-                               'responseSha256': h['responseSha256'], 'basis': 'last-pre-match'})
+                               'score': f['score'], 'cutoff': cutoff.isoformat(), 'prices': selected['prices'],
+                               'responseSha256': response_hash, 'basis': selected['basis'],
+                               'bookmaker': selected['bookmaker'], 'fallbackReasons': selected['rejected']})
         print(f'{league}: {counts[league]}', flush=True)
     if set(expected) != seen:
         raise ValueError(f'Incomplete fixture reconciliation: {len(set(expected)-seen)} missing, {len(seen-set(expected))} unexpected')
     new = merge_archive(old, additions)
     report = {'checkedAt': now.isoformat(), 'windowFrom': start.isoformat(), 'windowTo': end.isoformat(),
               'newMatches': len(additions), 'leagues': counts, 'quotaBefore': remaining,
-              'calls': api.calls, 'status': 'validated', 'provenance': provenance}
+              'calls': api.calls, 'status': 'validated', 'provenance': provenance,
+              'priceSources': {book: sum(p['bookmaker'] == book for p in provenance) for book in BOOKMAKERS}}
     legacy.write(state / 'collection.json', report)
     return new, report
 
@@ -328,6 +364,12 @@ def main():
     try:
         if args.publish and not os.environ.get('VERCEL_TOKEN'):
             raise ValueError('Project-scoped VERCEL_TOKEN is required before publication starts')
+        if args.publish:
+            helper = legacy.load_module('atlas_commit_helpers', ROOT / 'scripts/refresh-return-atlas.py')
+            run = helper.run
+            dirty = run(['git', 'status', '--porcelain'], ROOT).strip()
+            if dirty:
+                raise ValueError('Publication checkout dirty before collection: ' + dirty[:1000])
         manifest = legacy.read(ROOT / MANIFEST)
         old = legacy.read(ROOT / 'public' / manifest['indexUrl'].lstrip('/'))
         new, report = collect(old, manifest, state, datetime.now(UTC), OddsPapi(os.environ.get('ODDSPAPI_API_KEY')))
@@ -341,8 +383,6 @@ def main():
             report['fixtureBoard'] = atlas_fixture_board.refresh(state)['report']
             report['status'] = 'dry-run-passed'
         else:
-            helper = legacy.load_module('atlas_commit_helpers', ROOT / 'scripts/refresh-return-atlas.py')
-            run = helper.run
             dirty = run(['git', 'status', '--porcelain'], ROOT).strip()
             if dirty:
                 raise ValueError('Publication checkout dirty: ' + dirty[:1000])
