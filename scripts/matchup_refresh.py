@@ -83,7 +83,7 @@ def validate(old, new):
     return previous != candidate or old_extra != new_extra or any(old[k] != new[k] for k in ('players', 'portraits', 'countries'))
 
 
-def prepare(checkout, candidate, atlas_release, as_of):
+def prepare(checkout, candidate, atlas_release, as_of, historical_prices=()):
     here = Path(__file__).resolve().parent
     def module(name, filename):
         spec = importlib.util.spec_from_file_location(name, here / filename)
@@ -94,10 +94,12 @@ def prepare(checkout, candidate, atlas_release, as_of):
     packager = module('matchup_packager', 'package-tennis-matchup.py')
     atlas = candidate / 'release/public' / atlas_release['indexUrl'].lstrip('/')
     private = candidate / 'matchup-private'
-    builder.build(atlas.parent, candidate / 'oncourt', private, as_of, data_only=True)
-    new_release = packager.package(private / 'data.json', candidate / 'release')
     old_release = read(checkout / 'src/data/tennis-matchup-release.json')
     old = load_snapshot(checkout, old_release)
+    retained = canonical({**old,'matches':[r for r in old.get('results',[]) if r.get('o1') and r.get('o2')]})
+    builder.build(atlas.parent, candidate / 'oncourt', private, as_of, data_only=True,
+                  historical_prices=historical_prices, retained_prices=retained)
+    new_release = packager.package(private / 'data.json', candidate / 'release')
     new = load_snapshot(candidate / 'release', new_release)
     changed = validate(old, new)
     return old_release, new_release if changed else old_release, changed
