@@ -222,6 +222,27 @@ class WeeklyAtlasTests(unittest.TestCase):
             csv.write_bytes(b'match,price\r\n1,3.00\r\n')
             self.assertIn(b'archive.csv', git(root, 'status', '--porcelain'))
 
+    def test_release_stages_both_retention_deletion_types_and_rejects_unrelated_files(self):
+        def run(args, root):
+            return subprocess.check_output(args, cwd=root, stderr=subprocess.STDOUT).decode()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            run(['git','init','-q'], root)
+            run(['git','config','user.email','test@example.invalid'], root)
+            run(['git','config','user.name','Test'], root)
+            for path in ('old-manager.json', 'old-board.json', 'manifest.json', 'unrelated.txt'):
+                (root/path).write_text('old\n')
+            run(['git','add','.'], root); run(['git','commit','-qm','Initial archives'], root)
+            run(['git','rm','--','old-manager.json'], root)
+            (root/'old-board.json').unlink()
+            (root/'new-manager.json').write_text('new\n'); (root/'manifest.json').write_text('new\n')
+            expected = {'old-manager.json','old-board.json','new-manager.json','manifest.json'}
+            w.stage_release(run, root, expected)
+            self.assertEqual(set(run(['git','diff','--cached','--name-only'], root).splitlines()), expected)
+            (root/'unrelated.txt').write_text('changed\n'); run(['git','add','unrelated.txt'], root)
+            with self.assertRaisesRegex(ValueError,'Unexpected staged'):
+                w.stage_release(run, root, expected)
+
 
 class FixtureBoardTests(unittest.TestCase):
     def row(self, **changes):
