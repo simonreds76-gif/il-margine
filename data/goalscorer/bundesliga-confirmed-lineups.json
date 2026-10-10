@@ -411,7 +411,7 @@
       "away_unavailable": [
         "Jamal Musiala"
       ],
-      "observed_at": "2026-10-10T15:53:17.424223+00:00",
+      "observed_at": "2026-10-10T20:03:52.830427+00:00",
       "changed_at": "2026-10-10T13:25:32.953906+00:00"
     },
     {
@@ -823,7 +823,7 @@
         "Patson Daka",
         "Albert Grønbæk"
       ],
-      "observed_at": "2026-10-10T15:53:17.424223+00:00",
+      "observed_at": "2026-10-10T20:03:52.830427+00:00",
       "changed_at": "2026-10-10T15:53:17.424223+00:00"
     },
     {
@@ -1241,7 +1241,7 @@
         "Montrell Culbreath",
         "Christian Kofane"
       ],
-      "observed_at": "2026-10-10T15:53:17.424223+00:00",
+      "observed_at": "2026-10-10T20:03:52.830427+00:00",
       "changed_at": "2026-10-10T13:25:32.953906+00:00"
     },
     {
@@ -1660,7 +1660,7 @@
         "Justin Diehl",
         "Tiago Tomás"
       ],
-      "observed_at": "2026-10-10T15:53:17.424223+00:00",
+      "observed_at": "2026-10-10T20:03:52.830427+00:00",
       "changed_at": "2026-10-10T13:25:32.953906+00:00"
     },
     {
@@ -1950,40 +1950,20 @@
         }
       ],
       "home_subs": [
-        "Ørjan Håskjold Nyland",
         "Benjamin Henrichs",
-        "Lukas Klostermann",
-        "Max Finkgräfe",
-        "Maxime Estève",
         "Nicolas Seiwald",
+        "Tidiam Gomis",
+        "Max Finkgräfe",
         "Rocco Reitz",
-        "Brajan Gruda",
-        "Tidiam Gomis"
+        "Ørjan Håskjold Nyland",
+        "Lukas Klostermann",
+        "Maxime Estève",
+        "Brajan Gruda"
       ],
       "home_substitute_entries": [
         {
-          "name": "Ørjan Håskjold Nyland",
-          "player_id": "73409",
-          "role_group": "GK"
-        },
-        {
           "name": "Benjamin Henrichs",
           "player_id": "681383",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Lukas Klostermann",
-          "player_id": "526657",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Max Finkgräfe",
-          "player_id": "1529161",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Maxime Estève",
-          "player_id": "1250443",
           "role_group": "DEF"
         },
         {
@@ -1992,35 +1972,110 @@
           "role_group": "MID"
         },
         {
+          "name": "Tidiam Gomis",
+          "player_id": "1482733",
+          "role_group": "FW"
+        },
+        {
+          "name": "Max Finkgräfe",
+          "player_id": "1529161",
+          "role_group": "DEF"
+        },
+        {
           "name": "Rocco Reitz",
           "player_id": "1174726",
           "role_group": "MID"
         },
         {
+          "name": "Ørjan Håskjold Nyland",
+          "player_id": "73409",
+          "role_group": "GK"
+        },
+        {
+          "name": "Lukas Klostermann",
+          "player_id": "526657",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Maxime Estève",
+          "player_id": "1250443",
+          "role_group": "DEF"
+        },
+        {
           "name": "Brajan Gruda",
           "player_id": "1430151",
           "role_group": "FW"
-        },
-        {
-          "name": "Tidiam Gomis",
-          "player_id": "1482733",
-          "role_group": "FW"
         }
       ],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "away_subs": [
+        "Elias Baum",
+        "Younes Ebnoutalib",
+        "Farès Chaïbi",
+        "Love Arrhov",
+        "Kauã",
+        "Otávio",
+        "Mario Götze",
+        "Oscar Højlund",
+        "Timothy Chandler"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Elias Baum",
+          "player_id": "1421821",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Younes Ebnoutalib",
+          "player_id": "1447050",
+          "role_group": "FW"
+        },
+        {
+          "name": "Farès Chaïbi",
+          "player_id": "1345875",
+          "role_group": "MID"
+        },
+        {
+          "name": "Love Arrhov",
+          "player_id": "1717491",
+          "role_group": "FW"
+        },
+        {
+          "name": "Kauã",
+          "player_id": "1418816",
+          "role_group": "GK"
+        },
+        {
+          "name": "Otávio",
+          "player_id": "1738366",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Mario Götze",
+          "player_id": "177714",
+          "role_group": "MID"
+        },
+        {
+          "name": "Oscar Højlund",
+          "player_id": "1336529",
+          "role_group": "MID"
+        },
+        {
+          "name": "Timothy Chandler",
+          "player_id": "158234",
+          "role_group": "MID"
+        }
+      ],
       "home_unavailable": [
         "Christoph Baumgartner",
         "Assan Ouédraogo",
         "Marc Guiu"
       ],
       "away_unavailable": [
-        "Farès Chaïbi",
         "Jeremiaha Maluze",
         "Jessic Ngankam",
         "Malik Pimpong"
       ],
-      "observed_at": "2026-10-10T15:53:17.424223+00:00",
+      "observed_at": "2026-10-10T20:03:52.830427+00:00",
       "changed_at": "2026-10-10T15:53:17.424223+00:00"
     },
     {
@@ -2433,7 +2488,7 @@
         "Stanley N'Soki"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-10-10T15:53:17.424223+00:00",
+      "observed_at": "2026-10-10T20:03:52.830427+00:00",
       "changed_at": "2026-10-10T13:25:32.953906+00:00"
     },
     {
@@ -2739,7 +2794,7 @@
         "Franck Honorat",
         "Nicolas-Gerrit Kühn"
       ],
-      "observed_at": "2026-10-10T15:53:17.424223+00:00",
+      "observed_at": "2026-10-10T20:03:52.830427+00:00",
       "changed_at": "2026-10-10T13:25:32.953906+00:00"
     },
     {
@@ -3043,7 +3098,7 @@
         "Dejan Ljubičić",
         "Bryan Lasme"
       ],
-      "observed_at": "2026-10-10T15:53:17.424223+00:00",
+      "observed_at": "2026-10-10T20:03:52.830427+00:00",
       "changed_at": "2026-10-10T13:25:32.953906+00:00"
     }
   ]

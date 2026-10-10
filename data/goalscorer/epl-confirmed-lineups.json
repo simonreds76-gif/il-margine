@@ -411,7 +411,7 @@
         "Daniel James",
         "Mateo Joseph"
       ],
-      "observed_at": "2026-10-10T15:52:34.154908+00:00",
+      "observed_at": "2026-10-10T20:03:13.379213+00:00",
       "changed_at": "2026-10-10T13:24:37.213120+00:00"
     },
     {
@@ -828,7 +828,7 @@
         "Antoni Milambo",
         "Joshua Dasilva"
       ],
-      "observed_at": "2026-10-10T15:52:34.154908+00:00",
+      "observed_at": "2026-10-10T20:03:13.379213+00:00",
       "changed_at": "2026-10-10T13:24:37.213120+00:00"
     },
     {
@@ -1246,7 +1246,7 @@
         "Justin Kluivert",
         "Amine Adli"
       ],
-      "observed_at": "2026-10-10T15:52:34.154908+00:00",
+      "observed_at": "2026-10-10T20:03:13.379213+00:00",
       "changed_at": "2026-10-10T13:24:37.213120+00:00"
     },
     {
@@ -1659,7 +1659,7 @@
         "Antonee Robinson",
         "Tom Cairney"
       ],
-      "observed_at": "2026-10-10T15:52:34.154908+00:00",
+      "observed_at": "2026-10-10T20:03:13.379213+00:00",
       "changed_at": "2026-10-10T13:24:37.213120+00:00"
     },
     {
@@ -1686,8 +1686,8 @@
         "Kobbie Mainoo",
         "Amad Diallo",
         "Bruno Fernandes",
-        "Bryan Mbeumo",
-        "Matheus Cunha"
+        "Matheus Cunha",
+        "Bryan Mbeumo"
       ],
       "away_players": [
         "Antonín Kinský",
@@ -1803,26 +1803,26 @@
           "shirt_number": "8"
         },
         {
-          "name": "Bryan Mbeumo",
+          "name": "Matheus Cunha",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 87,
-          "player_id": 923312,
-          "shirt_number": "19"
+          "player_id": 863098,
+          "shirt_number": "10"
         },
         {
-          "name": "Matheus Cunha",
+          "name": "Bryan Mbeumo",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-2-3-1",
           "position_id": 115,
-          "player_id": 863098,
-          "shirt_number": "10"
+          "player_id": 923312,
+          "shirt_number": "19"
         }
       ],
       "away_starters": [
@@ -1949,45 +1949,25 @@
         }
       ],
       "home_subs": [
-        "Karl Darlow",
-        "Ayden Heaven",
         "Diogo Dalot",
-        "Andrey Santos",
         "Carlos Baleba",
-        "Mason Mount",
         "Joshua Zirkzee",
+        "Ayden Heaven",
         "Marcus Rashford",
+        "Karl Darlow",
+        "Andrey Santos",
+        "Mason Mount",
         "Shea Lacey"
       ],
       "home_substitute_entries": [
-        {
-          "name": "Karl Darlow",
-          "player_id": "163604",
-          "role_group": "GK"
-        },
-        {
-          "name": "Ayden Heaven",
-          "player_id": "1559639",
-          "role_group": "DEF"
-        },
         {
           "name": "Diogo Dalot",
           "player_id": "751550",
           "role_group": "DEF"
         },
         {
-          "name": "Andrey Santos",
-          "player_id": "1372921",
-          "role_group": "MID"
-        },
-        {
           "name": "Carlos Baleba",
           "player_id": "1352713",
-          "role_group": "MID"
-        },
-        {
-          "name": "Mason Mount",
-          "player_id": "750032",
           "role_group": "MID"
         },
         {
@@ -1996,9 +1976,29 @@
           "role_group": "FW"
         },
         {
+          "name": "Ayden Heaven",
+          "player_id": "1559639",
+          "role_group": "DEF"
+        },
+        {
           "name": "Marcus Rashford",
           "player_id": "696365",
           "role_group": "FW"
+        },
+        {
+          "name": "Karl Darlow",
+          "player_id": "163604",
+          "role_group": "GK"
+        },
+        {
+          "name": "Andrey Santos",
+          "player_id": "1372921",
+          "role_group": "MID"
+        },
+        {
+          "name": "Mason Mount",
+          "player_id": "750032",
+          "role_group": "MID"
         },
         {
           "name": "Shea Lacey",
@@ -2007,35 +2007,30 @@
         }
       ],
       "away_subs": [
-        "Martin Dúbravka",
-        "Ben Davies",
+        "Rodrigo Bentancur",
+        "Omar Marmoush",
         "Micky van de Ven",
-        "Tosin Adarabioyo",
         "James Maddison",
         "Mateus Fernandes",
-        "Rodrigo Bentancur",
-        "Mathys Tel",
-        "Omar Marmoush"
+        "Martin Dúbravka",
+        "Ben Davies",
+        "Tosin Adarabioyo",
+        "Mathys Tel"
       ],
       "away_substitute_entries": [
         {
-          "name": "Martin Dúbravka",
-          "player_id": "72241",
-          "role_group": "GK"
+          "name": "Rodrigo Bentancur",
+          "player_id": "620618",
+          "role_group": "MID"
         },
         {
-          "name": "Ben Davies",
-          "player_id": "276121",
-          "role_group": "DEF"
+          "name": "Omar Marmoush",
+          "player_id": "839204",
+          "role_group": "FW"
         },
         {
           "name": "Micky van de Ven",
           "player_id": "1097466",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Tosin Adarabioyo",
-          "player_id": "683402",
           "role_group": "DEF"
         },
         {
@@ -2049,18 +2044,23 @@
           "role_group": "MID"
         },
         {
-          "name": "Rodrigo Bentancur",
-          "player_id": "620618",
-          "role_group": "MID"
+          "name": "Martin Dúbravka",
+          "player_id": "72241",
+          "role_group": "GK"
+        },
+        {
+          "name": "Ben Davies",
+          "player_id": "276121",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Tosin Adarabioyo",
+          "player_id": "683402",
+          "role_group": "DEF"
         },
         {
           "name": "Mathys Tel",
           "player_id": "1288111",
-          "role_group": "FW"
-        },
-        {
-          "name": "Omar Marmoush",
-          "player_id": "839204",
           "role_group": "FW"
         }
       ],
@@ -2079,7 +2079,7 @@
         "Mykhaylo Mudryk",
         "Wilson Odobert"
       ],
-      "observed_at": "2026-10-10T15:52:34.154908+00:00",
+      "observed_at": "2026-10-10T20:03:13.379213+00:00",
       "changed_at": "2026-10-10T15:52:34.154908+00:00"
     },
     {
@@ -2500,7 +2500,7 @@
         "Yankuba Minteh",
         "Zadok Yohanna"
       ],
-      "observed_at": "2026-10-10T15:52:34.154908+00:00",
+      "observed_at": "2026-10-10T20:03:13.379213+00:00",
       "changed_at": "2026-10-10T13:24:37.213120+00:00"
     },
     {
@@ -2806,7 +2806,7 @@
         "Nikola Milenković",
         "Igor Jesus"
       ],
-      "observed_at": "2026-10-10T15:52:34.154908+00:00",
+      "observed_at": "2026-10-10T20:03:13.379213+00:00",
       "changed_at": "2026-10-10T13:24:37.213120+00:00"
     },
     {
@@ -3115,7 +3115,7 @@
         "Vitaliy Mykolenko",
         "Christian Nørgaard"
       ],
-      "observed_at": "2026-10-10T15:52:34.154908+00:00",
+      "observed_at": "2026-10-10T20:03:13.379213+00:00",
       "changed_at": "2026-10-10T13:24:37.213120+00:00"
     },
     {
@@ -3421,7 +3421,7 @@
         "Phil Foden",
         "Antoine Semenyo"
       ],
-      "observed_at": "2026-10-10T15:52:34.154908+00:00",
+      "observed_at": "2026-10-10T20:03:13.379213+00:00",
       "changed_at": "2026-10-10T13:24:37.213120+00:00"
     },
     {
@@ -3731,7 +3731,7 @@
         "Anthony Elanga",
         "William Osula"
       ],
-      "observed_at": "2026-10-10T15:52:34.154908+00:00",
+      "observed_at": "2026-10-10T20:03:13.379213+00:00",
       "changed_at": "2026-10-09T21:40:17.158614+00:00"
     }
   ]

@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-10T15:52:07Z",
+  "generated_at": "2026-10-10T20:02:51Z",
   "league": "serie-a",
-  "row_count": 36,
+  "row_count": 34,
   "rows": [
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-10",
       "home_team": "Genoa",
       "away_team": "Fiorentina",
@@ -73,7 +73,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-10",
       "home_team": "Genoa",
       "away_team": "Fiorentina",
@@ -134,7 +134,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-10",
       "home_team": "Inter",
       "away_team": "Parma",
@@ -158,22 +158,22 @@
         "Hakan Çalhanoglu",
         "Henrikh Mkhitaryan",
         "Federico Dimarco",
-        "Francesco Pio Esposito",
-        "Marcus Thuram"
+        "Marcus Thuram",
+        "Francesco Pio Esposito"
       ],
       "bench_names": [
+        "Aleksandar Stanković",
+        "Ange-Yoan Bonny",
+        "Lautaro Martínez",
+        "Djed Spence",
+        "Luis Henrique",
         "Ivan Provedel",
         "Raffaele Di Gennaro",
         "Alessandro Bastoni",
-        "Djed Spence",
         "Leonardo Bovio",
         "Manuel Akanji",
-        "Aleksandar Stanković",
-        "Luis Henrique",
         "Nicolò Barella",
-        "Piotr Zieliński",
-        "Ange-Yoan Bonny",
-        "Lautaro Martínez"
+        "Piotr Zieliński"
       ],
       "unavailable_names": [
         "John Stones",
@@ -196,7 +196,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-10",
       "home_team": "Inter",
       "away_team": "Parma",
@@ -212,10 +212,10 @@
       "team_lineup_status": "unknown",
       "starter_names": [
         "Edoardo Corvi",
-        "Enrico Del Prato",
         "Mariano Troilo",
         "Diego Carlos",
         "Franco Carboni",
+        "Enrico Del Prato",
         "Giovanni Fabbian",
         "Vincent Sierro",
         "Mandela Keita",
@@ -224,18 +224,18 @@
         "Nesta Elphege"
       ],
       "bench_names": [
+        "Adrián Bernabé",
+        "David Romero",
+        "Simone Lontani",
+        "Sascha Britschgi",
+        "Matija Frigan",
         "Giovanni Daffara",
         "Simone Ghidotti",
         "Dominik Drobnič",
         "Abdou-Salam Konaté",
-        "Adrián Bernabé",
         "Benjamín Cremaschi",
         "Christian Ordóñez",
-        "Sascha Britschgi",
-        "David Romero",
-        "Matija Frigan",
-        "Ousmane Diallo",
-        "Simone Lontani"
+        "Ousmane Diallo"
       ],
       "unavailable_names": [
         "Abdoulaye Ndiaye",
@@ -259,7 +259,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-10",
       "home_team": "Napoli",
       "away_team": "Frosinone",
@@ -268,25 +268,36 @@
       "opponent": "Frosinone",
       "opponent_key": "frosinone",
       "is_home": 1,
-      "lineup_input": "expected_xi",
-      "trust_tier": "T2",
+      "lineup_input": "confirmed_xi",
+      "trust_tier": "T1",
       "fixture_corruption_score": 0.0,
       "fixture_corruption_flags": [],
       "team_lineup_status": "unknown",
       "starter_names": [
-        "Vanja Milinković-Savić",
-        "Giovanni Di Lorenzo",
-        "Amir Rrahmani",
+        "Alex Meret",
         "Rafa Marín",
-        "Leonardo Spinazzola",
-        "Billy Gilmour",
-        "Stanislav Lobotka",
-        "Matteo Politano",
+        "Amir Rrahmani",
+        "Benoît Badiashile",
+        "Giovanni Di Lorenzo",
         "Kevin De Bruyne",
-        "Noa Lang",
-        "Rasmus Højlund"
+        "Stanislav Lobotka",
+        "Leonardo Spinazzola",
+        "David Neres",
+        "Rasmus Højlund",
+        "Noa Lang"
       ],
-      "bench_names": [],
+      "bench_names": [
+        "Nikita Contini",
+        "Vanja Milinković-Savić",
+        "Luca Marianucci",
+        "Sam Beukema",
+        "Billy Gilmour",
+        "Matteo Politano",
+        "Scott McTominay",
+        "Giovane Nascimento",
+        "Lorenzo Lucca",
+        "Milton Pereyra"
+      ],
       "unavailable_names": [
         "Alessandro Buongiorno",
         "Mathías Olivera",
@@ -298,11 +309,11 @@
       "primary": "Kevin De Bruyne",
       "secondary": "Rasmus Højlund",
       "tertiary": "Matteo Politano",
-      "primary_lineup_status": "expected_starter",
+      "primary_lineup_status": "confirmed_starter",
       "primary_match_name": "Kevin De Bruyne",
-      "secondary_lineup_status": "expected_starter",
+      "secondary_lineup_status": "confirmed_starter",
       "secondary_match_name": "Rasmus Højlund",
-      "tertiary_lineup_status": "expected_starter",
+      "tertiary_lineup_status": "confirmed_bench",
       "tertiary_match_name": "Matteo Politano",
       "active_taker_pre_match": "Kevin De Bruyne",
       "active_slot_pre_match": "primary",
@@ -312,7 +323,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-10",
       "home_team": "Napoli",
       "away_team": "Frosinone",
@@ -321,8 +332,8 @@
       "opponent": "Napoli",
       "opponent_key": "napoli",
       "is_home": 0,
-      "lineup_input": "expected_xi",
-      "trust_tier": "T2",
+      "lineup_input": "confirmed_xi",
+      "trust_tier": "T1",
       "fixture_corruption_score": 0.0,
       "fixture_corruption_flags": [],
       "team_lineup_status": "unknown",
@@ -332,28 +343,41 @@
         "Gabriele Calvani",
         "Giorgio Cittadini",
         "Gabriele Bracaglia",
-        "Romano Schmid",
-        "Giacomo Calò",
         "Patrizio Masini",
+        "Giacomo Calò",
         "Farès Ghedjemis",
-        "Tomás Bobček",
-        "Giorgi Kvernadze"
-      ],
-      "bench_names": [],
-      "unavailable_names": [
-        "Aleksa Terzić",
-        "Daniel Bîrligea",
-        "Florian Grillitsch",
+        "Romano Schmid",
+        "Giorgi Kvernadze",
         "Antonio Raimondo"
+      ],
+      "bench_names": [
+        "Aleksa Terzić",
+        "Matteo Pisseri",
+        "Sebastiano Desplanches",
+        "Enzo Tchato",
+        "Ilario Monterisi",
+        "Kevin Akpoguma",
+        "Omar Fayed",
+        "Wisdom Amey",
+        "Alessio Zerbin",
+        "Anouar El Azzouzi",
+        "Luis Hasa",
+        "Matteo Cichella",
+        "Seydou Fini",
+        "Tomás Bobček"
+      ],
+      "unavailable_names": [
+        "Daniel Bîrligea",
+        "Florian Grillitsch"
       ],
       "primary": "Giacomo Calò",
       "secondary": "Ben Lhassine Kone",
       "tertiary": "Antonio Raimondo",
-      "primary_lineup_status": "expected_starter",
+      "primary_lineup_status": "confirmed_starter",
       "primary_match_name": "Giacomo Calò",
       "secondary_lineup_status": "unknown",
       "secondary_match_name": "",
-      "tertiary_lineup_status": "expected_out",
+      "tertiary_lineup_status": "confirmed_starter",
       "tertiary_match_name": "Antonio Raimondo",
       "active_taker_pre_match": "Giacomo Calò",
       "active_slot_pre_match": "primary",
@@ -363,111 +387,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
-      "match_date": "2026-10-10",
-      "home_team": "SSC Napoli",
-      "away_team": "Frosinone Calcio",
-      "team": "SSC Napoli",
-      "team_key": "napoli",
-      "opponent": "Frosinone Calcio",
-      "opponent_key": "frosinone",
-      "is_home": 1,
-      "lineup_input": "expected_xi",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": [],
-      "team_lineup_status": "unknown",
-      "starter_names": [
-        "Vanja Milinković-Savić",
-        "Giovanni Di Lorenzo",
-        "Amir Rrahmani",
-        "Rafa Marín",
-        "Leonardo Spinazzola",
-        "Billy Gilmour",
-        "Stanislav Lobotka",
-        "Matteo Politano",
-        "Kevin De Bruyne",
-        "Noa Lang",
-        "Rasmus Højlund"
-      ],
-      "bench_names": [],
-      "unavailable_names": [
-        "Alessandro Buongiorno",
-        "Mathías Olivera",
-        "Alisson Santos",
-        "Frank Anguissa",
-        "Antonio Vergara",
-        "Costantino Favasuli"
-      ],
-      "primary": "Kevin De Bruyne",
-      "secondary": "Rasmus Højlund",
-      "tertiary": "Matteo Politano",
-      "primary_lineup_status": "expected_starter",
-      "primary_match_name": "Kevin De Bruyne",
-      "secondary_lineup_status": "expected_starter",
-      "secondary_match_name": "Rasmus Højlund",
-      "tertiary_lineup_status": "expected_starter",
-      "tertiary_match_name": "Matteo Politano",
-      "active_taker_pre_match": "Kevin De Bruyne",
-      "active_slot_pre_match": "primary",
-      "penalty_transfer_pre_match": 0,
-      "inherited_from_pre_match": "",
-      "transfer_level_pre_match": ""
-    },
-    {
-      "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
-      "match_date": "2026-10-10",
-      "home_team": "SSC Napoli",
-      "away_team": "Frosinone Calcio",
-      "team": "Frosinone Calcio",
-      "team_key": "frosinone",
-      "opponent": "SSC Napoli",
-      "opponent_key": "napoli",
-      "is_home": 0,
-      "lineup_input": "expected_xi",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": [],
-      "team_lineup_status": "unknown",
-      "starter_names": [
-        "Lorenzo Palmisani",
-        "Anthony Oyono",
-        "Gabriele Calvani",
-        "Giorgio Cittadini",
-        "Gabriele Bracaglia",
-        "Romano Schmid",
-        "Giacomo Calò",
-        "Patrizio Masini",
-        "Farès Ghedjemis",
-        "Tomás Bobček",
-        "Giorgi Kvernadze"
-      ],
-      "bench_names": [],
-      "unavailable_names": [
-        "Aleksa Terzić",
-        "Daniel Bîrligea",
-        "Florian Grillitsch",
-        "Antonio Raimondo"
-      ],
-      "primary": "Giacomo Calò",
-      "secondary": "Ben Lhassine Kone",
-      "tertiary": "Antonio Raimondo",
-      "primary_lineup_status": "expected_starter",
-      "primary_match_name": "Giacomo Calò",
-      "secondary_lineup_status": "unknown",
-      "secondary_match_name": "",
-      "tertiary_lineup_status": "expected_out",
-      "tertiary_match_name": "Antonio Raimondo",
-      "active_taker_pre_match": "Giacomo Calò",
-      "active_slot_pre_match": "primary",
-      "penalty_transfer_pre_match": 0,
-      "inherited_from_pre_match": "",
-      "transfer_level_pre_match": ""
-    },
-    {
-      "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Cagliari",
       "away_team": "Juventus",
@@ -520,7 +440,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Cagliari",
       "away_team": "Juventus",
@@ -574,7 +494,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Cagliari Calcio",
       "away_team": "Juventus Turin",
@@ -627,7 +547,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Cagliari Calcio",
       "away_team": "Juventus Turin",
@@ -681,7 +601,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Como",
       "away_team": "Roma",
@@ -709,7 +629,9 @@
         "Anastasios Douvikas"
       ],
       "bench_names": [],
-      "unavailable_names": [],
+      "unavailable_names": [
+        "Moise Kean"
+      ],
       "primary": "Lucas Da Cunha",
       "secondary": "Nico Paz",
       "tertiary": "Tasos Douvikas",
@@ -727,7 +649,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Como",
       "away_team": "Roma",
@@ -756,6 +678,7 @@
       ],
       "bench_names": [],
       "unavailable_names": [
+        "Konstantinos Koulierakis",
         "Bryan Cristante"
       ],
       "primary": "Donyell Malen",
@@ -775,7 +698,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Como 1907",
       "away_team": "AS Roma",
@@ -803,7 +726,9 @@
         "Anastasios Douvikas"
       ],
       "bench_names": [],
-      "unavailable_names": [],
+      "unavailable_names": [
+        "Moise Kean"
+      ],
       "primary": "Lucas Da Cunha",
       "secondary": "Nico Paz",
       "tertiary": "Tasos Douvikas",
@@ -821,7 +746,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Como 1907",
       "away_team": "AS Roma",
@@ -850,6 +775,7 @@
       ],
       "bench_names": [],
       "unavailable_names": [
+        "Konstantinos Koulierakis",
         "Bryan Cristante"
       ],
       "primary": "Donyell Malen",
@@ -869,7 +795,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Lazio",
       "away_team": "Monza",
@@ -901,7 +827,8 @@
         "Nicolò Rovella",
         "Adam Marušić",
         "Danilo Cataldi",
-        "Albert Guðmundsson"
+        "Albert Guðmundsson",
+        "Matteo Cancellieri"
       ],
       "primary": "Mattia Zaccagni",
       "secondary": "Danilo Cataldi",
@@ -920,7 +847,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Lazio",
       "away_team": "Monza",
@@ -950,6 +877,7 @@
       "bench_names": [],
       "unavailable_names": [
         "Jan Ziólkowski",
+        "Idrissa Touré",
         "Matteo Pessina",
         "Patrick Ciurria"
       ],
@@ -970,7 +898,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Lazio Rome",
       "away_team": "AC Monza",
@@ -1002,7 +930,8 @@
         "Nicolò Rovella",
         "Adam Marušić",
         "Danilo Cataldi",
-        "Albert Guðmundsson"
+        "Albert Guðmundsson",
+        "Matteo Cancellieri"
       ],
       "primary": "Mattia Zaccagni",
       "secondary": "Danilo Cataldi",
@@ -1021,7 +950,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Lazio Rome",
       "away_team": "AC Monza",
@@ -1051,6 +980,7 @@
       "bench_names": [],
       "unavailable_names": [
         "Jan Ziólkowski",
+        "Idrissa Touré",
         "Matteo Pessina",
         "Patrick Ciurria"
       ],
@@ -1071,7 +1001,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Lecce",
       "away_team": "Bologna",
@@ -1100,6 +1030,7 @@
       ],
       "bench_names": [],
       "unavailable_names": [
+        "Nikola Štulić",
         "Medon Berisha"
       ],
       "primary": "Willem Geubbels",
@@ -1107,8 +1038,8 @@
       "tertiary": "Santiago Pierotti",
       "primary_lineup_status": "unknown",
       "primary_match_name": "",
-      "secondary_lineup_status": "unknown",
-      "secondary_match_name": "",
+      "secondary_lineup_status": "expected_out",
+      "secondary_match_name": "Nikola Štulić",
       "tertiary_lineup_status": "expected_starter",
       "tertiary_match_name": "Santiago Pierotti",
       "active_taker_pre_match": "Santiago Pierotti",
@@ -1119,7 +1050,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Lecce",
       "away_team": "Bologna",
@@ -1169,7 +1100,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Sassuolo",
       "away_team": "Milan",
@@ -1223,7 +1154,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Sassuolo",
       "away_team": "Milan",
@@ -1272,7 +1203,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Sassuolo Calcio",
       "away_team": "AC Milan",
@@ -1326,7 +1257,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "Sassuolo Calcio",
       "away_team": "AC Milan",
@@ -1375,7 +1306,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "US Lecce",
       "away_team": "Bologna FC",
@@ -1404,6 +1335,7 @@
       ],
       "bench_names": [],
       "unavailable_names": [
+        "Nikola Štulić",
         "Medon Berisha"
       ],
       "primary": "Willem Geubbels",
@@ -1411,8 +1343,8 @@
       "tertiary": "Santiago Pierotti",
       "primary_lineup_status": "unknown",
       "primary_match_name": "",
-      "secondary_lineup_status": "unknown",
-      "secondary_match_name": "",
+      "secondary_lineup_status": "expected_out",
+      "secondary_match_name": "Nikola Štulić",
       "tertiary_lineup_status": "expected_starter",
       "tertiary_match_name": "Santiago Pierotti",
       "active_taker_pre_match": "Santiago Pierotti",
@@ -1423,7 +1355,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-11",
       "home_team": "US Lecce",
       "away_team": "Bologna FC",
@@ -1473,7 +1405,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-12",
       "home_team": "Atalanta",
       "away_team": "Venezia",
@@ -1525,7 +1457,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-12",
       "home_team": "Atalanta",
       "away_team": "Venezia",
@@ -1579,7 +1511,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-12",
       "home_team": "Atalanta BC",
       "away_team": "Venezia FC",
@@ -1631,7 +1563,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-12",
       "home_team": "Atalanta BC",
       "away_team": "Venezia FC",
@@ -1685,7 +1617,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-12",
       "home_team": "Torino",
       "away_team": "Udinese",
@@ -1734,7 +1666,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-12",
       "home_team": "Torino",
       "away_team": "Udinese",
@@ -1784,7 +1716,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-12",
       "home_team": "Torino FC",
       "away_team": "Udinese Calcio",
@@ -1833,7 +1765,7 @@
     },
     {
       "league": "serie-a",
-      "compared_at": "2026-10-10T15:52:07Z",
+      "compared_at": "2026-10-10T20:02:51Z",
       "match_date": "2026-10-12",
       "home_team": "Torino FC",
       "away_team": "Udinese Calcio",
