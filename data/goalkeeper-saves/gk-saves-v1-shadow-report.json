@@ -2,21 +2,21 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 104,
+    "blocked_lines": 62,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 24,
-      "goalkeeper_team_unresolved": 56,
-      "history_lt_6": 37,
-      "missing_lineup": 32,
-      "missing_priced_edge": 93,
-      "missing_registered_feature": 37
+      "goalkeeper_not_matched_to_lineup": 15,
+      "goalkeeper_team_unresolved": 36,
+      "history_lt_6": 26,
+      "missing_lineup": 21,
+      "missing_priced_edge": 62,
+      "missing_registered_feature": 26
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 9,
-    "priced_lines": 190,
+    "eligible_lines": 6,
+    "priced_lines": 107,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 43
+    "value_ladder_lines": 29
   },
   "evidence": {
     "clv": 0.043999,
@@ -35,15 +35,15 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-10T15:34:13.987909+00:00",
+    "checked_at": "2026-10-10T19:31:08.546677+00:00",
     "counts": {
-      "not_fresh_prematch": 54,
-      "offers_saved": 229
+      "not_fresh_prematch": 1,
+      "offers_saved": 168
     },
-    "saved": 21,
+    "saved": 16,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-10T15:34:13Z",
+  "generated_at": "2026-10-10T19:31:07Z",
   "live_routing": false,
   "promotion": {
     "mean_true_close_clv_required": 0.005,
