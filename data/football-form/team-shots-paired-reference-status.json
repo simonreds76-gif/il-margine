@@ -1,5 +1,5 @@
 {
-  "contracts": 105,
+  "contracts": 108,
   "settled_contracts": 0,
   "paired_contracts": 0,
   "paired_fixtures": 0,
@@ -20,7 +20,7 @@
         "stake_units": 0,
         "pending": 19,
         "overdue": 0,
-        "unavailable_contracts": 41,
+        "unavailable_contracts": 43,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
@@ -39,7 +39,7 @@
         "stake_units": 0,
         "pending": 0,
         "overdue": 0,
-        "unavailable_contracts": 41,
+        "unavailable_contracts": 43,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
@@ -95,13 +95,13 @@
   "model_fingerprint": "934de9b700fe013c26d54fefa1c5ccfa82af2f0bd98748b242cda712d9ad3e0d",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 0,
-  "generated_at": "2026-10-10T19:31:20Z",
-  "new_contracts": 10,
+  "generated_at": "2026-10-10T22:56:17Z",
+  "new_contracts": 3,
   "scan_exclusions": {
-    "stale_price": 344
+    "stale_price": 408
   },
-  "latest_archived_capture": "2026-10-10T19:31:06Z",
+  "latest_archived_capture": "2026-10-10T22:56:04Z",
   "latest_result_date": "2026-09-20",
-  "raw_upcoming_rows": 408,
+  "raw_upcoming_rows": 472,
   "status": "COLLECTING"
 }

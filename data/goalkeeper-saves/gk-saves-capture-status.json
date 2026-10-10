@@ -2,29 +2,29 @@
   "capture_errors": [],
   "capture_mode": "close",
   "event_last_checked": {
-    "71945288": "2026-10-10T19:31:06Z",
-    "71945290": "2026-10-10T19:31:06Z",
-    "71945296": "2026-10-10T19:31:06Z",
-    "71945298": "2026-10-10T19:31:06Z",
-    "71945302": "2026-10-10T19:31:06Z",
-    "72036212": "2026-10-10T19:31:06Z",
-    "72036216": "2026-10-10T19:31:06Z",
-    "72036218": "2026-10-10T19:31:06Z",
-    "72221300": "2026-10-10T19:31:06Z",
-    "72221302": "2026-10-10T19:31:06Z",
-    "72221306": "2026-10-10T19:31:06Z",
-    "72478608": "2026-10-10T19:31:06Z",
-    "72478610": "2026-10-10T19:31:06Z",
-    "72478618": "2026-10-10T19:31:06Z",
-    "72478624": "2026-10-10T19:31:06Z",
-    "72513226": "2026-10-10T19:31:06Z",
-    "72513234": "2026-10-10T19:31:06Z"
+    "71945288": "2026-10-10T22:56:05Z",
+    "71945290": "2026-10-10T22:56:05Z",
+    "71945296": "2026-10-10T22:56:05Z",
+    "71945298": "2026-10-10T22:56:05Z",
+    "71945302": "2026-10-10T22:56:05Z",
+    "72036212": "2026-10-10T22:56:05Z",
+    "72036216": "2026-10-10T22:56:05Z",
+    "72036218": "2026-10-10T22:56:05Z",
+    "72221300": "2026-10-10T22:56:05Z",
+    "72221302": "2026-10-10T22:56:05Z",
+    "72221306": "2026-10-10T22:56:05Z",
+    "72478608": "2026-10-10T22:56:05Z",
+    "72478610": "2026-10-10T22:56:05Z",
+    "72478618": "2026-10-10T22:56:05Z",
+    "72478624": "2026-10-10T22:56:05Z",
+    "72513226": "2026-10-10T22:56:05Z",
+    "72513234": "2026-10-10T22:56:05Z"
   },
   "events_deferred_by_budget": 0,
   "events_selected": 17,
   "events_supported": 17,
   "events_with_lines": 16,
-  "generated_at": "2026-10-10T19:31:06Z",
+  "generated_at": "2026-10-10T22:56:05Z",
   "last_publication_at": "2026-10-10T14:30:51Z",
   "league_coverage": {
     "bundesliga": {
@@ -146,44 +146,9 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 3,
-  "rows_added": 168,
-  "rows_observed": 168,
+  "rows_added": 169,
+  "rows_observed": 169,
   "selected_events": [
-    {
-      "away": "AC Milan",
-      "competition": "Italy - Serie A",
-      "home": "Sassuolo Calcio",
-      "id": 71945302,
-      "kickoff_at": "2026-10-11T16:00:00Z"
-    },
-    {
-      "away": "CA Osasuna",
-      "competition": "Spain - LaLiga",
-      "home": "Real Betis Seville",
-      "id": 72478608,
-      "kickoff_at": "2026-10-11T16:30:00Z"
-    },
-    {
-      "away": "Olympique Marseille",
-      "competition": "France - Ligue 1",
-      "home": "ESTAC Troyes",
-      "id": 72036218,
-      "kickoff_at": "2026-10-11T18:45:00Z"
-    },
-    {
-      "away": "Juventus Turin",
-      "competition": "Italy - Serie A",
-      "home": "Cagliari Calcio",
-      "id": 71945288,
-      "kickoff_at": "2026-10-11T18:45:00Z"
-    },
-    {
-      "away": "Valencia CF",
-      "competition": "Spain - LaLiga",
-      "home": "Racing Santander",
-      "id": 72478618,
-      "kickoff_at": "2026-10-11T19:00:00Z"
-    },
     {
       "away": "AS Roma",
       "competition": "Italy - Serie A",
@@ -267,6 +232,41 @@
       "home": "SC Freiburg",
       "id": 72513226,
       "kickoff_at": "2026-10-11T15:30:00Z"
+    },
+    {
+      "away": "AC Milan",
+      "competition": "Italy - Serie A",
+      "home": "Sassuolo Calcio",
+      "id": 71945302,
+      "kickoff_at": "2026-10-11T16:00:00Z"
+    },
+    {
+      "away": "CA Osasuna",
+      "competition": "Spain - LaLiga",
+      "home": "Real Betis Seville",
+      "id": 72478608,
+      "kickoff_at": "2026-10-11T16:30:00Z"
+    },
+    {
+      "away": "Olympique Marseille",
+      "competition": "France - Ligue 1",
+      "home": "ESTAC Troyes",
+      "id": 72036218,
+      "kickoff_at": "2026-10-11T18:45:00Z"
+    },
+    {
+      "away": "Juventus Turin",
+      "competition": "Italy - Serie A",
+      "home": "Cagliari Calcio",
+      "id": 71945288,
+      "kickoff_at": "2026-10-11T18:45:00Z"
+    },
+    {
+      "away": "Valencia CF",
+      "competition": "Spain - LaLiga",
+      "home": "Racing Santander",
+      "id": 72478618,
+      "kickoff_at": "2026-10-11T19:00:00Z"
     }
   ],
   "status": "CAPTURED",
