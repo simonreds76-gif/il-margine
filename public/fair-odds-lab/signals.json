@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T13:26:45.178800Z",
+  "generated_at": "2026-10-10T15:54:15.814397Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -35,23 +35,215 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 37,
-  "signals_qualifying": 0,
+  "fixtures_evaluated": 30,
+  "signals_qualifying": 2,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 54,
-    "market_odds_above_cap": 1,
-    "model_probability_below_floor": 1,
-    "model_market_gap_gt_10pp": 1
+    "incomplete_prediction_roster": 44,
+    "model_probability_below_floor": 2,
+    "model_market_gap_gt_10pp": 2
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 1,
+    "eligible_rows": 2,
     "added_by_league": {
-      "epl": 1
+      "bundesliga": 2
     },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [],
-  "featured_signal_id": null,
-  "signals": []
+  "leagues_covered": [
+    "epl",
+    "la-liga"
+  ],
+  "featured_signal_id": "20261010-lamine-yamal-c4e9ffe623",
+  "signals": [
+    {
+      "id": "20261010-lamine-yamal-c4e9ffe623",
+      "match": {
+        "home_team": "FC Barcelona",
+        "away_team": "Getafe CF",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-10-10T16:30:00Z",
+        "kickoff_display": "Sat 10 Oct 17:30 UK",
+        "fotmob_match_id": "5868084",
+        "fotmob_page_url": "/matches/getafe-vs-barcelona/2dfbe4#5868084",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Lamine Yamal",
+        "team": "Barcelona",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/la-liga/barcelona.png",
+        "team_primary_color": "#1e3a8a",
+        "team_secondary_color": "#b91c1c",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 69.4,
+        "fair_odds": 1.44
+      },
+      "market_data": {
+        "best_odds": 1.61,
+        "best_book": "Bet365",
+        "implied_chance_pct": 61.9
+      },
+      "edge": {
+        "price_gap_pp": 7.4,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 97
+        },
+        "share_of_team_chances_pct": 38,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 97
+        },
+        "recent_team_form": {
+          "tier": "Strong",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-09-19",
+          "xg_for_avg": 3.44,
+          "xg_against_avg": 1.25,
+          "xgd_per90": 2.19,
+          "shots_for_avg": 23.4,
+          "shots_against_avg": 7.8,
+          "sot_for_avg": 8.2,
+          "sot_against_avg": 4.0,
+          "corners_for_avg": 7.8,
+          "corners_against_avg": 2.0
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 32
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-09-20",
+          "xg_for_avg": 1.02,
+          "xg_against_avg": 1.6,
+          "xgd_per90": -0.58,
+          "shots_for_avg": 12.8,
+          "shots_against_avg": 13.8,
+          "sot_for_avg": 3.2,
+          "sot_against_avg": 4.0,
+          "corners_for_avg": 3.4,
+          "corners_against_avg": 5.2
+        },
+        "fixture_boost_pct": 5,
+        "projected_minutes": 85,
+        "penalty_role": "Secondary",
+        "role_adjustment_factor": 0.9688,
+        "role_adjustment_reason": "confirmed_role_delta=-1;usual=FWR;today=AM;weight=0.62",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Recent team form supports the attacking case",
+        "Opponent has been allowing chances recently"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20261010-bryan-mbeumo-35a712aeaf",
+      "match": {
+        "home_team": "Manchester United",
+        "away_team": "Tottenham Hotspur",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-10-10T16:30:00Z",
+        "kickoff_display": "Sat 10 Oct 17:30 UK",
+        "fotmob_match_id": "5795473",
+        "fotmob_page_url": "/matches/tottenham-hotspur-vs-manchester-united/2xqo0r#5795473",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Bryan Mbeumo",
+        "team": "Manchester United",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/manchester-united.png",
+        "team_primary_color": "#dc2626",
+        "team_secondary_color": "#111827",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 48.5,
+        "fair_odds": 2.06
+      },
+      "market_data": {
+        "best_odds": 2.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 40.0
+      },
+      "edge": {
+        "price_gap_pp": 8.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 99
+        },
+        "share_of_team_chances_pct": 32,
+        "share_of_team_chances_percentile": 96,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 91
+        },
+        "recent_team_form": {
+          "tier": "Unknown"
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 55
+        },
+        "opponent_recent_defence": {
+          "tier": "High",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-09-19",
+          "xg_for_avg": 1.16,
+          "xg_against_avg": 1.84,
+          "xgd_per90": -0.67,
+          "shots_for_avg": 14.2,
+          "shots_against_avg": 15.2,
+          "sot_for_avg": 3.8,
+          "sot_against_avg": 4.2,
+          "corners_for_avg": 7.6,
+          "corners_against_avg": 4.6
+        },
+        "fixture_boost_pct": 1,
+        "projected_minutes": 85,
+        "penalty_role": "Secondary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent has been allowing chances recently"
+      ],
+      "risk_flags": []
+    }
+  ]
 }
