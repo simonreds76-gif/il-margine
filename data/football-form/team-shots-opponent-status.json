@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T14:31:23Z",
+  "generated_at": "2026-10-10T15:34:20Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -19,11 +19,11 @@
     "mean_clv": 0.021458333333333333
   },
   "latest_scan": {
-    "scored_rows": 72,
-    "scored_fixtures": 18,
-    "explanation": "38 fresh paired contracts; 72 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: fewer_than_six_prior_matches=2, outside_capture_window=48, stale_price=468."
+    "scored_rows": 84,
+    "scored_fixtures": 20,
+    "explanation": "44 fresh paired contracts; 84 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: fewer_than_six_prior_matches=2, outside_capture_window=36, stale_price=444."
   },
-  "settled_this_run": 2,
+  "settled_this_run": 0,
   "result_source": {
     "bundesliga": {
       "football_data_latest": "2026-09-20",

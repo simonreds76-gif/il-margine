@@ -1,42 +1,44 @@
 {
   "capture_errors": [],
-  "capture_mode": "publication",
+  "capture_mode": "close",
   "event_last_checked": {
-    "71945290": "2026-10-10T14:30:51Z",
-    "71945294": "2026-10-10T14:30:51Z",
-    "71945296": "2026-10-10T14:30:51Z",
-    "71945298": "2026-10-10T14:30:51Z",
-    "71945300": "2026-10-10T14:30:51Z",
-    "72036202": "2026-10-10T14:30:51Z",
-    "72036206": "2026-10-10T14:30:51Z",
-    "72036208": "2026-10-10T14:30:51Z",
-    "72036210": "2026-10-10T14:30:51Z",
-    "72036212": "2026-10-10T14:30:51Z",
-    "72036214": "2026-10-10T14:30:51Z",
-    "72221300": "2026-10-10T14:30:51Z",
-    "72221302": "2026-10-10T14:30:51Z",
-    "72221308": "2026-10-10T14:30:51Z",
-    "72478610": "2026-10-10T14:30:51Z",
-    "72478612": "2026-10-10T14:30:51Z",
-    "72478622": "2026-10-10T14:30:51Z",
-    "72478624": "2026-10-10T14:30:51Z",
-    "72513222": "2026-10-10T14:30:51Z",
-    "72513234": "2026-10-10T14:30:51Z"
+    "71945290": "2026-10-10T15:34:11Z",
+    "71945294": "2026-10-10T15:34:11Z",
+    "71945296": "2026-10-10T15:34:11Z",
+    "71945298": "2026-10-10T15:34:11Z",
+    "71945300": "2026-10-10T15:34:11Z",
+    "72036202": "2026-10-10T15:34:11Z",
+    "72036208": "2026-10-10T15:34:11Z",
+    "72036210": "2026-10-10T15:34:11Z",
+    "72036212": "2026-10-10T15:34:11Z",
+    "72036214": "2026-10-10T15:34:11Z",
+    "72036216": "2026-10-10T15:34:11Z",
+    "72221300": "2026-10-10T15:34:11Z",
+    "72221302": "2026-10-10T15:34:11Z",
+    "72221306": "2026-10-10T15:34:11Z",
+    "72221308": "2026-10-10T15:34:11Z",
+    "72478610": "2026-10-10T15:34:11Z",
+    "72478612": "2026-10-10T15:34:11Z",
+    "72478622": "2026-10-10T15:34:11Z",
+    "72478624": "2026-10-10T15:34:11Z",
+    "72513222": "2026-10-10T15:34:11Z",
+    "72513226": "2026-10-10T15:34:11Z",
+    "72513234": "2026-10-10T15:34:11Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 20,
-  "events_supported": 20,
-  "events_with_lines": 19,
-  "generated_at": "2026-10-10T14:30:51Z",
+  "events_selected": 22,
+  "events_supported": 22,
+  "events_with_lines": 21,
+  "generated_at": "2026-10-10T15:34:11Z",
   "last_publication_at": "2026-10-10T14:30:51Z",
   "league_coverage": {
     "bundesliga": {
-      "selected": 2,
-      "with_prices": 1
+      "selected": 3,
+      "with_prices": 2
     },
     "epl": {
-      "selected": 3,
-      "with_prices": 3
+      "selected": 4,
+      "with_prices": 4
     },
     "la-liga": {
       "selected": 4,
@@ -51,7 +53,7 @@
       "with_prices": 5
     }
   },
-  "market_inventory_rows_added": 1677,
+  "market_inventory_rows_added": 1866,
   "market_names_observed": [
     "1st Half Corners",
     "Alternative Corners",
@@ -148,17 +150,10 @@
   ],
   "publication_recovery": false,
   "request_budget": 4,
-  "requests_used": 3,
-  "rows_added": 208,
-  "rows_observed": 208,
+  "requests_used": 4,
+  "rows_added": 229,
+  "rows_observed": 229,
   "selected_events": [
-    {
-      "away": "Le Havre AC",
-      "competition": "France - Ligue 1",
-      "home": "Lille OSC",
-      "id": 72036206,
-      "kickoff_at": "2026-10-10T15:15:00Z"
-    },
     {
       "away": "Parma Calcio",
       "competition": "Italy - Serie A",
@@ -186,6 +181,27 @@
       "home": "Manchester United",
       "id": 72221308,
       "kickoff_at": "2026-10-10T16:30:00Z"
+    },
+    {
+      "away": "AJ Auxerre",
+      "competition": "France - Ligue 1",
+      "home": "Stade Rennais FC",
+      "id": 72036216,
+      "kickoff_at": "2026-10-11T15:15:00Z"
+    },
+    {
+      "away": "Manchester City",
+      "competition": "England - Premier League",
+      "home": "Liverpool FC",
+      "id": 72221306,
+      "kickoff_at": "2026-10-11T15:30:00Z"
+    },
+    {
+      "away": "Schalke 04",
+      "competition": "Germany - Bundesliga",
+      "home": "SC Freiburg",
+      "id": 72513226,
+      "kickoff_at": "2026-10-11T15:30:00Z"
     },
     {
       "away": "Angers SCO",
@@ -294,5 +310,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 19
+  "three_way_events": 21
 }
