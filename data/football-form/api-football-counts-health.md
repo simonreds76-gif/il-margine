@@ -1,6 +1,6 @@
 # API-Football Count Archive Health
 
-- Generated: 2026-10-09T15:20:31Z
+- Generated: 2026-10-10T14:30:25Z
 - Archive: 0 fixtures; 0 new this run
 - Latest fixture: -
 - Requests: 15/30
@@ -31,6 +31,11 @@
 
 ## Errors
 
+- fixtures epl 2026-10-10: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures serie-a 2026-10-10: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures {'league': 140, 'season': 2026, 'date': '2026-10-10', 'status': 'FT-AET-PEN'}: 500 Server Error: Internal Server Error for url: https://v3.football.api-sports.io/fixtures?league=140&season=2026&date=2026-10-10&status=FT-AET-PEN
+- fixtures bundesliga 2026-10-10: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures ligue-1 2026-10-10: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
 - fixtures epl 2026-10-09: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
 - fixtures serie-a 2026-10-09: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
 - fixtures la-liga 2026-10-09: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
@@ -41,8 +46,3 @@
 - fixtures la-liga 2026-10-08: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
 - fixtures bundesliga 2026-10-08: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
 - fixtures ligue-1 2026-10-08: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
-- fixtures epl 2026-10-07: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
-- fixtures serie-a 2026-10-07: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
-- fixtures la-liga 2026-10-07: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
-- fixtures bundesliga 2026-10-07: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
-- fixtures ligue-1 2026-10-07: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}

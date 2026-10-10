@@ -1,6 +1,6 @@
 # Football Count Market Coverage
 
-Generated: 2026-10-09T15:20:54Z
+Generated: 2026-10-10T14:30:53Z
 
 This report measures what the configured odds feed actually exposes. A bookmaker offering a market on its website does not prove the aggregator returns it.
 
@@ -8,11 +8,11 @@ This report measures what the configured odds feed actually exposes. A bookmaker
 |---|---|---:|---:|---:|---:|---|
 | team_fouls_total | NOT_OBSERVED | 0 | 0 | 0 | 0 | - |
 | match_fouls_total | NOT_OBSERVED | 0 | 0 | 0 | 0 | - |
-| team_cards_total | PAIRED_PRICES_OBSERVED | 40 | 40 | 36 | 10 | Bookings Totals Away, Bookings Totals Home |
-| match_cards_total | PAIRED_PRICES_OBSERVED | 42 | 42 | 38 | 10 | Bookings Totals, Number of Cards In Match |
-| player_fouls_committed | MARKET_NAME_ONLY | 38 | 0 | 34 | 8 | Player Fouls |
-| player_fouled | MARKET_NAME_ONLY | 38 | 0 | 34 | 8 | Player To Be Fouled |
-| player_cards | MARKET_NAME_ONLY | 45 | 0 | 41 | 10 | Player Cards |
+| team_cards_total | PAIRED_PRICES_OBSERVED | 31 | 26 | 31 | 10 | Bookings Totals Away, Bookings Totals Home |
+| match_cards_total | PAIRED_PRICES_OBSERVED | 32 | 27 | 31 | 10 | Bookings Totals, Number of Cards In Match |
+| player_fouls_committed | MARKET_NAME_ONLY | 28 | 0 | 28 | 8 | Player Fouls |
+| player_fouled | MARKET_NAME_ONLY | 28 | 0 | 28 | 8 | Player To Be Fouled |
+| player_cards | MARKET_NAME_ONLY | 34 | 0 | 34 | 10 | Player Cards |
 
 ## Decision
 
