@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T21:16:52Z",
+  "generated_at": "2026-10-10T01:15:36Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -36,16 +36,16 @@
     },
     "latest_scan": {
       "state": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
-      "explanation": "For all 112 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.11%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
-      "scored_rows": 146,
+      "explanation": "For all 114 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.11%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
+      "scored_rows": 148,
       "scored_fixtures": 25,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 146,
+      "blocked_rows": 148,
       "blocker_rows": {
         "early_market_gap_cap": 20,
-        "edge_below_3pct": 141,
-        "price_older_than_3h": 94
+        "edge_below_3pct": 143,
+        "price_older_than_3h": 96
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 5,
@@ -54,7 +54,7 @@
       "operational_alert_required": true,
       "operational_alert_code": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
       "rule_feasibility": {
-        "affected_rows": 112,
+        "affected_rows": 114,
         "rows_capable_of_minimum_edge": 0,
         "maximum_allowed_edge": 0.021062786390673605,
         "minimum_edge": 0.03,
@@ -100,16 +100,16 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "ELIGIBLE_CANDIDATES_PRESENT",
-      "explanation": "At least one candidate passed every locked shadow gate.",
+      "state": "NO_EDGE_AFTER_UNLOCK",
+      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
       "scored_rows": 154,
       "scored_fixtures": 29,
-      "eligible_rows": 38,
-      "eligible_fixtures": 17,
-      "blocked_rows": 116,
+      "eligible_rows": 0,
+      "eligible_fixtures": 0,
+      "blocked_rows": 154,
       "blocker_rows": {
         "edge_below_3pct": 116,
-        "price_older_than_3h": 4
+        "price_older_than_3h": 154
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 5,
