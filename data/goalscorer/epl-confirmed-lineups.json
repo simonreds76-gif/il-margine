@@ -287,31 +287,21 @@
         }
       ],
       "home_subs": [
-        "Remi Matthews",
         "Honest Ahanor",
-        "Cheick Oumar Doucouré",
         "Edward Nketiah",
         "Ismaïla Sarr",
+        "Dwight McNeil",
+        "Remi Matthews",
+        "Cheick Oumar Doucouré",
         "Óscar Mingueza",
         "Will Hughes",
-        "Dwight McNeil",
         "Evann Guessand"
       ],
       "home_substitute_entries": [
         {
-          "name": "Remi Matthews",
-          "player_id": "562726",
-          "role_group": "GK"
-        },
-        {
           "name": "Honest Ahanor",
           "player_id": "1669629",
           "role_group": "DEF"
-        },
-        {
-          "name": "Cheick Oumar Doucouré",
-          "player_id": "951954",
-          "role_group": "MID"
         },
         {
           "name": "Edward Nketiah",
@@ -321,6 +311,21 @@
         {
           "name": "Ismaïla Sarr",
           "player_id": "771294",
+          "role_group": "MID"
+        },
+        {
+          "name": "Dwight McNeil",
+          "player_id": "939542",
+          "role_group": "FW"
+        },
+        {
+          "name": "Remi Matthews",
+          "player_id": "562726",
+          "role_group": "GK"
+        },
+        {
+          "name": "Cheick Oumar Doucouré",
+          "player_id": "951954",
           "role_group": "MID"
         },
         {
@@ -334,28 +339,43 @@
           "role_group": "MID"
         },
         {
-          "name": "Dwight McNeil",
-          "player_id": "939542",
-          "role_group": "FW"
-        },
-        {
           "name": "Evann Guessand",
           "player_id": "1087966",
           "role_group": "FW"
         }
       ],
       "away_subs": [
+        "Ibrahim Sangaré",
+        "Callum Hudson-Odoi",
+        "Chris Wood",
+        "Arnaud Kalimuendo-Muinga",
         "John Victor",
         "Jair Cunha",
-        "Ibrahim Sangaré",
         "Luca Netz",
         "Nicolás Dominguez",
-        "Ryan Yates",
-        "Arnaud Kalimuendo-Muinga",
-        "Callum Hudson-Odoi",
-        "Chris Wood"
+        "Ryan Yates"
       ],
       "away_substitute_entries": [
+        {
+          "name": "Ibrahim Sangaré",
+          "player_id": "795371",
+          "role_group": "MID"
+        },
+        {
+          "name": "Callum Hudson-Odoi",
+          "player_id": "846383",
+          "role_group": "FW"
+        },
+        {
+          "name": "Chris Wood",
+          "player_id": "169719",
+          "role_group": "FW"
+        },
+        {
+          "name": "Arnaud Kalimuendo-Muinga",
+          "player_id": "1095445",
+          "role_group": "FW"
+        },
         {
           "name": "John Victor",
           "player_id": "749834",
@@ -365,11 +385,6 @@
           "name": "Jair Cunha",
           "player_id": "1391209",
           "role_group": "DEF"
-        },
-        {
-          "name": "Ibrahim Sangaré",
-          "player_id": "795371",
-          "role_group": "MID"
         },
         {
           "name": "Luca Netz",
@@ -385,21 +400,6 @@
           "name": "Ryan Yates",
           "player_id": "775614",
           "role_group": "MID"
-        },
-        {
-          "name": "Arnaud Kalimuendo-Muinga",
-          "player_id": "1095445",
-          "role_group": "FW"
-        },
-        {
-          "name": "Callum Hudson-Odoi",
-          "player_id": "846383",
-          "role_group": "FW"
-        },
-        {
-          "name": "Chris Wood",
-          "player_id": "169719",
-          "role_group": "FW"
         }
       ],
       "home_unavailable": [
@@ -414,7 +414,7 @@
         "Nikola Milenković",
         "Igor Jesus"
       ],
-      "observed_at": "2026-10-11T13:36:17.956006+00:00",
+      "observed_at": "2026-10-11T16:18:52.660651+00:00",
       "changed_at": "2026-10-11T13:36:17.956006+00:00"
     },
     {
@@ -704,17 +704,42 @@
         }
       ],
       "home_subs": [
+        "Elliot Stroud",
+        "Tim Iroegbunam",
+        "Mohamed Belloumi",
+        "Hidemasa Morita",
+        "Robinio Vaz",
         "Dillon Phillips",
         "Lucas Herrington",
         "Paddy McNair",
-        "Brooke Norton-Cuffy",
-        "Elliot Stroud",
-        "Hidemasa Morita",
-        "Tim Iroegbunam",
-        "Mohamed Belloumi",
-        "Robinio Vaz"
+        "Brooke Norton-Cuffy"
       ],
       "home_substitute_entries": [
+        {
+          "name": "Elliot Stroud",
+          "player_id": "1272349",
+          "role_group": "MID"
+        },
+        {
+          "name": "Tim Iroegbunam",
+          "player_id": "1203512",
+          "role_group": "MID"
+        },
+        {
+          "name": "Mohamed Belloumi",
+          "player_id": "1231090",
+          "role_group": "FW"
+        },
+        {
+          "name": "Hidemasa Morita",
+          "player_id": "915102",
+          "role_group": "MID"
+        },
+        {
+          "name": "Robinio Vaz",
+          "player_id": "1705134",
+          "role_group": "FW"
+        },
         {
           "name": "Dillon Phillips",
           "player_id": "518500",
@@ -734,49 +759,24 @@
           "name": "Brooke Norton-Cuffy",
           "player_id": "1214915",
           "role_group": "MID"
-        },
-        {
-          "name": "Elliot Stroud",
-          "player_id": "1272349",
-          "role_group": "MID"
-        },
-        {
-          "name": "Hidemasa Morita",
-          "player_id": "915102",
-          "role_group": "MID"
-        },
-        {
-          "name": "Tim Iroegbunam",
-          "player_id": "1203512",
-          "role_group": "MID"
-        },
-        {
-          "name": "Mohamed Belloumi",
-          "player_id": "1231090",
-          "role_group": "FW"
-        },
-        {
-          "name": "Robinio Vaz",
-          "player_id": "1705134",
-          "role_group": "FW"
         }
       ],
       "away_subs": [
-        "Mark Travers",
+        "Tyrique George",
         "Jake O'Brien",
-        "Merlin Röhl",
-        "Charly Alcaraz",
-        "Christian Nørgaard",
         "Hayden Hackney",
-        "Braiden Graham",
+        "Charly Alcaraz",
         "Tyler Dibling",
-        "Tyrique George"
+        "Mark Travers",
+        "Merlin Röhl",
+        "Christian Nørgaard",
+        "Braiden Graham"
       ],
       "away_substitute_entries": [
         {
-          "name": "Mark Travers",
-          "player_id": "731855",
-          "role_group": "GK"
+          "name": "Tyrique George",
+          "player_id": "1424875",
+          "role_group": "FW"
         },
         {
           "name": "Jake O'Brien",
@@ -784,9 +784,9 @@
           "role_group": "DEF"
         },
         {
-          "name": "Merlin Röhl",
-          "player_id": "1210384",
-          "role_group": "DEF"
+          "name": "Hayden Hackney",
+          "player_id": "982394",
+          "role_group": "MID"
         },
         {
           "name": "Charly Alcaraz",
@@ -794,28 +794,28 @@
           "role_group": "MID"
         },
         {
-          "name": "Christian Nørgaard",
-          "player_id": "266520",
-          "role_group": "MID"
-        },
-        {
-          "name": "Hayden Hackney",
-          "player_id": "982394",
-          "role_group": "MID"
-        },
-        {
-          "name": "Braiden Graham",
-          "player_id": "1589726",
-          "role_group": "FW"
-        },
-        {
           "name": "Tyler Dibling",
           "player_id": "1292833",
           "role_group": "FW"
         },
         {
-          "name": "Tyrique George",
-          "player_id": "1424875",
+          "name": "Mark Travers",
+          "player_id": "731855",
+          "role_group": "GK"
+        },
+        {
+          "name": "Merlin Röhl",
+          "player_id": "1210384",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Christian Nørgaard",
+          "player_id": "266520",
+          "role_group": "MID"
+        },
+        {
+          "name": "Braiden Graham",
+          "player_id": "1589726",
           "role_group": "FW"
         }
       ],
@@ -830,7 +830,7 @@
       "away_unavailable": [
         "Vitaliy Mykolenko"
       ],
-      "observed_at": "2026-10-11T13:36:17.956006+00:00",
+      "observed_at": "2026-10-11T16:18:52.660651+00:00",
       "changed_at": "2026-10-11T13:36:17.956006+00:00"
     },
     {
@@ -1124,18 +1124,18 @@
       "away_subs": [],
       "away_substitute_entries": [],
       "home_unavailable": [
-        "Federico Chiesa",
         "Conor Bradley",
         "Giovanni Leoni",
         "Alexander Isak",
         "Cody Gakpo",
+        "Federico Chiesa",
         "Hugo Ekitiké"
       ],
       "away_unavailable": [
         "Nico O'Reilly",
         "Phil Foden"
       ],
-      "observed_at": "2026-10-11T13:36:17.956006+00:00",
+      "observed_at": "2026-10-11T16:18:52.660651+00:00",
       "changed_at": "2026-10-10T13:24:37.213120+00:00"
     },
     {
@@ -1443,7 +1443,7 @@
         "Jacob Ramsey",
         "Anthony Elanga"
       ],
-      "observed_at": "2026-10-11T13:36:17.956006+00:00",
+      "observed_at": "2026-10-11T16:18:52.660651+00:00",
       "changed_at": "2026-10-11T13:36:17.956006+00:00"
     }
   ]

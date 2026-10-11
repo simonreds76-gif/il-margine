@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T13:36:19Z",
+  "generated_at": "2026-10-11T16:18:54Z",
   "league": "epl",
-  "row_count": 10,
+  "row_count": 8,
   "rows": [
     {
       "league": "epl",
-      "compared_at": "2026-10-11T13:36:19Z",
+      "compared_at": "2026-10-11T16:18:54Z",
       "match_date": "2026-10-11",
       "home_team": "Crystal Palace",
       "away_team": "Nottingham Forest",
@@ -34,14 +34,14 @@
         "Jørgen Strand Larsen"
       ],
       "bench_names": [
-        "Remi Matthews",
         "Honest Ahanor",
-        "Cheick Oumar Doucouré",
         "Edward Nketiah",
         "Ismaïla Sarr",
+        "Dwight McNeil",
+        "Remi Matthews",
+        "Cheick Oumar Doucouré",
         "Óscar Mingueza",
         "Will Hughes",
-        "Dwight McNeil",
         "Evann Guessand"
       ],
       "unavailable_names": [
@@ -68,7 +68,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-11T13:36:19Z",
+      "compared_at": "2026-10-11T16:18:54Z",
       "match_date": "2026-10-11",
       "home_team": "Crystal Palace",
       "away_team": "Nottingham Forest",
@@ -96,15 +96,15 @@
         "Liam Delap"
       ],
       "bench_names": [
+        "Ibrahim Sangaré",
+        "Callum Hudson-Odoi",
+        "Chris Wood",
+        "Arnaud Kalimuendo-Muinga",
         "John Victor",
         "Jair Cunha",
-        "Ibrahim Sangaré",
         "Luca Netz",
         "Nicolás Dominguez",
-        "Ryan Yates",
-        "Arnaud Kalimuendo-Muinga",
-        "Callum Hudson-Odoi",
-        "Chris Wood"
+        "Ryan Yates"
       ],
       "unavailable_names": [
         "Nicolò Savona",
@@ -128,7 +128,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-11T13:36:19Z",
+      "compared_at": "2026-10-11T16:18:54Z",
       "match_date": "2026-10-11",
       "home_team": "Hull City",
       "away_team": "Everton",
@@ -156,15 +156,15 @@
         "Oli McBurnie"
       ],
       "bench_names": [
+        "Elliot Stroud",
+        "Tim Iroegbunam",
+        "Mohamed Belloumi",
+        "Hidemasa Morita",
+        "Robinio Vaz",
         "Dillon Phillips",
         "Lucas Herrington",
         "Paddy McNair",
-        "Brooke Norton-Cuffy",
-        "Elliot Stroud",
-        "Hidemasa Morita",
-        "Tim Iroegbunam",
-        "Mohamed Belloumi",
-        "Robinio Vaz"
+        "Brooke Norton-Cuffy"
       ],
       "unavailable_names": [
         "Jack Butland",
@@ -191,7 +191,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-11T13:36:19Z",
+      "compared_at": "2026-10-11T16:18:54Z",
       "match_date": "2026-10-11",
       "home_team": "Hull City",
       "away_team": "Everton",
@@ -219,15 +219,15 @@
         "Thierno Barry"
       ],
       "bench_names": [
-        "Mark Travers",
+        "Tyrique George",
         "Jake O'Brien",
-        "Merlin Röhl",
-        "Charly Alcaraz",
-        "Christian Nørgaard",
         "Hayden Hackney",
-        "Braiden Graham",
+        "Charly Alcaraz",
         "Tyler Dibling",
-        "Tyrique George"
+        "Mark Travers",
+        "Merlin Röhl",
+        "Christian Nørgaard",
+        "Braiden Graham"
       ],
       "unavailable_names": [
         "Vitaliy Mykolenko"
@@ -249,7 +249,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-11T13:36:19Z",
+      "compared_at": "2026-10-11T16:18:54Z",
       "match_date": "2026-10-11",
       "home_team": "Liverpool",
       "away_team": "Manchester City",
@@ -278,11 +278,11 @@
       ],
       "bench_names": [],
       "unavailable_names": [
-        "Federico Chiesa",
         "Conor Bradley",
         "Giovanni Leoni",
         "Alexander Isak",
         "Cody Gakpo",
+        "Federico Chiesa",
         "Hugo Ekitiké"
       ],
       "primary": "Dominik Szoboszlai",
@@ -302,7 +302,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-11T13:36:19Z",
+      "compared_at": "2026-10-11T16:18:54Z",
       "match_date": "2026-10-11",
       "home_team": "Liverpool",
       "away_team": "Manchester City",
@@ -351,109 +351,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-11T13:36:19Z",
-      "match_date": "2026-10-11",
-      "home_team": "Liverpool FC",
-      "away_team": "Manchester City",
-      "team": "Liverpool FC",
-      "team_key": "liverpool",
-      "opponent": "Manchester City",
-      "opponent_key": "manchester city",
-      "is_home": 1,
-      "lineup_input": "expected_xi",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": [],
-      "team_lineup_status": "unknown",
-      "starter_names": [
-        "Alisson Becker",
-        "Ronald Araujo",
-        "Jérémy Jacquet",
-        "Virgil van Dijk",
-        "Miloš Kerkez",
-        "Ryan Gravenberch",
-        "Alexis Mac Allister",
-        "Víctor Muñoz",
-        "Dominik Szoboszlai",
-        "Bradley Barcola",
-        "Florian Wirtz"
-      ],
-      "bench_names": [],
-      "unavailable_names": [
-        "Federico Chiesa",
-        "Conor Bradley",
-        "Giovanni Leoni",
-        "Alexander Isak",
-        "Cody Gakpo",
-        "Hugo Ekitiké"
-      ],
-      "primary": "Dominik Szoboszlai",
-      "secondary": "Alexander Isak",
-      "tertiary": "Cody Gakpo",
-      "primary_lineup_status": "expected_starter",
-      "primary_match_name": "Dominik Szoboszlai",
-      "secondary_lineup_status": "expected_out",
-      "secondary_match_name": "Alexander Isak",
-      "tertiary_lineup_status": "expected_out",
-      "tertiary_match_name": "Cody Gakpo",
-      "active_taker_pre_match": "Dominik Szoboszlai",
-      "active_slot_pre_match": "primary",
-      "penalty_transfer_pre_match": 0,
-      "inherited_from_pre_match": "",
-      "transfer_level_pre_match": ""
-    },
-    {
-      "league": "epl",
-      "compared_at": "2026-10-11T13:36:19Z",
-      "match_date": "2026-10-11",
-      "home_team": "Liverpool FC",
-      "away_team": "Manchester City",
-      "team": "Manchester City",
-      "team_key": "manchester city",
-      "opponent": "Liverpool FC",
-      "opponent_key": "liverpool",
-      "is_home": 0,
-      "lineup_input": "expected_xi",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": [],
-      "team_lineup_status": "unknown",
-      "starter_names": [
-        "Gianluigi Donnarumma",
-        "Matheus Nunes",
-        "Rúben Dias",
-        "Marc Guéhi",
-        "Joško Gvardiol",
-        "Enzo Fernández",
-        "Elliot Anderson",
-        "Jérémy Doku",
-        "Rayan Cherki",
-        "Iliman Ndiaye",
-        "Erling Haaland"
-      ],
-      "bench_names": [],
-      "unavailable_names": [
-        "Nico O'Reilly",
-        "Phil Foden"
-      ],
-      "primary": "Erling Haaland",
-      "secondary": "Jérémy Doku",
-      "tertiary": "Antoine Semenyo",
-      "primary_lineup_status": "expected_starter",
-      "primary_match_name": "Erling Haaland",
-      "secondary_lineup_status": "expected_starter",
-      "secondary_match_name": "Jérémy Doku",
-      "tertiary_lineup_status": "unknown",
-      "tertiary_match_name": "",
-      "active_taker_pre_match": "Erling Haaland",
-      "active_slot_pre_match": "primary",
-      "penalty_transfer_pre_match": 0,
-      "inherited_from_pre_match": "",
-      "transfer_level_pre_match": ""
-    },
-    {
-      "league": "epl",
-      "compared_at": "2026-10-11T13:36:19Z",
+      "compared_at": "2026-10-11T16:18:54Z",
       "match_date": "2026-10-12",
       "home_team": "Coventry City",
       "away_team": "Newcastle United",
@@ -504,7 +402,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-11T13:36:19Z",
+      "compared_at": "2026-10-11T16:18:54Z",
       "match_date": "2026-10-12",
       "home_team": "Coventry City",
       "away_team": "Newcastle United",

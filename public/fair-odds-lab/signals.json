@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-11T13:37:38.751141Z",
+  "generated_at": "2026-10-11T16:20:01.708561Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -35,11 +35,10 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 13,
+  "fixtures_evaluated": 8,
   "signals_qualifying": 0,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 19,
-    "market_odds_above_cap": 1
+    "incomplete_prediction_roster": 12
   },
   "extreme_gap_quarantine": {
     "eligible_rows": 0,
