@@ -819,6 +819,48 @@
       },
       "message_id": 416,
       "sent_at": "2026-10-10T01:15:53.254467+00:00"
+    },
+    "71945304|maduka okoye|3.5|over": {
+      "status": "claimed",
+      "run_token": "38172741822:1",
+      "claimed_at": "2026-10-11T20:34:31.196821+00:00",
+      "signal": {
+        "signal_id": "71945304|maduka okoye|3.5|over",
+        "created_at": "2026-10-11T20:34:13Z",
+        "event_id": "71945304",
+        "match_date": "2026-10-12",
+        "kickoff_at": "2026-10-12T18:45:00Z",
+        "league": "serie-a",
+        "home_team": "Torino FC",
+        "away_team": "Udinese Calcio",
+        "team": "Udinese Calcio",
+        "opponent": "Torino FC",
+        "venue": "away",
+        "goalkeeper": "Maduka Okoye",
+        "bookmaker": "Bet365",
+        "line": "3.5",
+        "side": "over",
+        "odds_decimal": "2.7500",
+        "model_mean": "3.2470",
+        "model_probability": "0.402176",
+        "push_probability": "0.000000",
+        "fair_odds": "2.486",
+        "edge": "0.105983",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-10-11T20:34:12Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2"
+      }
     }
   }
 }

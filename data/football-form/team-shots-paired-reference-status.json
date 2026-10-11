@@ -1,5 +1,5 @@
 {
-  "contracts": 112,
+  "contracts": 120,
   "settled_contracts": 0,
   "paired_contracts": 0,
   "paired_fixtures": 0,
@@ -18,9 +18,9 @@
         "pnl_units": 0,
         "roi": null,
         "stake_units": 0,
-        "pending": 19,
-        "overdue": 0,
-        "unavailable_contracts": 45,
+        "pending": 21,
+        "overdue": 2,
+        "unavailable_contracts": 47,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
@@ -39,7 +39,7 @@
         "stake_units": 0,
         "pending": 0,
         "overdue": 0,
-        "unavailable_contracts": 45,
+        "unavailable_contracts": 47,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
@@ -57,8 +57,8 @@
         "roi": null,
         "stake_units": 0,
         "pending": 20,
-        "overdue": 0,
-        "unavailable_contracts": 8,
+        "overdue": 1,
+        "unavailable_contracts": 10,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
@@ -76,8 +76,8 @@
         "roi": null,
         "stake_units": 0,
         "pending": 9,
-        "overdue": 0,
-        "unavailable_contracts": 8,
+        "overdue": 1,
+        "unavailable_contracts": 10,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     }
@@ -95,14 +95,13 @@
   "model_fingerprint": "934de9b700fe013c26d54fefa1c5ccfa82af2f0bd98748b242cda712d9ad3e0d",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 0,
-  "generated_at": "2026-10-11T15:57:49Z",
-  "new_contracts": 0,
+  "generated_at": "2026-10-11T20:34:22Z",
+  "new_contracts": 8,
   "scan_exclusions": {
-    "stale_price": 172,
-    "outside_capture_window": 16
+    "stale_price": 80
   },
-  "latest_archived_capture": "2026-10-11T15:57:35Z",
+  "latest_archived_capture": "2026-10-11T20:34:12Z",
   "latest_result_date": "2026-09-20",
-  "raw_upcoming_rows": 224,
+  "raw_upcoming_rows": 96,
   "status": "COLLECTING"
 }

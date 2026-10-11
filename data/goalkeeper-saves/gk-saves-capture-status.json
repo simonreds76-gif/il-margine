@@ -2,17 +2,16 @@
   "capture_errors": [],
   "capture_mode": "close",
   "event_last_checked": {
-    "71945288": "2026-10-11T15:57:36Z",
-    "71945302": "2026-10-11T15:57:36Z",
-    "72036218": "2026-10-11T15:57:36Z",
-    "72478608": "2026-10-11T15:57:36Z",
-    "72478618": "2026-10-11T15:57:36Z"
+    "71945286": "2026-10-11T20:34:12Z",
+    "71945304": "2026-10-11T20:34:12Z",
+    "72221298": "2026-10-11T20:34:12Z",
+    "72478614": "2026-10-11T20:34:12Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 5,
-  "events_supported": 5,
+  "events_selected": 4,
+  "events_supported": 4,
   "events_with_lines": 4,
-  "generated_at": "2026-10-11T15:57:36Z",
+  "generated_at": "2026-10-11T20:34:12Z",
   "last_publication_at": "2026-10-11T14:57:30Z",
   "league_coverage": {
     "bundesliga": {
@@ -20,23 +19,23 @@
       "with_prices": 0
     },
     "epl": {
-      "selected": 0,
-      "with_prices": 0
-    },
-    "la-liga": {
-      "selected": 2,
-      "with_prices": 2
-    },
-    "ligue-1": {
       "selected": 1,
       "with_prices": 1
     },
+    "la-liga": {
+      "selected": 1,
+      "with_prices": 1
+    },
+    "ligue-1": {
+      "selected": 0,
+      "with_prices": 0
+    },
     "serie-a": {
       "selected": 2,
-      "with_prices": 1
+      "with_prices": 2
     }
   },
-  "market_inventory_rows_added": 371,
+  "market_inventory_rows_added": 351,
   "market_names_observed": [
     "1st Half Corners",
     "Alternative Corners",
@@ -97,6 +96,7 @@
     "Player Cards",
     "Player Fouls",
     "Player Headed Shots on Target",
+    "Player Passes",
     "Player Shots",
     "Player Shots on Target",
     "Player Shots on Target Outside Box",
@@ -113,12 +113,18 @@
     "Teams to Score",
     "Time of First Corner",
     "Total Corners",
+    "Total Offsides",
+    "Total Offsides Away",
+    "Total Offsides Home",
     "Total Shots",
     "Total Shots Away",
     "Total Shots Home",
     "Total Shots on Target",
     "Total Shots on Target Away",
     "Total Shots on Target Home",
+    "Total Tackles",
+    "Total Tackles Away",
+    "Total Tackles Home",
     "Totals",
     "Totals 2H",
     "Totals HT",
@@ -127,43 +133,36 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 43,
-  "rows_observed": 43,
+  "rows_added": 42,
+  "rows_observed": 42,
   "selected_events": [
     {
-      "away": "AC Milan",
+      "away": "Venezia FC",
       "competition": "Italy - Serie A",
-      "home": "Sassuolo Calcio",
-      "id": 71945302,
-      "kickoff_at": "2026-10-11T16:00:00Z"
+      "home": "Atalanta BC",
+      "id": 71945286,
+      "kickoff_at": "2026-10-12T16:30:00Z"
     },
     {
-      "away": "CA Osasuna",
-      "competition": "Spain - LaLiga",
-      "home": "Real Betis Seville",
-      "id": 72478608,
-      "kickoff_at": "2026-10-11T16:30:00Z"
-    },
-    {
-      "away": "Olympique Marseille",
-      "competition": "France - Ligue 1",
-      "home": "ESTAC Troyes",
-      "id": 72036218,
-      "kickoff_at": "2026-10-11T18:45:00Z"
-    },
-    {
-      "away": "Juventus Turin",
+      "away": "Udinese Calcio",
       "competition": "Italy - Serie A",
-      "home": "Cagliari Calcio",
-      "id": 71945288,
-      "kickoff_at": "2026-10-11T18:45:00Z"
+      "home": "Torino FC",
+      "id": 71945304,
+      "kickoff_at": "2026-10-12T18:45:00Z"
     },
     {
-      "away": "Valencia CF",
+      "away": "Sevilla FC",
       "competition": "Spain - LaLiga",
-      "home": "Racing Santander",
-      "id": 72478618,
-      "kickoff_at": "2026-10-11T19:00:00Z"
+      "home": "Levante UD",
+      "id": 72478614,
+      "kickoff_at": "2026-10-12T19:00:00Z"
+    },
+    {
+      "away": "Newcastle United",
+      "competition": "England - Premier League",
+      "home": "Coventry City",
+      "id": 72221298,
+      "kickoff_at": "2026-10-12T19:00:00Z"
     }
   ],
   "status": "CAPTURED",

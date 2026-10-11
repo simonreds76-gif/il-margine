@@ -4,23 +4,22 @@
   "current": {
     "blocked_lines": 16,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 6,
-      "goalkeeper_team_unresolved": 6,
-      "history_lt_6": 10,
-      "missing_priced_edge": 16,
-      "missing_registered_feature": 10
+      "goalkeeper_not_matched_to_lineup": 5,
+      "goalkeeper_team_unresolved": 5,
+      "history_lt_6": 11,
+      "missing_priced_edge": 5
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 2,
-    "priced_lines": 38,
+    "eligible_lines": 1,
+    "priced_lines": 37,
     "provisional_lines": 0,
-    "signals_added": 0,
-    "value_ladder_lines": 14
+    "signals_added": 1,
+    "value_ladder_lines": 7
   },
   "evidence": {
     "clv": 0.040856,
     "clv_matched": 14,
-    "pending": 5,
+    "pending": 6,
     "pnl_units": 15.5905,
     "roi": 0.556804,
     "settled": 56,
@@ -28,20 +27,20 @@
       "fotmob_named_keeper_shotmap": 53,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 62,
+    "signals": 63,
     "true_close_coverage": 0.25,
     "void": 1
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-11T15:57:38.244162+00:00",
+    "checked_at": "2026-10-11T20:34:14.109204+00:00",
     "counts": {
-      "offers_saved": 54
+      "offers_saved": 42
     },
-    "saved": 5,
+    "saved": 4,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-11T15:57:37Z",
+  "generated_at": "2026-10-11T20:34:13Z",
   "live_routing": false,
   "promotion": {
     "mean_true_close_clv_required": 0.005,
