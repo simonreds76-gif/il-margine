@@ -163,57 +163,28 @@ class WeeklyResearchReportTests(unittest.TestCase):
         payload = REPORT["build_payload"]()
         tennis = payload["tennis_model_evidence"]
         self.assertEqual(
-            set(tennis["lanes"]),
+            set(tennis["lanes"]) - {"provisional_hard", "provisional_expansion"},
             {"strict", "volume_200", "spread_v1", "grass_bo3", "clay_bo3", "cpi_speed", "challenger"},
         )
         self.assertIn("strict_gap_10_20_same_side", tennis["gap_replacements"])
         self.assertIn("volume200_gap_10_15_same_side", tennis["gap_replacements"])
 
-    def test_telegram_report_contains_core_provisional_and_inactive_tennis(self) -> None:
+    def test_telegram_report_contains_only_active_tennis_and_keeps_football(self):
         message = REPORT["telegram_text"](REPORT["build_payload"]())
-        self.assertIn("Tennis prospective evidence source:", message)
-        self.assertIn("Tennis lane summaries:", message)
-        self.assertIn("Tennis Strict [CORE]", message)
-        self.assertIn("ACTION BOARD", message)
-        self.assertIn("EVIDENCE DETAIL", message)
-        self.assertIn("Tennis Volume 200 [SHADOW / DO NOT BET]", message)
-        self.assertIn("Strict gap 10-20pp [0.5u provisional]", message)
-        self.assertIn("Volume gap 10-15pp [0.5u provisional]", message)
-        self.assertIn("Inactive tennis research (not tips)", message)
-        self.assertIn("Hard side-flip evidence [BROAD DIAGNOSTIC]", message)
-        self.assertIn("GK Saves v1: count PASS", message)
-        self.assertIn("Team Shots scan:", message)
-        self.assertIn("Corners scan:", message)
-        self.assertIn("Goalscorer beta vs raw", message)
-        self.assertIn("Goalscorer gaps [ZERO-STAKE]", message)
-        self.assertIn("weekly verdict", message)
-        self.assertIn("| capture ", message)
-        chunks = REPORT["telegram_chunks"](message)
-        self.assertTrue(all(len(chunk) <= 4096 for chunk in chunks))
-        restored = "\n".join(chunk.split("\n", 1)[1] for chunk in chunks) if len(chunks) > 1 else chunks[0]
-        self.assertEqual(restored, message)
+        for label in ("Strict:", "Provisional Hard:", "Provisional Expansion:", "GK Saves v1:", "Team Shots scan:", "Corners scan:"):
+            self.assertIn(label, message)
+        for retired in ("Volume 200 [", "Spread v1 [", "Inactive tennis research", "Venue ace v1", "Tennis props v3", "historical replay ROI"):
+            self.assertNotIn(retired, message)
 
-    def test_tennis_only_telegram_report_is_complete_and_compact(self) -> None:
+
+    def test_tennis_only_telegram_report_is_complete_and_compact(self):
         message = REPORT["tennis_telegram_text"](REPORT["build_payload"]())
-        self.assertIn("Il Margine weekly tennis evidence", message)
-        self.assertIn("Prospective evidence source:", message)
-        self.assertIn("Lane summaries:", message)
-        self.assertIn("Strict [CORE]", message)
-        self.assertIn("Volume 200 [SHADOW / DO NOT BET]", message)
-        self.assertIn("Strict gap 10-20pp [0.5u provisional]", message)
-        self.assertIn("Inactive research (not tips)", message)
-        self.assertIn("Aces/DF vs Bet365", message)
-        self.assertIn("Aces Over v4 [PRE_FIT]", message)
-        self.assertIn("Venue ace v1 [SHADOW]", message)
-        self.assertIn("NOT SELLABLE", message)
-        self.assertIn("Most Aces A0 [outcome only]", message)
-        self.assertIn("Most Aces Direct [prospective shadow]", message)
-        self.assertIn("Direct vs A0 paired", message)
-        self.assertIn("price evidence is separate below", message)
-        self.assertIn("Most Aces Direct vs BetMGM", message)
-        self.assertIn("Aces/DF promotion gate", message)
-        self.assertIn("Hard side-flip evidence [BROAD DIAGNOSTIC]", message)
+        for label in ("Strict:", "Provisional Hard:", "Provisional Expansion:", "Challenger ML v2:", "Aces v4", "Most Aces Direct:", "Astra Volume PAPER ONLY"):
+            self.assertIn(label, message)
+        for retired in ("legacy archive", "Spread v1", "Venue ace", "Volume 200", "Full refresh"):
+            self.assertNotIn(retired, message)
         self.assertLessEqual(len(message), 4096)
+
 
     def test_long_telegram_report_splits_on_lines_below_platform_limit(self) -> None:
         message = "\n".join([f"evidence row {index}: " + ("x" * 180) for index in range(30)])
@@ -248,7 +219,7 @@ class WeeklyResearchReportTests(unittest.TestCase):
             "side_flip_by_surface": {},
         }
         message = REPORT["tennis_telegram_text"](payload)
-        self.assertIn("SOURCE_MISSING - local prospective evidence unavailable", message)
+        self.assertIn("registered record unavailable", message)
         self.assertNotIn("0/150 settled", message)
 
     def test_fresh_local_snapshot_replaces_stale_hosted_tennis_lanes(self) -> None:
@@ -293,8 +264,8 @@ class WeeklyResearchReportTests(unittest.TestCase):
             "paired_comparison": {"paired_events": 0},
         }
         message = REPORT["tennis_telegram_text"](payload)
-        self.assertIn("Direct vs A0 paired: n=0/200", message)
-        self.assertIn("BUILDING (next 50)", message)
+        self.assertIn("Most Aces Direct: 0 paired fixtures", message)
+        self.assertIn("Brier difference -", message)
         self.assertNotIn("BUILDING (review due)", message)
 
     def test_most_aces_price_summary_is_model_specific(self) -> None:

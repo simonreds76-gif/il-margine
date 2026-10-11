@@ -29,6 +29,11 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Use the latest published penalty hierarchies
+        run: |
+          git fetch --no-tags --depth=1 origin codex/fair-odds-daily-pitch-20260908
+          python scripts/sync-published-penalty-hierarchies.py --ref FETCH_HEAD
+
       - name: Install dependencies
         run: pip install requests
 

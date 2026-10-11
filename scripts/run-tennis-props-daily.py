@@ -243,21 +243,6 @@ def run_comparison(as_of: str, market_file: Path) -> bool:
             "Compare v3 ATP ace shadow projections with Bet365",
             fatal=False,
         )
-    if has_market_rows(VENUE_ACE_V1_BOARD):
-        run(
-            [
-                sys.executable,
-                str(ROOT / "scripts" / "tennis-props-compare-bet365.py"),
-                "--date", as_of,
-                "--lines", str(market_file),
-                "--board", str(VENUE_ACE_V1_BOARD),
-                "--out", str(PROPS_DIR / f"comparison-venue-ace-v1-{as_of}.csv"),
-                "--unmatched-out", str(PROPS_DIR / f"comparison-venue-ace-v1-{as_of}-unmatched.csv"),
-                "--market-filter", "aces,ace,player_aces,match_aces",
-            ],
-            "Compare venue ace factor v1 shadow projections with Bet365",
-            fatal=False,
-        )
     return exit_code == 0 and has_market_rows(comparison)
 
 
@@ -272,66 +257,13 @@ def run_shadow_tracking(as_of: str) -> None:
     )
     run_most_aces_shadow(as_of)
     v3_comparison = PROPS_DIR / f"comparison-v3-aces-{as_of}.csv"
-    if has_market_rows(v3_comparison):
-        run(
-            [
-                sys.executable,
-                str(ROOT / "scripts" / "tennis-props-shadow-tracker.py"),
-                "--date", as_of,
-                "--comparison", str(v3_comparison),
-                "--signals", str(PROPS_DIR / "shadow" / "aces-v3-shadow-signals.csv"),
-                "--performance", str(PROPS_DIR / "shadow" / "aces-v3-shadow-performance.txt"),
-                "--allow-medium", "--allow-notes", "--allow-watch",
-            ],
-            "Append v3 ATP ace prospective shadow signals",
-            fatal=True,
-        )
-        run(
-            [
-                sys.executable,
-                str(ROOT / "scripts" / "tennis-props-settle-shadow.py"),
-                "--signals", str(PROPS_DIR / "shadow" / "aces-v3-shadow-signals.csv"),
-                "--performance", str(PROPS_DIR / "shadow" / "aces-v3-shadow-performance.txt"),
-            ],
-            "Settle v3 ATP ace prospective shadow signals",
-            fatal=True,
-        )
     venue_comparison = PROPS_DIR / f"comparison-venue-ace-v1-{as_of}.csv"
-    if has_market_rows(venue_comparison):
-        venue_signals = PROPS_DIR / "shadow" / "venue-ace-factor-v1-observations.csv"
-        venue_performance = PROPS_DIR / "shadow" / "venue-ace-factor-v1-performance.txt"
-        run(
-            [
-                sys.executable,
-                str(ROOT / "scripts" / "tennis-venue-ace-factor-v1-observations.py"),
-                "--date", as_of,
-                "--comparison", str(venue_comparison),
-                "--observations", str(venue_signals),
-            ],
-            "Append paired venue ace factor v1 control/candidate observations",
-            fatal=False,
-        )
-        run(
-            [
-                sys.executable,
-                str(ROOT / "scripts" / "tennis-props-settle-shadow.py"),
-                "--signals", str(venue_signals),
-                "--performance", str(venue_performance),
-            ],
-            "Settle venue ace factor v1 prospective shadow observations",
-            fatal=False,
-        )
     comparison = PROPS_DIR / f"comparison-{as_of}.csv"
     run(
         [sys.executable, str(ROOT / "scripts/tennis-props-rate-trend-prospective.py"),
          "--comparison", str(comparison)],
         "Freeze and settle paired rate-trend prospective research",
         fatal=False, timeout_seconds=300,
-    )
-    run(
-        [sys.executable, str(ROOT / "scripts/tennis-props-full-refresh-shadow.py"),
-         "--comparison", str(comparison), "--settle-only"],
-        "Settle retained input-refresh comparison", fatal=False, timeout_seconds=180,
     )
     if has_market_rows(comparison):
         run(
@@ -379,14 +311,6 @@ def run_shadow_tracking(as_of: str) -> None:
     run(
         [
             sys.executable,
-            str(ROOT / "scripts" / "tennis-venue-ace-factor-v1-report.py"),
-        ],
-        "Build venue ace factor v1 shadow gate report",
-        fatal=False,
-    )
-    run(
-        [
-            sys.executable,
             str(ROOT / "scripts" / "tennis-derivatives-evidence-report.py"),
         ],
         "Refresh tennis derivative evidence gates",
@@ -397,8 +321,6 @@ def run_shadow_tracking(as_of: str) -> None:
         sys.executable,
         str(ROOT / "scripts" / "tennis-props-aces-over-v4.py"),
     ]
-    if has_market_rows(v3_comparison):
-        v4_cmd.extend(["--comparison", str(v3_comparison)])
     run(
         v4_cmd,
         "Register and score ATP ace-over v4 challenger",
