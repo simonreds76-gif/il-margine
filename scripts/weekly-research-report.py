@@ -1384,17 +1384,14 @@ def full_refresh_summary() -> dict[str, Any]:
 
 
 def full_refresh_text(payload: dict[str, Any]) -> str:
-    import importlib.util
-    spec = importlib.util.spec_from_file_location("full_refresh_reporting", ROOT / "scripts/tennis_full_refresh_reporting.py")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module.text(payload.get("tennis_full_refresh") or {})
+    # Completed source-upgrade experiment; retained offline, not a current report lane.
+    return ''
 
 
 def context_forward_text(payload: dict[str, Any]) -> str:
     result = payload.get("tennis_context_forward") or {}
     if not result:
-        return "Astra Volume: forward evidence snapshot missing; the 69 historical replay bets are separate."
+        return "Astra Volume: forward evidence snapshot missing."
     candidate = result.get("candidate") or {}
     roi = candidate.get("roi_pct")
     roi_text = f"{roi:+.2f}%" if roi is not None else "not yet settled"
@@ -1403,7 +1400,7 @@ def context_forward_text(payload: dict[str, Any]) -> str:
             f"ROI {roi_text}, {candidate.get('pending', 0)} pending ({candidate.get('overdue', 0)} overdue). "
             f"Paired fixtures settled {result.get('settled_fixtures', 0)}; review at 50 and 100. "
             f"Capture {capture.get('status', 'UNKNOWN')} at {capture.get('checked_at', 'unknown')}. "
-            "No closing-price coverage; 69 historical replay bets excluded.")
+            "No verified closing-price coverage.")
 
 
 def rate_trend_summary() -> dict[str, Any]:
@@ -1419,7 +1416,9 @@ def rate_trend_text(payload: dict[str, Any]) -> str:
     if not result.get("markets"):
         return "Astra Aces / Astra DF: evidence snapshot missing; no performance claim."
     names = {"aces": "Astra Aces", "double_faults": "Astra DF"}
-    cohorts = result.get("history_versions") or {"mixed/unversioned archive": result["markets"]}
+    cohorts = {k: v for k, v in (result.get("history_versions") or {}).items() if k != "legacy-unversioned"}
+    if not cohorts:
+        return "Astra Aces / DF: current-input evidence unavailable; legacy experiment retired."
     parts = []
     for version, markets in cohorts.items():
         label = "legacy archive" if version == "legacy-unversioned" else version
@@ -1440,7 +1439,7 @@ def rate_trend_text(payload: dict[str, Any]) -> str:
 
 def v4_cohort_text(report: dict[str, Any]) -> str:
     cohorts = report.get('history_cohorts') or []
-    counts = '; '.join(f"{c.get('version', 'unknown')}: {c.get('settled', 0)} settled observations" for c in cohorts)
+    counts = '; '.join(f"{c.get('version', 'unknown')}: {c.get('settled', 0)} settled observations" for c in cohorts if c.get('version') != 'legacy-unversioned')
     if not counts:
         counts = 'Input-version breakdown unavailable; pooled counts are not training eligibility'
     return (counts + f" | {report.get('signals_settled', 0)} settled v4 selections | "
@@ -2062,325 +2061,47 @@ def telegram_text(payload: dict[str, Any]) -> str:
         f"Goalscorer gaps [ZERO-STAKE]: {goalscorer['extreme_gap_quarantine']['settled']}/{goalscorer['extreme_gap_quarantine']['registered']} settled | {goalscorer['extreme_gap_quarantine']['pnl_units']:+.2f}u | ROI {pct(goalscorer['extreme_gap_quarantine']['roi_pct'])} | weekly verdict {goalscorer['decision']} | blockers {', '.join(goalscorer['blockers']) or 'none'}",
         f"Assist V1: {assist['lane_status']} | backtest {assist['backtest_status']} | settlement {assist['settlement_status']} | market {assist['market_status']} ({assist['market_calendar_span_days']}/90d) | prospective {assist['prospective']['settled']}/{assist['prospective_target']} | <=30 API calls/week | {assist['decision']}",
         f"Automation: {automation.get('status', 'NOT_RUN')} | Odds-API worst hour {odds_budget.get('max_requests_in_one_hour', '-')}/{odds_budget.get('requests_per_hour', '-')} | DB writes/week max {(automation.get('database') or {}).get('registered_writes_per_week_max', '-')}",
-        tennis_lane_line("Tennis Strict", "strict", "CORE"),
-        tennis_lane_line("Tennis Volume 200", "volume_200", "SHADOW / DO NOT BET"),
-        tennis_lane_line("Tennis Spread v1", "spread_v1", "PAUSED/RESEARCH"),
-        replacement_line("Strict gap 10-20pp", "strict_gap_10_20_same_side"),
-        replacement_line("Volume gap 10-15pp", "volume200_gap_10_15_same_side"),
-        hard_side_flip_line(),
-        challenger_line(),
-        (
-            "Inactive tennis research (not tips): "
-            + "; ".join(
-                f"{label} n={int(number((tennis_lanes.get(key) or {}).get('settled')))} "
-                f"ROI={pct((tennis_lanes.get(key) or {}).get('roi_pct'))}"
-                for label, key in (
-                    ("Grass", "grass_bo3"),
-                    ("Clay", "clay_bo3"),
-                    ("CPI", "cpi_speed"),
-                )
-            )
-        ),
     ]
-    if tennis_props_v3 and not tennis_props_v3.get("_error"):
-        atp_v3 = tennis_props_v3.get("atp") or {}
-        evidence_v3 = tennis_props_v3.get("evidence") or {}
-        lines.append(
-            "Tennis props v3: "
-            f"ATP {atp_v3.get('status', 'UNKNOWN')} {','.join(atp_v3.get('surfaces') or []) or '-'}, "
-            f"MAE {number(atp_v3.get('mae_improvement_pct')):+.2f}%, "
-            f"{int(number(evidence_v3.get('settled')))} settled, "
-            f"ROI {number(evidence_v3.get('roi_pct')):+.2f}%, "
-            f"CLV {number(evidence_v3.get('mean_clv_pct')):+.2f}%, "
-            f"{evidence_v3.get('status', 'BLOCKED')}"
-        )
-    elif tennis_props_v3.get("_error"):
-        lines.append(f"Tennis props v3: snapshot unavailable ({tennis_props_v3['_error']})")
-    lines.append(
-        "Venue ace v1 [SHADOW]: "
-        + ("SOURCE_MISSING" if tennis_venue_ace_v1.get("status") == "SOURCE_MISSING" else
-        f"venues {tennis_venue_ace_v1.get('eligible_venues', 0)}/"
-        f"{tennis_venue_ace_v1.get('total_venues', 0)} | "
-        f"{tennis_venue_ace_v1.get('settled', 0)}/"
-        f"{tennis_venue_ace_v1.get('promotion_target_rows', 600)} settled | "
-        f"ROI {pct(tennis_venue_ace_v1.get('roi_pct'))} | "
-        f"CLV {pct(tennis_venue_ace_v1.get('mean_clv_pct'), 2)} "
-        f"n={tennis_venue_ace_v1.get('clv_rows', 0)} | "
-        f"Brier delta {number(tennis_venue_ace_v1.get('brier_delta')):+.4f} "
-        f"n={tennis_venue_ace_v1.get('paired_rows', 0)} | NOT SELLABLE")
-    )
-    lines.append(
-        "Tennis props vs Bet365: "
-        + ("SOURCE_MISSING" if tennis_props_benchmark.get("status") == "SOURCE_MISSING" else
-        f"{tennis_props_benchmark.get('settled', 0)}/{tennis_props_benchmark.get('observations', 0)} settled, "
-        f"Brier delta {number(tennis_props_benchmark.get('brier_delta_vs_market')):+.4f}, "
-        f"{tennis_props_benchmark.get('status', 'EVIDENCE_BUILDING')}")
-    )
-    props_clv = tennis_props_shadow.get("clv") or {}
-    props_calibration = tennis_props_shadow.get("calibration") or {}
-    lines.append(
-        "Aces/DF: "
-        f"{tennis_props_shadow.get('settled', 0)}/{tennis_props_shadow.get('registered', 0)} | "
-        f"P{tennis_props_shadow.get('pending', 0)} "
-        f"(D{tennis_props_shadow.get('pending_due', 0)}/"
-        f"F{tennis_props_shadow.get('pending_future', 0)}/"
-        f"U{tennis_props_shadow.get('pending_unknown', 0)}) | "
-        f"{number(tennis_props_shadow.get('pnl_units')):+.2f}u | "
-        f"ROI {pct(tennis_props_shadow.get('roi_pct'))} | "
-        f"CLV {pct(props_clv.get('mean_pct'), 2)} n={props_clv.get('rows', 0)} | "
-        f"Brier {props_calibration.get('brier') if props_calibration.get('brier') is not None else '-'} "
-        f"n={props_calibration.get('rows', 0)}"
-    )
-    lines.append(tennis_breaks_gate_line(tennis_breaks_v1))
-    lines.extend(
-        [
-            "",
-            "Read: all promotion gates remain fail-closed. No weekly report changes routing or stakes.",
-        ]
-    )
-    lines.extend(["", rate_trend_text(payload)])
-    lines.extend(["", full_refresh_text(payload), context_forward_text(payload)])
-    lines.extend(["", model_watchlist_text(payload)])
+    lines.extend(["", tennis_telegram_text(payload)])
     return "\n".join(lines)
 
 
 def tennis_telegram_text(payload: dict[str, Any]) -> str:
-    evidence = payload.get("tennis_model_evidence") or {}
-    tennis_breaks_v1 = payload.get("tennis_breaks_v1") or {}
-    lanes = evidence.get("lanes") or {}
-    replacements = evidence.get("gap_replacements") or {}
-    props_v3 = payload.get("tennis_props_v3") or {}
-    props_v4 = payload.get("tennis_props_v4") or {}
-    venue_ace_v1 = payload.get("tennis_venue_ace_factor_v1") or {}
-    most_aces = payload.get("tennis_most_aces_forecast") or {}
-    most_aces_prices = payload.get("tennis_most_aces_prices") or {}
-    props_benchmark = payload.get("tennis_props_market_benchmark") or {}
-    props_shadow = payload.get("tennis_props_shadow_decision") or {}
-    source = payload.get("tennis_evidence_source") or {}
-    lane_source = evidence.get("lane_source") or {}
-    gap_source_status = evidence.get("gap_source_status", "SOURCE_MISSING")
-    side_flip_by_surface = evidence.get("side_flip_by_surface") or {}
-
-    def lane_line(label: str, key: str, status: str) -> str:
+    """Active policies and current-input research only; obsolete archives stay off Telegram."""
+    evidence = payload.get('tennis_model_evidence') or {}
+    lanes = evidence.get('lanes') or {}
+    source = payload.get('tennis_evidence_source') or {}
+    lines = ['Il Margine weekly tennis review', f"Generated: {payload['generated_at']}",
+             f"Evidence: {source.get('status', 'UNAVAILABLE')} | {source.get('generated_at', 'unknown')}", '']
+    for key, label in [('strict', 'Strict'), ('challenger', 'Challenger ML v2')]:
         lane = lanes.get(key) or {}
-        clv = lane.get("clv") or {}
-        return (
-            f"{label} [{status}]: {lane.get('settled', 0)} settled | "
-            f"{number(lane.get('pnl_units')):+.2f}u | ROI {pct(lane.get('roi_pct'))} | "
-            f"CLV {pct(clv.get('avg_clv_pct'), 2)} n={clv.get('rows', 0)}"
-        )
+        clv = lane.get('clv') or {}
+        lines.append(f"{label}: {lane.get('settled', 0)} settled | {pct(lane.get('roi_pct'))} ROI | "
+                     f"{number(lane.get('pnl_units')):+.2f}u | {lane.get('pending', 0)} pending | CLV {pct(clv.get('avg_clv_pct'), 2)} n={clv.get('rows', 0)}")
+    for key, label in [('strict_gap_10_20_same_side', 'Provisional Hard'), ('volume200_gap_10_15_same_side', 'Provisional Expansion')]:
+        performance = ((evidence.get('gap_replacements') or {}).get(key) or {}).get('performance') or {}
+        if evidence.get('gap_source_status') != 'OK' or not performance:
+            lines.append(f"{label}: registered record unavailable")
+        else:
+            lines.append(f"{label}: {performance.get('settled', 0)} settled | ROI {pct(performance.get('roi_pct'))} | "
+                         f"{number(performance.get('pnl_units')):+.2f}u | CLV {pct(performance.get('avg_clv_pct'), 2)} n={performance.get('clv_rows', 0)}")
+    lines.append('Provisional lanes remain 0.5u; Challenger remains zero-stake research. No automatic promotion.')
+    v4 = payload.get('tennis_props_v4') or {}
+    lines.append(f"Aces v4 [{v4.get('status', 'UNAVAILABLE')}]: " + v4_cohort_text(v4))
+    shadow = payload.get('tennis_props_shadow_decision') or {}
+    lines.append(f"Current aces/DF baseline: {shadow.get('settled', 0)} settled | ROI {pct(shadow.get('roi_pct'))} | "
+                 f"{number(shadow.get('pnl_units')):+.2f}u | research only")
+    lines.append(rate_trend_text(payload))
+    most = payload.get('tennis_most_aces_forecast') or {}
+    paired = most.get('paired_comparison') or {}
+    lines.append(f"Most Aces Direct: {paired.get('paired_events', 0)} paired fixtures | "
+                 f"Brier difference {signed_number(paired.get('brier_delta_direct_minus_control'), 4)} | outcome research; prices assessed separately")
+    lines.append(context_forward_text(payload))
+    health = shadow.get('pipeline') or {}
+    if health and health.get('state') not in ('CURRENT', 'HEALTHY', 'OK'):
+        lines.append('Capture check: ' + str(health.get('state', 'UNAVAILABLE')))
+    return '\n'.join(lines)
 
-    def replacement_line(label: str, key: str) -> str:
-        if gap_source_status != "OK":
-            return f"{label} [0.5u provisional]: SOURCE_MISSING - local prospective evidence unavailable"
-        experiment = replacements.get(key) or {}
-        performance = experiment.get("performance") or {}
-        return (
-            f"{label} [0.5u provisional]: {performance.get('settled', 0)}/150 settled | "
-            f"{number(performance.get('pnl_units')):+.2f}u | ROI {pct(performance.get('roi_pct'))} | "
-            f"CLV {pct(performance.get('avg_clv_pct'), 2)} n={performance.get('clv_rows', 0)} | "
-            f"{experiment.get('verdict', 'FORWARD_SAMPLE_BUILDING')}"
-        )
-
-    def hard_side_flip_line() -> str:
-        hard = side_flip_by_surface.get("Hard") or side_flip_by_surface.get("hard") or {}
-        if gap_source_status != "OK":
-            return "Hard side-flip evidence [BROAD DIAGNOSTIC]: SOURCE_MISSING"
-        return (
-            "Hard side-flip evidence [BROAD DIAGNOSTIC]: "
-            f"{hard.get('settled', hard.get('bets', 0))} settled | "
-            f"{number(hard.get('pnl_units')):+.2f}u | ROI {pct(hard.get('roi_pct'))} | "
-            f"CLV {pct(hard.get('avg_clv_pct'), 2)} n={hard.get('clv_rows', 0)} | "
-            "only scoped Masters/HIGH <=10pp rows are Strict"
-        )
-
-    def challenger_line() -> str:
-        lane = lanes.get("challenger") or {}
-        clv = lane.get("clv") or {}
-        return (
-            "Challenger ML v2 [ZERO-STAKE SHADOW]: "
-            f"{lane.get('settled', 0)} settled | "
-            f"CLV {pct(clv.get('avg_clv_pct'), 2)} n={clv.get('rows', 0)} | "
-            "gate n>=300 / CLV>=+1.0% / calibration pass"
-        )
-
-    lines = [
-        "Il Margine weekly tennis evidence",
-        f"Generated: {payload['generated_at']}",
-        (
-            "Prospective evidence source: "
-            f"{source.get('status', 'SOURCE_MISSING')} "
-            f"({source.get('source', 'none')}; {source.get('generated_at') or 'missing'})"
-        ),
-        (
-            "Lane summaries: "
-            f"{lane_source.get('status', 'SOURCE_MISSING')} "
-            f"(oldest core generation {lane_source.get('oldest_generated_at') or 'missing'})"
-        ),
-        "",
-        lane_line("Strict", "strict", "CORE"),
-        lane_line("Volume 200", "volume_200", "SHADOW / DO NOT BET"),
-        lane_line("Spread v1", "spread_v1", "PAUSED/RESEARCH"),
-        replacement_line("Strict gap 10-20pp", "strict_gap_10_20_same_side"),
-        replacement_line("Volume gap 10-15pp", "volume200_gap_10_15_same_side"),
-        hard_side_flip_line(),
-        challenger_line(),
-        (
-            "Inactive research (not tips): "
-            + "; ".join(
-                f"{label} n={int(number((lanes.get(key) or {}).get('settled')))} "
-                f"ROI={pct((lanes.get(key) or {}).get('roi_pct'))}"
-                for label, key in (
-                    ("Grass", "grass_bo3"),
-                    ("Clay", "clay_bo3"),
-                    ("CPI", "cpi_speed"),
-                )
-            )
-        ),
-    ]
-    if props_v3 and not props_v3.get("_error"):
-        atp = props_v3.get("atp") or {}
-        proof = props_v3.get("evidence") or {}
-        lines.append(
-            "Aces/DF v3: "
-            f"{proof.get('settled', 0)} settled | ROI {number(proof.get('roi_pct')):+.2f}% | "
-            f"CLV {number(proof.get('mean_clv_pct')):+.2f}% | betting evidence {proof.get('status', 'UNKNOWN')}; count test {atp.get('status', 'UNKNOWN')}"
-        )
-    if props_v4 and not props_v4.get("_error"):
-        lines.append(
-            f"Aces Over v4 [{props_v4.get('status', 'PRE_FIT')}]: "
-            + v4_cohort_text(props_v4)
-        )
-    lines.append(
-        "Venue ace v1 [SHADOW]: "
-        f"venues {venue_ace_v1.get('eligible_venues', 0)}/"
-        f"{venue_ace_v1.get('total_venues', 0)} | "
-        f"{venue_ace_v1.get('settled', 0)}/"
-        f"{venue_ace_v1.get('promotion_target_rows', 600)} settled | "
-        f"events {venue_ace_v1.get('distinct_events', 0)}/"
-        f"{venue_ace_v1.get('promotion_target_events', 150)} | "
-        f"ROI {pct(venue_ace_v1.get('roi_pct'))} | "
-        f"CLV {pct(venue_ace_v1.get('mean_clv_pct'), 2)} | "
-        f"Brier delta {number(venue_ace_v1.get('brier_delta')):+.4f} "
-        f"n={venue_ace_v1.get('paired_rows', 0)} | NOT SELLABLE"
-    )
-    if most_aces and not most_aces.get("_error"):
-        models = most_aces.get("models") or {}
-        paired = most_aces.get("paired_comparison") or {}
-        a0_model = paired.get("control_model")
-        if not a0_model or a0_model not in models:
-            a0_candidates = [
-                (name, summary)
-                for name, summary in models.items()
-                if str(name).startswith("v3_aces_gaussian")
-            ]
-            a0_model = (
-                TENNIS_MOST_ACES_A0_MODEL
-                if TENNIS_MOST_ACES_A0_MODEL in models
-                else (
-                    max(
-                        a0_candidates,
-                        key=lambda item: int(number(item[1].get("rows_registered"))),
-                    )[0]
-                    if a0_candidates
-                    else ""
-                )
-            )
-        a0 = models.get(a0_model) or {}
-        direct = models.get(TENNIS_MOST_ACES_DIRECT_MODEL) or {}
-        paired_events = int(number(paired.get("paired_events")))
-        fallback_stage, fallback_next_review = most_aces_review_stage(paired_events)
-        review_stage = paired.get("review_stage") or fallback_stage
-        next_review_at = (
-            paired.get("next_review_at")
-            if "next_review_at" in paired
-            else fallback_next_review
-        )
-
-        def model_metric(model: dict[str, Any], key: str) -> str:
-            value = model.get(key)
-            return "-" if value is None else f"{number(value):.4f}"
-
-        lines.extend(
-            [
-                (
-                    "Most Aces A0 [outcome only]: "
-                    f"{a0.get('rows_settled', 0)}/{a0.get('rows_registered', 0)} settled | "
-                    f"Brier {model_metric(a0, 'brier')} | logloss {model_metric(a0, 'logloss')}"
-                ),
-                (
-                    "Most Aces Direct [prospective shadow]: "
-                    f"{direct.get('rows_settled', 0)}/{direct.get('rows_registered', 0)} settled | "
-                    f"Brier {model_metric(direct, 'brier')} | logloss {model_metric(direct, 'logloss')}"
-                ),
-                (
-                    "Direct vs A0 paired: "
-                    f"n={paired_events}/200 | "
-                    f"Brier delta {model_metric(paired, 'brier_delta_direct_minus_control')} | "
-                    f"logloss delta {model_metric(paired, 'logloss_delta_direct_minus_control')} | "
-                    f"{review_stage}"
-                    + (
-                        f" (next {next_review_at})"
-                        if next_review_at
-                        else " (review due)"
-                    )
-                ),
-                "Paired A0/Direct forecast comparison is outcome-only; price evidence is separate below.",
-            ]
-        )
-        direct_prices = most_aces_prices.get(TENNIS_MOST_ACES_DIRECT_MODEL) or {}
-        lines.append(
-            "Most Aces Direct vs BetMGM: "
-            f"{direct_prices.get('eligible_settled', 0)} eligible settled | "
-            f"{number(direct_prices.get('pnl_units')):+.2f}u | "
-            f"ROI {pct(direct_prices.get('roi_pct'))} | "
-            f"CLV {pct(direct_prices.get('mean_clv_pct'), 2)} "
-            f"n={direct_prices.get('clv_rows', 0)} | shadow only"
-        )
-    shadow_clv = props_shadow.get("clv") or {}
-    shadow_calibration = props_shadow.get("calibration") or {}
-    lines.extend(
-        [
-            (
-                "Aces/DF canonical shadow: "
-                f"{props_shadow.get('settled', 0)}/{props_shadow.get('registered', 0)} settled | "
-                f"{number(props_shadow.get('pnl_units')):+.2f}u | "
-                f"ROI {pct(props_shadow.get('roi_pct'))} | "
-                f"CLV {pct(shadow_clv.get('mean_pct'), 2)} "
-                f"({shadow_clv.get('positive_pct') if shadow_clv.get('positive_pct') is not None else '-'}% positive, n={shadow_clv.get('rows', 0)}) | "
-                f"{props_shadow.get('status', 'COLLECTING_EVIDENCE')}"
-            ),
-            (
-                "Aces/DF calibration: "
-                f"Brier {shadow_calibration.get('brier') if shadow_calibration.get('brier') is not None else '-'} | "
-                f"gap {shadow_calibration.get('absolute_gap_pp') if shadow_calibration.get('absolute_gap_pp') is not None else '-'}pp | "
-                f"n={shadow_calibration.get('rows', 0)}"
-            ),
-            "Aces/DF blockers: " + ("; ".join(props_shadow.get("blockers") or []) or "none"),
-            (
-                "Aces/DF promotion gate: 300 settled across 2 Slams; ROI >= 0; "
-                "mean CLV >= +1% and >=55% positive; calibration n>=100, "
-                "Brier <=0.25 and gap <=5pp; approved prices + healthy pipeline. Human review only."
-            ),
-        ]
-    )
-    lines.extend(
-        [
-            (
-                "Aces/DF vs Bet365: "
-                f"{props_benchmark.get('settled', 0)}/{props_benchmark.get('observations', 0)} settled | "
-                f"Brier delta {number(props_benchmark.get('brier_delta_vs_market')):+.4f} | "
-                f"{props_benchmark.get('status', 'EVIDENCE_BUILDING')}"
-            ),
-            tennis_breaks_gate_line(tennis_breaks_v1),
-            "",
-            "No automatic promotion: provisional lanes remain 0.5u until their registered gates pass.",
-        ]
-    )
-    lines.extend(["", rate_trend_text(payload)])
-    lines.extend(["", full_refresh_text(payload), context_forward_text(payload)])
-    lines.extend(["", model_watchlist_text(payload, tennis_only=True)])
-    return "\n".join(lines)
 
 
 def github_token_from_credential_manager() -> str:

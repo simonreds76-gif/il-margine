@@ -26,15 +26,17 @@ class ReportCohortTests(unittest.TestCase):
                 'legacy-unversioned':{'aces':item(-49)}, 'current':{'aces':item(-65)}}}})
         self.assertIn('[current]: 17 settled fixtures', text)
         self.assertIn('Astra ROI -65.0% (13 selected lines)', text)
-        self.assertIn('[legacy archive]', text)
+        self.assertNotIn('[legacy archive]', text)
         self.assertNotIn('+99.0%', text)
         self.assertIn('correlated', text)
 
     def test_unversioned_input_does_not_claim_corrected_cohort(self):
         text = namespace['rate_trend_text']({'tennis_rate_trend': {'markets':{'aces':{}}}})
-        self.assertIn('mixed/unversioned archive', text)
+        self.assertIn('current-input evidence unavailable', text)
 
-    def test_v3_count_test_is_not_presented_as_betting_approval(self):
-        self.assertIn("betting evidence {proof.get('status', 'UNKNOWN')}; count test", source)
+    def test_v3_is_absent_from_current_telegram_formatter(self):
+        node = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == 'tennis_telegram_text')
+        self.assertNotIn('tennis_props_v3', ast.get_source_segment(source, node))
+
 
 if __name__ == '__main__': unittest.main()
