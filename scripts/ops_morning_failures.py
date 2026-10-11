@@ -18,6 +18,31 @@ def request_json(method, url, headers, payload=None):
         raise RuntimeError('Morning failure alert transport failed; retry on next ops check') from None
 
 
+def verified_atlas_recovery(row, details):
+    """Accept a run-specific recovery receipt without rewriting failure history."""
+    recovery = details.get('ops_failure_resolution')
+    if row.get('error_type') != 'ReturnAtlasRefreshFailed' or not isinstance(recovery, dict):
+        return False
+    expected = recovery.get('expected_commit', '')
+    version = recovery.get('expected_data_version', '')
+    try:
+        resolved = datetime.fromisoformat(recovery.get('resolved_at', '').replace('Z', '+00:00'))
+        finished = datetime.fromisoformat(row.get('finished_at', '').replace('Z', '+00:00'))
+        valid_time = resolved.tzinfo is not None and finished.tzinfo is not None and finished <= resolved <= datetime.now(timezone.utc)
+    except (ValueError, TypeError, AttributeError):
+        return False
+    return (
+        valid_time
+        and recovery.get('run_id') == row.get('run_id')
+        and recovery.get('method') == 'verified_production_deployment'
+        and recovery.get('public_url') == 'https://ilmargine.bet'
+        and str(recovery.get('deployment_id', '')).startswith('dpl_')
+        and len(expected) == 40 and all(c in '0123456789abcdef' for c in expected)
+        and recovery.get('verified_commit') == expected
+        and bool(version) and recovery.get('verified_data_version') == version
+    )
+
+
 def check_morning_failure(env=None, transport=request_json):
     env = os.environ if env is None else env
     base = env.get('NEXT_PUBLIC_SUPABASE_URL', '').rstrip('/')
@@ -36,6 +61,9 @@ def check_morning_failure(env=None, transport=request_json):
         print(f"OPS_MORNING_FAILURE clear status={row['status']}")
         return False
     details = dict(row.get('details') or {})
+    if verified_atlas_recovery(row, details):
+        print('OPS_MORNING_FAILURE resolved by verified production deployment; original failure retained')
+        return False
     if details.get('ops_failure_notified_at'):
         print('OPS_MORNING_FAILURE already notified')
         return True

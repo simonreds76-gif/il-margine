@@ -38,4 +38,31 @@ class MorningFailureTests(unittest.TestCase):
         self.assertEqual(transport.call_count,1)
     def test_missing_morning_record_is_visible_error(self):
         with self.assertRaises(RuntimeError): check_morning_failure(ENV,Mock(return_value=[]))
+class VerifiedRecoveryTests(unittest.TestCase):
+    def receipt(self):
+        return {'run_id': 'test-run', 'method': 'verified_production_deployment',
+                'resolved_at': '2026-09-20T12:00:00Z', 'deployment_id': 'dpl_verified',
+                'public_url': 'https://ilmargine.bet', 'expected_commit': 'a' * 40,
+                'verified_commit': 'a' * 40, 'expected_data_version': 'v1', 'verified_data_version': 'v1'}
+    def check(self, receipt, **changes):
+        row = {**ROW, 'finished_at': '2026-09-19T11:00:00Z', **changes,
+               'details': {'ops_failure_notified_at': 'already', 'ops_failure_resolution': receipt}}
+        transport = Mock(return_value=[row])
+        result = check_morning_failure(ENV, transport)
+        self.assertEqual(transport.call_count, 1)
+        return result
+    def test_verified_recovery_clears_alert_without_writing_or_sending(self):
+        self.assertFalse(self.check(self.receipt()))
+    def test_receipt_for_another_run_does_not_clear_failure(self):
+        self.assertTrue(self.check({**self.receipt(), 'run_id': 'older-run'}))
+    def test_different_error_is_not_cleared(self):
+        self.assertTrue(self.check(self.receipt(), error_type='TennisPropsRefreshFailed'))
+    def test_unverified_commit_version_or_host_does_not_clear_failure(self):
+        for key in ('verified_commit', 'verified_data_version', 'public_url', 'deployment_id', 'method'):
+            with self.subTest(key=key):
+                self.assertTrue(self.check({**self.receipt(), key: 'wrong'}))
+    def test_missing_or_invalid_resolution_time_does_not_clear_failure(self):
+        for value in ('', 'wrong', '2026-09-18T12:00:00Z', '2099-01-01T00:00:00Z', '2026-09-20T12:00:00'):
+            self.assertTrue(self.check({**self.receipt(), 'resolved_at': value}))
+
 if __name__=='__main__': unittest.main()
