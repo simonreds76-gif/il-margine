@@ -6,7 +6,7 @@ import { foldNameText } from "./player-name-matching";
 import { resolveTeamLogoPath } from "./team-logos";
 import type { TipPortrait } from "./tip-artwork-types";
 
-type PickIdentity = { market: string; category: string; event: string; player: string | null; match_date?: string | null };
+type PickIdentity = { id?: number; market: string; category: string; event: string; player: string | null; match_date?: string | null };
 const key = (name: string) => foldNameText(name).toLowerCase().replace(/[^a-z0-9]/g, "");
 const words = (name: string) => foldNameText(name).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const leagueKeys: Record<string, string> = { pl: "epl", seriea: "serie-a", laliga: "la-liga", bundesliga: "bundesliga", ligue1: "ligue-1" };
@@ -64,5 +64,5 @@ export function getTipArtwork(pick: PickIdentity): TipPortrait[] {
   const scoped = sides.map((club) => ({ club, id: portraits[`${league}|${clubKey(club)}|${key(name)}`] })).filter((row) => row.id);
   const scopedIds = new Set(scoped.map((row) => row.id));
   const id = scopedIds.size === 1 ? scoped[0].id : scopedIds.size > 1 ? null : lab[`${league}|${key(name)}`] ?? portraits[key(name)];
-  return [{ name, src: id ? `https://images.fotmob.com/image_resources/playerimages/${id}.png` : null, kind: "player", fallbackSrc: scopedIds.size === 1 ? resolveTeamLogoPath(scoped[0].club, pick.category) : null }];
+  return [{ name, src: id ? `https://images.fotmob.com/image_resources/playerimages/${id}.png` : Number.isSafeInteger(pick.id) && Number(pick.id) > 0 ? `/api/tip-portrait/${pick.id}` : null, kind: "player", fallbackSrc: scopedIds.size === 1 ? resolveTeamLogoPath(scoped[0].club, pick.category) : null }];
 }
