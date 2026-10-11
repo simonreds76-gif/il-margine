@@ -10,7 +10,8 @@ type PickIdentity = { market: string; category: string; event: string; player: s
 const key = (name: string) => foldNameText(name).toLowerCase().replace(/[^a-z0-9]/g, "");
 const words = (name: string) => foldNameText(name).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const leagueKeys: Record<string, string> = { pl: "epl", seriea: "serie-a", laliga: "la-liga", bundesliga: "bundesliga", ligue1: "ligue-1" };
-const clubKey = (club: string) => ({ psg: "parissaintgermain", acmilan: "milan" }[key(club)] ?? key(club));
+const clubAliases: Record<string, string> = { psg: "parissaintgermain", acmilan: "milan" };
+const clubKey = (club: string) => clubAliases[key(club)] ?? key(club);
 
 // Verified FotMob identities for published surname-only selections. Club context
 // prevents assigning a namesake or carrying an old club crest into another fixture.
