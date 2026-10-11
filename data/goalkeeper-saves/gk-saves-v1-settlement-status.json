@@ -1,14 +1,76 @@
 {
-  "deferred_not_due": 9,
-  "generated_at": "2026-10-10T14:31:41Z",
+  "api_errors": [],
+  "deferred_not_due": 5,
+  "details": [
+    {
+      "detail": "",
+      "goalkeeper": "Finn Dahmen",
+      "match": "FC Augsburg vs Bayern Munich",
+      "match_date": "2026-10-10",
+      "reason": "settled_fotmob",
+      "signal_id": "72513228|finn dahmen|4.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Mark Flekken",
+      "match": "FSV Mainz vs Bayer Leverkusen",
+      "match_date": "2026-10-10",
+      "reason": "settled_fotmob",
+      "signal_id": "72513230|mark flekken|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Noah Atubolu",
+      "match": "RB Leipzig vs Eintracht Frankfurt",
+      "match_date": "2026-10-10",
+      "reason": "settled_fotmob",
+      "signal_id": "72513222|noah atubolu|4.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Lorenzo Palmisani",
+      "match": "SSC Napoli vs Frosinone Calcio",
+      "match_date": "2026-10-10",
+      "reason": "settled_fotmob",
+      "signal_id": "71945300|lorenzo palmisani|3.5|over"
+    }
+  ],
+  "fotmob_requests_used": 5,
+  "generated_at": "2026-10-11T14:58:24Z",
+  "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 0,
-  "pending_total": 9,
+  "pending_total": 5,
   "reason_counts": {
-    "not_due": 9
+    "settled_fotmob": 4
   },
   "requests_used": 0,
-  "reviewed_voids": 0,
-  "settled": 0,
-  "status": "NOTHING_DUE"
+  "settled": 4,
+  "status": "SETTLED",
+  "verified_player_targets": [
+    {
+      "appearances": 30,
+      "match_id": 5881179,
+      "status": "saved",
+      "targets_sha256": "166c630ea77bdf0a7146e02befd1514426dc0dc4fee81e73588589c279eb5e82"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5881184,
+      "status": "saved",
+      "targets_sha256": "1c389a565f4cbf758a3182b3e4585c95ae98fd19462c4e983fceb9d5cd029b10"
+    },
+    {
+      "appearances": 31,
+      "match_id": 5881186,
+      "status": "saved",
+      "targets_sha256": "59ad683f1ca3e90ceba3df454d4d4c84d6659a8c319c1b64bc4f217f6bf044a9"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5749697,
+      "status": "saved",
+      "targets_sha256": "7f4cd6287faabb980cd60f22d80d4dadb28563f3d889e90f62ce1e3749d7384d"
+    }
+  ]
 }
