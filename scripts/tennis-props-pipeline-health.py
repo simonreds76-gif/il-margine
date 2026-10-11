@@ -55,8 +55,13 @@ def observation_key(row: dict[str, str]) -> tuple[str, ...] | None:
         return None
     if captured is None or not line.is_finite():
         return None
-    return (*(" ".join(value.casefold().split()) for value in values[:-2]),
-            str(line.normalize()), captured.isoformat())
+    normalized = [" ".join(value.casefold().split()) for value in values[:-2]]
+    # Exact provider spelling alias; retain event, book, market, line and capture.
+    # The comparison board expands this player's middle name on match-total rows.
+    for index in (2, 3):
+        if normalized[index] == "leylah fernandez":
+            normalized[index] = "leylah annie fernandez"
+    return (*normalized, str(line.normalize()), captured.isoformat())
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:

@@ -399,6 +399,10 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: nightly tennis settlement failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Astrissimo: daily paper record and new selections ==="
+$astrissimoExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--astrissimo-only") -Label "Astrissimo paper alerts" -TimeoutSeconds 90
+if ($astrissimoExit -ne 0) { Log "WARNING: Astrissimo paper alerts failed (exit $astrissimoExit)" }
+
 Log "=== Step 9b/10: Compact tennis evidence snapshot ==="
 $evidenceSnapshotExit = Invoke-LoggedProcessWithRetry -FilePath "python" -ArgumentList @("scripts\tennis-evidence-snapshot.py", "--supabase") -Label "tennis evidence snapshot" -TimeoutSeconds 120 -Attempts 1
 if ($evidenceSnapshotExit -ne 0) {

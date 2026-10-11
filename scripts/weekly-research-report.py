@@ -1517,6 +1517,7 @@ def build_payload() -> dict[str, Any]:
     tennis_rate_trend = rate_trend_summary()
     tennis_full_refresh = full_refresh_summary()
     tennis_context_forward = load_json(ROOT / "data/tennis-ml-research/context-forward-v1/report.json")
+    tennis_astrissimo = load_json(ROOT / "data/tennis-ml-research/astrissimo-v1/report.json")
     tennis_props_v4 = load_json(TENNIS_PROPS_V4_JSON)
     tennis_breaks_v1 = load_json(TENNIS_BREAKS_V1_GATE)
     tennis_venue_ace_v1 = venue_ace_factor_v1_summary()
@@ -1539,6 +1540,7 @@ def build_payload() -> dict[str, Any]:
         tennis_rate_trend = snapshot_sections.get("tennis_rate_trend") or tennis_rate_trend
         tennis_full_refresh = snapshot_sections.get("tennis_full_refresh") or tennis_full_refresh
         tennis_context_forward = snapshot_sections.get("tennis_context_forward") or tennis_context_forward
+        tennis_astrissimo = snapshot_sections.get("tennis_astrissimo") or tennis_astrissimo
         tennis_props_v3 = snapshot_sections.get("tennis_props_v3") or tennis_props_v3
         tennis_props_v4 = snapshot_sections.get("tennis_props_v4") or tennis_props_v4
         tennis_venue_ace_v1 = snapshot_sections.get("tennis_venue_ace_factor_v1") or tennis_venue_ace_v1
@@ -1590,6 +1592,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_rate_trend": tennis_rate_trend,
         "tennis_full_refresh": tennis_full_refresh,
         "tennis_context_forward": tennis_context_forward,
+        "tennis_astrissimo": tennis_astrissimo,
         "model_review_watchlist": model_watchlist_summary(),
         "tennis_props_v4": tennis_props_v4,
         "tennis_breaks_v1": tennis_breaks_v1,
@@ -2097,6 +2100,11 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     lines.append(f"Most Aces Direct: {paired.get('paired_events', 0)} paired fixtures | "
                  f"Brier difference {signed_number(paired.get('brier_delta_direct_minus_control'), 4)} | outcome research; prices assessed separately")
     lines.append(context_forward_text(payload))
+    astrissimo = payload.get("tennis_astrissimo") or {}
+    if astrissimo:
+        roi = astrissimo.get("roi_pct")
+        record = (f"ROI {roi:+.2f}% | {astrissimo.get('pnl_units', 0):+.2f}u" if roi is not None else "No settled selections yet; ROI not established")
+        lines.append(f"Astrissimo v1 | ATP main draw paper only\n{astrissimo.get('wins', 0)}W / {astrissimo.get('losses', 0)}L | {astrissimo.get('pending', 0)} pending | {astrissimo.get('void', 0)} void | {record}\nChallenger excluded. Historical backtest kept separate. Capture: {(astrissimo.get('capture') or {}).get('state', 'unknown')}.")
     health = shadow.get('feed') or {}
     if health and health.get('state') not in ('CURRENT', 'HEALTHY', 'OK'):
         lines.append('Capture check: ' + str(health.get('state', 'UNAVAILABLE')))
