@@ -1,7 +1,24 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-10T14:52:13Z",
+  "generated_at": "2026-10-11T05:54:45Z",
   "league": "la-liga",
-  "row_count": 0,
-  "rows": []
+  "row_count": 1,
+  "rows": [
+    {
+      "team": "Deportivo Alavés",
+      "team_key": "alaves",
+      "player_name": "Lucas Boyé",
+      "player_key": "lucas boy",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-10"
+    }
+  ]
 }
