@@ -56,7 +56,7 @@ def refresh(root=ROOT, now=None, online=True, force=False):
             url = f'https://www.fotmob.com/api/data/matchDetails?matchId={row["id"]}'
             response = requests.get(url, timeout=25); response.raise_for_status(); time.sleep(.5)
             record = extract(response.json(), row)
-            record['players']=[{k:v for k,v in p.items() if k in ('id','minutes','aerials_won','aerials_attempted','headed_shots')} for p in record['players']]
+            record['players']=[{k:v for k,v in p.items() if k in ('id','team_id','starter','minutes','aerials_won','aerials_attempted','headed_shots','headed_sot','headed_goals','set_piece_headers')} for p in record['players']]
             record.pop('coverage',None);record.pop('exceptions',None)
             record.update(home=row['home'], away=row['away'], league=row['league'],
                           source_url=url, source_sha256=sha256(response.content).hexdigest(), observed_at=now.isoformat())

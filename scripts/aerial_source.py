@@ -51,6 +51,15 @@ def extract(p, row):
     shots = (c.get('shotmap') or {}).get('shots')
     shots_ok = isinstance(shots, list) and all(isinstance(s, dict) and s.get('playerId') is not None and s.get('shotType') for s in shots)
     headers = Counter(str(s['playerId']) for s in shots if s['shotType'] == 'Header' and not s.get('isOwnGoal')) if shots_ok else {}
+    # Preserve distinct headed markets from explicit shotmap flags. A headed
+    # attempt is not automatically on target, and blocked attempts do not count.
+    header_rows = [s for s in shots if s['shotType'] == 'Header' and not s.get('isOwnGoal')] if shots_ok else []
+    sot_ok = shots_ok and all(type(s.get('isOnTarget')) is bool for s in header_rows)
+    goals_ok = shots_ok and all(s.get('eventType') for s in header_rows)
+    sot = Counter(str(s['playerId']) for s in header_rows if s.get('isOnTarget') is True and not s.get('isBlocked'))
+    goals = Counter(str(s['playerId']) for s in header_rows if s.get('eventType') == 'Goal')
+    set_piece = Counter(str(s['playerId']) for s in header_rows if s.get('situation') in ('FromCorner', 'SetPiece'))
+    delivery_identity_ok = shots_ok and all(str(s.get('teamId')) in (row['home_id'], row['away_id']) for s in shots)
     players, exceptions = [], []
     for pid, player in (c.get('playerStats') or {}).items():
         if str(player.get('id')) != str(pid) or str(player.get('teamId')) not in (row['home_id'], row['away_id']):
@@ -69,6 +78,9 @@ def extract(p, row):
                         'minutes': minutes, 'starter': str(pid) in starter_ids,
                         'aerials_won': won, 'aerials_attempted': attempted,
                         'headed_shots': headers.get(str(pid), 0) if shots_ok else None,
+                        'headed_sot': sot.get(str(pid), 0) if sot_ok else None,
+                        'headed_goals': goals.get(str(pid), 0) if goals_ok else None,
+                        'set_piece_headers': set_piece.get(str(pid), 0) if shots_ok and all(s.get('situation') for s in header_rows) else None,
                         'keeper_high_claims': count(player_stat(player, 'keeper_high_claim').get('value')) if player.get('isGoalkeeper') else None,
                         'keeper_punches': count(player_stat(player, 'punches').get('value')) if player.get('isGoalkeeper') else None,
                         'usual_position': player.get('usualPosition'), 'goalkeeper': player.get('isGoalkeeper') is True})
@@ -76,6 +88,9 @@ def extract(p, row):
                  'crosses_attempted': team_stat(p, 'accurate_crosses', i, 'total'),
                  'crosses_accurate': team_stat(p, 'accurate_crosses', i)}
                 for i, tid in enumerate((row['home_id'], row['away_id']))]
+    for entry in delivery:
+        entry['headed_shots_for'] = sum(str(s['teamId']) == entry['team_id'] for s in header_rows) if delivery_identity_ok else None
+        entry['headed_shots_against'] = sum(str(s['teamId']) != entry['team_id'] for s in header_rows) if delivery_identity_ok else None
     starter_minutes_ok = lineup_ok and starter_ids.issubset({v['id'] for v in players})
     outfield = [p for p in players if not p['goalkeeper']]
     coverage = {'lineups': bool(lineup_ok), 'starter_minutes': starter_minutes_ok,
