@@ -136,6 +136,15 @@ jobs:
           fi
           python scripts/upload-fair-odds-lab-blob.py
 
+      - name: Private Air Control player watchlist
+        continue-on-error: true
+        env:
+          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+        run: |
+          python -m unittest discover -s scripts/tests -p test_aerial_alerts.py
+          python scripts/aerial_alerts.py --send
+
       - name: Upload goalscorer monitor snapshot
         env:
           ENABLE_SUPABASE_SNAPSHOT_UPLOADS: ${{ vars.ENABLE_SUPABASE_SNAPSHOT_UPLOADS }}
