@@ -1,3 +1,4 @@
+import type { TipPortrait } from "./tip-artwork-types";
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -31,6 +32,7 @@ export interface Bookmaker {
 }
 
 export interface Bet {
+  artwork?: TipPortrait[];
   id: number;
   market: 'props' | 'tennis' | 'betbuilders' | 'atg';
   category: string;

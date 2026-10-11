@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import MarketBadge from "@/components/MarketBadge";
 import PropsAlertsCta from "@/components/PropsAlertsCta";
 import TipPageTracker from "@/components/TipPageTracker";
+import TipPortraits from "@/components/TipPortraits";
+import { getTipArtwork } from "@/lib/tip-artwork";
 import TipTeamCrest from "@/components/TipTeamCrest";
 import { BASE_URL } from "@/lib/config";
 import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
@@ -230,6 +232,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
               <span className="font-mono text-xs text-slate-400">{formatMatchDate(fixture.seed.match_date)}</span>
             </div>
 
+            {fixture.seed.market === "tennis" && <div className="mb-5"><TipPortraits portraits={getTipArtwork(fixture.seed)} size="hero" /></div>}
             {clubs ? (
               <h1 aria-label={fixture.seed.event} className="grid max-w-4xl grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 py-3 text-2xl font-black tracking-[-0.035em] text-white sm:gap-6 sm:text-4xl md:text-5xl">
                 <span className="flex min-w-0 flex-col items-center gap-4 text-center md:flex-row md:text-left">
@@ -284,7 +287,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
                           </span>
                           <span className="text-xs text-slate-500">{copy.competition || bet.category}</span>
                         </div>
-                        <h3 className="text-lg font-bold text-white">{selectionLabel(bet)}</h3>
+                        <div className="flex items-center gap-3"><TipPortraits portraits={getTipArtwork(bet)} /><h3 className="min-w-0 break-words text-lg font-bold text-white">{selectionLabel(bet)}</h3></div>
                       </div>
 
                       <div className="grid grid-cols-3 gap-2 sm:min-w-[285px]">

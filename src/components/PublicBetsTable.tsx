@@ -1,5 +1,6 @@
 "use client";
 
+import TipPortraits from "@/components/TipPortraits";
 import Link from "next/link";
 import { type Bet, type Bookmaker } from "@/lib/supabase";
 import BookmakerLogo from "@/components/BookmakerLogo";
@@ -96,7 +97,7 @@ export default function PublicBetsTable({
                 className="block min-w-0 transition-colors hover:text-emerald-400"
                 title={bet.event}
               >
-                <span className="min-w-0 truncate">{bet.event}</span>
+                <span className="flex items-center justify-center gap-2"><TipPortraits portraits={bet.artwork} size="compact" /><span className="min-w-0 break-words">{bet.event}</span></span>
               </Link>
             </td>
             <td className={td.player}>

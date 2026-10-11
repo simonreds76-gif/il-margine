@@ -8,6 +8,7 @@ import TennisMatchdayPromo from "@/components/TennisMatchdayPromo";
 import TipsCompetitionToolbar from "@/components/TipsCompetitionToolbar";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
+import TipPortraits from "@/components/TipPortraits";
 import BetMobileMeta from "@/components/BetMobileMeta";
 import MarketBadge from "@/components/MarketBadge";
 import PublicBetsTable from "@/components/PublicBetsTable";
@@ -346,9 +347,7 @@ export default function TennisTips({
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
                           <ResultBadge status="pending" size="sm" />
                         </div>
-                        <div className="font-medium text-slate-200 mb-1 leading-snug">
-                          {pick.event}
-                        </div>
+                        <div className="mb-2 flex items-center gap-2 font-medium text-slate-200 leading-snug"><TipPortraits portraits={pick.artwork} size="compact" /><span className="min-w-0 break-words">{pick.event}</span></div>
                         <div className="text-sm text-slate-400 leading-snug">
                           {pick.player && <span>{pick.player} | </span>}
                           {pick.selection}
@@ -445,9 +444,7 @@ export default function TennisTips({
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(result.match_date)}</span>
                         </div>
-                        <div className="font-medium text-slate-200 mb-1">
-                          {result.event}
-                        </div>
+                        <div className="mb-2 flex items-center gap-2 font-medium text-slate-200"><TipPortraits portraits={result.artwork} size="compact" /><span className="min-w-0 break-words">{result.event}</span></div>
                         <div className="text-sm text-slate-400">
                           {result.player && <span>{result.player} | </span>}
                           {result.selection}

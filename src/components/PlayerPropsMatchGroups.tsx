@@ -1,11 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import TipPortraits from "@/components/TipPortraits";
 import Image from "next/image";
 import Link from "next/link";
 import type { Bet } from "@/lib/supabase";
 import BookmakerLogo from "@/components/BookmakerLogo";
-import MarketBadge from "@/components/MarketBadge";
 import PnL from "@/components/PnL";
 import ResultBadge from "@/components/ResultBadge";
 import { getDisplayBetCategory } from "@/lib/bet-category";
@@ -173,8 +173,8 @@ function PickRow({ bet, mode }: { bet: Bet; mode: Mode }) {
   return (
     <Link href={href} className="block transition-colors hover:bg-slate-800/30 active:bg-slate-800/40">
       <div className="hidden items-center gap-3 px-4 py-3 sm:flex">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center">
-          <MarketBadge market={bet.market} category={bet.category} event={bet.event} />
+        <span className="flex min-h-9 shrink-0 items-center justify-center">
+          <TipPortraits portraits={bet.artwork} size="compact" />
         </span>
         <div className="min-w-0 flex-1">
           <div className="truncate text-sm font-medium text-slate-100">{bet.player || bet.selection}</div>
@@ -192,8 +192,8 @@ function PickRow({ bet, mode }: { bet: Bet; mode: Mode }) {
 
       <div className="px-4 py-3 sm:hidden">
         <div className="flex items-start gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center">
-            <MarketBadge market={bet.market} category={bet.category} event={bet.event} />
+          <span className="flex min-h-9 shrink-0 items-center justify-center">
+            <TipPortraits portraits={bet.artwork} size="compact" />
           </span>
           <div className="min-w-0 flex-1">
             <div className="truncate text-sm font-medium text-slate-100">{bet.player || bet.selection}</div>

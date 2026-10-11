@@ -6,7 +6,7 @@ import { foldNameText } from "./player-name-matching";
 import { resolveTeamLogoPath } from "./team-logos";
 import type { TipPortrait } from "./tip-artwork-types";
 
-type PickIdentity = { market: string; category: string; event: string; player: string | null };
+type PickIdentity = { market: string; category: string; event: string; player: string | null; match_date?: string | null };
 const key = (name: string) => foldNameText(name).toLowerCase().replace(/[^a-z0-9]/g, "");
 const words = (name: string) => foldNameText(name).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const leagueKeys: Record<string, string> = { pl: "epl", seriea: "serie-a", laliga: "la-liga", bundesliga: "bundesliga", ligue1: "ligue-1" };
@@ -44,7 +44,7 @@ export function getTipArtwork(pick: PickIdentity): TipPortrait[] {
   if (pick.market === "tennis") {
     // Current editorial shorthand for the active ATP player; full names remain
     // exact, including Mischa Zverev. Restricted to the ATP category.
-    return sides.map((name) => tennisPortrait(pick.category === "atp" && key(name) === "zverev" ? "Alexander Zverev" : name));
+    return sides.map((name) => tennisPortrait(pick.category === "atp" && (!pick.match_date || pick.match_date >= "2024-01-01") && key(name) === "zverev" ? "Alexander Zverev" : name));
   }
   const name = pick.player?.trim();
   const clubPortraits = sides.map((club): TipPortrait => ({ name: club, src: resolveTeamLogoPath(club, pick.category), kind: "club" }));
