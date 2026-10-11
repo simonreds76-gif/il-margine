@@ -1,3 +1,4 @@
+import { getTipArtwork } from "@/lib/tip-artwork";
 import { fetchMonthlyPayload } from "@/lib/public-record";
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
@@ -138,8 +139,8 @@ async function fetchHomePayload() {
 
   return {
     stats: statsResponse.data ?? [],
-    recent: recentResponse.data ?? [],
-    pending: pendingResponse.data ?? [],
+    recent: (recentResponse.data ?? []).map((pick) => ({ ...pick, artwork: getTipArtwork(pick) })),
+    pending: (pendingResponse.data ?? []).map((pick) => ({ ...pick, artwork: getTipArtwork(pick) })),
     last7: {
       total: last7Total,
       count: last7Rows.length,
@@ -190,8 +191,8 @@ async function fetchMarketPayload(scope: "tennis" | "props") {
   if (error) throw new Error(error.message);
 
   return {
-    pending: pendingResponse.data ?? [],
-    recent: recentResponse.data ?? [],
+    pending: (pendingResponse.data ?? []).map((pick) => ({ ...pick, artwork: getTipArtwork(pick) })),
+    recent: (recentResponse.data ?? []).map((pick) => ({ ...pick, artwork: getTipArtwork(pick) })),
     stats: categoryStatsResponse.data ?? [],
     progression: buildProgressionRows((progressionResponse.data ?? []) as ProgressionBetRow[]),
   };
