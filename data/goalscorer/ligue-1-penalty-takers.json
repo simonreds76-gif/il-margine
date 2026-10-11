@@ -26,7 +26,7 @@
       "Troyes"
     ],
     "last_verified": "2026-09-02",
-    "public_updated_at": "2026-09-19",
+    "public_updated_at": "2026-10-11",
     "membership_source": "https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",
     "last_reviewed": "2026-09-04"
   },
@@ -876,10 +876,10 @@
     }
   },
   "Brest": {
-    "primary": "Kamory Doumbia",
-    "secondary": "Ludovic Ajorque",
-    "tertiary": "Kenny Lala",
-    "last_updated": "2026-09-06",
+    "primary": "Kenny Lala",
+    "secondary": "Kamory Doumbia",
+    "tertiary": "Ludovic Ajorque",
+    "last_updated": "2026-10-11",
     "source": "Ligue 1",
     "cross_check": "L'Équipe",
     "hierarchy_status": "probable",
@@ -888,16 +888,16 @@
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "Doumbia converted at Le Havre on 5 September with Ajorque and Lala both on the pitch. Doumbia is now first choice; Ajorque and Lala remain the deputies.",
+    "condition_note": "Lala moves to first choice after scoring against Angers with Doumbia and Ajorque both on the pitch. Doumbia and Ajorque remain the deputies.",
     "last_verified": {
-      "date": "2026-09-06",
+      "date": "2026-10-11",
       "by": "local_admin",
       "method": "reviewed_manual_hierarchy_override"
     },
-    "public_updated_at": "2026-09-06",
+    "public_updated_at": "2026-10-11",
     "latest_evidence": {
-      "id": "be275a615158438ba80afb929487c56f",
-      "date": "2026-09-06",
+      "id": "101e6a5ce5354df78af5a70d5fc4f13c",
+      "date": "2026-10-11",
       "type": "current_season_board_review",
       "source_count": 1
     },
@@ -1173,6 +1173,30 @@
         "affects_hierarchy": true,
         "detection": "local_admin",
         "season": "2026/27"
+      },
+      {
+        "id": "101e6a5ce5354df78af5a70d5fc4f13c",
+        "date": "2026-10-11",
+        "type": "current_season_board_review",
+        "headline": "Kenny Lala moves to first choice",
+        "editorial_note": "Lala moves to first choice after scoring against Angers with Doumbia and Ajorque both on the pitch. Doumbia and Ajorque remain the deputies.",
+        "match": "Brest vs Angers",
+        "sources": [
+          {
+            "label": "Completed match and lineup evidence",
+            "url": "https://www.fotmob.com/matches/angers-vs-brest/2agfd8#5802946",
+            "date": "2026-10-10",
+            "note": ""
+          }
+        ],
+        "review": {
+          "status": "approved",
+          "reviewed_by": "local_admin",
+          "reviewed_at": "2026-10-11T10:40:52+00:00"
+        },
+        "affects_hierarchy": true,
+        "detection": "local_admin",
+        "season": "2026/27"
       }
     ],
     "change_log": [
@@ -1309,6 +1333,25 @@
         "evidence_ids": [
           "be275a615158438ba80afb929487c56f"
         ]
+      },
+      {
+        "id": "101e6a5ce5354df78af5a70d5fc4f13c",
+        "changed_at": "2026-10-11T10:40:52+00:00",
+        "change_type": "hierarchy_change",
+        "reason": "Lala moves to first choice after scoring against Angers with Doumbia and Ajorque both on the pitch. Doumbia and Ajorque remain the deputies. Editorial decision explicitly approved by Simone on 11 October 2026.",
+        "from": {
+          "primary": "Kamory Doumbia",
+          "secondary": "Ludovic Ajorque",
+          "tertiary": "Kenny Lala"
+        },
+        "to": {
+          "primary": "Kenny Lala",
+          "secondary": "Kamory Doumbia",
+          "tertiary": "Ludovic Ajorque"
+        },
+        "evidence_ids": [
+          "101e6a5ce5354df78af5a70d5fc4f13c"
+        ]
       }
     ],
     "flags": {
@@ -1326,19 +1369,19 @@
     "player_ids": {},
     "squad_membership": {
       "primary": {
-        "player": "Kamory Doumbia",
+        "player": "Kenny Lala",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/8521/overview/brest",
         "checked_at": "2026-09-02"
       },
       "secondary": {
-        "player": "Ludovic Ajorque",
+        "player": "Kamory Doumbia",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/8521/overview/brest",
         "checked_at": "2026-09-02"
       },
       "tertiary": {
-        "player": "Kenny Lala",
+        "player": "Ludovic Ajorque",
         "status": "confirmed",
         "source_url": "https://www.fotmob.com/teams/8521/overview/brest",
         "checked_at": "2026-09-02"
@@ -6742,7 +6785,7 @@
     "primary": "Casper Tengstedt",
     "secondary": "Aron Dønnum",
     "tertiary": "Cristian Cásseres Jr.",
-    "last_updated": "2026-09-21",
+    "last_updated": "2026-10-11",
     "source": "Toulouse FC",
     "cross_check": "Ligue 1",
     "hierarchy_status": "probable",
@@ -6751,16 +6794,16 @@
       "secondary": "medium",
       "tertiary": "medium"
     },
-    "condition_note": "First choice: Casper Tengstedt; Second choice: Aron Dønnum; Third choice: Cristian Cásseres Jr..",
+    "condition_note": "Tengstedt remains first choice after converting against Monaco on 10 October. Dønnum and Cásseres remain the deputies.",
     "last_verified": {
-      "date": "2026-09-21",
+      "date": "2026-10-11",
       "by": "local_admin",
       "method": "reviewed_manual_hierarchy_override"
     },
-    "public_updated_at": "2026-09-21",
+    "public_updated_at": "2026-10-11",
     "latest_evidence": {
-      "id": "824e4caa3fcf48e98ee5786bc5839342",
-      "date": "2026-09-21",
+      "id": "b1c6256f8a97424195cb38af1d456b8a",
+      "date": "2026-10-11",
       "type": "current_season_board_review",
       "source_count": 1
     },
@@ -7008,6 +7051,30 @@
         "affects_hierarchy": true,
         "detection": "local_admin",
         "season": "2026/27"
+      },
+      {
+        "id": "b1c6256f8a97424195cb38af1d456b8a",
+        "date": "2026-10-11",
+        "type": "current_season_board_review",
+        "headline": "Casper Tengstedt remains first choice",
+        "editorial_note": "Tengstedt remains first choice after converting against Monaco on 10 October. Dønnum and Cásseres remain the deputies.",
+        "match": "Monaco vs Toulouse",
+        "sources": [
+          {
+            "label": "Completed match and lineup evidence",
+            "url": "https://www.fotmob.com/matches/monaco-vs-toulouse/38d3b8#5802950",
+            "date": "2026-10-10",
+            "note": ""
+          }
+        ],
+        "review": {
+          "status": "approved",
+          "reviewed_by": "local_admin",
+          "reviewed_at": "2026-10-11T10:40:51+00:00"
+        },
+        "affects_hierarchy": true,
+        "detection": "local_admin",
+        "season": "2026/27"
       }
     ],
     "change_log": [
@@ -7097,6 +7164,25 @@
         },
         "evidence_ids": [
           "824e4caa3fcf48e98ee5786bc5839342"
+        ]
+      },
+      {
+        "id": "b1c6256f8a97424195cb38af1d456b8a",
+        "changed_at": "2026-10-11T10:40:51+00:00",
+        "change_type": "hierarchy_change",
+        "reason": "Tengstedt remains first choice after converting against Monaco on 10 October. Dønnum and Cásseres remain the deputies. Editorial decision explicitly approved by Simone on 11 October 2026.",
+        "from": {
+          "primary": "Casper Tengstedt",
+          "secondary": "Aron Dønnum",
+          "tertiary": "Cristian Cásseres Jr."
+        },
+        "to": {
+          "primary": "Casper Tengstedt",
+          "secondary": "Aron Dønnum",
+          "tertiary": "Cristian Cásseres Jr."
+        },
+        "evidence_ids": [
+          "b1c6256f8a97424195cb38af1d456b8a"
         ]
       }
     ],
