@@ -3893,6 +3893,12 @@ def main():
         print("  Local ML component evidence: " + capture_components(Path(_script_dir).parent, evidence))
     except Exception as exc:
         print(f"WARNING: local ML evidence capture failed ({type(exc).__name__}); live forecasts already saved.")
+    try:
+        from tennis_astrissimo import capture_current as capture_astrissimo, current_fixture_rows
+        print("  Astrissimo paper research: " + capture_astrissimo(Path(_script_dir).parent, current_fixture_rows(Path(_script_dir).parent)))
+    except Exception as exc:
+        print(f"WARNING: Astrissimo capture failed ({type(exc).__name__}); published forecasts unchanged.")
+
     if do_skip_handicap_values:
         print("Skipped handicap-value refresh (--skip-handicap-values).")
         print("Done.")

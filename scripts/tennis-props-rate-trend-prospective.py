@@ -218,17 +218,19 @@ def report(records, outcomes, health, config, now, *, include_cohorts=True):
         metrics = {}
         for model in ('control', 'candidate'):
             pnl, bets, brier = 0., 0, []
+            tallies = Counter()
             for r in settled:
                 actual = outcomes[r['id']]['actual']
                 row, predictions = r['row'], r[model]
                 side = r[f'{model}_side']
                 if side:
-                    payoff, _ = MODEL['outcomes'](actual, float(row['line']), side, float(row[side.lower()+'_odds']))
+                    payoff, won = MODEL['outcomes'](actual, float(row['line']), side, float(row[side.lower()+'_odds']))
+                    tallies['pushes' if won is None else 'wins' if won else 'losses'] += 1
                     pnl += payoff
                     bets += 1
                 if actual != float(row['line']):
                     brier.append((predictions['OVER']['p_conditional'] - int(actual > float(row['line'])))**2)
-            metrics[model] = {'bets': bets, 'pnl_units': pnl, 'roi_pct': 100*pnl/bets if bets else None,
+            metrics[model] = {'bets': bets, 'wins': tallies['wins'], 'losses': tallies['losses'], 'pushes': tallies['pushes'], 'stake_units': bets, 'pnl_units': pnl, 'roi_pct': 100*pnl/bets if bets else None,
                               'brier': sum(brier)/len(brier) if brier else None}
         fixtures = {r['fixture_key'] for r in settled}
         tournaments = {MODEL['tournament_identity'](r['row']['tournament']) for r in settled}

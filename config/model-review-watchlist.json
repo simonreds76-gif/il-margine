@@ -146,6 +146,20 @@
       "next_action": "Collect fixed-policy forward evidence; show pending, W/L, ROI and closing-price coverage weekly. No automatic promotion.",
       "evaluation": "Manual review after 150 settled fixtures and eight weeks; assess calibration, ROI, positive CLV and at least 70% true-close coverage.",
       "family": "football_counts"
+    },
+    {
+      "id": "astrissimo_v1",
+      "label": "Astrissimo",
+      "status": "FORWARD_PAPER_ONLY",
+      "actual_stake": 0,
+      "automatic_promotion": false,
+      "forward_report": "data/tennis-ml-research/astrissimo-v1/report.json",
+      "scope": "ATP main draw on all supported surfaces; Challenger and qualifying excluded",
+      "review_milestones_settled_fixtures": [
+        50,
+        100
+      ],
+      "next_action": "Compare identical-fixture Brier/log loss against margin-removed Pinnacle, then full 1u paper ROI; investigate capture failures and overdue settlements. Frozen weights. ATP-only subset chosen after retrospective research. Never combine 24 historical bets with new forecasts."
     }
   ],
   "review_checks": [

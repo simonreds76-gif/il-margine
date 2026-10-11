@@ -570,6 +570,7 @@ def main() -> int:
     parser.add_argument("--require-ready", action="store_true")
     parser.add_argument("--print-only", action="store_true")
     parser.add_argument("--force", action="store_true")
+    parser.add_argument("--astrissimo-only", action="store_true", help="Send only Astrissimo fresh signals and its once-daily paper record.")
     parser.add_argument("--paper-summary", action="store_true", help="Include the once-daily ace paper-model progress report.")
     parser.add_argument("--paper-summary-only", action="store_true", help="Send only the ace paper-model summary, without repeating selections.")
     parser.add_argument("--paper-signals", action="store_true", help="Include fresh qualifying v4 paper selections, deduplicated across days.")
@@ -585,6 +586,21 @@ def main() -> int:
         date.fromisoformat(args.date)
     except ValueError as exc:
         raise SystemExit(f"Invalid --date: {args.date}") from exc
+
+    # Astrissimo uses the existing daily/admin relay and its own durable dedup state.
+    # Summary-only passes do not send selection alerts from another model.
+    if not args.paper_summary_only and not args.paper_signals_only:
+        from tennis_astrissimo import alerts as astrissimo_alerts
+        try:
+            astrissimo_alerts(ROOT,
+                lambda messages: dispatch(messages, repository=args.repository, workflow=args.workflow, ref=args.ref),
+                print_only=args.print_only)
+        except (OSError, ValueError, RuntimeError) as exc:
+            if args.astrissimo_only:
+                raise
+            print(f"WARNING: Astrissimo alerts failed: {exc}", file=sys.stderr)
+        if args.astrissimo_only:
+            return 0
 
     if args.paper_summary or args.paper_summary_only:
         from tennis_props_daily_summary import daily_summary
