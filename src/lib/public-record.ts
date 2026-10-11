@@ -1,4 +1,5 @@
 import "server-only";
+import { getTipArtwork } from "@/lib/tip-artwork";
 import type { MarketStats } from "@/lib/supabase";
 import { buildMonthlyRows, type MonthlyBetRow } from "@/lib/monthly-record";
 
@@ -142,7 +143,7 @@ export async function fetchHomePayload() {
   return {
     stats: statsResponse.data ?? [],
     recent: recentResponse.data ?? [],
-    pending: pendingResponse.data ?? [],
+    pending: (pendingResponse.data ?? []).map((pick) => ({ ...pick, artwork: getTipArtwork(pick) })),
     last7: {
       total: last7Total,
       count: last7Rows.length,

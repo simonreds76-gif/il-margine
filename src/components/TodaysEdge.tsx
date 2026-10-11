@@ -10,10 +10,29 @@ import type { Bet, Bookmaker } from "@/lib/supabase";
 import { formatOdds, formatStake } from "@/lib/format";
 import { publicTipPath } from "@/lib/tip-seo";
 import { track } from "@/lib/analytics";
+import type { TipPortrait } from "@/lib/tip-artwork-types";
 
 type EdgeBet = Bet & {
   bookmaker?: Bookmaker | Bookmaker[] | null;
+  artwork?: TipPortrait[];
 };
+
+function PickPortrait({ portrait }: { portrait: TipPortrait }) {
+  const [failed, setFailed] = useState<string[]>([]);
+  const src = [portrait.src, portrait.fallbackSrc].find((url) => url && !failed.includes(url));
+  const isClub = portrait.kind === "club" || (src != null && src === portrait.fallbackSrc);
+  return <span className={`${styles.portrait} ${isClub ? styles.crest : ""}`} title={portrait.name} aria-hidden="true">
+    {src ? (
+      // The existing small portraits are served directly; fixed dimensions avoid
+      // layout shift and lazy loading keeps off-screen cards inexpensive.
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={src} alt="" width={48} height={48} loading="lazy" decoding="async"
+        onError={() => setFailed((urls) => [...urls, src])} />
+    ) : <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      {portrait.kind === "club" ? <path d="M12 10l12-4 12 4v13c0 9-12 17-12 17S12 32 12 23V10Z" stroke="currentColor" strokeWidth="2" /> : <><circle cx="24" cy="17" r="7" fill="currentColor"/><path d="M10 41v-5a14 14 0 0128 0v5" fill="currentColor"/></>}
+    </svg>}
+  </span>;
+}
 
 type Filter = "all" | "props" | "tennis";
 
@@ -154,8 +173,15 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
                   </span>
                   <span className={styles.open} aria-hidden="true">↗</span>
                 </div>
-                <h3>{pick.event}</h3>
-                <p className={styles.selection}>{pick.player ? `${pick.player} · ` : ""}{pick.selection}</p>
+                <div className={styles.identityRow}>
+                  {Boolean(pick.artwork?.length) && <div className={styles.portraitGroup}>
+                    {pick.artwork?.map((portrait, index) => <PickPortrait key={`${index}:${portrait.name}:${portrait.src}`} portrait={portrait} />)}
+                  </div>}
+                  <div className={styles.pickText}>
+                    <h3>{pick.event}</h3>
+                    <p className={styles.selection}>{pick.player ? `${pick.player.trim()} · ` : ""}{pick.selection}</p>
+                  </div>
+                </div>
                 <div className={styles.priceRow}>
                   <div><small>Recorded odds</small><strong>{formatOdds(pick.odds)}</strong></div>
                   <div className={styles.stake}><small>Stake</small><strong>{formatStake(pick.stake)}<span>u</span></strong></div>

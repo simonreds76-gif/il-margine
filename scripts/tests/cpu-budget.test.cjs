@@ -53,6 +53,7 @@ test('scope keys coalesce queries; live responses cache briefly; errors are not 
  const query=new Proxy({}, {get:(_,key)=>key==='then' ? (resolve)=>resolve({data:[],error:fail?{message:'offline'}:null}) : ()=>query});
  const monthlyLoader=compile(fs.readFileSync(path.join(root,'src/lib/public-record.ts'),'utf8'),{
   'server-only':{},
+  '@/lib/tip-artwork':{getTipArtwork:()=>[]},
   '@/lib/monthly-record':compile(fs.readFileSync(path.join(root,'src/lib/monthly-record.ts'),'utf8')),
   '@/lib/supabase-server':{getSupabaseAdmin:()=>({from:()=>{queries++;return query}}),hasSupabaseAdminConfig:()=>true},
   '@/lib/bet-category':{getDisplayBetCategory:()=>''},

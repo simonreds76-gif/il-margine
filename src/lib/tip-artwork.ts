@@ -1,0 +1,65 @@
+import "server-only";
+import tennisPortraits from "@/data/tip-tennis-portraits.json";
+import penaltyPortraits from "../../data/goalscorer/penalty-player-portraits.json";
+import labPortraits from "../../data/goalscorer/lab-player-portraits.json";
+import { foldNameText } from "./player-name-matching";
+import { resolveTeamLogoPath } from "./team-logos";
+import type { TipPortrait } from "./tip-artwork-types";
+
+type PickIdentity = { market: string; category: string; event: string; player: string | null };
+const key = (name: string) => foldNameText(name).toLowerCase().replace(/[^a-z0-9]/g, "");
+const words = (name: string) => foldNameText(name).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+const leagueKeys: Record<string, string> = { pl: "epl", seriea: "serie-a", laliga: "la-liga", bundesliga: "bundesliga", ligue1: "ligue-1" };
+const clubAliases: Record<string, string> = { psg: "parissaintgermain", acmilan: "milan" };
+const clubKey = (club: string) => clubAliases[key(club)] ?? key(club);
+
+// Verified FotMob identities for published surname-only selections. Club context
+// prevents assigning a namesake or carrying an old club crest into another fixture.
+const footballPlayers = [
+  { name: "Marten de Roon", alias: "De Roon", club: "Roma", id: "198559" },
+  { name: "Mario Hermoso", alias: "Hermoso", club: "Roma", id: "671203" },
+  { name: "Mike Maignan", alias: "Maignan", club: "Milan", id: "466439" },
+  { name: "Jeffrey De Lange", alias: "De Lange", club: "Marseille", id: "687868" },
+  { name: "Loris Karius", alias: "Karius", club: "Schalke 04", id: "287894" },
+  { name: "Lukasz Skorupski", alias: "Skorupski", club: "Bologna", id: "178732" },
+  { name: "Noel Törnqvist", alias: "Tornqvist", club: "Monza", id: "1122424" },
+];
+
+function participants(event: string): string[] {
+  const parts = event.split(/\s+(?:vs?\.?|versus)\s+|\s+[–—-]\s+/i).map((part) => part.trim());
+  return parts.length === 2 && parts.every(Boolean) ? parts : [];
+}
+
+function tennisPortrait(name: string): TipPortrait {
+  const query = words(name);
+  const exact = tennisPortraits.filter((row) => words(row.name) === query);
+  const candidates = exact.length ? exact : tennisPortraits.filter((row) => words(row.name).endsWith(` ${query}`));
+  // Never choose between players sharing a surname without a verified alias.
+  const row = candidates.length === 1 ? candidates[0] : null;
+  return { name: row?.name ?? name, src: row?.src ?? null, kind: "player" };
+}
+
+export function getTipArtwork(pick: PickIdentity): TipPortrait[] {
+  const sides = participants(pick.event);
+  if (pick.market === "tennis") {
+    // Current editorial shorthand for the active ATP player; full names remain
+    // exact, including Mischa Zverev. Restricted to the ATP category.
+    return sides.map((name) => tennisPortrait(pick.category === "atp" && key(name) === "zverev" ? "Alexander Zverev" : name));
+  }
+  const name = pick.player?.trim();
+  const clubPortraits = sides.map((club): TipPortrait => ({ name: club, src: resolveTeamLogoPath(club, pick.category), kind: "club" }));
+  if (!name || sides.some((club) => key(club) === key(name))) return clubPortraits;
+
+  const known = footballPlayers.find((row) => [row.name, row.alias].some((alias) => key(alias) === key(name))
+    && sides.some((club) => key(club) === key(row.club) || (resolveTeamLogoPath(club, pick.category) != null && resolveTeamLogoPath(club, pick.category) === resolveTeamLogoPath(row.club, pick.category))));
+  if (known) return [{ name: known.name, src: `https://images.fotmob.com/image_resources/playerimages/${known.id}.png`, kind: "player", fallbackSrc: resolveTeamLogoPath(known.club, pick.category) }];
+
+  const league = leagueKeys[pick.category];
+  const portraits: Record<string, string> = penaltyPortraits;
+  const lab: Record<string, string> = labPortraits;
+  // Club-scoped identities take precedence (e.g. the two Vitinhas).
+  const scoped = sides.map((club) => ({ club, id: portraits[`${league}|${clubKey(club)}|${key(name)}`] })).filter((row) => row.id);
+  const scopedIds = new Set(scoped.map((row) => row.id));
+  const id = scopedIds.size === 1 ? scoped[0].id : scopedIds.size > 1 ? null : lab[`${league}|${key(name)}`] ?? portraits[key(name)];
+  return [{ name, src: id ? `https://images.fotmob.com/image_resources/playerimages/${id}.png` : null, kind: "player", fallbackSrc: scopedIds.size === 1 ? resolveTeamLogoPath(scoped[0].club, pick.category) : null }];
+}
