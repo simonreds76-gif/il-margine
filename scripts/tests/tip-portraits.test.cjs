@@ -1,0 +1,86 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+const ts = require('typescript');
+const root = path.resolve(__dirname, '../..');
+const squads = require('./fixtures/tip-portrait-squads.json');
+const source = (club) => `<script id="__NEXT_DATA__" type="application/json">${JSON.stringify({props:{pageProps:{fallback:{['team-'+squads[club].details.id]:squads[club]}}}})}</script>`;
+
+function harness({ fail = false, empty = false } = {}) {
+  const cache = new Map();
+  let fetches = 0, queries = 0;
+  const cached = (fn) => {
+    const values = new Map();
+    return async (...args) => {
+      const key = JSON.stringify(args);
+      if (!values.has(key)) values.set(key, Promise.resolve().then(() => fn(...args)).catch((e) => { values.delete(key); throw e; }));
+      return values.get(key);
+    };
+  };
+  const pick = {id:123, market:'props',category:'ligue1',event:'Rennes vs Auxerre',player:'Cresswell'};
+  const load = (file) => {
+    if (!path.extname(file)) file += '.ts';
+    if (file.endsWith('.json')) return JSON.parse(fs.readFileSync(file, 'utf8'));
+    if (cache.has(file)) return cache.get(file).exports;
+    const module = {exports:{}}; cache.set(file,module);
+    const code = ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
+    const req = (id) => {
+      if(id === 'server-only') return {};
+      if(id === 'next/cache') return {unstable_cache:cached};
+      if(id === '@/lib/supabase-server') return {getSupabaseAdmin:()=>({from:()=>({select:()=>({eq:()=>({maybeSingle:async()=>{queries++;return {data:empty?null:pick,error:null};}})})})})};
+      return load(id.startsWith('@/')?path.join(root,'src',id.slice(2)):path.resolve(path.dirname(file),id));
+    };
+    const mockedFetch = async (url) => {
+      fetches++;
+      if(fail) throw new Error('timeout');
+      assert.match(url,/^https:\/\/www\.fotmob\.com\/teams\/\d+\/overview$/);
+      const club = url.includes('/9851/')?'rennes':'auxerre';
+      return new Response(source(club));
+    };
+    vm.runInThisContext('(function(require,module,exports,fetch){'+code+'\n})',{filename:file})(req,module,module.exports,mockedFetch);
+    return module.exports;
+  };
+  return {load,pick,counts:()=>({fetches,queries})};
+}
+
+test('a new surname-only pick gets a real club-scoped portrait without a curated player entry',async()=>{
+  const h=harness();
+  const artwork=h.load(path.join(root,'src/lib/tip-artwork.ts')).getTipArtwork(h.pick);
+  assert.equal(artwork[0].src,'/api/tip-portrait/123');
+  const {GET}=h.load(path.join(root,'src/app/api/tip-portrait/[id]/route.ts'));
+  for(let n=0;n<2;n++) {
+    const response=await GET(new Request('https://example.test/api/tip-portrait/123'),{params:Promise.resolve({id:'123'})});
+    assert.equal(response.status,307);
+    assert.equal(response.headers.get('location'),'https://images.fotmob.com/image_resources/playerimages/1186444.png');
+  }
+  assert.deepEqual(h.counts(),{fetches:2,queries:1});
+});
+
+test('ambiguous surnames, missing clubs, coaches and wrong team payloads do not get guessed',()=>{
+  const h=harness(); const r=h.load(path.join(root,'src/lib/tip-portrait-resolver.ts'));
+  const a=[{id:1,name:'Charlie Cresswell',clubId:1}],b=[{id:2,name:'Aaron Cresswell',clubId:2}];
+  assert.equal(r.uniquePlayer('Cresswell',[a,b]),null);
+  assert.equal(r.uniquePlayer('Charlie Cresswell',[a,b]).id,1);
+  assert.equal(r.uniquePlayer('Cresswell',[a,[]]),null);
+  assert.equal(r.uniquePlayer('Cress',[a,b]),null);
+  assert.equal(r.clubsForPick({...h.pick,event:'Unknown vs Rennes'}).length,0);
+  assert.equal(r.clubsForPick({...h.pick,event:'Rennes vs Rennes'}).length,0);
+  assert.throws(()=>r.parseSquad(source('rennes'),8583),/identity/);
+  const squad=r.parseSquad(source('rennes'),9851);
+  const coaches=squads.rennes.squad.squad.filter(g=>/coach/i.test(g.title)).flatMap(g=>g.members);
+  assert.equal(squad.some(p=>coaches.some(c=>c.id===p.id)),false);
+});
+
+test('source outage, unknown tip and malformed IDs fail safely without arbitrary requests',async()=>{
+  for(const config of [{fail:true},{empty:true}]){
+    const h=harness(config),{GET}=h.load(path.join(root,'src/app/api/tip-portrait/[id]/route.ts'));
+    const invalid=await GET(new Request('https://example.test'),{params:Promise.resolve({id:'../123'})});
+    assert.equal(invalid.status,400); assert.deepEqual(h.counts(),{fetches:0,queries:0});
+    const response=await GET(new Request('https://example.test'),{params:Promise.resolve({id:'123'})});
+    assert.equal(response.status,config.fail?503:404);
+    assert.equal(response.headers.get('location'),null);
+    if(config.empty) assert.equal(h.counts().fetches,0);
+  }
+});
