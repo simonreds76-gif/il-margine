@@ -1164,6 +1164,8 @@ def main() -> None:
                 "history_fingerprint": str((board_row or {}).get("history_fingerprint") or ""),
                 "player": line_player,
                 "opponent": line_opponent,
+                "capture_player": original_player,
+                "capture_opponent": original_opponent,
                 "event_id": str(line.get("event_id") or ""),
                 "bookmaker": str(line.get("bookmaker") or ""),
                 "raw_market_name": str(line.get("raw_market_name") or ""),
@@ -1228,6 +1230,7 @@ def main() -> None:
 
     fieldnames = [
         "history_version", "history_as_of", "history_fingerprint",
+        "capture_player", "capture_opponent",
         "date",
         "tour",
         "tournament",
