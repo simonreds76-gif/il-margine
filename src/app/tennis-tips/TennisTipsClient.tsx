@@ -444,7 +444,7 @@ export default function TennisTips({
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(result.match_date)}</span>
                         </div>
-                        <div className="mb-2 flex items-center gap-2 font-medium text-slate-200"><TipPortraits portraits={result.artwork} size="compact" /><span className="min-w-0 break-words">{result.event}</span></div>
+                        <div className="mb-2 flex items-center gap-2 font-medium text-slate-200"><span className="min-w-0 break-words">{result.event}</span></div>
                         <div className="text-sm text-slate-400">
                           {result.player && <span>{result.player} | </span>}
                           {result.selection}

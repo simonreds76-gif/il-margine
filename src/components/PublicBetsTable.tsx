@@ -97,7 +97,7 @@ export default function PublicBetsTable({
                 className="block min-w-0 transition-colors hover:text-emerald-400"
                 title={bet.event}
               >
-                <span className="flex items-center justify-center gap-2"><TipPortraits portraits={bet.artwork} size="compact" /><span className="min-w-0 break-words">{bet.event}</span></span>
+                <span className="flex items-center justify-center gap-2">{!isSettled && <TipPortraits portraits={bet.artwork} size="compact" />}<span className="min-w-0 break-words">{bet.event}</span></span>
               </Link>
             </td>
             <td className={td.player}>

@@ -173,9 +173,9 @@ function PickRow({ bet, mode }: { bet: Bet; mode: Mode }) {
   return (
     <Link href={href} className="block transition-colors hover:bg-slate-800/30 active:bg-slate-800/40">
       <div className="hidden items-center gap-3 px-4 py-3 sm:flex">
-        <span className="flex min-h-9 shrink-0 items-center justify-center">
+        {mode === "pending" && <span className="flex min-h-9 shrink-0 items-center justify-center">
           <TipPortraits portraits={bet.artwork} size="compact" />
-        </span>
+        </span>}
         <div className="min-w-0 flex-1">
           <div className="truncate text-sm font-medium text-slate-100">{bet.player || bet.selection}</div>
           {bet.player ? <div className="truncate text-xs text-slate-400">{bet.selection}</div> : null}
@@ -192,16 +192,16 @@ function PickRow({ bet, mode }: { bet: Bet; mode: Mode }) {
 
       <div className="px-4 py-3 sm:hidden">
         <div className="flex items-start gap-3">
-          <span className="flex min-h-9 shrink-0 items-center justify-center">
+          {mode === "pending" && <span className="flex min-h-9 shrink-0 items-center justify-center">
             <TipPortraits portraits={bet.artwork} size="compact" />
-          </span>
+          </span>}
           <div className="min-w-0 flex-1">
             <div className="truncate text-sm font-medium text-slate-100">{bet.player || bet.selection}</div>
             {bet.player ? <div className="truncate text-xs text-slate-400">{bet.selection}</div> : null}
           </div>
           <StatusCell bet={bet} mode={mode} />
         </div>
-        <div className="mt-2 flex flex-wrap items-center gap-2 pl-12">
+        <div className={`mt-2 flex flex-wrap items-center gap-2 ${mode === "pending" ? "pl-12" : ""}`}>
           <PickMetric label="Odds" value={formatOdds(bet.odds)} />
           <PickMetric label="Stake" value={`${formatStake(bet.stake)}u`} />
           <BookmakerLogo bookmaker={bet.bookmaker} size="sm" noLink stopPropagationOnClick />

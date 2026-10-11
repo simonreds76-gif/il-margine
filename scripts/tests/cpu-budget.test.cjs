@@ -50,7 +50,7 @@ test('failed and slow loads cannot leave stale successful entries',async()=>{
 });
 test('scope keys coalesce queries; live responses cache briefly; errors are not cached',async()=>{
  let queries=0,fail=false;
- const query=new Proxy({}, {get:(_,key)=>key==='then' ? (resolve)=>resolve({data:[],error:fail?{message:'offline'}:null}) : ()=>query});
+ const query=new Proxy({}, {get:(_,key)=>key==='then' ? (resolve)=>resolve({data:[{id:1,market:'props',category:'pl',event:'Hull vs Everton',player:'Keane'}],error:fail?{message:'offline'}:null}) : ()=>query});
  const monthlyLoader=compile(fs.readFileSync(path.join(root,'src/lib/public-record.ts'),'utf8'),{
   'server-only':{},
   '@/lib/tip-artwork':{getTipArtwork:()=>[]},
@@ -60,6 +60,7 @@ test('scope keys coalesce queries; live responses cache briefly; errors are not 
  });
  const api=compile(fs.readFileSync(path.join(root,'src/app/api/public-record/route.ts'),'utf8'),{
   '@/lib/public-record':monthlyLoader,
+  '@/lib/tip-artwork':{getTipArtwork:()=>[{name:'Michael Keane',src:'verified.png',kind:'player'}]},
   '@/lib/bounded-async-cache':cache,
   '@/lib/supabase-server':{getSupabaseAdmin:()=>({from:()=>{queries++;return query}})},
   '@/lib/bet-category':{getDisplayBetCategory:()=>''},
@@ -67,7 +68,7 @@ test('scope keys coalesce queries; live responses cache briefly; errors are not 
  });
  const responses=await Promise.all(['home','home&ts=1','home&ts=2'].map(s=>api.GET(new Request('https://example.com/api/public-record?scope='+s))));
  assert.equal(queries,4);
- for(const r of responses){assert.equal(r.status,200);assert.match(r.headers.get('Cache-Control'),/s-maxage=30/);assert.doesNotMatch(r.headers.get('Cache-Control'),/stale-while/)}
+ for(const r of responses){assert.equal(r.status,200);assert.match(r.headers.get('Cache-Control'),/s-maxage=30/);assert.doesNotMatch(r.headers.get('Cache-Control'),/stale-while/);const body=await r.json();assert.equal(body.pending[0].artwork[0].src,'verified.png');assert.equal(body.recent[0].artwork[0].src,'verified.png')}
  fail=true;const error=await api.GET(new Request('https://example.com/api/public-record?scope=tennis'));
  assert.equal(error.status,500);assert.equal(error.headers.get('Cache-Control'),'no-store');
  fail=false;assert.equal((await api.GET(new Request('https://example.com/api/public-record?scope=tennis'))).status,200);
