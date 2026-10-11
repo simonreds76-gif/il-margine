@@ -2097,7 +2097,7 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     lines.append(f"Most Aces Direct: {paired.get('paired_events', 0)} paired fixtures | "
                  f"Brier difference {signed_number(paired.get('brier_delta_direct_minus_control'), 4)} | outcome research; prices assessed separately")
     lines.append(context_forward_text(payload))
-    health = shadow.get('pipeline') or {}
+    health = shadow.get('feed') or {}
     if health and health.get('state') not in ('CURRENT', 'HEALTHY', 'OK'):
         lines.append('Capture check: ' + str(health.get('state', 'UNAVAILABLE')))
     return '\n'.join(lines)
