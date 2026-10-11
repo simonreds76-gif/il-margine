@@ -45,7 +45,11 @@ def observation_key(row: dict[str, str]) -> tuple[str, ...] | None:
     # Only compare fully identified observations; diagnostic counts still accept
     # historical rows without identities, but cannot establish their parity.
     fields = ("event_id", "bookmaker", "player", "opponent", "market", "line", "capture_ts")
-    values = tuple(str(row.get(field) or "").strip() for field in fields)
+    identity_row = dict(row)
+    for field in ("player", "opponent"):
+        if row.get("capture_" + field):
+            identity_row[field] = row["capture_" + field]
+    values = tuple(str(identity_row.get(field) or "").strip() for field in fields)
     if not all(values):
         return None
     captured = parse_timestamp(values[-1])
