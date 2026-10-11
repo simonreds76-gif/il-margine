@@ -1419,23 +1419,32 @@ def rate_trend_text(payload: dict[str, Any]) -> str:
     if not result.get("markets"):
         return "Astra Aces / Astra DF: evidence snapshot missing; no performance claim."
     names = {"aces": "Astra Aces", "double_faults": "Astra DF"}
+    cohorts = result.get("history_versions") or {"mixed/unversioned archive": result["markets"]}
     parts = []
-    for market, item in result["markets"].items():
-        parts.append(f"{names.get(market, market)}: {item.get('settled', 0)}/{item.get('registered', 0)} settled, "
-                     f"{item.get('pending', 0)} pending, {item.get('independent_fixtures', 0)}/200 fixtures")
-    performance = []
-    for market, item in result["markets"].items():
-        scores = []
-        for model in ("control", "candidate"):
-            metrics = item.get(model) or {}
-            roi = metrics.get("roi_pct")
-            label = f"{float(roi):+.1f}%" if roi is not None else "pending"
-            scores.append(f"{'baseline' if model == 'control' else 'Astra'} ROI {label} ({metrics.get('bets', 0)} contracts)")
-        performance.append(names.get(market, market) + ": " + ", ".join(scores))
-    parts.extend(performance)
+    for version, markets in cohorts.items():
+        label = "legacy archive" if version == "legacy-unversioned" else version
+        for market, item in markets.items():
+            scores = []
+            for arm in ("control", "candidate"):
+                metrics = item.get(arm) or {}
+                roi = metrics.get("roi_pct")
+                value = f"{float(roi):+.1f}%" if roi is not None else "no settled selections"
+                scores.append(f"{'baseline' if arm == 'control' else 'Astra'} ROI {value} ({metrics.get('bets', 0)} selected lines)")
+            parts.append(f"{names.get(market, market)} [{label}]: {item.get('independent_fixtures', 0)} settled fixtures; "
+                         f"{item.get('pending', 0)} pending quotes; " + ", ".join(scores))
     freshness = evidence_freshness(str(result.get("generated_at") or ""), stale_after_days=2)
     return ("Astra models SHADOW ONLY | " + " | ".join(parts)
-            + f" | data {freshness.get('status', 'UNKNOWN')}; 8 weeks/4 tournaments minimum, manual review before promotion.")
+            + f" | data {freshness.get('status', 'UNKNOWN')}; multiple lines per match are correlated. "
+              "Review floors: 200 fixtures, 8 weeks, 4 tournaments within each input version. Manual review before promotion.")
+
+
+def v4_cohort_text(report: dict[str, Any]) -> str:
+    cohorts = report.get('history_cohorts') or []
+    counts = '; '.join(f"{c.get('version', 'unknown')}: {c.get('settled', 0)} settled observations" for c in cohorts)
+    if not counts:
+        counts = 'Input-version breakdown unavailable; pooled counts are not training eligibility'
+    return (counts + f" | {report.get('signals_settled', 0)} settled v4 selections | "
+            f"training needs {report.get('minimum_prefit_settled', 200)} same-version observations before the forecast month; no tips before gate")
 
 
 def model_watchlist_summary() -> dict[str, Any]:
@@ -2235,15 +2244,12 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
         lines.append(
             "Aces/DF v3: "
             f"{proof.get('settled', 0)} settled | ROI {number(proof.get('roi_pct')):+.2f}% | "
-            f"CLV {number(proof.get('mean_clv_pct')):+.2f}% | {atp.get('status', 'UNKNOWN')}"
+            f"CLV {number(proof.get('mean_clv_pct')):+.2f}% | betting evidence {proof.get('status', 'UNKNOWN')}; count test {atp.get('status', 'UNKNOWN')}"
         )
     if props_v4 and not props_v4.get("_error"):
         lines.append(
             f"Aces Over v4 [{props_v4.get('status', 'PRE_FIT')}]: "
-            f"{props_v4.get('rows_settled', 0)} settled across input versions | "
-            f"{props_v4.get('rows_registered', 0)} registered | "
-            f"CLV {number(props_v4.get('clv_mean_pct')):+.2f}% "
-            f"n={props_v4.get('clv_coverage', 0)} | no tips before gate"
+            + v4_cohort_text(props_v4)
         )
     lines.append(
         "Venue ace v1 [SHADOW]: "

@@ -120,7 +120,7 @@ def load_summary(root):
 def text(summary):
     if not summary.get('markets'):
         return 'Full input refresh: ' + summary.get('status', 'SOURCE_MISSING') + '; performance unavailable.'
-    retired = summary.get('status') == 'SOURCE_UPGRADE_APPLIED_SETTLING'
+    retired = summary.get('capture_enabled') is False or summary.get('status') == 'SOURCE_UPGRADE_APPLIED_SETTLING'
     lines = ['Input upgrade applied | retained paper comparison' if retired else 'Full input refresh | paper tracking only',
              'Evidence: ' + str(summary.get('generated_at', 'unknown'))]
     try:
