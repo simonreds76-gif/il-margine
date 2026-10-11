@@ -16,6 +16,7 @@ const clubKey = (club: string) => clubAliases[key(club)] ?? key(club);
 // Verified FotMob identities for published surname-only selections. Club context
 // prevents assigning a namesake or carrying an old club crest into another fixture.
 const footballPlayers = [
+  { name: "Marten de Roon", alias: "De Roon", club: "Roma", id: "198559" },
   { name: "Mario Hermoso", alias: "Hermoso", club: "Roma", id: "671203" },
   { name: "Mike Maignan", alias: "Maignan", club: "Milan", id: "466439" },
   { name: "Jeffrey De Lange", alias: "De Lange", club: "Marseille", id: "687868" },
