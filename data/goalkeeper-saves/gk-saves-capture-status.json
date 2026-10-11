@@ -1,45 +1,42 @@
 {
   "capture_errors": [],
-  "capture_mode": "publication",
+  "capture_mode": "close",
   "event_last_checked": {
-    "71945288": "2026-10-11T14:57:30Z",
-    "71945302": "2026-10-11T14:57:30Z",
-    "72036216": "2026-10-11T14:57:30Z",
-    "72036218": "2026-10-11T14:57:30Z",
-    "72221306": "2026-10-11T14:57:30Z",
-    "72478608": "2026-10-11T14:57:30Z",
-    "72478618": "2026-10-11T14:57:30Z",
-    "72513226": "2026-10-11T14:57:30Z"
+    "71945288": "2026-10-11T15:57:36Z",
+    "71945302": "2026-10-11T15:57:36Z",
+    "72036218": "2026-10-11T15:57:36Z",
+    "72478608": "2026-10-11T15:57:36Z",
+    "72478618": "2026-10-11T15:57:36Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 8,
-  "events_supported": 8,
-  "events_with_lines": 8,
-  "generated_at": "2026-10-11T14:57:30Z",
+  "events_selected": 5,
+  "events_supported": 5,
+  "events_with_lines": 4,
+  "generated_at": "2026-10-11T15:57:36Z",
   "last_publication_at": "2026-10-11T14:57:30Z",
   "league_coverage": {
     "bundesliga": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 0,
+      "with_prices": 0
     },
     "epl": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 0,
+      "with_prices": 0
     },
     "la-liga": {
       "selected": 2,
       "with_prices": 2
     },
     "ligue-1": {
-      "selected": 2,
-      "with_prices": 2
+      "selected": 1,
+      "with_prices": 1
     },
     "serie-a": {
       "selected": 2,
-      "with_prices": 2
+      "with_prices": 1
     }
   },
-  "market_inventory_rows_added": 692,
+  "market_inventory_rows_added": 371,
   "market_names_observed": [
     "1st Half Corners",
     "Alternative Corners",
@@ -100,7 +97,6 @@
     "Player Cards",
     "Player Fouls",
     "Player Headed Shots on Target",
-    "Player Passes",
     "Player Shots",
     "Player Shots on Target",
     "Player Shots on Target Outside Box",
@@ -117,18 +113,12 @@
     "Teams to Score",
     "Time of First Corner",
     "Total Corners",
-    "Total Offsides",
-    "Total Offsides Away",
-    "Total Offsides Home",
     "Total Shots",
     "Total Shots Away",
     "Total Shots Home",
     "Total Shots on Target",
     "Total Shots on Target Away",
     "Total Shots on Target Home",
-    "Total Tackles",
-    "Total Tackles Away",
-    "Total Tackles Home",
     "Totals",
     "Totals 2H",
     "Totals HT",
@@ -137,30 +127,9 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 86,
-  "rows_observed": 86,
+  "rows_added": 43,
+  "rows_observed": 43,
   "selected_events": [
-    {
-      "away": "AJ Auxerre",
-      "competition": "France - Ligue 1",
-      "home": "Stade Rennais FC",
-      "id": 72036216,
-      "kickoff_at": "2026-10-11T15:15:00Z"
-    },
-    {
-      "away": "Manchester City",
-      "competition": "England - Premier League",
-      "home": "Liverpool FC",
-      "id": 72221306,
-      "kickoff_at": "2026-10-11T15:30:00Z"
-    },
-    {
-      "away": "Schalke 04",
-      "competition": "Germany - Bundesliga",
-      "home": "SC Freiburg",
-      "id": 72513226,
-      "kickoff_at": "2026-10-11T15:30:00Z"
-    },
     {
       "away": "AC Milan",
       "competition": "Italy - Serie A",
@@ -198,5 +167,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 8
+  "three_way_events": 4
 }
