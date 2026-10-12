@@ -4,14 +4,6 @@
   "details": [
     {
       "detail": "",
-      "goalkeeper": "Noel T\u00f6rnqvist",
-      "match": "Lazio Rome vs AC Monza",
-      "match_date": "2026-10-11",
-      "reason": "settled_fotmob",
-      "signal_id": "71945296|noel t\u00f6rnqvist|3.5|over"
-    },
-    {
-      "detail": "",
       "goalkeeper": "\u0141ukasz Skorupski",
       "match": "US Lecce vs Bologna FC",
       "match_date": "2026-10-11",
@@ -25,67 +17,32 @@
       "match_date": "2026-10-11",
       "reason": "fotmob_save_totals_disagree",
       "signal_id": "72513226|loris karius|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Mike Maignan",
-      "match": "Sassuolo Calcio vs AC Milan",
-      "match_date": "2026-10-11",
-      "reason": "settled_fotmob",
-      "signal_id": "71945302|mike maignan|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Jeffrey De Lange",
-      "match": "ESTAC Troyes vs Olympique Marseille",
-      "match_date": "2026-10-11",
-      "reason": "settled_fotmob",
-      "signal_id": "72036218|jeffrey de lange|2.5|over"
     }
   ],
-  "fotmob_requests_used": 6,
-  "generated_at": "2026-10-12T15:01:45Z",
+  "fotmob_requests_used": 3,
+  "generated_at": "2026-10-12T18:01:07Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 2,
   "pending_total": 3,
   "reason_counts": {
     "fotmob_matched_player_not_goalkeeper": 1,
-    "fotmob_save_totals_disagree": 1,
-    "settled_fotmob": 3
+    "fotmob_save_totals_disagree": 1
   },
   "requests_used": 0,
-  "settled": 3,
-  "status": "PARTIAL",
+  "settled": 0,
+  "status": "BLOCKED",
   "verified_player_targets": [
     {
       "appearances": 32,
-      "match_id": 5749695,
-      "status": "saved",
-      "targets_sha256": "20ed635fcee5d6bfa63e9b631baf658db4c26510a1224b5ba1699d1e518dcc30"
-    },
-    {
-      "appearances": 32,
       "match_id": 5749696,
-      "status": "saved",
+      "status": "unchanged",
       "targets_sha256": "a982e931aac1f5abfdb8855be122751ddb32e62e9d8409bcc0f8fd894fddef68"
     },
     {
       "match_id": 5881182,
       "reason": "explicit player totals disagree with reconciled events",
       "status": "rejected"
-    },
-    {
-      "appearances": 32,
-      "match_id": 5749698,
-      "status": "saved",
-      "targets_sha256": "bc430bbb48f2ec4610dd001fdf09d77bd771f7c9dd38163a4a97b7f0b2ad16fd"
-    },
-    {
-      "appearances": 32,
-      "match_id": 5802954,
-      "status": "saved",
-      "targets_sha256": "dbdd2d480ee79fcfc1a4976b52c041c610535544f09655bd66a109b3d8c5495e"
     }
   ]
 }

@@ -2,17 +2,16 @@
   "capture_errors": [],
   "capture_mode": "publication",
   "event_last_checked": {
-    "71945286": "2026-10-12T15:00:37Z",
-    "71945304": "2026-10-12T15:00:37Z",
-    "72221298": "2026-10-12T15:00:37Z",
-    "72478614": "2026-10-12T15:00:37Z"
+    "71945304": "2026-10-12T18:00:14Z",
+    "72221298": "2026-10-12T18:00:14Z",
+    "72478614": "2026-10-12T18:00:14Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 4,
-  "events_supported": 4,
-  "events_with_lines": 4,
-  "generated_at": "2026-10-12T15:00:37Z",
-  "last_publication_at": "2026-10-12T15:00:37Z",
+  "events_selected": 3,
+  "events_supported": 3,
+  "events_with_lines": 3,
+  "generated_at": "2026-10-12T18:00:14Z",
+  "last_publication_at": "2026-10-12T18:00:14Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 0,
@@ -31,11 +30,11 @@
       "with_prices": 0
     },
     "serie-a": {
-      "selected": 2,
-      "with_prices": 2
+      "selected": 1,
+      "with_prices": 1
     }
   },
-  "market_inventory_rows_added": 352,
+  "market_inventory_rows_added": 267,
   "market_names_observed": [
     "1st Half Corners",
     "Alternative Corners",
@@ -133,16 +132,9 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 42,
-  "rows_observed": 42,
+  "rows_added": 31,
+  "rows_observed": 31,
   "selected_events": [
-    {
-      "away": "Venezia FC",
-      "competition": "Italy - Serie A",
-      "home": "Atalanta BC",
-      "id": 71945286,
-      "kickoff_at": "2026-10-12T16:30:00Z"
-    },
     {
       "away": "Udinese Calcio",
       "competition": "Italy - Serie A",
@@ -166,5 +158,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 4
+  "three_way_events": 3
 }

@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-12T15:01:10Z",
+  "fetched_at": "2026-10-12T18:00:21Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
@@ -693,21 +693,48 @@
           "referee": null,
           "source": "football-data",
           "total_corners": 8
+        },
+        "2026-10-10|rb leipzig|eintracht frankfurt": {
+          "away_corners": 6,
+          "away_shots": 18,
+          "away_sot": 9,
+          "away_team": "eintracht frankfurt",
+          "home_corners": 3,
+          "home_shots": 20,
+          "home_sot": 10,
+          "home_team": "rb leipzig",
+          "match_id": 5881186,
+          "source": "fotmob",
+          "total_corners": 9
+        },
+        "2026-10-11|freiburg|schalke 04": {
+          "away_corners": 2,
+          "away_shots": 5,
+          "away_sot": 1,
+          "away_team": "schalke 04",
+          "home_corners": 7,
+          "home_shots": 10,
+          "home_sot": 4,
+          "home_team": "freiburg",
+          "match_id": 5881182,
+          "source": "fotmob",
+          "total_corners": 9
         }
       },
       "football_data_count": 36,
       "football_data_latest": "2026-09-20",
-      "fotmob_count": 0,
-      "fotmob_latest": null,
+      "fotmob_count": 2,
+      "fotmob_latest": "2026-10-11",
       "lag_days": 22,
       "source": "football-data",
       "source_latest": "2026-09-20",
       "target_dates": [
         "2026-10-09",
         "2026-10-10",
-        "2026-10-11"
+        "2026-10-11",
+        "2026-10-12"
       ],
-      "target_fixture_count": 3,
+      "target_fixture_count": 5,
       "unresolved_fixture_count": 3
     },
     "epl": {
@@ -1669,33 +1696,73 @@
           "source": "football-data",
           "total_corners": 11
         },
-        "2026-10-11|hull|everton": {
-          "away_corners": 6,
-          "away_shots": 15,
-          "away_sot": 7,
-          "away_team": "everton",
-          "home_corners": 7,
-          "home_shots": 9,
-          "home_sot": 5,
-          "home_team": "hull",
-          "match_id": 5795470,
+        "2026-10-10|aston villa|brentford": {
+          "away_corners": 2,
+          "away_shots": 14,
+          "away_sot": 4,
+          "away_team": "brentford",
+          "home_corners": 2,
+          "home_shots": 20,
+          "home_sot": 7,
+          "home_team": "aston villa",
+          "match_id": 5795466,
+          "source": "fotmob",
+          "total_corners": 4
+        },
+        "2026-10-10|man united|tottenham": {
+          "away_corners": 4,
+          "away_shots": 12,
+          "away_sot": 3,
+          "away_team": "tottenham",
+          "home_corners": 4,
+          "home_shots": 12,
+          "home_sot": 4,
+          "home_team": "man united",
+          "match_id": 5795473,
+          "source": "fotmob",
+          "total_corners": 8
+        },
+        "2026-10-11|crystal palace|nottm forest": {
+          "away_corners": 8,
+          "away_shots": 24,
+          "away_sot": 6,
+          "away_team": "nottm forest",
+          "home_corners": 5,
+          "home_shots": 13,
+          "home_sot": 7,
+          "home_team": "crystal palace",
+          "match_id": 5795469,
           "source": "fotmob",
           "total_corners": 13
+        },
+        "2026-10-11|liverpool|man city": {
+          "away_corners": 6,
+          "away_shots": 15,
+          "away_sot": 4,
+          "away_team": "man city",
+          "home_corners": 5,
+          "home_shots": 13,
+          "home_sot": 6,
+          "home_team": "liverpool",
+          "match_id": 5795472,
+          "source": "fotmob",
+          "total_corners": 11
         }
       },
       "football_data_count": 50,
       "football_data_latest": "2026-09-20",
-      "fotmob_count": 1,
+      "fotmob_count": 4,
       "fotmob_latest": "2026-10-11",
       "lag_days": 22,
       "source": "football-data",
       "source_latest": "2026-09-20",
       "target_dates": [
+        "2026-10-09",
         "2026-10-10",
         "2026-10-11",
         "2026-10-12"
       ],
-      "target_fixture_count": 1,
+      "target_fixture_count": 4,
       "unresolved_fixture_count": 0
     },
     "la-liga": {
@@ -3018,46 +3085,74 @@
           "source": "football-data",
           "total_corners": 8
         },
-        "2026-10-11|betis|osasuna": {
-          "away_corners": 4,
-          "away_shots": 11,
-          "away_sot": 5,
-          "away_team": "osasuna",
+        "2026-10-09|malaga|espanol": {
+          "away_corners": 2,
+          "away_shots": 9,
+          "away_sot": 4,
+          "away_team": "espanol",
+          "home_corners": 8,
+          "home_shots": 15,
+          "home_sot": 7,
+          "home_team": "malaga",
+          "match_id": 5868086,
+          "source": "fotmob",
+          "total_corners": 10
+        },
+        "2026-10-10|vallecano|ath bilbao": {
+          "away_corners": 2,
+          "away_shots": 1,
+          "away_sot": null,
+          "away_team": "ath bilbao",
+          "home_corners": 1,
+          "home_shots": 1,
+          "home_sot": 1,
+          "home_team": "vallecano",
+          "match_id": 5868088,
+          "source": "fotmob",
+          "total_corners": 3
+        },
+        "2026-10-11|elche|celta": {
+          "away_corners": 2,
+          "away_shots": 7,
+          "away_sot": null,
+          "away_team": "celta",
+          "home_corners": 5,
+          "home_shots": 13,
+          "home_sot": 2,
+          "home_team": "elche",
+          "match_id": 5868083,
+          "source": "fotmob",
+          "total_corners": 7
+        },
+        "2026-10-11|santander|valencia": {
+          "away_corners": 3,
+          "away_shots": 10,
+          "away_sot": 2,
+          "away_team": "valencia",
           "home_corners": 8,
           "home_shots": 20,
-          "home_sot": 7,
-          "home_team": "betis",
-          "match_id": 5868082,
+          "home_sot": 11,
+          "home_team": "santander",
+          "match_id": 5868087,
           "source": "fotmob",
-          "total_corners": 12
-        },
-        "2026-10-11|sociedad|la coruna": {
-          "away_corners": 10,
-          "away_shots": 21,
-          "away_sot": 7,
-          "away_team": "la coruna",
-          "home_corners": 7,
-          "home_shots": 12,
-          "home_sot": 4,
-          "home_team": "sociedad",
-          "match_id": 5868090,
-          "source": "fotmob",
-          "total_corners": 17
+          "total_corners": 11
         }
       },
       "football_data_count": 69,
       "football_data_latest": "2026-09-20",
-      "fotmob_count": 2,
+      "fotmob_count": 4,
       "fotmob_latest": "2026-10-11",
       "lag_days": 22,
       "source": "football-data",
       "source_latest": "2026-09-20",
       "target_dates": [
+        "2026-10-08",
+        "2026-10-09",
         "2026-10-10",
         "2026-10-11",
         "2026-10-12"
       ],
-      "target_fixture_count": 2,
+      "target_fixture_count": 4,
       "unresolved_fixture_count": 0
     },
     "ligue-1": {
@@ -3923,12 +4018,38 @@
           "referee": null,
           "source": "football-data",
           "total_corners": 10
+        },
+        "2026-10-10|paris saint germain|le mans": {
+          "away_corners": 4,
+          "away_shots": 11,
+          "away_sot": 3,
+          "away_team": "le mans",
+          "home_corners": 4,
+          "home_shots": 22,
+          "home_sot": 8,
+          "home_team": "paris saint germain",
+          "match_id": 5802952,
+          "source": "fotmob",
+          "total_corners": 8
+        },
+        "2026-10-11|troyes|marseille": {
+          "away_corners": 3,
+          "away_shots": 5,
+          "away_sot": 2,
+          "away_team": "marseille",
+          "home_corners": 6,
+          "home_shots": 15,
+          "home_sot": 3,
+          "home_team": "troyes",
+          "match_id": 5802954,
+          "source": "fotmob",
+          "total_corners": 9
         }
       },
       "football_data_count": 45,
       "football_data_latest": "2026-09-20",
-      "fotmob_count": 0,
-      "fotmob_latest": null,
+      "fotmob_count": 2,
+      "fotmob_latest": "2026-10-11",
       "lag_days": 22,
       "source": "football-data",
       "source_latest": "2026-09-20",
@@ -3939,7 +4060,7 @@
         "2026-10-11",
         "2026-10-12"
       ],
-      "target_fixture_count": 4,
+      "target_fixture_count": 6,
       "unresolved_fixture_count": 4
     },
     "serie-a": {
@@ -4901,31 +5022,31 @@
           "source": "football-data",
           "total_corners": 7
         },
-        "2026-10-11|lecce|bologna": {
-          "away_corners": 3,
+        "2026-10-10|internazionale|parma": {
+          "away_corners": 1,
           "away_shots": 9,
-          "away_sot": 5,
-          "away_team": "bologna",
-          "home_corners": 10,
-          "home_shots": 19,
-          "home_sot": 5,
-          "home_team": "lecce",
-          "match_id": 5749696,
-          "source": "fotmob",
-          "total_corners": 13
-        },
-        "2026-10-11|sassuolo|milan": {
-          "away_corners": 5,
-          "away_shots": 11,
-          "away_sot": 6,
-          "away_team": "milan",
+          "away_sot": 2,
+          "away_team": "parma",
           "home_corners": 3,
-          "home_shots": 10,
-          "home_sot": 4,
-          "home_team": "sassuolo",
-          "match_id": 5749698,
+          "home_shots": 19,
+          "home_sot": 6,
+          "home_team": "internazionale",
+          "match_id": 5749694,
           "source": "fotmob",
-          "total_corners": 8
+          "total_corners": 4
+        },
+        "2026-10-11|cagliari|juventus": {
+          "away_corners": 9,
+          "away_shots": 22,
+          "away_sot": 10,
+          "away_team": "juventus",
+          "home_corners": 1,
+          "home_shots": 4,
+          "home_sot": 2,
+          "home_team": "cagliari",
+          "match_id": 5749691,
+          "source": "fotmob",
+          "total_corners": 10
         }
       },
       "football_data_count": 50,
@@ -4936,6 +5057,7 @@
       "source": "football-data",
       "source_latest": "2026-09-20",
       "target_dates": [
+        "2026-10-09",
         "2026-10-10",
         "2026-10-11",
         "2026-10-12",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T15:01:30Z",
+  "generated_at": "2026-10-12T18:00:58Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -19,9 +19,9 @@
     "mean_clv": 0.0193125
   },
   "latest_scan": {
-    "scored_rows": 44,
-    "scored_fixtures": 3,
-    "explanation": "29 fresh paired contracts; 44 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: fewer_than_six_prior_matches=7, stale_price=112."
+    "scored_rows": 30,
+    "scored_fixtures": 2,
+    "explanation": "22 fresh paired contracts; 30 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: fewer_than_six_prior_matches=7, stale_price=128."
   },
   "settled_this_run": 0,
   "result_source": {
@@ -29,8 +29,8 @@
       "football_data_latest": "2026-09-20",
       "lag_days": 22,
       "football_data_count": 36,
-      "fotmob_count": 0,
-      "fotmob_latest": null,
+      "fotmob_count": 2,
+      "fotmob_latest": "2026-10-11",
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 1,
@@ -44,7 +44,7 @@
       "football_data_latest": "2026-09-20",
       "lag_days": 22,
       "football_data_count": 50,
-      "fotmob_count": 1,
+      "fotmob_count": 4,
       "fotmob_latest": "2026-10-11",
       "api_football_count": 0,
       "api_football_latest": null,
@@ -59,7 +59,7 @@
       "football_data_latest": "2026-09-20",
       "lag_days": 22,
       "football_data_count": 69,
-      "fotmob_count": 2,
+      "fotmob_count": 4,
       "fotmob_latest": "2026-10-11",
       "api_football_count": 0,
       "api_football_latest": null,
@@ -74,8 +74,8 @@
       "football_data_latest": "2026-09-20",
       "lag_days": 22,
       "football_data_count": 45,
-      "fotmob_count": 0,
-      "fotmob_latest": null,
+      "fotmob_count": 2,
+      "fotmob_latest": "2026-10-11",
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 3,

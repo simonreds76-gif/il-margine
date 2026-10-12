@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T15:01:36Z",
+  "generated_at": "2026-10-12T18:01:02Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -36,16 +36,16 @@
     },
     "latest_scan": {
       "state": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
-      "explanation": "For all 32 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.11%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
-      "scored_rows": 50,
-      "scored_fixtures": 3,
+      "explanation": "For all 14 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.11%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
+      "scored_rows": 32,
+      "scored_fixtures": 2,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 50,
+      "blocked_rows": 32,
       "blocker_rows": {
         "early_market_gap_cap": 6,
-        "edge_below_3pct": 50,
-        "price_older_than_3h": 6
+        "edge_below_3pct": 32,
+        "price_older_than_3h": 2
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 6,
@@ -54,7 +54,7 @@
       "operational_alert_required": true,
       "operational_alert_code": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
       "rule_feasibility": {
-        "affected_rows": 32,
+        "affected_rows": 14,
         "rows_capable_of_minimum_edge": 0,
         "maximum_allowed_edge": 0.021062786390673605,
         "minimum_edge": 0.03,
@@ -100,16 +100,16 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "ELIGIBLE_CANDIDATES_PRESENT",
-      "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 18,
-      "scored_fixtures": 3,
-      "eligible_rows": 2,
-      "eligible_fixtures": 1,
-      "blocked_rows": 16,
+      "state": "NO_EDGE_AFTER_UNLOCK",
+      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
+      "scored_rows": 12,
+      "scored_fixtures": 2,
+      "eligible_rows": 0,
+      "eligible_fixtures": 0,
+      "blocked_rows": 12,
       "blocker_rows": {
-        "edge_below_3pct": 15,
-        "price_older_than_3h": 4
+        "edge_below_3pct": 11,
+        "price_older_than_3h": 2
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 6,
