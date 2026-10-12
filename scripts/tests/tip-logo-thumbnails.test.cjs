@@ -28,3 +28,11 @@ test('every mapped thumbnail exists, preserves proportions and fits high-density
     if (a.hasAlpha && !b.hasAlpha) { const stats=await sharp(path.join(root,"public",original)).stats(); assert.equal(stats.isOpaque,true,original); }
   }
 });
+test('compact crests exist at 2x the 32px display size',async()=>{
+  for(const original of Object.keys(manifest)) {
+    const src=smallTeamLogo(original,64);
+    assert.match(src,/-64\.webp$/);
+    const m=await sharp(path.join(root,'public',src)).metadata();
+    assert.ok(m.width<=64 && m.height<=64);
+  }
+});

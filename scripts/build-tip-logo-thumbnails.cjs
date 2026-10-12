@@ -11,6 +11,7 @@ const sharp = require('sharp');
     const output = file.replace('public/team-logos/', 'public/team-logos/thumbs-v1/').replace(/\.png$/, '.webp');
     fs.mkdirSync(path.dirname(output),{recursive:true});
     await sharp(file).resize(144,144,{fit:'inside',withoutEnlargement:true}).webp({quality:90,alphaQuality:100}).toFile(output);
+    await sharp(file).resize(64,64,{fit:'inside',withoutEnlargement:true}).webp({quality:85,alphaQuality:100}).toFile(output.replace('.webp','-64.webp'));
     manifest['/'+file.slice(7)]='/'+output.slice(7);
     before+=fs.statSync(file).size; after+=fs.statSync(output).size;
   }
