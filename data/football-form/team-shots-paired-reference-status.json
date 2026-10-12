@@ -1,6 +1,6 @@
 {
   "contracts": 122,
-  "settled_contracts": 112,
+  "settled_contracts": 110,
   "paired_contracts": 67,
   "paired_fixtures": 25,
   "conflicting_results": 0,
@@ -53,8 +53,8 @@
         "settled": 20,
         "wins": 12,
         "losses": 8,
-        "pnl_units": 1.8320000000000005,
-        "roi": 0.09160000000000003,
+        "pnl_units": 1.8319999999999999,
+        "roi": 0.09159999999999999,
         "stake_units": 20,
         "pending": 0,
         "overdue": 0,
@@ -93,17 +93,17 @@
   "automatic_promotion": false,
   "version": "paired-market-offset-20260930-v2",
   "model_fingerprint": "934de9b700fe013c26d54fefa1c5ccfa82af2f0bd98748b242cda712d9ad3e0d",
-  "calibration_sha256": "4dd7f85fa5e9dc7d3bcc56c495bafba4f87bd54bfaebf37688c2ca16587fe0ea",
+  "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 0,
-  "generated_at": "2026-10-12T14:41:24Z",
+  "generated_at": "2026-10-12T15:01:38Z",
   "new_contracts": 0,
   "scan_exclusions": {
     "stale_price": 112
   },
-  "latest_archived_capture": "2026-10-11T23:58:58Z",
+  "latest_archived_capture": "2026-10-12T15:00:36Z",
   "latest_result_date": "2026-10-11",
-  "raw_upcoming_rows": 112,
+  "raw_upcoming_rows": 170,
   "status": "COLLECTING",
   "settlement_source": "exact_fixture_base_and_verified_snapshots",
-  "snapshot_settlement_contracts": 81
+  "snapshot_settlement_contracts": 59
 }

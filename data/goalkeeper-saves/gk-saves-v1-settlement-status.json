@@ -1,76 +1,91 @@
 {
   "api_errors": [],
-  "deferred_not_due": 5,
+  "deferred_not_due": 1,
   "details": [
     {
       "detail": "",
-      "goalkeeper": "Finn Dahmen",
-      "match": "FC Augsburg vs Bayern Munich",
-      "match_date": "2026-10-10",
+      "goalkeeper": "Noel T\u00f6rnqvist",
+      "match": "Lazio Rome vs AC Monza",
+      "match_date": "2026-10-11",
       "reason": "settled_fotmob",
-      "signal_id": "72513228|finn dahmen|4.5|over"
+      "signal_id": "71945296|noel t\u00f6rnqvist|3.5|over"
     },
     {
       "detail": "",
-      "goalkeeper": "Mark Flekken",
-      "match": "FSV Mainz vs Bayer Leverkusen",
-      "match_date": "2026-10-10",
-      "reason": "settled_fotmob",
-      "signal_id": "72513230|mark flekken|2.5|over"
+      "goalkeeper": "\u0141ukasz Skorupski",
+      "match": "US Lecce vs Bologna FC",
+      "match_date": "2026-10-11",
+      "reason": "fotmob_matched_player_not_goalkeeper",
+      "signal_id": "71945298|\u0142ukasz skorupski|2.5|over"
     },
     {
       "detail": "",
-      "goalkeeper": "Noah Atubolu",
-      "match": "RB Leipzig vs Eintracht Frankfurt",
-      "match_date": "2026-10-10",
-      "reason": "settled_fotmob",
-      "signal_id": "72513222|noah atubolu|4.5|over"
+      "goalkeeper": "Loris Karius",
+      "match": "SC Freiburg vs Schalke 04",
+      "match_date": "2026-10-11",
+      "reason": "fotmob_save_totals_disagree",
+      "signal_id": "72513226|loris karius|3.5|over"
     },
     {
       "detail": "",
-      "goalkeeper": "Lorenzo Palmisani",
-      "match": "SSC Napoli vs Frosinone Calcio",
-      "match_date": "2026-10-10",
+      "goalkeeper": "Mike Maignan",
+      "match": "Sassuolo Calcio vs AC Milan",
+      "match_date": "2026-10-11",
       "reason": "settled_fotmob",
-      "signal_id": "71945300|lorenzo palmisani|3.5|over"
+      "signal_id": "71945302|mike maignan|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Jeffrey De Lange",
+      "match": "ESTAC Troyes vs Olympique Marseille",
+      "match_date": "2026-10-11",
+      "reason": "settled_fotmob",
+      "signal_id": "72036218|jeffrey de lange|2.5|over"
     }
   ],
-  "fotmob_requests_used": 5,
-  "generated_at": "2026-10-11T14:58:24Z",
+  "fotmob_requests_used": 6,
+  "generated_at": "2026-10-12T15:01:45Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
-  "pending_due": 0,
-  "pending_total": 5,
+  "pending_due": 2,
+  "pending_total": 3,
   "reason_counts": {
-    "settled_fotmob": 4
+    "fotmob_matched_player_not_goalkeeper": 1,
+    "fotmob_save_totals_disagree": 1,
+    "settled_fotmob": 3
   },
   "requests_used": 0,
-  "settled": 4,
-  "status": "SETTLED",
+  "settled": 3,
+  "status": "PARTIAL",
   "verified_player_targets": [
     {
-      "appearances": 30,
-      "match_id": 5881179,
+      "appearances": 32,
+      "match_id": 5749695,
       "status": "saved",
-      "targets_sha256": "166c630ea77bdf0a7146e02befd1514426dc0dc4fee81e73588589c279eb5e82"
+      "targets_sha256": "20ed635fcee5d6bfa63e9b631baf658db4c26510a1224b5ba1699d1e518dcc30"
     },
     {
       "appearances": 32,
-      "match_id": 5881184,
+      "match_id": 5749696,
       "status": "saved",
-      "targets_sha256": "1c389a565f4cbf758a3182b3e4585c95ae98fd19462c4e983fceb9d5cd029b10"
+      "targets_sha256": "a982e931aac1f5abfdb8855be122751ddb32e62e9d8409bcc0f8fd894fddef68"
     },
     {
-      "appearances": 31,
-      "match_id": 5881186,
-      "status": "saved",
-      "targets_sha256": "59ad683f1ca3e90ceba3df454d4d4c84d6659a8c319c1b64bc4f217f6bf044a9"
+      "match_id": 5881182,
+      "reason": "explicit player totals disagree with reconciled events",
+      "status": "rejected"
     },
     {
       "appearances": 32,
-      "match_id": 5749697,
+      "match_id": 5749698,
       "status": "saved",
-      "targets_sha256": "7f4cd6287faabb980cd60f22d80d4dadb28563f3d889e90f62ce1e3749d7384d"
+      "targets_sha256": "bc430bbb48f2ec4610dd001fdf09d77bd771f7c9dd38163a4a97b7f0b2ad16fd"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5802954,
+      "status": "saved",
+      "targets_sha256": "dbdd2d480ee79fcfc1a4976b52c041c610535544f09655bd66a109b3d8c5495e"
     }
   ]
 }
