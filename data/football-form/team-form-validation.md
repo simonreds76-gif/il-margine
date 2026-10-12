@@ -1,14 +1,14 @@
 # Football Form Layer Validation
 
-Generated: 2026-10-11T14:57:08+00:00
+Generated: 2026-10-12T14:50:25+00:00
 Status: **OK**
 
 ## Files
 
 | File | Rows | Latest date | Market coverage | xG coverage | Duplicates |
 | --- | ---: | --- | ---: | ---: | ---: |
-| team-match-base.csv | 43678 | 2026-09-20 | 100.0% | 91.5% | 0 |
-| team-rolling-form.csv | 43678 | 2026-09-20 | 100.0% | 91.5% | 0 |
+| team-match-base.csv | 43764 | 2026-10-11 | 99.8% | 91.5% | 0 |
+| team-rolling-form.csv | 43764 | 2026-10-11 | 99.8% | 91.5% | 0 |
 
 ## Issues
 
@@ -20,18 +20,18 @@ Status: **OK**
 
 | League | Latest date | Age days |
 | --- | --- | ---: |
-| bundesliga | 2026-09-20 | 21 |
-| epl | 2026-09-20 | 21 |
-| la-liga | 2026-09-20 | 21 |
-| ligue-1 | 2026-09-20 | 21 |
-| serie-a | 2026-09-20 | 21 |
+| bundesliga | 2026-10-11 | 1 |
+| epl | 2026-10-11 | 1 |
+| la-liga | 2026-10-11 | 1 |
+| ligue-1 | 2026-10-11 | 1 |
+| serie-a | 2026-10-11 | 1 |
 
 ### team-rolling-form.csv
 
 | League | Latest date | Age days |
 | --- | --- | ---: |
-| bundesliga | 2026-09-20 | 21 |
-| epl | 2026-09-20 | 21 |
-| la-liga | 2026-09-20 | 21 |
-| ligue-1 | 2026-09-20 | 21 |
-| serie-a | 2026-09-20 | 21 |
+| bundesliga | 2026-10-11 | 1 |
+| epl | 2026-10-11 | 1 |
+| la-liga | 2026-10-11 | 1 |
+| ligue-1 | 2026-10-11 | 1 |
+| serie-a | 2026-10-11 | 1 |

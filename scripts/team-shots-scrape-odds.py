@@ -97,7 +97,7 @@ LIVE_LEAGUES = ["epl", "serie-a", "la-liga", "bundesliga", "ligue-1"]
 # Live account check on 2026-04-18 showed only Bet365 returning 200 for the
 # team-shots football markets we query. The others force /odds/multi into a
 # 403 fallback path without adding coverage.
-DEFAULT_BOOKMAKERS = "Bet365"
+DEFAULT_BOOKMAKERS = "Bet365,Kambi"
 BOOKMAKER_RETRY_FALLBACK = ["Bet365"]
 
 OUTPUT_FIELDS = [

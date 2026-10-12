@@ -21,6 +21,7 @@ from scripts._lib.run_status import run_status
 
 from api_football_match_stats import fetch_api_football_results
 from fotmob_match_stats import fetch_fotmob_recent_results
+from football_count_results import snapshot_index, identity, stamp, count
 from settlement_utils import (
     LEAGUE_CODES,
     ROOT,
@@ -178,6 +179,21 @@ def load_pending_rows(paths: list[str]) -> list[dict]:
         if pick_id and pick_id in settled_ids:
             continue
         unique.setdefault(pick_id or f"unkeyed:{i}", row)
+    paired = family / "team-shots-paired-reference.jsonl"
+    if any(p.parent.resolve() == family.resolve() and p.name in COUNT_LEDGER_NAMES + COUNT_SIGNAL_NAMES for p in resolved) and paired.exists():
+        now = datetime.now(UTC)
+        results = snapshot_index(ROOT, now)
+        for line in paired.read_text(encoding="utf8").splitlines():
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            kickoff = stamp(row.get("kickoff_utc"))
+            if kickoff is None or now < kickoff + timedelta(hours=3):
+                continue
+            fixture = results.get(identity(row))
+            if fixture and stamp(fixture["observed_at"]) >= kickoff + timedelta(hours=3) and all(count(fixture.get(s + "_shots")) is not None for s in ("home", "away")):
+                continue
+            unique.setdefault("paired|" + row["contract_id"], dict(row, result="pending", pick_id="paired|" + row["contract_id"]))
     return list(unique.values())
 
 
