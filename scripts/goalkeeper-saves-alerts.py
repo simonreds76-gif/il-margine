@@ -53,10 +53,10 @@ def message(row):
         f"<b>{e('home_team')} vs {e('away_team')}</b>\n"
         f"{e('goalkeeper')} - {e('side').title()} {e('line')} saves\n"
         f"Bet365 recorded odds: <b>{float(row['odds_decimal']):.2f}</b>\n"
-        f"Model fair odds: {float(row['fair_odds']):.2f} | Estimated EV: +{float(row['edge'])*100:.1f}%\n"
+        f"Fair odds at capture: {float(row['fair_odds']):.2f} | Estimated EV: +{float(row['edge'])*100:.1f}%\n"
         f"Kickoff: {e('kickoff_at')}\nCaptured: {e('captured_at')}\n"
         f"Lineup: {e('lineup_status').replace('_',' ')}\n\n"
-        'Original odds are locked for tracking. Check the current bookmaker price before betting.\n'
+        'These odds and this forecast are locked for tracking. Later updates may show a revised forecast and price. Check the current bookmaker price before betting.\n'
         'Research model; 0.5u paper tracking, not a proven edge.')
 
 def main():

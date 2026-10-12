@@ -15,6 +15,7 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[1]
 COUNTS_BOARD = ROOT / "data/football-form/football-counts-vnext-candidates.csv"
 GK_BOARD = ROOT / "data/goalkeeper-saves/gk-saves-v1-candidates.csv"
+GK_LEDGER = ROOT / "data/goalkeeper-saves/gk-saves-v1-shadow-signals.csv"
 DEFAULT_STATE = ROOT / "data/football-form/football-daily-signal-digest-state.json"
 TELEGRAM_LIMIT = 3900
 COUNT_MIN_EDGE = 0.03
@@ -79,7 +80,20 @@ def count_candidates(rows: list[dict[str, str]], target_day: str, model: str) ->
     return sorted(strongest.values(), key=lambda row: (str(row["kickoff"]), str(row["match"])))
 
 
-def goalkeeper_candidates(rows: list[dict[str, str]], target_day: str) -> list[dict[str, object]]:
+def goalkeeper_contract(row: dict[str, str]) -> tuple:
+    """Exact fixture, keeper, bookmaker and line; never join a different quote contract."""
+    return (row.get("event_id", ""), row.get("kickoff_at", ""),
+            str(row.get("goalkeeper") or "").strip().casefold(),
+            str(row.get("bookmaker") or "Bet365").strip().casefold(),
+            number(row.get("line")), str(row.get("side") or "").strip().casefold())
+
+
+def goalkeeper_candidates(rows: list[dict[str, str]], target_day: str,
+                          tracked_rows: list[dict[str, str]] | None = None) -> list[dict[str, object]]:
+    tracked: dict[tuple, list[dict[str, str]]] = {}
+    for original in tracked_rows or []:
+        if original.get("status") == "pending" and not original.get("duplicate_of") and not original.get("quarantine_reason"):
+            tracked.setdefault(goalkeeper_contract(original), []).append(original)
     candidates: list[dict[str, object]] = []
     for row in rows:
         if row_day(row) != target_day:
@@ -94,18 +108,22 @@ def goalkeeper_candidates(rows: list[dict[str, str]], target_day: str) -> list[d
         goalkeeper = str(row.get("goalkeeper") or "").strip()
         line = str(row.get("line") or "").strip()
         side = str(row.get("side") or "").strip().lower()
+        originals = tracked.get(goalkeeper_contract(row), [])
+        original = originals[0] if len(originals) == 1 else None
         candidates.append(
             {
                 "id": f"gk_saves_v1|{event_id}|{goalkeeper.casefold()}|{line}|{side}",
                 "model": "gk_saves_v1",
-                "status": "SHADOW" if status == "eligible_shadow" else "VALUE LADDER",
+                "status": "TRACKED: LATEST VIEW" if original else "SHADOW" if status == "eligible_shadow" else "VALUE LADDER",
                 "kickoff": kickoff_label(row.get("kickoff_at")),
                 "match": f"{row.get('home_team', '').strip()} vs {row.get('away_team', '').strip()}",
                 "selection": f"{goalkeeper} {side.title()} {line} saves",
-                "bookmaker": "Bet365",
+                "bookmaker": str(row.get("bookmaker") or "Bet365"),
                 "odds": number(row.get("odds_decimal")),
                 "fair": number(row.get("fair_odds")),
                 "edge": edge,
+                "captured_at": row.get("captured_at", ""),
+                "original": dict(original) if original else None,
             }
         )
     return sorted(candidates, key=lambda row: (str(row["kickoff"]), str(row["match"]), -float(row["edge"])))
@@ -116,7 +134,7 @@ def build_candidates(target_day: str) -> dict[str, list[dict[str, object]]]:
     return {
         "TEAM SHOTS V4": count_candidates(counts, target_day, "team_shots_v4"),
         "CORNERS V3": count_candidates(counts, target_day, "corners_v3"),
-        "GK SAVES V1": goalkeeper_candidates(read_csv(GK_BOARD), target_day),
+        "GK SAVES V1": goalkeeper_candidates(read_csv(GK_BOARD), target_day, read_csv(GK_LEDGER)),
     }
 
 
@@ -151,12 +169,19 @@ def candidate_block(row: dict[str, object]) -> str:
     fair = float(row["fair"]) if row.get("fair") is not None else 0.0
     edge = float(row["edge"])
     bookmaker = f" {row['bookmaker']}" if row.get("bookmaker") else ""
-    return "\n".join(
-        [
+    lines = [
             f"[{row['status']}] {row['match']} | {row['kickoff']}",
             f"{row['selection']} @{odds:.2f}{bookmaker} | fair {fair:.2f} | EV {edge:+.1%}",
-        ]
-    )
+    ]
+    if row.get("model") == "gk_saves_v1":
+        captured = str(row.get("captured_at") or "")
+        lines.append(f"Latest quote: {captured or 'time unavailable'}. Fair odds recalculated for this update.")
+        original = row.get("original")
+        if original and all(number(original.get(k)) is not None for k in ("odds_decimal", "fair_odds", "edge")):
+            lines.append(f"Original tracking: @{float(original['odds_decimal']):.2f} | fair {float(original['fair_odds']):.2f} | EV {float(original['edge']):+.1%} ({original.get('captured_at', '')}). Record unchanged.")
+        elif row.get("status") == "VALUE LADDER":
+            lines.append("Price comparison only; not a new tracked selection.")
+    return "\n".join(lines)
 
 
 def render_messages(groups: dict[str, list[dict[str, object]]], target_day: str, include_empty: bool) -> list[tuple[str, list[str]]]:
