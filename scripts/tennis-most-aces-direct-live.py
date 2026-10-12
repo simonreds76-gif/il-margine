@@ -18,6 +18,7 @@ import numpy as np
 import pandas as pd
 
 from tennis_props_names import norm_name
+from model_lifecycle import most_aces_suspended
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -390,6 +391,9 @@ def fair(probability: float, visible: bool) -> str:
 
 
 def main() -> int:
+    if most_aces_suspended():
+        print("Direct Most Aces suspended; no new forecasts.")
+        return 0
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--as-of", default=date.today().isoformat())
     parser.add_argument("--start-year", type=int, default=2022)

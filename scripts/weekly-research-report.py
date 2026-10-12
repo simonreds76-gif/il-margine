@@ -22,6 +22,7 @@ import urllib.parse
 import urllib.request
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from model_lifecycle import most_aces_suspended
 from typing import Any
 
 
@@ -2048,14 +2049,13 @@ def telegram_text(payload: dict[str, Any]) -> str:
         *[f"- {action}" for action in action_lines()],
         "",
         "EVIDENCE DETAIL",
-        f"Team Shots v4: {team_v4.get('prospective_status', 'BLOCKED')} | {team_v4_live.get('settled', 0)} settled | {number(team_v4_live.get('pnl_units')):+.2f}u | ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'} | CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'} | promotion {team_v4.get('promotion_gate', 'BLOCKED')}",
+        f"Team Shots v4 [CURRENT TELEGRAM MODEL]: {team_v4.get('prospective_status', 'BLOCKED')} | {team_v4_live.get('settled', 0)} settled | {number(team_v4_live.get('pnl_units')):+.2f}u | ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'} | CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'} | promotion {team_v4.get('promotion_gate', 'BLOCKED')}",
         f"Team Shots v4 warm-up [TRACK ONLY]: {team_v4_warmup.get('settled', 0)}/{team_v4_warmup.get('signals', 0)} settled | {number(team_v4_warmup.get('pnl_units')):+.2f}u | ROI {pct(number(team_v4_warmup.get('roi')) * 100) if team_v4_warmup.get('roi') is not None else '-'} | pending {team_v4_warmup.get('pending', 0)}",
         f"Team Shots scan: {team_v4_scan.get('state', 'NOT_RUN')} | scored {team_v4_scan.get('scored_rows', 0)} rows/{team_v4_scan.get('scored_fixtures', 0)} fixtures | edge-pass warmup blocks {team_v4_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)}",
         f"Corners v3: {corners_v3.get('prospective_status', 'BLOCKED')} | {corners_v3_live.get('settled', 0)} settled | {number(corners_v3_live.get('pnl_units')):+.2f}u | ROI {pct(number(corners_v3_live.get('roi')) * 100) if corners_v3_live.get('roi') is not None else '-'} | CLV {pct(number(corners_v3_live.get('mean_true_close_clv')) * 100) if corners_v3_live.get('mean_true_close_clv') is not None else '-'} | promotion {corners_v3.get('promotion_gate', 'BLOCKED')}",
         f"Corners v3 warm-up [TRACK ONLY]: {corners_v3_warmup.get('settled', 0)}/{corners_v3_warmup.get('signals', 0)} settled | {number(corners_v3_warmup.get('pnl_units')):+.2f}u | ROI {pct(number(corners_v3_warmup.get('roi')) * 100) if corners_v3_warmup.get('roi') is not None else '-'} | pending {corners_v3_warmup.get('pending', 0)}",
         f"Corners scan: {corners_v3_scan.get('state', 'NOT_RUN')} | scored {corners_v3_scan.get('scored_rows', 0)} rows/{corners_v3_scan.get('scored_fixtures', 0)} fixtures | edge-pass warmup blocks {corners_v3_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)}",
         f"Corners v4 G0 [RESEARCH]: {corners_v4_g0.get('decision', 'NOT_RUN')} | MAE delta {signed_number(corners_v4_g0.get('mae_delta'), 4)} | market Brier delta {signed_number(corners_v4_g0.get('brier_delta'), 4)} n={corners_v4_g0.get('market_rows', 0)} | line gates {corners_v4_g0.get('passed_lines', 0)}/{corners_v4_g0.get('available_lines', 0)}",
-        f"Legacy controls: Team Shots V3 {team_clv['settled']} settled/{team_clv['pnl_units']:+.2f}u; Corners V0 {corners_clv['settled']} settled/{corners_clv['pnl_units']:+.2f}u",
         f"Count-source health: API-Football {api_health.get('archive_rows', 0)} archived, latest {api_health.get('latest_fixture_date') or '-'}, agreement {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)}",
         f"Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; sources {team_fouls_m2.get('status', 'NOT_RUN')}; no signals",
         f"GK Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} n={goalkeeper_saves.get('historical_observations', 0)} | discovery {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines) | capture {goalkeeper_saves.get('capture_status', 'NOT_RUN')} events={goalkeeper_saves.get('capture_events_selected', 0)} rows={goalkeeper_saves.get('capture_rows_observed', 0)} 1X2={goalkeeper_saves.get('capture_three_way_events', 0)} | prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} priced={goalkeeper_saves.get('priced_lines', 0)} eligible={goalkeeper_saves.get('eligible_lines', 0)} provisional={goalkeeper_saves.get('provisional_lines', 0)} signals={goalkeeper_saves.get('signals', 0)} settled={goalkeeper_saves.get('settled', 0)} blockers={goalkeeper_saves.get('blocker_counts', {})} ROI={ratio_pct(goalkeeper_saves.get('roi'))} CLV={ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)} | promotion BLOCKED",
@@ -2097,8 +2097,9 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     lines.append(rate_trend_text(payload))
     most = payload.get('tennis_most_aces_forecast') or {}
     paired = most.get('paired_comparison') or {}
-    lines.append(f"Most Aces Direct: {paired.get('paired_events', 0)} paired fixtures | "
-                 f"Brier difference {signed_number(paired.get('brier_delta_direct_minus_control'), 4)} | outcome research; prices assessed separately")
+    if not most_aces_suspended():
+        lines.append(f"Most Aces Direct: {paired.get('paired_events', 0)} paired fixtures | "
+                     f"Brier difference {signed_number(paired.get('brier_delta_direct_minus_control'), 4)} | outcome research; prices assessed separately")
     lines.append(context_forward_text(payload))
     astrissimo = payload.get("tennis_astrissimo") or {}
     if astrissimo:

@@ -15,6 +15,7 @@ import subprocess
 import sys
 from datetime import date, timedelta
 from pathlib import Path
+from model_lifecycle import most_aces_suspended
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -169,6 +170,9 @@ def refresh_derived_ace_boards(as_of: str) -> None:
         "Build v3 ATP ace prospective shadow board",
         fatal=False,
     )
+    if most_aces_suspended():
+        print("Most Aces suspended; ordinary aces/DF boards continue. Existing forecasts still settle.")
+        return
     run(
         [sys.executable, str(ROOT / "scripts" / "build-tennis-most-aces-board.py")],
         "Build correlated Most Aces 1X2 fair board",

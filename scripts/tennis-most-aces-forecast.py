@@ -16,6 +16,7 @@ import importlib.util
 import json
 import math
 from pathlib import Path
+from model_lifecycle import most_aces_suspended
 import sys
 from typing import Any
 
@@ -478,11 +479,14 @@ def main() -> int:
     board_rows = read_csv(Path(args.board))
     for additional in args.additional_board:
         board_rows.extend(read_csv(Path(additional)))
-    added = register(board_rows, ledger)
+    added = 0 if most_aces_suspended() else register(board_rows, ledger)
     settled_now = settle(ledger, Path(args.sackmann_dir), Path(args.oncourt_dir))
     ledger.sort(key=lambda row: (row.get("date", ""), row.get("forecast_id", "")))
     write_csv(Path(args.ledger), ledger)
     payload = report_payload(ledger)
+    if most_aces_suspended():
+        payload['status'] = 'SUSPENDED_NO_PRICES'
+        payload['new_forecasts_enabled'] = False
     write_report(Path(args.report), Path(args.json), payload)
     print(
         "Most Aces forecasts: "
