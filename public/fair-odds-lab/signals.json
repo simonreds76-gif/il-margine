@@ -1,12 +1,10 @@
 {
-  "generated_at": "2026-10-12T00:31:32.647757Z",
+  "generated_at": "2026-10-12T16:07:22.904799Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
-    "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
-    "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
-    "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
+    "data/goalscorer/la-liga/goalscorer-live-comparison.csv"
   ],
   "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
   "edge_threshold_pp": 6.0,
@@ -38,7 +36,7 @@
   "fixtures_evaluated": 4,
   "signals_qualifying": 0,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 4
+    "incomplete_prediction_roster": 6
   },
   "extreme_gap_quarantine": {
     "eligible_rows": 0,
