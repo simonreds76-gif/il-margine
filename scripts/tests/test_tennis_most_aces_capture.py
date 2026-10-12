@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 
@@ -15,6 +16,11 @@ SPEC.loader.exec_module(MODULE)
 
 
 class MostAcesCaptureTests(unittest.TestCase):
+    def test_paused_bookmaker_makes_no_api_calls_or_file_changes(self) -> None:
+        with patch('sys.argv', ['tennis-most-aces-capture.py']), patch.object(MODULE, 'load_common') as common:
+            self.assertEqual(MODULE.main(), 0)
+            common.assert_not_called()
+
     def test_three_separate_outcomes(self) -> None:
         market = {
             "name": "Player To Serve Most Aces",

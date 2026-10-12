@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-11T23:59:08Z",
+  "generated_at": "2026-10-12T14:41:22Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -44,7 +44,7 @@
       "blocked_rows": 18,
       "blocker_rows": {
         "edge_below_3pct": 18,
-        "price_older_than_3h": 6
+        "price_older_than_3h": 18
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 6,
@@ -69,19 +69,19 @@
     "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 61,
-      "settled": 58,
-      "pending": 3,
-      "pnl_units": -3.01,
-      "roi": -0.051897,
-      "true_close_n": 36,
-      "true_close_coverage": 0.62069,
-      "mean_true_close_clv": -8.2e-05,
+      "signals": 62,
+      "settled": 61,
+      "pending": 1,
+      "pnl_units": -3.86,
+      "roi": -0.063279,
+      "true_close_n": 39,
+      "true_close_coverage": 0.639344,
+      "mean_true_close_clv": 0.003014,
       "side_counts": {
-        "over": 14,
+        "over": 15,
         "under": 47
       },
-      "dominant_side_share": 0.770492
+      "dominant_side_share": 0.758065
     },
     "warmup_tracking": {
       "signals": 36,
@@ -99,16 +99,16 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "NO_EDGE_AFTER_UNLOCK",
-      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 16,
+      "state": "ELIGIBLE_CANDIDATES_PRESENT",
+      "explanation": "At least one candidate passed every locked shadow gate.",
+      "scored_rows": 18,
       "scored_fixtures": 3,
-      "eligible_rows": 0,
-      "eligible_fixtures": 0,
+      "eligible_rows": 2,
+      "eligible_fixtures": 1,
       "blocked_rows": 16,
       "blocker_rows": {
-        "edge_below_3pct": 13,
-        "price_older_than_3h": 16
+        "edge_below_3pct": 15,
+        "price_older_than_3h": 4
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 6,

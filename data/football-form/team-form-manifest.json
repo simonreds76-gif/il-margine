@@ -1,7 +1,7 @@
 {
   "date_range": {
-    "max": "2026-09-20",
-    "min": "2014-08-08"
+    "min": "2014-08-08",
+    "max": "2026-10-11"
   },
   "fields": {
     "team_match_base": [
@@ -186,7 +186,7 @@
       "ema20_opponent_market_strength_avg"
     ]
   },
-  "generated_at": "2026-10-11T14:57:06+00:00",
+  "generated_at": "2026-10-12T14:37:52.003176+00:00",
   "notes": [
     "Versioned CSVs are date-tagged generated artifacts.",
     "Models should record the version value when training or producing research reports.",
@@ -202,8 +202,8 @@
     "validation_report": "data/football-form/team-form-validation.md"
   },
   "row_counts": {
-    "team_match_base": 43678,
-    "team_rolling_form": 43678
+    "team_match_base": 43764,
+    "team_rolling_form": 43764
   },
   "version": "2026-10-11",
   "xg_overlay": {
@@ -211,5 +211,14 @@
     "rows": 21839,
     "unmatched": 0,
     "with_xg": 19988
+  },
+  "count_input_supplement": {
+    "revision": "verified-count-inputs-20261012",
+    "matches": 51,
+    "sources": [
+      "FotMob full-time counts",
+      "Understat completed-fixture goals and xG"
+    ],
+    "no_odds_imputed": true
   }
 }

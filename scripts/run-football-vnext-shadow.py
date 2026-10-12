@@ -20,6 +20,7 @@ def run(*args: str) -> None:
 
 
 def main() -> int:
+    run(str(SCRIPTS / "refresh-football-count-inputs.py"))
     run(str(SCRIPTS / "football-counts-capture-coverage.py"))
     run(str(SCRIPTS / "publish-football-vnext-shadow.py"))
     run(str(SCRIPTS / "team-shots-opponent-shadow.py"))
@@ -47,7 +48,7 @@ def main() -> int:
         "--corners-model", "corners-v3-shadow",
     )
     run(str(SCRIPTS / "football-counts-vnext-gate.py"))
-    run(str(SCRIPTS / "team-shots-paired-reference.py"))
+    run(str(SCRIPTS / "refresh-football-count-evidence.py"))
     return 0
 
 

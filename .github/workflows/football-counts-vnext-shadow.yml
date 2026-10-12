@@ -84,6 +84,7 @@ jobs:
           # Understat supplements. Individual lanes fail closed on missing
           # registered inputs; generic offseason league staleness is reported.
           python scripts/build-football-form-layer.py
+          python scripts/refresh-football-count-inputs.py --refresh --max-matches 30 --max-requests 75
           if [ -n "${API_FOOTBALL_KEY:-}" ]; then
             # Free access is date-limited. Accumulate recent results prospectively;
             # historical backfills stay available as an explicit CLI operation.
@@ -105,7 +106,7 @@ jobs:
           SCHEDULE_EXPR: ${{ github.event.schedule }}
         shell: bash
         run: |
-          TEAM_ARGS=(--all-leagues --bookmakers "Bet365")
+          TEAM_ARGS=(--all-leagues --bookmakers "Bet365,Kambi")
           CORNER_ARGS=()
           GK_ARGS=(--bookmaker "Bet365")
           if [[ "$EVENT_NAME" == "schedule" && "$SCHEDULE_EXPR" != "15 8 * * *" ]]; then
@@ -165,11 +166,13 @@ jobs:
           else
             # Re-score from the just-captured near-kickoff prices. Settlement
             # and promotion gates remain on the daily full run.
+            python scripts/refresh-football-count-inputs.py
             python scripts/publish-football-vnext-shadow.py
             python scripts/team-shots-opponent-shadow.py
             # Refresh reason-coded scan telemetry even when the heavier daily
             # settlement stack is intentionally skipped.
             python scripts/football-counts-vnext-gate.py
+            python scripts/refresh-football-count-evidence.py
           fi
           python scripts/team-shots-live-snapshot.py
           python scripts/corners-live-snapshot.py
@@ -241,6 +244,11 @@ jobs:
           fi
           # These controls come from the same bounded Bet365 payload as Team
           git add -f data/football-form/team-shots-opponent-shadow.csv data/football-form/team-shots-opponent-candidates.csv data/football-form/team-shots-opponent-status.json
+          git add data/football-form/team-match-base.csv data/football-form/team-form-manifest.json
+          git add data/football-form/count-input-*.json
+          for evidence in data/football-form/team-shots-paired-reference.jsonl data/football-form/team-shots-paired-reference-status.json data/football-form/team-shots-paired-settlement-audit.json; do
+            if [[ -f "$evidence" ]]; then git add "$evidence"; fi
+          done
           # Shots, so retaining them adds no API calls. Stage them on both full
           # and near-kickoff runs. `-f` is required for the 1X2 CSV because the
           # broad football-form CSV ignore rule predates this evidence file.

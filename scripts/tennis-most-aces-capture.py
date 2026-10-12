@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import importlib.util
+import json
 import re
 import unicodedata
 from datetime import datetime, timedelta, timezone
@@ -237,6 +238,14 @@ def main() -> int:
     parser.add_argument("--history-out", default="")
     parser.add_argument("--audit-out", default="")
     args = parser.parse_args()
+    allocation_path = ROOT / "config" / "odds-api-bookmaker-allocation.json"
+    if allocation_path.exists():
+        allocation = json.loads(allocation_path.read_text(encoding="utf8"))
+        paused = {name.casefold() for name in allocation.get("paused_capture_bookmakers", [])}
+        requested = {name.strip().casefold() for name in args.bookmakers.split(",")}
+        if requested & paused:
+            print("Most Aces price capture paused by approved bookmaker allocation; existing records retained, zero API requests.")
+            return 0
     common = load_common()
     common.load_env()
     api_key = common.os.environ.get("ODDS_API_KEY") or common.os.environ.get("ODDS_API_IO_KEY")
