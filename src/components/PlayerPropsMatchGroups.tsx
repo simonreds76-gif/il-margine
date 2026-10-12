@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import TipPortraits from "@/components/TipPortraits";
 import Image from "next/image";
+import { smallTeamLogo } from "@/lib/small-team-logo";
 import Link from "next/link";
 import type { Bet } from "@/lib/supabase";
 import BookmakerLogo from "@/components/BookmakerLogo";
@@ -128,7 +129,7 @@ function Crest({ team, category }: { team: string | null; category: string }) {
     <span data-testid="team-crest" title={team ?? undefined} className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-slate-800 ring-2 ring-slate-950">
       {showImage ? (
         <Image
-          src={src as string}
+          src={smallTeamLogo(src) as string}
           alt=""
           width={32}
           height={32}

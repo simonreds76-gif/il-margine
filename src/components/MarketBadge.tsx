@@ -25,7 +25,7 @@ const NATURAL_MARK_FILTER =
 const MARKET_CONFIG: Record<string, MarketConfig> = {
   tennis: { src: "/icons/markets/tennis.svg", label: "Tennis" },
   atp: {
-    src: "/icons/markets/atp-logo.png",
+    src: "/icons/markets/atp-logo-small-v1.webp",
     label: "ATP Tour",
     containerClassName: "h-8 w-12",
     imageClassName: "max-h-8 w-12 object-contain",

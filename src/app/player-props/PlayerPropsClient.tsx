@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TipsHubIntro from "@/components/TipsHubIntro";
@@ -79,8 +79,15 @@ export default function PlayerProps({
   const logoMarkClassName = "flex h-10 w-10 shrink-0 items-center justify-center overflow-visible";
   const logoImageClassName = "h-full w-full object-contain";
 
+  const refreshInFlight = useRef(false);
+  const lastRefreshStarted = useRef(0);
+
   const fetchData = useCallback(async () => {
-    setLoading(true);
+    // A tab switch fires both focus and visibilitychange. Keep the displayed
+    // record in place and avoid starting two requests.
+    if (refreshInFlight.current || Date.now() - lastRefreshStarted.current < 1000) return;
+    refreshInFlight.current = true;
+    lastRefreshStarted.current = Date.now();
 
     try {
       const res = await fetch("/api/public-record?scope=props");
@@ -94,6 +101,7 @@ export default function PlayerProps({
     } catch (error) {
       console.error("Error fetching player props record:", error);
     } finally {
+      refreshInFlight.current = false;
       setLoading(false);
     }
   }, []);

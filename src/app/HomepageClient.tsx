@@ -1,7 +1,7 @@
 "use client";
 import TennisMatchupFeature from "@/components/TennisMatchupFeature";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { type Bet, type Bookmaker, type MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
@@ -197,7 +197,15 @@ export default function HomepageClient({
     setCombinedStats(buildCombinedStats(liveStats));
   };
 
+  const refreshInFlight = useRef(false);
+  const lastRefreshStarted = useRef(0);
+
   const fetchData = useCallback(async () => {
+    // A tab switch fires both focus and visibilitychange. Keep the displayed
+    // record in place and avoid starting two requests.
+    if (refreshInFlight.current || Date.now() - lastRefreshStarted.current < 1000) return;
+    refreshInFlight.current = true;
+    lastRefreshStarted.current = Date.now();
     try {
       const res = await fetch("/api/public-record?scope=home");
       const json = await res.json();
@@ -218,6 +226,8 @@ export default function HomepageClient({
       console.error("Error fetching public homepage record:", error);
       setLast7Error(true);
       setRecordStatus("unavailable");
+    } finally {
+      refreshInFlight.current = false;
     }
   }, []);
 

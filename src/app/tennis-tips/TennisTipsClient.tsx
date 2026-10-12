@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TipsHubIntro from "@/components/TipsHubIntro";
@@ -59,7 +59,7 @@ export default function TennisTips({
 
   const categoryConfig = [
     { id: "all", name: "All Tennis", color: "emerald", logoPath: "/icons/markets/tennis.svg", logoClassName: naturalLogoFilter },
-    { id: "atp", name: "ATP Tour", color: "blue", logoPath: "/icons/markets/atp-logo.png", logoClassName: naturalLogoFilter },
+    { id: "atp", name: "ATP Tour", color: "blue", logoPath: "/icons/markets/atp-logo-small-v1.webp", logoClassName: naturalLogoFilter },
     { id: "challenger", name: "Challenger", color: "amber", logoPath: "/icons/markets/challenger-tour.png", logoClassName: naturalLogoFilter },
     { id: "ausopen", name: "Australian Open", color: "cyan", logoPath: "/icons/markets/slams/australian-open.png", logoClassName: naturalLogoFilter },
     { id: "rolandgarros", name: "Roland Garros", color: "rose", logoPath: "/icons/markets/slams/roland-garros.png", logoClassName: naturalLogoFilter },
@@ -81,8 +81,15 @@ export default function TennisTips({
   const logoMarkClassName = "flex h-10 w-10 shrink-0 items-center justify-center overflow-visible";
   const logoImageClassName = "h-full w-full object-contain";
 
+  const refreshInFlight = useRef(false);
+  const lastRefreshStarted = useRef(0);
+
   const fetchData = useCallback(async () => {
-    setLoading(true);
+    // A tab switch fires both focus and visibilitychange. Keep the displayed
+    // record in place and avoid starting two requests.
+    if (refreshInFlight.current || Date.now() - lastRefreshStarted.current < 1000) return;
+    refreshInFlight.current = true;
+    lastRefreshStarted.current = Date.now();
 
     try {
       const res = await fetch("/api/public-record?scope=tennis");
@@ -96,6 +103,7 @@ export default function TennisTips({
     } catch (error) {
       console.error("Error fetching tennis record:", error);
     } finally {
+      refreshInFlight.current = false;
       setLoading(false);
     }
   }, []);
