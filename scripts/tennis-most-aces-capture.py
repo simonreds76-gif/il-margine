@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from player_name_matching import fold_name_text
+from model_lifecycle import most_aces_suspended
 
 ROOT = Path(__file__).resolve().parent.parent
 INBOX = ROOT / "data" / "tennis-props" / "inbox"
@@ -229,6 +230,9 @@ def append_history(path: Path, rows: list[dict[str, str]]) -> int:
 
 
 def main() -> int:
+    if most_aces_suspended():
+        print("Most Aces suspended: no usable selected-bookmaker prices; zero API requests.")
+        return 0
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--date", default=datetime.now(timezone.utc).date().isoformat())
     parser.add_argument("--days-ahead", type=int, default=2)

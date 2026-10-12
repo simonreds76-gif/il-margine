@@ -9,6 +9,7 @@ import math
 from collections import defaultdict
 from datetime import date, datetime, timezone
 from pathlib import Path
+from model_lifecycle import most_aces_suspended
 
 from tennis_most_aces import devig_three_way, norm_name, pair_key, result_from_counts, value_pct
 
@@ -430,7 +431,7 @@ def main() -> int:
     board_rows = read_csv(Path(args.board))
     for additional in args.additional_board:
         board_rows.extend(read_csv(Path(additional)))
-    added = register(board_rows, captures, ledger)
+    added = 0 if most_aces_suspended() else register(board_rows, captures, ledger)
     pattern = Path(args.history_glob)
     history = []
     for path in sorted(pattern.parent.glob(pattern.name)):

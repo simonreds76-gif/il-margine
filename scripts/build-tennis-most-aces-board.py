@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+from model_lifecycle import most_aces_suspended
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -251,6 +252,9 @@ def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
 
 
 def main() -> int:
+    if most_aces_suspended():
+        print("Most Aces board suspended; existing evidence retained.")
+        return 0
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", default=str(DEFAULT_SOURCE))
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT))

@@ -132,7 +132,7 @@ def goalkeeper_candidates(rows: list[dict[str, str]], target_day: str,
 def build_candidates(target_day: str) -> dict[str, list[dict[str, object]]]:
     counts = read_csv(COUNTS_BOARD)
     return {
-        "TEAM SHOTS V4": count_candidates(counts, target_day, "team_shots_v4"),
+        "TEAM SHOTS V4 | CURRENT ALERT MODEL": count_candidates(counts, target_day, "team_shots_v4"),
         "CORNERS V3": count_candidates(counts, target_day, "corners_v3"),
         "GK SAVES V1": goalkeeper_candidates(read_csv(GK_BOARD), target_day, read_csv(GK_LEDGER)),
     }

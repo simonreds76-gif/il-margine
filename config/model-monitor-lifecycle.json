@@ -1,0 +1,19 @@
+{
+  "updated_at": "2026-10-12",
+  "team_shots": {
+    "current_alert_model": "team_shots_v4",
+    "current_alert_label": "Team Shots v4",
+    "research_models": ["opponent", "shots_market_offset_v1"],
+    "archived_models": ["canonical_form_v1_nb", "canonical_form_v2_pooled_opp_nb", "canonical_form_v3_ema20_nb"],
+    "ema20_reference_only": true,
+    "reason": "v4 remains the current Telegram selection model. Opponent and calibration are separate research; EMA20 is retained only as a fixed comparison and historical archive. No model promotion or weight change."
+  },
+  "most_aces": {
+    "status": "SUSPENDED_NO_PRICES",
+    "new_forecasts": false,
+    "price_capture": false,
+    "settle_existing": true,
+    "telegram_review": false,
+    "reason": "User suspended Most Aces 1X2 after the 12 October check found no complete three-way market from selected Bet365/Kambi. Ordinary player aces and double faults remain active. Resume only after usable prices and explicit review."
+  }
+}

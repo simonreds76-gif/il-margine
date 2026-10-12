@@ -3,6 +3,7 @@ import path from "path";
 import { Fragment } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import lifecycle from "../../../../config/model-monitor-lifecycle.json";
 import {
   MODEL_MONITOR_ENABLED,
   MonitorNav,
@@ -2546,7 +2547,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
         <nav className="mb-6 grid gap-3 sm:grid-cols-3">
           <TabLink active={activeTab === "decision"} href="/model-monitor/tennis-props?tab=decision" label="Decision Board" detail="BET NOW / near miss / blocked lines" />
           <TabLink active={activeTab === "projections"} href="/model-monitor/tennis-props?tab=projections" label="Projections" detail="Aces, DFs, breaks, tie-break simulation" />
-          <TabLink active={false} href="/model-monitor/tennis-props?tab=decision#most-aces-evidence" label="Most Aces Evidence" detail="Fair odds, settled scores, model accuracy" />
+          <TabLink active={false} href="/model-monitor/tennis-props?tab=decision#most-aces-evidence" label="Most Aces | suspended" detail="Archived evidence; no usable prices" />
         </nav>
 
         {activeTab === "decision" && todayBoardRows.length ? (
@@ -2588,7 +2589,9 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
 
             <CountMarketResearchIntake rows={countMarketIntakeRows} />
 
-            <div id="most-aces-evidence" className="scroll-mt-6">
+            <details id="most-aces-evidence" className="scroll-mt-6 rounded-2xl border border-slate-800 p-4" open={lifecycle.most_aces.new_forecasts}>
+              <summary className="cursor-pointer font-semibold text-slate-300">Most Aces 1X2 | suspended, retained evidence</summary>
+              <p className="my-3 text-sm text-slate-400">No new forecasts or price requests while this experiment is suspended. Existing records can still settle. Bet365 player aces and double faults, including milestones, continue separately.</p>
               <MostAcesPanel
                 rows={mostAcesRows}
                 directRows={mostAcesDirectRows}
@@ -2601,7 +2604,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
                 stamp={mostAcesReportStamp}
                 sortKey={mostAcesSortKey}
               />
-            </div>
+            </details>
 
             <ModelTrackerPanel rows={modelSummaryRows} stamp={modelSummaryStamp} />
 

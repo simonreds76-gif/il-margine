@@ -178,10 +178,12 @@ class WeeklyResearchReportTests(unittest.TestCase):
 
 
     def test_tennis_only_telegram_report_is_complete_and_compact(self):
-        message = REPORT["tennis_telegram_text"](REPORT["build_payload"]())
-        for label in ("Strict:", "Provisional Hard:", "Provisional Expansion:", "Challenger ML v2:", "Aces v4", "Most Aces Direct:", "Astra Volume PAPER ONLY"):
+        payload = REPORT["build_payload"]()
+        payload["tennis_context_forward"] = {"candidate": {"pending": 0}, "capture": {"status": "CONNECTED"}}
+        message = REPORT["tennis_telegram_text"](payload)
+        for label in ("Strict:", "Provisional Hard:", "Provisional Expansion:", "Challenger ML v2:", "Aces v4", "Astra Volume PAPER ONLY"):
             self.assertIn(label, message)
-        for retired in ("legacy archive", "Spread v1", "Venue ace", "Volume 200", "Full refresh"):
+        for retired in ("legacy archive", "Spread v1", "Venue ace", "Volume 200", "Full refresh", "Most Aces Direct:"):
             self.assertNotIn(retired, message)
         self.assertLessEqual(len(message), 4096)
 
@@ -257,15 +259,15 @@ class WeeklyResearchReportTests(unittest.TestCase):
         )
         self.assertEqual(summary["status"], "STALE")
 
-    def test_most_aces_stale_json_falls_back_to_next_checkpoint(self) -> None:
+    def test_suspended_most_aces_stays_off_telegram_even_with_old_snapshot(self) -> None:
         payload = REPORT["build_payload"]()
         payload["tennis_most_aces_forecast"] = {
             "models": {},
             "paired_comparison": {"paired_events": 0},
         }
         message = REPORT["tennis_telegram_text"](payload)
-        self.assertIn("Most Aces Direct: 0 paired fixtures", message)
-        self.assertIn("Brier difference -", message)
+        self.assertNotIn("Most Aces Direct:", message)
+        self.assertNotIn("Brier difference", message)
         self.assertNotIn("BUILDING (review due)", message)
 
     def test_most_aces_price_summary_is_model_specific(self) -> None:
