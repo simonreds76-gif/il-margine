@@ -10,6 +10,7 @@ import argparse
 import csv
 import importlib.util
 import json
+import subprocess
 import sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -161,6 +162,10 @@ def main():
         manifest['count_input_supplement']={'revision':'verified-count-inputs-20261012','matches':len(supplement),'sources':['FotMob full-time counts','Understat completed-fixture goals and xG'],'no_odds_imputed':True}
         atomic_json(manifest_path,manifest)
     report.update(applied_matches=added,base_rows=len(merged),latest_input_date=max((r['date'] for r in merged),default=None),supplement_matches=len(supplement))
+    if args.refresh:
+        # The primary builder's freshness report predates this supplement.
+        # Recompute it against the actual model inputs, retaining any issues.
+        subprocess.run([sys.executable,str(ROOT/'scripts/validate-football-form-layer.py'),'--output-dir',str(FORM)],cwd=ROOT,check=True)
     # Keep refresh coverage distinct from merely reapplying the saved supplement.
     if args.refresh:atomic_json(FORM/'count-input-refresh-status.json',report)
     atomic_json(FORM/'count-input-application-status.json',report)
