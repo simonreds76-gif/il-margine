@@ -81,6 +81,35 @@ class FootballDailySignalDigestTests(unittest.TestCase):
         filtered = MODULE.unseen_candidates(groups, {"sent": {"sent": {}}})
         self.assertEqual([row["id"] for row in filtered["TEAM SHOTS V4"]], ["new"])
 
+    def test_latest_view_retains_original_tracking_terms(self):
+        import copy
+        original = gk_row(status="pending", odds_decimal="2.75", fair_odds="2.486",
+                          edge="0.105983", captured_at="2026-08-26T20:34:12Z")
+        before = copy.deepcopy(original)
+        latest = gk_row(odds_decimal="2.625", fair_odds="2.549", edge="0.029826",
+                        candidate_status="value_ladder", captured_at="2026-08-27T15:00:37Z")
+        row = MODULE.goalkeeper_candidates([latest], "2026-08-27", [original])[0]
+        message = MODULE.candidate_block(row)
+        self.assertIn("TRACKED: LATEST VIEW", message)
+        self.assertIn("fair 2.55", message)
+        self.assertIn("Original tracking: @2.75 | fair 2.49", message)
+        self.assertIn("2026-08-27T15:00:37Z", message)
+        self.assertEqual(original, before)
+
+    def test_original_must_match_exact_contract_and_be_unambiguous(self):
+        original = gk_row(status="pending", bookmaker="Bet365")
+        for change in ({"bookmaker":"Kambi"}, {"line":"4.5"}, {"kickoff_at":"2026-08-28T19:00:00Z"},
+                       {"goalkeeper":"Keeper Two"}, {"status":"void"}):
+            wrong = {**original, **change}
+            row = MODULE.goalkeeper_candidates([gk_row()], "2026-08-27", [wrong])[0]
+            self.assertIsNone(row["original"])
+        ambiguous = MODULE.goalkeeper_candidates([gk_row()], "2026-08-27", [original, original])[0]
+        self.assertIsNone(ambiguous["original"])
+
+    def test_untracked_ladder_is_not_presented_as_new_selection(self):
+        row = MODULE.goalkeeper_candidates([gk_row(candidate_status="value_ladder")], "2026-08-27")[0]
+        self.assertIn("not a new tracked selection", MODULE.candidate_block(row))
+
     def test_rendered_messages_respect_telegram_limit(self):
         rows = []
         for index in range(80):
