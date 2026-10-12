@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T18:01:02Z",
+  "generated_at": "2026-10-12T19:19:11Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -35,28 +35,38 @@
       "dominant_side_share": 0.928571
     },
     "latest_scan": {
-      "state": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
-      "explanation": "For all 14 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.11%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
-      "scored_rows": 32,
-      "scored_fixtures": 2,
+      "state": "EXPECTED_EMPTY_CAPTURE_WINDOW",
+      "explanation": "The successful Team Shots scan found no supported fixtures in its capture window. Stored corners rows are outside that window.",
+      "scored_rows": 0,
+      "scored_fixtures": 0,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 32,
-      "blocker_rows": {
-        "early_market_gap_cap": 6,
-        "edge_below_3pct": 32,
-        "price_older_than_3h": 2
-      },
+      "blocked_rows": 0,
+      "blocker_rows": {},
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": 6,
-      "matchday_max": 7,
+      "matchday_min": null,
+      "matchday_max": null,
       "next_unlock": null,
-      "operational_alert_required": true,
-      "operational_alert_code": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
+      "operational_alert_required": false,
+      "operational_alert_code": null,
+      "capture_window_evidence": {
+        "capture_at": "2026-10-12T19:19:03Z",
+        "capture_window_end": "2026-10-13T19:19:03Z",
+        "capture_run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/38296805025",
+        "leagues_checked": [
+          "bundesliga",
+          "epl",
+          "la-liga",
+          "ligue-1",
+          "serie-a"
+        ],
+        "events_found": 0,
+        "peer_rows_outside_window": 0
+      },
       "rule_feasibility": {
-        "affected_rows": 14,
+        "affected_rows": 0,
         "rows_capable_of_minimum_edge": 0,
-        "maximum_allowed_edge": 0.021062786390673605,
+        "maximum_allowed_edge": null,
         "minimum_edge": 0.03,
         "raw_gap_cap": 0.12,
         "model_weight": 0.18
@@ -100,20 +110,17 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "NO_EDGE_AFTER_UNLOCK",
-      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 12,
-      "scored_fixtures": 2,
+      "state": "NO_SCORED_CANDIDATES",
+      "explanation": "No paired current market rows reached model scoring. Check capture coverage and fixture joins.",
+      "scored_rows": 0,
+      "scored_fixtures": 0,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 12,
-      "blocker_rows": {
-        "edge_below_3pct": 11,
-        "price_older_than_3h": 2
-      },
+      "blocked_rows": 0,
+      "blocker_rows": {},
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": 6,
-      "matchday_max": 7,
+      "matchday_min": null,
+      "matchday_max": null,
       "next_unlock": null,
       "operational_alert_required": false,
       "operational_alert_code": null
