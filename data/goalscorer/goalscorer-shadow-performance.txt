@@ -1,39 +1,39 @@
 Goalscorer Shadow Performance
 =============================
 
-As of:                 2026-10-12T16:06:25Z
-Signals file:          /home/runner/work/il-margine/il-margine/data/goalscorer/goalscorer-shadow-signals.csv
+As of:                 2026-10-12T18:12:51Z
+Signals file:          data/goalscorer/goalscorer-shadow-signals.csv
 Clean evaluation start:2026-03-15
 
 All time
   signals:    355
-  settled:    322
-  unsettled:  33
-  ROI:        -44.69%
-  win rate:   8.39%
-  P/L units:  -144.25
-  Staked:     322.75
+  settled:    334
+  unsettled:  21
+  ROI:        -44.44%
+  win rate:   8.38%
+  P/L units:  -148.75
+  Staked:     334.75
 
 Clean sample
   signals:    355
-  settled:    322
-  unsettled:  33
-  ROI:        -44.69%
-  win rate:   8.39%
-  P/L units:  -144.25
-  Staked:     322.75
+  settled:    334
+  unsettled:  21
+  ROI:        -44.44%
+  win rate:   8.38%
+  P/L units:  -148.75
+  Staked:     334.75
 
 Last 7 days
   signals:    38
-  settled:    16
-  unsettled:  22
-  ROI:        -87.50%
-  win rate:   0.00%
-  P/L units:  -14.00
-  Staked:     16.00
+  settled:    28
+  unsettled:  10
+  ROI:        -66.07%
+  win rate:   3.57%
+  P/L units:  -18.50
+  Staked:     28.00
 
 By signal type (clean sample)
   both             signals=  2 settled=  2 roi=-100.00% win_rate=0.00% pnl=-2.00u
   penalty_transfer signals= 21 settled= 21 roi=+8.24% win_rate=23.81% pnl=+1.75u
-  shadow_track     signals=325 settled=293 roi=-50.26% win_rate=7.17% pnl=-147.50u
+  shadow_track     signals=325 settled=305 roi=-49.75% win_rate=7.21% pnl=-152.00u
   stacked          signals=  7 settled=  6 roi=+58.33% win_rate=16.67% pnl=+3.50u
