@@ -12,6 +12,7 @@ import TodaysEdge from "@/components/TodaysEdge";
 import ToolEmblem, { emblemForHref } from "@/components/ToolEmblem";
 import "./home-discovery.css";
 import HomeResearchIcon from "@/components/HomeResearchIcon";
+import HomePerformanceRecord from "@/components/HomePerformanceRecord";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import type { MonthRow } from "@/components/MonthlyBreakdown";
@@ -178,23 +179,6 @@ export default function HomepageClient({
   }, [fetchData, hasInitialPayload]);
 
   const displayStats = combinedStats ?? getBaselineDisplayStats();
-  const heroProofStats = [
-    {
-      label: "Overall ROI",
-      icon: "roi" as const,
-      value: `${displayStats.overall.roi > 0 ? "+" : ""}${displayStats.overall.roi.toFixed(1)}%`,
-    },
-    {
-      label: "Settled bets",
-      icon: "bets" as const,
-      value: `${displayStats.overall.total_bets.toLocaleString()}`,
-    },
-    {
-      label: "Record since",
-      icon: "calendar" as const,
-      value: "Oct 2024",
-    },
-  ];
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <main id="main-content">
@@ -208,17 +192,7 @@ export default function HomepageClient({
           </div>
           <div className="home-lead-picks"><TodaysEdge picks={pendingBets} lastSettled={recentBets[0] ?? null} last7Profit={last7DaysProfit} /></div>
           <div className="home-lead-record">
-            <section className="home-record-card" aria-labelledby="home-record-title">
-              <div className="home-record-heading"><HomeResearchIcon name="record" /><h2 id="home-record-title">{recordStatus === "historical" || !combinedStats ? "Earlier recorded results" : "Public performance record"}</h2></div>
-              <div className="home-record-numbers">
-                <dl className={`home-record-roi ${displayStats.overall.roi < 0 ? 'is-negative' : ''}`}><dt>{heroProofStats[0].label}</dt><dd>{heroProofStats[0].value}</dd></dl>
-                <dl className="home-record-support">{heroProofStats.slice(1).map(stat => <div key={stat.label}><dt>{stat.label}</dt><dd>{stat.value}</dd></div>)}</dl>
-              </div>
-              <p className="home-record-basis">ROI is profit divided by total stakes.</p>
-              <a className="home-record-explore" href="#monthly"><svg viewBox="0 0 32 24" aria-hidden="true"><path d="M2 19h28M7 19V11m9 8V4m9 15V8" fill="none" stroke="currentColor" strokeWidth="2" /></svg><span>Explore the monthly results<small>Profit, ROI and the bets behind each month</small></span><span aria-hidden="true">↓</span></a>
-              <div className="home-record-links"><Link prefetch={false} href="/track-record">Full record <span aria-hidden="true">↗</span></Link><Link prefetch={false} href="/track-record#record-method">How it is calculated</Link></div>
-              <p className="home-record-note">{recordStatus === "unavailable" ? "The latest refresh is unavailable. These are the last available figures, which may exclude recent results." : recordStatus === "historical" ? "Earlier recorded results are shown. The latest results are unavailable and are not included." : "Past performance is not a forecast."}</p>
-            </section>
+            <HomePerformanceRecord stats={displayStats} status={recordStatus} />
             <nav className="home-research-start" aria-label="Start your betting research">
               <h2>Put the data to work.</h2>
               <Link prefetch={false} href="/football-atlas/fixtures"><HomeResearchIcon name="football" /><span><strong>Football Matchday</strong><small>Research upcoming fixtures through club and manager history.</small></span><span aria-hidden="true">↗</span></Link>
