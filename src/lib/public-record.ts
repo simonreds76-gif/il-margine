@@ -2,6 +2,7 @@ import "server-only";
 import { getTipArtwork } from "@/lib/tip-artwork";
 import type { MarketStats } from "@/lib/supabase";
 import { buildMonthlyRows, type MonthlyBetRow } from "@/lib/monthly-record";
+import { readRecordPages } from "@/lib/read-record-pages";
 
 import { getDisplayBetCategory } from "@/lib/bet-category";
 import { getSupabaseAdmin, hasSupabaseAdminConfig } from "@/lib/supabase-server";
@@ -288,23 +289,26 @@ export async function fetchMonthlyPayload(monthlyScope: MonthlyScope) {
   const show = settingResponse.data?.value === true;
   if (!show) return { show: false, rows: [] };
 
-  let rowsQuery = supabase
-    .from("bets")
-    .select("match_date, settled_at, status, stake, profit_loss")
-    .in("status", ["won", "lost"])
-    .not("profit_loss", "is", null)
-    .order("match_date", { ascending: false, nullsFirst: false })
-    .limit(5000);
+  const rows = await readRecordPages<MonthlyBetRow>(async (from, to) => {
+    let rowsQuery = supabase
+      .from("bets")
+      .select("match_date, settled_at, status, stake, profit_loss")
+      .in("status", ["won", "lost"])
+      .not("profit_loss", "is", null)
+      .order("id", { ascending: true })
+      .range(from, to);
 
-  if (monthlyScope === "props" || monthlyScope === "tennis") {
-    rowsQuery = rowsQuery.eq("market", MARKET_BY_SCOPE[monthlyScope]);
-  }
+    if (monthlyScope === "props" || monthlyScope === "tennis") {
+      rowsQuery = rowsQuery.eq("market", MARKET_BY_SCOPE[monthlyScope]);
+    }
 
-  const rowsResponse = await withTimeout(rowsQuery, `monthly ${monthlyScope} raw bets query`);
-  if (rowsResponse.error) throw new Error(rowsResponse.error.message);
+    const rowsResponse = await withTimeout(rowsQuery, `monthly ${monthlyScope} raw bets query`);
+    if (rowsResponse.error) throw new Error(rowsResponse.error.message);
+    return (rowsResponse.data ?? []) as MonthlyBetRow[];
+  });
 
   return {
     show: true,
-    rows: buildMonthlyRows((rowsResponse.data ?? []) as MonthlyBetRow[]),
+    rows: buildMonthlyRows(rows),
   };
 }

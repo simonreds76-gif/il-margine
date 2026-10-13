@@ -30,18 +30,9 @@ type HomepageBet = Bet & {
   bookmaker?: Bookmaker | Bookmaker[] | null;
 };
 
-function getTrackingMonths() {
-  const start = new Date("2024-10-01T00:00:00Z");
-  const now = new Date();
-  const months = Math.max(
-    1,
-    (now.getUTCFullYear() - start.getUTCFullYear()) * 12 + (now.getUTCMonth() - start.getUTCMonth())
-  );
-  return `${months}+ months`;
-}
-
 type HomepageClientProps = {
   initialMonthly?: { show: boolean; rows: MonthRow[] };
+  initialMonthlyBySport?: Partial<Record<'props' | 'tennis', { show: boolean; rows: MonthRow[] }>>;
   initialMarketStats?: MarketStats[];
   initialRecentBets?: HomepageBet[];
   initialPendingBets?: HomepageBet[];
@@ -107,6 +98,7 @@ function buildCombinedStats(liveStats: MarketStats[]) {
 
 export default function HomepageClient({
   initialMonthly,
+  initialMonthlyBySport,
   initialMarketStats = [],
   initialRecentBets = [],
   initialPendingBets = [],
@@ -186,7 +178,6 @@ export default function HomepageClient({
   }, [fetchData, hasInitialPayload]);
 
   const displayStats = combinedStats ?? getBaselineDisplayStats();
-  const trackingPeriod = getTrackingMonths();
   const heroProofStats = [
     {
       label: "Overall ROI",
@@ -199,9 +190,9 @@ export default function HomepageClient({
       value: `${displayStats.overall.total_bets.toLocaleString()}`,
     },
     {
-      label: "Tracking period",
+      label: "Record since",
       icon: "calendar" as const,
-      value: trackingPeriod,
+      value: "Oct 2024",
     },
   ];
   return (
@@ -212,8 +203,8 @@ export default function HomepageClient({
         <div className="home-lead hf-container">
           <div className="home-lead-intro">
             <p className="hf-eyebrow">Il Margine · Football &amp; tennis</p>
-            <h1>Data driven betting.<br /><span>Tools. Models. Picks.</span></h1>
-            <p className="home-lead-copy">Football and tennis models, matchup analysis and historical betting records. Research tools and selections for serious bettors.</p>
+            <h1>Published picks.<br /><span>Free research tools.</span></h1>
+            <p className="home-lead-copy">Our latest selections, plus tools to explore the players, clubs and managers behind your next bet.</p>
           </div>
           <div className="home-lead-picks"><TodaysEdge picks={pendingBets} lastSettled={recentBets[0] ?? null} last7Profit={last7DaysProfit} /></div>
           <div className="home-lead-record">
@@ -223,7 +214,9 @@ export default function HomepageClient({
                 <dl className={`home-record-roi ${displayStats.overall.roi < 0 ? 'is-negative' : ''}`}><dt>{heroProofStats[0].label}</dt><dd>{heroProofStats[0].value}</dd></dl>
                 <dl className="home-record-support">{heroProofStats.slice(1).map(stat => <div key={stat.label}><dt>{stat.label}</dt><dd>{stat.value}</dd></div>)}</dl>
               </div>
-              <div className="home-record-links"><Link prefetch={false} href="/track-record">Explore the full record <span aria-hidden="true">↗</span></Link><Link prefetch={false} href="/track-record#record-method">How it is calculated</Link></div>
+              <p className="home-record-basis">ROI is profit divided by total stakes.</p>
+              <a className="home-record-explore" href="#monthly"><svg viewBox="0 0 32 24" aria-hidden="true"><path d="M2 19h28M7 19V11m9 8V4m9 15V8" fill="none" stroke="currentColor" strokeWidth="2" /></svg><span>Explore the monthly results<small>Profit, ROI and the bets behind each month</small></span><span aria-hidden="true">↓</span></a>
+              <div className="home-record-links"><Link prefetch={false} href="/track-record">Full record <span aria-hidden="true">↗</span></Link><Link prefetch={false} href="/track-record#record-method">How it is calculated</Link></div>
               <p className="home-record-note">{recordStatus === "unavailable" ? "The latest refresh is unavailable. These are the last available figures, which may exclude recent results." : recordStatus === "historical" ? "Earlier recorded results are shown. The latest results are unavailable and are not included." : "Past performance is not a forecast."}</p>
             </section>
             <nav className="home-research-start" aria-label="Start your betting research">
@@ -236,7 +229,7 @@ export default function HomepageClient({
         </div>
       </section>
       <HomeFixtures />
-      <MonthlyBreakdownSection scope="combined" initialPayload={initialMonthly} cards />
+      <MonthlyBreakdownSection scope="combined" initialPayload={initialMonthly} bySport={initialMonthlyBySport} cards />
       {recentBets.length > 0 ? (
         <section className="border-b border-slate-800/30 bg-[#0b0e13] py-9 md:py-12">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

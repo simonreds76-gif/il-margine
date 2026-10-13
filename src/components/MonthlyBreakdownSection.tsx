@@ -8,9 +8,10 @@ interface MonthlyBreakdownSectionProps {
   scope: MonthlyBreakdownScope;
   initialPayload?: { show: boolean; rows: MonthRow[] };
   cards?: boolean;
+  bySport?: Partial<Record<'props' | 'tennis', { show: boolean; rows: MonthRow[] }>>;
 }
 
-export default function MonthlyBreakdownSection({ scope, initialPayload, cards = false }: MonthlyBreakdownSectionProps) {
+export default function MonthlyBreakdownSection({ scope, initialPayload, cards = false, bySport }: MonthlyBreakdownSectionProps) {
   const [payload, setPayload] = useState<{ show: boolean; rows: MonthRow[] } | null>(initialPayload ?? null);
   const hasInitialPayload = initialPayload !== undefined;
 
@@ -36,7 +37,7 @@ export default function MonthlyBreakdownSection({ scope, initialPayload, cards =
   return (
     <section id="monthly" className="monthly-showcase scroll-mt-24 border-b border-slate-800/30 py-9 md:py-12">
       <div className={cards ? "hf-container" : "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"}>
-        {cards ? <MonthlyResultCards rows={payload.rows} /> : <MonthlyBreakdown scope={scope} rowsOverride={payload.rows} />}
+        {cards ? <MonthlyResultCards rows={payload.rows} bySport={bySport} /> : <MonthlyBreakdown scope={scope} rowsOverride={payload.rows} />}
       </div>
     </section>
   );

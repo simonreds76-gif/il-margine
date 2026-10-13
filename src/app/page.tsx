@@ -6,14 +6,16 @@ import { fetchHomePayload, fetchMonthlyPayload } from "@/lib/public-record";
 export const revalidate = 86400;
 
 export default async function Home() {
-  const [payload, monthly] = await Promise.all([fetchHomePayload().catch((error) => {
+  const [payload, monthly, propsMonthly, tennisMonthly] = await Promise.all([fetchHomePayload().catch((error) => {
     console.error("[home] failed to load initial public record", error);
     return { stats: [], recent: [], pending: [], last7: null };
-  }), fetchMonthlyPayload("combined").catch((error) => { console.error("[home] monthly record unavailable", error); return undefined; })]);
+  }), fetchMonthlyPayload("combined").catch((error) => { console.error("[home] monthly record unavailable", error); return undefined; }),
+  fetchMonthlyPayload("props").catch(() => undefined), fetchMonthlyPayload("tennis").catch(() => undefined)]);
 
   return (
     <HomepageClient
       initialMonthly={monthly}
+      initialMonthlyBySport={{ props: propsMonthly, tennis: tennisMonthly }}
       initialMarketStats={payload.stats}
       initialRecentBets={payload.recent}
       initialPendingBets={payload.pending}
