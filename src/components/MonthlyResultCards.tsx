@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import type { MonthRow } from './MonthlyBreakdown';
-import HomeResearchIcon from './HomeResearchIcon';
+import PerformanceFilterIcon from './PerformanceFilterIcon';
 import './home-fixtures.css';
 import './monthly-performance.css';
 
@@ -45,7 +45,7 @@ export default function MonthlyResultCards({ rows, bySport }: { rows: MonthRow[]
     <div className="hf-heading"><div><p className="hf-eyebrow">The public record</p><h2>Explore the monthly record.</h2><p>Explore the returns from our football and tennis selections.</p></div><Link className="hf-outline-link" prefetch={false} href="/track-record">Full record <span aria-hidden="true">↗</span></Link></div>
     <div className="mp-terminal">
       <div className="mp-toolbar">
-        <div className="mp-sports" role="group" aria-label="Record sport">{scopes.filter(item => item.key === 'combined' || bySport?.[item.key]?.show).map(item => <button key={item.key} aria-pressed={scope === item.key} onClick={() => { setScope(item.key); setSelected(''); }}><HomeResearchIcon name={item.key === 'combined' ? 'record' : item.key === 'props' ? 'football' : 'tennis'} />{item.label}</button>)}</div>
+        <div className="mp-sports" role="group" aria-label="Record sport">{scopes.filter(item => item.key === 'combined' || bySport?.[item.key]?.show).map(item => <button key={item.key} aria-pressed={scope === item.key} onClick={() => { setScope(item.key); setSelected(''); }}><PerformanceFilterIcon name={item.key === 'combined' ? 'all' : item.key === 'props' ? 'football' : 'tennis'} />{item.label}</button>)}</div>
         <div className="mp-range" role="group" aria-label="Chart period"><button aria-pressed={range === 'six'} onClick={() => { setRange('six'); setSelected(''); }}>Recent 6 months</button><button aria-pressed={range === 'all'} onClick={() => { setRange('all'); setSelected(''); }}>All months</button></div>
       </div>
       {active ? <>
