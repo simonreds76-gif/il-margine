@@ -58,7 +58,6 @@ export function buildMonthlyRows(rows: MonthlyBetRow[]) {
 
   return Array.from(byMonth.values())
     .sort((a, b) => b.month.localeCompare(a.month))
-    .slice(0, 24)
     .map((row) => {
       const totalStake = roundUnits(row.total_stake);
       const totalProfit = roundUnits(row.total_profit);
@@ -72,5 +71,17 @@ export function buildMonthlyRows(rows: MonthlyBetRow[]) {
         roi: totalStake > 0 ? roundUnits((totalProfit / totalStake) * 100) : 0,
       };
     });
+}
+
+type RecordTotals = { total_profit: number; total_stake: number; total_bets: number };
+
+/** Earlier aggregates belong in full-record totals, never in individual months. */
+export function summarizeMonthlyRecord(rows: RecordTotals[], earlier?: RecordTotals) {
+  const totals = rows.reduce((sum, row) => ({
+    profit: sum.profit + row.total_profit,
+    stake: sum.stake + row.total_stake,
+    bets: sum.bets + row.total_bets,
+  }), { profit: earlier?.total_profit ?? 0, stake: earlier?.total_stake ?? 0, bets: earlier?.total_bets ?? 0 });
+  return { ...totals, roi: totals.stake > 0 ? totals.profit / totals.stake * 100 : null };
 }
 
