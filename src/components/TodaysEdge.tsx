@@ -2,7 +2,7 @@
 
 import SportIcon from "@/components/SportIcon";
 import MarketBadge from "@/components/MarketBadge";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import styles from "./TodaysEdge.module.css";
 import TrackedLink from "@/components/TrackedLink";
@@ -44,14 +44,12 @@ const publishedDate = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Europe/London", day: "numeric", month: "short", year: "numeric",
 });
 
-function dateChip(value: string | null): string {
+function dateChip(value: string | null, today: string | null): string {
   if (!value) return "Date TBC";
   const date = new Date(`${value}T12:00:00Z`);
   if (Number.isNaN(date.getTime())) return "Date TBC";
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const target = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
-  const days = Math.round((target.getTime() - today.getTime()) / 86_400_000);
+  if (!today) return londonDate.format(date);
+  const days = Math.round((date.getTime() - Date.parse(`${today}T12:00:00Z`)) / 86_400_000);
   if (days === 0) return "Today";
   if (days === 1) return "Tomorrow";
   return londonDate.format(date);
@@ -90,6 +88,17 @@ function selectVisiblePicks(picks: EdgeBet[], filter: Filter): EdgeBet[] {
 
 export default function TodaysEdge({ picks, lastSettled = null, last7Profit = null }: TodaysEdgeProps) {
   const [filter, setFilter] = useState<Filter>("all");
+  // Cached HTML and the first client render use the same absolute date.
+  // Relative labels then follow the London calendar, including overnight tabs.
+  const [today, setToday] = useState<string | null>(null);
+  useEffect(() => {
+    const updateDay = () => setToday(new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/London", year: "numeric", month: "2-digit", day: "2-digit",
+    }).format(new Date()));
+    const initial = window.setTimeout(updateDay, 0);
+    const timer = window.setInterval(updateDay, 60_000);
+    return () => { window.clearTimeout(initial); window.clearInterval(timer); };
+  }, []);
   const counts = useMemo(
     () => ({
       all: picks.length,
@@ -153,7 +162,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
                 <div className={styles.pickHeading}>
                   <span className={styles.sportBadge}>
                     <MarketBadge market={pick.market} category={pick.category} event={pick.event} showLabel compact />
-                    <span className={styles.date}>· {dateChip(pick.match_date)}</span>
+                    <span className={styles.date}>· {dateChip(pick.match_date, today)}</span>
                   </span>
                   <span className={styles.open} aria-hidden="true">↗</span>
                 </div>
