@@ -252,6 +252,14 @@ def main() -> int:
 
     local_csv = save_local_csv(history_rows, captured_at)
     print(f"Local history CSV: {local_csv}")
+    if args.capture_mode == "daily" and not args.dry_run:
+        scout_root = Path(__file__).resolve().parents[1]
+        if (scout_root / "data/tennis-ml-research/hardcourt-scout-v1/registration.json").exists():
+            try:
+                from tennis_hardcourt_scout import capture_latest
+                print("Hardcourt Scout paper research: " + capture_latest(scout_root))
+            except Exception as exc:
+                print(f"WARNING: Hardcourt Scout daily capture failed ({type(exc).__name__}); history capture continues.")
     append_history_rows(history_rows, dry_run=args.dry_run)
     return 0
 
