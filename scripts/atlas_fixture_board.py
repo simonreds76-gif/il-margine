@@ -167,7 +167,15 @@ def build(fixtures, clubs, managers, now, crests):
         shared_ids = {r['id'] for r in club_rows if r['odds'] is not None} & {r['id'] for r in manager_rows if r['odds'] is not None}
         club_by_id = {r['id']: r for r in club_rows}
         for r in manager_rows:
-            if r['id'] in shared_ids and any(r[k] != club_by_id[r['id']][k] for k in ('odds', 'winner', 'profits')):
+            if r['id'] not in shared_ids:
+                continue
+            reference = club_by_id[r['id']]
+            # Managers can now coach the opposite clubs. Validate the same
+            # historical match in a common orientation, without changing either
+            # series' independently oriented returns for the upcoming fixture.
+            comparable = r if r['firstWasHome'] == reference['firstWasHome'] else {
+                **r, 'odds': r['odds'][::-1], 'profits': r['profits'][::-1], 'winner': 2 - r['winner']}
+            if any(comparable[k] != reference[k] for k in ('date', 'league', 'home', 'away', 'score', 'odds', 'winner', 'profits')):
                 raise ValueError('Shared match orientation or price mismatch: ' + r['id'])
         shared = len(shared_ids)
         c, m = summarize(club_rows), summarize(manager_rows)
