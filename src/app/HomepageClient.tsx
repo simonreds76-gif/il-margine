@@ -11,7 +11,7 @@ import ResultBadge from "@/components/ResultBadge";
 import TodaysEdge from "@/components/TodaysEdge";
 import ToolEmblem, { emblemForHref } from "@/components/ToolEmblem";
 import "./home-discovery.css";
-import RecordIcon from "@/components/RecordIcon";
+import HomeResearchIcon from "@/components/HomeResearchIcon";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import type { MonthRow } from "@/components/MonthlyBreakdown";
@@ -217,16 +217,20 @@ export default function HomepageClient({
           </div>
           <div className="home-lead-picks"><TodaysEdge picks={pendingBets} lastSettled={recentBets[0] ?? null} last7Profit={last7DaysProfit} /></div>
           <div className="home-lead-record">
-            <div className="home-performance-proof mt-5 rounded-2xl border border-slate-700/60 p-4 sm:p-5">
-              <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{recordStatus === "historical" || !combinedStats ? "Earlier recorded results" : "Public performance record"}</p><Link href="/track-record" className="text-xs text-emerald-300 underline underline-offset-4">View results ↗</Link></div>
-              <dl className="grid grid-cols-3 gap-3">{heroProofStats.map(stat => <div key={stat.label}><RecordIcon name={stat.icon} className="mb-3 h-6 w-6 text-emerald-200" /><dt className="text-xs leading-5 text-slate-400">{stat.label}</dt><dd className="mt-1.5 text-lg font-semibold tabular-nums tracking-tight sm:text-2xl">{stat.value}</dd></div>)}</dl>
-              <p className="mt-4 text-xs leading-5 text-slate-400">{recordStatus === "unavailable" ? "The latest refresh is unavailable. These are the last available figures, which may exclude recent results." : recordStatus === "historical" ? "Earlier recorded results are shown. The latest results are unavailable and are not included." : "Past performance is not a forecast."}</p><Link prefetch={false} href="/track-record#record-method" className="mt-2 inline-flex min-h-9 items-center text-xs text-emerald-200 underline underline-offset-4">How the record is calculated →</Link>
-            </div>
+            <section className="home-record-card" aria-labelledby="home-record-title">
+              <div className="home-record-heading"><HomeResearchIcon name="record" /><h2 id="home-record-title">{recordStatus === "historical" || !combinedStats ? "Earlier recorded results" : "Public performance record"}</h2></div>
+              <div className="home-record-numbers">
+                <dl className={`home-record-roi ${displayStats.overall.roi < 0 ? 'is-negative' : ''}`}><dt>{heroProofStats[0].label}</dt><dd>{heroProofStats[0].value}</dd></dl>
+                <dl className="home-record-support">{heroProofStats.slice(1).map(stat => <div key={stat.label}><dt>{stat.label}</dt><dd>{stat.value}</dd></div>)}</dl>
+              </div>
+              <div className="home-record-links"><Link prefetch={false} href="/track-record">Explore the full record <span aria-hidden="true">↗</span></Link><Link prefetch={false} href="/track-record#record-method">How it is calculated</Link></div>
+              <p className="home-record-note">{recordStatus === "unavailable" ? "The latest refresh is unavailable. These are the last available figures, which may exclude recent results." : recordStatus === "historical" ? "Earlier recorded results are shown. The latest results are unavailable and are not included." : "Past performance is not a forecast."}</p>
+            </section>
             <nav className="home-research-start" aria-label="Start your betting research">
               <h2>Put the data to work.</h2>
-              <Link prefetch={false} href="/football-atlas/fixtures"><ToolEmblem name="matchday" /><span><strong>Research the next football match</strong><small>Club and manager head to head, with historical returns.</small></span><span aria-hidden="true">↗</span></Link>
-              <Link prefetch={false} href="/tennis-matchday"><ToolEmblem name="tennis-matchday" /><span><strong>Get to know the tennis matchup</strong><small>Upcoming matches, player profiles and previous meetings.</small></span><span aria-hidden="true">↗</span></Link>
-              <Link prefetch={false} href="/fair-odds-lab"><ToolEmblem name="lab" /><span><strong>Investigate the price</strong><small>Goalscorer prices, lineups and aerial analysis in Fair Odds Lab.</small></span><span aria-hidden="true">↗</span></Link>
+              <Link prefetch={false} href="/football-atlas/fixtures"><HomeResearchIcon name="football" /><span><strong>Football Matchday</strong><small>Research upcoming fixtures through club and manager history.</small></span><span aria-hidden="true">↗</span></Link>
+              <Link prefetch={false} href="/tennis-matchday"><HomeResearchIcon name="tennis" /><span><strong>Tennis Matchday</strong><small>Compare the players and their previous meetings.</small></span><span aria-hidden="true">↗</span></Link>
+              <Link prefetch={false} href="/penalty-takers"><HomeResearchIcon name="penalty" /><span><strong>Club penalty takers</strong><small>Find each club’s first choice, backups and recent penalty history.</small></span><span aria-hidden="true">↗</span></Link>
             </nav>
           </div>
         </div>
