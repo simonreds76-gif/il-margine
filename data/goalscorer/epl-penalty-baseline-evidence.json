@@ -1,7 +1,24 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-12T18:13:05Z",
+  "generated_at": "2026-10-13T06:51:08Z",
   "league": "epl",
-  "row_count": 0,
-  "rows": []
+  "row_count": 1,
+  "rows": [
+    {
+      "team": "Coventry City",
+      "team_key": "coventry city",
+      "player_name": "Jack Rudoni",
+      "player_key": "jack rudoni",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-12"
+    }
+  ]
 }
