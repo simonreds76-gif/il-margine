@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-13T06:51:08Z",
+  "generated_at": "2026-10-13T16:27:08Z",
   "league": "epl",
   "row_count": 1,
   "rows": [
@@ -22,17 +22,17 @@
       "primary_pre_match": "Haji Wright",
       "secondary_pre_match": "Victor Torp",
       "tertiary_pre_match": "Brandon Thomas-Asante",
-      "primary_lineup_status": "expected_out",
-      "secondary_lineup_status": "unknown",
-      "tertiary_lineup_status": "expected_starter",
-      "active_taker_pre_match": "Brandon Thomas-Asante",
-      "active_slot_pre_match": "tertiary",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
       "review_type": "unranked_taker",
       "review_priority": "high",
-      "editorial_note": "Jack Rudoni took 1 penalty attempt and scored for Coventry City vs Newcastle United. Primary pre-match: Haji Wright (expected_out). Secondary pre-match: Victor Torp (unknown). Pre-match active slot was tertiary -> Brandon Thomas-Asante. Strong review flag: the taker was not in the tracked top three.",
-      "context_generated_at": "2026-10-12T16:06:30Z",
-      "context_source_path": "data/goalscorer/epl/penalty-duty-context.json",
+      "editorial_note": "Jack Rudoni took 1 penalty attempt and scored for Coventry City vs Newcastle United. Primary pre-match: Haji Wright (unknown). Secondary pre-match: Victor Torp (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/epl-penalty-takers.json",
       "actual_taker_match_status": "Yes - started, off 83'",
       "primary_on_pitch_at_penalty": "No - unavailable in match squad",
       "secondary_on_pitch_at_penalty": "No - bench, on 83'",
@@ -44,7 +44,7 @@
           "source_event_id": "2980971647",
           "match_id": "5795468",
           "source_url": "https://www.fotmob.com/matches/coventry-city-vs-newcastle-united/2yooc8#5795468",
-          "observed_at": "2026-10-13T06:51:04+00:00",
+          "observed_at": "2026-10-13T16:27:05+00:00",
           "event_date": "2026-10-12",
           "season": "2026/27",
           "team": "Coventry City",
@@ -75,10 +75,14 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20261007",
+      "20261008",
+      "20261009",
+      "20261010",
       "20261011",
       "20261012",
       "20261013"
     ],
-    "matches_checked": 4
+    "matches_checked": 10
   }
 }
