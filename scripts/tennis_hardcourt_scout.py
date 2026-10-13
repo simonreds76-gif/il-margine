@@ -159,7 +159,7 @@ def fixture_key(row):
     return '|'.join(values[:2]+sorted(values[2:]))
 
 
-def capture(root,rows,now=None,as_of=None):
+def capture(root,rows,now=None,as_of=None,forecast_generated_at=None):
     now=now or datetime.now(timezone.utc);folder=root/RELATIVE
     with locked(folder):
         reg=read(folder/'registration.json');reasons=Counter()
@@ -167,6 +167,8 @@ def capture(root,rows,now=None,as_of=None):
         if reg['model_hashes']!=hashes(root) or reg['model_environment']!=environment(root):raise ValueError('frozen model code or environment changed')
         if reg['rules']!=RULES:raise ValueError('frozen rules changed')
         if str(as_of)!=now.date().isoformat():raise ValueError('forecast must be freshly generated today')
+        forecast_stamp=utc(forecast_generated_at) if forecast_generated_at else now
+        if not forecast_stamp or not utc(reg['registered_at'])<=forecast_stamp<=now or now-forecast_stamp>timedelta(hours=2):raise ValueError('forecast generation time invalid or stale')
         available,price_hashes=quotes(root,now)
         known_results=set();game_file=root/'data/oncourt/games_atp.csv'
         if game_file.exists():
@@ -188,7 +190,7 @@ def capture(root,rows,now=None,as_of=None):
             if not q:reasons[reason]+=1;continue
             selection=select(p,q,row)
             pending.append((path,dict(version=VERSION,fixture_key=key,registered_at=now.isoformat(),
-                forecast_as_of=str(as_of),tour_id=str(row['tour_id']),round_id=str(row['round_id']),
+                forecast_as_of=str(as_of),forecast_generated_at=forecast_stamp.isoformat(),tour_id=str(row['tour_id']),round_id=str(row['round_id']),
                 players=[str(row['player1_id']),str(row['player2_id'])],names=[row['player1'],row['player2']],
                 tournament=row['tour_name'],surface='Hard',category='Challenger',
                 probability=p,market_probability=q['market_p1'],selection=selection,quote=q,
@@ -283,10 +285,10 @@ def summarize(root,folder=None,now=None):
         return result
 
 
-def capture_current(root,rows,as_of=None):
+def capture_current(root,rows,as_of=None,forecast_generated_at=None):
     """Fail visibly for research without changing or blocking live forecasting."""
     try:
-        status=capture(root,rows,as_of=as_of)
+        status=capture(root,rows,as_of=as_of,forecast_generated_at=forecast_generated_at)
         summarize(root)
         return json.dumps(status)
     except Exception as exc:
@@ -295,6 +297,24 @@ def capture_current(root,rows,as_of=None):
         try:summarize(root)
         except Exception:pass
         return 'BLOCKED: see hardcourt-scout-v1/capture-status.json'
+
+
+def capture_latest(root,now=None):
+    """The existing daily price save can follow forecasting; reuse only its fresh packet."""
+    now=now or datetime.now(timezone.utc);folder=root/RELATIVE
+    reg=read(folder/'registration.json')
+    if not reg:return 'not registered'
+    packets=[]
+    for path in (root/'data/tennis-ml-research/components'/now.strftime('%Y-%m-%d')).glob('*.json'):
+        if path.stat().st_size>500_000:continue
+        packet=read(path);stamp=utc(packet.get('captured_at'))
+        if stamp and utc(reg['registered_at'])<=stamp<=now and now-stamp<=timedelta(hours=2):packets.append((stamp,packet))
+    if not packets:return 'No fresh post-registration component packet; next normal forecast required.'
+    stamp,packet=max(packets,key=lambda item:item[0])
+    if packet.get('model_file_sha256')!=sha256((root/MODEL_FILES[0]).read_bytes()).hexdigest():return 'Component engine version mismatch; new forecast required.'
+    body=json.dumps(packet['rows'],sort_keys=True,separators=(',',':'),allow_nan=False)
+    if sha256(body.encode()).hexdigest()!=packet.get('payload_sha256'):raise ValueError('component packet checksum mismatch')
+    return capture_current(root,packet['rows'],as_of=stamp.date().isoformat(),forecast_generated_at=stamp.isoformat())
 
 
 def weekly_text(report):

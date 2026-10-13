@@ -1,4 +1,5 @@
-import csv, importlib.util, json, os, sys, tempfile, unittest
+import ast, csv, importlib.util, json, os, sys, tempfile, unittest
+from types import SimpleNamespace
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
@@ -81,6 +82,39 @@ class ScoutTests(unittest.TestCase):
     def test_weekly_reports_pending_void_and_no_false_roi(self):
         self.capture();text=s.weekly_text(self.report());self.assertIn('PAPER ONLY',text);self.assertIn('ROI awaits',text)
         self.assertIn('1 pending',text);self.assertIn('zero real stake',text)
+    def test_late_daily_price_save_cannot_reuse_old_forecasts(self):
+        self.assertIn('No fresh',s.capture_latest(self.root,self.now))
+        p=self.root/'data/tennis-ml-research/components/2026-10-13/old.json';p.parent.mkdir(parents=True)
+        p.write_text(json.dumps({'captured_at':'2026-10-13T05:00:00+00:00','rows':[self.row]}))
+        self.assertIn('No fresh',s.capture_latest(self.root,self.now))
+        p.write_text(json.dumps({'captured_at':self.now.isoformat(),'rows':[self.row],'model_file_sha256':'wrong'}))
+        self.assertIn('version mismatch',s.capture_latest(self.root,self.now))
+        packet={'captured_at':self.now.isoformat(),'rows':[self.row],
+                'model_file_sha256':s.sha256((self.root/s.MODEL_FILES[0]).read_bytes()).hexdigest(),
+                'payload_sha256':s.sha256(json.dumps([self.row],sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()}
+        p.write_text(json.dumps(packet))
+        with patch.object(s,'capture_current',return_value='captured') as collect:
+            self.assertEqual(s.capture_latest(self.root,self.now),'captured')
+            self.assertEqual(collect.call_args.kwargs['forecast_generated_at'],self.now.isoformat())
+        packet['payload_sha256']='wrong';p.write_text(json.dumps(packet))
+        with self.assertRaises(ValueError):s.capture_latest(self.root,self.now)
+    def test_source_forecast_timestamp_locked_and_stale_rejected(self):
+        with self.assertRaises(ValueError):
+            s.capture(self.root,[self.row],self.now,self.now.date().isoformat(),(self.now-timedelta(hours=3)).isoformat())
+        generated=self.now-timedelta(seconds=30)
+        s.capture(self.root,[self.row],self.now,self.now.date().isoformat(),generated.isoformat())
+        packet=s.read(next((self.root/s.RELATIVE/'captures').glob('*.json')))
+        self.assertEqual(packet['forecast_generated_at'],generated.isoformat())
+    def test_daily_capture_hook_has_no_close_or_dry_run_side_effects(self):
+        tree=ast.parse((Path(__file__).resolve().parents[1]/'pinnacle-capture-history.py').read_text(encoding='utf-8-sig'))
+        main=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='main')
+        hook=next(n for n in main.body if isinstance(n,ast.If) and 'args.capture_mode' in ast.unparse(n.test))
+        code=compile(ast.Module(body=[hook],type_ignores=[]),'daily_hook','exec')
+        with patch.object(s,'capture_latest',return_value='checked') as collect:
+            for mode,dry in [('close',False),('daily',True),('daily',False)]:
+                exec(code,{'Path':Path,'__file__':str(self.root/'scripts/pinnacle-capture-history.py'),
+                           'args':SimpleNamespace(capture_mode=mode,dry_run=dry),'print':lambda *args:None})
+            collect.assert_called_once_with(self.root)
 
 
 if __name__=='__main__':unittest.main()
