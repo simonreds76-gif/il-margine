@@ -186,8 +186,8 @@ export default function HomepageClient({
         <div className="home-lead hf-container">
           <div className="home-lead-intro">
             <p className="hf-eyebrow">Il Margine · Football &amp; tennis</p>
-            <h1>Published picks.<br /><span>Free research tools.</span></h1>
-            <p className="home-lead-copy">Our latest selections, plus tools to explore the players, clubs and managers behind your next bet.</p>
+            <h1>Data driven betting.<br /><span>Tools for sharper decisions.</span></h1>
+            <p className="home-lead-copy">Football and tennis models, published selections and free research tools. Compare player statistics, explore club and manager head to head records, and see how past bets performed at the recorded odds.</p>
           </div>
           <div className="home-lead-picks"><TodaysEdge picks={pendingBets} lastSettled={recentBets[0] ?? null} last7Profit={last7DaysProfit} /></div>
           <div className="home-lead-record">
