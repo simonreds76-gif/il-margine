@@ -10,5 +10,5 @@ export async function GET() {
   const football = footballHomeFeed(board as FixtureBoard);
   const tennis = tennisHomeFeed(await getTennisMatchday());
   const now = Date.now();
-  return Response.json({ football: { ...football, fixtures: upcomingHomeFixtures(football, now, 36) }, tennis: { ...tennis, fixtures: ['ATP', 'Challenger'].flatMap(tour => upcomingHomeFixtures({ ...tennis, fixtures: tennis.fixtures.filter(f => f.tour === tour) }, now, 24)) } });
+  return Response.json({ football: { ...football, fixtures: upcomingHomeFixtures(football, now, 36) }, tennis: { ...tennis, fixtures: upcomingHomeFixtures({ ...tennis, fixtures: tennis.fixtures.filter(f => f.tour === 'ATP') }, now, 24) } });
 }

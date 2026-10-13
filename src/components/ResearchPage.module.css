@@ -45,3 +45,8 @@
   .page .header .title { font-size: 30px; }
   .page .header .description { min-height: 90px; }
 }
+/* Descriptive destinations instead of a row of unexplained sport icons. */
+.page .editions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;overflow:visible;padding:0}
+.page .editions a{white-space:normal;min-width:0;padding:12px;gap:10px;align-items:flex-start;flex-direction:row;justify-content:flex-start}
+.page .editions a>span{min-width:0}.page .editions strong{display:block;font-size:13px;font-weight:650;line-height:1.4}.page .editions small{display:block;font-size:11px;font-weight:400;color:#a8bdc7;line-height:1.45;margin-top:4px}.page .editions img{flex:0 0 24px;margin-top:2px}
+@media(max-width:639px){.page .editions{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.page .editions a{padding:9px 8px;gap:7px}.page .editions img{width:20px;height:20px;flex-basis:20px}.page .editions strong{font-size:12px}.page .editions small{font-size:11px}.page .editions a:nth-child(1){grid-column:1;grid-row:1}.page .editions a:nth-child(2){grid-column:1;grid-row:2}.page .editions a:nth-child(3){grid-column:1;grid-row:3}.page .editions a:nth-child(4){grid-column:2;grid-row:2}.page .editions a:nth-child(5){grid-column:2;grid-row:1}.page .editions a:nth-child(6){grid-column:2;grid-row:3}}

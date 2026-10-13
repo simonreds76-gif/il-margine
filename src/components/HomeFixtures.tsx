@@ -31,7 +31,6 @@ function Fixture({ fixture: f, tennis, now }: { fixture: HomeFixture; tennis: bo
 }
 export default function HomeFixtures() {
   const [data, setData] = useState<HomeFixturesData | null>(null);
-  const [tour, setTour] = useState('ATP');
   const [failed, setFailed] = useState(false);
   const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
@@ -46,13 +45,13 @@ export default function HomeFixtures() {
     <nav className="hf-jump" aria-label="Choose a sport"><a href="#home-football">Football ↓</a><a href="#home-tennis">Tennis ↓</a></nav>
     <div className="hf-sports">{(['football', 'tennis'] as const).map(sport => {
       const feed = data?.[sport];
-      const fixtures = feed && now ? upcomingHomeFixtures(sport === 'tennis' ? { ...feed, fixtures: feed.fixtures.filter(f => f.tour === tour) } : feed, now) : [];
+      const fixtures = feed && now ? upcomingHomeFixtures(sport === 'tennis' ? { ...feed, fixtures: feed.fixtures.filter(f => f.tour === 'ATP') } : feed, now) : [];
       const loading = !failed && (!data || !now);
       const stale = feed?.expiresAt && now && Date.parse(feed.expiresAt) <= now;
       const title = fixtures.length && now && londonDay(fixtures[0].start) === londonDay(now) ? `Today's ${sport}` : sport === 'football' ? 'Next league fixtures' : 'Next tennis matches';
       const href = sport === 'football' ? '/football-atlas/fixtures' : '/tennis-matchday';
-      return <div className="hf-sport" id={`home-${sport}`} key={sport}><div className="hf-sport-heading"><ToolEmblem name={sport === 'football' ? 'matchday' : 'tennis-matchday'} /><div><h3>{title}</h3><span>{sport === 'football' ? 'Five major domestic leagues' : `${tour} player meetings`}</span></div><Link prefetch={false} href={href} aria-label={`All ${sport} fixtures`}>View all ↗</Link></div>
-        {sport === 'tennis' && <div className="hf-tour" aria-label="Tennis tour">{['ATP', 'Challenger'].map(t => <button key={t} aria-pressed={tour === t} onClick={() => setTour(t)}>{t}</button>)}</div>}
+      return <div className="hf-sport" id={`home-${sport}`} key={sport}><div className="hf-sport-heading"><ToolEmblem name={sport === 'football' ? 'matchday' : 'tennis-matchday'} /><div><h3>{title}</h3><span>{sport === 'football' ? 'Five major domestic leagues' : 'ATP player meetings'}</span></div><Link prefetch={false} href={href} aria-label={`All ${sport} fixtures`}>View all ↗</Link></div>
+
         <div className="hf-cards" aria-busy={loading}>{loading ? <><div className="hf-empty hf-skeleton" role="status">Loading upcoming fixtures…</div><div className="hf-empty hf-skeleton" aria-hidden="true" /></> : fixtures.length ? fixtures.map(f => <Fixture key={f.id} fixture={f} tennis={sport === 'tennis'} now={now!} />) : <div className="hf-empty"><ToolEmblem name={sport} /><h4>{failed || stale || !feed?.checkedAt ? 'The schedule needs a refresh' : 'No upcoming matches in this snapshot'}</h4><p>Previous meetings are still available in Return Atlas.</p><Link prefetch={false} href={sport === 'football' ? '/football-atlas' : '/return-atlas'}>Explore historical returns ↗</Link></div>}</div>
         {feed?.checkedAt && <p className="hf-freshness">Updated {new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(feed.checkedAt))} · UK times</p>}
       </div>;

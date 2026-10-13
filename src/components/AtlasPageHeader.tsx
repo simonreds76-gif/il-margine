@@ -5,12 +5,12 @@ import styles from "./ResearchPage.module.css";
 import "@/app/research-mobile.css";
 
 const editions = [
-  { id: "matchday", href: "/football-atlas/fixtures", label: "Matchday", image: "/football-atlas/matchday/mark-v1.svg" },
-  { id: "football", href: "/football-atlas", label: "Football", image: "/images/tools/football-v1.webp" },
-  { id: "managers", href: "/manager-atlas", label: "Managers", image: "/manager-atlas/mark-v2.svg" },
-  { id: "tennis", href: "/return-atlas", label: "Tennis", image: "/images/tools/tennis-v1.webp" },
-  { id: "tennis-matchday", href: "/tennis-matchday", label: "Tennis Matchday", image: "/tennis-matchday/mark.svg" },
-  { id: "matchup", href: "/tennis-matchup", label: "Matchup Lab", image: "/tennis-matchup/court-v1.webp" },
+  { id: "matchday", href: "/football-atlas/fixtures", label: "Football Matchday", description: "Fixtures with club and manager history", image: "/football-atlas/matchday/mark-v1.svg" },
+  { id: "football", href: "/football-atlas", label: "Club returns", description: "Historical club betting returns", image: "/images/tools/football-v1.webp" },
+  { id: "managers", href: "/manager-atlas", label: "Manager returns", description: "Head to head betting returns", image: "/manager-atlas/mark-v2.svg" },
+  { id: "tennis", href: "/return-atlas", label: "Tennis returns", description: "Historical player betting returns", image: "/images/tools/tennis-v1.webp" },
+  { id: "tennis-matchday", href: "/tennis-matchday", label: "Tennis Matchday", description: "Daily matches and player history", image: "/tennis-matchday/mark.svg" },
+  { id: "matchup", href: "/tennis-matchup", label: "Matchup Lab", description: "Serve, return and match history", image: "/tennis-matchup/court-v1.webp" },
 ] as const;
 
 export default function AtlasPageHeader({ edition, description, children }: {
@@ -32,7 +32,7 @@ export default function AtlasPageHeader({ edition, description, children }: {
     </div>
     <p className={styles.description}>{description}</p>
     <nav className={styles.editions} aria-label="Return Atlas tools">
-      {editions.map(item => <Link key={item.id} href={item.href} prefetch={false} aria-label={item.id === "matchup" ? "Tennis Matchup Lab" : item.label} aria-current={edition === item.id ? "page" : undefined}><Image src={item.image} alt="" width={24} height={24} unoptimized /><span>{item.id === "matchup" ? "Matchup" : item.id === "tennis-matchday" ? "Daily H2H" : item.label}</span></Link>)}
+      {editions.map(item => <Link key={item.id} href={item.href} prefetch={false} aria-current={edition === item.id ? "page" : undefined}><Image src={item.image} alt="" width={24} height={24} unoptimized /><span><strong>{item.label}</strong><small>{item.description}</small></span></Link>)}
     </nav>
     {children}
   </header>;

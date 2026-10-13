@@ -208,27 +208,24 @@ export default function HomepageClient({
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <main id="main-content">
 
-      <section className="home-hero border-b border-slate-800/70 py-8 sm:py-12">
-        <div className="hf-container">
-          <p className="hf-eyebrow">Il Margine · Football &amp; tennis</p>
-          <h1 className="max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl">The next match.<br /><span className="text-emerald-300">Know the history.</span></h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">Club, manager and player histories for upcoming matches. Free betting tools and our latest selections.</p>
-          <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm"><a href="#matchups" className="inline-flex min-h-11 items-center gap-2 text-emerald-200"><ToolEmblem name="matchday" className="h-7 w-7" />Explore the next matches ↓</a><a href="#monthly" className="inline-flex min-h-11 items-center text-slate-300">Our monthly results ↓</a></div>
-        </div>
-      </section>
-      <HomeFixtures />
-      <section className="border-b border-slate-800/30 py-9 md:py-12">
-        <div className="home-picks-layout hf-container">
-          <div><p className="hf-eyebrow">Our selections</p><h2 className="text-3xl font-semibold tracking-tight">The picks. The record.</h2><p className="mt-3 text-sm leading-6 text-slate-400">Football player props and tennis selections, with the recorded prices and stakes behind our returns.</p>
+      <section className="home-hero border-b border-slate-800/70 py-7 sm:py-10">
+        <div className="home-lead hf-container">
+          <div className="home-lead-intro">
+            <p className="hf-eyebrow">Il Margine · Football &amp; tennis</p>
+            <h1>Betting insight.<br /><span>Tools. Models. Picks.</span></h1>
+            <p className="home-lead-copy">Our latest selections, plus free tools to explore the players, clubs and managers behind your next bet.</p>
+          </div>
+          <div className="home-lead-picks"><TodaysEdge picks={pendingBets} lastSettled={recentBets[0] ?? null} last7Profit={last7DaysProfit} /></div>
+          <div className="home-lead-record">
             <div className="home-performance-proof mt-5 rounded-2xl border border-slate-700/60 p-4 sm:p-5">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{recordStatus === "historical" || !combinedStats ? "Earlier recorded results" : "Public performance record"}</p><Link href="/track-record" className="text-xs text-emerald-300 underline underline-offset-4">View results ↗</Link></div>
               <dl className="grid grid-cols-3 gap-3">{heroProofStats.map(stat => <div key={stat.label}><RecordIcon name={stat.icon} className="mb-3 h-6 w-6 text-emerald-200" /><dt className="text-xs leading-5 text-slate-400">{stat.label}</dt><dd className="mt-1.5 text-lg font-semibold tabular-nums tracking-tight sm:text-2xl">{stat.value}</dd></div>)}</dl>
               <p className="mt-4 text-xs leading-5 text-slate-400">{recordStatus === "unavailable" ? "The latest refresh is unavailable. These are the last available figures, which may exclude recent results." : recordStatus === "historical" ? "Earlier recorded results are shown. The latest results are unavailable and are not included." : "Past performance is not a forecast."}</p><Link prefetch={false} href="/track-record#record-method" className="mt-2 inline-flex min-h-9 items-center text-xs text-emerald-200 underline underline-offset-4">How the record is calculated →</Link>
             </div>
           </div>
-          <div><TodaysEdge picks={pendingBets} lastSettled={recentBets[0] ?? null} last7Profit={last7DaysProfit} /></div>
         </div>
       </section>
+      <HomeFixtures />
       <MonthlyBreakdownSection scope="combined" initialPayload={initialMonthly} cards />
       {recentBets.length > 0 ? (
         <section className="border-b border-slate-800/30 bg-[#0b0e13] py-9 md:py-12">
