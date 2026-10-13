@@ -11,7 +11,6 @@ import ResultBadge from "@/components/ResultBadge";
 import TodaysEdge from "@/components/TodaysEdge";
 import ToolEmblem, { emblemForHref } from "@/components/ToolEmblem";
 import "./home-discovery.css";
-import HomeResearchIcon from "@/components/HomeResearchIcon";
 import HomePerformanceRecord from "@/components/HomePerformanceRecord";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
@@ -193,12 +192,6 @@ export default function HomepageClient({
           <div className="home-lead-picks"><TodaysEdge picks={pendingBets} lastSettled={recentBets[0] ?? null} last7Profit={last7DaysProfit} /></div>
           <div className="home-lead-record">
             <HomePerformanceRecord stats={displayStats} status={recordStatus} />
-            <nav className="home-research-start" aria-label="Start your betting research">
-              <h2>Put the data to work.</h2>
-              <Link prefetch={false} href="/football-atlas/fixtures"><HomeResearchIcon name="football" /><span><strong>Football Matchday</strong><small>Research upcoming fixtures through club and manager history.</small></span><span aria-hidden="true">↗</span></Link>
-              <Link prefetch={false} href="/tennis-matchday"><HomeResearchIcon name="tennis" /><span><strong>Tennis Matchday</strong><small>Compare the players and their previous meetings.</small></span><span aria-hidden="true">↗</span></Link>
-              <Link prefetch={false} href="/penalty-takers"><HomeResearchIcon name="penalty" /><span><strong>Club penalty takers</strong><small>Find each club’s first choice, backups and recent penalty history.</small></span><span aria-hidden="true">↗</span></Link>
-            </nav>
           </div>
         </div>
       </section>
@@ -284,9 +277,9 @@ export default function HomepageClient({
             ["/return-atlas", "Tennis Return Atlas", "Player returns at the recorded match odds."],
             ["/tennis-matchup", "Tennis Matchup Lab", "Serve, return and head to head profiles."],
             ["/fair-odds-lab", "Fair Odds Lab", "Compare goalscorer prices and lineups."],
-            ["/fair-odds-lab/aerial", "Air Control", "Height, aerial profiles and delivery."],
+            ["/penalty-takers", "Club penalty takers", "First choices, backups and recent penalty history."],
           ].map(([href,title,copy]) => <Link prefetch={false} href={href} key={href}><ToolEmblem name={emblemForHref(href)} /><div><h3>{title}</h3><p>{copy}</p></div><span aria-hidden="true">↗</span></Link>)}</div>
-          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-400"><Link href="/penalty-takers" className="inline-flex min-h-11 items-center">Penalty takers ↗</Link><Link href="/resources" className="inline-flex min-h-11 items-center">Betting guides ↗</Link><Link href="/the-edge" className="inline-flex min-h-11 items-center">Our methodology ↗</Link></div>
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-400"><Link href="/resources" className="inline-flex min-h-11 items-center">Betting guides ↗</Link><Link href="/the-edge" className="inline-flex min-h-11 items-center">Our methodology ↗</Link></div>
         </div>
       </section>
       </main>
