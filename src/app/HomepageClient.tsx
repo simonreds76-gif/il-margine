@@ -212,8 +212,8 @@ export default function HomepageClient({
         <div className="home-lead hf-container">
           <div className="home-lead-intro">
             <p className="hf-eyebrow">Il Margine · Football &amp; tennis</p>
-            <h1>Betting insight.<br /><span>Tools. Models. Picks.</span></h1>
-            <p className="home-lead-copy">Our latest selections, plus free tools to explore the players, clubs and managers behind your next bet.</p>
+            <h1>Data driven betting.<br /><span>Tools. Models. Picks.</span></h1>
+            <p className="home-lead-copy">Football and tennis models, matchup analysis and historical betting records. Research tools and selections for serious bettors.</p>
           </div>
           <div className="home-lead-picks"><TodaysEdge picks={pendingBets} lastSettled={recentBets[0] ?? null} last7Profit={last7DaysProfit} /></div>
           <div className="home-lead-record">
@@ -222,6 +222,12 @@ export default function HomepageClient({
               <dl className="grid grid-cols-3 gap-3">{heroProofStats.map(stat => <div key={stat.label}><RecordIcon name={stat.icon} className="mb-3 h-6 w-6 text-emerald-200" /><dt className="text-xs leading-5 text-slate-400">{stat.label}</dt><dd className="mt-1.5 text-lg font-semibold tabular-nums tracking-tight sm:text-2xl">{stat.value}</dd></div>)}</dl>
               <p className="mt-4 text-xs leading-5 text-slate-400">{recordStatus === "unavailable" ? "The latest refresh is unavailable. These are the last available figures, which may exclude recent results." : recordStatus === "historical" ? "Earlier recorded results are shown. The latest results are unavailable and are not included." : "Past performance is not a forecast."}</p><Link prefetch={false} href="/track-record#record-method" className="mt-2 inline-flex min-h-9 items-center text-xs text-emerald-200 underline underline-offset-4">How the record is calculated →</Link>
             </div>
+            <nav className="home-research-start" aria-label="Start your betting research">
+              <h2>Put the data to work.</h2>
+              <Link prefetch={false} href="/football-atlas/fixtures"><ToolEmblem name="matchday" /><span><strong>Research the next football match</strong><small>Club and manager head to head, with historical returns.</small></span><span aria-hidden="true">↗</span></Link>
+              <Link prefetch={false} href="/tennis-matchday"><ToolEmblem name="tennis-matchday" /><span><strong>Get to know the tennis matchup</strong><small>Upcoming matches, player profiles and previous meetings.</small></span><span aria-hidden="true">↗</span></Link>
+              <Link prefetch={false} href="/fair-odds-lab"><ToolEmblem name="lab" /><span><strong>Investigate the price</strong><small>Goalscorer prices, lineups and aerial analysis in Fair Odds Lab.</small></span><span aria-hidden="true">↗</span></Link>
+            </nav>
           </div>
         </div>
       </section>
