@@ -1,5 +1,5 @@
 "use client";
-import TennisMatchupFeature from "@/components/TennisMatchupFeature";
+import HomeFixtures from "@/components/HomeFixtures";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -12,7 +12,6 @@ import TodaysEdge from "@/components/TodaysEdge";
 import ToolEmblem, { emblemForHref } from "@/components/ToolEmblem";
 import "./home-discovery.css";
 import RecordIcon from "@/components/RecordIcon";
-import ReturnAtlasFeature from "@/components/ReturnAtlasFeature";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import type { MonthRow } from "@/components/MonthlyBreakdown";
@@ -31,15 +30,6 @@ type HomepageBet = Bet & {
   bookmaker?: Bookmaker | Bookmaker[] | null;
 };
 
-type HomepageMarket = {
-  id: string;
-  name: string;
-  description: string;
-  status: "active" | "coming";
-  bets?: string;
-  profit?: string;
-};
-
 function getTrackingMonths() {
   const start = new Date("2024-10-01T00:00:00Z");
   const now = new Date();
@@ -48,64 +38,6 @@ function getTrackingMonths() {
     (now.getUTCFullYear() - start.getUTCFullYear()) * 12 + (now.getUTCMonth() - start.getUTCMonth())
   );
   return `${months}+ months`;
-}
-
-function MarketCard({
-  market,
-  href,
-}: {
-  market: HomepageMarket;
-  href?: string;
-}) {
-  const active = market.status === "active";
-  const card = (
-    <div
-      className={`group relative flex h-full min-h-[160px] flex-col overflow-hidden rounded-2xl border p-5 transition-all duration-300 md:p-6 ${
-        active
-          ? "border-[rgba(87,209,150,0.20)] bg-[#0c0f14] hover:-translate-y-[2px] hover:border-[rgba(87,209,150,0.30)] hover:shadow-[0_12px_48px_rgba(87,209,150,0.04)]"
-          : "border-slate-700/40 bg-[#0c0f14] opacity-90"
-      }`}
-    >
-      {active ? (
-        <div
-          className="absolute top-0 left-[8%] right-[8%] h-px"
-          style={{ background: "linear-gradient(90deg, transparent, rgba(87,209,150,0.22), transparent)" }}
-        />
-      ) : null}
-      <div className="relative flex h-full flex-col">
-        <div className="home-market-art"><ToolEmblem name={market.id === "atp" ? "tennis" : market.id === "atg" ? "lab" : "football"} /><span className="home-discovery-arrow" aria-hidden="true">↗</span></div>
-        <div className="mb-3 flex flex-wrap items-center gap-2.5">
-          <h3 className="text-[15px] font-semibold text-slate-200">{market.name}</h3>
-          <span
-            className={`rounded-full border px-2.5 py-[2px] text-[10px] font-mono font-bold uppercase tracking-[0.14em] ${
-              active
-                ? "border-[rgba(87,209,150,0.20)] bg-[rgba(87,209,150,0.08)] text-[rgba(87,209,150,0.85)]"
-                : "border-slate-700/40 bg-slate-800/50 text-slate-400"
-            }`}
-          >
-            {active ? (market.id === "atg" ? "Model" : "Active") : "Soon"}
-          </span>
-        </div>
-        <p className="text-[13px] leading-[1.65] text-slate-400 transition-colors duration-300 group-hover:text-slate-300">{market.description}</p>
-        {active && market.profit ? (
-          <div className="mt-4 flex items-baseline gap-4 tabular-nums text-[12px]">
-            {market.bets ? <span className="tabular-nums text-slate-400">{market.bets} bets</span> : null}
-            <span className="font-semibold tabular-nums text-[rgba(87,209,150,0.90)]">{market.profit}</span>
-          </div>
-        ) : null}
-      </div>
-    </div>
-  );
-
-  if (!href || !active) {
-    return card;
-  }
-
-  return (
-    <Link prefetch={false} href={href} className="home-market-link block h-full">
-      {card}
-    </Link>
-  );
 }
 
 type HomepageClientProps = {
@@ -272,64 +204,32 @@ export default function HomepageClient({
       value: trackingPeriod,
     },
   ];
-  const markets: HomepageMarket[] = [
-    {
-      id: "props",
-      name: "Player Props",
-      description: "Published football player selections, recorded odds and settled results.",
-      status: "active" as const,
-      bets: `${displayStats.props.total_bets}+`,
-      profit: `${displayStats.props.roi > 0 ? "+" : ""}${displayStats.props.roi.toFixed(1)}% ROI`,
-    },
-    {
-      id: "atp",
-      name: "ATP Tennis",
-      description: "Tennis selections with recorded stakes, prices and results.",
-      status: "active" as const,
-      bets: `${displayStats.tennis.total_bets}+`,
-      profit: `${displayStats.tennis.roi > 0 ? "+" : ""}${displayStats.tennis.roi.toFixed(1)}% ROI`,
-    },
-    {
-      id: "atg",
-      name: "Fair Odds Lab",
-      description: "Expected and confirmed lineups, model fair odds and Bet365 price comparisons.",
-      status: "active" as const,
-      profit: "Explore lineups & odds",
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <main id="main-content">
 
-      <section className="home-hero border-b border-slate-800/70 py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,.92fr)] lg:gap-12">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">Football &amp; tennis</p>
-              <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-slate-100 sm:text-5xl xl:text-6xl">Betting research,<br /><span className="text-emerald-300">built on evidence.</span></h1>
-              <p className="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Il Margine combines independent betting analysis with specialist tools for football and tennis. Compare prices, investigate matchups and explore historical returns. Follow selections identified by our statistical models.</p>
-              <div className="mt-6">
-                <Link prefetch={false} href="/tools" className="sport-cta"><span className="sport-cta-emblem"><ToolEmblem name="tools" className="h-full w-full" /></span><span className="sport-cta-label">Explore the tools</span><svg aria-hidden="true" viewBox="0 0 24 24" className="sport-cta-arrow" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12h15m-6-6 6 6-6 6" /></svg></Link>
-              </div>
-              <div className="mt-3">
-                <Link prefetch={false} href="/track-record" className="home-record-link">See our published record <span aria-hidden="true">→</span></Link>
-              </div>
-              <div className="home-performance-proof mt-6 rounded-2xl border border-slate-800 p-4 sm:p-5">
-                <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{recordStatus === "historical" || !combinedStats ? "Earlier recorded results" : "Public performance record"}</p><Link href="/track-record" className="text-xs text-emerald-300 underline decoration-emerald-400/30 underline-offset-4 hover:text-emerald-200">View results</Link></div>
-                <dl className="grid grid-cols-3 gap-3">{heroProofStats.map((stat) => <div key={stat.label}>
-                  <RecordIcon name={stat.icon} className="mb-3 h-7 w-7 text-emerald-200" /><dt className="text-xs leading-5 text-slate-400">{stat.label}</dt><dd className="mt-1.5 text-lg font-semibold tabular-nums tracking-tight text-slate-100 sm:text-2xl">{stat.value}</dd>
-                </div>)}</dl>
-                <p className="mt-3 text-xs text-slate-400">{recordStatus === "unavailable" ? "The latest refresh is unavailable. These are the last available figures, which may exclude recent results." : recordStatus === "historical" ? "Earlier recorded results are shown. The latest results are unavailable and are not included." : "Recorded betting results, including wins and losses. Past performance is not a forecast."}</p><Link prefetch={false} href="/track-record#record-method" className="mt-2 inline-flex min-h-8 items-center text-xs text-emerald-200 underline underline-offset-4">How the record is calculated →</Link>
-              </div>
-            </div>
-            <div className="lg:pt-1"><TodaysEdge picks={pendingBets} lastSettled={recentBets[0] ?? null} last7Profit={last7DaysProfit} /></div>
-          </div>
+      <section className="home-hero border-b border-slate-800/70 py-8 sm:py-12">
+        <div className="hf-container">
+          <p className="hf-eyebrow">Il Margine · Football &amp; tennis</p>
+          <h1 className="max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl">The next match.<br /><span className="text-emerald-300">Know the history.</span></h1>
+          <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">Club, manager and player histories for upcoming matches. Free betting tools and our latest selections.</p>
+          <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm"><a href="#matchups" className="inline-flex min-h-11 items-center gap-2 text-emerald-200"><ToolEmblem name="matchday" className="h-7 w-7" />Explore the next matches ↓</a><a href="#monthly" className="inline-flex min-h-11 items-center text-slate-300">Our monthly results ↓</a></div>
         </div>
       </section>
-      <MonthlyBreakdownSection scope="combined" initialPayload={initialMonthly} />
-      <ReturnAtlasFeature />
-      <TennisMatchupFeature />
+      <HomeFixtures />
+      <section className="border-b border-slate-800/30 py-9 md:py-12">
+        <div className="home-picks-layout hf-container">
+          <div><p className="hf-eyebrow">Our selections</p><h2 className="text-3xl font-semibold tracking-tight">The picks. The record.</h2><p className="mt-3 text-sm leading-6 text-slate-400">Football player props and tennis selections, with the recorded prices and stakes behind our returns.</p>
+            <div className="home-performance-proof mt-5 rounded-2xl border border-slate-700/60 p-4 sm:p-5">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{recordStatus === "historical" || !combinedStats ? "Earlier recorded results" : "Public performance record"}</p><Link href="/track-record" className="text-xs text-emerald-300 underline underline-offset-4">View results ↗</Link></div>
+              <dl className="grid grid-cols-3 gap-3">{heroProofStats.map(stat => <div key={stat.label}><RecordIcon name={stat.icon} className="mb-3 h-6 w-6 text-emerald-200" /><dt className="text-xs leading-5 text-slate-400">{stat.label}</dt><dd className="mt-1.5 text-lg font-semibold tabular-nums tracking-tight sm:text-2xl">{stat.value}</dd></div>)}</dl>
+              <p className="mt-4 text-xs leading-5 text-slate-400">{recordStatus === "unavailable" ? "The latest refresh is unavailable. These are the last available figures, which may exclude recent results." : recordStatus === "historical" ? "Earlier recorded results are shown. The latest results are unavailable and are not included." : "Past performance is not a forecast."}</p><Link prefetch={false} href="/track-record#record-method" className="mt-2 inline-flex min-h-9 items-center text-xs text-emerald-200 underline underline-offset-4">How the record is calculated →</Link>
+            </div>
+          </div>
+          <div><TodaysEdge picks={pendingBets} lastSettled={recentBets[0] ?? null} last7Profit={last7DaysProfit} /></div>
+        </div>
+      </section>
+      <MonthlyBreakdownSection scope="combined" initialPayload={initialMonthly} cards />
       {recentBets.length > 0 ? (
         <section className="border-b border-slate-800/30 bg-[#0b0e13] py-9 md:py-12">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -402,42 +302,17 @@ export default function HomepageClient({
       ) : null}
 
 
-      <section id="markets" className="border-b border-slate-800/30 py-9 md:py-12 scroll-mt-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">
-            Where we operate
-          </span>
-          <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Markets</h2>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-400">
-            Follow published selections or use the goalscorer board to make your own comparisons.
-          </p>
-
-          <div className={`mt-6 grid gap-3 md:grid-cols-2 ${markets.length > 3 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
-            {markets.map((market) => {
-              const href =
-                market.id === "props"
-                  ? "/player-props"
-                  : market.id === "atp"
-                    ? "/tennis-tips"
-                    : market.id === "atg"
-                      ? "/fair-odds-lab"
-                      : undefined;
-              return <MarketCard key={market.id} market={market} href={href} />;
-            })}
-          </div>
-
-        </div>
-      </section>
-
-      <section className="site-section">
-        <div className="site-container grid gap-6 lg:grid-cols-[1fr_1.3fr]">
-          <div><p className="site-eyebrow">The approach</p><h2 className="text-2xl font-semibold tracking-tight">A price is only useful with context.</h2><p className="mt-3 text-sm text-slate-300">We assess the evidence, compare an estimated fair price with the market and record what happens. Our methodology explains the assumptions and limitations.</p><Link href="/the-edge" className="site-text-link">Read our methodology →</Link></div>
-          <div className="grid gap-3 sm:grid-cols-2">{[
-            ["/track-record", "Review the results", "ROI, sample sizes and links to the full public histories."],
-            ["/penalty-takers", "Penalty taker directory", "First choices, deputies and the evidence behind each order."],
-            ["/tools", "Find your betting tool", "Fair prices, historical research and staking. Choose the tool for your question."],
-            ["/resources", "Understand the method", "Practical guides to probability, pricing and value."],
-          ].map(([href,title,copy]) => <Link prefetch={false} href={href} key={href} className="site-card site-card-link home-approach-card"><div className="home-approach-art"><ToolEmblem name={emblemForHref(href)} /></div><div className="home-approach-copy"><h3 className="font-semibold">{title}</h3><p className="mt-2 text-sm text-slate-400">{copy}</p></div><span className="home-discovery-arrow" aria-hidden="true">↗</span></Link>)}</div>
+      <section className="site-section" id="tools">
+        <div className="hf-container"><div className="hf-heading"><div><p className="hf-eyebrow">Go deeper</p><h2>Your research desk.</h2><p>Choose the question. Open the tool.</p></div><Link prefetch={false} href="/tools">All tools ↗</Link></div>
+          <div className="home-compact-directory">{[
+            ["/football-atlas", "Football Return Atlas", "Club returns by season, venue and price."],
+            ["/manager-atlas", "Manager Return Atlas", "Follow managers across clubs and meetings."],
+            ["/return-atlas", "Tennis Return Atlas", "Player returns at the recorded match odds."],
+            ["/tennis-matchup", "Tennis Matchup Lab", "Serve, return and head to head profiles."],
+            ["/fair-odds-lab", "Fair Odds Lab", "Compare goalscorer prices and lineups."],
+            ["/fair-odds-lab/aerial", "Air Control", "Height, aerial profiles and delivery."],
+          ].map(([href,title,copy]) => <Link prefetch={false} href={href} key={href}><ToolEmblem name={emblemForHref(href)} /><div><h3>{title}</h3><p>{copy}</p></div><span aria-hidden="true">↗</span></Link>)}</div>
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-400"><Link href="/penalty-takers" className="inline-flex min-h-11 items-center">Penalty takers ↗</Link><Link href="/resources" className="inline-flex min-h-11 items-center">Betting guides ↗</Link><Link href="/the-edge" className="inline-flex min-h-11 items-center">Our methodology ↗</Link></div>
         </div>
       </section>
       </main>

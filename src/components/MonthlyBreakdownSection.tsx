@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from "react";
 import MonthlyBreakdown, { type MonthRow, type MonthlyBreakdownScope } from "./MonthlyBreakdown";
+import MonthlyResultCards from './MonthlyResultCards';
 
 interface MonthlyBreakdownSectionProps {
   scope: MonthlyBreakdownScope;
   initialPayload?: { show: boolean; rows: MonthRow[] };
+  cards?: boolean;
 }
 
-export default function MonthlyBreakdownSection({ scope, initialPayload }: MonthlyBreakdownSectionProps) {
+export default function MonthlyBreakdownSection({ scope, initialPayload, cards = false }: MonthlyBreakdownSectionProps) {
   const [payload, setPayload] = useState<{ show: boolean; rows: MonthRow[] } | null>(initialPayload ?? null);
   const hasInitialPayload = initialPayload !== undefined;
 
@@ -33,8 +35,8 @@ export default function MonthlyBreakdownSection({ scope, initialPayload }: Month
 
   return (
     <section id="monthly" className="monthly-showcase scroll-mt-24 border-b border-slate-800/30 py-9 md:py-12">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <MonthlyBreakdown scope={scope} rowsOverride={payload.rows} />
+      <div className={cards ? "hf-container" : "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"}>
+        {cards ? <MonthlyResultCards rows={payload.rows} /> : <MonthlyBreakdown scope={scope} rowsOverride={payload.rows} />}
       </div>
     </section>
   );
