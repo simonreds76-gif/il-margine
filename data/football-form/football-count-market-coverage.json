@@ -2,21 +2,18 @@
   "categories": {
     "match_cards_total": {
       "bookmakers": [
-        "Bet365",
-        "Kambi"
+        "Bet365"
       ],
       "competitions": [
         "England - Premier League",
         "France - Ligue 1",
         "Germany - Bundesliga",
         "Italy - Serie A",
-        "La Liga",
         "Premier League",
-        "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 13,
-      "paired_price_events": 3,
+      "events": 19,
+      "paired_price_events": 7,
       "pairing_unknown_events": 12,
       "raw_market_names": [
         "Bookings Totals",
@@ -26,22 +23,14 @@
       "status": "PAIRED_PRICES_OBSERVED"
     },
     "match_fouls_total": {
-      "bookmakers": [
-        "Kambi"
-      ],
-      "competitions": [
-        "La Liga",
-        "Premier League",
-        "Serie A"
-      ],
-      "events": 3,
+      "bookmakers": [],
+      "competitions": [],
+      "events": 0,
       "paired_price_events": 0,
       "pairing_unknown_events": 0,
-      "raw_market_names": [
-        "Total Fouls"
-      ],
-      "rows": 3,
-      "status": "MARKET_NAME_ONLY"
+      "raw_market_names": [],
+      "rows": 0,
+      "status": "NOT_OBSERVED"
     },
     "player_cards": {
       "bookmakers": [
@@ -51,18 +40,16 @@
         "England - Premier League",
         "Germany - Bundesliga",
         "Italy - Serie A",
-        "La Liga",
         "Premier League",
-        "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 11,
+      "events": 20,
       "paired_price_events": 0,
       "pairing_unknown_events": 11,
       "raw_market_names": [
         "Player Cards"
       ],
-      "rows": 14,
+      "rows": 20,
       "status": "MARKET_NAME_ONLY"
     },
     "player_fouled": {
@@ -70,44 +57,41 @@
         "Bet365"
       ],
       "competitions": [
+        "Bundesliga",
         "England - Premier League",
         "Germany - Bundesliga",
         "Italy - Serie A",
-        "La Liga",
         "Premier League",
-        "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 11,
+      "events": 19,
       "paired_price_events": 0,
       "pairing_unknown_events": 11,
       "raw_market_names": [
         "Player To Be Fouled"
       ],
-      "rows": 14,
+      "rows": 19,
       "status": "MARKET_NAME_ONLY"
     },
     "player_fouls_committed": {
       "bookmakers": [
-        "Bet365",
-        "Kambi"
+        "Bet365"
       ],
       "competitions": [
+        "Bundesliga",
         "England - Premier League",
         "Germany - Bundesliga",
         "Italy - Serie A",
-        "La Liga",
         "Premier League",
-        "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 11,
+      "events": 20,
       "paired_price_events": 0,
       "pairing_unknown_events": 11,
       "raw_market_names": [
         "Player Fouls"
       ],
-      "rows": 17,
+      "rows": 20,
       "status": "MARKET_NAME_ONLY"
     },
     "team_cards_total": {
@@ -119,42 +103,30 @@
         "France - Ligue 1",
         "Germany - Bundesliga",
         "Italy - Serie A",
-        "La Liga",
-        "Premier League",
-        "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 13,
-      "paired_price_events": 3,
+      "events": 12,
+      "paired_price_events": 0,
       "pairing_unknown_events": 12,
       "raw_market_names": [
         "Bookings Totals Away",
         "Bookings Totals Home"
       ],
-      "rows": 30,
-      "status": "PAIRED_PRICES_OBSERVED"
+      "rows": 24,
+      "status": "MARKET_NAME_ONLY"
     },
     "team_fouls_total": {
-      "bookmakers": [
-        "Kambi"
-      ],
-      "competitions": [
-        "La Liga",
-        "Premier League",
-        "Serie A"
-      ],
-      "events": 3,
+      "bookmakers": [],
+      "competitions": [],
+      "events": 0,
       "paired_price_events": 0,
       "pairing_unknown_events": 0,
-      "raw_market_names": [
-        "Total Fouls Away",
-        "Total Fouls Home"
-      ],
-      "rows": 6,
-      "status": "MARKET_NAME_ONLY"
+      "raw_market_names": [],
+      "rows": 0,
+      "status": "NOT_OBSERVED"
     }
   },
-  "generated_at": "2026-10-12T18:00:15Z",
+  "generated_at": "2026-10-13T16:04:43Z",
   "policy": {
     "definition_gate": "Bookmaker settlement definitions must be reconciled against the result source before ROI is scored.",
     "live_staking": "BLOCKED",

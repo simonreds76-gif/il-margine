@@ -1,35 +1,35 @@
 {
   "contracts": 122,
-  "settled_contracts": 112,
-  "paired_contracts": 67,
-  "paired_fixtures": 25,
+  "settled_contracts": 122,
+  "paired_contracts": 75,
+  "paired_fixtures": 28,
   "conflicting_results": 0,
   "models": {
     "ema20_v3": {
-      "brier": 0.2565788223004353,
-      "log_loss": 0.7091609244659417,
-      "market_brier": 0.25037878960050747,
-      "mean_error": -0.24289011536999922,
-      "absolute_error": 3.7253083472466666,
+      "brier": 0.2564296019814323,
+      "log_loss": 0.7083980629330859,
+      "market_brier": 0.2493519822115298,
+      "mean_error": -0.6854183871904753,
+      "absolute_error": 3.850533281883928,
       "hypothetical_selections": {
-        "settled": 19,
-        "wins": 10,
+        "settled": 21,
+        "wins": 12,
         "losses": 9,
-        "pnl_units": -0.47999999999999976,
-        "roi": -0.02526315789473683,
-        "stake_units": 19,
-        "pending": 2,
+        "pnl_units": 0.9740000000000004,
+        "roi": 0.0463809523809524,
+        "stake_units": 21,
+        "pending": 0,
         "overdue": 0,
         "unavailable_contracts": 47,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
     "v4": {
-      "brier": 0.2512762631203333,
-      "log_loss": 0.6957349751593057,
-      "market_brier": 0.25037878960050747,
-      "mean_error": -0.16219618333333333,
-      "absolute_error": 3.7130282366666667,
+      "brier": 0.25146988934876785,
+      "log_loss": 0.6961379817544132,
+      "market_brier": 0.2493519822115298,
+      "mean_error": -0.5917185744047619,
+      "absolute_error": 3.8298110148809528,
       "hypothetical_selections": {
         "settled": 0,
         "wins": 0,
@@ -44,11 +44,11 @@
       }
     },
     "opponent": {
-      "brier": 0.24716799108110665,
-      "log_loss": 0.6871568907801499,
-      "market_brier": 0.25037878960050747,
-      "mean_error": -0.22432446000000011,
-      "absolute_error": 3.6299769266666666,
+      "brier": 0.24688475080108332,
+      "log_loss": 0.6866317252287568,
+      "market_brier": 0.2493519822115298,
+      "mean_error": -0.6458982023809524,
+      "absolute_error": 3.7794314047619046,
       "hypothetical_selections": {
         "settled": 20,
         "wins": 12,
@@ -63,11 +63,11 @@
       }
     },
     "shots_market_offset_v1": {
-      "brier": 0.247467511822547,
-      "log_loss": 0.6879345691272729,
-      "market_brier": 0.25037878960050747,
-      "mean_error": -0.22432446000000011,
-      "absolute_error": 3.6299769266666666,
+      "brier": 0.24574137617153916,
+      "log_loss": 0.6844685795206014,
+      "market_brier": 0.2493519822115298,
+      "mean_error": -0.6458982023809524,
+      "absolute_error": 3.7794314047619046,
       "hypothetical_selections": {
         "settled": 9,
         "wins": 5,
@@ -95,13 +95,15 @@
   "model_fingerprint": "934de9b700fe013c26d54fefa1c5ccfa82af2f0bd98748b242cda712d9ad3e0d",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 0,
-  "generated_at": "2026-10-13T01:37:19Z",
+  "generated_at": "2026-10-13T16:05:25Z",
   "new_contracts": 0,
-  "scan_exclusions": {},
-  "latest_archived_capture": "2026-10-12T18:00:12Z",
-  "latest_result_date": "2026-10-11",
-  "raw_upcoming_rows": 0,
+  "scan_exclusions": {
+    "outside_capture_window": 40
+  },
+  "latest_archived_capture": "2026-10-13T16:04:40Z",
+  "latest_result_date": "2026-10-12",
+  "raw_upcoming_rows": 40,
   "status": "COLLECTING",
   "settlement_source": "exact_fixture_base_and_verified_snapshots",
-  "snapshot_settlement_contracts": 81
+  "snapshot_settlement_contracts": 109
 }

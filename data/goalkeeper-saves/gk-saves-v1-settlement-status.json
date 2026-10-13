@@ -1,6 +1,6 @@
 {
   "api_errors": [],
-  "deferred_not_due": 1,
+  "deferred_not_due": 0,
   "details": [
     {
       "detail": "",
@@ -17,21 +17,30 @@
       "match_date": "2026-10-11",
       "reason": "fotmob_save_totals_disagree",
       "signal_id": "72513226|loris karius|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Maduka Okoye",
+      "match": "Torino FC vs Udinese Calcio",
+      "match_date": "2026-10-12",
+      "reason": "settled_fotmob",
+      "signal_id": "71945304|maduka okoye|3.5|over"
     }
   ],
-  "fotmob_requests_used": 3,
-  "generated_at": "2026-10-12T18:01:07Z",
+  "fotmob_requests_used": 5,
+  "generated_at": "2026-10-13T16:05:32Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 2,
-  "pending_total": 3,
+  "pending_total": 2,
   "reason_counts": {
     "fotmob_matched_player_not_goalkeeper": 1,
-    "fotmob_save_totals_disagree": 1
+    "fotmob_save_totals_disagree": 1,
+    "settled_fotmob": 1
   },
   "requests_used": 0,
-  "settled": 0,
-  "status": "BLOCKED",
+  "settled": 1,
+  "status": "PARTIAL",
   "verified_player_targets": [
     {
       "appearances": 32,
@@ -43,6 +52,12 @@
       "match_id": 5881182,
       "reason": "explicit player totals disagree with reconciled events",
       "status": "rejected"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5749699,
+      "status": "saved",
+      "targets_sha256": "91d29aeeb02bf3ad8783b47b5d34c3670a01711954fc500fa53b31c0d9b7dd97"
     }
   ]
 }

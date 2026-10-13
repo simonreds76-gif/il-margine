@@ -1,6 +1,6 @@
 # API-Football Count Archive Health
 
-- Generated: 2026-10-12T17:59:52Z
+- Generated: 2026-10-13T16:04:14Z
 - Archive: 0 fixtures; 0 new this run
 - Latest fixture: -
 - Requests: 15/30
@@ -31,6 +31,11 @@
 
 ## Errors
 
+- fixtures epl 2026-10-13: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures serie-a 2026-10-13: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures la-liga 2026-10-13: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures bundesliga 2026-10-13: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
+- fixtures ligue-1 2026-10-13: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
 - fixtures epl 2026-10-12: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
 - fixtures serie-a 2026-10-12: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
 - fixtures la-liga 2026-10-12: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
@@ -41,8 +46,3 @@
 - fixtures la-liga 2026-10-11: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
 - fixtures bundesliga 2026-10-11: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
 - fixtures ligue-1 2026-10-11: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
-- fixtures epl 2026-10-10: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
-- fixtures serie-a 2026-10-10: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
-- fixtures la-liga 2026-10-10: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
-- fixtures bundesliga 2026-10-10: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
-- fixtures ligue-1 2026-10-10: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}
