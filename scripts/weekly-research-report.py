@@ -1518,6 +1518,7 @@ def build_payload() -> dict[str, Any]:
     tennis_rate_trend = rate_trend_summary()
     tennis_full_refresh = full_refresh_summary()
     tennis_context_forward = load_json(ROOT / "data/tennis-ml-research/context-forward-v1/report.json")
+    tennis_hardcourt_scout = load_json(ROOT / "data/tennis-ml-research/hardcourt-scout-v1/report.json")
     tennis_astrissimo = load_json(ROOT / "data/tennis-ml-research/astrissimo-v1/report.json")
     tennis_props_v4 = load_json(TENNIS_PROPS_V4_JSON)
     tennis_breaks_v1 = load_json(TENNIS_BREAKS_V1_GATE)
@@ -1541,6 +1542,7 @@ def build_payload() -> dict[str, Any]:
         tennis_rate_trend = snapshot_sections.get("tennis_rate_trend") or tennis_rate_trend
         tennis_full_refresh = snapshot_sections.get("tennis_full_refresh") or tennis_full_refresh
         tennis_context_forward = snapshot_sections.get("tennis_context_forward") or tennis_context_forward
+        tennis_hardcourt_scout = snapshot_sections.get("tennis_hardcourt_scout") or tennis_hardcourt_scout
         tennis_astrissimo = snapshot_sections.get("tennis_astrissimo") or tennis_astrissimo
         tennis_props_v3 = snapshot_sections.get("tennis_props_v3") or tennis_props_v3
         tennis_props_v4 = snapshot_sections.get("tennis_props_v4") or tennis_props_v4
@@ -1593,6 +1595,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_rate_trend": tennis_rate_trend,
         "tennis_full_refresh": tennis_full_refresh,
         "tennis_context_forward": tennis_context_forward,
+        "tennis_hardcourt_scout": tennis_hardcourt_scout,
         "tennis_astrissimo": tennis_astrissimo,
         "model_review_watchlist": model_watchlist_summary(),
         "tennis_props_v4": tennis_props_v4,
@@ -1895,7 +1898,8 @@ def render_report(payload: dict[str, Any]) -> str:
         ]
     )
     lines.extend(["", rate_trend_text(payload)])
-    lines.extend(["", full_refresh_text(payload), context_forward_text(payload)])
+    from tennis_hardcourt_scout import weekly_text as hardcourt_scout_text
+    lines.extend(["", full_refresh_text(payload), context_forward_text(payload), hardcourt_scout_text(payload.get("tennis_hardcourt_scout") or {})])
     lines.extend(["", model_watchlist_text(payload)])
     return "\n".join(lines)
 
@@ -2100,6 +2104,8 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     if not most_aces_suspended():
         lines.append(f"Most Aces Direct: {paired.get('paired_events', 0)} paired fixtures | "
                      f"Brier difference {signed_number(paired.get('brier_delta_direct_minus_control'), 4)} | outcome research; prices assessed separately")
+    from tennis_hardcourt_scout import weekly_text as hardcourt_scout_text
+    lines.append(hardcourt_scout_text(payload.get("tennis_hardcourt_scout") or {}))
     lines.append(context_forward_text(payload))
     astrissimo = payload.get("tennis_astrissimo") or {}
     if astrissimo:
