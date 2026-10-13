@@ -1,12 +1,27 @@
 import importlib.util
 from pathlib import Path
 import unittest
+import json
 import sys
 sys.path.insert(0,str(Path(__file__).parents[1]))
 spec=importlib.util.spec_from_file_location('refresh',Path(__file__).parents[1]/'refresh-manager-atlas.py')
 mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
 
 class RefreshTests(unittest.TestCase):
+    def test_verified_luis_garcia_provider_id_survives_context_review_date(self):
+        root=Path(__file__).parents[2]
+        registry=json.loads((root/'scripts/config/manager-atlas-identities.json').read_text(encoding='utf-8'))
+        crosswalk=json.loads((root/'scripts/config/manager-fotmob-identities.json').read_text(encoding='utf-8'))
+        coach={'id':'242474','name':'Luis García'}
+        self.assertEqual(mod.resolve_coach(coach,'Sevilla','2026-10-12',registry,crosswalk),'mgr-0366')
+        # A verified person ID does not expire with a historical name-only window.
+        self.assertEqual(mod.resolve_coach(coach,'Sevilla','2026-10-20',registry,crosswalk),'mgr-0366')
+        with self.assertRaises(ValueError):
+            mod.resolve_coach({'id':'unknown','name':'Luis García'},'Sevilla','2026-10-20',registry,crosswalk)
+        with self.assertRaises(ValueError):
+            mod.resolve_coach({'id':'242474','name':'Luis García Fernández'},'Sevilla','2026-10-12',registry,crosswalk)
+        self.assertEqual(mod.resolve_coach({'id':'other','name':'Luis García'},'Espanyol','2023-05-01',registry,crosswalk),'mgr-0674')
+
     def page(self):
         return {'general':{'matchId':'42','leagueId':47},'header':{'status':{'finished':True,'utcTime':'2026-09-20T13:00:00Z'},'teams':[{'id':1,'name':'A','score':1},{'id':2,'name':'B','score':0}]},'content':{'lineup':{'homeTeam':{'id':1,'coach':{'id':8,'name':'Coach A','isCoach':True}},'awayTeam':{'id':2,'coach':{'id':9,'name':'Coach B','isCoach':True}}}}}
     def test_coaches_are_fixture_specific_and_oriented(self):
