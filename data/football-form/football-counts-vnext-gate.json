@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-14T18:53:22Z",
+  "generated_at": "2026-10-14T22:38:37Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -102,13 +102,13 @@
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
       "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 148,
-      "scored_fixtures": 30,
+      "scored_rows": 154,
+      "scored_fixtures": 31,
       "eligible_rows": 43,
       "eligible_fixtures": 20,
-      "blocked_rows": 105,
+      "blocked_rows": 111,
       "blocker_rows": {
-        "edge_below_3pct": 104,
+        "edge_below_3pct": 110,
         "price_older_than_3h": 2
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
