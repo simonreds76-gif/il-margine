@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T12:32:27Z",
+  "generated_at": "2026-10-14T15:07:26Z",
   "league": "ligue-1",
   "row_count": 40,
   "stats": {
@@ -32,7 +32,7 @@
     "expected_bench_rows": 0,
     "expected_out_rows": 0,
     "not_in_squad_rows": 20,
-    "avg_ev": -0.728196625
+    "avg_ev": -0.7280888249999999
   },
   "fixtures": [
     {
@@ -466,8 +466,8 @@
   ],
   "rows": [
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -568,8 +568,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -670,8 +670,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -772,8 +772,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -794,35 +794,35 @@
       "calibration_version": "raw",
       "allocation_status": "expected_roster",
       "roster_prior_players": 0,
-      "model_p_atgs": 0.358069,
-      "model_fair_odds_atgs": 2.7928,
-      "model_lambda": 0.4433,
+      "model_p_atgs": 0.359637,
+      "model_fair_odds_atgs": 2.7806,
+      "model_lambda": 0.4457,
       "team_expected_npxg": 1.6957,
       "team_share": 0.2087,
       "non_pen_lambda": 0.3539,
       "base_non_pen_lambda": 0.3539,
-      "penalty_lambda": 0.0894,
-      "base_model_lambda": 0.4433,
+      "penalty_lambda": 0.0919,
+      "base_model_lambda": 0.4457,
       "role_adjustment_factor": 1.0,
       "role_adjustment_reason": "",
-      "penalty_dependency_share": 0.2017,
+      "penalty_dependency_share": 0.2061,
       "penalty_dependent": 0,
-      "penalty_share": 0.8035,
+      "penalty_share": 0.8255,
       "baseline_penalty_share": 1.0,
-      "baseline_penalty_sample": 1.94,
-      "baseline_penalty_source": "recent_long",
+      "baseline_penalty_sample": 2.94,
+      "baseline_penalty_source": "recent_long+review_events",
       "career_player_penalties": 2.0,
       "career_team_penalties": 2.0,
       "career_penalty_share": 1.0,
-      "penalty_evidence_share": 0.0,
-      "penalty_evidence_sample": 0.0,
-      "penalty_evidence_source": "",
+      "penalty_evidence_share": 1.0,
+      "penalty_evidence_sample": 1.0,
+      "penalty_evidence_source": "review_events",
       "penalty_evidence_note": "",
       "is_penalty_taker": 1,
       "penalty_role": "primary",
       "penalty_share_prior": 0.74,
       "penalty_share_prior_weight": 6.0,
-      "penalty_hierarchy_boost_xg": 0.0267,
+      "penalty_hierarchy_boost_xg": 0.0182,
       "penalty_transfer": 0,
       "penalty_transfer_from": "",
       "penalty_transfer_level": "",
@@ -855,8 +855,8 @@
       "fixture_swing_3": 1.5625,
       "attack_factor": 1.2108,
       "opp_factor": 1.25,
-      "ev": -0.01531,
-      "edge_pct": -1.531,
+      "ev": -0.010998,
+      "edge_pct": -1.1,
       "method": "model",
       "resolver_source": "history",
       "historical_minutes": 222.0,
@@ -874,8 +874,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -976,8 +976,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -1078,8 +1078,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -1180,8 +1180,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -1282,8 +1282,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -1384,8 +1384,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -1486,8 +1486,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -1588,8 +1588,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -1690,8 +1690,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -1792,8 +1792,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -1894,8 +1894,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -1996,8 +1996,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2098,8 +2098,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2200,8 +2200,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2302,8 +2302,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2404,8 +2404,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2506,8 +2506,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2608,8 +2608,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2710,8 +2710,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2812,8 +2812,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2914,8 +2914,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3016,8 +3016,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3118,8 +3118,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3220,8 +3220,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3322,8 +3322,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3424,8 +3424,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3526,8 +3526,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3628,8 +3628,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3730,8 +3730,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3832,8 +3832,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3934,8 +3934,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4036,8 +4036,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4138,8 +4138,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4240,8 +4240,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4342,8 +4342,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4444,8 +4444,8 @@
       "notes": "event_id=72036224;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-14T12:32:27Z",
-      "captured_at": "2026-10-14T12:32:25Z",
+      "compared_at": "2026-10-14T15:07:26Z",
+      "captured_at": "2026-10-14T15:07:26Z",
       "match_date": "2026-10-16",
       "kickoff": "",
       "bookmaker": "Bet365",
