@@ -20,6 +20,9 @@ import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from admin_monitor_bundle import build_admin_bundle
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -123,6 +126,7 @@ def build_snapshot() -> dict[str, Any]:
         "tennis_props_shadow_decision": module.tennis_props_shadow_decision(),
     }
     stable = {
+        **build_admin_bundle(ROOT),
         "schema_version": SCHEMA_VERSION,
         "source": "windows_local_tennis_pipeline",
         "source_files": source_metadata(module),

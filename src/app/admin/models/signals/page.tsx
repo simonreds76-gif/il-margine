@@ -1,0 +1,6 @@
+import {redirect} from "next/navigation";
+import {isAdminSession} from "@/lib/admin-auth";
+import SignalDesk from "./SignalDesk";
+export const dynamic="force-dynamic";
+export const metadata={title:"Private signals and results",robots:{index:false,follow:false}};
+export default async function Page(){if(!await isAdminSession())redirect("/admin");return <main className="min-h-screen bg-[#0f1117] px-4 py-8 text-slate-100"><div className="mx-auto max-w-7xl"><header className="mb-6"><p className="text-xs uppercase tracking-widest text-emerald-300">Il Margine · Private</p><h1 className="mt-2 text-3xl font-bold">Signals and results</h1><p className="mt-3 max-w-3xl text-sm text-slate-300">Open the model boards, individual selections, results and capture reports. These are saved model records. Recorded prices may no longer be available, and research candidates are not published tips.</p><nav className="mt-4 flex flex-wrap gap-3 text-sm"><a className="rounded-lg border border-slate-600 px-4 py-3" href="/admin/models">ROI overview</a><a className="rounded-lg border border-slate-600 px-4 py-3" href="/admin/penalties">Penalty reviews</a><a className="rounded-lg border border-slate-600 px-4 py-3" href="/admin">Admin</a></nav></header><SignalDesk/></div></main>}
