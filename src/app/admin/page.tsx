@@ -665,6 +665,13 @@ export default function AdminPanel() {
         </div>
       </header>
 
+      <div className="mx-auto max-w-4xl px-4 pt-4">
+        <a href="/admin/models" className="flex items-center justify-between gap-4 rounded-xl border border-emerald-400/30 bg-emerald-400/5 p-4 transition hover:bg-emerald-400/10">
+          <div><h2 className="font-semibold text-emerald-200">Private model monitor</h2><p className="mt-1 text-sm text-slate-400">ROI, results and pending selections from your saved model records. No local server needed.</p></div>
+          <svg aria-hidden="true" className="h-6 w-6 shrink-0 text-emerald-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M4 19V5m0 14h16M8 15l4-5 4 2 4-7"/><path d="M16 5h4v4"/></svg>
+        </a>
+      </div>
+
       <section className="border-b border-slate-800 bg-slate-950/40">
           <div className="max-w-4xl mx-auto px-4 py-4">
             <div className="flex flex-col gap-3 rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-4 sm:flex-row sm:items-center sm:justify-between">
