@@ -104,6 +104,8 @@ test('penalty data reuses its date formatter and preserves date output',async()=
  let constructions=0;
  const NativeFormat=Intl.DateTimeFormat;
  const api=compile(fs.readFileSync(path.join(root,'src/lib/club-penalty-takers.ts'),'utf8'),{
+  '@/lib/penalty-editorial-store': {readPenaltyOverrides: async () => ({})},
+  '@/lib/penalty-editorial': {penaltyKey: (league, team) => `${league}|${team}`},
   'server-only':{},'react':{cache:f=>f},
   '@/lib/config':{BASE_URL:'https://ilmargine.bet'},
   '@/lib/player-name-matching':compile(fs.readFileSync(path.join(root,'src/lib/player-name-matching.ts'),'utf8')),

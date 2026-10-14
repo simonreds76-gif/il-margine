@@ -8,6 +8,8 @@ import { promises as fs } from "node:fs";
 import { BASE_URL } from "@/lib/config";
 import { getKnownProjectFilePath, type KnownProjectFile } from "@/lib/project-file-paths";
 import clubPenaltySeason from "../../data/goalscorer/club-penalty-season.json";
+import { readPenaltyOverrides } from "@/lib/penalty-editorial-store";
+import { penaltyKey } from "@/lib/penalty-editorial";
 
 export const CLUB_PENALTY_SEASON = clubPenaltySeason.label;
 export const CLUB_PENALTY_PREVIOUS_SEASON = clubPenaltySeason.previous_label;
@@ -492,13 +494,26 @@ export function getClubPenaltySeason(): ClubPenaltySeason {
 // React cache deduplicates metadata/page reads within a render only. A later
 // request still reads current files, preserving local edits and invalidation.
 export const readClubPenaltyData = cache(async (): Promise<ClubPenaltyLeague[]> => {
-  const logoManifest = await readLogoManifest();
+  const [logoManifest, overrides] = await Promise.all([readLogoManifest(), readPenaltyOverrides()]);
   return Promise.all(
     CLUB_LEAGUES.map(async (league) => {
       const [penaltyFile, archiveFile] = await Promise.all([
         readJson<PenaltyFile>(league.file),
         readJson<PenaltyFile>(league.archiveFile),
       ]);
+      for (const [teamName, raw] of Object.entries(penaltyFile)) {
+        if (teamName.startsWith("_") || !raw) continue;
+        const override = overrides[penaltyKey(league.key, correctFootballClubNames(teamName))];
+        if (!override || override.season !== CLUB_PENALTY_SEASON) continue;
+        const old = raw as PenaltyTeamRow;
+        if (override.at.slice(0, 10) > (penaltyFile._meta?.public_updated_at ?? "")) penaltyFile._meta = {...penaltyFile._meta, public_updated_at: override.at.slice(0, 10)};
+        penaltyFile[teamName] = {...old, ...override.order, condition_note: override.reason,
+          hierarchy_status: "probable", confidence: {primary: "medium", secondary: override.order.secondary ? "medium" : null, tertiary: override.order.tertiary ? "medium" : null},
+          last_updated: override.at.slice(0, 10), public_updated_at: override.at.slice(0, 10),
+          last_verified: {date: override.at.slice(0, 10), by: "Il Margine editorial", method: "Owner hierarchy review"},
+          flags: {...old.flags, carryover_from_previous_season: false},
+          evidence_log: [...(old.evidence_log ?? []), {id: `admin-${override.at}`, date: override.at.slice(0, 10), type: "editorial_hierarchy_review", headline: "Penalty order reviewed", context: override.reason, affects_hierarchy: true, review: {status: "approved"}, sources: override.source ? [{label: "Editorial source", url: override.source}] : []}]};
+      }
       const meta = penaltyFile._meta ?? {};
       const publicUpdatedAt = cleanClubPenaltyText(meta.public_updated_at) || clubPenaltySeason.published_at;
       const boardCheckedAt = cleanClubPenaltyText(meta.last_verified) || publicUpdatedAt;

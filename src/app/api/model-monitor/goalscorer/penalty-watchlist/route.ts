@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { isAdminSession } from "@/lib/admin-auth";
 
 import {
   clubPenaltySlug,
@@ -8,6 +9,9 @@ import {
 } from "@/lib/club-penalty-takers";
 import { readGoalscorerMonitorSnapshot } from "@/lib/goalscorer-monitor-snapshot";
 import { readPenaltyReviewState, setPenaltyReviewResolution } from "@/lib/goalscorer-penalty-review-state";
+
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 const REVIEW_STATUSES = new Set(["accepted", "ignored", "deferred", "applied", "active"]);
 
@@ -89,6 +93,7 @@ async function validateAppliedTicket(id: string) {
 }
 
 export async function GET() {
+  if (!await isAdminSession()) return NextResponse.json({error: "Sign in to Admin."}, {status: 401});
   try {
     const [snapshot, state] = await Promise.all([
       readGoalscorerMonitorSnapshot(),
@@ -120,6 +125,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!await isAdminSession()) return NextResponse.json({error: "Sign in to Admin."}, {status: 401});
+  if (request.headers.get("origin") !== new URL(request.url).origin) return NextResponse.json({error: "Same-origin Admin request required."}, {status: 403});
   try {
     const payload = (await request.json()) as {
       id?: string;
@@ -134,6 +141,11 @@ export async function POST(request: Request) {
     }
     if (!status || !REVIEW_STATUSES.has(status)) {
       return NextResponse.json({ ok: false, error: "Invalid status" }, { status: 400 });
+    }
+
+    const snapshot = await readGoalscorerMonitorSnapshot();
+    if (!snapshot?.penalty_watchlist.rows.some(r => r.row_id === id) && !snapshot?.preseason_role_review?.rows.some(r => r.row_id === id)) {
+      return NextResponse.json({ok: false, error: "Ticket no longer present. Reload the review."}, {status: 409});
     }
 
     const validation = status === "applied" ? await validateAppliedTicket(id) : null;

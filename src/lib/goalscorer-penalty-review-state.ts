@@ -2,6 +2,8 @@ import "server-only";
 
 import { promises as fs } from "fs";
 import path from "path";
+import { randomUUID } from "node:crypto";
+import { readPenaltyEditorial, savePenaltyEditorial } from "@/lib/penalty-editorial-store";
 
 export type PenaltyReviewResolution = "accepted" | "ignored" | "deferred" | "applied";
 
@@ -50,7 +52,7 @@ function normalizeEntry(value: unknown): PenaltyReviewStateEntry | null {
   };
 }
 
-export async function readPenaltyReviewState(): Promise<Record<string, PenaltyReviewStateEntry>> {
+async function readLocalPenaltyReviewState(): Promise<Record<string, PenaltyReviewStateEntry>> {
   try {
     const raw = await fs.readFile(STATE_PATH, "utf8");
     const parsed = JSON.parse(raw) as Partial<PenaltyReviewStatePayload>;
@@ -66,13 +68,13 @@ export async function readPenaltyReviewState(): Promise<Record<string, PenaltyRe
   }
 }
 
-async function writePenaltyReviewState(items: Record<string, PenaltyReviewStateEntry>): Promise<void> {
-  const payload: PenaltyReviewStatePayload = {
-    schema_version: 1,
-    items,
-  };
-  await fs.mkdir(path.dirname(STATE_PATH), { recursive: true });
-  await fs.writeFile(STATE_PATH, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+export async function readPenaltyReviewState(): Promise<Record<string, PenaltyReviewStateEntry>> {
+  const [items, state] = await Promise.all([readLocalPenaltyReviewState(), readPenaltyEditorial()]);
+  for (const [id, entry] of Object.entries(state.payload.tickets)) {
+    if (entry.status === "active") delete items[id];
+    else items[id] = {status: entry.status, updated_at: entry.updated_at};
+  }
+  return items;
 }
 
 export async function setPenaltyReviewResolution(
@@ -84,15 +86,10 @@ export async function setPenaltyReviewResolution(
     throw new Error("Missing penalty review id");
   }
 
-  const current = await readPenaltyReviewState();
-  if (status === "active") {
-    delete current[trimmedId];
-  } else {
-    current[trimmedId] = {
-      status,
-      updated_at: new Date().toISOString(),
-    };
-  }
-  await writePenaltyReviewState(current);
-  return current;
+  const state = await readPenaltyEditorial();
+  const at = new Date().toISOString();
+  state.payload.tickets[trimmedId] = {status, updated_at: at};
+  state.payload.audit.push({id: randomUUID(), at, action: `ticket_${status}`, ticket: trimmedId, club: "", before: null, after: null, reason: "Reviewed in Model Monitor"});
+  await savePenaltyEditorial(state.revision, state.payload);
+  return readPenaltyReviewState();
 }

@@ -1,0 +1,54 @@
+"use client";
+import { useCallback, useEffect, useState } from "react";
+import type { PenaltyAdminReport, ReviewClub, ReviewTicket } from "@/lib/penalty-admin-types";
+import type { PenaltyOrder } from "@/lib/penalty-editorial";
+const button = "min-h-11 rounded-lg border border-slate-600 px-3 py-2 text-sm hover:border-emerald-400/60 disabled:opacity-40";
+const field = "mt-1 min-h-11 w-full rounded-lg border border-slate-600 bg-slate-950 p-3 text-sm";
+const emptyOrder = {primary: "", secondary: "", tertiary: ""};
+const statusLabel = (s: string) => s === "ignored" ? "Done · order kept" : s === "applied" ? "Done · order changed" : s === "deferred" ? "Deferred" : s === "accepted" ? "Awaiting edit" : "Open";
+async function request(command?: unknown) {
+  const r = await fetch("/api/admin/penalty-reviews", command ? {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(command), signal: AbortSignal.timeout(15000)} : {cache: "no-store", signal: AbortSignal.timeout(15000)});
+  const data = await r.json();
+  if (!r.ok || !data.ok) throw new Error(data.error || "Request failed. Reload before retrying.");
+  return data;
+}
+export default function PenaltyReviewDesk() {
+  const [report, setReport] = useState<PenaltyAdminReport | null>(null);
+  const [busy, setBusy] = useState(false), [message, setMessage] = useState("");
+  const [filter, setFilter] = useState("open"), [search, setSearch] = useState("");
+  const [editing, setEditing] = useState<{club: ReviewClub; ticket: string; revision: number} | null>(null);
+  const [order, setOrder] = useState<PenaltyOrder>(emptyOrder), [reason, setReason] = useState(""), [source, setSource] = useState("");
+  const [brief, setBrief] = useState("");
+  const load = useCallback(async () => {setBusy(true); try {setReport((await request()).report);} catch (e) {setMessage(e instanceof Error ? e.message : "Review unavailable.");} finally {setBusy(false);}}, []);
+  useEffect(() => {void load();}, [load]);
+  useEffect(() => { if (editing) document.getElementById("hierarchy-editor")?.scrollIntoView({behavior: "smooth", block: "start"}); }, [editing]);
+  function move(from: number, to: number) { const keys = ["primary", "secondary", "tertiary"] as const; setOrder(current => ({...current, [keys[from]]: current[keys[to]], [keys[to]]: current[keys[from]]})); }
+  async function act(action: string, ticket = "", club = "") {
+    if (!report) return;
+    setBusy(true); setMessage("");
+    try {
+      const saved = await request({action, ticket, club, revision: editing?.revision ?? report.revision, order, reason, source});
+      setMessage(saved.warning || saved.message); setEditing(null);
+      try {setReport((await request()).report);} catch {setMessage(`${saved.message || "Saved."} Reload to see the updated list.`);}
+    } catch (e) {setMessage(e instanceof Error ? e.message : "Save was not confirmed. Reload before retrying.");}
+    finally {setBusy(false);}
+  }
+  function edit(club: ReviewClub, ticket = "") {if (!report) return; setEditing({club, ticket, revision: report.revision}); setOrder({...club.order}); setReason(""); setSource(""); setMessage("");}
+  async function copyReview(t: ReviewTicket, c?: ReviewClub) {
+    const text = `Please review this Il Margine penalty ticket and verify the latest evidence before recommending an order. One penalty does not automatically prove a change.\nClub: ${t.team} (${t.league})\nMatch: ${t.match}\nDate: ${t.date}\nObserved taker: ${t.taker}; result: ${t.result}\nReason: ${t.reason}\nCurrent order: ${c ? Object.values(c.order).filter(Boolean).join(" → ") : "Identity needs checking"}\nEvidence:\n${t.evidence.join("\n")}\nTicket ID: ${t.id}\n${c ? `Public page: https://ilmargine.bet${c.url}` : ""}\nRecommend keeping the order or a specific change, with sources. Wait for my decision before changing it.`;
+    setBrief(text);
+    try {await navigator.clipboard.writeText(text); setMessage("Review brief copied. Paste it into our Codex chat for my assessment.");}
+    catch {setMessage("Copy the review brief below and paste it into our chat.");}
+  }
+  const filtered = report?.tickets.filter(t => (filter === "all" || (filter === "closed" ? ["ignored", "applied"].includes(t.status) : filter === "deferred" ? t.status === "deferred" : ["active", "accepted"].includes(t.status))) && `${t.team} ${t.league} ${t.taker}`.toLowerCase().includes(search.toLowerCase())) ?? [];
+  return <div className="space-y-6">
+    <div className="flex flex-wrap items-end gap-3"><label className="min-w-40 flex-1 text-sm">Find club or player<input className={field} value={search} onChange={e=>setSearch(e.target.value)} /></label><label className="text-sm">Tickets<select className={field} value={filter} onChange={e=>setFilter(e.target.value)}><option value="open">Open</option><option value="deferred">Deferred</option><option value="closed">Completed</option><option value="all">All</option></select></label><button className={button} onClick={()=>{setEditing(null); void load();}} disabled={busy}>{busy ? "Working…" : "Reload reviews"}</button></div>
+    <p role="status" className="text-sm text-emerald-200">{message}</p>
+    {report && <p className="text-xs text-slate-400">Evidence snapshot: {report.generatedAt.replace("T", " ")} · {filtered.length} matching tickets. Saved decisions are independent of snapshot refreshes.</p>}
+    {editing && <section id="hierarchy-editor" className="scroll-mt-24 rounded-2xl border border-emerald-400/40 bg-slate-900 p-5" aria-label="Edit hierarchy"><h2 className="text-xl font-semibold">Edit {editing.club.team}</h2><p className="mt-2 text-sm text-slate-300">Published now: {Object.values(editing.club.order).filter(Boolean).join(" → ")}. Saving updates the website and closes this ticket, if one is selected.</p><div className="mt-4 grid gap-3 sm:grid-cols-3">{(["primary", "secondary", "tertiary"] as const).map((k,i)=><label className="text-sm" key={k}>Choice {i+1}<input className={field} maxLength={120} value={order[k]} disabled={busy} onChange={e=>setOrder({...order,[k]:e.target.value})}/><span className="mt-2 flex gap-2">{i > 0 && <button type="button" className={button} disabled={busy} aria-label={`Move choice ${i+1} up`} onClick={()=>move(i,i-1)}>↑ Move up</button>}{i < 2 && <button type="button" className={button} disabled={busy} aria-label={`Move choice ${i+1} down`} onClick={()=>move(i,i+1)}>↓ Move down</button>}</span></label>)}</div><label className="mt-4 block text-sm">Public explanation<textarea className={field} maxLength={1200} value={reason} disabled={busy} onChange={e=>setReason(e.target.value)} placeholder="Why this is the current order" /></label><label className="mt-3 block text-sm">Supporting source URL (optional)<input className={field} type="url" value={source} maxLength={1500} disabled={busy} onChange={e=>setSource(e.target.value)} /></label><div className="mt-4 flex flex-wrap gap-3"><button className={`${button} bg-emerald-400/10 text-emerald-200`} disabled={busy || reason.trim().length < 5} onClick={()=>act("save",editing.ticket,editing.club.id)}>Save hierarchy to website</button><button className={button} disabled={busy} onClick={()=>setEditing(null)}>Cancel</button></div><p className="mt-3 text-xs text-slate-400">Your order takes priority over routine website data refreshes for this season. Forecast models are not rerun by this action.</p></section>}
+    {!editing && report && <details className="rounded-xl border border-slate-700 p-4"><summary className="cursor-pointer text-sm">Edit a club without an open ticket</summary><label className="mt-3 block text-sm">Club<select className={field} value="" onChange={e=>{const c=report.clubs.find(c=>c.id===e.target.value); if(c) edit(c);}}><option value="">Choose a club</option>{report.clubs.map(c=><option key={c.id} value={c.id}>{c.team} · {c.league}</option>)}</select></label></details>}
+    {brief && <details open className="rounded-xl border border-slate-700 p-4"><summary className="cursor-pointer text-sm">Review brief for Codex</summary><textarea aria-label="Review brief" className={`${field} h-56`} readOnly value={brief}/><p className="mt-2 text-xs text-slate-400">Copy and paste into this chat. Nothing is sent automatically.</p></details>}
+    <div className="space-y-4">{filtered.map(t=>{const club=report?.clubs.find(c=>c.id===t.clubId); return <article key={t.id} className="rounded-2xl border border-slate-700 bg-slate-900/60 p-5"><div className="flex flex-wrap justify-between gap-2"><div><p className="text-xs uppercase tracking-wide text-slate-400">{t.league} · {t.priority || "review"}</p><h2 className="mt-1 text-xl font-semibold">{t.team}</h2></div><span className="text-sm text-emerald-200">{statusLabel(t.status)}</span></div><p className="mt-3 text-sm">{t.match} · {t.date.slice(0,10)}</p><p className="mt-2 font-medium">{t.taker || "Role review"}{t.result ? ` · ${t.result}` : ""}</p><p className="mt-1 text-sm text-amber-200">{t.reason.replaceAll("_"," ")}</p><p className="mt-3 text-sm text-slate-300">Current order: {club ? Object.values(club.order).filter(Boolean).join(" → ") : "Club mapping needs review before editing."}</p><details className="mt-3"><summary className="cursor-pointer text-sm text-slate-400">Match evidence</summary><ul className="mt-2 space-y-2 text-sm text-slate-300">{t.evidence.map((e,i)=><li key={i}>{e}</li>)}</ul></details><div className="mt-4 flex flex-wrap gap-2">{!["ignored","applied"].includes(t.status) ? <><button className={button} disabled={busy || !!editing} onClick={()=>act("done",t.id,t.clubId ?? "")}>Done</button><button className={`${button} text-emerald-200`} disabled={busy || !club} onClick={()=>club && edit(club,t.id)}>Edit hierarchy</button><button className={button} disabled={busy || !!editing} onClick={()=>act("defer",t.id,t.clubId ?? "")}>Defer</button></> : <button className={button} disabled={busy || !!editing} onClick={()=>act("reopen",t.id,t.clubId ?? "")}>Reopen review</button>}<button className={button} onClick={()=>copyReview(t,club)}>Copy review brief</button>{club && <a className={button} target="_blank" rel="noopener noreferrer" href={club.url}>View public page</a>}</div></article>;})}{report && filtered.length===0 && <p className="rounded-xl border border-slate-700 p-6 text-slate-300">No tickets match this view.</p>}</div>
+    {report && <details className="rounded-xl border border-slate-700 p-4"><summary className="cursor-pointer text-sm">Recent saved decisions</summary><ul className="mt-4 space-y-3 text-sm">{report.audit.map(a=><li key={a.id}><p>{a.at.replace("T"," ")} · {a.action} · {report.clubs.find(c=>c.id===a.club)?.team || "Ticket review"}</p><p className="text-slate-400">{a.reason}</p>{a.after && <p>{a.before ? Object.values(a.before).filter(Boolean).join(" → ") : ""} ⇒ {Object.values(a.after).filter(Boolean).join(" → ")}</p>}</li>)}</ul></details>}
+  </div>;
+}
