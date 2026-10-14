@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { randomUUID } from "node:crypto";
 import { isAdminSession } from "@/lib/admin-auth";
+import { isAdminSameOrigin } from "@/lib/admin-same-origin";
 import { penaltyAdminReport } from "@/lib/penalty-admin-reader";
 import { readPenaltyEditorial, savePenaltyEditorial, PENALTY_EDITORIAL_TAG } from "@/lib/penalty-editorial-store";
 import { editorialChange } from "@/lib/penalty-editorial";
@@ -16,7 +17,7 @@ export async function GET() {
 }
 export async function POST(request: Request) {
   if (!await isAdminSession()) return json({error: "Sign in to Admin."}, 401);
-  if (request.headers.get("origin") !== new URL(request.url).origin) return json({error: "Same-origin Admin request required."}, 403);
+  if (!isAdminSameOrigin(request)) return json({error: "Same-origin Admin request required."}, 403);
   try {
     const raw = await request.text();
     if (raw.length > 8000) return json({error: "Request too large."}, 413);

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { isAdminSession } from "@/lib/admin-auth";
+import { isAdminSameOrigin } from "@/lib/admin-same-origin";
 
 import {
   clubPenaltySlug,
@@ -126,7 +127,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   if (!await isAdminSession()) return NextResponse.json({error: "Sign in to Admin."}, {status: 401});
-  if (request.headers.get("origin") !== new URL(request.url).origin) return NextResponse.json({error: "Same-origin Admin request required."}, {status: 403});
+  if (!isAdminSameOrigin(request)) return NextResponse.json({error: "Same-origin Admin request required."}, {status: 403});
   try {
     const payload = (await request.json()) as {
       id?: string;
