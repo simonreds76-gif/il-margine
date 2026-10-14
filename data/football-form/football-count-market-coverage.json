@@ -12,47 +12,34 @@
         "Premier League",
         "Spain - LaLiga"
       ],
-      "events": 19,
-      "paired_price_events": 7,
+      "events": 22,
+      "paired_price_events": 10,
       "pairing_unknown_events": 12,
       "raw_market_names": [
         "Bookings Totals",
         "Number of Cards In Match"
       ],
-      "rows": 31,
+      "rows": 41,
       "status": "PAIRED_PRICES_OBSERVED"
     },
     "match_fouls_total": {
-      "bookmakers": [],
-      "competitions": [],
-      "events": 0,
-      "paired_price_events": 0,
-      "pairing_unknown_events": 0,
-      "raw_market_names": [],
-      "rows": 0,
-      "status": "NOT_OBSERVED"
-    },
-    "player_cards": {
       "bookmakers": [
-        "Bet365"
+        "Kambi"
       ],
       "competitions": [
-        "England - Premier League",
-        "Germany - Bundesliga",
-        "Italy - Serie A",
-        "Premier League",
-        "Spain - LaLiga"
+        "La Liga",
+        "Serie A"
       ],
-      "events": 20,
+      "events": 2,
       "paired_price_events": 0,
-      "pairing_unknown_events": 11,
+      "pairing_unknown_events": 0,
       "raw_market_names": [
-        "Player Cards"
+        "Total Fouls"
       ],
-      "rows": 20,
+      "rows": 2,
       "status": "MARKET_NAME_ONLY"
     },
-    "player_fouled": {
+    "player_cards": {
       "bookmakers": [
         "Bet365"
       ],
@@ -64,13 +51,36 @@
         "Premier League",
         "Spain - LaLiga"
       ],
-      "events": 19,
+      "events": 27,
+      "paired_price_events": 0,
+      "pairing_unknown_events": 11,
+      "raw_market_names": [
+        "Player Cards"
+      ],
+      "rows": 27,
+      "status": "MARKET_NAME_ONLY"
+    },
+    "player_fouled": {
+      "bookmakers": [
+        "Bet365"
+      ],
+      "competitions": [
+        "Bundesliga",
+        "England - Premier League",
+        "Germany - Bundesliga",
+        "Italy - Serie A",
+        "La Liga",
+        "Premier League",
+        "Serie A",
+        "Spain - LaLiga"
+      ],
+      "events": 31,
       "paired_price_events": 0,
       "pairing_unknown_events": 11,
       "raw_market_names": [
         "Player To Be Fouled"
       ],
-      "rows": 19,
+      "rows": 31,
       "status": "MARKET_NAME_ONLY"
     },
     "player_fouls_committed": {
@@ -83,15 +93,16 @@
         "Germany - Bundesliga",
         "Italy - Serie A",
         "Premier League",
+        "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 20,
+      "events": 30,
       "paired_price_events": 0,
       "pairing_unknown_events": 11,
       "raw_market_names": [
         "Player Fouls"
       ],
-      "rows": 20,
+      "rows": 30,
       "status": "MARKET_NAME_ONLY"
     },
     "team_cards_total": {
@@ -103,30 +114,39 @@
         "France - Ligue 1",
         "Germany - Bundesliga",
         "Italy - Serie A",
+        "Premier League",
         "Spain - LaLiga"
       ],
-      "events": 12,
-      "paired_price_events": 0,
+      "events": 22,
+      "paired_price_events": 10,
       "pairing_unknown_events": 12,
       "raw_market_names": [
         "Bookings Totals Away",
         "Bookings Totals Home"
       ],
-      "rows": 24,
-      "status": "MARKET_NAME_ONLY"
+      "rows": 44,
+      "status": "PAIRED_PRICES_OBSERVED"
     },
     "team_fouls_total": {
-      "bookmakers": [],
-      "competitions": [],
-      "events": 0,
+      "bookmakers": [
+        "Kambi"
+      ],
+      "competitions": [
+        "La Liga",
+        "Serie A"
+      ],
+      "events": 2,
       "paired_price_events": 0,
       "pairing_unknown_events": 0,
-      "raw_market_names": [],
-      "rows": 0,
-      "status": "NOT_OBSERVED"
+      "raw_market_names": [
+        "Total Fouls Away",
+        "Total Fouls Home"
+      ],
+      "rows": 4,
+      "status": "MARKET_NAME_ONLY"
     }
   },
-  "generated_at": "2026-10-13T16:04:43Z",
+  "generated_at": "2026-10-14T13:47:33Z",
   "policy": {
     "definition_gate": "Bookmaker settlement definitions must be reconciled against the result source before ROI is scored.",
     "live_staking": "BLOCKED",

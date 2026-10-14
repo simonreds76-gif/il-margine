@@ -1,13 +1,13 @@
 {
-  "fetched_at": "2026-10-13T16:04:52Z",
+  "fetched_at": "2026-10-14T13:47:40Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
       "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 9,
-      "api_football_requests_used": 1,
+      "api_football_requests_remaining_after_league": 7,
+      "api_football_requests_used": 3,
       "fetch_error": null,
       "fixtures": {
         "2026-08-28|bayern munich|stuttgart": {
@@ -870,24 +870,28 @@
       "football_data_latest": "2026-10-11",
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "lag_days": 2,
+      "lag_days": 3,
       "source": "football-data",
       "source_latest": "2026-10-11",
       "target_dates": [
         "2026-10-09",
         "2026-10-10",
-        "2026-10-11"
+        "2026-10-11",
+        "2026-10-16",
+        "2026-10-17",
+        "2026-10-18",
+        "2026-10-19"
       ],
-      "target_fixture_count": 3,
-      "unresolved_fixture_count": 3
+      "target_fixture_count": 4,
+      "unresolved_fixture_count": 4
     },
     "epl": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 9,
-      "api_football_requests_used": 0,
+      "api_football_max_requests": 7,
+      "api_football_requests_remaining_after_league": 5,
+      "api_football_requests_used": 2,
       "fetch_error": null,
       "fixtures": {
         "2026-08-21|arsenal|coventry": {
@@ -2011,19 +2015,6 @@
           "source": "football-data",
           "total_corners": 11
         },
-        "2026-10-12|coventry city|newcastle": {
-          "away_corners": 6,
-          "away_shots": 19,
-          "away_sot": 6,
-          "away_team": "newcastle",
-          "home_corners": 2,
-          "home_shots": 9,
-          "home_sot": 6,
-          "home_team": "coventry city",
-          "match_id": 5795468,
-          "source": "fotmob",
-          "total_corners": 8
-        },
         "2026-10-12|coventry|newcastle": {
           "away_corners": 6,
           "away_fouls": 10,
@@ -2046,27 +2037,27 @@
       },
       "football_data_count": 60,
       "football_data_latest": "2026-10-12",
-      "fotmob_count": 2,
-      "fotmob_latest": "2026-10-12",
-      "lag_days": 1,
+      "fotmob_count": 0,
+      "fotmob_latest": null,
+      "lag_days": 2,
       "source": "football-data",
       "source_latest": "2026-10-12",
       "target_dates": [
-        "2026-10-10",
-        "2026-10-11",
-        "2026-10-12",
-        "2026-10-13"
+        "2026-10-16",
+        "2026-10-17",
+        "2026-10-18",
+        "2026-10-19"
       ],
-      "target_fixture_count": 2,
-      "unresolved_fixture_count": 0
+      "target_fixture_count": 4,
+      "unresolved_fixture_count": 4
     },
     "la-liga": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 9,
-      "api_football_requests_used": 0,
+      "api_football_max_requests": 5,
+      "api_football_requests_remaining_after_league": 2,
+      "api_football_requests_used": 3,
       "fetch_error": null,
       "fixtures": {
         "2026-08-15|alaves|getafe": {
@@ -3554,27 +3545,28 @@
       },
       "football_data_count": 78,
       "football_data_latest": "2026-10-12",
-      "fotmob_count": 3,
-      "fotmob_latest": "2026-10-12",
-      "lag_days": 1,
+      "fotmob_count": 0,
+      "fotmob_latest": null,
+      "lag_days": 2,
       "source": "football-data",
       "source_latest": "2026-10-12",
       "target_dates": [
-        "2026-10-10",
-        "2026-10-11",
-        "2026-10-12",
-        "2026-10-13"
+        "2026-10-16",
+        "2026-10-17",
+        "2026-10-18",
+        "2026-10-19",
+        "2026-10-20"
       ],
-      "target_fixture_count": 3,
-      "unresolved_fixture_count": 0
+      "target_fixture_count": 4,
+      "unresolved_fixture_count": 4
     },
     "ligue-1": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 9,
-      "api_football_requests_remaining_after_league": 6,
-      "api_football_requests_used": 3,
+      "api_football_max_requests": 2,
+      "api_football_requests_remaining_after_league": 0,
+      "api_football_requests_used": 2,
       "fetch_error": null,
       "fixtures": {
         "2026-08-21|marseille|strasbourg": {
@@ -4608,7 +4600,7 @@
       "football_data_latest": "2026-10-11",
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "lag_days": 2,
+      "lag_days": 3,
       "source": "football-data",
       "source_latest": "2026-10-11",
       "target_dates": [
@@ -4616,18 +4608,23 @@
         "2026-10-09",
         "2026-10-10",
         "2026-10-11",
-        "2026-10-12"
+        "2026-10-12",
+        "2026-10-15",
+        "2026-10-16",
+        "2026-10-17",
+        "2026-10-18",
+        "2026-10-19"
       ],
-      "target_fixture_count": 4,
-      "unresolved_fixture_count": 4
+      "target_fixture_count": 10,
+      "unresolved_fixture_count": 10
     },
     "serie-a": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 6,
-      "api_football_requests_remaining_after_league": 5,
-      "api_football_requests_used": 1,
+      "api_football_max_requests": 10,
+      "api_football_requests_remaining_after_league": 0,
+      "api_football_requests_used": 0,
       "fetch_error": null,
       "fixtures": {
         "2026-08-22|genoa|napoli": {
@@ -5773,20 +5770,20 @@
       },
       "football_data_count": 60,
       "football_data_latest": "2026-10-12",
-      "fotmob_count": 4,
-      "fotmob_latest": "2026-10-12",
-      "lag_days": 1,
+      "fotmob_count": 0,
+      "fotmob_latest": null,
+      "lag_days": 2,
       "source": "football-data",
       "source_latest": "2026-10-12",
       "target_dates": [
-        "2026-10-10",
-        "2026-10-11",
-        "2026-10-12",
-        "2026-10-13"
+        "2026-10-16",
+        "2026-10-17",
+        "2026-10-18",
+        "2026-10-19"
       ],
-      "target_fixture_count": 5,
-      "unresolved_fixture_count": 1
+      "target_fixture_count": 2,
+      "unresolved_fixture_count": 2
     }
   },
-  "snapshot_date": "2026-10-13"
+  "snapshot_date": "2026-10-14"
 }
