@@ -24,14 +24,33 @@ DEFAULT_ARTIFACTS = (
 )
 
 
+class SyncBlobAdapter:
+    """Keep both Lab and Aerial publishers on the SDK's synchronous API."""
+
+    def __init__(self, put_blob: Any) -> None:
+        self.put_blob = put_blob
+
+    def put(self, pathname: str, body: bytes, *, overwrite: bool = False, **options: Any) -> Any:
+        return self.put_blob(pathname, body, allow_overwrite=overwrite,
+                             add_random_suffix=False, **options)
+
+
 def load_blob_client() -> Any:
     try:
-        from vercel.blob import BlobClient  # type: ignore
+        from vercel import blob
     except ImportError as exc:  # pragma: no cover - depends on CI/local env
         raise SystemExit(
-            "Missing Python package 'vercel'. Install with: pip install vercel"
+            f"Cannot import the Vercel Blob SDK ({type(exc).__name__}: {exc}). "
+            "Install the supported SDK with: pip install vercel-blob==0.5.0"
         ) from exc
-    return BlobClient()
+    sync_put = getattr(getattr(blob, "sync", None), "put_blob", None)
+    if callable(sync_put):
+        return SyncBlobAdapter(sync_put)
+    # Older local environments can finish publication without a forced upgrade.
+    legacy_client = getattr(blob, "BlobClient", None)
+    if callable(legacy_client):
+        return legacy_client()
+    raise SystemExit("Unsupported Vercel Blob SDK API; install vercel-blob==0.5.0")
 
 
 def validate_json_file(path: Path) -> bytes:
@@ -74,6 +93,7 @@ def main() -> None:
         print(f"::warning::{message}")
         return
 
+    os.environ["BLOB_READ_WRITE_TOKEN"] = token
     client = load_blob_client()
     uploaded: dict[str, str] = {}
     for label, path, pathname in DEFAULT_ARTIFACTS:
