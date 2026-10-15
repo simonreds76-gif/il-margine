@@ -55,7 +55,8 @@ class KeeperWatchTests(unittest.TestCase):
 
     def test_future_outcomes_not_used(self):
         self.result();a=self.run_watch();self.assertEqual(a['paired_settled_fixtures'],0)
-        self.assertTrue(all(r['history']['appearances']==0 for r in a['selections']))
+        forecasts=w.load_records(self.root/'data/goalkeeper-saves/keeper-watch/forecasts')
+        self.assertTrue(all(r['history']['appearances']==0 for r in forecasts))
 
     def test_settlement_and_roi(self):
         self.run_watch();self.result();a=self.run_watch([],self.now+timedelta(days=3))
