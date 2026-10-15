@@ -25,7 +25,7 @@ function Icon({ name }: { name: 'calendar' | 'manager' | 'club' | 'link' | 'arro
 }
 
 function Photo({ src, manager = false }: { src: string | null; manager?: boolean }) {
-  return <FixturePhoto src={src} className={manager ? 'af-face' : 'af-crest'} size={manager ? 28 : 48} fallback={<Icon name={manager ? 'manager' : 'club'} />} />;
+  return <FixturePhoto src={src} className={manager ? 'af-face' : 'af-crest'} size={manager ? 36 : 48} fallback={<Icon name={manager ? 'manager' : 'club'} />} />;
 }
 
 function Team({ club, away = false }: { club: Club; away?: boolean }) {

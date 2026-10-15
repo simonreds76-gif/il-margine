@@ -26,3 +26,8 @@
 
 .hf-side:first-child .hf-portrait,.hf-manager-names>span:first-child .hf-portrait{border-color:#a5e7ce70}
 .hf-side:nth-child(2) .hf-portrait,.hf-manager-names>span:last-child .hf-portrait{border-color:#a9cdf570}
+
+.hf-manager-names .hf-portrait{width:36px;height:36px;flex-basis:36px}
+.hf-manager-names>span{min-width:0}
+.hf-manager-names>span>span:last-child{min-width:0;overflow-wrap:anywhere}
+@media(max-width:640px){.hf-manager-names .hf-portrait{width:32px;height:32px;flex-basis:32px}}
