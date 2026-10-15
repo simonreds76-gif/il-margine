@@ -2,13 +2,16 @@
   "capture_errors": [],
   "capture_mode": "close",
   "event_last_checked": {
-    "72513242": "2026-10-15T18:39:25Z"
+    "71945310": "2026-10-15T21:46:37Z",
+    "72036224": "2026-10-15T21:46:37Z",
+    "72478630": "2026-10-15T21:46:37Z",
+    "72513242": "2026-10-15T21:46:37Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 1,
-  "events_supported": 1,
-  "events_with_lines": 1,
-  "generated_at": "2026-10-15T18:39:25Z",
+  "events_selected": 4,
+  "events_supported": 4,
+  "events_with_lines": 4,
+  "generated_at": "2026-10-15T21:46:37Z",
   "last_publication_at": "2026-10-15T17:43:04Z",
   "league_coverage": {
     "bundesliga": {
@@ -20,30 +23,33 @@
       "with_prices": 0
     },
     "la-liga": {
-      "selected": 0,
-      "with_prices": 0
+      "selected": 1,
+      "with_prices": 1
     },
     "ligue-1": {
-      "selected": 0,
-      "with_prices": 0
+      "selected": 1,
+      "with_prices": 1
     },
     "serie-a": {
-      "selected": 0,
-      "with_prices": 0
+      "selected": 1,
+      "with_prices": 1
     }
   },
-  "market_inventory_rows_added": 81,
+  "market_inventory_rows_added": 328,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Away Team Exact Goals",
     "Away Team Highest Scoring Half",
     "Bookings Spread",
     "Bookings Totals",
+    "Bookings Totals Away",
+    "Bookings Totals Home",
     "Both Teams To Score",
     "Both Teams To Score 2H",
     "Both Teams To Score HT",
     "Clean Sheet Away",
     "Clean Sheet Home",
+    "Corner Handicap",
     "Corners Race",
     "Corners Spread",
     "Corners Totals",
@@ -59,6 +65,7 @@
     "European Handicap HT",
     "Exact 1st Half Goals",
     "Exact 2nd Half Goals",
+    "Exact Total Goals",
     "First 10 Minutes (00:00 - 09:59)",
     "First Match Corner",
     "First Team To Score",
@@ -116,9 +123,30 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 11,
-  "rows_observed": 11,
+  "rows_added": 63,
+  "rows_observed": 63,
   "selected_events": [
+    {
+      "away": "Toulouse FC",
+      "competition": "France - Ligue 1",
+      "home": "Le Mans FC",
+      "id": 72036224,
+      "kickoff_at": "2026-10-16T18:45:00Z"
+    },
+    {
+      "away": "Sassuolo Calcio",
+      "competition": "Italy - Serie A",
+      "home": "Frosinone Calcio",
+      "id": 71945310,
+      "kickoff_at": "2026-10-16T18:45:00Z"
+    },
+    {
+      "away": "Levante UD",
+      "competition": "Spain - LaLiga",
+      "home": "RC Deportivo de A Coruna",
+      "id": 72478630,
+      "kickoff_at": "2026-10-16T19:00:00Z"
+    },
     {
       "away": "1. FC Cologne",
       "competition": "Germany - Bundesliga",
@@ -128,5 +156,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 1
+  "three_way_events": 4
 }

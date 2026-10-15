@@ -12,13 +12,13 @@
     "eligible_lines": 1,
     "priced_lines": 42,
     "provisional_lines": 0,
-    "signals_added": 0,
+    "signals_added": 1,
     "value_ladder_lines": 9
   },
   "evidence": {
     "clv": 0.026706,
     "clv_matched": 16,
-    "pending": 2,
+    "pending": 3,
     "pnl_units": 15.953,
     "roi": 0.531767,
     "settled": 60,
@@ -26,35 +26,34 @@
       "fotmob_named_keeper_shotmap": 57,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 63,
+    "signals": 64,
     "true_close_coverage": 0.266667,
     "void": 1
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-15T18:39:26.686318+00:00",
+    "checked_at": "2026-10-15T21:46:38.976546+00:00",
     "counts": {
-      "not_fresh_prematch": 52,
-      "offers_saved": 11
+      "offers_saved": 63
     },
-    "saved": 1,
+    "saved": 4,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-15T18:39:26Z",
+  "generated_at": "2026-10-15T21:46:38Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "not_new_fresh_prematch": 52
+      "blocked_or_missing_inputs": 21
     },
-    "forecast_fixtures": 1,
-    "forecast_keepers": 2,
-    "generated_at": "2026-10-15T18:39:26.715834+00:00",
-    "last_capture_at": "2026-10-15T18:39:26.715834+00:00",
+    "forecast_fixtures": 4,
+    "forecast_keepers": 8,
+    "generated_at": "2026-10-15T21:46:39.217424+00:00",
+    "last_capture_at": "2026-10-15T21:46:39.217424+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 2,
-    "new_selections": 0,
+    "new_forecasts": 6,
+    "new_selections": 1,
     "next_review_at": 50,
     "paired_scores": {
       "current": {
@@ -72,12 +71,12 @@
       "current": {
         "losses": 0,
         "overdue": 0,
-        "pending": 0,
+        "pending": 1,
         "profit": 0,
         "pushes": 0,
         "review": 0,
         "roi": null,
-        "selections": 0,
+        "selections": 1,
         "settled": 0,
         "stake": 0.0,
         "voids": 0,
@@ -99,9 +98,34 @@
       }
     },
     "review_milestone": null,
-    "selections": [],
+    "selections": [
+      {
+        "away": "Levante UD",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-15T21:46:37+00:00",
+        "edge": 0.10376834507021493,
+        "event_id": "72478630",
+        "fair_odds": 2.3782164180773036,
+        "goalkeeper": "Mathew Ryan",
+        "home": "RC Deportivo de A Coruna",
+        "kickoff_at": "2026-10-16T19:00:00+00:00",
+        "line": 3.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5868093",
+        "model": "current",
+        "odds": 2.625,
+        "overdue": false,
+        "player_id": "185644",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-15T21:46:39.217424+00:00",
+        "side": "over",
+        "status": "pending",
+        "team_id": "8581"
+      }
+    ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 2
+      "awaiting_verified_keeper_result": 8
     },
     "start_at": "2026-10-15T15:58:57.141631+00:00",
     "status": "TRACKING"
