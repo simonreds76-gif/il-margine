@@ -22,9 +22,11 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import os
 import re
 import time
+import unicodedata
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -129,6 +131,11 @@ TEAM_ALIASES: Dict[str, str] = {
     "laspalmas": "udlaspalmas",
     "alaves": "deportivoalaves",
     "depor": "deportivolacoruna",
+    "lacoruna": "deportivolacoruna",
+    "rcdeportivodeacoruna": "deportivolacoruna",
+    "deportivoacoruna": "deportivolacoruna",
+    "espanol": "espanyol",
+    "santander": "racingsantander",
     "leganes": "cdleganes",
     "eibar": "sdeibar",
     "huesca": "sdhuesca",
@@ -149,7 +156,9 @@ TEAM_ALIASES: Dict[str, str] = {
 
 
 def _normalise_team(name: str) -> str:
-    raw = re.sub(r"[^a-z0-9]", "", name.lower().strip())
+    folded = ''.join(c for c in unicodedata.normalize('NFKD', name.lower().strip())
+                     if not unicodedata.combining(c))
+    raw = re.sub(r"[^a-z0-9]", "", folded)
     return TEAM_ALIASES.get(raw, raw)
 
 
@@ -173,22 +182,39 @@ def fetch_understat_xg(league_key: str, season_start: int) -> Dict[str, Dict[str
         print(f"    [WARN] Invalid JSON from Understat {league_key}/{season_start}")
         return {}
 
+    return parse_understat_xg(data)
+
+
+def parse_understat_xg(data: dict) -> Dict[str, Dict[str, float]]:
     dates = data.get("dates", [])
     result: Dict[str, Dict[str, float]] = {}
+    ambiguous = set()
 
     for m in dates:
         dt_str = str(m.get("datetime", "")).split(" ")[0]
         home = _normalise_team(m.get("h", {}).get("title", ""))
         away = _normalise_team(m.get("a", {}).get("title", ""))
-        if not dt_str or not home or not away:
+        if m.get('isResult') is not True or not dt_str or not home or not away:
             continue
-
+        try:
+            values = [float(m['xG'][side]) for side in ('h', 'a')]
+            goals = [float(m['goals'][side]) for side in ('h', 'a')]
+            if not all(math.isfinite(v) and v >= 0 for v in values + goals):
+                continue
+            if not all(v.is_integer() for v in goals):
+                continue
+        except (KeyError, TypeError, ValueError):
+            continue
         key = f"{dt_str}:{home}:{away}"
-        result[key] = {
-            "home_xg": round(_safe_float(m.get("xG", {}).get("h")), 3),
-            "away_xg": round(_safe_float(m.get("xG", {}).get("a")), 3),
+        entry = {
+            "home_xg": round(values[0], 3), "away_xg": round(values[1], 3),
+            "home_goals": int(goals[0]), "away_goals": int(goals[1]),
         }
-
+        if key in result and result[key] != entry:
+            ambiguous.add(key)
+        result[key] = entry
+    for key in ambiguous:
+        result.pop(key, None)
     return result
 
 
@@ -271,7 +297,7 @@ def merge_xg(
     for row in fd_rows:
         key = f"{row['date']}:{row['_norm_home']}:{row['_norm_away']}"
         xg = xg_lookup.get(key)
-        if xg:
+        if xg and all(str(row.get(side+'_goals')) == str(xg.get(side+'_goals')) for side in ('home','away')):
             row["home_xg"] = xg["home_xg"]
             row["away_xg"] = xg["away_xg"]
             row["source"] = "football-data+understat-xg"
@@ -304,8 +330,23 @@ def merge_existing_rows(existing: List[dict], incoming: List[dict]) -> List[dict
     for row in incoming:
         key = row_key(row)
         if all(key):
+            prior = merged.get(key)
+            # A failed/unmatched refresh is not evidence that verified xG vanished.
+            # Preserve the pair only for the exact fixture and unchanged score.
+            if (prior and valid_xg_pair(prior) and not valid_xg_pair(row)
+                    and all(prior.get(s+'_goals') not in ('',None)
+                            and str(prior.get(s+'_goals')) == str(row.get(s+'_goals')) for s in ('home','away'))):
+                row = {**row, 'home_xg':prior['home_xg'], 'away_xg':prior['away_xg'],
+                       'source':prior.get('source','football-data+understat-xg')}
             merged[key] = row
     return sorted(merged.values(), key=lambda row: (str(row.get("date") or ""), row_key(row)))
+
+
+def valid_xg_pair(row: dict) -> bool:
+    try:
+        return all(math.isfinite(float(row[k])) and float(row[k]) >= 0 for k in ('home_xg','away_xg'))
+    except (KeyError, TypeError, ValueError):
+        return False
 
 
 def main() -> None:
@@ -357,6 +398,9 @@ def main() -> None:
                 total_matched += matched
                 total_rows += total
                 print(f"xG matched {matched}/{total} ({matched/total*100:.0f}%)")
+                if matched < total:
+                    missing = sorted({r['home_team']+' vs '+r['away_team'] for r in fd_rows if not valid_xg_pair(r)})
+                    print(f"    [WARN] {total-matched} fixtures lack verified xG in this refresh: " + '; '.join(missing[:20]))
             else:
                 total_rows += len(fd_rows)
                 for r in fd_rows:
