@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "name": "Keeper Watch v1",
+  "start_at": "2026-10-15T15:58:57.141631+00:00",
+  "candidate_params": {
+    "alpha": 0.035448992768678904,
+    "beta": [
+      -0.01803104236298088,
+      0.02513403569252078,
+      0.005137092597339356,
+      -0.07492060015119875,
+      -0.0038961213264220337,
+      0.1328940480753918,
+      0.15914158523605995,
+      -0.00432770837723863,
+      -0.11304884105751349,
+      0.018715482583297662
+    ],
+    "centers": [
+      1.4229418166799552,
+      1.4164922547328158,
+      2.5070116800283597,
+      2.495647317260222,
+      0.0,
+      0.38385864900419064,
+      0.3926579220775702,
+      -2.178359327386797,
+      1.0221525647733742
+    ],
+    "fallback_mean": 2.822174226061915,
+    "features": [
+      "opponent_sot_for_ema20_venue",
+      "team_sot_against_ema20_venue",
+      "opponent_shots_for_ema20_venue",
+      "team_shots_against_ema20_venue",
+      "market_strength_gap",
+      "opponent_xg_for_ema20",
+      "team_xga_ema20",
+      "opponent_xg_per_shot_ema20",
+      "log_shrunk_same_club_keeper_saves"
+    ],
+    "league_venue_means": {
+      "bundesliga|away": 3.3276595744680852,
+      "bundesliga|home": 2.617021276595745,
+      "epl|away": 2.960960960960961,
+      "epl|home": 2.5135135135135136,
+      "la-liga|away": 3.1839080459770117,
+      "la-liga|home": 2.5440613026819925,
+      "ligue-1|away": 3.0855018587360594,
+      "ligue-1|home": 2.591078066914498,
+      "serie-a|away": 3.0309278350515463,
+      "serie-a|home": 2.4604810996563575
+    },
+    "name": "NB2_FULL",
+    "scales": [
+      0.2849286617521607,
+      0.26325475913723134,
+      0.22113060271368232,
+      0.21794726536982403,
+      0.349247021783468,
+      0.27427395704539625,
+      0.21132767553229476,
+      0.17443215645143448,
+      0.2235083696253957
+    ]
+  },
+  "candidate_params_sha256": "434d0dc480e5a70a756e5476fd0af590044b5256de4e09c2aa6da1a2c978ec61",
+  "control_params_sha256": "74a1630cb8e82b0e847df1a912101a7a2b9af6b36db7e08618e324d3efd7b189",
+  "actual_stake": 0,
+  "paper_stake": 0.5,
+  "automatic_promotion": false,
+  "training_through": "2026-05-24",
+  "feature": "Same-club keeper saves, last20 within365 days; decay0.93, club prior10. Earlier calendar days only.",
+  "registration": "Exploratory keeper-history candidate frozen after 15 October replay; forward results begin only after this timestamp. Historical replay excluded.",
+  "review_milestones": [
+    50,
+    100
+  ]
+}

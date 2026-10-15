@@ -512,6 +512,17 @@ def main() -> None:
     )
     args.report.parent.mkdir(parents=True, exist_ok=True)
     payload["forecast_input_capture"] = input_capture
+    # Isolated, zero-stake candidate. Reuses this run's inputs and prices; the
+    # incumbent candidates, selections, alerts and parameters above are untouched.
+    from goalkeeper_keeper_watch import run as keeper_watch_run
+    try:
+        payload["keeper_watch"] = keeper_watch_run(
+            candidates if input_capture.get("status") != "BLOCKED" else [], params, ROOT)
+    except (OSError, ValueError, TypeError, KeyError) as exc:
+        prior_report = ROOT / "data/goalkeeper-saves/keeper-watch/report.json"
+        previous = json.loads(prior_report.read_text(encoding="utf-8")) if prior_report.exists() else {}
+        payload["keeper_watch"] = {**previous, "status": "BLOCKED", "generated_at": generated_at,
+                                    "reason": str(exc)[:240], "actual_stake": 0, "auto_promote": False}
     args.report.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     evidence = payload["evidence"]
     current = payload["current"]

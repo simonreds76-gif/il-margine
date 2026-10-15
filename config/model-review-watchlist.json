@@ -69,6 +69,13 @@
       "report_key": "tennis_full_refresh",
       "scope": "Completed input upgrade. Stop new old-versus-fresh comparisons; settle retained forecasts. Verify daily current-history status, ATP/WTA coverage and source-version results.",
       "capture_status": "RETIRED_SETTLEMENT_ONLY"
+    },
+    {
+      "id": "keeper_watch",
+      "report_key": "goalkeeper_saves_v1.keeper_watch",
+      "scope": "GK Saves Keeper Watch v1 forward-only paired comparison. Current control and fixed keeper-history candidate, 0.5u paper / zero real stake. Review paired fixture Brier/log loss before ROI at 50 and 100 independent settled fixtures. Review capture freshness, missing history, pending/overdue and source conflicts. Never auto-promote or refit; no replay included.",
+      "status": "CONNECTED_AWAITING_FIRST_CAPTURE",
+      "report_path": "data/goalkeeper-saves/keeper-watch/report.json"
     }
   ],
   "candidates": [
