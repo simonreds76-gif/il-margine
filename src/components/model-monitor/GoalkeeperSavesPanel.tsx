@@ -9,6 +9,7 @@ import {
 } from "@/app/model-monitor/shared";
 
 export type GoalkeeperReport = {
+  keeper_watch?: KeeperWatchReport;
   status?: string;
   generated_at?: string;
   selection_rule?: string;
@@ -39,6 +40,62 @@ export type GoalkeeperReport = {
     mean_true_close_clv_required?: number;
   };
 };
+
+type KeeperWatchRecord = {
+  selections?: number; wins?: number; losses?: number; voids?: number;
+  settled?: number; pending?: number; review?: number; overdue?: number;
+  stake?: number; profit?: number; roi?: number | null;
+};
+type KeeperWatchReport = {
+  status?: string; reason?: string; start_at?: string; last_capture_at?: string;
+  forecast_fixtures?: number; paired_settled_fixtures?: number;
+  next_review_at?: number | null; review_milestone?: number | null;
+  records?: Record<string, KeeperWatchRecord>;
+  paired_scores?: Record<string, { brier?: number | null; log_loss?: number | null }>;
+  selections?: Array<{ model: string; match_id: string; player_id: string; kickoff_at: string;
+    home: string; away: string; goalkeeper: string; side: string; line: number; odds: number;
+    status: string; profit: number; actual?: number; reason?: string; lineup_status?: string }>;
+};
+
+function KeeperWatch({ report }: { report?: KeeperWatchReport }) {
+  if (!report) return null;
+  return <div id="keeper-watch" className="border-b border-slate-800 bg-slate-950/40 p-4 sm:p-5">
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <h2 className="text-xl font-semibold text-white">Keeper Watch <span className="text-sm font-normal text-violet-300">Paper comparison</span></h2>
+      <StatusPill label={plain(report.status)} tone="border-violet-400/30 bg-violet-400/10 text-violet-200" />
+    </div>
+    <p className="mt-2 max-w-3xl text-sm text-slate-300">Does individual keeper history improve our saves prices? Both versions use the same captured markets. The current model is unchanged. Each selection uses 0.5 paper units and no real stake.</p>
+    {report.reason && <p className="mt-2 text-sm text-amber-200">Needs review: {plain(report.reason)}</p>}
+    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      {([['keeper_watch', 'Keeper Watch v1'], ['current', 'Current model comparison']] as const).map(([key, label]) => {
+        const r = report.records?.[key] ?? {};
+        return <div key={key} className="rounded-xl border border-slate-700/70 bg-slate-900/50 p-4">
+          <h3 className="font-semibold text-slate-100">{label}</h3>
+          <div className="mt-3 flex flex-wrap items-baseline gap-x-5 gap-y-2">
+            <strong className={cn('text-2xl tabular-nums', metricTone(r.roi ?? null))}>{r.roi == null ? 'No settled bets yet' : pct(r.roi)}</strong>
+            <span className={cn('tabular-nums', metricTone(r.profit ?? null))}>{units(r.profit)} profit</span>
+          </div>
+          <p className="mt-2 text-sm text-slate-300">{r.wins ?? 0} wins · {r.losses ?? 0} losses · {r.pending ?? 0} pending · {r.voids ?? 0} void</p>
+          <p className="mt-1 text-xs text-slate-400">{(r.stake ?? 0).toFixed(2)}u settled stake · {r.review ?? 0} need review · {r.overdue ?? 0} overdue</p>
+        </div>;
+      })}
+    </div>
+    <p className="mt-3 text-sm text-slate-300">{report.forecast_fixtures ?? 0} fixtures captured · {report.paired_settled_fixtures ?? 0} settled for probability comparison · {report.review_milestone ? `Review milestone reached: ${report.review_milestone}` : `Next review: ${report.next_review_at ?? 50} settled fixtures`}</p>
+    <p className="mt-1 text-xs text-slate-400">Started {formatDateTimeLabel(report.start_at)}. Last capture {formatDateTimeLabel(report.last_capture_at)}. This comparison excludes old backtests and is not the current model’s full record. No automatic promotion.</p>
+    <details className="mt-3 rounded-lg border border-slate-800 p-3">
+      <summary className="cursor-pointer text-sm font-medium text-slate-200">Forecast accuracy and tracked bets ({report.selections?.length ?? 0})</summary>
+      <p className="mt-3 text-xs text-slate-400">Lower probability error is better. Both versions are scored on the same settled fixtures, including forecasts that did not qualify as bets.</p>
+      {(['keeper_watch', 'current'] as const).map(key => <p key={key} className="mt-1 text-sm text-slate-300">{key === 'keeper_watch' ? 'Keeper Watch' : 'Current'}: Brier {report.paired_scores?.[key]?.brier?.toFixed(4) ?? 'awaiting results'} · Log loss {report.paired_scores?.[key]?.log_loss?.toFixed(4) ?? 'awaiting results'}</p>)}
+      <div className="mt-3 grid gap-2 md:grid-cols-2">{report.selections?.map(r => <article key={`${r.model}:${r.match_id}`} className="min-w-0 rounded-lg bg-slate-900 p-3 text-sm">
+        <p className="text-xs text-violet-300">{r.model === 'keeper_watch' ? 'Keeper Watch' : 'Current comparison'} · {formatDateTimeLabel(r.kickoff_at)}</p>
+        <p className="mt-1 break-words font-medium text-slate-100">{r.home} vs {r.away}</p>
+        <p className="mt-1 break-words text-slate-300">{r.goalkeeper} · {r.side} {r.line} saves @ {r.odds.toFixed(2)} Bet365</p>
+        <p className={cn('mt-1', resultTone(r.status))}>{plain(r.status)}{r.actual == null ? '' : ` · ${r.actual} saves`}{['won', 'lost'].includes(r.status) ? ` · ${units(r.profit)}` : ''}</p>
+        <p className="mt-1 text-xs text-slate-400">{plain(r.lineup_status)}{r.reason ? ` · ${plain(r.reason)}` : ''}</p>
+      </article>)}</div>
+    </details>
+  </div>;
+}
 
 export type GoalkeeperCaptureStatus = {
   status?: string;
@@ -195,6 +252,7 @@ export default function GoalkeeperSavesPanel({
 
   return (
     <section className="overflow-hidden rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.98),rgba(8,12,20,0.98))] shadow-[0_18px_60px_rgba(0,0,0,0.22)]">
+      <KeeperWatch report={report?.keeper_watch} />
       <div className="border-b border-slate-800 px-4 py-4 sm:px-5">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div>
