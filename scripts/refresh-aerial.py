@@ -97,6 +97,14 @@ def refresh(root=ROOT, now=None, online=True, force=False):
         missing_heights=sum(p['height_cm'] is None for f in payload['fixtures'] for t in f['teams'] for p in t['players']),
         exclusions=payload['exclusions'], history_through=payload['history_through'])
     save(data/'health.json', health)
+    # Identity coverage is advisory and offline; never gate the existing board.
+    try:
+        from football_identity import refresh_health
+        identity = refresh_health(root)
+        if identity.get('status') == 'error':
+            print('::warning::Football identity audit failed: ' + identity['error'])
+    except Exception as exc:
+        print(f'::warning::Football identity audit unavailable: {exc}')
     return payload
 
 def publish(client, root=ROOT, now=None):
