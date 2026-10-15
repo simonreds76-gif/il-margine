@@ -1,0 +1,73 @@
+Football identity sidecar
+========================
+
+Purpose
+Link existing native player IDs across providers for future research imports.
+This is advisory infrastructure. It does not add statistical data, change model
+features, select bets, settle results, change penalty orders, or fetch portraits.
+No claim of improved accuracy or ROI follows from installing it.
+
+Release and provenance
+Reep CC0 release 20261005T180536Z, https://reep.football/data/.
+The offline builder pins SHA256 checksums for bridges, players and redirects.
+It scans the downloaded compressed CSVs without installing a package/database.
+The generated compact registry is data/aerial/identity-registry.json.gz.
+Every input file is hashed; the full downloaded tables are not committed.
+Reep's active record status is never interpreted as current club or career status.
+Cross-provider mappings do not grant access to the providers' statistical data.
+
+Matching rules
+Source identity is the complete provider/namespace/external_id tuple. FotMob
+players use person, while Sofascore/API-Football use player. Numeric IDs alone
+are not sufficient. Redirect cycles and withdrawn/retired bridges are held out.
+Only active player records can pass; no coach/player interchange.
+After the exact ID join, names are sanity checked. Accents, punctuation and
+omitted middle names/additional surnames are accepted. Nicknames/initials and
+incompatible names require review. This is not fuzzy name-to-ID matching.
+Target IDs are checked against ALL bridge rows, including outside our population.
+Multiple active IDs in a provider namespace are withheld, not arbitrarily chosen.
+An existing different target ID always produces existing_id_conflict.
+The resolver returns registry_linked, independently_verified=False. A consuming
+statistical importer must still verify fixture, player, team, date and metric.
+
+Population and limits
+The Air Control roster and historical appearances provide native FotMob IDs.
+GK observed-target packets provide exact player IDs; snapshots are not modified.
+The GK betting ledger lacks player IDs: its historical rows are counted but not
+automatically attached to today's roster. Native fixture evidence is required.
+Penalty names can select only one exact name in the same club's stored squad.
+The audit uses repository hierarchy snapshots, not a claim of current editorial
+state in Supabase. Original squad observation dates remain authoritative.
+Missing registry IDs or a missing provider bridge do not prove absent source data.
+
+Batch integration
+scripts/refresh-aerial.py calls football_identity.refresh_health after its existing
+build, with no network. The existing artifact stager already retains data/aerial.
+No new job, cron, Telegram message, Supabase upload or Vercel workload is added.
+Exceptions cannot prevent the existing board publication. identity-health.json
+records coverage, provider counts, unresolved penalty slots and source hashes.
+New native IDs show not_in_registry until an explicitly reviewed rebuild. This
+does not automatically download newer Reep releases or grow provider access.
+
+Rebuild (downloaded files required; no network in this command)
+python scripts/build-football-identity.py --downloads PATH_TO_EXISTING_CSV_GZ_FILES
+Updating release/checksums requires reviewing the new source, never bypassing
+checksum failures. Do not erase name/target ambiguity flags to increase coverage.
+
+Tests
+python -m unittest discover -s tests -p test_football_identity.py
+python -m unittest discover -s scripts/tests -p test_aerial_data.py
+Coverage includes namespace collisions, existing-ID conflicts, withdrawn/looping
+redirects, global target collisions, multiple targets, checksum tampering, name
+ambiguities, same-name players at different clubs, and non-blocking batch failure.
+
+15 October 2026 installation audit (overlapping populations)
+Distinct native player IDs: 3,635; linked: 3,325; name review: 234; missing: 76.
+Air roster: 2,455 / 2,753 linked. Historical Air players: 2,995 / 3,228.
+GK roster: 289 / 314 linked; observed GK targets: 18 / 18 linked.
+Stored penalty slots: 283; same-club native IDs: 268; registry linked: 248.
+15 penalty slots have no unique same-club roster match; 20 need name review.
+GK ledger: 63 rows lack native player IDs and remain untouched.
+34 provider-specific target groups are ambiguous. Example: Dean Henderson has
+multiple Opta person IDs; that mapping is withheld while other unambiguous
+provider mappings remain available. The registry is approximately 621 KB gzip.
