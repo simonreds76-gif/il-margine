@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import H2HRecord from '@/components/H2HRecord';
 import { priceBasisLabel } from '../football-core';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -31,8 +32,20 @@ function Team({ club, away = false }: { club: Club; away?: boolean }) {
   return <div className={`af-team ${away ? 'af-away' : ''}`}><Photo src={club.crest} /><div><strong>{club.name}</strong><span className="af-coach"><Photo src={club.manager?.portrait ?? null} manager /><span>{club.manager?.name ?? 'Manager to be confirmed'}{club.manager?.status === 'unmatched' && <small>Archive identity pending</small>}</span></span></div></div>;
 }
 
-function RecordRow({ kind, record, unavailable, stale, paired }: { kind: 'Managers' | 'Clubs'; record: RecordSummary; unavailable: boolean; stale: boolean; paired: number[] }) {
-  return <div className="af-record"><div className="af-record-label"><Icon name={kind === 'Managers' ? 'manager' : 'club'} /><strong>{kind}</strong><span>{unavailable ? 'Identity pending' : `${record.meetings ?? record.count} meeting${(record.meetings ?? record.count)===1?'':'s'} · ${record.count} priced`}</span>{!unavailable && record.firstDate && record.lastDate && <span className="af-record-years">{record.firstDate.slice(0, 4) === record.lastDate.slice(0, 4) ? record.firstDate.slice(0, 4) : `${record.firstDate.slice(0, 4)} to ${record.lastDate.slice(0, 4)}`}</span>}{record.count > 0 && record.count < 6 && <small>{record.count < 3 ? 'Short history' : 'Few meetings'}</small>}</div><div className="af-cells">{record.outcomes.map((outcome, i) => <div className={`af-return ${outcome.positive && !stale && !unavailable ? 'af-positive' : ''} ${paired.includes(i) ? 'af-paired' : ''} ${record.count < 3 ? 'af-short' : ''} ${Math.abs(outcome.roi ?? 0) >= 1000 ? 'af-long' : ''}`} key={i}><strong>{unavailable || outcome.roi === null ? '—' : `${number(outcome.roi)}%`}</strong><span>{unavailable ? 'Not matched' : !record.count ? 'No prices' : `${number(outcome.profit, 2)}u`}</span></div>)}</div></div>;
+function RecordRow({ kind, record, unavailable, stale, paired, names }: { kind: 'Managers' | 'Clubs'; record: RecordSummary; unavailable: boolean; stale: boolean; paired: number[]; names: string[] }) {
+  const meetings = record.meetings ?? record.count;
+  const returns = record.outcomes.map((outcome, i) => <span className={`af-return ${outcome.positive && !stale && !unavailable ? 'af-positive' : ''} ${paired.includes(i) ? 'af-paired' : ''} ${record.count < 3 ? 'af-short' : ''} ${Math.abs(outcome.roi ?? 0) >= 1000 ? 'af-long' : ''}`} key={i}>
+    <strong>{unavailable || outcome.roi === null ? '—' : `${number(outcome.roi)}%`}<small> ROI</small></strong>
+    <span>{unavailable ? 'Not matched' : !record.count ? 'No prices' : `${number(outcome.profit, 2)}u`}</span>
+    {paired.includes(i) && <span className="af-return-alignment">Both positive</span>}
+  </span>);
+  return <section className="af-h2h-record" aria-label={`${kind} head to head`}>
+    <div className="af-h2h-heading"><Icon name={kind === 'Managers' ? 'manager' : 'club'} /><h3>{kind === 'Managers' ? 'Manager' : 'Club'} head to head</h3>
+      {!unavailable && record.count > 0 && record.count < 6 && <small>{record.count < 3 ? 'Short history' : 'Few meetings'}</small>}
+    </div>
+    <H2HRecord results={unavailable ? null : record.results ?? null} meetings={unavailable ? null : meetings} names={names} details={returns} />
+    {!unavailable && meetings > 0 && <p className="af-h2h-coverage">ROI uses {record.count} priced {record.count === 1 ? 'meeting' : 'meetings'}{record.firstDate && record.lastDate ? ` · ${record.firstDate.slice(0, 4)}${record.firstDate.slice(0, 4) === record.lastDate.slice(0, 4) ? '' : ` to ${record.lastDate.slice(0, 4)}`}` : ''}</p>}
+  </section>;
 }
 
 function MatchCard({ fixture: f, stale, load, initialKind }: { fixture: FixtureCard; stale: boolean; load: () => Promise<EvidencePayload>; initialKind?: 'managers' | 'clubs' }) {
@@ -56,10 +69,9 @@ function MatchCard({ fixture: f, stale, load, initialKind }: { fixture: FixtureC
   return <article className="af-card" style={{ scrollMarginTop: 100 }} id={f.id} aria-label={`${f.home.name} versus ${f.away.name}`}>
     <header className="af-card-top"><span><Image src={`/league-logos/${f.league === 'premier-league' ? 'epl' : f.league}.png`} alt="" width={18} height={18} unoptimized />{leagues[f.league]}<span className="af-round"> · Round {f.round}</span></span><time dateTime={f.kickoff}>{clockText(f.kickoff)}</time></header>
     <div className="af-match"><Team club={f.home} /><span className="af-versus">v</span><Team club={f.away} away /></div>
-    <div className="af-grid-heading"><span>Past ROI</span><div>{[`${f.home.name} win`, 'Draw', `${f.away.name} win`].map((label, i) => <span key={label} className={paired.includes(i) ? 'af-paired-heading' : undefined} title={paired.includes(i) ? 'Positive in both histories' : undefined}>{label}{paired.includes(i) && <span className="af-paired-dot" aria-hidden="true" />}</span>)}</div></div>
-    <p className="af-card-orientation">Manager returns follow each manager’s team across clubs and venues.</p>
-    <RecordRow kind="Managers" record={f.managers} unavailable={unavailable} stale={stale} paired={paired} />
-    <RecordRow kind="Clubs" record={f.clubs} unavailable={false} stale={stale} paired={paired} />
+    <RecordRow kind="Clubs" record={f.clubs} unavailable={false} stale={stale} paired={paired} names={[f.home.name, f.away.name]} />
+    <RecordRow kind="Managers" record={f.managers} unavailable={unavailable} stale={stale} paired={paired} names={[f.home.manager?.name ?? 'Manager unconfirmed', f.away.manager?.name ?? 'Manager unconfirmed']} />
+    <p className="af-card-orientation">Manager wins and returns follow each manager’s team across clubs and venues.</p>
     <details open={initialKind ? true : undefined} className="af-evidence" onToggle={e => { if (e.currentTarget.open) void openEvidence(); }}><summary>Explore the meetings <span aria-hidden="true">+</span></summary>
       <div className="af-evidence-body">    <div className="af-card-context"><span><Icon name="link" />{unavailable ? 'Manager comparison pending' : f.shared ? `${f.shared} priced meeting${f.shared === 1 ? '' : 's'} in both records` : 'No shared meetings'}<span className="af-context-more"> · Shared history</span></span>{paired.length > 0 && <span className="af-alignment">Both positive: {paired.map(i => [`${f.home.name} win`, 'draw', `${f.away.name} win`][i]).join(', ')}</span>}{paired.length > 0 && <span className="af-overlap-detail">{f.managers.count - f.shared} manager only · {f.clubs.count - f.shared} club only</span>}</div>
 <div className="af-evidence-controls"><div className="af-toggle" aria-label="History type">{(['managers', 'clubs'] as const).map(k => <button key={k} aria-pressed={kind === k} onClick={() => { setKind(k); setLimit(10); }}>{k === 'managers' ? 'Manager meetings' : 'Club meetings'} ({f[k].meetings ?? f[k].count})</button>)}</div><label>Selection shown<select value={outcome} onChange={e => setOutcome(Number(e.target.value))}>{labels.map((label, i) => <option key={i} value={i}>{label}{i !== 1 && kind === 'managers' ? ' manager’s team' : ''}</option>)}</select></label></div>

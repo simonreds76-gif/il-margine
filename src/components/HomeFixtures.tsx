@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import ToolEmblem from './ToolEmblem';
+import H2HRecord from './H2HRecord';
 import { homeLeagueLogos, tennisCompetition } from '@/lib/home-competition';
 import { londonDay, upcomingHomeFixtures, type HomeFixture, type HomeHistory, type HomeFixturesData } from '@/lib/home-fixtures';
 import './home-fixtures.css';
@@ -13,22 +14,7 @@ function Portrait({ src, person = false }: { src: string | null; person?: boolea
   return <span className={`hf-portrait ${person ? 'hf-person' : ''}`}>{src && !failed ? <Image src={src} width={48} height={48} alt="" unoptimized onError={() => setFailed(true)} /> : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d={person ? 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 22v-4c0-6 16-6 16 0v4' : 'M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z'} /></svg>}</span>;
 }
 function Record({ history, names }: { history: HomeHistory; names: string[] }) {
-  if (history.meetings === null || !history.results) return <span className="hf-no-history">History not yet matched</span>;
-  if (history.meetings === 0) return <span className="hf-no-history">No meetings in our archive</span>;
-  const hasDraws = history.results.length === 3;
-  return <div className="hf-record">
-    <dl className={`hf-results ${hasDraws ? 'hf-results-three' : 'hf-results-two'}`}>
-      {history.results.map((count, i) => {
-        const draw = hasDraws && i === 1;
-        const side = i === 0 ? 'first' : 'second';
-        return <div className={`hf-result hf-result-${draw ? 'draw' : side}`} key={i}>
-          <dt>{draw ? 'Draws' : <><span>{names[i === 0 ? 0 : 1]}</span><span className="hf-result-kind">wins</span></>}</dt>
-          <dd>{count}</dd>
-        </div>;
-      })}
-    </dl>
-    <p className="hf-meeting-count">{history.meetings} {history.meetings === 1 ? 'meeting' : 'meetings'} in our archive</p>
-  </div>;
+  return <H2HRecord results={history.results} meetings={history.meetings} names={names} />;
 }
 function Fixture({ fixture: f, tennis, now }: { fixture: HomeFixture; tennis: boolean; now: number }) {
   const date = new Date(f.start);

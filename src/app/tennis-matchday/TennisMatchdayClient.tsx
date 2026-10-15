@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { fixturesFor, matchdayQuote, type TennisBoard, type TennisFixture, type FixturePlayer } from '@/lib/tennis-matchday.mjs';
 import { atlasResearchHref } from '@/components/return-atlas/research-links.mjs';
 import styles from './matchday.module.css';
+import H2HRecord from '@/components/H2HRecord';
 
 const zone = 'Europe/London';
 const format = (date: string, options: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat('en-GB', { timeZone: zone, ...options }).format(new Date(date));
@@ -60,8 +61,8 @@ function FixtureCard({ fixture: f, now }: { fixture: TennisFixture; now: Date })
         : <p>{f.quote ? 'Price too old to display. Waiting for a fresh capture.' : 'No paired price captured for this match yet.'}</p>}
     </div>
     <div className={styles.record}>
-      <div className={styles.recordLabel}><span>ARCHIVE H2H</span><small>{f.meetings === null ? 'Player coverage missing' : f.meetings === 0 ? 'No recorded meetings' : `${f.meetings} ${f.meetings === 1 ? 'meeting' : 'meetings'} · all courts`}</small></div>
-      {f.wins && f.meetings ? <><div className={styles.score}><strong>{f.wins[0]}<small>{surname(f.players[0].name)} wins</small></strong><div className={styles.bars} aria-label={`${f.players[0].name} ${f.wins[0]} wins, ${f.players[1].name} ${f.wins[1]} wins`}><span style={{ flex: f.wins[0] || .03 }} /><span style={{ flex: f.wins[1] || .03 }} /></div><strong>{f.wins[1]}<small>{surname(f.players[1].name)} wins</small></strong></div>
+      <div className={styles.recordLabel}><span>ARCHIVE H2H</span><small>{f.meetings === null ? 'Player coverage missing' : f.meetings === 0 ? 'No recorded meetings' : 'All courts'}</small></div>
+      {f.wins && f.meetings ? <><H2HRecord results={f.wins} meetings={f.meetings} names={f.players.map(p => p.name)} />
         <div className={styles.returns}><span><Icon name="record" />H2H ROI<small>Odds for {f.priced} of {f.meetings} {f.meetings === 1 ? 'meeting' : 'meetings'}</small></span>{f.roi.map((value, i) => <strong key={i} className={value !== null && value > 0 ? styles.positive : styles.neutral}>{percent(value)}<small>{surname(f.players[i].name)}</small></strong>)}</div>
         {f.priced < f.meetings && <p className={styles.explanation}><strong>Odds missing for {f.meetings - f.priced} {f.meetings - f.priced === 1 ? 'meeting' : 'meetings'}.</strong> {f.priced ? `ROI uses only the ${f.priced} with recorded odds.` : 'ROI is unavailable.'} The H2H score includes every recorded meeting.</p>}
         <p className={styles.roiKey}>Backing each player separately in every meeting with recorded odds.</p>

@@ -1,0 +1,18 @@
+.record{min-width:0;text-align:center}
+.columns{display:grid;gap:8px;margin:12px 0 0;padding:0;align-items:stretch}
+.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+/* Side colours identify opponents, never betting value. */
+.result{--result-colour:#a4b1be;--result-tint:#a4b1be08;display:grid;grid-template-rows:1fr auto;align-items:start;gap:8px;min-width:0;padding:10px 8px 9px;border-top:2px solid var(--result-colour);border-radius:3px 3px 8px 8px;background:var(--result-tint)}
+.first{--result-colour:#a5e7ce;--result-tint:#a5e7ce08}
+.second{--result-colour:#a9cdf5;--result-tint:#a9cdf508}
+.draw{--result-colour:#a4b1be}
+.result dt{font-size:11px;line-height:1.4;font-weight:500;color:#d5e0e9;overflow-wrap:anywhere}
+.kind{display:block;color:#9eafbd;font-size:10px;font-weight:400;margin-top:2px}
+.count{margin:0;font-size:28px;line-height:1.1;font-weight:650;font-variant-numeric:tabular-nums;color:var(--result-colour)}
+.detail{margin:0;min-width:0}
+.columns:has(.detail){grid-template-rows:auto auto auto}
+.columns:has(.detail) .result{grid-row:span 3;grid-template-rows:subgrid}
+.coverage{margin:9px 0 0;font-size:11px;line-height:1.5;color:#a8b8c5}
+.empty{color:#a8b8c5;font-size:12px;line-height:1.5;padding:12px 0 2px;margin:0}
+@media(max-width:400px){.columns{gap:6px}.result{padding-inline:5px}.result dt{font-size:10px}.count{font-size:25px}}
