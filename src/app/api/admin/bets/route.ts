@@ -38,6 +38,7 @@ function revalidatePublicBetSurfaces(...bets: Array<RevalidationBet | null | und
   for (const bet of bets) {
     if (!bet?.id || !bet.event) continue;
     tipPaths.add(`/tips/${slugifyTip(bet.event, bet.id)}`);
+    tipPaths.add(`/tips/${slugifyTip(bet.event, bet.id)}/opengraph-image`);
     const previewPath = tipPreviewPath(bet);
     tipPaths.add(previewPath);
     tipPaths.add(`${previewPath}/opengraph-image`);

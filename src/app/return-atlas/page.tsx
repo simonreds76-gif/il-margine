@@ -1,3 +1,4 @@
+import { studioMetadata } from "@/lib/share-studio-metadata";
 import RelatedLinks from "@/components/RelatedLinks";
 import TennisMatchdayPromo from "@/components/TennisMatchdayPromo";
 import AtlasPageHeader from "@/components/AtlasPageHeader";
@@ -20,8 +21,7 @@ const description = "Explore ATP tennis players’ historical betting returns at
 const url = "https://ilmargine.bet/return-atlas";
 export const metadata: Metadata = {
   title, description, alternates: { canonical: url }, robots: { index: true, follow: true },
-  openGraph: { title, description, url, type: "website", images: [{ url: `${url}/assets/share-20260920-square.png`, width: 1200, height: 1200, type: "image/png", alt: "Return Atlas — ATP tennis betting returns by player, season and surface" }] },
-  twitter: { card: "summary_large_image", title, description, images: [`${url}/assets/share-20260920-wide.png`] },
+  ...studioMetadata("tennis-atlas"),
 };
 
 const date = (value: string) => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(value + "T12:00:00Z"));

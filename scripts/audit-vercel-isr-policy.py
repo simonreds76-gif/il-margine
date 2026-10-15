@@ -22,6 +22,7 @@ MIN_REVALIDATE_SECONDS = {
     "src/app/tips/[slugId]/page.tsx": 86_400,
     "src/app/betting-tips/[slugId]/page.tsx": 86_400,
     "src/app/betting-tips/[slugId]/opengraph-image.tsx": 604_800,
+    "src/app/tips/[slugId]/opengraph-image.tsx": 604_800,
     "src/app/world-cup-2026-free-picks/page.tsx": 86_400,
     "src/app/fair-odds-lab/world-cup/page.tsx": 86_400,
     "src/app/penalty-takers/page.tsx": 43_200,

@@ -1,3 +1,4 @@
+import { tipShareDetails } from "@/lib/tip-share";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
@@ -100,8 +101,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       : `${fixture.seed.event} Player Props & Betting Tips - ${dateLabel}`;
   const description = previewDescription(fixture);
   const canonicalUrl = `${BASE_URL}${fixture.canonicalPath}`;
-  const imageUrl = `${canonicalUrl}/opengraph-image`;
+  const imageUrl = `${canonicalUrl}/opengraph-image?v=share-v3`;
 
+  const social = tipShareDetails(fixture.bets);
   return {
     title,
     description,
@@ -112,15 +114,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       locale: "en_GB",
       url: canonicalUrl,
       siteName: "Il Margine",
-      title,
-      description,
-      images: [{ url: imageUrl, width: 1200, height: 630, alt: `${fixture.seed.event} betting preview` }],
+      title: social.title,
+      description: social.description,
+      images: [{ url: imageUrl, width: 1200, height: 630, alt: social.alt }],
     },
     twitter: {
       card: "summary_large_image",
-      title,
-      description,
-      images: [imageUrl],
+      title: social.title,
+      description: social.description,
+      images: [{ url: imageUrl, alt: social.alt }],
     },
   };
 }
@@ -138,7 +140,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
     : null;
   const description = previewDescription(fixture);
   const canonicalUrl = `${BASE_URL}${fixture.canonicalPath}`;
-  const imageUrl = `${canonicalUrl}/opengraph-image`;
+  const imageUrl = `${canonicalUrl}/opengraph-image?v=share-v3`;
   const reasoning = Array.from(
     new Set(fixture.analyses.map((entry) => entry.assessment.analysis.trim()).filter(Boolean)),
   );

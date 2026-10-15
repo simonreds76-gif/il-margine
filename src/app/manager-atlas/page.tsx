@@ -1,3 +1,4 @@
+import { studioMetadata } from "@/lib/share-studio-metadata";
 import AtlasPageHeader from "@/components/AtlasPageHeader";
 import frame from "@/components/ResearchPage.module.css";
 import type { Metadata } from "next";
@@ -13,28 +14,13 @@ export const dynamic = "force-static";
 export const revalidate = false;
 const url = "https://ilmargine.bet/manager-atlas";
 const title = "Football Manager H2H & Betting Returns";
-const shareTitle = `${title} | Return Atlas`;
 const description = "Compare football managers head to head. Explore past results and see what backing their team, the draw or their opponent returned at the recorded odds.";
-const shareImage = {
-  url: "https://ilmargine.bet/manager-atlas/share-v2.png",
-  width: 1200,
-  height: 630,
-  type: "image/png",
-  alt: "Return Atlas Managers by Il Margine. Compare managers, results and historical betting returns.",
-};
 export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: url },
   robots: { index: true, follow: true, "max-image-preview": "large" },
-  openGraph: {
-    title: shareTitle, description, url, siteName: "Il Margine",
-    locale: "en_GB", type: "website", images: [shareImage],
-  },
-  twitter: {
-    card: "summary_large_image", title: shareTitle, description,
-    images: [{ url: shareImage.url, alt: shareImage.alt }],
-  },
+  ...studioMetadata("manager"),
 };
 
 // Adapt the generated research island without losing its runtime IDs or source evidence.

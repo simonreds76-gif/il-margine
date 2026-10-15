@@ -1,3 +1,4 @@
+import { studioMetadata } from "@/lib/share-studio-metadata";
 import RelatedLinks from "@/components/RelatedLinks";
 import AtlasPageHeader from "@/components/AtlasPageHeader";
 import frame from "@/components/ResearchPage.module.css";
@@ -16,8 +17,7 @@ const title = 'Return Atlas Football: Club ROI & Betting History';
 const description = 'Explore football betting returns at recorded prices across the Premier League, Serie A, La Liga, Bundesliga and Ligue 1. Filter seasons, venue, favourites, underdogs and odds ranges.';
 export const metadata: Metadata = {
     title, description, alternates: { canonical: url }, robots: { index: true, follow: true },
-    openGraph: { title, description, url, type: 'website', images: [{ url: `${url}/share-v1-square.png`, width: 1200, height: 1200, type: 'image/png', alt: 'Return Atlas Football — league club ROI, profit and betting history' }] },
-    twitter: { card: 'summary_large_image', title, description, images: [`${url}/share-v1-wide.png`] },
+  ...studioMetadata("football-atlas"),
 };
 export default function FootballAtlasPage() {
     return <div className="min-h-screen bg-[#0f1117] text-slate-100"><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebApplication', '@id': `${url}#application`, name: 'Return Atlas Football', url, description, applicationCategory: 'SportsApplication', operatingSystem: 'Web', isAccessibleForFree: true, publisher: { '@type': 'Organization', name: 'Il Margine', url: 'https://ilmargine.bet' } }) }} /><main className={`football-atlas ${frame.page}`}><AtlasPageHeader edition="football" description="Compare club, draw and opponent returns at recorded odds. Explore past league matches by season, venue and price.">

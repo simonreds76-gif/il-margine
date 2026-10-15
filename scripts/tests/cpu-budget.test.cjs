@@ -14,20 +14,35 @@ function compile(source, imports={}, globals={}) {
 const cache=compile(fs.readFileSync(path.join(root,'src/lib/bounded-async-cache.ts'),'utf8'));
 test('tip preview PNGs have an explicit shared cache and missing tips avoid rendering',async()=>{
  let fixture=null, renders=0;
- const route=compile(fs.readFileSync(path.join(root,'src/app/betting-tips/[slugId]/opengraph-image.tsx'),'utf8'),{
+ const format=compile(fs.readFileSync(path.join(root,'src/lib/format.ts'),'utf8'));
+ const share=compile(fs.readFileSync(path.join(root,'src/lib/tip-share.ts'),'utf8'),{'./format':format});
+ const renderer=compile(fs.readFileSync(path.join(root,'src/lib/tip-share-image.tsx'),'utf8'),{
+  'server-only':{}, './config':{BASE_URL:'https://ilmargine.bet'},
   'next/og':{ImageResponse:class extends Response {constructor(_jsx,options){super('png',options);renders++;}}},
-  '@/lib/tip-seo-server':{fetchSeoTipFixture:async()=>fixture},
-  '@/lib/site-brand-image':{SITE_BRAND_IMAGE:'test-logo'},
+  './site-brand-image':{SITE_BRAND_IMAGE:'test-logo'},
+  './share-fonts':{SHARE_FONTS:[]},
+  './tip-artwork':{getTipArtwork:()=>[]}, './format':format, './tip-share':share,
   'react/jsx-runtime':{jsx:()=>null,jsxs:()=>null},
+ });
+ const route=compile(fs.readFileSync(path.join(root,'src/app/betting-tips/[slugId]/opengraph-image.tsx'),'utf8'),{
+  '@/lib/tip-seo-server':{fetchSeoTipFixture:async()=>fixture},
+  '@/lib/tip-share-image':renderer,
  });
  const missing=await route.default({params:Promise.resolve({slugId:'missing'})});
  assert.equal(missing.status,404);assert.equal(renders,0);
- fixture={seed:{event:'Home vs Away',market:'props'},bets:[{}]};
+ fixture={bets:[{id:1,event:'Home vs Away',market:'props',category:'pl',player:'Keeper',selection:'Over 2.5 saves',odds:1.73,stake:0.5,match_date:'2026-10-15'}]};
  const valid=await route.default({params:Promise.resolve({slugId:'known'})});
  assert.equal(valid.status,200);assert.equal(renders,1);
  assert.equal(route.revalidate,604800);
  assert.match(valid.headers.get('Cache-Control'),/s-maxage=604800/);
  assert.doesNotMatch(valid.headers.get('Cache-Control'),/immutable/);
+ const details=share.tipShareDetails(fixture.bets);
+ assert.match(details.title,/Keeper · Over 2.5 saves at 1.73/);
+ assert.match(details.description,/stake 0.5u/);
+ const multi=share.tipShareDetails([...fixture.bets,{...fixture.bets[0],id:2,player:'Striker',selection:'Over 1.5 shots',odds:2.2}]);
+ assert.match(multi.title,/2 published selections/);
+ assert.match(multi.description,/Striker · Over 1.5 shots at 2.20/);
+ assert.throws(()=>share.tipShareDetails([]),/requires a published selection/);
 });
 test('concurrent callers share one load, expiry reloads, capacity is bounded',async()=>{
  let now=0,calls=0,resolve;

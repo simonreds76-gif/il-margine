@@ -1,3 +1,4 @@
+import { studioMetadata } from "@/lib/share-studio-metadata";
 import RelatedLinks from "@/components/RelatedLinks";
 import TennisMatchdayPromo from "@/components/TennisMatchdayPromo";
 import AtlasPageHeader from "@/components/AtlasPageHeader";
@@ -16,8 +17,7 @@ export const dynamic="force-static";
 const title="Tennis Matchup Lab: H2H, Aces & Player Statistics";
 const description="Compare ATP tennis players by surface and location. Explore head-to-head results, aces, double faults, serve and return statistics, and historical pre-match odds.";
 export const metadata: Metadata={title,description,alternates:{canonical:`${BASE_URL}/tennis-matchup`},robots:{index:true,follow:true},
-  openGraph:{title,description,url:`${BASE_URL}/tennis-matchup`,type:"website",images:[{url:"/tennis-matchup/share-v1.png",width:1200,height:630,alt:"Tennis Matchup Lab by Il Margine — compare the players, understand the matchup"}]},
-  twitter:{card:"summary_large_image",title,description,images:["/tennis-matchup/share-v1.png"]}};
+  ...studioMetadata("tennis-matchup"),};
 const readable=(date:string)=>new Intl.DateTimeFormat("en-GB",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}).format(new Date(`${date}T12:00:00Z`));
 
 export default function TennisMatchupPage(){

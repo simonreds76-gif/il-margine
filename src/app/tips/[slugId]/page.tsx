@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { supabase } from "@/lib/supabase";
 import { BASE_URL } from "@/lib/config";
 import { slugifyTip, parseTipSlugId } from "@/lib/slugify";
-import { isWorldCupPropsTip, WORLD_CUP_TIP_IMAGE_PATH } from "@/lib/world-cup-tips";
+import { tipShareDetails } from "@/lib/tip-share";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import TipPortraits from "@/components/TipPortraits";
 import { getTipArtwork } from "@/lib/tip-artwork";
@@ -18,7 +18,6 @@ import { assessTipSeoReadiness, stripTipSeoMarker, tipPreviewPath } from "@/lib/
 // Admin changes invalidate the affected tip URL directly. Keep a daily fallback
 // for automated settlements instead of regenerating every crawled tip each minute.
 export const revalidate = 86400;
-const DEFAULT_SOCIAL_IMAGE = `${BASE_URL}/brand/20260913/social.png`;
 
 /** Spell out common abbreviations on the tip page (no need to shorten here). */
 function displaySelection(selection: string): string {
@@ -71,7 +70,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ? `Tennis tip: ${bet.event}. ${bet.selection} at ${formatOdds(bet.odds)}. ${bet.category}. Il Margine.`
       : `Player props tip: ${bet.event}. ${bet.player ? bet.player + " - " : ""}${bet.selection} at ${formatOdds(bet.odds)}. Il Margine.`;
   const url = `${BASE_URL}/tips/${canonicalSlug}`;
-  const worldCupGraphic = isWorldCupPropsTip(bet) ? `${BASE_URL}${WORLD_CUP_TIP_IMAGE_PATH}` : null;
+  const social = tipShareDetails([bet]);
+  const socialImage = `${url}/opengraph-image?v=share-v3`;
   const seoAssessment = assessTipSeoReadiness(bet);
   const canonicalUrl = seoAssessment.eligible ? `${BASE_URL}${tipPreviewPath(bet)}` : url;
 
@@ -84,25 +84,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       locale: "en_GB",
       url,
       siteName: "Il Margine",
-      title,
-      description,
+      title: social.title,
+      description: social.description,
       publishedTime: bet.posted_at,
       modifiedTime: bet.settled_at ?? bet.posted_at,
       images: [
         {
-          url: worldCupGraphic ?? DEFAULT_SOCIAL_IMAGE,
+          url: socialImage,
           width: 1200,
-          height: worldCupGraphic ? 1200 : 630,
-          alt: worldCupGraphic ? "Il Margine World Cup free picks" : "Il Margine betting with mathematical edge",
+          height: 630,
+          alt: social.alt,
           type: "image/png",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title,
-      description,
-      images: [worldCupGraphic ?? DEFAULT_SOCIAL_IMAGE],
+      title: social.title,
+      description: social.description,
+      images: [{ url: socialImage, alt: social.alt }],
     },
     robots: {
       index: false,
