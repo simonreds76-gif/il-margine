@@ -7,7 +7,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: '/',
+        // Public image redirects must be crawlable so their X-Robots-Tag can be read.
+        allow: ['/', '/api/tip-portrait/'],
         disallow: ['/admin', '/api', '/api/*'],
       },
       {
@@ -24,7 +25,7 @@ export default function robots(): MetadataRoute.Robots {
           'Google-Extended',
           'bingbot',
         ],
-        allow: '/',
+        allow: ['/', '/api/tip-portrait/'],
         disallow: ['/admin', '/api', '/api/*'],
       },
     ],
