@@ -268,11 +268,6 @@ export default function PlayerProps({
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <PropsAlertsCta
-        source="player_props_persistent"
-        variant="pill"
-        className="fixed bottom-5 right-5 z-40 hidden lg:inline-flex"
-      />
       {/* Nav */}
             {/* Navigation is now in GlobalNav component in layout.tsx */}
 
