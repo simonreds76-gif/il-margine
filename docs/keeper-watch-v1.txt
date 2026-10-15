@@ -1,0 +1,21 @@
+Keeper Watch v1: forward-only goalkeeper saves comparison
+
+Fixed candidate: the 15 October 2026 individual keeper history experiment. This is a research candidate, not an improved or promoted model. Its inspected historical and October replays did not establish an advantage. Replays are excluded from the forward ledger.
+
+The registration timestamp, exact parameters and hashes are in data/goalkeeper-saves/keeper-watch-v1.json. Never silently replace this artifact. The current control is also pinned; a current-model change stops capture and requests review rather than mixing versions.
+
+Run path: the existing goalkeeper-saves-shadow.py calls goalkeeper_keeper_watch.py after building the incumbent report. It reuses this run's candidates and prices and already retained keeper targets. No new download, cron, stake, public tip or Telegram signal. The existing private snapshot already includes this report. The existing weekly report appends one compact comparison line, with 50 and 100 independent settled fixture review milestones, not promotion thresholds.
+
+Forward data begins after registration: captured_at >= start_at, capture within six hours, registered before kickoff, exact keeper native ID and club ID in the contemporaneous expected/confirmed lineup, all incumbent input gates passed, current predicted mean parity verified. Only Bet365 is registered for settlement rules. Available lines are not assumed to be the complete market.
+
+Feature: last 20 verified 90-minute starts at the same club and league within 365 days; weight 0.93 per older appearance. Combine actual keeper saves with the original club baseline using a fixed prior weight of 10. Earlier calendar days only, and source versions must already have been observed/recovered when the forecast runs. No history uses the original club input. The other eight inputs and NB2 count method remain unchanged.
+
+Each keeper/fixture's first eligible paired forecast is immutable and contains both versions' probabilities at 1.5, 2.5, 3.5, 4.5 and 5.5 saves. Each model's first qualifying selection per fixture is separately locked, allowing later captures to qualify without rewriting earlier forecasts or earlier selections. Selection odds 1.70 to 3.00, EV >=5%, closest to 2 then highest probability then edge. Paper stake 0.5u, actual stake zero.
+
+Settlement reuses the existing keeper-history and verified-player-target archives. Exact fixture/date/player/club checks and full 90-minute agreement between explicit saves and attributable save events are required. Confirmed nonstarters are void. Missing, short appearances or conflicting counts are left for review, not guessed. First verified outcome is retained separately; later revisions require review. Settlement can lag while the existing bounded collector obtains the result; pending and >48h overdue are visible.
+
+Report ROI uses settled stake and excludes voids/pushes. Probability errors are averaged within each fixture before averaging across fixtures; correlated keeper/threshold observations are not counted as independent fixtures. Current comparison ROI is only this new matched capture cohort, not the full current-model record. Original GK saves alerts are unchanged. Candidate bets are viewable in the monitor and the existing weekly review, not new daily betting alerts.
+
+Files: data/goalkeeper-saves/keeper-watch/{forecasts,selections,outcomes} are immutable records. lock.json pins the registration, report.json is the regenerated view. A collection error preserves the previous summary in the main report with BLOCKED status. Capture budget 5,000 input lines per run and 20,000 records per archive; reaching the bound requires review.
+
+First status: CONNECTED_AWAITING_FIRST_CAPTURE until a genuinely fresh pre-match forecast is stored. An empty installation or workspace test is not a forecast. No aerial modelling changes are included.
