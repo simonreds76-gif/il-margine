@@ -15,8 +15,20 @@ function Portrait({ src, person = false }: { src: string | null; person?: boolea
 function Record({ history, names }: { history: HomeHistory; names: string[] }) {
   if (history.meetings === null || !history.results) return <span className="hf-no-history">History not yet matched</span>;
   if (history.meetings === 0) return <span className="hf-no-history">No meetings in our archive</span>;
-  const label = history.results.length === 3 ? `${names[0]} ${history.results[0]} wins, ${history.results[1]} draws, ${names[1]} ${history.results[2]} wins` : `${names[0]} ${history.results[0]} wins, ${names[1]} ${history.results[1]} wins`;
-  return <span className="hf-record"><span className="hf-score" aria-label={label}>{history.results.map((n, i) => <span key={i}>{i > 0 && <i aria-hidden="true">:</i>}{n}</span>)}</span><span>{history.meetings} recorded meetings{history.results.length === 3 ? ' · wins / draws / wins' : ''}</span></span>;
+  const hasDraws = history.results.length === 3;
+  return <div className="hf-record">
+    <dl className={`hf-results ${hasDraws ? 'hf-results-three' : 'hf-results-two'}`}>
+      {history.results.map((count, i) => {
+        const draw = hasDraws && i === 1;
+        const side = i === 0 ? 'first' : 'second';
+        return <div className={`hf-result hf-result-${draw ? 'draw' : side}`} key={i}>
+          <dt>{draw ? 'Draws' : <><span>{names[i === 0 ? 0 : 1]}</span><span className="hf-result-kind">wins</span></>}</dt>
+          <dd>{count}</dd>
+        </div>;
+      })}
+    </dl>
+    <p className="hf-meeting-count">{history.meetings} {history.meetings === 1 ? 'meeting' : 'meetings'} in our archive</p>
+  </div>;
 }
 function Fixture({ fixture: f, tennis, now }: { fixture: HomeFixture; tennis: boolean; now: number }) {
   const date = new Date(f.start);
