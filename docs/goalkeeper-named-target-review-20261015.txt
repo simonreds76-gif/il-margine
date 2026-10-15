@@ -1,0 +1,136 @@
+GOALKEEPER NAMED-TARGET COMPARISON AND AERIAL RECOVERY
+15 October 2026
+
+DECISION
+Keep the live model and selection policy unchanged. Actual keeper targets are
+better-defined research data, but the fixed-specification refit did not improve
+probability accuracy. Its very high replay ROI comes from ONE winning bet and
+does not justify promotion. No new candidate alerts or stakes were enabled.
+
+RECOVERY
+Read 2,049 retained/new raw files and recovered 2,019 distinct fixture records.
+1,776 fixtures have two starting keepers, 90 minutes each, explicit saves agreeing
+with attributable save events, and no target conflict. Other records are retained
+with their conflicting or missing counts, not silently converted to zero.
+42 missing completed evaluation matches were fetched by exact recorded fixture,
+date and team IDs. All 42 succeeded. No paid API requests were used.
+
+The full usable training join contains 2,778 goalkeeper rows from 1,389 fixtures,
+15 August 2025 to 24 May 2026, across all five leagues. This replaces the earlier
+118-row preparation. 350 labels differ from the old training proxy; named saves
+total 7,840, against 8,023 proxy saves. This difference is data evidence, not ROI.
+
+METHOD
+Registered before fitting in registration.json. Both refits use exactly the same
+training fixtures, nine existing features, NB2_FULL fitting method, regularisation
+and dispersion bounds. Only the dependent variable differs: old team proxy versus
+explicit named-keeper saves. The team_saves_ema20 feature remains the original
+proxy in BOTH versions, isolating the target change. No feature, threshold,
+surface/league filter, coefficient or date-range search was performed.
+
+The historical count test trains before 1 March 2026 and evaluates March to May:
+1,946 training keeper rows and 832 test rows, representing 416 held-out fixtures.
+The frozen production model is not assessed on this historical holdout because
+its own training overlaps that period. It is assessed on the later captured data.
+
+HISTORICAL COUNT HOLDOUT: LOWER IS BETTER
+                               Proxy refit       Actual-save refit
+Count negative log likelihood  1.987381          1.990657
+Threshold Brier                0.172831          0.172987
+Threshold log loss             0.519607          0.520328
+Mean absolute save error       1.483486          1.478280
+Mean forecast minus actual    -0.022009         -0.079211
+
+The actual-save refit is slightly worse on probability accuracy, slightly better
+on absolute count error and more biased towards underprediction. Paired fixture
+bootstrap ranges cross zero: Brier difference +0.000156, 95% range -0.000317 to
++0.000657; log-loss difference +0.000721, range -0.000765 to +0.002229. These are
+descriptive uncertainty estimates, not proof that either refit is superior.
+No ROI is available for this 416-fixture count holdout: historical keeper market
+prices were not recorded. No synthetic odds were created.
+
+LATER CAPTURED INPUTS
+234 authentic pre-match packets covering 50 events, with kickoff dates 9 to
+16 October 2026. All packet hashes and pre-match registration times were checked.
+Recorded feature vectors reproduce the original forecast means within rounding.
+Blocked/missing-input offers are excluded equally from all variants.
+52 verified keeper outcomes across 29 fixtures support paired probability scores:
+
+                               Current frozen   Proxy refit   Actual-save refit
+Brier                          0.159953         0.166492      0.167959
+Log loss                       0.489527         0.506469      0.510295
+Count negative log likelihood  2.027867         2.071334      2.084707
+Mean forecast minus actual    -0.105073        -0.335838     -0.411763
+
+Both refits are worse than current on this small later sample. They were trained
+on a narrower, more recent matched sample than production. The proxy control
+helps separate that retraining effect from changing the target. Fixture-bootstrap
+uncertainty remains wide; no claim of established harm or improvement is made.
+
+ROI REPLAY, WITH REVIEWED SETTLEMENT EXCEPTIONS
+Replay all recorded available offers in registration order. Per model, lock the
+first eligible selection per fixture using the existing policy: odds 1.70 to
+3.00, EV at least 5%, rank closest to even money then probability then edge.
+Stake 0.5 paper units. Prices are recorded Bet365 quotes, not invented or assumed
+closing lines. Models see the same chronological offer stream. Market completeness
+is not established. These are retrospective strategy replays, NOT actual bets,
+the full existing model record, or prospective results for either refit.
+
+Model                 W/L   Void  Pending  Stake   P/L        ROI
+Current frozen        4/5   1     0        4.5u   -0.1375u    -3.06%
+Matched proxy refit   2/1   1     0        1.5u   +1.1875u   +79.17%
+Actual-save refit     1/0   0     0        0.5u   +0.8125u  +162.50%
+
+Settled fixtures are 9-12 October; the actual-save refit's sole selection is
+Jeffrey De Lange over 2.5 at 2.625, Troyes v Marseille, 11 October; 3 saves.
+These samples cannot establish profitable model improvement. The all-offer
+probability comparison is more informative than these ROI percentages.
+
+Original strict results remain unchanged in comparison.json: the current model
+initially had eight graded bets and two held; the proxy refit had three graded
+bets and one held. settlement-review.json and resolved-replay.json show the
+separate evidence-based resolutions. Skorupski was a confirmed nonstarter and is
+void under Bet365's published player-statistics participation rule. Karius had
+three published saves corroborated by the Sofascore match report; his event count
+was two, so the original strict count comparison still excludes that fixture.
+Neither count would win his over 3.5 bet. All original live ledgers are unchanged.
+
+LIMITS
+The candidate was designed after historical outcomes existed. Chronological
+splits prevent using later rows in fitting but do not make this prospective.
+Training market inputs are historical prices and may represent a later time
+than the early quotes used in the captured replay. The verified full-match
+protocol excludes substitutions and disputed/missing counts, so coverage is not
+random. Agreement within FotMob is not independent upstream-provider verification.
+Probability scores average fixed thresholds 1.5 through 5.5, with uncertainty
+resampled by whole fixture. Multiple thresholds are not independent observations.
+
+AERIAL COLLECTION REPAIR
+The extractor already read claims/punches; the storage allowlist dropped them.
+The collector now retains goalkeeper identity flags, claims and punches, keeping
+unknown as null and explicit zero as zero. Exact original source hashes and
+player/team/minutes checks allowed historical backfill of 1,860 fixtures and
+3,765 keeper appearances. 189 fixtures remain without that backfill: 31 have no
+retained payload, 158 lack a matching original payload hash. No guesses or
+additional fetches were made for these fields.
+The existing public Aerial payload was byte-for-byte equivalent as a JSON object
+at the same evaluation timestamp before and after the backfill.
+
+The same existing match response now also retains named keeper saves/minutes/
+starts and source evidence in data/aerial/keeper-history.json.gz. Initial recovery
+contains 2,019 fixtures; source revisions are preserved separately. This avoids
+limiting future outcome collection to matches with selected GK bets. Missing or
+conflicting counts remain explicit. No extra requests, schedule, forecast inputs,
+public feature, model weights or selection rules were introduced.
+
+REPRODUCIBILITY
+registration.json, recovery-report.json, training-rows.json.gz,
+recovered-targets.json.gz, fitted-models.json, comparison.json,
+predictions.json.gz, selections.csv, settlement-review.json,
+resolved-replay.json, aerial-backfill-report.json, and the saved Python scripts.
+Raw source files are reused by path/hash; only 42 missing evaluation payloads are
+new downloads. Tests and merge receipt are saved separately.
+
+SETTLEMENT SOURCES
+https://www.sofascore.com/news/sc-freiburg-2-1-schalke-late-header-seals-it
+https://help.bet365.com/s/en/sportsrules/soccer/match-statistics

@@ -55,8 +55,19 @@ def refresh(root=ROOT, now=None, online=True, force=False):
         for row in missing[:20]:
             url = f'https://www.fotmob.com/api/data/matchDetails?matchId={row["id"]}'
             response = requests.get(url, timeout=25); response.raise_for_status(); time.sleep(.5)
-            record = extract(response.json(), row)
-            record['players']=[{k:v for k,v in p.items() if k in ('id','team_id','starter','minutes','aerials_won','aerials_attempted','headed_shots','headed_sot','headed_goals','set_piece_headers')} for p in record['players']]
+            source_page = response.json()
+            record = extract(source_page, row)
+            # Reuse this exact response for named-keeper research labels. A
+            # missing target cannot stop the established Air Control publisher.
+            try:
+                from named_goalkeeper_history import target_record, retain
+                keeper_record = target_record(source_page, row, response.content, now.isoformat())
+                retain(data/'keeper-history.json.gz', keeper_record)
+                health['keeper_history_last_success_at'] = now.isoformat()
+            except Exception as exc:
+                health['keeper_history_last_error'] = dict(match_id=row['id'], at=now.isoformat(), error=str(exc))
+                print(f'::warning::Named keeper history unavailable for {row["id"]}: {exc}')
+            record['players']=[{k:v for k,v in p.items() if k in ('id','team_id','starter','minutes','aerials_won','aerials_attempted','headed_shots','headed_sot','headed_goals','set_piece_headers','goalkeeper','keeper_high_claims','keeper_punches')} for p in record['players']]
             record.pop('coverage',None);record.pop('exceptions',None)
             record.update(home=row['home'], away=row['away'], league=row['league'],
                           source_url=url, source_sha256=sha256(response.content).hexdigest(), observed_at=now.isoformat())

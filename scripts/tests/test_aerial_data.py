@@ -62,5 +62,35 @@ class AerialTests(unittest.TestCase):
             client.put.assert_not_called();self.assertEqual(read(root/'public/fair-odds-lab/aerial.json')['version'],'last-good')
             self.assertEqual(read(root/'data/aerial/health.json')['last_error'],'calendar invalid')
 
+    def test_collection_retains_keeper_claims_punches_and_unknowns(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory); data=root/'data/aerial'
+            save(data/'calendar.json.gz',{'observed_at':'2026-10-01T00:00:00Z'})
+            save(data/'history.json.gz',{'matches':[]})
+            save(data/'heights.json.gz',{});save(data/'roster-sources.json',{})
+            fixtures=[dict(id='1',home={'id':10,'name':'Home'},away={'id':20,'name':'Away'},pageUrl='/match/1',
+                           status={'finished':True,'utcTime':'2026-10-09T13:00:00Z','scoreStr':'1 - 0'}),
+                      dict(id='2',home={'id':20,'name':'Away'},away={'id':10,'name':'Home'},pageUrl='/match/2',
+                           status={'finished':False,'utcTime':'2026-11-09T13:00:00Z'})]
+            calendar={'details':{'id':47,'selectedSeason':'2026/2027'},'fixtures':{'allMatches':fixtures}}
+            record={'id':'1','players':[{'id':'101','goalkeeper':True,'minutes':90,'keeper_high_claims':0,'keeper_punches':2},
+                                       {'id':'201','goalkeeper':True,'minutes':90,'keeper_high_claims':None,'keeper_punches':None}]}
+            response=Mock();response.content=b'raw';response.json.return_value={}
+            payload={'fixtures':[],'exclusions':{},'history_through':'2026-10-09'}
+            with patch.object(refresh,'LEAGUES',{'47':('epl','Premier League',2)}), \
+                 patch.object(refresh,'page',return_value=(calendar,'calendar-hash')), \
+                 patch.object(refresh.requests,'get',return_value=response) as get, \
+                 patch.object(refresh,'extract',return_value=record), \
+                 patch('named_goalkeeper_history.target_record',return_value={'match_id':'1','source_sha256':'keeper-evidence'}), \
+                 patch.object(refresh,'build',return_value=payload), patch.object(refresh.time,'sleep'):
+                self.assertEqual(refresh.refresh(root,self.now,force=True),payload)
+            players=read(data/'history.json.gz')['matches'][0]['players']
+            self.assertEqual(players[0]['keeper_high_claims'],0)
+            self.assertEqual(players[0]['keeper_punches'],2)
+            self.assertIsNone(players[1]['keeper_high_claims'])
+            self.assertIsNone(players[1]['keeper_punches'])
+            self.assertEqual(get.call_count,1)
+            self.assertEqual(read(data/'keeper-history.json.gz')['fixtures']['1'][0]['source_sha256'],'keeper-evidence')
+
 if __name__=='__main__':unittest.main()
 
