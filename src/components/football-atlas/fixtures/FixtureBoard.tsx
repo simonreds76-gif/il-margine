@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import H2HRecord from '@/components/H2HRecord';
+import FixturePhoto from '@/components/FixturePhoto';
 import { priceBasisLabel } from '../football-core';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -24,8 +25,7 @@ function Icon({ name }: { name: 'calendar' | 'manager' | 'club' | 'link' | 'arro
 }
 
 function Photo({ src, manager = false }: { src: string | null; manager?: boolean }) {
-  const [failed, setFailed] = useState(false);
-  return <span className={manager ? 'af-face' : 'af-crest'}>{src && !failed ? <Image src={src} alt="" width={manager ? 28 : 48} height={manager ? 28 : 48} unoptimized onError={() => setFailed(true)} /> : <Icon name={manager ? 'manager' : 'club'} />}</span>;
+  return <FixturePhoto src={src} className={manager ? 'af-face' : 'af-crest'} size={manager ? 28 : 48} fallback={<Icon name={manager ? 'manager' : 'club'} />} />;
 }
 
 function Team({ club, away = false }: { club: Club; away?: boolean }) {

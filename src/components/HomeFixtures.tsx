@@ -5,13 +5,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ToolEmblem from './ToolEmblem';
 import H2HRecord from './H2HRecord';
+import FixturePhoto from './FixturePhoto';
 import { homeLeagueLogos, tennisCompetition } from '@/lib/home-competition';
 import { londonDay, upcomingHomeFixtures, type HomeFixture, type HomeHistory, type HomeFixturesData } from '@/lib/home-fixtures';
 import './home-fixtures.css';
 
 function Portrait({ src, person = false }: { src: string | null; person?: boolean }) {
-  const [failed, setFailed] = useState(false);
-  return <span className={`hf-portrait ${person ? 'hf-person' : ''}`}>{src && !failed ? <Image src={src} width={48} height={48} alt="" unoptimized onError={() => setFailed(true)} /> : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d={person ? 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 22v-4c0-6 16-6 16 0v4' : 'M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z'} /></svg>}</span>;
+  return <FixturePhoto src={src} className={`hf-portrait ${person ? 'hf-person' : ''}`} size={48} fallback={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d={person ? 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 22v-4c0-6 16-6 16 0v4' : 'M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z'} /></svg>} />;
 }
 function Record({ history, names }: { history: HomeHistory; names: string[] }) {
   return <H2HRecord results={history.results} meetings={history.meetings} names={names} />;
