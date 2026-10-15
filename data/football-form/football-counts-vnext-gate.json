@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-15T00:52:11Z",
+  "generated_at": "2026-10-15T13:30:57Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -36,25 +36,25 @@
     },
     "latest_scan": {
       "state": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
-      "explanation": "For all 8 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.04%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
-      "scored_rows": 84,
-      "scored_fixtures": 14,
+      "explanation": "For all 34 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.04%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
+      "scored_rows": 428,
+      "scored_fixtures": 30,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 84,
+      "blocked_rows": 428,
       "blocker_rows": {
-        "early_market_gap_cap": 2,
-        "edge_below_3pct": 84,
-        "price_older_than_3h": 84
+        "early_market_gap_cap": 8,
+        "edge_below_3pct": 428,
+        "price_older_than_3h": 12
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 6,
-      "matchday_max": 8,
+      "matchday_max": 9,
       "next_unlock": null,
       "operational_alert_required": true,
       "operational_alert_code": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
       "rule_feasibility": {
-        "affected_rows": 8,
+        "affected_rows": 34,
         "rows_capable_of_minimum_edge": 0,
         "maximum_allowed_edge": 0.020419220748831624,
         "minimum_edge": 0.03,
@@ -70,9 +70,9 @@
     "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 81,
+      "signals": 82,
       "settled": 62,
-      "pending": 19,
+      "pending": 20,
       "pnl_units": -4.86,
       "roi": -0.078387,
       "true_close_n": 40,
@@ -80,9 +80,9 @@
       "mean_true_close_clv": 0.003518,
       "side_counts": {
         "over": 15,
-        "under": 66
+        "under": 67
       },
-      "dominant_side_share": 0.814815
+      "dominant_side_share": 0.817073
     },
     "warmup_tracking": {
       "signals": 36,
@@ -100,16 +100,16 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "NO_EDGE_AFTER_UNLOCK",
-      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
+      "state": "ELIGIBLE_CANDIDATES_PRESENT",
+      "explanation": "At least one candidate passed every locked shadow gate.",
       "scored_rows": 154,
       "scored_fixtures": 31,
-      "eligible_rows": 0,
-      "eligible_fixtures": 0,
-      "blocked_rows": 154,
+      "eligible_rows": 38,
+      "eligible_fixtures": 17,
+      "blocked_rows": 116,
       "blocker_rows": {
-        "edge_below_3pct": 110,
-        "price_older_than_3h": 154
+        "edge_below_3pct": 114,
+        "price_older_than_3h": 4
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 6,
