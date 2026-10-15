@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import ToolEmblem from './ToolEmblem';
+import { homeLeagueLogos, tennisCompetition } from '@/lib/home-competition';
 import { londonDay, upcomingHomeFixtures, type HomeFixture, type HomeHistory, type HomeFixturesData } from '@/lib/home-fixtures';
 import './home-fixtures.css';
 
@@ -21,8 +22,14 @@ function Fixture({ fixture: f, tennis, now }: { fixture: HomeFixture; tennis: bo
   const date = new Date(f.start);
   const day = londonDay(f.start) === londonDay(now) ? 'Today' : new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', weekday: 'short', day: 'numeric', month: 'short' }).format(date);
   const time = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit' }).format(date);
+  const competition = tennis ? tennisCompetition(f.competition) : { label: f.competition, country: null };
+  const logo = tennis ? '/icons/markets/atp-logo-small-v1.webp' : homeLeagueLogos[f.competition];
   return <article className={`hf-card ${tennis ? "hf-tennis" : ""}`}>
-    <div className="hf-meta"><span>{f.competition}</span><time dateTime={f.start}>{day} · {time}</time></div>
+    <div className="hf-meta"><span className="hf-competition">
+      {logo && <Image className={`hf-competition-logo ${tennis ? 'hf-atp-logo' : ''}`} src={logo} width={tennis ? 42 : 28} height={28} alt={tennis ? 'ATP' : ''} unoptimized />}
+      <span className="hf-competition-name">{competition.label}</span>
+      {competition.country && <Image className="hf-venue-flag" src={`/flags/${competition.country.code}.png`} width={20} height={14} alt={competition.country.name} title={`Played in ${competition.country.name}`} unoptimized />}
+    </span><time dateTime={f.start}>{day} · {time}</time></div>
     <div className="hf-opponents">{f.sides.map((s, i) => <div className="hf-side" key={`${f.id}-${i}`}><Portrait key={s.image} src={s.image} person={tennis} /><h4>{s.name}</h4></div>)}<span className="hf-versus" aria-hidden="true">vs</span></div>
     <div className="hf-history"><span className="hf-kicker">{tennis ? 'Player' : 'Club'} head to head</span><Record history={f.history} names={f.sides.map(s => s.name)} /></div>
     {f.managers && <div className="hf-managers"><span className="hf-kicker">Manager head to head</span><div className="hf-manager-names">{f.managers.sides.map((s, i) => <span key={i}><Portrait key={s.image} src={s.image} person /><span>{s.name}</span></span>)}</div><Record history={f.managers.history} names={f.managers.sides.map(s => s.name)} /></div>}
