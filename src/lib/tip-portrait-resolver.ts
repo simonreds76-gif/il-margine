@@ -57,7 +57,10 @@ export function uniquePlayer(name: string, squads: SquadPlayer[][]): SquadPlayer
   if (!query) return null;
   const players = squads.flat();
   const exact = players.filter((p) => normal(p.name) === query);
-  const matches = exact.length ? exact : players.filter((p) => normal(p.name).endsWith(` ${query}`));
+  // Verified public short names/spelling variants; accepted only when the exact
+  // player ID occurs in one of the fixture's two current squads.
+  const aliases: Record<number, string[]> = { 1248662: ["adriel"], 886809: ["javi vasquez"] };
+  const matches = exact.length ? exact : players.filter((p) => normal(p.name).endsWith(` ${query}`) || aliases[p.id]?.includes(query));
   const ids = new Set(matches.map((p) => p.id));
   return ids.size === 1 ? matches[0] : null;
 }

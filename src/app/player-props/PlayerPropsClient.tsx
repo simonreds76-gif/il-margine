@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import TipsHubIntro from "@/components/TipsHubIntro";
+import TipsHubIntro, { TipsResearchLink } from "@/components/TipsHubIntro";
 import TipsCompetitionToolbar from "@/components/TipsCompetitionToolbar";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
@@ -361,6 +361,8 @@ export default function PlayerProps({
           <PropsAlertsCta source="player_props_alerts" className="mt-6" />
         </div>
       </section>
+
+      <TipsResearchLink sport="football" />
 
       {/* Detailed record */}
       <section id="competition-record" className="scroll-mt-24 py-10 md:py-12 border-b border-slate-800/50">

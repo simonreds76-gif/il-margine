@@ -1,5 +1,6 @@
 import teamLogoManifest from "../../data/goalscorer/team-logo-map.json";
 import europeanLogos from "../../data/team-logos/europe.json";
+import { foldNameText } from "./player-name-matching";
 import { correctFootballClubNames } from "./football-club-names";
 
 type TeamEntry = {
@@ -128,7 +129,7 @@ const WORLD_CUP_TEAM_KEYS = new Set([
 ]);
 
 export function normalizeText(value: string): string {
-  return correctFootballClubNames(value)
+  return foldNameText(correctFootballClubNames(value))
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/&/g, " and ")
@@ -205,7 +206,7 @@ export function resolveTeamLogoPath(team: string | null, category: string): stri
   const national = NATIONAL_TEAM_LOGOS[normalizeTeamKey(team)];
   if (national) return national;
   if (category === "worldcup") return worldCupTeamLogoPath(team) ?? teamLogoPathFromCategory(team, category);
-  const european = europeanLogos.teams.find((club) => club.aliases.some((alias) => normalizeText(alias) === normalizeText(team)));
+  const european = europeanLogos.teams.find((club) => [club.name, ...club.aliases].some((alias) => normalizeText(alias) === normalizeText(team)));
   if (european) return european.logo_path;
   return (
     resolveManifestLogoPath(team, category) ??

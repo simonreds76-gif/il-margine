@@ -6,6 +6,8 @@ import { BASE_URL } from "@/lib/config";
 import { slugifyTip, parseTipSlugId } from "@/lib/slugify";
 import { isWorldCupPropsTip, WORLD_CUP_TIP_IMAGE_PATH } from "@/lib/world-cup-tips";
 import BookmakerLogo from "@/components/BookmakerLogo";
+import TipPortraits from "@/components/TipPortraits";
+import { getTipArtwork } from "@/lib/tip-artwork";
 import MarketBadge from "@/components/MarketBadge";
 import PropsAlertsCta from "@/components/PropsAlertsCta";
 import TipPageTracker from "@/components/TipPageTracker";
@@ -167,9 +169,12 @@ export default async function TipPage({ params }: PageProps) {
             <span className={`text-xs font-mono px-2.5 py-1 rounded-md font-medium ${statusClass}`}>{statusLabel}</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-2">
-            {heroName}
-          </h1>
+          <div className="mb-3 flex items-center gap-4">
+            <TipPortraits portraits={getTipArtwork(bet)} size="hero" />
+            <h1 className="min-w-0 break-words text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white">
+              {heroName}
+            </h1>
+          </div>
           {heroSelection && (
             <p className="text-xl sm:text-2xl font-medium text-emerald-400 mb-3">{heroSelection}</p>
           )}

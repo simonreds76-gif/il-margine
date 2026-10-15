@@ -8,6 +8,15 @@ export default function TipsHubIntro({ sport }: { sport: "tennis" | "football" }
   return <section className={styles.hero} aria-labelledby="tips-title">
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <PageHeading introClassName={styles.intro} titleId="tips-title" eyebrow={tennis ? "Tennis analysis" : "Football player props"} title={tennis ? "Tennis Betting Tips" : "Football Player Props Betting Tips"} icon={sport}><p>{tennis ? "Tennis betting tips informed by statistical models and bookmaker prices. Explore ATP, Challenger and Grand Slam picks, then compare current selections and performance by competition." : "Football player props informed by statistical models and bookmaker prices. Explore shots, shots on target, fouls, tackles and cards, then compare picks and performance by league."}</p></PageHeading>
+
+    </div>
+  </section>;
+}
+
+export function TipsResearchLink({ sport }: { sport: "tennis" | "football" }) {
+  const tennis = sport === "tennis";
+  return <aside className={styles.research} aria-label="Explore historical returns">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div className={styles.details}>
         <Link prefetch={false} href={tennis ? "/return-atlas" : "/football-atlas"} className={styles.atlasLink} aria-label={`Explore Return Atlas ${tennis ? "Tennis" : "Football"}`}>
           <span className={styles.atlasIcon}><ToolEmblem name={sport} className={styles.atlasEmblem} /></span>
@@ -20,5 +29,5 @@ export default function TipsHubIntro({ sport }: { sport: "tennis" | "football" }
         </Link>
       </div>
     </div>
-  </section>;
+  </aside>;
 }

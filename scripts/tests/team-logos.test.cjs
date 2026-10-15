@@ -11,10 +11,14 @@ const names = { exports: {} };
 vm.runInNewContext(ts.transpileModule(fs.readFileSync(path.join(root, 'src/lib/football-club-names.ts'), 'utf8'), {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
 }).outputText, { module: names, exports: names.exports });
+const folding = { exports: {} };
+vm.runInNewContext(ts.transpileModule(fs.readFileSync(path.join(root, 'src/lib/player-name-matching.ts'), 'utf8'), {
+  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+}).outputText, { module: folding, exports: folding.exports });
 const moduleResult = { exports: {} };
 vm.runInNewContext(ts.transpileModule(fs.readFileSync(source, 'utf8'), {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
-}).outputText, { module: moduleResult, exports: moduleResult.exports, require: (name) => name === './football-club-names' ? names.exports : createRequire(source)(name) });
+}).outputText, { module: moduleResult, exports: moduleResult.exports, require: (name) => name === './football-club-names' ? names.exports : name === './player-name-matching' ? folding.exports : createRequire(source)(name) });
 const { resolveTeamLogoPath } = moduleResult.exports;
 const europe = require('../../data/team-logos/europe.json');
 
@@ -38,7 +42,7 @@ test('every 2026/27 Champions League club resolves to a real local crest', () =>
   for (const club of europe.champions_league_2026_27) checkFile(club, 'ucl');
 });
 
-test('today’s published fixtures resolve both badges regardless of competition category', () => {
+test('todayâ€™s published fixtures resolve both badges regardless of competition category', () => {
   for (const category of ['ucl', 'championsleague', 'all']) {
     for (const team of ['Barcelona', 'Feyenoord', 'Stuttgart', 'Viking', 'Sporting', 'Galatasaray']) checkFile(team, category);
   }
@@ -90,4 +94,12 @@ test('Omonia and Benfica picks use the correct senior club crests', () => {
   }
   assert.notEqual(resolveTeamLogoPath('Omonia Aradippou', 'all'), '/team-logos/europe/omonia-nicosia.png');
   assert.notEqual(resolveTeamLogoPath('Benfica B', 'all'), '/team-logos/europe/benfica.png');
+});
+
+test('all 36 Europa League clubs and common local spellings resolve to real badges', () => {
+  assert.equal(europe.europa_league_2026_27.length, 36);
+  for (const club of europe.europa_league_2026_27) checkFile(club, 'other');
+  for (const [alias, canonical] of [['Sparta Praha','Sparta Prague'],['Lillestrom','Lillestrøm'],['Besiktas','Beşiktaş'],['Jagiellonia Bialystok','Jagiellonia Białystok']]) {
+    assert.equal(checkFile(alias,'other'),checkFile(canonical,'other'));
+  }
 });

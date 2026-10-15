@@ -5,6 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const ts = require('typescript');
 const root = path.resolve(__dirname, '../..');
+const europa = require('./fixtures/tip-portrait-europa-squads.json');
 const squads = require('./fixtures/tip-portrait-squads.json');
 const source = (club) => `<script id="__NEXT_DATA__" type="application/json">${JSON.stringify({props:{pageProps:{fallback:{['team-'+squads[club].details.id]:squads[club]}}}})}</script>`;
 
@@ -36,6 +37,8 @@ function harness({ fail = false, empty = false } = {}) {
       fetches++;
       if(fail) throw new Error('timeout');
       assert.match(url,/^https:\/\/www\.fotmob\.com\/teams\/\d+\/overview$/);
+      const teamId = url.match(/teams\/(\d+)/)[1];
+      if (europa[teamId]) return new Response('<script id="__NEXT_DATA__">'+JSON.stringify({props:{pageProps:{fallback:{['team-'+teamId]:europa[teamId]}}}})+'</script>');
       const club = url.includes('/9851/')?'rennes':'auxerre';
       return new Response(source(club));
     };
@@ -83,4 +86,22 @@ test('source outage, unknown tip and malformed IDs fail safely without arbitrary
     assert.equal(response.headers.get('location'),null);
     if(config.empty) assert.equal(h.counts().fetches,0);
   }
+});
+
+test('new Europa picks resolve both squads and the correct player including accents and verified short names', async () => {
+  const examples = [
+    ['Sparta Praha vs Lillestrom', 'Suchomel', 1310253],
+    ['Benfica vs Celtic', 'Lukebakio', 688876],
+    ['Torreense vs Sunderland', 'Adriel', 1248662],
+    ['Az Alkmaar vs Hapoel Beer Sheva', 'Diop ', 1316534],
+    ['Hoffenheim vs Besiktas', 'Murillo', 643635],
+    ['Torreense vs Sunderland', 'Javi Vasquez ', 886809],
+  ];
+  const h=harness(); const r=h.load(path.join(root,'src/lib/tip-portrait-resolver.ts'));
+  for (const [event,player,id] of examples) {
+    const pick={market:'props',category:'other',event,player};
+    assert.equal(r.clubsForPick(pick).length,2,event);
+    assert.equal((await r.resolveTipPortrait(pick))?.id,id,event+' '+player);
+  }
+  assert.equal(r.uniquePlayer('Adriel',[[{id:9,name:'Adriel Other',clubId:1}],[{id:10,name:'Other Player',clubId:2}]]),null);
 });
