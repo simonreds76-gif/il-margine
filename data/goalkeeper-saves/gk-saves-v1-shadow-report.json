@@ -33,14 +33,77 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-15T14:24:45.757849+00:00",
+    "checked_at": "2026-10-15T16:08:44.080391+00:00",
     "counts": {
       "not_fresh_prematch": 62
     },
     "saved": 0,
     "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-10-15T14:24:45Z",
+  "generated_at": "2026-10-15T16:08:43Z",
+  "keeper_watch": {
+    "actual_stake": 0,
+    "auto_promote": false,
+    "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
+    "exclusions": {
+      "not_new_fresh_prematch": 62
+    },
+    "forecast_fixtures": 0,
+    "forecast_keepers": 0,
+    "generated_at": "2026-10-15T16:08:44.111665+00:00",
+    "last_capture_at": null,
+    "name": "Keeper Watch v1",
+    "new_forecasts": 0,
+    "new_selections": 0,
+    "next_review_at": 50,
+    "paired_scores": {
+      "current": {
+        "brier": null,
+        "log_loss": null
+      },
+      "keeper_watch": {
+        "brier": null,
+        "log_loss": null
+      }
+    },
+    "paired_settled_fixtures": 0,
+    "paper_stake": 0.5,
+    "records": {
+      "current": {
+        "losses": 0,
+        "overdue": 0,
+        "pending": 0,
+        "profit": 0,
+        "pushes": 0,
+        "review": 0,
+        "roi": null,
+        "selections": 0,
+        "settled": 0,
+        "stake": 0.0,
+        "voids": 0,
+        "wins": 0
+      },
+      "keeper_watch": {
+        "losses": 0,
+        "overdue": 0,
+        "pending": 0,
+        "profit": 0,
+        "pushes": 0,
+        "review": 0,
+        "roi": null,
+        "selections": 0,
+        "settled": 0,
+        "stake": 0.0,
+        "voids": 0,
+        "wins": 0
+      }
+    },
+    "review_milestone": null,
+    "selections": [],
+    "settlement_reasons": {},
+    "start_at": "2026-10-15T15:58:57.141631+00:00",
+    "status": "CONNECTED_AWAITING_FIRST_CAPTURE"
+  },
   "live_routing": false,
   "promotion": {
     "mean_true_close_clv_required": 0.005,
