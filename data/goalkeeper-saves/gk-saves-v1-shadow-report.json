@@ -15,13 +15,13 @@
     "eligible_lines": 8,
     "priced_lines": 200,
     "provisional_lines": 0,
-    "signals_added": 6,
-    "value_ladder_lines": 39
+    "signals_added": 0,
+    "value_ladder_lines": 42
   },
   "evidence": {
     "clv": 0.026706,
     "clv_matched": 16,
-    "pending": 9,
+    "pending": 10,
     "pnl_units": 15.953,
     "roi": 0.531767,
     "settled": 60,
@@ -29,34 +29,36 @@
       "fotmob_named_keeper_shotmap": 57,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 70,
+    "signals": 71,
     "true_close_coverage": 0.266667,
     "void": 1
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-16T00:46:32.773196+00:00",
+    "checked_at": "2026-10-16T13:20:10.211511+00:00",
     "counts": {
-      "offers_saved": 332
+      "already_saved": 7,
+      "not_fresh_prematch": 226
     },
-    "saved": 25,
-    "status": "CAPTURED"
+    "saved": 0,
+    "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-10-16T00:46:32Z",
+  "generated_at": "2026-10-16T13:20:09Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "blocked_or_missing_inputs": 142
+      "blocked_or_missing_inputs": 40,
+      "not_new_fresh_prematch": 226
     },
     "forecast_fixtures": 20,
     "forecast_keepers": 38,
-    "generated_at": "2026-10-16T00:46:32.838059+00:00",
+    "generated_at": "2026-10-16T13:20:10.249679+00:00",
     "last_capture_at": "2026-10-16T00:46:32.838059+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 30,
-    "new_selections": 7,
+    "new_forecasts": 0,
+    "new_selections": 0,
     "next_review_at": 50,
     "paired_scores": {
       "current": {
@@ -74,12 +76,12 @@
       "current": {
         "losses": 0,
         "overdue": 0,
-        "pending": 7,
+        "pending": 8,
         "profit": 0,
         "pushes": 0,
         "review": 0,
         "roi": null,
-        "selections": 7,
+        "selections": 8,
         "settled": 0,
         "stake": 0.0,
         "voids": 0,
@@ -293,6 +295,30 @@
         "side": "over",
         "status": "pending",
         "team_id": "8581"
+      },
+      {
+        "away": "Sassuolo Calcio",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-16T13:19:09+00:00",
+        "edge": 0.09454349061520406,
+        "event_id": "71945310",
+        "fair_odds": 1.9186080936991041,
+        "goalkeeper": "Arijanet Muri\u0107",
+        "home": "Frosinone Calcio",
+        "kickoff_at": "2026-10-16T18:45:00+00:00",
+        "line": 3.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5749704",
+        "model": "current",
+        "odds": 2.1,
+        "overdue": false,
+        "player_id": "760752",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-16T13:19:11.634634+00:00",
+        "side": "over",
+        "status": "pending",
+        "team_id": "7943"
       }
     ],
     "settlement_reasons": {

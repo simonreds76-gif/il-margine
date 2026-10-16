@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-15T13:30:28Z",
+  "fetched_at": "2026-10-16T13:19:20Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
@@ -870,7 +870,7 @@
       "football_data_latest": "2026-10-11",
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "lag_days": 4,
+      "lag_days": 5,
       "source": "football-data",
       "source_latest": "2026-10-11",
       "target_dates": [
@@ -2039,7 +2039,7 @@
       "football_data_latest": "2026-10-12",
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "lag_days": 3,
+      "lag_days": 4,
       "source": "football-data",
       "source_latest": "2026-10-12",
       "target_dates": [
@@ -2056,8 +2056,8 @@
       "api_football_error": null,
       "api_football_latest": null,
       "api_football_max_requests": 5,
-      "api_football_requests_remaining_after_league": 2,
-      "api_football_requests_used": 3,
+      "api_football_requests_remaining_after_league": 1,
+      "api_football_requests_used": 4,
       "fetch_error": null,
       "fixtures": {
         "2026-08-15|alaves|getafe": {
@@ -3547,26 +3547,27 @@
       "football_data_latest": "2026-10-12",
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "lag_days": 3,
+      "lag_days": 4,
       "source": "football-data",
       "source_latest": "2026-10-12",
       "target_dates": [
+        "2026-10-15",
         "2026-10-16",
         "2026-10-17",
         "2026-10-18",
         "2026-10-19",
         "2026-10-20"
       ],
-      "target_fixture_count": 4,
-      "unresolved_fixture_count": 4
+      "target_fixture_count": 5,
+      "unresolved_fixture_count": 5
     },
     "ligue-1": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 2,
+      "api_football_max_requests": 1,
       "api_football_requests_remaining_after_league": 0,
-      "api_football_requests_used": 2,
+      "api_football_requests_used": 1,
       "fetch_error": null,
       "fixtures": {
         "2026-08-21|marseille|strasbourg": {
@@ -4600,7 +4601,7 @@
       "football_data_latest": "2026-10-11",
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "lag_days": 4,
+      "lag_days": 5,
       "source": "football-data",
       "source_latest": "2026-10-11",
       "target_dates": [
@@ -5772,18 +5773,19 @@
       "football_data_latest": "2026-10-12",
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "lag_days": 3,
+      "lag_days": 4,
       "source": "football-data",
       "source_latest": "2026-10-12",
       "target_dates": [
+        "2026-10-15",
         "2026-10-16",
         "2026-10-17",
         "2026-10-18",
         "2026-10-19"
       ],
-      "target_fixture_count": 2,
-      "unresolved_fixture_count": 2
+      "target_fixture_count": 3,
+      "unresolved_fixture_count": 3
     }
   },
-  "snapshot_date": "2026-10-15"
+  "snapshot_date": "2026-10-16"
 }

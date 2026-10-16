@@ -1211,6 +1211,48 @@
       },
       "message_id": 494,
       "sent_at": "2026-10-16T00:46:59.546335+00:00"
+    },
+    "71945310|arijanet murić|3.5|over": {
+      "status": "claimed",
+      "run_token": "38906617626:1",
+      "claimed_at": "2026-10-16T13:20:11.386282+00:00",
+      "signal": {
+        "signal_id": "71945310|arijanet murić|3.5|over",
+        "created_at": "2026-10-16T13:19:10Z",
+        "event_id": "71945310",
+        "match_date": "2026-10-16",
+        "kickoff_at": "2026-10-16T18:45:00Z",
+        "league": "serie-a",
+        "home_team": "Frosinone Calcio",
+        "away_team": "Sassuolo Calcio",
+        "team": "Sassuolo Calcio",
+        "opponent": "Frosinone Calcio",
+        "venue": "away",
+        "goalkeeper": "Arijanet Murić",
+        "bookmaker": "Bet365",
+        "line": "3.5",
+        "side": "over",
+        "odds_decimal": "2.1000",
+        "model_mean": "3.8719",
+        "model_probability": "0.521211",
+        "push_probability": "0.000000",
+        "fair_odds": "1.919",
+        "edge": "0.094543",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-10-16T13:19:09Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2"
+      }
     }
   }
 }
