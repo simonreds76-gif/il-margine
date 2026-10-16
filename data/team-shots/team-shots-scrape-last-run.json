@@ -1,66 +1,66 @@
 {
   "capture_mode": "near_kickoff",
-  "control_odds_rows_added": 668,
-  "control_odds_rows_observed": 668,
+  "control_odds_rows_added": 879,
+  "control_odds_rows_observed": 879,
   "days_ahead": 2,
   "discovery_diagnostics": [
     {
-      "from": "2026-10-16T14:15:02Z",
+      "from": "2026-10-16T18:21:07Z",
       "kickoff_within_minutes": 1440,
       "league": "epl",
-      "league_events": 8,
-      "provider_events": 3501,
-      "rows_scraped": 62,
-      "selected_events": 4,
+      "league_events": 9,
+      "provider_events": 3680,
+      "rows_scraped": 76,
+      "selected_events": 5,
       "state": "PRICES_CAPTURED",
-      "to": "2026-10-18T14:15:02Z"
+      "to": "2026-10-18T18:21:07Z"
     },
     {
-      "from": "2026-10-16T14:15:02Z",
+      "from": "2026-10-16T18:21:07Z",
       "kickoff_within_minutes": 1440,
       "league": "serie-a",
-      "league_events": 6,
-      "provider_events": 3501,
-      "rows_scraped": 32,
-      "selected_events": 2,
-      "state": "PRICES_CAPTURED",
-      "to": "2026-10-18T14:15:02Z"
-    },
-    {
-      "from": "2026-10-16T14:15:02Z",
-      "kickoff_within_minutes": 1440,
-      "league": "la-liga",
       "league_events": 7,
-      "provider_events": 3501,
+      "provider_events": 3680,
       "rows_scraped": 44,
       "selected_events": 3,
       "state": "PRICES_CAPTURED",
-      "to": "2026-10-18T14:15:02Z"
+      "to": "2026-10-18T18:21:07Z"
     },
     {
-      "from": "2026-10-16T14:15:02Z",
+      "from": "2026-10-16T18:21:07Z",
+      "kickoff_within_minutes": 1440,
+      "league": "la-liga",
+      "league_events": 8,
+      "provider_events": 3680,
+      "rows_scraped": 62,
+      "selected_events": 4,
+      "state": "PRICES_CAPTURED",
+      "to": "2026-10-18T18:21:07Z"
+    },
+    {
+      "from": "2026-10-16T18:21:07Z",
       "kickoff_within_minutes": 1440,
       "league": "bundesliga",
-      "league_events": 8,
-      "provider_events": 3501,
-      "rows_scraped": 70,
-      "selected_events": 6,
+      "league_events": 9,
+      "provider_events": 3680,
+      "rows_scraped": 86,
+      "selected_events": 7,
       "state": "PRICES_CAPTURED",
-      "to": "2026-10-18T14:15:02Z"
+      "to": "2026-10-18T18:21:07Z"
     },
     {
-      "from": "2026-10-16T14:15:02Z",
+      "from": "2026-10-16T18:21:07Z",
       "kickoff_within_minutes": 1440,
       "league": "ligue-1",
-      "league_events": 5,
-      "provider_events": 3501,
-      "rows_scraped": 12,
-      "selected_events": 1,
+      "league_events": 8,
+      "provider_events": 3680,
+      "rows_scraped": 28,
+      "selected_events": 2,
       "state": "PRICES_CAPTURED",
-      "to": "2026-10-18T14:15:02Z"
+      "to": "2026-10-18T18:21:07Z"
     }
   ],
-  "events_found": 16,
+  "events_found": 21,
   "kickoff_within_minutes": 1440,
   "leagues": [
     "epl",
@@ -72,9 +72,9 @@
   "odds_api_http_request_limit": 9,
   "odds_api_http_requests": 6,
   "provider_errors": [],
-  "rows_scraped": 220,
-  "run_at": "2026-10-16T14:15:02Z",
-  "run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/38914195936",
+  "rows_scraped": 296,
+  "run_at": "2026-10-16T18:21:07Z",
+  "run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/38946616947",
   "sources_used": [
     "odds-api",
     "odds-api",
