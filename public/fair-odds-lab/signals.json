@@ -1,10 +1,9 @@
 {
-  "generated_at": "2026-10-16T18:50:20.304552Z",
+  "generated_at": "2026-10-16T19:00:24.882686Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
-    "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
     "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
     "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
@@ -35,112 +34,18 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 43,
-  "signals_qualifying": 1,
+  "fixtures_evaluated": 34,
+  "signals_qualifying": 0,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 60,
-    "market_odds_above_cap": 1,
-    "model_market_gap_gt_10pp": 1
+    "incomplete_prediction_roster": 53
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 1,
-    "added_by_league": {
-      "la-liga": 1
-    },
+    "eligible_rows": 0,
+    "added_by_league": {},
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [
-    "la-liga"
-  ],
-  "featured_signal_id": "20261016-ivan-romero-5f16a96788",
-  "signals": [
-    {
-      "id": "20261016-ivan-romero-5f16a96788",
-      "match": {
-        "home_team": "RC Deportivo de A Coruna",
-        "away_team": "Levante UD",
-        "league": "la-liga",
-        "league_display": "La Liga",
-        "league_logo_path": "/league-logos/la-liga.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-10-16",
-        "fotmob_match_id": "",
-        "fotmob_page_url": "",
-        "lineup_type": "",
-        "venue": ""
-      },
-      "player": {
-        "name": "Ivan Romero",
-        "team": "Levante",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/la-liga/levante.png",
-        "team_primary_color": "#7f1d1d",
-        "team_secondary_color": "#1d4ed8",
-        "team_shirt_pattern": "vertical-stripes"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 35.1,
-        "fair_odds": 2.85
-      },
-      "market_data": {
-        "best_odds": 3.6,
-        "best_book": "Bet365",
-        "implied_chance_pct": 27.8
-      },
-      "edge": {
-        "price_gap_pp": 7.3,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 96
-        },
-        "share_of_team_chances_pct": 26,
-        "share_of_team_chances_percentile": 94,
-        "team_attacking_outlook": {
-          "tier": "Average",
-          "percentile": 48
-        },
-        "recent_team_form": {
-          "tier": "Quiet",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-10-12",
-          "xg_for_avg": 1.97,
-          "xg_against_avg": 2.72,
-          "xgd_per90": -0.75,
-          "shots_for_avg": 13.8,
-          "shots_against_avg": 16.2,
-          "sot_for_avg": 5.8,
-          "sot_against_avg": 5.4,
-          "corners_for_avg": 3.6,
-          "corners_against_avg": 5.6
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 35
-        },
-        "opponent_recent_defence": {
-          "tier": "Unknown"
-        },
-        "fixture_boost_pct": 7,
-        "projected_minutes": 85,
-        "penalty_role": "Secondary",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong"
-      ],
-      "risk_flags": []
-    }
-  ]
+  "leagues_covered": [],
+  "featured_signal_id": null,
+  "signals": []
 }
