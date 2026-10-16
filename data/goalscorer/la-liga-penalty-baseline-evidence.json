@@ -1,7 +1,56 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-16T04:38:06Z",
+  "generated_at": "2026-10-16T13:55:03Z",
   "league": "la-liga",
-  "row_count": 0,
-  "rows": []
+  "row_count": 3,
+  "rows": [
+    {
+      "team": "Deportivo Alavés",
+      "team_key": "alaves",
+      "player_name": "Lucas Boyé",
+      "player_key": "lucas boy",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-10"
+    },
+    {
+      "team": "Deportivo A Coruña",
+      "team_key": "deportivo a coruna",
+      "player_name": "Yeremay Hernández",
+      "player_key": "yeremay hern ndez",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-11"
+    },
+    {
+      "team": "Real Betis",
+      "team_key": "real betis",
+      "player_name": "Isco",
+      "player_key": "isco",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-11"
+    }
+  ]
 }
