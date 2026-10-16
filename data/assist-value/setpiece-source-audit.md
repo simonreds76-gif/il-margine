@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-10-11T13:56:01+00:00`
+Fetched at UTC: `2026-10-16T12:21:14+00:00`
 
 ## Decision
 
@@ -14,15 +14,15 @@ Overall: **PASS_SOURCE_LAYER**
 ## RotoWire
 
 - Teams with set-piece blocks: `96/96`
-- Player role rows extracted: `605`
+- Player role rows extracted: `639`
 
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
-| bundesliga | 18 | 18 | 99 | 6 |
-| epl | 20 | 20 | 121 | 7 |
-| la-liga | 20 | 20 | 147 | 9 |
-| ligue-1 | 18 | 18 | 116 | 8 |
-| serie-a | 20 | 20 | 122 | 7 |
+| bundesliga | 18 | 18 | 103 | 7 |
+| epl | 20 | 20 | 130 | 8 |
+| la-liga | 20 | 20 | 152 | 10 |
+| ligue-1 | 18 | 18 | 121 | 9 |
+| serie-a | 20 | 20 | 133 | 8 |
 
 ## FPL API
 
@@ -32,7 +32,7 @@ Overall: **PASS_SOURCE_LAYER**
 - Players with set-piece role fields: `139`
 - Registered season: `2026/27`
 - Exact 20-team roster match: `YES`
-- Snapshot valid until UTC: `2026-10-18T13:56:01+00:00`
+- Snapshot valid until UTC: `2026-10-23T12:21:14+00:00`
 
 ## SetPieceTakers
 
@@ -46,20 +46,20 @@ Overall: **PASS_SOURCE_LAYER**
 | League | Team | Player | Last-5 corner share | Season corner share | Corner total |
 |---|---|---|---:|---:|---:|
 | bundesliga | FSV Mainz 05 | Nadiem Amiri | 100.0% | 100.0% | 19 |
-| bundesliga | RB Leipzig | David Raum | 100.0% | 100.0% | 28 |
+| bundesliga | RB Leipzig | David Raum | 100.0% | 100.0% | 33 |
 | bundesliga | SV 07 Elversberg | Felix Keidel | 100.0% | 100.0% | 11 |
 | ligue-1 | Angers | Branco van den Boomen | 100.0% | 97.56% | 40 |
 | serie-a | Frosinone | Giacomo Calo | 100.0% | 100.0% | 28 |
-| bundesliga | Bayer Leverkusen | Aleix Garcia | 96.43% | 96.77% | 30 |
 | la-liga | Rayo Vallecano | Unai Lopez | 93.75% | 85.71% | 24 |
-| bundesliga | FC Schalke 04 | Adil Aouchiche | 91.67% | 91.67% | 11 |
+| bundesliga | Bayer Leverkusen | Aleix Garcia | 92.59% | 91.67% | 33 |
 | ligue-1 | Brest | Joris Chotard | 90.0% | 92.31% | 24 |
-| epl | Liverpool | Dominik Szoboszlai | 88.24% | 91.3% | 21 |
 | epl | Leeds United | Anton Stach | 86.96% | 84.0% | 21 |
 | bundesliga | Eintracht Frankfurt | Can Uzun | 84.21% | 84.21% | 16 |
-| ligue-1 | Lens | Florian Thauvin | 80.56% | 81.82% | 36 |
-| epl | Aston Villa | John McGinn | 80.0% | 69.23% | 9 |
+| ligue-1 | Lens | Florian Thauvin | 78.79% | 83.33% | 40 |
+| bundesliga | FC Schalke 04 | Adil Aouchiche | 78.57% | 78.57% | 11 |
 | la-liga | Getafe | Johan Mojica | 78.57% | 51.85% | 14 |
+| la-liga | Málaga | Pablo Martinez | 77.42% | 71.05% | 27 |
+| ligue-1 | Strasbourg | Oso | 75.0% | 42.86% | 3 |
 
 ## Outputs
 
