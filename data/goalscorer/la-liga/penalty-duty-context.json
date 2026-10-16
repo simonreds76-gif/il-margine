@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-15T22:15:08Z",
+  "generated_at": "2026-10-16T12:18:41Z",
   "league": "la-liga",
   "row_count": 36,
   "rows": [
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-16",
       "home_team": "Deportivo A Coruña",
       "away_team": "Levante",
@@ -57,7 +57,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-16",
       "home_team": "Deportivo A Coruña",
       "away_team": "Levante",
@@ -106,7 +106,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-16",
       "home_team": "RC Deportivo de A Coruna",
       "away_team": "Levante UD",
@@ -157,7 +157,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-16",
       "home_team": "RC Deportivo de A Coruna",
       "away_team": "Levante UD",
@@ -206,7 +206,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Espanyol",
       "away_team": "Atlético Madrid",
@@ -235,9 +235,9 @@
       ],
       "bench_names": [],
       "unavailable_names": [
+        "Jofre Carreras",
         "Marko Dmitrović",
         "Andoni Gorosabel",
-        "Jofre Carreras",
         "Kike García"
       ],
       "primary": "Roberto Fernández",
@@ -257,7 +257,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Espanyol",
       "away_team": "Atlético Madrid",
@@ -277,15 +277,17 @@
         "Cristian Romero",
         "Robin Le Normand",
         "Alejandro Grimaldo",
-        "Koke",
-        "Johnny Cardoso",
         "Giuliano Simeone",
+        "Morten Hjulmand",
         "Pablo Barrios",
-        "Ademola Lookman",
+        "Álex Baena",
+        "Kang-In Lee",
         "Jonathan David"
       ],
       "bench_names": [],
-      "unavailable_names": [],
+      "unavailable_names": [
+        "Johnny Cardoso"
+      ],
       "primary": "Julián Álvarez",
       "secondary": "Alejandro Grimaldo",
       "tertiary": "Alexander Sørloth",
@@ -303,7 +305,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Espanyol Barcelona",
       "away_team": "Atletico Madrid",
@@ -332,9 +334,9 @@
       ],
       "bench_names": [],
       "unavailable_names": [
+        "Jofre Carreras",
         "Marko Dmitrović",
         "Andoni Gorosabel",
-        "Jofre Carreras",
         "Kike García"
       ],
       "primary": "Roberto Fernández",
@@ -354,7 +356,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Espanyol Barcelona",
       "away_team": "Atletico Madrid",
@@ -374,15 +376,17 @@
         "Cristian Romero",
         "Robin Le Normand",
         "Alejandro Grimaldo",
-        "Koke",
-        "Johnny Cardoso",
         "Giuliano Simeone",
+        "Morten Hjulmand",
         "Pablo Barrios",
-        "Ademola Lookman",
+        "Álex Baena",
+        "Kang-In Lee",
         "Jonathan David"
       ],
       "bench_names": [],
-      "unavailable_names": [],
+      "unavailable_names": [
+        "Johnny Cardoso"
+      ],
       "primary": "Julián Álvarez",
       "secondary": "Alejandro Grimaldo",
       "tertiary": "Alexander Sørloth",
@@ -400,7 +404,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Real Betis",
       "away_team": "Barcelona",
@@ -449,7 +453,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Real Betis",
       "away_team": "Barcelona",
@@ -480,14 +484,13 @@
       "unavailable_names": [
         "Andreas Christensen",
         "Frenkie de Jong",
-        "Raphinha",
         "Roony Bardghji"
       ],
       "primary": "Raphinha",
       "secondary": "Lamine Yamal",
       "tertiary": "Anthony Gordon",
-      "primary_lineup_status": "expected_out",
-      "primary_match_name": "Raphinha",
+      "primary_lineup_status": "unknown",
+      "primary_match_name": "",
       "secondary_lineup_status": "expected_starter",
       "secondary_match_name": "Lamine Yamal",
       "tertiary_lineup_status": "expected_starter",
@@ -500,7 +503,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Real Betis Seville",
       "away_team": "FC Barcelona",
@@ -549,7 +552,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Real Betis Seville",
       "away_team": "FC Barcelona",
@@ -580,14 +583,13 @@
       "unavailable_names": [
         "Andreas Christensen",
         "Frenkie de Jong",
-        "Raphinha",
         "Roony Bardghji"
       ],
       "primary": "Raphinha",
       "secondary": "Lamine Yamal",
       "tertiary": "Anthony Gordon",
-      "primary_lineup_status": "expected_out",
-      "primary_match_name": "Raphinha",
+      "primary_lineup_status": "unknown",
+      "primary_match_name": "",
       "secondary_lineup_status": "expected_starter",
       "secondary_match_name": "Lamine Yamal",
       "tertiary_lineup_status": "expected_starter",
@@ -600,7 +602,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Valencia",
       "away_team": "Athletic Club",
@@ -653,7 +655,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Valencia",
       "away_team": "Athletic Club",
@@ -703,7 +705,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Valencia CF",
       "away_team": "Athletic Bilbao",
@@ -756,7 +758,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Valencia CF",
       "away_team": "Athletic Bilbao",
@@ -806,7 +808,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Villarreal",
       "away_team": "Elche",
@@ -855,7 +857,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Villarreal",
       "away_team": "Elche",
@@ -903,7 +905,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Villarreal CF",
       "away_team": "Elche CF",
@@ -939,7 +941,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-17",
       "home_team": "Villarreal CF",
       "away_team": "Elche CF",
@@ -975,7 +977,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "CA Osasuna",
       "away_team": "Racing Santander",
@@ -1027,7 +1029,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "CA Osasuna",
       "away_team": "Racing Santander",
@@ -1076,7 +1078,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "Celta Vigo",
       "away_team": "Deportivo Alavés",
@@ -1127,7 +1129,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "Celta Vigo",
       "away_team": "Deportivo Alavés",
@@ -1177,7 +1179,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "Malaga CF",
       "away_team": "Real Sociedad San Sebastian",
@@ -1229,7 +1231,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "Malaga CF",
       "away_team": "Real Sociedad San Sebastian",
@@ -1280,7 +1282,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "Málaga",
       "away_team": "Real Sociedad",
@@ -1332,7 +1334,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "Málaga",
       "away_team": "Real Sociedad",
@@ -1383,7 +1385,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "Osasuna",
       "away_team": "Racing Santander",
@@ -1435,7 +1437,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "Osasuna",
       "away_team": "Racing Santander",
@@ -1484,7 +1486,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "RC Celta de Vigo",
       "away_team": "Deportivo Alaves",
@@ -1535,7 +1537,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "RC Celta de Vigo",
       "away_team": "Deportivo Alaves",
@@ -1585,7 +1587,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "Real Madrid",
       "away_team": "Sevilla",
@@ -1637,7 +1639,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "Real Madrid",
       "away_team": "Sevilla",
@@ -1687,7 +1689,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "Real Madrid",
       "away_team": "Sevilla FC",
@@ -1739,7 +1741,7 @@
     },
     {
       "league": "la-liga",
-      "compared_at": "2026-10-15T22:15:08Z",
+      "compared_at": "2026-10-16T12:18:41Z",
       "match_date": "2026-10-18",
       "home_team": "Real Madrid",
       "away_team": "Sevilla FC",

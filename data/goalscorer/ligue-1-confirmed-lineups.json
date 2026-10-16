@@ -296,7 +296,7 @@
         "Erwan Colas"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-10-15T22:16:00.953516+00:00",
+      "observed_at": "2026-10-16T12:19:33.468712+00:00",
       "changed_at": "2026-10-15T15:00:55.595368+00:00"
     },
     {
@@ -600,7 +600,7 @@
         "Raphaël Le Guen",
         "Giovani Versini"
       ],
-      "observed_at": "2026-10-15T22:16:00.953516+00:00",
+      "observed_at": "2026-10-16T12:19:33.468712+00:00",
       "changed_at": "2026-10-14T23:13:18.884160+00:00"
     },
     {
@@ -615,7 +615,7 @@
       "home_status": "FotMob Expected XI",
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
-      "home_formation": "4-2-3-1",
+      "home_formation": "4-3-3",
       "away_formation": "4-3-3",
       "home_players": [
         "Filip Jörgensen",
@@ -623,23 +623,23 @@
         "Jeyland Mitchell",
         "Karim Coulibaly",
         "Oso",
-        "Pape Demba Diop",
+        "Giovanni Reyna",
         "Dário Essugo",
-        "Gessime Yassine",
         "Diogo Sousa",
         "Samuel Amo-Ameyaw",
-        "Conrad Harder"
+        "Jacobo Ortega",
+        "Gessime Yassine"
       ],
       "away_players": [
         "Matvey Safonov",
         "Achraf Hakimi",
-        "Ilya Zabarnyi",
-        "Lucas Hernández",
-        "Lucas Digne",
+        "Marquinhos",
+        "Willian Pacho",
+        "Nuno Mendes",
         "João Neves",
         "Lucas Beraldo",
-        "Dro Fernández",
-        "Maghnes Akliouche",
+        "Fabián Ruiz",
+        "Khvicha Kvaratskhelia",
         "Ferrán Torres",
         "Mika Godts"
       ],
@@ -650,7 +650,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 11,
           "player_id": 1200984,
           "shirt_number": "1"
@@ -661,7 +661,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 32,
           "player_id": 1647186,
           "shirt_number": "16"
@@ -672,7 +672,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 34,
           "player_id": 1340071,
           "shirt_number": "4"
@@ -683,7 +683,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 36,
           "player_id": 1643851,
           "shirt_number": "31"
@@ -694,52 +694,41 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 38,
           "player_id": 1575945,
           "shirt_number": "36"
         },
         {
-          "name": "Pape Demba Diop",
+          "name": "Giovanni Reyna",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64,
-          "player_id": 1417802,
-          "shirt_number": "21"
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 73,
+          "player_id": 1071179,
+          "shirt_number": "10"
         },
         {
           "name": "Dário Essugo",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 75,
           "player_id": 1239595,
           "shirt_number": "14"
         },
         {
-          "name": "Gessime Yassine",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83,
-          "player_id": 1603755,
-          "shirt_number": "80"
-        },
-        {
           "name": "Diogo Sousa",
-          "line_index": 2,
+          "line_index": 1,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 77,
           "player_id": 1701117,
           "shirt_number": "23"
         },
@@ -747,23 +736,34 @@
           "name": "Samuel Amo-Ameyaw",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 103,
           "player_id": 1418073,
           "shirt_number": "7"
         },
         {
-          "name": "Conrad Harder",
-          "line_index": 3,
-          "line_size": 1,
+          "name": "Jacobo Ortega",
+          "line_index": 2,
+          "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-2-3-1",
-          "position_id": 115,
-          "player_id": 1482294,
-          "shirt_number": "40"
+          "formation": "4-3-3",
+          "position_id": 105,
+          "player_id": 1677224,
+          "shirt_number": "30"
+        },
+        {
+          "name": "Gessime Yassine",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 107,
+          "player_id": 1603755,
+          "shirt_number": "80"
         }
       ],
       "away_starters": [
@@ -790,37 +790,37 @@
           "shirt_number": "2"
         },
         {
-          "name": "Ilya Zabarnyi",
+          "name": "Marquinhos",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-3-3",
           "position_id": 34,
-          "player_id": 1140003,
-          "shirt_number": "6"
+          "player_id": 267365,
+          "shirt_number": "5"
         },
         {
-          "name": "Lucas Hernández",
+          "name": "Willian Pacho",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-3-3",
           "position_id": 36,
-          "player_id": 504606,
-          "shirt_number": "21"
+          "player_id": 1137670,
+          "shirt_number": "51"
         },
         {
-          "name": "Lucas Digne",
+          "name": "Nuno Mendes",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-3-3",
           "position_id": 38,
-          "player_id": 210111,
-          "shirt_number": "12"
+          "player_id": 1158945,
+          "shirt_number": "25"
         },
         {
           "name": "João Neves",
@@ -845,26 +845,26 @@
           "shirt_number": "4"
         },
         {
-          "name": "Dro Fernández",
+          "name": "Fabián Ruiz",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
           "formation": "4-3-3",
           "position_id": 77,
-          "player_id": 1682313,
-          "shirt_number": "27"
+          "player_id": 605654,
+          "shirt_number": "8"
         },
         {
-          "name": "Maghnes Akliouche",
+          "name": "Khvicha Kvaratskhelia",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-3-3",
           "position_id": 103,
-          "player_id": 1305618,
-          "shirt_number": "11"
+          "player_id": 900433,
+          "shirt_number": "7"
         },
         {
           "name": "Ferrán Torres",
@@ -903,8 +903,8 @@
       "away_unavailable": [
         "Senny Mayulu"
       ],
-      "observed_at": "2026-10-15T22:16:00.953516+00:00",
-      "changed_at": "2026-10-14T19:22:35.376472+00:00"
+      "observed_at": "2026-10-16T12:19:33.468712+00:00",
+      "changed_at": "2026-10-16T12:19:33.468712+00:00"
     },
     {
       "fotmob_match_id": 5802963,
@@ -1207,7 +1207,7 @@
         "Abdallah Sima",
         "Jhoanner Chávez"
       ],
-      "observed_at": "2026-10-15T22:16:00.953516+00:00",
+      "observed_at": "2026-10-16T12:19:33.468712+00:00",
       "changed_at": "2026-10-14T23:13:18.884160+00:00"
     },
     {
@@ -1509,7 +1509,7 @@
         "Derek Cornelius",
         "Pierre-Emile Højbjerg"
       ],
-      "observed_at": "2026-10-15T22:16:00.953516+00:00",
+      "observed_at": "2026-10-16T12:19:33.468712+00:00",
       "changed_at": "2026-10-15T19:36:30.554465+00:00"
     },
     {
@@ -1818,7 +1818,7 @@
         "Assane Dioussé",
         "Rayan Mandengue"
       ],
-      "observed_at": "2026-10-15T22:16:00.953516+00:00",
+      "observed_at": "2026-10-16T12:19:33.468712+00:00",
       "changed_at": "2026-10-15T19:36:30.554465+00:00"
     },
     {
@@ -2120,7 +2120,7 @@
       "away_unavailable": [
         "Paris Brunner"
       ],
-      "observed_at": "2026-10-15T22:16:00.953516+00:00",
+      "observed_at": "2026-10-16T12:19:33.468712+00:00",
       "changed_at": "2026-10-15T19:36:30.554465+00:00"
     },
     {
@@ -2425,7 +2425,7 @@
         "Laurent Abergel",
         "Morgan Sanson"
       ],
-      "observed_at": "2026-10-15T22:16:00.953516+00:00",
+      "observed_at": "2026-10-16T12:19:33.468712+00:00",
       "changed_at": "2026-10-15T19:36:30.554465+00:00"
     },
     {
@@ -2723,7 +2723,7 @@
         "Nhoa Sangui"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-10-15T22:16:00.953516+00:00",
+      "observed_at": "2026-10-16T12:19:33.468712+00:00",
       "changed_at": "2026-10-15T19:36:30.554465+00:00"
     }
   ]
