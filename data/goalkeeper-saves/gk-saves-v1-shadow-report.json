@@ -12,11 +12,11 @@
       "missing_registered_feature": 11
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 8,
-    "priced_lines": 200,
+    "eligible_lines": 7,
+    "priced_lines": 201,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 42
+    "value_ladder_lines": 39
   },
   "evidence": {
     "clv": 0.026706,
@@ -35,26 +35,26 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-16T13:20:10.211511+00:00",
+    "checked_at": "2026-10-16T14:15:07.157700+00:00",
     "counts": {
-      "already_saved": 7,
-      "not_fresh_prematch": 226
+      "not_fresh_prematch": 128,
+      "offers_saved": 205
     },
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "saved": 16,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-10-16T13:20:09Z",
+  "generated_at": "2026-10-16T14:15:06Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "blocked_or_missing_inputs": 40,
-      "not_new_fresh_prematch": 226
+      "blocked_or_missing_inputs": 82,
+      "not_new_fresh_prematch": 128
     },
     "forecast_fixtures": 20,
     "forecast_keepers": 38,
-    "generated_at": "2026-10-16T13:20:10.249679+00:00",
+    "generated_at": "2026-10-16T14:15:07.251867+00:00",
     "last_capture_at": "2026-10-16T00:46:32.838059+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
