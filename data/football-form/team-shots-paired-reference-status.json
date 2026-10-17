@@ -1,5 +1,5 @@
 {
-  "contracts": 210,
+  "contracts": 230,
   "settled_contracts": 136,
   "paired_contracts": 85,
   "paired_fixtures": 31,
@@ -20,7 +20,7 @@
         "stake_units": 21,
         "pending": 12,
         "overdue": 0,
-        "unavailable_contracts": 78,
+        "unavailable_contracts": 88,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
@@ -39,7 +39,7 @@
         "stake_units": 0,
         "pending": 0,
         "overdue": 0,
-        "unavailable_contracts": 78,
+        "unavailable_contracts": 88,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
@@ -56,7 +56,7 @@
         "pnl_units": 3.3920000000000003,
         "roi": 0.1541818181818182,
         "stake_units": 22,
-        "pending": 8,
+        "pending": 13,
         "overdue": 0,
         "unavailable_contracts": 17,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
@@ -75,7 +75,7 @@
         "pnl_units": 1.6320000000000003,
         "roi": 0.1483636363636364,
         "stake_units": 11,
-        "pending": 3,
+        "pending": 4,
         "overdue": 0,
         "unavailable_contracts": 17,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
@@ -95,15 +95,14 @@
   "model_fingerprint": "934de9b700fe013c26d54fefa1c5ccfa82af2f0bd98748b242cda712d9ad3e0d",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 0,
-  "generated_at": "2026-10-17T13:12:01Z",
-  "new_contracts": 11,
+  "generated_at": "2026-10-17T16:39:30Z",
+  "new_contracts": 20,
   "scan_exclusions": {
-    "stale_price": 672,
-    "outside_capture_window": 64
+    "stale_price": 452
   },
-  "latest_archived_capture": "2026-10-17T13:11:30Z",
+  "latest_archived_capture": "2026-10-17T16:39:09Z",
   "latest_result_date": "2026-10-16",
-  "raw_upcoming_rows": 2952,
+  "raw_upcoming_rows": 1670,
   "status": "COLLECTING",
   "settlement_source": "exact_fixture_base_and_verified_snapshots",
   "snapshot_settlement_contracts": 123

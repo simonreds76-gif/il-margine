@@ -2,26 +2,24 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 148,
+    "blocked_lines": 88,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 82,
-      "goalkeeper_team_unresolved": 126,
-      "history_lt_6": 11,
-      "missing_lineup": 44,
-      "missing_priced_edge": 137,
-      "missing_registered_feature": 11
+      "goalkeeper_not_matched_to_lineup": 51,
+      "goalkeeper_team_unresolved": 88,
+      "missing_lineup": 37,
+      "missing_priced_edge": 88
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 5,
-    "priced_lines": 205,
+    "eligible_lines": 6,
+    "priced_lines": 184,
     "provisional_lines": 0,
-    "signals_added": 0,
-    "value_ladder_lines": 33
+    "signals_added": 1,
+    "value_ladder_lines": 28
   },
   "evidence": {
     "clv": 0.041585,
     "clv_matched": 18,
-    "pending": 10,
+    "pending": 11,
     "pnl_units": 17.3155,
     "roi": 0.558565,
     "settled": 62,
@@ -29,36 +27,36 @@
       "fotmob_named_keeper_shotmap": 59,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 73,
+    "signals": 74,
     "true_close_coverage": 0.290323,
     "void": 1
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-17T13:11:38.197502+00:00",
+    "checked_at": "2026-10-17T16:39:12.763541+00:00",
     "counts": {
-      "not_fresh_prematch": 29,
-      "offers_saved": 313
+      "not_fresh_prematch": 37,
+      "offers_saved": 235
     },
-    "saved": 25,
+    "saved": 20,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-17T13:11:37Z",
+  "generated_at": "2026-10-17T16:39:12Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "blocked_or_missing_inputs": 126,
-      "not_new_fresh_prematch": 29
+      "blocked_or_missing_inputs": 86,
+      "not_new_fresh_prematch": 37
     },
-    "forecast_fixtures": 26,
-    "forecast_keepers": 51,
-    "generated_at": "2026-10-17T13:11:38.271380+00:00",
-    "last_capture_at": "2026-10-17T13:11:38.271380+00:00",
+    "forecast_fixtures": 33,
+    "forecast_keepers": 63,
+    "generated_at": "2026-10-17T16:39:12.820364+00:00",
+    "last_capture_at": "2026-10-17T16:39:12.820364+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 8,
-    "new_selections": 0,
+    "new_forecasts": 12,
+    "new_selections": 1,
     "next_review_at": 50,
     "paired_scores": {
       "current": {
@@ -76,12 +74,12 @@
       "current": {
         "losses": 0,
         "overdue": 0,
-        "pending": 8,
+        "pending": 9,
         "profit": 1.3625,
         "pushes": 0,
         "review": 0,
         "roi": 1.3625,
-        "selections": 10,
+        "selections": 11,
         "settled": 2,
         "stake": 1.0,
         "voids": 0,
@@ -104,6 +102,30 @@
     },
     "review_milestone": null,
     "selections": [
+      {
+        "away": "Atalanta BC",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-17T16:39:10+00:00",
+        "edge": 0.09671783942009293,
+        "event_id": "71945314",
+        "fair_odds": 2.0515760017086286,
+        "goalkeeper": "Mike Maignan",
+        "home": "AC Milan",
+        "kickoff_at": "2026-10-18T16:00:00+00:00",
+        "line": 2.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5749700",
+        "model": "current",
+        "odds": 2.25,
+        "overdue": false,
+        "player_id": "466439",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-17T16:39:12.820364+00:00",
+        "side": "over",
+        "status": "pending",
+        "team_id": "8564"
+      },
       {
         "away": "US Lecce",
         "bookmaker": "Bet365",
@@ -394,7 +416,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 43
+      "awaiting_verified_keeper_result": 55
     },
     "start_at": "2026-10-15T15:58:57.141631+00:00",
     "status": "TRACKING"
