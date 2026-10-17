@@ -300,7 +300,7 @@
         "Curtis Jones",
         "Lautaro Martínez"
       ],
-      "observed_at": "2026-10-17T11:34:19.328677+00:00",
+      "observed_at": "2026-10-17T13:42:28.778940+00:00",
       "changed_at": "2026-10-17T11:34:19.328677+00:00"
     },
     {
@@ -608,7 +608,7 @@
         "Lorenzo Colombo",
         "Lorenzo Venturino"
       ],
-      "observed_at": "2026-10-17T11:34:19.328677+00:00",
+      "observed_at": "2026-10-17T13:42:28.778940+00:00",
       "changed_at": "2026-10-16T12:17:39.949202+00:00"
     },
     {
@@ -620,16 +620,16 @@
       "kickoff_utc": "2026-10-17T13:00:00Z",
       "home_team": "Venezia",
       "away_team": "Napoli",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-5-2",
       "away_formation": "3-4-2-1",
       "home_players": [
         "Filip Stanković",
-        "Joël Schingtienne",
-        "Juan Jesus",
         "Redouane Halhal",
+        "Matías Moreno",
+        "Juan Jesus",
         "Antoine Hainaut",
         "Kike Pérez",
         "Simon Sohm",
@@ -664,15 +664,26 @@
           "shirt_number": "1"
         },
         {
-          "name": "Joël Schingtienne",
+          "name": "Redouane Halhal",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "3-5-2",
           "position_id": 33,
-          "player_id": 1352744,
-          "shirt_number": "3"
+          "player_id": 1298186,
+          "shirt_number": "25"
+        },
+        {
+          "name": "Matías Moreno",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 35,
+          "player_id": 1605748,
+          "shirt_number": "2"
         },
         {
           "name": "Juan Jesus",
@@ -681,20 +692,9 @@
           "role_score": 1,
           "role_group": "DEF",
           "formation": "3-5-2",
-          "position_id": 35,
+          "position_id": 37,
           "player_id": 197352,
           "shirt_number": "15"
-        },
-        {
-          "name": "Redouane Halhal",
-          "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-5-2",
-          "position_id": 37,
-          "player_id": 1298186,
-          "shirt_number": "25"
         },
         {
           "name": "Antoine Hainaut",
@@ -897,12 +897,171 @@
           "shirt_number": "20"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Lorenzo Montipò",
+        "Ale Gomes",
+        "Joël Schingtienne",
+        "Rufai Mohammed",
+        "Lamine Fanne",
+        "Lorenzo Berardi",
+        "Matteo Dagasso",
         "Pasquale Mazzocchi",
+        "Richie Sagrado",
+        "Simone Panada",
+        "Thórir Helgason",
+        "Toni Fernández",
+        "Albion Rrahmani",
+        "Kornel Lisman",
+        "Lion Lauberbach"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Lorenzo Montipò",
+          "player_id": "491784",
+          "role_group": "GK"
+        },
+        {
+          "name": "Ale Gomes",
+          "player_id": "1842921",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Joël Schingtienne",
+          "player_id": "1352744",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Rufai Mohammed",
+          "player_id": "1681811",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Lamine Fanne",
+          "player_id": "1460862",
+          "role_group": "MID"
+        },
+        {
+          "name": "Lorenzo Berardi",
+          "player_id": "1803901",
+          "role_group": "MID"
+        },
+        {
+          "name": "Matteo Dagasso",
+          "player_id": "1592168",
+          "role_group": "MID"
+        },
+        {
+          "name": "Pasquale Mazzocchi",
+          "player_id": "675327",
+          "role_group": "MID"
+        },
+        {
+          "name": "Richie Sagrado",
+          "player_id": "1388039",
+          "role_group": "MID"
+        },
+        {
+          "name": "Simone Panada",
+          "player_id": "1050821",
+          "role_group": "MID"
+        },
+        {
+          "name": "Thórir Helgason",
+          "player_id": "939593",
+          "role_group": "MID"
+        },
+        {
+          "name": "Toni Fernández",
+          "player_id": "1665438",
+          "role_group": "MID"
+        },
+        {
+          "name": "Albion Rrahmani",
+          "player_id": "1379468",
+          "role_group": "FW"
+        },
+        {
+          "name": "Kornel Lisman",
+          "player_id": "1529483",
+          "role_group": "FW"
+        },
+        {
+          "name": "Lion Lauberbach",
+          "player_id": "866165",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Nikita Contini",
+        "Vanja Milinković-Savić",
+        "Luca Marianucci",
+        "Mathías Olivera",
+        "Rafa Marín",
+        "Alisson Santos",
+        "Frank Anguissa",
+        "Kevin De Bruyne",
+        "Matteo Politano",
+        "Noa Lang",
+        "Rasmus Højlund"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Nikita Contini",
+          "player_id": "517068",
+          "role_group": "GK"
+        },
+        {
+          "name": "Vanja Milinković-Savić",
+          "player_id": "543021",
+          "role_group": "GK"
+        },
+        {
+          "name": "Luca Marianucci",
+          "player_id": "1529148",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Mathías Olivera",
+          "player_id": "729093",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Rafa Marín",
+          "player_id": "1313884",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Alisson Santos",
+          "player_id": "1355552",
+          "role_group": "MID"
+        },
+        {
+          "name": "Frank Anguissa",
+          "player_id": "612863",
+          "role_group": "MID"
+        },
+        {
+          "name": "Kevin De Bruyne",
+          "player_id": "169200",
+          "role_group": "MID"
+        },
+        {
+          "name": "Matteo Politano",
+          "player_id": "415539",
+          "role_group": "MID"
+        },
+        {
+          "name": "Noa Lang",
+          "player_id": "837341",
+          "role_group": "FW"
+        },
+        {
+          "name": "Rasmus Højlund",
+          "player_id": "1199272",
+          "role_group": "FW"
+        }
+      ],
+      "home_unavailable": [
         "Armel Bella-Kotchap",
         "Bartol Franjić",
         "Marin Šverko",
@@ -916,8 +1075,8 @@
         "Costantino Favasuli",
         "David Neres"
       ],
-      "observed_at": "2026-10-17T11:34:19.328677+00:00",
-      "changed_at": "2026-10-17T11:34:19.328677+00:00"
+      "observed_at": "2026-10-17T13:42:28.778940+00:00",
+      "changed_at": "2026-10-17T13:42:28.778940+00:00"
     },
     {
       "fotmob_match_id": 5749703,
@@ -1217,7 +1376,7 @@
         "Assane Diao",
         "Moise Kean"
       ],
-      "observed_at": "2026-10-17T11:34:19.328677+00:00",
+      "observed_at": "2026-10-17T13:42:28.778940+00:00",
       "changed_at": "2026-10-17T11:34:19.328677+00:00"
     },
     {
@@ -1526,7 +1685,7 @@
         "Albert Guðmundsson",
         "Matteo Cancellieri"
       ],
-      "observed_at": "2026-10-17T11:34:19.328677+00:00",
+      "observed_at": "2026-10-17T13:42:28.778940+00:00",
       "changed_at": "2026-10-17T11:34:19.328677+00:00"
     },
     {
@@ -1834,7 +1993,7 @@
         "Kamaldeen Sulemana",
         "Giacomo Raspadori"
       ],
-      "observed_at": "2026-10-17T11:34:19.328677+00:00",
+      "observed_at": "2026-10-17T13:42:28.778940+00:00",
       "changed_at": "2026-10-17T11:34:19.328677+00:00"
     },
     {
@@ -2137,7 +2296,7 @@
         "Ivan Ilić",
         "Medon Berisha"
       ],
-      "observed_at": "2026-10-17T11:34:19.328677+00:00",
+      "observed_at": "2026-10-17T13:42:28.778940+00:00",
       "changed_at": "2026-10-17T11:34:19.328677+00:00"
     },
     {
@@ -2443,7 +2602,7 @@
         "Riyad Idrissi",
         "Yael Trepy"
       ],
-      "observed_at": "2026-10-17T11:34:19.328677+00:00",
+      "observed_at": "2026-10-17T13:42:28.778940+00:00",
       "changed_at": "2026-10-16T18:47:23.914679+00:00"
     },
     {
@@ -2746,7 +2905,7 @@
         "Niccolò Fortini",
         "Emirhan İlkhan"
       ],
-      "observed_at": "2026-10-17T11:34:19.328677+00:00",
+      "observed_at": "2026-10-17T13:42:28.778940+00:00",
       "changed_at": "2026-10-16T22:04:10.887887+00:00"
     }
   ]

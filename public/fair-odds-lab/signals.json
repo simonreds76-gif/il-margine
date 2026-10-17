@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-17T11:37:02.229656Z",
+  "generated_at": "2026-10-17T13:45:01.288573Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -35,17 +35,15 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 43,
+  "fixtures_evaluated": 36,
   "signals_qualifying": 0,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 56,
-    "model_market_gap_gt_10pp": 1
+    "incomplete_prediction_roster": 42,
+    "defensive_position": 1
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 1,
-    "added_by_league": {
-      "la-liga": 1
-    },
+    "eligible_rows": 0,
+    "added_by_league": {},
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
