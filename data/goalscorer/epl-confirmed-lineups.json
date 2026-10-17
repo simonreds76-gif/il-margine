@@ -412,7 +412,7 @@
         "Ryan Gravenberch",
         "Hugo Ekitiké"
       ],
-      "observed_at": "2026-10-17T17:08:06.942755+00:00",
+      "observed_at": "2026-10-17T19:23:57.282002+00:00",
       "changed_at": "2026-10-17T13:42:59.140541+00:00"
     },
     {
@@ -823,7 +823,7 @@
         "Emanuel Emegha",
         "Jamie Gittens"
       ],
-      "observed_at": "2026-10-17T17:08:06.942755+00:00",
+      "observed_at": "2026-10-17T19:23:57.282002+00:00",
       "changed_at": "2026-10-17T13:42:59.140541+00:00"
     },
     {
@@ -1242,7 +1242,7 @@
         "Lucas Gourna-Douath",
         "Mohamed-Ali Cho"
       ],
-      "observed_at": "2026-10-17T17:08:06.942755+00:00",
+      "observed_at": "2026-10-17T19:23:57.282002+00:00",
       "changed_at": "2026-10-17T17:08:06.942755+00:00"
     },
     {
@@ -1651,7 +1651,7 @@
       "away_unavailable": [
         "Jack Taylor"
       ],
-      "observed_at": "2026-10-17T17:08:06.942755+00:00",
+      "observed_at": "2026-10-17T19:23:57.282002+00:00",
       "changed_at": "2026-10-17T17:08:06.942755+00:00"
     },
     {
@@ -1941,17 +1941,32 @@
         }
       ],
       "home_subs": [
+        "Bazoumana Touré",
+        "William Osula",
+        "Daniel Burn",
         "Nick Pope",
         "Amar Dedić",
-        "Daniel Burn",
         "Fabian Schär",
         "Aladji Bamba",
         "Sean Steur",
-        "Bazoumana Touré",
-        "Jacob Murphy",
-        "William Osula"
+        "Jacob Murphy"
       ],
       "home_substitute_entries": [
+        {
+          "name": "Bazoumana Touré",
+          "player_id": "1624586",
+          "role_group": "FW"
+        },
+        {
+          "name": "William Osula",
+          "player_id": "1258092",
+          "role_group": "FW"
+        },
+        {
+          "name": "Daniel Burn",
+          "player_id": "188058",
+          "role_group": "DEF"
+        },
         {
           "name": "Nick Pope",
           "player_id": "280484",
@@ -1960,11 +1975,6 @@
         {
           "name": "Amar Dedić",
           "player_id": "958010",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Daniel Burn",
-          "player_id": "188058",
           "role_group": "DEF"
         },
         {
@@ -1983,52 +1993,27 @@
           "role_group": "MID"
         },
         {
-          "name": "Bazoumana Touré",
-          "player_id": "1624586",
-          "role_group": "FW"
-        },
-        {
           "name": "Jacob Murphy",
           "player_id": "521148",
-          "role_group": "FW"
-        },
-        {
-          "name": "William Osula",
-          "player_id": "1258092",
           "role_group": "FW"
         }
       ],
       "away_subs": [
-        "Marco Bizot",
-        "Pau Torres",
-        "Taylor Harwood-Bellis",
-        "Lamare Bogarde",
+        "John McGinn",
         "Leon Goretzka",
         "Ross Barkley",
-        "Brian Madjo",
         "Ibrahim Mbaye",
-        "John McGinn"
+        "Pau Torres",
+        "Marco Bizot",
+        "Taylor Harwood-Bellis",
+        "Lamare Bogarde",
+        "Brian Madjo"
       ],
       "away_substitute_entries": [
         {
-          "name": "Marco Bizot",
-          "player_id": "195782",
-          "role_group": "GK"
-        },
-        {
-          "name": "Pau Torres",
-          "player_id": "792645",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Taylor Harwood-Bellis",
-          "player_id": "966021",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Lamare Bogarde",
-          "player_id": "1190033",
-          "role_group": "MID"
+          "name": "John McGinn",
+          "player_id": "356406",
+          "role_group": "FW"
         },
         {
           "name": "Leon Goretzka",
@@ -2041,18 +2026,33 @@
           "role_group": "MID"
         },
         {
-          "name": "Brian Madjo",
-          "player_id": "1729841",
-          "role_group": "FW"
-        },
-        {
           "name": "Ibrahim Mbaye",
           "player_id": "1593857",
           "role_group": "FW"
         },
         {
-          "name": "John McGinn",
-          "player_id": "356406",
+          "name": "Pau Torres",
+          "player_id": "792645",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Marco Bizot",
+          "player_id": "195782",
+          "role_group": "GK"
+        },
+        {
+          "name": "Taylor Harwood-Bellis",
+          "player_id": "966021",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Lamare Bogarde",
+          "player_id": "1190033",
+          "role_group": "MID"
+        },
+        {
+          "name": "Brian Madjo",
+          "player_id": "1729841",
           "role_group": "FW"
         }
       ],
@@ -2069,7 +2069,7 @@
         "Modou Kéba Cissé",
         "Amadou Onana"
       ],
-      "observed_at": "2026-10-17T17:08:06.942755+00:00",
+      "observed_at": "2026-10-17T19:23:57.282002+00:00",
       "changed_at": "2026-10-17T17:08:06.942755+00:00"
     },
     {
@@ -2374,7 +2374,7 @@
         "Thomas Meunier",
         "Romaine Mundle"
       ],
-      "observed_at": "2026-10-17T17:08:06.942755+00:00",
+      "observed_at": "2026-10-17T19:23:57.282002+00:00",
       "changed_at": "2026-10-17T11:34:55.288100+00:00"
     },
     {
@@ -2684,7 +2684,7 @@
         "Axel Disasi",
         "Chadi Riad"
       ],
-      "observed_at": "2026-10-17T17:08:06.942755+00:00",
+      "observed_at": "2026-10-17T19:23:57.282002+00:00",
       "changed_at": "2026-10-17T11:34:55.288100+00:00"
     },
     {
@@ -2991,7 +2991,7 @@
         "Benjamin Šeško",
         "Patrick Dorgu"
       ],
-      "observed_at": "2026-10-17T17:08:06.942755+00:00",
+      "observed_at": "2026-10-17T19:23:57.282002+00:00",
       "changed_at": "2026-10-15T14:59:21.730281+00:00"
     },
     {
@@ -3296,7 +3296,7 @@
         "William Saliba",
         "Christos Tzolis"
       ],
-      "observed_at": "2026-10-17T17:08:06.942755+00:00",
+      "observed_at": "2026-10-17T19:23:57.282002+00:00",
       "changed_at": "2026-10-17T11:34:55.288100+00:00"
     },
     {
@@ -3604,7 +3604,7 @@
         "Josh Eccles",
         "Haji Wright"
       ],
-      "observed_at": "2026-10-17T17:08:06.942755+00:00",
+      "observed_at": "2026-10-17T19:23:57.282002+00:00",
       "changed_at": "2026-10-16T22:04:40.843983+00:00"
     }
   ]

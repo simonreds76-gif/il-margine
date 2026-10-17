@@ -287,17 +287,42 @@
         }
       ],
       "home_subs": [
+        "Josip Stanišić",
+        "Tom Bischof",
+        "Lennart Karl",
+        "Serge Gnabry",
+        "Sacha Boey",
         "Sven Ulreich",
         "Alphonso Davies",
         "Hiroki Ito",
-        "Jonathan Tah",
-        "Josip Stanišić",
-        "Sacha Boey",
-        "Tom Bischof",
-        "Lennart Karl",
-        "Serge Gnabry"
+        "Jonathan Tah"
       ],
       "home_substitute_entries": [
+        {
+          "name": "Josip Stanišić",
+          "player_id": "950824",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Tom Bischof",
+          "player_id": "1286183",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Lennart Karl",
+          "player_id": "1737700",
+          "role_group": "MID"
+        },
+        {
+          "name": "Serge Gnabry",
+          "player_id": "385437",
+          "role_group": "MID"
+        },
+        {
+          "name": "Sacha Boey",
+          "player_id": "1034808",
+          "role_group": "DEF"
+        },
         {
           "name": "Sven Ulreich",
           "player_id": "94841",
@@ -317,54 +342,49 @@
           "name": "Jonathan Tah",
           "player_id": "469700",
           "role_group": "DEF"
-        },
-        {
-          "name": "Josip Stanišić",
-          "player_id": "950824",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Sacha Boey",
-          "player_id": "1034808",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Tom Bischof",
-          "player_id": "1286183",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Lennart Karl",
-          "player_id": "1737700",
-          "role_group": "MID"
-        },
-        {
-          "name": "Serge Gnabry",
-          "player_id": "385437",
-          "role_group": "MID"
         }
       ],
       "away_subs": [
-        "Ørjan Håskjold Nyland",
+        "Nicolas Seiwald",
+        "Tidiam Gomis",
         "Benjamin Henrichs",
+        "Rômulo",
+        "Andrija Maksimović",
+        "Ørjan Håskjold Nyland",
         "Max Finkgräfe",
         "Maxime Estève",
-        "Ridle Baku",
-        "Andrija Maksimović",
-        "Nicolas Seiwald",
-        "Rômulo",
-        "Tidiam Gomis"
+        "Ridle Baku"
       ],
       "away_substitute_entries": [
         {
-          "name": "Ørjan Håskjold Nyland",
-          "player_id": "73409",
-          "role_group": "GK"
+          "name": "Nicolas Seiwald",
+          "player_id": "1024672",
+          "role_group": "MID"
+        },
+        {
+          "name": "Tidiam Gomis",
+          "player_id": "1482733",
+          "role_group": "FW"
         },
         {
           "name": "Benjamin Henrichs",
           "player_id": "681383",
           "role_group": "DEF"
+        },
+        {
+          "name": "Rômulo",
+          "player_id": "1314412",
+          "role_group": "FW"
+        },
+        {
+          "name": "Andrija Maksimović",
+          "player_id": "1482209",
+          "role_group": "MID"
+        },
+        {
+          "name": "Ørjan Håskjold Nyland",
+          "player_id": "73409",
+          "role_group": "GK"
         },
         {
           "name": "Max Finkgräfe",
@@ -380,26 +400,6 @@
           "name": "Ridle Baku",
           "player_id": "883087",
           "role_group": "DEF"
-        },
-        {
-          "name": "Andrija Maksimović",
-          "player_id": "1482209",
-          "role_group": "MID"
-        },
-        {
-          "name": "Nicolas Seiwald",
-          "player_id": "1024672",
-          "role_group": "MID"
-        },
-        {
-          "name": "Rômulo",
-          "player_id": "1314412",
-          "role_group": "FW"
-        },
-        {
-          "name": "Tidiam Gomis",
-          "player_id": "1482733",
-          "role_group": "FW"
         }
       ],
       "home_unavailable": [
@@ -411,7 +411,7 @@
         "Assan Ouédraogo",
         "Marc Guiu"
       ],
-      "observed_at": "2026-10-17T17:08:55.016206+00:00",
+      "observed_at": "2026-10-17T19:24:41.840723+00:00",
       "changed_at": "2026-10-17T17:08:55.016206+00:00"
     },
     {
@@ -828,7 +828,7 @@
         "Faik Sakar",
         "Steve Mounié"
       ],
-      "observed_at": "2026-10-17T17:08:55.016206+00:00",
+      "observed_at": "2026-10-17T19:24:41.840723+00:00",
       "changed_at": "2026-10-17T13:43:55.783623+00:00"
     },
     {
@@ -1248,7 +1248,7 @@
         "Justin Diehl",
         "Tiago Tomás"
       ],
-      "observed_at": "2026-10-17T17:08:55.016206+00:00",
+      "observed_at": "2026-10-17T19:24:41.840723+00:00",
       "changed_at": "2026-10-17T17:08:55.016206+00:00"
     },
     {
@@ -1665,7 +1665,7 @@
         "Otto Ruoppi",
         "Silas Katompa Mvumpa"
       ],
-      "observed_at": "2026-10-17T17:08:55.016206+00:00",
+      "observed_at": "2026-10-17T19:24:41.840723+00:00",
       "changed_at": "2026-10-17T13:43:55.783623+00:00"
     },
     {
@@ -2082,7 +2082,7 @@
         "Giannis Konstantelias",
         "Justin Lerma"
       ],
-      "observed_at": "2026-10-17T17:08:55.016206+00:00",
+      "observed_at": "2026-10-17T19:24:41.840723+00:00",
       "changed_at": "2026-10-17T13:43:55.783623+00:00"
     },
     {
@@ -2503,7 +2503,7 @@
         "Sebastian Klaas",
         "Timur Gayret"
       ],
-      "observed_at": "2026-10-17T17:08:55.016206+00:00",
+      "observed_at": "2026-10-17T19:24:41.840723+00:00",
       "changed_at": "2026-10-17T13:43:55.783623+00:00"
     },
     {
@@ -2808,7 +2808,7 @@
         "Florent Muslija",
         "Yuito Suzuki"
       ],
-      "observed_at": "2026-10-17T17:08:55.016206+00:00",
+      "observed_at": "2026-10-17T19:24:41.840723+00:00",
       "changed_at": "2026-10-17T11:35:58.800292+00:00"
     },
     {
@@ -3116,7 +3116,7 @@
         "Bernardo",
         "Patrick Wimmer"
       ],
-      "observed_at": "2026-10-17T17:08:55.016206+00:00",
+      "observed_at": "2026-10-17T19:24:41.840723+00:00",
       "changed_at": "2026-10-17T11:35:58.800292+00:00"
     }
   ]
