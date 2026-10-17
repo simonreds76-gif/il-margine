@@ -460,7 +460,7 @@
         "Curtis Jones",
         "Lautaro Martínez"
       ],
-      "observed_at": "2026-10-17T19:23:31.245499+00:00",
+      "observed_at": "2026-10-17T22:15:43.549797+00:00",
       "changed_at": "2026-10-17T17:07:40.951037+00:00"
     },
     {
@@ -750,20 +750,45 @@
         }
       ],
       "home_subs": [
-        "Devis Vásquez",
-        "Giorgio De Marzi",
-        "Daniele Ghilardi",
-        "Gianluca Mancini",
         "Mario Hermoso",
-        "Nahuel Molina",
-        "Alessandro Di Nunzio",
         "Lorenzo Pellegrini",
         "Wesley",
+        "Daniele Ghilardi",
+        "Alessandro Di Nunzio",
+        "Devis Vásquez",
+        "Giorgio De Marzi",
+        "Gianluca Mancini",
+        "Nahuel Molina",
         "Antonio Arena",
         "Lorenzo Paratici",
         "Mandjou Camara"
       ],
       "home_substitute_entries": [
+        {
+          "name": "Mario Hermoso",
+          "player_id": "671203",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Lorenzo Pellegrini",
+          "player_id": "540307",
+          "role_group": "MID"
+        },
+        {
+          "name": "Wesley",
+          "player_id": "1320176",
+          "role_group": "MID"
+        },
+        {
+          "name": "Daniele Ghilardi",
+          "player_id": "1386006",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Alessandro Di Nunzio",
+          "player_id": "2026491",
+          "role_group": "MID"
+        },
         {
           "name": "Devis Vásquez",
           "player_id": "1186685",
@@ -775,39 +800,14 @@
           "role_group": "GK"
         },
         {
-          "name": "Daniele Ghilardi",
-          "player_id": "1386006",
-          "role_group": "DEF"
-        },
-        {
           "name": "Gianluca Mancini",
           "player_id": "588687",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Mario Hermoso",
-          "player_id": "671203",
           "role_group": "DEF"
         },
         {
           "name": "Nahuel Molina",
           "player_id": "726345",
           "role_group": "DEF"
-        },
-        {
-          "name": "Alessandro Di Nunzio",
-          "player_id": "2026491",
-          "role_group": "MID"
-        },
-        {
-          "name": "Lorenzo Pellegrini",
-          "player_id": "540307",
-          "role_group": "MID"
-        },
-        {
-          "name": "Wesley",
-          "player_id": "1320176",
-          "role_group": "MID"
         },
         {
           "name": "Antonio Arena",
@@ -826,6 +826,9 @@
         }
       ],
       "away_subs": [
+        "Vítinha",
+        "Amorim",
+        "Robinho Júnior",
         "Daniele Sommariva",
         "Franz Stolz",
         "Cody Drameh",
@@ -833,14 +836,26 @@
         "Marcelo Vaz",
         "Mario Mitaj",
         "Sebastian Otoa",
-        "Amorim",
         "Hamed Traorè",
         "Stefano Sabelli",
-        "Tommaso Baldanzi",
-        "Robinho Júnior",
-        "Vítinha"
+        "Tommaso Baldanzi"
       ],
       "away_substitute_entries": [
+        {
+          "name": "Vítinha",
+          "player_id": "1215057",
+          "role_group": "FW"
+        },
+        {
+          "name": "Amorim",
+          "player_id": "1469120",
+          "role_group": "MID"
+        },
+        {
+          "name": "Robinho Júnior",
+          "player_id": "1784631",
+          "role_group": "FW"
+        },
         {
           "name": "Daniele Sommariva",
           "player_id": "577914",
@@ -877,11 +892,6 @@
           "role_group": "DEF"
         },
         {
-          "name": "Amorim",
-          "player_id": "1469120",
-          "role_group": "MID"
-        },
-        {
           "name": "Hamed Traorè",
           "player_id": "875672",
           "role_group": "MID"
@@ -895,16 +905,6 @@
           "name": "Tommaso Baldanzi",
           "player_id": "1200591",
           "role_group": "MID"
-        },
-        {
-          "name": "Robinho Júnior",
-          "player_id": "1784631",
-          "role_group": "FW"
-        },
-        {
-          "name": "Vítinha",
-          "player_id": "1215057",
-          "role_group": "FW"
         }
       ],
       "home_unavailable": [
@@ -921,7 +921,7 @@
         "Lorenzo Colombo",
         "Lorenzo Venturino"
       ],
-      "observed_at": "2026-10-17T19:23:31.245499+00:00",
+      "observed_at": "2026-10-17T22:15:43.549797+00:00",
       "changed_at": "2026-10-17T19:23:31.245499+00:00"
     },
     {
@@ -1388,7 +1388,7 @@
         "Costantino Favasuli",
         "David Neres"
       ],
-      "observed_at": "2026-10-17T19:23:31.245499+00:00",
+      "observed_at": "2026-10-17T22:15:43.549797+00:00",
       "changed_at": "2026-10-17T13:42:28.778940+00:00"
     },
     {
@@ -1689,7 +1689,7 @@
         "Assane Diao",
         "Moise Kean"
       ],
-      "observed_at": "2026-10-17T19:23:31.245499+00:00",
+      "observed_at": "2026-10-17T22:15:43.549797+00:00",
       "changed_at": "2026-10-17T11:34:19.328677+00:00"
     },
     {
@@ -1998,7 +1998,7 @@
         "Albert Guðmundsson",
         "Matteo Cancellieri"
       ],
-      "observed_at": "2026-10-17T19:23:31.245499+00:00",
+      "observed_at": "2026-10-17T22:15:43.549797+00:00",
       "changed_at": "2026-10-17T11:34:19.328677+00:00"
     },
     {
@@ -2306,7 +2306,7 @@
         "Kamaldeen Sulemana",
         "Giacomo Raspadori"
       ],
-      "observed_at": "2026-10-17T19:23:31.245499+00:00",
+      "observed_at": "2026-10-17T22:15:43.549797+00:00",
       "changed_at": "2026-10-17T11:34:19.328677+00:00"
     },
     {
@@ -2609,7 +2609,7 @@
         "Ivan Ilić",
         "Medon Berisha"
       ],
-      "observed_at": "2026-10-17T19:23:31.245499+00:00",
+      "observed_at": "2026-10-17T22:15:43.549797+00:00",
       "changed_at": "2026-10-17T11:34:19.328677+00:00"
     },
     {
@@ -2915,7 +2915,7 @@
         "Riyad Idrissi",
         "Yael Trepy"
       ],
-      "observed_at": "2026-10-17T19:23:31.245499+00:00",
+      "observed_at": "2026-10-17T22:15:43.549797+00:00",
       "changed_at": "2026-10-16T18:47:23.914679+00:00"
     },
     {
@@ -3218,7 +3218,7 @@
         "Niccolò Fortini",
         "Emirhan İlkhan"
       ],
-      "observed_at": "2026-10-17T19:23:31.245499+00:00",
+      "observed_at": "2026-10-17T22:15:43.549797+00:00",
       "changed_at": "2026-10-16T22:04:10.887887+00:00"
     }
   ]

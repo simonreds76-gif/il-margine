@@ -287,26 +287,41 @@
         }
       ],
       "home_subs": [
-        "Zadig Lanssade",
         "Calvin Verdonk",
+        "Nabil Bentaleb",
+        "Soriba Diaoune",
+        "Maurits Kjærgaard",
+        "Zadig Lanssade",
         "Isaac Cossier",
         "Başar Önal",
-        "Maurits Kjærgaard",
-        "Nabil Bentaleb",
         "Angel Yondjo",
-        "Gaëtan Perrin",
-        "Soriba Diaoune"
+        "Gaëtan Perrin"
       ],
       "home_substitute_entries": [
-        {
-          "name": "Zadig Lanssade",
-          "player_id": "1867240",
-          "role_group": "GK"
-        },
         {
           "name": "Calvin Verdonk",
           "player_id": "622137",
           "role_group": "DEF"
+        },
+        {
+          "name": "Nabil Bentaleb",
+          "player_id": "500520",
+          "role_group": "MID"
+        },
+        {
+          "name": "Soriba Diaoune",
+          "player_id": "1684579",
+          "role_group": "FW"
+        },
+        {
+          "name": "Maurits Kjærgaard",
+          "player_id": "1070404",
+          "role_group": "MID"
+        },
+        {
+          "name": "Zadig Lanssade",
+          "player_id": "1867240",
+          "role_group": "GK"
         },
         {
           "name": "Isaac Cossier",
@@ -319,16 +334,6 @@
           "role_group": "MID"
         },
         {
-          "name": "Maurits Kjærgaard",
-          "player_id": "1070404",
-          "role_group": "MID"
-        },
-        {
-          "name": "Nabil Bentaleb",
-          "player_id": "500520",
-          "role_group": "MID"
-        },
-        {
           "name": "Angel Yondjo",
           "player_id": "1882264",
           "role_group": "FW"
@@ -337,24 +342,34 @@
           "name": "Gaëtan Perrin",
           "player_id": "708435",
           "role_group": "FW"
-        },
-        {
-          "name": "Soriba Diaoune",
-          "player_id": "1684579",
-          "role_group": "FW"
         }
       ],
       "away_subs": [
+        "Joseph Boende",
+        "Ibrahim Kanté",
+        "Mamady Diambou",
         "Mathieu Patouillet",
         "Justin Bourgault",
         "Luck Zogbé",
-        "Joseph Boende",
-        "Mamady Diambou",
         "Djylian N'Guessan",
-        "Enzo Monchatre",
-        "Ibrahim Kanté"
+        "Enzo Monchatre"
       ],
       "away_substitute_entries": [
+        {
+          "name": "Joseph Boende",
+          "player_id": "1427018",
+          "role_group": "MID"
+        },
+        {
+          "name": "Ibrahim Kanté",
+          "player_id": "1669616",
+          "role_group": "FW"
+        },
+        {
+          "name": "Mamady Diambou",
+          "player_id": "1231909",
+          "role_group": "MID"
+        },
         {
           "name": "Mathieu Patouillet",
           "player_id": "1514445",
@@ -371,16 +386,6 @@
           "role_group": "DEF"
         },
         {
-          "name": "Joseph Boende",
-          "player_id": "1427018",
-          "role_group": "MID"
-        },
-        {
-          "name": "Mamady Diambou",
-          "player_id": "1231909",
-          "role_group": "MID"
-        },
-        {
           "name": "Djylian N'Guessan",
           "player_id": "1703371",
           "role_group": "FW"
@@ -388,11 +393,6 @@
         {
           "name": "Enzo Monchatre",
           "player_id": "1945732",
-          "role_group": "FW"
-        },
-        {
-          "name": "Ibrahim Kanté",
-          "player_id": "1669616",
           "role_group": "FW"
         }
       ],
@@ -406,7 +406,7 @@
         "Raphaël Le Guen",
         "Giovani Versini"
       ],
-      "observed_at": "2026-10-17T19:25:08.148482+00:00",
+      "observed_at": "2026-10-17T22:17:34.133286+00:00",
       "changed_at": "2026-10-17T19:25:08.148482+00:00"
     },
     {
@@ -821,7 +821,7 @@
       "away_unavailable": [
         "Senny Mayulu"
       ],
-      "observed_at": "2026-10-17T19:25:08.148482+00:00",
+      "observed_at": "2026-10-17T22:17:34.133286+00:00",
       "changed_at": "2026-10-17T17:09:19.089626+00:00"
     },
     {
@@ -1111,17 +1111,37 @@
         }
       ],
       "home_subs": [
-        "Hillel Konaté",
-        "Lassana Simakha",
+        "Kandet Diawara",
         "Noah Donkor",
-        "Alexandre Phliponeau",
-        "Hugo Picard",
         "Iron Gomis",
         "Jérémy Le Douaron",
-        "Christ Batola",
-        "Kandet Diawara"
+        "Hillel Konaté",
+        "Lassana Simakha",
+        "Alexandre Phliponeau",
+        "Hugo Picard",
+        "Christ Batola"
       ],
       "home_substitute_entries": [
+        {
+          "name": "Kandet Diawara",
+          "player_id": "1108031",
+          "role_group": "FW"
+        },
+        {
+          "name": "Noah Donkor",
+          "player_id": "1844131",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Iron Gomis",
+          "player_id": "1030945",
+          "role_group": "MID"
+        },
+        {
+          "name": "Jérémy Le Douaron",
+          "player_id": "917808",
+          "role_group": "MID"
+        },
         {
           "name": "Hillel Konaté",
           "player_id": "560896",
@@ -1130,11 +1150,6 @@
         {
           "name": "Lassana Simakha",
           "player_id": "2222106",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Noah Donkor",
-          "player_id": "1844131",
           "role_group": "DEF"
         },
         {
@@ -1148,43 +1163,23 @@
           "role_group": "MID"
         },
         {
-          "name": "Iron Gomis",
-          "player_id": "1030945",
-          "role_group": "MID"
-        },
-        {
-          "name": "Jérémy Le Douaron",
-          "player_id": "917808",
-          "role_group": "MID"
-        },
-        {
           "name": "Christ Batola",
           "player_id": "1760691",
-          "role_group": "FW"
-        },
-        {
-          "name": "Kandet Diawara",
-          "player_id": "1108031",
           "role_group": "FW"
         }
       ],
       "away_subs": [
-        "Mathieu Gorgelin",
         "Samson Baidoo",
         "Amadou Haidara",
         "Mezian Mesloub Soares",
-        "Michaël Cuisance",
-        "Saud Abdulhamid",
-        "Thorgan Hazard",
         "Franjo Ivanović",
+        "Saud Abdulhamid",
+        "Mathieu Gorgelin",
+        "Michaël Cuisance",
+        "Thorgan Hazard",
         "Junior Kadile"
       ],
       "away_substitute_entries": [
-        {
-          "name": "Mathieu Gorgelin",
-          "player_id": "186811",
-          "role_group": "GK"
-        },
         {
           "name": "Samson Baidoo",
           "player_id": "1276626",
@@ -1201,9 +1196,9 @@
           "role_group": "MID"
         },
         {
-          "name": "Michaël Cuisance",
-          "player_id": "861445",
-          "role_group": "MID"
+          "name": "Franjo Ivanović",
+          "player_id": "1406419",
+          "role_group": "FW"
         },
         {
           "name": "Saud Abdulhamid",
@@ -1211,14 +1206,19 @@
           "role_group": "MID"
         },
         {
-          "name": "Thorgan Hazard",
-          "player_id": "264190",
+          "name": "Mathieu Gorgelin",
+          "player_id": "186811",
+          "role_group": "GK"
+        },
+        {
+          "name": "Michaël Cuisance",
+          "player_id": "861445",
           "role_group": "MID"
         },
         {
-          "name": "Franjo Ivanović",
-          "player_id": "1406419",
-          "role_group": "FW"
+          "name": "Thorgan Hazard",
+          "player_id": "264190",
+          "role_group": "MID"
         },
         {
           "name": "Junior Kadile",
@@ -1238,7 +1238,7 @@
         "Abdallah Sima",
         "Matthieu Udol"
       ],
-      "observed_at": "2026-10-17T19:25:08.148482+00:00",
+      "observed_at": "2026-10-17T22:17:34.133286+00:00",
       "changed_at": "2026-10-17T19:25:08.148482+00:00"
     },
     {
@@ -1540,7 +1540,7 @@
         "Derek Cornelius",
         "Pierre-Emile Højbjerg"
       ],
-      "observed_at": "2026-10-17T19:25:08.148482+00:00",
+      "observed_at": "2026-10-17T22:17:34.133286+00:00",
       "changed_at": "2026-10-17T11:36:27.537190+00:00"
     },
     {
@@ -1851,7 +1851,7 @@
         "Rayan Mandengue",
         "Rémy Lascary"
       ],
-      "observed_at": "2026-10-17T19:25:08.148482+00:00",
+      "observed_at": "2026-10-17T22:17:34.133286+00:00",
       "changed_at": "2026-10-17T11:36:27.537190+00:00"
     },
     {
@@ -2154,7 +2154,7 @@
         "Eric Dier",
         "Paris Brunner"
       ],
-      "observed_at": "2026-10-17T19:25:08.148482+00:00",
+      "observed_at": "2026-10-17T22:17:34.133286+00:00",
       "changed_at": "2026-10-17T11:36:27.537190+00:00"
     },
     {
@@ -2458,7 +2458,7 @@
         "Laurent Abergel",
         "Morgan Sanson"
       ],
-      "observed_at": "2026-10-17T19:25:08.148482+00:00",
+      "observed_at": "2026-10-17T22:17:34.133286+00:00",
       "changed_at": "2026-10-17T11:36:27.537190+00:00"
     },
     {
@@ -2756,7 +2756,7 @@
         "Jonathan Ikoné"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-10-17T19:25:08.148482+00:00",
+      "observed_at": "2026-10-17T22:17:34.133286+00:00",
       "changed_at": "2026-10-17T11:36:27.537190+00:00"
     }
   ]

@@ -445,7 +445,7 @@
       "away_unavailable": [
         "Johnny Cardoso"
       ],
-      "observed_at": "2026-10-17T19:24:22.403778+00:00",
+      "observed_at": "2026-10-17T22:16:38.913778+00:00",
       "changed_at": "2026-10-17T13:43:28.531903+00:00"
     },
     {
@@ -894,7 +894,7 @@
         "Andreas Christensen",
         "Roony Bardghji"
       ],
-      "observed_at": "2026-10-17T19:24:22.403778+00:00",
+      "observed_at": "2026-10-17T22:16:38.913778+00:00",
       "changed_at": "2026-10-17T17:08:32.560189+00:00"
     },
     {
@@ -1184,20 +1184,45 @@
         }
       ],
       "home_subs": [
+        "David Otorbi",
+        "Luis Rioja",
+        "Harvey Elliott",
+        "Jesus Vázquez",
+        "Filip Ugrinic",
         "Kayne van Oevelen",
         "Arnau Martínez",
-        "Jesus Vázquez",
         "Mouctar Diakhaby",
         "Aaron Mayol",
         "Aliou Dieng",
-        "David Otorbi",
-        "Filip Ugrinic",
-        "Harvey Elliott",
-        "Luis Rioja",
         "Ryunosuke Sato",
         "Aimar Blázquez"
       ],
       "home_substitute_entries": [
+        {
+          "name": "David Otorbi",
+          "player_id": "1600732",
+          "role_group": "MID"
+        },
+        {
+          "name": "Luis Rioja",
+          "player_id": "638070",
+          "role_group": "MID"
+        },
+        {
+          "name": "Harvey Elliott",
+          "player_id": "963964",
+          "role_group": "MID"
+        },
+        {
+          "name": "Jesus Vázquez",
+          "player_id": "1220187",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Filip Ugrinic",
+          "player_id": "800615",
+          "role_group": "MID"
+        },
         {
           "name": "Kayne van Oevelen",
           "player_id": "1348497",
@@ -1206,11 +1231,6 @@
         {
           "name": "Arnau Martínez",
           "player_id": "1194892",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Jesus Vázquez",
-          "player_id": "1220187",
           "role_group": "DEF"
         },
         {
@@ -1229,26 +1249,6 @@
           "role_group": "MID"
         },
         {
-          "name": "David Otorbi",
-          "player_id": "1600732",
-          "role_group": "MID"
-        },
-        {
-          "name": "Filip Ugrinic",
-          "player_id": "800615",
-          "role_group": "MID"
-        },
-        {
-          "name": "Harvey Elliott",
-          "player_id": "963964",
-          "role_group": "MID"
-        },
-        {
-          "name": "Luis Rioja",
-          "player_id": "638070",
-          "role_group": "MID"
-        },
-        {
           "name": "Ryunosuke Sato",
           "player_id": "1611149",
           "role_group": "MID"
@@ -1260,20 +1260,45 @@
         }
       ],
       "away_subs": [
-        "Álex Padilla",
-        "Daniel Vivian",
-        "Jesús Areso",
-        "Yeray Álvarez",
-        "Yuri Berchiche",
-        "Alejandro Rego",
-        "Beñat Prados",
         "Mikel Jauregizar",
-        "Christian Imga",
+        "Jesús Areso",
+        "Alejandro Rego",
         "Gorka Guruzeta",
         "Maroan Sannadi",
+        "Álex Padilla",
+        "Daniel Vivian",
+        "Yeray Álvarez",
+        "Yuri Berchiche",
+        "Beñat Prados",
+        "Christian Imga",
         "Nico Serrano"
       ],
       "away_substitute_entries": [
+        {
+          "name": "Mikel Jauregizar",
+          "player_id": "1553099",
+          "role_group": "MID"
+        },
+        {
+          "name": "Jesús Areso",
+          "player_id": "1037537",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Alejandro Rego",
+          "player_id": "1425769",
+          "role_group": "MID"
+        },
+        {
+          "name": "Gorka Guruzeta",
+          "player_id": "711231",
+          "role_group": "FW"
+        },
+        {
+          "name": "Maroan Sannadi",
+          "player_id": "1425206",
+          "role_group": "FW"
+        },
         {
           "name": "Álex Padilla",
           "player_id": "1401997",
@@ -1282,11 +1307,6 @@
         {
           "name": "Daniel Vivian",
           "player_id": "940743",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Jesús Areso",
-          "player_id": "1037537",
           "role_group": "DEF"
         },
         {
@@ -1300,33 +1320,13 @@
           "role_group": "DEF"
         },
         {
-          "name": "Alejandro Rego",
-          "player_id": "1425769",
-          "role_group": "MID"
-        },
-        {
           "name": "Beñat Prados",
           "player_id": "1229176",
           "role_group": "MID"
         },
         {
-          "name": "Mikel Jauregizar",
-          "player_id": "1553099",
-          "role_group": "MID"
-        },
-        {
           "name": "Christian Imga",
           "player_id": "1820604",
-          "role_group": "FW"
-        },
-        {
-          "name": "Gorka Guruzeta",
-          "player_id": "711231",
-          "role_group": "FW"
-        },
-        {
-          "name": "Maroan Sannadi",
-          "player_id": "1425206",
           "role_group": "FW"
         },
         {
@@ -1347,7 +1347,7 @@
         "Oihan Sancet",
         "Nico Williams"
       ],
-      "observed_at": "2026-10-17T19:24:22.403778+00:00",
+      "observed_at": "2026-10-17T22:16:38.913778+00:00",
       "changed_at": "2026-10-17T19:24:22.403778+00:00"
     },
     {
@@ -1795,7 +1795,7 @@
       "away_unavailable": [
         "Yago Santiago"
       ],
-      "observed_at": "2026-10-17T19:24:22.403778+00:00",
+      "observed_at": "2026-10-17T22:16:38.913778+00:00",
       "changed_at": "2026-10-17T13:43:28.531903+00:00"
     },
     {
@@ -2100,7 +2100,7 @@
         "Ángel Pérez",
         "Mikel Rodríguez"
       ],
-      "observed_at": "2026-10-17T19:24:22.403778+00:00",
+      "observed_at": "2026-10-17T22:16:38.913778+00:00",
       "changed_at": "2026-10-17T11:35:28.234539+00:00"
     },
     {
@@ -2406,7 +2406,7 @@
         "Luken Beitia",
         "Pablo Marín"
       ],
-      "observed_at": "2026-10-17T19:24:22.403778+00:00",
+      "observed_at": "2026-10-17T22:16:38.913778+00:00",
       "changed_at": "2026-10-17T11:35:28.234539+00:00"
     },
     {
@@ -2710,7 +2710,7 @@
         "Manu",
         "Simon Eriksson"
       ],
-      "observed_at": "2026-10-17T19:24:22.403778+00:00",
+      "observed_at": "2026-10-17T22:16:38.913778+00:00",
       "changed_at": "2026-10-17T11:35:28.234539+00:00"
     },
     {
@@ -3017,7 +3017,7 @@
         "Isaac Romero",
         "Miguel Sierra"
       ],
-      "observed_at": "2026-10-17T19:24:22.403778+00:00",
+      "observed_at": "2026-10-17T22:16:38.913778+00:00",
       "changed_at": "2026-10-17T11:35:28.234539+00:00"
     },
     {
@@ -3325,7 +3325,7 @@
         "Andrei Rațiu",
         "Luiz Felipe"
       ],
-      "observed_at": "2026-10-17T19:24:22.403778+00:00",
+      "observed_at": "2026-10-17T22:16:38.913778+00:00",
       "changed_at": "2026-10-17T00:27:35.538536+00:00"
     }
   ]
