@@ -2,32 +2,31 @@
   "capture_errors": [],
   "capture_mode": "close",
   "event_last_checked": {
-    "71945308": "2026-10-17T16:39:10Z",
-    "71945314": "2026-10-17T16:39:10Z",
-    "71945320": "2026-10-17T16:39:10Z",
-    "71945322": "2026-10-17T16:39:10Z",
-    "72036220": "2026-10-17T16:39:10Z",
-    "72036222": "2026-10-17T16:39:10Z",
-    "72036226": "2026-10-17T16:39:10Z",
-    "72036228": "2026-10-17T16:39:10Z",
-    "72036232": "2026-10-17T16:39:10Z",
-    "72036236": "2026-10-17T16:39:10Z",
-    "72221312": "2026-10-17T16:39:10Z",
-    "72221316": "2026-10-17T16:39:10Z",
-    "72221322": "2026-10-17T16:39:10Z",
-    "72221328": "2026-10-17T16:39:10Z",
-    "72478628": "2026-10-17T16:39:10Z",
-    "72478636": "2026-10-17T16:39:10Z",
-    "72478638": "2026-10-17T16:39:10Z",
-    "72478642": "2026-10-17T16:39:10Z",
-    "72513240": "2026-10-17T16:39:10Z",
-    "72513246": "2026-10-17T16:39:10Z"
+    "71945308": "2026-10-17T18:49:47Z",
+    "71945312": "2026-10-17T18:49:47Z",
+    "71945314": "2026-10-17T18:49:47Z",
+    "71945322": "2026-10-17T18:49:47Z",
+    "72036220": "2026-10-17T18:49:47Z",
+    "72036222": "2026-10-17T18:49:47Z",
+    "72036228": "2026-10-17T18:49:47Z",
+    "72036230": "2026-10-17T18:49:47Z",
+    "72036232": "2026-10-17T18:49:47Z",
+    "72221312": "2026-10-17T18:49:47Z",
+    "72221316": "2026-10-17T18:49:47Z",
+    "72221322": "2026-10-17T18:49:47Z",
+    "72221328": "2026-10-17T18:49:47Z",
+    "72478628": "2026-10-17T18:49:47Z",
+    "72478636": "2026-10-17T18:49:47Z",
+    "72478638": "2026-10-17T18:49:47Z",
+    "72478642": "2026-10-17T18:49:47Z",
+    "72513240": "2026-10-17T18:49:47Z",
+    "72513246": "2026-10-17T18:49:47Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 20,
-  "events_supported": 20,
-  "events_with_lines": 20,
-  "generated_at": "2026-10-17T16:39:10Z",
+  "events_selected": 19,
+  "events_supported": 19,
+  "events_with_lines": 18,
+  "generated_at": "2026-10-17T18:49:47Z",
   "last_publication_at": "2026-10-17T12:15:16Z",
   "league_coverage": {
     "bundesliga": {
@@ -40,18 +39,18 @@
     },
     "la-liga": {
       "selected": 4,
-      "with_prices": 4
+      "with_prices": 3
     },
     "ligue-1": {
-      "selected": 6,
-      "with_prices": 6
+      "selected": 5,
+      "with_prices": 5
     },
     "serie-a": {
       "selected": 4,
       "with_prices": 4
     }
   },
-  "market_inventory_rows_added": 1641,
+  "market_inventory_rows_added": 1522,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Away Team Exact Goals",
@@ -146,9 +145,79 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 3,
-  "rows_added": 234,
-  "rows_observed": 234,
+  "rows_added": 197,
+  "rows_observed": 197,
   "selected_events": [
+    {
+      "away": "Athletic Bilbao",
+      "competition": "Spain - LaLiga",
+      "home": "Valencia CF",
+      "id": 72478642,
+      "kickoff_at": "2026-10-17T19:00:00Z"
+    },
+    {
+      "away": "OGC Nice",
+      "competition": "France - Ligue 1",
+      "home": "Olympique Lyon",
+      "id": 72036230,
+      "kickoff_at": "2026-10-18T18:45:00Z"
+    },
+    {
+      "away": "Lazio Rome",
+      "competition": "Italy - Serie A",
+      "home": "Juventus Turin",
+      "id": 71945312,
+      "kickoff_at": "2026-10-18T18:45:00Z"
+    },
+    {
+      "away": "US Lecce",
+      "competition": "Italy - Serie A",
+      "home": "Udinese Calcio",
+      "id": 71945322,
+      "kickoff_at": "2026-10-18T10:30:00Z"
+    },
+    {
+      "away": "Racing Santander",
+      "competition": "Spain - LaLiga",
+      "home": "CA Osasuna",
+      "id": 72478638,
+      "kickoff_at": "2026-10-18T12:00:00Z"
+    },
+    {
+      "away": "Olympique Marseille",
+      "competition": "France - Ligue 1",
+      "home": "Angers SCO",
+      "id": 72036220,
+      "kickoff_at": "2026-10-18T13:00:00Z"
+    },
+    {
+      "away": "Como 1907",
+      "competition": "Italy - Serie A",
+      "home": "ACF Fiorentina",
+      "id": 71945308,
+      "kickoff_at": "2026-10-18T13:00:00Z"
+    },
+    {
+      "away": "Sunderland AFC",
+      "competition": "England - Premier League",
+      "home": "AFC Bournemouth",
+      "id": 72221312,
+      "kickoff_at": "2026-10-18T13:00:00Z"
+    },
+    {
+      "away": "Crystal Palace",
+      "competition": "England - Premier League",
+      "home": "Brighton & Hove Albion",
+      "id": 72221316,
+      "kickoff_at": "2026-10-18T13:00:00Z"
+    },
+    {
+      "away": "Manchester United",
+      "competition": "England - Premier League",
+      "home": "Leeds United",
+      "id": 72221322,
+      "kickoff_at": "2026-10-18T13:00:00Z"
+    },
     {
       "away": "SC Freiburg",
       "competition": "Germany - Bundesliga",
@@ -211,85 +280,8 @@
       "home": "Malaga CF",
       "id": 72478636,
       "kickoff_at": "2026-10-18T16:30:00Z"
-    },
-    {
-      "away": "Stade Brest 29",
-      "competition": "France - Ligue 1",
-      "home": "Lille OSC",
-      "id": 72036226,
-      "kickoff_at": "2026-10-17T18:45:00Z"
-    },
-    {
-      "away": "Racing Club De Lens",
-      "competition": "France - Ligue 1",
-      "home": "ESTAC Troyes",
-      "id": 72036236,
-      "kickoff_at": "2026-10-17T18:45:00Z"
-    },
-    {
-      "away": "Genoa CFC",
-      "competition": "Italy - Serie A",
-      "home": "AS Roma",
-      "id": 71945320,
-      "kickoff_at": "2026-10-17T18:45:00Z"
-    },
-    {
-      "away": "Athletic Bilbao",
-      "competition": "Spain - LaLiga",
-      "home": "Valencia CF",
-      "id": 72478642,
-      "kickoff_at": "2026-10-17T19:00:00Z"
-    },
-    {
-      "away": "US Lecce",
-      "competition": "Italy - Serie A",
-      "home": "Udinese Calcio",
-      "id": 71945322,
-      "kickoff_at": "2026-10-18T10:30:00Z"
-    },
-    {
-      "away": "Racing Santander",
-      "competition": "Spain - LaLiga",
-      "home": "CA Osasuna",
-      "id": 72478638,
-      "kickoff_at": "2026-10-18T12:00:00Z"
-    },
-    {
-      "away": "Olympique Marseille",
-      "competition": "France - Ligue 1",
-      "home": "Angers SCO",
-      "id": 72036220,
-      "kickoff_at": "2026-10-18T13:00:00Z"
-    },
-    {
-      "away": "Como 1907",
-      "competition": "Italy - Serie A",
-      "home": "ACF Fiorentina",
-      "id": 71945308,
-      "kickoff_at": "2026-10-18T13:00:00Z"
-    },
-    {
-      "away": "Sunderland AFC",
-      "competition": "England - Premier League",
-      "home": "AFC Bournemouth",
-      "id": 72221312,
-      "kickoff_at": "2026-10-18T13:00:00Z"
-    },
-    {
-      "away": "Crystal Palace",
-      "competition": "England - Premier League",
-      "home": "Brighton & Hove Albion",
-      "id": 72221316,
-      "kickoff_at": "2026-10-18T13:00:00Z"
-    },
-    {
-      "away": "Manchester United",
-      "competition": "England - Premier League",
-      "home": "Leeds United",
-      "id": 72221322,
-      "kickoff_at": "2026-10-18T13:00:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 20
+  "three_way_events": 18
 }
