@@ -2,19 +2,19 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 100,
+    "blocked_lines": 73,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 51,
-      "goalkeeper_team_unresolved": 100,
-      "missing_lineup": 49,
-      "missing_priced_edge": 100
+      "goalkeeper_not_matched_to_lineup": 35,
+      "goalkeeper_team_unresolved": 73,
+      "missing_lineup": 38,
+      "missing_priced_edge": 73
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 4,
-    "priced_lines": 162,
+    "eligible_lines": 3,
+    "priced_lines": 136,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 26
+    "value_ladder_lines": 21
   },
   "evidence": {
     "clv": 0.041585,
@@ -33,29 +33,27 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-17T18:49:48.579132+00:00",
+    "checked_at": "2026-10-17T21:44:15.360646+00:00",
     "counts": {
-      "not_fresh_prematch": 55,
-      "offers_saved": 207
+      "offers_saved": 209
     },
     "saved": 19,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-17T18:49:48Z",
+  "generated_at": "2026-10-17T21:44:14Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "blocked_or_missing_inputs": 67,
-      "not_new_fresh_prematch": 55
+      "blocked_or_missing_inputs": 73
     },
-    "forecast_fixtures": 34,
-    "forecast_keepers": 65,
-    "generated_at": "2026-10-17T18:49:48.644013+00:00",
-    "last_capture_at": "2026-10-17T18:49:48.644013+00:00",
+    "forecast_fixtures": 35,
+    "forecast_keepers": 66,
+    "generated_at": "2026-10-17T21:44:15.436216+00:00",
+    "last_capture_at": "2026-10-17T21:44:15.436216+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 2,
+    "new_forecasts": 1,
     "new_selections": 0,
     "next_review_at": 50,
     "paired_scores": {
@@ -416,7 +414,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 57
+      "awaiting_verified_keeper_result": 58
     },
     "start_at": "2026-10-15T15:58:57.141631+00:00",
     "status": "TRACKING"
