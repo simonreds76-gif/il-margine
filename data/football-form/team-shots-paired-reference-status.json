@@ -1,16 +1,16 @@
 {
-  "contracts": 188,
-  "settled_contracts": 122,
-  "paired_contracts": 75,
-  "paired_fixtures": 28,
+  "contracts": 199,
+  "settled_contracts": 136,
+  "paired_contracts": 85,
+  "paired_fixtures": 31,
   "conflicting_results": 0,
   "models": {
     "ema20_v3": {
-      "brier": 0.2564296019814323,
-      "log_loss": 0.7083980629330859,
-      "market_brier": 0.2493519822115298,
-      "mean_error": -0.6854183871904753,
-      "absolute_error": 3.850533281883928,
+      "brier": 0.25595662805249497,
+      "log_loss": 0.707245947596751,
+      "market_brier": 0.24850978152924003,
+      "mean_error": -0.6503658644395153,
+      "absolute_error": 3.6875858566922037,
       "hypothetical_selections": {
         "settled": 21,
         "wins": 12,
@@ -18,18 +18,18 @@
         "pnl_units": 0.9740000000000004,
         "roi": 0.0463809523809524,
         "stake_units": 21,
-        "pending": 10,
+        "pending": 11,
         "overdue": 0,
-        "unavailable_contracts": 72,
+        "unavailable_contracts": 76,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
     "v4": {
-      "brier": 0.25146988934876785,
-      "log_loss": 0.6961379817544132,
-      "market_brier": 0.2493519822115298,
-      "mean_error": -0.5917185744047619,
-      "absolute_error": 3.8298110148809528,
+      "brier": 0.24999473170727957,
+      "log_loss": 0.69317604644287,
+      "market_brier": 0.24850978152924003,
+      "mean_error": -0.5575084650537635,
+      "absolute_error": 3.6725271424731183,
       "hypothetical_selections": {
         "settled": 0,
         "wins": 0,
@@ -39,45 +39,45 @@
         "stake_units": 0,
         "pending": 0,
         "overdue": 0,
-        "unavailable_contracts": 72,
+        "unavailable_contracts": 76,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
     "opponent": {
-      "brier": 0.24688475080108332,
-      "log_loss": 0.6866317252287568,
-      "market_brier": 0.2493519822115298,
-      "mean_error": -0.6458982023809524,
-      "absolute_error": 3.7794314047619046,
+      "brier": 0.24490130453263978,
+      "log_loss": 0.6826462975367991,
+      "market_brier": 0.24850978152924003,
+      "mean_error": -0.5482245107526882,
+      "absolute_error": 3.5698248548387097,
       "hypothetical_selections": {
-        "settled": 20,
-        "wins": 12,
+        "settled": 22,
+        "wins": 14,
         "losses": 8,
-        "pnl_units": 1.8319999999999999,
-        "roi": 0.09159999999999999,
-        "stake_units": 20,
-        "pending": 10,
+        "pnl_units": 3.3920000000000003,
+        "roi": 0.1541818181818182,
+        "stake_units": 22,
+        "pending": 8,
         "overdue": 0,
-        "unavailable_contracts": 16,
+        "unavailable_contracts": 17,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
     "shots_market_offset_v1": {
-      "brier": 0.24574137617153916,
-      "log_loss": 0.6844685795206014,
-      "market_brier": 0.2493519822115298,
-      "mean_error": -0.6458982023809524,
-      "absolute_error": 3.7794314047619046,
+      "brier": 0.24474207568591497,
+      "log_loss": 0.6824590707361834,
+      "market_brier": 0.24850978152924003,
+      "mean_error": -0.5482245107526882,
+      "absolute_error": 3.5698248548387097,
       "hypothetical_selections": {
-        "settled": 9,
-        "wins": 5,
+        "settled": 11,
+        "wins": 7,
         "losses": 4,
-        "pnl_units": 0.07200000000000029,
-        "roi": 0.008000000000000031,
-        "stake_units": 9,
-        "pending": 5,
+        "pnl_units": 1.6320000000000003,
+        "roi": 0.1483636363636364,
+        "stake_units": 11,
+        "pending": 3,
         "overdue": 0,
-        "unavailable_contracts": 16,
+        "unavailable_contracts": 17,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     }
@@ -95,15 +95,16 @@
   "model_fingerprint": "934de9b700fe013c26d54fefa1c5ccfa82af2f0bd98748b242cda712d9ad3e0d",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 0,
-  "generated_at": "2026-10-16T23:53:53Z",
-  "new_contracts": 0,
+  "generated_at": "2026-10-17T12:16:03Z",
+  "new_contracts": 11,
   "scan_exclusions": {
-    "stale_price": 588
+    "stale_price": 700,
+    "outside_capture_window": 84
   },
-  "latest_archived_capture": "2026-10-16T23:53:33Z",
-  "latest_result_date": "2026-10-12",
-  "raw_upcoming_rows": 2338,
+  "latest_archived_capture": "2026-10-17T12:15:14Z",
+  "latest_result_date": "2026-10-16",
+  "raw_upcoming_rows": 2718,
   "status": "COLLECTING",
   "settlement_source": "exact_fixture_base_and_verified_snapshots",
-  "snapshot_settlement_contracts": 109
+  "snapshot_settlement_contracts": 123
 }

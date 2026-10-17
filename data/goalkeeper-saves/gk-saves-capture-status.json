@@ -1,43 +1,43 @@
 {
   "capture_errors": [],
-  "capture_mode": "close",
+  "capture_mode": "publication",
   "event_last_checked": {
-    "71945306": "2026-10-16T23:53:34Z",
-    "71945320": "2026-10-16T23:53:34Z",
-    "71945324": "2026-10-16T23:53:34Z",
-    "72036226": "2026-10-16T23:53:34Z",
-    "72036234": "2026-10-16T23:53:34Z",
-    "72036236": "2026-10-16T23:53:34Z",
-    "72221314": "2026-10-16T23:53:34Z",
-    "72221318": "2026-10-16T23:53:34Z",
-    "72221320": "2026-10-16T23:53:34Z",
-    "72221324": "2026-10-16T23:53:34Z",
-    "72221326": "2026-10-16T23:53:34Z",
-    "72478626": "2026-10-16T23:53:34Z",
-    "72478632": "2026-10-16T23:53:34Z",
-    "72478642": "2026-10-16T23:53:34Z",
-    "72478644": "2026-10-16T23:53:34Z",
-    "72513238": "2026-10-16T23:53:34Z",
-    "72513244": "2026-10-16T23:53:34Z",
-    "72513248": "2026-10-16T23:53:34Z",
-    "72513250": "2026-10-16T23:53:34Z",
-    "72513252": "2026-10-16T23:53:34Z",
-    "72513254": "2026-10-16T23:53:34Z"
+    "71945306": "2026-10-17T12:15:16Z",
+    "71945320": "2026-10-17T12:15:16Z",
+    "71945322": "2026-10-17T12:15:16Z",
+    "71945324": "2026-10-17T12:15:16Z",
+    "72036226": "2026-10-17T12:15:16Z",
+    "72036234": "2026-10-17T12:15:16Z",
+    "72036236": "2026-10-17T12:15:16Z",
+    "72221314": "2026-10-17T12:15:16Z",
+    "72221320": "2026-10-17T12:15:16Z",
+    "72221324": "2026-10-17T12:15:16Z",
+    "72221326": "2026-10-17T12:15:16Z",
+    "72478626": "2026-10-17T12:15:16Z",
+    "72478638": "2026-10-17T12:15:16Z",
+    "72478642": "2026-10-17T12:15:16Z",
+    "72478644": "2026-10-17T12:15:16Z",
+    "72513238": "2026-10-17T12:15:16Z",
+    "72513244": "2026-10-17T12:15:16Z",
+    "72513248": "2026-10-17T12:15:16Z",
+    "72513250": "2026-10-17T12:15:16Z",
+    "72513252": "2026-10-17T12:15:16Z",
+    "72513254": "2026-10-17T12:15:16Z"
   },
   "events_deferred_by_budget": 0,
   "events_selected": 21,
   "events_supported": 21,
   "events_with_lines": 21,
-  "generated_at": "2026-10-16T23:53:34Z",
-  "last_publication_at": "2026-10-16T13:19:09Z",
+  "generated_at": "2026-10-17T12:15:16Z",
+  "last_publication_at": "2026-10-17T12:15:16Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 6,
       "with_prices": 6
     },
     "epl": {
-      "selected": 5,
-      "with_prices": 5
+      "selected": 4,
+      "with_prices": 4
     },
     "la-liga": {
       "selected": 4,
@@ -48,11 +48,11 @@
       "with_prices": 3
     },
     "serie-a": {
-      "selected": 3,
-      "with_prices": 3
+      "selected": 4,
+      "with_prices": 4
     }
   },
-  "market_inventory_rows_added": 1736,
+  "market_inventory_rows_added": 1720,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Away Team Exact Goals",
@@ -147,23 +147,9 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 4,
-  "rows_added": 269,
-  "rows_observed": 269,
+  "rows_added": 278,
+  "rows_observed": 278,
   "selected_events": [
-    {
-      "away": "Chelsea FC",
-      "competition": "England - Premier League",
-      "home": "Everton FC",
-      "id": 72221318,
-      "kickoff_at": "2026-10-17T11:30:00Z"
-    },
-    {
-      "away": "Atletico Madrid",
-      "competition": "Spain - LaLiga",
-      "home": "Espanyol Barcelona",
-      "id": 72478632,
-      "kickoff_at": "2026-10-17T12:00:00Z"
-    },
     {
       "away": "SSC Napoli",
       "competition": "Italy - Serie A",
@@ -233,6 +219,20 @@
       "home": "Villarreal CF",
       "id": 72478644,
       "kickoff_at": "2026-10-17T14:15:00Z"
+    },
+    {
+      "away": "US Lecce",
+      "competition": "Italy - Serie A",
+      "home": "Udinese Calcio",
+      "id": 71945322,
+      "kickoff_at": "2026-10-18T10:30:00Z"
+    },
+    {
+      "away": "Racing Santander",
+      "competition": "Spain - LaLiga",
+      "home": "CA Osasuna",
+      "id": 72478638,
+      "kickoff_at": "2026-10-18T12:00:00Z"
     },
     {
       "away": "Paris Saint-Germain",

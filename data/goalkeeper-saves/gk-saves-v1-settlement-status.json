@@ -17,21 +17,38 @@
       "match_date": "2026-10-11",
       "reason": "fotmob_save_totals_disagree",
       "signal_id": "72513226|loris karius|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Mathew Ryan",
+      "match": "RC Deportivo de A Coruna vs Levante UD",
+      "match_date": "2026-10-16",
+      "reason": "settled_fotmob",
+      "signal_id": "72478630|mathew ryan|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Arijanet Muri\u0107",
+      "match": "Frosinone Calcio vs Sassuolo Calcio",
+      "match_date": "2026-10-16",
+      "reason": "settled_fotmob",
+      "signal_id": "71945310|arijanet muri\u0107|3.5|over"
     }
   ],
-  "fotmob_requests_used": 3,
-  "generated_at": "2026-10-16T13:20:08Z",
+  "fotmob_requests_used": 6,
+  "generated_at": "2026-10-17T12:16:09Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 2,
   "pending_total": 10,
   "reason_counts": {
     "fotmob_matched_player_not_goalkeeper": 1,
-    "fotmob_save_totals_disagree": 1
+    "fotmob_save_totals_disagree": 1,
+    "settled_fotmob": 2
   },
   "requests_used": 0,
-  "settled": 0,
-  "status": "BLOCKED",
+  "settled": 2,
+  "status": "PARTIAL",
   "verified_player_targets": [
     {
       "appearances": 32,
@@ -43,6 +60,18 @@
       "match_id": 5881182,
       "reason": "explicit player totals disagree with reconciled events",
       "status": "rejected"
+    },
+    {
+      "appearances": 31,
+      "match_id": 5868093,
+      "status": "saved",
+      "targets_sha256": "b92bbc3103249a05e225446695260958b51dc94278f332ce7df9694822c03456"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5749704,
+      "status": "saved",
+      "targets_sha256": "3b88c6ee69284cdcee5e28687ad1a7cf05727465df83260a287fd5d5dd68ec92"
     }
   ]
 }
