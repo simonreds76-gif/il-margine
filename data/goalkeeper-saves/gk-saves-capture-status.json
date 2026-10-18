@@ -1,33 +1,32 @@
 {
   "capture_errors": [],
-  "capture_mode": "close",
+  "capture_mode": "publication",
   "event_last_checked": {
-    "71945308": "2026-10-17T23:27:35Z",
-    "71945312": "2026-10-17T23:27:35Z",
-    "71945314": "2026-10-17T23:27:35Z",
-    "71945322": "2026-10-17T23:27:35Z",
-    "72036220": "2026-10-17T23:27:35Z",
-    "72036222": "2026-10-17T23:27:35Z",
-    "72036228": "2026-10-17T23:27:35Z",
-    "72036230": "2026-10-17T23:27:35Z",
-    "72036232": "2026-10-17T23:27:35Z",
-    "72221312": "2026-10-17T23:27:35Z",
-    "72221316": "2026-10-17T23:27:35Z",
-    "72221322": "2026-10-17T23:27:35Z",
-    "72221328": "2026-10-17T23:27:35Z",
-    "72478628": "2026-10-17T23:27:35Z",
-    "72478636": "2026-10-17T23:27:35Z",
-    "72478638": "2026-10-17T23:27:35Z",
-    "72478640": "2026-10-17T23:27:35Z",
-    "72513240": "2026-10-17T23:27:35Z",
-    "72513246": "2026-10-17T23:27:35Z"
+    "71945308": "2026-10-18T11:17:35Z",
+    "71945312": "2026-10-18T11:17:35Z",
+    "71945314": "2026-10-18T11:17:35Z",
+    "72036220": "2026-10-18T11:17:35Z",
+    "72036222": "2026-10-18T11:17:35Z",
+    "72036228": "2026-10-18T11:17:35Z",
+    "72036230": "2026-10-18T11:17:35Z",
+    "72036232": "2026-10-18T11:17:35Z",
+    "72221312": "2026-10-18T11:17:35Z",
+    "72221316": "2026-10-18T11:17:35Z",
+    "72221322": "2026-10-18T11:17:35Z",
+    "72221328": "2026-10-18T11:17:35Z",
+    "72478628": "2026-10-18T11:17:35Z",
+    "72478636": "2026-10-18T11:17:35Z",
+    "72478638": "2026-10-18T11:17:35Z",
+    "72478640": "2026-10-18T11:17:35Z",
+    "72513240": "2026-10-18T11:17:35Z",
+    "72513246": "2026-10-18T11:17:35Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 19,
-  "events_supported": 19,
-  "events_with_lines": 19,
-  "generated_at": "2026-10-17T23:27:35Z",
-  "last_publication_at": "2026-10-17T12:15:16Z",
+  "events_selected": 18,
+  "events_supported": 18,
+  "events_with_lines": 18,
+  "generated_at": "2026-10-18T11:17:35Z",
+  "last_publication_at": "2026-10-18T11:17:35Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 2,
@@ -46,11 +45,11 @@
       "with_prices": 5
     },
     "serie-a": {
-      "selected": 4,
-      "with_prices": 4
+      "selected": 3,
+      "with_prices": 3
     }
   },
-  "market_inventory_rows_added": 1585,
+  "market_inventory_rows_added": 1502,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Away Team Exact Goals",
@@ -145,16 +144,9 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 3,
-  "rows_added": 208,
-  "rows_observed": 208,
+  "rows_added": 191,
+  "rows_observed": 191,
   "selected_events": [
-    {
-      "away": "US Lecce",
-      "competition": "Italy - Serie A",
-      "home": "Udinese Calcio",
-      "id": 71945322,
-      "kickoff_at": "2026-10-18T10:30:00Z"
-    },
     {
       "away": "Racing Santander",
       "competition": "Spain - LaLiga",
@@ -283,5 +275,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 19
+  "three_way_events": 18
 }
