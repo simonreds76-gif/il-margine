@@ -58,7 +58,16 @@ def normalize_person(value: Any) -> str:
 def person_match_score(left: Any, right: Any) -> int:
     a, b = normalize_person(left), normalize_person(right)
     # Verified full name: https://rccelta.es/jugadores/andrei-radu/
-    aliases = {"andrei radu": "ionut andrei radu", "ionut radu": "ionut andrei radu"}
+    aliases = {
+        "andrei radu": "ionut andrei radu", "ionut radu": "ionut andrei radu",
+        # Opta full name: https://theanalyst.com/players/10763/yvon-mvogo
+        "landry mvogo": "yvon landry mvogo", "yvon mvogo": "yvon landry mvogo",
+        # https://www.realsociedad.eus/en/news/details/agreement-with-alejandro-remiro
+        "alex remiro": "alejandro remiro",
+        # Official league profile uses both transliterations in URL/title.
+        # https://www.laliga.com/en-GB/player/odisseas-vlachodimos
+        "odisseas vlachodimos": "odysseas vlachodimos",
+    }
     a, b = aliases.get(a, a), aliases.get(b, b)
     if not a or not b:
         return 0
