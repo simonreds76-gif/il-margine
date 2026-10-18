@@ -11,7 +11,7 @@ import os
 import requests
 from aerial_data import ROOT, read, save, utc, number
 
-VERSION = 'air-control-watch-v1'
+VERSION = 'air-control-watch-v2-headed-markets'
 POLICY = dict(player_matches=5, player_minutes=450, aerial_attempts=20,
               headers_per90=0.60, height_gap_cm=3, duel_gap_pp=10,
               player_duel_pct=55, corners=4, crosses=15,
@@ -131,14 +131,21 @@ def evaluate(payload, history, now):
                     exclusions['no_supported_mismatch'] += 1; continue
                 conceded = defence['headed_shots_against']
                 concession_flag = fresh(defence['latest'], now, POLICY['max_team_age_days']) and conceded['matches'] >= 3 and conceded['average'] >= 3
+                markets = []
+                if stat['headed_sot']['matches'] >= 5 and stat['headed_sot']['hit_matches'] >= 2:
+                    markets.append('1+ headed shot on target')
+                if stat['headed_goals']['matches'] >= 5 and stat['headed_goals']['count'] >= 2:
+                    markets.append('headed goal')
+                if not markets:
+                    exclusions['no_supported_bettable_headed_market'] += 1
+                    continue
                 candidates.append(dict(player_id=player['id'], player=player['name'], team_id=team['id'], team=team['name'],
                     height_cm=player['height_cm'], defence_height_cm=defence_height, height_gap_cm=height_gap,
                     defence_duel_pct=defence_duel_pct, duel_gap_pp=duel_gap,
                     height_flag=height_flag, duel_flag=duel_flag, concession_flag=concession_flag,
                     supporting_factors=2+int(height_flag)+int(duel_flag)+int(concession_flag),
                     history=stat, delivery=supply, opposition=defence,
-                    markets_to_check=['1+ headed shot'] + (['1+ headed shot on target'] if stat['headed_sot']['matches'] >= 5 and stat['headed_sot']['hit_matches'] >= 2 else [])
-                        + (['headed goal'] if stat['headed_goals']['matches'] >= 5 and stat['headed_goals']['count'] >= 2 else []),
+                    markets_to_check=markets,
                     fair_odds=None, available_odds=None, ev=None))
         candidates.sort(key=lambda c: (-c['supporting_factors'], -c['history']['headers_per90'], -c['history']['minutes'], c['player_id']))
         if candidates:
