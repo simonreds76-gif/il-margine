@@ -18,6 +18,7 @@ def eligible(record, state, now):
             and record['key'] not in state.get('outcomes',{})
             and record['model_sha256']==report['model_sha256']
             and VARIANT in report.get('stats',{})
+            and any(r.get('key')==record['key'] and r.get('lineup')=='confirmed' for r in report.get('board',[]))
             and record['quote'].get('bookmaker')=='Bet365'
             and report.get('status')=='CAPTURING'
             and timedelta(0)<=now-utc(report['generated_at'])<=timedelta(hours=3)
@@ -63,7 +64,7 @@ def run(root, now=None, transmit=False, sender=send, reader=fetch, writer=update
     token=os.environ.get('OPS_ALERT_TELEGRAM_BOT_TOKEN','').strip()
     chat=os.environ.get('OPS_ALERT_TELEGRAM_CHAT_ID','').strip()
     if not token or not chat:return {**result,'status':'credentials_missing'}
-    for record in records[:12]:
+    for record in records:
         key=record['key'];prepared={}
         def claim(current):
             r=current.get('forecasts',{}).get(key,{})

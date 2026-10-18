@@ -19,6 +19,7 @@ def fixture():
     state={'version':'skyline-v1','forecasts':{r['key']:r},'outcomes':{},
         'report':{'status':'CAPTURING','generated_at':NOW.isoformat(),'model_sha256':'frozen'}}
     state['report']['stats']={'baseline':summarize([r],{},'baseline',NOW)}
+    state['report']['board']=[{'key':r['key'],'lineup':'confirmed'}]
     return r,state
 
 class Alerts(unittest.TestCase):
@@ -52,6 +53,7 @@ class Alerts(unittest.TestCase):
             self.assertFalse(eligible(r,{**s,'alerts':{r['key']:{'status':status}}},NOW))
         self.assertFalse(eligible(r,{**s,'outcomes':{r['key']:{'status':'review'}}},NOW))
         self.assertFalse(eligible(r,{**s,'report':{**s['report'],'status':'FAILED'}},NOW))
+        self.assertFalse(eligible(r,{**s,'report':{**s['report'],'board':[]}},NOW))
 
     def run_state(self,state,sender):
         def writer(root,fn):
