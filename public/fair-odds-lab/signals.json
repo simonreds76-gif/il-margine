@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-18T13:05:49.492440Z",
+  "generated_at": "2026-10-18T13:24:18.048019Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -35,11 +35,10 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 16,
-  "signals_qualifying": 0,
+  "fixtures_evaluated": 15,
+  "signals_qualifying": 1,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 19,
-    "market_odds_above_cap": 1
+    "incomplete_prediction_roster": 17
   },
   "extreme_gap_quarantine": {
     "eligible_rows": 0,
@@ -47,7 +46,97 @@
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [],
-  "featured_signal_id": null,
-  "signals": []
+  "leagues_covered": [
+    "la-liga"
+  ],
+  "featured_signal_id": "20261018-antonio-martinez-e2d5f36b74",
+  "signals": [
+    {
+      "id": "20261018-antonio-martinez-e2d5f36b74",
+      "match": {
+        "home_team": "RC Celta de Vigo",
+        "away_team": "Deportivo Alaves",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-10-18",
+        "fotmob_match_id": "",
+        "fotmob_page_url": "",
+        "lineup_type": "",
+        "venue": ""
+      },
+      "player": {
+        "name": "Antonio Martinez",
+        "team": "Alaves",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/la-liga/alaves.png",
+        "team_primary_color": "#2563eb",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 36.9,
+        "fair_odds": 2.71
+      },
+      "market_data": {
+        "best_odds": 3.6,
+        "best_book": "Bet365",
+        "implied_chance_pct": 27.8
+      },
+      "edge": {
+        "price_gap_pp": 9.1,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 97
+        },
+        "share_of_team_chances_pct": 34,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 26
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-10-10",
+          "xg_for_avg": 1.25,
+          "xg_against_avg": 1.47,
+          "xgd_per90": -0.22,
+          "shots_for_avg": 10.6,
+          "shots_against_avg": 14.8,
+          "sot_for_avg": 4.2,
+          "sot_against_avg": 5.0,
+          "corners_for_avg": 2.6,
+          "corners_against_avg": 5.0
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 44
+        },
+        "opponent_recent_defence": {
+          "tier": "Unknown"
+        },
+        "fixture_boost_pct": -2,
+        "projected_minutes": 85,
+        "penalty_role": "Secondary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    }
+  ]
 }
