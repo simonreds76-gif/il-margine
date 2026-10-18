@@ -1625,7 +1625,9 @@ def read_existing_snapshot(path: Path) -> dict[str, Any] | None:
 
 def write_snapshot(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    # Skyline details stay in the private upload, never the Git artifact.
+    public_payload = {k:v for k,v in payload.items() if k != "skyline"}
+    path.write_text(json.dumps(public_payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def upload_snapshot(snapshot_key: str, payload: dict[str, Any]) -> None:
