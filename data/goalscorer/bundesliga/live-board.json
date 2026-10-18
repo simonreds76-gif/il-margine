@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-17T22:17:11Z",
+  "generated_at": "2026-10-18T11:47:41Z",
   "league": "bundesliga",
   "row_count": 84,
   "stats": {
     "historical_rows": 26716,
     "odds_rows": 91,
     "matched_rows": 84,
-    "missing_player_history": 28,
+    "missing_player_history": 13,
     "missing_team_mapping": 0,
     "fallback_rows": 3,
     "qualified_rows": 10,
-    "roster_resolved_rows": 45,
+    "roster_resolved_rows": 11,
     "high_confidence_rows": 0,
     "medium_confidence_rows": 29,
     "low_confidence_rows": 55,
@@ -21,9 +21,9 @@
     "penalty_transfer_rows": 2,
     "position_upgrade_rows": 0,
     "role_adjusted_rows": 0,
-    "fixtures_with_confirmed_lineups": 6,
+    "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 4,
-    "fixtures_clean": 6,
+    "fixtures_clean": 0,
     "fixtures_degraded": 4,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
@@ -32,1285 +32,9 @@
     "expected_bench_rows": 0,
     "expected_out_rows": 0,
     "not_in_squad_rows": 46,
-    "avg_ev": -0.677436642857143
+    "avg_ev": -0.6756517023809525
   },
   "fixtures": [
-    {
-      "match_date": "2026-10-17",
-      "home_team": "Bayern München",
-      "away_team": "RB Leipzig",
-      "league": "bundesliga",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Jonas Urbig",
-          "status": "plausible",
-          "known_team_keys": [
-            "bayern munich"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Konrad Laimer",
-          "status": "plausible",
-          "known_team_keys": [
-            "bayern munich"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Dayot Upamecano",
-          "status": "plausible",
-          "known_team_keys": [
-            "bayern munich"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Min-Jae Kim",
-          "status": "plausible",
-          "known_team_keys": [
-            "bayern munich"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Nathaniel Brown",
-          "status": "plausible",
-          "known_team_keys": [
-            "bayern munich"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Joshua Kimmich",
-          "status": "plausible",
-          "known_team_keys": [
-            "bayern munich"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Aleksandar Pavlović",
-          "status": "plausible",
-          "known_team_keys": [
-            "bayern munich"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Michael Olise",
-          "status": "plausible",
-          "known_team_keys": [
-            "bayern munich"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ismael Saibari",
-          "status": "plausible",
-          "known_team_keys": [
-            "bayern munich"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Luis Díaz",
-          "status": "plausible",
-          "known_team_keys": [
-            "bayern munich"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Harry Kane",
-          "status": "plausible",
-          "known_team_keys": [
-            "bayern munich"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Maarten Vandevoordt",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lukas Klostermann",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Willi Orbán",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Castello Lukeba",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "David Raum",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Brajan Gruda",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Rocco Reitz",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Neil El Aynaoui",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ezechiel Banzuzi",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Antonio Nusa",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Christopher Nkunku",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    },
-    {
-      "match_date": "2026-10-17",
-      "home_team": "Elversberg",
-      "away_team": "Augsburg",
-      "league": "bundesliga",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Nicolas Kristof",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jan Gyamerah",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lukas Pinckert",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Maximilian Rohr",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lasse Günther",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Felix Keidel",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Łukasz Poręba",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lukas Petkov",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Noah Darvich",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Maurice Krattenmacher",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "David Mokwa",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Finn Dahmen",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Juma Bah",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Chrislain Matsima",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Calvin Brackelmann",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Marius Wolf",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Han-Noah Massengo",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Fabian Rieder",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Hennes Behrens",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Robin Fellhauer",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Arijon Ibrahimović",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Rodrigo Ribeiro",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    },
-    {
-      "match_date": "2026-10-17",
-      "home_team": "Hamburger SV",
-      "away_team": "VfB Stuttgart",
-      "league": "bundesliga",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Daniel Heuer Fernandes",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Nicolás Capaldo",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Sebastiaan Bornauw",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Warmed Omari",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "David Møller Wolfe",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Martin Adeline",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Bilal Nadir",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Miro Muheim",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Louis Lemke",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Fábio Vieira",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Yussuf Poulsen",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Dennis Seimen",
-          "status": "plausible",
-          "known_team_keys": [
-            "vfb stuttgart"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Josha Vagnoman",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Finn Jeltsch",
-          "status": "plausible",
-          "known_team_keys": [
-            "vfb stuttgart"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jeff Chabot",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ramon Hendriks",
-          "status": "plausible",
-          "known_team_keys": [
-            "vfb stuttgart"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Atakan Karazor",
-          "status": "plausible",
-          "known_team_keys": [
-            "vfb stuttgart"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Angelo Stiller",
-          "status": "plausible",
-          "known_team_keys": [
-            "vfb stuttgart"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Bilal El Khannouss",
-          "status": "plausible",
-          "known_team_keys": [
-            "vfb stuttgart"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Deniz Undav",
-          "status": "plausible",
-          "known_team_keys": [
-            "vfb stuttgart"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jamie Leweling",
-          "status": "plausible",
-          "known_team_keys": [
-            "vfb stuttgart"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ermedin Demirović",
-          "status": "plausible",
-          "known_team_keys": [
-            "vfb stuttgart"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    },
-    {
-      "match_date": "2026-10-17",
-      "home_team": "Schalke 04",
-      "away_team": "Mainz 05",
-      "league": "bundesliga",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Loris Karius",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Timo Becker",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Nikola Katić",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Hasan Kuruçay",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Adrian Gantenbein",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Soufian El-Faouzi",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Satoshi Tanaka",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Robin Gosens",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Kenan Karaman",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Adil Aouchiche",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Edin Džeko",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Alexander Schwolow",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Danny da Costa",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Stefan Posch",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Kacper Potulski",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Anthony Caci",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Nadiem Amiri",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Kaishu Sano",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jae-Sung Lee",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Phillipp Mwene",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Sheraldo Becker",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Phillip Tietz",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    },
-    {
-      "match_date": "2026-10-17",
-      "home_team": "Union Berlin",
-      "away_team": "Borussia Dortmund",
-      "league": "bundesliga",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Frederik Rønnow",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Janik Haberer",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Zeno Van Den Bosch",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Felix Uduokhai",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tom Rothe",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Michel Aebischer",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "András Schäfer",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Rani Khedira",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Kastriot Imeri",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Woo-Yeong Jeong",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tim Skarke",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Gregor Kobel",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Joane Gadou",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Waldemar Anton",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Nico Schlotterbeck",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Julian Ryerson",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jobe Bellingham",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Felix Nmecha",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Daniel Svensson",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ethan Nwaneri",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Maximilian Beier",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Serhou Guirassy",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    },
-    {
-      "match_date": "2026-10-17",
-      "home_team": "Werder Bremen",
-      "away_team": "Paderborn",
-      "league": "bundesliga",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Karl Hein",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Amos Pieper",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Marco Friedl",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Olivier Deman",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Arthur",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ludovit Reis",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Youri Regeer",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Marco Grüll",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Eren Dinkçi",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Chuki",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Niclas Füllkrug",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Nahuel Noll",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jano ter Horst",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tjark Scheller",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Mattes Hansen",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Laurin Curda",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Santiago Castañeda",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Raphael Obermair",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Laurin Ulrich",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Gabriel Vidović",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Steffen Tigges",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Stefano Marino",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    },
     {
       "match_date": "2026-10-18",
       "home_team": "Bayer Leverkusen",
@@ -2162,8 +886,8 @@
   ],
   "rows": [
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2264,110 +988,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
-      "match_date": "2026-10-18",
-      "kickoff": "",
-      "bookmaker": "Bet365",
-      "competition": "Germany - Bundesliga",
-      "home_team": "Bayer Leverkusen",
-      "away_team": "SC Freiburg",
-      "is_home": 1,
-      "player_id": "10187",
-      "player_name": "Jarell Quansah",
-      "canonical_player_name": "Jarell Quansah",
-      "player_team": "Bayer Leverkusen",
-      "opponent": "SC Freiburg",
-      "position": "DR",
-      "position_group": "DR",
-      "odds_decimal": 7.5,
-      "implied_prob": 0.133333,
-      "model_version": "goalscorer_v1_incomplete_roster",
-      "calibration_version": "raw",
-      "allocation_status": "expected_roster",
-      "roster_prior_players": 0,
-      "model_p_atgs": 0.22939,
-      "model_fair_odds_atgs": 4.3594,
-      "model_lambda": 0.2606,
-      "team_expected_npxg": 2.3065,
-      "team_share": 0.113,
-      "non_pen_lambda": 0.2606,
-      "base_non_pen_lambda": 0.2606,
-      "penalty_lambda": 0.0,
-      "base_model_lambda": 0.2606,
-      "role_adjustment_factor": 1.0,
-      "role_adjustment_reason": "",
-      "penalty_dependency_share": 0.0,
-      "penalty_dependent": 0,
-      "penalty_share": 0.0,
-      "baseline_penalty_share": 0.0,
-      "baseline_penalty_sample": 1.94,
-      "baseline_penalty_source": "recent_long",
-      "career_player_penalties": 0.0,
-      "career_team_penalties": 5.0,
-      "career_penalty_share": 0.0,
-      "penalty_evidence_share": 0.0,
-      "penalty_evidence_sample": 0.0,
-      "penalty_evidence_source": "",
-      "penalty_evidence_note": "",
-      "is_penalty_taker": 0,
-      "penalty_role": "none",
-      "penalty_share_prior": 0.0,
-      "penalty_share_prior_weight": 0.0,
-      "penalty_hierarchy_boost_xg": 0.0,
-      "penalty_transfer": 0,
-      "penalty_transfer_from": "",
-      "penalty_transfer_level": "",
-      "lineup_state": "expected_starter",
-      "lineup_status": "expected_starter",
-      "lineup_source": "fotmob_expected",
-      "lineup_input": "expected_xi",
-      "lineup_match_name": "Jarell Quansah",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": "",
-      "minutes_estimate": 82.5,
-      "usual_position": "DC",
-      "usual_position_score": 1,
-      "usual_position_share_10": 0.5556,
-      "usual_position_matches_10": 9,
-      "today_position_group": "DEF",
-      "today_position_score": 1,
-      "today_formation": "4-2-3-1",
-      "position_change_score": 0,
-      "position_upgrade": 0,
-      "expected_minutes": 82.5,
-      "recent_matches_8": 8,
-      "recent_npxg_8": 1.8146,
-      "recent_np_goals_8": 1.0,
-      "recent_npxg_per90_8": 0.256,
-      "finishing_luck_8": -0.8146,
-      "last_fixture_avg_xga_3": 1.7194,
-      "next_opponent_xga": 1.3995,
-      "fixture_swing_3": 0.814,
-      "attack_factor": 1.6735,
-      "opp_factor": 1.0547,
-      "ev": 0.720421,
-      "edge_pct": 72.043,
-      "method": "model",
-      "resolver_source": "history",
-      "historical_minutes": 2671.0,
-      "signal_confidence": "medium",
-      "legacy_public_action": "surface_with_caveat",
-      "public_action": "no_action",
-      "public_policy_reason": "incomplete_prediction_roster",
-      "recommended_stake_units": 0.0,
-      "recommended_stake_band": "",
-      "recommended_stake_label": "",
-      "shadow_action": "shadow_track",
-      "confidence_reason": "history_resolver,expected_xi,incomplete_prediction_roster,fixture_t2",
-      "team_lineup_status": "FotMob Expected XI",
-      "source": "odds_api_io",
-      "notes": "event_id=72513240;market=Anytime Goalscorer"
-    },
-    {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2382,8 +1004,8 @@
       "opponent": "Bayer Leverkusen",
       "position": "DC",
       "position_group": "DC",
-      "odds_decimal": 9.0,
-      "implied_prob": 0.111111,
+      "odds_decimal": 11.0,
+      "implied_prob": 0.090909,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "estimated_roster",
@@ -2449,8 +1071,8 @@
       "fixture_swing_3": 0.7513,
       "attack_factor": 1.2459,
       "opp_factor": 1.1407,
-      "ev": 0.591906,
-      "edge_pct": 59.191,
+      "ev": 0.945663,
+      "edge_pct": 94.567,
       "method": "model",
       "resolver_source": "history",
       "historical_minutes": 7773.0,
@@ -2468,8 +1090,110 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
+      "match_date": "2026-10-18",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "Germany - Bundesliga",
+      "home_team": "Bayer Leverkusen",
+      "away_team": "SC Freiburg",
+      "is_home": 1,
+      "player_id": "10187",
+      "player_name": "Jarell Quansah",
+      "canonical_player_name": "Jarell Quansah",
+      "player_team": "Bayer Leverkusen",
+      "opponent": "SC Freiburg",
+      "position": "DR",
+      "position_group": "DR",
+      "odds_decimal": 7.0,
+      "implied_prob": 0.142857,
+      "model_version": "goalscorer_v1_incomplete_roster",
+      "calibration_version": "raw",
+      "allocation_status": "expected_roster",
+      "roster_prior_players": 0,
+      "model_p_atgs": 0.22939,
+      "model_fair_odds_atgs": 4.3594,
+      "model_lambda": 0.2606,
+      "team_expected_npxg": 2.3065,
+      "team_share": 0.113,
+      "non_pen_lambda": 0.2606,
+      "base_non_pen_lambda": 0.2606,
+      "penalty_lambda": 0.0,
+      "base_model_lambda": 0.2606,
+      "role_adjustment_factor": 1.0,
+      "role_adjustment_reason": "",
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 1.94,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 5.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "expected_starter",
+      "lineup_status": "expected_starter",
+      "lineup_source": "fotmob_expected",
+      "lineup_input": "expected_xi",
+      "lineup_match_name": "Jarell Quansah",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 0.0,
+      "fixture_corruption_flags": "",
+      "minutes_estimate": 82.5,
+      "usual_position": "DC",
+      "usual_position_score": 1,
+      "usual_position_share_10": 0.5556,
+      "usual_position_matches_10": 9,
+      "today_position_group": "DEF",
+      "today_position_score": 1,
+      "today_formation": "4-2-3-1",
+      "position_change_score": 0,
+      "position_upgrade": 0,
+      "expected_minutes": 82.5,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 1.8146,
+      "recent_np_goals_8": 1.0,
+      "recent_npxg_per90_8": 0.256,
+      "finishing_luck_8": -0.8146,
+      "last_fixture_avg_xga_3": 1.7194,
+      "next_opponent_xga": 1.3995,
+      "fixture_swing_3": 0.814,
+      "attack_factor": 1.6735,
+      "opp_factor": 1.0547,
+      "ev": 0.605727,
+      "edge_pct": 60.573,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 2671.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "surface_with_caveat",
+      "public_action": "no_action",
+      "public_policy_reason": "incomplete_prediction_roster",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "shadow_track",
+      "confidence_reason": "history_resolver,expected_xi,incomplete_prediction_roster,fixture_t2",
+      "team_lineup_status": "FotMob Expected XI",
+      "source": "odds_api_io",
+      "notes": "event_id=72513240;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2570,8 +1294,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2672,8 +1396,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2774,8 +1498,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2876,110 +1600,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
-      "match_date": "2026-10-18",
-      "kickoff": "",
-      "bookmaker": "Bet365",
-      "competition": "Germany - Bundesliga",
-      "home_team": "Bayer Leverkusen",
-      "away_team": "SC Freiburg",
-      "is_home": 1,
-      "player_id": "1236",
-      "player_name": "Patrik Schick",
-      "canonical_player_name": "Patrik Schick",
-      "player_team": "Bayer Leverkusen",
-      "opponent": "SC Freiburg",
-      "position": "FW",
-      "position_group": "FW",
-      "odds_decimal": 1.833,
-      "implied_prob": 0.545554,
-      "model_version": "goalscorer_v1_incomplete_roster",
-      "calibration_version": "raw",
-      "allocation_status": "expected_roster",
-      "roster_prior_players": 0,
-      "model_p_atgs": 0.606051,
-      "model_fair_odds_atgs": 1.65,
-      "model_lambda": 0.9315,
-      "team_expected_npxg": 2.3065,
-      "team_share": 0.3633,
-      "non_pen_lambda": 0.838,
-      "base_non_pen_lambda": 0.838,
-      "penalty_lambda": 0.0935,
-      "base_model_lambda": 0.9315,
-      "role_adjustment_factor": 1.0,
-      "role_adjustment_reason": "",
-      "penalty_dependency_share": 0.1004,
-      "penalty_dependent": 0,
-      "penalty_share": 0.7575,
-      "baseline_penalty_share": 0.7951,
-      "baseline_penalty_sample": 2.79,
-      "baseline_penalty_source": "recent_long",
-      "career_player_penalties": 7.0,
-      "career_team_penalties": 16.0,
-      "career_penalty_share": 0.4375,
-      "penalty_evidence_share": 0.0,
-      "penalty_evidence_sample": 0.0,
-      "penalty_evidence_source": "",
-      "penalty_evidence_note": "",
-      "is_penalty_taker": 1,
-      "penalty_role": "primary",
-      "penalty_share_prior": 0.74,
-      "penalty_share_prior_weight": 6.0,
-      "penalty_hierarchy_boost_xg": 0.0297,
-      "penalty_transfer": 0,
-      "penalty_transfer_from": "",
-      "penalty_transfer_level": "",
-      "lineup_state": "expected_starter",
-      "lineup_status": "expected_starter",
-      "lineup_source": "fotmob_expected",
-      "lineup_input": "expected_xi",
-      "lineup_match_name": "Patrik Schick",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": "",
-      "minutes_estimate": 78.0,
-      "usual_position": "FW",
-      "usual_position_score": 5,
-      "usual_position_share_10": 0.8889,
-      "usual_position_matches_10": 9,
-      "today_position_group": "FW",
-      "today_position_score": 5,
-      "today_formation": "4-2-3-1",
-      "position_change_score": 0,
-      "position_upgrade": 0,
-      "expected_minutes": 78.0,
-      "recent_matches_8": 8,
-      "recent_npxg_8": 7.5529,
-      "recent_np_goals_8": 8.0,
-      "recent_npxg_per90_8": 1.0964,
-      "finishing_luck_8": 0.4471,
-      "last_fixture_avg_xga_3": 1.7194,
-      "next_opponent_xga": 1.3995,
-      "fixture_swing_3": 0.814,
-      "attack_factor": 1.6735,
-      "opp_factor": 1.0547,
-      "ev": 0.110892,
-      "edge_pct": 11.089,
-      "method": "model",
-      "resolver_source": "history",
-      "historical_minutes": 5092.0,
-      "signal_confidence": "medium",
-      "legacy_public_action": "surface_with_caveat",
-      "public_action": "no_action",
-      "public_policy_reason": "incomplete_prediction_roster",
-      "recommended_stake_units": 0.0,
-      "recommended_stake_band": "",
-      "recommended_stake_label": "",
-      "shadow_action": "shadow_track",
-      "confidence_reason": "history_resolver,expected_xi,incomplete_prediction_roster,fixture_t2",
-      "team_lineup_status": "FotMob Expected XI",
-      "source": "odds_api_io",
-      "notes": "event_id=72513240;market=Anytime Goalscorer"
-    },
-    {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3080,8 +1702,110 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
+      "match_date": "2026-10-18",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "Germany - Bundesliga",
+      "home_team": "Bayer Leverkusen",
+      "away_team": "SC Freiburg",
+      "is_home": 1,
+      "player_id": "1236",
+      "player_name": "Patrik Schick",
+      "canonical_player_name": "Patrik Schick",
+      "player_team": "Bayer Leverkusen",
+      "opponent": "SC Freiburg",
+      "position": "FW",
+      "position_group": "FW",
+      "odds_decimal": 1.8,
+      "implied_prob": 0.555556,
+      "model_version": "goalscorer_v1_incomplete_roster",
+      "calibration_version": "raw",
+      "allocation_status": "expected_roster",
+      "roster_prior_players": 0,
+      "model_p_atgs": 0.606051,
+      "model_fair_odds_atgs": 1.65,
+      "model_lambda": 0.9315,
+      "team_expected_npxg": 2.3065,
+      "team_share": 0.3633,
+      "non_pen_lambda": 0.838,
+      "base_non_pen_lambda": 0.838,
+      "penalty_lambda": 0.0935,
+      "base_model_lambda": 0.9315,
+      "role_adjustment_factor": 1.0,
+      "role_adjustment_reason": "",
+      "penalty_dependency_share": 0.1004,
+      "penalty_dependent": 0,
+      "penalty_share": 0.7575,
+      "baseline_penalty_share": 0.7951,
+      "baseline_penalty_sample": 2.79,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 7.0,
+      "career_team_penalties": 16.0,
+      "career_penalty_share": 0.4375,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 1,
+      "penalty_role": "primary",
+      "penalty_share_prior": 0.74,
+      "penalty_share_prior_weight": 6.0,
+      "penalty_hierarchy_boost_xg": 0.0297,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "expected_starter",
+      "lineup_status": "expected_starter",
+      "lineup_source": "fotmob_expected",
+      "lineup_input": "expected_xi",
+      "lineup_match_name": "Patrik Schick",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 0.0,
+      "fixture_corruption_flags": "",
+      "minutes_estimate": 78.0,
+      "usual_position": "FW",
+      "usual_position_score": 5,
+      "usual_position_share_10": 0.8889,
+      "usual_position_matches_10": 9,
+      "today_position_group": "FW",
+      "today_position_score": 5,
+      "today_formation": "4-2-3-1",
+      "position_change_score": 0,
+      "position_upgrade": 0,
+      "expected_minutes": 78.0,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 7.5529,
+      "recent_np_goals_8": 8.0,
+      "recent_npxg_per90_8": 1.0964,
+      "finishing_luck_8": 0.4471,
+      "last_fixture_avg_xga_3": 1.7194,
+      "next_opponent_xga": 1.3995,
+      "fixture_swing_3": 0.814,
+      "attack_factor": 1.6735,
+      "opp_factor": 1.0547,
+      "ev": 0.090892,
+      "edge_pct": 9.089,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 5092.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "surface_with_caveat",
+      "public_action": "no_action",
+      "public_policy_reason": "incomplete_prediction_roster",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "shadow_track",
+      "confidence_reason": "history_resolver,expected_xi,incomplete_prediction_roster,fixture_t2",
+      "team_lineup_status": "FotMob Expected XI",
+      "source": "odds_api_io",
+      "notes": "event_id=72513240;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3182,8 +1906,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3284,8 +2008,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3386,110 +2110,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
-      "match_date": "2026-10-18",
-      "kickoff": "",
-      "bookmaker": "Bet365",
-      "competition": "Germany - Bundesliga",
-      "home_team": "Bayer Leverkusen",
-      "away_team": "SC Freiburg",
-      "is_home": 1,
-      "player_id": "8317",
-      "player_name": "Edmond Tapsoba",
-      "canonical_player_name": "Edmond Tapsoba",
-      "player_team": "Bayer Leverkusen",
-      "opponent": "SC Freiburg",
-      "position": "DC",
-      "position_group": "DC",
-      "odds_decimal": 6.5,
-      "implied_prob": 0.153846,
-      "model_version": "goalscorer_v1_incomplete_roster",
-      "calibration_version": "raw",
-      "allocation_status": "expected_roster",
-      "roster_prior_players": 0,
-      "model_p_atgs": 0.116516,
-      "model_fair_odds_atgs": 8.5825,
-      "model_lambda": 0.1239,
-      "team_expected_npxg": 2.3065,
-      "team_share": 0.0537,
-      "non_pen_lambda": 0.1239,
-      "base_non_pen_lambda": 0.1239,
-      "penalty_lambda": 0.0,
-      "base_model_lambda": 0.1239,
-      "role_adjustment_factor": 1.0,
-      "role_adjustment_reason": "",
-      "penalty_dependency_share": 0.0,
-      "penalty_dependent": 0,
-      "penalty_share": 0.0,
-      "baseline_penalty_share": 0.0,
-      "baseline_penalty_sample": 2.95,
-      "baseline_penalty_source": "recent_long",
-      "career_player_penalties": 0.0,
-      "career_team_penalties": 20.0,
-      "career_penalty_share": 0.0,
-      "penalty_evidence_share": 0.0,
-      "penalty_evidence_sample": 0.0,
-      "penalty_evidence_source": "",
-      "penalty_evidence_note": "",
-      "is_penalty_taker": 0,
-      "penalty_role": "none",
-      "penalty_share_prior": 0.0,
-      "penalty_share_prior_weight": 0.0,
-      "penalty_hierarchy_boost_xg": 0.0,
-      "penalty_transfer": 0,
-      "penalty_transfer_from": "",
-      "penalty_transfer_level": "",
-      "lineup_state": "expected_starter",
-      "lineup_status": "expected_starter",
-      "lineup_source": "fotmob_expected",
-      "lineup_input": "expected_xi",
-      "lineup_match_name": "Edmond Tapsoba",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": "",
-      "minutes_estimate": 90.0,
-      "usual_position": "DC",
-      "usual_position_score": 1,
-      "usual_position_share_10": 1.0,
-      "usual_position_matches_10": 10,
-      "today_position_group": "DEF",
-      "today_position_score": 1,
-      "today_formation": "4-2-3-1",
-      "position_change_score": 0,
-      "position_upgrade": 0,
-      "expected_minutes": 90.0,
-      "recent_matches_8": 8,
-      "recent_npxg_8": 0.5375,
-      "recent_np_goals_8": 0.0,
-      "recent_npxg_per90_8": 0.0672,
-      "finishing_luck_8": -0.5375,
-      "last_fixture_avg_xga_3": 1.7194,
-      "next_opponent_xga": 1.3995,
-      "fixture_swing_3": 0.814,
-      "attack_factor": 1.6735,
-      "opp_factor": 1.0547,
-      "ev": -0.242644,
-      "edge_pct": -24.264,
-      "method": "model",
-      "resolver_source": "history",
-      "historical_minutes": 7636.0,
-      "signal_confidence": "medium",
-      "legacy_public_action": "monitor",
-      "public_action": "no_action",
-      "public_policy_reason": "incomplete_prediction_roster",
-      "recommended_stake_units": 0.0,
-      "recommended_stake_band": "",
-      "recommended_stake_label": "",
-      "shadow_action": "no_action",
-      "confidence_reason": "history_resolver,expected_xi,incomplete_prediction_roster,fixture_t2",
-      "team_lineup_status": "FotMob Expected XI",
-      "source": "odds_api_io",
-      "notes": "event_id=72513240;market=Anytime Goalscorer"
-    },
-    {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3590,8 +2212,110 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
+      "match_date": "2026-10-18",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "Germany - Bundesliga",
+      "home_team": "Bayer Leverkusen",
+      "away_team": "SC Freiburg",
+      "is_home": 1,
+      "player_id": "8317",
+      "player_name": "Edmond Tapsoba",
+      "canonical_player_name": "Edmond Tapsoba",
+      "player_team": "Bayer Leverkusen",
+      "opponent": "SC Freiburg",
+      "position": "DC",
+      "position_group": "DC",
+      "odds_decimal": 6.0,
+      "implied_prob": 0.166667,
+      "model_version": "goalscorer_v1_incomplete_roster",
+      "calibration_version": "raw",
+      "allocation_status": "expected_roster",
+      "roster_prior_players": 0,
+      "model_p_atgs": 0.116516,
+      "model_fair_odds_atgs": 8.5825,
+      "model_lambda": 0.1239,
+      "team_expected_npxg": 2.3065,
+      "team_share": 0.0537,
+      "non_pen_lambda": 0.1239,
+      "base_non_pen_lambda": 0.1239,
+      "penalty_lambda": 0.0,
+      "base_model_lambda": 0.1239,
+      "role_adjustment_factor": 1.0,
+      "role_adjustment_reason": "",
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 2.95,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 20.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "expected_starter",
+      "lineup_status": "expected_starter",
+      "lineup_source": "fotmob_expected",
+      "lineup_input": "expected_xi",
+      "lineup_match_name": "Edmond Tapsoba",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 0.0,
+      "fixture_corruption_flags": "",
+      "minutes_estimate": 90.0,
+      "usual_position": "DC",
+      "usual_position_score": 1,
+      "usual_position_share_10": 1.0,
+      "usual_position_matches_10": 10,
+      "today_position_group": "DEF",
+      "today_position_score": 1,
+      "today_formation": "4-2-3-1",
+      "position_change_score": 0,
+      "position_upgrade": 0,
+      "expected_minutes": 90.0,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 0.5375,
+      "recent_np_goals_8": 0.0,
+      "recent_npxg_per90_8": 0.0672,
+      "finishing_luck_8": -0.5375,
+      "last_fixture_avg_xga_3": 1.7194,
+      "next_opponent_xga": 1.3995,
+      "fixture_swing_3": 0.814,
+      "attack_factor": 1.6735,
+      "opp_factor": 1.0547,
+      "ev": -0.300903,
+      "edge_pct": -30.09,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 7636.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "incomplete_prediction_roster",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,expected_xi,incomplete_prediction_roster,fixture_t2",
+      "team_lineup_status": "FotMob Expected XI",
+      "source": "odds_api_io",
+      "notes": "event_id=72513240;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3692,8 +2416,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3794,8 +2518,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3896,8 +2620,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3998,8 +2722,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4014,8 +2738,8 @@
       "opponent": "Bayer Leverkusen",
       "position": "Sub",
       "position_group": "Sub",
-      "odds_decimal": 3.75,
-      "implied_prob": 0.266667,
+      "odds_decimal": 4.0,
+      "implied_prob": 0.25,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "estimated_roster",
@@ -4081,8 +2805,8 @@
       "fixture_swing_3": 0.7827,
       "attack_factor": 1.2459,
       "opp_factor": 1.1407,
-      "ev": -0.404417,
-      "edge_pct": -40.442,
+      "ev": -0.364712,
+      "edge_pct": -36.471,
       "method": "model",
       "resolver_source": "history",
       "historical_minutes": 6291.0,
@@ -4100,110 +2824,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
-      "match_date": "2026-10-18",
-      "kickoff": "",
-      "bookmaker": "Bet365",
-      "competition": "Germany - Bundesliga",
-      "home_team": "Bayer Leverkusen",
-      "away_team": "SC Freiburg",
-      "is_home": 1,
-      "player_id": "14008",
-      "player_name": "Ezequiel Fernandez",
-      "canonical_player_name": "Ezequiel Fernandez",
-      "player_team": "Bayer Leverkusen",
-      "opponent": "SC Freiburg",
-      "position": "Sub",
-      "position_group": "Sub",
-      "odds_decimal": 6.5,
-      "implied_prob": 0.153846,
-      "model_version": "goalscorer_v1_incomplete_roster",
-      "calibration_version": "raw",
-      "allocation_status": "expected_roster",
-      "roster_prior_players": 0,
-      "model_p_atgs": 0.091279,
-      "model_fair_odds_atgs": 10.9554,
-      "model_lambda": 0.0957,
-      "team_expected_npxg": 2.3065,
-      "team_share": 0.0415,
-      "non_pen_lambda": 0.0957,
-      "base_non_pen_lambda": 0.0957,
-      "penalty_lambda": 0.0,
-      "base_model_lambda": 0.0957,
-      "role_adjustment_factor": 1.0,
-      "role_adjustment_reason": "",
-      "penalty_dependency_share": 0.0,
-      "penalty_dependent": 0,
-      "penalty_share": 0.0,
-      "baseline_penalty_share": 0.0,
-      "baseline_penalty_sample": 2.81,
-      "baseline_penalty_source": "recent_long",
-      "career_player_penalties": 0.0,
-      "career_team_penalties": 6.0,
-      "career_penalty_share": 0.0,
-      "penalty_evidence_share": 0.0,
-      "penalty_evidence_sample": 0.0,
-      "penalty_evidence_source": "",
-      "penalty_evidence_note": "",
-      "is_penalty_taker": 0,
-      "penalty_role": "none",
-      "penalty_share_prior": 0.0,
-      "penalty_share_prior_weight": 0.0,
-      "penalty_hierarchy_boost_xg": 0.0,
-      "penalty_transfer": 0,
-      "penalty_transfer_from": "",
-      "penalty_transfer_level": "",
-      "lineup_state": "expected_starter",
-      "lineup_status": "expected_starter",
-      "lineup_source": "fotmob_expected",
-      "lineup_input": "expected_xi",
-      "lineup_match_name": "Equi Fernández",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": "",
-      "minutes_estimate": 78.0,
-      "usual_position": "DMC",
-      "usual_position_score": 2,
-      "usual_position_share_10": 0.6667,
-      "usual_position_matches_10": 6,
-      "today_position_group": "DMC",
-      "today_position_score": 2,
-      "today_formation": "4-2-3-1",
-      "position_change_score": 0,
-      "position_upgrade": 0,
-      "expected_minutes": 78.0,
-      "recent_matches_8": 8,
-      "recent_npxg_8": 0.9543,
-      "recent_np_goals_8": 1.0,
-      "recent_npxg_per90_8": 0.2406,
-      "finishing_luck_8": 0.0457,
-      "last_fixture_avg_xga_3": 1.7194,
-      "next_opponent_xga": 1.3995,
-      "fixture_swing_3": 0.814,
-      "attack_factor": 1.6735,
-      "opp_factor": 1.0547,
-      "ev": -0.406687,
-      "edge_pct": -40.669,
-      "method": "model",
-      "resolver_source": "history",
-      "historical_minutes": 1295.0,
-      "signal_confidence": "medium",
-      "legacy_public_action": "monitor",
-      "public_action": "no_action",
-      "public_policy_reason": "incomplete_prediction_roster",
-      "recommended_stake_units": 0.0,
-      "recommended_stake_band": "",
-      "recommended_stake_label": "",
-      "shadow_action": "no_action",
-      "confidence_reason": "history_resolver,expected_xi,incomplete_prediction_roster,fixture_t2",
-      "team_lineup_status": "FotMob Expected XI",
-      "source": "odds_api_io",
-      "notes": "event_id=72513240;market=Anytime Goalscorer"
-    },
-    {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4304,8 +2926,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4406,8 +3028,212 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
+      "match_date": "2026-10-18",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "Germany - Bundesliga",
+      "home_team": "Bayer Leverkusen",
+      "away_team": "SC Freiburg",
+      "is_home": 1,
+      "player_id": "14008",
+      "player_name": "Ezequiel Fernandez",
+      "canonical_player_name": "Ezequiel Fernandez",
+      "player_team": "Bayer Leverkusen",
+      "opponent": "SC Freiburg",
+      "position": "Sub",
+      "position_group": "Sub",
+      "odds_decimal": 6.0,
+      "implied_prob": 0.166667,
+      "model_version": "goalscorer_v1_incomplete_roster",
+      "calibration_version": "raw",
+      "allocation_status": "expected_roster",
+      "roster_prior_players": 0,
+      "model_p_atgs": 0.091279,
+      "model_fair_odds_atgs": 10.9554,
+      "model_lambda": 0.0957,
+      "team_expected_npxg": 2.3065,
+      "team_share": 0.0415,
+      "non_pen_lambda": 0.0957,
+      "base_non_pen_lambda": 0.0957,
+      "penalty_lambda": 0.0,
+      "base_model_lambda": 0.0957,
+      "role_adjustment_factor": 1.0,
+      "role_adjustment_reason": "",
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 2.81,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 6.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "expected_starter",
+      "lineup_status": "expected_starter",
+      "lineup_source": "fotmob_expected",
+      "lineup_input": "expected_xi",
+      "lineup_match_name": "Equi Fernández",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 0.0,
+      "fixture_corruption_flags": "",
+      "minutes_estimate": 78.0,
+      "usual_position": "DMC",
+      "usual_position_score": 2,
+      "usual_position_share_10": 0.6667,
+      "usual_position_matches_10": 6,
+      "today_position_group": "DMC",
+      "today_position_score": 2,
+      "today_formation": "4-2-3-1",
+      "position_change_score": 0,
+      "position_upgrade": 0,
+      "expected_minutes": 78.0,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 0.9543,
+      "recent_np_goals_8": 1.0,
+      "recent_npxg_per90_8": 0.2406,
+      "finishing_luck_8": 0.0457,
+      "last_fixture_avg_xga_3": 1.7194,
+      "next_opponent_xga": 1.3995,
+      "fixture_swing_3": 0.814,
+      "attack_factor": 1.6735,
+      "opp_factor": 1.0547,
+      "ev": -0.452327,
+      "edge_pct": -45.233,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 1295.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "incomplete_prediction_roster",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,expected_xi,incomplete_prediction_roster,fixture_t2",
+      "team_lineup_status": "FotMob Expected XI",
+      "source": "odds_api_io",
+      "notes": "event_id=72513240;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
+      "match_date": "2026-10-18",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "Germany - Bundesliga",
+      "home_team": "Bayer Leverkusen",
+      "away_team": "SC Freiburg",
+      "is_home": 0,
+      "player_id": "11982",
+      "player_name": "Jan-Niklas Beste",
+      "canonical_player_name": "Jan-Niklas Beste",
+      "player_team": "Freiburg",
+      "opponent": "Bayer Leverkusen",
+      "position": "AMR",
+      "position_group": "AMR",
+      "odds_decimal": 4.75,
+      "implied_prob": 0.210526,
+      "model_version": "goalscorer_v1_incomplete_roster",
+      "calibration_version": "raw",
+      "allocation_status": "estimated_roster",
+      "roster_prior_players": 1,
+      "model_p_atgs": 0.11217,
+      "model_fair_odds_atgs": 8.9151,
+      "model_lambda": 0.119,
+      "team_expected_npxg": 1.5924,
+      "team_share": 0.0747,
+      "non_pen_lambda": 0.119,
+      "base_non_pen_lambda": 0.119,
+      "penalty_lambda": 0.0,
+      "base_model_lambda": 0.119,
+      "role_adjustment_factor": 1.0,
+      "role_adjustment_reason": "",
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 0.85,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 1.0,
+      "career_team_penalties": 8.0,
+      "career_penalty_share": 0.125,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "expected_starter",
+      "lineup_status": "expected_starter",
+      "lineup_source": "fotmob_expected",
+      "lineup_input": "expected_xi",
+      "lineup_match_name": "Jan-Niklas Beste",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 0.0,
+      "fixture_corruption_flags": "",
+      "minutes_estimate": 78.0,
+      "usual_position": "AMR",
+      "usual_position_score": 4,
+      "usual_position_share_10": 1.0,
+      "usual_position_matches_10": 8,
+      "today_position_group": "AM",
+      "today_position_score": 4,
+      "today_formation": "4-2-3-1",
+      "position_change_score": 0,
+      "position_upgrade": 0,
+      "expected_minutes": 78.0,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 0.7887,
+      "recent_np_goals_8": 1.0,
+      "recent_npxg_per90_8": 0.1256,
+      "finishing_luck_8": 0.2113,
+      "last_fixture_avg_xga_3": 2.0713,
+      "next_opponent_xga": 1.5561,
+      "fixture_swing_3": 0.7513,
+      "attack_factor": 1.2459,
+      "opp_factor": 1.1407,
+      "ev": -0.467195,
+      "edge_pct": -46.719,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 4898.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "incomplete_prediction_roster",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,expected_xi,incomplete_prediction_roster,fixture_t2",
+      "team_lineup_status": "FotMob Expected XI",
+      "source": "odds_api_io",
+      "notes": "event_id=72513240;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4508,110 +3334,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
-      "match_date": "2026-10-18",
-      "kickoff": "",
-      "bookmaker": "Bet365",
-      "competition": "Germany - Bundesliga",
-      "home_team": "Bayer Leverkusen",
-      "away_team": "SC Freiburg",
-      "is_home": 0,
-      "player_id": "11982",
-      "player_name": "Jan-Niklas Beste",
-      "canonical_player_name": "Jan-Niklas Beste",
-      "player_team": "Freiburg",
-      "opponent": "Bayer Leverkusen",
-      "position": "AMR",
-      "position_group": "AMR",
-      "odds_decimal": 4.333,
-      "implied_prob": 0.230787,
-      "model_version": "goalscorer_v1_incomplete_roster",
-      "calibration_version": "raw",
-      "allocation_status": "estimated_roster",
-      "roster_prior_players": 1,
-      "model_p_atgs": 0.11217,
-      "model_fair_odds_atgs": 8.9151,
-      "model_lambda": 0.119,
-      "team_expected_npxg": 1.5924,
-      "team_share": 0.0747,
-      "non_pen_lambda": 0.119,
-      "base_non_pen_lambda": 0.119,
-      "penalty_lambda": 0.0,
-      "base_model_lambda": 0.119,
-      "role_adjustment_factor": 1.0,
-      "role_adjustment_reason": "",
-      "penalty_dependency_share": 0.0,
-      "penalty_dependent": 0,
-      "penalty_share": 0.0,
-      "baseline_penalty_share": 0.0,
-      "baseline_penalty_sample": 0.85,
-      "baseline_penalty_source": "recent_long",
-      "career_player_penalties": 1.0,
-      "career_team_penalties": 8.0,
-      "career_penalty_share": 0.125,
-      "penalty_evidence_share": 0.0,
-      "penalty_evidence_sample": 0.0,
-      "penalty_evidence_source": "",
-      "penalty_evidence_note": "",
-      "is_penalty_taker": 0,
-      "penalty_role": "none",
-      "penalty_share_prior": 0.0,
-      "penalty_share_prior_weight": 0.0,
-      "penalty_hierarchy_boost_xg": 0.0,
-      "penalty_transfer": 0,
-      "penalty_transfer_from": "",
-      "penalty_transfer_level": "",
-      "lineup_state": "expected_starter",
-      "lineup_status": "expected_starter",
-      "lineup_source": "fotmob_expected",
-      "lineup_input": "expected_xi",
-      "lineup_match_name": "Jan-Niklas Beste",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": "",
-      "minutes_estimate": 78.0,
-      "usual_position": "AMR",
-      "usual_position_score": 4,
-      "usual_position_share_10": 1.0,
-      "usual_position_matches_10": 8,
-      "today_position_group": "AM",
-      "today_position_score": 4,
-      "today_formation": "4-2-3-1",
-      "position_change_score": 0,
-      "position_upgrade": 0,
-      "expected_minutes": 78.0,
-      "recent_matches_8": 8,
-      "recent_npxg_8": 0.7887,
-      "recent_np_goals_8": 1.0,
-      "recent_npxg_per90_8": 0.1256,
-      "finishing_luck_8": 0.2113,
-      "last_fixture_avg_xga_3": 2.0713,
-      "next_opponent_xga": 1.5561,
-      "fixture_swing_3": 0.7513,
-      "attack_factor": 1.2459,
-      "opp_factor": 1.1407,
-      "ev": -0.513969,
-      "edge_pct": -51.397,
-      "method": "model",
-      "resolver_source": "history",
-      "historical_minutes": 4898.0,
-      "signal_confidence": "medium",
-      "legacy_public_action": "monitor",
-      "public_action": "no_action",
-      "public_policy_reason": "incomplete_prediction_roster",
-      "recommended_stake_units": 0.0,
-      "recommended_stake_band": "",
-      "recommended_stake_label": "",
-      "shadow_action": "no_action",
-      "confidence_reason": "history_resolver,expected_xi,incomplete_prediction_roster,fixture_t2",
-      "team_lineup_status": "FotMob Expected XI",
-      "source": "odds_api_io",
-      "notes": "event_id=72513240;market=Anytime Goalscorer"
-    },
-    {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4712,8 +3436,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4814,110 +3538,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
-      "match_date": "2026-10-18",
-      "kickoff": "",
-      "bookmaker": "Bet365",
-      "competition": "Germany - Bundesliga",
-      "home_team": "Bayer Leverkusen",
-      "away_team": "SC Freiburg",
-      "is_home": 1,
-      "player_id": "8513",
-      "player_name": "Miguel Gutierrez",
-      "canonical_player_name": "Miguel Gutierrez",
-      "player_team": "Bayer Leverkusen",
-      "opponent": "SC Freiburg",
-      "position": "DL",
-      "position_group": "DL",
-      "odds_decimal": 8.0,
-      "implied_prob": 0.125,
-      "model_version": "goalscorer_v1_incomplete_roster",
-      "calibration_version": "raw",
-      "allocation_status": "expected_roster",
-      "roster_prior_players": 0,
-      "model_p_atgs": 0.042054,
-      "model_fair_odds_atgs": 23.7787,
-      "model_lambda": 0.043,
-      "team_expected_npxg": 2.3065,
-      "team_share": 0.0186,
-      "non_pen_lambda": 0.043,
-      "base_non_pen_lambda": 0.043,
-      "penalty_lambda": 0.0,
-      "base_model_lambda": 0.043,
-      "role_adjustment_factor": 1.0,
-      "role_adjustment_reason": "",
-      "penalty_dependency_share": 0.0,
-      "penalty_dependent": 0,
-      "penalty_share": 0.0,
-      "baseline_penalty_share": 0.0,
-      "baseline_penalty_sample": 0.0,
-      "baseline_penalty_source": "none",
-      "career_player_penalties": 0.0,
-      "career_team_penalties": 0.0,
-      "career_penalty_share": 0.0,
-      "penalty_evidence_share": 0.0,
-      "penalty_evidence_sample": 0.0,
-      "penalty_evidence_source": "",
-      "penalty_evidence_note": "",
-      "is_penalty_taker": 0,
-      "penalty_role": "none",
-      "penalty_share_prior": 0.0,
-      "penalty_share_prior_weight": 0.0,
-      "penalty_hierarchy_boost_xg": 0.0,
-      "penalty_transfer": 0,
-      "penalty_transfer_from": "",
-      "penalty_transfer_level": "",
-      "lineup_state": "expected_starter",
-      "lineup_status": "expected_starter",
-      "lineup_source": "fotmob_expected",
-      "lineup_input": "expected_xi",
-      "lineup_match_name": "Miguel Gutiérrez",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": "",
-      "minutes_estimate": 88.9,
-      "usual_position": "DL",
-      "usual_position_score": 1,
-      "usual_position_share_10": 1.0,
-      "usual_position_matches_10": 5,
-      "today_position_group": "DEF",
-      "today_position_score": 1,
-      "today_formation": "4-2-3-1",
-      "position_change_score": 0,
-      "position_upgrade": 0,
-      "expected_minutes": 88.9,
-      "recent_matches_8": 5,
-      "recent_npxg_8": 0.3785,
-      "recent_np_goals_8": 1.0,
-      "recent_npxg_per90_8": 0.0767,
-      "finishing_luck_8": 0.6215,
-      "last_fixture_avg_xga_3": 1.7194,
-      "next_opponent_xga": 1.3995,
-      "fixture_swing_3": 0.814,
-      "attack_factor": 1.6735,
-      "opp_factor": 1.0547,
-      "ev": -0.663565,
-      "edge_pct": -66.356,
-      "method": "model",
-      "resolver_source": "history",
-      "historical_minutes": 444.0,
-      "signal_confidence": "low",
-      "legacy_public_action": "suppress",
-      "public_action": "no_action",
-      "public_policy_reason": "incomplete_prediction_roster",
-      "recommended_stake_units": 0.0,
-      "recommended_stake_band": "",
-      "recommended_stake_label": "",
-      "shadow_action": "no_action",
-      "confidence_reason": "history_lt_500,incomplete_prediction_roster,fixture_t2",
-      "team_lineup_status": "FotMob Expected XI",
-      "source": "odds_api_io",
-      "notes": "event_id=72513240;market=Anytime Goalscorer"
-    },
-    {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5018,8 +3640,110 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
+      "match_date": "2026-10-18",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "Germany - Bundesliga",
+      "home_team": "Bayer Leverkusen",
+      "away_team": "SC Freiburg",
+      "is_home": 1,
+      "player_id": "8513",
+      "player_name": "Miguel Gutierrez",
+      "canonical_player_name": "Miguel Gutierrez",
+      "player_team": "Bayer Leverkusen",
+      "opponent": "SC Freiburg",
+      "position": "DL",
+      "position_group": "DL",
+      "odds_decimal": 7.0,
+      "implied_prob": 0.142857,
+      "model_version": "goalscorer_v1_incomplete_roster",
+      "calibration_version": "raw",
+      "allocation_status": "expected_roster",
+      "roster_prior_players": 0,
+      "model_p_atgs": 0.042054,
+      "model_fair_odds_atgs": 23.7787,
+      "model_lambda": 0.043,
+      "team_expected_npxg": 2.3065,
+      "team_share": 0.0186,
+      "non_pen_lambda": 0.043,
+      "base_non_pen_lambda": 0.043,
+      "penalty_lambda": 0.0,
+      "base_model_lambda": 0.043,
+      "role_adjustment_factor": 1.0,
+      "role_adjustment_reason": "",
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 0.0,
+      "baseline_penalty_source": "none",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 0.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "expected_starter",
+      "lineup_status": "expected_starter",
+      "lineup_source": "fotmob_expected",
+      "lineup_input": "expected_xi",
+      "lineup_match_name": "Miguel Gutiérrez",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 0.0,
+      "fixture_corruption_flags": "",
+      "minutes_estimate": 88.9,
+      "usual_position": "DL",
+      "usual_position_score": 1,
+      "usual_position_share_10": 1.0,
+      "usual_position_matches_10": 5,
+      "today_position_group": "DEF",
+      "today_position_score": 1,
+      "today_formation": "4-2-3-1",
+      "position_change_score": 0,
+      "position_upgrade": 0,
+      "expected_minutes": 88.9,
+      "recent_matches_8": 5,
+      "recent_npxg_8": 0.3785,
+      "recent_np_goals_8": 1.0,
+      "recent_npxg_per90_8": 0.0767,
+      "finishing_luck_8": 0.6215,
+      "last_fixture_avg_xga_3": 1.7194,
+      "next_opponent_xga": 1.3995,
+      "fixture_swing_3": 0.814,
+      "attack_factor": 1.6735,
+      "opp_factor": 1.0547,
+      "ev": -0.705619,
+      "edge_pct": -70.562,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 444.0,
+      "signal_confidence": "low",
+      "legacy_public_action": "suppress",
+      "public_action": "no_action",
+      "public_policy_reason": "incomplete_prediction_roster",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_lt_500,incomplete_prediction_roster,fixture_t2",
+      "team_lineup_status": "FotMob Expected XI",
+      "source": "odds_api_io",
+      "notes": "event_id=72513240;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5120,8 +3844,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5222,8 +3946,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5324,8 +4048,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5340,8 +4064,8 @@
       "opponent": "SC Freiburg",
       "position": "AML",
       "position_group": "AML",
-      "odds_decimal": 3.0,
-      "implied_prob": 0.333333,
+      "odds_decimal": 2.875,
+      "implied_prob": 0.347826,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "expected_roster",
@@ -5407,8 +4131,8 @@
       "fixture_swing_3": 0.814,
       "attack_factor": 1.6735,
       "opp_factor": 1.0547,
-      "ev": -0.768305,
-      "edge_pct": -76.83,
+      "ev": -0.777959,
+      "edge_pct": -77.796,
       "method": "model",
       "resolver_source": "history",
       "historical_minutes": 423.0,
@@ -5426,8 +4150,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5528,8 +4252,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5630,8 +4354,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5732,8 +4456,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5834,8 +4558,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5936,8 +4660,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6038,8 +4762,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6140,8 +4864,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6242,8 +4966,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6344,8 +5068,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6446,8 +5170,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6548,8 +5272,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6650,8 +5374,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6752,8 +5476,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6854,8 +5578,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6956,8 +5680,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6972,8 +5696,8 @@
       "opponent": "SC Freiburg",
       "position": "Sub",
       "position_group": "Sub",
-      "odds_decimal": 2.375,
-      "implied_prob": 0.421053,
+      "odds_decimal": 2.2,
+      "implied_prob": 0.454545,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "expected_roster",
@@ -7058,8 +5782,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7160,8 +5884,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7262,8 +5986,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7278,8 +6002,8 @@
       "opponent": "SC Freiburg",
       "position": "Sub",
       "position_group": "Sub",
-      "odds_decimal": 3.0,
-      "implied_prob": 0.333333,
+      "odds_decimal": 2.875,
+      "implied_prob": 0.347826,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "expected_roster",
@@ -7364,8 +6088,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7466,8 +6190,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7568,8 +6292,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7670,8 +6394,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7772,8 +6496,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7874,8 +6598,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7976,8 +6700,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8078,8 +6802,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8180,8 +6904,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8282,8 +7006,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8298,8 +7022,8 @@
       "opponent": "SC Freiburg",
       "position": "Sub",
       "position_group": "Sub",
-      "odds_decimal": 8.0,
-      "implied_prob": 0.125,
+      "odds_decimal": 7.0,
+      "implied_prob": 0.142857,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "expected_roster",
@@ -8384,8 +7108,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8486,8 +7210,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8588,8 +7312,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8604,8 +7328,8 @@
       "opponent": "SC Freiburg",
       "position": "Sub",
       "position_group": "Sub",
-      "odds_decimal": 2.75,
-      "implied_prob": 0.363636,
+      "odds_decimal": 2.625,
+      "implied_prob": 0.380952,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "expected_roster",
@@ -8690,8 +7414,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8792,8 +7516,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8894,8 +7618,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8996,8 +7720,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9012,8 +7736,8 @@
       "opponent": "SC Freiburg",
       "position": "DMR",
       "position_group": "DMR",
-      "odds_decimal": 4.0,
-      "implied_prob": 0.25,
+      "odds_decimal": 3.6,
+      "implied_prob": 0.277778,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "expected_roster",
@@ -9098,8 +7822,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9200,8 +7924,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9216,8 +7940,8 @@
       "opponent": "SC Freiburg",
       "position": "AMC",
       "position_group": "AMC",
-      "odds_decimal": 3.0,
-      "implied_prob": 0.333333,
+      "odds_decimal": 2.875,
+      "implied_prob": 0.347826,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "expected_roster",
@@ -9302,8 +8026,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9404,8 +8128,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9506,8 +8230,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9608,8 +8332,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9624,8 +8348,8 @@
       "opponent": "SC Freiburg",
       "position": "DMC",
       "position_group": "DMC",
-      "odds_decimal": 6.5,
-      "implied_prob": 0.153846,
+      "odds_decimal": 6.0,
+      "implied_prob": 0.166667,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "expected_roster",
@@ -9710,8 +8434,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9812,8 +8536,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9914,8 +8638,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -10016,8 +8740,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -10118,8 +8842,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -10220,8 +8944,8 @@
       "notes": "event_id=72513246;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -10236,8 +8960,8 @@
       "opponent": "SC Freiburg",
       "position": "Sub",
       "position_group": "Sub",
-      "odds_decimal": 6.5,
-      "implied_prob": 0.153846,
+      "odds_decimal": 6.0,
+      "implied_prob": 0.166667,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "expected_roster",
@@ -10322,8 +9046,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -10338,8 +9062,8 @@
       "opponent": "SC Freiburg",
       "position": "S",
       "position_group": "S",
-      "odds_decimal": 2.375,
-      "implied_prob": 0.421053,
+      "odds_decimal": 2.2,
+      "implied_prob": 0.454545,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "expected_roster",
@@ -10424,8 +9148,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -10440,8 +9164,8 @@
       "opponent": "Bayer Leverkusen",
       "position": "Sub",
       "position_group": "Sub",
-      "odds_decimal": 3.4,
-      "implied_prob": 0.294118,
+      "odds_decimal": 3.6,
+      "implied_prob": 0.277778,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "estimated_roster",
@@ -10526,8 +9250,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -10628,8 +9352,8 @@
       "notes": "event_id=72513240;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-17T22:17:11Z",
-      "captured_at": "2026-10-17T22:17:10Z",
+      "compared_at": "2026-10-18T11:47:41Z",
+      "captured_at": "2026-10-18T11:47:40Z",
       "match_date": "2026-10-18",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -10644,8 +9368,8 @@
       "opponent": "Bayer Leverkusen",
       "position": "AMC",
       "position_group": "AMC",
-      "odds_decimal": 3.75,
-      "implied_prob": 0.266667,
+      "odds_decimal": 4.0,
+      "implied_prob": 0.25,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "estimated_roster",
