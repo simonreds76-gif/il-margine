@@ -80,6 +80,11 @@ function buildProgressionRows(rows: ProgressionBetRow[]) {
       event: row.event || "Unknown event",
       player: row.player || "",
       selection: row.selection || "Selection",
+      artwork: row.market === "props" ? getTipArtwork({
+        id: row.id, market: "props", category: row.category || "", event: row.event || "",
+        match_date: row.match_date,
+        player: /^(over|under) \d/i.test(row.player || "") && !/^(over|under) \d/i.test(row.selection || "") ? row.selection : row.player,
+      }) : undefined,
       odds: row.odds != null && Number(row.odds) > 1 ? Number(row.odds) : null,
       status: row.status || "settled",
       stake: roundUnits(Number(row.stake) || 0),

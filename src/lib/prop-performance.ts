@@ -1,3 +1,4 @@
+import type { TipPortrait } from "./tip-artwork-types";
 import { foldNameText } from "./player-name-matching";
 
 export const PROP_LABELS = {
@@ -6,7 +7,7 @@ export const PROP_LABELS = {
   assists: "Assists", passes: "Passes", offsides: "Offsides", team: "Team / match bets", other: "Other selections",
 } as const;
 export type PropKey = keyof typeof PROP_LABELS;
-export type PropRow = { id: number; event: string; player: string | null; selection: string; status: string; stake: number; profit_loss?: number | null; odds?: number | null; date?: string | null; match_date?: string | null; category?: string };
+export type PropRow = { artwork?: TipPortrait[]; id: number; event: string; player: string | null; selection: string; status: string; stake: number; profit_loss?: number | null; odds?: number | null; date?: string | null; match_date?: string | null; category?: string };
 const normal = (s: string) => foldNameText(s).toLowerCase().replace(/\s+/g, " ").trim();
 
 export function classifyProp(row: Pick<PropRow, "event" | "player" | "selection">): PropKey {

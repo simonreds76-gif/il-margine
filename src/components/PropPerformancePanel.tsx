@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import TipPortraits from "@/components/TipPortraits";
 import PropMarketIcon from "@/components/PropMarketIcon";
 import { buildPropPerformance, type PropKey, type PropRow } from "@/lib/prop-performance";
 
@@ -56,24 +57,61 @@ export default function PropPerformancePanel({ rows, pending, league, leagues, o
       </button>)}
     </div> : <p className="mt-5 rounded-xl border border-slate-800 p-5 text-sm text-slate-400">No recorded selections for this league yet.</p>}
     <div id="prop-selections" className="mt-5 scroll-mt-24" aria-live="polite">
-      {active ? <div className="rounded-xl border border-slate-700/80 bg-slate-900/40 p-3 sm:p-5">
-        <div className="flex items-start justify-between gap-3"><div className="min-w-0"><span className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl border border-slate-600/50 bg-slate-800/70 text-emerald-200"><PropMarketIcon market={active.key} className="h-7 w-7" /></span><h3 className="text-lg font-semibold text-white">{active.label}</h3><p className="mt-1 text-xs leading-5 text-slate-400">{leagueName} · {active.wins} wins / {active.losses} losses · {active.stake.toFixed(2)}u staked</p></div><button type="button" onClick={() => setSelected(null)} className="min-h-11 shrink-0 rounded-lg border border-slate-700 px-3 text-xs text-slate-300 hover:bg-slate-800">Close</button></div>
-        {active.pending.length ? <div className="mt-4"><p className="mb-2 text-xs font-semibold uppercase tracking-wider text-amber-300">Pending · excluded from ROI</p>{active.pending.map(row => <Selection key={row.id} row={row} />)}</div> : null}
-        <div className="mt-4 divide-y divide-slate-800">{active.rows.slice(0, limit).map(row => <Selection key={row.id} row={row} />)}</div>
-        {active.rows.length > limit ? <button type="button" onClick={() => setLimit(limit + 20)} className="mt-4 min-h-11 w-full rounded-lg border border-slate-600 px-4 text-sm text-slate-200 hover:bg-slate-800">Show 20 more · {active.rows.length - limit} remaining</button> : null}
-        {!active.rows.length ? <p className="mt-4 text-sm text-slate-400">No settled selections for this prop yet.</p> : null}
+      {active ? <div className="overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-950/60">
+        <div className="border-b border-slate-700/60 bg-gradient-to-br from-slate-800/65 to-slate-900/20 p-4 sm:p-5">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-300/20 bg-emerald-300/10 text-emerald-200"><PropMarketIcon market={active.key} className="h-7 w-7" /></span>
+              <div className="min-w-0"><h3 className="text-lg font-semibold leading-6 text-white">{active.label}</h3><p className="mt-1 text-xs text-slate-400">{leagueName} · Latest first</p></div>
+            </div>
+            <button type="button" aria-label="Close prop selections" onClick={() => setSelected(null)} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-600/60 text-slate-300 hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-emerald-300"><svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
+          </div>
+          <dl className="mt-4 grid grid-cols-3 gap-2 rounded-xl border border-slate-700/50 bg-slate-950/50 p-3 sm:p-4">
+            <div><dt className="text-[10px] font-medium uppercase tracking-wider text-slate-400">ROI</dt><dd className={`mt-1 font-mono text-lg font-semibold sm:text-2xl ${tone(active.roi)}`}>{active.roi == null ? "N/A" : `${signed(active.roi, 1)}%`}</dd></div>
+            <div><dt className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Profit</dt><dd className={`mt-1 font-mono text-lg font-semibold sm:text-2xl ${tone(active.profit)}`}>{signed(active.profit)}<span className="text-xs">u</span></dd></div>
+            <div><dt className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Settled</dt><dd className="mt-1 font-mono text-lg font-semibold text-slate-100 sm:text-2xl">{active.rows.length}</dd></div>
+          </dl>
+          <p className="mt-3 text-xs leading-5 text-slate-400">{active.wins} wins · {active.losses} losses · {active.stake.toFixed(2)}u staked</p>
+        </div>
+        <div className="p-3 sm:p-5">
+          {active.pending.length ? <div className="mb-5"><h4 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-200"><span className="h-1.5 w-1.5 rounded-full bg-amber-300" />Awaiting result · {active.pending.length}</h4><div className="grid gap-3 lg:grid-cols-2">{active.pending.map(row => <Selection key={row.id} row={row} market={active.key} />)}</div></div> : null}
+          <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">Settled selections</h4>
+          <div className="grid gap-3 lg:grid-cols-2">{active.rows.slice(0, limit).map(row => <Selection key={row.id} row={row} market={active.key} />)}</div>
+          {active.rows.length > limit ? <button type="button" onClick={() => setLimit(value => value + 20)} className="mt-4 min-h-11 w-full rounded-xl border border-slate-600 px-4 py-2 text-sm text-slate-200 hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-emerald-300">Show 20 more · {active.rows.length - limit} remaining</button> : null}
+          {!active.rows.length ? <p className="mt-4 text-sm text-slate-400">No settled selections for this prop yet.</p> : null}
+        </div>
       </div> : selected ? <p className="text-sm text-slate-400">No selections for this prop in {leagueName}. Choose another prop or league.</p> : <p className="text-xs text-slate-500">Tap a prop above to open its selections.</p>}
     </div>
     <p className="mt-4 text-xs leading-5 text-slate-500">ROI is profit divided by settled stakes. Pending and void bets do not enter these figures. Team and match markets are kept separate. A high ROI from a few bets is not a reliable ranking.</p>
   </section>;
 }
 
-function Selection({ row }: { row: PropRow }) {
+function Selection({ row, market }: { row: PropRow; market: PropKey }) {
   // Preserve older entries where the player and selection fields were reversed.
   const reversed = /^(over|under) \d/i.test(row.player || "") && !/^(over|under) \d/i.test(row.selection);
-  return <article className="min-w-0 py-3.5">
-    <div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="break-words text-sm font-medium text-slate-100">{reversed ? row.selection : row.player || "Selection"}</p><p className="mt-1 break-words text-sm text-slate-300">{reversed ? row.player : row.selection}{row.odds && row.odds > 1 ? <span className="ml-2 whitespace-nowrap font-mono text-slate-100">@ {row.odds.toFixed(2)}</span> : null}</p></div><span className={`shrink-0 rounded-md border px-2 py-1 text-[11px] font-semibold ${row.status === "won" ? "border-emerald-300/20 text-emerald-300" : row.status === "lost" ? "border-rose-300/20 text-rose-300" : "border-amber-300/20 text-amber-300"}`}>{row.status === "won" ? "Won" : row.status === "lost" ? "Lost" : "Pending"}</span></div>
-    <p className="mt-2 break-words text-xs leading-5 text-slate-500">{row.event} · {dateLabel(row.date || row.match_date)}</p>
-    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs tabular-nums"><span className="text-slate-400">Stake {row.stake.toFixed(2)}u</span>{row.status !== "pending" && row.profit_loss != null ? <span className={tone(row.profit_loss)}>Profit {signed(row.profit_loss)}u</span> : null}</div>
+  const player = reversed ? row.selection : row.player || "Selection";
+  const selection = reversed ? row.player : row.selection;
+  const settled = row.status === "won" || row.status === "lost";
+  const won = row.status === "won";
+  return <article className="min-w-0 rounded-xl border border-slate-700/60 bg-slate-900/60 p-3.5 sm:p-4">
+    <div className="flex items-start gap-3">
+      <span className="flex min-h-12 shrink-0 items-center justify-center">
+        {row.artwork?.length ? <TipPortraits portraits={row.artwork} size="card" /> : <span className="flex h-12 w-12 items-center justify-center rounded-full border border-slate-700 bg-slate-800 text-slate-400"><PropMarketIcon market={market} className="h-7 w-7" /></span>}
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="break-words text-base font-semibold leading-5 text-slate-100">{player}</p>
+        <p className="mt-1 break-words text-sm leading-5 text-slate-300">{selection}</p>
+      </div>
+      <span className={`flex shrink-0 items-center gap-1 rounded-full border px-2 py-1 text-[10px] font-semibold ${won ? "border-emerald-300/20 bg-emerald-300/5 text-emerald-300" : settled ? "border-rose-300/20 bg-rose-300/5 text-rose-300" : "border-amber-300/20 bg-amber-300/5 text-amber-200"}`}>
+        <svg viewBox="0 0 16 16" className="hidden h-3 w-3 sm:block" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">{settled ? <path d={won ? "m3 8 3 3 7-7" : "m4 4 8 8M12 4l-8 8"} /> : <><circle cx="8" cy="8" r="5.5"/><path d="M8 4.5V8l2 1.5"/></>}</svg>
+        {won ? "Won" : settled ? "Lost" : "Pending"}
+      </span>
+    </div>
+    <div className="mt-3 border-t border-slate-700/50 pt-3"><p className="break-words text-xs font-medium leading-5 text-slate-300">{row.event}</p><p className="mt-0.5 text-[11px] text-slate-400">{dateLabel(row.date || row.match_date)}</p></div>
+    <dl className="mt-3 grid grid-cols-3 divide-x divide-slate-700/60 rounded-lg bg-slate-950/60 py-2.5">
+      <div className="min-w-0 px-2.5"><dt className="text-[9px] font-medium uppercase tracking-wider text-slate-400">Odds</dt><dd className="mt-1 font-mono text-sm font-semibold tabular-nums text-slate-100">{row.odds && row.odds > 1 ? row.odds.toFixed(2) : "N/A"}</dd></div>
+      <div className="min-w-0 px-2.5"><dt className="text-[9px] font-medium uppercase tracking-wider text-slate-400">Stake</dt><dd className="mt-1 font-mono text-sm font-semibold tabular-nums text-slate-100">{row.stake.toFixed(2)}u</dd></div>
+      <div className="min-w-0 px-2.5"><dt className="text-[9px] font-medium uppercase tracking-wider text-slate-400">Profit</dt><dd className={`mt-1 font-mono text-sm font-semibold tabular-nums ${tone(settled ? row.profit_loss ?? null : null)}`}>{settled && row.profit_loss != null ? `${signed(row.profit_loss)}u` : "Pending"}</dd></div>
+    </dl>
   </article>;
 }
