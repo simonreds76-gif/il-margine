@@ -51,7 +51,7 @@ export default function PropPerformancePanel({ rows, pending, league, leagues, o
         </span>
         <span className="block min-h-10 text-sm font-medium leading-5 text-slate-100 max-[360px]:text-xs">{item.label}</span>
         <span className={`mt-1 flex flex-wrap items-baseline gap-x-1.5 font-mono text-2xl font-semibold tracking-tight sm:text-3xl ${tone(item.roi)}`}>{item.roi == null ? "N/A" : `${signed(item.roi, 1)}%`}<span className="font-sans text-[10px] font-medium tracking-wider text-slate-400">ROI</span></span>
-        <span className="mt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-slate-700/50 pt-3 text-xs tabular-nums"><span className={tone(item.profit)}>{signed(item.profit)}u</span><span className="text-slate-400">{item.rows.length} bets</span></span>
+        <span className="mt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-slate-700/50 pt-3 text-xs tabular-nums"><span className={tone(item.profit)}>{signed(item.profit)}u</span><span className="text-slate-400">{item.rows.length} {item.rows.length === 1 ? "bet" : "bets"}</span></span>
         <span className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] leading-4 text-slate-400">{item.rows.length < 50 ? "Small sample" : "Settled selections"}{item.pending.length ? <span className="text-amber-200/90">{item.pending.length} pending</span> : null}</span>
       </button>)}
     </div> : <p className="mt-5 rounded-xl border border-slate-800 p-5 text-sm text-slate-400">No recorded selections for this league yet.</p>}
