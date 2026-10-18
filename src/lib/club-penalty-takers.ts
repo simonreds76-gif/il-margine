@@ -458,7 +458,8 @@ function mapTeam(
       const clubKey = foldNameText(team).toLowerCase().replace(/[^a-z0-9]/g, "");
       const portraits = penaltyPortraits as Record<string, string>;
       const id = portraits[`${league.key}|${clubKey}|${key}`] || portraits[key];
-      return id ? `https://images.fotmob.com/image_resources/playerimages/${id}.png` : null;
+      return id ? `https://images.fotmob.com/image_resources/playerimages/${id}.png`
+        : isArchived ? null : `/api/penalty-portrait/${league.key}/${slug}/${key}`;
     }),
     hierarchyDepth,
     hierarchyStatus: isArchived ? "confirmed" : entry.hierarchy_status ?? (entry.primary ? "probable" : "unknown"),

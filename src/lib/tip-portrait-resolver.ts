@@ -83,3 +83,13 @@ export async function resolveTipPortrait(pick: Pick): Promise<SquadPlayer | null
   const squads = await Promise.all(pair.map((club) => readSquad(club.id)));
   return uniquePlayer(pick.player ?? "", squads);
 }
+
+/** Penalty editorial names are full names. Never guess from a shared surname. */
+export async function resolveClubPlayerPortrait(clubName: string, league: string, name: string): Promise<SquadPlayer | null> {
+  const logo = resolveTeamLogoPath(clubName, league);
+  const candidates = clubs.filter((club) => club.names.some((n) => normal(n) === normal(clubName)) || (logo && logo === club.logo));
+  if (new Set(candidates.map((club) => club.id)).size !== 1 || !normal(name)) return null;
+  const players = await readSquad(candidates[0].id);
+  const matches = players.filter((player) => normal(player.name) === normal(name));
+  return new Set(matches.map((player) => player.id)).size === 1 ? matches[0] : null;
+}

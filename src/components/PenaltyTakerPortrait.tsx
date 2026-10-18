@@ -9,7 +9,8 @@ export default function PenaltyTakerPortrait({ name, src, rank, size = "large" }
 }) {
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
   const pixels = size === "small" ? 36 : size === "medium" ? 48 : 56;
-  const valid = src && /^https:\/\/images\.fotmob\.com\/image_resources\/playerimages\/\d+\.png$/.test(src) && failedSrc !== src;
+  const valid = src && (/^https:\/\/images\.fotmob\.com\/image_resources\/playerimages\/\d+\.png$/.test(src)
+    || /^\/api\/penalty-portrait\/[a-z-]+\/[a-z0-9-]+\/[a-z0-9]+$/.test(src)) && failedSrc !== src;
   const initials = name.trim().split(/\s+/).filter(Boolean).map(word => Array.from(word)[0]).filter(Boolean);
   return <span aria-hidden="true" className={`relative inline-flex shrink-0 rounded-full border ${rank === 1 ? "border-emerald-300/40 bg-emerald-400/10" : "border-slate-600/60 bg-slate-800"}`} style={{ width: pixels, height: pixels }}>
     <span className="flex h-full w-full items-center justify-center overflow-hidden rounded-full">
