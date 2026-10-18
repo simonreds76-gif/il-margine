@@ -625,9 +625,13 @@ async function readGithubSnapshot(): Promise<GoalscorerMonitorSnapshot | null> {
 }
 
 export async function readSkylineMonitorReport(): Promise<SkylineReport | null> {
-  // Skyline is private: a newer public Git snapshot must not hide its report.
-  const snapshot = await readSupabaseSnapshot();
-  return snapshot?.skyline ?? null;
+  // Dedicated key has restrictive RLS: only the server service role can read it.
+  try {
+    const { data, error } = await getSupabaseAdmin().from(SNAPSHOT_TABLE)
+      .select("payload").eq("snapshot_key", "skyline_paper_v1").maybeSingle();
+    if (error || !data?.payload?.report) return null;
+    return data.payload.report as SkylineReport;
+  } catch { return null; }
 }
 
 export async function readGoalscorerMonitorSnapshot(): Promise<GoalscorerMonitorSnapshot | null> {
