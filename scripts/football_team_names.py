@@ -14,6 +14,10 @@ from settlement_utils import normalize_team_name
 
 
 FORM_TEAM_ALIASES = {
+    "angers sco": "angers",
+    "aj auxerre": "auxerre",
+    "stade rennais": "rennes",
+    "olympique lyon": "lyon",
     "coventry city": "coventry",
     "lille osc": "lille",
     "estac troyes": "troyes",
