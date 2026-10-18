@@ -126,7 +126,10 @@ def publish(client, root=ROOT, now=None):
         validate(payload, now)
         try:
             from skyline_paper import run as skyline_run
-            skyline_run(root, now=now, capture=True)
+            from skyline_store import restore as skyline_restore, persist as skyline_persist
+            skyline_restore(root)
+            skyline_report = skyline_run(root, now=now, capture=True)
+            skyline_persist(root, skyline_report)
         except Exception as exc:
             failed=read(data/'skyline/report.json',{})
             if failed:

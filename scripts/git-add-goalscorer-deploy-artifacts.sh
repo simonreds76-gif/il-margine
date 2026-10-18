@@ -106,6 +106,7 @@ fi
 
 # Keep the compact Aerial archive and its collection cooldown in the cloud branch.
 if [[ -d data/aerial ]]; then
+  git rm -r --cached --ignore-unmatch -- data/aerial/skyline/forecasts data/aerial/skyline/outcomes data/aerial/skyline/report.json data/aerial/skyline/health.json 2>/dev/null || true
   git add -- data/aerial
 fi
 
