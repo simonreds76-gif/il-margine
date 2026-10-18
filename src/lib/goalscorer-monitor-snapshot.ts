@@ -624,6 +624,12 @@ async function readGithubSnapshot(): Promise<GoalscorerMonitorSnapshot | null> {
   }
 }
 
+export async function readSkylineMonitorReport(): Promise<SkylineReport | null> {
+  // Skyline is private: a newer public Git snapshot must not hide its report.
+  const snapshot = await readSupabaseSnapshot();
+  return snapshot?.skyline ?? null;
+}
+
 export async function readGoalscorerMonitorSnapshot(): Promise<GoalscorerMonitorSnapshot | null> {
   if (cache && cache.expiresAt > Date.now()) {
     return cache.payload;
