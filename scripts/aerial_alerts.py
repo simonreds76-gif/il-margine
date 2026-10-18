@@ -283,9 +283,18 @@ def run(root=ROOT, now=None, transmit=False, sender=send):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--send',action='store_true');parser.add_argument('--root',type=Path,default=ROOT)
-    args=parser.parse_args();report=run(args.root,transmit=args.send)
+    args=parser.parse_args()
+    # Independent of the opportunity watchlist, with its own private receipts.
+    try:
+        from skyline_alerts import run as skyline_alert_run
+        skyline_alert_status=skyline_alert_run(args.root,transmit=args.send)
+        print('Skyline alerts: '+json.dumps(skyline_alert_status))
+    except Exception as exc:
+        skyline_alert_status={'status':'failed'}
+        print('Skyline alerts failed: '+type(exc).__name__)
+    report=run(args.root,transmit=args.send)
     print(json.dumps({k:report[k] for k in ('status','prospective_captures','sent','exclusions')}))
     if not args.send:
         print('\n\n'.join(report['telegram_previews']))
-    if report['status'] in ('credentials_missing','delivery_failed'):
+    if report['status'] in ('credentials_missing','delivery_failed') or skyline_alert_status['status'] in ('failed','credentials_missing','delivery_uncertain'):
         raise SystemExit(1)
