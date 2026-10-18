@@ -37,11 +37,11 @@ test('tip preview PNGs have an explicit shared cache and missing tips avoid rend
  assert.match(valid.headers.get('Cache-Control'),/s-maxage=604800/);
  assert.doesNotMatch(valid.headers.get('Cache-Control'),/immutable/);
  const details=share.tipShareDetails(fixture.bets);
- assert.match(details.title,/Keeper · Over 2.5 saves at 1.73/);
+ assert.match(details.title,/Keeper Â· Over 2.5 saves at 1.73/);
  assert.match(details.description,/stake 0.5u/);
  const multi=share.tipShareDetails([...fixture.bets,{...fixture.bets[0],id:2,player:'Striker',selection:'Over 1.5 shots',odds:2.2}]);
  assert.match(multi.title,/2 published selections/);
- assert.match(multi.description,/Striker · Over 1.5 shots at 2.20/);
+ assert.match(multi.description,/Striker Â· Over 1.5 shots at 2.20/);
  assert.throws(()=>share.tipShareDetails([]),/requires a published selection/);
 });
 test('concurrent callers share one load, expiry reloads, capacity is bounded',async()=>{
@@ -76,6 +76,7 @@ test('scope keys coalesce queries; live responses cache briefly; errors are not 
  });
  const api=compile(fs.readFileSync(path.join(root,'src/app/api/public-record/route.ts'),'utf8'),{
   '@/lib/public-record':monthlyLoader,
+  '@/lib/read-record-pages':compile(fs.readFileSync(path.join(root,'src/lib/read-record-pages.ts'),'utf8')),
   '@/lib/tip-artwork':{getTipArtwork:()=>[{name:'Michael Keane',src:'verified.png',kind:'player'}]},
   '@/lib/bounded-async-cache':cache,
   '@/lib/supabase-server':{getSupabaseAdmin:()=>({from:()=>{queries++;return query}})},
