@@ -386,6 +386,7 @@ function mapTeam(
       return (
         type.startsWith("competitive_penalty_") ||
         type === "preseason_penalty_assignment" ||
+        (type === "editorial_hierarchy_review" && evidence.affects_hierarchy) ||
         type === "roster_integrity_review" ||
         (type === "current_season_board_review" && evidence.affects_hierarchy)
       );
