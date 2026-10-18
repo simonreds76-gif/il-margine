@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-18T13:59:18Z",
+  "updated_at": "2026-10-18T14:08:46Z",
   "reason": "cycle",
   "last_clv_run_at": "2026-10-18T13:59:25Z",
   "leagues": {
@@ -12,7 +12,7 @@
       "last_tier": "off",
       "last_decision": "off",
       "last_message": "Skip serie-a: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": "2026-10-18T16:00:00Z"
+      "next_kickoff_utc": ""
     },
     "epl": {
       "last_successful_run_at": "2026-10-18T13:22:36Z",
@@ -23,7 +23,7 @@
       "last_tier": "off",
       "last_decision": "off",
       "last_message": "Skip epl: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": "2026-10-18T15:30:00Z"
+      "next_kickoff_utc": ""
     },
     "la-liga": {
       "last_successful_run_at": "2026-10-18T13:59:18Z",
@@ -31,9 +31,9 @@
       "last_detail_run_at": "2026-10-18T12:31:31Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "close",
-      "last_decision": "ran",
-      "last_message": "Ran la-liga in close tier (cadence 10m, fixtures 1).",
+      "last_tier": "lineup",
+      "last_decision": "waiting",
+      "last_message": "Skip la-liga: cadence 10m not due yet.",
       "next_kickoff_utc": "2026-10-18T14:15:00Z"
     },
     "bundesliga": {
@@ -45,17 +45,17 @@
       "last_tier": "off",
       "last_decision": "off",
       "last_message": "Skip bundesliga: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": "2026-10-18T15:30:00Z"
+      "next_kickoff_utc": ""
     },
     "ligue-1": {
-      "last_successful_run_at": "2026-10-18T13:23:45Z",
+      "last_successful_run_at": "2026-10-18T14:08:46Z",
       "last_price_run_at": "2026-10-18T13:23:45Z",
       "last_detail_run_at": "2026-10-18T12:53:34Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip ligue-1: no upcoming fixtures inside schedule window.",
+      "last_tier": "lineup",
+      "last_decision": "ran",
+      "last_message": "Ran ligue-1 in lineup tier (cadence 10m, fixtures 3).",
       "next_kickoff_utc": "2026-10-18T15:15:00Z"
     }
   }
