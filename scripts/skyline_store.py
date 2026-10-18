@@ -20,7 +20,6 @@ def connection(root):
     return base+'/rest/v1/goalscorer_live_snapshot',{'apikey':key,'Authorization':'Bearer '+key,'Content-Type':'application/json'}
 
 def restore(root):
-    raise RuntimeError('Skyline capture paused pending verified private storage permissions')
     url,headers=connection(root)
     response=requests.get(url,headers=headers,params={'snapshot_key':'eq.'+KEY,'select':'payload'},timeout=30)
     response.raise_for_status();rows=response.json()
@@ -38,7 +37,7 @@ def restore(root):
 
 def persist(root,report):
     directory=root/'data/aerial/skyline'
-    state={'version':'skyline-v1','generated_at':report['generated_at']}
+    state={'version':'skyline-v1','generated_at':report['generated_at'],'report':report}
     for kind in ('forecasts','outcomes'):
         state[kind]={p.stem:read(p) for p in sorted((directory/kind).glob('*.json'))}
     url,headers=connection(root);headers['Prefer']='resolution=merge-duplicates,return=minimal'

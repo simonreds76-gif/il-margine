@@ -15,3 +15,5 @@ Settlement: exact match/player/team, completed source match at least three hours
 Private monitor: /model-monitor/skyline, existing admin protection. Compact report included in existing goalscorer private Supabase snapshot. No new Telegram channel, no additional alerts, no public betting tips. Existing unpriced Air Control watchlist continues independently.
 
 Review at 50 and 100 independently settled fixtures; inspect calibration, fixture-cluster uncertainty, prices and ROI before considering any promotion. No automatic refitting or parameter adjustment.
+
+Storage: forecasts, outcomes and monitor report use the private skyline_paper_v1 key in goalscorer_live_snapshot. Restrictive RLS denies anon and authenticated access; server service role retains access. Generated Git artifacts omit Skyline state. One private read/write per existing refresh; no extra odds requests.
