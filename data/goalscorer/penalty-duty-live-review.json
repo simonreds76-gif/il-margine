@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-18T04:40:43Z",
+  "generated_at": "2026-10-18T12:47:06Z",
   "league": "serie-a",
   "row_count": 1,
   "rows": [
@@ -22,17 +22,17 @@
       "primary_pre_match": "Kevin De Bruyne",
       "secondary_pre_match": "Rasmus Højlund",
       "tertiary_pre_match": "Matteo Politano",
-      "primary_lineup_status": "confirmed_bench",
-      "secondary_lineup_status": "confirmed_bench",
-      "tertiary_lineup_status": "confirmed_bench",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
       "active_taker_pre_match": "",
       "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
       "review_type": "primary_held",
       "review_priority": "low",
-      "editorial_note": "Kevin De Bruyne took 1 penalty attempt and missed for Napoli vs Venezia. Primary pre-match: Kevin De Bruyne (confirmed_bench). Secondary pre-match: Rasmus Højlund (confirmed_bench). No hierarchy change implied from this event.",
-      "context_generated_at": "2026-10-17T22:15:45Z",
-      "context_source_path": "data/goalscorer/penalty-duty-context.json",
+      "editorial_note": "Kevin De Bruyne took 1 penalty attempt and missed for Napoli vs Venezia. Primary pre-match: Kevin De Bruyne (unknown). Secondary pre-match: Rasmus Højlund (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/serie-a-penalty-takers.json",
       "actual_taker_match_status": "Yes - bench, on 54'",
       "primary_on_pitch_at_penalty": "Yes - bench, on 54'",
       "secondary_on_pitch_at_penalty": "Yes - bench, on 54'",
@@ -44,7 +44,7 @@
           "source_event_id": "2982837183",
           "match_id": "5749709",
           "source_url": "https://www.fotmob.com/matches/venezia-vs-napoli/2lv4jt#5749709",
-          "observed_at": "2026-10-18T04:40:37+00:00",
+          "observed_at": "2026-10-18T12:47:04+00:00",
           "event_date": "2026-10-17",
           "season": "2026/27",
           "team": "Napoli",
@@ -80,10 +80,14 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20261012",
+      "20261013",
+      "20261014",
+      "20261015",
       "20261016",
       "20261017",
       "20261018"
     ],
-    "matches_checked": 4
+    "matches_checked": 7
   }
 }
