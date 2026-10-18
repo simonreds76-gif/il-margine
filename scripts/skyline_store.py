@@ -20,6 +20,7 @@ def connection(root):
     return base+'/rest/v1/goalscorer_live_snapshot',{'apikey':key,'Authorization':'Bearer '+key,'Content-Type':'application/json'}
 
 def restore(root):
+    raise RuntimeError('Skyline capture paused pending verified private storage permissions')
     url,headers=connection(root)
     response=requests.get(url,headers=headers,params={'snapshot_key':'eq.'+KEY,'select':'payload'},timeout=30)
     response.raise_for_status();rows=response.json()
