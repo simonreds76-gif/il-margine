@@ -10,6 +10,7 @@ import json
 import os
 import requests
 from aerial_data import ROOT, read, save, utc, number
+from aerial_market_capture import quoted_markets
 
 VERSION = 'air-control-watch-v2-headed-markets'
 POLICY = dict(player_matches=5, player_minutes=450, aerial_attempts=20,
@@ -180,7 +181,15 @@ def message(row, removed=()):
             m=h[key]
             lines += [f"{label}: {m['count']} in {m['matches']} covered appearances." if m['matches'] else f'{label}: historical breakdown unavailable.']
         lines += ['Inspect: '+', '.join(c['markets_to_check'])+'.']
-    lines += ['', 'Research shortlist, not a priced bet. Defender comparison is a pool, not an assumed marker. No fair odds or EV until the exact market price and probability are verified.',
+        quotes={q['market']:q for q in c.get('market_prices',[])}
+        for market in c['markets_to_check']:
+            quote=quotes.get(market)
+            if quote:
+                stamp=utc(quote['captured_at']).astimezone(ZoneInfo('Europe/London'))
+                lines += [f"Bet365 {market}: {quote['odds']:.2f} (captured {stamp:%H:%M %Z})."]
+            else:
+                lines += [f"{market}: fresh matched price unavailable; check Bet365."]
+    lines += ['', 'Research shortlist, not a value recommendation. Check the current Bet365 price and market terms. Defender comparison is a pool, not an assumed marker. No validated fair odds or EV.',
               'https://ilmargine.bet/fair-odds-lab/aerial']
     return '\n'.join(lines)
 
@@ -219,6 +228,11 @@ def run(root=ROOT, now=None, transmit=False, sender=send):
     payload=read(root/'public/fair-odds-lab/aerial.json',{})
     history=read(root/'data/aerial/history.json.gz',{}).get('matches',[])
     rows, exclusions=evaluate(payload,history,now)
+    prices=read(root/'data/goalkeeper-saves/aerial-headed-market-prices.json', {})
+    fixtures={f['id']:f for f in payload.get('fixtures',[])}
+    for row in rows:
+        for candidate in row['candidates']:
+            candidate['market_prices']=quoted_markets(fixtures[row['fixture_id']],candidate,prices,now)
     state=read(directory/'state.json',{'schema_version':1,'fixtures':{}})
     ledger=read(directory/'ledger.json',[])
     settle(ledger,history)
