@@ -10,6 +10,7 @@ const ProfitProgressionChart = dynamic(() => import("./ProfitProgressionChart"),
 });
 
 export type CategoryProgressionRow = {
+  odds?: number | null;
   id: number;
   date: string | null;
   category: string;

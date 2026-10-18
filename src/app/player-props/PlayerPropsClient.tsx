@@ -11,6 +11,7 @@ import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/component
 import PlayerPropsMatchGroups from "@/components/PlayerPropsMatchGroups";
 import PropsAlertsCta from "@/components/PropsAlertsCta";
 import SampleSizeBadge from "@/components/SampleSizeBadge";
+import PropPerformancePanel from "@/components/PropPerformancePanel";
 import PublicRecordMetricGrid from "@/components/PublicRecordMetricGrid";
 
 import Footer from "@/components/Footer";
@@ -107,7 +108,7 @@ export default function PlayerProps({
   }, []);
 
   useEffect(() => {
-    const initialFetch = hasInitialPayload ? undefined : window.setTimeout(() => {
+    const initialFetch = window.setTimeout(() => {
       void fetchData();
     }, 0);
     const handleFocus = () => {
@@ -118,15 +119,17 @@ export default function PlayerProps({
         void fetchData();
       }
     };
+    const refreshTimer = window.setInterval(handleVisibility, 5 * 60 * 1000);
     window.addEventListener("focus", handleFocus);
     document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
-      if (initialFetch !== undefined) window.clearTimeout(initialFetch);
+      window.clearTimeout(initialFetch);
+      window.clearInterval(refreshTimer);
       window.removeEventListener("focus", handleFocus);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, [fetchData, hasInitialPayload]);
+  }, [fetchData]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -139,7 +142,9 @@ export default function PlayerProps({
     if (typeof window === "undefined" || loading) return;
     const targetId = window.location.hash === "#picks"
       ? "picks"
-      : window.location.hash === "#competition-record"
+      : window.location.hash === "#prop-performance"
+        ? "prop-performance"
+        : window.location.hash === "#competition-record"
         ? "competition-record"
         : null;
     if (!targetId) return;
@@ -376,6 +381,8 @@ export default function PlayerProps({
             avgOdds={currentStats.avg_odds}
             hasArchiveBaseline={Boolean(archiveStats?.total_bets)}
           />
+
+          <PropPerformancePanel rows={filteredProgressionRows} pending={filteredPending} league={activeLeague} leagues={leagueConfig} onLeagueChange={setActiveLeague} />
 
           <ProfitProgressionPanel rows={filteredProgressionRows} activeName={activeName} archiveStats={archiveStats} />
 

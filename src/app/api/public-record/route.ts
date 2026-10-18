@@ -1,3 +1,4 @@
+import { readRecordPages } from "@/lib/read-record-pages";
 import { getTipArtwork } from "@/lib/tip-artwork";
 import { fetchMonthlyPayload } from "@/lib/public-record";
 import { NextResponse } from "next/server";
@@ -39,6 +40,7 @@ function errorJson(message: string, status = 500) {
 }
 
 type ProgressionBetRow = {
+  odds: number | string | null;
   id: number;
   market: string | null;
   category: string | null;
@@ -78,6 +80,7 @@ function buildProgressionRows(rows: ProgressionBetRow[]) {
       event: row.event || "Unknown event",
       player: row.player || "",
       selection: row.selection || "Selection",
+      odds: row.odds != null && Number(row.odds) > 1 ? Number(row.odds) : null,
       status: row.status || "settled",
       stake: roundUnits(Number(row.stake) || 0),
       profit_loss: roundUnits(Number(row.profit_loss) || 0),
@@ -172,17 +175,14 @@ async function fetchMarketPayload(scope: "tennis" | "props") {
         .order("id", { ascending: false })
         .limit(MARKET_RECENT_LIMIT),
       supabase.from("category_stats").select("*").eq("market", market),
-      supabase
-        .from("bets")
-        .select("id, market, category, event, player, selection, status, stake, profit_loss, match_date, settled_at, posted_at")
-        .eq("market", market)
-        .in("status", ["won", "lost"])
-        .not("profit_loss", "is", null)
-        .order("match_date", { ascending: true, nullsFirst: false })
-        .order("settled_at", { ascending: true, nullsFirst: false })
-        .order("posted_at", { ascending: true, nullsFirst: false })
-        .order("id", { ascending: true })
-        .limit(5000),
+      readRecordPages<ProgressionBetRow>(async (from, to) => {
+        const result = await supabase.from("bets")
+          .select("id, market, category, event, player, selection, odds, status, stake, profit_loss, match_date, settled_at, posted_at")
+          .eq("market", market).in("status", ["won", "lost"])
+          .not("profit_loss", "is", null).order("id", { ascending: true }).range(from, to);
+        if (result.error) throw new Error("Could not read the complete settled record");
+        return (result.data ?? []) as ProgressionBetRow[];
+      }).then(data => ({ data, error: null })),
     ]),
     `public ${scope} record query`,
   );
