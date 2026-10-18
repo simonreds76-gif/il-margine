@@ -1580,7 +1580,7 @@ def build_snapshot(snapshot_key: str) -> dict[str, Any]:
     avg_ev_pct = (sum(ev_values) / len(ev_values) * 100) if ev_values else None
 
     payload = {
-        "skyline": read_json("data/aerial/skyline/report.json"),
+
         "schema_version": 3,
         "generated_at": utc_now_iso(),
         "source_status": {
