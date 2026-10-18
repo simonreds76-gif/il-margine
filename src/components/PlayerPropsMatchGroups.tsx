@@ -1,16 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import TipPortraits from "@/components/TipPortraits";
+import PropSelectionCard from "@/components/PropSelectionCard";
+import { classifyProp } from "@/lib/prop-performance";
 import Image from "next/image";
 import { smallTeamLogo } from "@/lib/small-team-logo";
 import Link from "next/link";
 import type { Bet } from "@/lib/supabase";
-import BookmakerLogo from "@/components/BookmakerLogo";
-import PnL from "@/components/PnL";
-import ResultBadge from "@/components/ResultBadge";
 import { getDisplayBetCategory } from "@/lib/bet-category";
-import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
+import { formatMatchDate } from "@/lib/format";
 import { publicTipPath } from "@/lib/tip-seo";
 import { resolveTeamLogoPath } from "@/lib/team-logos";
 
@@ -144,72 +142,8 @@ function Crest({ team, category }: { team: string | null; category: string }) {
   );
 }
 
-function StatusCell({ bet, mode }: { bet: Bet; mode: Mode }) {
-  if (mode === "pending") {
-    return (
-      <ResultBadge status="pending" size="sm" />
-    );
-  }
-  return (
-    <span className="flex items-center gap-2">
-      <span className="font-mono text-xs font-semibold">
-        <PnL value={bet.profit_loss} status={bet.status} />
-      </span>
-      <ResultBadge status={bet.status} size="sm" />
-    </span>
-  );
-}
-
-function PickMetric({ label, value, className = "" }: { label: string; value: string; className?: string }) {
-  return (
-    <span className={`rounded-lg border border-slate-800 bg-slate-950/45 px-2.5 py-1.5 text-right ${className}`}>
-      <span className="block font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">{label}</span>
-      <span className="block font-mono text-sm font-semibold tabular-nums text-slate-100">{value}</span>
-    </span>
-  );
-}
-
-function PickRow({ bet, mode }: { bet: Bet; mode: Mode }) {
-  const href = publicTipPath(bet);
-  return (
-    <Link href={href} className="block transition-colors hover:bg-slate-800/30 active:bg-slate-800/40">
-      <div className="hidden items-center gap-3 px-4 py-3 sm:flex">
-        {mode === "pending" && <span className="flex min-h-9 shrink-0 items-center justify-center">
-          <TipPortraits portraits={bet.artwork} size="compact" />
-        </span>}
-        <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-medium text-slate-100">{bet.player || bet.selection}</div>
-          {bet.player ? <div className="truncate text-xs text-slate-400">{bet.selection}</div> : null}
-        </div>
-        <PickMetric label="Odds" value={formatOdds(bet.odds)} className="w-20" />
-        <PickMetric label="Stake" value={`${formatStake(bet.stake)}u`} className="w-20" />
-        <div className="flex w-20 justify-center">
-          <BookmakerLogo bookmaker={bet.bookmaker} size="sm" noLink stopPropagationOnClick />
-        </div>
-        <div className="flex w-32 justify-end">
-          <StatusCell bet={bet} mode={mode} />
-        </div>
-      </div>
-
-      <div className="px-4 py-3 sm:hidden">
-        <div className="flex items-start gap-3">
-          {mode === "pending" && <span className="flex min-h-9 shrink-0 items-center justify-center">
-            <TipPortraits portraits={bet.artwork} size="compact" />
-          </span>}
-          <div className="min-w-0 flex-1">
-            <div className="truncate text-sm font-medium text-slate-100">{bet.player || bet.selection}</div>
-            {bet.player ? <div className="truncate text-xs text-slate-400">{bet.selection}</div> : null}
-          </div>
-          <StatusCell bet={bet} mode={mode} />
-        </div>
-        <div className={`mt-2 flex flex-wrap items-center gap-2 ${mode === "pending" ? "pl-12" : ""}`}>
-          <PickMetric label="Odds" value={formatOdds(bet.odds)} />
-          <PickMetric label="Stake" value={`${formatStake(bet.stake)}u`} />
-          <BookmakerLogo bookmaker={bet.bookmaker} size="sm" noLink stopPropagationOnClick />
-        </div>
-      </div>
-    </Link>
-  );
+function PickRow({ bet }: { bet: Bet }) {
+  return <PropSelectionCard row={bet} market={classifyProp(bet)} href={publicTipPath(bet)} bookmaker={bet.bookmaker} />;
 }
 
 function Chevron({ open }: { open: boolean }) {
@@ -259,7 +193,7 @@ function MatchCard({ group, mode, open, onToggle }: { group: MatchGroup; mode: M
         type="button"
         onClick={onToggle}
         aria-expanded={open}
-        className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-slate-800/30"
+        className="flex min-h-14 w-full items-center gap-2 px-3 py-3 text-left transition-colors hover:bg-slate-800/30 focus-visible:outline-2 focus-visible:outline-emerald-300 sm:gap-3 sm:px-4"
       >
         <span className="flex shrink-0 -space-x-2">
           <Crest team={group.home} category={group.category} />
@@ -267,14 +201,9 @@ function MatchCard({ group, mode, open, onToggle }: { group: MatchGroup; mode: M
         </span>
         <span className="min-w-0 flex-1">
           <span className="block text-sm font-semibold leading-snug text-slate-100 sm:truncate sm:text-base">{group.event}</span>
-          <span className="mt-0.5 block text-xs text-slate-500">{formatMatchDate(group.matchDate)}</span>
+          <span className="mt-0.5 block text-xs text-slate-400">{formatMatchDate(group.matchDate)}{group.bets.length > 1 ? ` · ${group.bets.length} picks` : ""}</span>
         </span>
         <span className="flex items-center gap-2 sm:gap-3">
-          {group.bets.length > 1 && (
-            <span className="text-xs text-slate-400">
-              {group.bets.length} picks
-            </span>
-          )}
           {mode === "settled" && (
             <>
               <RecordChip group={group} />
@@ -290,9 +219,9 @@ function MatchCard({ group, mode, open, onToggle }: { group: MatchGroup; mode: M
         </Link>
       </div>
       {open ? (
-        <div className="divide-y divide-slate-800/70 border-t border-slate-800/70">
+        <div className="grid gap-3 border-t border-slate-800/70 p-3 sm:p-4 lg:grid-cols-2">
           {group.bets.map((bet) => (
-            <PickRow key={bet.id} bet={bet} mode={mode} />
+            <PickRow key={bet.id} bet={bet} />
           ))}
         </div>
       ) : null}
@@ -308,7 +237,7 @@ export default function PlayerPropsMatchGroups({ bets, mode }: { bets: Bet[]; mo
   const [visibleCount, setVisibleCount] = useState(RESULTS_PAGE_SIZE);
   const visibleGroups = mode === "pending" ? groups : groups.slice(0, visibleCount);
 
-  const defaultOpen = (group: MatchGroup) => (mode === "pending" ? true : isTodayOrFuture(group.matchDate));
+  const defaultOpen = (group: MatchGroup) => (mode === "pending" ? true : group.key === groups[0]?.key || isTodayOrFuture(group.matchDate));
   const isOpen = (group: MatchGroup) => overrides[group.key] ?? defaultOpen(group);
 
   if (groups.length === 0) return null;

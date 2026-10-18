@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import TipPortraits from "@/components/TipPortraits";
+import PropSelectionCard from "@/components/PropSelectionCard";
 import PropMarketIcon from "@/components/PropMarketIcon";
 import { buildPropPerformance, type PropKey, type PropRow } from "@/lib/prop-performance";
 
@@ -74,9 +74,9 @@ export default function PropPerformancePanel({ rows, pending, league, leagues, o
           <p className="mt-3 text-xs leading-5 text-slate-400">{active.wins} wins · {active.losses} losses · {active.stake.toFixed(2)}u staked</p>
         </div>
         <div className="p-3 sm:p-5">
-          {active.pending.length ? <div className="mb-5"><h4 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-200"><span className="h-1.5 w-1.5 rounded-full bg-amber-300" />Awaiting result · {active.pending.length}</h4><div className="grid gap-3 lg:grid-cols-2">{active.pending.map(row => <Selection key={row.id} row={row} market={active.key} />)}</div></div> : null}
+          {active.pending.length ? <div className="mb-5"><h4 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-200"><span className="h-1.5 w-1.5 rounded-full bg-amber-300" />Awaiting result · {active.pending.length}</h4><div className="grid gap-3 lg:grid-cols-2">{active.pending.map(row => <PropSelectionCard key={row.id} row={row} market={active.key} />)}</div></div> : null}
           <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">Settled selections</h4>
-          <div className="grid gap-3 lg:grid-cols-2">{active.rows.slice(0, limit).map(row => <Selection key={row.id} row={row} market={active.key} />)}</div>
+          <div className="grid gap-3 lg:grid-cols-2">{active.rows.slice(0, limit).map(row => <PropSelectionCard key={row.id} row={row} market={active.key} />)}</div>
           {active.rows.length > limit ? <button type="button" onClick={() => setLimit(value => value + 20)} className="mt-4 min-h-11 w-full rounded-xl border border-slate-600 px-4 py-2 text-sm text-slate-200 hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-emerald-300">Show 20 more · {active.rows.length - limit} remaining</button> : null}
           {!active.rows.length ? <p className="mt-4 text-sm text-slate-400">No settled selections for this prop yet.</p> : null}
         </div>
@@ -86,32 +86,3 @@ export default function PropPerformancePanel({ rows, pending, league, leagues, o
   </section>;
 }
 
-function Selection({ row, market }: { row: PropRow; market: PropKey }) {
-  // Preserve older entries where the player and selection fields were reversed.
-  const reversed = /^(over|under) \d/i.test(row.player || "") && !/^(over|under) \d/i.test(row.selection);
-  const player = reversed ? row.selection : row.player || "Selection";
-  const selection = reversed ? row.player : row.selection;
-  const settled = row.status === "won" || row.status === "lost";
-  const won = row.status === "won";
-  return <article className="min-w-0 rounded-xl border border-slate-700/60 bg-slate-900/60 p-3.5 sm:p-4">
-    <div className="flex items-start gap-3">
-      <span className="flex min-h-12 shrink-0 items-center justify-center">
-        {row.artwork?.length ? <TipPortraits portraits={row.artwork} size="card" /> : <span className="flex h-12 w-12 items-center justify-center rounded-full border border-slate-700 bg-slate-800 text-slate-400"><PropMarketIcon market={market} className="h-7 w-7" /></span>}
-      </span>
-      <div className="min-w-0 flex-1">
-        <p className="break-words text-base font-semibold leading-5 text-slate-100">{player}</p>
-        <p className="mt-1 break-words text-sm leading-5 text-slate-300">{selection}</p>
-      </div>
-      <span className={`flex shrink-0 items-center gap-1 rounded-full border px-2 py-1 text-[10px] font-semibold ${won ? "border-emerald-300/20 bg-emerald-300/5 text-emerald-300" : settled ? "border-rose-300/20 bg-rose-300/5 text-rose-300" : "border-amber-300/20 bg-amber-300/5 text-amber-200"}`}>
-        <svg viewBox="0 0 16 16" className="hidden h-3 w-3 sm:block" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">{settled ? <path d={won ? "m3 8 3 3 7-7" : "m4 4 8 8M12 4l-8 8"} /> : <><circle cx="8" cy="8" r="5.5"/><path d="M8 4.5V8l2 1.5"/></>}</svg>
-        {won ? "Won" : settled ? "Lost" : "Pending"}
-      </span>
-    </div>
-    <div className="mt-3 border-t border-slate-700/50 pt-3"><p className="break-words text-xs font-medium leading-5 text-slate-300">{row.event}</p><p className="mt-0.5 text-[11px] text-slate-400">{dateLabel(row.date || row.match_date)}</p></div>
-    <dl className="mt-3 grid grid-cols-3 divide-x divide-slate-700/60 rounded-lg bg-slate-950/60 py-2.5">
-      <div className="min-w-0 px-2.5"><dt className="text-[9px] font-medium uppercase tracking-wider text-slate-400">Odds</dt><dd className="mt-1 font-mono text-sm font-semibold tabular-nums text-slate-100">{row.odds && row.odds > 1 ? row.odds.toFixed(2) : "N/A"}</dd></div>
-      <div className="min-w-0 px-2.5"><dt className="text-[9px] font-medium uppercase tracking-wider text-slate-400">Stake</dt><dd className="mt-1 font-mono text-sm font-semibold tabular-nums text-slate-100">{row.stake.toFixed(2)}u</dd></div>
-      <div className="min-w-0 px-2.5"><dt className="text-[9px] font-medium uppercase tracking-wider text-slate-400">Profit</dt><dd className={`mt-1 font-mono text-sm font-semibold tabular-nums ${tone(settled ? row.profit_loss ?? null : null)}`}>{settled && row.profit_loss != null ? `${signed(row.profit_loss)}u` : "Pending"}</dd></div>
-    </dl>
-  </article>;
-}
