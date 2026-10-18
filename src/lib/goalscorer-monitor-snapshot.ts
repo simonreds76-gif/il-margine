@@ -1,3 +1,4 @@
+import type { SkylineReport } from "@/lib/skyline-types";
 import "server-only";
 
 import path from "node:path";
@@ -225,6 +226,7 @@ export type GoalscorerFixtureLineup = {
 };
 
 export type GoalscorerMonitorSnapshot = {
+  skyline?: SkylineReport | null;
   schema_version: number;
   generated_at: string;
   source_status: {
