@@ -6,11 +6,11 @@ export const PROP_LABELS = {
   assists: "Assists", passes: "Passes", offsides: "Offsides", team: "Team / match bets", other: "Other selections",
 } as const;
 export type PropKey = keyof typeof PROP_LABELS;
-export type PropRow = { id: number; event: string; player: string; selection: string; status: string; stake: number; profit_loss?: number | null; odds?: number | null; date?: string | null; match_date?: string | null; category?: string };
+export type PropRow = { id: number; event: string; player: string | null; selection: string; status: string; stake: number; profit_loss?: number | null; odds?: number | null; date?: string | null; match_date?: string | null; category?: string };
 const normal = (s: string) => foldNameText(s).toLowerCase().replace(/\s+/g, " ").trim();
 
 export function classifyProp(row: Pick<PropRow, "event" | "player" | "selection">): PropKey {
-  const player = normal(row.player), selection = normal(row.selection);
+  const player = normal(row.player || ""), selection = normal(row.selection);
   const sides = row.event.split(/\s+(?:vs?\.?|versus)\s+|\s+[–—]\s+/i).map(normal);
   if (/\b(total|match|both teams|first goal method)\b/.test(player) || sides.includes(player)) return "team";
   const text = `${player} ${selection}`;

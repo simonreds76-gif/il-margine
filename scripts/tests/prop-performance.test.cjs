@@ -25,6 +25,7 @@ test('specific markets precede broad labels; team totals and combinations remain
     [row(10,'Over 0.5 Shots and Over 0.5 Fouls'),'other'],
     [row(11,'To Score 2 or More Goals'),'goals'],
     [row(12,'Over 2.5'),'other'],
+    [row(13,'Over 1.5 Shots',{player:null}),'shots'],
   ]) assert.equal(classifyProp(bet),key);
 });
 test('ROI uses actual stakes and excludes void, pending, duplicate and malformed rows', () => {
