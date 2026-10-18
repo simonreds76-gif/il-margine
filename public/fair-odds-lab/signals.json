@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-18T12:32:34.043109Z",
+  "generated_at": "2026-10-18T12:54:25.233266Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -35,113 +35,18 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 21,
-  "signals_qualifying": 1,
+  "fixtures_evaluated": 16,
+  "signals_qualifying": 0,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 22,
-    "model_market_gap_gt_10pp": 3,
-    "model_probability_below_floor": 1
+    "incomplete_prediction_roster": 18
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 3,
-    "added_by_league": {
-      "epl": 2,
-      "serie-a": 1
-    },
+    "eligible_rows": 0,
+    "added_by_league": {},
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [
-    "ligue-1"
-  ],
-  "featured_signal_id": "20261018-amine-sbai-8e2922b0f6",
-  "signals": [
-    {
-      "id": "20261018-amine-sbai-8e2922b0f6",
-      "match": {
-        "home_team": "Angers SCO",
-        "away_team": "Olympique Marseille",
-        "league": "ligue-1",
-        "league_display": "Ligue 1",
-        "league_logo_path": "/league-logos/ligue-1.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-10-18",
-        "fotmob_match_id": "",
-        "fotmob_page_url": "",
-        "lineup_type": "",
-        "venue": ""
-      },
-      "player": {
-        "name": "Amine Sbai",
-        "team": "Angers",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/ligue-1/angers.png",
-        "team_primary_color": "#f8fafc",
-        "team_secondary_color": "#111827",
-        "team_shirt_pattern": "vertical-stripes"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 34.2,
-        "fair_odds": 2.92
-      },
-      "market_data": {
-        "best_odds": 4.0,
-        "best_book": "Bet365",
-        "implied_chance_pct": 25.0
-      },
-      "edge": {
-        "price_gap_pp": 9.2,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 80
-        },
-        "share_of_team_chances_pct": 25,
-        "share_of_team_chances_percentile": 95,
-        "team_attacking_outlook": {
-          "tier": "Average",
-          "percentile": 54
-        },
-        "recent_team_form": {
-          "tier": "Quiet",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-10-10",
-          "xg_for_avg": 1.54,
-          "xg_against_avg": 2.07,
-          "xgd_per90": -0.53,
-          "shots_for_avg": 12.8,
-          "shots_against_avg": 18.0,
-          "sot_for_avg": 3.2,
-          "sot_against_avg": 6.0,
-          "corners_for_avg": 7.0,
-          "corners_against_avg": 6.4
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 92
-        },
-        "opponent_recent_defence": {
-          "tier": "Unknown"
-        },
-        "fixture_boost_pct": 7,
-        "projected_minutes": 85,
-        "penalty_role": "Secondary",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup"
-      ],
-      "risk_flags": []
-    }
-  ]
+  "leagues_covered": [],
+  "featured_signal_id": null,
+  "signals": []
 }
