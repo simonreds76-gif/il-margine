@@ -465,13 +465,13 @@ export function PhaseLabel({ label, aside }: { label: string; aside?: string }) 
 export function MonitorNav({
   current,
 }: {
-  current: "tennis" | "tennis-props" | "goalscorer" | "lineups" | "assist-value" | "team-shots" | "corners" | "gk-saves" | "team-fouls";
+  current: "tennis" | "tennis-props" | "goalscorer" | "lineups" | "assist-value" | "team-shots" | "corners" | "gk-saves" | "team-fouls" | "skyline";
 }) {
   const base =
     "inline-flex items-center rounded-full border border-slate-700/70 bg-slate-900/70 px-3 py-1.5 text-sm text-slate-400 transition-colors hover:border-slate-600 hover:text-slate-200";
   const active =
     "border-emerald-500/30 bg-emerald-500/8 text-emerald-200 hover:border-emerald-500/40 hover:text-emerald-100";
-  const footballCurrent = ["team-shots", "corners", "gk-saves", "team-fouls"].includes(current);
+  const footballCurrent = ["team-shots", "corners", "gk-saves", "team-fouls", "skyline"].includes(current);
   return (
     <nav className="flex flex-wrap items-center gap-2">
       <Link href="/model-monitor" aria-current={current === "tennis" ? "page" : undefined} className={cn(base, current === "tennis" && active)}>
@@ -499,17 +499,18 @@ export function MonitorNav({
 export function FootballLaneNav({
   current,
 }: {
-  current: "team-shots" | "corners" | "gk-saves" | "team-fouls";
+  current: "team-shots" | "corners" | "gk-saves" | "team-fouls" | "skyline";
 }) {
   const lanes = [
     { id: "team-shots", href: "/model-monitor/team-shots", label: "Team Shots v4", detail: "2026/27 ledger" },
     { id: "corners", href: "/model-monitor/corners", label: "Corners v3", detail: "2026/27 ledger" },
     { id: "gk-saves", href: "/model-monitor/gk-saves", label: "GK Saves v1", detail: "prospective evidence" },
+    { id: "skyline", href: "/model-monitor/skyline", label: "Skyline", detail: "headed SOT paper" },
     { id: "team-fouls", href: "/model-monitor/team-fouls", label: "Team Fouls F2", detail: "gate progress" },
   ] as const;
 
   return (
-    <nav aria-label="Football model lanes" className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+    <nav aria-label="Football model lanes" className="grid grid-cols-2 gap-2 lg:grid-cols-5">
       {lanes.map((lane) => {
         const selected = current === lane.id;
         return (
