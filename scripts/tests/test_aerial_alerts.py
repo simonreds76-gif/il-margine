@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from aerial_alerts import evaluate, run, settle, VERSION
+from aerial_alerts import evaluate, run, settle, VERSION, message
 from aerial_data import save, read
 from aerial_source import extract
 
@@ -44,6 +44,19 @@ class Alerts(unittest.TestCase):
         self.assertIsNone(c['ev']);self.assertIsNone(c['fair_odds'])
         self.assertIn('1+ headed shot on target',c['markets_to_check'])
 
+    def test_only_bettable_markets_and_independent_coverage(self):
+        rows,_=evaluate(packet(),history(),NOW)
+        self.assertEqual(rows[0]['candidates'][0]['markets_to_check'],['1+ headed shot on target','headed goal'])
+        self.assertNotIn('Inspect: 1+ headed shot,', message(rows[0]))
+        h=history()
+        for m in h:
+            for p in m['players']:p['headed_goals']=0
+        rows,_=evaluate(packet(),h,NOW)
+        self.assertEqual(rows[0]['candidates'][0]['markets_to_check'],['1+ headed shot on target'])
+        for m in h:
+            for p in m['players']:p['headed_sot']=0
+        self.assertEqual(evaluate(packet(),h,NOW)[0],[])
+
     def test_no_heading_no_alert_even_if_tall(self):
         h=history()
         for m in h:
@@ -69,9 +82,9 @@ class Alerts(unittest.TestCase):
         h=history()
         for m in h:
             for p in m['players']:p.pop('headed_sot');p.pop('headed_goals')
-        row=evaluate(packet(),h,NOW)[0][0]['candidates'][0]
-        self.assertEqual(row['history']['headed_sot']['matches'],0)
-        self.assertEqual(row['markets_to_check'],['1+ headed shot'])
+        rows, exclusions=evaluate(packet(),h,NOW)
+        self.assertEqual(rows,[])
+        self.assertGreater(exclusions['no_supported_bettable_headed_market'],0)
 
     def test_delivery_dedup_confirmation_and_preview_not_prospective(self):
         with tempfile.TemporaryDirectory() as d, patch.dict(os.environ,{'OPS_ALERT_TELEGRAM_BOT_TOKEN':'test','OPS_ALERT_TELEGRAM_CHAT_ID':'private'}):

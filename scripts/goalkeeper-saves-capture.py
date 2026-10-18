@@ -14,6 +14,8 @@ from typing import Any
 
 import requests
 
+from aerial_market_capture import retain_headed_markets
+
 from football_count_markets import (
     append_market_inventory,
     build_market_inventory_rows,
@@ -357,6 +359,9 @@ def main() -> None:
                 captured_at,
             )
         )
+    # Reuse the full response: no extra API request, subscription or schedule.
+    retain_headed_markets(args.status.parent / "aerial-headed-market-prices.json",
+                         payload, event_index, captured_at)
     inventory_added = append_market_inventory(args.market_inventory, inventory_rows)
     added = append_rows(args.history, rows)
     market_names = sorted(
