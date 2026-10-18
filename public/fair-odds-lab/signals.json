@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-18T12:54:25.233266Z",
+  "generated_at": "2026-10-18T13:05:49.492440Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -38,7 +38,8 @@
   "fixtures_evaluated": 16,
   "signals_qualifying": 0,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 18
+    "incomplete_prediction_roster": 19,
+    "market_odds_above_cap": 1
   },
   "extreme_gap_quarantine": {
     "eligible_rows": 0,

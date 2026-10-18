@@ -1,44 +1,44 @@
 {
-  "updated_at": "2026-10-18T12:53:39Z",
+  "updated_at": "2026-10-18T13:05:08Z",
   "reason": "cycle",
   "last_clv_run_at": "2026-09-18T18:28:32Z",
   "leagues": {
     "serie-a": {
-      "last_successful_run_at": "2026-10-18T12:52:49Z",
-      "last_price_run_at": "2026-10-18T12:52:49Z",
+      "last_successful_run_at": "2026-10-18T13:04:21Z",
+      "last_price_run_at": "2026-10-18T13:04:21Z",
       "last_detail_run_at": "2026-10-18T12:52:49Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "distant",
+      "last_tier": "grace",
       "last_decision": "ran",
-      "last_message": "Ran serie-a in distant tier (cadence 1m, fixtures 4).",
+      "last_message": "Ran serie-a in grace tier (cadence 10m, fixtures 1).",
       "next_kickoff_utc": "2026-10-18T13:00:00Z"
     },
     "epl": {
-      "last_successful_run_at": "2026-10-18T12:53:04Z",
-      "last_price_run_at": "2026-10-18T12:53:04Z",
+      "last_successful_run_at": "2026-10-18T13:04:38Z",
+      "last_price_run_at": "2026-10-18T13:04:38Z",
       "last_detail_run_at": "2026-10-18T12:53:04Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "distant",
+      "last_tier": "grace",
       "last_decision": "ran",
-      "last_message": "Ran epl in distant tier (cadence 1m, fixtures 2).",
+      "last_message": "Ran epl in grace tier (cadence 10m, fixtures 3).",
       "next_kickoff_utc": "2026-10-18T13:00:00Z"
     },
     "la-liga": {
-      "last_successful_run_at": "2026-10-18T12:53:23Z",
-      "last_price_run_at": "2026-10-18T12:53:23Z",
+      "last_successful_run_at": "2026-10-18T13:04:49Z",
+      "last_price_run_at": "2026-10-18T13:04:49Z",
       "last_detail_run_at": "2026-10-18T12:31:31Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "distant",
+      "last_tier": "lineup",
       "last_decision": "ran",
-      "last_message": "Ran la-liga in distant tier (cadence 1m, fixtures 5).",
+      "last_message": "Ran la-liga in lineup tier (cadence 10m, fixtures 1).",
       "next_kickoff_utc": "2026-10-18T14:15:00Z"
     },
     "bundesliga": {
-      "last_successful_run_at": "2026-10-18T12:53:28Z",
-      "last_price_run_at": "2026-10-18T12:53:28Z",
+      "last_successful_run_at": "2026-10-18T13:04:57Z",
+      "last_price_run_at": "2026-10-18T13:04:57Z",
       "last_detail_run_at": "2026-10-15T19:36:11Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
@@ -48,14 +48,14 @@
       "next_kickoff_utc": "2026-10-18T13:30:00Z"
     },
     "ligue-1": {
-      "last_successful_run_at": "2026-10-18T12:53:34Z",
-      "last_price_run_at": "2026-10-18T12:53:34Z",
+      "last_successful_run_at": "2026-10-18T13:05:08Z",
+      "last_price_run_at": "2026-10-18T13:05:08Z",
       "last_detail_run_at": "2026-10-18T12:53:34Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "distant",
+      "last_tier": "grace",
       "last_decision": "ran",
-      "last_message": "Ran ligue-1 in distant tier (cadence 1m, fixtures 4).",
+      "last_message": "Ran ligue-1 in grace tier (cadence 10m, fixtures 1).",
       "next_kickoff_utc": "2026-10-18T13:00:00Z"
     }
   }

@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-10-18T13:30:00Z",
       "home_team": "Bayer Leverkusen",
       "away_team": "Freiburg",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -20,8 +20,8 @@
         "Edmond Tapsoba",
         "Facundo Medina",
         "Miguel Gutiérrez",
-        "Equi Fernández",
         "Aleix García",
+        "Equi Fernández",
         "Moussa Diaby",
         "Ibrahim Maza",
         "Afonso Moreira",
@@ -36,7 +36,7 @@
         "Maximilian Eggestein",
         "Yannik Engelhardt",
         "Jan-Niklas Beste",
-        "Lucas Höler",
+        "Keisuke Goto",
         "Derry Scherhant",
         "Igor Matanović"
       ],
@@ -97,26 +97,26 @@
           "shirt_number": "3"
         },
         {
-          "name": "Equi Fernández",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64,
-          "player_id": 1199959,
-          "shirt_number": "6"
-        },
-        {
           "name": "Aleix García",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
-          "position_id": 66,
+          "position_id": 64,
           "player_id": 642551,
           "shirt_number": "24"
+        },
+        {
+          "name": "Equi Fernández",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1199959,
+          "shirt_number": "6"
         },
         {
           "name": "Moussa Diaby",
@@ -253,15 +253,15 @@
           "shirt_number": "19"
         },
         {
-          "name": "Lucas Höler",
+          "name": "Keisuke Goto",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 85,
-          "player_id": 556524,
-          "shirt_number": "9"
+          "player_id": 1436730,
+          "shirt_number": "42"
         },
         {
           "name": "Derry Scherhant",
@@ -286,10 +286,122 @@
           "shirt_number": "31"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Janis Blaswich",
+        "Loic Badé",
+        "Robert Andrich",
+        "Tim Oermann",
+        "Jonas Hofmann",
+        "Lucas Vázquez",
+        "Malik Tillman",
+        "Nathan Tella",
+        "Victor Okoh Boniface"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Janis Blaswich",
+          "player_id": "278814",
+          "role_group": "GK"
+        },
+        {
+          "name": "Loic Badé",
+          "player_id": "1119461",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Robert Andrich",
+          "player_id": "411851",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Tim Oermann",
+          "player_id": "1381853",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Jonas Hofmann",
+          "player_id": "331542",
+          "role_group": "MID"
+        },
+        {
+          "name": "Lucas Vázquez",
+          "player_id": "359193",
+          "role_group": "MID"
+        },
+        {
+          "name": "Malik Tillman",
+          "player_id": "1126058",
+          "role_group": "MID"
+        },
+        {
+          "name": "Nathan Tella",
+          "player_id": "877700",
+          "role_group": "MID"
+        },
+        {
+          "name": "Victor Okoh Boniface",
+          "player_id": "1035208",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Florian Müller",
+        "Christian Günter",
+        "Lukas Kübler",
+        "Max Rosenfelder",
+        "Patrick Osterhage",
+        "Rihito Yamamoto",
+        "Cyriaque Irié",
+        "Lucas Höler",
+        "Vincenzo Grifo"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Florian Müller",
+          "player_id": "737365",
+          "role_group": "GK"
+        },
+        {
+          "name": "Christian Günter",
+          "player_id": "355358",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Lukas Kübler",
+          "player_id": "307209",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Max Rosenfelder",
+          "player_id": "1281107",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Patrick Osterhage",
+          "player_id": "1075815",
+          "role_group": "MID"
+        },
+        {
+          "name": "Rihito Yamamoto",
+          "player_id": "1030836",
+          "role_group": "MID"
+        },
+        {
+          "name": "Cyriaque Irié",
+          "player_id": "1526221",
+          "role_group": "FW"
+        },
+        {
+          "name": "Lucas Höler",
+          "player_id": "556524",
+          "role_group": "FW"
+        },
+        {
+          "name": "Vincenzo Grifo",
+          "player_id": "400625",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
         "Kennet Eichhorn",
         "Montrell Culbreath",
@@ -302,8 +414,8 @@
         "Florent Muslija",
         "Yuito Suzuki"
       ],
-      "observed_at": "2026-10-18T12:53:23.810872+00:00",
-      "changed_at": "2026-10-17T11:35:58.800292+00:00"
+      "observed_at": "2026-10-18T13:04:52.806000+00:00",
+      "changed_at": "2026-10-18T13:04:52.806000+00:00"
     },
     {
       "fotmob_match_id": 5881190,
@@ -610,7 +722,7 @@
         "Bernardo",
         "Patrick Wimmer"
       ],
-      "observed_at": "2026-10-18T12:53:23.810872+00:00",
+      "observed_at": "2026-10-18T13:04:52.806000+00:00",
       "changed_at": "2026-10-17T11:35:58.800292+00:00"
     }
   ]
