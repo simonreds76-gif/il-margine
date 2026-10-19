@@ -1,15 +1,15 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-10-19T15:52:34Z",
+  "generated_at": "2026-10-19T16:59:43Z",
   "source_status": {
-    "compared_at": "2026-10-19T15:51:45Z",
-    "hot_live_updated_at": "2026-10-19T00:26:51Z",
-    "expected_refresh_updated_at": "2026-10-19T15:51:45Z",
+    "compared_at": "2026-10-19T16:58:42Z",
+    "hot_live_updated_at": "2026-10-19T16:58:50Z",
+    "expected_refresh_updated_at": "2026-10-19T16:58:42Z",
     "settlement_updated_at": "2026-10-19T15:52:33Z",
-    "scheduler_heartbeat_at": "2026-10-19T00:26:51Z",
-    "snapshot_generated_at": "2026-10-19T15:52:34Z",
-    "live_status_state": "skipped",
-    "live_status_message": "Goalscorer live poll skipped: no leagues due in current cadence window."
+    "scheduler_heartbeat_at": "2026-10-19T16:58:50Z",
+    "snapshot_generated_at": "2026-10-19T16:59:43Z",
+    "live_status_state": "idle",
+    "live_status_message": "Goalscorer live poll finished (3 league(s) ran)."
   },
   "league_cards": [
     {
@@ -18,12 +18,12 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-10-19T15:52:15Z",
-      "live_rows": 89,
+      "updated_at": "2026-10-19T16:58:27Z",
+      "live_rows": 46,
       "public_now": 0,
-      "shadow_now": 7,
-      "clean_fixtures": 0,
-      "degraded_fixtures": 4,
+      "shadow_now": 3,
+      "clean_fixtures": 1,
+      "degraded_fixtures": 2,
       "quarantined_fixtures": 0,
       "public_record": {
         "settled": 31,
@@ -49,7 +49,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-10-19T15:52:19Z",
+      "updated_at": "2026-10-19T16:58:33Z",
       "live_rows": 20,
       "public_now": 0,
       "shadow_now": 1,
@@ -80,7 +80,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-10-19T15:52:22Z",
+      "updated_at": "2026-10-19T16:58:42Z",
       "live_rows": 86,
       "public_now": 0,
       "shadow_now": 13,
@@ -111,7 +111,7 @@
       "status_key": "no_feed",
       "status_label": "no ATGS feed",
       "status_detail": "Source feed returned 0 current ATGS rows for this league window.",
-      "updated_at": "2026-10-19T15:52:25Z",
+      "updated_at": "2026-10-19T16:58:07Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -142,7 +142,7 @@
       "status_key": "no_feed",
       "status_label": "no ATGS feed",
       "status_detail": "Source feed returned 0 current ATGS rows for this league window.",
-      "updated_at": "2026-10-19T15:52:27Z",
+      "updated_at": "2026-10-19T16:58:07Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -193,29 +193,6 @@
       "stake_label": "-"
     },
     {
-      "key": "Alessandro Deiola-2026-10-19-Bet365-shadow_track",
-      "status": "SHADOW",
-      "action": "shadow_track",
-      "action_label": "shadow",
-      "league_key": "serie-a",
-      "league_label": "SA",
-      "competition": "Italy - Serie A",
-      "player": "Alessandro Deiola",
-      "team": "Cagliari",
-      "opponent": "AC Monza",
-      "match": "Cagliari vs AC Monza",
-      "match_date": "2026-10-19",
-      "kickoff": "2026-10-19",
-      "bookmaker": "Bet365",
-      "lineup_short": "~",
-      "lineup_label": "FotMob Expected XI",
-      "lineup_status": "expected_starter",
-      "odds": 10.0,
-      "fair": 6.1376,
-      "edge_pct": 62.9304,
-      "stake_label": "-"
-    },
-    {
       "key": "Martin Satriano-2026-10-19-Bet365-shadow_track",
       "status": "SHADOW",
       "action": "shadow_track",
@@ -233,9 +210,9 @@
       "lineup_short": "~",
       "lineup_label": "FotMob Expected XI",
       "lineup_status": "expected_starter",
-      "odds": 3.75,
+      "odds": 4.0,
       "fair": 2.549,
-      "edge_pct": 47.118,
+      "edge_pct": 56.9259,
       "stake_label": "-"
     },
     {
@@ -377,52 +354,6 @@
       "stake_label": "-"
     },
     {
-      "key": "Samuele Birindelli-2026-10-19-Bet365-shadow_track",
-      "status": "SHADOW",
-      "action": "shadow_track",
-      "action_label": "shadow",
-      "league_key": "serie-a",
-      "league_label": "SA",
-      "competition": "Italy - Serie A",
-      "player": "Samuele Birindelli",
-      "team": "Monza",
-      "opponent": "Cagliari Calcio",
-      "match": "Monza vs Cagliari Calcio",
-      "match_date": "2026-10-19",
-      "kickoff": "2026-10-19",
-      "bookmaker": "Bet365",
-      "lineup_short": "~",
-      "lineup_label": "FotMob Expected XI",
-      "lineup_status": "expected_starter",
-      "odds": 7.0,
-      "fair": 5.8631,
-      "edge_pct": 19.3902,
-      "stake_label": "-"
-    },
-    {
-      "key": "Eddy Kouadio-2026-10-19-Bet365-shadow_track",
-      "status": "SHADOW",
-      "action": "shadow_track",
-      "action_label": "shadow",
-      "league_key": "serie-a",
-      "league_label": "SA",
-      "competition": "Italy - Serie A",
-      "player": "Eddy Kouadio",
-      "team": "Monza",
-      "opponent": "Cagliari Calcio",
-      "match": "Monza vs Cagliari Calcio",
-      "match_date": "2026-10-19",
-      "kickoff": "2026-10-19",
-      "bookmaker": "Bet365",
-      "lineup_short": "~",
-      "lineup_label": "FotMob Expected XI",
-      "lineup_status": "expected_starter",
-      "odds": 11.0,
-      "fair": 9.294,
-      "edge_pct": 18.3558,
-      "stake_label": "-"
-    },
-    {
       "key": "Nemanja Gudelj-2026-10-19-Bet365-shadow_track",
       "status": "SHADOW",
       "action": "shadow_track",
@@ -466,29 +397,6 @@
       "odds": 3.0,
       "fair": 2.7106,
       "edge_pct": 10.6766,
-      "stake_label": "-"
-    },
-    {
-      "key": "Juan Rodriguez-2026-10-19-Bet365-shadow_track",
-      "status": "SHADOW",
-      "action": "shadow_track",
-      "action_label": "shadow",
-      "league_key": "serie-a",
-      "league_label": "SA",
-      "competition": "Italy - Serie A",
-      "player": "Juan Rodriguez",
-      "team": "Cagliari",
-      "opponent": "AC Monza",
-      "match": "Cagliari vs AC Monza",
-      "match_date": "2026-10-19",
-      "kickoff": "2026-10-19",
-      "bookmaker": "Bet365",
-      "lineup_short": "~",
-      "lineup_label": "FotMob Expected XI",
-      "lineup_status": "expected_starter",
-      "odds": 15.0,
-      "fair": 14.0684,
-      "edge_pct": 6.6222,
       "stake_label": "-"
     },
     {
@@ -624,9 +532,9 @@
       "lineup_short": "~",
       "lineup_label": "FotMob Expected XI",
       "lineup_status": "expected_starter",
-      "odds": 3.75,
+      "odds": 3.5,
       "fair": 2.8147,
-      "edge_pct": 33.231100000000005,
+      "edge_pct": 24.349,
       "stake_label": "-"
     },
     {
@@ -656,22 +564,6 @@
   "fixture_health": {
     "rows": [
       {
-        "key": "serie-a|2026-10-19|ac monza|cagliari",
-        "league_key": "serie-a",
-        "league_label": "Serie A",
-        "match_date": "2026-10-19",
-        "home_team": "AC Monza",
-        "away_team": "Cagliari Calcio",
-        "competition": "Italy - Serie A",
-        "bookmaker": "Bet365",
-        "lineup_input": "expected_xi",
-        "trust_tier": "T2",
-        "corruption_score": 0.0,
-        "corruption_flags": [],
-        "status_label": "Expected XI",
-        "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
-      },
-      {
         "key": "serie-a|2026-10-19|monza|cagliari",
         "league_key": "serie-a",
         "league_label": "Serie A",
@@ -680,12 +572,12 @@
         "away_team": "Cagliari",
         "competition": "",
         "bookmaker": "",
-        "lineup_input": "expected_xi",
-        "trust_tier": "T2",
+        "lineup_input": "confirmed_xi",
+        "trust_tier": "T1",
         "corruption_score": 0.0,
         "corruption_flags": [],
-        "status_label": "Expected XI",
-        "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
+        "status_label": "Lineup Clean",
+        "summary": "This fixture is visible in the monitor, but not in a fully confirmed clean state yet."
       },
       {
         "key": "serie-a|2026-10-19|parma|torino",
@@ -800,67 +692,14 @@
         "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
       }
     ],
-    "clean_count": 0,
-    "degraded_count": 9,
+    "clean_count": 1,
+    "degraded_count": 7,
     "quarantined_count": 0,
     "hidden_pending_count": 0,
-    "hidden_expected_count": 9,
+    "hidden_expected_count": 7,
     "flagged_rows": []
   },
   "fixture_lineups": [
-    {
-      "key": "2026-10-19|Bet365|AC Monza|Cagliari Calcio",
-      "league_key": "serie-a",
-      "league_label": "Serie A",
-      "competition": "Italy - Serie A",
-      "match_date": "2026-10-19",
-      "kickoff": "2026-10-19",
-      "bookmaker": "Bet365",
-      "home_team": "AC Monza",
-      "away_team": "Cagliari Calcio",
-      "matched_player_prices": 43,
-      "health": {
-        "key": "serie-a|2026-10-19|ac monza|cagliari",
-        "league_key": "serie-a",
-        "league_label": "Serie A",
-        "match_date": "2026-10-19",
-        "home_team": "AC Monza",
-        "away_team": "Cagliari Calcio",
-        "competition": "Italy - Serie A",
-        "bookmaker": "Bet365",
-        "lineup_input": "expected_xi",
-        "trust_tier": "T2",
-        "corruption_score": 0.0,
-        "corruption_flags": [],
-        "status_label": "Expected XI",
-        "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
-      },
-      "home": {
-        "team": "AC Monza",
-        "lineup_status": "",
-        "total_players": 0,
-        "matched_players": 0,
-        "keeper": null,
-        "attackers": [],
-        "midfielders": [],
-        "wide_players": [],
-        "centre_backs": [],
-        "unplaced": []
-      },
-      "away": {
-        "team": "Cagliari Calcio",
-        "lineup_status": "",
-        "total_players": 0,
-        "matched_players": 0,
-        "keeper": null,
-        "attackers": [],
-        "midfielders": [],
-        "wide_players": [],
-        "centre_backs": [],
-        "unplaced": []
-      },
-      "has_any_lineup": false
-    },
     {
       "key": "2026-10-19|Bet365|Parma Calcio|Torino FC",
       "league_key": "serie-a",
@@ -7323,18 +7162,18 @@
     "recent_rows": []
   },
   "diagnostics": {
-    "matched_rows": 195,
+    "matched_rows": 152,
     "suppressed_rows": 0,
     "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_xis": 0,
-    "history_mapped_rows": 172,
-    "roster_mapped_rows": 23,
+    "history_mapped_rows": 143,
+    "roster_mapped_rows": 9,
     "fallback_rows": 3,
-    "low_confidence_rows": 125,
-    "missing_player_history_rows": 37,
+    "low_confidence_rows": 97,
+    "missing_player_history_rows": 34,
     "starter_rows": 0,
-    "expected_starter_rows": 88,
-    "avg_ev_pct": -68.14321384615386,
+    "expected_starter_rows": 69,
+    "avg_ev_pct": -68.90135592105266,
     "source_feed_gap_leagues": [
       {
         "key": "bundesliga",
@@ -7347,12 +7186,12 @@
         "detail": "Source feed returned 0 current ATGS rows for this league window."
       }
     ],
-    "raw_monitor_summary": "=== Serie A | Updated 19/10/2026, 16:51 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-10-19T13:56:47Z\n\nHistorical Rows          32,694\nOdds Rows                97\nMatched Rows             89\nMissing Player History   8\nMissing Team Mapping     0\nFallback Rows            1\nQualified Rows           7\nRoster Resolved Rows     24\nHigh Confidence Rows     0\nMedium Confidence Rows   30\nLow Confidence Rows      59\nPublic High Signals      0\nPublic Caveat Signals    6\nShadow Track Rows        7\nPenalty Transfer Rows    1\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 4\nFixtures Clean           0\nFixtures Degraded        4\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    39\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        50\n\nAverage EV               -0.6787\n\n\n=== Premier League | Updated 19/10/2026, 16:51 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-10-19T13:56:55Z\n\nHistorical Rows          32,301\nOdds Rows                40\nMatched Rows             20\nMissing Player History   20\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           1\nRoster Resolved Rows     1\nHigh Confidence Rows     0\nMedium Confidence Rows   10\nLow Confidence Rows      10\nPublic High Signals      0\nPublic Caveat Signals    1\nShadow Track Rows        1\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 1\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    10\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        10\n\nAverage EV               -0.7608\n\n\n=== La Liga | Updated 19/10/2026, 16:51 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-10-19T13:57:03Z\n\nHistorical Rows          34,426\nOdds Rows                92\nMatched Rows             86\nMissing Player History   9\nMissing Team Mapping     0\nFallback Rows            2\nQualified Rows           13\nRoster Resolved Rows     4\nHigh Confidence Rows     0\nMedium Confidence Rows   30\nLow Confidence Rows      56\nPublic High Signals      0\nPublic Caveat Signals    13\nShadow Track Rows        13\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 4\nFixtures Clean           0\nFixtures Degraded        4\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    39\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        47\n\nAverage EV               -0.6658\n\n\n=== Bundesliga | Updated 19/10/2026, 16:51 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-10-19T13:57:08Z\n\nHistorical Rows          26,716\nOdds Rows                0\nMatched Rows             0\nMissing Player History   0\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n\n\n=== Ligue 1 | Updated 19/10/2026, 16:51 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-10-19T13:57:10Z\n\nHistorical Rows          26,317\nOdds Rows                0\nMatched Rows             0\nMissing Player History   0\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n"
+    "raw_monitor_summary": "=== Serie A | Updated 19/10/2026, 17:58 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-10-19T16:58:24Z\n\nHistorical Rows          32,694\nOdds Rows                48\nMatched Rows             46\nMissing Player History   5\nMissing Team Mapping     0\nFallback Rows            1\nQualified Rows           3\nRoster Resolved Rows     19\nHigh Confidence Rows     0\nMedium Confidence Rows   15\nLow Confidence Rows      31\nPublic High Signals      0\nPublic Caveat Signals    3\nShadow Track Rows        3\nPenalty Transfer Rows    1\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 1\nFixtures With Expected Lineups 2\nFixtures Clean           1\nFixtures Degraded        2\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    20\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        26\n\nAverage EV               -0.7053\n\n\n=== Premier League | Updated 19/10/2026, 17:58 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-10-19T16:58:31Z\n\nHistorical Rows          32,301\nOdds Rows                40\nMatched Rows             20\nMissing Player History   20\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           1\nRoster Resolved Rows     1\nHigh Confidence Rows     0\nMedium Confidence Rows   10\nLow Confidence Rows      10\nPublic High Signals      0\nPublic Caveat Signals    1\nShadow Track Rows        1\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 1\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    10\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        10\n\nAverage EV               -0.7608\n\n\n=== La Liga | Updated 19/10/2026, 17:58 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-10-19T16:58:40Z\n\nHistorical Rows          34,426\nOdds Rows                92\nMatched Rows             86\nMissing Player History   9\nMissing Team Mapping     0\nFallback Rows            2\nQualified Rows           13\nRoster Resolved Rows     4\nHigh Confidence Rows     0\nMedium Confidence Rows   30\nLow Confidence Rows      56\nPublic High Signals      0\nPublic Caveat Signals    13\nShadow Track Rows        13\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 4\nFixtures Clean           0\nFixtures Degraded        4\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    39\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        47\n\nAverage EV               -0.6636\n\n\n=== Bundesliga | Updated 19/10/2026, 17:58 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-10-19T13:57:08Z\n\nHistorical Rows          26,716\nOdds Rows                0\nMatched Rows             0\nMissing Player History   0\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n\n\n=== Ligue 1 | Updated 19/10/2026, 17:58 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-10-19T13:57:10Z\n\nHistorical Rows          26,317\nOdds Rows                0\nMatched Rows             0\nMissing Player History   0\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           0\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   0\nLow Confidence Rows      0\nPublic High Signals      0\nPublic Caveat Signals    0\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        0\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               0.0000\n"
   },
   "research_status": {
     "status": "RESEARCH_ONLY",
     "model_variant": "v2_minutes_absolute_share_repair",
-    "updated_at": "2026-10-19T15:51:45Z",
+    "updated_at": "2026-10-19T16:58:07Z",
     "parity": {
       "decision": "PASS",
       "golden_rows": 25,
@@ -7395,5 +7234,5 @@
     }
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "6ff8542babb0c67377cbc5646ce2ad26cffed6f7bd8088809fdd24047fcb3113"
+  "payload_hash": "af04374ff4e1016136a4cdfbbe30b69b19a630c2bd25a7d1c99340b748dbf75c"
 }
