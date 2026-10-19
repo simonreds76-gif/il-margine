@@ -1,4 +1,4 @@
-﻿# Il Margine - AM Tennis Refresh
+# Il Margine - AM Tennis Refresh
 # Lighter daytime refresh: refresh today's OnCourt schedule/tours, then odds/fair-odds/shadow append.
 
 $ErrorActionPreference = "Stop"
@@ -331,7 +331,7 @@ try {
     Log "=== Post-step: spread_v1 refresh skipped in AM task (nightly/weekly only) ==="
 
     Log "=== Post-step: Daily tennis Telegram digest ==="
-    $digestExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--require-ready") -Label "daily tennis Telegram digest" -TimeoutSeconds 90
+    $digestExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--require-ready", "--props-pending") -Label "daily tennis Telegram digest" -TimeoutSeconds 90
     if ($digestExit -ne 0) {
         Log "WARNING: daily tennis Telegram digest failed/timed out (exit $digestExit); signal generation remains valid."
     }
