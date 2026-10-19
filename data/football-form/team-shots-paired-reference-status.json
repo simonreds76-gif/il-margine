@@ -19,7 +19,7 @@
         "roi": 0.0463809523809524,
         "stake_units": 21,
         "pending": 15,
-        "overdue": 7,
+        "overdue": 10,
         "unavailable_contracts": 96,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
@@ -57,7 +57,7 @@
         "roi": 0.1541818181818182,
         "stake_units": 22,
         "pending": 15,
-        "overdue": 5,
+        "overdue": 8,
         "unavailable_contracts": 17,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
@@ -76,7 +76,7 @@
         "roi": 0.1483636363636364,
         "stake_units": 11,
         "pending": 4,
-        "overdue": 2,
+        "overdue": 3,
         "unavailable_contracts": 17,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
@@ -95,14 +95,12 @@
   "model_fingerprint": "d4723cba0af2b4604f3204e9d1d996542f206fc42313612b2a79117a64d4cce0",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 240,
-  "generated_at": "2026-10-19T16:55:02Z",
-  "new_contracts": 6,
-  "scan_exclusions": {
-    "stale_price": 40
-  },
+  "generated_at": "2026-10-19T21:14:55Z",
+  "new_contracts": 0,
+  "scan_exclusions": {},
   "latest_archived_capture": "2026-10-19T16:54:40Z",
   "latest_result_date": "2026-10-16",
-  "raw_upcoming_rows": 184,
+  "raw_upcoming_rows": 0,
   "status": "COLLECTING",
   "cohorts": {
     "paired-market-offset-20260930-v2": {
@@ -126,7 +124,7 @@
             "roi": 0.0463809523809524,
             "stake_units": 21,
             "pending": 14,
-            "overdue": 7,
+            "overdue": 10,
             "unavailable_contracts": 94,
             "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
           }
@@ -164,7 +162,7 @@
             "roi": 0.1541818181818182,
             "stake_units": 22,
             "pending": 15,
-            "overdue": 5,
+            "overdue": 8,
             "unavailable_contracts": 17,
             "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
           }
@@ -183,7 +181,7 @@
             "roi": 0.1483636363636364,
             "stake_units": 11,
             "pending": 4,
-            "overdue": 2,
+            "overdue": 3,
             "unavailable_contracts": 17,
             "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
           }
