@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-19T13:26:37Z",
+  "generated_at": "2026-10-19T15:52:10Z",
   "league": "epl",
-  "row_count": 2,
+  "row_count": 1,
   "rows": [
     {
       "date": "2026-10-17",
@@ -44,7 +44,7 @@
           "source_event_id": "2983018805",
           "match_id": "5795481",
           "source_url": "https://www.fotmob.com/matches/manchester-city-vs-ipswich-town/2sc4e3#5795481",
-          "observed_at": "2026-10-19T13:26:13+00:00",
+          "observed_at": "2026-10-19T15:52:09+00:00",
           "event_date": "2026-10-17",
           "season": "2026/27",
           "team": "Ipswich Town",
@@ -74,76 +74,12 @@
           "event_result": "scored"
         }
       ]
-    },
-    {
-      "date": "2026-10-12",
-      "league": "epl",
-      "review_source": "fotmob_live",
-      "match": "Coventry City vs Newcastle United",
-      "team": "Coventry City",
-      "opponent": "Newcastle United",
-      "actual_taker": "Jack Rudoni",
-      "actual_role_pre_match": "none",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "6",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Haji Wright",
-      "secondary_pre_match": "Victor Torp",
-      "tertiary_pre_match": "Brandon Thomas-Asante",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "unranked_taker",
-      "review_priority": "high",
-      "editorial_note": "Jack Rudoni took 1 penalty attempt and scored for Coventry City vs Newcastle United. Primary pre-match: Haji Wright (unknown). Secondary pre-match: Victor Torp (unknown). Strong review flag: the taker was not in the tracked top three.",
-      "context_generated_at": "2026-09-02",
-      "context_source_path": "data/goalscorer/epl-penalty-takers.json",
-      "actual_taker_match_status": "Yes - started, off 83'",
-      "primary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
-      "secondary_on_pitch_at_penalty": "No - bench, on 83'",
-      "tertiary_on_pitch_at_penalty": "Yes - started",
-      "actual_taker_on_pitch_at_penalty": "Yes - started, off 83'",
-      "event_evidence": [
-        {
-          "id": "fotmob|epl|5795468|2980971647",
-          "source_event_id": "2980971647",
-          "match_id": "5795468",
-          "source_url": "https://www.fotmob.com/matches/coventry-city-vs-newcastle-united/2yooc8#5795468",
-          "observed_at": "2026-10-19T13:26:13+00:00",
-          "event_date": "2026-10-12",
-          "season": "2026/27",
-          "team": "Coventry City",
-          "taker": "Jack Rudoni",
-          "primary": "Haji Wright",
-          "primary_on_pitch": null,
-          "on_pitch_proof": {
-            "player": "Haji Wright",
-            "minute": 6,
-            "method": "completed_lineup_timeline",
-            "reason": "missing_or_ambiguous_player"
-          },
-          "minute": 6,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Coventry City vs Newcastle United",
-          "event_result": "scored"
-        }
-      ]
     }
   ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261011",
-      "20261012",
       "20261013",
       "20261014",
       "20261015",
@@ -152,6 +88,6 @@
       "20261018",
       "20261019"
     ],
-    "matches_checked": 13
+    "matches_checked": 9
   }
 }
