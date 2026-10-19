@@ -28,7 +28,10 @@ spec.loader.exec_module(O)
 V, PUB = O.V, O.PUB
 MODELS = ('ema20_v3', 'v4', 'opponent', 'shots_market_offset_v1')
 CALIBRATION_PATH = ROOT/'data/team-shots/shots-market-offset-v1.json'
-VERSION = 'paired-market-offset-20260930-v2'
+VERSION = 'paired-market-offset-20261019-club-alias-v3'
+
+class ModelFingerprintMismatch(ValueError):
+    """Hold new forecasts without preventing independent settlement/reporting."""
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
@@ -41,7 +44,7 @@ def model_fingerprint():
         'scripts/publish-football-research-picks.py','scripts/build-football-form-layer.py',
         'scripts/backtest-football-form-layer.py','scripts/team_shots_opponent.py',
         'scripts/team-shots-opponent-shadow.py','scripts/football_counts.py','scripts/football_market.py',
-        'scripts/football_team_names.py','data/team-shots/team-shots-v4-params.json',
+        'scripts/football_team_names.py','scripts/settlement_utils.py','scripts/football_form_integrity.py','data/team-shots/team-shots-v4-params.json',
         'data/team-shots/team-shots-v4-lock.json','data/team-shots/team-shots-opponent-config.json',
         'data/team-shots/shots-market-offset-v1.json']
     values={name:hashlib.sha256((ROOT/name).read_text(encoding='utf8').encode()).hexdigest() for name in names}
@@ -49,7 +52,13 @@ def model_fingerprint():
 
 def check_fingerprint(existing, fingerprint):
     if any(r.get('model_fingerprint')!=fingerprint for r in existing):
-        raise ValueError('Comparison model code or weights changed; review and register a new cohort before collecting')
+        raise ModelFingerprintMismatch('Comparison model code or weights changed; review and register a new cohort before collecting')
+
+def check_registration(fingerprint):
+    path=ROOT/'data/team-shots/paired-reference-cohort.json'
+    registration=json.loads(path.read_text(encoding='utf8')) if path.exists() else {}
+    if registration.get('version')!=VERSION or registration.get('model_fingerprint')!=fingerprint:
+        raise ModelFingerprintMismatch('Current paired inference does not match its registered cohort fingerprint')
 
 def calibrated_forecast(opponent, pair):
     if 'raw_p_over' not in opponent:
@@ -308,13 +317,15 @@ def main():
     historical=existing
     existing=current_cohort(historical)
     fingerprint=model_fingerprint()
+    check_registration(fingerprint)
     check_fingerprint(existing,fingerprint)
-    seen={r['contract_id'] for r in existing}
+    # A cohort change must not recapture an existing contract at a later price.
+    seen={contract(dict(r,kickoff=PUB.parse_dt(r['kickoff_utc']))) for r in historical}
     pairs=[p for p in pairs if contract(p['over']) not in seen]
     opponent_base=O.read_base(base_path) if pairs else []
     match_path=data('data/football-form/football-1x2-odds-history.csv')
     records=score(pairs,raw,base,opponent_base,config,params,lock,PUB.load_csv(match_path),now) if pairs else []
-    select_first_scan(records,existing)
+    select_first_scan(records,historical)
     hashes={str(p.relative_to(ROOT)):digest(p) for p in [Path(__file__),ROOT/'scripts/team_shots_ema20_reference.py',ROOT/'scripts/team_shots_ema20_features.py',V.TEAM_PARAMS,V.TEAM_LOCK,O.CONFIG,ROOT/'scripts/publish-football-vnext-shadow.py',ROOT/'scripts/team_shots_opponent.py']}
     hashes['calibration_sha256']=digest(CALIBRATION_PATH)
     hashes.update(base_sha256=digest(base_path),odds_sha256=digest(odds_path),match_odds_sha256=digest(match_path))
