@@ -36,6 +36,23 @@ class KeeperWatchTests(unittest.TestCase):
     def run_watch(self, rows=None, now=None):
         return w.run([self.row] if rows is None else rows,self.params,self.root,now=now or self.now)
 
+    def test_verified_alternative_starter_voids_predicted_keeper(self):
+        self.run_watch(); self.result()
+        path=self.root/'data/aerial/keeper-history.json.gz'
+        data=read(path); data['fixtures']['100'][0]['keepers'][0]['player_id']=99
+        write(path,data)
+        result=self.run_watch([],self.now+timedelta(days=3))
+        for arm in ('current','keeper_watch'):
+            self.assertEqual(result['records'][arm]['voids'],1)
+            self.assertEqual(result['records'][arm]['overdue'],0)
+            self.assertEqual(result['records'][arm]['profit'],0)
+
+    def test_incomplete_alternative_starter_stays_review(self):
+        row={'match_id':'100','player_id':'1','team_id':'2','kickoff_at':'2026-01-20T18:00:00Z'}
+        source={'kickoff':row['kickoff_at'],'source_hash':'test','full_match_agreement':False,
+                'keepers':[{'player_id':99,'team_id':2,'started':True,'minutes':45}]}
+        self.assertEqual(w.outcome(row,{'100':source},self.now)['status'],'review')
+
     def test_capture_is_paired_and_idempotent_with_locked_odds(self):
         a=self.run_watch();self.assertEqual(a['forecast_keepers'],1);self.assertEqual(a['new_selections'],2)
         row=copy.deepcopy(self.row);row['odds_decimal']=2.5

@@ -105,6 +105,13 @@ def outcome(row, outcomes, now):
     if r.get('conflict'):return {'status':'review','reason':'conflicting_source_versions'}
     if r['kickoff'][:10]!=row['kickoff_at'][:10]:return {'status':'review','reason':'fixture_date_mismatch'}
     people=[k for k in r['keepers'] if str(k['player_id'])==row['player_id'] and str(k['team_id'])==row['team_id']]
+    if not people and r.get('full_match_agreement'):
+        # A verified different starter for this exact team proves this selection
+        # was a nonstarter. Missing/incomplete lineups still require review.
+        starters=[k for k in r['keepers'] if str(k['team_id'])==row['team_id'] and k.get('started') is True and k.get('minutes')==90]
+        if len(starters)==1 and str(starters[0]['player_id'])!=row['player_id']:
+            return {'status':'void','reason':'verified_different_starting_keeper',
+                    'source_hash':r['source_hash'],'settled_at':now.isoformat()}
     if len(people)!=1:return {'status':'review','reason':'keeper_identity_unresolved'}
     k=people[0];source={'source_hash':r['source_hash'],'settled_at':now.isoformat()}
     if k.get('started') is False:return {**source,'status':'void','reason':'confirmed_nonstarter'}

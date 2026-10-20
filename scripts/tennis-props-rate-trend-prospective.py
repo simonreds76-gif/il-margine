@@ -170,7 +170,7 @@ def accepted_result_dates(record):
     if registered >= start or captured >= start or abs((day-start.date()).days) > 1:
         return set()
     dates = {start.date()}
-    zone = {'us open': 'America/New_York', 'beijing': 'Asia/Shanghai'}.get(
+    zone = {'us open': 'America/New_York', 'beijing': 'Asia/Shanghai', 'shanghai':'Asia/Shanghai', 'wuhan':'Asia/Shanghai'}.get(
         MODEL['tournament_identity'](row.get('tournament')))
     if zone:
         try:
@@ -183,18 +183,37 @@ def accepted_result_dates(record):
     return {day.strftime('%Y%m%d') for day in dates}
 
 
+def verified_schedule_change(record, candidate, now):
+    """Date-only outcomes require proof the entire played day follows capture.
+
+    Caller additionally requires the same tour, year, two players and canonical
+    tournament, and exactly one result. No name-only or closest-date fallback.
+    """
+    row=record['row']
+    start=stamp(row.get('match_start_utc'));captured=stamp(row.get('capture_ts'));registered=stamp(record.get('registered_at'))
+    try: played=datetime.strptime(str(candidate.get('tourney_date','')).replace('-','')[:8], '%Y%m%d').date()
+    except ValueError:return False
+    if not all((start,captured,registered)) or not captured<=registered<start:return False
+    return (played<=now.date() and abs((played-start.date()).days)<=3
+            and captured.date()<played and registered.date()<played)
+
+
 def settle(records, source, outcomes, now):
     pending = [r for r in records if r['id'] not in outcomes
                and stamp(r['row'].get('match_start_utc'))
-               and stamp(r['row']['match_start_utc']) < now and accepted_result_dates(r)]
+               and stamp(r['row']['match_start_utc']) < now]
     index = SETTLE['load_oncourt_index'](source, [r['row'] for r in pending])
     for record in pending:
         row = record['row']
         key = (row['tour'], int(row['date'][:4]), SETTLE['pair_key'](row['player'], row['opponent']))
         dates = accepted_result_dates(record)
-        candidates = [c for c in index.get(key, [])
-                      if str(c.get('tourney_date')).replace('-', '')[:8] in dates
-                      and MODEL['tournament_identity'](c.get('tourney_name')) == MODEL['tournament_identity'](row['tournament'])]
+        same_event = [c for c in index.get(key, [])
+                      if MODEL['tournament_identity'](c.get('tourney_name')) == MODEL['tournament_identity'](row['tournament'])]
+        candidates = [c for c in same_event if str(c.get('tourney_date')).replace('-', '')[:8] in dates]
+        timing_rule = 'original_start_or_known_venue_date'
+        if not candidates:
+            candidates = [c for c in same_event if verified_schedule_change(record, c, now)]
+            timing_rule = 'unique_pair_tournament_year_verified_prematch_date_change'
         unique = {digest(c): c for c in candidates}
         if len(unique) != 1:
             continue
@@ -207,7 +226,7 @@ def settle(records, source, outcomes, now):
                 continue
             result = {'status': 'settled', 'actual': actual}
         outcomes[record['id']] = dict(result, settled_at=now.isoformat(), source='oncourt', source_hash=digest(candidate),
-                                      source_result_date=candidate['tourney_date'], scheduled_start_utc=row['match_start_utc'])
+                                      source_result_date=candidate['tourney_date'], scheduled_start_utc=row['match_start_utc'], timing_rule=timing_rule)
 
 
 def report(records, outcomes, health, config, now, *, include_cohorts=True):
@@ -219,6 +238,7 @@ def report(records, outcomes, health, config, now, *, include_cohorts=True):
         for model in ('control', 'candidate'):
             pnl, bets, brier = 0., 0, []
             tallies = Counter()
+            price_bands = {}
             for r in settled:
                 actual = outcomes[r['id']]['actual']
                 row, predictions = r['row'], r[model]
@@ -228,20 +248,27 @@ def report(records, outcomes, health, config, now, *, include_cohorts=True):
                     tallies['pushes' if won is None else 'wins' if won else 'losses'] += 1
                     pnl += payoff
                     bets += 1
+                    odds = float(row[side.lower()+'_odds'])
+                    band = 'below_3' if odds < 3 else '3_to_5' if odds < 5 else '5_to_10' if odds < 10 else '10_plus'
+                    bucket = price_bands.setdefault(band, {'bets':0,'wins':0,'losses':0,'pushes':0,'pnl_units':0.0})
+                    bucket['bets'] += 1
+                    bucket['wins' if won else 'losses' if won is not None else 'pushes'] += 1
+                    bucket['pnl_units'] += payoff
                 if actual != float(row['line']):
                     brier.append((predictions['OVER']['p_conditional'] - int(actual > float(row['line'])))**2)
-            metrics[model] = {'bets': bets, 'wins': tallies['wins'], 'losses': tallies['losses'], 'pushes': tallies['pushes'], 'stake_units': bets, 'pnl_units': pnl, 'roi_pct': 100*pnl/bets if bets else None,
+            metrics[model] = {'price_bands': price_bands, 'selected_fixtures': len({r['fixture_key'] for r in settled if r[f'{model}_side']}), 'bets': bets, 'wins': tallies['wins'], 'losses': tallies['losses'], 'pushes': tallies['pushes'], 'stake_units': bets, 'pnl_units': pnl, 'roi_pct': 100*pnl/bets if bets else None,
                               'brier': sum(brier)/len(brier) if brier else None}
         fixtures = {r['fixture_key'] for r in settled}
         tournaments = {MODEL['tournament_identity'](r['row']['tournament']) for r in settled}
         age_days = max(0, (now - stamp(group[0]['registered_at'])).days) if group else 0
         markets[market] = dict(registered=len(group), settled=len(settled), pending=sum(r['id'] not in outcomes for r in group),
+                               overdue_quotes=sum(r['id'] not in outcomes and (now-stamp(r['row']['match_start_utc'])).total_seconds()>48*3600 for r in group),
                                independent_fixtures=len(fixtures), tournaments=len(tournaments), age_days=age_days,
                                review_floor_met=len(fixtures)>=200 and len(tournaments)>=4 and age_days>=56,
                                **metrics)
     payload = dict(schema_version=1, generated_at=now.isoformat(), model=config['id'], status='SHADOW_ONLY',
                 automatic_promotion=False, config_hash=digest(config), health=health, markets=markets,
-                interpretation='Paired full-board research; correlated lines are not independent bets. No ROI claim before prospective review.')
+                interpretation='Full-board paper experiment, including lines blocked by normal signal filters; every selected contract is 1u hypothetical. Correlated lines are not independent bets. All losses retained.')
     if include_cohorts:
         payload['quote_cohorts'] = {cohort: report([r for r in records if quote_cohort(r) == cohort], outcomes,
                                                 {}, config, now, include_cohorts=False)['markets']
