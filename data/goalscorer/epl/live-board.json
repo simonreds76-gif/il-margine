@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-19T21:31:13Z",
+  "generated_at": "2026-10-20T01:05:04Z",
   "league": "epl",
   "row_count": 0,
   "stats": {
     "historical_rows": 32301,
     "odds_rows": 0,
     "matched_rows": 0,
-    "missing_player_history": 12,
+    "missing_player_history": 0,
     "missing_team_mapping": 0,
     "fallback_rows": 0,
     "qualified_rows": 0,
-    "roster_resolved_rows": 2,
+    "roster_resolved_rows": 0,
     "high_confidence_rows": 0,
     "medium_confidence_rows": 0,
     "low_confidence_rows": 0,
@@ -21,9 +21,9 @@
     "penalty_transfer_rows": 0,
     "position_upgrade_rows": 0,
     "role_adjusted_rows": 0,
-    "fixtures_with_confirmed_lineups": 1,
+    "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 0,
-    "fixtures_clean": 1,
+    "fixtures_clean": 0,
     "fixtures_degraded": 0,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
@@ -34,222 +34,6 @@
     "not_in_squad_rows": 0,
     "avg_ev": 0.0
   },
-  "fixtures": [
-    {
-      "match_date": "2026-10-19",
-      "home_team": "Tottenham Hotspur",
-      "away_team": "Coventry City",
-      "league": "epl",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Antonín Kinský",
-          "status": "plausible",
-          "known_team_keys": [
-            "tottenham"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jan Paul van Hecke",
-          "status": "plausible",
-          "known_team_keys": [
-            "tottenham"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tosin Adarabioyo",
-          "status": "plausible",
-          "known_team_keys": [
-            "chelsea",
-            "tottenham"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Micky van de Ven",
-          "status": "plausible",
-          "known_team_keys": [
-            "tottenham"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Andrew Robertson",
-          "status": "plausible",
-          "known_team_keys": [
-            "tottenham"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Sandro Tonali",
-          "status": "plausible",
-          "known_team_keys": [
-            "tottenham"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Archie Gray",
-          "status": "plausible",
-          "known_team_keys": [
-            "tottenham"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "James Maddison",
-          "status": "plausible",
-          "known_team_keys": [
-            "tottenham"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Mohammed Kudus",
-          "status": "plausible",
-          "known_team_keys": [
-            "tottenham"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Dominic Solanke",
-          "status": "plausible",
-          "known_team_keys": [
-            "tottenham"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Omar Marmoush",
-          "status": "plausible",
-          "known_team_keys": [
-            "tottenham"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Carl Rushworth",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "coventry"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Milan van Ewijk",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "coventry"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Bobby Thomas",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "coventry"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ethan Pinnock",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "coventry"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jay Dasilva",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "coventry"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Caleb Yirenkyi",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "coventry"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Matt Grimes",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "coventry"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tatsuhiro Sakamoto",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "coventry"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jack Rudoni",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "coventry"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Brandon Thomas-Asante",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "coventry"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Sidiki Cherif",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "coventry"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    }
-  ],
+  "fixtures": [],
   "rows": []
 }
