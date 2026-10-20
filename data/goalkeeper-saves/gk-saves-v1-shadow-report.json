@@ -12,54 +12,56 @@
     "value_ladder_lines": 3
   },
   "evidence": {
-    "clv": 0.041585,
-    "clv_matched": 18,
-    "pending": 11,
-    "pnl_units": 17.3155,
-    "roi": 0.558565,
-    "settled": 62,
+    "clv": 0.05358,
+    "clv_matched": 22,
+    "pending": 3,
+    "pnl_units": 17.654,
+    "roi": 0.5044,
+    "settled": 70,
     "settlement_sources": {
-      "fotmob_named_keeper_shotmap": 59,
+      "fotmob_named_keeper_shotmap": 67,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
     "signals": 74,
-    "true_close_coverage": 0.290323,
+    "true_close_coverage": 0.314286,
     "void": 1
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-20T00:39:02.816470+00:00",
+    "checked_at": "2026-10-20T13:38:11.724831+00:00",
     "counts": {
-      "offers_saved": 10
+      "not_fresh_prematch": 10
     },
-    "saved": 1,
-    "status": "CAPTURED"
+    "saved": 0,
+    "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-10-20T00:39:02Z",
+  "generated_at": "2026-10-20T13:38:11Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
-    "exclusions": {},
+    "exclusions": {
+      "not_new_fresh_prematch": 10
+    },
     "forecast_fixtures": 42,
     "forecast_keepers": 82,
-    "generated_at": "2026-10-20T00:39:02.857527+00:00",
+    "generated_at": "2026-10-20T13:38:11.740343+00:00",
     "last_capture_at": "2026-10-20T00:39:02.857527+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 2,
+    "new_forecasts": 0,
     "new_selections": 0,
     "next_review_at": 50,
     "paired_scores": {
       "current": {
-        "brier": 0.17549803942166578,
-        "log_loss": 0.5250756354662168
+        "brier": 0.17275528218818542,
+        "log_loss": 0.5180585452211866
       },
       "keeper_watch": {
-        "brier": 0.18034408788515735,
-        "log_loss": 0.5400917632673113
+        "brier": 0.1770239242254774,
+        "log_loss": 0.5313232016525923
       }
     },
-    "paired_settled_fixtures": 36,
+    "paired_settled_fixtures": 38,
     "paper_stake": 0.5,
     "records": {
       "current": {
@@ -407,7 +409,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 6,
+      "awaiting_verified_keeper_result": 2,
       "incomplete_or_conflicting_full_match_count": 4,
       "keeper_identity_unresolved": 4
     },

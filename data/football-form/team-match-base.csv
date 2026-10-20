@@ -43771,11 +43771,99 @@ date,league,season,team,team_key,opponent,opponent_key,venue,home_team,away_team
 2026-10-12,serie-a,2026-2027,Venezia,venezia,Atalanta,atalanta,away,Atalanta,Venezia,1,3,2.689,2.924,19,22,4,11,7,8,1.57,4.2,5.75,0.1658,0.6072,football-data,understat
 2026-10-12,serie-a,2026-2027,Torino,torino,Udinese,udinese,home,Torino,Udinese,2,1,2.381,0.574,12,15,4,1,4,3,2.3,3.2,3.3,0.414,0.2885,football-data,understat
 2026-10-12,serie-a,2026-2027,Udinese,udinese,Torino,torino,away,Torino,Udinese,1,2,0.574,2.381,15,12,1,4,3,4,2.3,3.2,3.3,0.2885,0.414,football-data,understat
-2026-10-16,bundesliga,2026-2027,Eintracht Frankfurt,ein frankfurt,FC Cologne,1 koln,home,Eintracht Frankfurt,FC Cologne,1,0,1.27021,1.02313,15,9,7,3,7,3,,,,,,fotmob_verified_fulltime,understat
-2026-10-16,bundesliga,2026-2027,FC Cologne,1 koln,Eintracht Frankfurt,ein frankfurt,away,Eintracht Frankfurt,FC Cologne,0,1,1.02313,1.27021,9,15,3,7,3,7,,,,,,fotmob_verified_fulltime,understat
-2026-10-16,la-liga,2026-2027,Deportivo La Coruna,la coruna,Levante,levante,home,Deportivo La Coruna,Levante,1,1,1.45617,0.56336,13,11,5,4,3,5,,,,,,fotmob_verified_fulltime,understat
-2026-10-16,la-liga,2026-2027,Levante,levante,Deportivo La Coruna,la coruna,away,Deportivo La Coruna,Levante,1,1,0.56336,1.45617,11,13,4,5,5,3,,,,,,fotmob_verified_fulltime,understat
-2026-10-16,ligue-1,2026-2027,Le Mans,le mans,Toulouse,toulouse,home,Le Mans,Toulouse,0,3,0.609329,2.06038,11,13,1,5,2,2,,,,,,fotmob_verified_fulltime,understat
-2026-10-16,ligue-1,2026-2027,Toulouse,toulouse,Le Mans,le mans,away,Le Mans,Toulouse,3,0,2.06038,0.609329,13,11,5,1,2,2,,,,,,fotmob_verified_fulltime,understat
-2026-10-16,serie-a,2026-2027,Frosinone,frosinone,Sassuolo,sassuolo,home,Frosinone,Sassuolo,4,2,2.94443,1.82074,21,14,10,6,5,4,,,,,,fotmob_verified_fulltime,understat
-2026-10-16,serie-a,2026-2027,Sassuolo,sassuolo,Frosinone,frosinone,away,Frosinone,Sassuolo,2,4,1.82074,2.94443,14,21,6,10,4,5,,,,,,fotmob_verified_fulltime,understat
+2026-10-16,bundesliga,2026-2027,Ein Frankfurt,ein frankfurt,FC Koln,1 koln,home,Ein Frankfurt,FC Koln,1,0,1.27,1.023,15,9,7,3,7,3,1.85,4.2,3.6,0.5117,0.2629,football-data,understat
+2026-10-16,bundesliga,2026-2027,FC Koln,1 koln,Ein Frankfurt,ein frankfurt,away,Ein Frankfurt,FC Koln,0,1,1.023,1.27,9,15,3,7,3,7,1.85,4.2,3.6,0.2629,0.5117,football-data,understat
+2026-10-16,la-liga,2026-2027,La Coruna,la coruna,Levante,levante,home,La Coruna,Levante,1,1,1.456,0.563,13,11,5,4,3,5,2.05,3.5,3.6,0.464,0.2642,football-data,understat
+2026-10-16,la-liga,2026-2027,Levante,levante,La Coruna,la coruna,away,La Coruna,Levante,1,1,0.563,1.456,11,13,4,5,5,3,2.05,3.5,3.6,0.2642,0.464,football-data,understat
+2026-10-16,ligue-1,2026-2027,Le Mans,le mans,Toulouse,toulouse,home,Le Mans,Toulouse,0,3,0.609,2.06,11,13,1,5,2,2,3,3.5,2.3,0.3163,0.4126,football-data,understat
+2026-10-16,ligue-1,2026-2027,Toulouse,toulouse,Le Mans,le mans,away,Le Mans,Toulouse,3,0,2.06,0.609,13,11,5,1,2,2,3,3.5,2.3,0.4126,0.3163,football-data,understat
+2026-10-16,serie-a,2026-2027,Frosinone,frosinone,Sassuolo,sassuolo,home,Frosinone,Sassuolo,4,2,2.944,1.821,21,14,10,6,5,4,2.3,3.9,2.75,0.4122,0.3447,football-data,understat
+2026-10-16,serie-a,2026-2027,Sassuolo,sassuolo,Frosinone,frosinone,away,Frosinone,Sassuolo,2,4,1.821,2.944,14,21,6,10,4,5,2.3,3.9,2.75,0.3447,0.4122,football-data,understat
+2026-10-17,bundesliga,2026-2027,Bayern Munich,bayern munich,RB Leipzig,rb leipzig,home,Bayern Munich,RB Leipzig,6,1,4.904,0.704,29,12,17,4,11,3,1.22,7.5,9.5,0.7745,0.0995,football-data,understat
+2026-10-17,bundesliga,2026-2027,RB Leipzig,rb leipzig,Bayern Munich,bayern munich,away,Bayern Munich,RB Leipzig,1,6,0.704,4.904,12,29,4,17,3,11,1.22,7.5,9.5,0.0995,0.7745,football-data,understat
+2026-10-17,bundesliga,2026-2027,Elversberg,elversberg,Augsburg,augsburg,home,Elversberg,Augsburg,4,3,4.003,3.736,19,29,8,8,4,12,2.5,3.75,2.6,0.3805,0.3659,football-data,understat
+2026-10-17,bundesliga,2026-2027,Augsburg,augsburg,Elversberg,elversberg,away,Elversberg,Augsburg,3,4,3.736,4.003,29,19,8,8,12,4,2.5,3.75,2.6,0.3659,0.3805,football-data,understat
+2026-10-17,bundesliga,2026-2027,Hamburg,hamburg,Stuttgart,stuttgart,home,Hamburg,Stuttgart,1,0,,,14,24,3,5,5,9,3.8,4.2,1.8,0.249,0.5257,football-data,
+2026-10-17,bundesliga,2026-2027,Stuttgart,stuttgart,Hamburg,hamburg,away,Hamburg,Stuttgart,0,1,,,24,14,5,3,9,5,3.8,4.2,1.8,0.5257,0.249,football-data,
+2026-10-17,bundesliga,2026-2027,Schalke 04,schalke 04,Mainz,mainz,home,Schalke 04,Mainz,0,1,0.406,1.532,9,10,3,6,4,1,3.1,3.75,2.25,0.3121,0.43,football-data,understat
+2026-10-17,bundesliga,2026-2027,Mainz,mainz,Schalke 04,schalke 04,away,Schalke 04,Mainz,1,0,1.532,0.406,10,9,6,3,1,4,3.1,3.75,2.25,0.43,0.3121,football-data,understat
+2026-10-17,bundesliga,2026-2027,Union Berlin,union berlin,Dortmund,dortmund,home,Union Berlin,Dortmund,0,0,0.936,0.991,11,10,0,2,5,5,5.5,4.33,1.57,0.1732,0.6068,football-data,understat
+2026-10-17,bundesliga,2026-2027,Dortmund,dortmund,Union Berlin,union berlin,away,Union Berlin,Dortmund,0,0,0.991,0.936,10,11,2,0,5,5,5.5,4.33,1.57,0.6068,0.1732,football-data,understat
+2026-10-17,bundesliga,2026-2027,Werder Bremen,werder bremen,Paderborn,paderborn,home,Werder Bremen,Paderborn,2,2,2.667,1.368,18,11,11,4,5,3,1.75,4.2,4.1,0.5424,0.2315,football-data,understat
+2026-10-17,bundesliga,2026-2027,Paderborn,paderborn,Werder Bremen,werder bremen,away,Werder Bremen,Paderborn,2,2,1.368,2.667,11,18,4,11,3,5,1.75,4.2,4.1,0.2315,0.5424,football-data,understat
+2026-10-17,epl,2026-2027,Brentford,brentford,Liverpool,liverpool,home,Brentford,Liverpool,1,2,0.859,1.549,10,21,2,5,3,9,2.3,3.75,2.88,0.4146,0.3311,football-data,understat
+2026-10-17,epl,2026-2027,Liverpool,liverpool,Brentford,brentford,away,Brentford,Liverpool,2,1,1.549,0.859,21,10,5,2,9,3,2.3,3.75,2.88,0.3311,0.4146,football-data,understat
+2026-10-17,epl,2026-2027,Everton,everton,Chelsea,chelsea,home,Everton,Chelsea,0,2,0.571,1.602,6,18,5,7,5,7,3.2,3.8,2.1,0.2971,0.4527,football-data,understat
+2026-10-17,epl,2026-2027,Chelsea,chelsea,Everton,everton,away,Everton,Chelsea,2,0,1.602,0.571,18,6,7,5,7,5,3.2,3.8,2.1,0.4527,0.2971,football-data,understat
+2026-10-17,epl,2026-2027,Fulham,fulham,Hull,hull,home,Fulham,Hull,1,0,2.274,0.131,18,5,6,0,10,2,1.73,3.9,4.5,0.547,0.2103,football-data,understat
+2026-10-17,epl,2026-2027,Hull,hull,Fulham,fulham,away,Fulham,Hull,0,1,0.131,2.274,5,18,0,6,2,10,1.73,3.9,4.5,0.2103,0.547,football-data,understat
+2026-10-17,epl,2026-2027,Man City,man city,Ipswich,ipswich,home,Man City,Ipswich,3,2,4.008,1.372,19,8,6,3,2,3,1.22,7,11,0.7781,0.0863,football-data,understat
+2026-10-17,epl,2026-2027,Ipswich,ipswich,Man City,man city,away,Man City,Ipswich,2,3,1.372,4.008,8,19,3,6,3,2,1.22,7,11,0.0863,0.7781,football-data,understat
+2026-10-17,epl,2026-2027,Newcastle,newcastle,Aston Villa,aston villa,home,Newcastle,Aston Villa,0,1,0.92,2.082,16,15,1,3,4,5,2.25,3.6,3,0.4211,0.3158,football-data,understat
+2026-10-17,epl,2026-2027,Aston Villa,aston villa,Newcastle,newcastle,away,Newcastle,Aston Villa,1,0,2.082,0.92,15,16,3,1,5,4,2.25,3.6,3,0.3158,0.4211,football-data,understat
+2026-10-17,la-liga,2026-2027,Betis,betis,Barcelona,barcelona,home,Betis,Barcelona,2,5,1.353,3.189,6,18,5,10,2,5,5.75,5.75,1.42,0.1653,0.6694,football-data,understat
+2026-10-17,la-liga,2026-2027,Barcelona,barcelona,Betis,betis,away,Betis,Barcelona,5,2,3.189,1.353,18,6,10,5,5,2,5.75,5.75,1.42,0.6694,0.1653,football-data,understat
+2026-10-17,la-liga,2026-2027,Espanol,espanol,Ath Madrid,ath madrid,home,Espanol,Ath Madrid,0,1,0.485,1.778,10,19,2,6,4,12,5,4,1.7,0.1926,0.5666,football-data,understat
+2026-10-17,la-liga,2026-2027,Ath Madrid,ath madrid,Espanol,espanol,away,Espanol,Ath Madrid,1,0,1.778,0.485,19,10,6,2,12,4,5,4,1.7,0.5666,0.1926,football-data,understat
+2026-10-17,la-liga,2026-2027,Valencia,valencia,Ath Bilbao,ath bilbao,home,Valencia,Ath Bilbao,0,0,2.244,0.516,16,9,3,2,2,6,3.4,3.3,2.2,0.2797,0.4322,football-data,understat
+2026-10-17,la-liga,2026-2027,Ath Bilbao,ath bilbao,Valencia,valencia,away,Valencia,Ath Bilbao,0,0,0.516,2.244,9,16,2,3,6,2,3.4,3.3,2.2,0.4322,0.2797,football-data,understat
+2026-10-17,la-liga,2026-2027,Villarreal,villarreal,Elche,elche,home,Villarreal,Elche,0,0,2.296,0.22,20,7,7,1,10,5,1.45,5,6,0.6529,0.1578,football-data,understat
+2026-10-17,la-liga,2026-2027,Elche,elche,Villarreal,villarreal,away,Villarreal,Elche,0,0,0.22,2.296,7,20,1,7,5,10,1.45,5,6,0.1578,0.6529,football-data,understat
+2026-10-17,ligue-1,2026-2027,Lille,lille,Brest,brest,home,Lille,Brest,1,1,2.05,0.787,17,8,5,2,5,2,1.85,3.75,4,0.5113,0.2365,football-data,understat
+2026-10-17,ligue-1,2026-2027,Brest,brest,Lille,lille,away,Lille,Brest,1,1,0.787,2.05,8,17,2,5,2,5,1.85,3.75,4,0.2365,0.5113,football-data,understat
+2026-10-17,ligue-1,2026-2027,Strasbourg,strasbourg,Paris SG,paris sg,home,Strasbourg,Paris SG,1,3,1.314,2.364,17,18,8,7,3,6,6.25,5.5,1.4,0.1515,0.6763,football-data,understat
+2026-10-17,ligue-1,2026-2027,Paris SG,paris sg,Strasbourg,strasbourg,away,Strasbourg,Paris SG,3,1,2.364,1.314,18,17,7,8,6,3,6.25,5.5,1.4,0.6763,0.1515,football-data,understat
+2026-10-17,ligue-1,2026-2027,Troyes,troyes,Lens,lens,home,Troyes,Lens,1,3,1.471,1.846,12,13,5,3,6,4,3.8,4,1.85,0.2497,0.513,football-data,understat
+2026-10-17,ligue-1,2026-2027,Lens,lens,Troyes,troyes,away,Troyes,Lens,3,1,1.846,1.471,13,12,3,5,4,6,3.8,4,1.85,0.513,0.2497,football-data,understat
+2026-10-17,serie-a,2026-2027,Bologna,bologna,Inter,internazionale,home,Bologna,Inter,1,3,1.765,3.596,11,17,4,8,2,6,5.5,4,1.62,0.1733,0.5884,football-data,understat
+2026-10-17,serie-a,2026-2027,Inter,internazionale,Bologna,bologna,away,Bologna,Inter,3,1,3.596,1.765,17,11,8,4,6,2,5.5,4,1.62,0.5884,0.1733,football-data,understat
+2026-10-17,serie-a,2026-2027,Roma,roma,Genoa,genoa,home,Roma,Genoa,2,0,1.414,0.509,15,9,5,1,5,3,1.45,4.5,7,0.6539,0.1354,football-data,understat
+2026-10-17,serie-a,2026-2027,Genoa,genoa,Roma,roma,away,Roma,Genoa,0,2,0.509,1.414,9,15,1,5,3,5,1.45,4.5,7,0.1354,0.6539,football-data,understat
+2026-10-17,serie-a,2026-2027,Venezia,venezia,Napoli,napoli,home,Venezia,Napoli,1,0,0.683,2.555,9,29,4,10,0,12,5,3.9,1.7,0.1915,0.5631,football-data,understat
+2026-10-17,serie-a,2026-2027,Napoli,napoli,Venezia,venezia,away,Venezia,Napoli,0,1,2.555,0.683,29,9,10,4,12,0,5,3.9,1.7,0.5631,0.1915,football-data,understat
+2026-10-18,bundesliga,2026-2027,Leverkusen,leverkusen,Freiburg,freiburg,home,Leverkusen,Freiburg,2,1,1.847,1.207,12,11,5,2,4,3,1.73,4.2,4.2,0.5483,0.2258,football-data,understat
+2026-10-18,bundesliga,2026-2027,Freiburg,freiburg,Leverkusen,leverkusen,away,Leverkusen,Freiburg,1,2,1.207,1.847,11,12,2,5,3,4,1.73,4.2,4.2,0.2258,0.5483,football-data,understat
+2026-10-18,bundesliga,2026-2027,M'gladbach,borussia monchengladbach,Hoffenheim,hoffenheim,home,M'gladbach,Hoffenheim,1,2,0.758,2.171,9,14,3,8,3,6,3.1,4,2.05,0.3042,0.46,football-data,understat
+2026-10-18,bundesliga,2026-2027,Hoffenheim,hoffenheim,M'gladbach,borussia monchengladbach,away,M'gladbach,Hoffenheim,2,1,2.171,0.758,14,9,8,3,6,3,3.1,4,2.05,0.46,0.3042,football-data,understat
+2026-10-18,epl,2026-2027,Bournemouth,bournemouth,Sunderland,sunderland,home,Bournemouth,Sunderland,2,0,4.386,0.094,29,3,6,0,5,3,2.05,3.5,3.6,0.464,0.2642,football-data,understat
+2026-10-18,epl,2026-2027,Sunderland,sunderland,Bournemouth,bournemouth,away,Bournemouth,Sunderland,0,2,0.094,4.386,3,29,0,6,3,5,2.05,3.5,3.6,0.2642,0.464,football-data,understat
+2026-10-18,epl,2026-2027,Brighton,brighton,Crystal Palace,crystal palace,home,Brighton,Crystal Palace,5,0,2.252,0.628,17,5,9,1,8,5,1.53,4.5,5.5,0.618,0.1719,football-data,understat
+2026-10-18,epl,2026-2027,Crystal Palace,crystal palace,Brighton,brighton,away,Brighton,Crystal Palace,0,5,0.628,2.252,5,17,1,9,5,8,1.53,4.5,5.5,0.1719,0.618,football-data,understat
+2026-10-18,epl,2026-2027,Leeds,leeds,Man United,man united,home,Leeds,Man United,1,1,1.41,1.081,12,13,5,3,2,3,2.35,3.6,2.9,0.406,0.329,football-data,understat
+2026-10-18,epl,2026-2027,Man United,man united,Leeds,leeds,away,Leeds,Man United,1,1,1.081,1.41,13,12,3,5,3,2,2.35,3.6,2.9,0.329,0.406,football-data,understat
+2026-10-18,epl,2026-2027,Nott'm Forest,nottm forest,Arsenal,arsenal,home,Nott'm Forest,Arsenal,0,1,0.747,0.915,14,9,2,1,8,6,6,3.9,1.6,0.159,0.5963,football-data,understat
+2026-10-18,epl,2026-2027,Arsenal,arsenal,Nott'm Forest,nottm forest,away,Nott'm Forest,Arsenal,1,0,0.915,0.747,9,14,1,2,6,8,6,3.9,1.6,0.5963,0.159,football-data,understat
+2026-10-18,la-liga,2026-2027,Celta,celta,Alaves,alaves,home,Celta,Alaves,2,1,0.758,1.181,6,20,3,9,0,4,2.1,3.4,3.5,0.4509,0.2706,football-data,understat
+2026-10-18,la-liga,2026-2027,Alaves,alaves,Celta,celta,away,Celta,Alaves,1,2,1.181,0.758,20,6,9,3,4,0,2.1,3.4,3.5,0.2706,0.4509,football-data,understat
+2026-10-18,la-liga,2026-2027,Malaga,malaga,Sociedad,sociedad,home,Malaga,Sociedad,2,5,1.923,2.572,17,21,6,9,4,5,3.3,3.5,2.15,0.2875,0.4413,football-data,understat
+2026-10-18,la-liga,2026-2027,Sociedad,sociedad,Malaga,malaga,away,Malaga,Sociedad,5,2,2.572,1.923,21,17,9,6,5,4,3.3,3.5,2.15,0.4413,0.2875,football-data,understat
+2026-10-18,la-liga,2026-2027,Osasuna,osasuna,Santander,santander,home,Osasuna,Santander,2,0,3.082,0.22,20,9,7,1,7,4,2,3.6,3.7,0.4771,0.2579,football-data,understat
+2026-10-18,la-liga,2026-2027,Santander,santander,Osasuna,osasuna,away,Osasuna,Santander,0,2,0.22,3.082,9,20,1,7,4,7,2,3.6,3.7,0.2579,0.4771,football-data,understat
+2026-10-18,la-liga,2026-2027,Real Madrid,real madrid,Sevilla,sevilla,home,Real Madrid,Sevilla,4,1,2.125,1.322,15,11,8,5,1,2,1.25,7,9.5,0.7633,0.1004,football-data,understat
+2026-10-18,la-liga,2026-2027,Sevilla,sevilla,Real Madrid,real madrid,away,Real Madrid,Sevilla,1,4,1.322,2.125,11,15,5,8,2,1,1.25,7,9.5,0.1004,0.7633,football-data,understat
+2026-10-18,ligue-1,2026-2027,Angers,angers,Marseille,marseille,home,Angers,Marseille,2,5,1.803,3.106,11,21,3,8,2,5,3.3,3.8,2.05,0.2875,0.4628,football-data,understat
+2026-10-18,ligue-1,2026-2027,Marseille,marseille,Angers,angers,away,Angers,Marseille,5,2,3.106,1.803,21,11,8,3,5,2,3.3,3.8,2.05,0.4628,0.2875,football-data,understat
+2026-10-18,ligue-1,2026-2027,Le Havre,le havre,Auxerre,auxerre,home,Le Havre,Auxerre,1,3,1.591,1.958,15,13,6,6,7,4,2.25,3.4,3.2,0.4229,0.2973,football-data,understat
+2026-10-18,ligue-1,2026-2027,Auxerre,auxerre,Le Havre,le havre,away,Le Havre,Auxerre,3,1,1.958,1.591,13,15,6,6,4,7,2.25,3.4,3.2,0.2973,0.4229,football-data,understat
+2026-10-18,ligue-1,2026-2027,Lorient,lorient,Monaco,monaco,home,Lorient,Monaco,1,0,1.752,0.487,9,15,3,4,3,4,3.6,3.5,2.05,0.2642,0.464,football-data,understat
+2026-10-18,ligue-1,2026-2027,Monaco,monaco,Lorient,lorient,away,Lorient,Monaco,0,1,0.487,1.752,15,9,4,3,4,3,3.6,3.5,2.05,0.464,0.2642,football-data,understat
+2026-10-18,ligue-1,2026-2027,Lyon,lyon,Nice,nice,home,Lyon,Nice,2,1,1.705,1.194,8,12,4,5,1,9,1.67,4.1,4.75,0.5685,0.1999,football-data,understat
+2026-10-18,ligue-1,2026-2027,Nice,nice,Lyon,lyon,away,Lyon,Nice,1,2,1.194,1.705,12,8,5,4,9,1,1.67,4.1,4.75,0.1999,0.5685,football-data,understat
+2026-10-18,ligue-1,2026-2027,Paris FC,paris,Rennes,rennes,home,Paris FC,Rennes,4,3,3.062,3.01,19,12,9,7,3,4,2.25,3.6,3,0.4211,0.3158,football-data,understat
+2026-10-18,ligue-1,2026-2027,Rennes,rennes,Paris FC,paris,away,Paris FC,Rennes,3,4,3.01,3.062,12,19,7,9,4,3,2.25,3.6,3,0.3158,0.4211,football-data,understat
+2026-10-18,serie-a,2026-2027,Fiorentina,fiorentina,Como,como,home,Fiorentina,Como,1,3,2.757,2.112,19,16,7,8,11,5,3.5,3.6,2.05,0.2718,0.464,football-data,understat
+2026-10-18,serie-a,2026-2027,Como,como,Fiorentina,fiorentina,away,Fiorentina,Como,3,1,2.112,2.757,16,19,8,7,5,11,3.5,3.6,2.05,0.464,0.2718,football-data,understat
+2026-10-18,serie-a,2026-2027,Juventus,juventus,Lazio,lazio,home,Juventus,Lazio,0,3,0.6,0.818,9,9,2,3,5,7,1.67,3.8,5.25,0.569,0.181,football-data,understat
+2026-10-18,serie-a,2026-2027,Lazio,lazio,Juventus,juventus,away,Juventus,Lazio,3,0,0.818,0.6,9,9,3,2,7,5,1.67,3.8,5.25,0.181,0.569,football-data,understat
+2026-10-18,serie-a,2026-2027,Milan,milan,Atalanta,atalanta,home,Milan,Atalanta,3,2,2.616,1.919,11,12,6,4,2,2,1.8,3.75,4.33,0.5275,0.2193,football-data,understat
+2026-10-18,serie-a,2026-2027,Atalanta,atalanta,Milan,milan,away,Milan,Atalanta,2,3,1.919,2.616,12,11,4,6,2,2,1.8,3.75,4.33,0.2193,0.5275,football-data,understat
+2026-10-18,serie-a,2026-2027,Udinese,udinese,Lecce,lecce,home,Udinese,Lecce,0,3,0.593,4.362,14,17,2,11,1,4,1.85,3.5,4.33,0.5113,0.2185,football-data,understat
+2026-10-18,serie-a,2026-2027,Lecce,lecce,Udinese,udinese,away,Udinese,Lecce,3,0,4.362,0.593,17,14,11,2,4,1,1.85,3.5,4.33,0.2185,0.5113,football-data,understat
+2026-10-19,epl,2026-2027,Tottenham,tottenham,Coventry,coventry,home,Tottenham,Coventry,3,1,0.972,1.144,16,12,5,1,4,4,1.45,4.5,7,0.6539,0.1354,football-data,understat
+2026-10-19,epl,2026-2027,Coventry,coventry,Tottenham,tottenham,away,Tottenham,Coventry,1,3,1.144,0.972,12,16,1,5,4,4,1.45,4.5,7,0.1354,0.6539,football-data,understat
+2026-10-19,la-liga,2026-2027,Getafe,getafe,Vallecano,vallecano,home,Getafe,Vallecano,1,1,0.897,2.293,12,21,4,5,8,8,2.9,3,2.7,0.3289,0.3532,football-data,understat
+2026-10-19,la-liga,2026-2027,Vallecano,vallecano,Getafe,getafe,away,Getafe,Vallecano,1,1,2.293,0.897,21,12,5,4,8,8,2.9,3,2.7,0.3532,0.3289,football-data,understat
+2026-10-19,serie-a,2026-2027,Monza,monza,Cagliari,cagliari,home,Monza,Cagliari,4,0,1.836,2.729,14,16,6,5,2,7,2.38,3.1,3.1,0.3944,0.3028,football-data,understat
+2026-10-19,serie-a,2026-2027,Cagliari,cagliari,Monza,monza,away,Monza,Cagliari,0,4,2.729,1.836,16,14,5,6,7,2,2.38,3.1,3.1,0.3028,0.3944,football-data,understat
+2026-10-19,serie-a,2026-2027,Parma,parma,Torino,torino,home,Parma,Torino,0,3,,,25,9,8,3,6,2,3.1,3.1,2.45,0.3063,0.3875,football-data,
+2026-10-19,serie-a,2026-2027,Torino,torino,Parma,parma,away,Parma,Torino,3,0,,,9,25,3,8,2,6,3.1,3.1,2.45,0.3875,0.3063,football-data,

@@ -1,6 +1,6 @@
 {
   "api_errors": [],
-  "deferred_not_due": 8,
+  "deferred_not_due": 0,
   "details": [
     {
       "detail": "",
@@ -20,41 +20,97 @@
     },
     {
       "detail": "",
-      "goalkeeper": "Mathew Ryan",
-      "match": "RC Deportivo de A Coruna vs Levante UD",
-      "match_date": "2026-10-16",
+      "goalkeeper": "Filip Stankovi\u0107",
+      "match": "Venezia FC vs SSC Napoli",
+      "match_date": "2026-10-17",
       "reason": "settled_fotmob",
-      "signal_id": "72478630|mathew ryan|3.5|over"
+      "signal_id": "71945324|filip stankovi\u0107|3.5|over"
     },
     {
       "detail": "",
-      "goalkeeper": "Arijanet Muri\u0107",
-      "match": "Frosinone Calcio vs Sassuolo Calcio",
-      "match_date": "2026-10-16",
+      "goalkeeper": "Gregor Kobel",
+      "match": "Union Berlin vs Borussia Dortmund",
+      "match_date": "2026-10-17",
       "reason": "settled_fotmob",
-      "signal_id": "71945310|arijanet muri\u0107|3.5|over"
+      "signal_id": "72513244|gregor kobel|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Konstantinos Tzolakis",
+      "match": "Fulham FC vs Hull City",
+      "match_date": "2026-10-17",
+      "reason": "settled_fotmob",
+      "signal_id": "72221320|konstantinos tzolakis|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Massimo Pessina",
+      "match": "Bologna FC vs Inter Milano",
+      "match_date": "2026-10-17",
+      "reason": "fotmob_matched_player_not_goalkeeper",
+      "signal_id": "71945306|massimo pessina|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Maarten Vandevoordt",
+      "match": "Bayern Munich vs RB Leipzig",
+      "match_date": "2026-10-17",
+      "reason": "settled_fotmob",
+      "signal_id": "72513238|maarten vandevoordt|4.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Pierluigi Gollini",
+      "match": "AS Roma vs Genoa CFC",
+      "match_date": "2026-10-17",
+      "reason": "settled_fotmob",
+      "signal_id": "71945320|pierluigi gollini|1.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Loris Karius",
+      "match": "Schalke 04 vs FSV Mainz",
+      "match_date": "2026-10-17",
+      "reason": "settled_fotmob",
+      "signal_id": "72513252|loris karius|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Wladimiro Falcone",
+      "match": "Udinese Calcio vs US Lecce",
+      "match_date": "2026-10-18",
+      "reason": "settled_fotmob",
+      "signal_id": "71945322|wladimiro falcone|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Mike Maignan",
+      "match": "AC Milan vs Atalanta BC",
+      "match_date": "2026-10-18",
+      "reason": "settled_fotmob",
+      "signal_id": "71945314|mike maignan|2.5|over"
     }
   ],
-  "fotmob_requests_used": 6,
-  "generated_at": "2026-10-17T12:16:09Z",
+  "fotmob_requests_used": 14,
+  "generated_at": "2026-10-20T13:38:07Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
-  "pending_due": 2,
-  "pending_total": 10,
+  "pending_due": 3,
+  "pending_total": 3,
   "reason_counts": {
-    "fotmob_matched_player_not_goalkeeper": 1,
+    "fotmob_matched_player_not_goalkeeper": 2,
     "fotmob_save_totals_disagree": 1,
-    "settled_fotmob": 2
+    "settled_fotmob": 8
   },
   "requests_used": 0,
-  "settled": 2,
+  "settled": 8,
   "status": "PARTIAL",
   "verified_player_targets": [
     {
       "appearances": 32,
       "match_id": 5749696,
-      "status": "unchanged",
-      "targets_sha256": "a982e931aac1f5abfdb8855be122751ddb32e62e9d8409bcc0f8fd894fddef68"
+      "status": "saved",
+      "targets_sha256": "ac056e2c30c3d895423061b1a960ed1f87742fef3c6796270e1c2d76b9885ffc"
     },
     {
       "match_id": 5881182,
@@ -62,16 +118,58 @@
       "status": "rejected"
     },
     {
-      "appearances": 31,
-      "match_id": 5868093,
+      "appearances": 32,
+      "match_id": 5749709,
       "status": "saved",
-      "targets_sha256": "b92bbc3103249a05e225446695260958b51dc94278f332ce7df9694822c03456"
+      "targets_sha256": "a51602c555fb17ec09cf85a96933a519024fc72fa50cf2b97090d01e2328d90f"
+    },
+    {
+      "appearances": 30,
+      "match_id": 5881195,
+      "status": "saved",
+      "targets_sha256": "9f16441b160d8ad429c8367c24ebd3b201f8bd6f1ad8e2fb03e0f7a2ff6d5ccf"
+    },
+    {
+      "appearances": 30,
+      "match_id": 5795479,
+      "status": "saved",
+      "targets_sha256": "931bc492c8829af1324eccfe1bdd1413fae63305975f182396187f8e8ec9d360"
+    },
+    {
+      "appearances": 31,
+      "match_id": 5749702,
+      "status": "saved",
+      "targets_sha256": "4776b048089f44be71c69cb73ed9221b5d6b041259a27c64f4889899290be13f"
     },
     {
       "appearances": 32,
-      "match_id": 5749704,
+      "match_id": 5881189,
       "status": "saved",
-      "targets_sha256": "3b88c6ee69284cdcee5e28687ad1a7cf05727465df83260a287fd5d5dd68ec92"
+      "targets_sha256": "d7800d021d6dd1f597a3b02ca55250b79bcbf630f4825bbb5888dfb61c89274c"
+    },
+    {
+      "appearances": 30,
+      "match_id": 5749701,
+      "status": "saved",
+      "targets_sha256": "919b790c0213c63218123ba16a552efb09f83c3e802c1bd5796015a037df79ae"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5881194,
+      "status": "saved",
+      "targets_sha256": "c6027e2784dfa8eaa7d3dbf4601ece19e45124c948f5dd06f38589d7588fc84c"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5749708,
+      "status": "saved",
+      "targets_sha256": "c45484a7e061f2cec7ed2331daf86a74ac52efca78aed0ccb434a6c56fc23859"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5749700,
+      "status": "saved",
+      "targets_sha256": "c6cf5a79c8f04670b13e850feb1b2305d33e68e06b8df9b7b64561e3b49828e6"
     }
   ]
 }

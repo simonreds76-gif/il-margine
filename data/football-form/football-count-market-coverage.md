@@ -1,18 +1,18 @@
 # Football Count Market Coverage
 
-Generated: 2026-10-17T12:15:22Z
+Generated: 2026-10-20T13:36:48Z
 
 This report measures what the configured odds feed actually exposes. A bookmaker offering a market on its website does not prove the aggregator returns it.
 
 | Category | Status | Events | Paired O/U events | Pairing unknown | Competitions | Raw labels |
 |---|---|---:|---:|---:|---:|---|
-| team_fouls_total | MARKET_NAME_ONLY | 27 | 0 | 0 | 5 | Total Fouls Away, Total Fouls Home |
-| match_fouls_total | MARKET_NAME_ONLY | 27 | 0 | 0 | 5 | Total Fouls |
-| team_cards_total | PAIRED_PRICES_OBSERVED | 38 | 37 | 38 | 10 | Bookings Totals Away, Bookings Totals Home |
-| match_cards_total | PAIRED_PRICES_OBSERVED | 43 | 42 | 38 | 10 | Bookings Totals, Number of Cards In Match |
-| player_fouls_committed | MARKET_NAME_ONLY | 36 | 0 | 35 | 9 | Player Fouls |
-| player_fouled | MARKET_NAME_ONLY | 35 | 0 | 35 | 8 | Player To Be Fouled |
-| player_cards | MARKET_NAME_ONLY | 41 | 0 | 41 | 10 | Player Cards |
+| team_fouls_total | MARKET_NAME_ONLY | 1 | 0 | 0 | 1 | Total Fouls Away, Total Fouls Home |
+| match_fouls_total | MARKET_NAME_ONLY | 1 | 0 | 0 | 1 | Total Fouls |
+| team_cards_total | PAIRED_PRICES_OBSERVED | 25 | 5 | 20 | 7 | Bookings Totals Away, Bookings Totals Home |
+| match_cards_total | PAIRED_PRICES_OBSERVED | 31 | 11 | 20 | 7 | Bookings Totals, Number of Cards In Match |
+| player_fouls_committed | MARKET_NAME_ONLY | 21 | 0 | 16 | 6 | Player Fouls |
+| player_fouled | MARKET_NAME_ONLY | 20 | 0 | 16 | 6 | Player To Be Fouled |
+| player_cards | MARKET_NAME_ONLY | 30 | 0 | 20 | 6 | Player Cards |
 
 ## Decision
 
