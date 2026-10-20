@@ -28,24 +28,22 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-20T16:18:48.566732+00:00",
+    "checked_at": "2026-10-20T18:44:00.983602+00:00",
     "counts": {
-      "not_fresh_prematch": 10
+      "offers_saved": 10
     },
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "saved": 1,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-10-20T16:18:48Z",
+  "generated_at": "2026-10-20T18:44:00Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
-    "exclusions": {
-      "not_new_fresh_prematch": 10
-    },
+    "exclusions": {},
     "forecast_fixtures": 42,
     "forecast_keepers": 82,
-    "generated_at": "2026-10-20T16:18:48.595294+00:00",
+    "generated_at": "2026-10-20T18:44:01.021488+00:00",
     "last_capture_at": "2026-10-20T00:39:02.857527+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
