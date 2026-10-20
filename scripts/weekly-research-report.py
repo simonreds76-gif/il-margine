@@ -571,6 +571,8 @@ def goalkeeper_saves_research_summary() -> dict[str, Any]:
         "market_status": market.get("status", "NOT_RUN"),
         "over_lines": len(observed.get("over_lines") or []),
         "capture_status": capture.get("status", "NOT_RUN"),
+        "capture_checked_at": capture.get("checked_at") or capture.get("generated_at"),
+        "prospective_generated_at": prospective.get("generated_at"),
         "capture_events_selected": int(number(capture.get("events_selected"))),
         "capture_events_with_lines": int(number(capture.get("events_with_lines"))),
         "capture_three_way_events": int(number(capture.get("three_way_events"))),
@@ -1433,10 +1435,14 @@ def rate_trend_text(payload: dict[str, Any]) -> str:
                 roi = metrics.get("roi_pct")
                 value = f"{float(roi):+.1f}%" if roi is not None else "no settled selections"
                 scores.append(f"{'baseline' if arm == 'control' else 'Astra'} ROI {value} ({metrics.get('bets', 0)} selected lines)")
+                bands = metrics.get('price_bands') or {}
+                high = [bands[k] for k in ('5_to_10', '10_plus') if k in bands]
+                if arm == 'candidate' and high:
+                    scores.append(f"Astra odds >=5.00: {sum(b.get('wins', 0) for b in high)}W/{sum(b.get('losses', 0) for b in high)}L, {sum(b.get('pnl_units', 0) for b in high):+.2f}u")
             parts.append(f"{names.get(market, market)} [{label}]: {item.get('independent_fixtures', 0)} settled fixtures; "
-                         f"{item.get('pending', 0)} pending quotes; " + ", ".join(scores))
+                         f"{item.get('pending', 0)} unresolved quote records ({item.get('overdue_quotes', 'unknown')} older than 48h); " + ", ".join(scores))
     freshness = evidence_freshness(str(result.get("generated_at") or ""), stale_after_days=2)
-    return ("Astra models SHADOW ONLY | " + " | ".join(parts)
+    return ("Astra models FULL-BOARD PAPER, including lines blocked by normal signal filters; 1u per selected line | " + " | ".join(parts)
             + f" | data {freshness.get('status', 'UNKNOWN')}; multiple lines per match are correlated. "
               "Review floors: 200 fixtures, 8 weeks, 4 tournaments within each input version. Manual review before promotion.")
 
@@ -1480,11 +1486,17 @@ def model_watchlist_text(payload: dict[str, Any], *, tennis_only: bool = False) 
             continue
         if candidate.get("id") == "shots_market_offset_v1":
             status = candidate.get("forward_evidence") or {}
-            current = status if status.get("version") == "paired-market-offset-20260930-v2" else {}
+            current = status if isinstance(status.get("models", {}).get("shots_market_offset_v1"), dict) else {}
             evidence = current.get("models", {}).get("shots_market_offset_v1", {}).get("hypothetical_selections", {})
             roi = evidence.get("roi")
             roi_text = f"{roi:+.1%}" if roi is not None else "awaiting evidence"
-            lines.append(f"Calibrated Shots [ZERO-STAKE]: forward ROI {roi_text}, settled {evidence.get('settled', 0)}, pending {evidence.get('pending', 0)} | {current.get('status', 'SNAPSHOT_UNAVAILABLE')}")
+            lines.append(f"Calibrated Shots [ZERO-STAKE, retained prospective cohorts]: hypothetical ROI {roi_text}, settled {evidence.get('settled', 0)}, pending {evidence.get('pending', 0)} | {current.get('status', 'SNAPSHOT_UNAVAILABLE')} | {current.get('paired_fixtures', 0)} paired fixtures | version {current.get('version', 'unknown')}")
+            continue
+        if candidate.get("id") == "astrissimo_v1" or "astrissimo" in candidate.get("id", ""):
+            record = payload.get("tennis_astrissimo") or {}
+            roi = record.get("roi_pct")
+            result = f"{roi:+.2f}% ROI" if roi is not None else "no settled selections"
+            lines.append(f"Astrissimo [PAPER ONLY]: {result}; capture {(record.get('capture') or {}).get('state', 'UNAVAILABLE')}")
             continue
         history = candidate.get("historical_replay") or {}
         label = candidate.get("label", "Unnamed candidate")
@@ -1699,6 +1711,7 @@ def render_report(payload: dict[str, Any]) -> str:
         f"- Cross-provider agreement: {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)} API fixtures matched; status {api_agreement.get('status', 'NOT_RUN')}.",
         f"- Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; M2 {team_fouls_m2.get('status', 'NOT_RUN')}; market prices BLOCKED; signals disabled.",
         f"- Goalkeeper Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} on {goalkeeper_saves.get('historical_observations', 0):,} observations; discovery {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines); latest capture {goalkeeper_saves.get('capture_status', 'NOT_RUN')} ({goalkeeper_saves.get('capture_events_selected', 0)} events selected / {goalkeeper_saves.get('capture_rows_observed', 0)} rows / {goalkeeper_saves.get('capture_three_way_events', 0)} with 1X2); prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} with {goalkeeper_saves.get('priced_lines', 0)} priced lines, {goalkeeper_saves.get('eligible_lines', 0)} eligible, {goalkeeper_saves.get('provisional_lines', 0)} predicted-XI research rows, {goalkeeper_saves.get('signals', 0)} signals and {goalkeeper_saves.get('settled', 0)} settled; blockers {goalkeeper_saves.get('blocker_counts', {})}; ROI {ratio_pct(goalkeeper_saves.get('roi'))}, CLV {ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)}; promotion BLOCKED.",
+        *[line for line in model_watchlist_text(payload).splitlines() if line.startswith(("Calibrated Shots", "Opponent Shots"))],
         keeper_watch_weekly_text(goalkeeper_saves.get("keeper_watch")),
         "- New provider fields remain diagnostic-only until source definitions and coverage are accepted.",
         "",
@@ -1894,7 +1907,7 @@ def render_report(payload: dict[str, Any]) -> str:
             "- Team-shots V3 is not proven profitable live yet; it is the first broad research candidate that passed the backtest segment gates.",
             "- Corners V0 is narrower and deliberately blocked in two leagues. That is a discipline feature, not a failure.",
             "- Goalscorer V2 fixes live/backtest mechanics, but it is not a betting edge until captured prices validate it.",
-            "- Assist V1 passed count calibration and settlement integrity, but remains frozen until 90-day market calibration and 100 prospective settled signals pass.",
+            f"- Assist V1: count gate {assist.get('backtest_status', 'UNAVAILABLE')}; settlement gate {assist.get('settlement_status', 'UNAVAILABLE')}. Remains frozen until all registered evidence gates pass.",
             "- Tennis ML gap-guard remains a safety brake. The backtest is not stable enough to unblock those big market-disagreement ML dogs.",
             "- Tennis props v3 remains prospective shadow evidence; historical accuracy alone does not authorise tips.",
             "- The next real evidence is CLV and settled live sample. Until 50 settled picks, do not overreact to wins/losses.",
@@ -1968,7 +1981,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
             )
         if int(number(hard_flip.get("settled", hard_flip.get("bets")))) >= 100 and number(hard_flip.get("roi_pct")) <= 0:
             actions.append("KEEP BLOCKED: broad Hard side flips are negative; scoped Strict rows only")
-        for label, cohort in (("Strict gap", strict_gap), ("Volume gap", volume_gap)):
+        for label, cohort in (("Strict gap research (overlapping)", strict_gap), ("Volume gap research (overlapping)", volume_gap)):
             settled = int(number(cohort.get("settled")))
             roi_pct = number(cohort.get("roi_pct"))
             clv_pct = number(cohort.get("avg_clv_pct"))
@@ -1992,8 +2005,8 @@ def telegram_text(payload: dict[str, Any]) -> str:
             )
         if int(number(api_health.get("archive_rows"))) == 0:
             actions.append("FIX DATA: API-Football agreement archive is empty")
-        if int(number(goalkeeper_saves.get("over_lines"))) > 0 and int(number(goalkeeper_saves.get("capture_rows_observed"))) == 0:
-            actions.append("FIX CAPTURE: GK prices were discovered but the live capture retained zero rows")
+        if goalkeeper_saves.get("capture_status") in {"FAILED", "ERROR", "CAPTURE_FAILED"}:
+            actions.append("CHECK CAPTURE: GK capture explicitly failed; inspect its timestamp and error")
         return actions
 
     def tennis_lane_line(label: str, key: str, status: str) -> str:
@@ -2066,7 +2079,8 @@ def telegram_text(payload: dict[str, Any]) -> str:
         f"Corners v4 G0 [RESEARCH]: {corners_v4_g0.get('decision', 'NOT_RUN')} | MAE delta {signed_number(corners_v4_g0.get('mae_delta'), 4)} | market Brier delta {signed_number(corners_v4_g0.get('brier_delta'), 4)} n={corners_v4_g0.get('market_rows', 0)} | line gates {corners_v4_g0.get('passed_lines', 0)}/{corners_v4_g0.get('available_lines', 0)}",
         f"Count-source health: API-Football {api_health.get('archive_rows', 0)} archived, latest {api_health.get('latest_fixture_date') or '-'}, agreement {api_agreement.get('matched_fixtures', 0)}/{api_agreement.get('api_rows', 0)}",
         f"Team Fouls: F1 {team_fouls_decision.get('status', 'NOT_RUN')}; F2 {team_fouls_f2_decision.get('status', 'NOT_RUN')}; sources {team_fouls_m2.get('status', 'NOT_RUN')}; no signals",
-        f"GK Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} n={goalkeeper_saves.get('historical_observations', 0)} | discovery {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines) | capture {goalkeeper_saves.get('capture_status', 'NOT_RUN')} events={goalkeeper_saves.get('capture_events_selected', 0)} rows={goalkeeper_saves.get('capture_rows_observed', 0)} 1X2={goalkeeper_saves.get('capture_three_way_events', 0)} | prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} priced={goalkeeper_saves.get('priced_lines', 0)} eligible={goalkeeper_saves.get('eligible_lines', 0)} provisional={goalkeeper_saves.get('provisional_lines', 0)} signals={goalkeeper_saves.get('signals', 0)} settled={goalkeeper_saves.get('settled', 0)} blockers={goalkeeper_saves.get('blocker_counts', {})} ROI={ratio_pct(goalkeeper_saves.get('roi'))} CLV={ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)} | promotion BLOCKED",
+        f"GK Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} n={goalkeeper_saves.get('historical_observations', 0)} | discovery {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines) | last scan {goalkeeper_saves.get('capture_status', 'NOT_RUN')} at {goalkeeper_saves.get('capture_checked_at') or 'unknown'} (an empty scan does not erase the ledger) events={goalkeeper_saves.get('capture_events_selected', 0)} rows={goalkeeper_saves.get('capture_rows_observed', 0)} 1X2={goalkeeper_saves.get('capture_three_way_events', 0)} | prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} priced={goalkeeper_saves.get('priced_lines', 0)} eligible={goalkeeper_saves.get('eligible_lines', 0)} provisional={goalkeeper_saves.get('provisional_lines', 0)} signals={goalkeeper_saves.get('signals', 0)} settled={goalkeeper_saves.get('settled', 0)} blockers={goalkeeper_saves.get('blocker_counts', {})} ROI={ratio_pct(goalkeeper_saves.get('roi'))} CLV={ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)} | promotion BLOCKED",
+        *[line for line in model_watchlist_text(payload).splitlines() if line.startswith(("Calibrated Shots", "Opponent Shots"))],
         keeper_watch_weekly_text(goalkeeper_saves.get("keeper_watch")),
         f"Goalscorer V2: {goalscorer['ledger']['settled']} settled | {goalscorer['ledger']['pnl_units']:+.2f}u | ROI {pct(goalscorer['ledger']['roi_pct'])} | CLV {goalscorer['matched_closes']}/{goalscorer['signals']} | PUBLIC RESEARCH ONLY",
         f"Goalscorer beta vs raw n={goalscorer['calibration']['n']}: Brier {fixed(goalscorer['calibration']['raw_brier'])}->{fixed(goalscorer['calibration']['beta_brier'])} ({fixed(goalscorer['calibration']['brier_delta'])}) | ECE {ratio_pct(goalscorer['calibration']['raw_ece'], 2)}->{ratio_pct(goalscorer['calibration']['beta_ece'], 2)} | folds {goalscorer['beta_fold_wins']}/{goalscorer['beta_folds']}",
@@ -2090,13 +2104,16 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
         clv = lane.get('clv') or {}
         lines.append(f"{label}: {lane.get('settled', 0)} settled | {pct(lane.get('roi_pct'))} ROI | "
                      f"{number(lane.get('pnl_units')):+.2f}u | {lane.get('pending', 0)} pending | CLV {pct(clv.get('avg_clv_pct'), 2)} n={clv.get('rows', 0)}")
-    for key, label in [('strict_gap_10_20_same_side', 'Provisional Hard'), ('volume200_gap_10_15_same_side', 'Provisional Expansion')]:
-        performance = ((evidence.get('gap_replacements') or {}).get(key) or {}).get('performance') or {}
-        if evidence.get('gap_source_status') != 'OK' or not performance:
-            lines.append(f"{label}: registered record unavailable")
+    for key, label in [('provisional_hard', 'Provisional Hard'), ('provisional_expansion', 'Provisional Expansion')]:
+        lane = lanes.get(key) or {}
+        if not lane or lane.get('roi_pct') is None:
+            lines.append(f"{label}: alert-lane record unavailable; broader research groups not substituted")
         else:
-            lines.append(f"{label}: {performance.get('settled', 0)} settled | ROI {pct(performance.get('roi_pct'))} | "
-                         f"{number(performance.get('pnl_units')):+.2f}u | CLV {pct(performance.get('avg_clv_pct'), 2)} n={performance.get('clv_rows', 0)}")
+            lines.append(f"{label} [separate lane, overlaps removed]: {lane.get('wins', 0)}W/{lane.get('losses', 0)}L | "
+                         f"{lane.get('void', 0)} void | ROI {pct(lane.get('roi_pct'))} | "
+                         f"{number(lane.get('pnl_units')):+.2f}u on {number(lane.get('staked_units')):.2f}u | "
+                         f"{lane.get('pending', 0)} pending ({lane.get('overdue', 0)} overdue)")
+    lines.append('Provisional records use saved model selections and first recorded prices; Telegram delivery is not independently verified.')
     lines.append('Provisional lanes remain 0.5u; Challenger remains zero-stake research. No automatic promotion.')
     v4 = payload.get('tennis_props_v4') or {}
     lines.append(f"Aces v4 [{v4.get('status', 'UNAVAILABLE')}]: " + v4_cohort_text(v4))
