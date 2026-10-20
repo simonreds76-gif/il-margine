@@ -2,21 +2,304 @@
   "fixtures": [
     {
       "fotmob_match_id": 5795491,
+      "fotmob_page_url": "/matches/ipswich-town-vs-nottingham-forest/3cc90b#5795491",
+      "home_fotmob_team_id": 9902,
+      "away_fotmob_team_id": 10203,
       "match_date": "2026-10-23",
       "kickoff_utc": "2026-10-23T19:00:00Z",
       "home_team": "Ipswich Town",
       "away_team": "Nottingham Forest",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-4-2-1",
+      "away_formation": "3-4-2-1",
+      "home_players": [
+        "Christian Walton",
+        "Dara O'Shea",
+        "Issa Diop",
+        "Jacob Greaves",
+        "Abdoul Ouattara",
+        "Florentino",
+        "Exequiel Palacios",
+        "Leif Davis",
+        "Daizen Maeda",
+        "Julio Enciso",
+        "Emersonn"
+      ],
+      "away_players": [
+        "Matz Sels",
+        "Jair Cunha",
+        "Ousmane Diomande",
+        "Murillo",
+        "Daniel Muñoz",
+        "James McAtee",
+        "Xaver Schlager",
+        "Neco Williams",
+        "Dan Ndoye",
+        "Nicolás Dominguez",
+        "Liam Delap"
+      ],
+      "home_starters": [
+        {
+          "name": "Christian Walton",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-2-1",
+          "position_id": 11,
+          "player_id": 512013,
+          "shirt_number": "28"
+        },
+        {
+          "name": "Dara O'Shea",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 33,
+          "player_id": 789578,
+          "shirt_number": "26"
+        },
+        {
+          "name": "Issa Diop",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 35,
+          "player_id": 696443,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Jacob Greaves",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 37,
+          "player_id": 1079103,
+          "shirt_number": "24"
+        },
+        {
+          "name": "Abdoul Ouattara",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 62,
+          "player_id": 1343053,
+          "shirt_number": "42"
+        },
+        {
+          "name": "Florentino",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 64,
+          "player_id": 793255,
+          "shirt_number": "12"
+        },
+        {
+          "name": "Exequiel Palacios",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66,
+          "player_id": 693599,
+          "shirt_number": "25"
+        },
+        {
+          "name": "Leif Davis",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 68,
+          "player_id": 980381,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Daizen Maeda",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84,
+          "player_id": 728765,
+          "shirt_number": "38"
+        },
+        {
+          "name": "Julio Enciso",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86,
+          "player_id": 1073742,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Emersonn",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-2-1",
+          "position_id": 105,
+          "player_id": 1320949,
+          "shirt_number": "19"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Matz Sels",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-2-1",
+          "position_id": 11,
+          "player_id": 181069,
+          "shirt_number": "26"
+        },
+        {
+          "name": "Jair Cunha",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 33,
+          "player_id": 1391209,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Ousmane Diomande",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 35,
+          "player_id": 1425182,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Murillo",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 37,
+          "player_id": 1458711,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Daniel Muñoz",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 62,
+          "player_id": 859282,
+          "shirt_number": "27"
+        },
+        {
+          "name": "James McAtee",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 64,
+          "player_id": 1107648,
+          "shirt_number": "24"
+        },
+        {
+          "name": "Xaver Schlager",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66,
+          "player_id": 620027,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Neco Williams",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 68,
+          "player_id": 1078788,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Dan Ndoye",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84,
+          "player_id": 1022649,
+          "shirt_number": "14"
+        },
+        {
+          "name": "Nicolás Dominguez",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86,
+          "player_id": 827315,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Liam Delap",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-2-1",
+          "position_id": 105,
+          "player_id": 1113903,
+          "shirt_number": "19"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-10-20T15:01:46.128902+00:00",
-      "changed_at": "2026-10-20T01:05:03.343714+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Jack Taylor"
+      ],
+      "away_unavailable": [
+        "Nicolò Savona",
+        "Morgan Gibbs-White",
+        "Igor Jesus"
+      ],
+      "observed_at": "2026-10-20T19:12:26.420063+00:00",
+      "changed_at": "2026-10-20T19:12:26.420063+00:00"
     }
   ]
 }
