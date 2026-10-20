@@ -1,7 +1,88 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-20T04:57:52Z",
+  "generated_at": "2026-10-20T13:51:09Z",
   "league": "bundesliga",
-  "row_count": 0,
-  "rows": []
+  "row_count": 5,
+  "rows": [
+    {
+      "team": "Augsburg",
+      "team_key": "augsburg",
+      "player_name": "Fabian Rieder",
+      "player_key": "fabian rieder",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-17"
+    },
+    {
+      "team": "Augsburg",
+      "team_key": "augsburg",
+      "player_name": "Michael Gregoritsch",
+      "player_key": "michael gregoritsch",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-17"
+    },
+    {
+      "team": "Elversberg",
+      "team_key": "elversberg",
+      "player_name": "Lukas Petkov",
+      "player_key": "lukas petkov",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-17"
+    },
+    {
+      "team": "Elversberg",
+      "team_key": "elversberg",
+      "player_name": "Noel Futkeu",
+      "player_key": "noel futkeu",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-17"
+    },
+    {
+      "team": "Werder Bremen",
+      "team_key": "werder bremen",
+      "player_name": "Niclas Füllkrug",
+      "player_key": "niclas f llkrug",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-17"
+    }
+  ]
 }

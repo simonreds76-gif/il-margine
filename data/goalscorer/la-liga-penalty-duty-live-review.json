@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-20T04:57:47Z",
+  "generated_at": "2026-10-20T13:50:45Z",
   "league": "la-liga",
   "row_count": 2,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2984299179",
           "match_id": "5868098",
           "source_url": "https://www.fotmob.com/matches/sevilla-vs-real-madrid/2ddv45#5868098",
-          "observed_at": "2026-10-20T04:57:38+00:00",
+          "observed_at": "2026-10-20T13:50:42+00:00",
           "event_date": "2026-10-18",
           "season": "2026/27",
           "team": "Real Madrid",
@@ -115,7 +115,7 @@
           "source_event_id": "2983726199",
           "match_id": "5868097",
           "source_url": "https://www.fotmob.com/matches/osasuna-vs-racing-santander/2epysq#5868097",
-          "observed_at": "2026-10-20T04:57:38+00:00",
+          "observed_at": "2026-10-20T13:50:42+00:00",
           "event_date": "2026-10-18",
           "season": "2026/27",
           "team": "Osasuna",
@@ -146,10 +146,14 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20261014",
+      "20261015",
+      "20261016",
+      "20261017",
       "20261018",
       "20261019",
       "20261020"
     ],
-    "matches_checked": 5
+    "matches_checked": 10
   }
 }
