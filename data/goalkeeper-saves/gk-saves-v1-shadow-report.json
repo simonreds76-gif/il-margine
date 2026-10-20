@@ -28,14 +28,14 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-20T14:28:56.928818+00:00",
+    "checked_at": "2026-10-20T16:18:48.566732+00:00",
     "counts": {
       "not_fresh_prematch": 10
     },
     "saved": 0,
     "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-10-20T14:28:56Z",
+  "generated_at": "2026-10-20T16:18:48Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
@@ -45,7 +45,7 @@
     },
     "forecast_fixtures": 42,
     "forecast_keepers": 82,
-    "generated_at": "2026-10-20T14:28:56.976264+00:00",
+    "generated_at": "2026-10-20T16:18:48.595294+00:00",
     "last_capture_at": "2026-10-20T00:39:02.857527+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
@@ -66,16 +66,16 @@
     "records": {
       "current": {
         "losses": 4,
-        "overdue": 1,
+        "overdue": 0,
         "pending": 0,
         "profit": 1.7010000000000003,
         "pushes": 0,
-        "review": 1,
+        "review": 0,
         "roi": 0.34020000000000006,
         "selections": 11,
         "settled": 10,
         "stake": 5.0,
-        "voids": 0,
+        "voids": 1,
         "wins": 6
       },
       "keeper_watch": {
@@ -254,13 +254,13 @@
         "match_id": "5749702",
         "model": "current",
         "odds": 2.625,
-        "overdue": true,
+        "overdue": false,
         "player_id": "1696050",
         "profit": 0,
-        "reason": "keeper_identity_unresolved",
+        "reason": "verified_different_starting_keeper",
         "registered_at": "2026-10-16T00:46:32.838059+00:00",
         "side": "over",
-        "status": "review",
+        "status": "void",
         "team_id": "9857"
       },
       {
@@ -411,7 +411,8 @@
     "settlement_reasons": {
       "awaiting_verified_keeper_result": 2,
       "incomplete_or_conflicting_full_match_count": 4,
-      "keeper_identity_unresolved": 4
+      "keeper_identity_unresolved": 1,
+      "verified_different_starting_keeper": 3
     },
     "start_at": "2026-10-15T15:58:57.141631+00:00",
     "status": "TRACKING"
