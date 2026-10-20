@@ -11,6 +11,10 @@ for file in data/goalscorer/bet365-latest-quotes.json data/goalscorer/fair-odds-
   if [[ -f "$file" ]]; then git add -f -- "$file"; fi
 done
 
+for file in data/goalscorer/club-penalty-alert-state.json data/goalscorer/club-penalty-squad-alert-state.json; do
+  if [[ -f "$file" ]]; then git add -f -- "$file"; fi
+done
+
 blocked_artifacts=(
   data/goalscorer/live-history
   data/goalscorer/*/live-history

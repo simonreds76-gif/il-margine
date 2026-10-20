@@ -44,8 +44,7 @@ class TelegramPenaltyRoleReviewTests(unittest.TestCase):
 
         self.assertIn("Club penalty hierarchy reviews: 1 open", message)
         self.assertIn("Liverpool: Mohamed Salah -> Alexander Isak", message)
-        self.assertIn("Model Monitor > Goalscorer > Preseason Role Review", message)
-        self.assertNotIn("http", message)
+        self.assertIn("https://ilmargine.bet/admin/penalties", message)
 
     def test_active_rows_prioritise_high_severity(self) -> None:
         rows = MODULE["active_rows"](
