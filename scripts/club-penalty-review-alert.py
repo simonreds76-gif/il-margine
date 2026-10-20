@@ -13,10 +13,11 @@ import unicodedata
 import urllib.request
 from pathlib import Path
 from typing import Iterable
+from penalty_alert_reviews import is_closed, load_reviews
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_REVIEW_URL = "http://localhost:3000/model-monitor/goalscorer#penalty-watchlist"
+DEFAULT_REVIEW_URL = "https://ilmargine.bet/admin/penalties"
 DEFAULT_ALERT_STATE = Path("data/goalscorer/club-penalty-alert-state.json")
 REVIEW_FILES = (
     Path("data/goalscorer/penalty-duty-review.json"),
@@ -168,12 +169,15 @@ def new_actionable_rows(
     previous: Iterable[dict],
     priority_teams: dict[str, str] | None = None,
     alerted_identities: set[str] | None = None,
+    reviews: dict | None = None,
 ) -> list[dict]:
     previous_ids = set(dedupe_rows(previous))
     priority_teams = priority_teams or {}
     alerted_identities = alerted_identities or set()
     rows = []
     for identity, row in dedupe_rows(current).items():
+        if reviews is not None and is_closed(row, reviews):
+            continue
         hierarchy_status = priority_teams.get(team_identity(row), "")
         review_priority = str(row.get("review_priority") or "").lower()
         if identity in previous_ids or identity in alerted_identities:
@@ -246,7 +250,7 @@ def build_message(rows: list[dict], review_url: str, run_url: str = "") -> str:
         lines.extend([f"Plus {len(rows) - 8} more ticket(s) in the queue.", ""])
     lines.extend(
         [
-            "Review on your PC:",
+            "Review in Admin:",
             review_url,
             "",
             "Done = reviewed and close the ticket",
@@ -289,12 +293,14 @@ def main() -> int:
     if not state_path.is_absolute():
         state_path = ROOT / state_path
     alert_state = load_alert_state(state_path)
+    reviews = load_reviews()
 
     rows = new_actionable_rows(
         current_rows(REVIEW_FILES),
         previous_rows(REVIEW_FILES, args.base_ref),
         priority_hierarchy_teams(),
         set(alert_state["items"]),
+        reviews,
     )
     if not rows:
         print("PENALTY_REVIEW_TELEGRAM no_new_actionable_tickets")
