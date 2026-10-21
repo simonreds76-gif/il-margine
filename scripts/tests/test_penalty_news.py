@@ -187,6 +187,11 @@ class PenaltyNewsTests(unittest.TestCase):
 
 
 class PublicationGuards(unittest.TestCase):
+    def test_readback_resolves_full_url_for_project_scoped_ci_token(self):
+        with patch.object(publisher, 'run', return_value='verified page') as command:
+            self.assertEqual(publisher.deployment_page('vercel', 'https://candidate.vercel.app', '/penalty-news/article'), 'verified page')
+            command.assert_called_once_with('vercel', 'curl', 'https://candidate.vercel.app/penalty-news/article', '--', '--fail', '--silent')
+
     def run_guard(self, enabled, outputs):
         with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent, prefix='penalty-test-') as tmp:
             root = Path(tmp)

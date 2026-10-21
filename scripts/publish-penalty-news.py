@@ -29,6 +29,12 @@ def run(*args, timeout=120):
     return result.stdout.strip()
 
 
+def deployment_page(vercel, url, route):
+    # Match the Atlas publisher: the full URL avoids /user, which a
+    # project-scoped CI token cannot access. Deployment protection stays enabled.
+    return run(vercel, 'curl', url + route, '--', '--fail', '--silent')
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--state', type=Path, required=True)
@@ -85,7 +91,7 @@ def main():
     data = json.loads((ROOT / DATA).read_text())
     version = data['generatedAt']
     # The collector changes this revision only when the published packet changes.
-    live_page = run(vercel, 'curl', '/penalty-news', '--deployment', 'https://' + live['url'], '--', '--fail', '--silent')
+    live_page = deployment_page(vercel, 'https://' + live['url'], '/penalty-news')
     if f'data-news-version="{version}"' in live_page:
         (args.state / 'publication.json').write_text(json.dumps({'status': 'already_current', 'sha': sha, 'version': version,
             'deploymentId': live['id'], 'articles': len(data['articles']), 'verifiedAt': datetime.now(timezone.utc).isoformat()}, indent=2))
@@ -106,11 +112,11 @@ def main():
     else:
         raise RuntimeError('Candidate build timed out; public alias unchanged')
     url = 'https://' + deployment['url']
-    page = run(vercel, 'curl', '/penalty-news', '--deployment', url, '--', '--fail', '--silent')
+    page = deployment_page(vercel, url, '/penalty-news')
     if f'data-news-version="{version}"' not in page or re.search(r'<meta[^>]+name="robots"[^>]+content="[^"]*noindex', page):
         raise RuntimeError('Candidate news version/indexability validation failed')
     for a in data['articles'][:3]:
-        page = run(vercel, 'curl', '/penalty-news/' + a['slug'], '--deployment', url, '--', '--fail', '--silent')
+        page = deployment_page(vercel, url, '/penalty-news/' + a['slug'])
         if f'data-article-id="{a["id"]}"' not in page:
             raise RuntimeError('Candidate article route failed verification')
     if run('git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH).split()[0] != sha:
