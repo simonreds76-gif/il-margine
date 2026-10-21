@@ -7,12 +7,16 @@ the last validated articles and return a failing exit code for the operator.
 import argparse
 from datetime import date, datetime, timedelta, timezone
 import hashlib
+import gzip
 import json
 from pathlib import Path
 import re
 import time
 import unicodedata
 import requests
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from penalty_news_context import incident_context, match_context
 
 ROOT = Path(__file__).resolve().parents[1]
 LEAGUES = {47: ("epl", "Premier League"), 55: ("serie-a", "Serie A"),
@@ -37,7 +41,7 @@ def atomic_write(path, value):
     temp.replace(path)
 
 
-def normalize(payload, source_url, observed_at, club_map):
+def normalize(payload, source_url, observed_at, club_map, commentary=None, notes=None):
     q = payload.get("props", {}).get("pageProps", {})
     g, h, c = q.get("general", {}), q.get("header", {}), q.get("content", {})
     league = LEAGUES.get(g.get("leagueId"))
@@ -49,6 +53,8 @@ def normalize(payload, source_url, observed_at, club_map):
     teams = h.get("teams", [])
     if len(teams) != 2 or any(type(t.get("score")) is not int for t in teams):
         raise ValueError("Missing final score")
+    if commentary and [commentary.get('HometeamId'), commentary.get('AwayteamId')] != [t['id'] for t in teams]:
+        raise ValueError('Commentary belongs to different teams')
     shots = c.get("shotmap", {}).get("shots")
     if not isinstance(shots, list):
         raise ValueError("Missing shot map")
@@ -84,10 +90,26 @@ def normalize(payload, source_url, observed_at, club_map):
         verb = {"scored": "converted a penalty", "saved": "had a penalty saved", "missed": "missed a penalty", "woodwork": "hit the woodwork with a penalty"}[outcome]
         title_verb = {"scored": "scores from the spot", "saved": "has penalty saved", "missed": "misses from the spot", "woodwork": "hits the woodwork from the spot"}[outcome]
         score = f"{teams[0]['name']} {teams[0]['score']}–{teams[1]['score']} {teams[1]['name']}"
-        # Cause is intentionally absent: the shot map does not verify who won it.
+        incident = incident_context(shot, commentary or {}, notes or {})
+        stats, keeper, moment, context = match_context(c, shot, teams, penalty_shots)
         sentences = [f"{player} {verb} for {club['name']} in minute {minute_label} against {opponent['name']}.",
                      f"The match finished {score}."]
-        raw = {"general": g, "teams": teams, "shot": shot}
+        incident_text = incident['sentence'] if incident else ''
+        if keeper and outcome == 'saved':
+            incident_text += f' {keeper} kept out the spot kick.'
+        if moment and outcome == 'scored':
+            after = moment['after']
+            own = 0 if team['id'] == teams[0]['id'] else 1
+            diff = after[own] - after[1-own]
+            impact = 'brought the sides level' if diff == 0 else 'put the team ahead' if diff == 1 else 'extended the lead' if diff > 1 else 'reduced the deficit'
+            incident_text += f" The goal {impact} at {after[own]}–{after[1-own]}."
+        suffix = 'th' if 10 <= minute % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(minute % 10, 'th')
+        when = f'in the {minute}{suffix} minute' if not added else f'in added time ({minute_label} minutes)'
+        own_score, other_score = team['score'], opponent['score']
+        result = f"{own_score}–{other_score} draw with" if own_score == other_score else f"{own_score}–{other_score} win over" if own_score > other_score else f"{own_score}–{other_score} defeat to"
+        lead = f"{player} {verb} {when} of {club['name']}’s {result} {opponent['name']}."
+        paragraphs = [lead] + ([incident_text.strip()] if incident_text.strip() else []) + ([' '.join(context)] if context else [])
+        raw = {"general": g, "teams": teams, "shot": shot, "incident": incident, "stats": stats, "keeper": keeper, "moment": moment, "paragraphs": paragraphs}
         articles.append({"id": f"fotmob:{match_id}:{sid}", "slug": f"{match_date}-{slug(player)}-{match_id}-{sid}",
                          "matchId": match_id, "eventId": sid, "date": match_date, "kickoff": g["matchTimeUTCDate"],
                          "league": league[0], "leagueLabel": league[1], "round": str(g.get("matchRound") or ""),
@@ -96,7 +118,8 @@ def normalize(payload, source_url, observed_at, club_map):
                          "crest": club["logo"], "opponent": opponent["name"], "home": teams[0]["name"], "away": teams[1]["name"],
                          "homeScore": teams[0]["score"], "awayScore": teams[1]["score"], "minute": minute_label,
                          "outcome": outcome, "title": f"{player} {title_verb} against {opponent['name']}", "sentences": sentences,
-                         "cause": None, "sourceUrl": source_url, "sourceHash": hashlib.sha256(json.dumps(raw, sort_keys=True).encode()).hexdigest(),
+                         "cause": incident['type'] if incident else None, "incident": incident, "stats": stats, "keeper": keeper, "moment": moment, "paragraphs": paragraphs,
+                         "sourceUrl": source_url, "sourceHash": hashlib.sha256(json.dumps(raw, sort_keys=True).encode()).hexdigest(),
                          "publishedAt": observed_at, "updatedAt": observed_at})
     return match_id, articles, excluded
 
@@ -141,6 +164,7 @@ def main():
         response.raise_for_status()
     errors, excluded, fresh, completed = [], [], [], set()
     args.evidence_dir.mkdir(parents=True, exist_ok=True)
+    notes = read(ROOT / 'data/penalty-news/editorial-evidence.json', {})
     match_ids = set()
     for offset in range(args.days):
         day = (date.fromisoformat(args.end_date) - timedelta(days=offset)).strftime("%Y%m%d")
@@ -170,7 +194,23 @@ def main():
                     raise ValueError("Missing match payload")
                 packet = {"sourceUrl": url, "observedAt": now, "payload": json.loads(found.group(1))}
                 atomic_write(path, packet)
-            match_id, articles, omitted = normalize(packet["payload"], packet["sourceUrl"], packet["observedAt"], clubs)
+            q = packet['payload']['props']['pageProps']
+            commentary = {}
+            if any(s.get('situation') == 'Penalty' for s in q.get('content', {}).get('shotmap', {}).get('shots', [])):
+                cp = args.evidence_dir / f'commentary-{mid}.json'
+                if not args.offline:
+                    langs = q.get('content', {}).get('liveticker', {}).get('langs', '').split(',')
+                    lang = 'en' if 'en' in langs else 'en_gen' if 'en_gen' in langs else None
+                    if lang:
+                        url = f'https://data.fotmob.com/webcl/ltc/gsm/{mid}_{lang}.json.gz'
+                        body = get(url).content
+                        if body[:2] == b'\x1f\x8b':
+                            body = gzip.decompress(body)
+                        atomic_write(cp, {'sourceUrl': url, 'observedAt': now, 'payload': json.loads(body)})
+                commentary = read(cp, {}).get('payload', {})
+            match_id, articles, omitted = normalize(packet["payload"], packet["sourceUrl"], packet["observedAt"], clubs, commentary, notes)
+            for article in articles:
+                article['updatedAt'] = now
             completed.add(match_id)
             fresh.extend(articles)
             excluded.extend(omitted)
@@ -182,6 +222,8 @@ def main():
     articles = merge(previous["articles"], fresh, completed)
     report = {"checkedAt": now, "windowEnd": args.end_date, "days": args.days, "matchesChecked": len(completed),
               "matchesExpected": len(match_ids), "articles": len(articles), "errors": errors, "excluded": excluded}
+    report['incidentCoverage'] = {'verified': sum(bool(a.get('incident')) for a in fresh), 'total': len(fresh),
+                                  'missing': [a['id'] for a in fresh if not a.get('incident')]}
     atomic_write(args.evidence_dir / "report.json", report)
     # Fail closed as a batch: never publish a partially refreshed news feed.
     if errors or excluded:

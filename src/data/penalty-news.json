@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-21T13:09:12.022535+00:00",
+  "generatedAt": "2026-10-21T16:25:58.065112+00:00",
   "coverageStart": "2026-10-17",
   "checkedThrough": "2026-10-19",
   "matchesChecked": 44,
@@ -34,9 +34,42 @@
         "Kylian Mbappé converted a penalty for Real Madrid in minute 63 against Sevilla.",
         "The match finished Real Madrid 4–1 Sevilla."
       ],
-      "cause": null,
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Kylian Mbappé",
+        "concededBy": "Castrin",
+        "sentence": "Kylian Mbappé won the penalty when Castrin brought him down as he chased a Yan Diomande pass. Mbappé then beat Odysseas Vlachodimos with a chipped finish down the middle.",
+        "evidenceIds": [
+          "en:26508496100062"
+        ],
+        "method": "reviewed_commentary"
+      },
+      "stats": {
+        "minutes": 84,
+        "goals": 2,
+        "shots": 5,
+        "onTarget": 3,
+        "chances": 2
+      },
+      "keeper": "Odysseas Vlachodimos",
+      "moment": {
+        "before": [
+          2,
+          0
+        ],
+        "after": [
+          3,
+          0
+        ]
+      },
+      "paragraphs": [
+        "Kylian Mbappé converted a penalty in the 63rd minute of Real Madrid’s 4–1 win over Sevilla.",
+        "Kylian Mbappé won the penalty when Castrin brought him down as he chased a Yan Diomande pass. Mbappé then beat Odysseas Vlachodimos with a chipped finish down the middle. The goal extended the lead at 3–0.",
+        "Kylian Mbappé finished with 2 goals and 5 shots, including 3 on target, in 84 minutes."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/sevilla-vs-real-madrid/2ddv45#5868098",
-      "sourceHash": "7d90e8af41d7294c0e1ce82f2d1276075f23820e5e84ba6b378ca102d3d6a4fc",
+      "sourceHash": "436e16ef32b7958aa0b89c9f5133c0e7c96d4561f9b5fc958d90099cde6264ce",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -69,11 +102,36 @@
         "Gonçalo Ramos had a penalty saved for AC Milan in minute 57 against Atalanta.",
         "The match finished Milan 3–2 Atalanta."
       ],
-      "cause": null,
+      "cause": "handball",
+      "incident": {
+        "type": "handball",
+        "wonBy": null,
+        "concededBy": "Thomas Kristensen",
+        "sentence": "A second VAR review penalised Thomas Kristensen for handball following an Adrien Rabiot shot. Mario Gila subsequently scored from the corner that followed the penalty save.",
+        "evidenceIds": [
+          "26381865600049",
+          "26381865700052"
+        ],
+        "method": "reviewed_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 1,
+        "shots": 3,
+        "onTarget": 3,
+        "chances": 1
+      },
+      "keeper": "Marco Carnesecchi",
+      "moment": null,
+      "paragraphs": [
+        "Gonçalo Ramos had a penalty saved in the 57th minute of AC Milan’s 3–2 win over Atalanta.",
+        "A second VAR review penalised Thomas Kristensen for handball following an Adrien Rabiot shot. Mario Gila subsequently scored from the corner that followed the penalty save. Marco Carnesecchi kept out the spot kick.",
+        "Gonçalo Ramos finished with 1 goal and 3 shots, including 3 on target, in 90 minutes. Milan took 2 penalties in the match and converted 1. Gonçalo Ramos took both."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/atalanta-vs-milan/2exnf8#5749700",
-      "sourceHash": "7d144c6e9be28ed338483bee71146a0caefc3f4fb1972724b0dbfeee43b34dce",
+      "sourceHash": "8289fd4eff14604871f48250dff4de83704867c7540d5bb388d8e5d259496d72",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
-      "updatedAt": "2026-10-21T13:02:46.985896+00:00"
+      "updatedAt": "2026-10-21T16:25:58.065112+00:00"
     },
     {
       "id": "fotmob:5749700:2984076277",
@@ -104,9 +162,42 @@
         "Gonçalo Ramos converted a penalty for AC Milan in minute 24 against Atalanta.",
         "The match finished Milan 3–2 Atalanta."
       ],
-      "cause": null,
+      "cause": "handball",
+      "incident": {
+        "type": "handball",
+        "wonBy": null,
+        "concededBy": "Relja Obrić",
+        "sentence": "A VAR review identified a handball by Relja Obrić as he blocked a Yunus Musah effort. Gonçalo Ramos placed the penalty into the bottom right corner.",
+        "evidenceIds": [
+          "26381862300025"
+        ],
+        "method": "reviewed_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 1,
+        "shots": 3,
+        "onTarget": 3,
+        "chances": 1
+      },
+      "keeper": "Marco Carnesecchi",
+      "moment": {
+        "before": [
+          0,
+          0
+        ],
+        "after": [
+          1,
+          0
+        ]
+      },
+      "paragraphs": [
+        "Gonçalo Ramos converted a penalty in the 24th minute of AC Milan’s 3–2 win over Atalanta.",
+        "A VAR review identified a handball by Relja Obrić as he blocked a Yunus Musah effort. Gonçalo Ramos placed the penalty into the bottom right corner. The goal put the team ahead at 1–0.",
+        "Gonçalo Ramos finished with 1 goal and 3 shots, including 3 on target, in 90 minutes. Milan took 2 penalties in the match and converted 1. Gonçalo Ramos took both."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/atalanta-vs-milan/2exnf8#5749700",
-      "sourceHash": "b76f6bccc26f927e5bb1c4b21ad1ca6a28dc95cdd2581163bfb98785693ec94c",
+      "sourceHash": "ecc675dc6d1a733e0f80163454557e0666c6a70972b023460bcaca6f68008016",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -139,9 +230,43 @@
         "Lassine Sinayoko converted a penalty for Paris FC in minute 90+7 against Rennes.",
         "The match finished Paris FC 4–3 Rennes."
       ],
-      "cause": null,
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Lassine Sinayoko",
+        "concededBy": "Valentin Rongier",
+        "sentence": "Lassine Sinayoko won the penalty after a foul by Valentin Rongier inside the area.",
+        "evidenceIds": [
+          "2984140887",
+          "2984138331"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 2,
+        "shots": 6,
+        "onTarget": 2,
+        "chances": 4
+      },
+      "keeper": "Brice Samba",
+      "moment": {
+        "before": [
+          3,
+          3
+        ],
+        "after": [
+          4,
+          3
+        ]
+      },
+      "paragraphs": [
+        "Lassine Sinayoko converted a penalty in added time (90+7 minutes) of Paris FC’s 4–3 win over Rennes.",
+        "Lassine Sinayoko won the penalty after a foul by Valentin Rongier inside the area. The goal put the team ahead at 4–3.",
+        "Lassine Sinayoko finished with 2 goals and 6 shots, including 2 on target, in 90 minutes."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/paris-fc-vs-rennes/26fb7k#5802961",
-      "sourceHash": "4476a29c1520c32f1d66a13c74616b0072e8a5c000866753a9b804d65057e8f0",
+      "sourceHash": "4dc002db00c10faf455ec24e3b4948d9f7b799ae57785bcaa249d70183680f38",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -174,9 +299,42 @@
         "Estéban Lepaul converted a penalty for Rennes in minute 88 against Paris FC.",
         "The match finished Paris FC 4–3 Rennes."
       ],
-      "cause": null,
+      "cause": "handball",
+      "incident": {
+        "type": "handball",
+        "wonBy": null,
+        "concededBy": "Otávio",
+        "sentence": "The penalty was awarded for a handball by Otávio.",
+        "evidenceIds": [
+          "2984130841"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 3,
+        "shots": 4,
+        "onTarget": 3,
+        "chances": 3
+      },
+      "keeper": "Kevin Trapp",
+      "moment": {
+        "before": [
+          3,
+          2
+        ],
+        "after": [
+          3,
+          3
+        ]
+      },
+      "paragraphs": [
+        "Estéban Lepaul converted a penalty in the 88th minute of Rennes’s 3–4 defeat to Paris FC.",
+        "The penalty was awarded for a handball by Otávio. The goal brought the sides level at 3–3.",
+        "Estéban Lepaul finished with 3 goals and 4 shots, including 3 on target, in 90 minutes. Rennes took 3 penalties in the match and converted 3. Estéban Lepaul took all 3."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/paris-fc-vs-rennes/26fb7k#5802961",
-      "sourceHash": "ac6a2cc2aabf9998722e112031df8e7e1c69699094061db7d255e90697cd571e",
+      "sourceHash": "27e148298252f779ab6779d20d60764797ddf6546563f84cc1605fd017448af4",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -209,9 +367,43 @@
         "Estéban Lepaul converted a penalty for Rennes in minute 74 against Paris FC.",
         "The match finished Paris FC 4–3 Rennes."
       ],
-      "cause": null,
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Mousa Al Tamari",
+        "concededBy": "Samir Chergui",
+        "sentence": "Mousa Al Tamari won the penalty after a foul by Samir Chergui inside the area.",
+        "evidenceIds": [
+          "2984115991",
+          "2984115951"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 3,
+        "shots": 4,
+        "onTarget": 3,
+        "chances": 3
+      },
+      "keeper": "Kevin Trapp",
+      "moment": {
+        "before": [
+          2,
+          1
+        ],
+        "after": [
+          2,
+          2
+        ]
+      },
+      "paragraphs": [
+        "Estéban Lepaul converted a penalty in the 74th minute of Rennes’s 3–4 defeat to Paris FC.",
+        "Mousa Al Tamari won the penalty after a foul by Samir Chergui inside the area. The goal brought the sides level at 2–2.",
+        "Estéban Lepaul finished with 3 goals and 4 shots, including 3 on target, in 90 minutes. Rennes took 3 penalties in the match and converted 3. Estéban Lepaul took all 3."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/paris-fc-vs-rennes/26fb7k#5802961",
-      "sourceHash": "c487ef24341956df3c6274985c038c34e428a75ab64d752b313e4db2bbc1be69",
+      "sourceHash": "1db42cda58de4e13a49bfb1a5adc2e4f030abb487f3396ee6d64e7457667b29d",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -244,9 +436,43 @@
         "Noah Cadiou converted a penalty for Lorient in minute 61 against Monaco.",
         "The match finished Lorient 1–0 Monaco."
       ],
-      "cause": null,
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Dembo Sylla",
+        "concededBy": "Denis Zakaria",
+        "sentence": "Dembo Sylla won the penalty after a foul by Denis Zakaria inside the area.",
+        "evidenceIds": [
+          "2984084933",
+          "2984084879"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 1,
+        "shots": 1,
+        "onTarget": 1,
+        "chances": 0
+      },
+      "keeper": "Lukás Hrádecky",
+      "moment": {
+        "before": [
+          0,
+          0
+        ],
+        "after": [
+          1,
+          0
+        ]
+      },
+      "paragraphs": [
+        "Noah Cadiou converted a penalty in the 61st minute of Lorient’s 1–0 win over Monaco.",
+        "Dembo Sylla won the penalty after a foul by Denis Zakaria inside the area. The goal put the team ahead at 1–0.",
+        "Noah Cadiou finished with 1 goal and 1 shot, including 1 on target, in 90 minutes."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/lorient-vs-monaco/2u3coy#5802959",
-      "sourceHash": "f114d5b30c5494b55a0544e5ee8f87db48b39900815ce19885e7982954f091b0",
+      "sourceHash": "963a6f2a2a52f60609bace6db4028b446b10676132374ea62f77b8dab91ba3a6",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -279,9 +505,43 @@
         "Estéban Lepaul converted a penalty for Rennes in minute 29 against Paris FC.",
         "The match finished Paris FC 4–3 Rennes."
       ],
-      "cause": null,
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Estéban Lepaul",
+        "concededBy": "Pierre Lees-Melou",
+        "sentence": "Estéban Lepaul won the penalty after a foul by Pierre Lees-Melou inside the area.",
+        "evidenceIds": [
+          "2984030301",
+          "2984030303"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 3,
+        "shots": 4,
+        "onTarget": 3,
+        "chances": 3
+      },
+      "keeper": "Kevin Trapp",
+      "moment": {
+        "before": [
+          1,
+          0
+        ],
+        "after": [
+          1,
+          1
+        ]
+      },
+      "paragraphs": [
+        "Estéban Lepaul converted a penalty in the 29th minute of Rennes’s 3–4 defeat to Paris FC.",
+        "Estéban Lepaul won the penalty after a foul by Pierre Lees-Melou inside the area. The goal brought the sides level at 1–1.",
+        "Estéban Lepaul finished with 3 goals and 4 shots, including 3 on target, in 90 minutes. Rennes took 3 penalties in the match and converted 3. Estéban Lepaul took all 3."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/paris-fc-vs-rennes/26fb7k#5802961",
-      "sourceHash": "52d7512a178b895977646fc2b9aa9fa728053bf1d604abcc33a90da49b19d342",
+      "sourceHash": "b16f7dcbbfff7f6b6a4789c30c131388cb37ec98fc9911c2cf19707161cf20c4",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -314,9 +574,43 @@
         "Amine El Ouazzani converted a penalty for Angers in minute 75 against Marseille.",
         "The match finished Angers 2–5 Marseille."
       ],
-      "cause": null,
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Carlens Arcus",
+        "concededBy": "Tochukwu Nnadi",
+        "sentence": "Carlens Arcus won the penalty after a foul by Tochukwu Nnadi inside the area.",
+        "evidenceIds": [
+          "2983931509",
+          "2983931151"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 89,
+        "goals": 1,
+        "shots": 2,
+        "onTarget": 1,
+        "chances": 0
+      },
+      "keeper": "Jeffrey De Lange",
+      "moment": {
+        "before": [
+          1,
+          3
+        ],
+        "after": [
+          2,
+          3
+        ]
+      },
+      "paragraphs": [
+        "Amine El Ouazzani converted a penalty in the 75th minute of Angers’s 2–5 defeat to Marseille.",
+        "Carlens Arcus won the penalty after a foul by Tochukwu Nnadi inside the area. The goal reduced the deficit at 2–3.",
+        "Amine El Ouazzani finished with 1 goal and 2 shots, including 1 on target, in 89 minutes."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/angers-vs-marseille/2b5t3x#5802955",
-      "sourceHash": "b758049a688b90c2d1ae10c238e0cc23695951b919f0c4dd68082144b6e8c699",
+      "sourceHash": "9e4fde0b964d167da76294fdde11a707b6d29b53eacad7b97dc1030e3fe20e99",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -349,9 +643,34 @@
         "Amine Gouiri had a penalty saved for Marseille in minute 59 against Angers.",
         "The match finished Angers 2–5 Marseille."
       ],
-      "cause": null,
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Amine Gouiri",
+        "concededBy": "Yassin Belkhdim",
+        "sentence": "Amine Gouiri won the penalty after a foul by Yassin Belkhdim inside the area.",
+        "evidenceIds": [
+          "2983906853",
+          "2983906803"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 1,
+        "shots": 4,
+        "onTarget": 3,
+        "chances": 2
+      },
+      "keeper": "Anthony Lopes",
+      "moment": null,
+      "paragraphs": [
+        "Amine Gouiri had a penalty saved in the 59th minute of Marseille’s 5–2 win over Angers.",
+        "Amine Gouiri won the penalty after a foul by Yassin Belkhdim inside the area. Anthony Lopes kept out the spot kick.",
+        "Amine Gouiri finished with 1 goal and 4 shots, including 3 on target, in 90 minutes."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/angers-vs-marseille/2b5t3x#5802955",
-      "sourceHash": "affd8f4d18716d55a0552b7ab442e741a6893e66ba0a835f3c05f60534bbca7e",
+      "sourceHash": "c43cdec1b942ee2a7d04b37f8423fa6c597f07b5ae7ef06f96bbade762549e09",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -384,9 +703,43 @@
         "Ante Budimir converted a penalty for Osasuna in minute 9 against Racing Santander.",
         "The match finished Osasuna 2–0 Racing Santander."
       ],
-      "cause": null,
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Ante Budimir",
+        "concededBy": "Jeanuël Belocian",
+        "sentence": "Ante Budimir won the penalty after a foul by Jeanuël Belocian inside the area.",
+        "evidenceIds": [
+          "2983722765",
+          "2983722809"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 1,
+        "shots": 4,
+        "onTarget": 1,
+        "chances": 0
+      },
+      "keeper": "Julen Agirrezabala",
+      "moment": {
+        "before": [
+          0,
+          0
+        ],
+        "after": [
+          1,
+          0
+        ]
+      },
+      "paragraphs": [
+        "Ante Budimir converted a penalty in the 9th minute of Osasuna’s 2–0 win over Racing Santander.",
+        "Ante Budimir won the penalty after a foul by Jeanuël Belocian inside the area. The goal put the team ahead at 1–0.",
+        "Ante Budimir finished with 1 goal and 4 shots, including 1 on target, in 90 minutes."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/osasuna-vs-racing-santander/2epysq#5868097",
-      "sourceHash": "f5c9fbc8d62526815957e0a40dc06107da77b62903f5a40022a916224525189d",
+      "sourceHash": "82cc47f314a7d4bc9017a7188fc6c184ab130d656b060d2734c8aedf12c637b1",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -419,9 +772,43 @@
         "Olivier Giroud converted a penalty for Lille in minute 64 against Brest.",
         "The match finished Lille 1–1 Brest."
       ],
-      "cause": null,
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Ethan Mbappé",
+        "concededBy": "Bradley Locko",
+        "sentence": "Ethan Mbappé won the penalty after a foul by Bradley Locko inside the area.",
+        "evidenceIds": [
+          "2983285027",
+          "2983285021"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 1,
+        "shots": 2,
+        "onTarget": 2,
+        "chances": 0
+      },
+      "keeper": "Egil Selvik",
+      "moment": {
+        "before": [
+          0,
+          1
+        ],
+        "after": [
+          1,
+          1
+        ]
+      },
+      "paragraphs": [
+        "Olivier Giroud converted a penalty in the 64th minute of Lille’s 1–1 draw with Brest.",
+        "Ethan Mbappé won the penalty after a foul by Bradley Locko inside the area. The goal brought the sides level at 1–1.",
+        "Olivier Giroud finished with 1 goal and 2 shots, including 2 on target, in 90 minutes."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/brest-vs-lille/2fo2ub#5802958",
-      "sourceHash": "cd50be31aff468eef579e896e91f118ec2e1edfb4bb168f09db383af3036a1ac",
+      "sourceHash": "46dc134cd213c8e68592f307755bae5713776614b39cdd70e75060071e590ad2",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -454,9 +841,34 @@
         "Ousmane Dembélé missed a penalty for Paris Saint Germain in minute 72 against Strasbourg.",
         "The match finished Strasbourg 1–3 Paris Saint-Germain."
       ],
-      "cause": null,
+      "cause": "handball",
+      "incident": {
+        "type": "handball",
+        "wonBy": null,
+        "concededBy": "Pape Demba Diop",
+        "sentence": "A Désiré Doué shot struck Pape Demba Diop, with the handball checked by VAR before the referee awarded the penalty. Ousmane Dembélé sent his attempt wide of Filip Jörgensen’s right post.",
+        "evidenceIds": [
+          "26406207100053",
+          "26406207000052"
+        ],
+        "method": "reviewed_commentary"
+      },
+      "stats": {
+        "minutes": 27,
+        "goals": 1,
+        "shots": 4,
+        "onTarget": 1,
+        "chances": 2
+      },
+      "keeper": null,
+      "moment": null,
+      "paragraphs": [
+        "Ousmane Dembélé missed a penalty in the 72nd minute of Paris Saint Germain’s 3–1 win over Strasbourg.",
+        "A Désiré Doué shot struck Pape Demba Diop, with the handball checked by VAR before the referee awarded the penalty. Ousmane Dembélé sent his attempt wide of Filip Jörgensen’s right post.",
+        "Ousmane Dembélé finished with 1 goal and 4 shots, including 1 on target, in 27 minutes."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/paris-saint-germain-vs-strasbourg/37hda8#5802962",
-      "sourceHash": "58fd2f895b555c3bd4ac17c6a038371900d4d358ed67e684059f09b7e94e4a1f",
+      "sourceHash": "4abafe2ea7e13ff4002d695bcfddd33d82c6ecf2e950aa010de436cdfb70d349",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -489,9 +901,42 @@
         "Zian Flemming converted a penalty for Ipswich Town in minute 90 against Manchester City.",
         "The match finished Manchester City 3–2 Ipswich Town."
       ],
-      "cause": null,
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Abdul Fatawu",
+        "concededBy": "Marc Guéhi",
+        "sentence": "Abdul Fatawu reached the ball ahead of Marc Guéhi and was fouled by the defender. Following the VAR check, Zian Flemming struck his penalty down the middle.",
+        "evidenceIds": [
+          "en:26452619000065"
+        ],
+        "method": "reviewed_commentary"
+      },
+      "stats": {
+        "minutes": 12,
+        "goals": 1,
+        "shots": 2,
+        "onTarget": 2,
+        "chances": 0
+      },
+      "keeper": "Gianluigi Donnarumma",
+      "moment": {
+        "before": [
+          3,
+          1
+        ],
+        "after": [
+          3,
+          2
+        ]
+      },
+      "paragraphs": [
+        "Zian Flemming converted a penalty in the 90th minute of Ipswich Town’s 2–3 defeat to Manchester City.",
+        "Abdul Fatawu reached the ball ahead of Marc Guéhi and was fouled by the defender. Following the VAR check, Zian Flemming struck his penalty down the middle. The goal reduced the deficit at 2–3.",
+        "Zian Flemming finished with 1 goal and 2 shots, including 2 on target, in 12 minutes."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/manchester-city-vs-ipswich-town/2sc4e3#5795481",
-      "sourceHash": "6f8aa8b9a5d5819c62659bf5d7ae9943cdd029b35bd8bee1fa275c08e7ec3cdd",
+      "sourceHash": "5ce9fe53c8431a3c23ead665b11edad7081f4de1aa3745d8c27a1ff18293003a",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -524,9 +969,34 @@
         "Noel Futkeu hit the woodwork with a penalty for SV Elversberg in minute 90+8 against Augsburg.",
         "The match finished Elversberg 4–3 Augsburg."
       ],
-      "cause": null,
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Noel Futkeu",
+        "concededBy": "Calvin Brackelmann",
+        "sentence": "Noel Futkeu won the penalty after a foul by Calvin Brackelmann inside the area.",
+        "evidenceIds": [
+          "2982983279",
+          "2982983593"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 13,
+        "goals": 0,
+        "shots": 2,
+        "onTarget": 0,
+        "chances": 1
+      },
+      "keeper": null,
+      "moment": null,
+      "paragraphs": [
+        "Noel Futkeu hit the woodwork with a penalty in added time (90+8 minutes) of SV Elversberg’s 4–3 win over Augsburg.",
+        "Noel Futkeu won the penalty after a foul by Calvin Brackelmann inside the area.",
+        "Noel Futkeu finished with 0 goals and 2 shots, including 0 on target, in 13 minutes. Elversberg took 2 penalties in the match and converted 0. The attempts were shared by Lukas Petkov and Noel Futkeu."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/elversberg-vs-augsburg/2aezx3#5881192",
-      "sourceHash": "8d36e82716b0d0a5deb339c6867cdc9c0a9405d7a6cf22445cae57a802c70da4",
+      "sourceHash": "e469e5e963f8380136b05e0df13aea9c2d016b4491b3de6bb8c1b5f42ece86fe",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -559,9 +1029,43 @@
         "Michael Gregoritsch converted a penalty for Augsburg in minute 76 against Elversberg.",
         "The match finished Elversberg 4–3 Augsburg."
       ],
-      "cause": null,
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Hennes Behrens",
+        "concededBy": "Lukas Pinckert",
+        "sentence": "Hennes Behrens won the penalty after a foul by Lukas Pinckert inside the area.",
+        "evidenceIds": [
+          "2982934203",
+          "2982934157"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 45,
+        "goals": 1,
+        "shots": 3,
+        "onTarget": 2,
+        "chances": 0
+      },
+      "keeper": "Nicolas Kristof",
+      "moment": {
+        "before": [
+          3,
+          1
+        ],
+        "after": [
+          3,
+          2
+        ]
+      },
+      "paragraphs": [
+        "Michael Gregoritsch converted a penalty in the 76th minute of Augsburg’s 3–4 defeat to Elversberg.",
+        "Hennes Behrens won the penalty after a foul by Lukas Pinckert inside the area. The goal reduced the deficit at 2–3.",
+        "Michael Gregoritsch finished with 1 goal and 3 shots, including 2 on target, in 45 minutes. Augsburg took 2 penalties in the match and converted 2. The attempts were shared by Fabian Rieder and Michael Gregoritsch."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/elversberg-vs-augsburg/2aezx3#5881192",
-      "sourceHash": "bc03f887fa380c2204d61628e8391d8c593fab799a60b0e4c3cdd76e30144a54",
+      "sourceHash": "f350eb63d7b3696f0d68c2b0c1faecf0003e69baeb9cf94c239353ef7403db9a",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -594,9 +1098,42 @@
         "Niclas Füllkrug converted a penalty for Werder Bremen in minute 65 against Paderborn.",
         "The match finished Werder Bremen 2–2 Paderborn."
       ],
-      "cause": null,
+      "cause": "handball",
+      "incident": {
+        "type": "handball",
+        "wonBy": null,
+        "concededBy": "Laurin Curda",
+        "sentence": "The penalty was awarded for a handball by Laurin Curda.",
+        "evidenceIds": [
+          "2982901281"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 2,
+        "shots": 6,
+        "onTarget": 5,
+        "chances": 1
+      },
+      "keeper": "Nahuel Noll",
+      "moment": {
+        "before": [
+          1,
+          2
+        ],
+        "after": [
+          2,
+          2
+        ]
+      },
+      "paragraphs": [
+        "Niclas Füllkrug converted a penalty in the 65th minute of Werder Bremen’s 2–2 draw with Paderborn.",
+        "The penalty was awarded for a handball by Laurin Curda. The goal brought the sides level at 2–2.",
+        "Niclas Füllkrug finished with 2 goals and 6 shots, including 5 on target, in 90 minutes."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/paderborn-vs-werder-bremen/2fmz60#5881196",
-      "sourceHash": "2d88fc410dbfa1d3a6968f3234bc83fc53009b6c6a7d16b6b5086ab0a0c8fa4c",
+      "sourceHash": "d0cbc665c28de68072440b40e80b57729bb3aaef3fc7cd8f126dc6c20f1bd3ac",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -629,9 +1166,42 @@
         "Fabian Rieder converted a penalty for Augsburg in minute 45+9 against Elversberg.",
         "The match finished Elversberg 4–3 Augsburg."
       ],
-      "cause": null,
+      "cause": "handball",
+      "incident": {
+        "type": "handball",
+        "wonBy": null,
+        "concededBy": "Maximilian Rohr",
+        "sentence": "The penalty was awarded for a handball by Maximilian Rohr.",
+        "evidenceIds": [
+          "2982830191"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 1,
+        "shots": 3,
+        "onTarget": 1,
+        "chances": 3
+      },
+      "keeper": "Nicolas Kristof",
+      "moment": {
+        "before": [
+          3,
+          0
+        ],
+        "after": [
+          3,
+          1
+        ]
+      },
+      "paragraphs": [
+        "Fabian Rieder converted a penalty in added time (45+9 minutes) of Augsburg’s 3–4 defeat to Elversberg.",
+        "The penalty was awarded for a handball by Maximilian Rohr. The goal reduced the deficit at 1–3.",
+        "Fabian Rieder finished with 1 goal and 3 shots, including 1 on target, in 90 minutes. Augsburg took 2 penalties in the match and converted 2. The attempts were shared by Fabian Rieder and Michael Gregoritsch."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/elversberg-vs-augsburg/2aezx3#5881192",
-      "sourceHash": "9638552921ff4f0d500c821d6b4a98d38629c9eb54b90340d5cdc96602d55468",
+      "sourceHash": "81565d438b74253605660eff745985515ee579423c391337e6438e4727e5425a",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -664,9 +1234,33 @@
         "Lukas Petkov had a penalty saved for SV Elversberg in minute 4 against Augsburg.",
         "The match finished Elversberg 4–3 Augsburg."
       ],
-      "cause": null,
+      "cause": "handball",
+      "incident": {
+        "type": "handball",
+        "wonBy": null,
+        "concededBy": "Chrislain Matsima",
+        "sentence": "The penalty was awarded for a handball by Chrislain Matsima.",
+        "evidenceIds": [
+          "2982733167"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 1,
+        "shots": 3,
+        "onTarget": 2,
+        "chances": 1
+      },
+      "keeper": "Finn Dahmen",
+      "moment": null,
+      "paragraphs": [
+        "Lukas Petkov had a penalty saved in the 4th minute of SV Elversberg’s 4–3 win over Augsburg.",
+        "The penalty was awarded for a handball by Chrislain Matsima. Finn Dahmen kept out the spot kick.",
+        "Lukas Petkov finished with 1 goal and 3 shots, including 2 on target, in 90 minutes. Elversberg took 2 penalties in the match and converted 0. The attempts were shared by Lukas Petkov and Noel Futkeu."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/elversberg-vs-augsburg/2aezx3#5881192",
-      "sourceHash": "054ea8e4ebbf8fb13555b5ea5c38bd25cef63e14848b9e0a1194ad9bbc2920d4",
+      "sourceHash": "741e0767cb809359b91c21237a76bb2bb954cf743825acb368762e3430874182",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     },
@@ -699,9 +1293,33 @@
         "Kevin De Bruyne had a penalty saved for Napoli in minute 68 against Venezia.",
         "The match finished Venezia 1–0 Napoli."
       ],
-      "cause": null,
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Rasmus Højlund",
+        "concededBy": "Matías Moreno",
+        "sentence": "Rasmus Højlund won the penalty after Matías Moreno brought him down inside the box. Højlund had driven forward after receiving a Leonardo Spinazzola pass.",
+        "evidenceIds": [
+          "26381916700049"
+        ],
+        "method": "reviewed_commentary"
+      },
+      "stats": {
+        "minutes": 36,
+        "goals": 0,
+        "shots": 3,
+        "onTarget": 1,
+        "chances": 5
+      },
+      "keeper": "Filip Stanković",
+      "moment": null,
+      "paragraphs": [
+        "Kevin De Bruyne had a penalty saved in the 68th minute of Napoli’s 0–1 defeat to Venezia.",
+        "Rasmus Højlund won the penalty after Matías Moreno brought him down inside the box. Højlund had driven forward after receiving a Leonardo Spinazzola pass. Filip Stanković kept out the spot kick.",
+        "Kevin De Bruyne finished with 0 goals and 3 shots, including 1 on target, in 36 minutes."
+      ],
       "sourceUrl": "https://www.fotmob.com/matches/venezia-vs-napoli/2lv4jt#5749709",
-      "sourceHash": "89ed60e5584b155cd0fb40c9fb4797d1da96eedbf75a888de19d915a1fea733b",
+      "sourceHash": "097d14da4117488b9dd1fd649acd720e4eeee3f6543bfe9e60e970e8d955f022",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
     }

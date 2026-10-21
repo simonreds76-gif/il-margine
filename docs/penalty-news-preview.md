@@ -15,10 +15,23 @@ Ambiguous nearby attempts are held for retake verification, not invented.
 Source failures or unresolved events fail the batch and preserve the last good
 public JSON. Evidence, exclusions and corrections are stored separately.
 
-The feed does not consistently supply the player who won the penalty or the
-cause. Do not infer these from assists, nearby fouls, player totals or commentary
-from another incident. Current reports omit the name until explicit incident
-evidence is available. Saved penalties followed by rebound goals remain saved.
+The collector also captures the public English match commentary. Structured
+penalty-won and penalty-conceded events are paired to the exact taker and attempt,
+with team checks, stoppage-time handling and a boundary at the previous penalty.
+Handballs never acquire a guessed foul winner. Match statistics and the score
+immediately after a converted penalty add context independently of review tickets.
+
+The initial 20 reports all have verified award details: 14 are extracted from
+structured commentary; six use reviewed facts pinned to exact commentary messages
+in data/penalty-news/editorial-evidence.json. These six examples are not evidence
+that arbitrary narrative commentary can already be interpreted automatically.
+Future unfamiliar narratives still receive the verified outcome and match context,
+with missing award details recorded in incidentCoverage. Reviewed additions expire
+if their supporting commentary changes. No generative model or paid service runs.
+
+Original reporting follows a factual lead, incident explanation and wider match
+context. It does not copy third-party analysis or infer hierarchy changes from a
+miss. Player statistics cover the entire appearance, including any penalty attempt.
 
 ## Preview status and launch
 

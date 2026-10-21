@@ -14,21 +14,34 @@ export function NewsPicture({ src, name, crest = false }: { src: string; name: s
   </span>;
 }
 
+function NewsIcon({ kind }: { kind: "clock" | "goal" | "shots" }) {
+  return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">{kind === "clock" ? <><circle cx="12" cy="12" r="8" /><path d="M12 7v5l3 2" /></> : kind === "goal" ? <><path d="M3 19V6h18v13M7 6v13M17 6v13M3 10h18M3 14h18" /><circle cx="12" cy="18" r="3" fill="currentColor" stroke="none" /></> : <><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="4" /><path d="m16 8 5-5m-4 0h4v4" /></>}</svg>;
+}
+
 export function PenaltyNewsCard({ article, detail = false }: { article: PenaltyArticle; detail?: boolean }) {
   const a = article;
+  const statisticItems = [
+    { label: "Match goals", value: a.stats.goals, kind: "goal" as const },
+    { label: "Shots on target", value: a.stats.onTarget, kind: "shots" as const },
+    { label: "Minutes", value: a.stats.minutes, kind: "clock" as const },
+  ].filter(s => s.value !== null);
   return <article className={`${styles.card} ${detail ? styles.detailCard : ""}`}>
     <div className={styles.cardMeta}><span className={styles.leagueLabel}><Image src={`/league-logos/${a.league}.png`} alt="" width={22} height={22} unoptimized />{a.leagueLabel}</span><time dateTime={a.date}>{newsDate(a.date)}</time></div>
-    <div className={styles.playerRow}><NewsPicture src={a.portrait} name={a.player} /><div className={styles.playerCopy}>
-      <span className={styles.clubLine}><NewsPicture src={a.crest} name={a.club} crest /><span>{a.club}</span></span>
-      <h2>{detail ? a.player : <Link href={`/penalty-news/${a.slug}`} prefetch={false}>{a.player}</Link>}</h2>
-      <span className={`${styles.badge} ${a.outcome === "scored" ? styles.scored : styles.notScored}`}><svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.7"><circle cx="10" cy="10" r="7.5" />{a.outcome === "scored" ? <path d="m6 10 2.5 2.5L14 7" /> : <path d="m7 7 6 6m0-6-6 6" />}</svg>{outcomeLabel[a.outcome]}<span className={styles.badgeMinute}>{a.minute}′</span></span>
-    </div></div>
-    <div className={styles.scoreline}><span>{a.home}</span><strong>{a.homeScore}<span>:</span>{a.awayScore}</strong><span>{a.away}</span><small>FT</small></div>
-    <p className={styles.summary}>{a.sentences.join(" ")}</p>
-    <div className={styles.cardActions}><Link className={styles.clubLink} href={a.clubUrl} prefetch={false}><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M5 20V4h14v16M5 12h14M9 4v4h6V4" /><circle cx="12" cy="15.5" r="1.5" /></svg><span>{a.club} penalty takers</span><span aria-hidden="true">↗</span></Link>
-      {!detail && <Link className={styles.readLink} href={`/penalty-news/${a.slug}`} prefetch={false} aria-label={`Open ${a.player} penalty report`}>Report <span aria-hidden="true">→</span></Link>}
+    <div className={styles.storyHeader}>
+      <div className={styles.playerVisual}><NewsPicture src={a.portrait} name={a.player} /><span className={styles.visualCrest}><NewsPicture src={a.crest} name={a.club} crest /></span></div>
+      <div className={styles.playerCopy}><span className={styles.clubLine}>{a.club} <span className={styles.minute}>{a.minute}′</span></span>
+        {!detail && <h2><Link href={`/penalty-news/${a.slug}`} prefetch={false}>{a.title}</Link></h2>}
+        {detail && <h2>{a.player}</h2>}
+        <span className={`${styles.badge} ${a.outcome === "scored" ? styles.scored : styles.notScored}`}><svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.7"><circle cx="10" cy="10" r="7.5" />{a.outcome === "scored" ? <path d="m6 10 2.5 2.5L14 7" /> : <path d="m7 7 6 6m0-6-6 6" />}</svg>{outcomeLabel[a.outcome]}</span>
+      </div>
     </div>
-    {detail && <div className={styles.source}><a href={a.sourceUrl} target="_blank" rel="noreferrer">Match evidence on FotMob ↗</a><span>Published {newsDate(a.publishedAt)} · Match played {newsDate(a.date)}</span>{a.updatedAt !== a.publishedAt && <span>Updated {newsDate(a.updatedAt)}</span>}</div>}
+    <div className={styles.scoreline}><span>{a.home}</span><strong>{a.homeScore}<span>:</span>{a.awayScore}</strong><span>{a.away}</span><small>FT</small></div>
+    <div className={styles.storyBody}>{a.paragraphs.map((paragraph, i) => <p className={i === 0 ? styles.lead : styles.summary} key={i}>{paragraph}</p>)}</div>
+    {statisticItems.length > 0 && <dl className={styles.statStrip}>{statisticItems.map(s => <div key={s.label}><dt><NewsIcon kind={s.kind} />{s.label}</dt><dd>{s.value}</dd></div>)}</dl>}
+    <div className={styles.cardActions}><Link className={styles.clubLink} href={a.clubUrl} prefetch={false}><NewsPicture src={a.crest} name={a.club} crest /><span>{a.club} penalty takers</span><span aria-hidden="true">↗</span></Link>
+      {!detail && <Link className={styles.readLink} href={`/penalty-news/${a.slug}`} prefetch={false} aria-label={`Open ${a.player} penalty report`}>Full report <span aria-hidden="true">→</span></Link>}
+    </div>
+    {detail && <div className={styles.source}><a href={a.sourceUrl} target="_blank" rel="noreferrer">Match and commentary on FotMob ↗</a><span>Published {newsDate(a.publishedAt)} · Match played {newsDate(a.date)}</span>{a.updatedAt !== a.publishedAt && <span>Updated {newsDate(a.updatedAt)}</span>}</div>}
   </article>;
 }
 

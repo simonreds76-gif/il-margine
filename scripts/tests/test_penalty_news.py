@@ -2,10 +2,12 @@ import copy
 import importlib.util
 from pathlib import Path
 import unittest
+from copy import deepcopy
 
 spec = importlib.util.spec_from_file_location("penalty_news", Path(__file__).parents[1] / "build-penalty-news.py")
 news = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(news)
+from penalty_news_context import incident_context, clock
 
 
 class PenaltyNewsTests(unittest.TestCase):
@@ -77,6 +79,56 @@ class PenaltyNewsTests(unittest.TestCase):
         self.assertNotEqual(result[0]["updatedAt"], first[0]["updatedAt"])
         self.assertEqual(news.merge(first, [], set()), first)
         self.assertEqual(news.merge(first, [], {"123"}), [])
+
+    def commentary(self):
+        return {'Events': [
+            {'MessageId': 'kick', 'Elapsed': 90, 'ElapsedPlus': 4, 'IncidentCode': 'PSG', 'Players': [{'Id': 9, 'TeamId': 1}]},
+            {'MessageId': 'conceded', 'Elapsed': 90, 'ElapsedPlus': 2, 'IncidentCode': 'penalty lost', 'Description': 'Penalty conceded by Defender (Away) after a foul in the penalty area.', 'Players': [{'Id': 8, 'TeamId': 2}]},
+            {'MessageId': 'won', 'Elapsed': 90, 'ElapsedPlus': 2, 'IncidentCode': 'penalty won', 'Description': 'Penalty Home. Winger draws a foul in the penalty area.', 'Players': [{'Id': 7, 'TeamId': 1}]},
+        ]}
+
+    def test_award_identifies_fouled_player_not_taker(self):
+        result = incident_context(self.shot, self.commentary(), {})
+        self.assertEqual(result['wonBy'], 'Winger')
+        self.assertEqual(result['concededBy'], 'Defender')
+        self.assertLess(clock(45, 9), clock(46))
+
+    def test_handball_does_not_invent_foul_winner(self):
+        c = self.commentary()
+        c['Events'].pop()
+        c['Events'][1]['Description'] = 'Penalty conceded by Defender (Away) with a handball in the penalty area.'
+        result = incident_context(self.shot, c, {})
+        self.assertEqual(result['type'], 'handball')
+        self.assertIsNone(result['wonBy'])
+
+    def test_wrong_player_and_intervening_attempt_are_rejected(self):
+        c = self.commentary()
+        c['Events'][0]['Players'][0]['Id'] = 99
+        self.assertIsNone(incident_context(self.shot, c, {}))
+        c = self.commentary()
+        c['Events'].insert(1, {'IncidentCode': 'PSG', 'Elapsed': 90, 'ElapsedPlus': 3})
+        self.assertIsNone(incident_context(self.shot, c, {}))
+
+    def test_ambiguous_awards_and_wrong_team_rejected(self):
+        c = self.commentary()
+        c['Events'].append(deepcopy(c['Events'][-1]))
+        self.assertIsNone(incident_context(self.shot, c, {}))
+        c = self.commentary()
+        c['Events'][-1]['Players'][0]['TeamId'] = 2
+        self.assertIsNone(incident_context(self.shot, c, {}))
+
+    def test_reviewed_note_expires_when_source_changes(self):
+        c = self.commentary()
+        c['Events'] = [c['Events'][0], {'MessageId': 'note', 'Elapsed': 90, 'ElapsedPlus': 2, 'Description': 'Verified incident', 'IncidentCode': 'highlight'}]
+        notes = {'100': {'type': 'foul', 'wonBy': 'Winger', 'sentence': 'Verified summary', 'evidence': {'note': 'Verified incident'}}}
+        self.assertEqual(incident_context(self.shot, c, notes)['method'], 'reviewed_commentary')
+        c['Events'][1]['Description'] = 'Corrected incident'
+        self.assertIsNone(incident_context(self.shot, c, notes))
+
+    def test_commentary_must_match_the_fixture(self):
+        with self.assertRaisesRegex(ValueError, 'different teams'):
+            news.normalize(self.payload, 'https://example.com', '2026-10-21', self.clubs,
+                           {'HometeamId': 99, 'AwayteamId': 2, 'Events': []})
 
 
 if __name__ == "__main__":
