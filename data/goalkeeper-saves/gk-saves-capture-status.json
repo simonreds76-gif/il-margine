@@ -1,15 +1,15 @@
 {
   "capture_errors": [],
-  "capture_mode": "close",
+  "capture_mode": "publication",
   "event_last_checked": {
-    "74801144": "2026-10-20T21:55:00Z"
+    "74801144": "2026-10-21T00:56:47Z"
   },
   "events_deferred_by_budget": 0,
   "events_selected": 1,
   "events_supported": 1,
   "events_with_lines": 1,
-  "generated_at": "2026-10-20T21:55:00Z",
-  "last_publication_at": "2026-10-20T13:36:47Z",
+  "generated_at": "2026-10-21T00:56:47Z",
+  "last_publication_at": "2026-10-21T00:56:47Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 0,
@@ -32,11 +32,13 @@
       "with_prices": 0
     }
   },
-  "market_inventory_rows_added": 82,
+  "market_inventory_rows_added": 84,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Away Team Exact Goals",
     "Away Team Highest Scoring Half",
+    "Bookings Spread",
+    "Bookings Totals",
     "Bookings Totals Away",
     "Bookings Totals Home",
     "Both Teams To Score",
@@ -44,6 +46,7 @@
     "Both Teams To Score HT",
     "Clean Sheet Away",
     "Clean Sheet Home",
+    "Corner Handicap",
     "Corners Race",
     "Corners Spread",
     "Corners Totals",
@@ -96,7 +99,6 @@
     "Player to be Booked",
     "Specials",
     "Spread",
-    "Spread HT",
     "Team Goalscorer",
     "Team Total Away",
     "Team Total Home",
@@ -114,7 +116,7 @@
     "Totals HT",
     "Winning Margin"
   ],
-  "publication_recovery": false,
+  "publication_recovery": true,
   "request_budget": 4,
   "requests_used": 2,
   "rows_added": 10,
