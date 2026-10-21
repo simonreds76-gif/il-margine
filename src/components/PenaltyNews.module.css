@@ -13,7 +13,7 @@
 .filters { border: 1px solid #2b3945; border-radius: 16px; padding: 16px; background: #121a22; }
 .leagueFilters { display: flex; flex-wrap: wrap; gap: 8px; }
 .leagueFilters button { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #33434e; background: #17232d; border-radius: 10px; color: #c3cfd7; font-size: 12px; font-weight: 600; padding: 10px 12px; min-height: 44px; cursor: pointer; }
-.leagueFilters button img { object-fit: contain; }
+.leagueFilters button img { object-fit: contain; background: #e9f0f3; border-radius: 4px; padding: 2px; }
 .leagueFilters button[aria-pressed=true] { background: #223e35; border-color: #7ac6a6; color: #d9f9eb; }
 .selects { display: flex; align-items: end; gap: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px solid #293742; }
 .selects label { display: flex; flex-direction: column; gap: 7px; color: #a9b9c5; font-size: 12px; min-width: 0; width: 210px; }
@@ -26,7 +26,7 @@
 .card { display: flex; flex-direction: column; min-width: 0; border: 1px solid #30404b; border-radius: 18px; background: linear-gradient(140deg,#17232b,#101820 68%); padding: 22px; box-shadow: 0 10px 30px #0000000d; }
 .cardMeta { display: flex; justify-content: space-between; align-items: center; gap: 10px; color: #9eb0bd; font-size: 11px; margin-bottom: 22px; }
 .leagueLabel { display: flex; align-items: center; gap: 8px; }
-.leagueLabel img { object-fit: contain; }
+.leagueLabel img { object-fit: contain; background: #e9f0f3; border-radius: 4px; padding: 2px; }
 .cardMeta time { white-space: nowrap; }
 .playerRow { display: flex; align-items: center; gap: 16px; }
 .portrait { width: 80px; height: 80px; display: flex; align-items: end; justify-content: center; flex: none; border-radius: 16px; border: 1px solid #3c535d; overflow: hidden; background: radial-gradient(ellipse at bottom,#355e55,#1a3038); }
