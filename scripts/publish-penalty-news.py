@@ -35,6 +35,11 @@ def deployment_page(vercel, url, route):
     return run(vercel, 'curl', url + route, '--', '--fail', '--silent')
 
 
+def api_response(output):
+    # Promotion returns HTTP 204. The CLI has already checked HTTP success.
+    return json.loads(output) if output.strip() else {}
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--state', type=Path, required=True)
@@ -75,7 +80,7 @@ def main():
     (ROOT / '.vercel/project.json').write_text(json.dumps({'projectId': PROJECT, 'orgId': TEAM, 'projectName': 'il-margine'}))
 
     def api(path, *extra):
-        return json.loads(run(vercel, 'api', path + '?teamId=' + TEAM, *extra, '--raw'))
+        return api_response(run(vercel, 'api', path + '?teamId=' + TEAM, *extra, '--raw'))
 
     alias = api('/v4/aliases/ilmargine.bet')['deploymentId']
     live = api('/v13/deployments/' + alias)

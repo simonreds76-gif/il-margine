@@ -187,6 +187,12 @@ class PenaltyNewsTests(unittest.TestCase):
 
 
 class PublicationGuards(unittest.TestCase):
+    def test_promotion_accepts_empty_success_but_rejects_malformed_response(self):
+        self.assertEqual(publisher.api_response(''), {})
+        self.assertEqual(publisher.api_response('{"deploymentId":"verified"}'), {'deploymentId': 'verified'})
+        with self.assertRaises(json.JSONDecodeError):
+            publisher.api_response('<html>Authentication required</html>')
+
     def test_readback_resolves_full_url_for_project_scoped_ci_token(self):
         with patch.object(publisher, 'run', return_value='verified page') as command:
             self.assertEqual(publisher.deployment_page('vercel', 'https://candidate.vercel.app', '/penalty-news/article'), 'verified page')
