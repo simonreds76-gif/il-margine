@@ -1,0 +1,78 @@
+name: Penalty News Daily
+
+# Reuse the existing daily cycle, including when settlement itself fails.
+# Neither hierarchy decisions nor Telegram delivery gate article creation.
+on:
+  workflow_run:
+    workflows: [Goalscorer Settlement]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Collect and validate without publishing
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: penalty-news-publication
+  cancel-in-progress: false
+
+jobs:
+  news:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/fair-odds-daily-pitch-20260908
+          fetch-depth: 0
+      - name: Check public launch status
+        id: launch
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          path = Path('config/penalty-news-publication.json')
+          enabled = path.exists() and json.loads(path.read_text()).get('enabled') is True
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write(f'enabled={str(enabled).lower()}\n')
+          print('Public news enabled' if enabled else 'Penalty News remains on preview; no publication')
+          PY
+      - uses: actions/setup-python@v5
+        if: steps.launch.outputs.enabled == 'true'
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        if: steps.launch.outputs.enabled == 'true'
+        with:
+          node-version: '22'
+      - name: Install batch tools
+        if: steps.launch.outputs.enabled == 'true'
+        run: |
+          python -m pip install requests==2.32.5
+          npm install --global vercel@54.4.1
+      - name: Validate collector
+        if: steps.launch.outputs.enabled == 'true'
+        run: python -m unittest discover -s scripts/tests -p test_penalty_news.py
+      - name: Collect, validate and publish independently
+        if: steps.launch.outputs.enabled == 'true'
+        env:
+          VERCEL_TOKEN: ${{ secrets.FOOTBALL_ATLAS_VERCEL_TOKEN }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [ "$DRY_RUN" = 'true' ]; then
+            python scripts/publish-penalty-news.py --dry-run --state "$RUNNER_TEMP/penalty-news-evidence"
+          else
+            python scripts/publish-penalty-news.py --state "$RUNNER_TEMP/penalty-news-evidence"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.launch.outputs.enabled == 'true'
+        with:
+          name: penalty-news-evidence
+          path: ${{ runner.temp }}/penalty-news-evidence
+          retention-days: 30
