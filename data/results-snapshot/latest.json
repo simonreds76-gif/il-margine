@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-20T13:36:56Z",
+  "fetched_at": "2026-10-21T13:52:38Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
@@ -960,19 +960,6 @@
           "source": "football-data",
           "total_corners": 5
         },
-        "2026-10-17|union berlin|borussia dortmund": {
-          "away_corners": 5,
-          "away_shots": 10,
-          "away_sot": 2,
-          "away_team": "borussia dortmund",
-          "home_corners": 5,
-          "home_shots": 11,
-          "home_sot": null,
-          "home_team": "union berlin",
-          "match_id": 5881195,
-          "source": "fotmob",
-          "total_corners": 10
-        },
         "2026-10-17|union berlin|dortmund": {
           "away_corners": 5,
           "away_fouls": 13,
@@ -1010,19 +997,6 @@
           "referee": null,
           "source": "football-data",
           "total_corners": 8
-        },
-        "2026-10-18|bayer leverkusen|freiburg": {
-          "away_corners": 3,
-          "away_shots": 11,
-          "away_sot": 2,
-          "away_team": "freiburg",
-          "home_corners": 4,
-          "home_shots": 12,
-          "home_sot": 5,
-          "home_team": "bayer leverkusen",
-          "match_id": 5881188,
-          "source": "fotmob",
-          "total_corners": 7
         },
         "2026-10-18|borussia monchengladbach|hoffenheim": {
           "away_corners": 6,
@@ -1065,9 +1039,9 @@
       },
       "football_data_count": 54,
       "football_data_latest": "2026-10-18",
-      "fotmob_count": 6,
-      "fotmob_latest": "2026-10-18",
-      "lag_days": 2,
+      "fotmob_count": 0,
+      "fotmob_latest": null,
+      "lag_days": 3,
       "source": "football-data",
       "source_latest": "2026-10-18",
       "target_dates": [
@@ -1076,19 +1050,18 @@
         "2026-10-11",
         "2026-10-16",
         "2026-10-17",
-        "2026-10-18",
-        "2026-10-19"
+        "2026-10-18"
       ],
-      "target_fixture_count": 10,
-      "unresolved_fixture_count": 4
+      "target_fixture_count": 2,
+      "unresolved_fixture_count": 2
     },
     "epl": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 8,
-      "api_football_requests_used": 0,
+      "api_football_max_requests": 8,
+      "api_football_requests_remaining_after_league": 7,
+      "api_football_requests_used": 1,
       "fetch_error": null,
       "fixtures": {
         "2026-08-21|arsenal|coventry": {
@@ -2420,45 +2393,30 @@
           "referee": "A Madley",
           "source": "football-data",
           "total_corners": 8
-        },
-        "2026-10-19|tottenham|coventry city": {
-          "away_corners": 4,
-          "away_shots": 12,
-          "away_sot": 1,
-          "away_team": "coventry city",
-          "home_corners": 4,
-          "home_shots": 16,
-          "home_sot": 5,
-          "home_team": "tottenham",
-          "match_id": 5795484,
-          "source": "fotmob",
-          "total_corners": 8
         }
       },
       "football_data_count": 70,
       "football_data_latest": "2026-10-19",
-      "fotmob_count": 10,
-      "fotmob_latest": "2026-10-19",
-      "lag_days": 1,
+      "fotmob_count": 0,
+      "fotmob_latest": null,
+      "lag_days": 2,
       "source": "football-data",
       "source_latest": "2026-10-19",
       "target_dates": [
-        "2026-10-16",
-        "2026-10-17",
-        "2026-10-18",
-        "2026-10-19",
-        "2026-10-20"
+        "2026-10-24",
+        "2026-10-25",
+        "2026-10-26"
       ],
-      "target_fixture_count": 10,
-      "unresolved_fixture_count": 0
+      "target_fixture_count": 1,
+      "unresolved_fixture_count": 1
     },
     "la-liga": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 8,
-      "api_football_requests_used": 0,
+      "api_football_max_requests": 7,
+      "api_football_requests_remaining_after_league": 6,
+      "api_football_requests_used": 1,
       "fetch_error": null,
       "fixtures": {
         "2026-08-15|alaves|getafe": {
@@ -4136,28 +4094,26 @@
       },
       "football_data_count": 88,
       "football_data_latest": "2026-10-19",
-      "fotmob_count": 9,
-      "fotmob_latest": "2026-10-19",
-      "lag_days": 1,
+      "fotmob_count": 0,
+      "fotmob_latest": null,
+      "lag_days": 2,
       "source": "football-data",
       "source_latest": "2026-10-19",
       "target_dates": [
-        "2026-10-16",
-        "2026-10-17",
-        "2026-10-18",
-        "2026-10-19",
-        "2026-10-20"
+        "2026-10-20",
+        "2026-10-21",
+        "2026-10-22"
       ],
-      "target_fixture_count": 9,
-      "unresolved_fixture_count": 0
+      "target_fixture_count": 1,
+      "unresolved_fixture_count": 1
     },
     "ligue-1": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 8,
-      "api_football_requests_remaining_after_league": 4,
-      "api_football_requests_used": 4,
+      "api_football_max_requests": 6,
+      "api_football_requests_remaining_after_league": 3,
+      "api_football_requests_used": 3,
       "fetch_error": null,
       "fixtures": {
         "2026-08-21|marseille|strasbourg": {
@@ -5224,19 +5180,6 @@
           "source": "football-data",
           "total_corners": 7
         },
-        "2026-10-17|strasbourg|paris saint germain": {
-          "away_corners": 6,
-          "away_shots": 18,
-          "away_sot": 7,
-          "away_team": "paris saint germain",
-          "home_corners": 3,
-          "home_shots": 17,
-          "home_sot": 8,
-          "home_team": "strasbourg",
-          "match_id": 5802962,
-          "source": "fotmob",
-          "total_corners": 9
-        },
         "2026-10-17|strasbourg|paris sg": {
           "away_corners": 6,
           "away_fouls": 6,
@@ -5373,9 +5316,9 @@
       },
       "football_data_count": 63,
       "football_data_latest": "2026-10-18",
-      "fotmob_count": 6,
-      "fotmob_latest": "2026-10-18",
-      "lag_days": 2,
+      "fotmob_count": 0,
+      "fotmob_latest": null,
+      "lag_days": 3,
       "source": "football-data",
       "source_latest": "2026-10-18",
       "target_dates": [
@@ -5385,19 +5328,18 @@
         "2026-10-12",
         "2026-10-16",
         "2026-10-17",
-        "2026-10-18",
-        "2026-10-19"
+        "2026-10-18"
       ],
-      "target_fixture_count": 15,
-      "unresolved_fixture_count": 9
+      "target_fixture_count": 4,
+      "unresolved_fixture_count": 4
     },
     "serie-a": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 4,
+      "api_football_max_requests": 10,
       "api_football_requests_remaining_after_league": 3,
-      "api_football_requests_used": 1,
+      "api_football_requests_used": 0,
       "fetch_error": null,
       "fixtures": {
         "2026-08-22|genoa|napoli": {
@@ -6733,21 +6675,15 @@
       },
       "football_data_count": 70,
       "football_data_latest": "2026-10-19",
-      "fotmob_count": 7,
-      "fotmob_latest": "2026-10-19",
-      "lag_days": 1,
+      "fotmob_count": 0,
+      "fotmob_latest": null,
+      "lag_days": 2,
       "source": "football-data",
       "source_latest": "2026-10-19",
-      "target_dates": [
-        "2026-10-16",
-        "2026-10-17",
-        "2026-10-18",
-        "2026-10-19",
-        "2026-10-20"
-      ],
-      "target_fixture_count": 8,
-      "unresolved_fixture_count": 1
+      "target_dates": [],
+      "target_fixture_count": 0,
+      "unresolved_fixture_count": 0
     }
   },
-  "snapshot_date": "2026-10-20"
+  "snapshot_date": "2026-10-21"
 }
