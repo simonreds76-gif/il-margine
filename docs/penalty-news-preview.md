@@ -1,84 +1,33 @@
-# Penalty News preview
+# Penalty News
 
-Scope: new /penalty-news hub and individual reports. Existing hierarchy pages,
-models, editorial decisions, schedules and Telegram messages are unchanged.
+Public routes: /penalty-news and /penalty-news/[slug]. Articles link to the club hierarchy. The directory, Tools & guides navigation and footer link to the news hub. Club hierarchy content and review decisions are not changed by news publication.
 
-## Factual automation
+## Daily operation
 
-Run `python scripts/build-penalty-news.py --days 3` after the daily completed
-match capture. It discovers all five supported leagues, fetches final scores
-and penalty shot evidence, and generates original short reports without an
-LLM call or reading a manual review queue. It retains stable event IDs and URLs,
-distinguishes saves, misses and woodwork, rejects shootouts and incomplete
-results, deduplicates observations, and preserves original publication dates.
-Ambiguous nearby attempts are held for retake verification, not invented.
-With --allow-partial, independently verified fixtures advance while failed or
-ambiguous fixtures retain their last validated reports. A wholly failed capture
-cannot overwrite the public JSON. Evidence, exclusions and corrections are saved.
+Penalty News Daily follows completion of Goalscorer Settlement's existing daily 08:45 UTC workflow, regardless of its result. It never reads the hierarchy review queue. Install the workflow on golden-with-speed-insights; it checks out codex/fair-odds-daily-pitch-20260908 for the approved collector, website and publication configuration. A manual dispatch supports a dry run. GitHub can delay scheduled jobs, so this is daily completed-match reporting, not a live incident feed.
 
-The collector also captures the public English match commentary. Structured
-penalty-won and penalty-conceded events are paired to the exact taker and attempt,
-with team checks, stoppage-time handling and a boundary at the previous penalty.
-Handballs never acquire a guessed foul winner. Match statistics and the score
-immediately after a converted penalty add context independently of review tickets.
+config/penalty-news-publication.json controls publication and an eight-day retry window. The collector checks finished matches in the Premier League, Serie A, La Liga, Bundesliga and Ligue 1. Cup games and shootouts are excluded. Match score, player identity, minute and penalty outcome must be verified. Retake ambiguity is held rather than guessed. Partial capture preserves failed fixtures while allowing independently verified fixtures to advance.
 
-The 20 reports were replayed without editorial-evidence.json: 14 award details
-come from structured commentary and six from automatic narrative cross-checks.
-The latter require the exact attempt window, matching participants, explicit
-award language and, for a foul winner, one penalty and one credited winner for
-the team. A player's total cannot assign them to one of several penalties.
-Handball passages must identify exactly one opponent; negated decisions are
-rejected. These are evidence rules, not a claim that arbitrary prose is solved.
-Unfamiliar narratives still publish confirmed outcome and match context, with
-missing award details recorded in incidentCoverage and retried over eight days.
-An outage cannot erase verified enrichment when the underlying facts are identical.
-No generative model, manual ticket decision or additional paid service is needed.
+## Automatic commentary
 
-Original reporting follows a factual lead, incident explanation and wider match
-context. It does not copy third-party analysis or infer hierarchy changes from a
-miss. Player statistics cover the entire appearance, including any penalty attempt.
+Structured award events are linked to the exact taker, team and attempt, including stoppage time. Narrative extraction cross-checks the commentary window, roster identities and penalty-won totals. A team with several penalties cannot have a single incident assigned from a player's match total. Handballs do not acquire invented foul winners. Unsupported award details are omitted and retried; a valid report does not wait for a hierarchy review. Unchanged facts retain existing verified detail through a commentary outage.
 
-## Preview status and launch
+Each report contains the factual lead, supported incident context and available full-appearance statistics. No paid LLM service or manual editorial note is required. Original published dates and URLs are preserved. Corrections are journalled.
 
-The collector has been executed locally against a bounded weekend and offline
-replayed from its saved source packets. The manual preview workflow is provided
-for repeat captures; it uploads evidence only and does not publish data.
-No production daily job has been enabled by this preview.
+## Publication safeguards
 
-The new penalty-news-daily.yml is ready for launch but NOT installed on the
-scheduler branch. It follows completion of Goalscorer Settlement's existing
-daily 08:45 UTC cycle, regardless of that workflow's conclusion. It never reads
-the hierarchy review queue. It checks out the production branch and collects an
-eight-day window, retaining 30-day source/correction evidence artifacts. There
-is no extra cron, per-penalty deployment or per-visitor data work.
+scripts/publish-penalty-news.py requires the production branch and a clean tracked checkout. It stages only src/data/penalty-news.json. It checks current live ancestry, builds a candidate without changing the live alias, validates the exact news revision and article routes, then checks for branch/alias changes before promoting. An unchanged published revision skips the build. The existing FOOTBALL_ATLAS_VERCEL_TOKEN supplies deployment access. No credentials are stored in data or evidence.
 
-Launch checklist:
-1. Approve and merge the website preview, add canonical/schema/sitemap metadata
-   and remove preview-only noindex, then verify the public routes.
-2. Enable config/penalty-news-publication.json on the production branch.
-3. Install only penalty-news-daily.yml on golden-with-speed-insights.
-4. Dispatch a dry run, then verify one real publication and the next daily run.
+The workflow retains raw evidence, exclusions, corrections and the publication receipt for 30 days and writes a compact GitHub job summary. It adds no Telegram alerts and does not change model settings, stakes, review tickets or hierarchy orders.
 
-publish-penalty-news.py stages only src/data/penalty-news.json, refuses unrelated
-changes and uses the established Atlas candidate/verify/promote approach. It
-checks live ancestry, exact news revision, article routes, remote branch movement
-and alias movement before promoting. An unchanged published revision avoids a
-build. The production publisher has NOT been exercised from this preview; it
-must pass the launch dry run and controlled first publication before being
-described as operational. GitHub schedules can run late, so this is daily news
-after completed matches, not a live minute-by-minute feed.
+## Verification and launch
 
-Preview pages remain noindex and absent from the sitemap. Preview navigation now
-links to Penalty News under News & guides within Tools & guides, in the footer's
-Picks, news & guides group, and in a card on the penalty takers directory.
-At launch add canonical metadata, Article schema, sitemap entries and a
-discoverable link after approval. Club pages themselves need no rewrite.
+Run the collector tests, full TypeScript check and scoped ESLint. Verify a fresh bounded capture, a cloud dry run and an actual publication. The production page and individual reports must have the expected revision, canonical, indexable metadata and sitemap entries. Verify the default-branch workflow is active and the morning parent workflow remains scheduled. Do not describe an installed trigger as a witnessed future scheduled run.
 
-## Verification
+Commands:
 
-`python -m unittest discover -s scripts/tests -p test_penalty_news.py`
+    python -m unittest discover -s scripts/tests -p test_penalty_news.py
+    python scripts/build-penalty-news.py --days 3 --allow-partial --evidence-dir PATH
+    python scripts/publish-penalty-news.py --dry-run --state PATH
 
-`python scripts/build-penalty-news.py --offline --end-date YYYY-MM-DD --days 3 --evidence-dir PATH`
-
-The public JSON imports are static. There are no per-visitor source requests or
-frequent ISR writes. Visible cards are paginated in batches of 12.
+The pages are static. Source collection is never visitor-triggered. One batch produces at most one deployment, not one per penalty. Cards paginate in groups of 12.

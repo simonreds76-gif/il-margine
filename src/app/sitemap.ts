@@ -16,6 +16,7 @@ import { readWorldCupData, worldCupTeamUrl, WORLD_CUP_ARCHIVE_DATE, WORLD_CUP_PE
 import { fetchSeoTipSitemapState } from "@/lib/tip-seo-server";
 import returnAtlasRelease from "@/data/return-atlas-release.json";
 import footballAtlasRelease from "@/data/football-atlas-release.json";
+import { penaltyNews } from "@/lib/penalty-news";
 
 const STATIC_LAST_MODIFIED = new Date("2026-05-12T00:00:00Z");
 const RESOURCES_LAST_MODIFIED = new Date("2026-10-07T12:00:00Z");
@@ -70,6 +71,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/return-atlas`, lastModified: new Date(`${returnAtlasRelease.checkedAt}T12:00:00Z`), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/tennis-matchday`, lastModified: contentDate("2026-10-09", matchupRelease.checkedAt), changeFrequency: "daily", priority: 0.8 },
     { url: `${BASE_URL}/penalty-takers`, lastModified: clubPenaltyLastModified, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/penalty-news`, lastModified: new Date(penaltyNews.generatedAt), changeFrequency: "daily", priority: 0.7 },
+    ...penaltyNews.articles.map((article) => ({ url: `${BASE_URL}/penalty-news/${article.slug}`, lastModified: new Date(article.updatedAt), changeFrequency: "weekly" as const, priority: 0.6 })),
     { url: `${BASE_URL}/penalty-takers/methodology`, lastModified: clubPenaltyLastModified, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE_URL}/world-cup-2026-free-picks`, lastModified: new Date("2026-07-20T12:00:00Z"), changeFrequency: "monthly", priority: 0.85 },
     ...CLUB_LEAGUES.map((leagueConfig) => {

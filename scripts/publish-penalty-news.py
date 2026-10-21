@@ -1,4 +1,4 @@
-"""Daily news publication. Preview stays disabled until explicit site launch.
+"""Daily news publication, independent of hierarchy review decisions.
 
 One data-only commit/build per changed batch, never per article or visitor.
 Production promotion follows the existing Atlas candidate/verify/promote flow.
@@ -49,6 +49,12 @@ def main():
     capture = json.loads((args.state / 'report.json').read_text())
     print(f"Checked {capture['matchesChecked']}/{capture['matchesExpected']} fixtures; "
           f"{len(capture['errors'])} source errors; {len(capture['excluded'])} held events")
+    if os.environ.get('GITHUB_STEP_SUMMARY'):
+        with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
+            summary.write(f"## Penalty News capture\n\nFixtures: {capture['matchesChecked']}/{capture['matchesExpected']}. "
+                          f"Reports in archive: {capture['articles']}. Source errors: {len(capture['errors'])}. "
+                          f"Held events: {len(capture['excluded'])}.\n\n"
+                          "Hierarchy review decisions are not read by this job. Full evidence is attached as an artifact.\n")
     if args.dry_run:
         shutil.copyfile(ROOT / DATA, args.state / 'candidate.json')
         print('Dry run only; no commit or deployment')
@@ -81,6 +87,8 @@ def main():
     # The collector changes this revision only when the published packet changes.
     live_page = run(vercel, 'curl', '/penalty-news', '--deployment', 'https://' + live['url'], '--', '--fail', '--silent')
     if f'data-news-version="{version}"' in live_page:
+        (args.state / 'publication.json').write_text(json.dumps({'status': 'already_current', 'sha': sha, 'version': version,
+            'deploymentId': live['id'], 'articles': len(data['articles']), 'verifiedAt': datetime.now(timezone.utc).isoformat()}, indent=2))
         print('Published news already matches; no build required')
         return
     request = args.state / 'deployment-request.json'
