@@ -291,16 +291,16 @@
       "away_subs": [],
       "away_substitute_entries": [],
       "home_unavailable": [
-        "Etta Eyong",
-        "Hugo Sotelo"
+        "Hugo Sotelo",
+        "Etta Eyong"
       ],
       "away_unavailable": [
-        "Álvaro Djaló",
         "Unai Eguiluz",
+        "Álvaro Djaló",
         "Oihan Sancet",
         "Gorka Guruzeta"
       ],
-      "observed_at": "2026-10-20T23:10:42.370958+00:00",
+      "observed_at": "2026-10-21T12:30:41.261102+00:00",
       "changed_at": "2026-10-20T12:31:29.964067+00:00"
     },
     {
@@ -603,7 +603,7 @@
         "Juan Cruz",
         "Julen Lobete"
       ],
-      "observed_at": "2026-10-20T23:10:42.370958+00:00",
+      "observed_at": "2026-10-21T12:30:41.261102+00:00",
       "changed_at": "2026-10-20T19:12:35.000626+00:00"
     },
     {
@@ -621,7 +621,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-20T23:10:42.370958+00:00",
+      "observed_at": "2026-10-21T12:30:41.261102+00:00",
       "changed_at": "2026-10-20T23:10:42.370958+00:00"
     },
     {
@@ -639,26 +639,312 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-20T23:10:42.370958+00:00",
+      "observed_at": "2026-10-21T12:30:41.261102+00:00",
       "changed_at": "2026-10-20T23:10:42.370958+00:00"
     },
     {
       "fotmob_match_id": 5868107,
+      "fotmob_page_url": "/matches/rayo-vallecano-vs-elche/2vf3sr#5868107",
+      "home_fotmob_team_id": 8370,
+      "away_fotmob_team_id": 10268,
       "match_date": "2026-10-24",
       "kickoff_utc": "2026-10-24T12:00:00Z",
       "home_team": "Rayo Vallecano",
       "away_team": "Elche",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-2-3-1",
+      "away_formation": "5-3-2",
+      "home_players": [
+        "Emil Audero",
+        "Iván Balliu",
+        "Florian Lejeune",
+        "Mujaid Sadick",
+        "Adrià Pedrosa",
+        "Unai López",
+        "Óscar Valentín",
+        "Isi Palazón",
+        "Sergio Camello",
+        "Álvaro Garcia",
+        "Jorge de Frutos"
+      ],
+      "away_players": [
+        "Matías Dituro",
+        "Javi Morcillo",
+        "Víctor Chust",
+        "Roy Revivo",
+        "Buba Sangaré",
+        "Germán Valera",
+        "Gonzalo Villar",
+        "Federico Redondo",
+        "Thomas Lemar",
+        "Abiel Osorio",
+        "Lucas Cepeda"
+      ],
+      "home_starters": [
+        {
+          "name": "Emil Audero",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 602845,
+          "shirt_number": "25"
+        },
+        {
+          "name": "Iván Balliu",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 264885,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Florian Lejeune",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 184521,
+          "shirt_number": "24"
+        },
+        {
+          "name": "Mujaid Sadick",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 939427,
+          "shirt_number": "15"
+        },
+        {
+          "name": "Adrià Pedrosa",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 927646,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Unai López",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 571615,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Óscar Valentín",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 956622,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Isi Palazón",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 638010,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Sergio Camello",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 980422,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Álvaro Garcia",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 474658,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Jorge de Frutos",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 797901,
+          "shirt_number": "19"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Matías Dituro",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "5-3-2",
+          "position_id": 11,
+          "player_id": 592412,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Javi Morcillo",
+          "line_index": 0,
+          "line_size": 5,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-3-2",
+          "position_id": 33,
+          "player_id": 1732412,
+          "shirt_number": "47"
+        },
+        {
+          "name": "Víctor Chust",
+          "line_index": 0,
+          "line_size": 5,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-3-2",
+          "position_id": 35,
+          "player_id": 1192393,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Roy Revivo",
+          "line_index": 0,
+          "line_size": 5,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-3-2",
+          "position_id": 37,
+          "player_id": 1337914,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Buba Sangaré",
+          "line_index": 0,
+          "line_size": 5,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-3-2",
+          "position_id": 51,
+          "player_id": 1583872,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Germán Valera",
+          "line_index": 0,
+          "line_size": 5,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-3-2",
+          "position_id": 59,
+          "player_id": 1102708,
+          "shirt_number": "11"
+        },
+        {
+          "name": "Gonzalo Villar",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "5-3-2",
+          "position_id": 73,
+          "player_id": 881773,
+          "shirt_number": "12"
+        },
+        {
+          "name": "Federico Redondo",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "5-3-2",
+          "position_id": 75,
+          "player_id": 1277343,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Thomas Lemar",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "5-3-2",
+          "position_id": 77,
+          "player_id": 468931,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Abiel Osorio",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "5-3-2",
+          "position_id": 104,
+          "player_id": 1343195,
+          "shirt_number": "24"
+        },
+        {
+          "name": "Lucas Cepeda",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "5-3-2",
+          "position_id": 106,
+          "player_id": 1280756,
+          "shirt_number": "21"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-10-20T23:10:42.370958+00:00",
-      "changed_at": "2026-10-20T23:10:42.370958+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Augusto Batalla",
+        "Andrei Rațiu",
+        "Luiz Felipe",
+        "Pathé Ciss",
+        "Randy Nteka"
+      ],
+      "away_unavailable": [
+        "Marc Aguado",
+        "Yago Santiago"
+      ],
+      "observed_at": "2026-10-21T12:30:41.261102+00:00",
+      "changed_at": "2026-10-21T12:30:41.261102+00:00"
     },
     {
       "fotmob_match_id": 5868110,
@@ -675,7 +961,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-20T23:10:42.370958+00:00",
+      "observed_at": "2026-10-21T12:30:41.261102+00:00",
       "changed_at": "2026-10-20T23:10:42.370958+00:00"
     }
   ]
