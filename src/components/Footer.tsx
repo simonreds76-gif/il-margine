@@ -23,10 +23,11 @@ const groups = [
     { label: "Betting calculators", href: "/calculator" },
     { label: "All betting tools", href: "/tools" },
   ] },
-  { title: "Picks and guides", links: [
+  { title: "Picks, news & guides", links: [
     { label: "Football player props", href: "/player-props" },
     { label: "Tennis tips", href: "/tennis-tips" },
     { label: "Track record", href: "/track-record" },
+    { label: "Penalty News", href: "/penalty-news" },
     { label: "Tennis retirement rules", href: "/resources/tennis-retirement-rules" },
     { label: "Guides", href: "/resources" },
   ] },

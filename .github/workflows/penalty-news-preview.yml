@@ -1,0 +1,44 @@
+name: Penalty News Preview
+
+# Preview only. No schedule, production push or hierarchy dependency.
+# At launch, call this collector from the existing daily penalty capture.
+on:
+  workflow_dispatch:
+    inputs:
+      days:
+        description: Completed match days to check (1 to 8)
+        default: '3'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: penalty-news-preview
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    if: github.ref == 'refs/heads/codex/penalty-news-preview-20261021'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install requests
+      - run: python -m unittest discover -s scripts/tests -p test_penalty_news.py
+      - name: Generate reports from completed matches
+        env:
+          DAYS: ${{ inputs.days }}
+        run: python scripts/build-penalty-news.py --days "$DAYS" --allow-partial --evidence-dir "$RUNNER_TEMP/penalty-news-evidence"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: penalty-news-preview-evidence
+          path: |
+            ${{ runner.temp }}/penalty-news-evidence
+            src/data/penalty-news.json
+          retention-days: 14
