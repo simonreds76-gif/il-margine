@@ -4,7 +4,7 @@ Public routes: /penalty-news and /penalty-news/[slug]. Articles link to the club
 
 ## Daily operation
 
-Penalty News Daily follows completion of Goalscorer Settlement's existing daily 08:45 UTC workflow, regardless of its result. It never reads the hierarchy review queue. Install the workflow on golden-with-speed-insights; it checks out codex/fair-odds-daily-pitch-20260908 for the approved collector, website and publication configuration. A manual dispatch supports a dry run. GitHub can delay scheduled jobs, so this is daily completed-match reporting, not a live incident feed.
+Penalty News Daily follows completion of Goalscorer Settlement's existing daily 08:45 UTC workflow, regardless of its result. It never reads the hierarchy review queue. Install the workflow on the GitHub default branch main; it checks out codex/fair-odds-daily-pitch-20260908 for the approved collector, website and publication configuration. A manual dispatch supports a dry run. GitHub can delay scheduled jobs, so this is daily completed-match reporting, not a live incident feed.
 
 config/penalty-news-publication.json controls publication and an eight-day retry window. The collector checks finished matches in the Premier League, Serie A, La Liga, Bundesliga and Ligue 1. Cup games and shootouts are excluded. Match score, player identity, minute and penalty outcome must be verified. Retake ambiguity is held rather than guessed. Partial capture preserves failed fixtures while allowing independently verified fixtures to advance.
 
@@ -31,3 +31,4 @@ Commands:
     python scripts/publish-penalty-news.py --dry-run --state PATH
 
 The pages are static. Source collection is never visitor-triggered. One batch produces at most one deployment, not one per penalty. Cards paginate in groups of 12.
+
