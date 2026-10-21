@@ -123,9 +123,13 @@ def main():
         raise RuntimeError('Production branch advanced; refusing stale promotion')
     if api('/v4/aliases/ilmargine.bet')['deploymentId'] != alias:
         raise RuntimeError('Public deployment changed; refusing stale promotion')
-    run(vercel, 'promote', url, '--yes', timeout=180)
-    if api('/v4/aliases/ilmargine.bet')['deploymentId'] != deployment['id']:
-        raise RuntimeError('Promotion has not been verified')
+    # The API avoids the CLI's personal-user lookup with a project token.
+    api(f'/v10/projects/{PROJECT}/promote/{deployment["id"]}', '-X', 'POST')
+    deadline = time.monotonic() + 180
+    while api('/v4/aliases/ilmargine.bet')['deploymentId'] != deployment['id']:
+        if time.monotonic() > deadline:
+            raise RuntimeError('Promotion has not been verified')
+        time.sleep(5)
     (args.state / 'publication.json').write_text(json.dumps({'status': 'published', 'sha': sha, 'version': version,
         'deploymentId': deployment['id'], 'articles': len(data['articles']), 'verifiedAt': datetime.now(timezone.utc).isoformat()}, indent=2))
     print(f"Published {len(data['articles'])} verified reports")
