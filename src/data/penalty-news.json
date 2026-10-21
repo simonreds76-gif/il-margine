@@ -1,8 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-21T16:25:58.065112+00:00",
+  "generatedAt": "2026-10-21T16:47:35.693629+00:00",
   "coverageStart": "2026-10-17",
   "checkedThrough": "2026-10-19",
+  "captureStatus": "complete",
   "matchesChecked": 44,
   "articles": [
     {
@@ -38,12 +39,18 @@
       "incident": {
         "type": "foul",
         "wonBy": "Kylian Mbappé",
-        "concededBy": "Castrin",
-        "sentence": "Kylian Mbappé won the penalty when Castrin brought him down as he chased a Yan Diomande pass. Mbappé then beat Odysseas Vlachodimos with a chipped finish down the middle.",
+        "concededBy": null,
+        "sentence": "Kylian Mbappé won the penalty after being fouled in the area.",
         "evidenceIds": [
-          "en:26508496100062"
+          "en:26508496100062",
+          "en:26508495900061"
         ],
-        "method": "reviewed_commentary"
+        "method": "narrative_crosschecked",
+        "crosscheck": {
+          "playerId": 701154,
+          "penaltiesWon": 1,
+          "teamPenalties": 1
+        }
       },
       "stats": {
         "minutes": 84,
@@ -65,13 +72,14 @@
       },
       "paragraphs": [
         "Kylian Mbappé converted a penalty in the 63rd minute of Real Madrid’s 4–1 win over Sevilla.",
-        "Kylian Mbappé won the penalty when Castrin brought him down as he chased a Yan Diomande pass. Mbappé then beat Odysseas Vlachodimos with a chipped finish down the middle. The goal extended the lead at 3–0.",
+        "Kylian Mbappé won the penalty after being fouled in the area. The goal extended the lead at 3–0.",
         "Kylian Mbappé finished with 2 goals and 5 shots, including 3 on target, in 84 minutes."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/sevilla-vs-real-madrid/2ddv45#5868098",
-      "sourceHash": "436e16ef32b7958aa0b89c9f5133c0e7c96d4561f9b5fc958d90099cde6264ce",
+      "eventHash": "9087a69bb27195897fcc85d0819fede02b6aa4b6f4f58a54846b0d1d00c639b7",
+      "sourceHash": "9cd899d59a3a3b2f8f4fe90d4d77deba1ea7cbd9ce3191c68c45230ca41f1c17",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
-      "updatedAt": "2026-10-21T13:02:46.985896+00:00"
+      "updatedAt": "2026-10-21T16:47:35.693629+00:00"
     },
     {
       "id": "fotmob:5749700:2984141701",
@@ -107,12 +115,12 @@
         "type": "handball",
         "wonBy": null,
         "concededBy": "Thomas Kristensen",
-        "sentence": "A second VAR review penalised Thomas Kristensen for handball following an Adrien Rabiot shot. Mario Gila subsequently scored from the corner that followed the penalty save.",
+        "sentence": "The referee awarded the penalty following a VAR review of a handball by Thomas Kristensen.",
         "evidenceIds": [
           "26381865600049",
-          "26381865700052"
+          "26381865400048"
         ],
-        "method": "reviewed_commentary"
+        "method": "narrative_crosschecked"
       },
       "stats": {
         "minutes": 90,
@@ -125,13 +133,14 @@
       "moment": null,
       "paragraphs": [
         "Gonçalo Ramos had a penalty saved in the 57th minute of AC Milan’s 3–2 win over Atalanta.",
-        "A second VAR review penalised Thomas Kristensen for handball following an Adrien Rabiot shot. Mario Gila subsequently scored from the corner that followed the penalty save. Marco Carnesecchi kept out the spot kick.",
+        "The referee awarded the penalty following a VAR review of a handball by Thomas Kristensen. Marco Carnesecchi kept out the spot kick.",
         "Gonçalo Ramos finished with 1 goal and 3 shots, including 3 on target, in 90 minutes. Milan took 2 penalties in the match and converted 1. Gonçalo Ramos took both."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/atalanta-vs-milan/2exnf8#5749700",
-      "sourceHash": "8289fd4eff14604871f48250dff4de83704867c7540d5bb388d8e5d259496d72",
+      "eventHash": "31bf2a80034e13eb46e81863972f24e1f6f94d5883080028f243678c624e1122",
+      "sourceHash": "74c8925aaa5b6b35dfc2f940706f64cfbc1de2789541e0b84e50f655f7197c2d",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
-      "updatedAt": "2026-10-21T16:25:58.065112+00:00"
+      "updatedAt": "2026-10-21T16:47:35.693629+00:00"
     },
     {
       "id": "fotmob:5749700:2984076277",
@@ -167,11 +176,11 @@
         "type": "handball",
         "wonBy": null,
         "concededBy": "Relja Obrić",
-        "sentence": "A VAR review identified a handball by Relja Obrić as he blocked a Yunus Musah effort. Gonçalo Ramos placed the penalty into the bottom right corner.",
+        "sentence": "The referee awarded the penalty following a VAR review of a handball by Relja Obrić.",
         "evidenceIds": [
           "26381862300025"
         ],
-        "method": "reviewed_commentary"
+        "method": "narrative_crosschecked"
       },
       "stats": {
         "minutes": 90,
@@ -193,13 +202,14 @@
       },
       "paragraphs": [
         "Gonçalo Ramos converted a penalty in the 24th minute of AC Milan’s 3–2 win over Atalanta.",
-        "A VAR review identified a handball by Relja Obrić as he blocked a Yunus Musah effort. Gonçalo Ramos placed the penalty into the bottom right corner. The goal put the team ahead at 1–0.",
+        "The referee awarded the penalty following a VAR review of a handball by Relja Obrić. The goal put the team ahead at 1–0.",
         "Gonçalo Ramos finished with 1 goal and 3 shots, including 3 on target, in 90 minutes. Milan took 2 penalties in the match and converted 1. Gonçalo Ramos took both."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/atalanta-vs-milan/2exnf8#5749700",
-      "sourceHash": "ecc675dc6d1a733e0f80163454557e0666c6a70972b023460bcaca6f68008016",
+      "eventHash": "90a803091dcc138833857cb6b89eaeeedf77dd53f883320f05f61cd78d96d311",
+      "sourceHash": "93d06fa3026b1aac1ac34dce6036004f68b232b90b908e8b8c38847c8e7fa964",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
-      "updatedAt": "2026-10-21T13:02:46.985896+00:00"
+      "updatedAt": "2026-10-21T16:47:35.693629+00:00"
     },
     {
       "id": "fotmob:5802961:2984142353",
@@ -266,6 +276,7 @@
         "Lassine Sinayoko finished with 2 goals and 6 shots, including 2 on target, in 90 minutes."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/paris-fc-vs-rennes/26fb7k#5802961",
+      "eventHash": "1b214954ffeeee86a85112bb62b19872d04b9a0de8e90c40474917202053c43c",
       "sourceHash": "4dc002db00c10faf455ec24e3b4948d9f7b799ae57785bcaa249d70183680f38",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
@@ -334,6 +345,7 @@
         "Estéban Lepaul finished with 3 goals and 4 shots, including 3 on target, in 90 minutes. Rennes took 3 penalties in the match and converted 3. Estéban Lepaul took all 3."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/paris-fc-vs-rennes/26fb7k#5802961",
+      "eventHash": "8f8a380ce6371504866472f185c79ef205223a6a6eb8f25efe2a22ebe874be6d",
       "sourceHash": "27e148298252f779ab6779d20d60764797ddf6546563f84cc1605fd017448af4",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
@@ -403,6 +415,7 @@
         "Estéban Lepaul finished with 3 goals and 4 shots, including 3 on target, in 90 minutes. Rennes took 3 penalties in the match and converted 3. Estéban Lepaul took all 3."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/paris-fc-vs-rennes/26fb7k#5802961",
+      "eventHash": "7a3ad7fc884f093c99d99f21810e751f82160b28ba2af02171d6d74c4b3d6be4",
       "sourceHash": "1db42cda58de4e13a49bfb1a5adc2e4f030abb487f3396ee6d64e7457667b29d",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
@@ -472,6 +485,7 @@
         "Noah Cadiou finished with 1 goal and 1 shot, including 1 on target, in 90 minutes."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/lorient-vs-monaco/2u3coy#5802959",
+      "eventHash": "344b207ccdb767e514ef47d47c1709124a4fa299d170083db12435dee871757c",
       "sourceHash": "963a6f2a2a52f60609bace6db4028b446b10676132374ea62f77b8dab91ba3a6",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
@@ -541,6 +555,7 @@
         "Estéban Lepaul finished with 3 goals and 4 shots, including 3 on target, in 90 minutes. Rennes took 3 penalties in the match and converted 3. Estéban Lepaul took all 3."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/paris-fc-vs-rennes/26fb7k#5802961",
+      "eventHash": "f41adb1e8fcab181b1d3ca7d77d4334517038ed906a3e8350b755f39ce661b5e",
       "sourceHash": "b16f7dcbbfff7f6b6a4789c30c131388cb37ec98fc9911c2cf19707161cf20c4",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
@@ -610,6 +625,7 @@
         "Amine El Ouazzani finished with 1 goal and 2 shots, including 1 on target, in 89 minutes."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/angers-vs-marseille/2b5t3x#5802955",
+      "eventHash": "077f15e5dac4c6ffdbc0301c9f518db8388b800a2441bf72188a44af4b47c0a5",
       "sourceHash": "9e4fde0b964d167da76294fdde11a707b6d29b53eacad7b97dc1030e3fe20e99",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
@@ -670,6 +686,7 @@
         "Amine Gouiri finished with 1 goal and 4 shots, including 3 on target, in 90 minutes."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/angers-vs-marseille/2b5t3x#5802955",
+      "eventHash": "d0691c5ec25f0cad130c4f55a8f6a0201ca07d5ba438cb063aca863ee1962a98",
       "sourceHash": "c43cdec1b942ee2a7d04b37f8423fa6c597f07b5ae7ef06f96bbade762549e09",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
@@ -739,6 +756,7 @@
         "Ante Budimir finished with 1 goal and 4 shots, including 1 on target, in 90 minutes."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/osasuna-vs-racing-santander/2epysq#5868097",
+      "eventHash": "b480a2c0a1c3d2b2f73cb88ac005cebccb372764f400e01c328035f8256b0882",
       "sourceHash": "82cc47f314a7d4bc9017a7188fc6c184ab130d656b060d2734c8aedf12c637b1",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
@@ -808,6 +826,7 @@
         "Olivier Giroud finished with 1 goal and 2 shots, including 2 on target, in 90 minutes."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/brest-vs-lille/2fo2ub#5802958",
+      "eventHash": "4897b04c7115d8dd5a673ce8c024de4a9718b012268d83e431595cc8387497bb",
       "sourceHash": "46dc134cd213c8e68592f307755bae5713776614b39cdd70e75060071e590ad2",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
@@ -846,12 +865,12 @@
         "type": "handball",
         "wonBy": null,
         "concededBy": "Pape Demba Diop",
-        "sentence": "A Désiré Doué shot struck Pape Demba Diop, with the handball checked by VAR before the referee awarded the penalty. Ousmane Dembélé sent his attempt wide of Filip Jörgensen’s right post.",
+        "sentence": "The referee awarded the penalty following a VAR review of a handball by Pape Demba Diop.",
         "evidenceIds": [
           "26406207100053",
           "26406207000052"
         ],
-        "method": "reviewed_commentary"
+        "method": "narrative_crosschecked"
       },
       "stats": {
         "minutes": 27,
@@ -864,13 +883,14 @@
       "moment": null,
       "paragraphs": [
         "Ousmane Dembélé missed a penalty in the 72nd minute of Paris Saint Germain’s 3–1 win over Strasbourg.",
-        "A Désiré Doué shot struck Pape Demba Diop, with the handball checked by VAR before the referee awarded the penalty. Ousmane Dembélé sent his attempt wide of Filip Jörgensen’s right post.",
+        "The referee awarded the penalty following a VAR review of a handball by Pape Demba Diop.",
         "Ousmane Dembélé finished with 1 goal and 4 shots, including 1 on target, in 27 minutes."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/paris-saint-germain-vs-strasbourg/37hda8#5802962",
-      "sourceHash": "4abafe2ea7e13ff4002d695bcfddd33d82c6ecf2e950aa010de436cdfb70d349",
+      "eventHash": "2a4cb3c218c636f7716bfbe2d2e848f98eac3e1b335df18231c1cb7e84fc3429",
+      "sourceHash": "5454405829914d5278837dee86f365cb60ff00a78f5c26befef7302020c355d0",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
-      "updatedAt": "2026-10-21T13:02:46.985896+00:00"
+      "updatedAt": "2026-10-21T16:47:35.693629+00:00"
     },
     {
       "id": "fotmob:5795481:2983018805",
@@ -905,12 +925,18 @@
       "incident": {
         "type": "foul",
         "wonBy": "Abdul Fatawu",
-        "concededBy": "Marc Guéhi",
-        "sentence": "Abdul Fatawu reached the ball ahead of Marc Guéhi and was fouled by the defender. Following the VAR check, Zian Flemming struck his penalty down the middle.",
+        "concededBy": null,
+        "sentence": "Abdul Fatawu won the penalty after being fouled in the area.",
         "evidenceIds": [
-          "en:26452619000065"
+          "en:26452619000065",
+          "en:26452618900064"
         ],
-        "method": "reviewed_commentary"
+        "method": "narrative_crosschecked",
+        "crosscheck": {
+          "playerId": 1265626,
+          "penaltiesWon": 1,
+          "teamPenalties": 1
+        }
       },
       "stats": {
         "minutes": 12,
@@ -932,13 +958,14 @@
       },
       "paragraphs": [
         "Zian Flemming converted a penalty in the 90th minute of Ipswich Town’s 2–3 defeat to Manchester City.",
-        "Abdul Fatawu reached the ball ahead of Marc Guéhi and was fouled by the defender. Following the VAR check, Zian Flemming struck his penalty down the middle. The goal reduced the deficit at 2–3.",
+        "Abdul Fatawu won the penalty after being fouled in the area. The goal reduced the deficit at 2–3.",
         "Zian Flemming finished with 1 goal and 2 shots, including 2 on target, in 12 minutes."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/manchester-city-vs-ipswich-town/2sc4e3#5795481",
-      "sourceHash": "5ce9fe53c8431a3c23ead665b11edad7081f4de1aa3745d8c27a1ff18293003a",
+      "eventHash": "f48c4c57f618a5c435fb4ab62b76b69cf9d2833a3f50d795f85fca4fb414bfc7",
+      "sourceHash": "e31e8b944c36b570a58fa14f1b0af1ff57989956864cc2a2394dfaf6fd04e758",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
-      "updatedAt": "2026-10-21T13:02:46.985896+00:00"
+      "updatedAt": "2026-10-21T16:47:35.693629+00:00"
     },
     {
       "id": "fotmob:5881192:2982986017",
@@ -996,6 +1023,7 @@
         "Noel Futkeu finished with 0 goals and 2 shots, including 0 on target, in 13 minutes. Elversberg took 2 penalties in the match and converted 0. The attempts were shared by Lukas Petkov and Noel Futkeu."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/elversberg-vs-augsburg/2aezx3#5881192",
+      "eventHash": "15c0a94f4d8a28d2ac7efee819d1fb5bffd1babc2108c25d536be23e2bea6622",
       "sourceHash": "e469e5e963f8380136b05e0df13aea9c2d016b4491b3de6bb8c1b5f42ece86fe",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
@@ -1065,6 +1093,7 @@
         "Michael Gregoritsch finished with 1 goal and 3 shots, including 2 on target, in 45 minutes. Augsburg took 2 penalties in the match and converted 2. The attempts were shared by Fabian Rieder and Michael Gregoritsch."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/elversberg-vs-augsburg/2aezx3#5881192",
+      "eventHash": "08edc65cf4b690cc613558530fd6478140538ff61dc6239df066a310bde48d40",
       "sourceHash": "f350eb63d7b3696f0d68c2b0c1faecf0003e69baeb9cf94c239353ef7403db9a",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
@@ -1133,6 +1162,7 @@
         "Niclas Füllkrug finished with 2 goals and 6 shots, including 5 on target, in 90 minutes."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/paderborn-vs-werder-bremen/2fmz60#5881196",
+      "eventHash": "fcb1fa95e3be7c4146b0c47ce0ba7ad6d058e9175842344cb238d070ac7bebb2",
       "sourceHash": "d0cbc665c28de68072440b40e80b57729bb3aaef3fc7cd8f126dc6c20f1bd3ac",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
@@ -1201,6 +1231,7 @@
         "Fabian Rieder finished with 1 goal and 3 shots, including 1 on target, in 90 minutes. Augsburg took 2 penalties in the match and converted 2. The attempts were shared by Fabian Rieder and Michael Gregoritsch."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/elversberg-vs-augsburg/2aezx3#5881192",
+      "eventHash": "786c2edadde69c215dfc65fb5eb559c181f18cd78c8b878b7ad9cc06ab91423a",
       "sourceHash": "81565d438b74253605660eff745985515ee579423c391337e6438e4727e5425a",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
@@ -1260,6 +1291,7 @@
         "Lukas Petkov finished with 1 goal and 3 shots, including 2 on target, in 90 minutes. Elversberg took 2 penalties in the match and converted 0. The attempts were shared by Lukas Petkov and Noel Futkeu."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/elversberg-vs-augsburg/2aezx3#5881192",
+      "eventHash": "510e187dbff7dac9fad7d7d3049261fadb24277a651a04c92edc721f80914182",
       "sourceHash": "741e0767cb809359b91c21237a76bb2bb954cf743825acb368762e3430874182",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
       "updatedAt": "2026-10-21T13:02:46.985896+00:00"
@@ -1297,12 +1329,17 @@
       "incident": {
         "type": "foul",
         "wonBy": "Rasmus Højlund",
-        "concededBy": "Matías Moreno",
-        "sentence": "Rasmus Højlund won the penalty after Matías Moreno brought him down inside the box. Højlund had driven forward after receiving a Leonardo Spinazzola pass.",
+        "concededBy": null,
+        "sentence": "Rasmus Højlund won the penalty after being fouled in the area.",
         "evidenceIds": [
           "26381916700049"
         ],
-        "method": "reviewed_commentary"
+        "method": "narrative_crosschecked",
+        "crosscheck": {
+          "playerId": 1199272,
+          "penaltiesWon": 1,
+          "teamPenalties": 1
+        }
       },
       "stats": {
         "minutes": 36,
@@ -1315,13 +1352,14 @@
       "moment": null,
       "paragraphs": [
         "Kevin De Bruyne had a penalty saved in the 68th minute of Napoli’s 0–1 defeat to Venezia.",
-        "Rasmus Højlund won the penalty after Matías Moreno brought him down inside the box. Højlund had driven forward after receiving a Leonardo Spinazzola pass. Filip Stanković kept out the spot kick.",
+        "Rasmus Højlund won the penalty after being fouled in the area. Filip Stanković kept out the spot kick.",
         "Kevin De Bruyne finished with 0 goals and 3 shots, including 1 on target, in 36 minutes."
       ],
       "sourceUrl": "https://www.fotmob.com/matches/venezia-vs-napoli/2lv4jt#5749709",
-      "sourceHash": "097d14da4117488b9dd1fd649acd720e4eeee3f6543bfe9e60e970e8d955f022",
+      "eventHash": "0d7a12b0ebaabb66e2f5b7e92a182250288765f599241a63048c40b384c1300e",
+      "sourceHash": "5dd77130c3fbb0b7f02fbfc1a591f9486040ac91d4be75d2c78e780b4c464b1b",
       "publishedAt": "2026-10-21T13:02:46.985896+00:00",
-      "updatedAt": "2026-10-21T13:02:46.985896+00:00"
+      "updatedAt": "2026-10-21T16:47:35.693629+00:00"
     }
   ]
 }

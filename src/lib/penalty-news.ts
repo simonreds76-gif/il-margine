@@ -7,7 +7,7 @@ export type PenaltyArticle = {
   home: string; away: string; homeScore: number; awayScore: number; minute: string;
   outcome: string; title: string; sentences: string[]; cause: string | null;
   paragraphs: string[];
-  incident: { type: string; wonBy: string | null; concededBy: string; sentence: string; evidenceIds: string[]; method: string } | null;
+  incident: { type: string; wonBy: string | null; concededBy: string | null; sentence: string; evidenceIds: string[]; method: string } | null;
   stats: { minutes: number | null; goals: number | null; shots: number | null; onTarget: number | null; chances: number | null };
   keeper: string | null; moment: { before: number[]; after: number[] } | null;
   sourceUrl: string; sourceHash: string; publishedAt: string; updatedAt: string;

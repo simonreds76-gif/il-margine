@@ -33,7 +33,7 @@ jobs:
       - name: Generate reports from completed matches
         env:
           DAYS: ${{ inputs.days }}
-        run: python scripts/build-penalty-news.py --days "$DAYS" --evidence-dir "$RUNNER_TEMP/penalty-news-evidence"
+        run: python scripts/build-penalty-news.py --days "$DAYS" --allow-partial --evidence-dir "$RUNNER_TEMP/penalty-news-evidence"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -4,6 +4,7 @@ import Link from "next/link";
 import ClubPenaltyLatestUpdates from "@/components/ClubPenaltyLatestUpdates";
 import Footer from "@/components/Footer";
 import PageHeading from "@/components/PageHeading";
+import ToolEmblem from "@/components/ToolEmblem";
 import type { ClubPenaltyLeague, ClubPenaltyNewsItem, ClubPenaltySeason } from "@/lib/club-penalty-takers";
 
 type Props = { leagues: ClubPenaltyLeague[]; totalTeams: number; season: ClubPenaltySeason; latestNews: ClubPenaltyNewsItem[] };
@@ -104,6 +105,12 @@ export default function PenaltyTakersClient({ leagues, totalTeams, season, lates
         <PageHeading eyebrow="The club directory" title={`Club penalty takers ${season.label}`} icon="penalty" meta={<span className="penalty-heading-facts">{totalTeams} current clubs · {archivedCount} relegated records retained</span>}><p>Find first choices and deputies across {totalTeams} clubs. Open a team for its penalty order, recent changes and match evidence.</p></PageHeading>
 
         <PenaltyDirectory leagues={buildPenaltyDirectory(leagues)} hasUpdates={latestNews.length > 0} />
+
+        <Link href="/penalty-news" prefetch={false} className="my-6 flex items-center gap-4 rounded-2xl border border-slate-700 bg-slate-900/60 p-4 transition hover:border-emerald-300/40 focus-visible:outline-2 focus-visible:outline-emerald-300">
+          <ToolEmblem name="penalty" className="h-12 w-12 shrink-0" />
+          <span className="min-w-0"><strong className="block text-base text-slate-100">Penalty News</strong><span className="mt-1 block text-sm leading-6 text-slate-400">The foul, the decision and the finish. Read the latest match reports.</span></span>
+          <span aria-hidden="true" className="ml-auto text-xl text-emerald-200">↗</span>
+        </Link>
 
         <ClubPenaltyLatestUpdates items={latestNews} />
 

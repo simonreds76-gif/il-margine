@@ -90,7 +90,7 @@ def normalize(payload, source_url, observed_at, club_map, commentary=None, notes
         verb = {"scored": "converted a penalty", "saved": "had a penalty saved", "missed": "missed a penalty", "woodwork": "hit the woodwork with a penalty"}[outcome]
         title_verb = {"scored": "scores from the spot", "saved": "has penalty saved", "missed": "misses from the spot", "woodwork": "hits the woodwork from the spot"}[outcome]
         score = f"{teams[0]['name']} {teams[0]['score']}–{teams[1]['score']} {teams[1]['name']}"
-        incident = incident_context(shot, commentary or {}, notes or {})
+        incident = incident_context(shot, commentary or {}, notes, c, penalty_shots)
         stats, keeper, moment, context = match_context(c, shot, teams, penalty_shots)
         sentences = [f"{player} {verb} for {club['name']} in minute {minute_label} against {opponent['name']}.",
                      f"The match finished {score}."]
@@ -110,6 +110,7 @@ def normalize(payload, source_url, observed_at, club_map, commentary=None, notes
         lead = f"{player} {verb} {when} of {club['name']}’s {result} {opponent['name']}."
         paragraphs = [lead] + ([incident_text.strip()] if incident_text.strip() else []) + ([' '.join(context)] if context else [])
         raw = {"general": g, "teams": teams, "shot": shot, "incident": incident, "stats": stats, "keeper": keeper, "moment": moment, "paragraphs": paragraphs}
+        event_hash = hashlib.sha256(json.dumps({k: v for k, v in raw.items() if k not in ('incident', 'paragraphs')}, sort_keys=True).encode()).hexdigest()
         articles.append({"id": f"fotmob:{match_id}:{sid}", "slug": f"{match_date}-{slug(player)}-{match_id}-{sid}",
                          "matchId": match_id, "eventId": sid, "date": match_date, "kickoff": g["matchTimeUTCDate"],
                          "league": league[0], "leagueLabel": league[1], "round": str(g.get("matchRound") or ""),
@@ -119,7 +120,7 @@ def normalize(payload, source_url, observed_at, club_map, commentary=None, notes
                          "homeScore": teams[0]["score"], "awayScore": teams[1]["score"], "minute": minute_label,
                          "outcome": outcome, "title": f"{player} {title_verb} against {opponent['name']}", "sentences": sentences,
                          "cause": incident['type'] if incident else None, "incident": incident, "stats": stats, "keeper": keeper, "moment": moment, "paragraphs": paragraphs,
-                         "sourceUrl": source_url, "sourceHash": hashlib.sha256(json.dumps(raw, sort_keys=True).encode()).hexdigest(),
+                         "sourceUrl": source_url, "eventHash": event_hash, "sourceHash": hashlib.sha256(json.dumps(raw, sort_keys=True).encode()).hexdigest(),
                          "publishedAt": observed_at, "updatedAt": observed_at})
     return match_id, articles, excluded
 
@@ -131,6 +132,11 @@ def merge(existing, fresh, completed_ids):
         article = dict(item)
         prior = old.get(article["id"])
         if prior:
+            # A commentary outage must not erase detail already verified against
+            # exactly the same match, score, shot and player statistics.
+            if prior.get('incident') and not article.get('incident') and article.get('eventHash') and article['eventHash'] == prior.get('eventHash'):
+                merged.append(prior)
+                continue
             article["publishedAt"] = prior["publishedAt"]
             article["slug"] = prior["slug"]
             article["updatedAt"] = prior["updatedAt"] if article["sourceHash"] == prior["sourceHash"] else article["updatedAt"]
@@ -145,6 +151,7 @@ def main():
     parser.add_argument("--output", type=Path, default=ROOT / "src/data/penalty-news.json")
     parser.add_argument("--evidence-dir", type=Path, default=ROOT / "outputs/penalty-news-capture")
     parser.add_argument("--offline", action="store_true")
+    parser.add_argument('--allow-partial', action='store_true', help='Publish verified fixtures while retaining last good records for failed fixtures')
     args = parser.parse_args()
     if not 1 <= args.days <= 8:
         parser.error("Use a bounded 1–8 day window")
@@ -164,7 +171,7 @@ def main():
         response.raise_for_status()
     errors, excluded, fresh, completed = [], [], [], set()
     args.evidence_dir.mkdir(parents=True, exist_ok=True)
-    notes = read(ROOT / 'data/penalty-news/editorial-evidence.json', {})
+    enrichment_warnings = []
     match_ids = set()
     for offset in range(args.days):
         day = (date.fromisoformat(args.end_date) - timedelta(days=offset)).strftime("%Y%m%d")
@@ -203,16 +210,23 @@ def main():
                     lang = 'en' if 'en' in langs else 'en_gen' if 'en_gen' in langs else None
                     if lang:
                         url = f'https://data.fotmob.com/webcl/ltc/gsm/{mid}_{lang}.json.gz'
-                        body = get(url).content
-                        if body[:2] == b'\x1f\x8b':
-                            body = gzip.decompress(body)
-                        atomic_write(cp, {'sourceUrl': url, 'observedAt': now, 'payload': json.loads(body)})
+                        try:
+                            body = get(url).content
+                            if body[:2] == b'\x1f\x8b':
+                                body = gzip.decompress(body)
+                            atomic_write(cp, {'sourceUrl': url, 'observedAt': now, 'payload': json.loads(body)})
+                        except Exception:
+                            enrichment_warnings.append({'matchId': mid, 'reason': 'commentary_temporarily_unavailable'})
                 commentary = read(cp, {}).get('payload', {})
-            match_id, articles, omitted = normalize(packet["payload"], packet["sourceUrl"], packet["observedAt"], clubs, commentary, notes)
+                if commentary and [commentary.get('HometeamId'), commentary.get('AwayteamId')] != [t['id'] for t in q['header']['teams']]:
+                    enrichment_warnings.append({'matchId': mid, 'reason': 'commentary_fixture_mismatch'})
+                    commentary = {}
+            match_id, articles, omitted = normalize(packet["payload"], packet["sourceUrl"], packet["observedAt"], clubs, commentary)
             for article in articles:
                 article['updatedAt'] = now
-            completed.add(match_id)
-            fresh.extend(articles)
+            if not omitted:
+                completed.add(match_id)
+                fresh.extend(articles)
             excluded.extend(omitted)
             if articles:
                 print(f"Match {mid}: {len(articles)} verified penalties")
@@ -224,9 +238,10 @@ def main():
               "matchesExpected": len(match_ids), "articles": len(articles), "errors": errors, "excluded": excluded}
     report['incidentCoverage'] = {'verified': sum(bool(a.get('incident')) for a in fresh), 'total': len(fresh),
                                   'missing': [a['id'] for a in fresh if not a.get('incident')]}
+    report['enrichmentWarnings'] = enrichment_warnings
     atomic_write(args.evidence_dir / "report.json", report)
-    # Fail closed as a batch: never publish a partially refreshed news feed.
-    if errors or excluded:
+    # Never replace failed fixtures. Independent verified fixtures may advance.
+    if (errors or excluded) and (not args.allow_partial or not completed):
         print(json.dumps(report, ensure_ascii=False))
         raise SystemExit(1)
     old_articles = {a["id"]: a for a in previous["articles"]}
@@ -235,8 +250,13 @@ def main():
     removed = [a for a in previous["articles"] if a["matchId"] in completed and a["id"] not in {v["id"] for v in articles}]
     if changes or removed:
         atomic_write(args.evidence_dir / f"corrections-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%f')}.json", {"changedAt": now, "changes": changes, "removed": removed})
-    atomic_write(args.output, {"schemaVersion": 1, "generatedAt": now, "coverageStart": min((a["date"] for a in articles), default=args.end_date),
-                              "checkedThrough": args.end_date, "matchesChecked": len(completed), "articles": articles})
+    result = {"schemaVersion": 1, "generatedAt": previous.get('generatedAt', now), "coverageStart": min((a["date"] for a in articles), default=args.end_date),
+              "checkedThrough": previous.get('checkedThrough', '') if errors or excluded else args.end_date,
+              "captureStatus": 'partial' if errors or excluded else 'complete',
+              "matchesChecked": len(completed), "articles": articles}
+    if result != previous:
+        result['generatedAt'] = now
+        atomic_write(args.output, result)
     print(f"Saved {len(articles)} articles from {len(completed)} completed matches")
 
 

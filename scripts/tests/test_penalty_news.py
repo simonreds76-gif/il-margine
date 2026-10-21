@@ -3,11 +3,17 @@ import importlib.util
 from pathlib import Path
 import unittest
 from copy import deepcopy
+import json
+import tempfile
+from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location("penalty_news", Path(__file__).parents[1] / "build-penalty-news.py")
 news = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(news)
-from penalty_news_context import incident_context, clock
+from penalty_news_context import incident_context, narrative_context, clock
+publisher_spec = importlib.util.spec_from_file_location('penalty_publisher', Path(__file__).parents[1] / 'publish-penalty-news.py')
+publisher = importlib.util.module_from_spec(publisher_spec)
+publisher_spec.loader.exec_module(publisher)
 
 
 class PenaltyNewsTests(unittest.TestCase):
@@ -129,6 +135,77 @@ class PenaltyNewsTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'different teams'):
             news.normalize(self.payload, 'https://example.com', '2026-10-21', self.clubs,
                            {'HometeamId': 99, 'AwayteamId': 2, 'Events': []})
+
+    def narrative(self):
+        content = {'playerStats': {'7': {'id': 7, 'name': 'Rasmus Højlund', 'teamId': 1,
+                    'stats': [{'stats': {'Penalty won': {'key': 'penalties_won', 'stat': {'value': 1}}}}]},
+                    '8': {'id': 8, 'name': 'Relja Obrić', 'teamId': 2, 'stats': []}}}
+        window = [{'IncidentCode': 'highlight', 'Elapsed': 89, 'MessageId': 'award',
+                   'Description': 'PENALTY TO HOME! Hojlund is bundled over inside the area.'}]
+        return content, window
+
+    def test_narrative_foul_crosschecks_player_and_unique_team_penalty(self):
+        content, window = self.narrative()
+        result = narrative_context(self.shot, window, content, [self.shot])
+        self.assertEqual(result['wonBy'], 'Rasmus Højlund')
+        self.assertIsNone(result['concededBy'])
+        self.assertIsNone(narrative_context(self.shot, window, content, [self.shot, dict(self.shot, id=101)]))
+        content['playerStats']['7']['stats'] = []
+        self.assertIsNone(narrative_context(self.shot, window, content, [self.shot]))
+
+    def test_narrative_handball_requires_single_opponent_and_rejects_negation(self):
+        content, window = self.narrative()
+        content['playerStats']['7']['stats'] = []
+        window[0]['Description'] = 'PENALTY TO HOME! A raised Obric hand blocked the shot.'
+        self.assertEqual(narrative_context(self.shot, window, content, [self.shot])['concededBy'], 'Relja Obrić')
+        window[0]['Description'] += ' VAR decides it was not handball. The penalty is overturned.'
+        self.assertIsNone(narrative_context(self.shot, window, content, [self.shot]))
+
+    def test_unrelated_earlier_incident_is_not_used(self):
+        content, window = self.narrative()
+        content['playerStats']['7']['stats'] = []
+        content['playerStats']['6'] = {'id': 6, 'name': 'Other Defender', 'teamId': 2, 'stats': []}
+        window[0]['Description'] = 'PENALTY TO HOME! A raised Obric hand blocked the shot.'
+        window.append({'IncidentCode': 'highlight', 'Elapsed': 85, 'MessageId': 'old',
+                       'Description': 'Other Defender sees his handball appeal rejected at the other end.'})
+        self.assertEqual(narrative_context(self.shot, window, content, [self.shot])['concededBy'], 'Relja Obrić')
+
+    def test_commentary_outage_keeps_enriched_article_only_for_unchanged_facts(self):
+        old = self.run_normalize()[1]
+        old[0]['incident'] = {'sentence': 'Verified detail'}
+        fresh = self.run_normalize()[1]
+        self.assertEqual(news.merge(old, fresh, {'123'}), old)
+        fresh[0]['eventHash'] = 'corrected-score'
+        self.assertIsNone(news.merge(old, fresh, {'123'})[0]['incident'])
+
+    def test_partial_capture_preserves_unresolved_fixture_and_adds_new_one(self):
+        old = self.run_normalize()[1]
+        fresh = deepcopy(old)
+        fresh[0].update(id='fotmob:456:101', matchId='456')
+        merged = news.merge(old, fresh, {'456'})
+        self.assertEqual({a['matchId'] for a in merged}, {'123', '456'})
+
+
+class PublicationGuards(unittest.TestCase):
+    def run_guard(self, enabled, outputs):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent, prefix='penalty-test-') as tmp:
+            root = Path(tmp)
+            (root / 'config').mkdir()
+            (root / 'config/penalty-news-publication.json').write_text(json.dumps({'enabled': enabled, 'lookbackDays': 8}))
+            with patch.object(publisher, 'ROOT', root), patch('sys.argv', ['publish', '--state', str(root / 'evidence')]), patch.object(publisher, 'run', side_effect=outputs) as command:
+                publisher.main()
+                return command.call_count
+
+    def test_preview_does_not_invoke_capture_git_or_deployment(self):
+        self.assertEqual(self.run_guard(False, []), 0)
+
+    def test_dirty_checkout_blocks_publication(self):
+        with self.assertRaisesRegex(RuntimeError, 'unrelated tracked changes'):
+            self.run_guard(True, [' M src/app/page.tsx'])
+
+    def test_feature_branch_cannot_publish(self):
+        with self.assertRaisesRegex(RuntimeError, 'production branch'):
+            self.run_guard(True, ['', 'codex/penalty-news-preview-20261021'])
 
 
 if __name__ == "__main__":
