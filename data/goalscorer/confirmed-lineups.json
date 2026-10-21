@@ -291,6 +291,7 @@
       "away_subs": [],
       "away_substitute_entries": [],
       "home_unavailable": [
+        "Ricardo Rodríguez",
         "Emirhan İlkhan",
         "Niccolò Fortini"
       ],
@@ -300,44 +301,616 @@
         "Idrissa Touré",
         "Matteo Pessina"
       ],
-      "observed_at": "2026-10-21T12:30:02.075212+00:00",
+      "observed_at": "2026-10-21T15:12:38.165700+00:00",
       "changed_at": "2026-10-20T19:12:19.728655+00:00"
     },
     {
       "fotmob_match_id": 5749711,
+      "fotmob_page_url": "/matches/cagliari-vs-bologna/2sn5ak#5749711",
+      "home_fotmob_team_id": 8529,
+      "away_fotmob_team_id": 9857,
       "match_date": "2026-10-24",
       "kickoff_utc": "2026-10-24T13:00:00Z",
       "home_team": "Cagliari",
       "away_team": "Bologna",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-3-2-1",
+      "away_formation": "3-4-3",
+      "home_players": [
+        "Elia Caprile",
+        "Zé Pedro",
+        "Yerry Mina",
+        "Juan Rodríguez",
+        "Adam Obert",
+        "Michel Ndary Adopo",
+        "Harry Winks",
+        "Alessandro Romano",
+        "Paul Mendy",
+        "Daniel Maldini",
+        "M'Bala Nzola"
+      ],
+      "away_players": [
+        "Łukasz Skorupski",
+        "Matteo Darmian",
+        "Nicolò Casale",
+        "Arthur Theate",
+        "Nadir Zortea",
+        "Lewis Ferguson",
+        "Tommaso Pobega",
+        "Juan Miranda",
+        "Federico Bernardeschi",
+        "Artem Dovbyk",
+        "Nicolò Cambiaghi"
+      ],
+      "home_starters": [
+        {
+          "name": "Elia Caprile",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-3-2-1",
+          "position_id": 11,
+          "player_id": 958422,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Zé Pedro",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-2-1",
+          "position_id": 32,
+          "player_id": 957107,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Yerry Mina",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-2-1",
+          "position_id": 34,
+          "player_id": 496042,
+          "shirt_number": "26"
+        },
+        {
+          "name": "Juan Rodríguez",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-2-1",
+          "position_id": 36,
+          "player_id": 1621219,
+          "shirt_number": "15"
+        },
+        {
+          "name": "Adam Obert",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-2-1",
+          "position_id": 38,
+          "player_id": 1289961,
+          "shirt_number": "33"
+        },
+        {
+          "name": "Michel Ndary Adopo",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-2-1",
+          "position_id": 63,
+          "player_id": 936164,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Harry Winks",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-2-1",
+          "position_id": 65,
+          "player_id": 528453,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Alessandro Romano",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-2-1",
+          "position_id": 67,
+          "player_id": 1705649,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Paul Mendy",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-3-2-1",
+          "position_id": 84,
+          "player_id": 1902196,
+          "shirt_number": "31"
+        },
+        {
+          "name": "Daniel Maldini",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-3-2-1",
+          "position_id": 86,
+          "player_id": 1072054,
+          "shirt_number": "70"
+        },
+        {
+          "name": "M'Bala Nzola",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-2-1",
+          "position_id": 115,
+          "player_id": 613334,
+          "shirt_number": "18"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Łukasz Skorupski",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-3",
+          "position_id": 11,
+          "player_id": 178732,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Matteo Darmian",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 33,
+          "player_id": 46820,
+          "shirt_number": "36"
+        },
+        {
+          "name": "Nicolò Casale",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 35,
+          "player_id": 814398,
+          "shirt_number": "16"
+        },
+        {
+          "name": "Arthur Theate",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 37,
+          "player_id": 1173250,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Nadir Zortea",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 72,
+          "player_id": 1080669,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Lewis Ferguson",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 74,
+          "player_id": 888921,
+          "shirt_number": "19"
+        },
+        {
+          "name": "Tommaso Pobega",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 76,
+          "player_id": 790732,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Juan Miranda",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 78,
+          "player_id": 873956,
+          "shirt_number": "33"
+        },
+        {
+          "name": "Federico Bernardeschi",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 103,
+          "player_id": 414245,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Artem Dovbyk",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 105,
+          "player_id": 655696,
+          "shirt_number": "9"
+        },
+        {
+          "name": "Nicolò Cambiaghi",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 107,
+          "player_id": 1044029,
+          "shirt_number": "28"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-10-21T12:30:02.075212+00:00",
-      "changed_at": "2026-10-20T23:10:07.661208+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Mattia Felici",
+        "Riyad Idrissi",
+        "Yael Trepy"
+      ],
+      "away_unavailable": [
+        "Emil Holm",
+        "Riccardo Orsolini",
+        "Roberto Piccoli"
+      ],
+      "observed_at": "2026-10-21T15:12:38.165700+00:00",
+      "changed_at": "2026-10-21T15:12:38.165700+00:00"
     },
     {
       "fotmob_match_id": 5749712,
+      "fotmob_page_url": "/matches/sassuolo-vs-como/2popgq#5749712",
+      "home_fotmob_team_id": 10171,
+      "away_fotmob_team_id": 7943,
       "match_date": "2026-10-24",
       "kickoff_utc": "2026-10-24T13:00:00Z",
       "home_team": "Como",
       "away_team": "Sassuolo",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-2-3-1",
+      "away_formation": "4-2-3-1",
+      "home_players": [
+        "Jean Butez",
+        "Ivan Smolčić",
+        "Jacobo Ramón",
+        "Marc-Oliver Kempf",
+        "Álex Valle",
+        "Luis Milla",
+        "Lucas Da Cunha",
+        "Mattia Liberali",
+        "Nico Paz",
+        "Maxence Caqueret",
+        "Anastasios Douvikas"
+      ],
+      "away_players": [
+        "Arijanet Murić",
+        "Ignace Van Der Brempt",
+        "Cas Odenthal",
+        "Duje Ćaleta-Car",
+        "Josh Doig",
+        "Nemanja Matić",
+        "Darryl Bakola",
+        "Domenico Berardi",
+        "Kristian Thorstvedt",
+        "Armand Laurienté",
+        "Sebastiano Esposito"
+      ],
+      "home_starters": [
+        {
+          "name": "Jean Butez",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 560939,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Ivan Smolčić",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 1353289,
+          "shirt_number": "28"
+        },
+        {
+          "name": "Jacobo Ramón",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 1413963,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Marc-Oliver Kempf",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 355356,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Álex Valle",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 1384881,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Luis Milla",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 638090,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Lucas Da Cunha",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1076647,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Mattia Liberali",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 1593861,
+          "shirt_number": "30"
+        },
+        {
+          "name": "Nico Paz",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 1347574,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Maxence Caqueret",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 846000,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Anastasios Douvikas",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 873270,
+          "shirt_number": "9"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Arijanet Murić",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 760752,
+          "shirt_number": "49"
+        },
+        {
+          "name": "Ignace Van Der Brempt",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 1082597,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Cas Odenthal",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 1079501,
+          "shirt_number": "26"
+        },
+        {
+          "name": "Duje Ćaleta-Car",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 557799,
+          "shirt_number": "15"
+        },
+        {
+          "name": "Josh Doig",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 1130330,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Nemanja Matić",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 115067,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Darryl Bakola",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1641041,
+          "shirt_number": "50"
+        },
+        {
+          "name": "Domenico Berardi",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 364520,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Kristian Thorstvedt",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 921921,
+          "shirt_number": "42"
+        },
+        {
+          "name": "Armand Laurienté",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 935769,
+          "shirt_number": "45"
+        },
+        {
+          "name": "Sebastiano Esposito",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 1030212,
+          "shirt_number": "94"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-10-21T12:30:02.075212+00:00",
-      "changed_at": "2026-10-20T23:10:07.661208+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Jesús Rodríguez",
+        "Moise Kean",
+        "Trevoh Chalobah",
+        "Assane Diao"
+      ],
+      "away_unavailable": [
+        "Fedde Leysen",
+        "Jay Idzes",
+        "Daniel Boloca",
+        "Ismaël Koné"
+      ],
+      "observed_at": "2026-10-21T15:12:38.165700+00:00",
+      "changed_at": "2026-10-21T15:12:38.165700+00:00"
     },
     {
       "fotmob_match_id": 5749715,
@@ -354,7 +927,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-21T12:30:02.075212+00:00",
+      "observed_at": "2026-10-21T15:12:38.165700+00:00",
       "changed_at": "2026-10-20T23:10:07.661208+00:00"
     },
     {
@@ -372,7 +945,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-21T12:30:02.075212+00:00",
+      "observed_at": "2026-10-21T15:12:38.165700+00:00",
       "changed_at": "2026-10-20T23:10:07.661208+00:00"
     }
   ]
