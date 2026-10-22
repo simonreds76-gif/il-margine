@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22T22:45:42Z",
+  "generated_at": "2026-10-22T23:26:44Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -69,19 +69,19 @@
     "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 83,
+      "signals": 105,
       "settled": 83,
-      "pending": 0,
+      "pending": 22,
       "pnl_units": 1.12,
       "roi": 0.013494,
       "true_close_n": 45,
       "true_close_coverage": 0.542169,
       "mean_true_close_clv": 0.004768,
       "side_counts": {
-        "over": 15,
-        "under": 68
+        "over": 20,
+        "under": 85
       },
-      "dominant_side_share": 0.819277
+      "dominant_side_share": 0.809524
     },
     "warmup_tracking": {
       "signals": 36,
@@ -99,20 +99,22 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "POST_UNLOCK_NO_SCORED_CANDIDATES",
-      "explanation": "The peer football-count lane reached matchday 4+, but this lane produced no scored candidates. Check current price capture and fixture joins.",
-      "scored_rows": 0,
-      "scored_fixtures": 0,
-      "eligible_rows": 0,
-      "eligible_fixtures": 0,
-      "blocked_rows": 0,
-      "blocker_rows": {},
+      "state": "ELIGIBLE_CANDIDATES_PRESENT",
+      "explanation": "At least one candidate passed every locked shadow gate.",
+      "scored_rows": 176,
+      "scored_fixtures": 34,
+      "eligible_rows": 53,
+      "eligible_fixtures": 22,
+      "blocked_rows": 123,
+      "blocker_rows": {
+        "edge_below_3pct": 123
+      },
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": null,
-      "matchday_max": null,
+      "matchday_min": 7,
+      "matchday_max": 10,
       "next_unlock": null,
-      "operational_alert_required": true,
-      "operational_alert_code": "POST_UNLOCK_NO_SCORED_CANDIDATES"
+      "operational_alert_required": false,
+      "operational_alert_code": null
     },
     "promotion_gate": "BLOCKED"
   }
