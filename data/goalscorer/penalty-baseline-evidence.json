@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-16T13:55:01Z",
+  "generated_at": "2026-10-22T14:15:24Z",
   "league": "serie-a",
   "row_count": 2,
   "rows": [
     {
-      "team": "Inter",
-      "team_key": "inter",
-      "player_name": "Hakan Çalhanoglu",
-      "player_key": "hakan alhanoglu",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "team": "Milan",
+      "team_key": "milan",
+      "player_name": "Gonçalo Ramos",
+      "player_key": "gon alo ramos",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
         "fotmob_live"
       ],
       "event_count": 1,
-      "last_event_date": "2026-10-10"
+      "last_event_date": "2026-10-18"
     },
     {
       "team": "Napoli",
@@ -34,7 +34,7 @@
         "fotmob_live"
       ],
       "event_count": 1,
-      "last_event_date": "2026-10-10"
+      "last_event_date": "2026-10-17"
     }
   ]
 }

@@ -2,52 +2,41 @@
   "capture_errors": [],
   "capture_mode": "close",
   "event_last_checked": {
-    "71945310": "2026-10-16T14:15:05Z",
-    "71945324": "2026-10-16T14:15:05Z",
-    "72036224": "2026-10-16T14:15:05Z",
-    "72221314": "2026-10-16T14:15:05Z",
-    "72221318": "2026-10-16T14:15:05Z",
-    "72221320": "2026-10-16T14:15:05Z",
-    "72221324": "2026-10-16T14:15:05Z",
-    "72478630": "2026-10-16T14:15:05Z",
-    "72478632": "2026-10-16T14:15:05Z",
-    "72478644": "2026-10-16T14:15:05Z",
-    "72513242": "2026-10-16T14:15:05Z",
-    "72513244": "2026-10-16T14:15:05Z",
-    "72513248": "2026-10-16T14:15:05Z",
-    "72513250": "2026-10-16T14:15:05Z",
-    "72513252": "2026-10-16T14:15:05Z",
-    "72513254": "2026-10-16T14:15:05Z"
+    "71945342": "2026-10-22T22:45:26Z",
+    "72036242": "2026-10-22T22:45:26Z",
+    "72221344": "2026-10-22T22:45:26Z",
+    "72478646": "2026-10-22T22:45:26Z",
+    "72513260": "2026-10-22T22:45:26Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 16,
-  "events_supported": 16,
-  "events_with_lines": 16,
-  "generated_at": "2026-10-16T14:15:05Z",
-  "last_publication_at": "2026-10-16T13:19:09Z",
+  "events_selected": 5,
+  "events_supported": 5,
+  "events_with_lines": 5,
+  "generated_at": "2026-10-22T22:45:26Z",
+  "last_publication_at": "2026-10-22T13:51:21Z",
   "league_coverage": {
     "bundesliga": {
-      "selected": 6,
-      "with_prices": 6
+      "selected": 1,
+      "with_prices": 1
     },
     "epl": {
-      "selected": 4,
-      "with_prices": 4
+      "selected": 1,
+      "with_prices": 1
     },
     "la-liga": {
-      "selected": 3,
-      "with_prices": 3
+      "selected": 1,
+      "with_prices": 1
     },
     "ligue-1": {
       "selected": 1,
       "with_prices": 1
     },
     "serie-a": {
-      "selected": 2,
-      "with_prices": 2
+      "selected": 1,
+      "with_prices": 1
     }
   },
-  "market_inventory_rows_added": 1335,
+  "market_inventory_rows_added": 432,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Away Team Exact Goals",
@@ -79,6 +68,7 @@
     "Exact 2nd Half Goals",
     "Exact Total Goals",
     "First 10 Minutes (00:00 - 09:59)",
+    "First Goalscorer",
     "First Match Corner",
     "First Team To Score",
     "Goal Method",
@@ -88,6 +78,7 @@
     "Half With Most Goals",
     "Home Team Exact Goals",
     "Home Team Highest Scoring Half",
+    "Last Goalscorer",
     "Last Match Corner",
     "Last Team To Score",
     "ML",
@@ -141,123 +132,46 @@
   ],
   "publication_recovery": false,
   "request_budget": 4,
-  "requests_used": 3,
-  "rows_added": 205,
-  "rows_observed": 205,
+  "requests_used": 2,
+  "rows_added": 52,
+  "rows_observed": 52,
   "selected_events": [
     {
-      "away": "Borussia Dortmund",
-      "competition": "Germany - Bundesliga",
-      "home": "Union Berlin",
-      "id": 72513244,
-      "kickoff_at": "2026-10-17T13:30:00Z"
-    },
-    {
-      "away": "VfB Stuttgart",
-      "competition": "Germany - Bundesliga",
-      "home": "Hamburger SV",
-      "id": 72513248,
-      "kickoff_at": "2026-10-17T13:30:00Z"
-    },
-    {
-      "away": "SC Paderborn 07",
-      "competition": "Germany - Bundesliga",
-      "home": "Werder Bremen",
-      "id": 72513250,
-      "kickoff_at": "2026-10-17T13:30:00Z"
-    },
-    {
-      "away": "FSV Mainz",
-      "competition": "Germany - Bundesliga",
-      "home": "Schalke 04",
-      "id": 72513252,
-      "kickoff_at": "2026-10-17T13:30:00Z"
-    },
-    {
-      "away": "FC Augsburg",
-      "competition": "Germany - Bundesliga",
-      "home": "SV 07 Elversberg",
-      "id": 72513254,
-      "kickoff_at": "2026-10-17T13:30:00Z"
-    },
-    {
-      "away": "Liverpool FC",
+      "away": "Nottingham Forest",
       "competition": "England - Premier League",
-      "home": "Brentford FC",
-      "id": 72221314,
-      "kickoff_at": "2026-10-17T14:00:00Z"
+      "home": "Ipswich Town",
+      "id": 72221344,
+      "kickoff_at": "2026-10-23T19:00:00Z"
     },
     {
-      "away": "Hull City",
-      "competition": "England - Premier League",
-      "home": "Fulham FC",
-      "id": 72221320,
-      "kickoff_at": "2026-10-17T14:00:00Z"
-    },
-    {
-      "away": "Ipswich Town",
-      "competition": "England - Premier League",
-      "home": "Manchester City",
-      "id": 72221324,
-      "kickoff_at": "2026-10-17T14:00:00Z"
-    },
-    {
-      "away": "Elche CF",
+      "away": "Malaga CF",
       "competition": "Spain - LaLiga",
-      "home": "Villarreal CF",
-      "id": 72478644,
-      "kickoff_at": "2026-10-17T14:15:00Z"
+      "home": "Deportivo Alaves",
+      "id": 72478646,
+      "kickoff_at": "2026-10-23T19:00:00Z"
     },
     {
-      "away": "1. FC Cologne",
+      "away": "Borussia Monchengladbach",
       "competition": "Germany - Bundesliga",
-      "home": "Eintracht Frankfurt",
-      "id": 72513242,
-      "kickoff_at": "2026-10-16T18:30:00Z"
+      "home": "VfB Stuttgart",
+      "id": 72513260,
+      "kickoff_at": "2026-10-23T18:30:00Z"
     },
     {
-      "away": "Toulouse FC",
+      "away": "OGC Nice",
       "competition": "France - Ligue 1",
-      "home": "Le Mans FC",
-      "id": 72036224,
-      "kickoff_at": "2026-10-16T18:45:00Z"
+      "home": "Stade Brest 29",
+      "id": 72036242,
+      "kickoff_at": "2026-10-23T18:45:00Z"
     },
     {
-      "away": "Sassuolo Calcio",
+      "away": "AC Monza",
       "competition": "Italy - Serie A",
-      "home": "Frosinone Calcio",
-      "id": 71945310,
-      "kickoff_at": "2026-10-16T18:45:00Z"
-    },
-    {
-      "away": "Levante UD",
-      "competition": "Spain - LaLiga",
-      "home": "RC Deportivo de A Coruna",
-      "id": 72478630,
-      "kickoff_at": "2026-10-16T19:00:00Z"
-    },
-    {
-      "away": "Chelsea FC",
-      "competition": "England - Premier League",
-      "home": "Everton FC",
-      "id": 72221318,
-      "kickoff_at": "2026-10-17T11:30:00Z"
-    },
-    {
-      "away": "Atletico Madrid",
-      "competition": "Spain - LaLiga",
-      "home": "Espanyol Barcelona",
-      "id": 72478632,
-      "kickoff_at": "2026-10-17T12:00:00Z"
-    },
-    {
-      "away": "SSC Napoli",
-      "competition": "Italy - Serie A",
-      "home": "Venezia FC",
-      "id": 71945324,
-      "kickoff_at": "2026-10-17T13:00:00Z"
+      "home": "Torino FC",
+      "id": 71945342,
+      "kickoff_at": "2026-10-23T18:45:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 16
+  "three_way_events": 5
 }

@@ -1,6 +1,6 @@
 {
   "api_errors": [],
-  "deferred_not_due": 8,
+  "deferred_not_due": 1,
   "details": [
     {
       "detail": "",
@@ -17,16 +17,24 @@
       "match_date": "2026-10-11",
       "reason": "fotmob_save_totals_disagree",
       "signal_id": "72513226|loris karius|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Massimo Pessina",
+      "match": "Bologna FC vs Inter Milano",
+      "match_date": "2026-10-17",
+      "reason": "fotmob_matched_player_not_goalkeeper",
+      "signal_id": "71945306|massimo pessina|3.5|over"
     }
   ],
-  "fotmob_requests_used": 3,
-  "generated_at": "2026-10-16T13:20:08Z",
+  "fotmob_requests_used": 5,
+  "generated_at": "2026-10-22T13:52:05Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
-  "pending_due": 2,
-  "pending_total": 10,
+  "pending_due": 3,
+  "pending_total": 4,
   "reason_counts": {
-    "fotmob_matched_player_not_goalkeeper": 1,
+    "fotmob_matched_player_not_goalkeeper": 2,
     "fotmob_save_totals_disagree": 1
   },
   "requests_used": 0,
@@ -37,12 +45,18 @@
       "appearances": 32,
       "match_id": 5749696,
       "status": "unchanged",
-      "targets_sha256": "a982e931aac1f5abfdb8855be122751ddb32e62e9d8409bcc0f8fd894fddef68"
+      "targets_sha256": "ac056e2c30c3d895423061b1a960ed1f87742fef3c6796270e1c2d76b9885ffc"
     },
     {
       "match_id": 5881182,
       "reason": "explicit player totals disagree with reconciled events",
       "status": "rejected"
+    },
+    {
+      "appearances": 31,
+      "match_id": 5749702,
+      "status": "unchanged",
+      "targets_sha256": "4776b048089f44be71c69cb73ed9221b5d6b041259a27c64f4889899290be13f"
     }
   ]
 }

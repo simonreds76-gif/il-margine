@@ -1,21 +1,21 @@
 {
-  "generated_at": "2026-10-16T14:15:21Z",
+  "generated_at": "2026-10-22T22:45:42Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
     "market_gate": "BLOCKED_PENDING_2026_27_TRUE_CLOSE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 3,
+      "signals": 6,
       "settled": 3,
-      "pending": 0,
+      "pending": 3,
       "pnl_units": -3.0,
       "roi": -1.0,
       "true_close_n": 1,
       "true_close_coverage": 0.333333,
       "mean_true_close_clv": 0.0,
       "side_counts": {
-        "under": 3
+        "under": 6
       },
       "dominant_side_share": 1.0
     },
@@ -35,28 +35,27 @@
       "dominant_side_share": 0.928571
     },
     "latest_scan": {
-      "state": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
-      "explanation": "For all 44 scored matchday 4-6 lines, the raw-gap cap and market blend limit edge to at most 2.04%, below the required 3.00%. Review the combined selection rules; this is not missing price coverage.",
-      "scored_rows": 502,
-      "scored_fixtures": 30,
+      "state": "NO_EDGE_AFTER_UNLOCK",
+      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
+      "scored_rows": 460,
+      "scored_fixtures": 33,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 502,
+      "blocked_rows": 460,
       "blocker_rows": {
-        "early_market_gap_cap": 12,
-        "edge_below_3pct": 502,
-        "price_older_than_3h": 72
+        "edge_below_3pct": 455,
+        "price_older_than_3h": 422
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": 6,
-      "matchday_max": 9,
+      "matchday_min": 7,
+      "matchday_max": 10,
       "next_unlock": null,
-      "operational_alert_required": true,
-      "operational_alert_code": "EARLY_RULE_COMBINATION_BLOCKS_PRICED_LINES",
+      "operational_alert_required": false,
+      "operational_alert_code": null,
       "rule_feasibility": {
-        "affected_rows": 44,
+        "affected_rows": 0,
         "rows_capable_of_minimum_edge": 0,
-        "maximum_allowed_edge": 0.020419220748831624,
+        "maximum_allowed_edge": null,
         "minimum_edge": 0.03,
         "raw_gap_cap": 0.12,
         "model_weight": 0.18
@@ -71,13 +70,13 @@
     "live_routing": false,
     "prospective": {
       "signals": 83,
-      "settled": 62,
-      "pending": 21,
-      "pnl_units": -4.86,
-      "roi": -0.078387,
-      "true_close_n": 40,
-      "true_close_coverage": 0.645161,
-      "mean_true_close_clv": 0.003518,
+      "settled": 83,
+      "pending": 0,
+      "pnl_units": 1.12,
+      "roi": 0.013494,
+      "true_close_n": 45,
+      "true_close_coverage": 0.542169,
+      "mean_true_close_clv": 0.004768,
       "side_counts": {
         "over": 15,
         "under": 68
@@ -100,23 +99,20 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "ELIGIBLE_CANDIDATES_PRESENT",
-      "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 154,
-      "scored_fixtures": 31,
-      "eligible_rows": 38,
-      "eligible_fixtures": 17,
-      "blocked_rows": 116,
-      "blocker_rows": {
-        "edge_below_3pct": 114,
-        "price_older_than_3h": 4
-      },
+      "state": "POST_UNLOCK_NO_SCORED_CANDIDATES",
+      "explanation": "The peer football-count lane reached matchday 4+, but this lane produced no scored candidates. Check current price capture and fixture joins.",
+      "scored_rows": 0,
+      "scored_fixtures": 0,
+      "eligible_rows": 0,
+      "eligible_fixtures": 0,
+      "blocked_rows": 0,
+      "blocker_rows": {},
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": 6,
-      "matchday_max": 9,
+      "matchday_min": null,
+      "matchday_max": null,
       "next_unlock": null,
-      "operational_alert_required": false,
-      "operational_alert_code": null
+      "operational_alert_required": true,
+      "operational_alert_code": "POST_UNLOCK_NO_SCORED_CANDIDATES"
     },
     "promotion_gate": "BLOCKED"
   }

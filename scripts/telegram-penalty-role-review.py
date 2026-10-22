@@ -12,6 +12,7 @@ import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from penalty_alert_reviews import is_closed, load_reviews
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -70,7 +71,7 @@ def build_message(rows: list[dict[str, Any]]) -> str:
         proposed = str(row.get("proposed_primary") or "no proposal")
         review_type = str(row.get("review_type") or "review").replace("_", " ")
         lines.append(f"{priority} {team}: {current} -> {proposed} ({review_type})")
-    lines.extend(["", "Review: Model Monitor > Goalscorer > Preseason Role Review"])
+    lines.extend(["", "Review: https://ilmargine.bet/admin/penalties"])
     message = "\n".join(lines)
     if len(message) <= MAX_MESSAGE_LENGTH:
         return message
@@ -119,13 +120,15 @@ def main() -> int:
     args = parser.parse_args()
 
     payload = read_json(args.review, {})
-    rows = active_rows(payload if isinstance(payload, dict) else {})
+    reviews = load_reviews()
+    rows = [row for row in active_rows(payload if isinstance(payload, dict) else {})
+            if not is_closed(row, reviews)]
     fingerprint = review_fingerprint(rows)
     state = read_json(args.state, {})
     previous = str(state.get("fingerprint") or "") if isinstance(state, dict) else ""
 
     if not rows:
-        if previous:
+        if previous and not args.dry_run:
             write_state(args.state, "", 0, sent_at=None)
         print("Penalty-role Telegram alert skipped: no active reviews.")
         return 0

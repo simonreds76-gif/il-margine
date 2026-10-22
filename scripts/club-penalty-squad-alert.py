@@ -8,6 +8,7 @@ import json
 import os
 import urllib.request
 from pathlib import Path
+from penalty_alert_reviews import filter_quality, issue_key, load_reviews, load_sent, save_sent
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -90,11 +91,17 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--audit", type=Path, default=DEFAULT_AUDIT)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--state", type=Path, default=ROOT / "data/goalscorer/club-penalty-squad-alert-state.json")
     args = parser.parse_args()
-    payload = load_audit(args.audit)
+    reviews = load_reviews()
+    payload = filter_quality(load_audit(args.audit), reviews)
+    sent = load_sent(args.state)
+    payload = {**payload, **{field: [row for row in payload.get(field, [])
+                                    if issue_key(row) not in sent]
+                            for field in ("rows", "hierarchy_quality")}}
     issues = issue_rows(payload)
     if not issues:
-        print("PENALTY_SQUAD_TELEGRAM audit_clean")
+        print("PENALTY_SQUAD_TELEGRAM no_new_unreviewed_issues")
         return 0
 
     message = build_message(payload, os.environ.get("GITHUB_RUN_URL", "").strip())
@@ -108,6 +115,7 @@ def main() -> int:
         print("PENALTY_SQUAD_TELEGRAM skipped_missing_credentials")
         return 1
     send_telegram(message, token, chat_id)
+    save_sent(args.state, sent | {issue_key(row) for row in issues})
     print(f"PENALTY_SQUAD_TELEGRAM sent issues={len(issues)}")
     return 0
 

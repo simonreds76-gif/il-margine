@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-16T13:55:05Z",
+  "generated_at": "2026-10-22T14:15:28Z",
   "league": "ligue-1",
-  "row_count": 5,
+  "row_count": 7,
   "rows": [
     {
-      "team": "Brest",
-      "team_key": "brest",
-      "player_name": "Kenny Lala",
-      "player_key": "kenny lala",
+      "team": "Angers",
+      "team_key": "angers",
+      "player_name": "Amine El Ouazzani",
+      "player_key": "amine el ouazzani",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
@@ -18,13 +18,45 @@
         "fotmob_live"
       ],
       "event_count": 1,
-      "last_event_date": "2026-10-10"
+      "last_event_date": "2026-10-18"
+    },
+    {
+      "team": "Lille",
+      "team_key": "lille",
+      "player_name": "Olivier Giroud",
+      "player_key": "olivier giroud",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-17"
+    },
+    {
+      "team": "Lorient",
+      "team_key": "lorient",
+      "player_name": "Noah Cadiou",
+      "player_key": "noah cadiou",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-18"
     },
     {
       "team": "Marseille",
       "team_key": "marseille",
-      "player_name": "Himad Abdelli",
-      "player_key": "himad abdelli",
+      "player_name": "Amine Gouiri",
+      "player_key": "amine gouiri",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
@@ -34,45 +66,13 @@
         "fotmob_live"
       ],
       "event_count": 1,
-      "last_event_date": "2026-10-11"
+      "last_event_date": "2026-10-18"
     },
     {
-      "team": "Paris Saint-Germain",
-      "team_key": "paris saint germain",
-      "player_name": "Désiré Doué",
-      "player_key": "d sir dou",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 2,
-      "observed_share": 0.5,
-      "observed_sample": 2.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-10-10"
-    },
-    {
-      "team": "Paris Saint-Germain",
-      "team_key": "paris saint germain",
-      "player_name": "Lucas Beraldo",
-      "player_key": "lucas beraldo",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 2,
-      "observed_share": 0.5,
-      "observed_sample": 2.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-10-10"
-    },
-    {
-      "team": "Toulouse",
-      "team_key": "toulouse",
-      "player_name": "Casper Tengstedt",
-      "player_key": "casper tengstedt",
+      "team": "Paris FC",
+      "team_key": "paris fc",
+      "player_name": "Lassine Sinayoko",
+      "player_key": "lassine sinayoko",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
@@ -82,7 +82,39 @@
         "fotmob_live"
       ],
       "event_count": 1,
-      "last_event_date": "2026-10-10"
+      "last_event_date": "2026-10-18"
+    },
+    {
+      "team": "Paris Saint-Germain",
+      "team_key": "paris saint germain",
+      "player_name": "Ousmane Dembélé",
+      "player_key": "ousmane demb l",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-17"
+    },
+    {
+      "team": "Rennes",
+      "team_key": "rennes",
+      "player_name": "Estéban Lepaul",
+      "player_key": "est ban lepaul",
+      "observed_player_penalties": 3,
+      "observed_team_penalties": 3,
+      "observed_share": 1.0,
+      "observed_sample": 3.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-18"
     }
   ]
 }

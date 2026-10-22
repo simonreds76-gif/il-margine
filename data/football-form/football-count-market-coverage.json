@@ -17,14 +17,14 @@
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 48,
-      "paired_price_events": 48,
-      "pairing_unknown_events": 36,
+      "events": 54,
+      "paired_price_events": 34,
+      "pairing_unknown_events": 20,
       "raw_market_names": [
         "Bookings Totals",
         "Number of Cards In Match"
       ],
-      "rows": 176,
+      "rows": 107,
       "status": "PAIRED_PRICES_OBSERVED"
     },
     "match_fouls_total": {
@@ -32,19 +32,17 @@
         "Kambi"
       ],
       "competitions": [
-        "Bundesliga",
         "La Liga",
-        "Ligue 1",
         "Premier League",
         "Serie A"
       ],
-      "events": 31,
+      "events": 29,
       "paired_price_events": 0,
       "pairing_unknown_events": 0,
       "raw_market_names": [
         "Total Fouls"
       ],
-      "rows": 31,
+      "rows": 29,
       "status": "MARKET_NAME_ONLY"
     },
     "player_cards": {
@@ -52,7 +50,6 @@
         "Bet365"
       ],
       "competitions": [
-        "Bundesliga",
         "England - Premier League",
         "France - Ligue 1",
         "Germany - Bundesliga",
@@ -63,13 +60,13 @@
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 46,
+      "events": 56,
       "paired_price_events": 0,
-      "pairing_unknown_events": 42,
+      "pairing_unknown_events": 20,
       "raw_market_names": [
         "Player Cards"
       ],
-      "rows": 88,
+      "rows": 56,
       "status": "MARKET_NAME_ONLY"
     },
     "player_fouled": {
@@ -86,13 +83,13 @@
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 39,
+      "events": 51,
       "paired_price_events": 0,
-      "pairing_unknown_events": 35,
+      "pairing_unknown_events": 16,
       "raw_market_names": [
         "Player To Be Fouled"
       ],
-      "rows": 74,
+      "rows": 51,
       "status": "MARKET_NAME_ONLY"
     },
     "player_fouls_committed": {
@@ -106,18 +103,17 @@
         "Germany - Bundesliga",
         "Italy - Serie A",
         "La Liga",
-        "Ligue 1",
         "Premier League",
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 40,
+      "events": 49,
       "paired_price_events": 0,
-      "pairing_unknown_events": 35,
+      "pairing_unknown_events": 16,
       "raw_market_names": [
         "Player Fouls"
       ],
-      "rows": 105,
+      "rows": 61,
       "status": "MARKET_NAME_ONLY"
     },
     "team_cards_total": {
@@ -125,7 +121,6 @@
         "Bet365"
       ],
       "competitions": [
-        "Bundesliga",
         "England - Premier League",
         "France - Ligue 1",
         "Germany - Bundesliga",
@@ -133,17 +128,16 @@
         "La Liga",
         "Ligue 1",
         "Premier League",
-        "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 39,
-      "paired_price_events": 39,
-      "pairing_unknown_events": 36,
+      "events": 40,
+      "paired_price_events": 20,
+      "pairing_unknown_events": 20,
       "raw_market_names": [
         "Bookings Totals Away",
         "Bookings Totals Home"
       ],
-      "rows": 150,
+      "rows": 80,
       "status": "PAIRED_PRICES_OBSERVED"
     },
     "team_fouls_total": {
@@ -151,24 +145,22 @@
         "Kambi"
       ],
       "competitions": [
-        "Bundesliga",
         "La Liga",
-        "Ligue 1",
         "Premier League",
         "Serie A"
       ],
-      "events": 31,
+      "events": 29,
       "paired_price_events": 0,
       "pairing_unknown_events": 0,
       "raw_market_names": [
         "Total Fouls Away",
         "Total Fouls Home"
       ],
-      "rows": 62,
+      "rows": 58,
       "status": "MARKET_NAME_ONLY"
     }
   },
-  "generated_at": "2026-10-16T13:19:11Z",
+  "generated_at": "2026-10-22T13:51:22Z",
   "policy": {
     "definition_gate": "Bookmaker settlement definitions must be reconciled against the result source before ROI is scored.",
     "live_staking": "BLOCKED",

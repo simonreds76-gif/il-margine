@@ -372,18 +372,34 @@ def collect_signals(target_date: str) -> tuple[list[Signal], list[str]]:
     return signals, empty
 
 
+def retained_signal_ids(state, target_date, signals):
+    previous = state.get("signal_ids", []) if state.get("date") == target_date else []
+    return sorted(set(previous) | {signal_id(signal) for signal in signals})
+
+
+def scope_digest(signals, empty_lanes, props_pending=False):
+    if not props_pending:
+        return signals, empty_lanes
+    return ([signal for signal in signals if signal.priority < 40],
+            [lane for lane in empty_lanes if lane != "ACES/DF"])
+
+
 def render_messages(
     target_date: str,
     signals: list[Signal],
     empty_lanes: list[str],
     *,
     update_only: bool = False,
+    props_pending: bool = False,
 ) -> list[str]:
+    signals, empty_lanes = scope_digest(signals, empty_lanes, props_pending)
     display_date = date.fromisoformat(target_date).strftime("%a %d %b").upper()
     title = "IL MARGINE TENNIS SIGNAL UPDATE" if update_only else "IL MARGINE TENNIS SIGNALS"
     header = f"{title} - {display_date}\nGenerated from the latest completed odds refresh."
     if update_only:
         header += "\nOnly selections not included in the earlier alert are shown."
+    if props_pending:
+        header += "\nMatch winner and handicap checks complete. Aces and double faults are still refreshing; any new qualifying selections follow separately."
     blocks: list[str] = []
     current_section = ""
     for signal in signals:
@@ -392,7 +408,9 @@ def render_messages(
             blocks.append(f"\n{current_section}")
         label = "/".join(signal.labels)
         blocks.append(f"[{label}] {signal.match}\n{signal.selection}")
-    if not signals:
+    if not signals and props_pending:
+        blocks.append("\nNo qualifying match winner or handicap selections in this pass.")
+    elif not signals:
         blocks.append("\nNo qualifying signals today.")
     if empty_lanes:
         blocks.append("\nNo signals: " + ", ".join(empty_lanes))
@@ -568,6 +586,7 @@ def main() -> int:
     parser.add_argument("--workflow", default=DEFAULT_WORKFLOW)
     parser.add_argument("--ref", default=os.environ.get("TENNIS_DIGEST_GITHUB_REF", DEFAULT_REF))
     parser.add_argument("--require-ready", action="store_true")
+    parser.add_argument("--props-pending", action="store_true", help="Scope the early alert to match markets while props refresh separately.")
     parser.add_argument("--print-only", action="store_true")
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--astrissimo-only", action="store_true", help="Send only Astrissimo fresh signals and its once-daily paper record.")
@@ -637,7 +656,8 @@ def main() -> int:
         return 0
 
     signals, empty_lanes = collect_signals(args.date)
-    messages = render_messages(args.date, signals, empty_lanes)
+    signals, empty_lanes = scope_digest(signals, empty_lanes, args.props_pending)
+    messages = render_messages(args.date, signals, empty_lanes, props_pending=args.props_pending)
     rendered = "\n\n--- MESSAGE BREAK ---\n\n".join(messages) + "\n"
     report_path = Path(args.report)
     report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -670,7 +690,7 @@ def main() -> int:
                         "date": args.date,
                         "digest_hash": digest_hash,
                         "messages": len(messages),
-                        "signal_ids": [signal_id(signal) for signal in signals],
+                        "signal_ids": retained_signal_ids(state, args.date, signals),
                         "updated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
                     },
                     indent=2,
@@ -680,7 +700,7 @@ def main() -> int:
             )
             print("Telegram digest has no new selections; dispatch skipped.")
             return 0
-        dispatch_messages = render_messages(args.date, dispatch_signals, [], update_only=True)
+        dispatch_messages = render_messages(args.date, dispatch_signals, [], props_pending=args.props_pending, update_only=True)
 
     dispatch(dispatch_messages, repository=args.repository, workflow=args.workflow, ref=args.ref)
     state_path.parent.mkdir(parents=True, exist_ok=True)
@@ -690,7 +710,7 @@ def main() -> int:
                 "date": args.date,
                 "digest_hash": digest_hash,
                 "messages": len(messages),
-                "signal_ids": [signal_id(signal) for signal in signals],
+                "signal_ids": retained_signal_ids(state, args.date, signals),
                 "dispatched_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
             },
             indent=2,

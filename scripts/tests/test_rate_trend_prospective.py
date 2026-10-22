@@ -19,6 +19,20 @@ class ProspectiveIntegrity(unittest.TestCase):
                         fair_p_over='.55',fair_p_under='.45',fair_p_push='0',matched_board='yes',
                         capture_ts='2026-09-05T11:30:00Z',match_start_utc='2026-09-05T16:00:00Z')
 
+    def test_rescheduled_result_requires_proven_prematch_date(self):
+        record={'row':dict(self.row,match_start_utc='2026-09-07T12:00:00Z'), 'registered_at':'2026-09-05T12:00:00Z'}
+        now=datetime(2026,9,10,tzinfo=timezone.utc)
+        self.assertTrue(M['verified_schedule_change'](record,{'tourney_date':'20260906'},now))
+        self.assertFalse(M['verified_schedule_change'](record,{'tourney_date':'20260905'},now))
+        self.assertFalse(M['verified_schedule_change'](record,{'tourney_date':'20260911'},now))
+        self.assertFalse(M['verified_schedule_change'](record,{'tourney_date':'20260801'},now))
+        record['registered_at']='2026-09-08T12:00:00Z'
+        self.assertFalse(M['verified_schedule_change'](record,{'tourney_date':'20260909'},now))
+
+    def test_shanghai_conflicting_label_uses_known_venue_start(self):
+        record={'row':dict(self.row,date='2026-10-10',tournament='Shanghai',match_start_utc='2026-10-09T04:00:00Z',capture_ts='2026-10-07T20:00:00Z'),'registered_at':'2026-10-07T21:00:00Z'}
+        self.assertEqual(M['accepted_result_dates'](record),{'20261009'})
+
     def test_after_start_future_capture_and_missing_clock_rejected(self):
         self.assertIsNone(M['eligibility'](self.row,self.now))
         for change in ({'match_start_utc':self.now.isoformat()}, {'capture_ts':'2026-09-05T13:00:00Z'}, {'capture_ts':''}):

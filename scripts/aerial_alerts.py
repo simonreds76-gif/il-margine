@@ -10,8 +10,9 @@ import json
 import os
 import requests
 from aerial_data import ROOT, read, save, utc, number
+from aerial_market_capture import quoted_markets
 
-VERSION = 'air-control-watch-v1'
+VERSION = 'air-control-watch-v2-headed-markets'
 POLICY = dict(player_matches=5, player_minutes=450, aerial_attempts=20,
               headers_per90=0.60, height_gap_cm=3, duel_gap_pp=10,
               player_duel_pct=55, corners=4, crosses=15,
@@ -131,14 +132,21 @@ def evaluate(payload, history, now):
                     exclusions['no_supported_mismatch'] += 1; continue
                 conceded = defence['headed_shots_against']
                 concession_flag = fresh(defence['latest'], now, POLICY['max_team_age_days']) and conceded['matches'] >= 3 and conceded['average'] >= 3
+                markets = []
+                if stat['headed_sot']['matches'] >= 5 and stat['headed_sot']['hit_matches'] >= 2:
+                    markets.append('1+ headed shot on target')
+                if stat['headed_goals']['matches'] >= 5 and stat['headed_goals']['count'] >= 2:
+                    markets.append('headed goal')
+                if not markets:
+                    exclusions['no_supported_bettable_headed_market'] += 1
+                    continue
                 candidates.append(dict(player_id=player['id'], player=player['name'], team_id=team['id'], team=team['name'],
                     height_cm=player['height_cm'], defence_height_cm=defence_height, height_gap_cm=height_gap,
                     defence_duel_pct=defence_duel_pct, duel_gap_pp=duel_gap,
                     height_flag=height_flag, duel_flag=duel_flag, concession_flag=concession_flag,
                     supporting_factors=2+int(height_flag)+int(duel_flag)+int(concession_flag),
                     history=stat, delivery=supply, opposition=defence,
-                    markets_to_check=['1+ headed shot'] + (['1+ headed shot on target'] if stat['headed_sot']['matches'] >= 5 and stat['headed_sot']['hit_matches'] >= 2 else [])
-                        + (['headed goal'] if stat['headed_goals']['matches'] >= 5 and stat['headed_goals']['count'] >= 2 else []),
+                    markets_to_check=markets,
                     fair_odds=None, available_odds=None, ev=None))
         candidates.sort(key=lambda c: (-c['supporting_factors'], -c['history']['headers_per90'], -c['history']['minutes'], c['player_id']))
         if candidates:
@@ -173,7 +181,15 @@ def message(row, removed=()):
             m=h[key]
             lines += [f"{label}: {m['count']} in {m['matches']} covered appearances." if m['matches'] else f'{label}: historical breakdown unavailable.']
         lines += ['Inspect: '+', '.join(c['markets_to_check'])+'.']
-    lines += ['', 'Research shortlist, not a priced bet. Defender comparison is a pool, not an assumed marker. No fair odds or EV until the exact market price and probability are verified.',
+        quotes={q['market']:q for q in c.get('market_prices',[])}
+        for market in c['markets_to_check']:
+            quote=quotes.get(market)
+            if quote:
+                stamp=utc(quote['captured_at']).astimezone(ZoneInfo('Europe/London'))
+                lines += [f"Bet365 {market}: {quote['odds']:.2f} (captured {stamp:%H:%M %Z})."]
+            else:
+                lines += [f"{market}: fresh matched price unavailable; check Bet365."]
+    lines += ['', 'Research shortlist, not a value recommendation. Check the current Bet365 price and market terms. Defender comparison is a pool, not an assumed marker. No validated fair odds or EV.',
               'https://ilmargine.bet/fair-odds-lab/aerial']
     return '\n'.join(lines)
 
@@ -212,6 +228,11 @@ def run(root=ROOT, now=None, transmit=False, sender=send):
     payload=read(root/'public/fair-odds-lab/aerial.json',{})
     history=read(root/'data/aerial/history.json.gz',{}).get('matches',[])
     rows, exclusions=evaluate(payload,history,now)
+    prices=read(root/'data/goalkeeper-saves/aerial-headed-market-prices.json', {})
+    fixtures={f['id']:f for f in payload.get('fixtures',[])}
+    for row in rows:
+        for candidate in row['candidates']:
+            candidate['market_prices']=quoted_markets(fixtures[row['fixture_id']],candidate,prices,now)
     state=read(directory/'state.json',{'schema_version':1,'fixtures':{}})
     ledger=read(directory/'ledger.json',[])
     settle(ledger,history)
@@ -262,9 +283,18 @@ def run(root=ROOT, now=None, transmit=False, sender=send):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--send',action='store_true');parser.add_argument('--root',type=Path,default=ROOT)
-    args=parser.parse_args();report=run(args.root,transmit=args.send)
+    args=parser.parse_args()
+    # Independent of the opportunity watchlist, with its own private receipts.
+    try:
+        from skyline_alerts import run as skyline_alert_run
+        skyline_alert_status=skyline_alert_run(args.root,transmit=args.send)
+        print('Skyline alerts: '+json.dumps(skyline_alert_status))
+    except Exception as exc:
+        skyline_alert_status={'status':'failed'}
+        print('Skyline alerts failed: '+type(exc).__name__)
+    report=run(args.root,transmit=args.send)
     print(json.dumps({k:report[k] for k in ('status','prospective_captures','sent','exclusions')}))
     if not args.send:
         print('\n\n'.join(report['telegram_previews']))
-    if report['status'] in ('credentials_missing','delivery_failed'):
+    if report['status'] in ('credentials_missing','delivery_failed') or skyline_alert_status['status'] in ('failed','credentials_missing','delivery_uncertain'):
         raise SystemExit(1)

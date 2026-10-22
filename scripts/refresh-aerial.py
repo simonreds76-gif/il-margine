@@ -124,6 +124,19 @@ def publish(client, root=ROOT, now=None):
     try:
         payload = refresh(root, now)
         validate(payload, now)
+        try:
+            from skyline_paper import run as skyline_run
+            from skyline_store import restore as skyline_restore, persist as skyline_persist
+            skyline_restore(root)
+            skyline_report = skyline_run(root, now=now, capture=True)
+            skyline_persist(root, skyline_report)
+        except Exception as exc:
+            failed=read(data/'skyline/report.json',{})
+            if failed:
+                failed.update(status='FAILED', last_error_at=now.isoformat(), last_error=type(exc).__name__)
+                save(data/'skyline/report.json',failed)
+            save(data/'skyline/health.json', {'status':'FAILED','generated_at':now.isoformat(),'error':type(exc).__name__})
+            print(f'::warning::Skyline paper capture failed: {type(exc).__name__}')
         body = json.dumps(payload, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode()
         # One atomic object contains data and its version; never a partially updated board.
         client.put('fair-odds-lab/aerial.json', body, access='public', content_type='application/json',

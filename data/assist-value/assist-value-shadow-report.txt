@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-10-16T12:22:43Z
+generated_at_utc: 2026-10-18T12:03:15Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,60 +8,60 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 1966
-role_players_loaded: 639
+raw_odds_rows_loaded: 943
+role_players_loaded: 660
 
 Join
-shadow_rows_assist_only: 1966
-role_matched_rows: 437
-role_match_rate_pct: 22.23
-ambiguous_player_rows: 1
-unmatched_player_rows: 1528
+shadow_rows_assist_only: 943
+role_matched_rows: 221
+role_match_rate_pct: 23.44
+ambiguous_player_rows: 0
+unmatched_player_rows: 722
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
 It is not a betting model, not a public Fair Odds Lab lane, and not a value signal.
 
 Top role-matched rows
- - Giacomo Calo | Frosinone Calcio vs Sassuolo Calcio | odds 3.7500 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - Nadiem Amiri | Schalke 04 vs FSV Mainz | odds 5.0000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - David Raum | Bayern Munich vs RB Leipzig | odds 6.0000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - Branco van den Boomen | Angers SCO vs Olympique Marseille | odds 5.5000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
- - Felix Keidel | SV 07 Elversberg vs FC Augsburg | odds 7.0000 | setpiece_last5 94.74 | corners_last5 100.0 | fk_last5 87.5
- - Anton Stach | Leeds United vs Manchester United | odds 6.0000 | setpiece_last5 88.24 | corners_last5 86.96 | fk_last5 90.91
- - Aleix Garcia | Bayer Leverkusen vs SC Freiburg | odds 3.7500 | setpiece_last5 82.86 | corners_last5 92.59 | fk_last5 66.67
- - Can Uzun | Eintracht Frankfurt vs 1. FC Cologne | odds 5.0000 | setpiece_last5 80.0 | corners_last5 84.21 | fk_last5 66.67
- - Adil Aouchiche | Schalke 04 vs FSV Mainz | odds 7.0000 | setpiece_last5 78.95 | corners_last5 78.57 | fk_last5 80.0
- - Florian Thauvin | ESTAC Troyes vs Racing Club De Lens | odds 4.0000 | setpiece_last5 78.05 | corners_last5 78.79 | fk_last5 75.0
- - Joris Chotard | Lille OSC vs Stade Brest 29 | odds 7.0000 | setpiece_last5 75.76 | corners_last5 90.0 | fk_last5 63.64
+ - Branco van den Boomen | Angers SCO vs Olympique Marseille | odds 6.0000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
+ - Anton Stach | Leeds United vs Manchester United | odds 6.5000 | setpiece_last5 92.0 | corners_last5 94.44 | fk_last5 85.71
+ - Aleix Garcia | Bayer Leverkusen vs SC Freiburg | odds 3.5000 | setpiece_last5 82.86 | corners_last5 92.59 | fk_last5 66.67
  - Pablo Martinez | Malaga CF vs Real Sociedad San Sebastian | odds 5.0000 | setpiece_last5 75.0 | corners_last5 77.42 | fk_last5 75.0
- - Enzo Fernandez | Manchester City vs Ipswich Town | odds 3.7500 | setpiece_last5 68.97 | corners_last5 57.14 | fk_last5 100.0
- - Alberto Moleiro | Villarreal CF vs Elche CF | odds 4.0000 | setpiece_last5 68.0 | corners_last5 75.0 | fk_last5 50.0
- - Kevin De Bruyne | Venezia FC vs SSC Napoli | odds 2.7500 | setpiece_last5 66.67 | corners_last5 64.29 | fk_last5 0.0
+ - Johan Mojica | Getafe CF vs Rayo Vallecano | odds 7.0000 | setpiece_last5 70.83 | corners_last5 78.57 | fk_last5 60.0
  - Vladimir Coufal | Borussia Monchengladbach vs TSG Hoffenheim | odds 4.0000 | setpiece_last5 65.52 | corners_last5 73.08 | fk_last5 0.0
- - Raphael Obermair | Werder Bremen vs SC Paderborn 07 | odds 7.5000 | setpiece_last5 63.64 | corners_last5 56.52 | fk_last5 80.0
- - John McGinn | Newcastle United vs Aston Villa | odds 6.0000 | setpiece_last5 61.11 | corners_last5 66.67 | fk_last5 60.0
- - Adam Wharton | Brighton & Hove Albion vs Crystal Palace | odds 8.0000 | setpiece_last5 60.87 | corners_last5 66.67 | fk_last5 50.0
- - Paulo Dybala | AS Roma vs Genoa CFC | odds 3.0000 | setpiece_last5 60.0 | corners_last5 58.82 | fk_last5 66.67
+ - Jonathan Clauss | Olympique Lyon vs OGC Nice | odds 5.5000 | setpiece_last5 60.0 | corners_last5 55.56 | fk_last5 71.43
+ - Pascal Gross | Brighton & Hove Albion vs Crystal Palace | odds 4.5000 | setpiece_last5 59.26 | corners_last5 57.89 | fk_last5 57.14
+ - Bruno Fernandes | Leeds United vs Manchester United | odds 3.7500 | setpiece_last5 59.09 | corners_last5 57.89 | fk_last5 66.67
+ - Pablo Pagis | Paris FC vs Stade Rennais FC | odds 4.5000 | setpiece_last5 57.69 | corners_last5 57.89 | fk_last5 80.0
+ - Romain Faivre | Le Havre AC vs AJ Auxerre | odds 6.5000 | setpiece_last5 57.14 | corners_last5 52.63 | fk_last5 100.0
+ - Adam Wharton | Brighton & Hove Albion vs Crystal Palace | odds 8.5000 | setpiece_last5 56.25 | corners_last5 66.67 | fk_last5 33.33
+ - Denis Suarez | RC Celta de Vigo vs Deportivo Alaves | odds 7.0000 | setpiece_last5 55.56 | corners_last5 55.56 | fk_last5 62.5
+ - Rolando Mandragora | Parma Calcio vs Torino FC | odds 6.5000 | setpiece_last5 54.55 | corners_last5 50.0 | fk_last5 66.67
+ - Hugo Gonzalez | RC Celta de Vigo vs Deportivo Alaves | odds 7.5000 | setpiece_last5 54.17 | corners_last5 63.16 | fk_last5 0.0
+ - Arda Guler | Real Madrid vs Sevilla FC | odds 2.5000 | setpiece_last5 53.85 | corners_last5 61.54 | fk_last5 41.67
+ - Franco Mastantuono | ACF Fiorentina vs Como 1907 | odds 6.5000 | setpiece_last5 52.63 | corners_last5 53.33 | fk_last5 50.0
+ - Emanuele Valeri | Parma Calcio vs Torino FC | odds 7.0000 | setpiece_last5 50.0 | corners_last5 42.86 | fk_last5 62.5
+ - Derry Scherhant | Bayer Leverkusen vs SC Freiburg | odds 6.5000 | setpiece_last5 48.65 | corners_last5 42.86 | fk_last5 66.67
+ - Sergio Gomez | Malaga CF vs Real Sociedad San Sebastian | odds 4.5000 | setpiece_last5 47.37 | corners_last5 46.15 | fk_last5 54.55
 
 Unmatched sample
- - Aleksa Terzic | Frosinone Calcio vs Sassuolo Calcio
- - Alessio Zerbin | Frosinone Calcio vs Sassuolo Calcio
- - Andrea Ghion | Frosinone Calcio vs Sassuolo Calcio
- - Anouar El Azzouzi | Frosinone Calcio vs Sassuolo Calcio
- - Anthony Oyono | Frosinone Calcio vs Sassuolo Calcio
- - Antonio Raimondo | Frosinone Calcio vs Sassuolo Calcio
- - Benjamin Dominguez | Frosinone Calcio vs Sassuolo Calcio
- - Ben Kone | Frosinone Calcio vs Sassuolo Calcio
- - Cas Odenthal | Frosinone Calcio vs Sassuolo Calcio
- - Daniel Birligea | Frosinone Calcio vs Sassuolo Calcio
- - Darryl Bakola | Frosinone Calcio vs Sassuolo Calcio
- - Duje Caleta-Car | Frosinone Calcio vs Sassuolo Calcio
- - Enzo Tchato | Frosinone Calcio vs Sassuolo Calcio
- - Fali Cande | Frosinone Calcio vs Sassuolo Calcio
- - Fares Ghedjemis | Frosinone Calcio vs Sassuolo Calcio
- - Florian Grillitsch | Frosinone Calcio vs Sassuolo Calcio
- - Francesco Gelli | Frosinone Calcio vs Sassuolo Calcio
- - Gabriele Bracaglia | Frosinone Calcio vs Sassuolo Calcio
- - Gabriele Calvani | Frosinone Calcio vs Sassuolo Calcio
- - Giorgi Kvernadze | Frosinone Calcio vs Sassuolo Calcio
+ - Adam Bakoune | AC Monza vs Cagliari Calcio
+ - Alessandro Deiola | AC Monza vs Cagliari Calcio
+ - Alessandro Sugamele | AC Monza vs Cagliari Calcio
+ - Alieu Fadera | AC Monza vs Cagliari Calcio
+ - Andrea Carboni | AC Monza vs Cagliari Calcio
+ - Dany Mota | AC Monza vs Cagliari Calcio
+ - Demi Akarakiri | AC Monza vs Cagliari Calcio
+ - Ebenezer Akinsanmiro | AC Monza vs Cagliari Calcio
+ - Eddy Kouadio | AC Monza vs Cagliari Calcio
+ - Giuseppe Aurelio | AC Monza vs Cagliari Calcio
+ - Harry Winks | AC Monza vs Cagliari Calcio
+ - Ivan Sulev | AC Monza vs Cagliari Calcio
+ - Jan Ziolkowski | AC Monza vs Cagliari Calcio
+ - Jay Robinson | AC Monza vs Cagliari Calcio
+ - Joseph Liteta | AC Monza vs Cagliari Calcio
+ - Jose Ze Pedro | AC Monza vs Cagliari Calcio
+ - Juan Rodriguez | AC Monza vs Cagliari Calcio
+ - Kevin Omoruyi | AC Monza vs Cagliari Calcio
+ - Leonardo Colombo | AC Monza vs Cagliari Calcio
+ - Lorenzo Lucchesi | AC Monza vs Cagliari Calcio
