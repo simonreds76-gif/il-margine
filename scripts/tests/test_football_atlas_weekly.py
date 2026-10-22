@@ -72,6 +72,30 @@ class WeeklyAtlasTests(unittest.TestCase):
             self.assertEqual(again, new)
             self.assertEqual(report['newMatches'], 0)
 
+    def test_missing_previously_published_fixture_does_not_block_new_schedule(self):
+        f = dict(id='g1',league='premier-league',home='Arsenal',away='Chelsea',kickoff=NOW.isoformat(),status=-1,score=[2,1],season='2026-2027')
+        old=dict(teams=['Arsenal','Chelsea'],leagues=list(w.TOURNAMENTS),seasons=['2026-2027'],fixtures=[['old','2026-09-22',0,0,0,1,2,1,2.5,3.2,3.1,2]])
+        class EmptyAPI:
+            calls = {}
+            def quota(self): return 200
+            def get(self,*args,**kwargs): return []
+        with tempfile.TemporaryDirectory() as directory, patch.object(w.legacy,'calendar',return_value=[f]):
+            new,report=w.collect(old,{'through':'2026-09-20'},Path(directory),NOW+timedelta(days=1),EmptyAPI())
+            self.assertEqual(new,old)
+            self.assertEqual(report['newMatches'],0)
+            audit=json.loads((Path(directory)/'reconciliation.json').read_text())
+            self.assertTrue(audit['missing'][0]['alreadyPublished'])
+
+    def test_board_recovery_does_not_call_archive_writers(self):
+        manifest={'version':'existing'}
+        report={}
+        with patch.object(fb,'refresh',return_value={'report':{'fixtures':100},'changed':True}), patch.object(w,'write_release') as writer, patch.object(w,'publish') as publisher:
+            w.recover_fixture_board(Path('unused'),manifest,report,dry_run=True)
+            writer.assert_not_called()
+            publisher.assert_not_called()
+            self.assertEqual(manifest,{'version':'existing'})
+            self.assertEqual(report['fixtureRecovery'],'validated-dry-run')
+
     def test_strict_pre_match_and_draw_orientation(self):
         h = history()
         h['101']['players']['0'] += [dict(createdAt=NOW.isoformat(), price=99, active=True)]

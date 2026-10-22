@@ -290,8 +290,20 @@ def collect(old, manifest, state, now, api):
                                'responseSha256': response_hash, 'basis': selected['basis'],
                                'bookmaker': selected['bookmaker'], 'fallbackReasons': selected['rejected']})
         print(f'{league}: {counts[league]}', flush=True)
-    if set(expected) != seen:
-        raise ValueError(f'Incomplete fixture reconciliation: {len(set(expected)-seen)} missing, {len(seen-set(expected))} unexpected')
+    # A provider can stop listing an older fixture already validated and stored.
+    # Only unpublished missing results block ingestion; existing scores were
+    # cross-checked above and their prices remain immutable.
+    missing = set(expected) - seen
+    unresolved = missing - set(keys)
+    unexpected = seen - set(expected)
+    reconciliation = {'checkedAt': now.isoformat(), 'status': 'failed' if unresolved or unexpected else 'validated',
+                      'missing': [{'fixture': expected[k], 'alreadyPublished': k in keys} for k in sorted(missing)],
+                      'unexpected': [list(k) for k in sorted(unexpected)]}
+    legacy.write(state / 'reconciliation.json', reconciliation)
+    if unresolved or unexpected:
+        legacy.write(state / 'collection.json', reconciliation)
+        detail = '; '.join(f'{k[3]} {k[1]} v {k[2]}' for k in sorted(unresolved))
+        raise ValueError(f'Incomplete fixture reconciliation: {len(unresolved)} missing, {len(unexpected)} unexpected. {detail}')
     new = merge_archive(old, additions)
     report = {'checkedAt': now.isoformat(), 'windowFrom': start.isoformat(), 'windowTo': end.isoformat(),
               'newMatches': len(additions), 'leagues': counts, 'quotaBefore': remaining,
@@ -367,6 +379,33 @@ def stage_release(run, root, changed_paths):
         raise ValueError(f'Unexpected staged files: extra={sorted(unexpected)}, missing={sorted(missing)}, unstaged={sorted(remaining)}')
 
 
+def recover_fixture_board(state, manifest, report, *, dry_run=False):
+    """A historical ingestion failure must not block a validated new schedule.
+
+    This runs before archive writers: club/manager history stays byte-identical.
+    The ordinary publisher still verifies ancestry, scope, deployment and alias.
+    """
+    import atlas_fixture_board
+    if not dry_run:
+        helper = legacy.load_module('atlas_board_recovery_helpers', ROOT / 'scripts/refresh-return-atlas.py')
+        run = helper.run
+        if run(['git', 'status', '--porcelain'], ROOT).strip():
+            raise ValueError('Fixture recovery requires a clean production checkout')
+        if run(['git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH], ROOT).split()[0] != run(['git', 'rev-parse', 'HEAD'], ROOT).strip():
+            raise ValueError('Release advanced before fixture recovery')
+    board = atlas_fixture_board.refresh(state)
+    report['fixtureBoard'] = board['report']
+    if dry_run:
+        report['fixtureRecovery'] = 'validated-dry-run'
+        return
+    if board['changed']:
+        stage_release(run, ROOT, set(board['paths']))
+        run(['git', 'commit', '-m', 'data: refresh Matchday while retaining validated Atlas history'], ROOT)
+        run(['git', 'push', 'origin', 'HEAD:' + BRANCH], ROOT)
+    publish(state, manifest, report)
+    report['fixtureRecovery'] = 'published'
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--state-directory', type=Path, required=True)
@@ -388,7 +427,16 @@ def main():
                 raise ValueError('Publication checkout dirty before collection: ' + dirty[:1000])
         manifest = legacy.read(ROOT / MANIFEST)
         old = legacy.read(ROOT / 'public' / manifest['indexUrl'].lstrip('/'))
-        new, report = collect(old, manifest, state, datetime.now(UTC), OddsPapi(os.environ.get('ODDSPAPI_API_KEY')))
+        try:
+            new, report = collect(old, manifest, state, datetime.now(UTC), OddsPapi(os.environ.get('ODDSPAPI_API_KEY')))
+        except Exception as archive_error:
+            # Keep the historical failure visible, but restore the independently
+            # verified upcoming board instead of leaving the entire site stale.
+            try:
+                recover_fixture_board(state, manifest, report, dry_run=not args.publish)
+            except Exception as board_error:
+                report['fixtureRecoveryError'] = str(board_error)[:1000]
+            raise archive_error
         if not args.publish:
             # Validate managers against the current candidate prices without committing.
             import manager_atlas_weekly
