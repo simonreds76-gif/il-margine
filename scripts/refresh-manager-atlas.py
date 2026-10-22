@@ -60,12 +60,28 @@ def reviewed_fixture(reviews, fixture_id, provider_id):
         raise ValueError('Invalid fixture-specific manager review')
     return row
 
+def identity_quarantine_complete(candidates, added, pending):
+    """Only known identity-review holds may accompany a validated partial release.
+
+    Missing fixtures, conflicting scores/dates, failed requests and exhausted
+    bounds are not identity holds and must still stop strict publication.
+    """
+    candidate_ids={r[0] for r in candidates}
+    added_ids={r['id'] for r in added}
+    pending_ids={r['id'] for r in pending}
+    return (bool(pending) and len(candidate_ids)==len(candidates)
+            and len(added_ids)==len(added) and len(pending_ids)==len(pending)
+            and not added_ids & pending_ids and added_ids | pending_ids == candidate_ids
+            and all(p.get('reason','').startswith('Manager needs identity review: ')
+                    and len(p.get('coaches',[]))==2 for p in pending))
+
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--archive',type=Path,required=True);ap.add_argument('--state',type=Path,required=True)
     ap.add_argument('--max-matches',type=int,default=300);ap.add_argument('--max-dates',type=int,default=45)
     ap.add_argument('--offline',action='store_true')
     ap.add_argument('--strict',action='store_true',help='Retain the previous archive if any eligible fixture remains unresolved')
+    ap.add_argument('--quarantine-unknown-managers',action='store_true',help='Publish verified fixtures while retaining exact unknown-manager fixtures for review')
     args=ap.parse_args()
     archive=json.loads(args.archive.read_text(encoding='utf-8'))
     release=json.loads((ROOT/'src/data/football-atlas-release.json').read_text())
@@ -126,16 +142,17 @@ def main():
                 pending.append({'id':f[0],'reason':'Match date/teams/score conflict','providerMatchId':m['id']});continue
             try:ids=[resolve_coach(row['coaches'][i],club,date,registry,crosswalk) for i,club in enumerate([home,away])]
             except ValueError as e:
-                pending.append({'id':f[0],'reason':str(e),'home':home,'away':away,'coaches':row['coaches']});continue
+                pending.append({'id':f[0],'date':date,'providerMatchId':m['id'],'source':row.get('source'),'reason':str(e),'home':home,'away':away,'coaches':row['coaches']});continue
             if ids[0]==ids[1]:raise ValueError('Same manager on both sides')
             priced=all(type(v) in (int,float) and 1<v<1001 for v in f[8:11]) and f[11] in (1,2,3,4,5)
             added.append({'id':f[0],'date':date,'league':league,'season':atlas['seasons'][f[3]],'home':home,'away':away,'hg':f[6],'ag':f[7],'odds':f[8:11] if priced else None,'basis':({1:'closing',2:'last-pre-match',3:'bet365-last-pre-match',4:'bet365-closing',5:'bet365-pre-match'}[f[11]]) if priced else None,'homeManager':ids[0],'awayManager':ids[1]})
             for i,mid in enumerate(ids):new_coaches[row['coaches'][i]['id']]={'managerId':mid,'name':row['coaches'][i]['name']}
             if len(added)%20==0:print('Validated',len(added),'pending',len(pending),'requests',requests_count,flush=True)
     except Exception as e:failures.append(str(e))
-    if args.strict and len(added)!=len(candidates):
+    quarantine_ok=args.quarantine_unknown_managers and identity_quarantine_complete(candidates,added,pending)
+    if args.strict and len(added)!=len(candidates) and not quarantine_ok:
         failures.append(f'Manager verification incomplete: {len(candidates)-len(added)} eligible fixtures require review; previous archive retained')
-    report={'checkedAt':datetime.now(timezone.utc).isoformat(),'candidates':len(candidates),'added':len(added),'pending':pending,'failures':failures,'requests':requests_count,'coachMappings':new_coaches,'atlasVersion':release['version'],'through':max([archive['through']]+[r['date'] for r in added])}
+    report={'checkedAt':datetime.now(timezone.utc).isoformat(),'candidates':len(candidates),'added':len(added),'pending':pending,'quarantinedIdentities':len(pending) if quarantine_ok else 0,'failures':failures,'requests':requests_count,'coachMappings':new_coaches,'atlasVersion':release['version'],'through':max([archive['through']]+[r['date'] for r in added])}
     # A request/schema failure leaves the public candidate archive untouched.
     if not failures:
         for r in added:existing[r['id']]=r

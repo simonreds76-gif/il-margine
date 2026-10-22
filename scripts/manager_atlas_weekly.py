@@ -15,7 +15,7 @@ def refresh(state, offline=False):
     data=package.unpack(json.loads((ROOT/'public'/before['indexUrl'].lstrip('/')).read_text(encoding='utf-8')))
     state=Path(state)/'managers';state.mkdir(parents=True,exist_ok=True)
     archive=state/'candidate.json';archive.write_text(json.dumps(data,ensure_ascii=False),encoding='utf-8')
-    command=[sys.executable,str(ROOT/'scripts/refresh-manager-atlas.py'),'--archive',str(archive),'--state',str(state),'--strict']
+    command=[sys.executable,str(ROOT/'scripts/refresh-manager-atlas.py'),'--archive',str(archive),'--state',str(state),'--strict','--quarantine-unknown-managers']
     if offline:command.append('--offline')
     subprocess.run(command,cwd=ROOT,check=True,timeout=900)
     candidate=json.loads(archive.read_text(encoding='utf-8'))
@@ -24,4 +24,4 @@ def refresh(state, offline=False):
     if any(new.get(fid)!=row for fid,row in old.items()):raise ValueError('Existing manager fixture changed')
     after,path=package.package(candidate)
     report=json.loads((state/'refresh-report.json').read_text(encoding='utf-8'))
-    return {'changed':before['version']!=after['version'],'manifest':after,'previous':before['indexUrl'],'paths':[path.as_posix(),'src/data/manager-atlas-release.json'],'added':report['added']}
+    return {'changed':before['version']!=after['version'],'manifest':after,'previous':before['indexUrl'],'paths':[path.as_posix(),'src/data/manager-atlas-release.json'],'added':report['added'],'pending':report['pending']}
