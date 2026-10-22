@@ -2,19 +2,23 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 0,
-    "blocker_counts": {},
+    "blocked_lines": 10,
+    "blocker_counts": {
+      "goalkeeper_team_unresolved": 10,
+      "missing_lineup": 10,
+      "missing_priced_edge": 10
+    },
     "candidate_board_preserved": false,
-    "eligible_lines": 0,
-    "priced_lines": 0,
+    "eligible_lines": 1,
+    "priced_lines": 42,
     "provisional_lines": 0,
-    "signals_added": 0,
-    "value_ladder_lines": 0
+    "signals_added": 1,
+    "value_ladder_lines": 6
   },
   "evidence": {
     "clv": 0.05358,
     "clv_matched": 22,
-    "pending": 3,
+    "pending": 4,
     "pnl_units": 17.654,
     "roi": 0.5044,
     "settled": 70,
@@ -22,30 +26,34 @@
       "fotmob_named_keeper_shotmap": 67,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 74,
+    "signals": 75,
     "true_close_coverage": 0.314286,
     "void": 1
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-21T22:44:38.884155+00:00",
-    "counts": {},
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "checked_at": "2026-10-22T00:56:36.210861+00:00",
+    "counts": {
+      "offers_saved": 52
+    },
+    "saved": 5,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-10-21T22:44:38Z",
+  "generated_at": "2026-10-22T00:56:35Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
-    "exclusions": {},
-    "forecast_fixtures": 42,
-    "forecast_keepers": 82,
-    "generated_at": "2026-10-21T22:44:38.911167+00:00",
-    "last_capture_at": "2026-10-20T00:39:02.857527+00:00",
+    "exclusions": {
+      "blocked_or_missing_inputs": 10
+    },
+    "forecast_fixtures": 46,
+    "forecast_keepers": 90,
+    "generated_at": "2026-10-22T00:56:36.308848+00:00",
+    "last_capture_at": "2026-10-22T00:56:36.308848+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 0,
-    "new_selections": 0,
+    "new_forecasts": 8,
+    "new_selections": 1,
     "next_review_at": 50,
     "paired_scores": {
       "current": {
@@ -63,12 +71,12 @@
       "current": {
         "losses": 4,
         "overdue": 0,
-        "pending": 0,
+        "pending": 1,
         "profit": 1.7010000000000003,
         "pushes": 0,
         "review": 0,
         "roi": 0.34020000000000006,
-        "selections": 11,
+        "selections": 12,
         "settled": 10,
         "stake": 5.0,
         "voids": 1,
@@ -91,6 +99,30 @@
     },
     "review_milestone": null,
     "selections": [
+      {
+        "away": "Borussia Monchengladbach",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-22T00:56:34+00:00",
+        "edge": 0.18094017493573755,
+        "event_id": "72513260",
+        "fair_odds": 1.8629224804886635,
+        "goalkeeper": "Moritz Nicolas",
+        "home": "VfB Stuttgart",
+        "kickoff_at": "2026-10-23T18:30:00+00:00",
+        "line": 4.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5881205",
+        "model": "current",
+        "odds": 2.2,
+        "overdue": false,
+        "player_id": "784146",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-22T00:56:36.308848+00:00",
+        "side": "over",
+        "status": "pending",
+        "team_id": "9788"
+      },
       {
         "actual": 2,
         "away": "Atalanta BC",
@@ -405,7 +437,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 2,
+      "awaiting_verified_keeper_result": 10,
       "incomplete_or_conflicting_full_match_count": 4,
       "keeper_identity_unresolved": 1,
       "verified_different_starting_keeper": 3
