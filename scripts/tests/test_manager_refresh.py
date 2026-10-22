@@ -8,6 +8,17 @@ spec=importlib.util.spec_from_file_location('refresh',Path(__file__).parents[1]/
 mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
 
 class RefreshTests(unittest.TestCase):
+    def test_only_exact_unknown_identity_holds_can_accompany_verified_results(self):
+        candidates=[['verified'],['held']]
+        added=[{'id':'verified'}]
+        pending=[{'id':'held','reason':'Manager needs identity review: New Coach','coaches':[{'id':'a'},{'id':'b'}]}]
+        self.assertTrue(mod.identity_quarantine_complete(candidates,added,pending))
+        for reason in ['Match date/teams/score conflict','No unique exact fixture match','Provider coach name changed','Unfinished']:
+            self.assertFalse(mod.identity_quarantine_complete(candidates,added,[{**pending[0],'reason':reason}]))
+        self.assertFalse(mod.identity_quarantine_complete(candidates+[['unprocessed']],added,pending))
+        self.assertFalse(mod.identity_quarantine_complete(candidates,added,pending*2))
+        self.assertFalse(mod.identity_quarantine_complete(candidates,added+[{'id':'held'}],pending))
+
     def test_verified_luis_garcia_provider_id_survives_context_review_date(self):
         root=Path(__file__).parents[2]
         registry=json.loads((root/'scripts/config/manager-atlas-identities.json').read_text(encoding='utf-8'))
