@@ -56,14 +56,10 @@ try {
         throw "Capture worktree is dirty; refusing to mix automated data with code edits."
     }
 
-    Log "Fetching latest $branch before capture."
-    $exitCode = Invoke-NativeLogged "git" @("fetch", "origin", $branch)
+    Log "Synchronizing $branch and preserving any unpublished corners evidence."
+    $exitCode = Invoke-NativeLogged "python" @("scripts\sync-pinnacle-corners.py")
     if ($exitCode -ne 0) {
-        throw "git fetch failed with exit $exitCode"
-    }
-    $exitCode = Invoke-NativeLogged "git" @("merge", "--ff-only", "origin/$branch")
-    if ($exitCode -ne 0) {
-        throw "Capture branch cannot fast-forward to origin/$branch."
+        throw "Capture synchronization requires review; evidence preserved."
     }
 
     Log "Capturing Pinnacle Big-5 corners prices."
@@ -78,16 +74,15 @@ try {
     }
     git diff --cached --quiet
     if ($LASTEXITCODE -eq 0) {
-        Log "No new corners rows; nothing to push."
-        exit 0
+        Log "No new corners rows; retrying any earlier unpublished evidence."
     }
-
-    $exitCode = Invoke-NativeLogged "git" @("commit", "-m", "chore: capture local pinnacle corners odds")
-    if ($exitCode -ne 0) {
-        throw "Unable to commit local corners capture."
+    else {
+        $exitCode = Invoke-NativeLogged "git" @("commit", "-m", "chore: capture local pinnacle corners odds")
+        if ($exitCode -ne 0) {
+            throw "Unable to commit local corners capture."
+        }
     }
-    $bash = "C:\Program Files\Git\bin\bash.exe"
-    $exitCode = Invoke-NativeLogged $bash @("scripts/ci-safe-push.sh", $branch)
+    $exitCode = Invoke-NativeLogged "python" @("scripts\sync-pinnacle-corners.py", "--publish")
     if ($exitCode -ne 0) {
         throw "Safe push failed with exit $exitCode"
     }
