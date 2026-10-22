@@ -16,6 +16,8 @@ const clubKey = (club: string) => clubAliases[key(club)] ?? key(club);
 // Verified FotMob identities for published surname-only selections. Club context
 // prevents assigning a namesake or carrying an old club crest into another fixture.
 const footballPlayers = [
+  // FotMob Slavia squad 7787, verified 22 October 2026. Sabah has no squad feed.
+  { name: "David Zima", alias: "Zima", club: "Slavia Prague", id: "1085401" },
   // Verified Malaga appearances and photo; absent from the provider's senior squad list.
   { name: "Ángel Recio", alias: "Recio", club: "Malaga", id: "1260010" },
   // Verified 11 October 2026 against FotMob player profiles 290410 and 1203512.

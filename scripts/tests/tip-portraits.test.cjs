@@ -9,7 +9,7 @@ const europa = require('./fixtures/tip-portrait-europa-squads.json');
 const squads = require('./fixtures/tip-portrait-squads.json');
 const source = (club) => `<script id="__NEXT_DATA__" type="application/json">${JSON.stringify({props:{pageProps:{fallback:{['team-'+squads[club].details.id]:squads[club]}}}})}</script>`;
 
-function harness({ fail = false, empty = false } = {}) {
+function harness({ fail = false, empty = false, noSquad = false } = {}) {
   const cache = new Map();
   let fetches = 0, queries = 0;
   const cached = (fn) => {
@@ -38,6 +38,7 @@ function harness({ fail = false, empty = false } = {}) {
       if(fail) throw new Error('timeout');
       assert.match(url,/^https:\/\/www\.fotmob\.com\/teams\/\d+\/overview$/);
       const teamId = url.match(/teams\/(\d+)/)[1];
+      if (noSquad && teamId === '8583') return new Response('<script id="__NEXT_DATA__">'+JSON.stringify({props:{pageProps:{fallback:{['team-'+teamId]:{details:{id:8583},squad:{squad:null}}}}}})+'</script>');
       if (europa[teamId]) return new Response('<script id="__NEXT_DATA__">'+JSON.stringify({props:{pageProps:{fallback:{['team-'+teamId]:europa[teamId]}}}})+'</script>');
       const club = url.includes('/9851/')?'rennes':'auxerre';
       return new Response(source(club));
@@ -86,6 +87,27 @@ test('source outage, unknown tip and malformed IDs fail safely without arbitrary
     assert.equal(response.headers.get('location'),null);
     if(config.empty) assert.equal(h.counts().fetches,0);
   }
+});
+
+test('explicitly unavailable opponent squad is missing coverage, never a 503 or a guessed surname', async()=>{
+  const h=harness({noSquad:true});
+  const {GET}=h.load(path.join(root,'src/app/api/tip-portrait/[id]/route.ts'));
+  const response=await GET(new Request('https://example.test'),{params:Promise.resolve({id:'123'})});
+  assert.equal(response.status,404);
+  assert.equal(response.headers.get('location'),null);
+  assert.deepEqual(h.counts(),{fetches:2,queries:1});
+});
+
+test('verified Zima portrait also repairs old API URLs without depending on either squad source',async()=>{
+  const h=harness({fail:true});
+  Object.assign(h.pick,{id:1133,category:'ucl',event:'Sabah vs Slavia Prague',player:'Zima'});
+  const {GET}=h.load(path.join(root,'src/app/api/tip-portrait/[id]/route.ts'));
+  const response=await GET(new Request('https://example.test'),{params:Promise.resolve({id:'1133'})});
+  assert.equal(response.status,307);
+  assert.equal(response.headers.get('location'),'https://images.fotmob.com/image_resources/playerimages/1085401.png');
+  assert.deepEqual(h.counts(),{fetches:0,queries:1});
+  const artwork=h.load(path.join(root,'src/lib/tip-artwork.ts')).getTipArtwork({...h.pick,event:'Rennes vs Auxerre'});
+  assert.equal(artwork[0].src,'/api/tip-portrait/1133');
 });
 
 test('new Europa picks resolve both squads and the correct player including accents and verified short names', async () => {
