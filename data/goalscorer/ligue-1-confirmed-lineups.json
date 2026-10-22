@@ -301,7 +301,7 @@
         "Moïse Bombito",
         "Laurent Abergel"
       ],
-      "observed_at": "2026-10-22T12:36:18.845331+00:00",
+      "observed_at": "2026-10-22T15:16:15.160582+00:00",
       "changed_at": "2026-10-20T19:12:49.616998+00:00"
     },
     {
@@ -605,7 +605,7 @@
         "Nhoa Sangui",
         "Jonathan Ikoné"
       ],
-      "observed_at": "2026-10-22T12:36:18.845331+00:00",
+      "observed_at": "2026-10-22T15:16:15.160582+00:00",
       "changed_at": "2026-10-21T23:20:12.018109+00:00"
     },
     {
@@ -623,7 +623,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-22T12:36:18.845331+00:00",
+      "observed_at": "2026-10-22T15:16:15.160582+00:00",
       "changed_at": "2026-10-21T23:20:12.018109+00:00"
     },
     {
@@ -641,7 +641,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-22T12:36:18.845331+00:00",
+      "observed_at": "2026-10-22T15:16:15.160582+00:00",
       "changed_at": "2026-10-21T23:20:12.018109+00:00"
     },
     {
@@ -659,26 +659,311 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-22T12:36:18.845331+00:00",
+      "observed_at": "2026-10-22T15:16:15.160582+00:00",
       "changed_at": "2026-10-21T23:20:12.018109+00:00"
     },
     {
       "fotmob_match_id": 5802969,
+      "fotmob_page_url": "/matches/lille-vs-monaco/2tjj7j#5802969",
+      "home_fotmob_team_id": 9829,
+      "away_fotmob_team_id": 8639,
       "match_date": "2026-10-25",
       "kickoff_utc": "2026-10-25T14:00:00Z",
       "home_team": "Monaco",
       "away_team": "Lille",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-2-3-1",
+      "away_formation": "4-2-3-1",
+      "home_players": [
+        "Lukás Hrádecky",
+        "Vanderson",
+        "Sadibou Sané",
+        "Mohammed Salisu",
+        "Flávio Nazinho",
+        "Lamine Camara",
+        "Denis Zakaria",
+        "Takumi Minamino",
+        "Aleksandr Golovin",
+        "Ansu Fati",
+        "Matthis Abline"
+      ],
+      "away_players": [
+        "Orlando Gill",
+        "Maxima Goffi",
+        "Nathan Ngoy",
+        "Tanguy Nianzou",
+        "Romain Perraud",
+        "Benjamin André",
+        "Ngal Ayel Mukau",
+        "Ethan Mbappé",
+        "Hákon Arnar Haraldsson",
+        "Dilane Bakwa",
+        "Olivier Giroud"
+      ],
+      "home_starters": [
+        {
+          "name": "Lukás Hrádecky",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 66757,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Vanderson",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 1207992,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Sadibou Sané",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 1523208,
+          "shirt_number": "72"
+        },
+        {
+          "name": "Mohammed Salisu",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 938247,
+          "shirt_number": "22"
+        },
+        {
+          "name": "Flávio Nazinho",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 1239590,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Lamine Camara",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 1436305,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Denis Zakaria",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 598355,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Takumi Minamino",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 408943,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Aleksandr Golovin",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 586388,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Ansu Fati",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 1086012,
+          "shirt_number": "31"
+        },
+        {
+          "name": "Matthis Abline",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 1250492,
+          "shirt_number": "11"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Orlando Gill",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 1683391,
+          "shirt_number": "12"
+        },
+        {
+          "name": "Maxima Goffi",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 1793784,
+          "shirt_number": "38"
+        },
+        {
+          "name": "Nathan Ngoy",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 1252070,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Tanguy Nianzou",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 1070617,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Romain Perraud",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 815465,
+          "shirt_number": "15"
+        },
+        {
+          "name": "Benjamin André",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 148830,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Ngal Ayel Mukau",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1428153,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Ethan Mbappé",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 1426809,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Hákon Arnar Haraldsson",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 1044470,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Dilane Bakwa",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 1079539,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Olivier Giroud",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 46469,
+          "shirt_number": "9"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-10-22T12:36:18.845331+00:00",
-      "changed_at": "2026-10-21T23:20:12.018109+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Eric Dier",
+        "Stanis Idumbo"
+      ],
+      "away_unavailable": [
+        "Osame Sahraoui",
+        "Tiago Santos",
+        "Hamza Igamane",
+        "Ayase Ueda"
+      ],
+      "observed_at": "2026-10-22T15:16:15.160582+00:00",
+      "changed_at": "2026-10-22T15:16:15.160582+00:00"
     },
     {
       "fotmob_match_id": 5802972,
@@ -695,7 +980,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-22T12:36:18.845331+00:00",
+      "observed_at": "2026-10-22T15:16:15.160582+00:00",
       "changed_at": "2026-10-21T23:20:12.018109+00:00"
     },
     {
@@ -713,7 +998,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-22T12:36:18.845331+00:00",
+      "observed_at": "2026-10-22T15:16:15.160582+00:00",
       "changed_at": "2026-10-21T23:20:12.018109+00:00"
     },
     {
@@ -731,7 +1016,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-22T12:36:18.845331+00:00",
+      "observed_at": "2026-10-22T15:16:15.160582+00:00",
       "changed_at": "2026-10-21T23:20:12.018109+00:00"
     }
   ]
