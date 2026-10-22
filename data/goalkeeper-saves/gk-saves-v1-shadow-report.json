@@ -2,18 +2,19 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 10,
+    "blocked_lines": 14,
     "blocker_counts": {
-      "goalkeeper_team_unresolved": 10,
+      "goalkeeper_not_matched_to_lineup": 4,
+      "goalkeeper_team_unresolved": 14,
       "missing_lineup": 10,
-      "missing_priced_edge": 10
+      "missing_priced_edge": 14
     },
     "candidate_board_preserved": false,
     "eligible_lines": 1,
-    "priced_lines": 42,
+    "priced_lines": 38,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 6
+    "value_ladder_lines": 7
   },
   "evidence": {
     "clv": 0.05358,
@@ -32,24 +33,26 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-22T14:40:10.557670+00:00",
+    "checked_at": "2026-10-22T18:49:08.989242+00:00",
     "counts": {
-      "not_fresh_prematch": 52
+      "not_fresh_prematch": 21,
+      "offers_saved": 31
     },
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "saved": 3,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-10-22T14:40:10Z",
+  "generated_at": "2026-10-22T18:49:08Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "not_new_fresh_prematch": 52
+      "blocked_or_missing_inputs": 14,
+      "not_new_fresh_prematch": 21
     },
     "forecast_fixtures": 46,
     "forecast_keepers": 90,
-    "generated_at": "2026-10-22T14:40:10.602425+00:00",
+    "generated_at": "2026-10-22T18:49:09.049693+00:00",
     "last_capture_at": "2026-10-22T00:56:36.308848+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
