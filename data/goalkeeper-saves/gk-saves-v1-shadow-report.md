@@ -2,9 +2,9 @@
 
 **RESEARCH SHADOW ONLY. No live routing or staking authorization.**
 
-- Generated: 2026-10-22T18:49:08Z
+- Generated: 2026-10-22T22:45:28Z
 - Status: SIGNALS_COLLECTING
-- Current priced/primary-eligible/value-ladder/blocked: 38/1/7/14
+- Current priced/primary-eligible/value-ladder/blocked: 38/1/8/14
 - Provisional research lines: 0 (never appended to the signal ledger)
 - Candidate board preserved after infrastructure failure: False
 - Signals: 75 (4 pending, 70 settled)
