@@ -12,7 +12,7 @@
     "eligible_lines": 1,
     "priced_lines": 42,
     "provisional_lines": 0,
-    "signals_added": 1,
+    "signals_added": 0,
     "value_ladder_lines": 6
   },
   "evidence": {
@@ -32,40 +32,40 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-22T00:56:36.210861+00:00",
+    "checked_at": "2026-10-22T13:52:08.717884+00:00",
     "counts": {
-      "offers_saved": 52
+      "not_fresh_prematch": 52
     },
-    "saved": 5,
-    "status": "CAPTURED"
+    "saved": 0,
+    "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-10-22T00:56:35Z",
+  "generated_at": "2026-10-22T13:52:08Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "blocked_or_missing_inputs": 10
+      "not_new_fresh_prematch": 52
     },
     "forecast_fixtures": 46,
     "forecast_keepers": 90,
-    "generated_at": "2026-10-22T00:56:36.308848+00:00",
+    "generated_at": "2026-10-22T13:52:08.729656+00:00",
     "last_capture_at": "2026-10-22T00:56:36.308848+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 8,
-    "new_selections": 1,
+    "new_forecasts": 0,
+    "new_selections": 0,
     "next_review_at": 50,
     "paired_scores": {
       "current": {
-        "brier": 0.17275528218818542,
-        "log_loss": 0.5180585452211866
+        "brier": 0.17138000360604788,
+        "log_loss": 0.5147897458487798
       },
       "keeper_watch": {
-        "brier": 0.1770239242254774,
-        "log_loss": 0.5313232016525923
+        "brier": 0.17559323753734563,
+        "log_loss": 0.5277831322330764
       }
     },
-    "paired_settled_fixtures": 38,
+    "paired_settled_fixtures": 39,
     "paper_stake": 0.5,
     "records": {
       "current": {
@@ -437,7 +437,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 10,
+      "awaiting_verified_keeper_result": 8,
       "incomplete_or_conflicting_full_match_count": 4,
       "keeper_identity_unresolved": 1,
       "verified_different_starting_keeper": 3
