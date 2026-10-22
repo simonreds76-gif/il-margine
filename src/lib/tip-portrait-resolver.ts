@@ -37,6 +37,9 @@ export function parseSquad(html: string, teamId: number): SquadPlayer[] {
   const team = payload?.props?.pageProps?.fallback?.[`team-${teamId}`];
   if (team?.details?.id !== teamId) throw new Error("Squad identity mismatch");
   const groups = team?.squad?.squad;
+  // Some supported clubs have an explicitly unavailable squad. This is a
+  // coverage gap, not a server outage. Keep the two-squad identity guard below.
+  if (groups === null) return [];
   if (!Array.isArray(groups)) throw new Error("Squad unavailable");
   const players: SquadPlayer[] = [];
   for (const group of groups) {
