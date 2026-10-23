@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-10-18T12:01:27+00:00`
+Fetched at UTC: `2026-10-23T12:34:15+00:00`
 
 ## Decision
 
@@ -14,25 +14,25 @@ Overall: **PASS_SOURCE_LAYER**
 ## RotoWire
 
 - Teams with set-piece blocks: `96/96`
-- Player role rows extracted: `660`
+- Player role rows extracted: `685`
 
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
-| bundesliga | 18 | 18 | 108 | 8 |
-| epl | 20 | 20 | 132 | 9 |
-| la-liga | 20 | 20 | 158 | 11 |
-| ligue-1 | 18 | 18 | 125 | 9 |
-| serie-a | 20 | 20 | 137 | 9 |
+| bundesliga | 18 | 18 | 111 | 9 |
+| epl | 20 | 20 | 136 | 10 |
+| la-liga | 20 | 20 | 165 | 12 |
+| ligue-1 | 18 | 18 | 130 | 11 |
+| serie-a | 20 | 20 | 143 | 10 |
 
 ## FPL API
 
 - Status: `PASS`
 - Teams: `20`
-- Players: `667`
+- Players: `668`
 - Players with set-piece role fields: `140`
 - Registered season: `2026/27`
 - Exact 20-team roster match: `YES`
-- Snapshot valid until UTC: `2026-10-25T12:01:27+00:00`
+- Snapshot valid until UTC: `2026-10-30T12:34:15+00:00`
 
 ## SetPieceTakers
 
@@ -48,18 +48,18 @@ Overall: **PASS_SOURCE_LAYER**
 | bundesliga | FSV Mainz 05 | Nadiem Amiri | 100.0% | 100.0% | 19 |
 | bundesliga | RB Leipzig | David Raum | 100.0% | 100.0% | 36 |
 | bundesliga | SV 07 Elversberg | Felix Keidel | 100.0% | 100.0% | 13 |
-| ligue-1 | Angers | Branco van den Boomen | 100.0% | 97.56% | 40 |
+| ligue-1 | Angers | Branco van den Boomen | 100.0% | 97.67% | 42 |
 | serie-a | Frosinone | Giacomo Calo | 95.83% | 96.88% | 31 |
-| epl | Leeds United | Anton Stach | 94.44% | 84.0% | 21 |
-| la-liga | Rayo Vallecano | Unai Lopez | 93.75% | 85.71% | 24 |
-| bundesliga | Bayer Leverkusen | Aleix Garcia | 92.59% | 91.67% | 33 |
-| la-liga | Villarreal | Alberto Moleiro | 90.48% | 56.25% | 27 |
+| epl | Leeds United | Anton Stach | 95.0% | 85.19% | 23 |
+| la-liga | Villarreal | Alberto Moleiro | 94.44% | 55.1% | 27 |
 | ligue-1 | Brest | Joris Chotard | 86.67% | 92.86% | 26 |
-| ligue-1 | Lens | Florian Thauvin | 79.31% | 80.77% | 42 |
-| la-liga | Getafe | Johan Mojica | 78.57% | 51.85% | 14 |
-| la-liga | Málaga | Pablo Martinez | 77.42% | 71.05% | 27 |
-| bundesliga | 1899 Hoffenheim | Vladimir Coufal | 73.08% | 70.0% | 28 |
-| epl | Crystal Palace | Adam Wharton | 66.67% | 57.14% | 12 |
+| la-liga | Málaga | Pablo Martinez | 86.21% | 73.81% | 31 |
+| bundesliga | Bayer Leverkusen | Aleix Garcia | 85.71% | 91.3% | 42 |
+| ligue-1 | Lens | Florian Thauvin | 84.62% | 78.57% | 44 |
+| la-liga | Deportivo Alaves | Denis Suarez | 80.0% | 55.17% | 16 |
+| epl | Crystal Palace | Adam Wharton | 76.47% | 64.29% | 18 |
+| la-liga | Rayo Vallecano | Unai Lopez | 73.33% | 76.47% | 26 |
+| la-liga | Real Madrid | Arda Guler | 68.42% | 50.0% | 28 |
 
 ## Outputs
 
