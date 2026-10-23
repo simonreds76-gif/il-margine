@@ -89,6 +89,15 @@ test('source outage, unknown tip and malformed IDs fail safely without arbitrary
   }
 });
 
+test('SV 07 Elversberg resolves to its existing club identity for new player tips',()=>{
+  const h=harness();
+  const r=h.load(path.join(root,'src/lib/tip-portrait-resolver.ts'));
+  const logos=h.load(path.join(root,'src/lib/team-logos.ts'));
+  const pick={...h.pick,category:'bundesliga',event:'RB Leipzig vs SV 07 Elversberg',player:'Vandevoordt'};
+  assert.equal(logos.resolveTeamLogoPath('SV 07 Elversberg','bundesliga'),'/team-logos/bundesliga/sv-elversberg.png');
+  assert.deepEqual(r.clubsForPick(pick).map(c=>c.id),[178475,8232]);
+});
+
 test('explicitly unavailable opponent squad is missing coverage, never a 503 or a guessed surname', async()=>{
   const h=harness({noSquad:true});
   const {GET}=h.load(path.join(root,'src/app/api/tip-portrait/[id]/route.ts'));

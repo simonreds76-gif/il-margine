@@ -69,6 +69,7 @@ const TEAM_LOGO_ALIASES: Record<string, string> = {
   "ac-milan": "milan",
   "psg": "paris-saint-germain",
   "rb-leipzig": "rasenballsport-leipzig",
+  "sv-07-elversberg": "sv-elversberg",
   "borussia-monchengladbach": "borussia-m-gladbach",
 };
 
