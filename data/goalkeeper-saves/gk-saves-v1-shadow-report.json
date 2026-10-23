@@ -2,16 +2,16 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 25,
+    "blocked_lines": 31,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 4,
-      "goalkeeper_team_unresolved": 25,
+      "goalkeeper_not_matched_to_lineup": 10,
+      "goalkeeper_team_unresolved": 31,
       "missing_lineup": 21,
-      "missing_priced_edge": 25
+      "missing_priced_edge": 31
     },
     "candidate_board_preserved": false,
     "eligible_lines": 6,
-    "priced_lines": 124,
+    "priced_lines": 156,
     "provisional_lines": 0,
     "signals_added": 0,
     "value_ladder_lines": 33
@@ -33,27 +33,27 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-23T13:32:11.780729+00:00",
+    "checked_at": "2026-10-23T14:26:51.606811+00:00",
     "counts": {
-      "already_saved": 14
+      "offers_saved": 187
     },
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "saved": 17,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-10-23T13:32:11Z",
+  "generated_at": "2026-10-23T14:26:51Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "blocked_or_missing_inputs": 25
+      "blocked_or_missing_inputs": 31
     },
-    "forecast_fixtures": 54,
-    "forecast_keepers": 106,
-    "generated_at": "2026-10-23T13:32:11.820752+00:00",
-    "last_capture_at": "2026-10-23T13:31:12.674136+00:00",
+    "forecast_fixtures": 57,
+    "forecast_keepers": 112,
+    "generated_at": "2026-10-23T14:26:51.738241+00:00",
+    "last_capture_at": "2026-10-23T14:26:51.738241+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 0,
+    "new_forecasts": 6,
     "new_selections": 0,
     "next_review_at": 50,
     "paired_scores": {
@@ -558,7 +558,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 24,
+      "awaiting_verified_keeper_result": 30,
       "incomplete_or_conflicting_full_match_count": 4,
       "keeper_identity_unresolved": 1,
       "verified_different_starting_keeper": 3

@@ -1,27 +1,30 @@
 {
   "capture_errors": [],
-  "capture_mode": "publication",
+  "capture_mode": "close",
   "event_last_checked": {
-    "71945328": "2026-10-23T13:31:10Z",
-    "71945330": "2026-10-23T13:31:10Z",
-    "71945342": "2026-10-23T13:31:10Z",
-    "72036242": "2026-10-23T13:31:10Z",
-    "72221334": "2026-10-23T13:31:10Z",
-    "72221344": "2026-10-23T13:31:10Z",
-    "72478646": "2026-10-23T13:31:10Z",
-    "72478658": "2026-10-23T13:31:10Z",
-    "72513258": "2026-10-23T13:31:10Z",
-    "72513260": "2026-10-23T13:31:10Z",
-    "72513266": "2026-10-23T13:31:10Z",
-    "72513268": "2026-10-23T13:31:10Z",
-    "72513270": "2026-10-23T13:31:10Z",
-    "72513272": "2026-10-23T13:31:10Z"
+    "71945328": "2026-10-23T14:26:49Z",
+    "71945330": "2026-10-23T14:26:49Z",
+    "71945342": "2026-10-23T14:26:49Z",
+    "72036242": "2026-10-23T14:26:49Z",
+    "72221332": "2026-10-23T14:26:49Z",
+    "72221334": "2026-10-23T14:26:49Z",
+    "72221338": "2026-10-23T14:26:49Z",
+    "72221344": "2026-10-23T14:26:49Z",
+    "72478646": "2026-10-23T14:26:49Z",
+    "72478656": "2026-10-23T14:26:49Z",
+    "72478658": "2026-10-23T14:26:49Z",
+    "72513258": "2026-10-23T14:26:49Z",
+    "72513260": "2026-10-23T14:26:49Z",
+    "72513266": "2026-10-23T14:26:49Z",
+    "72513268": "2026-10-23T14:26:49Z",
+    "72513270": "2026-10-23T14:26:49Z",
+    "72513272": "2026-10-23T14:26:49Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 14,
-  "events_supported": 14,
-  "events_with_lines": 14,
-  "generated_at": "2026-10-23T13:31:10Z",
+  "events_selected": 17,
+  "events_supported": 17,
+  "events_with_lines": 17,
+  "generated_at": "2026-10-23T14:26:49Z",
   "last_publication_at": "2026-10-23T13:31:10Z",
   "league_coverage": {
     "bundesliga": {
@@ -29,12 +32,12 @@
       "with_prices": 6
     },
     "epl": {
-      "selected": 2,
-      "with_prices": 2
+      "selected": 4,
+      "with_prices": 4
     },
     "la-liga": {
-      "selected": 2,
-      "with_prices": 2
+      "selected": 3,
+      "with_prices": 3
     },
     "ligue-1": {
       "selected": 1,
@@ -45,7 +48,7 @@
       "with_prices": 3
     }
   },
-  "market_inventory_rows_added": 1195,
+  "market_inventory_rows_added": 1448,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Away Team Exact Goals",
@@ -142,9 +145,65 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 3,
-  "rows_added": 149,
-  "rows_observed": 149,
+  "rows_added": 187,
+  "rows_observed": 187,
   "selected_events": [
+    {
+      "away": "Everton FC",
+      "competition": "England - Premier League",
+      "home": "Arsenal FC",
+      "id": 72221332,
+      "kickoff_at": "2026-10-24T14:00:00Z"
+    },
+    {
+      "away": "Fulham FC",
+      "competition": "England - Premier League",
+      "home": "Coventry City",
+      "id": 72221338,
+      "kickoff_at": "2026-10-24T14:00:00Z"
+    },
+    {
+      "away": "Espanyol Barcelona",
+      "competition": "Spain - LaLiga",
+      "home": "Racing Santander",
+      "id": 72478656,
+      "kickoff_at": "2026-10-24T14:15:00Z"
+    },
+    {
+      "away": "Borussia Monchengladbach",
+      "competition": "Germany - Bundesliga",
+      "home": "VfB Stuttgart",
+      "id": 72513260,
+      "kickoff_at": "2026-10-23T18:30:00Z"
+    },
+    {
+      "away": "OGC Nice",
+      "competition": "France - Ligue 1",
+      "home": "Stade Brest 29",
+      "id": 72036242,
+      "kickoff_at": "2026-10-23T18:45:00Z"
+    },
+    {
+      "away": "AC Monza",
+      "competition": "Italy - Serie A",
+      "home": "Torino FC",
+      "id": 71945342,
+      "kickoff_at": "2026-10-23T18:45:00Z"
+    },
+    {
+      "away": "Nottingham Forest",
+      "competition": "England - Premier League",
+      "home": "Ipswich Town",
+      "id": 72221344,
+      "kickoff_at": "2026-10-23T19:00:00Z"
+    },
+    {
+      "away": "Malaga CF",
+      "competition": "Spain - LaLiga",
+      "home": "Deportivo Alaves",
+      "id": 72478646,
+      "kickoff_at": "2026-10-23T19:00:00Z"
+    },
     {
       "away": "Manchester City",
       "competition": "England - Premier League",
@@ -207,43 +266,8 @@
       "home": "SC Paderborn 07",
       "id": 72513272,
       "kickoff_at": "2026-10-24T13:30:00Z"
-    },
-    {
-      "away": "Borussia Monchengladbach",
-      "competition": "Germany - Bundesliga",
-      "home": "VfB Stuttgart",
-      "id": 72513260,
-      "kickoff_at": "2026-10-23T18:30:00Z"
-    },
-    {
-      "away": "OGC Nice",
-      "competition": "France - Ligue 1",
-      "home": "Stade Brest 29",
-      "id": 72036242,
-      "kickoff_at": "2026-10-23T18:45:00Z"
-    },
-    {
-      "away": "AC Monza",
-      "competition": "Italy - Serie A",
-      "home": "Torino FC",
-      "id": 71945342,
-      "kickoff_at": "2026-10-23T18:45:00Z"
-    },
-    {
-      "away": "Nottingham Forest",
-      "competition": "England - Premier League",
-      "home": "Ipswich Town",
-      "id": 72221344,
-      "kickoff_at": "2026-10-23T19:00:00Z"
-    },
-    {
-      "away": "Malaga CF",
-      "competition": "Spain - LaLiga",
-      "home": "Deportivo Alaves",
-      "id": 72478646,
-      "kickoff_at": "2026-10-23T19:00:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 14
+  "three_way_events": 17
 }
