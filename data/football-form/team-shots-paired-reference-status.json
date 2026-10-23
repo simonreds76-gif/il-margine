@@ -1,5 +1,5 @@
 {
-  "contracts": 259,
+  "contracts": 279,
   "settled_contracts": 249,
   "paired_contracts": 150,
   "paired_fixtures": 57,
@@ -18,9 +18,9 @@
         "pnl_units": -0.7570000000000003,
         "roi": -0.021027777777777788,
         "stake_units": 36,
-        "pending": 1,
+        "pending": 4,
         "overdue": 0,
-        "unavailable_contracts": 103,
+        "unavailable_contracts": 109,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
@@ -39,7 +39,7 @@
         "stake_units": 0,
         "pending": 0,
         "overdue": 0,
-        "unavailable_contracts": 103,
+        "unavailable_contracts": 109,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
@@ -56,9 +56,9 @@
         "pnl_units": 3.160000000000001,
         "roi": 0.08540540540540544,
         "stake_units": 37,
-        "pending": 0,
+        "pending": 2,
         "overdue": 0,
-        "unavailable_contracts": 17,
+        "unavailable_contracts": 19,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
@@ -75,9 +75,9 @@
         "pnl_units": 1.3740000000000003,
         "roi": 0.09160000000000003,
         "stake_units": 15,
-        "pending": 0,
+        "pending": 1,
         "overdue": 0,
-        "unavailable_contracts": 17,
+        "unavailable_contracts": 19,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     }
@@ -95,14 +95,15 @@
   "model_fingerprint": "d4723cba0af2b4604f3204e9d1d996542f206fc42313612b2a79117a64d4cce0",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 240,
-  "generated_at": "2026-10-22T23:26:46Z",
-  "new_contracts": 0,
+  "generated_at": "2026-10-23T13:31:59Z",
+  "new_contracts": 20,
   "scan_exclusions": {
-    "stale_price": 312
+    "stale_price": 332,
+    "outside_capture_window": 136
   },
-  "latest_archived_capture": "2026-10-22T22:45:25Z",
+  "latest_archived_capture": "2026-10-23T13:31:09Z",
   "latest_result_date": "2026-10-21",
-  "raw_upcoming_rows": 920,
+  "raw_upcoming_rows": 1598,
   "status": "COLLECTING",
   "cohorts": {
     "paired-market-offset-20260930-v2": {
@@ -200,7 +201,7 @@
       "automatic_promotion": false
     },
     "paired-market-offset-20261019-club-alias-v3": {
-      "contracts": 19,
+      "contracts": 39,
       "settled_contracts": 9,
       "paired_contracts": 4,
       "paired_fixtures": 2,
@@ -219,9 +220,9 @@
             "pnl_units": 1.0,
             "roi": 1.0,
             "stake_units": 1,
-            "pending": 1,
+            "pending": 4,
             "overdue": 0,
-            "unavailable_contracts": 9,
+            "unavailable_contracts": 15,
             "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
           }
         },
@@ -240,7 +241,7 @@
             "stake_units": 0,
             "pending": 0,
             "overdue": 0,
-            "unavailable_contracts": 9,
+            "unavailable_contracts": 15,
             "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
           }
         },
@@ -257,9 +258,9 @@
             "pnl_units": 0,
             "roi": null,
             "stake_units": 0,
-            "pending": 0,
+            "pending": 2,
             "overdue": 0,
-            "unavailable_contracts": 0,
+            "unavailable_contracts": 2,
             "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
           }
         },
@@ -276,9 +277,9 @@
             "pnl_units": 0,
             "roi": null,
             "stake_units": 0,
-            "pending": 0,
+            "pending": 1,
             "overdue": 0,
-            "unavailable_contracts": 0,
+            "unavailable_contracts": 2,
             "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
           }
         }
