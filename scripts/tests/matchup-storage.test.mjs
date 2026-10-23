@@ -22,10 +22,15 @@ test('all retained versions survive byte-identically, including prices and histo
       fs.writeFileSync(path.join(dir, 'keep.txt'), 'untouched');
     }
     const report = compressMatchupOutput(root);
-    assert.equal(report.files, 4);
+    assert.equal(report.files, 2);
     for (const [file, bytes] of originals) assert.deepEqual(fs.readFileSync(file), bytes);
-    assert.equal(compressMatchupOutput(root, { write: true }).files, 4);
+    assert.equal(compressMatchupOutput(root, { write: true }).files, 2);
     for (const [file, bytes] of originals) {
+      if (path.basename(file) === 'index.json') {
+        assert.deepEqual(fs.readFileSync(file), bytes);
+        assert.equal(fs.existsSync(`${file}.gz`), false);
+        continue;
+      }
       assert.equal(fs.existsSync(file), false);
       assert.deepEqual(gunzipSync(fs.readFileSync(`${file}.gz`)), bytes);
       assert.equal(fs.readFileSync(path.join(path.dirname(file), 'keep.txt'), 'utf8'), 'untouched');
