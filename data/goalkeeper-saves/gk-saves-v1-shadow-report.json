@@ -2,19 +2,19 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 31,
+    "blocked_lines": 36,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 10,
-      "goalkeeper_team_unresolved": 31,
+      "goalkeeper_not_matched_to_lineup": 15,
+      "goalkeeper_team_unresolved": 36,
       "missing_lineup": 21,
-      "missing_priced_edge": 31
+      "missing_priced_edge": 36
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 6,
-    "priced_lines": 156,
+    "eligible_lines": 8,
+    "priced_lines": 199,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 33
+    "value_ladder_lines": 47
   },
   "evidence": {
     "clv": 0.05358,
@@ -33,27 +33,29 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-23T14:26:51.606811+00:00",
+    "checked_at": "2026-10-23T18:43:00.248912+00:00",
     "counts": {
-      "offers_saved": 187
+      "not_fresh_prematch": 11,
+      "offers_saved": 224
     },
-    "saved": 17,
+    "saved": 20,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-23T14:26:51Z",
+  "generated_at": "2026-10-23T18:42:59Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "blocked_or_missing_inputs": 31
+      "blocked_or_missing_inputs": 32,
+      "not_new_fresh_prematch": 11
     },
-    "forecast_fixtures": 57,
-    "forecast_keepers": 112,
-    "generated_at": "2026-10-23T14:26:51.738241+00:00",
-    "last_capture_at": "2026-10-23T14:26:51.738241+00:00",
+    "forecast_fixtures": 61,
+    "forecast_keepers": 120,
+    "generated_at": "2026-10-23T18:43:00.306059+00:00",
+    "last_capture_at": "2026-10-23T18:43:00.306059+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 6,
+    "new_forecasts": 8,
     "new_selections": 0,
     "next_review_at": 50,
     "paired_scores": {
@@ -558,7 +560,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 30,
+      "awaiting_verified_keeper_result": 38,
       "incomplete_or_conflicting_full_match_count": 4,
       "keeper_identity_unresolved": 1,
       "verified_different_starting_keeper": 3
