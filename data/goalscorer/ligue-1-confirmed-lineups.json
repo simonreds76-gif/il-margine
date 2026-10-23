@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-10-23T18:45:00Z",
       "home_team": "Brest",
       "away_team": "Nice",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "3-4-2-1",
       "home_players": [
@@ -29,9 +29,9 @@
       ],
       "away_players": [
         "Yéhvann Diouf",
-        "Mohamed Abdelmonem",
+        "Alidu Seidu",
         "Youssouf Ndayishimiye",
-        "Xavier Mandza",
+        "Mohamed Abdelmonem",
         "Jonathan Clauss",
         "Axel Witsel",
         "Hicham Boudaoui",
@@ -176,15 +176,15 @@
           "shirt_number": "23"
         },
         {
-          "name": "Mohamed Abdelmonem",
+          "name": "Alidu Seidu",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "3-4-2-1",
           "position_id": 33,
-          "player_id": 1179331,
-          "shirt_number": "5"
+          "player_id": 1177779,
+          "shirt_number": "36"
         },
         {
           "name": "Youssouf Ndayishimiye",
@@ -198,15 +198,15 @@
           "shirt_number": "55"
         },
         {
-          "name": "Xavier Mandza",
+          "name": "Mohamed Abdelmonem",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "3-4-2-1",
           "position_id": 37,
-          "player_id": 2116938,
-          "shirt_number": "35"
+          "player_id": 1179331,
+          "shirt_number": "5"
         },
         {
           "name": "Jonathan Clauss",
@@ -286,10 +286,122 @@
           "shirt_number": "11"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Mathieu Patouillet",
+        "Justin Bourgault",
+        "Luck Zogbé",
+        "Joseph Boende",
+        "Mamady Diambou",
+        "Noah Edjouma",
+        "Djylian N'Guessan",
+        "Ibrahim Kanté",
+        "Mathis Laine"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Mathieu Patouillet",
+          "player_id": "1514445",
+          "role_group": "GK"
+        },
+        {
+          "name": "Justin Bourgault",
+          "player_id": "1668289",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Luck Zogbé",
+          "player_id": "1592417",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Joseph Boende",
+          "player_id": "1427018",
+          "role_group": "MID"
+        },
+        {
+          "name": "Mamady Diambou",
+          "player_id": "1231909",
+          "role_group": "MID"
+        },
+        {
+          "name": "Noah Edjouma",
+          "player_id": "1603990",
+          "role_group": "MID"
+        },
+        {
+          "name": "Djylian N'Guessan",
+          "player_id": "1703371",
+          "role_group": "FW"
+        },
+        {
+          "name": "Ibrahim Kanté",
+          "player_id": "1669616",
+          "role_group": "FW"
+        },
+        {
+          "name": "Mathis Laine",
+          "player_id": "2155246",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Teddy Boulhendi",
+        "Hamza Koutoune",
+        "Xavier Mandza",
+        "Djibril Coulibaly",
+        "Morgan Sanson",
+        "Sofiane Diop",
+        "Djelan Morana",
+        "Isak Jansson",
+        "Nathan N'Goumou"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Teddy Boulhendi",
+          "player_id": "1210649",
+          "role_group": "GK"
+        },
+        {
+          "name": "Hamza Koutoune",
+          "player_id": "1796096",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Xavier Mandza",
+          "player_id": "2116938",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Djibril Coulibaly",
+          "player_id": "1763598",
+          "role_group": "MID"
+        },
+        {
+          "name": "Morgan Sanson",
+          "player_id": "355901",
+          "role_group": "MID"
+        },
+        {
+          "name": "Sofiane Diop",
+          "player_id": "953812",
+          "role_group": "MID"
+        },
+        {
+          "name": "Djelan Morana",
+          "player_id": "2140393",
+          "role_group": "FW"
+        },
+        {
+          "name": "Isak Jansson",
+          "player_id": "944385",
+          "role_group": "FW"
+        },
+        {
+          "name": "Nathan N'Goumou",
+          "player_id": "979759",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
         "Brendan Chardonnet",
         "Raphaël Le Guen",
@@ -301,8 +413,8 @@
         "Moïse Bombito",
         "Laurent Abergel"
       ],
-      "observed_at": "2026-10-23T15:04:35.508118+00:00",
-      "changed_at": "2026-10-20T19:12:49.616998+00:00"
+      "observed_at": "2026-10-23T19:12:42.803375+00:00",
+      "changed_at": "2026-10-23T19:12:42.803375+00:00"
     },
     {
       "fotmob_match_id": 5802967,
@@ -605,7 +717,7 @@
         "Nhoa Sangui",
         "Jonathan Ikoné"
       ],
-      "observed_at": "2026-10-23T15:04:35.508118+00:00",
+      "observed_at": "2026-10-23T19:12:42.803375+00:00",
       "changed_at": "2026-10-23T15:04:35.508118+00:00"
     },
     {
@@ -625,7 +737,7 @@
       "home_players": [
         "Anthony Lopes",
         "Carlens Arcus",
-        "Emmanuel Biumla",
+        "Marius Louër",
         "Mael Gernigon",
         "Lilian Rao-Lisoa",
         "Yassin Belkhdim",
@@ -672,15 +784,15 @@
           "shirt_number": "2"
         },
         {
-          "name": "Emmanuel Biumla",
+          "name": "Marius Louër",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-2-3-1",
           "position_id": 34,
-          "player_id": 1428420,
-          "shirt_number": "24"
+          "player_id": 1688980,
+          "shirt_number": "20"
         },
         {
           "name": "Mael Gernigon",
@@ -907,8 +1019,8 @@
         "Noah Mbamba",
         "Isak Steiner Jensen"
       ],
-      "observed_at": "2026-10-23T15:04:35.508118+00:00",
-      "changed_at": "2026-10-22T20:06:37.478811+00:00"
+      "observed_at": "2026-10-23T19:12:42.803375+00:00",
+      "changed_at": "2026-10-23T19:12:42.803375+00:00"
     },
     {
       "fotmob_match_id": 5802965,
@@ -1214,7 +1326,7 @@
         "Adil Bourabaa",
         "Martin Rossignol"
       ],
-      "observed_at": "2026-10-23T15:04:35.508118+00:00",
+      "observed_at": "2026-10-23T19:12:42.803375+00:00",
       "changed_at": "2026-10-22T20:06:37.478811+00:00"
     },
     {
@@ -1517,7 +1629,7 @@
         "Stephan Zagadou",
         "Timothée Pembélé"
       ],
-      "observed_at": "2026-10-23T15:04:35.508118+00:00",
+      "observed_at": "2026-10-23T19:12:42.803375+00:00",
       "changed_at": "2026-10-22T20:06:37.478811+00:00"
     },
     {
@@ -1815,12 +1927,12 @@
         "Stanis Idumbo"
       ],
       "away_unavailable": [
-        "Osame Sahraoui",
         "Tiago Santos",
         "Hamza Igamane",
-        "Ayase Ueda"
+        "Ayase Ueda",
+        "Osame Sahraoui"
       ],
-      "observed_at": "2026-10-23T15:04:35.508118+00:00",
+      "observed_at": "2026-10-23T19:12:42.803375+00:00",
       "changed_at": "2026-10-22T15:16:15.160582+00:00"
     },
     {
@@ -2124,7 +2236,7 @@
         "Joaquín Panichelli",
         "Martial Godo"
       ],
-      "observed_at": "2026-10-23T15:04:35.508118+00:00",
+      "observed_at": "2026-10-23T19:12:42.803375+00:00",
       "changed_at": "2026-10-22T20:06:37.478811+00:00"
     },
     {
@@ -2423,7 +2535,7 @@
         "Ismaël Boura",
         "Yvann Titi"
       ],
-      "observed_at": "2026-10-23T15:04:35.508118+00:00",
+      "observed_at": "2026-10-23T19:12:42.803375+00:00",
       "changed_at": "2026-10-22T20:06:37.478811+00:00"
     },
     {
@@ -2441,7 +2553,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-23T15:04:35.508118+00:00",
+      "observed_at": "2026-10-23T19:12:42.803375+00:00",
       "changed_at": "2026-10-23T15:04:35.508118+00:00"
     }
   ]
