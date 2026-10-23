@@ -10,6 +10,7 @@ const nextInstallRoot = fs.realpathSync(path.dirname(path.dirname(path.dirname(r
 const relativeProjectRoot = path.relative(nextInstallRoot, projectRoot);
 const projectInsideNextInstallRoot =
   relativeProjectRoot === "" || (!relativeProjectRoot.startsWith("..") && !path.isAbsolute(relativeProjectRoot));
+const compressedMatchupOutput = process.env.VERCEL === "1";
 
 const nextConfig: NextConfig = {
   turbopack: {
@@ -95,6 +96,14 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      ...(compressedMatchupOutput ? ["/tennis-matchup/data/:version/:file.json", "/tennis-matchup/data/:version/:file.json.gz"].map(source => ({
+        source,
+        headers: [
+          { key: "Content-Encoding", value: "gzip" },
+          { key: "Content-Type", value: "application/json; charset=utf-8" },
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable, no-transform" },
+        ],
+      })) : []),
       { source: "/football-atlas/fixtures/evidence-:version.json", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] },
       { source: "/manager-atlas/index-:version.json", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] },
       {
@@ -153,10 +162,13 @@ const nextConfig: NextConfig = {
   },
   // /atp-tennis remains a real page with a canonical to /tennis-tips.
   async rewrites() {
-    return [
+    return { beforeFiles: compressedMatchupOutput ? [{
+      source: "/tennis-matchup/data/:version/:file.json",
+      destination: "/tennis-matchup/data/:version/:file.json.gz",
+    }] : [], afterFiles: [
       // Bing Webmaster verification: serve XML with correct Content-Type at exact URL
       { source: "/BingSiteAuth.xml", destination: "/api/bing-auth" },
-    ];
+    ], fallback: [] };
   },
 };
 
