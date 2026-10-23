@@ -1,17 +1,93 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-23T04:58:44Z",
+  "generated_at": "2026-10-23T14:10:52Z",
   "league": "epl",
-  "row_count": 0,
-  "rows": [],
+  "row_count": 1,
+  "rows": [
+    {
+      "date": "2026-10-17",
+      "league": "epl",
+      "review_source": "fotmob_live",
+      "match": "Manchester City vs Ipswich Town",
+      "team": "Ipswich Town",
+      "opponent": "Manchester City",
+      "actual_taker": "Zian Flemming",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "90",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Jack Clarke",
+      "secondary_pre_match": "Jaden Philogene",
+      "tertiary_pre_match": "Julio Enciso",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Zian Flemming took 1 penalty attempt and scored for Ipswich Town vs Manchester City. Primary pre-match: Jack Clarke (unknown). Secondary pre-match: Jaden Philogene (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/epl-penalty-takers.json",
+      "actual_taker_match_status": "Yes - bench, on 78'",
+      "primary_on_pitch_at_penalty": "Unknown - ambiguous substitution order",
+      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "tertiary_on_pitch_at_penalty": "No - started, off 78'",
+      "actual_taker_on_pitch_at_penalty": "Yes - bench, on 78'",
+      "event_evidence": [
+        {
+          "id": "fotmob|epl|5795481|2983018805",
+          "source_event_id": "2983018805",
+          "match_id": "5795481",
+          "source_url": "https://www.fotmob.com/matches/manchester-city-vs-ipswich-town/2sc4e3#5795481",
+          "observed_at": "2026-10-23T14:10:39+00:00",
+          "event_date": "2026-10-17",
+          "season": "2026/27",
+          "team": "Ipswich Town",
+          "taker": "Zian Flemming",
+          "primary": "Jack Clarke",
+          "primary_on_pitch": null,
+          "on_pitch_proof": {
+            "player": "Jack Clarke",
+            "minute": 90,
+            "method": "completed_lineup_timeline",
+            "player_id": 914402,
+            "bucket": "subs",
+            "substitutions": [
+              {
+                "type": "subin",
+                "time": 90
+              }
+            ],
+            "events": [],
+            "reason": "ambiguous_substitution_order"
+          },
+          "minute": 90,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Manchester City vs Ipswich Town",
+          "event_result": "scored"
+        }
+      ]
+    }
+  ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20261017",
+      "20261018",
+      "20261019",
+      "20261020",
       "20261021",
       "20261022",
       "20261023"
     ],
-    "matches_checked": 0
+    "matches_checked": 10
   }
 }
