@@ -13,7 +13,9 @@ export function compressMatchupOutput(root, { write = false } = {}) {
     if (!version.isDirectory() || !/^\d{8}-[a-f0-9]{12}$/.test(version.name)) continue;
     const dir = path.join(base, version.name);
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      if (!entry.isFile() || !/^(index|\d+)\.json$/.test(entry.name)) continue;
+      // Keep the tiny index in plain JSON: existing daily publishing tools use
+      // curl/urllib without content decoding to validate it before promotion.
+      if (!entry.isFile() || !/^\d+\.json$/.test(entry.name)) continue;
       const source = path.join(dir, entry.name);
       const original = fs.readFileSync(source);
       const compressed = gzipSync(original, { level: 9 });

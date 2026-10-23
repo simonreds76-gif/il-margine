@@ -96,7 +96,7 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
-      ...(compressedMatchupOutput ? ["/tennis-matchup/data/:version/:file.json", "/tennis-matchup/data/:version/:file.json.gz"].map(source => ({
+      ...(compressedMatchupOutput ? ["/tennis-matchup/data/:version/:file(\\d+).json", "/tennis-matchup/data/:version/:file(\\d+).json.gz"].map(source => ({
         source,
         headers: [
           { key: "Content-Encoding", value: "gzip" },
@@ -163,7 +163,7 @@ const nextConfig: NextConfig = {
   // /atp-tennis remains a real page with a canonical to /tennis-tips.
   async rewrites() {
     return { beforeFiles: compressedMatchupOutput ? [{
-      source: "/tennis-matchup/data/:version/:file.json",
+      source: "/tennis-matchup/data/:version/:file(\\d+).json",
       destination: "/tennis-matchup/data/:version/:file.json.gz",
     }] : [], afterFiles: [
       // Bing Webmaster verification: serve XML with correct Content-Type at exact URL
