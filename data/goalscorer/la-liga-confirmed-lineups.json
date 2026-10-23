@@ -13,7 +13,7 @@
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
       "home_formation": "5-3-2",
-      "away_formation": "4-3-3",
+      "away_formation": "4-1-4-1",
       "home_players": [
         "Antonio Sivera",
         "Nahuel Tenaglia",
@@ -24,21 +24,21 @@
         "Pablo Ibánez",
         "Antonio Blanco",
         "Carles Aleñá",
-        "Mariano Díaz",
-        "Lucas Boyé"
+        "Lucas Boyé",
+        "Mariano Díaz"
       ],
       "away_players": [
         "Alfonso Herrero",
         "Carlos Puga",
-        "Einar Galilea",
         "Ángel Recio",
+        "Einar Galilea",
         "Rafita",
-        "Carlos Dotor",
         "Ramón Enríquez",
-        "Dani Lorenzo",
         "David Larrubia",
-        "Adrián Nino",
-        "Adam Aznou"
+        "Carlos Dotor",
+        "Dani Lorenzo",
+        "Adam Aznou",
+        "Adrián Niño"
       ],
       "home_starters": [
         {
@@ -141,26 +141,26 @@
           "shirt_number": "10"
         },
         {
-          "name": "Mariano Díaz",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "5-3-2",
-          "position_id": 104,
-          "player_id": 518525,
-          "shirt_number": "9"
-        },
-        {
           "name": "Lucas Boyé",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
           "formation": "5-3-2",
-          "position_id": 106,
+          "position_id": 104,
           "player_id": 561164,
           "shirt_number": "15"
+        },
+        {
+          "name": "Mariano Díaz",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "5-3-2",
+          "position_id": 106,
+          "player_id": 518525,
+          "shirt_number": "9"
         }
       ],
       "away_starters": [
@@ -170,7 +170,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-3-3",
+          "formation": "4-1-4-1",
           "position_id": 11,
           "player_id": 616538,
           "shirt_number": "1"
@@ -181,21 +181,10 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-1-4-1",
           "position_id": 32,
           "player_id": 1668274,
           "shirt_number": "3"
-        },
-        {
-          "name": "Einar Galilea",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 34,
-          "player_id": 516803,
-          "shirt_number": "4"
         },
         {
           "name": "Ángel Recio",
@@ -203,10 +192,21 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 36,
+          "formation": "4-1-4-1",
+          "position_id": 34,
           "player_id": 1260010,
           "shirt_number": "15"
+        },
+        {
+          "name": "Einar Galilea",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-1-4-1",
+          "position_id": 36,
+          "player_id": 516803,
+          "shirt_number": "4"
         },
         {
           "name": "Rafita",
@@ -214,93 +214,118 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-1-4-1",
           "position_id": 38,
           "player_id": 1717331,
           "shirt_number": "31"
         },
         {
-          "name": "Carlos Dotor",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 73,
-          "player_id": 1209421,
-          "shirt_number": "8"
-        },
-        {
           "name": "Ramón Enríquez",
           "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 75,
+          "line_size": 1,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-1-4-1",
+          "position_id": 65,
           "player_id": 1082957,
           "shirt_number": "6"
         },
         {
-          "name": "Dani Lorenzo",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 77,
-          "player_id": 1317624,
-          "shirt_number": "22"
-        },
-        {
           "name": "David Larrubia",
           "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 103,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-1-4-1",
+          "position_id": 82,
           "player_id": 1108863,
           "shirt_number": "10"
         },
         {
-          "name": "Adrián Nino",
+          "name": "Carlos Dotor",
           "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 105,
-          "player_id": 1403695,
-          "shirt_number": "21"
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-1-4-1",
+          "position_id": 84,
+          "player_id": 1209421,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Dani Lorenzo",
+          "line_index": 2,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-1-4-1",
+          "position_id": 86,
+          "player_id": 1317624,
+          "shirt_number": "22"
         },
         {
           "name": "Adam Aznou",
           "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 107,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-1-4-1",
+          "position_id": 88,
           "player_id": 1573563,
           "shirt_number": "39"
+        },
+        {
+          "name": "Adrián Niño",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-1-4-1",
+          "position_id": 115,
+          "player_id": 1403695,
+          "shirt_number": "21"
         }
       ],
       "home_subs": [
+        "Hugo Novoa",
+        "Youssef Enríquez",
+        "Denis Suárez",
+        "Toni Martínez",
+        "Aitor Mañas",
         "Adrián Rodriguez",
         "Rubén Montero",
         "Carlos Protesoni",
-        "Hugo Novoa",
         "Jonny Otto",
         "Xanet Oláiz",
-        "Youssef Enríquez",
-        "Denis Suárez",
         "Selu Diallo",
-        "Aitor Mañas",
-        "Toni Martínez",
         "Miguel Rodríguez"
       ],
       "home_substitute_entries": [
+        {
+          "name": "Hugo Novoa",
+          "player_id": "1175969",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Youssef Enríquez",
+          "player_id": "1403692",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Denis Suárez",
+          "player_id": "282281",
+          "role_group": "MID"
+        },
+        {
+          "name": "Toni Martínez",
+          "player_id": "640123",
+          "role_group": "FW"
+        },
+        {
+          "name": "Aitor Mañas",
+          "player_id": "1553663",
+          "role_group": "FW"
+        },
         {
           "name": "Adrián Rodriguez",
           "player_id": "1136937",
@@ -317,11 +342,6 @@
           "role_group": "DEF"
         },
         {
-          "name": "Hugo Novoa",
-          "player_id": "1175969",
-          "role_group": "DEF"
-        },
-        {
           "name": "Jonny Otto",
           "player_id": "360918",
           "role_group": "DEF"
@@ -332,29 +352,9 @@
           "role_group": "DEF"
         },
         {
-          "name": "Youssef Enríquez",
-          "player_id": "1403692",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Denis Suárez",
-          "player_id": "282281",
-          "role_group": "MID"
-        },
-        {
           "name": "Selu Diallo",
           "player_id": "1431307",
           "role_group": "MID"
-        },
-        {
-          "name": "Aitor Mañas",
-          "player_id": "1553663",
-          "role_group": "FW"
-        },
-        {
-          "name": "Toni Martínez",
-          "player_id": "640123",
-          "role_group": "FW"
         },
         {
           "name": "Miguel Rodríguez",
@@ -363,20 +363,45 @@
         }
       ],
       "away_subs": [
+        "José Salinas",
+        "Rafa Rodríguez",
+        "Juan Berrocal",
+        "Chupe",
+        "Jens-Lys Cajuste",
         "Carlos López",
         "Álex Pastor",
         "Fernando Calero",
-        "José Salinas",
-        "Juan Berrocal",
         "Haitam Abaida",
         "Izan Merino",
-        "Jens-Lys Cajuste",
-        "Rafa Rodríguez",
-        "Chupe",
         "Eneko Jauregi",
         "Juan Fernandez"
       ],
       "away_substitute_entries": [
+        {
+          "name": "José Salinas",
+          "player_id": "1187478",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Rafa Rodríguez",
+          "player_id": "1434474",
+          "role_group": "MID"
+        },
+        {
+          "name": "Juan Berrocal",
+          "player_id": "873838",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Chupe",
+          "player_id": "1669622",
+          "role_group": "FW"
+        },
+        {
+          "name": "Jens-Lys Cajuste",
+          "player_id": "801120",
+          "role_group": "MID"
+        },
         {
           "name": "Carlos López",
           "player_id": "1426161",
@@ -393,16 +418,6 @@
           "role_group": "DEF"
         },
         {
-          "name": "José Salinas",
-          "player_id": "1187478",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Juan Berrocal",
-          "player_id": "873838",
-          "role_group": "DEF"
-        },
-        {
           "name": "Haitam Abaida",
           "player_id": "1220748",
           "role_group": "MID"
@@ -411,21 +426,6 @@
           "name": "Izan Merino",
           "player_id": "1669619",
           "role_group": "MID"
-        },
-        {
-          "name": "Jens-Lys Cajuste",
-          "player_id": "801120",
-          "role_group": "MID"
-        },
-        {
-          "name": "Rafa Rodríguez",
-          "player_id": "1434474",
-          "role_group": "MID"
-        },
-        {
-          "name": "Chupe",
-          "player_id": "1669622",
-          "role_group": "FW"
         },
         {
           "name": "Eneko Jauregi",
@@ -450,8 +450,8 @@
         "Juan Cruz",
         "Julen Lobete"
       ],
-      "observed_at": "2026-10-23T19:11:41.643592+00:00",
-      "changed_at": "2026-10-23T19:11:41.643592+00:00"
+      "observed_at": "2026-10-23T22:14:19.318121+00:00",
+      "changed_at": "2026-10-23T22:14:19.318121+00:00"
     },
     {
       "fotmob_match_id": 5868103,
@@ -755,7 +755,7 @@
         "Pierre-Emerick Aubameyang",
         "Zakaria Eddahchouri"
       ],
-      "observed_at": "2026-10-23T19:11:41.643592+00:00",
+      "observed_at": "2026-10-23T22:14:19.318121+00:00",
       "changed_at": "2026-10-23T15:03:28.578026+00:00"
     },
     {
@@ -1056,7 +1056,7 @@
         "Jofre Carreras",
         "Kike García"
       ],
-      "observed_at": "2026-10-23T19:11:41.643592+00:00",
+      "observed_at": "2026-10-23T22:14:19.318121+00:00",
       "changed_at": "2026-10-23T15:03:28.578026+00:00"
     },
     {
@@ -1358,7 +1358,7 @@
       "away_unavailable": [
         "Marc Aguado"
       ],
-      "observed_at": "2026-10-23T19:11:41.643592+00:00",
+      "observed_at": "2026-10-23T22:14:19.318121+00:00",
       "changed_at": "2026-10-23T12:30:39.808308+00:00"
     },
     {
@@ -1663,7 +1663,7 @@
         "Carlos Romero",
         "Nicolas Pépé"
       ],
-      "observed_at": "2026-10-23T19:11:41.643592+00:00",
+      "observed_at": "2026-10-23T22:14:19.318121+00:00",
       "changed_at": "2026-10-23T15:03:28.578026+00:00"
     },
     {
@@ -1971,7 +1971,7 @@
         "Enes Ünal",
         "Juanmi"
       ],
-      "observed_at": "2026-10-23T19:11:41.643592+00:00",
+      "observed_at": "2026-10-23T22:14:19.318121+00:00",
       "changed_at": "2026-10-23T19:11:41.643592+00:00"
     },
     {
@@ -2277,7 +2277,7 @@
         "Raúl Asencio",
         "Vinícius Júnior"
       ],
-      "observed_at": "2026-10-23T19:11:41.643592+00:00",
+      "observed_at": "2026-10-23T22:14:19.318121+00:00",
       "changed_at": "2026-10-22T20:05:46.483444+00:00"
     },
     {
@@ -2582,7 +2582,7 @@
         "Facundo Bernal",
         "Juan Hernández"
       ],
-      "observed_at": "2026-10-23T19:11:41.643592+00:00",
+      "observed_at": "2026-10-23T22:14:19.318121+00:00",
       "changed_at": "2026-10-22T15:15:19.209035+00:00"
     },
     {
@@ -2885,7 +2885,7 @@
         "Adrián De La Fuente",
         "Enzo Bardeli"
       ],
-      "observed_at": "2026-10-23T19:11:41.643592+00:00",
+      "observed_at": "2026-10-23T22:14:19.318121+00:00",
       "changed_at": "2026-10-22T20:05:46.483444+00:00"
     },
     {
@@ -3189,7 +3189,7 @@
         "Jorge Herrando",
         "Romain Del Castillo"
       ],
-      "observed_at": "2026-10-23T19:11:41.643592+00:00",
+      "observed_at": "2026-10-23T22:14:19.318121+00:00",
       "changed_at": "2026-10-23T19:11:41.643592+00:00"
     }
   ]
