@@ -1,11 +1,201 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-24T13:55:18.186701+00:00",
+  "generatedAt": "2026-10-24T14:04:49.453590+00:00",
   "coverageStart": "2026-10-17",
   "checkedThrough": "2026-10-24",
   "captureStatus": "complete",
-  "matchesChecked": 51,
+  "matchesChecked": 52,
   "articles": [
+    {
+      "id": "fotmob:5868107:2986532883",
+      "slug": "2026-10-24-pathe-ciss-5868107-2986532883",
+      "matchId": "5868107",
+      "eventId": "2986532883",
+      "date": "2026-10-24",
+      "kickoff": "2026-10-24T12:00:00.000Z",
+      "league": "la-liga",
+      "leagueLabel": "La Liga",
+      "round": "10",
+      "player": "Pathé Ciss",
+      "playerId": 872396,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/872396.png",
+      "club": "Rayo Vallecano",
+      "clubSlug": "rayo-vallecano",
+      "clubUrl": "/penalty-takers/la-liga/rayo-vallecano",
+      "crest": "/team-logos/la-liga/rayo-vallecano.png",
+      "opponent": "Elche",
+      "home": "Rayo Vallecano",
+      "away": "Elche",
+      "homeScore": 0,
+      "awayScore": 3,
+      "minute": "39",
+      "outcome": "woodwork",
+      "title": "Pathé Ciss hits the woodwork from the spot against Elche",
+      "sentences": [
+        "Pathé Ciss hit the woodwork with a penalty for Rayo Vallecano in minute 39 against Elche.",
+        "The match finished Rayo Vallecano 0–3 Elche."
+      ],
+      "cause": "handball",
+      "incident": {
+        "type": "handball",
+        "wonBy": null,
+        "concededBy": "Buba Sangaré",
+        "sentence": "The penalty was awarded for a handball by Buba Sangaré.",
+        "evidenceIds": [
+          "2986530113"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 0,
+        "shots": 1,
+        "onTarget": 0,
+        "chances": 2
+      },
+      "keeper": null,
+      "moment": null,
+      "paragraphs": [
+        "Pathé Ciss hit the woodwork with a penalty in the 39th minute of Rayo Vallecano’s 0–3 defeat to Elche.",
+        "The penalty was awarded for a handball by Buba Sangaré.",
+        "Pathé Ciss finished with 0 goals and 1 shot, including 0 on target, in 90 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/rayo-vallecano-vs-elche/2vf3sr#5868107",
+      "eventHash": "34c7b91f02ef5303579ca7d76c10368b34538ace0692a97fa79298109792cac7",
+      "sourceHash": "93fa424d511f620ab2eed82fd7f7c5f0b2f7d3c18b14d2d54f35a4b5a819408e",
+      "publishedAt": "2026-10-24T14:04:49.453590+00:00",
+      "updatedAt": "2026-10-24T14:04:49.453590+00:00"
+    },
+    {
+      "id": "fotmob:5868107:2986528397",
+      "slug": "2026-10-24-fer-nino-5868107-2986528397",
+      "matchId": "5868107",
+      "eventId": "2986528397",
+      "date": "2026-10-24",
+      "kickoff": "2026-10-24T12:00:00.000Z",
+      "league": "la-liga",
+      "leagueLabel": "La Liga",
+      "round": "10",
+      "player": "Fer Niño",
+      "playerId": 1127224,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/1127224.png",
+      "club": "Elche",
+      "clubSlug": "elche",
+      "clubUrl": "/penalty-takers/la-liga/elche",
+      "crest": "/team-logos/la-liga/elche.png",
+      "opponent": "Rayo Vallecano",
+      "home": "Rayo Vallecano",
+      "away": "Elche",
+      "homeScore": 0,
+      "awayScore": 3,
+      "minute": "36",
+      "outcome": "scored",
+      "title": "Fer Niño scores from the spot against Rayo Vallecano",
+      "sentences": [
+        "Fer Niño converted a penalty for Elche in minute 36 against Rayo Vallecano.",
+        "The match finished Rayo Vallecano 0–3 Elche."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Thomas Lemar",
+        "concededBy": "Pathé Ciss",
+        "sentence": "Thomas Lemar won the penalty after a foul by Pathé Ciss inside the area.",
+        "evidenceIds": [
+          "2986526633",
+          "2986526535"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 61,
+        "goals": 1,
+        "shots": 3,
+        "onTarget": 1,
+        "chances": 0
+      },
+      "keeper": "Emil Audero",
+      "moment": {
+        "before": [
+          0,
+          1
+        ],
+        "after": [
+          0,
+          2
+        ]
+      },
+      "paragraphs": [
+        "Fer Niño converted a penalty in the 36th minute of Elche’s 3–0 win over Rayo Vallecano.",
+        "Thomas Lemar won the penalty after a foul by Pathé Ciss inside the area. The goal extended the lead at 2–0.",
+        "Fer Niño finished with 1 goal and 3 shots, including 1 on target, in 61 minutes. Elche took 2 penalties in the match and converted 2. The attempts were shared by Federico Redondo and Fer Niño."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/rayo-vallecano-vs-elche/2vf3sr#5868107",
+      "eventHash": "ee2f71d16e377f171c654475d6a29eef556a33da7b9ca6438b152dc1aaad338b",
+      "sourceHash": "a48bd499c4007d9519c339a81798e1e5235941228b69759b83d4ad25466f80e5",
+      "publishedAt": "2026-10-24T14:04:49.453590+00:00",
+      "updatedAt": "2026-10-24T14:04:49.453590+00:00"
+    },
+    {
+      "id": "fotmob:5868107:2986515813",
+      "slug": "2026-10-24-federico-redondo-5868107-2986515813",
+      "matchId": "5868107",
+      "eventId": "2986515813",
+      "date": "2026-10-24",
+      "kickoff": "2026-10-24T12:00:00.000Z",
+      "league": "la-liga",
+      "leagueLabel": "La Liga",
+      "round": "10",
+      "player": "Federico Redondo",
+      "playerId": 1277343,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/1277343.png",
+      "club": "Elche",
+      "clubSlug": "elche",
+      "clubUrl": "/penalty-takers/la-liga/elche",
+      "crest": "/team-logos/la-liga/elche.png",
+      "opponent": "Rayo Vallecano",
+      "home": "Rayo Vallecano",
+      "away": "Elche",
+      "homeScore": 0,
+      "awayScore": 3,
+      "minute": "23",
+      "outcome": "scored",
+      "title": "Federico Redondo scores from the spot against Rayo Vallecano",
+      "sentences": [
+        "Federico Redondo converted a penalty for Elche in minute 23 against Rayo Vallecano.",
+        "The match finished Rayo Vallecano 0–3 Elche."
+      ],
+      "cause": null,
+      "incident": null,
+      "stats": {
+        "minutes": 83,
+        "goals": 1,
+        "shots": 1,
+        "onTarget": 1,
+        "chances": 0
+      },
+      "keeper": "Emil Audero",
+      "moment": {
+        "before": [
+          0,
+          0
+        ],
+        "after": [
+          0,
+          1
+        ]
+      },
+      "paragraphs": [
+        "Federico Redondo converted a penalty in the 23rd minute of Elche’s 3–0 win over Rayo Vallecano.",
+        "The goal put the team ahead at 1–0.",
+        "Federico Redondo finished with 1 goal and 1 shot, including 1 on target, in 83 minutes. Elche took 2 penalties in the match and converted 2. The attempts were shared by Federico Redondo and Fer Niño."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/rayo-vallecano-vs-elche/2vf3sr#5868107",
+      "eventHash": "545a34004661064689d5dbc5fe64ff9cb0bee249c6ca9654ee19f12e8bdf560b",
+      "sourceHash": "239058ccb3004bb9933d1029e290243d0a1e8a8dd878e8388b0f231cc883dbbe",
+      "publishedAt": "2026-10-24T14:04:49.453590+00:00",
+      "updatedAt": "2026-10-24T14:04:49.453590+00:00"
+    },
     {
       "id": "fotmob:5802966:2986220703",
       "slug": "2026-10-23-kenny-lala-5802966-2986220703",
