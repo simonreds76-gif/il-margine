@@ -1,3 +1,4 @@
+import AceCompassPanel from "@/components/model-monitor/AceCompassPanel";
 import { promises as fs } from "fs";
 import path from "path";
 import { Fragment } from "react";
@@ -2479,6 +2480,7 @@ export default async function TennisPropsMonitorPage({ searchParams }: { searchP
             <StatusPill label="Shadow only until settled" tone="border-amber-500/25 bg-amber-500/10 text-amber-300" />
           </div>
         </HeroCard>
+        <AceCompassPanel />
 
         <section className="my-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-7">
           <StatCard label="Verdict" value={bettableRows.length ? `${bettableRows.length} BET NOW` : "NO BET"} detail={`${nearMissRows.length} near miss / ${blockedExamples.length} blocked`} tone={bettableRows.length ? "text-emerald-300" : "text-amber-300"} />
