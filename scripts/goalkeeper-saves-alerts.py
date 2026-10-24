@@ -101,7 +101,7 @@ def message(row):
     return ('<b>GK saves | New tracked signal</b>\n\n'
         f"<b>{e('home_team')} vs {e('away_team')}</b>\n"
         f"{e('goalkeeper')} - {e('side').title()} {e('line')} saves\n"
-        f"Bet365 recorded odds: <b>{float(row['odds_decimal']):.2f}</b>\n"
+        f"{html.escape(str(row.get('bookmaker') or 'Bet365'))} recorded odds: <b>{float(row['odds_decimal']):.2f}</b>\n"
         f"Fair odds at capture: {float(row['fair_odds']):.2f} | Estimated EV: +{float(row['edge'])*100:.1f}%\n"
         f"Kickoff: {e('kickoff_at')}\nCaptured: {e('captured_at')}\n"
         f"Lineup: {e('lineup_status').replace('_',' ')}\n\n"

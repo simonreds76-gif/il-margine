@@ -59,6 +59,49 @@ class GoalscorerLivePenaltyReviewTests(unittest.TestCase):
         self.assertIs(MODULE._on_pitch_at(lineup, "First Player", 80)[0], False)
         self.assertIsNone(MODULE._on_pitch_at(lineup, "First Player", 70)[0])
 
+    def test_live_feed_proves_availability_only_through_observed_clock(self):
+        lineup = self.lineup()
+        lineup['starters'][0]['performance'] = {}
+        lineup['subs'] = [{'id': 12, 'name': 'Backup Player'}]
+        content = {'lineup': {'lineupType': 'standard'}, 'matchFacts': {'events': {'ongoing': True, 'events': [
+            {'type': 'Half', 'time': 45},
+            {'type': 'Substitution', 'time': 30, 'isHome': True, 'swap': [{'id': 12}, {'id': 1}]},
+        ]}}}
+        status = {'started': True, 'ongoing': True, 'finished': False, 'liveTime': {'maxTime': 51}}
+        rebuilt = MODULE._attach_match_timeline(lineup, content, True, False, status)
+        present, proof = MODULE._on_pitch_at(rebuilt, 'First Player', 23)
+        self.assertTrue(present)
+        self.assertEqual(proof['method'], 'live_lineup_timeline')
+        self.assertFalse(rebuilt['_complete_match_timeline'])
+        self.assertFalse(MODULE._on_pitch_at(rebuilt, 'First Player', 36)[0])
+        self.assertTrue(MODULE._on_pitch_at(rebuilt, 'Backup Player', 36)[0])
+        self.assertIsNone(MODULE._on_pitch_at(rebuilt, 'Backup Player', 30)[0])
+        self.assertIsNone(MODULE._on_pitch_at(rebuilt, 'Backup Player', 46)[0])
+        self.assertNotIn('substitutionEvents', lineup['starters'][0]['performance'])
+
+    def test_live_feed_requires_actual_lineup_clock_and_complete_event_shapes(self):
+        import copy
+        lineup = self.lineup()
+        lineup['starters'][0]['performance'] = {}
+        content = {'lineup': {'lineupType': 'standard'}, 'matchFacts': {'events': {'ongoing': True, 'events': [
+            {'type': 'Half', 'time': 45}]}}}
+        status = {'started': True, 'ongoing': True, 'finished': False, 'liveTime': {'maxTime': 45}}
+        cases = []
+        predicted = copy.deepcopy(content)
+        predicted['lineup']['lineupType'] = 'predicted'
+        cases.append((predicted, status))
+        cases.append((content, {}))
+        for event in [{'type':'Substitution','time':20,'isHome':True,'swap':[{},{}]},
+                      {'type':'Card','time':20,'isHome':True,'card':'Red','playerId':999},
+                      {'type':'Card','time':20,'card':'Red','playerId':1}]:
+            broken = copy.deepcopy(content)
+            broken['matchFacts']['events']['events'].append(event)
+            cases.append((broken, status))
+        for feed, clock in cases:
+            with self.subTest(feed=feed, clock=clock):
+                rebuilt = MODULE._attach_match_timeline(lineup, feed, True, False, clock)
+                self.assertIsNone(MODULE._on_pitch_at(rebuilt, 'First Player', 23)[0])
+
     def test_predicted_starter_or_missing_timeline_never_proves_availability(self):
         self.assertIsNone(MODULE._on_pitch_at({"primary_lineup_status": "confirmed_starter"}, "First Player", 30)[0])
         lineup = self.lineup()

@@ -108,7 +108,7 @@ jobs:
         run: |
           TEAM_ARGS=(--all-leagues --bookmakers "Bet365,Kambi")
           CORNER_ARGS=()
-          GK_ARGS=(--bookmaker "Bet365")
+          GK_ARGS=(--bookmakers "Bet365,Kambi")
           if [[ "$EVENT_NAME" == "schedule" && "$SCHEDULE_EXPR" != "15 8 * * *" ]]; then
             TEAM_ARGS+=(--days-ahead 2 --kickoff-within-minutes 1440 --max-events-per-league 10 --max-odds-requests-per-league 1 --max-odds-api-http-requests 9)
             CORNER_ARGS+=(--bucket-hours 1 --kickoff-within-minutes 90)

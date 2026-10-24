@@ -66,15 +66,15 @@ class FootballDailySignalDigestTests(unittest.TestCase):
         ]
         self.assertEqual(MODULE.count_candidates(rows, "2026-08-27", "team_shots_v4"), [])
 
-    def test_goalkeeper_lane_keeps_eligible_and_positive_value_ladder(self):
+    def test_goalkeeper_lane_keeps_signals_but_excludes_positive_value_ladder(self):
         rows = [
             gk_row(),
             gk_row(line="4.5", odds_decimal="4.00", edge="0.08", candidate_status="value_ladder"),
             gk_row(line="5.5", edge="-0.01", candidate_status="no_value"),
         ]
         result = MODULE.goalkeeper_candidates(rows, "2026-08-27")
-        self.assertEqual(len(result), 2)
-        self.assertEqual({row["status"] for row in result}, {"SHADOW", "VALUE LADDER"})
+        self.assertEqual(len(result), 1)
+        self.assertEqual({row["status"] for row in result}, {"SHADOW"})
 
     def test_sent_candidates_are_not_repeated(self):
         groups = {"TEAM SHOTS V4": [{"id": "sent"}, {"id": "new"}]}
@@ -87,7 +87,7 @@ class FootballDailySignalDigestTests(unittest.TestCase):
                           edge="0.105983", captured_at="2026-08-26T20:34:12Z")
         before = copy.deepcopy(original)
         latest = gk_row(odds_decimal="2.625", fair_odds="2.549", edge="0.029826",
-                        candidate_status="value_ladder", captured_at="2026-08-27T15:00:37Z")
+                        candidate_status="eligible_shadow", captured_at="2026-08-27T15:00:37Z")
         row = MODULE.goalkeeper_candidates([latest], "2026-08-27", [original])[0]
         message = MODULE.candidate_block(row)
         self.assertIn("TRACKED: LATEST VIEW", message)
@@ -106,9 +106,9 @@ class FootballDailySignalDigestTests(unittest.TestCase):
         ambiguous = MODULE.goalkeeper_candidates([gk_row()], "2026-08-27", [original, original])[0]
         self.assertIsNone(ambiguous["original"])
 
-    def test_untracked_ladder_is_not_presented_as_new_selection(self):
-        row = MODULE.goalkeeper_candidates([gk_row(candidate_status="value_ladder")], "2026-08-27")[0]
-        self.assertIn("not a new tracked selection", MODULE.candidate_block(row))
+    def test_even_previously_tracked_ladder_is_not_sent_as_update(self):
+        latest = gk_row(candidate_status="value_ladder")
+        self.assertEqual(MODULE.goalkeeper_candidates([latest], "2026-08-27", [gk_row(status="pending")]), [])
 
     def test_rendered_messages_respect_telegram_limit(self):
         rows = []
