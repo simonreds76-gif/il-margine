@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T12:06:14.515450Z",
+  "generated_at": "2026-10-24T13:21:57.758056Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -35,18 +35,470 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 41,
-  "signals_qualifying": 0,
+  "fixtures_evaluated": 39,
+  "signals_qualifying": 5,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 64
+    "incomplete_prediction_roster": 47,
+    "lineup_not_public_quality": 1,
+    "market_odds_above_cap": 2,
+    "low_signal_confidence": 1,
+    "model_probability_below_floor": 2,
+    "model_market_gap_gt_10pp": 2
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 0,
-    "added_by_league": {},
+    "eligible_rows": 2,
+    "added_by_league": {
+      "bundesliga": 2
+    },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [],
-  "featured_signal_id": null,
-  "signals": []
+  "leagues_covered": [
+    "bundesliga",
+    "la-liga"
+  ],
+  "featured_signal_id": "20261024-roberto-fernandez-0dc4f8cc85",
+  "signals": [
+    {
+      "id": "20261024-roberto-fernandez-0dc4f8cc85",
+      "match": {
+        "home_team": "Racing Santander",
+        "away_team": "Espanyol Barcelona",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-10-24T14:15:00Z",
+        "kickoff_display": "Sat 24 Oct 15:15 UK",
+        "fotmob_match_id": "5868106",
+        "fotmob_page_url": "/matches/espanyol-vs-racing-santander/2gmqyl#5868106",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Roberto Fernandez",
+        "team": "Espanyol",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/la-liga/espanyol.png",
+        "team_primary_color": "#2563eb",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 50.0,
+        "fair_odds": 2.0
+      },
+      "market_data": {
+        "best_odds": 2.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 40.0
+      },
+      "edge": {
+        "price_gap_pp": 10.0,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 94
+        },
+        "share_of_team_chances_pct": 48,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 24
+        },
+        "recent_team_form": {
+          "tier": "Unknown"
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 98
+        },
+        "opponent_recent_defence": {
+          "tier": "Unknown"
+        },
+        "fixture_boost_pct": 35,
+        "projected_minutes": 85,
+        "penalty_role": "Primary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20261024-anton-kade-0d3bf27e49",
+      "match": {
+        "home_team": "FC Augsburg",
+        "away_team": "Union Berlin",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "league_logo_path": "/league-logos/bundesliga.png",
+        "kickoff_utc": "2026-10-24T13:30:00Z",
+        "kickoff_display": "Sat 24 Oct 14:30 UK",
+        "fotmob_match_id": "5881197",
+        "fotmob_page_url": "/matches/union-berlin-vs-augsburg/29lgzs#5881197",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Anton Kade",
+        "team": "Augsburg",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/bundesliga/augsburg.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#dc2626",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 43.1,
+        "fair_odds": 2.32
+      },
+      "market_data": {
+        "best_odds": 2.88,
+        "best_book": "Bet365",
+        "implied_chance_pct": 34.8
+      },
+      "edge": {
+        "price_gap_pp": 8.3,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 97
+        },
+        "share_of_team_chances_pct": 25,
+        "share_of_team_chances_percentile": 94,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 88
+        },
+        "recent_team_form": {
+          "tier": "Quiet",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-10-17",
+          "xg_for_avg": 1.74,
+          "xg_against_avg": 3.06,
+          "xgd_per90": -1.31,
+          "shots_for_avg": 14.6,
+          "shots_against_avg": 24.2,
+          "sot_for_avg": 5.8,
+          "sot_against_avg": 8.4,
+          "corners_for_avg": 5.0,
+          "corners_against_avg": 7.6
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 88
+        },
+        "opponent_recent_defence": {
+          "tier": "High",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-10-17",
+          "xg_for_avg": 0.96,
+          "xg_against_avg": 2.4,
+          "xgd_per90": -1.44,
+          "shots_for_avg": 11.6,
+          "shots_against_avg": 16.0,
+          "sot_for_avg": 3.2,
+          "sot_against_avg": 7.8,
+          "corners_for_avg": 3.8,
+          "corners_against_avg": 6.6
+        },
+        "fixture_boost_pct": 27,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20261024-marius-bulter-51be961eac",
+      "match": {
+        "home_team": "1. FC Cologne",
+        "away_team": "Schalke 04",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "league_logo_path": "/league-logos/bundesliga.png",
+        "kickoff_utc": "2026-10-24T13:30:00Z",
+        "kickoff_display": "Sat 24 Oct 14:30 UK",
+        "fotmob_match_id": "5881199",
+        "fotmob_page_url": "/matches/1-fc-koln-vs-schalke-04/2ygyzm#5881199",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Marius Bulter",
+        "team": "FC Cologne",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/bundesliga/fc-cologne.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#dc2626",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 40.6,
+        "fair_odds": 2.46
+      },
+      "market_data": {
+        "best_odds": 3.1,
+        "best_book": "Bet365",
+        "implied_chance_pct": 32.3
+      },
+      "edge": {
+        "price_gap_pp": 8.4,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 95
+        },
+        "share_of_team_chances_pct": 21,
+        "share_of_team_chances_percentile": 92,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 83
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-10-16",
+          "xg_for_avg": 1.76,
+          "xg_against_avg": 1.75,
+          "xgd_per90": 0.01,
+          "shots_for_avg": 15.8,
+          "shots_against_avg": 15.8,
+          "sot_for_avg": 5.2,
+          "sot_against_avg": 6.8,
+          "corners_for_avg": 6.0,
+          "corners_against_avg": 6.2
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 90
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-10-17",
+          "xg_for_avg": 1.1,
+          "xg_against_avg": 1.58,
+          "xgd_per90": -0.48,
+          "shots_for_avg": 10.0,
+          "shots_against_avg": 13.2,
+          "sot_for_avg": 3.2,
+          "sot_against_avg": 4.8,
+          "corners_for_avg": 3.0,
+          "corners_against_avg": 5.4
+        },
+        "fixture_boost_pct": -1,
+        "projected_minutes": 85,
+        "penalty_role": "Secondary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20261024-ezechiel-banzuzi-8519a11648",
+      "match": {
+        "home_team": "RB Leipzig",
+        "away_team": "SV 07 Elversberg",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "league_logo_path": "/league-logos/bundesliga.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-10-24",
+        "fotmob_match_id": "",
+        "fotmob_page_url": "",
+        "lineup_type": "",
+        "venue": ""
+      },
+      "player": {
+        "name": "Ezechiel Banzuzi",
+        "team": "RasenBallsport Leipzig",
+        "position": "MID",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/bundesliga/rasenballsport-leipzig.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#dc2626",
+        "team_shirt_pattern": "sash"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 39.8,
+        "fair_odds": 2.51
+      },
+      "market_data": {
+        "best_odds": 3.25,
+        "best_book": "Bet365",
+        "implied_chance_pct": 30.8
+      },
+      "edge": {
+        "price_gap_pp": 9.1,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 92
+        },
+        "share_of_team_chances_pct": 19,
+        "share_of_team_chances_percentile": 89,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 99
+        },
+        "recent_team_form": {
+          "tier": "Quiet",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-10-17",
+          "xg_for_avg": 1.99,
+          "xg_against_avg": 2.57,
+          "xgd_per90": -0.58,
+          "shots_for_avg": 16.4,
+          "shots_against_avg": 17.4,
+          "sot_for_avg": 5.6,
+          "sot_against_avg": 8.6,
+          "corners_for_avg": 5.2,
+          "corners_against_avg": 7.0
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 99
+        },
+        "opponent_recent_defence": {
+          "tier": "Unknown"
+        },
+        "fixture_boost_pct": 50,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20261024-yussuf-poulsen-ec2a26da5b",
+      "match": {
+        "home_team": "SC Paderborn 07",
+        "away_team": "Hamburger SV",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "league_logo_path": "/league-logos/bundesliga.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-10-24",
+        "fotmob_match_id": "",
+        "fotmob_page_url": "",
+        "lineup_type": "",
+        "venue": ""
+      },
+      "player": {
+        "name": "Yussuf Poulsen",
+        "team": "Hamburger SV",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/bundesliga/hamburger-sv.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#1d4ed8",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 37.7,
+        "fair_odds": 2.65
+      },
+      "market_data": {
+        "best_odds": 3.25,
+        "best_book": "Bet365",
+        "implied_chance_pct": 30.8
+      },
+      "edge": {
+        "price_gap_pp": 7.0,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 99
+        },
+        "share_of_team_chances_pct": 35,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 26
+        },
+        "recent_team_form": {
+          "tier": "Unknown"
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 92
+        },
+        "opponent_recent_defence": {
+          "tier": "Unknown"
+        },
+        "fixture_boost_pct": 11,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    }
+  ]
 }

@@ -9,14 +9,14 @@
       "kickoff_utc": "2026-10-24T13:30:00Z",
       "home_team": "1. FC Köln",
       "away_team": "Schalke 04",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "3-4-2-1",
       "home_players": [
         "Marvin Schwäbe",
-        "Alessio Castro-Montes",
+        "Sebastian Sebulonsen",
         "Jahmai Simpson-Pusey",
         "Luka Lochoshvili",
         "Borna Sosa",
@@ -32,7 +32,7 @@
         "Timo Becker",
         "Nikola Katić",
         "Hasan Kuruçay",
-        "Adrian Gantenbein",
+        "Junior Dina Ebimbe",
         "Soufian El-Faouzi",
         "Satoshi Tanaka",
         "Robin Gosens",
@@ -53,15 +53,15 @@
           "shirt_number": "1"
         },
         {
-          "name": "Alessio Castro-Montes",
+          "name": "Sebastian Sebulonsen",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-2-3-1",
           "position_id": 32,
-          "player_id": 748620,
-          "shirt_number": "17"
+          "player_id": 936140,
+          "shirt_number": "28"
         },
         {
           "name": "Jahmai Simpson-Pusey",
@@ -209,15 +209,15 @@
           "shirt_number": "4"
         },
         {
-          "name": "Adrian Gantenbein",
+          "name": "Junior Dina Ebimbe",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
           "formation": "3-4-2-1",
           "position_id": 62,
-          "player_id": 1179182,
-          "shirt_number": "17"
+          "player_id": 1040889,
+          "shirt_number": "29"
         },
         {
           "name": "Soufian El-Faouzi",
@@ -286,10 +286,122 @@
           "shirt_number": "7"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Ron-Robert Zieler",
+        "Alessio Castro-Montes",
+        "Gideon Mensah",
+        "Joël Schmied",
+        "Jan Thielmann",
+        "Malek El Mala",
+        "Paul Okon-Engstler",
+        "Gian-Luca Waldschmidt",
+        "Reigan Heskey"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Ron-Robert Zieler",
+          "player_id": "41087",
+          "role_group": "GK"
+        },
+        {
+          "name": "Alessio Castro-Montes",
+          "player_id": "748620",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Gideon Mensah",
+          "player_id": "771630",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Joël Schmied",
+          "player_id": "1003254",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Jan Thielmann",
+          "player_id": "1119643",
+          "role_group": "MID"
+        },
+        {
+          "name": "Malek El Mala",
+          "player_id": "1640790",
+          "role_group": "MID"
+        },
+        {
+          "name": "Paul Okon-Engstler",
+          "player_id": "1527363",
+          "role_group": "MID"
+        },
+        {
+          "name": "Gian-Luca Waldschmidt",
+          "player_id": "540073",
+          "role_group": "FW"
+        },
+        {
+          "name": "Reigan Heskey",
+          "player_id": "1665352",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Kevin Müller",
+        "Mertcan Ayhan",
+        "Finn Porath",
+        "Janik Bachmann",
+        "Luca Vozar",
+        "Vitalie Becker",
+        "Bryan Lasme",
+        "Edin Džeko",
+        "Jean-Paul Ndiaye"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Kevin Müller",
+          "player_id": "215159",
+          "role_group": "GK"
+        },
+        {
+          "name": "Mertcan Ayhan",
+          "player_id": "1755657",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Finn Porath",
+          "player_id": "721091",
+          "role_group": "MID"
+        },
+        {
+          "name": "Janik Bachmann",
+          "player_id": "560976",
+          "role_group": "MID"
+        },
+        {
+          "name": "Luca Vozar",
+          "player_id": "1842512",
+          "role_group": "MID"
+        },
+        {
+          "name": "Vitalie Becker",
+          "player_id": "1659420",
+          "role_group": "MID"
+        },
+        {
+          "name": "Bryan Lasme",
+          "player_id": "815566",
+          "role_group": "FW"
+        },
+        {
+          "name": "Edin Džeko",
+          "player_id": "15403",
+          "role_group": "FW"
+        },
+        {
+          "name": "Jean-Paul Ndiaye",
+          "player_id": "1975808",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
         "Rav van den Berg",
         "Timo Hübers",
@@ -301,14 +413,13 @@
       "away_unavailable": [
         "Maximilian Wöber",
         "Ayman Gülasi",
-        "Bryan Lasme",
         "Dejan Ljubičić",
         "Kenan Karaman",
         "Ron Schallenberg",
         "Moussa Sylla"
       ],
-      "observed_at": "2026-10-24T12:05:11.658189+00:00",
-      "changed_at": "2026-10-23T15:04:01.422898+00:00"
+      "observed_at": "2026-10-24T13:20:50.455407+00:00",
+      "changed_at": "2026-10-24T13:20:50.455407+00:00"
     },
     {
       "fotmob_match_id": 5881197,
@@ -319,17 +430,17 @@
       "kickoff_utc": "2026-10-24T13:30:00Z",
       "home_team": "Augsburg",
       "away_team": "Union Berlin",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
-      "away_formation": "4-4-2",
+      "away_formation": "4-2-3-1",
       "home_players": [
         "Finn Dahmen",
         "Juma Bah",
         "Chrislain Matsima",
         "Calvin Brackelmann",
-        "Robin Fellhauer",
+        "Marius Wolf",
         "Han-Noah Massengo",
         "Fabian Rieder",
         "Hennes Behrens",
@@ -343,11 +454,11 @@
         "Zeno Van Den Bosch",
         "Felix Uduokhai",
         "Tom Rothe",
-        "Michel Aebischer",
         "András Schäfer",
         "Rani Khedira",
-        "Kastriot Imeri",
         "Woo-Yeong Jeong",
+        "Michel Aebischer",
+        "Livan Burcu",
         "Tim Skarke"
       ],
       "home_starters": [
@@ -396,15 +507,15 @@
           "shirt_number": "2"
         },
         {
-          "name": "Robin Fellhauer",
+          "name": "Marius Wolf",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
           "formation": "3-4-2-1",
           "position_id": 62,
-          "player_id": 1185609,
-          "shirt_number": "19"
+          "player_id": 556029,
+          "shirt_number": "27"
         },
         {
           "name": "Han-Noah Massengo",
@@ -480,7 +591,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 11,
           "player_id": 186557,
           "shirt_number": "1"
@@ -491,7 +602,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 32,
           "player_id": 304354,
           "shirt_number": "19"
@@ -502,7 +613,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 34,
           "player_id": 1231677,
           "shirt_number": "4"
@@ -513,7 +624,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 36,
           "player_id": 767800,
           "shirt_number": "2"
@@ -524,82 +635,194 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 38,
           "player_id": 1282582,
           "shirt_number": "15"
         },
         {
-          "name": "Michel Aebischer",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 72,
-          "player_id": 792756,
-          "shirt_number": "20"
-        },
-        {
           "name": "András Schäfer",
           "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 74,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
           "player_id": 836726,
           "shirt_number": "13"
         },
         {
           "name": "Rani Khedira",
           "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 76,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
           "player_id": 304348,
           "shirt_number": "8"
         },
         {
-          "name": "Kastriot Imeri",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 78,
-          "player_id": 852049,
-          "shirt_number": "30"
-        },
-        {
           "name": "Woo-Yeong Jeong",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 104,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
           "player_id": 949673,
           "shirt_number": "11"
         },
         {
-          "name": "Tim Skarke",
+          "name": "Michel Aebischer",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 792756,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Livan Burcu",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 1520506,
+          "shirt_number": "9"
+        },
+        {
+          "name": "Tim Skarke",
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 106,
+          "formation": "4-2-3-1",
+          "position_id": 115,
           "player_id": 658440,
           "shirt_number": "21"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Nediljko Labrović",
+        "Jeffrey Gouweleeuw",
+        "Young-Woo Seol",
+        "Mert Kömür",
+        "Robin Fellhauer",
+        "Tim Schnitzer",
+        "Yannik Keitel",
+        "Rodrigo Ribeiro",
+        "Uchenna Ogundu"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Nediljko Labrović",
+          "player_id": "1284464",
+          "role_group": "GK"
+        },
+        {
+          "name": "Jeffrey Gouweleeuw",
+          "player_id": "245315",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Young-Woo Seol",
+          "player_id": "1132818",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Mert Kömür",
+          "player_id": "1453218",
+          "role_group": "MID"
+        },
+        {
+          "name": "Robin Fellhauer",
+          "player_id": "1185609",
+          "role_group": "MID"
+        },
+        {
+          "name": "Tim Schnitzer",
+          "player_id": "1875448",
+          "role_group": "MID"
+        },
+        {
+          "name": "Yannik Keitel",
+          "player_id": "844431",
+          "role_group": "MID"
+        },
+        {
+          "name": "Rodrigo Ribeiro",
+          "player_id": "1343749",
+          "role_group": "FW"
+        },
+        {
+          "name": "Uchenna Ogundu",
+          "player_id": "1718174",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Matheo Raab",
+        "Leopold Querfeld",
+        "Aljoscha Kemlein",
+        "Christopher Trimmel",
+        "Derrick Köhn",
+        "Emmanuel Latte Lath",
+        "Marin Ljubičić",
+        "Mekhi Gray",
+        "Oliver Burke"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Matheo Raab",
+          "player_id": "1156148",
+          "role_group": "GK"
+        },
+        {
+          "name": "Leopold Querfeld",
+          "player_id": "1199947",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Aljoscha Kemlein",
+          "player_id": "1403332",
+          "role_group": "MID"
+        },
+        {
+          "name": "Christopher Trimmel",
+          "player_id": "166733",
+          "role_group": "MID"
+        },
+        {
+          "name": "Derrick Köhn",
+          "player_id": "860260",
+          "role_group": "MID"
+        },
+        {
+          "name": "Emmanuel Latte Lath",
+          "player_id": "783585",
+          "role_group": "FW"
+        },
+        {
+          "name": "Marin Ljubičić",
+          "player_id": "1242198",
+          "role_group": "FW"
+        },
+        {
+          "name": "Mekhi Gray",
+          "player_id": "2062767",
+          "role_group": "FW"
+        },
+        {
+          "name": "Oliver Burke",
+          "player_id": "609504",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
         "Sima Suso",
         "Noahkai Banks",
@@ -615,8 +838,8 @@
         "Andrik Markgraf",
         "Stanley N'Soki"
       ],
-      "observed_at": "2026-10-24T12:05:11.658189+00:00",
-      "changed_at": "2026-10-23T15:04:01.422898+00:00"
+      "observed_at": "2026-10-24T13:20:50.455407+00:00",
+      "changed_at": "2026-10-24T13:20:50.455407+00:00"
     },
     {
       "fotmob_match_id": 5881198,
@@ -919,7 +1142,7 @@
         "Jessic Ngankam",
         "Malik Pimpong"
       ],
-      "observed_at": "2026-10-24T12:05:11.658189+00:00",
+      "observed_at": "2026-10-24T13:20:50.455407+00:00",
       "changed_at": "2026-10-23T15:04:01.422898+00:00"
     },
     {
@@ -931,9 +1154,9 @@
       "kickoff_utc": "2026-10-24T13:30:00Z",
       "home_team": "Mainz 05",
       "away_team": "Werder Bremen",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-5-2",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -946,8 +1169,8 @@
         "Kaishu Sano",
         "Jae-Sung Lee",
         "Phillipp Mwene",
-        "Sheraldo Becker",
-        "Phillip Tietz"
+        "Phillip Tietz",
+        "Sheraldo Becker"
       ],
       "away_players": [
         "Karl Hein",
@@ -957,7 +1180,7 @@
         "Olivier Deman",
         "Ludovit Reis",
         "Youri Regeer",
-        "Eren Dinkçi",
+        "Mitchell Weiser",
         "Chuki",
         "Marco Grüll",
         "Niclas Füllkrug"
@@ -1063,26 +1286,26 @@
           "shirt_number": "2"
         },
         {
-          "name": "Sheraldo Becker",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-5-2",
-          "position_id": 104,
-          "player_id": 495222,
-          "shirt_number": "23"
-        },
-        {
           "name": "Phillip Tietz",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
           "formation": "3-5-2",
-          "position_id": 106,
+          "position_id": 104,
           "player_id": 686315,
           "shirt_number": "9"
+        },
+        {
+          "name": "Sheraldo Becker",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 106,
+          "player_id": 495222,
+          "shirt_number": "23"
         }
       ],
       "away_starters": [
@@ -1164,15 +1387,15 @@
           "shirt_number": "44"
         },
         {
-          "name": "Eren Dinkçi",
+          "name": "Mitchell Weiser",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 83,
-          "player_id": 1146376,
-          "shirt_number": "18"
+          "player_id": 298823,
+          "shirt_number": "8"
         },
         {
           "name": "Chuki",
@@ -1208,10 +1431,122 @@
           "shirt_number": "10"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Maximilian Kinzig",
+        "Fabio Gruber",
+        "Lennard Maloney",
+        "Rael Nakuzola",
+        "Eric Martel",
+        "Paul Nebel",
+        "Silvan Widmer",
+        "Benedict Hollerbach",
+        "Ransford Königsdörffer"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Maximilian Kinzig",
+          "player_id": "1283288",
+          "role_group": "GK"
+        },
+        {
+          "name": "Fabio Gruber",
+          "player_id": "1362417",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Lennard Maloney",
+          "player_id": "921197",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Rael Nakuzola",
+          "player_id": "2140397",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Eric Martel",
+          "player_id": "1199283",
+          "role_group": "MID"
+        },
+        {
+          "name": "Paul Nebel",
+          "player_id": "1175939",
+          "role_group": "MID"
+        },
+        {
+          "name": "Silvan Widmer",
+          "player_id": "275034",
+          "role_group": "MID"
+        },
+        {
+          "name": "Benedict Hollerbach",
+          "player_id": "1185568",
+          "role_group": "FW"
+        },
+        {
+          "name": "Ransford Königsdörffer",
+          "player_id": "1121170",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Alexander Schlager",
+        "Mick Schmetgens",
+        "Oskar Wójcik",
+        "Dariusz Stalmach",
+        "Eren Dinkçi",
+        "Senne Lynen",
+        "Cedric Itten",
+        "Kenny Quetant",
+        "Paul Erevbenagie"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Alexander Schlager",
+          "player_id": "450739",
+          "role_group": "GK"
+        },
+        {
+          "name": "Mick Schmetgens",
+          "player_id": "1714103",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Oskar Wójcik",
+          "player_id": "1283403",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Dariusz Stalmach",
+          "player_id": "1276988",
+          "role_group": "MID"
+        },
+        {
+          "name": "Eren Dinkçi",
+          "player_id": "1146376",
+          "role_group": "MID"
+        },
+        {
+          "name": "Senne Lynen",
+          "player_id": "919742",
+          "role_group": "MID"
+        },
+        {
+          "name": "Cedric Itten",
+          "player_id": "726956",
+          "role_group": "FW"
+        },
+        {
+          "name": "Kenny Quetant",
+          "player_id": "1869761",
+          "role_group": "FW"
+        },
+        {
+          "name": "Paul Erevbenagie",
+          "player_id": "1810868",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
         "Robin Zentner",
         "Silas Katompa Mvumpa",
@@ -1227,8 +1562,8 @@
         "Keke Topp",
         "Salim Musah"
       ],
-      "observed_at": "2026-10-24T12:05:11.658189+00:00",
-      "changed_at": "2026-10-23T15:04:01.422898+00:00"
+      "observed_at": "2026-10-24T13:20:50.455407+00:00",
+      "changed_at": "2026-10-24T13:20:50.455407+00:00"
     },
     {
       "fotmob_match_id": 5881203,
@@ -1239,34 +1574,34 @@
       "kickoff_utc": "2026-10-24T13:30:00Z",
       "home_team": "Paderborn",
       "away_team": "Hamburger SV",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "3-3-2-2",
-      "away_formation": "3-5-1-1",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "3-5-2",
+      "away_formation": "3-5-2",
       "home_players": [
         "Nahuel Noll",
         "Jano ter Horst",
         "Tjark Scheller",
         "Mattes Hansen",
         "Laurin Curda",
-        "Santiago Castañeda",
-        "Raphael Obermair",
         "Laurin Ulrich",
+        "Santiago Castañeda",
         "Gabriel Vidović",
-        "Steffen Tigges",
-        "Stefano Marino"
+        "Raphael Obermair",
+        "Stefano Marino",
+        "Steffen Tigges"
       ],
       "away_players": [
         "Daniel Heuer Fernandes",
-        "Nicolás Capaldo",
+        "Shafiq Nandja",
         "Sebastiaan Bornauw",
         "Warmed Omari",
         "Zakaria El Ouahdi",
+        "Martin Adeline",
         "Bilal Nadir",
-        "Albert Sambi Lokonga",
-        "Albert Grønbæk",
         "Miro Muheim",
+        "David Møller Wolfe",
         "Fábio Vieira",
         "Yussuf Poulsen"
       ],
@@ -1277,7 +1612,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-3-2-2",
+          "formation": "3-5-2",
           "position_id": 11,
           "player_id": 1257826,
           "shirt_number": "15"
@@ -1288,7 +1623,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-3-2-2",
+          "formation": "3-5-2",
           "position_id": 33,
           "player_id": 1520469,
           "shirt_number": "21"
@@ -1299,7 +1634,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-3-2-2",
+          "formation": "3-5-2",
           "position_id": 35,
           "player_id": 1415373,
           "shirt_number": "25"
@@ -1310,7 +1645,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-3-2-2",
+          "formation": "3-5-2",
           "position_id": 37,
           "player_id": 1515976,
           "shirt_number": "22"
@@ -1318,79 +1653,79 @@
         {
           "name": "Laurin Curda",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-3-2-2",
-          "position_id": 53,
+          "formation": "3-5-2",
+          "position_id": 71,
           "player_id": 1426060,
           "shirt_number": "17"
         },
         {
-          "name": "Santiago Castañeda",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-3-2-2",
-          "position_id": 55,
-          "player_id": 1362492,
-          "shirt_number": "5"
-        },
-        {
-          "name": "Raphael Obermair",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-3-2-2",
-          "position_id": 57,
-          "player_id": 784225,
-          "shirt_number": "23"
-        },
-        {
           "name": "Laurin Ulrich",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-3-2-2",
-          "position_id": 74,
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 73,
           "player_id": 1367587,
           "shirt_number": "28"
         },
         {
+          "name": "Santiago Castañeda",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 75,
+          "player_id": 1362492,
+          "shirt_number": "5"
+        },
+        {
           "name": "Gabriel Vidović",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-3-2-2",
-          "position_id": 76,
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 77,
           "player_id": 1276453,
           "shirt_number": "40"
         },
         {
-          "name": "Steffen Tigges",
-          "line_index": 3,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-3-2-2",
-          "position_id": 104,
-          "player_id": 706500,
-          "shirt_number": "27"
+          "name": "Raphael Obermair",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79,
+          "player_id": 784225,
+          "shirt_number": "23"
         },
         {
           "name": "Stefano Marino",
-          "line_index": 3,
+          "line_index": 2,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-3-2-2",
-          "position_id": 106,
+          "formation": "3-5-2",
+          "position_id": 104,
           "player_id": 1321553,
           "shirt_number": "30"
+        },
+        {
+          "name": "Steffen Tigges",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 106,
+          "player_id": 706500,
+          "shirt_number": "27"
         }
       ],
       "away_starters": [
@@ -1400,21 +1735,21 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-5-1-1",
+          "formation": "3-5-2",
           "position_id": 11,
           "player_id": 406501,
           "shirt_number": "1"
         },
         {
-          "name": "Nicolás Capaldo",
+          "name": "Shafiq Nandja",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "3-5-2",
           "position_id": 33,
-          "player_id": 1018564,
-          "shirt_number": "24"
+          "player_id": 1804634,
+          "shirt_number": "43"
         },
         {
           "name": "Sebastiaan Bornauw",
@@ -1422,7 +1757,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "3-5-2",
           "position_id": 35,
           "player_id": 922892,
           "shirt_number": "33"
@@ -1433,7 +1768,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "3-5-2",
           "position_id": 37,
           "player_id": 1202595,
           "shirt_number": "17"
@@ -1444,10 +1779,21 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
+          "formation": "3-5-2",
           "position_id": 71,
           "player_id": 1287871,
           "shirt_number": "7"
+        },
+        {
+          "name": "Martin Adeline",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 73,
+          "player_id": 1324082,
+          "shirt_number": "5"
         },
         {
           "name": "Bilal Nadir",
@@ -1455,32 +1801,10 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 73,
+          "formation": "3-5-2",
+          "position_id": 75,
           "player_id": 1283407,
           "shirt_number": "4"
-        },
-        {
-          "name": "Albert Sambi Lokonga",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 75,
-          "player_id": 901495,
-          "shirt_number": "6"
-        },
-        {
-          "name": "Albert Grønbæk",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 77,
-          "player_id": 1133381,
-          "shirt_number": "11"
         },
         {
           "name": "Miro Muheim",
@@ -1488,38 +1812,161 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 79,
+          "formation": "3-5-2",
+          "position_id": 77,
           "player_id": 759817,
           "shirt_number": "28"
         },
         {
+          "name": "David Møller Wolfe",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79,
+          "player_id": 1049679,
+          "shirt_number": "3"
+        },
+        {
           "name": "Fábio Vieira",
           "line_index": 2,
-          "line_size": 1,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-5-1-1",
-          "position_id": 95,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 104,
           "player_id": 1025462,
           "shirt_number": "20"
         },
         {
           "name": "Yussuf Poulsen",
-          "line_index": 3,
-          "line_size": 1,
+          "line_index": 2,
+          "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-5-1-1",
-          "position_id": 115,
+          "formation": "3-5-2",
+          "position_id": 106,
           "player_id": 266527,
           "shirt_number": "15"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Markus Schubert",
+        "Felix Götze",
+        "Jonah Sticker",
+        "Ruben Müller",
+        "Sven Michel",
+        "Tom Baack",
+        "Deniz Zeitler",
+        "Marvin Pieringer",
+        "Rayan Philippe"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Markus Schubert",
+          "player_id": "659046",
+          "role_group": "GK"
+        },
+        {
+          "name": "Felix Götze",
+          "player_id": "767790",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Jonah Sticker",
+          "player_id": "1520593",
+          "role_group": "MID"
+        },
+        {
+          "name": "Ruben Müller",
+          "player_id": "1688956",
+          "role_group": "MID"
+        },
+        {
+          "name": "Sven Michel",
+          "player_id": "419774",
+          "role_group": "MID"
+        },
+        {
+          "name": "Tom Baack",
+          "player_id": "658444",
+          "role_group": "MID"
+        },
+        {
+          "name": "Deniz Zeitler",
+          "player_id": "1580112",
+          "role_group": "FW"
+        },
+        {
+          "name": "Marvin Pieringer",
+          "player_id": "956913",
+          "role_group": "FW"
+        },
+        {
+          "name": "Rayan Philippe",
+          "player_id": "1079892",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Sander Tangvik",
+        "Jason Dean Bissi Mouelle",
+        "Albert Grønbæk",
+        "Albert Sambi Lokonga",
+        "Kofi Amoako",
+        "Louis Lemke",
+        "Alexander Røssing",
+        "Otto Stange",
+        "Terem Moffi"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Sander Tangvik",
+          "player_id": "1145714",
+          "role_group": "GK"
+        },
+        {
+          "name": "Jason Dean Bissi Mouelle",
+          "player_id": "2264137",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Albert Grønbæk",
+          "player_id": "1133381",
+          "role_group": "MID"
+        },
+        {
+          "name": "Albert Sambi Lokonga",
+          "player_id": "901495",
+          "role_group": "MID"
+        },
+        {
+          "name": "Kofi Amoako",
+          "player_id": "1587901",
+          "role_group": "MID"
+        },
+        {
+          "name": "Louis Lemke",
+          "player_id": "1899791",
+          "role_group": "MID"
+        },
+        {
+          "name": "Alexander Røssing",
+          "player_id": "1644278",
+          "role_group": "FW"
+        },
+        {
+          "name": "Otto Stange",
+          "player_id": "1576487",
+          "role_group": "FW"
+        },
+        {
+          "name": "Terem Moffi",
+          "player_id": "885005",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
         "Sebastian Klaas",
         "Marcel Hoffmeier",
@@ -1529,11 +1976,12 @@
       ],
       "away_unavailable": [
         "Mario Vušković",
+        "Nicolás Capaldo",
         "Nicolai Remberg",
         "Patson Daka"
       ],
-      "observed_at": "2026-10-24T12:05:11.658189+00:00",
-      "changed_at": "2026-10-23T15:04:01.422898+00:00"
+      "observed_at": "2026-10-24T13:20:50.455407+00:00",
+      "changed_at": "2026-10-24T13:20:50.455407+00:00"
     },
     {
       "fotmob_match_id": 5881204,
@@ -1544,23 +1992,23 @@
       "kickoff_utc": "2026-10-24T13:30:00Z",
       "home_team": "RB Leipzig",
       "away_team": "Elversberg",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-5-1",
       "away_formation": "4-2-3-1",
       "home_players": [
-        "Maarten Vandevoordt",
-        "Ridle Baku",
+        "Ørjan Håskjold Nyland",
+        "Benjamin Henrichs",
         "Willi Orbán",
-        "Castello Lukeba",
-        "David Raum",
+        "Maxime Estève",
+        "Max Finkgräfe",
         "Andrija Maksimović",
         "Rocco Reitz",
         "Neil El Aynaoui",
         "Ezechiel Banzuzi",
         "Antonio Nusa",
-        "Rômulo"
+        "Tidiam Gomis"
       ],
       "away_players": [
         "Nicolas Kristof",
@@ -1577,26 +2025,26 @@
       ],
       "home_starters": [
         {
-          "name": "Maarten Vandevoordt",
+          "name": "Ørjan Håskjold Nyland",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
           "formation": "4-5-1",
           "position_id": 11,
-          "player_id": 972200,
-          "shirt_number": "26"
+          "player_id": 73409,
+          "shirt_number": "1"
         },
         {
-          "name": "Ridle Baku",
+          "name": "Benjamin Henrichs",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-5-1",
           "position_id": 32,
-          "player_id": 883087,
-          "shirt_number": "17"
+          "player_id": 681383,
+          "shirt_number": "39"
         },
         {
           "name": "Willi Orbán",
@@ -1610,26 +2058,26 @@
           "shirt_number": "4"
         },
         {
-          "name": "Castello Lukeba",
+          "name": "Maxime Estève",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-5-1",
           "position_id": 36,
-          "player_id": 1253852,
-          "shirt_number": "23"
+          "player_id": 1250443,
+          "shirt_number": "3"
         },
         {
-          "name": "David Raum",
+          "name": "Max Finkgräfe",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-5-1",
           "position_id": 38,
-          "player_id": 806669,
-          "shirt_number": "22"
+          "player_id": 1529161,
+          "shirt_number": "35"
         },
         {
           "name": "Andrija Maksimović",
@@ -1687,15 +2135,15 @@
           "shirt_number": "7"
         },
         {
-          "name": "Rômulo",
+          "name": "Tidiam Gomis",
           "line_index": 2,
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-5-1",
           "position_id": 115,
-          "player_id": 1314412,
-          "shirt_number": "40"
+          "player_id": 1482733,
+          "shirt_number": "27"
         }
       ],
       "away_starters": [
@@ -1821,10 +2269,122 @@
           "shirt_number": "42"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Maarten Vandevoordt",
+        "Abdoul Koné",
+        "Castello Lukeba",
+        "David Raum",
+        "Ridle Baku",
+        "Christoph Baumgartner",
+        "Nicolas Seiwald",
+        "Brajan Gruda",
+        "Rômulo"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Maarten Vandevoordt",
+          "player_id": "972200",
+          "role_group": "GK"
+        },
+        {
+          "name": "Abdoul Koné",
+          "player_id": "1643776",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Castello Lukeba",
+          "player_id": "1253852",
+          "role_group": "DEF"
+        },
+        {
+          "name": "David Raum",
+          "player_id": "806669",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Ridle Baku",
+          "player_id": "883087",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Christoph Baumgartner",
+          "player_id": "747718",
+          "role_group": "MID"
+        },
+        {
+          "name": "Nicolas Seiwald",
+          "player_id": "1024672",
+          "role_group": "MID"
+        },
+        {
+          "name": "Brajan Gruda",
+          "player_id": "1430151",
+          "role_group": "FW"
+        },
+        {
+          "name": "Rômulo",
+          "player_id": "1314412",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Tim Boss",
+        "Florian Le Joncour",
+        "Luca Sirch",
+        "Nicholas Mickelson",
+        "Amara Condé",
+        "Francis Onyeka",
+        "Raif Adam",
+        "Cole Campbell",
+        "Noel Futkeu"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Tim Boss",
+          "player_id": "659051",
+          "role_group": "GK"
+        },
+        {
+          "name": "Florian Le Joncour",
+          "player_id": "594886",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Luca Sirch",
+          "player_id": "1097361",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Nicholas Mickelson",
+          "player_id": "633721",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Amara Condé",
+          "player_id": "763990",
+          "role_group": "MID"
+        },
+        {
+          "name": "Francis Onyeka",
+          "player_id": "1603681",
+          "role_group": "MID"
+        },
+        {
+          "name": "Raif Adam",
+          "player_id": "1730149",
+          "role_group": "MID"
+        },
+        {
+          "name": "Cole Campbell",
+          "player_id": "1288195",
+          "role_group": "FW"
+        },
+        {
+          "name": "Noel Futkeu",
+          "player_id": "1138725",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
         "Christopher Nkunku",
         "Assan Ouédraogo",
@@ -1832,12 +2392,10 @@
       ],
       "away_unavailable": [
         "Noah Darvich",
-        "Cole Campbell",
-        "Francis Onyeka",
         "Tom Zimmerschied"
       ],
-      "observed_at": "2026-10-24T12:05:11.658189+00:00",
-      "changed_at": "2026-10-23T15:04:01.422898+00:00"
+      "observed_at": "2026-10-24T13:20:50.455407+00:00",
+      "changed_at": "2026-10-24T13:20:50.455407+00:00"
     },
     {
       "fotmob_match_id": 5881200,
@@ -2137,7 +2695,7 @@
         "Jamal Musiala",
         "Luis Díaz"
       ],
-      "observed_at": "2026-10-24T12:05:11.658189+00:00",
+      "observed_at": "2026-10-24T13:20:50.455407+00:00",
       "changed_at": "2026-10-24T12:05:11.658189+00:00"
     },
     {
@@ -2443,7 +3001,7 @@
         "Martin Terrier",
         "Christian Kofane"
       ],
-      "observed_at": "2026-10-24T12:05:11.658189+00:00",
+      "observed_at": "2026-10-24T13:20:50.455407+00:00",
       "changed_at": "2026-10-24T12:05:11.658189+00:00"
     }
   ]
