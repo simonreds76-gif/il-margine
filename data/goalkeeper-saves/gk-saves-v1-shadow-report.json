@@ -12,16 +12,16 @@
       "team_keeper_mapping_unresolved": 6
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 3,
-    "priced_lines": 290,
+    "eligible_lines": 5,
+    "priced_lines": 300,
     "provisional_lines": 0,
-    "signals_added": 2,
-    "value_ladder_lines": 40
+    "signals_added": 1,
+    "value_ladder_lines": 39
   },
   "evidence": {
     "clv": 0.05358,
     "clv_matched": 22,
-    "pending": 14,
+    "pending": 15,
     "pnl_units": 17.154,
     "roi": 0.483211,
     "settled": 71,
@@ -29,36 +29,36 @@
       "fotmob_named_keeper_shotmap": 68,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 86,
+    "signals": 87,
     "true_close_coverage": 0.309859,
     "void": 1
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-24T16:58:05.452209+00:00",
+    "checked_at": "2026-10-24T17:42:57.461748+00:00",
     "counts": {
-      "not_fresh_prematch": 36,
-      "offers_saved": 302
+      "not_fresh_prematch": 15,
+      "offers_saved": 333
     },
-    "saved": 21,
+    "saved": 23,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-24T16:58:04Z",
+  "generated_at": "2026-10-24T17:42:56Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
       "blocked_or_missing_inputs": 47,
-      "not_new_fresh_prematch": 36,
-      "unregistered_settlement_rules": 66
+      "not_new_fresh_prematch": 15,
+      "unregistered_settlement_rules": 76
     },
     "forecast_fixtures": 83,
     "forecast_keepers": 165,
-    "generated_at": "2026-10-24T16:58:05.612353+00:00",
+    "generated_at": "2026-10-24T17:42:57.610773+00:00",
     "last_capture_at": "2026-10-24T16:58:05.612353+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 1,
+    "new_forecasts": 0,
     "new_selections": 0,
     "next_review_at": 50,
     "paired_scores": {
@@ -675,7 +675,7 @@
     "status": "BLOCKED",
     "true_close_coverage_required": 0.7
   },
-  "selection_rule": "retain every positive-EV line on the value ladder; track one predicted/confirmed starting goalkeeper line per fixture with edge >=5%, price 1.70-3.00, closest to even money",
+  "selection_rule": "compare the latest fixture capture across bookmakers first; retain the highest price per keeper/line/side, then track one starting goalkeeper line per fixture with edge >=5%, price 1.70-3.00, closest to even money; no second bookmaker bet for an already tracked fixture",
   "sellable": false,
   "status": "SIGNALS_COLLECTING"
 }
