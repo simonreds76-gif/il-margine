@@ -12,7 +12,7 @@ shadow=load('goalkeeper-saves-shadow'); settle=load('goalkeeper-saves-settle'); 
 
 class KambiContracts(unittest.TestCase):
     def test_maps_only_same_fixture_and_side(self):
-        common=dict(event_id='1',match_date='2026-10-25',home_team='Arsenal',away_team='Everton',league='epl',line='3.5',side='over',odds_decimal='2.0')
+        common=dict(event_id='1',match_date='2026-10-25',home_team='Arsenal',away_team='Everton',league='epl',line='3.5',side='over',odds_decimal='2.0',captured_at='2026-10-24T12:00:00Z',kickoff_at='2026-10-25T14:00:00Z')
         offers=[dict(common,bookmaker='Bet365',player='David Raya'),dict(common,bookmaker='Kambi',player='Home goalkeeper',source='odds_api_io:team_goalkeeper_home:bookmaker_ml'),dict(common,bookmaker='Kambi',player='Away goalkeeper',source='odds_api_io:team_goalkeeper_away:bookmaker_ml')]
         fixture=dict(lineup_type='predicted',home_starters=[dict(name='David Raya',role_group='GK')],away_starters=[dict(name='Jordan Pickford',role_group='GK')])
         with patch.object(shadow,'build_features',return_value=(tuple(range(9)),[])),patch.object(shadow,'predict_mean',return_value=4),patch.object(shadow,'price_side',return_value=dict(edge=.1,model_probability=.55,push_probability=0,fair_odds=1.818)):
@@ -23,8 +23,10 @@ class KambiContracts(unittest.TestCase):
         self.assertEqual(away['candidate_status'],'blocked')
         with tempfile.TemporaryDirectory() as d:
             added,ledger=shadow.append_signals(Path(d)/'signals.csv',rows,'2026-10-24T12:00:00Z')
-            self.assertEqual(added,2)
-            self.assertEqual({r['bookmaker'] for r in ledger},{'Bet365','Kambi'})
+            # Both contracts are captured above, but equal prices produce one
+            # tracked selection, preferring the named-player Bet365 contract.
+            self.assertEqual(added,1)
+            self.assertEqual({r['bookmaker'] for r in ledger},{'Bet365'})
             self.assertEqual(shadow.append_signals(Path(d)/'signals.csv',rows,'2026-10-24T13:00:00Z')[0],0)
 
     def test_team_scope_counts_replacement_keeper_not_opponent(self):

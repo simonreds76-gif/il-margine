@@ -29,7 +29,7 @@ class NewGkTests(unittest.TestCase):
     capture.main()
    d=json.loads((p/'s.json').read_text());self.assertEqual(request.call_count,4);self.assertEqual(d['status'],'PARTIAL_CAPTURE_FAILURE');self.assertEqual(d['requests_used'],4);self.assertEqual(sum(bool(x) for x in d['event_last_checked'].values()),20)
  def row(self,now):
-  return {'signal_id':'fixture|keeper|3.5|over','created_at':now.isoformat(),'captured_at':now.isoformat(),'kickoff_at':(now+timedelta(hours=3)).isoformat(),'status':'pending','edge':'.1','odds_decimal':'2.2','fair_odds':'2','selection_policy':'near_even_value_v2','goalkeeper':'Keeper','home_team':'A','away_team':'B','side':'over','line':'3.5','lineup_status':'predicted_starter'}
+  return {'event_id':'fixture','bookmaker':'Bet365','signal_id':'fixture|keeper|3.5|over','created_at':now.isoformat(),'captured_at':now.isoformat(),'kickoff_at':(now+timedelta(hours=3)).isoformat(),'status':'pending','edge':'.1','odds_decimal':'2.2','fair_odds':'2','selection_policy':'near_even_value_v2','goalkeeper':'Keeper','home_team':'A','away_team':'B','side':'over','line':'3.5','lineup_status':'predicted_starter'}
  def test_claim_once_freezes_original_price_and_survives_rerun(self):
   now=datetime.now(timezone.utc);r=self.row(now);state={}
   self.assertEqual(alerts.claim([r],state,'run:1',now),1)
@@ -52,8 +52,12 @@ class NewGkTests(unittest.TestCase):
   now=datetime.now(timezone.utc);state={};alerts.claim([self.row(now)],state,'test:1',now)
   with tempfile.TemporaryDirectory() as folder:
    path=Path(folder)/'state.json';path.write_text(json.dumps(state));output=io.StringIO()
+   import csv
+   candidates=Path(folder)/'candidates.csv'
+   with candidates.open('w',newline='') as f:
+    w=csv.DictWriter(f,fieldnames=list(self.row(now)));w.writeheader();w.writerow(self.row(now))
    env={'OPS_ALERT_TELEGRAM_BOT_TOKEN':'  fake-token\n','OPS_ALERT_TELEGRAM_CHAT_ID':' -123\r\n','GITHUB_RUN_ID':'test','GITHUB_RUN_ATTEMPT':'1'}
-   with patch.object(sys,'argv',['alerts','--send','--state',str(path)]),patch.dict(os.environ,env),patch.object(alerts.requests,'post',return_value=response,side_effect=error) as post,redirect_stdout(output):
+   with patch.object(sys,'argv',['alerts','--send','--state',str(path),'--candidates',str(candidates)]),patch.dict(os.environ,env),patch.object(alerts.requests,'post',return_value=response,side_effect=error) as post,redirect_stdout(output):
     if error or response.json.return_value.get('ok') is False:
      with self.assertRaises(SystemExit): alerts.main()
     else: alerts.main()

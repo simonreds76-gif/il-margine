@@ -339,6 +339,10 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
                 "strongest_for_fixture": "no",
             },
         ]
+        for i, row in enumerate(rows):
+            row.update(goalkeeper='Keeper', bookmaker='Bet365', line=str(3.5+i), side='over',
+                       captured_at='2026-10-24T12:00:00Z', generated_at='2026-10-24T12:01:00Z',
+                       kickoff_at='2026-10-25T14:00:00Z')
         shadow.mark_primary_selections(rows)
         self.assertEqual(rows[0]["strongest_for_fixture"], "yes")
         self.assertEqual(rows[1]["strongest_for_fixture"], "no")

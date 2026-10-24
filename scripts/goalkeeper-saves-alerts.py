@@ -8,17 +8,20 @@ import argparse
 import csv
 from datetime import datetime, timezone, timedelta
 import html
+import io
 import json
 import math
 import os
 from pathlib import Path
 import requests
+from goalkeeper_price_selection import alert_price_check, contract_key, number
 
 ROOT = Path(__file__).resolve().parents[1]
 FOLDER = ROOT / 'data/goalkeeper-saves'
 STATE = FOLDER / 'gk-saves-telegram-state.json'
 LEDGER = FOLDER / 'gk-saves-v1-shadow-signals.csv'
 REPORT = FOLDER / 'gk-saves-v1-shadow-report.json'
+CANDIDATES = FOLDER / 'gk-saves-v1-candidates.csv'
 
 def keeper_watch_rows(path, now):
     """Use the regenerated report's locked selections, never latest price candidates."""
@@ -69,19 +72,55 @@ def eligible(row, now):
                 and all(math.isfinite(float(row[k])) for k in ('edge','odds_decimal','fair_odds','line'))
                 and float(row['edge']) >= .05 and 1.7 <= float(row['odds_decimal']) <= 3
                 and float(row['fair_odds']) > 1 and float(row['line']) >= 0)
-        return bool(row.get('signal_id')) and float(row['edge']) >= .05 and 1.7 <= float(row['odds_decimal']) <= 3 and row.get('selection_policy') == 'near_even_value_v2'
+        return bool(row.get('signal_id')) and contract_key(row) is not None and float(row['edge']) >= .05 and 1.7 <= float(row['odds_decimal']) <= 3 and row.get('selection_policy') == 'near_even_value_v2'
     except (ValueError, KeyError, TypeError):
         return False
 
-def claim(rows, state, token, now):
+def recommendation_key(row):
+    if row.get('alert_model') == 'keeper_watch_v1':
+        return ('keeper_watch_v1', row.get('signal_id'))
+    key = contract_key(row)
+    # Current policy is one primary per fixture, not one per bookmaker.
+    return ('gk_saves_v1', key[0]) if key else None
+
+
+def prior_claim(row, entries, own_key=None):
+    key = recommendation_key(row)
+    if key is None:
+        return False
+    own = entries.get(own_key, {})
+    for signal_id, item in entries.items():
+        if signal_id == own_key or recommendation_key(item.get('signal', {})) != key:
+            continue
+        if item.get('status') in ('sent', 'delivery_unconfirmed'):
+            return True
+        if item.get('status') == 'claimed' and (own_key is None or (item.get('claimed_at',''), signal_id) < (own.get('claimed_at',''), own_key)):
+            return True
+    return False
+
+
+def claim(rows, state, token, now, offers=None):
     entries = state.setdefault('signals', {})
     added = 0
-    for row in rows:
+    rejected = {}
+    for row in sorted(rows, key=lambda r: -(number(r.get('odds_decimal')) or 0)):
         key = row.get('signal_id','')
         if key in entries or not eligible(row, now) or added >= 10:
             continue
-        entries[key] = {'status':'claimed','run_token':token,'claimed_at':now.isoformat(), 'signal':dict(row)}
+        reason = 'fixture_already_notified_or_claimed' if prior_claim(row, entries) else None
+        comparison = []
+        if not reason and row.get('alert_model') != 'keeper_watch_v1' and offers is not None:
+            reason, comparison = alert_price_check(row, offers, now)
+        if reason:
+            rejected[reason] = rejected.get(reason, 0) + 1
+            continue
+        signal = dict(row)
+        if comparison:
+            signal.update(price_comparison=comparison, price_checked_at=now.isoformat())
+        entries[key] = {'status':'claimed','run_token':token,'claimed_at':now.isoformat(), 'signal':signal}
         added += 1
+    if rows:
+        state.setdefault('preparation_checks', {})['keeper_watch' if rows[0].get('alert_model') == 'keeper_watch_v1' else 'current'] = dict(checked_at=now.isoformat(), added=added, suppressed=rejected)
     return added
 
 def message(row):
@@ -99,10 +138,13 @@ def message(row):
             'Original price and forecast locked. Estimated edge is unproven.\n'
             '<a href="https://ilmargine.bet/model-monitor/gk-saves#keeper-watch">Keeper Watch results and ROI (Admin login)</a>')
     contract_note = ('Market: ' + e('contract_scope').replace('_', ' ') + '. Keeper name matched to Bet365 and the expected/confirmed lineup; check the starter and bookmaker rules.\n') if str(row.get('contract_scope') or '').startswith('team_goalkeeper_') else ''
+    comparison = row.get('price_comparison') or []
+    price_note = ('Latest captured comparison: ' + ' | '.join(f"{html.escape(str(q['bookmaker']))} {q['odds']:.2f}" for q in comparison) + '\n') if comparison else ''
     return ('<b>GK saves | New tracked signal</b>\n\n'
         f"<b>{e('home_team')} vs {e('away_team')}</b>\n"
         f"{e('goalkeeper')} - {e('side').title()} {e('line')} saves\n"
         f"{html.escape(str(row.get('bookmaker') or 'Bet365'))} recorded odds: <b>{float(row['odds_decimal']):.2f}</b>\n"
+        f"{price_note}"
         f"Fair odds at capture: {float(row['fair_odds']):.2f} | Estimated EV: +{float(row['edge'])*100:.1f}%\n"
         f"Kickoff: {e('kickoff_at')}\nCaptured: {e('captured_at')}\n"
         f"Lineup: {e('lineup_status').replace('_',' ')}\n"
@@ -111,25 +153,34 @@ def message(row):
         'Research model; 0.5u paper tracking, not a proven edge.')
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--prepare',action='store_true');p.add_argument('--send',action='store_true');p.add_argument('--state',type=Path,default=STATE);p.add_argument('--ledger',type=Path,default=LEDGER);p.add_argument('--report',type=Path,default=REPORT);a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--prepare',action='store_true');p.add_argument('--send',action='store_true');p.add_argument('--state',type=Path,default=STATE);p.add_argument('--ledger',type=Path,default=LEDGER);p.add_argument('--report',type=Path,default=REPORT);p.add_argument('--candidates',type=Path,default=CANDIDATES);a=p.parse_args()
     if a.prepare == a.send: p.error('Choose exactly one of --prepare or --send')
     token = os.environ.get('GITHUB_RUN_ID','') + ':' + os.environ.get('GITHUB_RUN_ATTEMPT','')
     bot=os.environ.get('OPS_ALERT_TELEGRAM_BOT_TOKEN','').strip();chat=os.environ.get('OPS_ALERT_TELEGRAM_CHAT_ID','').strip()
     if not bot or not chat or token==':': raise SystemExit('GK alerts require the configured ops Telegram destination and a workflow run token')
     state=json.loads(a.state.read_text(encoding='utf-8')) if a.state.exists() else {'signals':{}}
+    with a.candidates.open(encoding='utf-8-sig',newline='') if a.candidates.exists() else io.StringIO('') as f:
+        offers=list(csv.DictReader(f))
     def save():
         a.state.parent.mkdir(parents=True,exist_ok=True);tmp=a.state.with_suffix('.tmp');tmp.write_text(json.dumps(state,ensure_ascii=False,indent=2)+'\n',encoding='utf-8');tmp.replace(a.state)
     if a.prepare:
         with a.ledger.open(encoding='utf-8-sig',newline='') as f: rows=list(csv.DictReader(f))
         now=datetime.now(timezone.utc)
-        count=claim(rows,state,token,now)
+        count=claim(rows,state,token,now,offers)
         watch_count=claim(keeper_watch_rows(a.report,now),state,token,now)
         save();print(f'GK alert claims prepared: current {count}; Keeper Watch paper {watch_count}');return
     failed=0;sent=0
-    for item in state['signals'].values():
+    for key, item in state['signals'].items():
         if item.get('status')!='claimed' or item.get('run_token')!=token: continue
         if not eligible(item['signal'],datetime.now(timezone.utc)):
             item['status']='expired_before_send';save();continue
+        reason = 'fixture_already_notified_or_claimed' if prior_claim(item['signal'], state['signals'], key) else None
+        if not reason and item['signal'].get('alert_model') != 'keeper_watch_v1':
+            reason, comparison = alert_price_check(item['signal'], offers, datetime.now(timezone.utc))
+            if not reason:
+                item['signal'].update(price_comparison=comparison, price_checked_at=datetime.now(timezone.utc).isoformat())
+        if reason:
+            item.update(status='suppressed_before_send',suppression_reason=reason);save();continue
         # Persist uncertainty before HTTP. A replay cannot assume Telegram rejected it.
         item['status']='delivery_unconfirmed';save()
         try:
