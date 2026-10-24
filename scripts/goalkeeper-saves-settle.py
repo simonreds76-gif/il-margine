@@ -248,7 +248,7 @@ def fotmob_player_saves(payload: dict[str, Any], goalkeeper: str) -> tuple[int |
 
 
 def fotmob_team_saves(payload: dict[str, Any], side: str) -> tuple[int | None, dict[str, Any]]:
-    """Grade the explicitly captured team-keeper contract, including keeper changes."""
+    """Count side-level saves; contract grading additionally requires identity checks."""
     page = (payload.get("props") or {}).get("pageProps") or {}
     header = page.get("header") or {}
     teams = header.get("teams") or []
@@ -272,6 +272,31 @@ def fotmob_team_saves(payload: dict[str, Any], side: str) -> tuple[int | None, d
             return None, {"error": "team_keeper_save_identity_missing"}
         saves.add(str(shot["id"]))
     return len(saves), {"source": "fotmob_team_keeper_shotmap", "contract_side": side}
+
+
+def fotmob_mapped_keeper_saves(payload: dict[str, Any], side: str, goalkeeper: str) -> tuple[int | None, dict[str, Any]]:
+    """Grade only where named and side scopes agree; hold substitute-rule ambiguity."""
+    total, metadata = fotmob_team_saves(payload, side)
+    if total is None:
+        return None, metadata
+    actual, named = fotmob_player_saves(payload, goalkeeper)
+    if actual is None:
+        return None, named
+    content = (payload.get("props") or {}).get("pageProps", {}).get("content") or {}
+    keeper_id = str(named.get("player_id") or "")
+    starters = ((content.get("lineup") or {}).get(side + "Team") or {}).get("starters") or []
+    started = any(str(player.get("id")) == keeper_id for player in starters)
+    try:
+        minutes = count(stat_values((content.get("playerStats") or {}).get(keeper_id) or {}).get("minutes_played"))
+    except ValueError:
+        minutes = None
+    # The feed label alone does not establish each operator's replacement rules.
+    # A predicted keeper who did not start, a substitution or missing participation
+    # evidence must not silently settle as a different keeper's result.
+    if not started or minutes != 90 or actual != total:
+        return None, {"error": "team_keeper_participation_or_rules_review", "started": started,
+                      "minutes": minutes, "named_saves": actual, "team_saves": total}
+    return total, {**metadata, "player_id": named["player_id"], "scope_agreement": True}
 
 
 def season_for_day(day: date) -> int:
@@ -532,7 +557,7 @@ def main() -> None:
                 continue
         scope = str(signal.get("contract_scope") or "")
         team_contract = scope.startswith("team_goalkeeper_")
-        actual, metadata = (fotmob_team_saves(match_cache[match_id], scope.removeprefix("team_goalkeeper_"))
+        actual, metadata = (fotmob_mapped_keeper_saves(match_cache[match_id], scope.removeprefix("team_goalkeeper_"), str(signal.get("goalkeeper") or ""))
                             if team_contract else fotmob_player_saves(match_cache[match_id], str(signal.get("goalkeeper") or "")))
         if actual is None:
             record(signal, str(metadata.get("error") or "fotmob_goalkeeper_stats_not_found"))
