@@ -2,85 +2,87 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 48,
+    "blocked_lines": 59,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 16,
-      "goalkeeper_team_unresolved": 38,
+      "goalkeeper_not_matched_to_lineup": 27,
+      "goalkeeper_team_unresolved": 49,
       "missing_lineup": 22,
-      "missing_priced_edge": 48,
+      "missing_priced_edge": 59,
       "missing_registered_feature": 10
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 8,
-    "priced_lines": 392,
+    "eligible_lines": 7,
+    "priced_lines": 362,
     "provisional_lines": 0,
-    "signals_added": 1,
-    "value_ladder_lines": 78
+    "signals_added": 0,
+    "value_ladder_lines": 69
   },
   "evidence": {
     "clv": 0.05358,
     "clv_matched": 22,
-    "pending": 10,
-    "pnl_units": 17.654,
-    "roi": 0.5044,
-    "settled": 70,
+    "pending": 11,
+    "pnl_units": 17.154,
+    "roi": 0.483211,
+    "settled": 71,
     "settlement_sources": {
-      "fotmob_named_keeper_shotmap": 67,
+      "fotmob_named_keeper_shotmap": 68,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 81,
-    "true_close_coverage": 0.314286,
+    "signals": 83,
+    "true_close_coverage": 0.309859,
     "void": 1
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-24T00:02:17.776384+00:00",
+    "checked_at": "2026-10-24T12:45:56.631907+00:00",
     "counts": {
-      "offers_saved": 440
+      "already_saved": 18,
+      "not_fresh_prematch": 218
     },
-    "saved": 40,
-    "status": "CAPTURED"
+    "saved": 0,
+    "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-10-24T00:02:17Z",
+  "generated_at": "2026-10-24T12:45:56Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "blocked_or_missing_inputs": 48
+      "blocked_or_missing_inputs": 37,
+      "not_new_fresh_prematch": 218
     },
     "forecast_fixtures": 83,
     "forecast_keepers": 164,
-    "generated_at": "2026-10-24T00:02:17.895946+00:00",
+    "generated_at": "2026-10-24T12:45:56.687212+00:00",
     "last_capture_at": "2026-10-24T00:02:17.895946+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 40,
-    "new_selections": 2,
+    "new_forecasts": 0,
+    "new_selections": 0,
     "next_review_at": 50,
     "paired_scores": {
       "current": {
-        "brier": 0.17138000360604788,
-        "log_loss": 0.5147897458487798
+        "brier": 0.16501179503886204,
+        "log_loss": 0.4997936633095587
       },
       "keeper_watch": {
-        "brier": 0.17559323753734563,
-        "log_loss": 0.5277831322330764
+        "brier": 0.1677089170494428,
+        "log_loss": 0.5084820803407982
       }
     },
-    "paired_settled_fixtures": 39,
+    "paired_settled_fixtures": 43,
     "paper_stake": 0.5,
     "records": {
       "current": {
-        "losses": 4,
+        "losses": 5,
         "overdue": 0,
-        "pending": 7,
-        "profit": 1.7010000000000003,
+        "pending": 8,
+        "profit": 1.2010000000000003,
         "pushes": 0,
         "review": 0,
-        "roi": 0.34020000000000006,
-        "selections": 18,
-        "settled": 10,
-        "stake": 5.0,
+        "roi": 0.21836363636363643,
+        "selections": 20,
+        "settled": 11,
+        "stake": 5.5,
         "voids": 1,
         "wins": 6
       },
@@ -148,6 +150,54 @@
         "side": "over",
         "status": "pending",
         "team_id": "9937"
+      },
+      {
+        "away": "AS Roma",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-24T12:44:43+00:00",
+        "edge": 0.07425872708951742,
+        "event_id": "71945340",
+        "fair_odds": 2.327186120957318,
+        "goalkeeper": "Pierluigi Gollini",
+        "home": "SSC Napoli",
+        "kickoff_at": "2026-10-24T16:00:00+00:00",
+        "line": 3.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5749717",
+        "model": "current",
+        "odds": 2.5,
+        "overdue": false,
+        "player_id": "553849",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-24T12:44:45.693876+00:00",
+        "side": "over",
+        "status": "pending",
+        "team_id": "8686"
+      },
+      {
+        "away": "Everton FC",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-24T12:44:43+00:00",
+        "edge": 0.06930958973575518,
+        "event_id": "72221332",
+        "fair_odds": 1.6150607986474446,
+        "goalkeeper": "David Raya",
+        "home": "Arsenal FC",
+        "kickoff_at": "2026-10-24T14:00:00+00:00",
+        "line": 1.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5795485",
+        "model": "current",
+        "odds": 1.727,
+        "overdue": false,
+        "player_id": "562727",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-24T12:44:45.693876+00:00",
+        "side": "over",
+        "status": "pending",
+        "team_id": "9825"
       },
       {
         "away": "SV 07 Elversberg",
@@ -270,6 +320,7 @@
         "team_id": "10171"
       },
       {
+        "actual": 3,
         "away": "Borussia Monchengladbach",
         "bookmaker": "Bet365",
         "captured_at": "2026-10-22T00:56:34+00:00",
@@ -286,11 +337,10 @@
         "odds": 2.2,
         "overdue": false,
         "player_id": "784146",
-        "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "profit": -0.5,
         "registered_at": "2026-10-22T00:56:36.308848+00:00",
         "side": "over",
-        "status": "pending",
+        "status": "lost",
         "team_id": "9788"
       },
       {
@@ -607,7 +657,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 82,
+      "awaiting_verified_keeper_result": 74,
       "incomplete_or_conflicting_full_match_count": 4,
       "keeper_identity_unresolved": 1,
       "verified_different_starting_keeper": 3

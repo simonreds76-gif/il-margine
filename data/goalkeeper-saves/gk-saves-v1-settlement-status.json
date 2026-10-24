@@ -1,6 +1,6 @@
 {
   "api_errors": [],
-  "deferred_not_due": 6,
+  "deferred_not_due": 8,
   "details": [
     {
       "detail": "",
@@ -25,21 +25,30 @@
       "match_date": "2026-10-17",
       "reason": "fotmob_matched_player_not_goalkeeper",
       "signal_id": "71945306|massimo pessina|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Moritz Nicolas",
+      "match": "VfB Stuttgart vs Borussia Monchengladbach",
+      "match_date": "2026-10-23",
+      "reason": "settled_fotmob",
+      "signal_id": "72513260|moritz nicolas|4.5|over"
     }
   ],
-  "fotmob_requests_used": 5,
-  "generated_at": "2026-10-23T13:32:09Z",
+  "fotmob_requests_used": 7,
+  "generated_at": "2026-10-24T12:45:53Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 3,
-  "pending_total": 9,
+  "pending_total": 11,
   "reason_counts": {
     "fotmob_matched_player_not_goalkeeper": 2,
-    "fotmob_save_totals_disagree": 1
+    "fotmob_save_totals_disagree": 1,
+    "settled_fotmob": 1
   },
   "requests_used": 0,
-  "settled": 0,
-  "status": "BLOCKED",
+  "settled": 1,
+  "status": "PARTIAL",
   "verified_player_targets": [
     {
       "appearances": 32,
@@ -57,6 +66,12 @@
       "match_id": 5749702,
       "status": "unchanged",
       "targets_sha256": "4776b048089f44be71c69cb73ed9221b5d6b041259a27c64f4889899290be13f"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5881205,
+      "status": "saved",
+      "targets_sha256": "a8bd50b1eb0b14cd1bf9ff160e1b74585ca50e3261fdaf82298510dfc59516ae"
     }
   ]
 }

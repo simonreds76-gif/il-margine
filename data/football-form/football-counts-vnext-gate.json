@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T00:02:35Z",
+  "generated_at": "2026-10-24T12:45:34Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -37,14 +37,14 @@
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
       "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 488,
-      "scored_fixtures": 31,
+      "scored_rows": 472,
+      "scored_fixtures": 29,
       "eligible_rows": 1,
       "eligible_fixtures": 1,
-      "blocked_rows": 487,
+      "blocked_rows": 471,
       "blocker_rows": {
-        "edge_below_3pct": 484,
-        "price_older_than_3h": 310
+        "edge_below_3pct": 469,
+        "price_older_than_3h": 78
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 7,
@@ -69,19 +69,19 @@
     "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 105,
-      "settled": 83,
-      "pending": 22,
-      "pnl_units": 1.12,
-      "roi": 0.013494,
-      "true_close_n": 45,
-      "true_close_coverage": 0.542169,
-      "mean_true_close_clv": 0.004768,
+      "signals": 107,
+      "settled": 87,
+      "pending": 20,
+      "pnl_units": -2.88,
+      "roi": -0.033103,
+      "true_close_n": 49,
+      "true_close_coverage": 0.563218,
+      "mean_true_close_clv": 0.008072,
       "side_counts": {
         "over": 20,
-        "under": 85
+        "under": 87
       },
-      "dominant_side_share": 0.809524
+      "dominant_side_share": 0.813084
     },
     "warmup_tracking": {
       "signals": 36,
@@ -99,16 +99,16 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "NO_EDGE_AFTER_UNLOCK",
-      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 154,
-      "scored_fixtures": 30,
-      "eligible_rows": 0,
-      "eligible_fixtures": 0,
-      "blocked_rows": 154,
+      "state": "ELIGIBLE_CANDIDATES_PRESENT",
+      "explanation": "At least one candidate passed every locked shadow gate.",
+      "scored_rows": 150,
+      "scored_fixtures": 29,
+      "eligible_rows": 39,
+      "eligible_fixtures": 17,
+      "blocked_rows": 111,
       "blocker_rows": {
-        "edge_below_3pct": 113,
-        "price_older_than_3h": 154
+        "edge_below_3pct": 111,
+        "price_older_than_3h": 8
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 7,
