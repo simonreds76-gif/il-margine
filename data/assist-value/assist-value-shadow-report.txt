@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-10-23T12:36:18Z
+generated_at_utc: 2026-10-24T12:09:17Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,15 +8,15 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 2110
-role_players_loaded: 685
+raw_odds_rows_loaded: 1873
+role_players_loaded: 689
 
 Join
-shadow_rows_assist_only: 2110
-role_matched_rows: 487
-role_match_rate_pct: 23.08
+shadow_rows_assist_only: 1873
+role_matched_rows: 439
+role_match_rate_pct: 23.44
 ambiguous_player_rows: 0
-unmatched_player_rows: 1623
+unmatched_player_rows: 1434
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
@@ -30,38 +30,38 @@ Top role-matched rows
  - Anton Stach | Sunderland AFC vs Leeds United | odds 6.5000 | setpiece_last5 92.86 | corners_last5 95.0 | fk_last5 87.5
  - Felix Keidel | RB Leipzig vs SV 07 Elversberg | odds 8.0000 | setpiece_last5 85.0 | corners_last5 100.0 | fk_last5 87.5
  - Alberto Moleiro | Valencia CF vs Villarreal CF | odds 5.0000 | setpiece_last5 81.82 | corners_last5 94.44 | fk_last5 25.0
- - Pablo Martinez | Deportivo Alaves vs Malaga CF | odds 7.0000 | setpiece_last5 81.58 | corners_last5 86.21 | fk_last5 66.67
  - Florian Thauvin | Racing Club De Lens vs Paris FC | odds 4.3330 | setpiece_last5 76.47 | corners_last5 84.62 | fk_last5 50.0
- - Joris Chotard | Stade Brest 29 vs OGC Nice | odds 5.0000 | setpiece_last5 76.0 | corners_last5 86.67 | fk_last5 75.0
  - Aleix Garcia | TSG Hoffenheim vs Bayer Leverkusen | odds 4.0000 | setpiece_last5 76.0 | corners_last5 85.71 | fk_last5 50.0
- - Romain Faivre | AJ Auxerre vs Le Mans FC | odds 5.0000 | setpiece_last5 70.83 | corners_last5 61.11 | fk_last5 100.0
- - Rolando Mandragora | Torino FC vs AC Monza | odds 5.5000 | setpiece_last5 70.0 | corners_last5 64.29 | fk_last5 83.33
- - Denis Suarez | Deportivo Alaves vs Malaga CF | odds 4.5000 | setpiece_last5 66.67 | corners_last5 80.0 | fk_last5 57.14
- - Enzo Fernandez | Aston Villa vs Manchester City | odds 4.5000 | setpiece_last5 66.67 | corners_last5 63.64 | fk_last5 75.0
+ - Romain Faivre | AJ Auxerre vs Le Mans FC | odds 5.5000 | setpiece_last5 70.83 | corners_last5 61.11 | fk_last5 100.0
  - Johan Mojica | Athletic Bilbao vs Getafe CF | odds 9.0000 | setpiece_last5 65.52 | corners_last5 66.67 | fk_last5 63.64
  - Can Uzun | Borussia Dortmund vs Eintracht Frankfurt | odds 7.5000 | setpiece_last5 65.38 | corners_last5 66.67 | fk_last5 50.0
  - Pablo Pagis | Racing Club De Lens vs Paris FC | odds 5.0000 | setpiece_last5 62.96 | corners_last5 65.0 | fk_last5 80.0
- - Jonathan Clauss | Stade Brest 29 vs OGC Nice | odds 4.5000 | setpiece_last5 62.5 | corners_last5 60.87 | fk_last5 66.67
  - Adam Wharton | Crystal Palace vs Newcastle United | odds 6.5000 | setpiece_last5 60.87 | corners_last5 76.47 | fk_last5 16.67
+ - Adil Aouchiche | 1. FC Cologne vs Schalke 04 | odds 7.0000 | setpiece_last5 60.87 | corners_last5 60.0 | fk_last5 62.5
+ - Pascal Gross | Liverpool FC vs Brighton & Hove Albion | odds 5.5000 | setpiece_last5 58.82 | corners_last5 56.0 | fk_last5 62.5
+ - Raphael Obermair | SC Paderborn 07 vs Hamburger SV | odds 6.0000 | setpiece_last5 57.58 | corners_last5 54.17 | fk_last5 66.67
+ - Arda Guler | FC Barcelona vs Real Madrid | odds 3.7500 | setpiece_last5 57.14 | corners_last5 68.42 | fk_last5 37.5
+ - Jack Rudoni | Coventry City vs Fulham FC | odds 5.5000 | setpiece_last5 57.14 | corners_last5 50.0 | fk_last5 61.54
+ - Federico Dimarco | Inter Milano vs ACF Fiorentina | odds 3.2500 | setpiece_last5 55.0 | corners_last5 62.5 | fk_last5 33.33
 
 Unmatched sample
- - Adrien Rabiot | Udinese Calcio vs AC Milan
- - Alessandro Zanoli | Udinese Calcio vs AC Milan
- - Alexis Saelemaekers | Udinese Calcio vs AC Milan
- - Ardon Jashari | Udinese Calcio vs AC Milan
- - Christian Comotto | Udinese Calcio vs AC Milan
- - Christian Kabasele | Udinese Calcio vs AC Milan
- - David Alaba | Udinese Calcio vs AC Milan
- - Enzo Ebosse | Udinese Calcio vs AC Milan
- - Fikayo Tomori | Udinese Calcio vs AC Milan
- - Filippo Terracciano | Udinese Calcio vs AC Milan
- - Francesco Camarda | Udinese Calcio vs AC Milan
- - Giorgi Chakvetadze | Udinese Calcio vs AC Milan
- - Giulio Vinciati | Udinese Calcio vs AC Milan
- - Idrissa Gueye | Udinese Calcio vs AC Milan
- - Jakub Piotrowski | Udinese Calcio vs AC Milan
- - James Abankwah | Udinese Calcio vs AC Milan
- - Jesper Karlstrom | Udinese Calcio vs AC Milan
- - Juan David Arizala | Udinese Calcio vs AC Milan
- - Keinan Davis | Udinese Calcio vs AC Milan
- - Koni de Winter | Udinese Calcio vs AC Milan
+ - Alessandro Deiola | Cagliari Calcio vs Bologna FC
+ - Alessandro Sugamele | Cagliari Calcio vs Bologna FC
+ - Alieu Fadera | Cagliari Calcio vs Bologna FC
+ - Artem Dovbyk | Cagliari Calcio vs Bologna FC
+ - Arthur Theate | Cagliari Calcio vs Bologna FC
+ - Demi Akarakiri | Cagliari Calcio vs Bologna FC
+ - Eivind Helland | Cagliari Calcio vs Bologna FC
+ - Giuseppe Aurelio | Cagliari Calcio vs Bologna FC
+ - Harry Winks | Cagliari Calcio vs Bologna FC
+ - Ivan Sulev | Cagliari Calcio vs Bologna FC
+ - Jay Enem | Cagliari Calcio vs Bologna FC
+ - Jens Odgaard | Cagliari Calcio vs Bologna FC
+ - Joseph Liteta | Cagliari Calcio vs Bologna FC
+ - Jose Ze Pedro | Cagliari Calcio vs Bologna FC
+ - Juan Rodriguez | Cagliari Calcio vs Bologna FC
+ - Kevin Omoruyi | Cagliari Calcio vs Bologna FC
+ - Lorenzo De Silvestri | Cagliari Calcio vs Bologna FC
+ - Marco Libra | Cagliari Calcio vs Bologna FC
+ - Martin Vitik | Cagliari Calcio vs Bologna FC
+ - Matteo Darmian | Cagliari Calcio vs Bologna FC

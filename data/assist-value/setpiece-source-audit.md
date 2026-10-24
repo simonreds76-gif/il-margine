@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-10-23T12:34:15+00:00`
+Fetched at UTC: `2026-10-24T12:07:44+00:00`
 
 ## Decision
 
@@ -14,14 +14,14 @@ Overall: **PASS_SOURCE_LAYER**
 ## RotoWire
 
 - Teams with set-piece blocks: `96/96`
-- Player role rows extracted: `685`
+- Player role rows extracted: `689`
 
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
-| bundesliga | 18 | 18 | 111 | 9 |
-| epl | 20 | 20 | 136 | 10 |
+| bundesliga | 18 | 18 | 111 | 10 |
+| epl | 20 | 20 | 138 | 11 |
 | la-liga | 20 | 20 | 165 | 12 |
-| ligue-1 | 18 | 18 | 130 | 11 |
+| ligue-1 | 18 | 18 | 132 | 11 |
 | serie-a | 20 | 20 | 143 | 10 |
 
 ## FPL API
@@ -29,10 +29,10 @@ Overall: **PASS_SOURCE_LAYER**
 - Status: `PASS`
 - Teams: `20`
 - Players: `668`
-- Players with set-piece role fields: `140`
+- Players with set-piece role fields: `141`
 - Registered season: `2026/27`
 - Exact 20-team roster match: `YES`
-- Snapshot valid until UTC: `2026-10-30T12:34:15+00:00`
+- Snapshot valid until UTC: `2026-10-31T12:07:44+00:00`
 
 ## SetPieceTakers
 
@@ -52,14 +52,14 @@ Overall: **PASS_SOURCE_LAYER**
 | serie-a | Frosinone | Giacomo Calo | 95.83% | 96.88% | 31 |
 | epl | Leeds United | Anton Stach | 95.0% | 85.19% | 23 |
 | la-liga | Villarreal | Alberto Moleiro | 94.44% | 55.1% | 27 |
-| ligue-1 | Brest | Joris Chotard | 86.67% | 92.86% | 26 |
-| la-liga | Málaga | Pablo Martinez | 86.21% | 73.81% | 31 |
 | bundesliga | Bayer Leverkusen | Aleix Garcia | 85.71% | 91.3% | 42 |
 | ligue-1 | Lens | Florian Thauvin | 84.62% | 78.57% | 44 |
-| la-liga | Deportivo Alaves | Denis Suarez | 80.0% | 55.17% | 16 |
+| la-liga | Málaga | Pablo Martinez | 80.0% | 72.09% | 31 |
+| ligue-1 | Brest | Joris Chotard | 78.57% | 90.32% | 28 |
 | epl | Crystal Palace | Adam Wharton | 76.47% | 64.29% | 18 |
-| la-liga | Rayo Vallecano | Unai Lopez | 73.33% | 76.47% | 26 |
 | la-liga | Real Madrid | Arda Guler | 68.42% | 50.0% | 28 |
+| bundesliga | Eintracht Frankfurt | Can Uzun | 66.67% | 61.54% | 16 |
+| ligue-1 | Monaco | Aleksandr Golovin | 66.67% | 45.45% | 10 |
 
 ## Outputs
 
