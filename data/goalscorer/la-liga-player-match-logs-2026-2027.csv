@@ -68,6 +68,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-29,Espanyol,Real Sociedad,0,13350,Roberto Fernández,FW,,85,1,0,2,,0.447228,0.447228,0.0,1,1,0,0.402229,0,0,0.929949,2.91657
 2026-2027,La Liga,2026-08-22,Espanyol,Real Madrid,1,13350,Roberto Fernández,FW,,90,0,0,2,,0.6524,0.6524,0.02788,1,0,1,0.564153,0,0,1.01908,2.56122
 2026-2027,La Liga,2026-08-16,Espanyol,Levante,1,13350,Roberto Fernández,FW,,90,2,0,2,,1.125561,1.125561,0.195564,2,2,0,1.125561,0,0,2.0099,0.196262
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,1189,Lucas Boyé,FW,,90,0,0,2,,0.171544,0.171544,0.057588,0,0,0,0.0,0,0,1.80426,0.805685
 2026-2027,La Liga,2026-10-18,Alaves,Celta Vigo,0,1189,Lucas Boyé,FW,,90,0,0,4,,0.556105,0.556105,0.025911,1,0,1,0.42618,0,0,1.18059,0.757627
 2026-2027,La Liga,2026-10-10,Alaves,Atletico Madrid,1,1189,Lucas Boyé,FW,,70,1,0,1,,0.743278,0.0,0.0,0,0,0,0.0,1,1,1.00614,2.00235
 2026-2027,La Liga,2026-09-19,Alaves,Athletic Club,0,1189,Lucas Boyé,FW,,75,0,0,0,,0.0,0.0,0.024964,0,0,0,0.0,0,0,0.046163,1.46153
@@ -102,6 +103,13 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-31,Barcelona,Rayo Vallecano,1,11822,Fermín López,Sub,,22,0,0,1,,0.420178,0.420178,0.036366,1,0,1,0.420178,0,0,2.9576,1.06614
 2026-2027,La Liga,2026-08-27,Barcelona,Athletic Club,1,11822,Fermín López,MC,,90,1,0,3,,1.03162,1.03162,0.0,1,1,0,0.915664,0,0,3.9166,0.221962
 2026-2027,La Liga,2026-08-23,Barcelona,Elche,0,11822,Fermín López,AMC,,90,2,0,2,,0.991707,0.991707,0.185382,2,2,0,0.991707,0,0,4.25182,1.17646
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,12115,Adrián Niño,FW,,78,1,0,1,,0.330928,0.330928,0.082427,1,1,0,0.330928,0,0,0.805685,1.80426
+2026-2027,La Liga,2026-10-18,Malaga,Real Sociedad,1,12115,Adrián Niño,FW,,84,1,0,3,,0.809965,0.809965,0.091171,2,1,1,0.772319,0,0,1.92319,2.5719
+2026-2027,La Liga,2026-10-09,Malaga,Espanyol,1,12115,Adrián Niño,Sub,,27,1,0,2,,0.116478,0.116478,0.0,0,0,0,0.0,0,0,0.685224,1.37967
+2026-2027,La Liga,2026-09-20,Malaga,Getafe,0,12115,Adrián Niño,Sub,,38,0,0,1,,0.131158,0.131158,0.0,0,0,0,0.0,0,0,0.660498,1.18796
+2026-2027,La Liga,2026-09-17,Malaga,Villarreal,1,12115,Adrián Niño,Sub,,24,0,0,1,,0.113061,0.113061,0.0,0,0,0,0.0,0,0,0.361392,4.2474
+2026-2027,La Liga,2026-09-13,Malaga,Celta Vigo,0,12115,Adrián Niño,Sub,,21,1,0,3,,0.199444,0.199444,0.012712,0,0,0,0.0,0,0,0.548065,1.48145
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,5110,Mariano,FW,,67,0,0,0,,0.0,0.0,0.02297,0,0,0,0.0,0,0,1.80426,0.805685
 2026-2027,La Liga,2026-10-18,Alaves,Celta Vigo,0,5110,Mariano,Sub,,28,0,1,2,,0.08114,0.08114,0.069908,0,0,0,0.0,0,0,1.18059,0.757627
 2026-2027,La Liga,2026-10-10,Alaves,Atletico Madrid,1,5110,Mariano,Sub,,20,0,0,2,,0.124224,0.124224,0.0,0,0,0,0.0,0,0,1.00614,2.00235
 2026-2027,La Liga,2026-09-19,Alaves,Athletic Club,0,5110,Mariano,FW,,65,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.046163,1.46153
@@ -177,11 +185,6 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-09-05,Atletico Madrid,Athletic Club,0,11866,Álex Grimaldo,DL,,90,0,0,1,,0.022377,0.022377,0.0,0,0,0,0.0,0,0,0.752183,1.87212
 2026-2027,La Liga,2026-08-29,Atletico Madrid,Sevilla,0,11866,Álex Grimaldo,DL,,90,0,0,2,,0.134103,0.134103,0.0,0,0,0,0.0,0,0,1.47677,1.08053
 2026-2027,La Liga,2026-08-23,Atletico Madrid,Villarreal,1,11866,Álex Grimaldo,DL,,90,0,0,1,,0.016027,0.016027,0.0,0,0,0,0.0,0,0,0.739413,3.54183
-2026-2027,La Liga,2026-10-18,Malaga,Real Sociedad,1,12115,Adrián Niño,FW,,84,1,0,3,,0.809965,0.809965,0.091171,2,1,1,0.772319,0,0,1.92319,2.5719
-2026-2027,La Liga,2026-10-09,Malaga,Espanyol,1,12115,Adrián Niño,Sub,,27,1,0,2,,0.116478,0.116478,0.0,0,0,0,0.0,0,0,0.685224,1.37967
-2026-2027,La Liga,2026-09-20,Malaga,Getafe,0,12115,Adrián Niño,Sub,,38,0,0,1,,0.131158,0.131158,0.0,0,0,0,0.0,0,0,0.660498,1.18796
-2026-2027,La Liga,2026-09-17,Malaga,Villarreal,1,12115,Adrián Niño,Sub,,24,0,0,1,,0.113061,0.113061,0.0,0,0,0,0.0,0,0,0.361392,4.2474
-2026-2027,La Liga,2026-09-13,Malaga,Celta Vigo,0,12115,Adrián Niño,Sub,,21,1,0,3,,0.199444,0.199444,0.012712,0,0,0,0.0,0,0,0.548065,1.48145
 2026-2027,La Liga,2026-10-11,Real Sociedad,Deportivo La Coruna,1,12862,Luka Sucic,FW,,90,0,0,0,,0.0,0.0,0.507283,0,0,0,0.0,0,0,1.32961,2.33695
 2026-2027,La Liga,2026-09-20,Real Sociedad,Valencia,0,12862,Luka Sucic,FW,,88,1,0,2,,0.132557,0.132557,0.537916,0,0,0,0.0,0,0,2.33411,1.52762
 2026-2027,La Liga,2026-09-13,Real Sociedad,Atletico Madrid,1,12862,Luka Sucic,AMC,,90,0,0,2,,0.391362,0.391362,0.0,1,0,1,0.376808,0,0,0.607518,1.83411
@@ -731,6 +734,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-09-05,Atletico Madrid,Athletic Club,0,10189,Marc Pubill,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.752183,1.87212
 2026-2027,La Liga,2026-08-29,Atletico Madrid,Sevilla,0,10189,Marc Pubill,DC,,90,0,0,1,,0.097463,0.097463,0.0,0,0,0,0.0,0,0,1.47677,1.08053
 2026-2027,La Liga,2026-08-23,Atletico Madrid,Villarreal,1,10189,Marc Pubill,DR,,71,1,0,1,,0.031955,0.031955,0.0,0,0,0,0.0,0,0,0.739413,3.54183
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,10364,Nahuel Tenaglia,DC,,90,0,0,3,,0.138919,0.138919,0.0,0,0,0,0.0,0,0,1.80426,0.805685
 2026-2027,La Liga,2026-10-18,Alaves,Celta Vigo,0,10364,Nahuel Tenaglia,DR,,90,0,0,1,,0.051573,0.051573,0.0,0,0,0,0.0,0,0,1.18059,0.757627
 2026-2027,La Liga,2026-10-10,Alaves,Atletico Madrid,1,10364,Nahuel Tenaglia,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.00614,2.00235
 2026-2027,La Liga,2026-09-19,Alaves,Athletic Club,0,10364,Nahuel Tenaglia,DR,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.046163,1.46153
@@ -745,6 +749,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-09-04,Real Madrid,Real Betis,0,10576,Álvaro Fernández,Sub,,1,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.38283,0.885249
 2026-2027,La Liga,2026-08-26,Real Madrid,Real Sociedad,1,10576,Álvaro Fernández,DL,,48,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.30519,0.462997
 2026-2027,La Liga,2026-08-22,Real Madrid,Espanyol,0,10576,Álvaro Fernández,DL,,67,0,0,0,,0.0,0.0,0.189137,0,0,0,0.0,0,0,2.56122,1.01908
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,10857,Pablo Ibáñez,MC,,90,0,0,2,,0.060356,0.060356,0.0,0,0,0,0.0,0,0,1.80426,0.805685
 2026-2027,La Liga,2026-10-18,Alaves,Celta Vigo,0,10857,Pablo Ibáñez,MC,,90,0,0,2,,0.059421,0.059421,0.08533,0,0,0,0.0,0,0,1.18059,0.757627
 2026-2027,La Liga,2026-10-10,Alaves,Atletico Madrid,1,10857,Pablo Ibáñez,MC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.00614,2.00235
 2026-2027,La Liga,2026-09-19,Alaves,Athletic Club,0,10857,Pablo Ibáñez,MC,,85,0,0,0,,0.0,0.0,0.021199,0,0,0,0.0,0,0,0.046163,1.46153
@@ -767,6 +772,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-09-07,Elche,Real Sociedad,1,11362,Facundo Buonanotte,MC,,58,0,0,2,,0.085732,0.085732,0.0,0,0,0,0.0,0,0,2.87045,0.876198
 2026-2027,La Liga,2026-08-28,Elche,Racing Santander,0,11362,Facundo Buonanotte,MR,,72,0,0,3,,0.106232,0.106232,0.026974,0,0,0,0.0,0,0,1.07551,2.56226
 2026-2027,La Liga,2026-08-23,Elche,Barcelona,1,11362,Facundo Buonanotte,Sub,,21,0,0,2,,0.347036,0.347036,0.0,1,0,1,0.31895,0,0,1.17646,4.25182
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,11540,Carlos Dotor,MC,,88,0,0,2,,0.224676,0.224676,0.0,0,0,0,0.0,0,0,0.805685,1.80426
 2026-2027,La Liga,2026-10-18,Malaga,Real Sociedad,1,11540,Carlos Dotor,MC,,66,0,0,0,,0.0,0.0,0.024464,0,0,0,0.0,0,0,1.92319,2.5719
 2026-2027,La Liga,2026-10-09,Malaga,Espanyol,1,11540,Carlos Dotor,Sub,,27,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.685224,1.37967
 2026-2027,La Liga,2026-09-20,Malaga,Getafe,0,11540,Carlos Dotor,MC,,90,0,0,1,,0.048226,0.048226,0.075277,0,0,0,0.0,0,0,0.660498,1.18796
@@ -877,6 +883,13 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-31,Barcelona,Rayo Vallecano,1,14129,Xavi Espart,DL,,90,0,1,1,,0.036366,0.036366,0.512394,0,0,0,0.0,0,0,2.9576,1.06614
 2026-2027,La Liga,2026-08-27,Barcelona,Athletic Club,1,14129,Xavi Espart,DL,,90,0,0,1,,0.041721,0.041721,0.190318,0,0,0,0.0,0,0,3.9166,0.221962
 2026-2027,La Liga,2026-08-23,Barcelona,Elche,0,14129,Xavi Espart,DL,,90,0,1,0,,0.0,0.0,0.494818,0,0,0,0.0,0,0,4.25182,1.17646
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,14222,Aitor Mañas,Sub,,14,1,0,2,,0.996655,0.996655,0.0,1,1,0,0.970131,0,0,1.80426,0.805685
+2026-2027,La Liga,2026-10-18,Alaves,Celta Vigo,0,14222,Aitor Mañas,Sub,,2,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.18059,0.757627
+2026-2027,La Liga,2026-10-10,Alaves,Atletico Madrid,1,14222,Aitor Mañas,Sub,,5,0,0,0,,0.0,0.0,0.107297,0,0,0,0.0,0,0,1.00614,2.00235
+2026-2027,La Liga,2026-09-12,Alaves,Racing Santander,0,14222,Aitor Mañas,Sub,,3,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.27148,1.38389
+2026-2027,La Liga,2026-09-06,Alaves,Osasuna,1,14222,Aitor Mañas,Sub,,15,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.60188,1.64406
+2026-2027,La Liga,2026-08-28,Alaves,Villarreal,1,14222,Aitor Mañas,Sub,,7,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.915469,1.45107
+2026-2027,La Liga,2026-08-15,Alaves,Getafe,1,14222,Aitor Mañas,FW,,60,0,0,0,,0.0,0.0,0.078761,0,0,0,0.0,0,0,2.28581,0.259705
 2026-2027,La Liga,2026-10-18,Real Sociedad,Malaga,0,14364,Job Ochieng,Sub,,17,0,0,1,,0.04873,0.04873,0.048476,0,0,0,0.0,0,0,2.5719,1.92319
 2026-2027,La Liga,2026-10-11,Real Sociedad,Deportivo La Coruna,1,14364,Job Ochieng,Sub,,32,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.32961,2.33695
 2026-2027,La Liga,2026-09-20,Real Sociedad,Valencia,0,14364,Job Ochieng,MR,,62,0,1,4,,0.180486,0.180486,0.084072,0,0,0,0.0,0,0,2.33411,1.52762
@@ -885,6 +898,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-26,Real Sociedad,Real Madrid,0,14364,Job Ochieng,AML,,68,0,0,1,,0.049111,0.049111,0.0,0,0,0,0.0,0,0,0.462997,3.30519
 2026-2027,La Liga,2026-09-20,Valencia,Real Sociedad,1,14452,Aaron Mayol,MC,,90,1,0,2,,0.067496,0.067496,0.031658,0,0,0,0.0,0,0,1.52762,2.33411
 2026-2027,La Liga,2026-09-15,Valencia,Alaves,0,14452,Aaron Mayol,DMC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.83949,1.30957
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,14519,Ville Koski,DC,,90,0,0,1,,0.093492,0.093492,0.0,0,0,0,0.0,0,0,1.80426,0.805685
 2026-2027,La Liga,2026-10-18,Alaves,Celta Vigo,0,14519,Ville Koski,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.18059,0.757627
 2026-2027,La Liga,2026-10-10,Alaves,Atletico Madrid,1,14519,Ville Koski,Sub,,13,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.00614,2.00235
 2026-2027,La Liga,2026-09-19,Alaves,Athletic Club,0,14519,Ville Koski,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.046163,1.46153
@@ -945,6 +959,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-09-20,Deportivo La Coruna,Real Betis,1,14712,Diego Villares,Sub,,57,1,0,1,,0.271777,0.271777,0.051272,1,1,0,0.271777,0,0,1.93872,1.00253
 2026-2027,La Liga,2026-08-24,Deportivo La Coruna,Malaga,0,14712,Diego Villares,Sub,,27,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.1297,1.35649
 2026-2027,La Liga,2026-08-17,Deportivo La Coruna,Elche,1,14712,Diego Villares,Sub,,29,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.33987,1.58691
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,14732,Chupe,Sub,,12,0,0,1,,0.052507,0.052507,0.107021,0,0,0,0.0,0,0,0.805685,1.80426
 2026-2027,La Liga,2026-10-18,Malaga,Real Sociedad,1,14732,Chupe,FW,,90,0,0,5,,0.459501,0.459501,0.0,1,0,1,0.236446,0,0,1.92319,2.5719
 2026-2027,La Liga,2026-10-09,Malaga,Espanyol,1,14732,Chupe,FW,,90,0,0,1,,0.049465,0.049465,0.0,0,0,0,0.0,0,0,0.685224,1.37967
 2026-2027,La Liga,2026-09-20,Malaga,Getafe,0,14732,Chupe,Sub,,17,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.660498,1.18796
@@ -1106,6 +1121,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-28,Alaves,Villarreal,1,2280,Jonny,DC,,90,0,0,1,,0.014247,0.014247,0.0,0,0,0,0.0,0,0,0.915469,1.45107
 2026-2027,La Liga,2026-08-20,Alaves,Rayo Vallecano,0,2280,Jonny,DC,,73,0,0,0,,0.0,0.0,0.006843,0,0,0,0.0,0,0,2.22075,0.566429
 2026-2027,La Liga,2026-08-15,Alaves,Getafe,1,2280,Jonny,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.28581,0.259705
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,2308,Denis Suárez,Sub,,34,0,0,0,,0.0,0.0,0.112344,0,0,0,0.0,0,0,1.80426,0.805685
 2026-2027,La Liga,2026-10-18,Alaves,Celta Vigo,0,2308,Denis Suárez,Sub,,28,0,0,0,,0.0,0.0,0.045103,0,0,0,0.0,0,0,1.18059,0.757627
 2026-2027,La Liga,2026-10-10,Alaves,Atletico Madrid,1,2308,Denis Suárez,MC,,85,0,0,0,,0.0,0.0,0.024687,0,0,0,0.0,0,0,1.00614,2.00235
 2026-2027,La Liga,2026-09-15,Alaves,Valencia,1,2308,Denis Suárez,MC,,69,0,0,0,,0.0,0.0,0.165922,0,0,0,0.0,0,0,1.30957,0.83949
@@ -1243,6 +1259,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-09-07,Getafe,Celta Vigo,1,5043,Kiko Femenía,DR,,7,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.45841,1.42122
 2026-2027,La Liga,2026-08-31,Getafe,Osasuna,0,5043,Kiko Femenía,DR,,90,0,0,0,,0.0,0.0,0.428955,0,0,0,0.0,0,0,1.09043,1.70503
 2026-2027,La Liga,2026-08-15,Getafe,Alaves,0,5043,Kiko Femenía,DMR,,41,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.259705,2.28581
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,5058,Carles Aleñá,MC,,47,0,0,0,,0.0,0.0,0.179406,0,0,0,0.0,0,0,1.80426,0.805685
 2026-2027,La Liga,2026-10-18,Alaves,Celta Vigo,0,5058,Carles Aleñá,MC,,62,0,0,1,,0.068912,0.068912,0.07199,0,0,0,0.0,0,0,1.18059,0.757627
 2026-2027,La Liga,2026-09-19,Alaves,Athletic Club,0,5058,Carles Aleñá,Sub,,5,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.046163,1.46153
 2026-2027,La Liga,2026-09-15,Alaves,Valencia,1,5058,Carles Aleñá,Sub,,3,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.30957,0.83949
@@ -1318,6 +1335,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-09-05,Rayo Vallecano,Racing Santander,1,5672,Iván Balliu,Sub,,9,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.18959,0.632853
 2026-2027,La Liga,2026-08-31,Rayo Vallecano,Barcelona,0,5672,Iván Balliu,DR,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.06614,2.9576
 2026-2027,La Liga,2026-08-15,Rayo Vallecano,Sevilla,0,5672,Iván Balliu,DL,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.91219,2.01841
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,6075,Antonio Sivera,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.80426,0.805685
 2026-2027,La Liga,2026-10-18,Alaves,Celta Vigo,0,6075,Antonio Sivera,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.18059,0.757627
 2026-2027,La Liga,2026-10-10,Alaves,Atletico Madrid,1,6075,Antonio Sivera,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.00614,2.00235
 2026-2027,La Liga,2026-09-19,Alaves,Athletic Club,0,6075,Antonio Sivera,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.046163,1.46153
@@ -1397,6 +1415,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-09-04,Real Madrid,Real Betis,0,6326,Ibrahima Konaté,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.38283,0.885249
 2026-2027,La Liga,2026-08-26,Real Madrid,Real Sociedad,1,6326,Ibrahima Konaté,DC,,90,0,0,0,,0.0,0.0,0.106823,0,0,0,0.0,0,0,3.30519,0.462997
 2026-2027,La Liga,2026-08-22,Real Madrid,Espanyol,0,6326,Ibrahima Konaté,DC,,90,0,0,1,,0.020967,0.020967,0.0,0,0,0,0.0,0,0,2.56122,1.01908
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,6400,Antonio Martínez,Sub,,23,0,0,3,,0.227465,0.227465,0.0,0,0,0,0.0,0,0,1.80426,0.805685
 2026-2027,La Liga,2026-10-18,Alaves,Celta Vigo,0,6400,Antonio Martínez,FW,,62,0,0,3,,0.119538,0.119538,0.0,0,0,0,0.0,0,0,1.18059,0.757627
 2026-2027,La Liga,2026-10-10,Alaves,Atletico Madrid,1,6400,Antonio Martínez,FW,,70,0,0,1,,0.00776,0.00776,0.027845,0,0,0,0.0,0,0,1.00614,2.00235
 2026-2027,La Liga,2026-09-19,Alaves,Athletic Club,0,6400,Antonio Martínez,Sub,,25,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.046163,1.46153
@@ -1495,6 +1514,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-30,Real Madrid,Malaga,1,7134,Marc Cucurella,DL,,90,0,0,0,,0.0,0.0,0.078581,0,0,0,0.0,0,0,3.40784,0.760169
 2026-2027,La Liga,2026-08-26,Real Madrid,Real Sociedad,1,7134,Marc Cucurella,Sub,,42,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.30519,0.462997
 2026-2027,La Liga,2026-08-22,Real Madrid,Espanyol,0,7134,Marc Cucurella,Sub,,23,0,0,0,,0.0,0.0,0.087056,0,0,0,0.0,0,0,2.56122,1.01908
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,7186,Juan Berrocal,Sub,,12,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.805685,1.80426
 2026-2027,La Liga,2026-09-20,Malaga,Getafe,0,7186,Juan Berrocal,DC,,90,0,0,1,,0.069291,0.069291,0.0,0,0,0,0.0,0,0,0.660498,1.18796
 2026-2027,La Liga,2026-09-13,Malaga,Celta Vigo,0,7186,Juan Berrocal,Sub,,1,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.548065,1.48145
 2026-2027,La Liga,2026-10-18,Malaga,Real Sociedad,1,7258,Joaquín Muñoz,Sub,,20,0,0,2,,0.100155,0.100155,0.124078,0,0,0,0.0,0,0,1.92319,2.5719
@@ -1666,6 +1686,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-28,Elche,Racing Santander,0,8895,Tete Morente,Sub,,41,0,1,1,,0.01568,0.01568,0.079964,0,0,0,0.0,0,0,1.07551,2.56226
 2026-2027,La Liga,2026-08-23,Elche,Barcelona,1,8895,Tete Morente,MR,,69,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.17646,4.25182
 2026-2027,La Liga,2026-08-17,Elche,Deportivo La Coruna,0,8895,Tete Morente,Sub,,29,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.58691,0.33987
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,8902,José Salinas,Sub,,21,0,0,1,,0.063074,0.063074,0.0,0,0,0,0.0,0,0,0.805685,1.80426
 2026-2027,La Liga,2026-10-18,Malaga,Real Sociedad,1,8902,José Salinas,DL,,48,0,0,0,,0.0,0.0,0.416936,0,0,0,0.0,0,0,1.92319,2.5719
 2026-2027,La Liga,2026-09-20,Malaga,Getafe,0,8902,José Salinas,DL,,90,0,0,1,,0.01738,0.01738,0.0,0,0,0,0.0,0,0,0.660498,1.18796
 2026-2027,La Liga,2026-09-17,Malaga,Villarreal,1,8902,José Salinas,DL,,51,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.361392,4.2474
@@ -1700,6 +1721,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-30,Valencia,Deportivo La Coruna,0,9217,Jesús Vázquez,DL,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.01663,1.40751
 2026-2027,La Liga,2026-08-25,Valencia,Real Betis,1,9217,Jesús Vázquez,DL,,90,0,0,2,,0.076791,0.076791,0.069819,0,0,0,0.0,0,0,1.28989,0.964495
 2026-2027,La Liga,2026-08-22,Valencia,Celta Vigo,1,9217,Jesús Vázquez,DR,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.420581,0.537309
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,9280,Antonio Blanco,MC,,76,0,0,1,,0.021013,0.021013,0.0,0,0,0,0.0,0,0,1.80426,0.805685
 2026-2027,La Liga,2026-10-18,Alaves,Celta Vigo,0,9280,Antonio Blanco,MC,,88,0,0,0,,0.0,0.0,0.514138,0,0,0,0.0,0,0,1.18059,0.757627
 2026-2027,La Liga,2026-10-10,Alaves,Atletico Madrid,1,9280,Antonio Blanco,MC,,70,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.00614,2.00235
 2026-2027,La Liga,2026-09-19,Alaves,Athletic Club,0,9280,Antonio Blanco,Sub,,15,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.046163,1.46153
@@ -2031,6 +2053,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-09-06,Sevilla,Espanyol,0,11788,Arouna Sangante,DC,,57,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.372572,1.81745
 2026-2027,La Liga,2026-08-22,Sevilla,Athletic Club,0,11788,Arouna Sangante,DC,,71,0,0,0,,0.0,0.0,0.026977,0,0,0,0.0,0,0,0.966795,1.46496
 2026-2027,La Liga,2026-08-15,Sevilla,Rayo Vallecano,1,11788,Arouna Sangante,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.01841,1.91219
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,11825,Abderrahmane Rebbach,DL,,56,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.80426,0.805685
 2026-2027,La Liga,2026-10-18,Alaves,Celta Vigo,0,11825,Abderrahmane Rebbach,DL,,88,0,0,1,,0.030102,0.030102,0.040868,0,0,0,0.0,0,0,1.18059,0.757627
 2026-2027,La Liga,2026-10-10,Alaves,Atletico Madrid,1,11825,Abderrahmane Rebbach,DML,,90,0,0,1,,0.01445,0.01445,0.0,0,0,0,0.0,0,0,1.00614,2.00235
 2026-2027,La Liga,2026-09-19,Alaves,Athletic Club,0,11825,Abderrahmane Rebbach,DL,,66,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.046163,1.46153
@@ -2112,6 +2135,9 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-09-13,Atletico Madrid,Real Sociedad,0,12323,Johnny Cardoso,Sub,,31,0,0,1,,0.035044,0.035044,0.0,0,0,0,0.0,0,0,1.83411,0.607518
 2026-2027,La Liga,2026-09-05,Atletico Madrid,Athletic Club,0,12323,Johnny Cardoso,Sub,,9,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.752183,1.87212
 2026-2027,La Liga,2026-08-29,Atletico Madrid,Sevilla,0,12323,Johnny Cardoso,Sub,,1,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.47677,1.08053
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,12371,Adam Aznou,ML,,69,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.805685,1.80426
+2026-2027,La Liga,2026-10-18,Malaga,Real Sociedad,1,12371,Adam Aznou,Sub,,42,0,0,1,,0.091171,0.091171,0.282831,0,0,0,0.0,0,0,1.92319,2.5719
+2026-2027,La Liga,2026-10-09,Malaga,Espanyol,1,12371,Adam Aznou,Sub,,27,0,0,1,,0.029826,0.029826,0.0,0,0,0,0.0,0,0,0.685224,1.37967
 2026-2027,La Liga,2026-10-18,Osasuna,Racing Santander,1,12472,Iñigo Arguibide,Sub,,10,0,0,1,,0.064781,0.064781,0.0,0,0,0,0.0,0,0,3.08218,0.220354
 2026-2027,La Liga,2026-10-11,Osasuna,Real Betis,0,12472,Iñigo Arguibide,DR,,66,0,0,0,,0.0,0.0,0.069449,0,0,0,0.0,0,0,1.14555,2.65567
 2026-2027,La Liga,2026-09-19,Osasuna,Rayo Vallecano,1,12472,Iñigo Arguibide,DR,,90,0,0,2,,0.088939,0.088939,0.0,0,0,0,0.0,0,0,0.926414,1.35649
@@ -2213,12 +2239,14 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-30,Athletic Club,Celta Vigo,0,13123,Peio Canales,Sub,,23,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.13299,1.20059
 2026-2027,La Liga,2026-08-27,Athletic Club,Barcelona,0,13123,Peio Canales,DMC,,90,0,0,0,,0.0,0.0,0.022903,0,0,0,0.0,0,0,0.221962,3.9166
 2026-2027,La Liga,2026-08-22,Athletic Club,Sevilla,1,13123,Peio Canales,DMC,,90,0,0,3,,0.124659,0.124659,0.217005,0,0,0,0.0,0,0,1.46496,0.966795
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,13278,Youssef Lekhedim,Sub,,34,0,0,1,,0.012334,0.012334,0.0,0,0,0,0.0,0,0,1.80426,0.805685
 2026-2027,La Liga,2026-09-19,Alaves,Athletic Club,0,13278,Youssef Lekhedim,Sub,,24,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.046163,1.46153
 2026-2027,La Liga,2026-09-15,Alaves,Valencia,1,13278,Youssef Lekhedim,Sub,,21,0,0,1,,0.015314,0.015314,0.0,0,0,0,0.0,0,0,1.30957,0.83949
 2026-2027,La Liga,2026-09-06,Alaves,Osasuna,1,13278,Youssef Lekhedim,Sub,,15,0,0,0,,0.0,0.0,0.037165,0,0,0,0.0,0,0,1.60188,1.64406
 2026-2027,La Liga,2026-08-28,Alaves,Villarreal,1,13278,Youssef Lekhedim,Sub,,35,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.915469,1.45107
 2026-2027,La Liga,2026-08-20,Alaves,Rayo Vallecano,0,13278,Youssef Lekhedim,Sub,,17,0,0,0,,0.0,0.0,0.02834,0,0,0,0.0,0,0,2.22075,0.566429
 2026-2027,La Liga,2026-08-15,Alaves,Getafe,1,13278,Youssef Lekhedim,Sub,,22,0,0,0,,0.0,0.0,0.044587,0,0,0,0.0,0,0,2.28581,0.259705
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,13313,Nicolás Valentini,DC,,56,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.80426,0.805685
 2026-2027,La Liga,2026-10-18,Alaves,Celta Vigo,0,13313,Nicolás Valentini,DC,,90,0,0,3,,0.10715,0.10715,0.0,0,0,0,0.0,0,0,1.18059,0.757627
 2026-2027,La Liga,2026-10-10,Alaves,Atletico Madrid,1,13313,Nicolás Valentini,DC,,77,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.00614,2.00235
 2026-2027,La Liga,2026-09-19,Alaves,Athletic Club,0,13313,Nicolás Valentini,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.046163,1.46153
@@ -2364,12 +2392,6 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-09-17,Villarreal,Malaga,0,14221,Carlos Macià,Sub,,5,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,4.2474,0.361392
 2026-2027,La Liga,2026-08-23,Villarreal,Atletico Madrid,0,14221,Carlos Macià,Sub,,6,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.54183,0.739413
 2026-2027,La Liga,2026-08-16,Villarreal,Racing Santander,0,14221,Carlos Macià,Sub,,28,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.768799,1.96477
-2026-2027,La Liga,2026-10-18,Alaves,Celta Vigo,0,14222,Aitor Mañas,Sub,,2,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.18059,0.757627
-2026-2027,La Liga,2026-10-10,Alaves,Atletico Madrid,1,14222,Aitor Mañas,Sub,,5,0,0,0,,0.0,0.0,0.107297,0,0,0,0.0,0,0,1.00614,2.00235
-2026-2027,La Liga,2026-09-12,Alaves,Racing Santander,0,14222,Aitor Mañas,Sub,,3,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,2.27148,1.38389
-2026-2027,La Liga,2026-09-06,Alaves,Osasuna,1,14222,Aitor Mañas,Sub,,15,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.60188,1.64406
-2026-2027,La Liga,2026-08-28,Alaves,Villarreal,1,14222,Aitor Mañas,Sub,,7,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.915469,1.45107
-2026-2027,La Liga,2026-08-15,Alaves,Getafe,1,14222,Aitor Mañas,FW,,60,0,0,0,,0.0,0.0,0.078761,0,0,0,0.0,0,0,2.28581,0.259705
 2026-2027,La Liga,2026-10-17,Atletico Madrid,Espanyol,0,14233,Dani Martinez,DL,,46,0,0,1,,0.061097,0.061097,0.01379,0,0,0,0.0,0,0,1.77823,0.485489
 2026-2027,La Liga,2026-08-19,Atletico Madrid,Malaga,1,14233,Dani Martinez,DL,,90,0,0,1,,0.47041,0.47041,0.0,1,0,1,0.47041,0,0,1.34391,0.229576
 2026-2027,La Liga,2026-10-12,Sevilla,Levante,0,14323,Julio Díaz,Sub,,17,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,3.19601,2.00633
@@ -2402,6 +2424,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-09-07,Getafe,Celta Vigo,1,14389,Sebastián Boselli,Sub,,1,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.45841,1.42122
 2026-2027,La Liga,2026-08-23,Getafe,Racing Santander,1,14389,Sebastián Boselli,Sub,,3,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.982608,1.1679
 2026-2027,La Liga,2026-08-15,Getafe,Alaves,0,14389,Sebastián Boselli,Sub,,6,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.259705,2.28581
+2026-2027,La Liga,2026-10-23,Alaves,Malaga,1,14392,Ángel Pérez,DR,,90,0,0,2,,0.088127,0.088127,0.191916,0,0,0,0.0,0,0,1.80426,0.805685
 2026-2027,La Liga,2026-10-10,Alaves,Atletico Madrid,1,14392,Ángel Pérez,DMR,,67,0,0,3,,0.116428,0.116428,0.0,0,0,0,0.0,0,0,1.00614,2.00235
 2026-2027,La Liga,2026-09-19,Alaves,Athletic Club,0,14392,Ángel Pérez,Sub,,15,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.046163,1.46153
 2026-2027,La Liga,2026-09-15,Alaves,Valencia,1,14392,Ángel Pérez,DMR,,87,0,0,2,,0.083791,0.083791,0.481446,0,0,0,0.0,0,0,1.30957,0.83949
@@ -2503,6 +2526,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-09-05,Atletico Madrid,Athletic Club,0,14722,Arnau Ortiz,Sub,,26,0,0,1,,0.052741,0.052741,0.0,0,0,0,0.0,0,0,0.752183,1.87212
 2026-2027,La Liga,2026-08-29,Atletico Madrid,Sevilla,0,14722,Arnau Ortiz,Sub,,18,0,0,1,,0.473353,0.473353,0.056188,1,0,1,0.473353,0,0,1.47677,1.08053
 2026-2027,La Liga,2026-08-19,Atletico Madrid,Malaga,1,14722,Arnau Ortiz,ML,,61,0,0,0,,0.0,0.0,0.109566,0,0,0,0.0,0,0,1.34391,0.229576
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,14724,Alfonso Herrero,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.805685,1.80426
 2026-2027,La Liga,2026-10-18,Malaga,Real Sociedad,1,14724,Alfonso Herrero,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.92319,2.5719
 2026-2027,La Liga,2026-10-09,Malaga,Espanyol,1,14724,Alfonso Herrero,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.685224,1.37967
 2026-2027,La Liga,2026-09-20,Malaga,Getafe,0,14724,Alfonso Herrero,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.660498,1.18796
@@ -2512,6 +2536,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-30,Malaga,Real Madrid,0,14724,Alfonso Herrero,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.760169,3.40784
 2026-2027,La Liga,2026-08-24,Malaga,Deportivo La Coruna,1,14724,Alfonso Herrero,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.35649,1.1297
 2026-2027,La Liga,2026-08-19,Malaga,Atletico Madrid,0,14724,Alfonso Herrero,GK,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.229576,1.34391
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,14725,Carlos Puga,DR,,78,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.805685,1.80426
 2026-2027,La Liga,2026-10-18,Malaga,Real Sociedad,1,14725,Carlos Puga,Sub,,6,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.92319,2.5719
 2026-2027,La Liga,2026-10-09,Malaga,Espanyol,1,14725,Carlos Puga,DR,,63,0,0,0,,0.0,0.0,0.060702,0,0,0,0.0,0,0,0.685224,1.37967
 2026-2027,La Liga,2026-09-17,Malaga,Villarreal,1,14725,Carlos Puga,DR,,80,0,0,0,,0.0,0.0,0.066086,0,0,0,0.0,0,0,0.361392,4.2474
@@ -2520,12 +2545,14 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-30,Malaga,Real Madrid,0,14725,Carlos Puga,DR,,64,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.760169,3.40784
 2026-2027,La Liga,2026-08-24,Malaga,Deportivo La Coruna,1,14725,Carlos Puga,DR,,90,0,0,1,,0.012768,0.012768,0.0,0,0,0,0.0,0,0,1.35649,1.1297
 2026-2027,La Liga,2026-08-19,Malaga,Atletico Madrid,0,14725,Carlos Puga,DR,,76,0,0,0,,0.0,0.0,0.057189,0,0,0,0.0,0,0,0.229576,1.34391
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,14726,Einar Galilea,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.805685,1.80426
 2026-2027,La Liga,2026-09-17,Malaga,Villarreal,1,14726,Einar Galilea,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.361392,4.2474
 2026-2027,La Liga,2026-09-13,Malaga,Celta Vigo,0,14726,Einar Galilea,DC,,48,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.548065,1.48145
 2026-2027,La Liga,2026-09-06,Malaga,Levante,1,14726,Einar Galilea,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.72661,1.19172
 2026-2027,La Liga,2026-08-30,Malaga,Real Madrid,0,14726,Einar Galilea,DC,,77,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.760169,3.40784
 2026-2027,La Liga,2026-08-24,Malaga,Deportivo La Coruna,1,14726,Einar Galilea,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.35649,1.1297
 2026-2027,La Liga,2026-08-19,Malaga,Atletico Madrid,0,14726,Einar Galilea,DC,,84,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.229576,1.34391
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,14727,Ángel Recio,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.805685,1.80426
 2026-2027,La Liga,2026-10-18,Malaga,Real Sociedad,1,14727,Ángel Recio,DC,,90,0,0,1,,0.02036,0.02036,0.0,0,0,0,0.0,0,0,1.92319,2.5719
 2026-2027,La Liga,2026-10-09,Malaga,Espanyol,1,14727,Ángel Recio,DC,,90,0,0,2,,0.054682,0.054682,0.0,0,0,0,0.0,0,0,0.685224,1.37967
 2026-2027,La Liga,2026-09-20,Malaga,Getafe,0,14727,Ángel Recio,DC,,90,0,0,1,,0.018174,0.018174,0.0,0,0,0,0.0,0,0,0.660498,1.18796
@@ -2535,6 +2562,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-30,Malaga,Real Madrid,0,14727,Ángel Recio,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.760169,3.40784
 2026-2027,La Liga,2026-08-24,Malaga,Deportivo La Coruna,1,14727,Ángel Recio,DC,,90,0,0,0,,0.0,0.0,0.020663,0,0,0,0.0,0,0,1.35649,1.1297
 2026-2027,La Liga,2026-08-19,Malaga,Atletico Madrid,0,14727,Ángel Recio,DC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.229576,1.34391
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,14728,Rafita,DL,,90,0,0,1,,0.027479,0.027479,0.0,0,0,0,0.0,0,0,0.805685,1.80426
 2026-2027,La Liga,2026-10-18,Malaga,Real Sociedad,1,14728,Rafita,DR,,90,0,0,0,,0.0,0.0,0.031539,0,0,0,0.0,0,0,1.92319,2.5719
 2026-2027,La Liga,2026-10-09,Malaga,Espanyol,1,14728,Rafita,DL,,90,0,1,0,,0.0,0.0,0.081889,0,0,0,0.0,0,0,0.685224,1.37967
 2026-2027,La Liga,2026-09-20,Malaga,Getafe,0,14728,Rafita,DR,,90,0,0,0,,0.0,0.0,0.054785,0,0,0,0.0,0,0,0.660498,1.18796
@@ -2552,6 +2580,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-30,Malaga,Real Madrid,0,14729,Izan Merino,MC,,90,0,0,0,,0.0,0.0,0.084897,0,0,0,0.0,0,0,0.760169,3.40784
 2026-2027,La Liga,2026-08-24,Malaga,Deportivo La Coruna,1,14729,Izan Merino,DMC,,86,0,0,1,,0.030382,0.030382,0.025442,0,0,0,0.0,0,0,1.35649,1.1297
 2026-2027,La Liga,2026-08-19,Malaga,Atletico Madrid,0,14729,Izan Merino,DMC,,90,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.229576,1.34391
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,14730,David Larrubia,MR,,90,0,0,0,,0.0,0.0,0.205323,0,0,0,0.0,0,0,0.805685,1.80426
 2026-2027,La Liga,2026-10-18,Malaga,Real Sociedad,1,14730,David Larrubia,MR,,70,0,0,1,,0.071612,0.071612,0.273334,0,0,0,0.0,0,0,1.92319,2.5719
 2026-2027,La Liga,2026-10-09,Malaga,Espanyol,1,14730,David Larrubia,MR,,90,0,0,2,,0.138969,0.138969,0.022337,0,0,0,0.0,0,0,0.685224,1.37967
 2026-2027,La Liga,2026-09-20,Malaga,Getafe,0,14730,David Larrubia,MR,,90,0,0,1,,0.054785,0.054785,0.129035,0,0,0,0.0,0,0,0.660498,1.18796
@@ -2561,6 +2590,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-30,Malaga,Real Madrid,0,14730,David Larrubia,MR,,90,0,0,4,,0.211805,0.211805,0.180306,0,0,0,0.0,0,0,0.760169,3.40784
 2026-2027,La Liga,2026-08-24,Malaga,Deportivo La Coruna,1,14730,David Larrubia,Sub,,33,0,0,1,,0.029035,0.029035,0.032943,0,0,0,0.0,0,0,1.35649,1.1297
 2026-2027,La Liga,2026-08-19,Malaga,Atletico Madrid,0,14730,David Larrubia,MR,,90,0,0,2,,0.075981,0.075981,0.0,0,0,0,0.0,0,0,0.229576,1.34391
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,14731,Dani Lorenzo,MC,,90,0,0,0,,0.0,0.0,0.027479,0,0,0,0.0,0,0,0.805685,1.80426
 2026-2027,La Liga,2026-10-18,Malaga,Real Sociedad,1,14731,Dani Lorenzo,Sub,,24,0,0,1,,0.031539,0.031539,0.09067,0,0,0,0.0,0,0,1.92319,2.5719
 2026-2027,La Liga,2026-10-09,Malaga,Espanyol,1,14731,Dani Lorenzo,MC,,90,0,0,0,,0.0,0.0,0.041048,0,0,0,0.0,0,0,0.685224,1.37967
 2026-2027,La Liga,2026-09-20,Malaga,Getafe,0,14731,Dani Lorenzo,MC,,73,0,0,1,,0.075277,0.075277,0.131158,0,0,0,0.0,0,0,0.660498,1.18796
@@ -2569,6 +2599,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-09-06,Malaga,Levante,1,14731,Dani Lorenzo,MC,,71,0,0,1,,0.458229,0.458229,0.015277,1,0,1,0.458229,0,0,1.72661,1.19172
 2026-2027,La Liga,2026-08-24,Malaga,Deportivo La Coruna,1,14731,Dani Lorenzo,MC,,86,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.35649,1.1297
 2026-2027,La Liga,2026-08-19,Malaga,Atletico Madrid,0,14731,Dani Lorenzo,MC,,84,0,0,0,,0.0,0.0,0.035695,0,0,0,0.0,0,0,0.229576,1.34391
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,14734,Ramón Enríquez,DMC,,69,0,1,0,,0.0,0.0,0.330928,0,0,0,0.0,0,0,0.805685,1.80426
 2026-2027,La Liga,2026-10-18,Malaga,Real Sociedad,1,14734,Ramón Enríquez,Sub,,42,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.92319,2.5719
 2026-2027,La Liga,2026-09-20,Malaga,Getafe,0,14734,Ramón Enríquez,Sub,,10,0,0,0,,0.0,0.0,0.048226,0,0,0,0.0,0,0,0.660498,1.18796
 2026-2027,La Liga,2026-09-17,Malaga,Villarreal,1,14734,Ramón Enríquez,Sub,,10,0,0,0,,0.0,0.0,0.020582,0,0,0,0.0,0,0,0.361392,4.2474
@@ -2577,6 +2608,7 @@ season,competition,match_date,team,opponent,is_home,player_id,player_name,positi
 2026-2027,La Liga,2026-08-30,Malaga,Real Madrid,0,14734,Ramón Enríquez,Sub,,1,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.760169,3.40784
 2026-2027,La Liga,2026-08-24,Malaga,Deportivo La Coruna,1,14734,Ramón Enríquez,Sub,,4,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,1.35649,1.1297
 2026-2027,La Liga,2026-08-19,Malaga,Atletico Madrid,0,14734,Ramón Enríquez,Sub,,6,0,0,0,,0.0,0.0,0.0,0,0,0,0.0,0,0,0.229576,1.34391
+2026-2027,La Liga,2026-10-23,Malaga,Alaves,0,14735,Rafa Rodríguez,Sub,,21,0,0,0,,0.0,0.0,0.052507,0,0,0,0.0,0,0,0.805685,1.80426
 2026-2027,La Liga,2026-10-09,Malaga,Espanyol,1,14735,Rafa Rodríguez,DMC,,63,0,0,3,,0.102879,0.102879,0.0,0,0,0,0.0,0,0,0.685224,1.37967
 2026-2027,La Liga,2026-09-20,Malaga,Getafe,0,14735,Rafa Rodríguez,DMC,,80,0,0,1,,0.022918,0.022918,0.01738,0,0,0,0.0,0,0,0.660498,1.18796
 2026-2027,La Liga,2026-08-30,Malaga,Real Madrid,0,14735,Rafa Rodríguez,MC,,49,0,0,3,,0.091764,0.091764,0.0,0,0,0,0.0,0,0,0.760169,3.40784
