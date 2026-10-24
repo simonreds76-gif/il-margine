@@ -1687,7 +1687,7 @@
       "sent_at": "2026-10-23T13:32:21.012939+00:00"
     },
     "72221342|caoimhín kelleher|2.5|over": {
-      "status": "claimed",
+      "status": "sent",
       "run_token": "40042887293:1",
       "claimed_at": "2026-10-24T00:02:55.664924+00:00",
       "signal": {
@@ -1726,10 +1726,12 @@
         "close_odds": "",
         "clv": "",
         "selection_policy": "near_even_value_v2"
-      }
+      },
+      "message_id": 611,
+      "sent_at": "2026-10-24T00:03:03.007583+00:00"
     },
     "keeper_watch_v1:5795490": {
-      "status": "claimed",
+      "status": "sent",
       "run_token": "40042887293:1",
       "claimed_at": "2026-10-24T00:02:55.664924+00:00",
       "signal": {
@@ -1764,7 +1766,9 @@
         "selection_policy": "keeper_watch_v1",
         "paper_stake": 0.5,
         "actual_stake": 0
-      }
+      },
+      "message_id": 612,
+      "sent_at": "2026-10-24T00:03:03.305683+00:00"
     }
   }
 }
