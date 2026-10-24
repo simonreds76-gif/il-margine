@@ -43,4 +43,20 @@ class KambiContracts(unittest.TestCase):
         self.assertEqual(len(alerts.new_actionable_rows([good],[bad])),1)
         self.assertEqual(alerts.new_actionable_rows([good],[good]),[])
 
+    def test_mapped_contract_holds_substitution_or_nonstarter(self):
+        player=dict(id=100,name='David Raya',positionId=11)
+        stats={'stats':[{'stats':{'Minutes played':{'key':'minutes_played','stat':{'value':90}}}}]}
+        content={'lineup':{'homeTeam':{'starters':[player]}},'playerStats':{'100':stats},
+                 'shotmap':{'shots':[dict(id=1,teamId=20,eventType='AttemptSaved',keeperId=100)]}}
+        payload={'props':{'pageProps':{'header':{'status':{'finished':True},'teams':[{'id':10},{'id':20}]},'content':content}}}
+        self.assertEqual(settle.fotmob_mapped_keeper_saves(payload,'home','David Raya')[0],1)
+        stats['stats'][0]['stats']['Minutes played']['stat']['value']=80
+        self.assertIsNone(settle.fotmob_mapped_keeper_saves(payload,'home','David Raya')[0])
+        stats['stats'][0]['stats']['Minutes played']['stat']['value']=90
+        content['shotmap']['shots'].append(dict(id=2,teamId=20,eventType='AttemptSaved',keeperId=101))
+        self.assertIsNone(settle.fotmob_mapped_keeper_saves(payload,'home','David Raya')[0])
+        content['shotmap']['shots'].pop()
+        content['lineup']['homeTeam']={'starters':[],'subs':[player]}
+        self.assertIsNone(settle.fotmob_mapped_keeper_saves(payload,'home','David Raya')[0])
+
 if __name__=='__main__':unittest.main()
