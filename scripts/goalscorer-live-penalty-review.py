@@ -202,18 +202,43 @@ def _event_name(value: object) -> str:
     return normalized_player_name(str(value or ""))
 
 
-def _attach_match_timeline(team, content, is_home, finished):
-    """Reconstruct explicit player timelines from the completed match feed."""
+def _attach_match_timeline(team, content, is_home, finished, live_status=None):
+    """Reconstruct actual events, bounding live evidence to the observed clock.
+
+    Live evidence is display-only; completed-match proof remains required by
+    the hierarchy review policy. Never turn a predicted XI into a timeline.
+    """
     import copy
     team = copy.deepcopy(team)
     feed = (content.get("matchFacts") or {}).get("events") or {}
     events = feed.get("events")
-    if not finished or feed.get("ongoing") is not False or not isinstance(events, list):
+    if not isinstance(events, list):
         return team
+    through_minute = None
+    if finished:
+        if feed.get("ongoing") is not False:
+            return team
+    else:
+        status = live_status or {}
+        clock = (status.get("liveTime") or {}).get("maxTime")
+        if (feed.get("ongoing") is not True or status.get("started") is not True
+                or status.get("ongoing") is not True or status.get("finished") is not False
+                or (content.get("lineup") or {}).get("lineupType") != "standard"
+                or not isinstance(clock, (int, float)) or clock <= 0):
+            return team
+        observed = [e.get("time") for e in events if isinstance(e, dict)
+                    and isinstance(e.get("time"), (int, float))]
+        if not observed:
+            return team
+        through_minute = min(clock, max(observed))
     players = [p for bucket in ("starters", "subs", "unavailable") for p in team.get(bucket, []) if isinstance(p, dict)]
     by_id = {str(p.get("id")): p for p in players if p.get("id")}
     substitutions, cards = {}, {}
     for event in events:
+        if not isinstance(event, dict):
+            return team
+        if event.get("type") in ("Substitution", "Card") and not isinstance(event.get("isHome"), bool):
+            return team
         if event.get("isHome") is not is_home:
             continue
         kind = event.get("type")
@@ -231,6 +256,8 @@ def _attach_match_timeline(team, content, is_home, finished):
         else:
             pid = str(event.get("playerId") or (event.get("player") or {}).get("id"))
             card = str(event.get("card") or "").lower()
+            if ("red" in card or card in {"yellowred", "secondyellow"}) and pid not in by_id:
+                return team
             if pid in by_id and ("red" in card or card in {"yellowred", "secondyellow"}):
                 cards.setdefault(pid, []).append({"type": "redcard", "time": minute})
     for pid, player in by_id.items():
@@ -238,12 +265,14 @@ def _attach_match_timeline(team, content, is_home, finished):
         performance["substitutionEvents"] = substitutions.get(pid, [])
         performance["events"] = cards.get(pid, [])
         player["performance"] = performance
-    team["_complete_match_timeline"] = True
+    team["_complete_match_timeline"] = bool(finished)
+    if through_minute is not None:
+        team["_live_timeline_through_minute"] = through_minute
     return team
 
 
 def _on_pitch_at(team_lineup: dict, player_name: str, minute: int) -> tuple[bool | None, dict]:
-    """Use completed-match lineup timelines, never a predicted starting XI.
+    """Use verified lineup timelines, never a predicted starting XI.
 
     Exact same-minute substitutions/dismissals have unknown ordering. Missing
     timelines and unknown event shapes remain unknown rather than implying that
@@ -252,6 +281,11 @@ def _on_pitch_at(team_lineup: dict, player_name: str, minute: int) -> tuple[bool
     team_lineup = team_lineup if isinstance(team_lineup, dict) else {}
     starters = team_lineup.get("starters")
     proof = {"player": player_name, "minute": minute, "method": "completed_lineup_timeline"}
+    through_minute = team_lineup.get("_live_timeline_through_minute")
+    if through_minute is not None:
+        proof.update(method="live_lineup_timeline", observed_through_minute=through_minute)
+        if minute > through_minute:
+            return None, dict(proof, reason="penalty_beyond_observed_timeline")
     if not isinstance(starters, list) or len(starters) != 11 or minute <= 0:
         return None, dict(proof, reason="missing_complete_starting_lineup_or_minute")
     found = [(bucket, player) for bucket in ("starters", "subs", "unavailable") for player in team_lineup.get(bucket, []) or []
@@ -588,8 +622,9 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str], diagnos
                 primary = str(proof_context.get("primary") or "")
                 lineup = content.get("lineup")
                 team_lineup = (lineup if isinstance(lineup, dict) else {}).get("homeTeam" if is_home else "awayTeam") or {}
-                finished = status.get("finished") is True
-                team_lineup = _attach_match_timeline(team_lineup, content, is_home, finished)
+                detail_status = (page_props.get("header") or {}).get("status") or {}
+                finished = general.get("finished") is True and detail_status.get("finished") is True
+                team_lineup = _attach_match_timeline(team_lineup, content, is_home, finished, detail_status)
                 on_pitch, proof = _on_pitch_at(team_lineup, primary, minute)
                 event_id = shot.get("id")
                 identity = str(event_id) if event_id is not None else f"missing|{minute}|{player_name}"
@@ -653,7 +688,7 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str], diagnos
         lineup_side = sample.get("lineup_side") or {}
         def pitch_status(name):
             present, proof = _on_pitch_at(lineup_side, name, penalty_minute)
-            if not sample.get("finished") or present is None:
+            if present is None:
                 return "Unknown - " + proof.get("reason", "match_not_finished").replace("_", " ")
             if proof.get("reason") == "absent_from_matchday_squad":
                 return "No - absent from matchday squad"

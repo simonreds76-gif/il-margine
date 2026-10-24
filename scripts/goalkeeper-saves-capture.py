@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Capture real Bet365 goalkeeper-save lines with a hard four-request budget."""
+"""Capture selected bookmaker save markets with a hard four-request budget."""
 
 from __future__ import annotations
 
@@ -203,15 +203,16 @@ def extract_rows(
         away_team = str(event.get("away") or meta.get("away") or "")
         kickoff = str(event.get("date") or meta.get("date") or meta.get("startTime") or "")
         competition = event_league(meta) or event_league(event)
-        home_price, draw_price, away_price, three_way_source = event_three_way_prices(
-            event, meta, bookmaker_name
-        )
+        requested = {name.strip().casefold() for name in bookmaker_name.split(",") if name.strip()}
         for bookmaker, markets in (event.get("bookmakers") or {}).items():
-            if str(bookmaker).casefold() != bookmaker_name.casefold():
+            if str(bookmaker).casefold() not in requested:
                 continue
+            home_price, draw_price, away_price, three_way_source = event_three_way_prices(event, meta, str(bookmaker))
             for market in markets or []:
                 if classify_market(market.get("name")) != "player_saves":
                     continue
+                if normalize_market_name(market.get("name")) in {"goalkeeper saves home", "goalkeeper saves away"}:
+                    continue  # Team contracts cannot be relabelled as a named player's bet.
                 for prop in market.get("odds") or []:
                     line = parse_float(prop.get("hdp"))
                     over = parse_float(prop.get("over"))
@@ -247,13 +248,39 @@ def extract_rows(
     return rows
 
 
+def save_market_coverage(payload: list[dict[str, Any]], bookmakers: str) -> dict[str, Any]:
+    """Distinguish a missing feed from prices we cannot identify as player bets."""
+    coverage = {}
+    for name in dict.fromkeys(x.strip() for x in bookmakers.split(",") if x.strip()):
+        fixtures, named, unnamed = set(), 0, 0
+        for event in payload:
+            for book, markets in (event.get("bookmakers") or {}).items():
+                if book.casefold() != name.casefold():
+                    continue
+                for market in markets or []:
+                    if classify_market(market.get("name")) != "player_saves":
+                        continue
+                    for prop in market.get("odds") or []:
+                        if not any((parse_float(prop.get(side)) or 0) > 1 for side in ("over", "under")):
+                            continue
+                        fixtures.add(str(event.get("id") or ""))
+                        if (prop.get("label") or prop.get("name")) and normalize_market_name(market.get("name")) not in {"goalkeeper saves home", "goalkeeper saves away"}:
+                            named += 1
+                        else:
+                            unnamed += 1
+        coverage[name] = {"events_with_save_markets": len(fixtures), "named_player_lines": named,
+                          "unnamed_or_team_lines": unnamed,
+                          "status": "NAMED_PLAYER_LINES" if named else "UNNAMED_OR_TEAM_CONTRACTS_ONLY" if unnamed else "NO_SAVE_MARKETS"}
+    return coverage
+
+
 def append_rows(path: Path, rows: list[dict[str, Any]]) -> int:
     path.parent.mkdir(parents=True, exist_ok=True)
     existing: set[tuple[str, ...]] = set()
     if path.exists():
         with path.open(newline="", encoding="utf-8-sig") as handle:
             for row in csv.DictReader(handle):
-                existing.add(tuple(str(row.get(key) or "") for key in ("captured_at", "event_id", "player", "line", "side")))
+                existing.add(tuple(str(row.get(key) or "") for key in ("captured_at", "event_id", "bookmaker", "player", "line", "side")))
     mode = "a" if path.exists() and path.stat().st_size else "w"
     added = 0
     with path.open(mode, newline="", encoding="utf-8") as handle:
@@ -261,7 +288,7 @@ def append_rows(path: Path, rows: list[dict[str, Any]]) -> int:
         if mode == "w":
             writer.writeheader()
         for row in rows:
-            key = tuple(str(row.get(field) or "") for field in ("captured_at", "event_id", "player", "line", "side"))
+            key = tuple(str(row.get(field) or "") for field in ("captured_at", "event_id", "bookmaker", "player", "line", "side"))
             if key in existing:
                 continue
             writer.writerow(row)
@@ -271,8 +298,8 @@ def append_rows(path: Path, rows: list[dict[str, Any]]) -> int:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Capture Bet365 goalkeeper saves prices")
-    parser.add_argument("--bookmaker", default="Bet365")
+    parser = argparse.ArgumentParser(description="Capture goalkeeper saves prices and identify market coverage gaps")
+    parser.add_argument("--bookmaker", "--bookmakers", default="Bet365,Kambi", help="Comma-separated selected bookmakers")
     parser.add_argument("--days-ahead", type=int, default=7)
     parser.add_argument("--max-events", type=int, default=30)
     parser.add_argument("--kickoff-within-minutes", type=int, default=0)
@@ -313,7 +340,7 @@ def main() -> None:
                      if supported_events([e], max_events=1, kickoff_within_minutes=cutoff_minutes, now=now)}
     events = supported_events(
         discovered if isinstance(discovered, list) else [],
-        max_events=args.max_events,
+        max_events=min(30, max(1, args.max_events)),
         kickoff_within_minutes=cutoff_minutes,
         now=now, last_seen=previous_seen,
     )
@@ -336,6 +363,23 @@ def main() -> None:
             # Keep successful batches; no unbounded retry or credential-bearing URL.
             capture_errors.append(f"batch_{offset // 10 + 1}: {type(error).__name__}")
     captured_at = now.isoformat().replace("+00:00", "Z")
+    # Preserve non-player contracts for review without fabricating keeper names.
+    # This is a bounded latest capture, not a growing duplicate of the odds archive.
+    unmapped = [
+        {"event_id": str(event.get("id") or ""), "home": event.get("home"), "away": event.get("away"),
+         "bookmaker": book, "market": market}
+        for event in payload for book, markets in (event.get("bookmakers") or {}).items()
+        if book.casefold() in {b.strip().casefold() for b in args.bookmaker.split(",")}
+        for market in markets or [] if classify_market(market.get("name")) == "player_saves"
+        and (normalize_market_name(market.get("name")) in {"goalkeeper saves home", "goalkeeper saves away"}
+             or any(not (prop.get("label") or prop.get("name")) for prop in market.get("odds") or []))
+    ]
+    if payload:
+        args.status.parent.mkdir(parents=True, exist_ok=True)
+        (args.status.parent / "gk-saves-unmapped-markets.json").write_text(
+            json.dumps({"captured_at": captured_at, "contracts": unmapped,
+                        "signal_eligible": False, "reason": "Player identity and settlement scope require verification"}, indent=2) + "\n",
+            encoding="utf-8")
     rows = extract_rows(
         payload,
         {str(event["id"]): event for event in events},
@@ -368,7 +412,7 @@ def main() -> None:
         {
             str(row.get("market_name") or "")
             for row in inventory_rows
-            if str(row.get("bookmaker") or "").casefold() == args.bookmaker.casefold()
+            if str(row.get("bookmaker") or "").casefold() in {b.strip().casefold() for b in args.bookmaker.split(",")}
         }
     )
     status = {
@@ -393,6 +437,7 @@ def main() -> None:
         "rows_added": added,
         "market_inventory_rows_added": inventory_added,
         "market_names_observed": market_names,
+        "bookmaker_coverage": save_market_coverage(payload, args.bookmaker),
         "capture_mode": capture_mode,
         "publication_recovery": publication_recovery,
         "last_publication_at": captured_at if capture_mode == "publication" else previous.get("last_publication_at"),

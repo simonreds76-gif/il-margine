@@ -169,7 +169,7 @@ def board_has_current_rows(rows: list[dict[str, Any]], now: datetime) -> bool:
 
 
 def latest_price_rows(rows: list[dict[str, str]], now: datetime) -> list[dict[str, str]]:
-    latest: dict[tuple[str, str, str, str], dict[str, str]] = {}
+    latest: dict[tuple[str, str, str, str, str], dict[str, str]] = {}
     for row in rows:
         kickoff_text = str(row.get("kickoff_at") or "")
         try:
@@ -180,6 +180,7 @@ def latest_price_rows(rows: list[dict[str, str]], now: datetime) -> list[dict[st
             continue
         key = (
             str(row.get("event_id") or ""),
+            str(row.get("bookmaker") or "Bet365").casefold(),
             str(row.get("player") or "").casefold(),
             str(row.get("line") or ""),
             str(row.get("side") or "").casefold(),

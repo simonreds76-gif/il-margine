@@ -100,7 +100,7 @@ def goalkeeper_candidates(rows: list[dict[str, str]], target_day: str,
             continue
         edge = number(row.get("edge"))
         status = str(row.get("candidate_status") or "").strip()
-        if edge is None or edge <= 0 or status not in {"eligible_shadow", "value_ladder"}:
+        if edge is None or edge <= 0 or status != "eligible_shadow":
             continue
         if str(row.get("blockers") or "").strip():
             continue
@@ -114,7 +114,7 @@ def goalkeeper_candidates(rows: list[dict[str, str]], target_day: str,
             {
                 "id": f"gk_saves_v1|{event_id}|{goalkeeper.casefold()}|{line}|{side}",
                 "model": "gk_saves_v1",
-                "status": "TRACKED: LATEST VIEW" if original else "SHADOW" if status == "eligible_shadow" else "VALUE LADDER",
+                "status": "TRACKED: LATEST VIEW" if original else "SHADOW",
                 "kickoff": kickoff_label(row.get("kickoff_at")),
                 "match": f"{row.get('home_team', '').strip()} vs {row.get('away_team', '').strip()}",
                 "selection": f"{goalkeeper} {side.title()} {line} saves",

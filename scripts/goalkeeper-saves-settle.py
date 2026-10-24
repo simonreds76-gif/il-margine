@@ -317,6 +317,8 @@ def latest_close(
     for row in odds_rows:
         if str(row.get("event_id") or "") != str(signal.get("event_id") or ""):
             continue
+        if str(row.get("bookmaker") or "Bet365").casefold() != str(signal.get("bookmaker") or "Bet365").casefold():
+            continue
         if str(row.get("line") or "") != str(signal.get("line") or ""):
             continue
         if str(row.get("side") or "").casefold() != str(signal.get("side") or "").casefold():

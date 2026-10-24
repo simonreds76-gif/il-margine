@@ -170,6 +170,36 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
         self.assertEqual(rows[0]["home_price"], "2.0000")
         self.assertEqual([row["side"] for row in rows], ["over", "under"])
 
+    def test_anonymous_kambi_contracts_are_not_assigned_to_named_players(self):
+        event = {'id':'1', 'date':'2026-08-22T15:00:00Z', 'home':'Home', 'away':'Away', 'bookmakers': {
+            'Bet365':[{'name':'Goalkeeper Saves','odds':[{'label':'Keeper One','hdp':3.5,'over':2}]}],
+            'Kambi':[
+                {'name':'Goalkeeper Saves Home','odds':[{'hdp':3.5,'over':2.1}]},
+                {'name':'Goalkeeper Saves Away','odds':[{'hdp':2.5,'over':1.9}]},
+                {'name':'Goalkeeper Saves','odds':[{'hdp':6.5,'over':2.2}]},
+            ]}}
+        rows = capture.extract_rows([event], {}, bookmaker_name='Bet365,Kambi',
+                                    captured_at='2026-08-20T10:00:00Z', capture_mode='publication')
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]['bookmaker'], 'Bet365')
+        coverage = capture.save_market_coverage([event], 'Bet365,Kambi')
+        self.assertEqual(coverage['Kambi']['status'], 'UNNAMED_OR_TEAM_CONTRACTS_ONLY')
+        self.assertEqual(coverage['Kambi']['unnamed_or_team_lines'], 3)
+        self.assertEqual(coverage['Bet365']['named_player_lines'], 1)
+
+    def test_bookmaker_quotes_do_not_overwrite_each_other(self):
+        import csv
+        base = {'captured_at':'2026-08-20T10:00:00Z','event_id':'1','player':'Keeper One',
+                'line':'3.5','side':'over','kickoff_at':'2026-08-22T15:00:00Z','odds_decimal':'2.0'}
+        rows = [{**base,'bookmaker':book} for book in ['Bet365','Kambi']]
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder)/'quotes.csv'
+            self.assertEqual(capture.append_rows(path, rows), 2)
+            self.assertEqual(capture.append_rows(path, rows), 0)
+            with path.open() as handle:
+                self.assertEqual(len(list(csv.DictReader(handle))), 2)
+        self.assertEqual(len(shadow.latest_price_rows(rows, datetime(2026,8,20,tzinfo=UTC))), 2)
+
     def test_capture_accepts_alternate_three_way_shape_and_event_fallback(self) -> None:
         event = {
             "id": "1",
@@ -460,6 +490,10 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
         self.assertIsNone(settle.latest_close(rows, signal))
         rows.append({**base, "capture_mode": "close", "captured_at": "2026-08-20T14:00:00Z"})
         self.assertEqual(settle.latest_close(rows, signal), 1.8)
+        rows.append({**base, 'bookmaker':'Kambi', 'odds_decimal':'2.10',
+                     'capture_mode':'close','captured_at':'2026-08-20T14:45:00Z'})
+        self.assertEqual(settle.latest_close(rows, signal), 1.8)
+        self.assertEqual(settle.latest_close(rows, {**signal,'bookmaker':'Kambi'}), 2.1)
 
     def test_shadow_report_calculates_true_close_evidence(self) -> None:
         signals = [
