@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-24T20:45:13Z",
+  "generated_at": "2026-10-24T23:10:51Z",
   "league": "bundesliga",
   "row_count": 83,
   "stats": {
     "historical_rows": 26984,
     "odds_rows": 91,
     "matched_rows": 83,
-    "missing_player_history": 26,
+    "missing_player_history": 11,
     "missing_team_mapping": 0,
     "fallback_rows": 0,
     "qualified_rows": 6,
-    "roster_resolved_rows": 30,
+    "roster_resolved_rows": 4,
     "high_confidence_rows": 0,
     "medium_confidence_rows": 34,
     "low_confidence_rows": 49,
@@ -21,9 +21,9 @@
     "penalty_transfer_rows": 2,
     "position_upgrade_rows": 1,
     "role_adjusted_rows": 0,
-    "fixtures_with_confirmed_lineups": 6,
+    "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 4,
-    "fixtures_clean": 6,
+    "fixtures_clean": 0,
     "fixtures_degraded": 4,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
@@ -35,1286 +35,6 @@
     "avg_ev": -0.6933179638554219
   },
   "fixtures": [
-    {
-      "match_date": "2026-10-24",
-      "home_team": "1. FC Köln",
-      "away_team": "Schalke 04",
-      "league": "bundesliga",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Marvin Schwäbe",
-          "status": "plausible",
-          "known_team_keys": [
-            "fc cologne"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Sebastian Sebulonsen",
-          "status": "plausible",
-          "known_team_keys": [
-            "fc cologne"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jahmai Simpson-Pusey",
-          "status": "plausible",
-          "known_team_keys": [
-            "fc cologne"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Luka Lochoshvili",
-          "status": "plausible",
-          "known_team_keys": [
-            "fc cologne"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Borna Sosa",
-          "status": "plausible",
-          "known_team_keys": [
-            "fc cologne"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ísak Jóhannesson",
-          "status": "plausible",
-          "known_team_keys": [
-            "fc cologne"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tom Krauß",
-          "status": "plausible",
-          "known_team_keys": [
-            "fc cologne"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Linton Maina",
-          "status": "plausible",
-          "known_team_keys": [
-            "fc cologne"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Mikey Moore",
-          "status": "plausible",
-          "known_team_keys": [
-            "fc cologne"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Saïd El Mala",
-          "status": "plausible",
-          "known_team_keys": [
-            "fc cologne"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Marius Bülter",
-          "status": "plausible",
-          "known_team_keys": [
-            "fc cologne"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Loris Karius",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Timo Becker",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Nikola Katić",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Hasan Kuruçay",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Junior Dina Ebimbe",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Robin Gosens",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Soufian El-Faouzi",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Satoshi Tanaka",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Adil Aouchiche",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Chukwubuike Adamu",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Hee-Chan Hwang",
-          "status": "plausible",
-          "known_team_keys": [
-            "schalke 04"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    },
-    {
-      "match_date": "2026-10-24",
-      "home_team": "Augsburg",
-      "away_team": "Union Berlin",
-      "league": "bundesliga",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Finn Dahmen",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Juma Bah",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Chrislain Matsima",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Calvin Brackelmann",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Marius Wolf",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Han-Noah Massengo",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Fabian Rieder",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Hennes Behrens",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Anton Kade",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Arijon Ibrahimović",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Michael Gregoritsch",
-          "status": "plausible",
-          "known_team_keys": [
-            "augsburg"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Frederik Rønnow",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Janik Haberer",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Zeno Van Den Bosch",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Felix Uduokhai",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tom Rothe",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "András Schäfer",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Rani Khedira",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Woo-Yeong Jeong",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Michel Aebischer",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Livan Burcu",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tim Skarke",
-          "status": "plausible",
-          "known_team_keys": [
-            "union berlin"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    },
-    {
-      "match_date": "2026-10-24",
-      "home_team": "Borussia Dortmund",
-      "away_team": "Eintracht Frankfurt",
-      "league": "bundesliga",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Gregor Kobel",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Waldemar Anton",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Nico Schlotterbeck",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ramy Bensebaini",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Julian Ryerson",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Joey Veerman",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Felix Nmecha",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Daniel Svensson",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Marcel Sabitzer",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Fábio Silva",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Serhou Guirassy",
-          "status": "plausible",
-          "known_team_keys": [
-            "borussia dortmund"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Noah Atubolu",
-          "status": "plausible",
-          "known_team_keys": [
-            "eintracht frankfurt"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Nnamdi Collins",
-          "status": "plausible",
-          "known_team_keys": [
-            "eintracht frankfurt"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Robin Koch",
-          "status": "plausible",
-          "known_team_keys": [
-            "eintracht frankfurt"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lilian Brassier",
-          "status": "plausible",
-          "known_team_keys": [
-            "eintracht frankfurt"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Elias Baum",
-          "status": "plausible",
-          "known_team_keys": [
-            "eintracht frankfurt"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ritsu Doan",
-          "status": "plausible",
-          "known_team_keys": [
-            "eintracht frankfurt"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Noël Aséko",
-          "status": "plausible",
-          "known_team_keys": [
-            "eintracht frankfurt"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Raphael Onyedika",
-          "status": "plausible",
-          "known_team_keys": [
-            "eintracht frankfurt"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Farès Chaïbi",
-          "status": "plausible",
-          "known_team_keys": [
-            "eintracht frankfurt"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Younes Ebnoutalib",
-          "status": "plausible",
-          "known_team_keys": [
-            "eintracht frankfurt"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jonathan Burkardt",
-          "status": "plausible",
-          "known_team_keys": [
-            "eintracht frankfurt"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    },
-    {
-      "match_date": "2026-10-24",
-      "home_team": "Mainz 05",
-      "away_team": "Werder Bremen",
-      "league": "bundesliga",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Alexander Schwolow",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Danny da Costa",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Stefan Posch",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Kacper Potulski",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Anthony Caci",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jae-Sung Lee",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Kaishu Sano",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Nadiem Amiri",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Phillipp Mwene",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Sheraldo Becker",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Phillip Tietz",
-          "status": "plausible",
-          "known_team_keys": [
-            "mainz 05"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Karl Hein",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Arthur",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Amos Pieper",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Marco Friedl",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Olivier Deman",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ludovit Reis",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Youri Regeer",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Mitchell Weiser",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Chuki",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Marco Grüll",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Niclas Füllkrug",
-          "status": "plausible",
-          "known_team_keys": [
-            "werder bremen"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    },
-    {
-      "match_date": "2026-10-24",
-      "home_team": "Paderborn",
-      "away_team": "Hamburger SV",
-      "league": "bundesliga",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Nahuel Noll",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jano ter Horst",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tjark Scheller",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Mattes Hansen",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Laurin Curda",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Laurin Ulrich",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Santiago Castañeda",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Gabriel Vidović",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Raphael Obermair",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Stefano Marino",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Steffen Tigges",
-          "status": "plausible",
-          "known_team_keys": [
-            "paderborn"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Daniel Heuer Fernandes",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Shafiq Nandja",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Sebastiaan Bornauw",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Warmed Omari",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Zakaria El Ouahdi",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Martin Adeline",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Bilal Nadir",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Miro Muheim",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "David Møller Wolfe",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Yussuf Poulsen",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Fábio Vieira",
-          "status": "plausible",
-          "known_team_keys": [
-            "hamburger sv"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    },
-    {
-      "match_date": "2026-10-24",
-      "home_team": "RB Leipzig",
-      "away_team": "Elversberg",
-      "league": "bundesliga",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Ørjan Håskjold Nyland",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Benjamin Henrichs",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Willi Orbán",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Maxime Estève",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Max Finkgräfe",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Andrija Maksimović",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Rocco Reitz",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Neil El Aynaoui",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ezechiel Banzuzi",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Antonio Nusa",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tidiam Gomis",
-          "status": "plausible",
-          "known_team_keys": [
-            "rasenballsport leipzig"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Nicolas Kristof",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jan Gyamerah",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lukas Pinckert",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Maximilian Rohr",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lasse Günther",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Felix Keidel",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Łukasz Poręba",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lukas Petkov",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Frederik Schmahl",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Maurice Krattenmacher",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "David Mokwa",
-          "status": "plausible",
-          "known_team_keys": [
-            "elversberg"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    },
     {
       "match_date": "2026-10-25",
       "home_team": "Freiburg",
@@ -2170,8 +890,8 @@
   ],
   "rows": [
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2272,8 +992,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2374,8 +1094,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2476,8 +1196,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2578,8 +1298,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2680,8 +1400,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2782,8 +1502,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2884,8 +1604,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -2986,8 +1706,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3088,8 +1808,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3190,8 +1910,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3292,8 +2012,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3394,8 +2114,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3496,8 +2216,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3598,8 +2318,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3700,8 +2420,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3802,8 +2522,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -3904,8 +2624,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4006,8 +2726,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4108,8 +2828,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4210,8 +2930,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4312,8 +3032,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4414,8 +3134,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4516,8 +3236,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4618,8 +3338,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4720,8 +3440,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4822,8 +3542,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -4924,8 +3644,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5026,8 +3746,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5128,8 +3848,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5230,8 +3950,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5332,8 +4052,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5434,8 +4154,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5536,8 +4256,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5638,8 +4358,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5740,8 +4460,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5842,8 +4562,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -5944,8 +4664,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6046,8 +4766,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6148,8 +4868,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6250,8 +4970,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6352,8 +5072,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6454,8 +5174,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6556,8 +5276,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6658,8 +5378,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6760,8 +5480,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6862,8 +5582,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -6964,8 +5684,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7066,8 +5786,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7168,8 +5888,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7270,8 +5990,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7372,8 +6092,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7474,8 +6194,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7576,8 +6296,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7678,8 +6398,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7780,8 +6500,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7882,8 +6602,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -7984,8 +6704,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8086,8 +6806,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8188,8 +6908,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8290,8 +7010,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8392,8 +7112,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8494,8 +7214,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8596,8 +7316,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8698,8 +7418,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8800,8 +7520,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -8902,8 +7622,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9004,8 +7724,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9106,8 +7826,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9208,8 +7928,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9310,8 +8030,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9412,8 +8132,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9514,8 +8234,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9616,8 +8336,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9718,8 +8438,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9820,8 +8540,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -9922,8 +8642,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -10024,8 +8744,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -10126,8 +8846,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -10228,8 +8948,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -10330,8 +9050,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -10432,8 +9152,8 @@
       "notes": "event_id=72513264;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -10534,8 +9254,8 @@
       "notes": "event_id=72513262;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-24T20:45:13Z",
-      "captured_at": "2026-10-24T20:45:12Z",
+      "compared_at": "2026-10-24T23:10:51Z",
+      "captured_at": "2026-10-24T23:10:50Z",
       "match_date": "2026-10-25",
       "kickoff": "",
       "bookmaker": "Bet365",
