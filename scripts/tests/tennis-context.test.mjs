@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {scheduleSummary,contextPanel} from '../../src/app/tennis-matchup/runtime/context.mjs';
+import {scheduleSummary,contextPanel,scheduleDays} from '../../src/app/tennis-matchup/runtime/context.mjs';
 const meta={asOf:'2026-10-24',from:'2026-04-27',through:'2026-10-23',mapped:{0:true,1:false},scope:'Recorded singles'};
 const schedule=[
   {date:'2026-10-09',sets:2,games:20},
@@ -23,4 +23,13 @@ test('unmapped or out-of-coverage players are unavailable, not rested',()=>{
   assert.equal(scheduleSummary([],'2026-10-24',meta).week.matches,0);
   const html=contextPanel([{name:'A'},{name:'B'}],[0,1],{0:schedule},meta,'2026-10-24');
   assert.match(html,/Unavailable/);assert.match(html,/All opponents and surfaces/);
+});
+test('timeline preserves exact date bounds and multiple matches on one day',()=>{
+  const s=scheduleSummary([...schedule,{date:'2026-10-23',sets:2,games:20}],'2026-10-24',meta);
+  const days=scheduleDays(s,'2026-10-24');
+  assert.equal(days.length,14);assert.equal(days[0].date,'2026-10-10');
+  assert.equal(days.at(-1).date,'2026-10-23');assert.equal(days.at(-1).count,2);
+  assert.equal(days.filter(d=>d.recent).length,7);
+  assert.equal(days.reduce((n,d)=>n+d.count,0),s.fortnight.matches);
+  assert.deepEqual(scheduleDays(null,'2026-10-24'),[]);
 });
