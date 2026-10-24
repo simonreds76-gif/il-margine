@@ -2,25 +2,25 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 32,
+    "blocked_lines": 48,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 11,
-      "goalkeeper_team_unresolved": 22,
-      "missing_lineup": 11,
-      "missing_priced_edge": 32,
+      "goalkeeper_not_matched_to_lineup": 16,
+      "goalkeeper_team_unresolved": 38,
+      "missing_lineup": 22,
+      "missing_priced_edge": 48,
       "missing_registered_feature": 10
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 7,
-    "priced_lines": 182,
+    "eligible_lines": 8,
+    "priced_lines": 392,
     "provisional_lines": 0,
-    "signals_added": 0,
-    "value_ladder_lines": 42
+    "signals_added": 1,
+    "value_ladder_lines": 78
   },
   "evidence": {
     "clv": 0.05358,
     "clv_matched": 22,
-    "pending": 9,
+    "pending": 10,
     "pnl_units": 17.654,
     "roi": 0.5044,
     "settled": 70,
@@ -28,34 +28,34 @@
       "fotmob_named_keeper_shotmap": 67,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 80,
+    "signals": 81,
     "true_close_coverage": 0.314286,
     "void": 1
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-23T21:41:47.222680+00:00",
+    "checked_at": "2026-10-24T00:02:17.776384+00:00",
     "counts": {
-      "offers_saved": 214
+      "offers_saved": 440
     },
-    "saved": 19,
+    "saved": 40,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-23T21:41:46Z",
+  "generated_at": "2026-10-24T00:02:17Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "blocked_or_missing_inputs": 32
+      "blocked_or_missing_inputs": 48
     },
-    "forecast_fixtures": 63,
-    "forecast_keepers": 124,
-    "generated_at": "2026-10-23T21:41:47.451591+00:00",
-    "last_capture_at": "2026-10-23T21:41:47.451591+00:00",
+    "forecast_fixtures": 83,
+    "forecast_keepers": 164,
+    "generated_at": "2026-10-24T00:02:17.895946+00:00",
+    "last_capture_at": "2026-10-24T00:02:17.895946+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 4,
-    "new_selections": 0,
+    "new_forecasts": 40,
+    "new_selections": 2,
     "next_review_at": 50,
     "paired_scores": {
       "current": {
@@ -73,12 +73,12 @@
       "current": {
         "losses": 4,
         "overdue": 0,
-        "pending": 6,
+        "pending": 7,
         "profit": 1.7010000000000003,
         "pushes": 0,
         "review": 0,
         "roi": 0.34020000000000006,
-        "selections": 17,
+        "selections": 18,
         "settled": 10,
         "stake": 5.0,
         "voids": 1,
@@ -87,12 +87,12 @@
       "keeper_watch": {
         "losses": 2,
         "overdue": 0,
-        "pending": 0,
+        "pending": 1,
         "profit": -1.0,
         "pushes": 0,
         "review": 0,
         "roi": -1.0,
-        "selections": 2,
+        "selections": 3,
         "settled": 2,
         "stake": 1.0,
         "voids": 0,
@@ -101,6 +101,54 @@
     },
     "review_milestone": null,
     "selections": [
+      {
+        "away": "Brentford FC",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-24T00:02:15+00:00",
+        "edge": 0.09439657910352572,
+        "event_id": "72221342",
+        "fair_odds": 2.2843638656545084,
+        "goalkeeper": "Caoimh\u00edn Kelleher",
+        "home": "Hull City",
+        "kickoff_at": "2026-10-25T14:00:00+00:00",
+        "line": 2.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5795490",
+        "model": "keeper_watch",
+        "odds": 2.5,
+        "overdue": false,
+        "player_id": "776689",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-24T00:02:17.895946+00:00",
+        "side": "over",
+        "status": "pending",
+        "team_id": "9937"
+      },
+      {
+        "away": "Brentford FC",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-24T00:02:15+00:00",
+        "edge": 0.33960208675560866,
+        "event_id": "72221342",
+        "fair_odds": 1.866225817888032,
+        "goalkeeper": "Caoimh\u00edn Kelleher",
+        "home": "Hull City",
+        "kickoff_at": "2026-10-25T14:00:00+00:00",
+        "line": 2.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5795490",
+        "model": "current",
+        "odds": 2.5,
+        "overdue": false,
+        "player_id": "776689",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-24T00:02:17.895946+00:00",
+        "side": "over",
+        "status": "pending",
+        "team_id": "9937"
+      },
       {
         "away": "SV 07 Elversberg",
         "bookmaker": "Bet365",
@@ -559,7 +607,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 42,
+      "awaiting_verified_keeper_result": 82,
       "incomplete_or_conflicting_full_match_count": 4,
       "keeper_identity_unresolved": 1,
       "verified_different_starting_keeper": 3

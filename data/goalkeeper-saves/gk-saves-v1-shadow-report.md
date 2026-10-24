@@ -2,12 +2,12 @@
 
 **RESEARCH SHADOW ONLY. No live routing or staking authorization.**
 
-- Generated: 2026-10-23T21:41:46Z
+- Generated: 2026-10-24T00:02:17Z
 - Status: SIGNALS_COLLECTING
-- Current priced/primary-eligible/value-ladder/blocked: 182/7/42/32
+- Current priced/primary-eligible/value-ladder/blocked: 392/8/78/48
 - Provisional research lines: 0 (never appended to the signal ledger)
 - Candidate board preserved after infrastructure failure: False
-- Signals: 80 (9 pending, 70 settled)
+- Signals: 81 (10 pending, 70 settled)
 - P/L: +17.65u; ROI: +50.4%
 - Closing evidence: 22/70 matched; mean CLV: 0.05358
 - Settlement sources: {'fotmob_named_keeper_shotmap': 67, 'sofascore_published_keeper_total_verified_20261003': 3}

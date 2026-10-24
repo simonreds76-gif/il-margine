@@ -1,6 +1,6 @@
 # Football Counts vNext Gate
 
-- Generated: 2026-10-23T21:41:59Z
+- Generated: 2026-10-24T00:02:35Z
 - This snapshot cannot promote or route bets.
 
 ## Team Shots v4
@@ -10,8 +10,8 @@
 - Promotion gate: **BLOCKED**
 - Prospective signals: 7 (3 settled / 4 pending)
 - Warm-up tracking: 14 (14 settled / 0 pending), +0.32u, ROI +2.3%
-- Latest scan: **ELIGIBLE_CANDIDATES_PRESENT**; 486 rows / 31 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
-- Blockers: {'edge_below_3pct': 482, 'price_older_than_3h': 308}
+- Latest scan: **ELIGIBLE_CANDIDATES_PRESENT**; 488 rows / 31 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
+- Blockers: {'edge_below_3pct': 484, 'price_older_than_3h': 310}
 - P/L / ROI: -3.00u / -100.0%
 - True-close coverage: 1/3 (33.3%)
 - Mean true-close CLV: +0.00%
@@ -24,8 +24,8 @@
 - Promotion gate: **BLOCKED**
 - Prospective signals: 105 (83 settled / 22 pending)
 - Warm-up tracking: 36 (36 settled / 0 pending), -2.50u, ROI -7.0%
-- Latest scan: **ELIGIBLE_CANDIDATES_PRESENT**; 154 rows / 30 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
-- Blockers: {'edge_below_3pct': 113, 'price_older_than_3h': 6}
+- Latest scan: **NO_EDGE_AFTER_UNLOCK**; 154 rows / 30 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
+- Blockers: {'edge_below_3pct': 113, 'price_older_than_3h': 154}
 - P/L / ROI: +1.12u / +1.3%
 - True-close coverage: 45/83 (54.2%)
 - Mean true-close CLV: +0.48%
