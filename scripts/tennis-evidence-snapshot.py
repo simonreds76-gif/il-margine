@@ -118,6 +118,7 @@ def build_snapshot() -> dict[str, Any]:
         "tennis_model_evidence": tennis_model_evidence,
         "tennis_monitor_integrity": build_integrity(ROOT),
         "tennis_props_v3": module.tennis_props_v3_snapshot(),
+        "tennis_ace_compass": module.load_json(ROOT / "data/tennis-props/shadow/ace-compass-v1/report.json"),
         "tennis_rate_trend": module.rate_trend_summary(),
         "tennis_full_refresh": module.full_refresh_summary(),
         "tennis_astrissimo": module.load_json(ROOT / "data/tennis-ml-research/astrissimo-v1/report.json"),
