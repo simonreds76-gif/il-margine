@@ -1,32 +1,45 @@
 {
+  "bookmaker_coverage": {
+    "Bet365": {
+      "events_with_save_markets": 17,
+      "named_player_lines": 191,
+      "status": "NAMED_PLAYER_LINES",
+      "unnamed_or_team_lines": 0
+    },
+    "Kambi": {
+      "events_with_save_markets": 17,
+      "named_player_lines": 0,
+      "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
+      "unnamed_or_team_lines": 118
+    }
+  },
   "capture_errors": [],
   "capture_mode": "publication",
   "event_last_checked": {
-    "71945328": "2026-10-24T12:44:43Z",
-    "71945330": "2026-10-24T12:44:43Z",
-    "71945334": "2026-10-24T12:44:43Z",
-    "71945336": "2026-10-24T12:44:43Z",
-    "71945340": "2026-10-24T12:44:43Z",
-    "72036244": "2026-10-24T12:44:43Z",
-    "72221332": "2026-10-24T12:44:43Z",
-    "72221336": "2026-10-24T12:44:43Z",
-    "72221338": "2026-10-24T12:44:43Z",
-    "72478650": "2026-10-24T12:44:43Z",
-    "72478656": "2026-10-24T12:44:43Z",
-    "72478664": "2026-10-24T12:44:43Z",
-    "72513256": "2026-10-24T12:44:43Z",
-    "72513258": "2026-10-24T12:44:43Z",
-    "72513266": "2026-10-24T12:44:43Z",
-    "72513268": "2026-10-24T12:44:43Z",
-    "72513270": "2026-10-24T12:44:43Z",
-    "72513272": "2026-10-24T12:44:43Z"
+    "71945334": "2026-10-24T13:23:10Z",
+    "71945336": "2026-10-24T13:23:10Z",
+    "71945340": "2026-10-24T13:23:10Z",
+    "72036244": "2026-10-24T13:23:10Z",
+    "72221332": "2026-10-24T13:23:10Z",
+    "72221336": "2026-10-24T13:23:10Z",
+    "72221338": "2026-10-24T13:23:10Z",
+    "72478648": "2026-10-24T13:23:10Z",
+    "72478650": "2026-10-24T13:23:10Z",
+    "72478656": "2026-10-24T13:23:10Z",
+    "72478664": "2026-10-24T13:23:10Z",
+    "72513256": "2026-10-24T13:23:10Z",
+    "72513258": "2026-10-24T13:23:10Z",
+    "72513266": "2026-10-24T13:23:10Z",
+    "72513268": "2026-10-24T13:23:10Z",
+    "72513270": "2026-10-24T13:23:10Z",
+    "72513272": "2026-10-24T13:23:10Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 18,
-  "events_supported": 18,
-  "events_with_lines": 18,
-  "generated_at": "2026-10-24T12:44:43Z",
-  "last_publication_at": "2026-10-24T12:44:43Z",
+  "events_selected": 17,
+  "events_supported": 17,
+  "events_with_lines": 17,
+  "generated_at": "2026-10-24T13:23:10Z",
+  "last_publication_at": "2026-10-24T13:23:10Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 6,
@@ -37,19 +50,19 @@
       "with_prices": 3
     },
     "la-liga": {
-      "selected": 3,
-      "with_prices": 3
+      "selected": 4,
+      "with_prices": 4
     },
     "ligue-1": {
       "selected": 1,
       "with_prices": 1
     },
     "serie-a": {
-      "selected": 5,
-      "with_prices": 5
+      "selected": 3,
+      "with_prices": 3
     }
   },
-  "market_inventory_rows_added": 1532,
+  "market_inventory_rows_added": 2227,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Away Team Exact Goals",
@@ -73,8 +86,11 @@
     "Correct Score",
     "Correct Score HT",
     "Double Chance",
+    "Double Chance 2H",
     "Double Chance HT",
     "Draw No Bet",
+    "Draw No Bet 2H",
+    "Draw No Bet HT",
     "European Handicap",
     "European Handicap HT",
     "Exact 1st Half Goals",
@@ -86,6 +102,8 @@
     "First Team To Score",
     "Goal Method",
     "Goalkeeper Saves",
+    "Goalkeeper Saves Away",
+    "Goalkeeper Saves Home",
     "Goals Over/Under",
     "Half Time / Full Time",
     "Half With Most Goals",
@@ -97,6 +115,7 @@
     "ML",
     "ML 2H",
     "ML HT",
+    "Most Shots on Target",
     "Multi Scorers",
     "Multicorners",
     "Number of Cards In Match",
@@ -125,7 +144,12 @@
     "Team Total Home",
     "Teams to Score",
     "Time of First Corner",
+    "To Score 2+ Goals",
+    "To Score 3+ Goals",
     "Total Corners",
+    "Total Fouls",
+    "Total Fouls Away",
+    "Total Fouls Home",
     "Total Offsides",
     "Total Offsides Away",
     "Total Offsides Home",
@@ -146,9 +170,37 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 3,
-  "rows_added": 203,
-  "rows_observed": 203,
+  "rows_added": 191,
+  "rows_observed": 191,
   "selected_events": [
+    {
+      "away": "SV 07 Elversberg",
+      "competition": "Germany - Bundesliga",
+      "home": "RB Leipzig",
+      "id": 72513258,
+      "kickoff_at": "2026-10-24T13:30:00Z"
+    },
+    {
+      "away": "Union Berlin",
+      "competition": "Germany - Bundesliga",
+      "home": "FC Augsburg",
+      "id": 72513266,
+      "kickoff_at": "2026-10-24T13:30:00Z"
+    },
+    {
+      "away": "Werder Bremen",
+      "competition": "Germany - Bundesliga",
+      "home": "FSV Mainz",
+      "id": 72513268,
+      "kickoff_at": "2026-10-24T13:30:00Z"
+    },
+    {
+      "away": "Schalke 04",
+      "competition": "Germany - Bundesliga",
+      "home": "1. FC Cologne",
+      "id": 72513270,
+      "kickoff_at": "2026-10-24T13:30:00Z"
+    },
     {
       "away": "Hamburger SV",
       "competition": "Germany - Bundesliga",
@@ -178,46 +230,11 @@
       "kickoff_at": "2026-10-24T14:15:00Z"
     },
     {
-      "away": "Bologna FC",
-      "competition": "Italy - Serie A",
-      "home": "Cagliari Calcio",
-      "id": 71945328,
-      "kickoff_at": "2026-10-24T13:00:00Z"
-    },
-    {
-      "away": "Sassuolo Calcio",
-      "competition": "Italy - Serie A",
-      "home": "Como 1907",
-      "id": 71945330,
-      "kickoff_at": "2026-10-24T13:00:00Z"
-    },
-    {
-      "away": "SV 07 Elversberg",
-      "competition": "Germany - Bundesliga",
-      "home": "RB Leipzig",
-      "id": 72513258,
-      "kickoff_at": "2026-10-24T13:30:00Z"
-    },
-    {
-      "away": "Union Berlin",
-      "competition": "Germany - Bundesliga",
-      "home": "FC Augsburg",
-      "id": 72513266,
-      "kickoff_at": "2026-10-24T13:30:00Z"
-    },
-    {
-      "away": "Werder Bremen",
-      "competition": "Germany - Bundesliga",
-      "home": "FSV Mainz",
-      "id": 72513268,
-      "kickoff_at": "2026-10-24T13:30:00Z"
-    },
-    {
-      "away": "Schalke 04",
-      "competition": "Germany - Bundesliga",
-      "home": "1. FC Cologne",
-      "id": 72513270,
-      "kickoff_at": "2026-10-24T13:30:00Z"
+      "away": "Getafe CF",
+      "competition": "Spain - LaLiga",
+      "home": "Athletic Bilbao",
+      "id": 72478648,
+      "kickoff_at": "2026-10-25T13:00:00Z"
     },
     {
       "away": "AS Roma",
@@ -277,5 +294,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 18
+  "three_way_events": 17
 }
