@@ -13,10 +13,12 @@ def load_snapshot(root, release):
     index = read(index_path)
     rows = {}
     results = {}
+    schedules = {}
     for i in range(len(index['players'])):
         shard = read(index_path.parent / f'{i}.json')
         if shard['version'] != index['version'] or shard['player'] != i:
             raise ValueError('Mixed Matchup snapshot')
+        schedules[str(i)] = shard.get('schedule',[])
         for row in shard['matches']:
             if row['id'] in rows and rows[row['id']] != row:
                 raise ValueError('Conflicting Matchup shards')
@@ -29,7 +31,7 @@ def load_snapshot(root, release):
         raise ValueError('Incomplete Matchup snapshot')
     if len(results) != index.get('additionalResults',0) or rows.keys() & results.keys():
         raise ValueError('Incomplete or duplicate H2H snapshot')
-    return {**index, 'matches': list(rows.values()), 'results':list(results.values())}
+    return {**index, 'matches': list(rows.values()), 'results':list(results.values()),'context':{**index.get('context',{}),'players':schedules}}
 
 
 def canonical(data):
@@ -80,7 +82,7 @@ def validate(old, new):
             elif value is not None and after.get(field) != value:
                 raise ValueError(f'Existing Matchup record changed: {mid} ({field})')
     # A new check date alone does not justify another deployment.
-    return previous != candidate or old_extra != new_extra or any(old[k] != new[k] for k in ('players', 'portraits', 'countries'))
+    return old.get('context') != new.get('context') or previous != candidate or old_extra != new_extra or any(old[k] != new[k] for k in ('players', 'portraits', 'countries'))
 
 
 def prepare(checkout, candidate, atlas_release, as_of, historical_prices=()):

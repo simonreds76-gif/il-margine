@@ -227,6 +227,10 @@ def build(atlas, oncourt, output, as_of, data_only=False, historical_prices=(), 
         'countries':[{'code':c,'name':COUNTRY_NAMES.get(c,c),'region':REGION_OF[c]} for c in countries],
         'audit': dict(audit), 'atlasVersion':atlas.name,
         'priceBasis':'Recorded Pinnacle prices; mixed pre-match archive snapshots, not uniform closing odds.'}
+    from tennis_match_context import build_context
+    registry_path = Path(__file__).resolve().parents[1]/'config/tennis-context-venue-registry.json'
+    registry = json.loads(registry_path.read_text()) if registry_path.exists() else []
+    payload['context'] = build_context(oncourt, index['players'], as_of, registry)
     output.mkdir(parents=True, exist_ok=True)
     (output/'data.json').write_text(json.dumps(payload,separators=(',',':')),encoding='utf-8')
     manifest = {'asOf':as_of,'audit':dict(audit),'matches':len(matches),'excludedContext':exclusions,

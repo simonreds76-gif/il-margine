@@ -39,6 +39,7 @@ def package(source, root=ROOT):
     content = {key: data[key] for key in ('through', 'countries', 'players', 'portraits')}
     content['matches'] = rows
     content['results'] = results
+    content['context'] = data.get('context', {})
     version = data['asOf'].replace('-', '') + '-' + hashlib.sha256(json.dumps(content, sort_keys=True).encode()).hexdigest()[:12]
     target = root / 'public/tennis-matchup/data' / version
     target.mkdir(parents=True, exist_ok=True)
@@ -53,8 +54,9 @@ def package(source, root=ROOT):
     def write(path, value):
         path.write_text(json.dumps(value, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     for index, matches in enumerate(shards):
-        write(target / f'{index}.json', {'version': version, 'player': index, 'matches': matches, 'results':result_shards[index]})
+        write(target / f'{index}.json', {'version': version, 'player': index, 'matches': matches, 'results':result_shards[index], 'schedule':data.get('context',{}).get('players',{}).get(str(index),[])})
     manifest = {key: data[key] for key in ('asOf', 'through', 'countries', 'players', 'portraits')}
+    manifest['context'] = {k:v for k,v in data.get('context',{}).items() if k != 'players'}
     manifest.update(schema=2, version=version, totalMatches=len(rows))
     manifest.update(additionalResults=len(results), historyFrom=data.get('historyFrom','2021-01-01'))
     write(target / 'index.json', manifest)
