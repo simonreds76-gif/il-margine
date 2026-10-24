@@ -259,6 +259,11 @@ def run_shadow_tracking(as_of: str) -> None:
         "Consolidate append-only Bet365 price history",
         fatal=False,
     )
+    run(
+        [sys.executable, str(ROOT / "scripts/tennis_ace_compass.py"),
+         "--comparison", str(PROPS_DIR / f"comparison-{as_of}.csv")],
+        "Capture and settle Ace Compass paper research", fatal=False, timeout_seconds=240,
+    )
     run_most_aces_shadow(as_of)
     v3_comparison = PROPS_DIR / f"comparison-v3-aces-{as_of}.csv"
     venue_comparison = PROPS_DIR / f"comparison-venue-ace-v1-{as_of}.csv"
