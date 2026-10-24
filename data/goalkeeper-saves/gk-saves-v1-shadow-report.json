@@ -2,26 +2,25 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 48,
+    "blocked_lines": 39,
     "blocker_counts": {
       "goalkeeper_not_matched_to_lineup": 16,
-      "goalkeeper_team_unresolved": 33,
+      "goalkeeper_team_unresolved": 39,
       "missing_lineup": 11,
-      "missing_priced_edge": 48,
-      "missing_registered_feature": 15,
-      "team_keeper_mapping_unresolved": 6
+      "missing_priced_edge": 39,
+      "team_keeper_mapping_unresolved": 12
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 5,
-    "priced_lines": 300,
+    "eligible_lines": 7,
+    "priced_lines": 272,
     "provisional_lines": 0,
     "signals_added": 1,
-    "value_ladder_lines": 39
+    "value_ladder_lines": 41
   },
   "evidence": {
     "clv": 0.05358,
     "clv_matched": 22,
-    "pending": 15,
+    "pending": 16,
     "pnl_units": 17.154,
     "roi": 0.483211,
     "settled": 71,
@@ -29,37 +28,38 @@
       "fotmob_named_keeper_shotmap": 68,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 87,
+    "signals": 88,
     "true_close_coverage": 0.309859,
     "void": 1
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-24T17:42:57.461748+00:00",
+    "checked_at": "2026-10-24T19:48:03.163764+00:00",
     "counts": {
-      "not_fresh_prematch": 15,
-      "offers_saved": 333
+      "ambiguous_duplicate_contract": 5,
+      "not_fresh_prematch": 14,
+      "offers_saved": 292
     },
-    "saved": 23,
+    "saved": 20,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-24T17:42:56Z",
+  "generated_at": "2026-10-24T19:48:02Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "blocked_or_missing_inputs": 47,
-      "not_new_fresh_prematch": 15,
-      "unregistered_settlement_rules": 76
+      "blocked_or_missing_inputs": 38,
+      "not_new_fresh_prematch": 14,
+      "unregistered_settlement_rules": 69
     },
     "forecast_fixtures": 83,
     "forecast_keepers": 165,
-    "generated_at": "2026-10-24T17:42:57.610773+00:00",
+    "generated_at": "2026-10-24T19:48:03.306112+00:00",
     "last_capture_at": "2026-10-24T16:58:05.612353+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
-    "new_selections": 0,
+    "new_selections": 1,
     "next_review_at": 50,
     "paired_scores": {
       "current": {
@@ -77,12 +77,12 @@
       "current": {
         "losses": 5,
         "overdue": 0,
-        "pending": 8,
+        "pending": 9,
         "profit": 1.2010000000000003,
         "pushes": 0,
         "review": 0,
         "roi": 0.21836363636363643,
-        "selections": 20,
+        "selections": 21,
         "settled": 11,
         "stake": 5.5,
         "voids": 1,
@@ -105,6 +105,30 @@
     },
     "review_milestone": null,
     "selections": [
+      {
+        "away": "Bayern Munich",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-24T19:48:00+00:00",
+        "edge": 0.09987025599706656,
+        "event_id": "72513264",
+        "fair_odds": 1.8183962963767375,
+        "goalkeeper": "Manuel Neuer",
+        "home": "SC Freiburg",
+        "kickoff_at": "2026-10-25T16:30:00+00:00",
+        "line": 2.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5881200",
+        "model": "current",
+        "odds": 2.0,
+        "overdue": false,
+        "player_id": "27299",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-24T19:48:03.306112+00:00",
+        "side": "over",
+        "status": "pending",
+        "team_id": "9823"
+      },
       {
         "away": "Brentford FC",
         "bookmaker": "Bet365",

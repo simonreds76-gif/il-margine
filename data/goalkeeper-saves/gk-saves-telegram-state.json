@@ -2056,16 +2056,75 @@
       },
       "message_id": 642,
       "sent_at": "2026-10-24T17:43:02.488121+00:00"
+    },
+    "72513264|manuel neuer|2.5|over": {
+      "status": "claimed",
+      "run_token": "40126903155:1",
+      "claimed_at": "2026-10-24T19:48:38.243733+00:00",
+      "signal": {
+        "signal_id": "72513264|manuel neuer|2.5|over",
+        "created_at": "2026-10-24T19:48:02Z",
+        "event_id": "72513264",
+        "match_date": "2026-10-25",
+        "kickoff_at": "2026-10-25T16:30:00Z",
+        "league": "bundesliga",
+        "home_team": "SC Freiburg",
+        "away_team": "Bayern Munich",
+        "team": "Bayern Munich",
+        "opponent": "SC Freiburg",
+        "venue": "away",
+        "goalkeeper": "Manuel Neuer",
+        "bookmaker": "Bet365",
+        "line": "2.5",
+        "side": "over",
+        "odds_decimal": "2.0000",
+        "model_mean": "2.9675",
+        "model_probability": "0.549935",
+        "push_probability": "0.000000",
+        "fair_odds": "1.818",
+        "edge": "0.099870",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-10-24T19:48:00Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "named_player",
+        "identity_basis": "bookmaker_named_player",
+        "price_comparison": [
+          {
+            "bookmaker": "Bet365",
+            "odds": 2.0,
+            "captured_at": "2026-10-24T19:48:00Z",
+            "contract_scope": "named_player"
+          },
+          {
+            "bookmaker": "Kambi",
+            "odds": 2.0,
+            "captured_at": "2026-10-24T19:48:00Z",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-10-24T19:48:38.243733+00:00"
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-10-24T17:42:58.057697+00:00",
+      "checked_at": "2026-10-24T19:48:38.243733+00:00",
       "added": 1,
       "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-10-24T17:42:58.057697+00:00",
+      "checked_at": "2026-10-24T19:48:38.243733+00:00",
       "added": 0,
       "suppressed": {}
     }
