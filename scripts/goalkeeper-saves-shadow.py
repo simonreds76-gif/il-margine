@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from football_team_names import football_form_team_key
+from goalkeeper_price_selection import best_offers, stamp as price_stamp
 from goalkeeper_forecast_evidence import archive as archive_forecast_inputs, source_hashes
 from goalkeeper_saves_live import (
     ROOT,
@@ -336,11 +337,13 @@ def build_candidates(
 
 
 def mark_primary_selections(rows: list[dict[str, Any]]) -> None:
-    """Choose one robust, near-even value line per fixture."""
+    """Best current bookmaker per keeper/line, then one near-even line per fixture."""
     by_fixture: dict[str, list[dict[str, Any]]] = {}
-    for index, row in enumerate(rows):
+    now = max((d for row in rows if (d := price_stamp(row.get('generated_at')))), default=datetime.now(UTC))
+    for row in rows:
         row["strongest_for_fixture"] = "no"
-        fixture_key = str(row.get("event_id") or f"__unresolved_fixture_{index}") + "|" + str(row.get("bookmaker") or "Bet365").casefold()
+    for row in best_offers(rows, now):
+        fixture_key = str(row['event_id'])
         by_fixture.setdefault(fixture_key, []).append(row)
     for fixture_rows in by_fixture.values():
         eligible = [row for row in fixture_rows if row.get("candidate_status") == "eligible_shadow"]
@@ -363,13 +366,13 @@ def append_signals(path: Path, candidates: list[dict[str, Any]], generated_at: s
         if not str(row.get("selection_policy") or "").strip():
             row["selection_policy"] = LEGACY_SELECTION_POLICY
     keys = {str(row.get("signal_id") or "") for row in existing}
-    tracked_fixtures = {(str(row.get("event_id") or ""), str(row.get("bookmaker") or "Bet365").casefold()) for row in existing if str(row.get("event_id") or "")}
+    tracked_fixtures = {str(row.get("event_id") or "") for row in existing if str(row.get("event_id") or "")}
     added = 0
     for row in candidates:
         if row["candidate_status"] != "eligible_shadow" or row["strongest_for_fixture"] != "yes":
             continue
         fixture_book = (str(row.get("event_id") or ""), str(row.get("bookmaker") or "Bet365").casefold())
-        if fixture_book in tracked_fixtures:
+        if fixture_book[0] in tracked_fixtures:
             continue
         signal_id = "|".join(
             (str(row["event_id"]), str(row["goalkeeper"]).casefold(), str(row["line"]), str(row["side"]))
@@ -391,7 +394,7 @@ def append_signals(path: Path, candidates: list[dict[str, Any]], generated_at: s
         )
         existing.append({field: str(signal.get(field, "")) for field in SIGNAL_FIELDS})
         keys.add(signal_id)
-        tracked_fixtures.add(fixture_book)
+        tracked_fixtures.add(fixture_book[0])
         added += 1
     write_csv(path, existing, SIGNAL_FIELDS)
     return added, existing
@@ -437,7 +440,7 @@ def report_payload(
         "count_model": "PASS",
         "live_routing": False,
         "sellable": False,
-        "selection_rule": "retain every positive-EV line on the value ladder; track one predicted/confirmed starting goalkeeper line per fixture with edge >=5%, price 1.70-3.00, closest to even money",
+        "selection_rule": "compare the latest fixture capture across bookmakers first; retain the highest price per keeper/line/side, then track one starting goalkeeper line per fixture with edge >=5%, price 1.70-3.00, closest to even money; no second bookmaker bet for an already tracked fixture",
         "current": {
             "priced_lines": sum(1 for row in candidates if row.get("model_mean")),
             "eligible_lines": len(eligible),
