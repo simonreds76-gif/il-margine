@@ -76,6 +76,11 @@
       "scope": "GK Saves Keeper Watch v1 forward-only paired comparison. Current control and fixed keeper-history candidate, 0.5u paper / zero real stake. Review paired fixture Brier/log loss before ROI at 50 and 100 independent settled fixtures. Review capture freshness, missing history, pending/overdue and source conflicts. Never auto-promote or refit; no replay included.",
       "status": "CONNECTED_AWAITING_FIRST_CAPTURE",
       "report_path": "data/goalkeeper-saves/keeper-watch/report.json"
+    },
+    {
+      "id": "ace_compass",
+      "report_key": "tennis_ace_compass",
+      "scope": "Frozen opponent-only ATP/Challenger aces, first pre-match quotes, 1u paper stakes. Paired research reference and unique player-match count bias by tour/phase. Historical 19 bets excluded. Review at 50 and 100 independent settled fixtures; no automatic promotion."
     }
   ],
   "candidates": [
