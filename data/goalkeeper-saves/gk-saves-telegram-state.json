@@ -1905,7 +1905,7 @@
       "sent_at": "2026-10-24T13:43:35.678896+00:00"
     },
     "kambi|71945326|lorenzo palmisani|3.5|over": {
-      "status": "claimed",
+      "status": "sent",
       "run_token": "40113934750:1",
       "claimed_at": "2026-10-24T16:58:42.776813+00:00",
       "signal": {
@@ -1946,10 +1946,12 @@
         "selection_policy": "near_even_value_v2",
         "contract_scope": "team_goalkeeper_away",
         "identity_basis": "same_event_bet365_and_lineup_side"
-      }
+      },
+      "message_id": 638,
+      "sent_at": "2026-10-24T16:58:49.620401+00:00"
     },
     "kambi|72221342|caoimhín kelleher|2.5|over": {
-      "status": "claimed",
+      "status": "sent",
       "run_token": "40113934750:1",
       "claimed_at": "2026-10-24T16:58:42.776813+00:00",
       "signal": {
@@ -1990,7 +1992,9 @@
         "selection_policy": "near_even_value_v2",
         "contract_scope": "team_goalkeeper_away",
         "identity_basis": "same_event_bet365_and_lineup_side"
-      }
+      },
+      "message_id": 639,
+      "sent_at": "2026-10-24T16:58:49.948542+00:00"
     }
   }
 }
