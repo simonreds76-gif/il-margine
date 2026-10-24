@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T13:21:57.758056Z",
+  "generated_at": "2026-10-24T14:00:32.603422Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -54,88 +54,10 @@
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
   "leagues_covered": [
-    "bundesliga",
-    "la-liga"
+    "bundesliga"
   ],
-  "featured_signal_id": "20261024-roberto-fernandez-0dc4f8cc85",
+  "featured_signal_id": "20261024-anton-kade-0d3bf27e49",
   "signals": [
-    {
-      "id": "20261024-roberto-fernandez-0dc4f8cc85",
-      "match": {
-        "home_team": "Racing Santander",
-        "away_team": "Espanyol Barcelona",
-        "league": "la-liga",
-        "league_display": "La Liga",
-        "league_logo_path": "/league-logos/la-liga.png",
-        "kickoff_utc": "2026-10-24T14:15:00Z",
-        "kickoff_display": "Sat 24 Oct 15:15 UK",
-        "fotmob_match_id": "5868106",
-        "fotmob_page_url": "/matches/espanyol-vs-racing-santander/2gmqyl#5868106",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Roberto Fernandez",
-        "team": "Espanyol",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/la-liga/espanyol.png",
-        "team_primary_color": "#2563eb",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "vertical-stripes"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 50.0,
-        "fair_odds": 2.0
-      },
-      "market_data": {
-        "best_odds": 2.5,
-        "best_book": "Bet365",
-        "implied_chance_pct": 40.0
-      },
-      "edge": {
-        "price_gap_pp": 10.0,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 94
-        },
-        "share_of_team_chances_pct": 48,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 24
-        },
-        "recent_team_form": {
-          "tier": "Unknown"
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 98
-        },
-        "opponent_recent_defence": {
-          "tier": "Unknown"
-        },
-        "fixture_boost_pct": 35,
-        "projected_minutes": 85,
-        "penalty_role": "Primary",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup",
-        "The fixture profile adds to his scoring case"
-      ],
-      "risk_flags": []
-    },
     {
       "id": "20261024-anton-kade-0d3bf27e49",
       "match": {
@@ -203,7 +125,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 88
+          "percentile": 87
         },
         "opponent_recent_defence": {
           "tier": "High",
@@ -303,7 +225,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 90
+          "percentile": 89
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -471,14 +393,14 @@
         "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 26
+          "percentile": 27
         },
         "recent_team_form": {
           "tier": "Unknown"
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 92
+          "percentile": 91
         },
         "opponent_recent_defence": {
           "tier": "Unknown"
@@ -488,6 +410,83 @@
         "penalty_role": "Not on penalties",
         "role_adjustment_factor": 1.0,
         "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20261024-fabio-vieira-703b04c794",
+      "match": {
+        "home_team": "SC Paderborn 07",
+        "away_team": "Hamburger SV",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "league_logo_path": "/league-logos/bundesliga.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-10-24",
+        "fotmob_match_id": "",
+        "fotmob_page_url": "",
+        "lineup_type": "",
+        "venue": ""
+      },
+      "player": {
+        "name": "Fabio Vieira",
+        "team": "Hamburger SV",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/bundesliga/hamburger-sv.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#1d4ed8",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 30.2,
+        "fair_odds": 3.31
+      },
+      "market_data": {
+        "best_odds": 4.33,
+        "best_book": "Bet365",
+        "implied_chance_pct": 23.1
+      },
+      "edge": {
+        "price_gap_pp": 7.1,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 83
+        },
+        "share_of_team_chances_pct": 26,
+        "share_of_team_chances_percentile": 95,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 27
+        },
+        "recent_team_form": {
+          "tier": "Unknown"
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 91
+        },
+        "opponent_recent_defence": {
+          "tier": "Unknown"
+        },
+        "fixture_boost_pct": 11,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0469,
+        "role_adjustment_reason": "confirmed_role_delta=+1;usual=AMC;today=FW;weight=0.94",
         "lineup_confidence": "Confirmed starter"
       },
       "confidence_tier": "High",
