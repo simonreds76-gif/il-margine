@@ -1,13 +1,13 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-10-24T13:22:48Z",
+  "generated_at": "2026-10-24T13:28:09Z",
   "source_status": {
     "compared_at": "2026-10-24T13:21:18Z",
     "hot_live_updated_at": "2026-10-24T13:21:34Z",
     "expected_refresh_updated_at": "2026-10-24T13:21:18Z",
     "settlement_updated_at": "2026-10-24T13:21:29Z",
     "scheduler_heartbeat_at": "2026-10-24T13:21:34Z",
-    "snapshot_generated_at": "2026-10-24T13:22:48Z",
+    "snapshot_generated_at": "2026-10-24T13:28:09Z",
     "live_status_state": "idle",
     "live_status_message": "Goalscorer live poll finished (5 league(s) ran)."
   },
@@ -12357,7 +12357,7 @@
     }
   ],
   "penalty_watchlist": {
-    "generated_at": "2026-10-24T13:21:29Z",
+    "generated_at": "2026-10-24T13:27:29Z",
     "row_count": 13,
     "rows": [
       {
@@ -12435,14 +12435,14 @@
         "inherited_from_pre_match": "Facundo Buonanotte",
         "transfer_level_pre_match": "secondary",
         "editorial_note": "Federico Redondo took 1 penalty attempt and scored for Elche vs Rayo Vallecano. Primary pre-match: Facundo Buonanotte (confirmed_bench). Secondary pre-match: Fer Niño (confirmed_starter). Pre-match active slot was secondary -> Fer Niño. Strong review flag: penalty duty was split across multiple takers in the same match.",
-        "context_generated_at": "2026-10-24T12:04:48Z",
+        "context_generated_at": "2026-10-24T13:20:26Z",
         "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json",
-        "actual_taker_match_status": "Unknown - missing explicit player timeline",
-        "primary_on_pitch_at_penalty": "Unknown - missing explicit player timeline",
-        "secondary_on_pitch_at_penalty": "Unknown - missing explicit player timeline",
-        "tertiary_on_pitch_at_penalty": "Unknown - missing explicit player timeline",
+        "actual_taker_match_status": "Yes - started",
+        "primary_on_pitch_at_penalty": "No - bench, on 46'",
+        "secondary_on_pitch_at_penalty": "Yes - started",
+        "tertiary_on_pitch_at_penalty": "Yes - started",
         "active_on_pitch_at_penalty": "",
-        "actual_taker_on_pitch_at_penalty": "Unknown - missing explicit player timeline"
+        "actual_taker_on_pitch_at_penalty": "Yes - started"
       },
       {
         "row_id": "2026-10-24|la-liga|elche|rayo vallecano|nio",
@@ -12477,14 +12477,14 @@
         "inherited_from_pre_match": "Facundo Buonanotte",
         "transfer_level_pre_match": "secondary",
         "editorial_note": "Fer Niño took 1 penalty attempt and scored for Elche vs Rayo Vallecano. Primary pre-match: Facundo Buonanotte (confirmed_bench). Secondary pre-match: Fer Niño (confirmed_starter). Pre-match active slot was secondary -> Fer Niño. Strong review flag: penalty duty was split across multiple takers in the same match.",
-        "context_generated_at": "2026-10-24T12:04:48Z",
+        "context_generated_at": "2026-10-24T13:20:26Z",
         "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json",
-        "actual_taker_match_status": "Unknown - missing explicit player timeline",
-        "primary_on_pitch_at_penalty": "Unknown - missing explicit player timeline",
-        "secondary_on_pitch_at_penalty": "Unknown - missing explicit player timeline",
-        "tertiary_on_pitch_at_penalty": "Unknown - missing explicit player timeline",
+        "actual_taker_match_status": "Yes - started",
+        "primary_on_pitch_at_penalty": "No - bench, on 46'",
+        "secondary_on_pitch_at_penalty": "Yes - started",
+        "tertiary_on_pitch_at_penalty": "Yes - started",
         "active_on_pitch_at_penalty": "",
-        "actual_taker_on_pitch_at_penalty": "Unknown - missing explicit player timeline"
+        "actual_taker_on_pitch_at_penalty": "Yes - started"
       },
       {
         "row_id": "2026-10-24|la-liga|rayo vallecano|elche|ciss",
@@ -12519,14 +12519,14 @@
         "inherited_from_pre_match": "Isi Palazón",
         "transfer_level_pre_match": "secondary",
         "editorial_note": "Pathé Ciss took 1 penalty attempt and missed for Rayo Vallecano vs Elche. Primary pre-match: Isi Palazón (confirmed_bench). Secondary pre-match: Jorge de Frutos (confirmed_starter). Pre-match active slot was secondary -> Jorge de Frutos. Strong review flag: the taker was not in the tracked top three.",
-        "context_generated_at": "2026-10-24T12:04:48Z",
+        "context_generated_at": "2026-10-24T13:20:26Z",
         "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json",
-        "actual_taker_match_status": "Unknown - missing explicit player timeline",
-        "primary_on_pitch_at_penalty": "Unknown - missing explicit player timeline",
-        "secondary_on_pitch_at_penalty": "Unknown - missing explicit player timeline",
-        "tertiary_on_pitch_at_penalty": "Unknown - missing explicit player timeline",
+        "actual_taker_match_status": "Yes - started",
+        "primary_on_pitch_at_penalty": "No - bench",
+        "secondary_on_pitch_at_penalty": "Yes - started, off 46'",
+        "tertiary_on_pitch_at_penalty": "Yes - started",
         "active_on_pitch_at_penalty": "",
-        "actual_taker_on_pitch_at_penalty": "Unknown - missing explicit player timeline"
+        "actual_taker_on_pitch_at_penalty": "Yes - started"
       },
       {
         "row_id": "2026-10-21|la-liga|athletic club|levante|berenguer",
@@ -15262,5 +15262,5 @@
     }
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "c954a0614ce6a7aab062beb9047e828c582c9c58aecefed5487974626c2209fc"
+  "payload_hash": "73c63780e3da26510bbd545f78da7657c9dc3c0eadd939d8e4a9916525c38d21"
 }
