@@ -2,26 +2,26 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 71,
+    "blocked_lines": 48,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 32,
-      "goalkeeper_team_unresolved": 56,
-      "missing_lineup": 22,
-      "missing_priced_edge": 71,
+      "goalkeeper_not_matched_to_lineup": 16,
+      "goalkeeper_team_unresolved": 33,
+      "missing_lineup": 11,
+      "missing_priced_edge": 48,
       "missing_registered_feature": 15,
-      "team_keeper_mapping_unresolved": 2
+      "team_keeper_mapping_unresolved": 6
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 6,
-    "priced_lines": 382,
+    "eligible_lines": 3,
+    "priced_lines": 290,
     "provisional_lines": 0,
-    "signals_added": 1,
-    "value_ladder_lines": 59
+    "signals_added": 2,
+    "value_ladder_lines": 40
   },
   "evidence": {
     "clv": 0.05358,
     "clv_matched": 22,
-    "pending": 12,
+    "pending": 14,
     "pnl_units": 17.154,
     "roi": 0.483211,
     "settled": 71,
@@ -29,36 +29,36 @@
       "fotmob_named_keeper_shotmap": 68,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 84,
+    "signals": 86,
     "true_close_coverage": 0.309859,
     "void": 1
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-24T13:43:30.181672+00:00",
+    "checked_at": "2026-10-24T16:58:05.452209+00:00",
     "counts": {
-      "not_fresh_prematch": 262,
-      "offers_saved": 191
+      "not_fresh_prematch": 36,
+      "offers_saved": 302
     },
-    "saved": 12,
+    "saved": 21,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-24T13:43:29Z",
+  "generated_at": "2026-10-24T16:58:04Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "blocked_or_missing_inputs": 33,
-      "not_new_fresh_prematch": 262,
-      "unregistered_settlement_rules": 47
+      "blocked_or_missing_inputs": 47,
+      "not_new_fresh_prematch": 36,
+      "unregistered_settlement_rules": 66
     },
     "forecast_fixtures": 83,
-    "forecast_keepers": 164,
-    "generated_at": "2026-10-24T13:43:30.271161+00:00",
-    "last_capture_at": "2026-10-24T00:02:17.895946+00:00",
+    "forecast_keepers": 165,
+    "generated_at": "2026-10-24T16:58:05.612353+00:00",
+    "last_capture_at": "2026-10-24T16:58:05.612353+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 0,
+    "new_forecasts": 1,
     "new_selections": 0,
     "next_review_at": 50,
     "paired_scores": {
@@ -659,7 +659,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 74,
+      "awaiting_verified_keeper_result": 75,
       "incomplete_or_conflicting_full_match_count": 4,
       "keeper_identity_unresolved": 1,
       "verified_different_starting_keeper": 3
