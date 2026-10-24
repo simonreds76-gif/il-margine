@@ -164,6 +164,13 @@ def write_alert_state(path: Path, state: dict, rows: Iterable[dict]) -> None:
     temporary.replace(path)
 
 
+def has_reliable_pitch_context(row: dict) -> bool:
+    fields = ["primary_on_pitch_at_penalty", "secondary_on_pitch_at_penalty", "tertiary_on_pitch_at_penalty"]
+    values = [str(row.get(k) or "") for k in fields]
+    values.append(str(row.get("actual_taker_on_pitch_at_penalty") or row.get("actual_taker_match_status") or ""))
+    return all(v.startswith(("Yes -", "No -")) for v in values)
+
+
 def new_actionable_rows(
     current: Iterable[dict],
     previous: Iterable[dict],
@@ -171,11 +178,13 @@ def new_actionable_rows(
     alerted_identities: set[str] | None = None,
     reviews: dict | None = None,
 ) -> list[dict]:
-    previous_ids = set(dedupe_rows(previous))
+    previous_ids = {identity for identity, row in dedupe_rows(previous).items() if has_reliable_pitch_context(row)}
     priority_teams = priority_teams or {}
     alerted_identities = alerted_identities or set()
     rows = []
     for identity, row in dedupe_rows(current).items():
+        if not has_reliable_pitch_context(row):
+            continue  # Retried on later refresh; never marked as delivered.
         if reviews is not None and is_closed(row, reviews):
             continue
         hierarchy_status = priority_teams.get(team_identity(row), "")

@@ -180,8 +180,10 @@ class GoalkeeperSavesLiveTests(unittest.TestCase):
             ]}}
         rows = capture.extract_rows([event], {}, bookmaker_name='Bet365,Kambi',
                                     captured_at='2026-08-20T10:00:00Z', capture_mode='publication')
-        self.assertEqual(len(rows), 1)
+        self.assertEqual(len(rows), 3)
         self.assertEqual(rows[0]['bookmaker'], 'Bet365')
+        self.assertEqual([r['player'] for r in rows[1:]], ['Home goalkeeper', 'Away goalkeeper'])
+        self.assertTrue(all('team_goalkeeper_' in r['source'] for r in rows[1:]))
         coverage = capture.save_market_coverage([event], 'Bet365,Kambi')
         self.assertEqual(coverage['Kambi']['status'], 'UNNAMED_OR_TEAM_CONTRACTS_ONLY')
         self.assertEqual(coverage['Kambi']['unnamed_or_team_lines'], 3)

@@ -51,7 +51,7 @@ CANDIDATE_FIELDS = [
     "team", "opponent", "venue", "goalkeeper", "bookmaker", "line", "side", "odds_decimal", "model_mean",
     "model_probability", "push_probability", "fair_odds", "edge", "lineup_status", "lineup_source", "data_issue_detail",
     "capture_mode", "captured_at", "candidate_status", "blockers", "strongest_for_fixture",
-    "selection_policy", "three_way_source",
+    "selection_policy", "three_way_source", "contract_scope", "identity_basis",
 ]
 PROVISIONAL_FIELDS = CANDIDATE_FIELDS + ["research_only", "not_a_signal"]
 SIGNAL_FIELDS = [
@@ -59,7 +59,7 @@ SIGNAL_FIELDS = [
     "team", "opponent", "venue", "goalkeeper", "bookmaker", "line", "side", "odds_decimal", "model_mean",
     "model_probability", "push_probability", "fair_odds", "edge", "stake_units", "lineup_status",
     "lineup_source", "capture_mode", "captured_at", "status", "result", "actual_saves", "pnl_units",
-    "settled_at", "settlement_source", "close_odds", "clv", "selection_policy",
+    "settled_at", "settlement_source", "close_odds", "clv", "selection_policy", "contract_scope", "identity_basis",
 ]
 
 
@@ -216,7 +216,23 @@ def build_candidates(
             (match_day.isoformat(), football_form_team_key(home), football_form_team_key(away))
         )
         player = str(price_row.get("player") or "").strip()
+        contract_side = next((s for s in ("home", "away") if f":team_goalkeeper_{s}:" in str(price_row.get("source") or "")), None)
+        identity_basis = "bookmaker_named_player"
+        if contract_side:
+            # The feed supplies team contracts. Attach a display keeper only when
+            # the same event's Bet365 names resolve uniquely to this lineup side.
+            mapped = set()
+            for quote in prices:
+                if str(quote.get("event_id")) != str(price_row.get("event_id")) or str(quote.get("bookmaker", "")).casefold() != "bet365":
+                    continue
+                qside, _, qplayer = resolve_goalkeeper(fixture, str(quote.get("player") or ""))
+                if qside == contract_side:
+                    mapped.add(qplayer)
+            player = next(iter(mapped)) if len(mapped) == 1 else ""
+            identity_basis = "same_event_bet365_and_lineup_side" if player else "unresolved_team_keeper"
         side, lineup_status, canonical_player = resolve_goalkeeper(fixture, player)
+        if contract_side and side != contract_side:
+            side, lineup_status, canonical_player = "", "team_keeper_mapping_unresolved", ""
         blockers: list[str] = []
         if lineup_status not in TRACKABLE_STARTER_STATUSES:
             blockers.append(lineup_status)
@@ -291,6 +307,8 @@ def build_candidates(
                 "opponent": opponent,
                 "venue": venue,
                 "goalkeeper": canonical_player or player,
+                "contract_scope": f"team_goalkeeper_{contract_side}" if contract_side else "named_player",
+                "identity_basis": identity_basis,
                 "bookmaker": price_row.get("bookmaker") or "Bet365",
                 "line": price_row.get("line", ""),
                 "side": str(price_row.get("side") or "over").casefold(),
@@ -322,7 +340,7 @@ def mark_primary_selections(rows: list[dict[str, Any]]) -> None:
     by_fixture: dict[str, list[dict[str, Any]]] = {}
     for index, row in enumerate(rows):
         row["strongest_for_fixture"] = "no"
-        fixture_key = str(row.get("event_id") or f"__unresolved_fixture_{index}")
+        fixture_key = str(row.get("event_id") or f"__unresolved_fixture_{index}") + "|" + str(row.get("bookmaker") or "Bet365").casefold()
         by_fixture.setdefault(fixture_key, []).append(row)
     for fixture_rows in by_fixture.values():
         eligible = [row for row in fixture_rows if row.get("candidate_status") == "eligible_shadow"]
@@ -345,16 +363,19 @@ def append_signals(path: Path, candidates: list[dict[str, Any]], generated_at: s
         if not str(row.get("selection_policy") or "").strip():
             row["selection_policy"] = LEGACY_SELECTION_POLICY
     keys = {str(row.get("signal_id") or "") for row in existing}
-    tracked_fixtures = {str(row.get("event_id") or "") for row in existing if str(row.get("event_id") or "")}
+    tracked_fixtures = {(str(row.get("event_id") or ""), str(row.get("bookmaker") or "Bet365").casefold()) for row in existing if str(row.get("event_id") or "")}
     added = 0
     for row in candidates:
         if row["candidate_status"] != "eligible_shadow" or row["strongest_for_fixture"] != "yes":
             continue
-        if str(row.get("event_id") or "") in tracked_fixtures:
+        fixture_book = (str(row.get("event_id") or ""), str(row.get("bookmaker") or "Bet365").casefold())
+        if fixture_book in tracked_fixtures:
             continue
         signal_id = "|".join(
             (str(row["event_id"]), str(row["goalkeeper"]).casefold(), str(row["line"]), str(row["side"]))
         )
+        if fixture_book[1] != "bet365":
+            signal_id = fixture_book[1] + "|" + signal_id
         if signal_id in keys:
             continue
         signal = {field: "" for field in SIGNAL_FIELDS}
@@ -370,7 +391,7 @@ def append_signals(path: Path, candidates: list[dict[str, Any]], generated_at: s
         )
         existing.append({field: str(signal.get(field, "")) for field in SIGNAL_FIELDS})
         keys.add(signal_id)
-        tracked_fixtures.add(str(row.get("event_id") or ""))
+        tracked_fixtures.add(fixture_book)
         added += 1
     write_csv(path, existing, SIGNAL_FIELDS)
     return added, existing
