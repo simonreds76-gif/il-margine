@@ -1,9 +1,7 @@
-import { after, NextResponse } from "next/server";
-import { getTipArtwork } from "@/lib/tip-artwork";
-import { resolveTipPortrait } from "@/lib/tip-portrait-resolver";
+import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createHmac } from "crypto";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { postPlayerPropTipToTelegram } from "@/lib/player-props-telegram";
 import { slugifyTip } from "@/lib/slugify";
@@ -24,6 +22,12 @@ type RevalidationBet = {
 const REVALIDATION_BET_COLUMNS = "id, market, event, match_date";
 
 function revalidatePublicBetSurfaces(...bets: Array<RevalidationBet | null | undefined>) {
+  for (const id of new Set(bets.map((bet) => bet?.id).filter(Boolean))) {
+    // Expire immediately after a successful write: the next portrait request
+    // must resolve the corrected club/player, not serve a stale lookup first.
+    revalidateTag(`tip-portrait:${id}`, { expire: 0 });
+    revalidatePath(`/api/tip-portrait/${id}`);
+  }
   for (const path of SHARED_PUBLIC_BET_PATHS) {
     revalidatePath(path);
   }

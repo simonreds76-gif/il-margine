@@ -9,15 +9,15 @@ const europa = require('./fixtures/tip-portrait-europa-squads.json');
 const squads = require('./fixtures/tip-portrait-squads.json');
 const source = (club) => `<script id="__NEXT_DATA__" type="application/json">${JSON.stringify({props:{pageProps:{fallback:{['team-'+squads[club].details.id]:squads[club]}}}})}</script>`;
 
-function harness({ fail = false, empty = false, noSquad = false } = {}) {
+function harness({ fail = false, empty = false, noSquad = false, updateError = false } = {}) {
   const cache = new Map();
+  const cachedValues = new Map(), invalidations = [], paths = [];
   let fetches = 0, queries = 0;
-  const cached = (fn) => {
-    const values = new Map();
+  const cached = (fn, parts = [], options = {}) => {
     return async (...args) => {
-      const key = JSON.stringify(args);
-      if (!values.has(key)) values.set(key, Promise.resolve().then(() => fn(...args)).catch((e) => { values.delete(key); throw e; }));
-      return values.get(key);
+      const key = JSON.stringify([fn.toString(),parts,args]);
+      if (!cachedValues.has(key)) cachedValues.set(key, {tags:options.tags || [],value:Promise.resolve().then(() => fn(...args)).catch((e) => { cachedValues.delete(key); throw e; })});
+      return cachedValues.get(key).value;
     };
   };
   const pick = {id:123, market:'props',category:'ligue1',event:'Rennes vs Auxerre',player:'Cresswell'};
@@ -29,8 +29,18 @@ function harness({ fail = false, empty = false, noSquad = false } = {}) {
     const code = ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
     const req = (id) => {
       if(id === 'server-only') return {};
-      if(id === 'next/cache') return {unstable_cache:cached};
-      if(id === '@/lib/supabase-server') return {getSupabaseAdmin:()=>({from:()=>({select:()=>({eq:()=>({maybeSingle:async()=>{queries++;return {data:empty?null:pick,error:null};}})})})})};
+      if(id === 'node:crypto' || id === 'crypto') return require(id);
+      if(id === 'next/cache') return {unstable_cache:cached,revalidatePath:p=>paths.push(p),revalidateTag:(tag,profile)=>{
+        invalidations.push({tag,profile});
+        for(const [k,v] of cachedValues) if(v.tags.includes(tag)) cachedValues.delete(k);
+      }};
+      if(id === 'next/server') return {NextResponse:{json:(body,opts)=>Response.json(body,opts)}};
+      if(id === 'next/headers') return {cookies:async()=>({get:()=>({value:require('node:crypto').createHmac('sha256','portrait-test-only').update('admin_session').digest('base64url')})})};
+      if(id === '@/lib/player-props-telegram') return {postPlayerPropTipToTelegram:()=>{throw new Error('Editing must not send Telegram');}};
+      if(id === '@/lib/supabase-server') return {getSupabaseAdmin:()=>({from:()=>({
+        select:()=>({eq:()=>({maybeSingle:async()=>{queries++;return {data:empty?null:{...pick},error:null};},single:async()=>({data:{...pick},error:null})})}),
+        update:updates=>({eq:()=>({select:()=>({single:async()=>{if(updateError)return {data:null,error:{message:'Update rejected'}};Object.assign(pick,updates);return {data:{...pick},error:null};}})})}),
+      })})};
       return load(id.startsWith('@/')?path.join(root,'src',id.slice(2)):path.resolve(path.dirname(file),id));
     };
     const mockedFetch = async (url) => {
@@ -43,16 +53,16 @@ function harness({ fail = false, empty = false, noSquad = false } = {}) {
       const club = url.includes('/9851/')?'rennes':'auxerre';
       return new Response(source(club));
     };
-    vm.runInThisContext('(function(require,module,exports,fetch){'+code+'\n})',{filename:file})(req,module,module.exports,mockedFetch);
+    vm.runInThisContext('(function(require,module,exports,fetch,process){'+code+'\n})',{filename:file})(req,module,module.exports,mockedFetch,{env:{ADMIN_PASSWORD:'portrait-test-only'}});
     return module.exports;
   };
-  return {load,pick,counts:()=>({fetches,queries})};
+  return {load,pick,invalidations,paths,counts:()=>({fetches,queries})};
 }
 
 test('a new surname-only pick gets a real club-scoped portrait without a curated player entry',async()=>{
   const h=harness();
   const artwork=h.load(path.join(root,'src/lib/tip-artwork.ts')).getTipArtwork(h.pick);
-  assert.equal(artwork[0].src,'/api/tip-portrait/123');
+  assert.match(artwork[0].src,/^\/api\/tip-portrait\/123\?v=[a-f0-9]{12}$/);
   const {GET}=h.load(path.join(root,'src/app/api/tip-portrait/[id]/route.ts'));
   for(let n=0;n<2;n++) {
     const response=await GET(new Request('https://example.test/api/tip-portrait/123'),{params:Promise.resolve({id:'123'})});
@@ -84,6 +94,7 @@ test('source outage, unknown tip and malformed IDs fail safely without arbitrary
     assert.equal(invalid.status,400); assert.deepEqual(h.counts(),{fetches:0,queries:0});
     const response=await GET(new Request('https://example.test'),{params:Promise.resolve({id:'123'})});
     assert.equal(response.status,config.fail?503:404);
+    assert.equal(response.headers.get('cache-control'),'no-store');
     assert.equal(response.headers.get('location'),null);
     if(config.empty) assert.equal(h.counts().fetches,0);
   }
@@ -116,7 +127,37 @@ test('verified Zima portrait also repairs old API URLs without depending on eith
   assert.equal(response.headers.get('location'),'https://images.fotmob.com/image_resources/playerimages/1085401.png');
   assert.deepEqual(h.counts(),{fetches:0,queries:1});
   const artwork=h.load(path.join(root,'src/lib/tip-artwork.ts')).getTipArtwork({...h.pick,event:'Rennes vs Auxerre'});
-  assert.equal(artwork[0].src,'/api/tip-portrait/1133');
+  assert.match(artwork[0].src,/^\/api\/tip-portrait\/1133\?v=[a-f0-9]{12}$/);
+});
+
+test('correcting a club on the same bet immediately retries a failed portrait without waiting for cached lookup expiry',async()=>{
+  const h=harness();h.pick.event='Rennnes vs Auxerre';
+  const artwork=h.load(path.join(root,'src/lib/tip-artwork.ts')).getTipArtwork;
+  const {GET}=h.load(path.join(root,'src/app/api/tip-portrait/[id]/route.ts'));
+  const {PATCH}=h.load(path.join(root,'src/app/api/admin/bets/route.ts'));
+  const before=artwork(h.pick)[0].src;
+  const request=()=>GET(new Request('https://example.test'+artwork(h.pick)[0].src),{params:Promise.resolve({id:'123'})});
+  assert.equal((await request()).status,404);
+  assert.equal(h.counts().queries,1);
+  const saved=await PATCH(new Request('https://example.test/api/admin/bets',{method:'PATCH',body:JSON.stringify({id:123,event:'Rennes vs Auxerre'})}));
+  assert.equal(saved.status,200);
+  assert.notEqual(artwork(h.pick)[0].src,before,'browser and React failed-image key must change');
+  assert.deepEqual(h.invalidations,[{tag:'tip-portrait:123',profile:{expire:0}}]);
+  assert.ok(h.paths.includes('/api/tip-portrait/123'));
+  const fixed=await request();
+  assert.equal(fixed.status,307);
+  assert.match(fixed.headers.get('location'),/1186444\.png$/);
+  assert.equal(h.counts().queries,2,'saved identity must replace stale cached miss');
+});
+
+test('player, club and category edits change the lookup URL; price edits do not; failed writes do not invalidate',async()=>{
+  const h=harness({updateError:true});const art=h.load(path.join(root,'src/lib/tip-artwork.ts')).getTipArtwork;
+  const original=art(h.pick)[0].src;
+  for(const edit of [{player:'Charlie Cresswell'},{event:'Auxerre vs Rennes'},{category:'other'}]) assert.notEqual(art({...h.pick,...edit})[0].src,original);
+  assert.equal(art({...h.pick,odds:3.5})[0].src,original);
+  const {PATCH}=h.load(path.join(root,'src/app/api/admin/bets/route.ts'));
+  const response=await PATCH(new Request('https://example.test/api/admin/bets',{method:'PATCH',body:JSON.stringify({id:123,event:'Rennnes vs Auxerre'})}));
+  assert.equal(response.status,400);assert.deepEqual(h.invalidations,[]);assert.equal(h.pick.event,'Rennes vs Auxerre');
 });
 
 test('new Europa picks resolve both squads and the correct player including accents and verified short names', async () => {

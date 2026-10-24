@@ -1,4 +1,5 @@
 import "server-only";
+import { createHash } from "node:crypto";
 import tennisPortraits from "@/data/tip-tennis-portraits.json";
 import penaltyPortraits from "../../data/goalscorer/penalty-player-portraits.json";
 import labPortraits from "../../data/goalscorer/lab-player-portraits.json";
@@ -12,6 +13,16 @@ const words = (name: string) => foldNameText(name).toLowerCase().replace(/[^a-z0
 const leagueKeys: Record<string, string> = { pl: "epl", seriea: "serie-a", laliga: "la-liga", bundesliga: "bundesliga", ligue1: "ligue-1" };
 const clubAliases: Record<string, string> = { psg: "parissaintgermain", acmilan: "milan" };
 const clubKey = (club: string) => clubAliases[key(club)] ?? key(club);
+
+// The URL must change with the saved identity, even when the bet ID stays the
+// same. This also resets the portrait component's failed-image state on edit.
+function portraitLookupUrl(pick: PickIdentity): string | null {
+  if (!Number.isSafeInteger(pick.id) || Number(pick.id) <= 0) return null;
+  const revision = createHash("sha256").update(JSON.stringify([
+    pick.market, pick.category, pick.event, pick.player,
+  ])).digest("hex").slice(0, 12);
+  return `/api/tip-portrait/${pick.id}?v=${revision}`;
+}
 
 // Verified FotMob identities for published surname-only selections. Club context
 // prevents assigning a namesake or carrying an old club crest into another fixture.
@@ -68,5 +79,5 @@ export function getTipArtwork(pick: PickIdentity): TipPortrait[] {
   const scoped = sides.map((club) => ({ club, id: portraits[`${league}|${clubKey(club)}|${key(name)}`] })).filter((row) => row.id);
   const scopedIds = new Set(scoped.map((row) => row.id));
   const id = scopedIds.size === 1 ? scoped[0].id : scopedIds.size > 1 ? null : lab[`${league}|${key(name)}`] ?? portraits[key(name)];
-  return [{ name, src: id ? `https://images.fotmob.com/image_resources/playerimages/${id}.png` : Number.isSafeInteger(pick.id) && Number(pick.id) > 0 ? `/api/tip-portrait/${pick.id}` : null, kind: "player", fallbackSrc: scopedIds.size === 1 ? resolveTeamLogoPath(scoped[0].club, pick.category) : null }];
+  return [{ name, src: id ? `https://images.fotmob.com/image_resources/playerimages/${id}.png` : portraitLookupUrl(pick), kind: "player", fallbackSrc: scopedIds.size === 1 ? resolveTeamLogoPath(scoped[0].club, pick.category) : null }];
 }
