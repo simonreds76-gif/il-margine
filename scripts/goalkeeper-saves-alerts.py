@@ -98,13 +98,15 @@ def message(row):
             'Tracking stake: 0.5u paper. Real stake: 0u.\n'
             'Original price and forecast locked. Estimated edge is unproven.\n'
             '<a href="https://ilmargine.bet/model-monitor/gk-saves#keeper-watch">Keeper Watch results and ROI (Admin login)</a>')
+    contract_note = ('Market: ' + e('contract_scope').replace('_', ' ') + '. Keeper name matched to Bet365 and the expected/confirmed lineup; check the starter and bookmaker rules.\n') if str(row.get('contract_scope') or '').startswith('team_goalkeeper_') else ''
     return ('<b>GK saves | New tracked signal</b>\n\n'
         f"<b>{e('home_team')} vs {e('away_team')}</b>\n"
         f"{e('goalkeeper')} - {e('side').title()} {e('line')} saves\n"
         f"{html.escape(str(row.get('bookmaker') or 'Bet365'))} recorded odds: <b>{float(row['odds_decimal']):.2f}</b>\n"
         f"Fair odds at capture: {float(row['fair_odds']):.2f} | Estimated EV: +{float(row['edge'])*100:.1f}%\n"
         f"Kickoff: {e('kickoff_at')}\nCaptured: {e('captured_at')}\n"
-        f"Lineup: {e('lineup_status').replace('_',' ')}\n\n"
+        f"Lineup: {e('lineup_status').replace('_',' ')}\n"
+        f"{contract_note}\n"
         'These odds and this forecast are locked for tracking. Later updates may show a revised forecast and price. Check the current bookmaker price before betting.\n'
         'Research model; 0.5u paper tracking, not a proven edge.')
 

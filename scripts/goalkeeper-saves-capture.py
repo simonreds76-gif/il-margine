@@ -211,13 +211,12 @@ def extract_rows(
             for market in markets or []:
                 if classify_market(market.get("name")) != "player_saves":
                     continue
-                if normalize_market_name(market.get("name")) in {"goalkeeper saves home", "goalkeeper saves away"}:
-                    continue  # Team contracts cannot be relabelled as a named player's bet.
+                team_side = {"goalkeeper saves home": "home", "goalkeeper saves away": "away"}.get(normalize_market_name(market.get("name"))) if str(bookmaker).casefold() == "kambi" else None
                 for prop in market.get("odds") or []:
                     line = parse_float(prop.get("hdp"))
                     over = parse_float(prop.get("over"))
                     under = parse_float(prop.get("under"))
-                    player = str(prop.get("label") or prop.get("name") or "").strip()
+                    player = f"{team_side.title()} goalkeeper" if team_side else str(prop.get("label") or prop.get("name") or "").strip()
                     has_over = over is not None and over > 1.0
                     has_under = under is not None and under > 1.0
                     if not player or line is None or not (has_over or has_under):
@@ -239,7 +238,7 @@ def extract_rows(
                             "home_price": f"{home_price:.4f}" if home_price else "",
                             "draw_price": f"{draw_price:.4f}" if draw_price else "",
                             "away_price": f"{away_price:.4f}" if away_price else "",
-                            "source": f"odds_api_io:{three_way_source}",
+                            "source": f"odds_api_io:team_goalkeeper_{team_side}:{three_way_source}" if team_side else f"odds_api_io:{three_way_source}",
                         }
                     if has_over:
                         rows.append({**base_row, "side": "over", "odds_decimal": f"{over:.4f}"})
@@ -378,7 +377,7 @@ def main() -> None:
         args.status.parent.mkdir(parents=True, exist_ok=True)
         (args.status.parent / "gk-saves-unmapped-markets.json").write_text(
             json.dumps({"captured_at": captured_at, "contracts": unmapped,
-                        "signal_eligible": False, "reason": "Player identity and settlement scope require verification"}, indent=2) + "\n",
+                        "reason": "Home/away contracts are mapped against same-fixture Bet365 keeper names and lineup sides by the shadow scorer. Combined contracts remain excluded."}, indent=2) + "\n",
             encoding="utf-8")
     rows = extract_rows(
         payload,

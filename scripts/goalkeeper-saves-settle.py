@@ -247,6 +247,33 @@ def fotmob_player_saves(payload: dict[str, Any], goalkeeper: str) -> tuple[int |
     }
 
 
+def fotmob_team_saves(payload: dict[str, Any], side: str) -> tuple[int | None, dict[str, Any]]:
+    """Grade the explicitly captured team-keeper contract, including keeper changes."""
+    page = (payload.get("props") or {}).get("pageProps") or {}
+    header = page.get("header") or {}
+    teams = header.get("teams") or []
+    if side not in {"home", "away"} or len(teams) != 2 or not (header.get("status") or {}).get("finished"):
+        return None, {"error": "team_keeper_finished_identity_unavailable"}
+    opponent_id = str(teams[1 if side == "home" else 0].get("id") or "")
+    shots = ((page.get("content") or {}).get("shotmap") or {}).get("shots")
+    if not opponent_id or not isinstance(shots, list) or not shots:
+        return None, {"error": "team_keeper_shotmap_unavailable"}
+    saves = set()
+    for shot in shots:
+        if not isinstance(shot, dict) or not shot.get("eventType") or not shot.get("teamId"):
+            return None, {"error": "team_keeper_shotmap_incomplete"}
+        if str(shot.get("teamId")) != opponent_id or str(shot["eventType"]).casefold() != "attemptsaved":
+            continue
+        if shot.get("isBlocked") or shot.get("isSavedOffLine"):
+            continue
+        if str(shot.get("period", "")).casefold() in {"penaltyshootout", "penalty shootout", "extrafirsthalf", "extrasecondhalf"}:
+            continue
+        if not shot.get("keeperId") or not shot.get("id"):
+            return None, {"error": "team_keeper_save_identity_missing"}
+        saves.add(str(shot["id"]))
+    return len(saves), {"source": "fotmob_team_keeper_shotmap", "contract_side": side}
+
+
 def season_for_day(day: date) -> int:
     return day.year if day.month >= 8 else day.year - 1
 
@@ -323,7 +350,11 @@ def latest_close(
             continue
         if str(row.get("side") or "").casefold() != str(signal.get("side") or "").casefold():
             continue
-        if person_match_score(row.get("player"), signal.get("goalkeeper")) < 80:
+        scope = str(signal.get("contract_scope") or "")
+        if scope.startswith("team_goalkeeper_"):
+            if f":{scope}:" not in str(row.get("source") or ""):
+                continue
+        elif person_match_score(row.get("player"), signal.get("goalkeeper")) < 80:
             continue
         if str(row.get("capture_mode") or "").casefold() != "close":
             continue
@@ -388,7 +419,7 @@ def main() -> None:
         write_report(args.report, {"generated_at": generated_at, "status": "NO_SIGNALS", "settled": 0, "reason_counts": {}})
         print("No goalkeeper-save shadow signals to settle.")
         return
-    reviewed_voids = apply_reviewed_voids(signals, ROOT, goalkeeper=True)
+    reviewed_voids = apply_reviewed_voids([r for r in signals if not str(r.get("contract_scope") or "").startswith("team_goalkeeper_")], ROOT, goalkeeper=True)
     if reviewed_voids:
         write_csv(args.signals, fields, signals)
     pending = [row for row in signals if str(row.get("status") or "").lower() == "pending"]
@@ -499,17 +530,21 @@ def main() -> None:
                 record(signal, "fotmob_match_request_failed", str(exc)[:240])
                 unresolved.append(signal)
                 continue
-        actual, metadata = fotmob_player_saves(match_cache[match_id], str(signal.get("goalkeeper") or ""))
+        scope = str(signal.get("contract_scope") or "")
+        team_contract = scope.startswith("team_goalkeeper_")
+        actual, metadata = (fotmob_team_saves(match_cache[match_id], scope.removeprefix("team_goalkeeper_"))
+                            if team_contract else fotmob_player_saves(match_cache[match_id], str(signal.get("goalkeeper") or "")))
         if actual is None:
             record(signal, str(metadata.get("error") or "fotmob_goalkeeper_stats_not_found"))
-            unresolved.append(signal)
+            if not team_contract:
+                unresolved.append(signal)
             continue
         settle_row(
             signal,
             actual,
             latest_close(odds_rows, signal),
             now,
-            source="fotmob_named_keeper_shotmap",
+            source="fotmob_team_keeper_shotmap" if team_contract else "fotmob_named_keeper_shotmap",
         )
         settled += 1
         record(signal, "settled_fotmob")
@@ -517,6 +552,8 @@ def main() -> None:
     groups: dict[tuple[str, str], list[dict[str, str]]] = defaultdict(list)
     if args.api_football_fallback:
         for signal in unresolved:
+            if str(signal.get("contract_scope") or "").startswith("team_goalkeeper_"):
+                continue  # Named-player fallback cannot settle a team contract.
             groups[(str(signal.get("league") or ""), str(signal.get("match_date") or "")[:10])].append(signal)
 
     for (league, day_text), group in sorted(groups.items()):
