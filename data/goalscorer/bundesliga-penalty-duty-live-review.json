@@ -1,9 +1,80 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-25T18:56:02.349437+00:00",
+  "generated_at": "2026-10-25T18:57:36.321484+00:00",
   "league": "bundesliga",
-  "row_count": 1,
+  "row_count": 2,
   "rows": [
+    {
+      "date": "2026-10-25",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "match": "Hoffenheim vs Bayer Leverkusen",
+      "team": "Hoffenheim",
+      "opponent": "Bayer Leverkusen",
+      "actual_taker": "Andrej Kramarić",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "79",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Andrej Kramarić",
+      "secondary_pre_match": "Tim Lemperle",
+      "tertiary_pre_match": "Fisnik Asllani",
+      "primary_lineup_status": "confirmed_bench",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "confirmed_starter",
+      "active_taker_pre_match": "Fisnik Asllani",
+      "active_slot_pre_match": "tertiary",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_reclaimed_from_bench",
+      "review_priority": "low",
+      "editorial_note": "Andrej Kramarić took 1 penalty attempt and scored for Hoffenheim vs Bayer Leverkusen. Primary pre-match: Andrej Kramarić (confirmed_bench). Secondary pre-match: Tim Lemperle (unknown). Pre-match active slot was tertiary -> Fisnik Asllani. Low-priority note: the benched primary later reclaimed the duty after coming on, so the hierarchy likely still stands.",
+      "context_generated_at": "2026-10-25T13:40:28Z",
+      "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json",
+      "actual_taker_match_status": "Yes - bench, on 65'",
+      "primary_on_pitch_at_penalty": "Yes - bench, on 65'",
+      "secondary_on_pitch_at_penalty": "No - bench",
+      "tertiary_on_pitch_at_penalty": "Yes - started, off 84'",
+      "actual_taker_on_pitch_at_penalty": "Yes - bench, on 65'",
+      "event_evidence": [
+        {
+          "id": "fotmob|bundesliga|5881201|2987922859",
+          "source_event_id": "2987922859",
+          "match_id": "5881201",
+          "source_url": "https://www.fotmob.com/matches/bayer-leverkusen-vs-hoffenheim/2844qc#5881201",
+          "observed_at": "2026-10-25T18:57:50+00:00",
+          "event_date": "2026-10-25",
+          "season": "2026/27",
+          "team": "Hoffenheim",
+          "taker": "Andrej Kramarić",
+          "primary": "Andrej Kramarić",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Andrej Kramarić",
+            "minute": 79,
+            "method": "completed_lineup_timeline",
+            "player_id": 173461,
+            "bucket": "subs",
+            "substitutions": [
+              {
+                "type": "subin",
+                "time": 65
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 79,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Hoffenheim vs Bayer Leverkusen",
+          "event_result": "scored"
+        }
+      ]
+    },
     {
       "date": "2026-10-24",
       "league": "bundesliga",
@@ -44,7 +115,7 @@
           "source_event_id": "2986611147",
           "match_id": "5881202",
           "source_url": "https://www.fotmob.com/matches/werder-bremen-vs-mainz-05/2v0rqw#5881202",
-          "observed_at": "2026-10-25T18:56:20+00:00",
+          "observed_at": "2026-10-25T18:57:50+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Werder Bremen",
@@ -78,7 +149,7 @@
           "source_event_id": "2986634487",
           "match_id": "5881202",
           "source_url": "https://www.fotmob.com/matches/werder-bremen-vs-mainz-05/2v0rqw#5881202",
-          "observed_at": "2026-10-25T18:56:20+00:00",
+          "observed_at": "2026-10-25T18:57:50+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Werder Bremen",
@@ -131,6 +202,6 @@
       "20261024",
       "20261025"
     ],
-    "matches_checked": 6
+    "matches_checked": 2
   }
 }
