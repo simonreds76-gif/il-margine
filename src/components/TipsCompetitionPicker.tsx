@@ -32,7 +32,7 @@ export default function TipsCompetitionPicker({ options, value, onChange, stats,
       <div className={styles.summary}>
         <span>{stats.total_bets.toLocaleString("en-GB")} bets</span>
         <span className={stats.total_bets < 50 || stats.roi === 0 ? "text-slate-400" : stats.roi > 0 ? "text-emerald-300" : "text-rose-300"}>
-          {stats.roi > 0 ? "+" : ""}{stats.roi.toFixed(1)}% ROI
+          {stats.total_bets > 0 ? `${stats.roi > 0 ? "+" : ""}${stats.roi.toFixed(1)}% ROI` : "ROI —"}
         </span>
         <SampleSizeBadge settled={stats.total_bets} compact />
       </div>

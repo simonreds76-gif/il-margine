@@ -54,7 +54,7 @@ export default function BetMobileMeta({
       <div className="min-w-0 px-2.5"><div className="text-[9px] uppercase tracking-wider text-slate-400">Stake</div><div className="mt-1 flex h-8 items-center font-mono text-sm font-semibold text-slate-100">{formatStake(stake)}u</div></div>
       <div className="min-w-0 px-2"><div className="text-[9px] uppercase tracking-wider text-slate-400">Bookmaker</div><div className="mt-1 flex h-8 items-center [&>div]:max-w-full [&>div>div]:max-w-full"><BookmakerLogo bookmaker={bookmaker} size="sm" noLink /></div></div>
     </div>
-    {showProfit ? <div className="mt-3 flex items-center justify-between gap-3 text-xs"><span className="text-slate-400">Profit / loss</span><span className={`font-mono text-sm font-semibold ${isVoid || profit === 0 ? "text-slate-300" : profit > 0 ? "text-emerald-300" : "text-rose-300"}`}><PnL value={profitLoss} status={status} /></span></div> : null}
+    {showProfit ? <div className="mt-3 flex items-center justify-between gap-3 text-xs"><span className="text-slate-400">Profit / loss</span><span className={`font-mono text-sm font-semibold ${isVoid || profit === 0 ? "text-slate-300" : profit > 0 ? "text-emerald-300" : "text-rose-300"}`}>{isVoid ? "0.00u" : profitLoss == null ? "—" : `${profit > 0 ? "+" : ""}${profit.toFixed(2)}u`}</span></div> : null}
   </div>;
 
   return (
