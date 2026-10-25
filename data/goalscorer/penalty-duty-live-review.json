@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-25T18:57:36.321484+00:00",
+  "generated_at": "2026-10-25T19:34:58.045709+00:00",
   "league": "serie-a",
-  "row_count": 3,
+  "row_count": 4,
   "rows": [
     {
       "date": "2026-10-25",
@@ -206,6 +206,77 @@
           "event_result": "scored"
         }
       ]
+    },
+    {
+      "date": "2026-10-17",
+      "league": "serie-a",
+      "review_source": "fotmob_live",
+      "match": "Venezia vs Napoli",
+      "team": "Napoli",
+      "opponent": "Venezia",
+      "actual_taker": "Kevin De Bruyne",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 0,
+      "distinct_takers_in_match": 1,
+      "minute": "68",
+      "event_type": "AttemptSaved",
+      "event_result": "missed",
+      "primary_pre_match": "Kevin De Bruyne",
+      "secondary_pre_match": "Rasmus Højlund",
+      "tertiary_pre_match": "Matteo Politano",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Kevin De Bruyne took 1 penalty attempt and missed for Napoli vs Venezia. Primary pre-match: Kevin De Bruyne (unknown). Secondary pre-match: Rasmus Højlund (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/serie-a-penalty-takers.json",
+      "actual_taker_match_status": "Yes - bench, on 54'",
+      "primary_on_pitch_at_penalty": "Yes - bench, on 54'",
+      "secondary_on_pitch_at_penalty": "Yes - bench, on 54'",
+      "tertiary_on_pitch_at_penalty": "Yes - bench, on 63'",
+      "actual_taker_on_pitch_at_penalty": "Yes - bench, on 54'",
+      "event_evidence": [
+        {
+          "id": "fotmob|serie-a|5749709|2982837183",
+          "source_event_id": "2982837183",
+          "match_id": "5749709",
+          "source_url": "https://www.fotmob.com/matches/venezia-vs-napoli/2lv4jt#5749709",
+          "observed_at": "2026-10-25T19:35:03+00:00",
+          "event_date": "2026-10-17",
+          "season": "2026/27",
+          "team": "Napoli",
+          "taker": "Kevin De Bruyne",
+          "primary": "Kevin De Bruyne",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Kevin De Bruyne",
+            "minute": 68,
+            "method": "completed_lineup_timeline",
+            "player_id": 169200,
+            "bucket": "subs",
+            "substitutions": [
+              {
+                "type": "subin",
+                "time": 54
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 68,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Venezia vs Napoli",
+          "event_result": "missed"
+        }
+      ]
     }
   ],
   "source_health": {
@@ -226,9 +297,8 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261024",
-      "20261025"
+      "20261017"
     ],
-    "matches_checked": 4
+    "matches_checked": 1
   }
 }
