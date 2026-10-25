@@ -139,7 +139,17 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           if [ "${ENABLE_SUPABASE_SNAPSHOT_UPLOADS:-0}" = "1" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
-            python scripts/build-goalscorer-monitor-snapshot.py --supabase
+            # The snapshot was already built above. Rebuilding then comparing
+            # against that local file can skip an update never uploaded to Admin.
+            python - <<'PY'
+          import runpy
+          module = runpy.run_path('scripts/build-goalscorer-monitor-snapshot.py')
+          payload = module['read_existing_snapshot'](module['OUTPUT_PATH'])
+          if not payload or not payload.get('generated_at'):
+              raise SystemExit('Built monitor snapshot missing; existing hosted snapshot retained')
+          module['upload_snapshot'](module['DEFAULT_SNAPSHOT_KEY'], payload)
+          print('Uploaded the already-built monitor snapshot to Admin')
+          PY
           else
             echo "::warning::Supabase snapshot upload disabled or key missing; skipping monitor snapshot upload."
           fi
