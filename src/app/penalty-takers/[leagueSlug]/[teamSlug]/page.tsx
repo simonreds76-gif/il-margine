@@ -374,25 +374,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                   ) : null}
                 </div>
               ) : null}
-              {team.evidenceSources.length ? (
-                <div>
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <p className="font-medium text-slate-100">Sources checked</p>
-                    <span className="rounded-full border border-slate-700 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-slate-300">
-                      {Math.min(team.evidenceSources.length, 4)} sources shown
-                    </span>
-                  </div>
-                  <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-                    {team.evidenceSources.slice(0, 4).map((source) => (
-                      <li key={source.url} className="rounded-xl border border-slate-800 bg-slate-950/55 px-3 py-3">
-                        <span className="font-medium text-slate-100">{source.label}</span>
-                        {source.note ? <span className="mt-1 block text-xs leading-5 text-slate-400">{source.note}</span> : null}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-              <p className="border-t border-slate-800 pt-4 text-xs leading-5 text-slate-400">{team.leagueCopy} Source URLs remain in the internal audit file so this page keeps readers focused on the current decision.</p>
+              <p className="border-t border-slate-800 pt-4 text-xs leading-5 text-slate-400">{team.leagueCopy}</p>
             </div>
           </div>
 
