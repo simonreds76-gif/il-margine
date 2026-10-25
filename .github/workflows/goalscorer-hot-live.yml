@@ -67,15 +67,37 @@ jobs:
         with:
           ref: ${{ github.sha }}
           path: .penalty-hot-tools
-          sparse-checkout: scripts/penalty_review_hot.py
+          sparse-checkout: |
+            scripts/penalty_review_hot.py
+            scripts/tests/test_penalty_review_hot.py
           sparse-checkout-cone-mode: false
 
       - name: Check completed matches for penalty reviews independently
+        id: penalty_capture
+        continue-on-error: true
         if: always() && !cancelled()
-        run: python .penalty-hot-tools/scripts/penalty_review_hot.py
+        run: |
+          python -m unittest discover -s .penalty-hot-tools/scripts/tests -p test_penalty_review_hot.py
+          python .penalty-hot-tools/scripts/penalty_review_hot.py
+
+      - name: Persist penalty capture before notification
+        id: penalty_capture_save
+        continue-on-error: true
+        if: steps.penalty_capture.outcome == 'success'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f data/goalscorer/penalty-hot-capture-state.json
+          git add -f data/goalscorer/*penalty-duty-live-review.json data/goalscorer/*penalty-duty-live-review.csv
+          if ! git diff --cached --quiet; then
+            git commit -m "data: penalty coverage ledger and verified match evidence"
+            bash scripts/ci-safe-push.sh golden-with-speed-insights
+          fi
 
       - name: Send only new actionable penalty reviews
-        if: success()
+        id: penalty_notify
+        continue-on-error: true
+        if: steps.penalty_capture_save.outcome == 'success'
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -84,14 +106,14 @@ jobs:
           PENALTY_REVIEW_URL: https://ilmargine.bet/model-monitor/goalscorer#penalty-watchlist
         run: python .penalty-hot-tools/scripts/penalty_review_hot.py --notify
 
-      - name: Persist penalty evidence and delivery history before pricing refresh
+      - name: Persist successful notification batches even if a later batch failed
+        id: penalty_delivery_save
+        continue-on-error: true
+        if: always() && !cancelled() && steps.penalty_capture_save.outcome == 'success'
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f data/goalscorer/penalty-hot-capture-state.json
-          git add -f data/goalscorer/*penalty-duty-live-review.json data/goalscorer/*penalty-duty-live-review.csv data/goalscorer/club-penalty-alert-state.json
+          git add -f data/goalscorer/club-penalty-alert-state.json
           if ! git diff --cached --quiet; then
-            git commit -m "data: completed-match penalty reviews and delivery state"
+            git commit -m "data: retain completed penalty notification receipts"
             bash scripts/ci-safe-push.sh golden-with-speed-insights
           fi
 
@@ -176,3 +198,19 @@ jobs:
           fi
           git commit -m "chore: hosted goalscorer hot live poll"
           bash scripts/ci-safe-push.sh golden-with-speed-insights
+
+      - name: Surface penalty failures after independent pricing work
+        if: always() && !cancelled()
+        env:
+          CAPTURE: ${{ steps.penalty_capture.outcome }}
+          CAPTURE_SAVE: ${{ steps.penalty_capture_save.outcome }}
+          NOTIFY: ${{ steps.penalty_notify.outcome }}
+          DELIVERY_SAVE: ${{ steps.penalty_delivery_save.outcome }}
+        run: |
+          for outcome in "$CAPTURE" "$CAPTURE_SAVE" "$NOTIFY" "$DELIVERY_SAVE"; do
+            if [ "$outcome" != "success" ]; then
+              echo "::error::Penalty processing did not complete; pricing was allowed to run independently."
+              exit 1
+            fi
+          done
+          python .penalty-hot-tools/scripts/penalty_review_hot.py --check-health
