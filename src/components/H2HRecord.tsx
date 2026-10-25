@@ -7,14 +7,15 @@ type Props = {
   names: string[];
   details?: ReactNode[];
   showCoverage?: boolean;
+  compact?: boolean;
 };
 
 // Counts include every verified meeting; optional returns use priced meetings only.
-export default function H2HRecord({ results, meetings, names, details, showCoverage = true }: Props) {
+export default function H2HRecord({ results, meetings, names, details, showCoverage = true, compact = false }: Props) {
   if (meetings === null || !results) return <p className={styles.empty}>History not yet matched</p>;
   if (meetings === 0) return <p className={styles.empty}>No meetings in our archive</p>;
   const hasDraws = results.length === 3;
-  return <div className={styles.record}>
+  return <div className={`${styles.record} ${compact ? styles.compact : ""}`}>
     <dl className={`${styles.columns} ${hasDraws ? styles.three : styles.two}`}>
       {results.map((count, i) => {
         const draw = hasDraws && i === 1;
@@ -25,6 +26,7 @@ export default function H2HRecord({ results, meetings, names, details, showCover
         </div>;
       })}
     </dl>
+    {compact && <div className={styles.balance} aria-hidden="true">{results.map((count, i) => <span key={i} className={hasDraws && i === 1 ? styles.draw : i === 0 ? styles.first : styles.second} style={{ flexGrow: count, display: count ? undefined : 'none' }}/>)}</div>}
     {showCoverage && <p className={styles.coverage}>{meetings} {meetings === 1 ? 'meeting' : 'meetings'} in our archive</p>}
   </div>;
 }

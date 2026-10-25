@@ -1,5 +1,6 @@
 import RelatedLinks from "@/components/RelatedLinks";
-import PageHeading from "@/components/PageHeading";
+import AtlasPageHeader from "@/components/AtlasPageHeader";
+import researchStyles from "@/components/ResearchPage.module.css";
 import type {Metadata} from 'next';
 import Footer from '@/components/Footer';
 import AerialBoard from '@/components/aerial/AerialBoard';
@@ -17,7 +18,7 @@ export default async function AerialPage({searchParams}:{searchParams:Promise<Re
  const params=process.env.NODE_ENV==='development'?await searchParams:{};
  const example=process.env.NODE_ENV==='development'&&params.example==='1';
  const url=example?'/fair-odds-lab/aerial-check.json':process.env.AERIAL_BOARD_URL||'https://jsuu8rjgs8aaukun.public.blob.vercel-storage.com/fair-odds-lab/aerial.json';
- return <><main className="aerial-page"><PageHeading eyebrow="Lineup research · beta" title="Air Control" icon="aerial" parent={{href:"/tools",label:"Betting tools"}}><p>Height, headers and delivery. Compare the expected starting teams, explore who competes in the air and see how their teammates supply the box. Confirmed XIs replace the expected teams when available.</p></PageHeading>
+ return <><main className={`aerial-page ${researchStyles.page}`}><AtlasPageHeader edition="aerial" description="Height, headers and delivery. Compare the expected starting teams, explore who competes in the air and see how their teammates supply the box. Confirmed XIs replace the expected teams when available."/>
  <AerialBoard url={url} example={example}/>
  <section className="aerial-faq"><p className="aerial-kicker">HOW TO USE IT</p><h2>From size to involvement.</h2>{faqs.map(([q,a])=><details key={q}><summary>{q}</summary><p>{a}</p></details>)}</section>
  <details className="aerial-method"><summary>Coverage and calculation notes</summary><p>Average height and the three tallest players require all ten outfield heights. Unknown or unresolved heights stay out of the comparison. Every available reported height links to its source in the player detail.</p><p>Aerial duels show contests won out of attempts. Fewer than 20 contests, five appearances or 450 minutes is labelled limited data. Headed shots per 90 uses only matches with shot data and requires three appearances and 270 minutes. A player’s role describes their usual position, not a predicted marking assignment.</p><p>Expected lineups expire after 30 hours and confirmed lineups after two hours, or at kickoff if earlier. The calendar and board also have freshness limits. A failed update keeps the last published snapshot with its original timestamp. The page never collects provider data when you visit.</p><p>Player photos use exact player identities; an unavailable image displays a neutral player icon. This tool is independent of the teams, competitions and data providers shown.</p></details>

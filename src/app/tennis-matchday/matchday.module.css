@@ -10,3 +10,19 @@
 .returns{margin-top:12px}
 .match>div:first-child .portrait{border-color:#a5e7ce70}
 .match>div:last-child .portrait{border-color:#a9cdf570}
+.page .card { border-radius: 16px; background: linear-gradient(135deg,#16232a,#111a22 58%); box-shadow: 0 6px 24px #00000016; }
+.page .cardTop { min-height: 44px; padding: 10px 16px; }
+.page .record { margin-inline: 16px; padding: 12px; background: #101a22; }
+.page .toolbar { border-radius: 13px; background: #121c24; }
+.page .match { padding: 18px 16px; }
+.page .match h3 { min-height: 0; }
+.page .portrait,.page .portrait img { width: 64px; height: 64px; }
+.page .actions a { background: #192d28; border-color: #426557; }
+@media(max-width:639px) {
+  .page .match { padding: 16px 12px; }
+  .page .record { margin-inline: 12px; }
+  .page .boardHeader { padding-top: 8px; }
+  .page .filters select,.page .searchInput input { font-size: 16px; }
+}
+
+/* Shared research presentation. Data and selection behaviour are unchanged. */

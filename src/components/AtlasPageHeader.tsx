@@ -4,14 +4,8 @@ import type { ReactNode } from "react";
 import styles from "./ResearchPage.module.css";
 import "@/app/research-mobile.css";
 
-const editions = [
-  { id: "matchday", href: "/football-atlas/fixtures", label: "Football Matchday", description: "Fixtures with club and manager history", image: "/football-atlas/matchday/mark-v1.svg" },
-  { id: "football", href: "/football-atlas", label: "Club returns", description: "Historical club betting returns", image: "/images/tools/football-v1.webp" },
-  { id: "managers", href: "/manager-atlas", label: "Manager returns", description: "Head to head betting returns", image: "/manager-atlas/mark-v2.svg" },
-  { id: "tennis", href: "/return-atlas", label: "Tennis returns", description: "Historical player betting returns", image: "/images/tools/tennis-v1.webp" },
-  { id: "tennis-matchday", href: "/tennis-matchday", label: "Tennis Matchday", description: "Daily matches and player history", image: "/tennis-matchday/mark.svg" },
-  { id: "matchup", href: "/tennis-matchup", label: "Matchup Lab", description: "Serve, return and match history", image: "/tennis-matchup/court-v1.webp" },
-] as const;
+import ResearchToolNav from './ResearchToolNav';
+import { researchTools as editions } from './research-tools';
 
 export default function AtlasPageHeader({ edition, description, children }: {
   edition: typeof editions[number]["id"];
@@ -27,13 +21,11 @@ export default function AtlasPageHeader({ edition, description, children }: {
     </nav>
     <div className={styles.identity}>
       <Image className={styles.mark} src={current.image} alt="" width={72} height={72} priority unoptimized />
-      <div><h1 className={styles.title}>{edition === "matchup" ? <>Matchup <span>Lab</span></> : <>Return <span>Atlas</span></>}<span className="sr-only">{edition === "matchup" ? ": Tennis H2H & player statistics" : `: ${current.label}`}</span></h1>
-        <p className={styles.edition}>{edition === "matchup" ? "Tennis" : current.label}</p></div>
+      <div><h1 className={styles.title}>{edition === "aerial" ? <>Air <span>Control</span></> : edition === "matchup" ? <>Matchup <span>Lab</span></> : <>Return <span>Atlas</span></>}<span className="sr-only">{edition === "aerial" ? ": Lineup height, headers and delivery" : edition === "matchup" ? ": Tennis H2H & player statistics" : `: ${current.label}`}</span></h1>
+        <p className={styles.edition}>{edition === "aerial" ? "Lineup research · beta" : edition === "matchup" ? "Tennis" : current.label}</p></div>
     </div>
     <p className={styles.description}>{description}</p>
-    <nav className={styles.editions} aria-label="Return Atlas tools">
-      {editions.map(item => <Link key={item.id} href={item.href} prefetch={false} aria-current={edition === item.id ? "page" : undefined}><Image src={item.image} alt="" width={24} height={24} unoptimized /><span><strong>{item.label}</strong><small>{item.description}</small></span></Link>)}
-    </nav>
+    <ResearchToolNav current={edition}/>
     {children}
   </header>;
 }

@@ -62,7 +62,7 @@ function FixtureCard({ fixture: f, now }: { fixture: TennisFixture; now: Date })
     </div>
     <div className={styles.record}>
       <div className={styles.recordLabel}><span>ARCHIVE H2H</span><small>{f.meetings === null ? 'Player coverage missing' : f.meetings === 0 ? 'No recorded meetings' : 'All courts'}</small></div>
-      {f.wins && f.meetings ? <><H2HRecord results={f.wins} meetings={f.meetings} names={f.players.map(p => p.name)} />
+      {f.wins && f.meetings ? <><H2HRecord compact results={f.wins} meetings={f.meetings} names={f.players.map(p => p.name)} />
         <div className={styles.returns}><span><Icon name="record" />H2H ROI<small>Odds for {f.priced} of {f.meetings} {f.meetings === 1 ? 'meeting' : 'meetings'}</small></span>{f.roi.map((value, i) => <strong key={i} className={value !== null && value > 0 ? styles.positive : styles.neutral}>{percent(value)}<small>{surname(f.players[i].name)}</small></strong>)}</div>
         {f.priced < f.meetings && <p className={styles.explanation}><strong>Odds missing for {f.meetings - f.priced} {f.meetings - f.priced === 1 ? 'meeting' : 'meetings'}.</strong> {f.priced ? `ROI uses only the ${f.priced} with recorded odds.` : 'ROI is unavailable.'} The H2H score includes every recorded meeting.</p>}
         <p className={styles.roiKey}>Backing each player separately in every meeting with recorded odds.</p>

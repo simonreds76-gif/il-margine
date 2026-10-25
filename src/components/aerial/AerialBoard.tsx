@@ -1,6 +1,7 @@
 'use client';
 import {useEffect,useState} from 'react';
 import Image from 'next/image';
+import ResearchIcon from '@/components/ResearchIcon';
 import type {Board,Fixture,Player,Team,WindowKey} from './types';
 import {isBoard} from './types';
 
@@ -8,8 +9,7 @@ const value=(n:number|null|undefined,dp=0)=>typeof n==='number'&&Number.isFinite
 const shortDate=(s:string)=>new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',day:'numeric',month:'short',year:'numeric'}).format(new Date(s));
 const date=(s:string)=>new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}).format(new Date(s));
 export function AerialIcon({kind='height'}:{kind?:string}) {
- const paths:Record<string,React.ReactNode>={height:<><path d="M5 20V4m-3 3 3-3 3 3m-6 10 3 3 3-3M13 4h7v16h-7zM16 8h4m-4 4h4m-4 4h4"/></>,duel:<><circle cx="7" cy="5" r="2"/><circle cx="18" cy="7" r="2"/><path d="m3 12 4-4 5 4M7 9v6l-3 6m3-6 5 6m3-7 3-4 4 3m-4-3v7l3 4m-3-4-4 4"/></>,corner:<><path d="M4 21V3l9 3-9 3m0 12h17M4 15a6 6 0 0 1 6 6m4-11c5 0 7 3 7 7m-3-2 3 2 2-3"/></>,players:<><circle cx="9" cy="7" r="3"/><path d="M3 21v-4a6 6 0 0 1 12 0v4m0-17a3 3 0 0 1 0 6m3 3a5 5 0 0 1 3 5v3"/></>};
- return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[kind]||paths.height}</svg>;
+ return <ResearchIcon name={kind==='height'?'height':kind==='duel'?'duel':kind==='corner'?'delivery':'managers'}/>;
 }
 function Portrait({player}:{player:Player}) {
  const [failed,setFailed]=useState<string|null>(null);
@@ -56,7 +56,7 @@ function Match({f,board,now}:{f:Fixture;board:Board;now:number}) {
  const active=(f.state==='confirmed'||f.state==='expected')&&now<Date.parse(f.valid_until)&&now-Date.parse(board.generated_at)>=-300_000&&now-Date.parse(board.generated_at)<36*3600_000&&now-Date.parse(board.calendar_observed_at)<36*3600_000;
  return <><section className="aerial-match"><div className="aerial-status"><span>{f.competition} · {date(f.kickoff)}</span><strong className={active?'aerial-badge':''}>{active?(f.state==='confirmed'?'Confirmed XI':'Expected XI'):f.state==='pending'?'Awaiting lineups':'Lineup no longer current'}</strong></div><div className="aerial-teams">{f.teams.map((t,i)=><div key={t.id}><span className="aerial-kicker">{i?'AWAY':'HOME'}</span><TeamName team={t}/><p>{active?t.formation:'Lineup not available'}</p></div>)}</div>{active&&<p className="aerial-note">Lineup seen {date(f.observed_at!)}. {f.state==='expected'?'These players may change before kickoff.':''}</p>}</section>
  {!active?<div className="aerial-empty"><AerialIcon kind="players"/><h2>{f.state==='pending'?'The fixture is scheduled. Lineups are still pending.':'This lineup needs a fresh check.'}</h2><p>The height and player comparison appears when a current expected or confirmed XI is available for both teams.</p><p>Expected XIs come first. Confirmed teams replace them when available. We look for lineups for today and the next three days; fixtures further away can appear here before their teams.</p></div>:<>
- <nav className="aerial-jumps" aria-label="On this page"><a href="#height">The height ↓</a><a href="#players">The players ↓</a><a href="#delivery">The delivery ↓</a></nav>
+ <nav className="aerial-jumps" aria-label="On this page"><a href="#height"><ResearchIcon name="height"/>Height</a><a href="#players"><ResearchIcon name="duel"/>Players</a><a href="#delivery"><ResearchIcon name="delivery"/>Delivery</a></nav>
  <Section id="height" kind="height" title="Size across the starting XI" text="Reported heights of the ten outfield starters. Goalkeepers are kept separate."/>
  <div className="aerial-height-grid">{f.teams.map((t,i)=><section className={`aerial-panel aerial-side-${i}`} key={t.id}><TeamName team={t}/><div className="aerial-height-number">{value(t.height.mean_cm,1)}{t.height.mean_cm!==null&&<small>cm average</small>}</div><p>{t.height.known} of 10 outfield heights available</p><div className="aerial-height-plot" aria-label={`${t.name} player heights`}>{t.players.filter(p=>p.role!=='GK'&&p.height_cm!==null).toSorted((a,b)=>a.height_cm!-b.height_cm!).map((p,index)=><span key={p.id} style={{left:`${Math.max(0,Math.min(100,(p.height_cm!-155)/55*100))}%`,top:`${12+(index%3)*16}px`}} tabIndex={0} aria-label={`${p.name}, ${p.height_cm} centimetres`}><i/><em>{p.name}: {p.height_cm} cm</em></span>)}</div><div className="aerial-axis"><span>155 cm</span><span>180 cm</span><span>210 cm</span></div><div className="aerial-height-extras"><span>Tallest three, average<strong>{value(t.height.tallest_three_mean_cm,1)} cm</strong></span><span>Outfield starters ≥185 cm<strong>{value(t.height.at_least_185)} / 10</strong></span></div></section>)}</div>
  <div className="aerial-history-control"><label>Choose the history<select value={w} onChange={e=>setW(e.target.value as WindowKey)}><option value="recent">Both seasons</option><option value="current">{board.seasons[0]}</option><option value="previous">{board.seasons[1]}</option></select></label><p>Up to 10 covered appearances per player and five earlier matches per team. Always before this fixture.</p></div>

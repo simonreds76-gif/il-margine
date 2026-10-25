@@ -1,0 +1,20 @@
+.shell { min-width: 0; margin-top: 18px; }
+.label { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; color: #a4b5c3; font-size: 10px; }
+.label > span { font-weight: 650; text-transform: uppercase; letter-spacing: .12em; }
+.label small { font-size: 11px; }
+.nav { display: flex; gap: 6px; overflow-x: auto; position: relative; padding: 3px 2px 9px; scrollbar-width: thin; scrollbar-color: #405b52 transparent; }
+.nav a { display: flex; align-items: center; gap: 9px; flex: 1 0 156px; min-width: 0; padding: 11px 10px; border: 1px solid #2b3c46; border-radius: 11px; background: #121c24; color: #d9e5eb; text-decoration: none; }
+.nav a > span:last-child { min-width: 0; }
+.nav strong { display: block; font-size: 12px; font-weight: 650; line-height: 1.4; white-space: nowrap; }
+.nav small { display: block; font-size: 10px; line-height: 1.45; color: #a4b5c3; margin-top: 3px; white-space: nowrap; }
+.icon { color: #9cb7b1; flex: 0 0 28px; }
+.icon svg { display: block; width: 28px; height: 28px; }
+.nav a[aria-current="page"] { background: linear-gradient(120deg,#1b352d,#142621); border-color: #609780; box-shadow: inset 0 -2px #8ce5bd; }
+.nav a[aria-current="page"] .icon,.nav a[aria-current="page"] strong { color: #b2f5d8; }
+.nav a:hover { border-color: #8ce5bd; }
+.nav a:focus-visible { outline: 2px solid #8ce5bd; outline-offset: -3px; }
+@media(max-width:639px) {
+  .shell { margin-top: 12px; }
+  .label small { display: none; }
+  .nav a { flex: 0 0 auto; padding: 9px 11px; min-height: 64px; }
+}

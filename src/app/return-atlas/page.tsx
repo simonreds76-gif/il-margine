@@ -40,8 +40,8 @@ export default function ReturnAtlasPage() {
       <AtlasPageHeader edition="tennis" description="Compare what backing or opposing an ATP player returned. Explore past matches by season, surface and odds.">
         <details className={frame.help}><summary>How it works &amp; coverage</summary><p>ATP main tour. Pinnacle odds. One unit per bet. Data checked {date(release.checkedAt)}. Latest included match {date(release.through)}.</p><p>Choose a player or explore the rankings. Open a record to inspect its matches and profit curve. For serve, return and head to head statistics, <Link href="/tennis-matchup" prefetch={false}>open Matchup Lab</Link>.</p><a href="#how-it-works">Read the full guide ↓</a></details>
       </AtlasPageHeader>
-      <TennisMatchdayPromo />
       <ReturnAtlasClient indexUrl={release.indexUrl} detailsBase={release.detailsBase} version={release.version} checkedAt={release.checkedAt} />
+      <TennisMatchdayPromo />
       <MatchdayPromo compact />
       <section className="atlas-about" aria-label="About Return Atlas">
         <p className="about-eyebrow">THE RECORD BEHIND THE RETURNS</p>

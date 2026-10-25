@@ -21,3 +21,23 @@
 .aerial-tool-card:hover .aerial-tool-action,.aerial-tool-card:focus-visible .aerial-tool-action{background:#244d3d;border-color:#a5e8c8}
 @media(max-width:850px){.aerial-next .aerial-related{grid-template-columns:1fr}.aerial-page .aerial-tool-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;padding:20px}.aerial-tool-heading{grid-column:1}.aerial-tool-description{grid-column:1;margin:0 0 0 74px;max-width:420px}.aerial-tool-action{grid-column:2;grid-row:1 / 3;align-self:center;min-width:170px;margin:0}}
 @media(max-width:500px){.aerial-page .aerial-tool-card{display:flex;padding:20px;gap:0}.aerial-tool-heading strong{font-size:20px}.aerial-tool-description{margin:12px 0 20px}.aerial-tool-action{align-self:stretch;min-width:0}.aerial-next h2{font-size:26px}}
+.aerial-page .aerial-fixture-control,.aerial-page .aerial-match,.aerial-page .aerial-panel { border-radius: 16px; border-color: #2b3c46; background: #121c24; }
+.aerial-page .aerial-fixture-control { padding: 16px; margin-top: 0; }
+.aerial-page .aerial-jumps { display: flex; gap: 8px; }
+.aerial-page .aerial-jumps a { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 9px 16px; border: 1px solid #365246; border-radius: 10px; background: #182b25; color: #b2ebcf; text-decoration: none; }
+.aerial-page .aerial-jumps svg { width: 25px; height: 25px; }
+.aerial-page .aerial-section-heading { align-items: center; gap: 14px; }
+.aerial-page .aerial-icon { display: grid; place-items: center; width: 50px; height: 50px; flex: 0 0 50px; border-radius: 13px; border: 1px solid #3e6452; background: linear-gradient(135deg,#213c30,#14251f); color: #a5e7ce; }
+.aerial-page .aerial-icon svg { width: 32px; height: 32px; }
+.aerial-page .aerial-section-heading h2 { font-size: clamp(21px,2.3vw,29px); letter-spacing: -.035em; }
+.aerial-page .aerial-height-plot { background: repeating-linear-gradient(90deg,transparent 0,transparent calc(25% - 1px),#30433c55 calc(25% - 1px),#30433c55 25%); border-block: 1px solid #2d4138; }
+.aerial-page .aerial-photo { border-radius: 10px; }
+@media(max-width:639px) {
+  .aerial-page .aerial-jumps { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; }
+  .aerial-page .aerial-jumps a { gap: 6px; padding: 9px 6px; font-size: 12px; }
+  .aerial-page .aerial-jumps svg { width: 23px; height: 23px; flex-shrink: 0; }
+  .aerial-page .aerial-section-heading { gap: 11px; }
+  .aerial-page .aerial-fixture-control select { font-size: 16px; }
+}
+
+/* Shared research presentation. Data and selection behaviour are unchanged. */
