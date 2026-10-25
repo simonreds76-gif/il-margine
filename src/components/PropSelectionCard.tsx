@@ -19,7 +19,7 @@ export default function PropSelectionCard({ row, market, href, bookmaker, groupe
   const voided = row.status === "void";
   const won = row.status === "won";
   const content = <>
-    <div className="flex items-start gap-3">
+    <div className={`flex items-start gap-3 ${grouped ? "max-[359px]:grid max-[359px]:grid-cols-[auto_minmax(0,1fr)]" : ""}`}>
       <span className="flex min-h-12 shrink-0 items-center justify-center">
         {row.artwork?.length ? <TipPortraits portraits={row.artwork} size="card" /> : <span className="flex h-12 w-12 items-center justify-center rounded-full border border-slate-700 bg-slate-800 text-slate-400"><PropMarketIcon market={market} className="h-7 w-7" /></span>}
       </span>
@@ -27,7 +27,7 @@ export default function PropSelectionCard({ row, market, href, bookmaker, groupe
         <p className="break-words text-base font-semibold leading-5 text-slate-100">{player}</p>
         <p className="mt-1 break-words text-sm leading-5 text-slate-300">{selection}</p>
       </div>
-      <span className={`flex shrink-0 items-center gap-1 rounded-full border px-2 py-1 text-[10px] font-semibold ${won ? "border-emerald-300/20 bg-emerald-300/5 text-emerald-300" : settled ? "border-rose-300/20 bg-rose-300/5 text-rose-300" : voided ? "border-slate-600 bg-slate-800 text-slate-300" : "border-amber-300/20 bg-amber-300/5 text-amber-200"}`}>
+      <span className={`flex shrink-0 items-center gap-1 rounded-full border px-2 py-1 text-[10px] font-semibold ${grouped ? "max-[359px]:col-start-2 max-[359px]:justify-self-start" : ""} ${won ? "border-emerald-300/20 bg-emerald-300/5 text-emerald-300" : settled ? "border-rose-300/20 bg-rose-300/5 text-rose-300" : voided ? "border-slate-600 bg-slate-800 text-slate-300" : "border-amber-300/20 bg-amber-300/5 text-amber-200"}`}>
         <svg viewBox="0 0 16 16" className="hidden h-3 w-3 sm:block" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">{voided ? <path d="M4 8h8" /> : settled ? <path d={won ? "m3 8 3 3 7-7" : "m4 4 8 8M12 4l-8 8"} /> : <><circle cx="8" cy="8" r="5.5"/><path d="M8 4.5V8l2 1.5"/></>}</svg>
         {won ? "Won" : settled ? "Lost" : voided ? "Void" : "Pending"}
       </span>
