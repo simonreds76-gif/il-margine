@@ -2,20 +2,19 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 46,
+    "blocked_lines": 20,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 24,
-      "goalkeeper_team_unresolved": 46,
-      "missing_lineup": 11,
-      "missing_priced_edge": 46,
-      "team_keeper_mapping_unresolved": 11
+      "goalkeeper_not_matched_to_lineup": 13,
+      "goalkeeper_team_unresolved": 20,
+      "missing_priced_edge": 20,
+      "team_keeper_mapping_unresolved": 7
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 6,
-    "priced_lines": 286,
+    "eligible_lines": 0,
+    "priced_lines": 41,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 41
+    "value_ladder_lines": 4
   },
   "evidence": {
     "clv": 0.057124,
@@ -35,28 +34,28 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-25T13:55:17.284030+00:00",
+    "checked_at": "2026-10-25T17:51:32.010217+00:00",
     "counts": {
       "ambiguous_duplicate_contract": 5,
-      "not_fresh_prematch": 38,
-      "offers_saved": 289
+      "not_fresh_prematch": 31,
+      "offers_saved": 25
     },
-    "saved": 19,
+    "saved": 1,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-25T13:55:16Z",
+  "generated_at": "2026-10-25T17:51:31Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "blocked_or_missing_inputs": 36,
-      "not_new_fresh_prematch": 38,
-      "unregistered_settlement_rules": 71
+      "blocked_or_missing_inputs": 12,
+      "not_new_fresh_prematch": 31,
+      "unregistered_settlement_rules": 5
     },
     "forecast_fixtures": 85,
     "forecast_keepers": 170,
-    "generated_at": "2026-10-25T13:55:17.383312+00:00",
+    "generated_at": "2026-10-25T17:51:32.062219+00:00",
     "last_capture_at": "2026-10-25T13:14:55.143085+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,

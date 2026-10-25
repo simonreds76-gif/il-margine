@@ -1,71 +1,53 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_save_markets": 19,
-      "named_player_lines": 213,
+      "events_with_save_markets": 1,
+      "named_player_lines": 20,
       "status": "NAMED_PLAYER_LINES",
       "unnamed_or_team_lines": 0
     },
     "Kambi": {
-      "events_with_save_markets": 20,
+      "events_with_save_markets": 2,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 134
+      "unnamed_or_team_lines": 18
     }
   },
   "capture_errors": [],
   "capture_mode": "close",
   "event_last_checked": {
-    "71945326": "2026-10-25T13:55:14Z",
-    "71945332": "2026-10-25T13:55:14Z",
-    "71945338": "2026-10-25T13:55:14Z",
-    "71945344": "2026-10-25T13:55:14Z",
-    "72036238": "2026-10-25T13:55:14Z",
-    "72036240": "2026-10-25T13:55:14Z",
-    "72036246": "2026-10-25T13:55:14Z",
-    "72036248": "2026-10-25T13:55:14Z",
-    "72036252": "2026-10-25T13:55:14Z",
-    "72036254": "2026-10-25T13:55:14Z",
-    "72221340": "2026-10-25T13:55:14Z",
-    "72221342": "2026-10-25T13:55:14Z",
-    "72221346": "2026-10-25T13:55:14Z",
-    "72221348": "2026-10-25T13:55:14Z",
-    "72221350": "2026-10-25T13:55:14Z",
-    "72478652": "2026-10-25T13:55:14Z",
-    "72478654": "2026-10-25T13:55:14Z",
-    "72478660": "2026-10-25T13:55:14Z",
-    "72513262": "2026-10-25T13:55:14Z",
-    "72513264": "2026-10-25T13:55:14Z"
+    "71945344": "2026-10-25T17:51:29Z",
+    "72478654": "2026-10-25T17:51:29Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 20,
-  "events_supported": 20,
-  "events_with_lines": 20,
-  "generated_at": "2026-10-25T13:55:14Z",
+  "events_selected": 2,
+  "events_supported": 2,
+  "events_with_lines": 2,
+  "generated_at": "2026-10-25T17:51:29Z",
   "last_publication_at": "2026-10-25T13:14:52Z",
   "league_coverage": {
     "bundesliga": {
-      "selected": 2,
-      "with_prices": 2
+      "selected": 0,
+      "with_prices": 0
     },
     "epl": {
-      "selected": 5,
-      "with_prices": 5
+      "selected": 0,
+      "with_prices": 0
     },
     "la-liga": {
-      "selected": 3,
-      "with_prices": 3
+      "selected": 1,
+      "with_prices": 1
     },
     "ligue-1": {
-      "selected": 6,
-      "with_prices": 6
+      "selected": 0,
+      "with_prices": 0
     },
     "serie-a": {
-      "selected": 4,
-      "with_prices": 4
+      "selected": 1,
+      "with_prices": 1
     }
   },
-  "market_inventory_rows_added": 2642,
+  "market_inventory_rows_added": 275,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Away Team Exact Goals",
@@ -79,7 +61,6 @@
     "Both Teams To Score HT",
     "Clean Sheet Away",
     "Clean Sheet Home",
-    "Corner Handicap",
     "Corners Race",
     "Corners Spread",
     "Corners Totals",
@@ -172,136 +153,10 @@
   ],
   "publication_recovery": false,
   "request_budget": 4,
-  "requests_used": 3,
-  "rows_added": 291,
-  "rows_observed": 291,
+  "requests_used": 2,
+  "rows_added": 30,
+  "rows_observed": 30,
   "selected_events": [
-    {
-      "away": "Newcastle United",
-      "competition": "England - Premier League",
-      "home": "Crystal Palace",
-      "id": 72221340,
-      "kickoff_at": "2026-10-25T14:00:00Z"
-    },
-    {
-      "away": "Brentford FC",
-      "competition": "England - Premier League",
-      "home": "Hull City",
-      "id": 72221342,
-      "kickoff_at": "2026-10-25T14:00:00Z"
-    },
-    {
-      "away": "Brighton & Hove Albion",
-      "competition": "England - Premier League",
-      "home": "Liverpool FC",
-      "id": 72221346,
-      "kickoff_at": "2026-10-25T14:00:00Z"
-    },
-    {
-      "away": "AFC Bournemouth",
-      "competition": "England - Premier League",
-      "home": "Manchester United",
-      "id": 72221348,
-      "kickoff_at": "2026-10-25T14:00:00Z"
-    },
-    {
-      "away": "Lille OSC",
-      "competition": "France - Ligue 1",
-      "home": "AS Monaco",
-      "id": 72036248,
-      "kickoff_at": "2026-10-25T14:00:00Z"
-    },
-    {
-      "away": "Frosinone Calcio",
-      "competition": "Italy - Serie A",
-      "home": "Atalanta BC",
-      "id": 71945326,
-      "kickoff_at": "2026-10-25T14:00:00Z"
-    },
-    {
-      "away": "Venezia FC",
-      "competition": "Italy - Serie A",
-      "home": "Genoa CFC",
-      "id": 71945332,
-      "kickoff_at": "2026-10-25T14:00:00Z"
-    },
-    {
-      "away": "Bayer Leverkusen",
-      "competition": "Germany - Bundesliga",
-      "home": "TSG Hoffenheim",
-      "id": 72513262,
-      "kickoff_at": "2026-10-25T14:30:00Z"
-    },
-    {
-      "away": "Real Betis Seville",
-      "competition": "Spain - LaLiga",
-      "home": "RC Celta de Vigo",
-      "id": 72478652,
-      "kickoff_at": "2026-10-25T15:15:00Z"
-    },
-    {
-      "away": "FC Lorient",
-      "competition": "France - Ligue 1",
-      "home": "Angers SCO",
-      "id": 72036238,
-      "kickoff_at": "2026-10-25T16:15:00Z"
-    },
-    {
-      "away": "Le Mans FC",
-      "competition": "France - Ligue 1",
-      "home": "AJ Auxerre",
-      "id": 72036240,
-      "kickoff_at": "2026-10-25T16:15:00Z"
-    },
-    {
-      "away": "Le Havre AC",
-      "competition": "France - Ligue 1",
-      "home": "Olympique Marseille",
-      "id": 72036246,
-      "kickoff_at": "2026-10-25T16:15:00Z"
-    },
-    {
-      "away": "Strasbourg Alsace",
-      "competition": "France - Ligue 1",
-      "home": "Stade Rennais FC",
-      "id": 72036252,
-      "kickoff_at": "2026-10-25T16:15:00Z"
-    },
-    {
-      "away": "ESTAC Troyes",
-      "competition": "France - Ligue 1",
-      "home": "Toulouse FC",
-      "id": 72036254,
-      "kickoff_at": "2026-10-25T16:15:00Z"
-    },
-    {
-      "away": "Leeds United",
-      "competition": "England - Premier League",
-      "home": "Sunderland AFC",
-      "id": 72221350,
-      "kickoff_at": "2026-10-25T16:30:00Z"
-    },
-    {
-      "away": "Bayern Munich",
-      "competition": "Germany - Bundesliga",
-      "home": "SC Freiburg",
-      "id": 72513264,
-      "kickoff_at": "2026-10-25T16:30:00Z"
-    },
-    {
-      "away": "Juventus Turin",
-      "competition": "Italy - Serie A",
-      "home": "US Lecce",
-      "id": 71945338,
-      "kickoff_at": "2026-10-25T17:00:00Z"
-    },
-    {
-      "away": "Levante UD",
-      "competition": "Spain - LaLiga",
-      "home": "Real Sociedad San Sebastian",
-      "id": 72478660,
-      "kickoff_at": "2026-10-25T17:30:00Z"
-    },
     {
       "away": "AC Milan",
       "competition": "Italy - Serie A",
@@ -318,5 +173,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 20
+  "three_way_events": 2
 }

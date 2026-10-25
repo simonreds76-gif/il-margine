@@ -1,815 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-25T13:55:14Z",
+  "generated_at": "2026-10-25T17:51:29Z",
   "purpose": "Exact market evidence; Goal Method is not assumed to be a player market",
   "events": [
-    {
-      "event_id": "72513260",
-      "home": "VfB Stuttgart",
-      "away": "Borussia Monchengladbach",
-      "kickoff": "2026-10-23T18:30:00Z",
-      "captured_at": "2026-10-23T14:26:49Z",
-      "bookmaker": "Bet365",
-      "source": "odds-api.io/v3/odds/multi",
-      "markets": [
-        {
-          "name": "Player Headed Shots on Target",
-          "updatedAt": "2026-10-20T17:58:09.448Z",
-          "odds": [
-            {
-              "label": "Ameen Al Dakhil (1)",
-              "hdp": 0.5,
-              "over": "13.000"
-            },
-            {
-              "label": "Angelo Stiller (1)",
-              "hdp": 0.5,
-              "over": "9.000"
-            },
-            {
-              "label": "Angelo Stiller (1)",
-              "hdp": 1.5,
-              "over": "67.000"
-            },
-            {
-              "label": "Atakan Karazor (1)",
-              "hdp": 0.5,
-              "over": "6.500"
-            },
-            {
-              "label": "Atakan Karazor (1)",
-              "hdp": 1.5,
-              "over": "51.000"
-            },
-            {
-              "label": "Bilal El Khannous (1)",
-              "hdp": 0.5,
-              "over": "10.000"
-            },
-            {
-              "label": "Bilal El Khannous (1)",
-              "hdp": 1.5,
-              "over": "67.000"
-            },
-            {
-              "label": "Chris Fuhrich (1)",
-              "hdp": 0.5,
-              "over": "8.000"
-            },
-            {
-              "label": "Chris Fuhrich (1)",
-              "hdp": 1.5,
-              "over": "51.000"
-            },
-            {
-              "label": "Daiki Hashioka (2)",
-              "hdp": 0.5,
-              "over": "15.000"
-            },
-            {
-              "label": "Dan-Axel Zagadou (1)",
-              "hdp": 0.5,
-              "over": "2.625"
-            },
-            {
-              "label": "Dan-Axel Zagadou (1)",
-              "hdp": 1.5,
-              "over": "11.000"
-            },
-            {
-              "label": "Dan-Axel Zagadou (1)",
-              "hdp": 2.5,
-              "over": "51.000"
-            },
-            {
-              "label": "David Herold (2)",
-              "hdp": 0.5,
-              "over": "15.000"
-            },
-            {
-              "label": "Deniz Undav (1)",
-              "hdp": 0.5,
-              "over": "3.000"
-            },
-            {
-              "label": "Deniz Undav (1)",
-              "hdp": 1.5,
-              "over": "13.000"
-            },
-            {
-              "label": "Deniz Undav (1)",
-              "hdp": 2.5,
-              "over": "51.000"
-            },
-            {
-              "label": "Dzenan Pejcinovic (1)",
-              "hdp": 0.5,
-              "over": "1.727"
-            },
-            {
-              "label": "Dzenan Pejcinovic (1)",
-              "hdp": 1.5,
-              "over": "4.500"
-            },
-            {
-              "label": "Dzenan Pejcinovic (1)",
-              "hdp": 2.5,
-              "over": "15.000"
-            },
-            {
-              "label": "Dzenan Pejcinovic (1)",
-              "hdp": 3.5,
-              "over": "51.000"
-            },
-            {
-              "label": "Enzo Leopold (2)",
-              "hdp": 0.5,
-              "over": "19.000"
-            },
-            {
-              "label": "Ermedin Demirovic (1)",
-              "hdp": 0.5,
-              "over": "3.250"
-            },
-            {
-              "label": "Ermedin Demirovic (1)",
-              "hdp": 1.5,
-              "over": "15.000"
-            },
-            {
-              "label": "Ermedin Demirovic (1)",
-              "hdp": 2.5,
-              "over": "67.000"
-            },
-            {
-              "label": "Fabio Chiarodia (2)",
-              "hdp": 0.5,
-              "over": "11.000"
-            },
-            {
-              "label": "Finn Jeltsch (1)",
-              "hdp": 0.5,
-              "over": "9.000"
-            },
-            {
-              "label": "Finn Jeltsch (1)",
-              "hdp": 1.5,
-              "over": "67.000"
-            },
-            {
-              "label": "Florian Neuhaus (2)",
-              "hdp": 0.5,
-              "over": "15.000"
-            },
-            {
-              "label": "Franck Honorat (2)",
-              "hdp": 0.5,
-              "over": "17.000"
-            },
-            {
-              "label": "Grischa Promel (1)",
-              "hdp": 0.5,
-              "over": "3.500"
-            },
-            {
-              "label": "Grischa Promel (1)",
-              "hdp": 1.5,
-              "over": "19.000"
-            },
-            {
-              "label": "Hugo Bolin (2)",
-              "hdp": 0.5,
-              "over": "8.000"
-            },
-            {
-              "label": "Hugo Bolin (2)",
-              "hdp": 1.5,
-              "over": "51.000"
-            },
-            {
-              "label": "Isac Lidberg (2)",
-              "hdp": 0.5,
-              "over": "5.500"
-            },
-            {
-              "label": "Isac Lidberg (2)",
-              "hdp": 1.5,
-              "over": "34.000"
-            },
-            {
-              "label": "Jamie Leweling (1)",
-              "hdp": 0.5,
-              "over": "10.000"
-            },
-            {
-              "label": "Jan Leszczynski (2)",
-              "hdp": 0.5,
-              "over": "4.000"
-            },
-            {
-              "label": "Jan Leszczynski (2)",
-              "hdp": 1.5,
-              "over": "23.000"
-            },
-            {
-              "label": "Jarzinho Malanga (1)",
-              "hdp": 0.5,
-              "over": "9.000"
-            },
-            {
-              "label": "Jarzinho Malanga (1)",
-              "hdp": 1.5,
-              "over": "67.000"
-            },
-            {
-              "label": "Joseph Scally (2)",
-              "hdp": 0.5,
-              "over": "10.000"
-            },
-            {
-              "label": "Joseph Scally (2)",
-              "hdp": 1.5,
-              "over": "67.000"
-            },
-            {
-              "label": "Josha Vagnoman (1)",
-              "hdp": 0.5,
-              "over": "4.500"
-            },
-            {
-              "label": "Josha Vagnoman (1)",
-              "hdp": 1.5,
-              "over": "26.000"
-            },
-            {
-              "label": "Julian Chabot (1)",
-              "hdp": 0.5,
-              "over": "3.750"
-            },
-            {
-              "label": "Julian Chabot (1)",
-              "hdp": 1.5,
-              "over": "21.000"
-            },
-            {
-              "label": "Kevin Diks (2)",
-              "hdp": 0.5,
-              "over": "13.000"
-            },
-            {
-              "label": "Kevin Stoger (2)",
-              "hdp": 0.5,
-              "over": "17.000"
-            },
-            {
-              "label": "Ko Itakura (2)",
-              "hdp": 0.5,
-              "over": "5.000"
-            },
-            {
-              "label": "Ko Itakura (2)",
-              "hdp": 1.5,
-              "over": "29.000"
-            },
-            {
-              "label": "Leonidas Stergiou (1)",
-              "hdp": 0.5,
-              "over": "26.000"
-            },
-            {
-              "label": "Leo Sauer (1)",
-              "hdp": 0.5,
-              "over": "9.000"
-            },
-            {
-              "label": "Leo Sauer (1)",
-              "hdp": 1.5,
-              "over": "67.000"
-            },
-            {
-              "label": "Lorenz Assignon (1)",
-              "hdp": 0.5,
-              "over": "19.000"
-            },
-            {
-              "label": "Luca Jaquez (1)",
-              "hdp": 0.5,
-              "over": "5.500"
-            },
-            {
-              "label": "Luca Jaquez (1)",
-              "hdp": 1.5,
-              "over": "34.000"
-            },
-            {
-              "label": "Lukas Ullrich (2)",
-              "hdp": 0.5,
-              "over": "19.000"
-            },
-            {
-              "label": "Mathieu Nguefack (2)",
-              "hdp": 0.5,
-              "over": "17.000"
-            },
-            {
-              "label": "Maximilian Herwerth (1)",
-              "hdp": 0.5,
-              "over": "21.000"
-            },
-            {
-              "label": "Maximilian Mittelstadt (1)",
-              "hdp": 0.5,
-              "over": "10.000"
-            },
-            {
-              "label": "Nicolas Kuhn (2)",
-              "hdp": 0.5,
-              "over": "5.000"
-            },
-            {
-              "label": "Nicolas Kuhn (2)",
-              "hdp": 1.5,
-              "over": "29.000"
-            },
-            {
-              "label": "Nikolas Nartey (1)",
-              "hdp": 0.5,
-              "over": "6.000"
-            },
-            {
-              "label": "Nikolas Nartey (1)",
-              "hdp": 1.5,
-              "over": "41.000"
-            },
-            {
-              "label": "Philipp Sander (2)",
-              "hdp": 0.5,
-              "over": "17.000"
-            },
-            {
-              "label": "Ramon Hendriks (1)",
-              "hdp": 0.5,
-              "over": "6.500"
-            },
-            {
-              "label": "Ramon Hendriks (1)",
-              "hdp": 1.5,
-              "over": "41.000"
-            },
-            {
-              "label": "Robin Hack (2)",
-              "hdp": 0.5,
-              "over": "8.000"
-            },
-            {
-              "label": "Robin Hack (2)",
-              "hdp": 1.5,
-              "over": "51.000"
-            },
-            {
-              "label": "Shuto Machino (2)",
-              "hdp": 0.5,
-              "over": "9.000"
-            },
-            {
-              "label": "Shuto Machino (2)",
-              "hdp": 1.5,
-              "over": "67.000"
-            },
-            {
-              "label": "Tiago Tomas (1)",
-              "hdp": 0.5,
-              "over": "5.000"
-            },
-            {
-              "label": "Tiago Tomas (1)",
-              "hdp": 1.5,
-              "over": "29.000"
-            },
-            {
-              "label": "Tim Kleindienst (2)",
-              "hdp": 0.5,
-              "over": "4.000"
-            },
-            {
-              "label": "Tim Kleindienst (2)",
-              "hdp": 1.5,
-              "over": "23.000"
-            },
-            {
-              "label": "Wael Mohya (2)",
-              "hdp": 0.5,
-              "over": "13.000"
-            },
-            {
-              "label": "Yanik Spalt (1)",
-              "hdp": 0.5,
-              "over": "7.000"
-            },
-            {
-              "label": "Yanik Spalt (1)",
-              "hdp": 1.5,
-              "over": "51.000"
-            },
-            {
-              "label": "Zento Uno (2)",
-              "hdp": 0.5,
-              "over": "19.000"
-            }
-          ]
-        },
-        {
-          "name": "Goal Method",
-          "updatedAt": "2026-10-23T00:57:43.274Z",
-          "odds": [
-            {
-              "label": "Ameen Al Dakhil (Header) (1)",
-              "under": "21.000"
-            },
-            {
-              "label": "Ameen Al Dakhil (Outside the Box) (1)",
-              "under": "23.000"
-            },
-            {
-              "label": "Angelo Stiller (Header) (1)",
-              "under": "41.000"
-            },
-            {
-              "label": "Angelo Stiller (Outside the Box) (1)",
-              "under": "23.000"
-            },
-            {
-              "label": "Atakan Karazor (Header) (1)",
-              "under": "15.000"
-            },
-            {
-              "label": "Atakan Karazor (Outside the Box) (1)",
-              "under": "15.000"
-            },
-            {
-              "label": "Bilal El Khannous (Header) (1)",
-              "under": "41.000"
-            },
-            {
-              "label": "Bilal El Khannous (Outside the Box) (1)",
-              "under": "5.500"
-            },
-            {
-              "label": "Chris Fuhrich (Header) (1)",
-              "under": "29.000"
-            },
-            {
-              "label": "Chris Fuhrich (Outside the Box) (1)",
-              "under": "15.000"
-            },
-            {
-              "label": "Daiki Hashioka (Header) (2)",
-              "under": "67.000"
-            },
-            {
-              "label": "Daiki Hashioka (Outside the Box) (2)",
-              "under": "34.000"
-            },
-            {
-              "label": "Dan-Axel Zagadou (Header) (1)",
-              "under": "15.000"
-            },
-            {
-              "label": "Dan-Axel Zagadou (Outside the Box) (1)",
-              "under": "51.000"
-            },
-            {
-              "label": "David Herold (Header) (2)",
-              "under": "67.000"
-            },
-            {
-              "label": "David Herold (Outside the Box) (2)",
-              "under": "34.000"
-            },
-            {
-              "label": "Deniz Undav (Header) (1)",
-              "under": "5.000"
-            },
-            {
-              "label": "Deniz Undav (Outside the Box) (1)",
-              "under": "15.000"
-            },
-            {
-              "label": "Dzenan Pejcinovic (Header) (1)",
-              "under": "4.500"
-            },
-            {
-              "label": "Dzenan Pejcinovic (Outside the Box) (1)",
-              "under": "17.000"
-            },
-            {
-              "label": "Enzo Leopold (Header) (2)",
-              "under": "67.000"
-            },
-            {
-              "label": "Enzo Leopold (Outside the Box) (2)",
-              "under": "19.000"
-            },
-            {
-              "label": "Ermedin Demirovic (Header) (1)",
-              "under": "6.000"
-            },
-            {
-              "label": "Ermedin Demirovic (Outside the Box) (1)",
-              "under": "17.000"
-            },
-            {
-              "label": "Fabio Chiarodia (Header) (2)",
-              "under": "41.000"
-            },
-            {
-              "label": "Fabio Chiarodia (Outside the Box) (2)",
-              "under": "251.000"
-            },
-            {
-              "label": "Finn Jeltsch (Header) (1)",
-              "under": "15.000"
-            },
-            {
-              "label": "Finn Jeltsch (Outside the Box) (1)",
-              "under": "23.000"
-            },
-            {
-              "label": "Florian Neuhaus (Header) (2)",
-              "under": "51.000"
-            },
-            {
-              "label": "Florian Neuhaus (Outside the Box) (2)",
-              "under": "19.000"
-            },
-            {
-              "label": "Franck Honorat (Header) (2)",
-              "under": "51.000"
-            },
-            {
-              "label": "Franck Honorat (Outside the Box) (2)",
-              "under": "26.000"
-            },
-            {
-              "label": "Fritz Fleck (Header) (2)",
-              "under": "23.000"
-            },
-            {
-              "label": "Fritz Fleck (Outside the Box) (2)",
-              "under": "29.000"
-            },
-            {
-              "label": "Grischa Promel (Header) (1)",
-              "under": "7.500"
-            },
-            {
-              "label": "Grischa Promel (Outside the Box) (1)",
-              "under": "21.000"
-            },
-            {
-              "label": "Hugo Bolin (Header) (2)",
-              "under": "29.000"
-            },
-            {
-              "label": "Hugo Bolin (Outside the Box) (2)",
-              "under": "19.000"
-            },
-            {
-              "label": "Isac Lidberg (Header) (2)",
-              "under": "13.000"
-            },
-            {
-              "label": "Isac Lidberg (Outside the Box) (2)",
-              "under": "21.000"
-            },
-            {
-              "label": "Jamie Leweling (Header) (1)",
-              "under": "21.000"
-            },
-            {
-              "label": "Jamie Leweling (Outside the Box) (1)",
-              "under": "9.000"
-            },
-            {
-              "label": "Jan Leszczynski (Header) (2)",
-              "under": "19.000"
-            },
-            {
-              "label": "Jan Leszczynski (Outside the Box) (2)",
-              "under": "67.000"
-            },
-            {
-              "label": "Jarzinho Malanga (Header) (1)",
-              "under": "17.000"
-            },
-            {
-              "label": "Jarzinho Malanga (Outside the Box) (1)",
-              "under": "7.500"
-            },
-            {
-              "label": "Joseph Scally (Header) (2)",
-              "under": "67.000"
-            },
-            {
-              "label": "Joseph Scally (Outside the Box) (2)",
-              "under": "67.000"
-            },
-            {
-              "label": "Josha Vagnoman (Header) (1)",
-              "under": "51.000"
-            },
-            {
-              "label": "Josha Vagnoman (Outside the Box) (1)",
-              "under": "29.000"
-            },
-            {
-              "label": "Julian Chabot (Header) (1)",
-              "under": "11.000"
-            },
-            {
-              "label": "Julian Chabot (Outside the Box) (1)",
-              "under": "29.000"
-            },
-            {
-              "label": "Kevin Diks (Header) (2)",
-              "under": "26.000"
-            },
-            {
-              "label": "Kevin Diks (Outside the Box) (2)",
-              "under": "29.000"
-            },
-            {
-              "label": "Kevin Stoger (Header) (2)",
-              "under": "51.000"
-            },
-            {
-              "label": "Kevin Stoger (Outside the Box) (2)",
-              "under": "23.000"
-            },
-            {
-              "label": "Ko Itakura (Header) (2)",
-              "under": "21.000"
-            },
-            {
-              "label": "Ko Itakura (Outside the Box) (2)",
-              "under": "67.000"
-            },
-            {
-              "label": "Leonidas Stergiou (Header) (1)",
-              "under": "8.500"
-            },
-            {
-              "label": "Leonidas Stergiou (Outside the Box) (1)",
-              "under": "41.000"
-            },
-            {
-              "label": "Leo Sauer (Header) (1)",
-              "under": "23.000"
-            },
-            {
-              "label": "Leo Sauer (Outside the Box) (1)",
-              "under": "9.000"
-            },
-            {
-              "label": "Lorenz Assignon (Header) (1)",
-              "under": "34.000"
-            },
-            {
-              "label": "Lorenz Assignon (Outside the Box) (1)",
-              "under": "34.000"
-            },
-            {
-              "label": "Luca Jaquez (Header) (1)",
-              "under": "9.000"
-            },
-            {
-              "label": "Luca Jaquez (Outside the Box) (1)",
-              "under": "41.000"
-            },
-            {
-              "label": "Lukas Ullrich (Header) (2)",
-              "under": "126.000"
-            },
-            {
-              "label": "Lukas Ullrich (Outside the Box) (2)",
-              "under": "51.000"
-            },
-            {
-              "label": "Mathieu Nguefack (Header) (2)",
-              "under": "51.000"
-            },
-            {
-              "label": "Mathieu Nguefack (Outside the Box) (2)",
-              "under": "29.000"
-            },
-            {
-              "label": "Maximilian Mittelstadt (Header) (1)",
-              "under": "41.000"
-            },
-            {
-              "label": "Maximilian Mittelstadt (Outside the Box) (1)",
-              "under": "17.000"
-            },
-            {
-              "label": "Nicolas Kuhn (Header) (2)",
-              "under": "9.500"
-            },
-            {
-              "label": "Nicolas Kuhn (Outside the Box) (2)",
-              "under": "17.000"
-            },
-            {
-              "label": "Nikolas Nartey (Header) (1)",
-              "under": "21.000"
-            },
-            {
-              "label": "Nikolas Nartey (Outside the Box) (1)",
-              "under": "8.500"
-            },
-            {
-              "label": "Philipp Sander (Header) (2)",
-              "under": "29.000"
-            },
-            {
-              "label": "Philipp Sander (Outside the Box) (2)",
-              "under": "19.000"
-            },
-            {
-              "label": "Ramon Hendriks (Header) (1)",
-              "under": "9.500"
-            },
-            {
-              "label": "Ramon Hendriks (Outside the Box) (1)",
-              "under": "67.000"
-            },
-            {
-              "label": "Robin Hack (Header) (2)",
-              "under": "23.000"
-            },
-            {
-              "label": "Robin Hack (Outside the Box) (2)",
-              "under": "29.000"
-            },
-            {
-              "label": "Shuto Machino (Header) (2)",
-              "under": "21.000"
-            },
-            {
-              "label": "Shuto Machino (Outside the Box) (2)",
-              "under": "29.000"
-            },
-            {
-              "label": "Tiago Tomas (Header) (1)",
-              "under": "12.000"
-            },
-            {
-              "label": "Tiago Tomas (Outside the Box) (1)",
-              "under": "8.000"
-            },
-            {
-              "label": "Tim Kleindienst (Header) (2)",
-              "under": "8.000"
-            },
-            {
-              "label": "Tim Kleindienst (Outside the Box) (2)",
-              "under": "29.000"
-            },
-            {
-              "label": "Wael Mohya (Header) (2)",
-              "under": "51.000"
-            },
-            {
-              "label": "Wael Mohya (Outside the Box) (2)",
-              "under": "17.000"
-            },
-            {
-              "label": "Yanik Spalt (Header) (1)",
-              "under": "41.000"
-            },
-            {
-              "label": "Yanik Spalt (Outside the Box) (1)",
-              "under": "17.000"
-            },
-            {
-              "label": "Yukhym Konoplya (Header) (2)",
-              "under": "81.000"
-            },
-            {
-              "label": "Yukhym Konoplya (Outside the Box) (2)",
-              "under": "34.000"
-            },
-            {
-              "label": "Zento Uno (Header) (2)",
-              "under": "51.000"
-            },
-            {
-              "label": "Zento Uno (Outside the Box) (2)",
-              "under": "15.000"
-            }
-          ]
-        }
-      ]
-    },
     {
       "event_id": "72036242",
       "home": "Stade Brest 29",
@@ -25554,7 +24747,7 @@
       "home": "Udinese Calcio",
       "away": "AC Milan",
       "kickoff": "2026-10-25T19:45:00Z",
-      "captured_at": "2026-10-25T13:55:14Z",
+      "captured_at": "2026-10-25T17:51:29Z",
       "bookmaker": "Bet365",
       "source": "odds-api.io/v3/odds/multi",
       "markets": [
@@ -26266,10 +25459,352 @@
       "home": "FC Barcelona",
       "away": "Real Madrid",
       "kickoff": "2026-10-25T20:00:00Z",
-      "captured_at": "2026-10-25T13:55:14Z",
+      "captured_at": "2026-10-25T17:51:29Z",
       "bookmaker": "Bet365",
       "source": "odds-api.io/v3/odds/multi",
       "markets": [
+        {
+          "name": "Goal Method",
+          "updatedAt": "2026-10-25T17:16:52.36Z",
+          "odds": [
+            {
+              "label": "Alex Balde (Header) (1)",
+              "under": "41.000"
+            },
+            {
+              "label": "Alex Balde (Outside the Box) (1)",
+              "under": "29.000"
+            },
+            {
+              "label": "Alex Campos (Header) (1)",
+              "under": "11.000"
+            },
+            {
+              "label": "Alex Campos (Outside the Box) (1)",
+              "under": "51.000"
+            },
+            {
+              "label": "Alvaro Carreras (Header) (2)",
+              "under": "101.000"
+            },
+            {
+              "label": "Alvaro Carreras (Outside the Box) (2)",
+              "under": "34.000"
+            },
+            {
+              "label": "Andreas Christensen (Header) (1)",
+              "under": "11.000"
+            },
+            {
+              "label": "Andreas Christensen (Outside the Box) (1)",
+              "under": "51.000"
+            },
+            {
+              "label": "Anthony Gordon (Header) (1)",
+              "under": "15.000"
+            },
+            {
+              "label": "Anthony Gordon (Outside the Box) (1)",
+              "under": "5.500"
+            },
+            {
+              "label": "Antonio Rudiger (Header) (2)",
+              "under": "15.000"
+            },
+            {
+              "label": "Antonio Rudiger (Outside the Box) (2)",
+              "under": "67.000"
+            },
+            {
+              "label": "Arda Guler (Header) (2)",
+              "under": "51.000"
+            },
+            {
+              "label": "Arda Guler (Outside the Box) (2)",
+              "under": "13.000"
+            },
+            {
+              "label": "Aurelien Tchouameni (Header) (2)",
+              "under": "23.000"
+            },
+            {
+              "label": "Aurelien Tchouameni (Outside the Box) (2)",
+              "under": "21.000"
+            },
+            {
+              "label": "Bernardo Silva (Header) (2)",
+              "under": "67.000"
+            },
+            {
+              "label": "Bernardo Silva (Outside the Box) (2)",
+              "under": "34.000"
+            },
+            {
+              "label": "Brahim Diaz (Header) (2)",
+              "under": "51.000"
+            },
+            {
+              "label": "Brahim Diaz (Outside the Box) (2)",
+              "under": "26.000"
+            },
+            {
+              "label": "Brian Farinas (Header) (1)",
+              "under": "17.000"
+            },
+            {
+              "label": "Brian Farinas (Outside the Box) (1)",
+              "under": "17.000"
+            },
+            {
+              "label": "Carlos Espi (Header) (2)",
+              "under": "6.000"
+            },
+            {
+              "label": "Carlos Espi (Outside the Box) (2)",
+              "under": "12.000"
+            },
+            {
+              "label": "Dani Olmo (Header) (1)",
+              "under": "26.000"
+            },
+            {
+              "label": "Dani Olmo (Outside the Box) (1)",
+              "under": "9.000"
+            },
+            {
+              "label": "Dean Huijsen (Header) (2)",
+              "under": "15.000"
+            },
+            {
+              "label": "Dean Huijsen (Outside the Box) (2)",
+              "under": "81.000"
+            },
+            {
+              "label": "Denzel Dumfries (Header) (2)",
+              "under": "19.000"
+            },
+            {
+              "label": "Denzel Dumfries (Outside the Box) (2)",
+              "under": "67.000"
+            },
+            {
+              "label": "Eder Militao (Header) (2)",
+              "under": "13.000"
+            },
+            {
+              "label": "Eder Militao (Outside the Box) (2)",
+              "under": "101.000"
+            },
+            {
+              "label": "Eduardo Camavinga (Header) (2)",
+              "under": "81.000"
+            },
+            {
+              "label": "Eduardo Camavinga (Outside the Box) (2)",
+              "under": "34.000"
+            },
+            {
+              "label": "Endrick (Header) (2)",
+              "under": "21.000"
+            },
+            {
+              "label": "Endrick (Outside the Box) (2)",
+              "under": "11.000"
+            },
+            {
+              "label": "Federico Valverde (Header) (2)",
+              "under": "51.000"
+            },
+            {
+              "label": "Federico Valverde (Outside the Box) (2)",
+              "under": "11.000"
+            },
+            {
+              "label": "Fermin Lopez (Header) (1)",
+              "under": "12.000"
+            },
+            {
+              "label": "Fermin Lopez (Outside the Box) (1)",
+              "under": "7.000"
+            },
+            {
+              "label": "Frenkie de Jong (Header) (1)",
+              "under": "51.000"
+            },
+            {
+              "label": "Frenkie de Jong (Outside the Box) (1)",
+              "under": "34.000"
+            },
+            {
+              "label": "Gabriel Jesus (Header) (1)",
+              "under": "12.000"
+            },
+            {
+              "label": "Gabriel Jesus (Outside the Box) (1)",
+              "under": "15.000"
+            },
+            {
+              "label": "Gavi (Header) (1)",
+              "under": "41.000"
+            },
+            {
+              "label": "Gavi (Outside the Box) (1)",
+              "under": "34.000"
+            },
+            {
+              "label": "Hamza Abdelkarim (Header) (1)",
+              "under": "11.000"
+            },
+            {
+              "label": "Hamza Abdelkarim (Outside the Box) (1)",
+              "under": "8.500"
+            },
+            {
+              "label": "Ibrahima Konate (Header) (2)",
+              "under": "15.000"
+            },
+            {
+              "label": "Ibrahima Konate (Outside the Box) (2)",
+              "under": "101.000"
+            },
+            {
+              "label": "Joao Cancelo (Header) (1)",
+              "under": "51.000"
+            },
+            {
+              "label": "Joao Cancelo (Outside the Box) (1)",
+              "under": "11.000"
+            },
+            {
+              "label": "Jude Bellingham (Header) (2)",
+              "under": "15.000"
+            },
+            {
+              "label": "Jude Bellingham (Outside the Box) (2)",
+              "under": "23.000"
+            },
+            {
+              "label": "Jules Kounde (Header) (1)",
+              "under": "15.000"
+            },
+            {
+              "label": "Jules Kounde (Outside the Box) (1)",
+              "under": "34.000"
+            },
+            {
+              "label": "Karim Adeyemi (Header) (1)",
+              "under": "17.000"
+            },
+            {
+              "label": "Karim Adeyemi (Outside the Box) (1)",
+              "under": "21.000"
+            },
+            {
+              "label": "Kylian Mbappe (Header) (2)",
+              "under": "21.000"
+            },
+            {
+              "label": "Kylian Mbappe (Outside the Box) (2)",
+              "under": "9.000"
+            },
+            {
+              "label": "Lamine Yamal (Header) (1)",
+              "under": "17.000"
+            },
+            {
+              "label": "Lamine Yamal (Outside the Box) (1)",
+              "under": "4.500"
+            },
+            {
+              "label": "Marc Bernal (Header) (1)",
+              "under": "11.000"
+            },
+            {
+              "label": "Marc Bernal (Outside the Box) (1)",
+              "under": "15.000"
+            },
+            {
+              "label": "Marc Cucurella (Header) (2)",
+              "under": "29.000"
+            },
+            {
+              "label": "Marc Cucurella (Outside the Box) (2)",
+              "under": "51.000"
+            },
+            {
+              "label": "Martin Gerard (Header) (1)",
+              "under": "34.000"
+            },
+            {
+              "label": "Martin Gerard (Outside the Box) (1)",
+              "under": "51.000"
+            },
+            {
+              "label": "Pau Cubarsi (Header) (1)",
+              "under": "10.000"
+            },
+            {
+              "label": "Pau Cubarsi (Outside the Box) (1)",
+              "under": "67.000"
+            },
+            {
+              "label": "Pedri (Header) (1)",
+              "under": "29.000"
+            },
+            {
+              "label": "Pedri (Outside the Box) (1)",
+              "under": "15.000"
+            },
+            {
+              "label": "Raphinha (Header) (1)",
+              "under": "23.000"
+            },
+            {
+              "label": "Raphinha (Outside the Box) (1)",
+              "under": "4.333"
+            },
+            {
+              "label": "Rodri (Header) (1)",
+              "under": "17.000"
+            },
+            {
+              "label": "Rodri (Outside the Box) (1)",
+              "under": "10.000"
+            },
+            {
+              "label": "Thiago Pitarch (Header) (2)",
+              "under": "51.000"
+            },
+            {
+              "label": "Thiago Pitarch (Outside the Box) (2)",
+              "under": "19.000"
+            },
+            {
+              "label": "Trent Alexander-Arnold (Header) (2)",
+              "under": "101.000"
+            },
+            {
+              "label": "Trent Alexander-Arnold (Outside the Box) (2)",
+              "under": "21.000"
+            },
+            {
+              "label": "Xavi Espart (Header) (1)",
+              "under": "41.000"
+            },
+            {
+              "label": "Xavi Espart (Outside the Box) (1)",
+              "under": "15.000"
+            },
+            {
+              "label": "Yan Diomande (Header) (2)",
+              "under": "13.000"
+            },
+            {
+              "label": "Yan Diomande (Outside the Box) (2)",
+              "under": "13.000"
+            }
+          ]
+        },
         {
           "name": "Player Headed Shots on Target",
           "updatedAt": "2026-10-25T09:18:00.235Z",
@@ -26648,348 +26183,6 @@
               "label": "Yan Diomande (2)",
               "hdp": 1.5,
               "over": "19.000"
-            }
-          ]
-        },
-        {
-          "name": "Goal Method",
-          "updatedAt": "2026-10-25T08:26:13.908Z",
-          "odds": [
-            {
-              "label": "Alex Balde (Header) (1)",
-              "under": "41.000"
-            },
-            {
-              "label": "Alex Balde (Outside the Box) (1)",
-              "under": "29.000"
-            },
-            {
-              "label": "Alex Campos (Header) (1)",
-              "under": "11.000"
-            },
-            {
-              "label": "Alex Campos (Outside the Box) (1)",
-              "under": "51.000"
-            },
-            {
-              "label": "Alvaro Carreras (Header) (2)",
-              "under": "81.000"
-            },
-            {
-              "label": "Alvaro Carreras (Outside the Box) (2)",
-              "under": "29.000"
-            },
-            {
-              "label": "Andreas Christensen (Header) (1)",
-              "under": "11.000"
-            },
-            {
-              "label": "Andreas Christensen (Outside the Box) (1)",
-              "under": "51.000"
-            },
-            {
-              "label": "Anthony Gordon (Header) (1)",
-              "under": "15.000"
-            },
-            {
-              "label": "Anthony Gordon (Outside the Box) (1)",
-              "under": "5.500"
-            },
-            {
-              "label": "Antonio Rudiger (Header) (2)",
-              "under": "15.000"
-            },
-            {
-              "label": "Antonio Rudiger (Outside the Box) (2)",
-              "under": "67.000"
-            },
-            {
-              "label": "Arda Guler (Header) (2)",
-              "under": "51.000"
-            },
-            {
-              "label": "Arda Guler (Outside the Box) (2)",
-              "under": "13.000"
-            },
-            {
-              "label": "Aurelien Tchouameni (Header) (2)",
-              "under": "26.000"
-            },
-            {
-              "label": "Aurelien Tchouameni (Outside the Box) (2)",
-              "under": "21.000"
-            },
-            {
-              "label": "Bernardo Silva (Header) (2)",
-              "under": "67.000"
-            },
-            {
-              "label": "Bernardo Silva (Outside the Box) (2)",
-              "under": "34.000"
-            },
-            {
-              "label": "Brahim Diaz (Header) (2)",
-              "under": "51.000"
-            },
-            {
-              "label": "Brahim Diaz (Outside the Box) (2)",
-              "under": "26.000"
-            },
-            {
-              "label": "Brian Farinas (Header) (1)",
-              "under": "17.000"
-            },
-            {
-              "label": "Brian Farinas (Outside the Box) (1)",
-              "under": "17.000"
-            },
-            {
-              "label": "Carlos Espi (Header) (2)",
-              "under": "6.000"
-            },
-            {
-              "label": "Carlos Espi (Outside the Box) (2)",
-              "under": "12.000"
-            },
-            {
-              "label": "Dani Olmo (Header) (1)",
-              "under": "26.000"
-            },
-            {
-              "label": "Dani Olmo (Outside the Box) (1)",
-              "under": "9.000"
-            },
-            {
-              "label": "Dean Huijsen (Header) (2)",
-              "under": "13.000"
-            },
-            {
-              "label": "Dean Huijsen (Outside the Box) (2)",
-              "under": "67.000"
-            },
-            {
-              "label": "Denzel Dumfries (Header) (2)",
-              "under": "19.000"
-            },
-            {
-              "label": "Denzel Dumfries (Outside the Box) (2)",
-              "under": "67.000"
-            },
-            {
-              "label": "Eder Militao (Header) (2)",
-              "under": "11.000"
-            },
-            {
-              "label": "Eder Militao (Outside the Box) (2)",
-              "under": "81.000"
-            },
-            {
-              "label": "Eduardo Camavinga (Header) (2)",
-              "under": "81.000"
-            },
-            {
-              "label": "Eduardo Camavinga (Outside the Box) (2)",
-              "under": "34.000"
-            },
-            {
-              "label": "Endrick (Header) (2)",
-              "under": "19.000"
-            },
-            {
-              "label": "Endrick (Outside the Box) (2)",
-              "under": "11.000"
-            },
-            {
-              "label": "Federico Valverde (Header) (2)",
-              "under": "67.000"
-            },
-            {
-              "label": "Federico Valverde (Outside the Box) (2)",
-              "under": "11.000"
-            },
-            {
-              "label": "Fermin Lopez (Header) (1)",
-              "under": "13.000"
-            },
-            {
-              "label": "Fermin Lopez (Outside the Box) (1)",
-              "under": "7.500"
-            },
-            {
-              "label": "Frenkie de Jong (Header) (1)",
-              "under": "51.000"
-            },
-            {
-              "label": "Frenkie de Jong (Outside the Box) (1)",
-              "under": "34.000"
-            },
-            {
-              "label": "Gabriel Jesus (Header) (1)",
-              "under": "12.000"
-            },
-            {
-              "label": "Gabriel Jesus (Outside the Box) (1)",
-              "under": "15.000"
-            },
-            {
-              "label": "Gavi (Header) (1)",
-              "under": "41.000"
-            },
-            {
-              "label": "Gavi (Outside the Box) (1)",
-              "under": "34.000"
-            },
-            {
-              "label": "Hamza Abdelkarim (Header) (1)",
-              "under": "11.000"
-            },
-            {
-              "label": "Hamza Abdelkarim (Outside the Box) (1)",
-              "under": "9.000"
-            },
-            {
-              "label": "Ibrahima Konate (Header) (2)",
-              "under": "17.000"
-            },
-            {
-              "label": "Ibrahima Konate (Outside the Box) (2)",
-              "under": "101.000"
-            },
-            {
-              "label": "Joao Cancelo (Header) (1)",
-              "under": "51.000"
-            },
-            {
-              "label": "Joao Cancelo (Outside the Box) (1)",
-              "under": "11.000"
-            },
-            {
-              "label": "Jude Bellingham (Header) (2)",
-              "under": "15.000"
-            },
-            {
-              "label": "Jude Bellingham (Outside the Box) (2)",
-              "under": "26.000"
-            },
-            {
-              "label": "Jules Kounde (Header) (1)",
-              "under": "15.000"
-            },
-            {
-              "label": "Jules Kounde (Outside the Box) (1)",
-              "under": "34.000"
-            },
-            {
-              "label": "Karim Adeyemi (Header) (1)",
-              "under": "17.000"
-            },
-            {
-              "label": "Karim Adeyemi (Outside the Box) (1)",
-              "under": "21.000"
-            },
-            {
-              "label": "Kylian Mbappe (Header) (2)",
-              "under": "21.000"
-            },
-            {
-              "label": "Kylian Mbappe (Outside the Box) (2)",
-              "under": "9.000"
-            },
-            {
-              "label": "Lamine Yamal (Header) (1)",
-              "under": "19.000"
-            },
-            {
-              "label": "Lamine Yamal (Outside the Box) (1)",
-              "under": "4.750"
-            },
-            {
-              "label": "Marc Bernal (Header) (1)",
-              "under": "11.000"
-            },
-            {
-              "label": "Marc Bernal (Outside the Box) (1)",
-              "under": "15.000"
-            },
-            {
-              "label": "Marc Cucurella (Header) (2)",
-              "under": "29.000"
-            },
-            {
-              "label": "Marc Cucurella (Outside the Box) (2)",
-              "under": "51.000"
-            },
-            {
-              "label": "Martin Gerard (Header) (1)",
-              "under": "34.000"
-            },
-            {
-              "label": "Martin Gerard (Outside the Box) (1)",
-              "under": "51.000"
-            },
-            {
-              "label": "Pau Cubarsi (Header) (1)",
-              "under": "11.000"
-            },
-            {
-              "label": "Pau Cubarsi (Outside the Box) (1)",
-              "under": "67.000"
-            },
-            {
-              "label": "Pedri (Header) (1)",
-              "under": "29.000"
-            },
-            {
-              "label": "Pedri (Outside the Box) (1)",
-              "under": "15.000"
-            },
-            {
-              "label": "Raphinha (Header) (1)",
-              "under": "23.000"
-            },
-            {
-              "label": "Raphinha (Outside the Box) (1)",
-              "under": "4.333"
-            },
-            {
-              "label": "Rodri (Header) (1)",
-              "under": "19.000"
-            },
-            {
-              "label": "Rodri (Outside the Box) (1)",
-              "under": "10.000"
-            },
-            {
-              "label": "Thiago Pitarch (Header) (2)",
-              "under": "51.000"
-            },
-            {
-              "label": "Thiago Pitarch (Outside the Box) (2)",
-              "under": "19.000"
-            },
-            {
-              "label": "Trent Alexander-Arnold (Header) (2)",
-              "under": "81.000"
-            },
-            {
-              "label": "Trent Alexander-Arnold (Outside the Box) (2)",
-              "under": "17.000"
-            },
-            {
-              "label": "Xavi Espart (Header) (1)",
-              "under": "41.000"
-            },
-            {
-              "label": "Xavi Espart (Outside the Box) (1)",
-              "under": "17.000"
-            },
-            {
-              "label": "Yan Diomande (Header) (2)",
-              "under": "15.000"
-            },
-            {
-              "label": "Yan Diomande (Outside the Box) (2)",
-              "under": "15.000"
             }
           ]
         }
