@@ -11,16 +11,16 @@
       "team_keeper_mapping_unresolved": 12
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 7,
-    "priced_lines": 277,
+    "eligible_lines": 9,
+    "priced_lines": 309,
     "provisional_lines": 0,
-    "signals_added": 0,
-    "value_ladder_lines": 41
+    "signals_added": 1,
+    "value_ladder_lines": 48
   },
   "evidence": {
     "clv": 0.05358,
     "clv_matched": 22,
-    "pending": 16,
+    "pending": 17,
     "pnl_units": 17.154,
     "roi": 0.483211,
     "settled": 71,
@@ -28,22 +28,22 @@
       "fotmob_named_keeper_shotmap": 68,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 88,
+    "signals": 89,
     "true_close_coverage": 0.309859,
     "void": 1
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-24T22:43:52.954761+00:00",
+    "checked_at": "2026-10-25T00:33:10.426948+00:00",
     "counts": {
       "ambiguous_duplicate_contract": 5,
       "not_fresh_prematch": 1,
-      "offers_saved": 310
+      "offers_saved": 342
     },
-    "saved": 21,
+    "saved": 23,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-24T22:43:52Z",
+  "generated_at": "2026-10-25T00:33:09Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
@@ -51,15 +51,15 @@
     "exclusions": {
       "blocked_or_missing_inputs": 38,
       "not_new_fresh_prematch": 1,
-      "unregistered_settlement_rules": 74
+      "unregistered_settlement_rules": 84
     },
-    "forecast_fixtures": 83,
-    "forecast_keepers": 165,
-    "generated_at": "2026-10-24T22:43:53.026538+00:00",
-    "last_capture_at": "2026-10-24T16:58:05.612353+00:00",
+    "forecast_fixtures": 85,
+    "forecast_keepers": 169,
+    "generated_at": "2026-10-25T00:33:10.603521+00:00",
+    "last_capture_at": "2026-10-25T00:33:10.603521+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 0,
-    "new_selections": 0,
+    "new_forecasts": 4,
+    "new_selections": 2,
     "next_review_at": 50,
     "paired_scores": {
       "current": {
@@ -77,12 +77,12 @@
       "current": {
         "losses": 5,
         "overdue": 0,
-        "pending": 9,
+        "pending": 10,
         "profit": 1.2010000000000003,
         "pushes": 0,
         "review": 0,
         "roi": 0.21836363636363643,
-        "selections": 21,
+        "selections": 22,
         "settled": 11,
         "stake": 5.5,
         "voids": 1,
@@ -91,12 +91,12 @@
       "keeper_watch": {
         "losses": 2,
         "overdue": 0,
-        "pending": 1,
+        "pending": 2,
         "profit": -1.0,
         "pushes": 0,
         "review": 0,
         "roi": -1.0,
-        "selections": 3,
+        "selections": 4,
         "settled": 2,
         "stake": 1.0,
         "voids": 0,
@@ -105,6 +105,54 @@
     },
     "review_milestone": null,
     "selections": [
+      {
+        "away": "Olympique Lyon",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-25T00:33:07+00:00",
+        "edge": 0.1366722664990121,
+        "event_id": "72036250",
+        "fair_odds": 2.6392831851524794,
+        "goalkeeper": "R\u00e9my Descamps",
+        "home": "Paris Saint-Germain",
+        "kickoff_at": "2026-10-26T19:30:00+00:00",
+        "line": 4.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5802972",
+        "model": "keeper_watch",
+        "odds": 3.0,
+        "overdue": false,
+        "player_id": "767014",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-25T00:33:10.603521+00:00",
+        "side": "over",
+        "status": "pending",
+        "team_id": "9748"
+      },
+      {
+        "away": "Olympique Lyon",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-25T00:33:07+00:00",
+        "edge": 0.08474263076857391,
+        "event_id": "72036250",
+        "fair_odds": 1.6898017538973853,
+        "goalkeeper": "R\u00e9my Descamps",
+        "home": "Paris Saint-Germain",
+        "kickoff_at": "2026-10-26T19:30:00+00:00",
+        "line": 3.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5802972",
+        "model": "current",
+        "odds": 1.833,
+        "overdue": false,
+        "player_id": "767014",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-25T00:33:10.603521+00:00",
+        "side": "over",
+        "status": "pending",
+        "team_id": "9748"
+      },
       {
         "away": "Bayern Munich",
         "bookmaker": "Bet365",
@@ -683,7 +731,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 75,
+      "awaiting_verified_keeper_result": 79,
       "incomplete_or_conflicting_full_match_count": 4,
       "keeper_identity_unresolved": 1,
       "verified_different_starting_keeper": 3

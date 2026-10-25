@@ -1,5 +1,5 @@
 {
-  "contracts": 357,
+  "contracts": 361,
   "settled_contracts": 261,
   "paired_contracts": 158,
   "paired_fixtures": 60,
@@ -20,7 +20,7 @@
         "stake_units": 37,
         "pending": 19,
         "overdue": 0,
-        "unavailable_contracts": 135,
+        "unavailable_contracts": 137,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
@@ -39,7 +39,7 @@
         "stake_units": 0,
         "pending": 2,
         "overdue": 0,
-        "unavailable_contracts": 135,
+        "unavailable_contracts": 137,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
       }
     },
@@ -95,14 +95,14 @@
   "model_fingerprint": "d4723cba0af2b4604f3204e9d1d996542f206fc42313612b2a79117a64d4cce0",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 240,
-  "generated_at": "2026-10-24T22:44:09Z",
-  "new_contracts": 3,
+  "generated_at": "2026-10-25T00:33:28Z",
+  "new_contracts": 4,
   "scan_exclusions": {
-    "stale_price": 416
+    "stale_price": 500
   },
-  "latest_archived_capture": "2026-10-24T22:43:49Z",
+  "latest_archived_capture": "2026-10-25T00:33:06Z",
   "latest_result_date": "2026-10-23",
-  "raw_upcoming_rows": 1914,
+  "raw_upcoming_rows": 2218,
   "status": "COLLECTING",
   "cohorts": {
     "paired-market-offset-20260930-v2": {
@@ -200,7 +200,7 @@
       "automatic_promotion": false
     },
     "paired-market-offset-20261019-club-alias-v3": {
-      "contracts": 117,
+      "contracts": 121,
       "settled_contracts": 21,
       "paired_contracts": 12,
       "paired_fixtures": 5,
@@ -221,7 +221,7 @@
             "stake_units": 2,
             "pending": 19,
             "overdue": 0,
-            "unavailable_contracts": 41,
+            "unavailable_contracts": 43,
             "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
           }
         },
@@ -240,7 +240,7 @@
             "stake_units": 0,
             "pending": 2,
             "overdue": 0,
-            "unavailable_contracts": 41,
+            "unavailable_contracts": 43,
             "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
           }
         },

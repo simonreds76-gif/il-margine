@@ -2117,17 +2117,114 @@
       },
       "message_id": 645,
       "sent_at": "2026-10-24T19:48:46.584605+00:00"
+    },
+    "72036250|rémy descamps|3.5|over": {
+      "status": "claimed",
+      "run_token": "40147118126:1",
+      "claimed_at": "2026-10-25T00:33:34.227429+00:00",
+      "signal": {
+        "signal_id": "72036250|rémy descamps|3.5|over",
+        "created_at": "2026-10-25T00:33:09Z",
+        "event_id": "72036250",
+        "match_date": "2026-10-26",
+        "kickoff_at": "2026-10-26T19:30:00Z",
+        "league": "ligue-1",
+        "home_team": "Paris Saint-Germain",
+        "away_team": "Olympique Lyon",
+        "team": "Olympique Lyon",
+        "opponent": "Paris Saint-Germain",
+        "venue": "away",
+        "goalkeeper": "Rémy Descamps",
+        "bookmaker": "Bet365",
+        "line": "3.5",
+        "side": "over",
+        "odds_decimal": "1.8330",
+        "model_mean": "4.2872",
+        "model_probability": "0.591785",
+        "push_probability": "0.000000",
+        "fair_odds": "1.690",
+        "edge": "0.084743",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-10-25T00:33:07Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "named_player",
+        "identity_basis": "bookmaker_named_player",
+        "price_comparison": [
+          {
+            "bookmaker": "Bet365",
+            "odds": 1.833,
+            "captured_at": "2026-10-25T00:33:07Z",
+            "contract_scope": "named_player"
+          },
+          {
+            "bookmaker": "Kambi",
+            "odds": 1.63,
+            "captured_at": "2026-10-25T00:33:07Z",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-10-25T00:33:34.227429+00:00"
+      }
+    },
+    "keeper_watch_v1:5802972": {
+      "status": "claimed",
+      "run_token": "40147118126:1",
+      "claimed_at": "2026-10-25T00:33:34.227429+00:00",
+      "signal": {
+        "away": "Olympique Lyon",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-25T00:33:07+00:00",
+        "edge": 0.1366722664990121,
+        "event_id": "72036250",
+        "fair_odds": 2.6392831851524794,
+        "goalkeeper": "Rémy Descamps",
+        "home": "Paris Saint-Germain",
+        "kickoff_at": "2026-10-26T19:30:00+00:00",
+        "line": 4.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5802972",
+        "model": "keeper_watch",
+        "odds": 3.0,
+        "overdue": false,
+        "player_id": "767014",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-25T00:33:10.603521+00:00",
+        "side": "over",
+        "status": "pending",
+        "team_id": "9748",
+        "alert_model": "keeper_watch_v1",
+        "signal_id": "keeper_watch_v1:5802972",
+        "created_at": "2026-10-25T00:33:10.603521+00:00",
+        "odds_decimal": 3.0,
+        "home_team": "Paris Saint-Germain",
+        "away_team": "Olympique Lyon",
+        "selection_policy": "keeper_watch_v1",
+        "paper_stake": 0.5,
+        "actual_stake": 0
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-10-24T22:44:15.649622+00:00",
-      "added": 0,
+      "checked_at": "2026-10-25T00:33:34.227429+00:00",
+      "added": 1,
       "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-10-24T22:44:15.649622+00:00",
-      "added": 0,
+      "checked_at": "2026-10-25T00:33:34.227429+00:00",
+      "added": 1,
       "suppressed": {}
     }
   }
