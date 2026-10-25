@@ -1,11 +1,354 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-25T13:24:58.455455+00:00",
+  "generatedAt": "2026-10-25T20:31:53.614473+00:00",
   "coverageStart": "2026-10-17",
   "checkedThrough": "2026-10-25",
   "captureStatus": "complete",
-  "matchesChecked": 48,
+  "matchesChecked": 68,
   "articles": [
+    {
+      "id": "fotmob:5802968:2988052191",
+      "slug": "2026-10-25-josh-maja-5802968-2988052191",
+      "matchId": "5802968",
+      "eventId": "2988052191",
+      "date": "2026-10-25",
+      "kickoff": "2026-10-25T16:15:00.000Z",
+      "league": "ligue-1",
+      "leagueLabel": "Ligue 1",
+      "round": "8",
+      "player": "Josh Maja",
+      "playerId": 791805,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/791805.png",
+      "club": "Le Havre",
+      "clubSlug": "le-havre",
+      "clubUrl": "/penalty-takers/ligue-1/le-havre",
+      "crest": "/team-logos/ligue-1/le-havre.png",
+      "opponent": "Marseille",
+      "home": "Marseille",
+      "away": "Le Havre",
+      "homeScore": 4,
+      "awayScore": 3,
+      "minute": "77",
+      "outcome": "scored",
+      "title": "Josh Maja scores from the spot against Marseille",
+      "sentences": [
+        "Josh Maja converted a penalty for Le Havre in minute 77 against Marseille.",
+        "The match finished Marseille 4–3 Le Havre."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Rayan Fofana",
+        "concededBy": "Timothy Weah",
+        "sentence": "Rayan Fofana won the penalty after a foul by Timothy Weah inside the area.",
+        "evidenceIds": [
+          "2988049155",
+          "2988049191"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 29,
+        "goals": 2,
+        "shots": 3,
+        "onTarget": 3,
+        "chances": 0
+      },
+      "keeper": "Jeffrey De Lange",
+      "moment": {
+        "before": [
+          4,
+          0
+        ],
+        "after": [
+          4,
+          1
+        ]
+      },
+      "paragraphs": [
+        "Josh Maja converted a penalty in the 77th minute of Le Havre’s 3–4 defeat to Marseille.",
+        "Rayan Fofana won the penalty after a foul by Timothy Weah inside the area. The goal reduced the deficit at 1–4.",
+        "Josh Maja finished with 2 goals and 3 shots, including 3 on target, in 29 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/marseille-vs-le-havre/2s4945#5802968",
+      "eventHash": "f794ac237248c81706edec273769e80e9ce0a845e9abaf061c6642835766fcb2",
+      "sourceHash": "f98c654d6f8cf05dc0e73b2eed2bdb5f9ffe6af8fe2c7e79726edc4dd4702495",
+      "publishedAt": "2026-10-25T20:31:53.614473+00:00",
+      "updatedAt": "2026-10-25T20:31:53.614473+00:00"
+    },
+    {
+      "id": "fotmob:5881201:2987922859",
+      "slug": "2026-10-25-andrej-kramaric-5881201-2987922859",
+      "matchId": "5881201",
+      "eventId": "2987922859",
+      "date": "2026-10-25",
+      "kickoff": "2026-10-25T14:30:00.000Z",
+      "league": "bundesliga",
+      "leagueLabel": "Bundesliga",
+      "round": "7",
+      "player": "Andrej Kramarić",
+      "playerId": 173461,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/173461.png",
+      "club": "Hoffenheim",
+      "clubSlug": "hoffenheim",
+      "clubUrl": "/penalty-takers/bundesliga/hoffenheim",
+      "crest": "/team-logos/bundesliga/hoffenheim.png",
+      "opponent": "Bayer Leverkusen",
+      "home": "Hoffenheim",
+      "away": "Bayer Leverkusen",
+      "homeScore": 3,
+      "awayScore": 0,
+      "minute": "79",
+      "outcome": "scored",
+      "title": "Andrej Kramarić scores from the spot against Bayer Leverkusen",
+      "sentences": [
+        "Andrej Kramarić converted a penalty for Hoffenheim in minute 79 against Bayer Leverkusen.",
+        "The match finished Hoffenheim 3–0 Bayer Leverkusen."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Fisnik Asllani",
+        "concededBy": "Edmond Tapsoba",
+        "sentence": "Fisnik Asllani won the penalty after a foul by Edmond Tapsoba inside the area.",
+        "evidenceIds": [
+          "2987921455",
+          "2987921579"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 25,
+        "goals": 1,
+        "shots": 3,
+        "onTarget": 2,
+        "chances": 1
+      },
+      "keeper": "Mark Flekken",
+      "moment": {
+        "before": [
+          0,
+          0
+        ],
+        "after": [
+          1,
+          0
+        ]
+      },
+      "paragraphs": [
+        "Andrej Kramarić converted a penalty in the 79th minute of Hoffenheim’s 3–0 win over Bayer Leverkusen.",
+        "Fisnik Asllani won the penalty after a foul by Edmond Tapsoba inside the area. The goal put the team ahead at 1–0.",
+        "Andrej Kramarić finished with 1 goal and 3 shots, including 2 on target, in 25 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/bayer-leverkusen-vs-hoffenheim/2844qc#5881201",
+      "eventHash": "956d66993ae679d06dba299ecdb70f43d7ebbdc8d08b05efad19ced8c2db5bfc",
+      "sourceHash": "65c879147988045dc8deb03e7e22119252051a6ca64dbf4678c68d52af734232",
+      "publishedAt": "2026-10-25T20:31:53.614473+00:00",
+      "updatedAt": "2026-10-25T20:31:53.614473+00:00"
+    },
+    {
+      "id": "fotmob:5749710:2987795929",
+      "slug": "2026-10-25-ederson-5749710-2987795929",
+      "matchId": "5749710",
+      "eventId": "2987795929",
+      "date": "2026-10-25",
+      "kickoff": "2026-10-25T14:00:00.000Z",
+      "league": "serie-a",
+      "leagueLabel": "Serie A",
+      "round": "8",
+      "player": "Éderson",
+      "playerId": 957203,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/957203.png",
+      "club": "Atalanta",
+      "clubSlug": "atalanta",
+      "clubUrl": "/penalty-takers/serie-a/atalanta",
+      "crest": "/team-logos/serie-a/atalanta.png",
+      "opponent": "Frosinone",
+      "home": "Atalanta",
+      "away": "Frosinone",
+      "homeScore": 4,
+      "awayScore": 4,
+      "minute": "33",
+      "outcome": "scored",
+      "title": "Éderson scores from the spot against Frosinone",
+      "sentences": [
+        "Éderson converted a penalty for Atalanta in minute 33 against Frosinone.",
+        "The match finished Atalanta 4–4 Frosinone."
+      ],
+      "cause": "handball",
+      "incident": {
+        "type": "handball",
+        "wonBy": null,
+        "concededBy": "Giorgio Cittadini",
+        "sentence": "The penalty was awarded for a handball by Giorgio Cittadini.",
+        "evidenceIds": [
+          "2987795001"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 1,
+        "shots": 4,
+        "onTarget": 2,
+        "chances": 1
+      },
+      "keeper": "Lorenzo Palmisani",
+      "moment": {
+        "before": [
+          1,
+          2
+        ],
+        "after": [
+          2,
+          2
+        ]
+      },
+      "paragraphs": [
+        "Éderson converted a penalty in the 33rd minute of Atalanta’s 4–4 draw with Frosinone.",
+        "The penalty was awarded for a handball by Giorgio Cittadini. The goal brought the sides level at 2–2.",
+        "Éderson finished with 1 goal and 4 shots, including 2 on target, in 90 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/atalanta-vs-frosinone/2syl2j#5749710",
+      "eventHash": "509056c3b3b1215296aacb52bb82eba10358630d9968764ec24960a416662755",
+      "sourceHash": "b1391b5b5abb5fcb4b41115b568b6333e7fa379aab8436150f790655b210a536",
+      "publishedAt": "2026-10-25T20:31:53.614473+00:00",
+      "updatedAt": "2026-10-25T20:31:53.614473+00:00"
+    },
+    {
+      "id": "fotmob:5795490:2987785209",
+      "slug": "2026-10-25-oli-mcburnie-5795490-2987785209",
+      "matchId": "5795490",
+      "eventId": "2987785209",
+      "date": "2026-10-25",
+      "kickoff": "2026-10-25T14:00:00.000Z",
+      "league": "epl",
+      "leagueLabel": "Premier League",
+      "round": "8",
+      "player": "Oli McBurnie",
+      "playerId": 509151,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/509151.png",
+      "club": "Hull City",
+      "clubSlug": "hull-city",
+      "clubUrl": "/penalty-takers/epl/hull-city",
+      "crest": "/team-logos/epl/hull-city.png",
+      "opponent": "Brentford",
+      "home": "Hull City",
+      "away": "Brentford",
+      "homeScore": 1,
+      "awayScore": 1,
+      "minute": "24",
+      "outcome": "scored",
+      "title": "Oli McBurnie scores from the spot against Brentford",
+      "sentences": [
+        "Oli McBurnie converted a penalty for Hull City in minute 24 against Brentford.",
+        "The match finished Hull City 1–1 Brentford."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Tim Iroegbunam",
+        "concededBy": null,
+        "sentence": "Tim Iroegbunam won the penalty after being fouled in the area.",
+        "evidenceIds": [
+          "26452702200024"
+        ],
+        "method": "narrative_crosschecked",
+        "crosscheck": {
+          "playerId": 1203512,
+          "penaltiesWon": 1,
+          "teamPenalties": 1
+        }
+      },
+      "stats": {
+        "minutes": 86,
+        "goals": 1,
+        "shots": 1,
+        "onTarget": 1,
+        "chances": 1
+      },
+      "keeper": "Caoimhín Kelleher",
+      "moment": {
+        "before": [
+          0,
+          0
+        ],
+        "after": [
+          1,
+          0
+        ]
+      },
+      "paragraphs": [
+        "Oli McBurnie converted a penalty in the 24th minute of Hull City’s 1–1 draw with Brentford.",
+        "Tim Iroegbunam won the penalty after being fouled in the area. The goal put the team ahead at 1–0.",
+        "Oli McBurnie finished with 1 goal and 1 shot, including 1 on target, in 86 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/hull-city-vs-brentford/2v1khb#5795490",
+      "eventHash": "f3655af513961ca73bdf119c9566564712c9cf1aca8431bc4c896794ebb46a5e",
+      "sourceHash": "68cf759ad8c7dc4d4a55146e8f9c035c51c237d54f381482dec711c4f3e13726",
+      "publishedAt": "2026-10-25T20:31:53.614473+00:00",
+      "updatedAt": "2026-10-25T20:31:53.614473+00:00"
+    },
+    {
+      "id": "fotmob:5749714:2987710667",
+      "slug": "2026-10-25-piotr-zielinski-5749714-2987710667",
+      "matchId": "5749714",
+      "eventId": "2987710667",
+      "date": "2026-10-25",
+      "kickoff": "2026-10-25T11:30:00.000Z",
+      "league": "serie-a",
+      "leagueLabel": "Serie A",
+      "round": "8",
+      "player": "Piotr Zieliński",
+      "playerId": 362212,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/362212.png",
+      "club": "Inter",
+      "clubSlug": "inter",
+      "clubUrl": "/penalty-takers/serie-a/inter",
+      "crest": "/team-logos/serie-a/inter.png",
+      "opponent": "Fiorentina",
+      "home": "Inter",
+      "away": "Fiorentina",
+      "homeScore": 2,
+      "awayScore": 1,
+      "minute": "90+7",
+      "outcome": "scored",
+      "title": "Piotr Zieliński scores from the spot against Fiorentina",
+      "sentences": [
+        "Piotr Zieliński converted a penalty for Inter in minute 90+7 against Fiorentina.",
+        "The match finished Inter 2–1 Fiorentina."
+      ],
+      "cause": null,
+      "incident": null,
+      "stats": {
+        "minutes": 12,
+        "goals": 1,
+        "shots": 1,
+        "onTarget": 1,
+        "chances": 0
+      },
+      "keeper": "David de Gea",
+      "moment": {
+        "before": [
+          1,
+          1
+        ],
+        "after": [
+          2,
+          1
+        ]
+      },
+      "paragraphs": [
+        "Piotr Zieliński converted a penalty in added time (90+7 minutes) of Inter’s 2–1 win over Fiorentina.",
+        "The goal put the team ahead at 2–1.",
+        "Piotr Zieliński finished with 1 goal and 1 shot, including 1 on target, in 12 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/fiorentina-vs-inter/2fs4je#5749714",
+      "eventHash": "6058a49043e09d4799599cc339c33018458655f3b8b1c8d1ccfa8d5b7c657d94",
+      "sourceHash": "9cdc916df8fe8f9cab8b7bdc398dba2bd1e425285e8a74e91cca9dba20137ad2",
+      "publishedAt": "2026-10-25T20:31:53.614473+00:00",
+      "updatedAt": "2026-10-25T20:31:53.614473+00:00"
+    },
     {
       "id": "fotmob:5868110:2987028547",
       "slug": "2026-10-24-pepelu-5868110-2987028547",
