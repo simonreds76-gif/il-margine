@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-25T20:05:07.282171+00:00",
+  "generated_at": "2026-10-25T20:06:27.446310+00:00",
   "league": "bundesliga",
   "row_count": 7,
   "rows": [
@@ -106,7 +106,7 @@
       "context_source_path": "data/goalscorer/bundesliga-penalty-takers.json",
       "actual_taker_match_status": "Yes - started, off 81'",
       "primary_on_pitch_at_penalty": "Yes - started, off 81'",
-      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "secondary_on_pitch_at_penalty": "No - absent from matchday squad",
       "tertiary_on_pitch_at_penalty": "No - bench, on 81'",
       "actual_taker_on_pitch_at_penalty": "Yes - started, off 81'",
       "event_evidence": [
@@ -115,7 +115,7 @@
           "source_event_id": "2986611147",
           "match_id": "5881202",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881202",
-          "observed_at": "2026-10-25T19:44:05+00:00",
+          "observed_at": "2026-10-25T20:06:34+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Werder Bremen",
@@ -125,13 +125,15 @@
           "on_pitch_proof": {
             "player": "Niclas Füllkrug",
             "minute": 7,
+            "added_time": 0,
             "method": "completed_lineup_timeline",
             "player_id": 276791,
             "bucket": "starters",
             "substitutions": [
               {
                 "type": "subout",
-                "time": 81
+                "time": 81,
+                "added_time": 0
               }
             ],
             "events": [],
@@ -149,7 +151,7 @@
           "source_event_id": "2986634487",
           "match_id": "5881202",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881202",
-          "observed_at": "2026-10-25T19:44:05+00:00",
+          "observed_at": "2026-10-25T20:06:34+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Werder Bremen",
@@ -159,13 +161,15 @@
           "on_pitch_proof": {
             "player": "Niclas Füllkrug",
             "minute": 25,
+            "added_time": 0,
             "method": "completed_lineup_timeline",
             "player_id": 276791,
             "bucket": "starters",
             "substitutions": [
               {
                 "type": "subout",
-                "time": 81
+                "time": 81,
+                "added_time": 0
               }
             ],
             "events": [],
@@ -211,7 +215,7 @@
       "context_source_path": "data/goalscorer/bundesliga-penalty-takers.json",
       "actual_taker_match_status": "Yes - started",
       "primary_on_pitch_at_penalty": "Yes - started",
-      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "secondary_on_pitch_at_penalty": "No - absent from matchday squad",
       "tertiary_on_pitch_at_penalty": "Yes - bench, on 63'",
       "actual_taker_on_pitch_at_penalty": "Yes - started",
       "event_evidence": [
@@ -219,8 +223,8 @@
           "id": "fotmob|bundesliga|5881196|2982902465",
           "source_event_id": "2982902465",
           "match_id": "5881196",
-          "source_url": "https://www.fotmob.com/matches/paderborn-vs-werder-bremen/2fmz60#5881196",
-          "observed_at": "2026-10-25T19:35:10+00:00",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881196",
+          "observed_at": "2026-10-25T20:06:31+00:00",
           "event_date": "2026-10-17",
           "season": "2026/27",
           "team": "Werder Bremen",
@@ -230,6 +234,7 @@
           "on_pitch_proof": {
             "player": "Niclas Füllkrug",
             "minute": 65,
+            "added_time": 0,
             "method": "completed_lineup_timeline",
             "player_id": 276791,
             "bucket": "starters",
@@ -276,17 +281,17 @@
       "context_generated_at": "2026-09-19",
       "context_source_path": "data/goalscorer/bundesliga-penalty-takers.json",
       "actual_taker_match_status": "Yes - bench, on 77'",
-      "primary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
-      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
-      "tertiary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "primary_on_pitch_at_penalty": "Not assigned - hierarchy slot empty",
+      "secondary_on_pitch_at_penalty": "Not assigned - hierarchy slot empty",
+      "tertiary_on_pitch_at_penalty": "Not assigned - hierarchy slot empty",
       "actual_taker_on_pitch_at_penalty": "Yes - bench, on 77'",
       "event_evidence": [
         {
           "id": "fotmob|bundesliga|5881192|2982986017",
           "source_event_id": "2982986017",
           "match_id": "5881192",
-          "source_url": "https://www.fotmob.com/matches/elversberg-vs-augsburg/2aezx3#5881192",
-          "observed_at": "2026-10-25T19:35:05+00:00",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881192",
+          "observed_at": "2026-10-25T20:06:30+00:00",
           "event_date": "2026-10-17",
           "season": "2026/27",
           "team": "Elversberg",
@@ -296,6 +301,7 @@
           "on_pitch_proof": {
             "player": "",
             "minute": 90,
+            "added_time": 8,
             "method": "completed_lineup_timeline",
             "reason": "missing_or_ambiguous_player"
           },
@@ -339,7 +345,7 @@
       "context_source_path": "data/goalscorer/bundesliga-penalty-takers.json",
       "actual_taker_match_status": "Yes - bench, on 46'",
       "primary_on_pitch_at_penalty": "Yes - started",
-      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "secondary_on_pitch_at_penalty": "No - absent from matchday squad",
       "tertiary_on_pitch_at_penalty": "Yes - bench, on 46'",
       "actual_taker_on_pitch_at_penalty": "Yes - bench, on 46'",
       "event_evidence": [
@@ -347,8 +353,8 @@
           "id": "fotmob|bundesliga|5881192|2982936715",
           "source_event_id": "2982936715",
           "match_id": "5881192",
-          "source_url": "https://www.fotmob.com/matches/elversberg-vs-augsburg/2aezx3#5881192",
-          "observed_at": "2026-10-25T19:35:05+00:00",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881192",
+          "observed_at": "2026-10-25T20:06:30+00:00",
           "event_date": "2026-10-17",
           "season": "2026/27",
           "team": "Augsburg",
@@ -358,6 +364,7 @@
           "on_pitch_proof": {
             "player": "Fabian Rieder",
             "minute": 76,
+            "added_time": 0,
             "method": "completed_lineup_timeline",
             "player_id": 1161211,
             "bucket": "starters",
@@ -404,17 +411,17 @@
       "context_generated_at": "2026-09-19",
       "context_source_path": "data/goalscorer/bundesliga-penalty-takers.json",
       "actual_taker_match_status": "Yes - started",
-      "primary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
-      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
-      "tertiary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "primary_on_pitch_at_penalty": "Not assigned - hierarchy slot empty",
+      "secondary_on_pitch_at_penalty": "Not assigned - hierarchy slot empty",
+      "tertiary_on_pitch_at_penalty": "Not assigned - hierarchy slot empty",
       "actual_taker_on_pitch_at_penalty": "Yes - started",
       "event_evidence": [
         {
           "id": "fotmob|bundesliga|5881192|2982734523",
           "source_event_id": "2982734523",
           "match_id": "5881192",
-          "source_url": "https://www.fotmob.com/matches/elversberg-vs-augsburg/2aezx3#5881192",
-          "observed_at": "2026-10-25T19:35:05+00:00",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881192",
+          "observed_at": "2026-10-25T20:06:30+00:00",
           "event_date": "2026-10-17",
           "season": "2026/27",
           "team": "Elversberg",
@@ -424,6 +431,7 @@
           "on_pitch_proof": {
             "player": "",
             "minute": 4,
+            "added_time": 0,
             "method": "completed_lineup_timeline",
             "reason": "missing_or_ambiguous_player"
           },
@@ -467,7 +475,7 @@
       "context_source_path": "data/goalscorer/bundesliga-penalty-takers.json",
       "actual_taker_match_status": "Yes - started",
       "primary_on_pitch_at_penalty": "Yes - started",
-      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "secondary_on_pitch_at_penalty": "No - absent from matchday squad",
       "tertiary_on_pitch_at_penalty": "No - bench, on 46'",
       "actual_taker_on_pitch_at_penalty": "Yes - started",
       "event_evidence": [
@@ -475,8 +483,8 @@
           "id": "fotmob|bundesliga|5881192|2982831735",
           "source_event_id": "2982831735",
           "match_id": "5881192",
-          "source_url": "https://www.fotmob.com/matches/elversberg-vs-augsburg/2aezx3#5881192",
-          "observed_at": "2026-10-25T19:35:05+00:00",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881192",
+          "observed_at": "2026-10-25T20:06:30+00:00",
           "event_date": "2026-10-17",
           "season": "2026/27",
           "team": "Augsburg",
@@ -486,6 +494,7 @@
           "on_pitch_proof": {
             "player": "Fabian Rieder",
             "minute": 45,
+            "added_time": 9,
             "method": "completed_lineup_timeline",
             "player_id": 1161211,
             "bucket": "starters",
@@ -521,7 +530,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261023"
+      "20261024"
     ],
     "matches_checked": 1
   }

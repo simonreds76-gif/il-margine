@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-25T20:05:07.282171+00:00",
+  "generated_at": "2026-10-25T20:06:27.446310+00:00",
   "league": "la-liga",
   "row_count": 7,
   "rows": [
@@ -318,9 +318,9 @@
       "context_generated_at": "2026-09-02",
       "context_source_path": "data/goalscorer/la-liga-penalty-takers.json",
       "actual_taker_match_status": "Yes - started",
-      "primary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "primary_on_pitch_at_penalty": "No - absent from matchday squad",
       "secondary_on_pitch_at_penalty": "No - bench, on 81'",
-      "tertiary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "tertiary_on_pitch_at_penalty": "No - absent from matchday squad",
       "actual_taker_on_pitch_at_penalty": "Yes - started",
       "event_evidence": [
         {
@@ -328,18 +328,44 @@
           "source_event_id": "2985446045",
           "match_id": "5868067",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868067",
-          "observed_at": "2026-10-25T19:46:22+00:00",
+          "observed_at": "2026-10-25T20:06:34+00:00",
           "event_date": "2026-10-21",
           "season": "2026/27",
           "team": "Athletic Club",
           "taker": "Alex Berenguer",
           "primary": "Oihan Sancet",
-          "primary_on_pitch": null,
+          "primary_on_pitch": false,
           "on_pitch_proof": {
             "player": "Oihan Sancet",
             "minute": 67,
+            "added_time": 0,
             "method": "completed_lineup_timeline",
-            "reason": "missing_or_ambiguous_player"
+            "reason": "absent_from_matchday_squad",
+            "squad_player_ids": [
+              "660625",
+              "1427819",
+              "639450",
+              "411617",
+              "80295",
+              "282462",
+              "1553099",
+              "574629",
+              "1011117",
+              "1327006",
+              "1425206",
+              "1585726",
+              "604105",
+              "1191407",
+              "1425769",
+              "1202110",
+              "1401997",
+              "940743",
+              "1037537",
+              "1425173",
+              "1229176",
+              "1820604",
+              "1203614"
+            ]
           },
           "minute": 67,
           "penalty_kind": "in_match",
@@ -452,16 +478,16 @@
       "context_source_path": "data/goalscorer/la-liga-penalty-takers.json",
       "actual_taker_match_status": "Yes - started",
       "primary_on_pitch_at_penalty": "Yes - started",
-      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
-      "tertiary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "secondary_on_pitch_at_penalty": "No - bench, on 90+1'",
+      "tertiary_on_pitch_at_penalty": "No - absent from matchday squad",
       "actual_taker_on_pitch_at_penalty": "Yes - started",
       "event_evidence": [
         {
           "id": "fotmob|la-liga|5868097|2983726199",
           "source_event_id": "2983726199",
           "match_id": "5868097",
-          "source_url": "https://www.fotmob.com/matches/osasuna-vs-racing-santander/2epysq#5868097",
-          "observed_at": "2026-10-25T19:37:39+00:00",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868097",
+          "observed_at": "2026-10-25T20:06:32+00:00",
           "event_date": "2026-10-18",
           "season": "2026/27",
           "team": "Osasuna",
@@ -471,6 +497,7 @@
           "on_pitch_proof": {
             "player": "Ante Budimir",
             "minute": 9,
+            "added_time": 0,
             "method": "completed_lineup_timeline",
             "player_id": 251269,
             "bucket": "starters",
@@ -506,7 +533,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261023"
+      "20261021"
     ],
     "matches_checked": 1
   }

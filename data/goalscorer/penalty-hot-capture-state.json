@@ -6,6 +6,7 @@
     "5795487": "2026-10-25",
     "5881197": "2026-10-25",
     "5881199": "2026-10-25",
+    "5881202": "2026-10-25",
     "5881203": "2026-10-25",
     "5881204": "2026-10-25",
     "5881198": "2026-10-25",
@@ -19,6 +20,7 @@
     "5749717": "2026-10-25",
     "5749715": "2026-10-25",
     "5795489": "2026-10-25",
+    "5795490": "2026-10-25",
     "5795492": "2026-10-25",
     "5795493": "2026-10-25",
     "5795494": "2026-10-25",
@@ -29,6 +31,7 @@
     "5802969": "2026-10-25",
     "5802964": "2026-10-25",
     "5802965": "2026-10-25",
+    "5802968": "2026-10-25",
     "5802970": "2026-10-25",
     "5802971": "2026-10-25",
     "5749714": "2026-10-25",
@@ -38,16 +41,20 @@
     "5795478": "2026-10-25",
     "5795476": "2026-10-25",
     "5795479": "2026-10-25",
+    "5795481": "2026-10-25",
     "5795482": "2026-10-25",
+    "5881192": "2026-10-25",
     "5881193": "2026-10-25",
     "5881194": "2026-10-25",
     "5881195": "2026-10-25",
+    "5881196": "2026-10-25",
     "5881189": "2026-10-25",
     "5868094": "2026-10-25",
     "5868100": "2026-10-25",
     "5868091": "2026-10-25",
     "5868099": "2026-10-25",
     "5802962": "2026-10-25",
+    "5802958": "2026-10-25",
     "5802963": "2026-10-25",
     "5749709": "2026-10-25",
     "5749702": "2026-10-25",
@@ -58,10 +65,13 @@
     "5795483": "2026-10-25",
     "5881188": "2026-10-25",
     "5881190": "2026-10-25",
+    "5868097": "2026-10-25",
     "5868092": "2026-10-25",
     "5868096": "2026-10-25",
     "5868098": "2026-10-25",
+    "5802955": "2026-10-25",
     "5802956": "2026-10-25",
+    "5802959": "2026-10-25",
     "5802961": "2026-10-25",
     "5802960": "2026-10-25",
     "5749708": "2026-10-25",
@@ -72,14 +82,15 @@
     "5868095": "2026-10-25",
     "5749706": "2026-10-25",
     "5749707": "2026-10-25",
+    "5868067": "2026-10-25",
     "5795491": "2026-10-25",
     "5881205": "2026-10-25",
     "5868101": "2026-10-25",
     "5802966": "2026-10-25",
     "5749718": "2026-10-25"
   },
-  "updated_at": "2026-10-25T20:05:07.282171+00:00",
-  "checked_this_run": 6,
+  "updated_at": "2026-10-25T20:06:27.446310+00:00",
+  "checked_this_run": 11,
   "errors": [],
   "fixtures": {
     "5795486": {
@@ -404,7 +415,7 @@
           "longName": "Werder Bremen"
         },
         "status": {
-          "utcTime": "2026-10-24T13:30:00.000Z",
+          "utcTime": "2026-10-24T13:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "24.10.2026 15:30:16",
             "secondHalfStarted": "24.10.2026 16:36:18"
@@ -424,13 +435,15 @@
         }
       },
       "date": "2026-10-24",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
       "pending_since": "2026-10-25T19:42:05.047181+00:00",
-      "last_attempt": "2026-10-25T19:44:02.854319+00:00",
-      "attempts": 1,
-      "reason": "unresolved_player_timeline",
-      "next_attempt": ""
+      "last_attempt": "2026-10-25T20:06:27.446310+00:00",
+      "attempts": 2,
+      "reason": "penalties_verified",
+      "next_attempt": "",
+      "verified_at": "2026-10-25T20:06:27.446310+00:00",
+      "penalty_count": 2
     },
     "5881203": {
       "league": "bundesliga",
@@ -1085,7 +1098,7 @@
           "longName": "Brentford"
         },
         "status": {
-          "utcTime": "2026-10-25T14:00:00.000Z",
+          "utcTime": "2026-10-25T14:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "25.10.2026 15:00:42",
             "secondHalfStarted": "25.10.2026 16:03:45"
@@ -1105,13 +1118,15 @@
         }
       },
       "date": "2026-10-25",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
       "pending_since": "2026-10-25T19:42:05.047181+00:00",
-      "last_attempt": "2026-10-25T19:46:20.446729+00:00",
-      "attempts": 1,
-      "reason": "unresolved_player_timeline",
-      "next_attempt": ""
+      "last_attempt": "2026-10-25T20:06:27.446310+00:00",
+      "attempts": 2,
+      "reason": "penalties_verified",
+      "next_attempt": "",
+      "verified_at": "2026-10-25T20:06:27.446310+00:00",
+      "penalty_count": 1
     },
     "5795492": {
       "league": "epl",
@@ -1532,9 +1547,9 @@
           "ongoing": true,
           "scoreStr": "0 - 0",
           "liveTime": {
-            "short": "3‎’‎",
+            "short": "5‎’‎",
             "shortKey": "",
-            "long": "2:49",
+            "long": "4:09",
             "longKey": "",
             "maxTime": 45,
             "basePeriod": 45,
@@ -1711,7 +1726,7 @@
           "longName": "Le Havre"
         },
         "status": {
-          "utcTime": "2026-10-25T16:15:00.000Z",
+          "utcTime": "2026-10-25T16:15:00+00:00",
           "halfs": {
             "firstHalfStarted": "25.10.2026 17:15:21",
             "secondHalfStarted": "25.10.2026 18:17:43"
@@ -1731,13 +1746,15 @@
         }
       },
       "date": "2026-10-25",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
       "pending_since": "2026-10-25T19:42:05.047181+00:00",
-      "last_attempt": "2026-10-25T19:46:20.446729+00:00",
-      "attempts": 1,
-      "reason": "unresolved_player_timeline",
-      "next_attempt": ""
+      "last_attempt": "2026-10-25T20:06:27.446310+00:00",
+      "attempts": 2,
+      "reason": "penalties_verified",
+      "next_attempt": "",
+      "verified_at": "2026-10-25T20:06:27.446310+00:00",
+      "penalty_count": 1
     },
     "5802970": {
       "league": "ligue-1",
@@ -1998,7 +2015,7 @@
           "longName": "Juventus"
         },
         "status": {
-          "utcTime": "2026-10-25T17:05:00+00:00",
+          "utcTime": "2026-10-25T17:05:00.000Z",
           "numberOfHomeRedCards": 1,
           "halfs": {
             "firstHalfStarted": "25.10.2026 18:05:35",
@@ -2058,9 +2075,9 @@
           "ongoing": true,
           "scoreStr": "0 - 1",
           "liveTime": {
-            "short": "20‎’‎",
+            "short": "22‎’‎",
             "shortKey": "",
-            "long": "19:51",
+            "long": "21:11",
             "longKey": "",
             "maxTime": 45,
             "basePeriod": 45,
@@ -2118,7 +2135,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:34:58.045709+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5795476": {
       "league": "epl",
@@ -2167,7 +2185,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:34:58.045709+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5795479": {
       "league": "epl",
@@ -2218,7 +2237,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:34:58.045709+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5795481": {
       "league": "epl",
@@ -2240,7 +2260,7 @@
           "longName": "Ipswich Town"
         },
         "status": {
-          "utcTime": "2026-10-17T14:00:00.000Z",
+          "utcTime": "2026-10-17T14:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "17.10.2026 16:02:09",
             "secondHalfStarted": "17.10.2026 17:05:26"
@@ -2260,12 +2280,15 @@
         }
       },
       "date": "2026-10-17",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
-      "last_attempt": "2026-10-25T19:34:58.045709+00:00",
-      "attempts": 1,
-      "reason": "unresolved_player_timeline",
-      "next_attempt": ""
+      "last_attempt": "2026-10-25T20:06:27.446310+00:00",
+      "attempts": 2,
+      "reason": "penalties_verified",
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00",
+      "verified_at": "2026-10-25T20:06:27.446310+00:00",
+      "penalty_count": 1
     },
     "5795482": {
       "league": "epl",
@@ -2313,7 +2336,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:34:58.045709+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5881192": {
       "league": "bundesliga",
@@ -2334,7 +2358,7 @@
           "longName": "Augsburg"
         },
         "status": {
-          "utcTime": "2026-10-17T13:30:00.000Z",
+          "utcTime": "2026-10-17T13:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "17.10.2026 15:30:31",
             "secondHalfStarted": "17.10.2026 16:43:22"
@@ -2354,12 +2378,15 @@
         }
       },
       "date": "2026-10-17",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
-      "last_attempt": "2026-10-25T19:34:58.045709+00:00",
-      "attempts": 1,
-      "reason": "unresolved_player_timeline",
-      "next_attempt": ""
+      "last_attempt": "2026-10-25T20:06:27.446310+00:00",
+      "attempts": 2,
+      "reason": "penalties_verified",
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00",
+      "verified_at": "2026-10-25T20:06:27.446310+00:00",
+      "penalty_count": 4
     },
     "5881193": {
       "league": "bundesliga",
@@ -2406,7 +2433,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:34:58.045709+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5881194": {
       "league": "bundesliga",
@@ -2455,7 +2483,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:34:58.045709+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5881195": {
       "league": "bundesliga",
@@ -2504,7 +2533,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:34:58.045709+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5881196": {
       "league": "bundesliga",
@@ -2526,7 +2556,7 @@
           "longName": "Paderborn"
         },
         "status": {
-          "utcTime": "2026-10-17T13:30:00.000Z",
+          "utcTime": "2026-10-17T13:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "17.10.2026 15:31:03",
             "secondHalfStarted": "17.10.2026 16:33:38"
@@ -2546,12 +2576,15 @@
         }
       },
       "date": "2026-10-17",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
-      "last_attempt": "2026-10-25T19:34:58.045709+00:00",
-      "attempts": 1,
-      "reason": "unresolved_player_timeline",
-      "next_attempt": ""
+      "last_attempt": "2026-10-25T20:06:27.446310+00:00",
+      "attempts": 2,
+      "reason": "penalties_verified",
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00",
+      "verified_at": "2026-10-25T20:06:27.446310+00:00",
+      "penalty_count": 1
     },
     "5881189": {
       "league": "bundesliga",
@@ -2600,7 +2633,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:37:26.084313+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5868094": {
       "league": "la-liga",
@@ -2647,7 +2681,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:34:58.045709+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5868100": {
       "league": "la-liga",
@@ -2694,7 +2729,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:34:58.045709+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5868091": {
       "league": "la-liga",
@@ -2743,7 +2779,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:34:58.045709+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5868099": {
       "league": "la-liga",
@@ -2790,7 +2827,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:37:26.084313+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5802962": {
       "league": "ligue-1",
@@ -2838,7 +2876,8 @@
       "reason": "penalties_verified",
       "verified_at": "2026-10-25T19:34:58.045709+00:00",
       "penalty_count": 1,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5802958": {
       "league": "ligue-1",
@@ -2858,7 +2897,7 @@
           "longName": "Brest"
         },
         "status": {
-          "utcTime": "2026-10-17T18:45:00.000Z",
+          "utcTime": "2026-10-17T18:45:00+00:00",
           "halfs": {
             "firstHalfStarted": "17.10.2026 20:45:14",
             "secondHalfStarted": "17.10.2026 21:46:48"
@@ -2878,12 +2917,15 @@
         }
       },
       "date": "2026-10-17",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
-      "last_attempt": "2026-10-25T19:37:26.084313+00:00",
-      "attempts": 1,
-      "reason": "unresolved_player_timeline",
-      "next_attempt": ""
+      "last_attempt": "2026-10-25T20:06:27.446310+00:00",
+      "attempts": 2,
+      "reason": "penalties_verified",
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00",
+      "verified_at": "2026-10-25T20:06:27.446310+00:00",
+      "penalty_count": 1
     },
     "5802963": {
       "league": "ligue-1",
@@ -2930,7 +2972,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:37:26.084313+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5749709": {
       "league": "serie-a",
@@ -2977,7 +3020,8 @@
       "reason": "penalties_verified",
       "verified_at": "2026-10-25T19:34:58.045709+00:00",
       "penalty_count": 1,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5749702": {
       "league": "serie-a",
@@ -3024,7 +3068,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:34:58.045709+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5749701": {
       "league": "serie-a",
@@ -3071,7 +3116,8 @@
       "reason": "verified_no_penalty",
       "verified_at": "2026-10-25T19:37:26.084313+00:00",
       "penalty_count": 0,
-      "next_attempt": ""
+      "next_attempt": "",
+      "pending_since": "2026-10-25T20:06:27.446310+00:00"
     },
     "5795475": {
       "league": "epl",
@@ -3384,7 +3430,7 @@
           "longName": "Racing Santander"
         },
         "status": {
-          "utcTime": "2026-10-18T12:00:00.000Z",
+          "utcTime": "2026-10-18T12:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "18.10.2026 14:00:13",
             "secondHalfStarted": "18.10.2026 15:05:22"
@@ -3404,12 +3450,14 @@
         }
       },
       "date": "2026-10-18",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:37:26.084313+00:00",
-      "last_attempt": "2026-10-25T19:37:26.084313+00:00",
-      "attempts": 1,
-      "reason": "unresolved_player_timeline",
-      "next_attempt": ""
+      "last_attempt": "2026-10-25T20:06:27.446310+00:00",
+      "attempts": 2,
+      "reason": "penalties_verified",
+      "next_attempt": "",
+      "verified_at": "2026-10-25T20:06:27.446310+00:00",
+      "penalty_count": 1
     },
     "5868092": {
       "league": "la-liga",
@@ -3570,7 +3618,7 @@
           "longName": "Marseille"
         },
         "status": {
-          "utcTime": "2026-10-18T13:00:00.000Z",
+          "utcTime": "2026-10-18T13:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "18.10.2026 15:00:26",
             "secondHalfStarted": "18.10.2026 16:01:34"
@@ -3590,12 +3638,14 @@
         }
       },
       "date": "2026-10-18",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:37:26.084313+00:00",
-      "last_attempt": "2026-10-25T19:37:26.084313+00:00",
-      "attempts": 1,
-      "reason": "unresolved_player_timeline",
-      "next_attempt": ""
+      "last_attempt": "2026-10-25T20:06:27.446310+00:00",
+      "attempts": 2,
+      "reason": "penalties_verified",
+      "next_attempt": "",
+      "verified_at": "2026-10-25T20:06:27.446310+00:00",
+      "penalty_count": 2
     },
     "5802956": {
       "league": "ligue-1",
@@ -3662,7 +3712,7 @@
           "longName": "Monaco"
         },
         "status": {
-          "utcTime": "2026-10-18T15:15:00.000Z",
+          "utcTime": "2026-10-18T15:15:00+00:00",
           "halfs": {
             "firstHalfStarted": "18.10.2026 17:15:30",
             "secondHalfStarted": "18.10.2026 18:18:29"
@@ -3682,12 +3732,14 @@
         }
       },
       "date": "2026-10-18",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:37:26.084313+00:00",
-      "last_attempt": "2026-10-25T19:37:26.084313+00:00",
-      "attempts": 1,
-      "reason": "unresolved_player_timeline",
-      "next_attempt": ""
+      "last_attempt": "2026-10-25T20:06:27.446310+00:00",
+      "attempts": 2,
+      "reason": "penalties_verified",
+      "next_attempt": "",
+      "verified_at": "2026-10-25T20:06:27.446310+00:00",
+      "penalty_count": 1
     },
     "5802961": {
       "league": "ligue-1",
@@ -4210,13 +4262,15 @@
         }
       },
       "date": "2026-10-21",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:46:20.446729+00:00",
       "pending_since": "2026-10-25T19:46:20.446729+00:00",
-      "last_attempt": "2026-10-25T19:46:20.446729+00:00",
-      "attempts": 1,
-      "reason": "unresolved_player_timeline",
-      "next_attempt": ""
+      "last_attempt": "2026-10-25T20:06:27.446310+00:00",
+      "attempts": 2,
+      "reason": "penalties_verified",
+      "next_attempt": "",
+      "verified_at": "2026-10-25T20:06:27.446310+00:00",
+      "penalty_count": 1
     },
     "5795491": {
       "league": "epl",
@@ -4466,7 +4520,7 @@
   "discovery": {
     "20261025": {
       "ok": true,
-      "checked_at": "2026-10-25T20:05:07.282171+00:00",
+      "checked_at": "2026-10-25T20:06:27.446310+00:00",
       "expected": 22,
       "match_ids": [
         "5749710",
@@ -4496,7 +4550,7 @@
     },
     "20261024": {
       "ok": true,
-      "checked_at": "2026-10-25T20:05:07.282171+00:00",
+      "checked_at": "2026-10-25T20:06:27.446310+00:00",
       "expected": 19,
       "match_ids": [
         "5749711",
@@ -4523,8 +4577,32 @@
     },
     "20261017": {
       "ok": true,
-      "checked_at": "2026-10-25T19:34:58.045709+00:00",
-      "expected": 21
+      "checked_at": "2026-10-25T20:06:27.446310+00:00",
+      "expected": 21,
+      "match_ids": [
+        "5749701",
+        "5749702",
+        "5749709",
+        "5795476",
+        "5795478",
+        "5795479",
+        "5795481",
+        "5795482",
+        "5802958",
+        "5802962",
+        "5802963",
+        "5868091",
+        "5868094",
+        "5868099",
+        "5868100",
+        "5881189",
+        "5881192",
+        "5881193",
+        "5881194",
+        "5881195",
+        "5881196"
+      ],
+      "missing_known_ids": []
     },
     "20261018": {
       "ok": true,
@@ -4582,11 +4660,11 @@
   },
   "coverage": {
     "expected": 91,
-    "verified": 77,
-    "pending": 14,
+    "verified": 88,
+    "pending": 3,
     "reverify": 0,
     "deferred": 0,
-    "overdue": 9,
+    "overdue": 0,
     "stalled": 0,
     "excluded": 0,
     "failed_discovery_days": []

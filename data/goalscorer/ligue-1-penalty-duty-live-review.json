@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-25T20:05:07.282171+00:00",
+  "generated_at": "2026-10-25T20:06:27.446310+00:00",
   "league": "ligue-1",
   "row_count": 9,
   "rows": [
@@ -35,8 +35,8 @@
       "context_source_path": "data/goalscorer/ligue-1/penalty-duty-context.json",
       "actual_taker_match_status": "Yes - bench, on 61'",
       "primary_on_pitch_at_penalty": "Yes - started, off 84'",
-      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
-      "tertiary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "secondary_on_pitch_at_penalty": "Not assigned - hierarchy slot empty",
+      "tertiary_on_pitch_at_penalty": "Not assigned - hierarchy slot empty",
       "actual_taker_on_pitch_at_penalty": "Yes - bench, on 61'",
       "event_evidence": [
         {
@@ -44,7 +44,7 @@
           "source_event_id": "2988052191",
           "match_id": "5802968",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802968",
-          "observed_at": "2026-10-25T19:46:26+00:00",
+          "observed_at": "2026-10-25T20:06:35+00:00",
           "event_date": "2026-10-25",
           "season": "2026/27",
           "team": "Le Havre",
@@ -54,13 +54,15 @@
           "on_pitch_proof": {
             "player": "Rayan Fofana",
             "minute": 77,
+            "added_time": 0,
             "method": "completed_lineup_timeline",
             "player_id": 1586559,
             "bucket": "starters",
             "substitutions": [
               {
                 "type": "subout",
-                "time": 84
+                "time": 84,
+                "added_time": 0
               }
             ],
             "events": [],
@@ -363,7 +365,7 @@
       "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
       "actual_taker_match_status": "Yes - started",
       "primary_on_pitch_at_penalty": "No - bench",
-      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "secondary_on_pitch_at_penalty": "No - absent from matchday squad",
       "tertiary_on_pitch_at_penalty": "Yes - started",
       "actual_taker_on_pitch_at_penalty": "Yes - started",
       "event_evidence": [
@@ -371,8 +373,8 @@
           "id": "fotmob|ligue-1|5802959|2984086897",
           "source_event_id": "2984086897",
           "match_id": "5802959",
-          "source_url": "https://www.fotmob.com/matches/lorient-vs-monaco/2u3coy#5802959",
-          "observed_at": "2026-10-25T19:37:53+00:00",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802959",
+          "observed_at": "2026-10-25T20:06:33+00:00",
           "event_date": "2026-10-18",
           "season": "2026/27",
           "team": "Lorient",
@@ -382,6 +384,7 @@
           "on_pitch_proof": {
             "player": "Aiyegun Tosin",
             "minute": 61,
+            "added_time": 0,
             "method": "completed_lineup_timeline",
             "player_id": 841395,
             "bucket": "subs",
@@ -430,15 +433,15 @@
       "actual_taker_match_status": "Yes - started",
       "primary_on_pitch_at_penalty": "Yes - started",
       "secondary_on_pitch_at_penalty": "Yes - started, off 80'",
-      "tertiary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "tertiary_on_pitch_at_penalty": "No - absent from matchday squad",
       "actual_taker_on_pitch_at_penalty": "Yes - started",
       "event_evidence": [
         {
           "id": "fotmob|ligue-1|5802955|2983908795",
           "source_event_id": "2983908795",
           "match_id": "5802955",
-          "source_url": "https://www.fotmob.com/matches/angers-vs-marseille/2b5t3x#5802955",
-          "observed_at": "2026-10-25T19:37:47+00:00",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802955",
+          "observed_at": "2026-10-25T20:06:33+00:00",
           "event_date": "2026-10-18",
           "season": "2026/27",
           "team": "Marseille",
@@ -448,6 +451,7 @@
           "on_pitch_proof": {
             "player": "Amine Gouiri",
             "minute": 59,
+            "added_time": 0,
             "method": "completed_lineup_timeline",
             "player_id": 844437,
             "bucket": "starters",
@@ -503,8 +507,8 @@
           "id": "fotmob|ligue-1|5802955|2983932663",
           "source_event_id": "2983932663",
           "match_id": "5802955",
-          "source_url": "https://www.fotmob.com/matches/angers-vs-marseille/2b5t3x#5802955",
-          "observed_at": "2026-10-25T19:37:47+00:00",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802955",
+          "observed_at": "2026-10-25T20:06:33+00:00",
           "event_date": "2026-10-18",
           "season": "2026/27",
           "team": "Angers",
@@ -514,13 +518,15 @@
           "on_pitch_proof": {
             "player": "Amine El Ouazzani",
             "minute": 75,
+            "added_time": 0,
             "method": "completed_lineup_timeline",
             "player_id": 1123505,
             "bucket": "starters",
             "substitutions": [
               {
                 "type": "subout",
-                "time": 89
+                "time": 89,
+                "added_time": 0
               }
             ],
             "events": [],
@@ -638,15 +644,15 @@
       "actual_taker_match_status": "Yes - started",
       "primary_on_pitch_at_penalty": "Yes - started",
       "secondary_on_pitch_at_penalty": "No - bench, on 66'",
-      "tertiary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "tertiary_on_pitch_at_penalty": "No - absent from matchday squad",
       "actual_taker_on_pitch_at_penalty": "Yes - started",
       "event_evidence": [
         {
           "id": "fotmob|ligue-1|5802958|2983285981",
           "source_event_id": "2983285981",
           "match_id": "5802958",
-          "source_url": "https://www.fotmob.com/matches/brest-vs-lille/2fo2ub#5802958",
-          "observed_at": "2026-10-25T19:37:33+00:00",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802958",
+          "observed_at": "2026-10-25T20:06:32+00:00",
           "event_date": "2026-10-17",
           "season": "2026/27",
           "team": "Lille",
@@ -656,6 +662,7 @@
           "on_pitch_proof": {
             "player": "Olivier Giroud",
             "minute": 64,
+            "added_time": 0,
             "method": "completed_lineup_timeline",
             "player_id": 46469,
             "bucket": "starters",
@@ -691,7 +698,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261023"
+      "20261025"
     ],
     "matches_checked": 1
   }

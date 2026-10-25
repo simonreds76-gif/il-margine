@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-25T20:05:07.282171+00:00",
+  "generated_at": "2026-10-25T20:06:27.446310+00:00",
   "league": "epl",
   "row_count": 2,
   "rows": [
@@ -36,7 +36,7 @@
       "actual_taker_match_status": "Yes - started, off 86'",
       "primary_on_pitch_at_penalty": "No - bench",
       "secondary_on_pitch_at_penalty": "Yes - started, off 86'",
-      "tertiary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "tertiary_on_pitch_at_penalty": "No - absent from matchday squad",
       "actual_taker_on_pitch_at_penalty": "Yes - started, off 86'",
       "event_evidence": [
         {
@@ -44,7 +44,7 @@
           "source_event_id": "2987785209",
           "match_id": "5795490",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5795490",
-          "observed_at": "2026-10-25T19:46:23+00:00",
+          "observed_at": "2026-10-25T20:06:34+00:00",
           "event_date": "2026-10-25",
           "season": "2026/27",
           "team": "Hull City",
@@ -54,6 +54,7 @@
           "on_pitch_proof": {
             "player": "Matt Crooks",
             "minute": 24,
+            "added_time": 0,
             "method": "completed_lineup_timeline",
             "player_id": 280507,
             "bucket": "subs",
@@ -100,8 +101,8 @@
       "context_generated_at": "2026-09-02",
       "context_source_path": "data/goalscorer/epl-penalty-takers.json",
       "actual_taker_match_status": "Yes - bench, on 78'",
-      "primary_on_pitch_at_penalty": "Unknown - ambiguous substitution order",
-      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "primary_on_pitch_at_penalty": "No - bench, on 90+1'",
+      "secondary_on_pitch_at_penalty": "No - bench",
       "tertiary_on_pitch_at_penalty": "No - started, off 78'",
       "actual_taker_on_pitch_at_penalty": "Yes - bench, on 78'",
       "event_evidence": [
@@ -109,28 +110,30 @@
           "id": "fotmob|epl|5795481|2983018805",
           "source_event_id": "2983018805",
           "match_id": "5795481",
-          "source_url": "https://www.fotmob.com/matches/manchester-city-vs-ipswich-town/2sc4e3#5795481",
-          "observed_at": "2026-10-25T19:35:14+00:00",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5795481",
+          "observed_at": "2026-10-25T20:06:31+00:00",
           "event_date": "2026-10-17",
           "season": "2026/27",
           "team": "Ipswich Town",
           "taker": "Zian Flemming",
           "primary": "Jack Clarke",
-          "primary_on_pitch": null,
+          "primary_on_pitch": false,
           "on_pitch_proof": {
             "player": "Jack Clarke",
             "minute": 90,
+            "added_time": 0,
             "method": "completed_lineup_timeline",
             "player_id": 914402,
             "bucket": "subs",
             "substitutions": [
               {
                 "type": "subin",
-                "time": 90
+                "time": 90,
+                "added_time": 1
               }
             ],
             "events": [],
-            "reason": "ambiguous_substitution_order"
+            "reason": "not_on_pitch"
           },
           "minute": 90,
           "penalty_kind": "in_match",
@@ -160,7 +163,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261023"
+      "20261025"
     ],
     "matches_checked": 1
   }
