@@ -249,8 +249,10 @@ def recover(root, calendar, now, fetch, online=True, max_per_run=MAX_PER_RUN, ma
                 recovered.append(pid)
             # Retain compact exact source fields, not every season's profile statistics.
             filename = pid+'-sky' if secondary else pid
-            save(data/'height-profile-evidence'/f'{filename}.json', dict(url=url, sha256=digest,
-                 observed_at=now.isoformat(), fields=evidence))
+            evidence_path = data/'height-profile-evidence.json.gz'
+            retained = read(evidence_path, {})
+            retained[filename] = dict(url=url, sha256=digest, observed_at=now.isoformat(), fields=evidence)
+            save(evidence_path, retained)
             # An official XI may arrive less than an hour before kickoff. Try
             # its mapped fallback in THIS cycle, within the same request cap.
             if not secondary and sky_url(registry, pid, entry):

@@ -109,6 +109,9 @@ class HeightRecoveryTests(unittest.TestCase):
         recover(self.root,{},NOW,primary,secondary_fetch=secondary)
         self.assertEqual(primary.call_count,1)
         self.assertEqual(secondary.call_count,1)
+        evidence=read(self.data/'height-profile-evidence.json.gz')
+        self.assertEqual(evidence['123-sky']['fields']['birthDate'],'2002-06-22')
+        self.assertEqual(evidence['123']['fields']['id'],123)
 
     def test_new_starter_prioritised_and_stale_lineups_rejected(self):
         row=dict(id='7',date='2026-10-25T13:00:00Z',league='League',season='2026/2027',home='A',away='B',
