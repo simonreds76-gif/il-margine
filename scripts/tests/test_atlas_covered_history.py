@@ -62,12 +62,22 @@ class CoveredHistoryTests(unittest.TestCase):
         for f in expanded['fixtures']:
             self.assertNotEqual(f['league'], 'championship')
             self.assertEqual(f['managers'], original[f['id']]['managers'])
-        match = next(f for f in expanded['fixtures'] if f['id']=='fm-5795494')
-        self.assertEqual(match['clubs']['results'], [2,4,2])
-        self.assertEqual(match['clubs']['count'], 8)
-        self.assertEqual([o['profit'] for o in match['clubs']['outcomes']], [.31,7.73,-2.81])
-        self.assertEqual(match['managers']['count'], 2)
-        self.assertEqual(original[match['id']]['clubs']['results'], [1,1,0])
+        # A rolling upcoming board eventually drops this fixture. Pin the golden
+        # historical example to its evidence date, not its presence in that board.
+        football_release = extension.read(self.root / 'src/data/football-atlas-release.json')
+        football = extension.read(self.root / 'public' / football_release['indexUrl'].lstrip('/'))
+        top_five = [{'id':r[0], 'date':r[1], 'league':football['leagues'][r[2]],
+                     'home':football['teams'][r[4]], 'away':football['teams'][r[5]],
+                     'hg':r[6], 'ag':r[7], 'odds':r[8:11] if r[8] else None,
+                     'basis':extension.BASES.get(r[11])} for r in football['fixtures']]
+        def pair(rows):
+            return [orient(r, r['home']=='Sunderland') for r in rows
+                    if {r['home'],r['away']} == {'Sunderland','Leeds United'} and r['date'] < '2026-10-25']
+        combined = summarize(pair(top_five + self.rows))
+        self.assertEqual(combined['results'], [2,4,2])
+        self.assertEqual(combined['count'], 8)
+        self.assertEqual([o['profit'] for o in combined['outcomes']], [.31,7.73,-2.81])
+        self.assertEqual(summarize(pair(top_five))['results'], [1,1,0])
 
     def test_future_excluded_and_orientation(self):
         row = copy.deepcopy(self.rows[0])
