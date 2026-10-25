@@ -16,7 +16,7 @@ import { readWorldCupData, worldCupTeamUrl, WORLD_CUP_ARCHIVE_DATE, WORLD_CUP_PE
 import { fetchSeoTipSitemapState } from "@/lib/tip-seo-server";
 import returnAtlasRelease from "@/data/return-atlas-release.json";
 import footballAtlasRelease from "@/data/football-atlas-release.json";
-import { penaltyNews } from "@/lib/penalty-news";
+import { penaltyNews } from "@/lib/penalty-news-data";
 
 const STATIC_LAST_MODIFIED = new Date("2026-05-12T00:00:00Z");
 const RESOURCES_LAST_MODIFIED = new Date("2026-10-07T12:00:00Z");

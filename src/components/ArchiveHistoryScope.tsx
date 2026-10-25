@@ -35,7 +35,7 @@ export default function ArchiveHistoryScope({ covered, choose, available, manage
       <strong>Top five + Championship · since 2012/13</strong>
       <p>Older Championship meetings are included in club H2H and returns. Upcoming fixtures and manager records stay top-five only.</p>
       <p>{release.matches.toLocaleString('en-GB')} Championship results · {release.priced.toLocaleString('en-GB')} with prices · through {release.through}.</p>
-      <details><summary>What is included?</summary><p>Regular-season league matches only. Cups, playoffs, Europe and other divisions are excluded, so this is not an all-time H2H. Results without prices count as meetings but are excluded from ROI. The original archive remains available using the other button.</p><p>Historical source: <a href="https://football-data.co.uk/data.php" target="_blank" rel="noreferrer">Football-Data</a>. Recent additions use independently checked results and recorded pre-match prices. Prices retain their bookmaker and snapshot basis.</p></details>
+      <details><summary>What is included?</summary><p>Regular-season league matches only. Cups, playoffs, Europe and other divisions are excluded, so this is not an all-time H2H. Results without prices count as meetings but are excluded from ROI. The original archive remains available using the other button.</p><p>Historical results are checked against recorded pre-match prices. Prices retain their bookmaker and snapshot basis.</p></details>
     </div> : <FootballArchiveCoverage managers={managers} />}
     {!available && <p className={styles.detail}>The wider history is awaiting a matching archive refresh. The original record remains available.</p>}
   </section>;

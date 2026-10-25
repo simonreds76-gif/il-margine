@@ -183,7 +183,7 @@ def refresh(state, *, offline=False, now=None, extension_state=None):
                     for name, club in competition['clubs'].items() if club.get('fotmob')}
     extension = {'columns': COLUMNS, 'rows': [[r[k] for k in COLUMNS] for r in rows], 'crests': extra_crests,
                  'managerColumns': managers['columns'], 'managerRows': [],
-                 'sources': sources, 'scope': 'historical-clubs-only',
+                 'scope': 'historical-clubs-only',
                  'provenance': {'seedRows': len(seed['rows']), 'independentNewRows': len(new_rows)}, 'pipeline': pipeline}
     clubs = [{'id': r[0], 'date': r[1], 'league': football['leagues'][r[2]], 'season': football['seasons'][r[3]],
               'home': football['teams'][r[4]], 'away': football['teams'][r[5]], 'hg': r[6], 'ag': r[7],
@@ -225,7 +225,7 @@ def refresh(state, *, offline=False, now=None, extension_state=None):
                 'managerVersion': manager_release['version'], 'historyUrl': '/' + data_path.relative_to('public').as_posix(),
                 'boardUrl': '/' + board_path.relative_to('public').as_posix(), 'matches': len(rows),
                 'priced': sum(bool(r['odds']) for r in rows), 'verifiedManagerMatches': 0, 'internalVerifiedManagerMatches': len(verified),
-                'through': max(r['date'] for r in rows), 'sources': sources, 'pipeline': pipeline,
+                'through': max(r['date'] for r in rows), 'pipeline': pipeline,
                 'additionalClubMeetings': {f['id']: f['additionalClubMeetings'] for f in cards if f['additionalClubMeetings']}}
     target = ROOT / 'src/data/covered-leagues-release.json'
     previous = read(target) if target.exists() else None
@@ -240,7 +240,7 @@ def refresh(state, *, offline=False, now=None, extension_state=None):
             suffix = path.stem.rsplit('-', 1)[-1]
             if len(suffix) == 12 and all(c in '0123456789abcdef' for c in suffix) and suffix not in keep:
                 path.unlink(); paths.append(path.relative_to(ROOT).as_posix())
-    report = {'state': 'ready', 'version': version, 'matches': len(rows), 'priced': manifest['priced'],
+    report = {'state': 'ready', 'version': version, 'sources': sources, 'matches': len(rows), 'priced': manifest['priced'],
               'verifiedManagerMatches': 0, 'internalVerifiedManagerMatches': len(verified), 'unverifiedManagerMatches': len(rows)-len(verified)}
     atomic(state / 'report.json', report)
     return {'paths': paths, 'changed': previous != manifest, 'report': report}

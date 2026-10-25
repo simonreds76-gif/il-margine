@@ -1838,7 +1838,7 @@ export default function FairOddsPage() {
         {!loading && !error && matches.length === 0 && (
           <div className="text-center py-24 text-slate-500">
             <p className="text-lg mb-2">No matches for today</p>
-            <p className="text-sm">Run <code className="text-slate-400 bg-slate-800/60 px-2 py-0.5 rounded font-mono text-xs">python scripts/oncourt-compute-fair-odds.py</code> to compute fair odds, then refresh.</p>
+            <p className="text-sm">Fair prices are not available yet. Check again after the next forecast refresh.</p>
           </div>
         )}
 
@@ -1919,7 +1919,7 @@ export default function FairOddsPage() {
               Pinnacle only ({data.pinnacle_only.length} matches)
             </h2>
             <p className="text-[11px] text-slate-500 mb-3">
-              These matches are in Pinnacle&apos;s snapshot but not in our fair-odds data (e.g. not in OnCourt today, or tournament not synced). Pinnacle odds and O/U only; no model value.
+              These matches are in Pinnacle&apos;s snapshot but not in our fair-odds data (for example, the tournament has not synced yet). Pinnacle odds and O/U only; no model value.
             </p>
             <div className="overflow-x-auto">
               <table className="w-full text-sm min-w-[400px]">

@@ -41,7 +41,7 @@ export function PenaltyNewsCard({ article, detail = false }: { article: PenaltyA
     <div className={styles.cardActions}><Link className={styles.clubLink} href={a.clubUrl} prefetch={false}><NewsPicture src={a.crest} name={a.club} crest /><span>{a.club} penalty takers</span><span aria-hidden="true">↗</span></Link>
       {!detail && <Link className={styles.readLink} href={`/penalty-news/${a.slug}`} prefetch={false} aria-label={`Open ${a.player} penalty report`}>Full report <span aria-hidden="true">→</span></Link>}
     </div>
-    {detail && <div className={styles.source}><a href={a.sourceUrl} target="_blank" rel="noreferrer">Match and commentary on FotMob ↗</a><span>Published {newsDate(a.publishedAt)} · Match played {newsDate(a.date)}</span>{a.updatedAt !== a.publishedAt && <span>Updated {newsDate(a.updatedAt)}</span>}</div>}
+    {detail && <div className={styles.source}><span>Published {newsDate(a.publishedAt)} · Match played {newsDate(a.date)}</span>{a.updatedAt !== a.publishedAt && <span>Updated {newsDate(a.updatedAt)}</span>}</div>}
   </article>;
 }
 

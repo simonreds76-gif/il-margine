@@ -1,5 +1,3 @@
-import news from "@/data/penalty-news.json";
-
 export type PenaltyArticle = {
   id: string; slug: string; matchId: string; eventId: string; date: string; kickoff: string;
   league: string; leagueLabel: string; round: string; player: string; playerId: number;
@@ -7,12 +5,10 @@ export type PenaltyArticle = {
   home: string; away: string; homeScore: number; awayScore: number; minute: string;
   outcome: string; title: string; sentences: string[]; cause: string | null;
   paragraphs: string[];
-  incident: { type: string; wonBy: string | null; concededBy: string | null; sentence: string; evidenceIds: string[]; method: string } | null;
   stats: { minutes: number | null; goals: number | null; shots: number | null; onTarget: number | null; chances: number | null };
   keeper: string | null; moment: { before: number[]; after: number[] } | null;
-  sourceUrl: string; sourceHash: string; publishedAt: string; updatedAt: string;
+  publishedAt: string; updatedAt: string;
 };
-export const penaltyNews = news as { schemaVersion: number; generatedAt: string; coverageStart: string; checkedThrough: string; matchesChecked: number; articles: PenaltyArticle[] };
 export const newsLeagues = [
   { key: "epl", label: "Premier League" }, { key: "serie-a", label: "Serie A" },
   { key: "la-liga", label: "La Liga" }, { key: "bundesliga", label: "Bundesliga" }, { key: "ligue-1", label: "Ligue 1" },

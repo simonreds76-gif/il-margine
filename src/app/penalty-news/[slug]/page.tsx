@@ -5,7 +5,8 @@ import { notFound } from "next/navigation";
 import PageHeading from "@/components/PageHeading";
 import Footer from "@/components/Footer";
 import { PenaltyNewsCard } from "@/components/PenaltyNewsFeed";
-import { penaltyNews, newsDate } from "@/lib/penalty-news";
+import { newsDate } from "@/lib/penalty-news";
+import { penaltyNews } from "@/lib/penalty-news-data";
 import styles from "@/components/PenaltyNews.module.css";
 
 export const dynamic = "force-static";
