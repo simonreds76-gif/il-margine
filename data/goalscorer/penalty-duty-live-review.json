@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-25T13:21:48Z",
+  "generated_at": "2026-10-25T18:56:02.349437+00:00",
   "league": "serie-a",
   "row_count": 1,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2986745901",
           "match_id": "5749711",
           "source_url": "https://www.fotmob.com/matches/cagliari-vs-bologna/2sn5ak#5749711",
-          "observed_at": "2026-10-25T13:21:40+00:00",
+          "observed_at": "2026-10-25T18:56:04+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Bologna",
@@ -84,5 +84,14 @@
       "20261025"
     ],
     "matches_checked": 8
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261024",
+      "20261025"
+    ],
+    "matches_checked": 3
   }
 }

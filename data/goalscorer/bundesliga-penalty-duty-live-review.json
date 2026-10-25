@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-25T13:21:56Z",
+  "generated_at": "2026-10-25T18:56:02.349437+00:00",
   "league": "bundesliga",
   "row_count": 1,
   "rows": [
@@ -35,7 +35,7 @@
       "context_source_path": "data/goalscorer/bundesliga-penalty-takers.json",
       "actual_taker_match_status": "Yes - started, off 81'",
       "primary_on_pitch_at_penalty": "Yes - started, off 81'",
-      "secondary_on_pitch_at_penalty": "No - unavailable in match squad",
+      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
       "tertiary_on_pitch_at_penalty": "No - bench, on 81'",
       "actual_taker_on_pitch_at_penalty": "Yes - started, off 81'",
       "event_evidence": [
@@ -44,7 +44,7 @@
           "source_event_id": "2986611147",
           "match_id": "5881202",
           "source_url": "https://www.fotmob.com/matches/werder-bremen-vs-mainz-05/2v0rqw#5881202",
-          "observed_at": "2026-10-25T13:21:55+00:00",
+          "observed_at": "2026-10-25T18:56:20+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Werder Bremen",
@@ -78,7 +78,7 @@
           "source_event_id": "2986634487",
           "match_id": "5881202",
           "source_url": "https://www.fotmob.com/matches/werder-bremen-vs-mainz-05/2v0rqw#5881202",
-          "observed_at": "2026-10-25T13:21:55+00:00",
+          "observed_at": "2026-10-25T18:56:20+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Werder Bremen",
@@ -123,5 +123,14 @@
       "20261025"
     ],
     "matches_checked": 7
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261024",
+      "20261025"
+    ],
+    "matches_checked": 6
   }
 }
