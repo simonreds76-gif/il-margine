@@ -36,17 +36,18 @@ function Team({ club, away = false }: { club: Club; away?: boolean }) {
 
 function RecordRow({ kind, record, unavailable, stale, paired, names }: { kind: 'Managers' | 'Clubs'; record: RecordSummary; unavailable: boolean; stale: boolean; paired: number[]; names: string[] }) {
   const meetings = record.meetings ?? record.count;
+  const shortHistory = !unavailable && record.count > 0 && record.count < 3;
   const returns = record.outcomes.map((outcome, i) => <span className={`af-return ${outcome.positive && !stale && !unavailable ? 'af-positive' : ''} ${paired.includes(i) ? 'af-paired' : ''} ${record.count < 3 ? 'af-short' : ''} ${Math.abs(outcome.roi ?? 0) >= 1000 ? 'af-long' : ''}`} key={i}>
     <strong>{unavailable || outcome.roi === null ? '—' : `${number(outcome.roi)}%`}<small> ROI</small></strong>
     <span>{unavailable ? 'Not matched' : !record.count ? 'No prices' : `${number(outcome.profit, 2)}u`}</span>
     {paired.includes(i) && <span className="af-return-alignment">Both positive</span>}
   </span>);
-  return <section className="af-h2h-record" aria-label={`${kind} head to head`}>
+  return <section className={`af-h2h-record${shortHistory ? ' af-h2h-short' : ''}`} aria-label={`${kind} head to head`}>
     <div className="af-h2h-heading"><Icon name={kind === 'Managers' ? 'manager' : 'club'} /><h3>{kind === 'Managers' ? 'Manager' : 'Club'} head to head</h3>
       {!unavailable && record.count > 0 && record.count < 6 && <small>{record.count < 3 ? 'Short history' : 'Few meetings'}</small>}
     </div>
-    <H2HRecord compact results={unavailable ? null : record.results ?? null} meetings={unavailable ? null : meetings} names={names} details={returns} />
-    {!unavailable && meetings > 0 && <p className="af-h2h-coverage">ROI uses {record.count} priced {record.count === 1 ? 'meeting' : 'meetings'}{record.firstDate && record.lastDate ? ` · ${record.firstDate.slice(0, 4)}${record.firstDate.slice(0, 4) === record.lastDate.slice(0, 4) ? '' : ` to ${record.lastDate.slice(0, 4)}`}` : ''}</p>}
+    <H2HRecord compact showCoverage={false} results={unavailable ? null : record.results ?? null} meetings={unavailable ? null : meetings} names={names} details={returns} />
+    {!unavailable && meetings > 0 && <p className="af-h2h-coverage"><span>{meetings} {meetings === 1 ? 'meeting' : 'meetings'} · {record.count} priced</span>{record.firstDate && record.lastDate && <span> · {record.firstDate.slice(0, 4)}{record.firstDate.slice(0, 4) === record.lastDate.slice(0, 4) ? '' : ` to ${record.lastDate.slice(0, 4)}`}</span>}</p>}
   </section>;
 }
 

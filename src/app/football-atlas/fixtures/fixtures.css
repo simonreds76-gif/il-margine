@@ -125,3 +125,10 @@
 .af-refine > summary > b { font-size: 19px; font-weight: 400; }
 .af-refine[open] > summary > b { transform: rotate(45deg); }
 .af-refine[open] > summary { border-bottom: 1px solid #2b3c46; }
+
+/* Keep short priced histories distinct without obscuring their results. */
+.atlas-fixtures .af-h2h-short dl > div { border-style: dashed; border-color: #63717b; background: transparent; }
+.atlas-fixtures .af-h2h-short .af-return { background: #121e26; }
+.atlas-fixtures .af-h2h-short .af-h2h-heading > small { padding: 3px 6px; border: 1px solid #655735; border-radius: 5px; background: #302b1d; color: #e0c78e; white-space: nowrap; }
+.atlas-fixtures .af-h2h-coverage { margin-top: 7px; }
+.atlas-fixtures .af-h2h-coverage > span { display: inline-block; }
