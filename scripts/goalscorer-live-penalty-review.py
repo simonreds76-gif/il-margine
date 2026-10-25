@@ -478,6 +478,24 @@ def _load_hierarchy_map(path: Path, team_key_func) -> Dict[str, dict]:
     return loaded
 
 
+def _saved_hierarchy_map(path: Path, team_key_func) -> dict:
+    """Reuse dated, exact-fixture evidence already persisted in the review JSON."""
+    saved, conflicts = {}, set()
+    for row in _load_json(path).get("rows", []):
+        ids = {str(e.get("match_id") or "") for e in row.get("event_evidence", [])}
+        if len(ids) != 1 or not all(ids) or not row.get("context_generated_at"):
+            continue
+        order = {slot: str(row.get(slot + "_pre_match") or "") for slot in ("primary", "secondary", "tertiary")}
+        if not any(order.values()):
+            continue
+        key = (ids.pop(), str(row.get("date") or ""), team_key_func(row.get("team", "")), team_key_func(row.get("opponent", "")))
+        previous = saved.get(key)
+        if previous and any(previous[slot] != order[slot] for slot in order):
+            conflicts.add(key)
+        saved[key] = {**order, "_generated_at": row["context_generated_at"], "_source_path": row.get("context_source_path") or _display_path(path)}
+    return {key: order for key, order in saved.items() if key not in conflicts}
+
+
 def _apply_hierarchy_fallback(context: dict, fallback: dict | None, as_of: str = "") -> dict:
     merged = dict(context)
     if not fallback:
@@ -490,9 +508,9 @@ def _apply_hierarchy_fallback(context: dict, fallback: dict | None, as_of: str =
                 fallback = approved
         except (ValueError, TypeError):
             pass
-    if as_of and fallback.get("_generated_at"):
+    if as_of:
         try:
-            stamp = str(fallback["_generated_at"])
+            stamp = str(fallback.get("_generated_at") or "")
             kickoff = datetime.fromisoformat(as_of.replace("Z", "+00:00"))
             # A date-only verification is not known to precede a same-day kickoff.
             usable = (stamp < kickoff.date().isoformat() if len(stamp) == 10 else
@@ -500,7 +518,8 @@ def _apply_hierarchy_fallback(context: dict, fallback: dict | None, as_of: str =
         except (ValueError, TypeError):
             usable = False
         if not usable:
-            merged["_hierarchy_unrecorded"] = True
+            if not any(merged.get(slot) for slot in ("primary", "secondary", "tertiary")):
+                merged["_hierarchy_unrecorded"] = True
             return merged
     for field in ("primary", "secondary", "tertiary"):
         if not str(merged.get(field) or "").strip():
@@ -591,6 +610,7 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str], diagnos
     penalty_role_for_player = penalty_utils["penalty_role_for_player"]
 
     context_map = _load_context_map([config["context"], config["context_history"]])
+    saved_hierarchies = _saved_hierarchy_map(config["output_json"], team_key_func)
     hierarchy_map = _load_hierarchy_map(config["hierarchy"], team_key_func)
     season = _load_json(config["hierarchy"]).get("_meta", {}).get("season", {}).get("label", "")
 
@@ -695,7 +715,12 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str], diagnos
                 taker_key = (match_date, team_key, opponent_key, player_name)
 
                 distinct_takers_by_team_match[team_match_key].add(player_name)
-                proof_context = _apply_hierarchy_fallback(dict(context_map.get((match_date, team_key, opponent_key)) or {}), hierarchy_map.get(team_key), str(general.get("matchTimeUTCDate") or ""))
+                kickoff = str(general.get("matchTimeUTCDate") or "")
+                context_key = (match_date, team_key, opponent_key)
+                saved_order = saved_hierarchies.get((str(match_id), *context_key))
+                retained = _apply_hierarchy_fallback(dict(context_map.get(context_key) or {}), saved_order, kickoff)
+                proof_context = _apply_hierarchy_fallback(retained, hierarchy_map.get(team_key), kickoff)
+                context_map[context_key] = proof_context
                 primary = str(proof_context.get("primary") or "")
                 lineup = content.get("lineup")
                 team_lineup = (lineup if isinstance(lineup, dict) else {}).get("homeTeam" if is_home else "awayTeam") or {}

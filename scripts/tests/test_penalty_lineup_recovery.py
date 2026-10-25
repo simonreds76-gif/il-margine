@@ -65,7 +65,7 @@ class RecoveryTests(unittest.TestCase):
         self.assertEqual(len(a.new_actionable_rows([row],[])),1)
 
     def test_admin_order_applies_only_when_known_before_match(self):
-        old={'primary':'Old Player','secondary':'','tertiary':'','_approved_override':{'primary':'New Player','secondary':'','tertiary':'','_generated_at':'2026-10-18T09:05:00Z'}}
+        old={'primary':'Old Player','secondary':'','tertiary':'','_generated_at':'2026-10-16','_approved_override':{'primary':'New Player','secondary':'','tertiary':'','_generated_at':'2026-10-18T09:05:00Z'}}
         self.assertEqual(r._apply_hierarchy_fallback({},old,'2026-10-17T13:30:00Z')['primary'],'Old Player')
         self.assertEqual(r._apply_hierarchy_fallback({},old,'2026-10-19T13:30:00Z')['primary'],'New Player')
         self.assertEqual(r._apply_hierarchy_fallback({'primary':'Captured Player'},old,'2026-10-19T13:30:00Z')['primary'],'Captured Player')
@@ -75,11 +75,23 @@ class RecoveryTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'another fixture'):r._fetch_match_payload(1)
 
     def test_newer_public_file_is_not_backdated_into_missing_context(self):
-        for at in ('2026-10-18','2026-10-17','2026-10-17T15:00:00Z','2026-10-17T12:00:00'):
+        for at in ('','2026-10-18','2026-10-17','2026-10-17T15:00:00Z','2026-10-17T12:00:00'):
             row=r._apply_hierarchy_fallback({}, {'primary':'New Player','_generated_at':at},'2026-10-17T13:30:00Z')
             self.assertNotIn('primary',row)
             self.assertTrue(row['_hierarchy_unrecorded'])
         row=r._apply_hierarchy_fallback({}, {'primary':'Old Player','_generated_at':'2026-10-16'},'2026-10-17T13:30:00Z')
         self.assertEqual(row['primary'],'Old Player')
+
+    def test_saved_exact_fixture_order_survives_later_editorial_change(self):
+        row={'date':'2026-10-17','team':'Club','opponent':'Opponent','primary_pre_match':'Original Player','context_generated_at':'2026-10-16','event_evidence':[{'match_id':'123'}]}
+        with patch.object(r,'_load_json',return_value={'rows':[row]}):
+            saved=r._saved_hierarchy_map(Path('unused'),str.lower)
+        self.assertNotIn(('124','2026-10-17','club','opponent'),saved)
+        context=r._apply_hierarchy_fallback({},saved[('123','2026-10-17','club','opponent')],'2026-10-17T13:30:00Z')
+        context=r._apply_hierarchy_fallback(context,{'primary':'New Player','_generated_at':'2026-10-18'},'2026-10-17T13:30:00Z')
+        self.assertEqual(context['primary'],'Original Player')
+        self.assertNotIn('_hierarchy_unrecorded',context)
+        with patch.object(r,'_load_json',return_value={'rows':[row,{**row,'primary_pre_match':'Conflicting Player'}]}):
+            self.assertEqual(r._saved_hierarchy_map(Path('unused'),str.lower),{})
 
 if __name__=='__main__':unittest.main()
