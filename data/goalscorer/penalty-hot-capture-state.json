@@ -28,6 +28,7 @@
     "5881200": "2026-10-25",
     "5868102": "2026-10-25",
     "5868104": "2026-10-25",
+    "5868108": "2026-10-25",
     "5802969": "2026-10-25",
     "5802964": "2026-10-25",
     "5802965": "2026-10-25",
@@ -89,8 +90,8 @@
     "5802966": "2026-10-25",
     "5749718": "2026-10-25"
   },
-  "updated_at": "2026-10-25T20:12:06.405608+00:00",
-  "checked_this_run": 0,
+  "updated_at": "2026-10-25T21:12:08.640034+00:00",
+  "checked_this_run": 1,
   "errors": [],
   "fixtures": {
     "5795486": {
@@ -1494,7 +1495,7 @@
           "longName": "Levante"
         },
         "status": {
-          "utcTime": "2026-10-25T17:30:00.000Z",
+          "utcTime": "2026-10-25T17:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "25.10.2026 18:30:36",
             "secondHalfStarted": "25.10.2026 19:34:46"
@@ -1514,9 +1515,15 @@
         }
       },
       "date": "2026-10-25",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
-      "pending_since": "2026-10-25T19:42:05.047181+00:00"
+      "pending_since": "2026-10-25T19:42:05.047181+00:00",
+      "last_attempt": "2026-10-25T21:12:08.640034+00:00",
+      "attempts": 1,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-10-25T21:12:08.640034+00:00",
+      "penalty_count": 0,
+      "next_attempt": ""
     },
     "5868105": {
       "league": "la-liga",
@@ -1531,28 +1538,29 @@
         },
         "away": {
           "id": 8633,
-          "score": 0,
+          "score": 1,
           "name": "Real Madrid",
           "longName": "Real Madrid"
         },
         "status": {
           "utcTime": "2026-10-25T20:00:00.000Z",
           "halfs": {
-            "firstHalfStarted": "25.10.2026 21:02:19"
+            "firstHalfStarted": "25.10.2026 21:02:19",
+            "secondHalfStarted": "25.10.2026 22:08:17"
           },
           "periodLength": 45,
           "finished": false,
           "started": true,
           "cancelled": false,
           "ongoing": true,
-          "scoreStr": "0 - 0",
+          "scoreStr": "0 - 1",
           "liveTime": {
-            "short": "10‎’‎",
+            "short": "49‎’‎",
             "shortKey": "",
-            "long": "9:48",
+            "long": "48:52",
             "longKey": "",
-            "maxTime": 45,
-            "basePeriod": 45,
+            "maxTime": 90,
+            "basePeriod": 90,
             "addedTime": 0
           }
         }
@@ -2059,28 +2067,29 @@
         },
         "away": {
           "id": 8564,
-          "score": 1,
+          "score": 2,
           "name": "Milan",
           "longName": "Milan"
         },
         "status": {
           "utcTime": "2026-10-25T19:45:00.000Z",
           "halfs": {
-            "firstHalfStarted": "25.10.2026 20:45:17"
+            "firstHalfStarted": "25.10.2026 20:45:17",
+            "secondHalfStarted": "25.10.2026 21:47:36"
           },
           "periodLength": 45,
           "finished": false,
           "started": true,
           "cancelled": false,
           "ongoing": true,
-          "scoreStr": "0 - 1",
+          "scoreStr": "0 - 2",
           "liveTime": {
-            "short": "27‎’‎",
+            "short": "70‎’‎",
             "shortKey": "",
-            "long": "26:50",
+            "long": "69:33",
             "longKey": "",
-            "maxTime": 45,
-            "basePeriod": 45,
+            "maxTime": 90,
+            "basePeriod": 90,
             "addedTime": 0
           }
         }
@@ -4064,7 +4073,7 @@
           "longName": "Coventry City"
         },
         "status": {
-          "utcTime": "2026-10-19T19:00:00+00:00",
+          "utcTime": "2026-10-19T19:00:00.000Z",
           "halfs": {
             "firstHalfStarted": "19.10.2026 21:01:18",
             "secondHalfStarted": "19.10.2026 22:04:42"
@@ -4113,7 +4122,7 @@
           "longName": "Rayo Vallecano"
         },
         "status": {
-          "utcTime": "2026-10-19T19:00:00+00:00",
+          "utcTime": "2026-10-19T19:00:00.000Z",
           "numberOfHomeRedCards": 1,
           "halfs": {
             "firstHalfStarted": "19.10.2026 21:00:42",
@@ -4162,7 +4171,7 @@
           "longName": "Cagliari"
         },
         "status": {
-          "utcTime": "2026-10-19T16:30:00+00:00",
+          "utcTime": "2026-10-19T16:30:00.000Z",
           "halfs": {
             "firstHalfStarted": "19.10.2026 18:31:55",
             "secondHalfStarted": "19.10.2026 19:34:24"
@@ -4211,7 +4220,7 @@
           "longName": "Torino"
         },
         "status": {
-          "utcTime": "2026-10-19T18:45:00+00:00",
+          "utcTime": "2026-10-19T18:45:00.000Z",
           "halfs": {
             "firstHalfStarted": "19.10.2026 20:45:37",
             "secondHalfStarted": "19.10.2026 21:48:09"
@@ -4539,7 +4548,7 @@
   "discovery": {
     "20261025": {
       "ok": true,
-      "checked_at": "2026-10-25T20:12:06.405608+00:00",
+      "checked_at": "2026-10-25T21:12:08.640034+00:00",
       "expected": 22,
       "match_ids": [
         "5749710",
@@ -4569,7 +4578,7 @@
     },
     "20261024": {
       "ok": true,
-      "checked_at": "2026-10-25T20:12:06.405608+00:00",
+      "checked_at": "2026-10-25T21:12:08.640034+00:00",
       "expected": 19,
       "match_ids": [
         "5749711",
@@ -4652,7 +4661,7 @@
     },
     "20261019": {
       "ok": true,
-      "checked_at": "2026-10-25T19:42:05.047181+00:00",
+      "checked_at": "2026-10-25T21:12:08.640034+00:00",
       "expected": 4,
       "match_ids": [
         "5749706",
@@ -4701,8 +4710,8 @@
   },
   "coverage": {
     "expected": 91,
-    "verified": 88,
-    "pending": 3,
+    "verified": 89,
+    "pending": 2,
     "reverify": 0,
     "deferred": 0,
     "overdue": 0,
