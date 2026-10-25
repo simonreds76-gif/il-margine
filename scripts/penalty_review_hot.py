@@ -140,11 +140,12 @@ def run(root, now=None):
                         if kickoff.tzinfo is None:raise ValueError('missing_fixture_timezone')
                         mid=str(m['id']);old=fixtures.get(mid,{})
                         stub={k:copy.deepcopy(m[k]) for k in ('id','home','away','status')}
-                        changed=old and (any(old['match'][k]['id']!=stub[k]['id'] for k in ('home','away')) or old['match']['status']['utcTime']!=stub['status']['utcTime'])
+                        changed=old and (any(old['match'][k]['id']!=stub[k]['id'] for k in ('home','away')) or datetime.fromisoformat(old['match']['status']['utcTime'].replace('Z','+00:00'))!=kickoff)
                         entry={**old,'league':by_id[lid],'league_id':lid,'match':stub,'date':status['utcTime'][:10]}
                         entry.setdefault('state','pending');entry.setdefault('first_seen',now.isoformat());entry.setdefault('pending_since',now.isoformat())
                         if changed:entry.update(state='pending',reason='fixture_changed',pending_since=now.isoformat(),next_attempt='')
-                        if status.get('awarded'):entry.update(state='excluded',reason='awarded_without_play')
+                        if status.get('awarded') and status.get('started') is False:entry.update(state='excluded',reason='awarded_without_play')
+                        elif status.get('awarded'):entry.update(state='pending',reason='awarded_match_requires_review')
                         elif status.get('cancelled') and entry['state']!='deferred':entry.update(state='deferred',reason='awaiting_rearranged_fixture',next_attempt=(now+timedelta(hours=24)).isoformat())
                         fixtures[mid]=entry;discovered+=1;seen.add(mid)
                     except Exception as exc:

@@ -126,6 +126,10 @@ class CoverageTests(unittest.TestCase):
                 health.update(complete=True,matches_checked=1)
                 return [{**row(1),'event_evidence':[{'match_id':'1','source_event_id':'1'}]}] if mode=='unknown' else []
             fetch=Mock(return_value={'leagues':[]})
+            if mode=='equivalent_time':
+                f=fixture(1,'2026-10-25T12:00:00+00:00');f.update(state='verified',verified_at='2026-10-25T19:30:00+00:00')
+                statepath.write_text(json.dumps({'fixtures':{'1':f},'discovery':{}}),encoding='utf-8')
+                fetch.return_value={'leagues':[{'id':55,'matches':[fixture(1,'2026-10-25T12:00:00.000Z')['match']]}]}
             if mode=='outage':fetch.side_effect=TimeoutError()
             if mode=='postponed':p['props']['pageProps']['header']['status'].update(cancelled=True,finished=False)
             if mode=='moved':
@@ -140,6 +144,10 @@ class CoverageTests(unittest.TestCase):
             with patch('penalty_review_hot.load',side_effect=[review,alerts]), patch.dict('os.environ',{'GITHUB_STEP_SUMMARY':''}), contextlib.redirect_stdout(io.StringIO()):
                 result=run(root,datetime(2026,10,25,20,tzinfo=timezone.utc))
             return result,json.loads(out.read_text(encoding='utf-8'))
+    def test_equivalent_kickoff_formats_do_not_reopen_verified_match(self):
+        state,_=self.scenario('equivalent_time')
+        self.assertEqual(state['fixtures']['1']['state'],'verified')
+        self.assertEqual(state['checked_this_run'],0)
     def test_reconciliation_overflow_is_not_a_false_stalled_alarm(self):
         state,_=self.scenario('reverify')
         self.assertEqual(state['coverage']['stalled'],0)
