@@ -1,8 +1,8 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_save_markets": 1,
-      "named_player_lines": 20,
+      "events_with_save_markets": 2,
+      "named_player_lines": 21,
       "status": "NAMED_PLAYER_LINES",
       "unnamed_or_team_lines": 0
     },
@@ -10,20 +10,20 @@
       "events_with_save_markets": 2,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 18
+      "unnamed_or_team_lines": 16
     }
   },
   "capture_errors": [],
   "capture_mode": "close",
   "event_last_checked": {
-    "71945344": "2026-10-25T17:51:29Z",
-    "72478654": "2026-10-25T17:51:29Z"
+    "72036250": "2026-10-25T21:14:16Z",
+    "72478662": "2026-10-25T21:14:16Z"
   },
   "events_deferred_by_budget": 0,
   "events_selected": 2,
   "events_supported": 2,
   "events_with_lines": 2,
-  "generated_at": "2026-10-25T17:51:29Z",
+  "generated_at": "2026-10-25T21:14:16Z",
   "last_publication_at": "2026-10-25T13:14:52Z",
   "league_coverage": {
     "bundesliga": {
@@ -39,15 +39,15 @@
       "with_prices": 1
     },
     "ligue-1": {
-      "selected": 0,
-      "with_prices": 0
-    },
-    "serie-a": {
       "selected": 1,
       "with_prices": 1
+    },
+    "serie-a": {
+      "selected": 0,
+      "with_prices": 0
     }
   },
-  "market_inventory_rows_added": 275,
+  "market_inventory_rows_added": 262,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Away Team Exact Goals",
@@ -61,6 +61,7 @@
     "Both Teams To Score HT",
     "Clean Sheet Away",
     "Clean Sheet Home",
+    "Corner Handicap",
     "Corners Race",
     "Corners Spread",
     "Corners Totals",
@@ -112,7 +113,6 @@
     "Player Cards",
     "Player Fouls",
     "Player Headed Shots on Target",
-    "Player Passes",
     "Player Shots",
     "Player Shots on Target",
     "Player Shots on Target Outside Box",
@@ -135,17 +135,12 @@
     "Total Fouls Away",
     "Total Fouls Home",
     "Total Offsides",
-    "Total Offsides Away",
-    "Total Offsides Home",
     "Total Shots",
     "Total Shots Away",
     "Total Shots Home",
     "Total Shots on Target",
     "Total Shots on Target Away",
     "Total Shots on Target Home",
-    "Total Tackles",
-    "Total Tackles Away",
-    "Total Tackles Home",
     "Totals",
     "Totals 2H",
     "Totals HT",
@@ -154,22 +149,22 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 30,
-  "rows_observed": 30,
+  "rows_added": 31,
+  "rows_observed": 31,
   "selected_events": [
     {
-      "away": "AC Milan",
-      "competition": "Italy - Serie A",
-      "home": "Udinese Calcio",
-      "id": 71945344,
-      "kickoff_at": "2026-10-25T19:45:00Z"
+      "away": "Olympique Lyon",
+      "competition": "France - Ligue 1",
+      "home": "Paris Saint-Germain",
+      "id": 72036250,
+      "kickoff_at": "2026-10-26T19:30:00Z"
     },
     {
-      "away": "Real Madrid",
+      "away": "CA Osasuna",
       "competition": "Spain - LaLiga",
-      "home": "FC Barcelona",
-      "id": 72478654,
-      "kickoff_at": "2026-10-25T20:00:00Z"
+      "home": "Sevilla FC",
+      "id": 72478662,
+      "kickoff_at": "2026-10-26T20:00:00Z"
     }
   ],
   "status": "CAPTURED",
