@@ -1,10 +1,11 @@
 name: Penalty News Daily
 
-# Reuse the existing daily cycle, including when settlement itself fails.
+# Reuse existing half-hourly hot checks and the daily reconciliation cycle.
+# Run even when the upstream pricing/review job fails; news captures independently.
 # Neither hierarchy decisions nor Telegram delivery gate article creation.
 on:
   workflow_run:
-    workflows: [Goalscorer Settlement]
+    workflows: [Goalscorer Settlement, Goalscorer Hot Live Poll]
     types: [completed]
   workflow_dispatch:
     inputs:
@@ -12,6 +13,11 @@ on:
         description: Collect and validate without publishing
         type: boolean
         default: true
+      mode:
+        description: Incremental post-match batch or full daily reconciliation
+        type: choice
+        options: [post-match, daily]
+        default: post-match
 
 permissions:
   contents: write
@@ -62,13 +68,14 @@ jobs:
         env:
           VERCEL_TOKEN: ${{ secrets.FOOTBALL_ATLAS_VERCEL_TOKEN }}
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+          CAPTURE_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || github.event.workflow_run.name == 'Goalscorer Hot Live Poll' && 'post-match' || 'daily' }}
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           if [ "$DRY_RUN" = 'true' ]; then
-            python scripts/publish-penalty-news.py --dry-run --state "$RUNNER_TEMP/penalty-news-evidence"
+            python scripts/publish-penalty-news.py --dry-run --mode "$CAPTURE_MODE" --state "$RUNNER_TEMP/penalty-news-evidence"
           else
-            python scripts/publish-penalty-news.py --state "$RUNNER_TEMP/penalty-news-evidence"
+            python scripts/publish-penalty-news.py --mode "$CAPTURE_MODE" --state "$RUNNER_TEMP/penalty-news-evidence"
           fi
       - uses: actions/upload-artifact@v4
         if: always() && steps.launch.outputs.enabled == 'true'
