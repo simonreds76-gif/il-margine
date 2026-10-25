@@ -12,6 +12,10 @@ on:
         description: "Why this hosted hot-live poll was triggered"
         type: string
         required: false
+      penalty_only:
+        description: "Recover penalty reviews without refreshing any model prices"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -58,7 +62,41 @@ jobs:
             echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL }}" >> .env.local
           fi
 
+      - uses: actions/checkout@v5
+        if: always() && !cancelled()
+        with:
+          ref: ${{ github.sha }}
+          path: .penalty-hot-tools
+          sparse-checkout: scripts/penalty_review_hot.py
+          sparse-checkout-cone-mode: false
+
+      - name: Check completed matches for penalty reviews independently
+        if: always() && !cancelled()
+        run: python .penalty-hot-tools/scripts/penalty_review_hot.py
+
+      - name: Send only new actionable penalty reviews
+        if: success()
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+          PENALTY_REVIEW_URL: https://ilmargine.bet/model-monitor/goalscorer#penalty-watchlist
+        run: python .penalty-hot-tools/scripts/penalty_review_hot.py --notify
+
+      - name: Persist penalty evidence and delivery history before pricing refresh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f data/goalscorer/penalty-hot-capture-state.json
+          git add -f data/goalscorer/*penalty-duty-live-review.json data/goalscorer/*penalty-duty-live-review.csv data/goalscorer/club-penalty-alert-state.json
+          if ! git diff --cached --quiet; then
+            git commit -m "data: completed-match penalty reviews and delivery state"
+            bash scripts/ci-safe-push.sh golden-with-speed-insights
+          fi
+
       - name: Run hosted hot live poll
+        if: github.event_name != 'workflow_dispatch' || !inputs.penalty_only
         env:
           ASSIST_VALUE_SHADOW_ENABLED: ${{ vars.ASSIST_VALUE_SHADOW_ENABLED }}
           GOALSCORER_LINEUP_ONLY: ${{ github.event.schedule == '40 10-22 * * *' && '1' || '0' }}
@@ -68,12 +106,14 @@ jobs:
       - name: Build goalscorer monitor snapshot
         run: |
           python scripts/build-goalscorer-monitor-snapshot.py
+          if [ "${{ inputs.penalty_only }}" = "true" ]; then exit 0; fi
           python scripts/build-football-form-layer.py --output-dir "${RUNNER_TEMP}/football-form" --skip-validation
           python scripts/generate-fair-odds-lab.py --team-match-base "${RUNNER_TEMP}/football-form/team-match-base.csv"
           python scripts/generate-fair-odds-lab-highlights.py
           python scripts/validate-fair-odds-lab-highlights.py
 
       - name: Upload Fair Odds Lab artifacts to Vercel Blob
+        if: github.event_name != 'workflow_dispatch' || !inputs.penalty_only
         env:
           BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
         run: |
@@ -110,6 +150,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           bash scripts/git-add-goalscorer-deploy-artifacts.sh
+          git add -f data/goalscorer/penalty-hot-capture-state.json
           if [ "${ASSIST_VALUE_SHADOW_ENABLED:-0}" = "1" ]; then
             git add -f \
               data/assist-value/assist-value-shadow-signals.csv \

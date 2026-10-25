@@ -10,6 +10,10 @@ on:
         description: "Validate downloads without committing or publishing"
         type: boolean
         default: true
+      extension_only:
+        description: "Check only the independent Championship extension"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -20,6 +24,7 @@ concurrency:
 
 jobs:
   refresh:
+    if: github.event_name != 'workflow_dispatch' || !inputs.extension_only
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -112,3 +117,59 @@ jobs:
           except Exception:
               raise SystemExit('Telegram delivery failed; credential details withheld') from None
           PY
+
+  championship:
+    needs: refresh
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/fair-odds-daily-pitch-20260908
+          sparse-checkout: scripts
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: .atlas-extension
+          sparse-checkout: |
+            scripts
+            data/football-atlas/extensions
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check requests==2.32.5
+      - uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/championship-extension/evidence
+          key: championship-evidence-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: championship-evidence-v1-
+      - name: Test independent extension contract
+        env:
+          ATLAS_BASE_SCRIPTS: ${{ github.workspace }}/scripts
+        run: python -m unittest discover -s .atlas-extension/scripts/tests -p test_atlas_championship_cloud.py
+      - name: Refresh separate Championship database checkpoint
+        env:
+          ATLAS_BASE_SCRIPTS: ${{ github.workspace }}/scripts
+          ODDSPAPI_API_KEY: ${{ secrets.ODDSPAPI_API_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: |
+          args=()
+          if [ "$DRY_RUN" = "true" ]; then args+=(--dry-run); fi
+          python .atlas-extension/scripts/atlas_championship_cloud.py --state "$RUNNER_TEMP/championship-extension" "${args[@]}"
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: ${{ runner.temp }}/championship-extension/evidence
+          key: championship-evidence-v1-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: championship-extension-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/championship-extension/ledger.json
+            ${{ runner.temp }}/championship-extension/cloud-report.json
+            ${{ runner.temp }}/championship-extension/report.json
+          retention-days: 90
