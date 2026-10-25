@@ -24,12 +24,14 @@ class RecoveryTests(unittest.TestCase):
 
     def test_confirmed_absence_is_not_missing_timeline(self):
         team=self.timeline(self.team())
-        present,proof=r._on_pitch_at(team,'Absent Playername',40)
+        present,proof=r._on_pitch_at(team,'Absent Striker',40)
         self.assertFalse(present);self.assertEqual(proof['reason'],'absent_from_matchday_squad')
         self.assertEqual(len(proof['squad_player_ids']),11)
-        self.assertIsNone(r._on_pitch_at(self.timeline(self.team(),standard=False),'Absent Playername',40)[0])
+        self.assertIsNone(r._on_pitch_at(self.timeline(self.team(),standard=False),'Absent Striker',40)[0])
         self.assertIsNone(r._on_pitch_at(team,'Different Player',40)[0])
         self.assertIsNone(r._on_pitch_at(team,'',40)[0])
+        for displayed, full in [('Gabriel','Gabriel Magalhaes'),('Rodri','Rodrigo Hernandez')]:
+            self.assertIsNone(r._on_pitch_at(self.timeline(self.team(displayed)),full,40)[0])
 
     def test_alias_is_bound_to_exact_provider_id(self):
         for name,pid,alias in [('Raúl García',1094778,'Raúl García de Haro'),('Jaden Philogene-Bidace',1089645,'Jaden Philogene')]:
@@ -71,5 +73,13 @@ class RecoveryTests(unittest.TestCase):
     def test_wrong_fixture_html_cannot_be_accepted(self):
         with patch.object(r,'_fetch_json',side_effect=[ValueError('unavailable'),{'pageUrl':'/shared#1'}]),patch.object(r,'_fetch_text',return_value='x'),patch.object(r,'_extract_next_payload',return_value={'props':{'pageProps':{'general':{'matchId':2}}}}):
             with self.assertRaisesRegex(ValueError,'another fixture'):r._fetch_match_payload(1)
+
+    def test_newer_public_file_is_not_backdated_into_missing_context(self):
+        for at in ('2026-10-18','2026-10-17','2026-10-17T15:00:00Z','2026-10-17T12:00:00'):
+            row=r._apply_hierarchy_fallback({}, {'primary':'New Player','_generated_at':at},'2026-10-17T13:30:00Z')
+            self.assertNotIn('primary',row)
+            self.assertTrue(row['_hierarchy_unrecorded'])
+        row=r._apply_hierarchy_fallback({}, {'primary':'Old Player','_generated_at':'2026-10-16'},'2026-10-17T13:30:00Z')
+        self.assertEqual(row['primary'],'Old Player')
 
 if __name__=='__main__':unittest.main()

@@ -341,8 +341,8 @@ def _on_pitch_at(team_lineup: dict, player_name: str, minute: int, added_time: i
         # Do not claim absence when an abbreviated/variant name might be present.
         names = [_event_name(p.get("name")).split() for b in ("starters", "subs", "unavailable")
                  for p in team_lineup.get(b, []) if isinstance(p, dict)]
-        plausible = any(target and n and (target[-1] == n[-1] or
-                        (target[0] == n[0] and len(set(target) & set(n)) >= 2)) for n in names)
+        plausible = any(a == b or (min(len(a), len(b)) >= 4 and (a.startswith(b) or b.startswith(a)))
+                        for a in target for n in names for b in n)
         if len(target) >= 2 and not plausible:
             return False, dict(proof, reason="absent_from_matchday_squad", squad_player_ids=[str(p["id"]) for b in ("starters", "subs") for p in team_lineup[b]])
     if len(found) != 1:
@@ -490,6 +490,18 @@ def _apply_hierarchy_fallback(context: dict, fallback: dict | None, as_of: str =
                 fallback = approved
         except (ValueError, TypeError):
             pass
+    if as_of and fallback.get("_generated_at"):
+        try:
+            stamp = str(fallback["_generated_at"])
+            kickoff = datetime.fromisoformat(as_of.replace("Z", "+00:00"))
+            # A date-only verification is not known to precede a same-day kickoff.
+            usable = (stamp < kickoff.date().isoformat() if len(stamp) == 10 else
+                      datetime.fromisoformat(stamp.replace("Z", "+00:00")) <= kickoff)
+        except (ValueError, TypeError):
+            usable = False
+        if not usable:
+            merged["_hierarchy_unrecorded"] = True
+            return merged
     for field in ("primary", "secondary", "tertiary"):
         if not str(merged.get(field) or "").strip():
             merged[field] = str(fallback.get(field) or "").strip()
@@ -756,6 +768,8 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str], diagnos
         lineup_side = sample.get("lineup_side") or {}
         def pitch_status(name):
             if not str(name or "").strip():
+                if context.get("_hierarchy_unrecorded"):
+                    return "Not recorded - pre-match hierarchy unavailable"
                 return "Not assigned - hierarchy slot empty"
             present, proof = _on_pitch_at(lineup_side, name, penalty_minute, sample.get("added_time", 0))
             if present is None:
