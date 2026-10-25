@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-25T19:46:20.446729+00:00",
+  "generated_at": "2026-10-25T20:05:07.282171+00:00",
   "league": "ligue-1",
   "row_count": 9,
   "rows": [
@@ -114,8 +114,8 @@
           "id": "fotmob|ligue-1|5802966|2986220703",
           "source_event_id": "2986220703",
           "match_id": "5802966",
-          "source_url": "https://www.fotmob.com/matches/brest-vs-nice/2s9rcv#5802966",
-          "observed_at": "2026-10-25T13:21:56+00:00",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802966",
+          "observed_at": "2026-10-25T20:05:11+00:00",
           "event_date": "2026-10-23",
           "season": "2026/27",
           "team": "Brest",
@@ -125,6 +125,7 @@
           "on_pitch_proof": {
             "player": "Kenny Lala",
             "minute": 90,
+            "added_time": 10,
             "method": "completed_lineup_timeline",
             "player_id": 279461,
             "bucket": "starters",
@@ -690,7 +691,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261025"
+      "20261023"
     ],
     "matches_checked": 1
   }
