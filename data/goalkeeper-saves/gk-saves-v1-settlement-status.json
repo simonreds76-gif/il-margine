@@ -1,6 +1,6 @@
 {
   "api_errors": [],
-  "deferred_not_due": 8,
+  "deferred_not_due": 7,
   "details": [
     {
       "detail": "",
@@ -28,26 +28,82 @@
     },
     {
       "detail": "",
-      "goalkeeper": "Moritz Nicolas",
-      "match": "VfB Stuttgart vs Borussia Monchengladbach",
-      "match_date": "2026-10-23",
+      "goalkeeper": "\u0141ukasz Skorupski",
+      "match": "Cagliari Calcio vs Bologna FC",
+      "match_date": "2026-10-24",
       "reason": "settled_fotmob",
-      "signal_id": "72513260|moritz nicolas|4.5|over"
+      "signal_id": "71945328|\u0142ukasz skorupski|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Jean Butez",
+      "match": "Como 1907 vs Sassuolo Calcio",
+      "match_date": "2026-10-24",
+      "reason": "settled_fotmob",
+      "signal_id": "71945330|jean butez|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Loris Karius",
+      "match": "1. FC Cologne vs Schalke 04",
+      "match_date": "2026-10-24",
+      "reason": "settled_fotmob",
+      "signal_id": "72513270|loris karius|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Frederik R\u00f8nnow",
+      "match": "FC Augsburg vs Union Berlin",
+      "match_date": "2026-10-24",
+      "reason": "settled_fotmob",
+      "signal_id": "72513266|frederik r\u00f8nnow|4.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Maarten Vandevoordt",
+      "match": "RB Leipzig vs SV 07 Elversberg",
+      "match_date": "2026-10-24",
+      "reason": "fotmob_matched_player_not_goalkeeper",
+      "signal_id": "72513258|maarten vandevoordt|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "David Raya",
+      "match": "Arsenal FC vs Everton FC",
+      "match_date": "2026-10-24",
+      "reason": "settled_fotmob",
+      "signal_id": "72221332|david raya|1.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Pierluigi Gollini",
+      "match": "SSC Napoli vs AS Roma",
+      "match_date": "2026-10-24",
+      "reason": "settled_fotmob",
+      "signal_id": "71945340|pierluigi gollini|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Noah Atubolu",
+      "match": "Borussia Dortmund vs Eintracht Frankfurt",
+      "match_date": "2026-10-24",
+      "reason": "settled_fotmob",
+      "signal_id": "kambi|72513256|noah atubolu|4.5|over"
     }
   ],
-  "fotmob_requests_used": 7,
-  "generated_at": "2026-10-24T12:45:53Z",
+  "fotmob_requests_used": 14,
+  "generated_at": "2026-10-25T13:16:03Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
-  "pending_due": 3,
+  "pending_due": 4,
   "pending_total": 11,
   "reason_counts": {
-    "fotmob_matched_player_not_goalkeeper": 2,
+    "fotmob_matched_player_not_goalkeeper": 3,
     "fotmob_save_totals_disagree": 1,
-    "settled_fotmob": 1
+    "settled_fotmob": 7
   },
   "requests_used": 0,
-  "settled": 1,
+  "settled": 7,
   "status": "PARTIAL",
   "verified_player_targets": [
     {
@@ -69,9 +125,51 @@
     },
     {
       "appearances": 32,
-      "match_id": 5881205,
+      "match_id": 5749711,
       "status": "saved",
-      "targets_sha256": "a8bd50b1eb0b14cd1bf9ff160e1b74585ca50e3261fdaf82298510dfc59516ae"
+      "targets_sha256": "612991b6753814724da3c1ee3a5cad4c25638b163ed22755e20053791e217b28"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5749712,
+      "status": "saved",
+      "targets_sha256": "85ad6e2c76bdcbf1014ec7b16d756bc6070169273f2bba675852171f96013332"
+    },
+    {
+      "appearances": 29,
+      "match_id": 5881199,
+      "status": "saved",
+      "targets_sha256": "67192fe51c41a92beea958c85edf9632ccf493355e13600b2bb102778824fe9b"
+    },
+    {
+      "appearances": 31,
+      "match_id": 5881197,
+      "status": "saved",
+      "targets_sha256": "ce0f5c940ef186d98ca8c0820a02cab2c05b4d1fed66709636753beb1df2c41d"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5881204,
+      "status": "saved",
+      "targets_sha256": "193075364e1a37baf69e8e68970e7e4ade7e6ba85e686eb64fc97a473e9abf7d"
+    },
+    {
+      "appearances": 30,
+      "match_id": 5795485,
+      "status": "saved",
+      "targets_sha256": "479c516324727351ca471f5f9f18b7a48e753a5e7c768dad7fca99eb0ad2a079"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5749717,
+      "status": "saved",
+      "targets_sha256": "92390b9c1a298a549ef0b1a853ba222de08276cb4fc8e914d5ff06246c6f4f83"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5881198,
+      "status": "saved",
+      "targets_sha256": "04434d919b01b537414bb273e0937e176a91ccf0ad1662ac534689094dbb6037"
     }
   ]
 }

@@ -1,52 +1,48 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_save_markets": 23,
-      "named_player_lines": 251,
+      "events_with_save_markets": 19,
+      "named_player_lines": 215,
       "status": "NAMED_PLAYER_LINES",
       "unnamed_or_team_lines": 0
     },
     "Kambi": {
-      "events_with_save_markets": 24,
+      "events_with_save_markets": 20,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 162
+      "unnamed_or_team_lines": 128
     }
   },
   "capture_errors": [],
   "capture_mode": "publication",
   "event_last_checked": {
-    "71945326": "2026-10-25T00:33:07Z",
-    "71945332": "2026-10-25T00:33:07Z",
-    "71945334": "2026-10-25T00:33:07Z",
-    "71945338": "2026-10-25T00:33:07Z",
-    "71945344": "2026-10-25T00:33:07Z",
-    "72036238": "2026-10-25T00:33:07Z",
-    "72036240": "2026-10-25T00:33:07Z",
-    "72036246": "2026-10-25T00:33:07Z",
-    "72036248": "2026-10-25T00:33:07Z",
-    "72036250": "2026-10-25T00:33:07Z",
-    "72036252": "2026-10-25T00:33:07Z",
-    "72036254": "2026-10-25T00:33:07Z",
-    "72221340": "2026-10-25T00:33:07Z",
-    "72221342": "2026-10-25T00:33:07Z",
-    "72221346": "2026-10-25T00:33:07Z",
-    "72221348": "2026-10-25T00:33:07Z",
-    "72221350": "2026-10-25T00:33:07Z",
-    "72478648": "2026-10-25T00:33:07Z",
-    "72478652": "2026-10-25T00:33:07Z",
-    "72478654": "2026-10-25T00:33:07Z",
-    "72478660": "2026-10-25T00:33:07Z",
-    "72478662": "2026-10-25T00:33:07Z",
-    "72513262": "2026-10-25T00:33:07Z",
-    "72513264": "2026-10-25T00:33:07Z"
+    "71945326": "2026-10-25T13:14:52Z",
+    "71945332": "2026-10-25T13:14:52Z",
+    "71945338": "2026-10-25T13:14:52Z",
+    "71945344": "2026-10-25T13:14:52Z",
+    "72036238": "2026-10-25T13:14:52Z",
+    "72036240": "2026-10-25T13:14:52Z",
+    "72036246": "2026-10-25T13:14:52Z",
+    "72036248": "2026-10-25T13:14:52Z",
+    "72036252": "2026-10-25T13:14:52Z",
+    "72036254": "2026-10-25T13:14:52Z",
+    "72221340": "2026-10-25T13:14:52Z",
+    "72221342": "2026-10-25T13:14:52Z",
+    "72221346": "2026-10-25T13:14:52Z",
+    "72221348": "2026-10-25T13:14:52Z",
+    "72221350": "2026-10-25T13:14:52Z",
+    "72478652": "2026-10-25T13:14:52Z",
+    "72478654": "2026-10-25T13:14:52Z",
+    "72478660": "2026-10-25T13:14:52Z",
+    "72513262": "2026-10-25T13:14:52Z",
+    "72513264": "2026-10-25T13:14:52Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 24,
-  "events_supported": 24,
-  "events_with_lines": 24,
-  "generated_at": "2026-10-25T00:33:07Z",
-  "last_publication_at": "2026-10-25T00:33:07Z",
+  "events_selected": 20,
+  "events_supported": 20,
+  "events_with_lines": 20,
+  "generated_at": "2026-10-25T13:14:52Z",
+  "last_publication_at": "2026-10-25T13:14:52Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 2,
@@ -57,19 +53,19 @@
       "with_prices": 5
     },
     "la-liga": {
-      "selected": 5,
-      "with_prices": 5
+      "selected": 3,
+      "with_prices": 3
     },
     "ligue-1": {
-      "selected": 7,
-      "with_prices": 7
+      "selected": 6,
+      "with_prices": 6
     },
     "serie-a": {
-      "selected": 5,
-      "with_prices": 5
+      "selected": 4,
+      "with_prices": 4
     }
   },
-  "market_inventory_rows_added": 3144,
+  "market_inventory_rows_added": 2634,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Away Team Exact Goals",
@@ -174,40 +170,12 @@
     "Totals HT",
     "Winning Margin"
   ],
-  "publication_recovery": true,
+  "publication_recovery": false,
   "request_budget": 4,
-  "requests_used": 4,
-  "rows_added": 347,
-  "rows_observed": 347,
+  "requests_used": 3,
+  "rows_added": 289,
+  "rows_observed": 289,
   "selected_events": [
-    {
-      "away": "Olympique Lyon",
-      "competition": "France - Ligue 1",
-      "home": "Paris Saint-Germain",
-      "id": 72036250,
-      "kickoff_at": "2026-10-26T19:30:00Z"
-    },
-    {
-      "away": "CA Osasuna",
-      "competition": "Spain - LaLiga",
-      "home": "Sevilla FC",
-      "id": 72478662,
-      "kickoff_at": "2026-10-26T20:00:00Z"
-    },
-    {
-      "away": "ACF Fiorentina",
-      "competition": "Italy - Serie A",
-      "home": "Inter Milano",
-      "id": 71945334,
-      "kickoff_at": "2026-10-25T11:30:00Z"
-    },
-    {
-      "away": "Getafe CF",
-      "competition": "Spain - LaLiga",
-      "home": "Athletic Bilbao",
-      "id": 72478648,
-      "kickoff_at": "2026-10-25T13:00:00Z"
-    },
     {
       "away": "Newcastle United",
       "competition": "England - Premier League",
@@ -350,5 +318,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 24
+  "three_way_events": 20
 }

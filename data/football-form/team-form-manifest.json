@@ -1,7 +1,7 @@
 {
   "date_range": {
     "min": "2014-08-08",
-    "max": "2026-10-23"
+    "max": "2026-10-24"
   },
   "fields": {
     "team_match_base": [
@@ -186,7 +186,7 @@
       "ema20_opponent_market_strength_avg"
     ]
   },
-  "generated_at": "2026-10-24T12:43:43.322008+00:00",
+  "generated_at": "2026-10-25T13:13:32.680374+00:00",
   "notes": [
     "Versioned CSVs are date-tagged generated artifacts.",
     "Models should record the version value when training or producing research reports.",
@@ -195,26 +195,26 @@
   "outputs": {
     "report": "data/football-form/team-form-report.md",
     "team_match_base": "data/football-form/team-match-base.csv",
-    "team_match_base_versioned": "data/football-form/team-match-base-2026-10-24.csv",
+    "team_match_base_versioned": "data/football-form/team-match-base-2026-10-25.csv",
     "team_rolling_form": "data/football-form/team-rolling-form.csv",
-    "team_rolling_form_versioned": "data/football-form/team-rolling-form-2026-10-24.csv",
+    "team_rolling_form_versioned": "data/football-form/team-rolling-form-2026-10-25.csv",
     "validation_json": "data/football-form/team-form-validation.json",
     "validation_report": "data/football-form/team-form-validation.md"
   },
   "row_counts": {
-    "team_match_base": 43880,
-    "team_rolling_form": 43880
+    "team_match_base": 43918,
+    "team_rolling_form": 43918
   },
-  "version": "2026-10-24",
+  "version": "2026-10-25",
   "xg_overlay": {
     "matched": 21935,
     "rows": 21935,
     "unmatched": 0,
-    "with_xg": 20100
+    "with_xg": 20101
   },
   "count_input_supplement": {
     "revision": "verified-count-inputs-20261012",
-    "matches": 60,
+    "matches": 79,
     "sources": [
       "FotMob full-time counts",
       "Understat completed-fixture goals and xG"
