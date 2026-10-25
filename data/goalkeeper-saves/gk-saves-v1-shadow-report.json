@@ -12,10 +12,10 @@
     },
     "candidate_board_preserved": false,
     "eligible_lines": 6,
-    "priced_lines": 281,
+    "priced_lines": 286,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 39
+    "value_ladder_lines": 41
   },
   "evidence": {
     "clv": 0.057124,
@@ -35,16 +35,16 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-25T13:16:12.337606+00:00",
+    "checked_at": "2026-10-25T13:55:17.284030+00:00",
     "counts": {
-      "already_saved": 19,
       "ambiguous_duplicate_contract": 5,
-      "not_fresh_prematch": 38
+      "not_fresh_prematch": 38,
+      "offers_saved": 289
     },
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "saved": 19,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-10-25T13:16:11Z",
+  "generated_at": "2026-10-25T13:55:16Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
@@ -52,11 +52,11 @@
     "exclusions": {
       "blocked_or_missing_inputs": 36,
       "not_new_fresh_prematch": 38,
-      "unregistered_settlement_rules": 66
+      "unregistered_settlement_rules": 71
     },
     "forecast_fixtures": 85,
     "forecast_keepers": 170,
-    "generated_at": "2026-10-25T13:16:12.407576+00:00",
+    "generated_at": "2026-10-25T13:55:17.383312+00:00",
     "last_capture_at": "2026-10-25T13:14:55.143085+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
