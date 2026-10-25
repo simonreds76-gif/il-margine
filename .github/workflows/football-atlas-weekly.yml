@@ -24,7 +24,8 @@ concurrency:
 
 jobs:
   refresh:
-    if: github.event_name != 'workflow_dispatch' || !inputs.extension_only
+    needs: championship
+    if: always() && !cancelled() && (github.event_name != 'workflow_dispatch' || !inputs.extension_only)
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -59,6 +60,19 @@ jobs:
           python -m unittest discover -s scripts/tests -p test_football_atlas_weekly.py
           python -m unittest discover -s scripts/tests -p 'test_manager*.py'
           node --experimental-strip-types --test scripts/tests/football-atlas.test.mjs
+
+      - name: Download verified Championship history
+        if: needs.championship.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: championship-extension-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/championship-extension
+
+      - name: Select Championship checkpoint
+        if: needs.championship.result == 'success'
+        run: |
+          test -f "$RUNNER_TEMP/championship-extension/ledger.json"
+          echo "CHAMPIONSHIP_CHECKPOINT=$RUNNER_TEMP/championship-extension/ledger.json" >> "$GITHUB_ENV"
 
       - name: Download, reconcile and update Atlas
         env:
@@ -119,15 +133,19 @@ jobs:
           PY
 
   championship:
-    needs: refresh
-    if: always() && !cancelled()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
           ref: codex/fair-odds-daily-pitch-20260908
-          sparse-checkout: scripts
+          sparse-checkout: |
+            scripts
+            src/data
+            public/football-atlas
+            public/manager-atlas
+            data/football-atlas
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
@@ -147,7 +165,10 @@ jobs:
       - name: Test independent extension contract
         env:
           ATLAS_BASE_SCRIPTS: ${{ github.workspace }}/scripts
-        run: python -m unittest discover -s .atlas-extension/scripts/tests -p test_atlas_championship_cloud.py
+        run: |
+          python -m unittest discover -s .atlas-extension/scripts/tests -p test_atlas_championship_cloud.py
+          python -m unittest discover -s scripts/tests -p test_atlas_covered_history.py
+          python -m unittest discover -s scripts/tests -p test_football_atlas_weekly.py
       - name: Refresh separate Championship database checkpoint
         env:
           ATLAS_BASE_SCRIPTS: ${{ github.workspace }}/scripts
