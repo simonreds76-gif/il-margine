@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-25T13:41:46.073648Z",
+  "generated_at": "2026-10-25T14:21:48.264820Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -38,7 +38,7 @@
   "fixtures_evaluated": 25,
   "signals_qualifying": 1,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 28,
+    "incomplete_prediction_roster": 27,
     "model_market_gap_gt_10pp": 1
   },
   "extreme_gap_quarantine": {
@@ -96,7 +96,7 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 91
+          "percentile": 92
         },
         "share_of_team_chances_pct": 27,
         "share_of_team_chances_percentile": 95,
@@ -121,7 +121,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 25
+          "percentile": 24
         },
         "opponent_recent_defence": {
           "tier": "Positive",
