@@ -1,6 +1,7 @@
 import copy
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import json
+import shutil
 from pathlib import Path
 import sys
 import unittest
@@ -105,6 +106,41 @@ class CoveredHistoryTests(unittest.TestCase):
             new_clubs = {r['id']: r for r in new_evidence[mid]['clubs']}
             self.assertEqual({key: new_clubs[key] for key in old_clubs}, old_clubs)
             self.assertTrue(all(r['league'] == 'championship' for key, r in new_clubs.items() if key not in old_clubs))
+
+    def test_repeated_refresh_keeps_provider_provenance_internal(self):
+        releases = ['football-atlas-release.json', 'manager-atlas-release.json']
+        files = [
+            'data/football-atlas/championship-seed.json',
+            'data/football-atlas/championship-forward.json',
+            'src/data/atlas-fixtures.json', 'src/data/covered-leagues-release.json',
+            'scripts/config/football-atlas-competitions.json',
+            'scripts/config/championship-manager-evidence.json',
+        ]
+        for name in releases:
+            files.append('src/data/' + name)
+            files.append('public' + extension.read(self.root / 'src/data' / name)['indexUrl'])
+        current = extension.read(self.root / 'src/data/covered-leagues-release.json')
+        expected = extension.read(self.root / ('public' + current['historyUrl']))['rows']
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            for relative in files:
+                target = root / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(self.root / relative, target)
+            with patch.object(extension, 'ROOT', root):
+                now = datetime.fromisoformat(current['through']).replace(tzinfo=timezone.utc) + timedelta(days=1)
+                first = extension.refresh(root / 'state', offline=True, now=now)
+                manifest = extension.read(root / 'src/data/covered-leagues-release.json')
+                history = extension.read(root / ('public' + manifest['historyUrl']))
+                self.assertNotIn('sources', manifest)
+                self.assertNotIn('sources', history)
+                self.assertEqual(history['rows'], expected)
+                report = extension.read(root / 'state/covered-history/report.json')
+                self.assertTrue(report['sources'])
+                self.assertEqual(report['sources'], first['report']['sources'])
+                second = extension.refresh(root / 'state', offline=True, now=now)
+                self.assertFalse(second['changed'])
+                self.assertEqual(first['report'], second['report'])
 
     def test_frozen_seed_download_disabled(self):
         with self.assertRaisesRegex(ValueError, 'Frozen seed'):

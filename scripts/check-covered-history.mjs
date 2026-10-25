@@ -10,6 +10,20 @@ const expanded = read(`public${release.boardUrl}`);
 const history = read(`public${release.historyUrl}`);
 const oldEvidence = read(`public${original.evidenceUrl}`).fixtures;
 const newEvidence = read(`public${expanded.evidenceUrl}`).fixtures;
+// Publication boundary: provider provenance belongs in the private refresh report.
+// Keep recorded bookmaker/price-basis fields and licensed credits intact.
+for (const [name, payload] of [['release', release], ['history', history]]) {
+  assert(!Object.hasOwn(payload, 'sources'), `${name} must not publish provider provenance`);
+}
+const publicCopyGuards = [
+  ['src/components/ArchiveHistoryScope.tsx', /Historical source:|football-data\.co\.uk/i],
+  ['src/components/PenaltyNewsFeed.tsx', /Match and commentary on|a\.sourceUrl/],
+  ['src/app/penalty-takers/[leagueSlug]/[teamSlug]/page.tsx', /Sources checked|team\.evidenceSources/],
+  ['src/components/aerial/AerialBoard.tsx', /href=\{p\.height_source\}/],
+];
+for (const [file, pattern] of publicCopyGuards) {
+  assert(!pattern.test(fs.readFileSync(file, 'utf8')), `Removed provider disclosure restored in ${file}`);
+}
 assert.equal(release.scope, 'historical-clubs-only');
 assert.equal(release.baseBoardVersion, original.version);
 assert.equal(release.footballVersion, football.version);
