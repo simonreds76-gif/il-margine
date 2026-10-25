@@ -200,7 +200,7 @@ function MatchCard({ group, mode, open, onToggle }: { group: MatchGroup; mode: M
           <Crest team={group.away} category={group.category} />
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block text-sm font-semibold leading-snug text-slate-100 sm:truncate sm:text-base">{group.event}</span>
+          <span className="block text-sm font-semibold leading-snug text-slate-100 break-words sm:text-base">{group.event}</span>
           <span className="mt-0.5 block text-xs text-slate-400">{formatMatchDate(group.matchDate)}{group.bets.length > 1 ? ` · ${group.bets.length} picks` : ""}</span>
         </span>
         <span className="flex items-center gap-2 sm:gap-3">
@@ -214,12 +214,12 @@ function MatchCard({ group, mode, open, onToggle }: { group: MatchGroup; mode: M
         </span>
       </button>
       <div className="border-t border-slate-800/50 px-4 py-2">
-        <Link href={publicTipPath(group.bets[0])} prefetch={false} className="text-xs font-medium text-emerald-300 hover:underline">
-          <span className="sm:hidden">Match tips &amp; results →</span><span className="hidden sm:inline">{group.event}: player prop tips &amp; results →</span>
+        <Link href={publicTipPath(group.bets[0])} aria-label={`Match tips and results for ${group.event}`} prefetch={false} className="text-xs font-medium text-emerald-300 hover:underline">
+          Match tips &amp; results &#8594;
         </Link>
       </div>
       {open ? (
-        <div className="grid gap-3 border-t border-slate-800/70 p-3 sm:p-4 lg:grid-cols-2">
+        <div className="grid gap-3 border-t border-slate-800/70 p-3 sm:p-4">
           {group.bets.map((bet) => (
             <PickRow key={bet.id} bet={bet} />
           ))}
@@ -244,6 +244,7 @@ export default function PlayerPropsMatchGroups({ bets, mode }: { bets: Bet[]; mo
 
   return (
     <div data-testid="player-props-match-groups" className="space-y-3">
+      <div className="grid items-start gap-3 lg:grid-cols-2">
       {visibleGroups.map((group) => (
         <MatchCard
           key={group.key}
@@ -253,6 +254,7 @@ export default function PlayerPropsMatchGroups({ bets, mode }: { bets: Bet[]; mo
           onToggle={() => setOverrides((prev) => ({ ...prev, [group.key]: !isOpen(group) }))}
         />
       ))}
+      </div>
       {mode === "settled" && groups.length > RESULTS_PAGE_SIZE ? (
         <>
           <div className="flex flex-wrap items-center justify-between gap-3 py-3">

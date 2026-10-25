@@ -1,10 +1,11 @@
 "use client";
+import { buildCombinedStats, type CombinedMarketStats } from "@/lib/homepage-record";
 import HomeFixtures from "@/components/HomeFixtures";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { type Bet, type Bookmaker, type MarketStats } from "@/lib/supabase";
-import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
+import { getBaselineDisplayStats } from "@/lib/baseline";
 import BetMobileMeta from "@/components/BetMobileMeta";
 import PublicBetsTable from "@/components/PublicBetsTable";
 import ResultBadge from "@/components/ResultBadge";
@@ -18,14 +19,6 @@ import type { MonthRow } from "@/components/MonthlyBreakdown";
 import { formatMatchDate } from "@/lib/format";
 import { publicTipPath } from "@/lib/tip-seo";
 
-interface CombinedMarketStats {
-  total_bets: number;
-  roi: number;
-  win_rate: number;
-  avg_odds: number;
-  total_profit: number;
-}
-
 type HomepageBet = Bet & {
   bookmaker?: Bookmaker | Bookmaker[] | null;
 };
@@ -38,63 +31,6 @@ type HomepageClientProps = {
   initialPendingBets?: HomepageBet[];
   initialLast7?: { total: number; count: number } | null;
 };
-
-function buildCombinedStats(liveStats: MarketStats[]) {
-  const propsLive = liveStats.find((stat) => stat.market === "props");
-  const tennisLive = liveStats.find((stat) => stat.market === "tennis");
-
-  const propsLiveBets = propsLive?.total_bets || 0;
-  const propsLiveWins = propsLive?.wins || 0;
-  const propsLiveLosses = propsLive?.losses || 0;
-  const propsLiveProfit = Number(propsLive?.total_profit) || 0;
-  const propsLiveStake = Number(propsLive?.total_stake) || propsLiveBets;
-  const propsProfit = BASELINE_STATS.props.total_profit + propsLiveProfit;
-  const propsStake = BASELINE_STATS.props.total_stake + propsLiveStake;
-  const propsCombined: CombinedMarketStats = {
-    total_bets: BASELINE_STATS.props.total_bets + propsLiveBets,
-    roi: calculateROI(propsProfit, propsStake || 1),
-    win_rate: calculateWinRate(BASELINE_STATS.props.wins + propsLiveWins, BASELINE_STATS.props.losses + propsLiveLosses),
-    avg_odds: propsLive?.avg_odds && propsLiveBets > 0 ? Number(propsLive.avg_odds) : BASELINE_STATS.props.avg_odds,
-    total_profit: propsProfit,
-  };
-
-  const tennisLiveBets = tennisLive?.total_bets || 0;
-  const tennisLiveWins = tennisLive?.wins || 0;
-  const tennisLiveLosses = tennisLive?.losses || 0;
-  const tennisLiveProfit = Number(tennisLive?.total_profit) || 0;
-  const tennisLiveStake = Number(tennisLive?.total_stake) || tennisLiveBets;
-  const tennisProfit = BASELINE_STATS.tennis.total_profit + tennisLiveProfit;
-  const tennisStake = BASELINE_STATS.tennis.total_stake + tennisLiveStake;
-  const tennisCombined: CombinedMarketStats = {
-    total_bets: BASELINE_STATS.tennis.total_bets + tennisLiveBets,
-    roi: calculateROI(tennisProfit, tennisStake || 1),
-    win_rate: calculateWinRate(BASELINE_STATS.tennis.wins + tennisLiveWins, BASELINE_STATS.tennis.losses + tennisLiveLosses),
-    avg_odds: tennisLive?.avg_odds && tennisLiveBets > 0 ? Number(tennisLive.avg_odds) : BASELINE_STATS.tennis.avg_odds,
-    total_profit: tennisProfit,
-  };
-
-  const overallLiveBets = propsLiveBets + tennisLiveBets;
-  const overallLiveWins = propsLiveWins + tennisLiveWins;
-  const overallLiveLosses = propsLiveLosses + tennisLiveLosses;
-  const overallLiveProfit = propsLiveProfit + tennisLiveProfit;
-  const overallLiveStake = propsLiveStake + tennisLiveStake;
-  const overallProfit = BASELINE_STATS.overall.total_profit + overallLiveProfit;
-  const overallStake = BASELINE_STATS.overall.total_stake + overallLiveStake;
-  const totalOddsWeight = propsCombined.avg_odds * propsCombined.total_bets + tennisCombined.avg_odds * tennisCombined.total_bets;
-  const overallCombined: CombinedMarketStats = {
-    total_bets: BASELINE_STATS.overall.total_bets + overallLiveBets,
-    roi: calculateROI(overallProfit, overallStake || 1),
-    win_rate: calculateWinRate(BASELINE_STATS.overall.wins + overallLiveWins, BASELINE_STATS.overall.losses + overallLiveLosses),
-    avg_odds: totalOddsWeight > 0 ? totalOddsWeight / (BASELINE_STATS.overall.total_bets + overallLiveBets) : BASELINE_STATS.overall.avg_odds,
-    total_profit: overallProfit,
-  };
-
-  return {
-    props: propsCombined,
-    tennis: tennisCombined,
-    overall: overallCombined,
-  };
-}
 
 export default function HomepageClient({
   initialMonthly,
@@ -257,10 +193,10 @@ export default function HomepageClient({
             </div>
 
             <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
-              <Link href="/tennis-tips#picks" className="text-slate-400 transition-colors hover:text-[var(--brand-green)]">
+              <Link href="/tennis-tips#recent-results" className="text-slate-400 transition-colors hover:text-[var(--brand-green)]">
                 Review tennis results -&gt;
               </Link>
-              <Link href="/player-props#picks" className="text-slate-400 transition-colors hover:text-[var(--brand-green)]">
+              <Link href="/player-props#recent-results" className="text-slate-400 transition-colors hover:text-[var(--brand-green)]">
                 Review player props results -&gt;
               </Link>
             </div>

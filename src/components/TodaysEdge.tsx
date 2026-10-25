@@ -108,12 +108,16 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
     [picks],
   );
   const visible = useMemo(() => selectVisiblePicks(picks, filter), [filter, picks]);
-  const fullCardHref =
-    filter === "props" || (filter === "all" && counts.props > 0)
-      ? "/player-props#picks"
+  const cardRoutes = filter === "all" && counts.props > 0 && counts.tennis > 0
+    ? [
+        { href: "/player-props#picks", label: `Football picks (${counts.props})`, filter: "props" },
+        { href: "/tennis-tips#picks", label: `Tennis picks (${counts.tennis})`, filter: "tennis" },
+      ]
+    : filter === "props" || (filter === "all" && counts.props > 0)
+      ? [{ href: "/player-props#picks", label: "All football picks", filter: "props" }]
       : filter === "tennis" || counts.tennis > 0
-        ? "/tennis-tips#picks"
-        : "/track-record";
+        ? [{ href: "/tennis-tips#picks", label: "All tennis picks", filter: "tennis" }]
+        : [{ href: "/track-record", label: "See the public record", filter: "all" }];
 
   const setActiveFilter = (next: Filter) => {
     setFilter(next);
@@ -191,11 +195,13 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
       </div>
 
       <footer className={styles.footer}>
-        <TrackedLink href={fullCardHref}
-          eventName={fullCardHref === "/track-record" ? "track_record_click" : "today_edge_open_full_card"}
-          eventParams={{ source: "todays_edge", filter }} className={styles.fullCard}>
-          {fullCardHref === "/track-record" ? "See the public record" : filter === "props" ? "All football picks" : filter === "tennis" ? "All tennis picks" : "Open full card"}<span aria-hidden="true">→</span>
-        </TrackedLink>
+        <div className={cardRoutes.length > 1 ? styles.cardRoutes : undefined}>
+          {cardRoutes.map((route) => <TrackedLink key={route.href} href={route.href}
+            eventName={route.href === "/track-record" ? "track_record_click" : "today_edge_open_full_card"}
+            eventParams={{ source: "todays_edge", filter: route.filter }} className={styles.fullCard}>
+            {route.label}<span aria-hidden="true">&#8594;</span>
+          </TrackedLink>)}
+        </div>
         {lastSettled ? <p className={styles.lastSettled}><span>Last settled</span> {lastSettled.event} <b className={Number(lastSettled.profit_loss) < 0 ? styles.negative : ""}>{Number(lastSettled.profit_loss) >= 0 ? "+" : ""}{Number(lastSettled.profit_loss || 0).toFixed(2)}u</b></p> : null}
       </footer>
     </section>
