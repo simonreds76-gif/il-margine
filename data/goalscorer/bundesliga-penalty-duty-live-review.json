@@ -1,21 +1,123 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-24T12:55:25Z",
+  "generated_at": "2026-10-25T04:50:19Z",
   "league": "bundesliga",
-  "row_count": 0,
-  "rows": [],
+  "row_count": 1,
+  "rows": [
+    {
+      "date": "2026-10-24",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "match": "Mainz 05 vs Werder Bremen",
+      "team": "Werder Bremen",
+      "opponent": "Mainz 05",
+      "actual_taker": "Niclas Füllkrug",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 2,
+      "penalties_scored": 2,
+      "distinct_takers_in_match": 1,
+      "minute": "7, 25",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Niclas Füllkrug",
+      "secondary_pre_match": "Salim Musah",
+      "tertiary_pre_match": "Cedric Itten",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Niclas Füllkrug took 2 penalty attempts and scored for Werder Bremen vs Mainz 05. Primary pre-match: Niclas Füllkrug (unknown). Secondary pre-match: Salim Musah (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/bundesliga-penalty-takers.json",
+      "actual_taker_match_status": "Yes - started, off 81'",
+      "primary_on_pitch_at_penalty": "Yes - started, off 81'",
+      "secondary_on_pitch_at_penalty": "No - unavailable in match squad",
+      "tertiary_on_pitch_at_penalty": "No - bench, on 81'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 81'",
+      "event_evidence": [
+        {
+          "id": "fotmob|bundesliga|5881202|2986611147",
+          "source_event_id": "2986611147",
+          "match_id": "5881202",
+          "source_url": "https://www.fotmob.com/matches/werder-bremen-vs-mainz-05/2v0rqw#5881202",
+          "observed_at": "2026-10-25T04:50:10+00:00",
+          "event_date": "2026-10-24",
+          "season": "2026/27",
+          "team": "Werder Bremen",
+          "taker": "Niclas Füllkrug",
+          "primary": "Niclas Füllkrug",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Niclas Füllkrug",
+            "minute": 7,
+            "method": "completed_lineup_timeline",
+            "player_id": 276791,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 81
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 7,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Mainz 05 vs Werder Bremen",
+          "event_result": "scored"
+        },
+        {
+          "id": "fotmob|bundesliga|5881202|2986634487",
+          "source_event_id": "2986634487",
+          "match_id": "5881202",
+          "source_url": "https://www.fotmob.com/matches/werder-bremen-vs-mainz-05/2v0rqw#5881202",
+          "observed_at": "2026-10-25T04:50:10+00:00",
+          "event_date": "2026-10-24",
+          "season": "2026/27",
+          "team": "Werder Bremen",
+          "taker": "Niclas Füllkrug",
+          "primary": "Niclas Füllkrug",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Niclas Füllkrug",
+            "minute": 25,
+            "method": "completed_lineup_timeline",
+            "player_id": 276791,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 81
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 25,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Mainz 05 vs Werder Bremen",
+          "event_result": "scored"
+        }
+      ]
+    }
+  ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261018",
-      "20261019",
-      "20261020",
-      "20261021",
-      "20261022",
       "20261023",
-      "20261024"
+      "20261024",
+      "20261025"
     ],
-    "matches_checked": 3
+    "matches_checked": 7
   }
 }

@@ -1,7 +1,24 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-24T12:55:51Z",
+  "generated_at": "2026-10-25T04:50:19Z",
   "league": "bundesliga",
-  "row_count": 0,
-  "rows": []
+  "row_count": 1,
+  "rows": [
+    {
+      "team": "Werder Bremen",
+      "team_key": "werder bremen",
+      "player_name": "Niclas Füllkrug",
+      "player_key": "niclas f llkrug",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
+      "observed_share": 1.0,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-24"
+    }
+  ]
 }
