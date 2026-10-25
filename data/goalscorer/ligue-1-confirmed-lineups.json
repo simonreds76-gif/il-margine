@@ -290,14 +290,17 @@
       "home_substitute_entries": [],
       "away_subs": [],
       "away_substitute_entries": [],
-      "home_unavailable": [],
+      "home_unavailable": [
+        "Emmanuel Biumla"
+      ],
       "away_unavailable": [
         "Bandiougou Fadiga",
         "Mohamed Bamba",
         "Noah Mbamba",
+        "Panos Katseris",
         "Isak Steiner Jensen"
       ],
-      "observed_at": "2026-10-24T23:11:12.838061+00:00",
+      "observed_at": "2026-10-25T12:00:54.408894+00:00",
       "changed_at": "2026-10-24T12:05:39.695504+00:00"
     },
     {
@@ -596,7 +599,6 @@
         "Bryan Okoh",
         "Sékou Fofana",
         "Assane Dioussé",
-        "Rayan Mandengue",
         "Rémy Lascary"
       ],
       "away_unavailable": [
@@ -607,7 +609,7 @@
         "Martin Rossignol",
         "Erwan Colas"
       ],
-      "observed_at": "2026-10-24T23:11:12.838061+00:00",
+      "observed_at": "2026-10-25T12:00:54.408894+00:00",
       "changed_at": "2026-10-24T12:05:39.695504+00:00"
     },
     {
@@ -910,7 +912,7 @@
         "Timothée Pembélé",
         "Felix Mambimbi"
       ],
-      "observed_at": "2026-10-24T23:11:12.838061+00:00",
+      "observed_at": "2026-10-25T12:00:54.408894+00:00",
       "changed_at": "2026-10-24T12:05:39.695504+00:00"
     },
     {
@@ -1213,7 +1215,7 @@
         "Ayase Ueda",
         "Hamza Igamane"
       ],
-      "observed_at": "2026-10-24T23:11:12.838061+00:00",
+      "observed_at": "2026-10-25T12:00:54.408894+00:00",
       "changed_at": "2026-10-24T12:05:39.695504+00:00"
     },
     {
@@ -1517,7 +1519,7 @@
         "Joaquín Panichelli",
         "Martial Godo"
       ],
-      "observed_at": "2026-10-24T23:11:12.838061+00:00",
+      "observed_at": "2026-10-25T12:00:54.408894+00:00",
       "changed_at": "2026-10-24T12:05:39.695504+00:00"
     },
     {
@@ -1818,7 +1820,7 @@
         "Ismaël Boura",
         "Yvann Titi"
       ],
-      "observed_at": "2026-10-24T23:11:12.838061+00:00",
+      "observed_at": "2026-10-25T12:00:54.408894+00:00",
       "changed_at": "2026-10-24T12:05:39.695504+00:00"
     },
     {
@@ -1837,29 +1839,29 @@
       "away_formation": "4-2-3-1",
       "home_players": [
         "Matvey Safonov",
-        "Warren Zaïre-Emery",
+        "Achraf Hakimi",
         "Ilya Zabarnyi",
-        "Lucas Hernández",
-        "Lucas Digne",
-        "João Neves",
-        "Dro Fernández",
         "Lucas Beraldo",
-        "Maghnes Akliouche",
+        "Lucas Hernández",
+        "João Neves",
+        "Vítinha",
+        "Fabián Ruiz",
+        "Ousmane Dembélé",
         "Ferrán Torres",
-        "Ousmane Dembélé"
+        "Désiré Doué"
       ],
       "away_players": [
-        "Rémy Descamps",
+        "Dominik Greif",
         "Zachary Athekame",
-        "Clinton Mata",
+        "Felix Bacher",
         "Moussa Niakhaté",
         "Abner",
         "Tanner Tessmann",
         "Mads Bidstrup",
         "Kaïl Boudache",
-        "Noah Nartey",
+        "Corentin Tolisso",
         "Julien Duranville",
-        "Corentin Tolisso"
+        "Ernest Nuamah"
       ],
       "home_starters": [
         {
@@ -1874,15 +1876,15 @@
           "shirt_number": "39"
         },
         {
-          "name": "Warren Zaïre-Emery",
+          "name": "Achraf Hakimi",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-3-3",
           "position_id": 32,
-          "player_id": 1367615,
-          "shirt_number": "33"
+          "player_id": 770881,
+          "shirt_number": "2"
         },
         {
           "name": "Ilya Zabarnyi",
@@ -1896,26 +1898,26 @@
           "shirt_number": "6"
         },
         {
-          "name": "Lucas Hernández",
+          "name": "Lucas Beraldo",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-3-3",
           "position_id": 36,
-          "player_id": 504606,
-          "shirt_number": "21"
+          "player_id": 1255209,
+          "shirt_number": "4"
         },
         {
-          "name": "Lucas Digne",
+          "name": "Lucas Hernández",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-3-3",
           "position_id": 38,
-          "player_id": 210111,
-          "shirt_number": "12"
+          "player_id": 504606,
+          "shirt_number": "21"
         },
         {
           "name": "João Neves",
@@ -1929,37 +1931,37 @@
           "shirt_number": "87"
         },
         {
-          "name": "Dro Fernández",
+          "name": "Vítinha",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
           "formation": "4-3-3",
           "position_id": 75,
-          "player_id": 1682313,
-          "shirt_number": "27"
+          "player_id": 1061249,
+          "shirt_number": "17"
         },
         {
-          "name": "Lucas Beraldo",
+          "name": "Fabián Ruiz",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
           "formation": "4-3-3",
           "position_id": 77,
-          "player_id": 1255209,
-          "shirt_number": "4"
+          "player_id": 605654,
+          "shirt_number": "8"
         },
         {
-          "name": "Maghnes Akliouche",
+          "name": "Ousmane Dembélé",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-3-3",
           "position_id": 103,
-          "player_id": 1305618,
-          "shirt_number": "11"
+          "player_id": 692984,
+          "shirt_number": "10"
         },
         {
           "name": "Ferrán Torres",
@@ -1973,28 +1975,28 @@
           "shirt_number": "9"
         },
         {
-          "name": "Ousmane Dembélé",
+          "name": "Désiré Doué",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-3-3",
           "position_id": 107,
-          "player_id": 692984,
-          "shirt_number": "10"
+          "player_id": 1339208,
+          "shirt_number": "14"
         }
       ],
       "away_starters": [
         {
-          "name": "Rémy Descamps",
+          "name": "Dominik Greif",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
           "formation": "4-2-3-1",
           "position_id": 11,
-          "player_id": 767014,
-          "shirt_number": "40"
+          "player_id": 651910,
+          "shirt_number": "1"
         },
         {
           "name": "Zachary Athekame",
@@ -2008,15 +2010,15 @@
           "shirt_number": "13"
         },
         {
-          "name": "Clinton Mata",
+          "name": "Felix Bacher",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-2-3-1",
           "position_id": 34,
-          "player_id": 266105,
-          "shirt_number": "22"
+          "player_id": 951498,
+          "shirt_number": "20"
         },
         {
           "name": "Moussa Niakhaté",
@@ -2074,15 +2076,15 @@
           "shirt_number": "26"
         },
         {
-          "name": "Noah Nartey",
+          "name": "Corentin Tolisso",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 85,
-          "player_id": 1368710,
-          "shirt_number": "99"
+          "player_id": 473852,
+          "shirt_number": "8"
         },
         {
           "name": "Julien Duranville",
@@ -2096,15 +2098,15 @@
           "shirt_number": "24"
         },
         {
-          "name": "Corentin Tolisso",
+          "name": "Ernest Nuamah",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-2-3-1",
           "position_id": 115,
-          "player_id": 473852,
-          "shirt_number": "8"
+          "player_id": 1338390,
+          "shirt_number": "7"
         }
       ],
       "home_subs": [],
@@ -2117,14 +2119,14 @@
         "Khvicha Kvaratskhelia"
       ],
       "away_unavailable": [
+        "Pavel Šulc",
         "Loïs Openda",
         "Nicolás Tagliafico",
         "Steeve Kango",
-        "Mohamed Ouédraogo",
-        "Pavel Šulc"
+        "Mohamed Ouédraogo"
       ],
-      "observed_at": "2026-10-24T23:11:12.838061+00:00",
-      "changed_at": "2026-10-23T22:15:08.463618+00:00"
+      "observed_at": "2026-10-25T12:00:54.408894+00:00",
+      "changed_at": "2026-10-25T12:00:54.408894+00:00"
     }
   ]
 }

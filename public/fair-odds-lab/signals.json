@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T23:12:06.278025Z",
+  "generated_at": "2026-10-25T12:01:39.132375Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -35,10 +35,10 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 27,
-  "signals_qualifying": 0,
+  "fixtures_evaluated": 26,
+  "signals_qualifying": 1,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 42
+    "incomplete_prediction_roster": 35
   },
   "extreme_gap_quarantine": {
     "eligible_rows": 0,
@@ -46,7 +46,97 @@
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [],
-  "featured_signal_id": null,
-  "signals": []
+  "leagues_covered": [
+    "la-liga"
+  ],
+  "featured_signal_id": "20261025-martin-satriano-424254d226",
+  "signals": [
+    {
+      "id": "20261025-martin-satriano-424254d226",
+      "match": {
+        "home_team": "Athletic Bilbao",
+        "away_team": "Getafe CF",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-10-25T13:00:00Z",
+        "kickoff_display": "Sun 25 Oct 13:00 UK",
+        "fotmob_match_id": "5868102",
+        "fotmob_page_url": "/matches/getafe-vs-athletic-club/2a8kvt#5868102",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Martin Satriano",
+        "team": "Getafe",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/la-liga/getafe.png",
+        "team_primary_color": "#1d4ed8",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 26.7,
+        "fair_odds": 3.75
+      },
+      "market_data": {
+        "best_odds": 5.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 18.2
+      },
+      "edge": {
+        "price_gap_pp": 8.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 85
+        },
+        "share_of_team_chances_pct": 34,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 2
+        },
+        "recent_team_form": {
+          "tier": "Quiet",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-10-19",
+          "xg_for_avg": 0.71,
+          "xg_against_avg": 1.88,
+          "xgd_per90": -1.17,
+          "shots_for_avg": 11.8,
+          "shots_against_avg": 17.4,
+          "sot_for_avg": 3.6,
+          "sot_against_avg": 5.6,
+          "corners_for_avg": 4.2,
+          "corners_against_avg": 7.4
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 24
+        },
+        "opponent_recent_defence": {
+          "tier": "Unknown"
+        },
+        "fixture_boost_pct": -18,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    }
+  ]
 }

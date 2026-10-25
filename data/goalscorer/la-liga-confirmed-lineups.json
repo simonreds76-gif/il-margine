@@ -9,23 +9,23 @@
       "kickoff_utc": "2026-10-25T13:00:00Z",
       "home_team": "Athletic Club",
       "away_team": "Getafe",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-4-2",
       "home_players": [
         "Unai Simón",
-        "Jesús Areso",
-        "Yeray Álvarez",
+        "Hugo Rincón",
+        "Daniel Vivian",
         "Aitor Paredes",
         "Yuri Berchiche",
-        "Beñat Gerenabarrena",
-        "Íñigo Ruíz de Galarreta",
-        "Robert Navarro",
         "Peio Canales",
+        "Íñigo Ruíz de Galarreta",
+        "Iñaki Williams",
         "Alex Berenguer",
-        "Iñaki Williams"
+        "Nico Williams",
+        "Maroan Sannadi"
       ],
       "away_players": [
         "David Soria",
@@ -33,11 +33,11 @@
         "Nemanja Gudelj",
         "Jean Ives Valou",
         "Johan Mojica",
-        "Andrés García",
+        "Kiko",
         "Francho Serrano",
         "Mario Martín",
         "Ramón Terrats",
-        "Enes Ünal",
+        "Iván Azon",
         "Martín Satriano"
       ],
       "home_starters": [
@@ -53,26 +53,26 @@
           "shirt_number": "1"
         },
         {
-          "name": "Jesús Areso",
+          "name": "Hugo Rincón",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-2-3-1",
           "position_id": 32,
-          "player_id": 1037537,
-          "shirt_number": "12"
+          "player_id": 1427819,
+          "shirt_number": "15"
         },
         {
-          "name": "Yeray Álvarez",
+          "name": "Daniel Vivian",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-2-3-1",
           "position_id": 34,
-          "player_id": 639450,
-          "shirt_number": "5"
+          "player_id": 940743,
+          "shirt_number": "3"
         },
         {
           "name": "Aitor Paredes",
@@ -97,15 +97,15 @@
           "shirt_number": "17"
         },
         {
-          "name": "Beñat Gerenabarrena",
+          "name": "Peio Canales",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
           "position_id": 64,
-          "player_id": 1425173,
-          "shirt_number": "24"
+          "player_id": 1585726,
+          "shirt_number": "28"
         },
         {
           "name": "Íñigo Ruíz de Galarreta",
@@ -119,26 +119,15 @@
           "shirt_number": "16"
         },
         {
-          "name": "Robert Navarro",
+          "name": "Iñaki Williams",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 83,
-          "player_id": 1011117,
-          "shirt_number": "23"
-        },
-        {
-          "name": "Peio Canales",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85,
-          "player_id": 1585726,
-          "shirt_number": "28"
+          "player_id": 604105,
+          "shirt_number": "9"
         },
         {
           "name": "Alex Berenguer",
@@ -147,20 +136,31 @@
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
-          "position_id": 87,
+          "position_id": 85,
           "player_id": 574629,
           "shirt_number": "7"
         },
         {
-          "name": "Iñaki Williams",
+          "name": "Nico Williams",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 1202110,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Maroan Sannadi",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-2-3-1",
           "position_id": 115,
-          "player_id": 604105,
-          "shirt_number": "9"
+          "player_id": 1425206,
+          "shirt_number": "21"
         }
       ],
       "away_starters": [
@@ -220,15 +220,15 @@
           "shirt_number": "22"
         },
         {
-          "name": "Andrés García",
+          "name": "Kiko",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
           "formation": "4-4-2",
           "position_id": 72,
-          "player_id": 1430406,
-          "shirt_number": "21"
+          "player_id": 175311,
+          "shirt_number": "17"
         },
         {
           "name": "Francho Serrano",
@@ -264,15 +264,15 @@
           "shirt_number": "11"
         },
         {
-          "name": "Enes Ünal",
+          "name": "Iván Azon",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-4-2",
           "position_id": 104,
-          "player_id": 464486,
-          "shirt_number": "19"
+          "player_id": 1203946,
+          "shirt_number": "20"
         },
         {
           "name": "Martín Satriano",
@@ -303,8 +303,8 @@
         "Christantus Uche",
         "Juanmi"
       ],
-      "observed_at": "2026-10-24T23:10:36.184627+00:00",
-      "changed_at": "2026-10-24T12:04:46.675201+00:00"
+      "observed_at": "2026-10-25T12:00:18.797267+00:00",
+      "changed_at": "2026-10-25T12:00:18.797267+00:00"
     },
     {
       "fotmob_match_id": 5868105,
@@ -334,7 +334,7 @@
         "Raphinha"
       ],
       "away_players": [
-        "Thibaut Courtois",
+        "Andriy Lunin",
         "Denzel Dumfries",
         "Ibrahima Konaté",
         "Dean Huijsen",
@@ -471,15 +471,15 @@
       ],
       "away_starters": [
         {
-          "name": "Thibaut Courtois",
+          "name": "Andriy Lunin",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
           "formation": "4-2-3-1",
           "position_id": 11,
-          "player_id": 170323,
-          "shirt_number": "1"
+          "player_id": 800882,
+          "shirt_number": "13"
         },
         {
           "name": "Denzel Dumfries",
@@ -604,13 +604,14 @@
         "Roony Bardghji"
       ],
       "away_unavailable": [
+        "Thibaut Courtois",
         "Ferland Mendy",
         "Raúl Asencio",
         "Rodrygo",
         "Vinícius Júnior"
       ],
-      "observed_at": "2026-10-24T23:10:36.184627+00:00",
-      "changed_at": "2026-10-24T12:04:46.675201+00:00"
+      "observed_at": "2026-10-25T12:00:18.797267+00:00",
+      "changed_at": "2026-10-25T12:00:18.797267+00:00"
     },
     {
       "fotmob_match_id": 5868104,
@@ -910,12 +911,11 @@
         "Borja Iglesias"
       ],
       "away_unavailable": [
-        "Héctor Bellerín",
         "Júnior Firpo",
         "Facundo Bernal",
         "Juan Hernández"
       ],
-      "observed_at": "2026-10-24T23:10:36.184627+00:00",
+      "observed_at": "2026-10-25T12:00:18.797267+00:00",
       "changed_at": "2026-10-24T12:04:46.675201+00:00"
     },
     {
@@ -1209,8 +1209,6 @@
       "away_subs": [],
       "away_substitute_entries": [],
       "home_unavailable": [
-        "Yangel Herrera",
-        "Jon Aramburu",
         "Álvaro Odriozola",
         "Luken Beitia"
       ],
@@ -1218,7 +1216,7 @@
         "Adrián De La Fuente",
         "Enzo Bardeli"
       ],
-      "observed_at": "2026-10-24T23:10:36.184627+00:00",
+      "observed_at": "2026-10-25T12:00:18.797267+00:00",
       "changed_at": "2026-10-24T12:04:46.675201+00:00"
     },
     {
@@ -1513,16 +1511,14 @@
       "away_substitute_entries": [],
       "home_unavailable": [
         "Miguel Sierra",
-        "Marcão",
-        "Jon Guridi",
-        "Lucas Stassin"
+        "Marcão"
       ],
       "away_unavailable": [
         "Aimar Oroz",
         "Jorge Herrando",
         "Romain Del Castillo"
       ],
-      "observed_at": "2026-10-24T23:10:36.184627+00:00",
+      "observed_at": "2026-10-25T12:00:18.797267+00:00",
       "changed_at": "2026-10-23T19:11:41.643592+00:00"
     }
   ]
