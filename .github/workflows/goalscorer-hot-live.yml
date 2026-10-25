@@ -123,6 +123,7 @@ jobs:
           python scripts/upload-fair-odds-lab-blob.py
 
       - name: Private Air Control player watchlist
+        if: github.event_name != 'workflow_dispatch' || !inputs.penalty_only
         continue-on-error: true
         env:
           OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}

@@ -32,5 +32,3 @@ def validate(rows):
         if row['odds'] is not None and (len(row['odds']) != 3 or row['basis'] not in BASES.values() or
                 not all(type(p) in (int, float) and math.isfinite(p) and 1 < p <= 1000 for p in row['odds'])):
             raise ValueError('Invalid price contract')
-
-
