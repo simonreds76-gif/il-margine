@@ -4,6 +4,7 @@ import Image from 'next/image';
 import ResearchIcon from '@/components/ResearchIcon';
 import type {Board,Fixture,Player,Team,WindowKey} from './types';
 import {isBoard} from './types';
+import {summarizeKnownHeights} from '@/lib/aerial-height-display';
 
 const value=(n:number|null|undefined,dp=0)=>typeof n==='number'&&Number.isFinite(n)?n.toFixed(dp):'Not available';
 const shortDate=(s:string)=>new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',day:'numeric',month:'short',year:'numeric'}).format(new Date(s));
@@ -20,6 +21,21 @@ function Portrait({player}:{player:Player}) {
 function TeamName({team}:{team:Team}) {
  const [failed,setFailed]=useState(false);
  return <span className="aerial-team-name">{!failed&&<Image unoptimized src={`https://images.fotmob.com/image_resources/logo/teamlogo/${team.id}.png`} alt="" width={32} height={32} onError={()=>setFailed(true)}/>}<strong>{team.name}</strong></span>;
+}
+function HeightPanel({team,index}:{team:Team;index:number}) {
+ const h=summarizeKnownHeights(team.players);
+ return <section className={`aerial-panel aerial-side-${index}`}>
+  <TeamName team={team}/>
+  <div className="aerial-height-number">{value(h.mean,1)}{h.mean!==null&&<small>{h.complete?'cm average':'cm known-player average'}</small>}</div>
+  <p>{h.known} of 10 outfield heights available{!h.complete?' · Partial coverage':''}</p>
+  {!h.complete&&h.missing.length>0&&<p className="aerial-note">Height missing: {h.missing.join(', ')}. {h.known>0?'Figures below use only the known players.':'No height summary is available yet.'}</p>}
+  <div className="aerial-height-plot" aria-label={`${team.name} reported player heights`}>{h.players.toSorted((a,b)=>a.height_cm!-b.height_cm!).map((p,index)=><span key={p.id} style={{left:`${Math.max(0,Math.min(100,(p.height_cm!-155)/55*100))}%`,top:`${12+(index%3)*16}px`}} tabIndex={0} aria-label={`${p.name}, ${p.height_cm} centimetres`}><i/><em>{p.name}: {p.height_cm} cm</em></span>)}</div>
+  <div className="aerial-axis"><span>155 cm</span><span>180 cm</span><span>210 cm</span></div>
+  <div className="aerial-height-extras">
+   <span>{h.complete?'Tallest three, average':'Tallest three known, average'}<strong>{value(h.tallestThreeMean,1)}{h.tallestThreeMean!==null?' cm':''}</strong></span>
+   <span>{h.complete?'Outfield starters ≥185 cm':'Known outfield starters ≥185 cm'}<strong>{h.atLeast185===null?'Not available':`${h.atLeast185} / ${h.known}${h.complete?'':' known'}`}</strong></span>
+  </div>
+ </section>;
 }
 function Section({id,kind,title,text}:{id:string;kind:string;title:string;text:string}) {
  return <header id={id} className="aerial-section-heading"><span className="aerial-icon"><AerialIcon kind={kind}/></span><div><h2>{title}</h2><p>{text}</p></div></header>;
@@ -58,7 +74,7 @@ function Match({f,board,now}:{f:Fixture;board:Board;now:number}) {
  {!active?<div className="aerial-empty"><AerialIcon kind="players"/><h2>{f.state==='pending'?'The fixture is scheduled. Lineups are still pending.':'This lineup needs a fresh check.'}</h2><p>The height and player comparison appears when a current expected or confirmed XI is available for both teams.</p><p>Expected XIs come first. Confirmed teams replace them when available. We look for lineups for today and the next three days; fixtures further away can appear here before their teams.</p></div>:<>
  <nav className="aerial-jumps" aria-label="On this page"><a href="#height"><ResearchIcon name="height"/>Height</a><a href="#players"><ResearchIcon name="duel"/>Players</a><a href="#delivery"><ResearchIcon name="delivery"/>Delivery</a></nav>
  <Section id="height" kind="height" title="Size across the starting XI" text="Reported heights of the ten outfield starters. Goalkeepers are kept separate."/>
- <div className="aerial-height-grid">{f.teams.map((t,i)=><section className={`aerial-panel aerial-side-${i}`} key={t.id}><TeamName team={t}/><div className="aerial-height-number">{value(t.height.mean_cm,1)}{t.height.mean_cm!==null&&<small>cm average</small>}</div><p>{t.height.known} of 10 outfield heights available</p><div className="aerial-height-plot" aria-label={`${t.name} player heights`}>{t.players.filter(p=>p.role!=='GK'&&p.height_cm!==null).toSorted((a,b)=>a.height_cm!-b.height_cm!).map((p,index)=><span key={p.id} style={{left:`${Math.max(0,Math.min(100,(p.height_cm!-155)/55*100))}%`,top:`${12+(index%3)*16}px`}} tabIndex={0} aria-label={`${p.name}, ${p.height_cm} centimetres`}><i/><em>{p.name}: {p.height_cm} cm</em></span>)}</div><div className="aerial-axis"><span>155 cm</span><span>180 cm</span><span>210 cm</span></div><div className="aerial-height-extras"><span>Tallest three, average<strong>{value(t.height.tallest_three_mean_cm,1)} cm</strong></span><span>Outfield starters ≥185 cm<strong>{value(t.height.at_least_185)} / 10</strong></span></div></section>)}</div>
+ <div className="aerial-height-grid">{f.teams.map((t,i)=><HeightPanel key={t.id} team={t} index={i}/>)}</div>
  <div className="aerial-history-control"><label>Choose the history<select value={w} onChange={e=>setW(e.target.value as WindowKey)}><option value="recent">Both seasons</option><option value="current">{board.seasons[0]}</option><option value="previous">{board.seasons[1]}</option></select></label><p>Up to 10 covered appearances per player and five earlier matches per team. Always before this fixture.</p></div>
  <Section id="players" kind="duel" title="Who actually uses their height?" text="Compare two starters, then open the matches behind every player’s figures."/>
  <Comparison key={f.id} fixture={f} windowKey={w}/>{f.teams.map(t=><Players key={t.id} team={t} windowKey={w}/>)}
