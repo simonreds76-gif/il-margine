@@ -166,7 +166,9 @@ def write_alert_state(path: Path, state: dict, rows: Iterable[dict]) -> None:
 
 def has_reliable_pitch_context(row: dict) -> bool:
     fields = ["primary_on_pitch_at_penalty", "secondary_on_pitch_at_penalty", "tertiary_on_pitch_at_penalty"]
-    values = [str(row.get(k) or "") for k in fields]
+    values = [str(row.get(k) or "") for k in fields
+              if not (row.get(k) == "Not assigned - hierarchy slot empty"
+                      and not str(row.get(k.replace("_on_pitch_at_penalty", "_pre_match")) or "").strip())]
     values.append(str(row.get("actual_taker_on_pitch_at_penalty") or row.get("actual_taker_match_status") or ""))
     return all(v.startswith(("Yes -", "No -")) for v in values)
 

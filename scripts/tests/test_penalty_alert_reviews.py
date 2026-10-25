@@ -41,6 +41,8 @@ class PenaltyAlertReviewsTests(unittest.TestCase):
         ]
         alert = script("club-penalty-review-alert")
         for row, identity in cases:
+            row.update({role + "_on_pitch_at_penalty": "Yes - started"
+                        for role in ("primary", "secondary", "tertiary", "actual_taker")})
             self.assertEqual(reviews.ticket_id(row), identity)
             for status in reviews.CLOSED:
                 with self.subTest(identity=identity, status=status):
