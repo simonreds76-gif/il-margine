@@ -1,9 +1,25 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-25T04:50:10Z",
+  "generated_at": "2026-10-25T13:22:20Z",
   "league": "la-liga",
-  "row_count": 4,
+  "row_count": 5,
   "rows": [
+    {
+      "team": "Athletic Club",
+      "team_key": "athletic club",
+      "player_name": "Alex Berenguer",
+      "player_key": "alex berenguer",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-21"
+    },
     {
       "team": "Elche",
       "team_key": "elche",
