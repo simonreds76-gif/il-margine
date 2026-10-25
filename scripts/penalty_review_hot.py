@@ -26,6 +26,20 @@ def evidence_ids(row):
     return {str(e['match_id']) for e in row.get('event_evidence', []) if e.get('match_id')}
 
 
+def exact_match_payload(review, match_id):
+    # The shared team matchup HTML can show a newer meeting: URL fragments
+    # are not sent to the server. Prefer the same ID endpoint as settlement.
+    url='https://www.fotmob.com/api/data/matchDetails'
+    try:
+        detail=review._fetch_json(url,{'matchId':int(match_id)})
+        if str((detail.get('general') or {}).get('matchId'))==str(match_id):
+            return {'props':{'pageProps':detail},'_source_url':url+'?matchId='+str(match_id)}
+    except Exception:
+        pass
+    # Completeness/identity validation below also applies to the HTML fallback.
+    return review._fetch_match_payload(int(match_id))
+
+
 def merge_rows(old, fresh, replaced, earliest, retain=()):
     kept = [r for r in old if (r.get('date','') >= earliest or evidence_ids(r).intersection(retain)) and not evidence_ids(r).intersection(replaced)]
     return sorted(kept + fresh, key=lambda r:(r.get('date',''),r.get('match',''),r.get('actual_taker','')), reverse=True)
@@ -47,6 +61,8 @@ def validate_payload(payload, fixture):
     if g.get('parentLeagueId',g.get('leagueId')) != fixture['league_id']:raise ValueError('competition_identity_mismatch')
     if [g.get(k+'Team',{}).get('id') for k in ('home','away')] != [m[k]['id'] for k in ('home','away')]:raise ValueError('participant_identity_mismatch')
     if not all(g.get(k+'Team',{}).get('name') for k in ('home','away')) or not g.get('matchTimeUTCDate'):raise ValueError('missing_match_metadata')
+    reason=str((h.get('reason') or {}).get('long','')).lower()
+    if h.get('cancelled') or 'postpon' in reason or 'cancel' in reason:raise ValueError('match_postponed_or_cancelled')
     if g.get('finished') is not True or h.get('finished') is not True or h.get('cancelled') or h.get('awarded'):raise ValueError('match_not_confirmed_complete')
     shots=(c.get('shotmap') or {}).get('shots')
     if not isinstance(shots,list) or not shots:raise ValueError('empty_or_missing_shotmap')
@@ -109,7 +125,7 @@ def run(root, now=None):
         try:
             day=fetch(review.MATCHES_URL,{'date':date,'timezone':'Europe/London','ccode3':'GBR'})
             if not isinstance(day.get('leagues'),list):raise ValueError('invalid_daily_listing')
-            discovered=0;listing_errors=[]
+            discovered=0;listing_errors=[];seen=set()
             for league in day['leagues']:
                 lid=league.get('primaryId',league.get('id'))
                 if lid not in by_id:continue
@@ -124,29 +140,42 @@ def run(root, now=None):
                         if kickoff.tzinfo is None:raise ValueError('missing_fixture_timezone')
                         mid=str(m['id']);old=fixtures.get(mid,{})
                         stub={k:copy.deepcopy(m[k]) for k in ('id','home','away','status')}
-                        changed=old and (any(old['match'][k]!=stub[k] for k in ('home','away')) or old['match']['status']['utcTime']!=stub['status']['utcTime'])
+                        changed=old and (any(old['match'][k]['id']!=stub[k]['id'] for k in ('home','away')) or old['match']['status']['utcTime']!=stub['status']['utcTime'])
                         entry={**old,'league':by_id[lid],'league_id':lid,'match':stub,'date':status['utcTime'][:10]}
-                        entry.setdefault('state','pending');entry.setdefault('first_seen',now.isoformat())
-                        if changed:entry.update(state='pending',reason='fixture_changed',next_attempt='')
-                        if status.get('cancelled') or status.get('awarded'):entry.update(state='excluded',reason='cancelled_or_awarded')
-                        fixtures[mid]=entry;discovered+=1
+                        entry.setdefault('state','pending');entry.setdefault('first_seen',now.isoformat());entry.setdefault('pending_since',now.isoformat())
+                        if changed:entry.update(state='pending',reason='fixture_changed',pending_since=now.isoformat(),next_attempt='')
+                        if status.get('awarded'):entry.update(state='excluded',reason='awarded_without_play')
+                        elif status.get('cancelled') and entry['state']!='deferred':entry.update(state='deferred',reason='awaiting_rearranged_fixture',next_attempt=(now+timedelta(hours=24)).isoformat())
+                        fixtures[mid]=entry;discovered+=1;seen.add(mid)
                     except Exception as exc:
                         listing_errors.append(str(exc) if isinstance(exc,ValueError) else type(exc).__name__)
             if listing_errors:raise ValueError('incomplete_listing:'+','.join(sorted(set(listing_errors))))
-            if discovered < discovery.get(date,{}).get('expected',0):raise ValueError('daily_listing_coverage_drop')
-            discovery[date]={'ok':True,'checked_at':now.isoformat(),'expected':discovered}
+            known=set(discovery.get(date,{}).get('match_ids',[]))
+            missing=known-seen
+            for mid in missing:
+                if mid in fixtures and fixtures[mid]['state']=='verified':
+                    fixtures[mid].update(state='reverify',reason='absent_from_listing',next_attempt='')
+            # Missing IDs remain individually tracked and fetched by ID. A moved
+            # fixture must not leave a calendar date permanently failing.
+            discovery[date]={'ok':True,'checked_at':now.isoformat(),'expected':discovered,'match_ids':sorted(known|seen),'missing_known_ids':sorted(missing)}
         except Exception as exc:
             discovery[date]={**discovery.get(date,{}),'ok':False,'checked_at':now.isoformat(),'reason':str(exc) if isinstance(exc,ValueError) else type(exc).__name__}
     for f in fixtures.values():
         if f['state']=='verified' and f['date'] >= (now-timedelta(days=8)).date().isoformat() and datetime.fromisoformat(f['verified_at']) <= now-timedelta(hours=24):
-            f.update(state='pending',reason='daily_reconciliation',next_attempt='')
+            f.update(state='reverify',reason='daily_reconciliation',next_attempt='')
     chosen=select_due(fixtures,now)
     failures=[];raw_fetch=review._fetch_match_payload
     earliest=(now-timedelta(days=8)).date().isoformat()
     for mid,f in chosen:
         f.update(last_attempt=now.isoformat(),attempts=f.get('attempts',0)+1)
         try:
-            payload=raw_fetch(int(mid));expected=validate_payload(payload,f)
+            payload=exact_match_payload(review,mid)
+            general=payload.get('props',{}).get('pageProps',{}).get('general') or {}
+            if str(general.get('matchId'))==mid and general.get('matchTimeUTCDate'):
+                detail_time=datetime.fromisoformat(general['matchTimeUTCDate'].replace('Z','+00:00'))
+                if detail_time.tzinfo is None:raise ValueError('missing_detail_timezone')
+                f['match']['status']['utcTime']=detail_time.isoformat();f['date']=detail_time.date().isoformat()
+            expected=validate_payload(payload,f)
             # Use the confirmed completed detail, even after an older pending game
             # has left all rolling calendar windows.
             m=copy.deepcopy(f['match']);m['status'].update(started=True,finished=True)
@@ -159,22 +188,24 @@ def run(root, now=None):
             if expected!=emitted:raise ValueError('penalty_parse_coverage_mismatch')
             config=review.LEAGUE_CONFIGS[f['league']];out=config['output_json']
             old=json.loads(out.read_text(encoding='utf-8')) if out.exists() else {'rows':[]}
-            rows=merge_rows(old['rows'],fresh,{mid},earliest,{k for k,v in fixtures.items() if v['state']=='pending'})
+            rows=merge_rows(old['rows'],fresh,{mid},earliest,{k for k,v in fixtures.items() if v['state'] in {'pending','reverify','deferred'}})
             review._write_csv(config['output_csv'],rows)
             review._write_json(out,{**old,'schema_version':1,'league':f['league'],'generated_at':now.isoformat(),'row_count':len(rows),'rows':rows,'hot_source_health':health})
             if any(not alerts.has_reliable_pitch_context(r) for r in fresh):raise ValueError('unresolved_player_timeline')
             f.update(state='verified',reason='penalties_verified' if expected else 'verified_no_penalty',verified_at=now.isoformat(),penalty_count=len(expected),next_attempt='')
         except Exception as exc:
             reason=str(exc) if isinstance(exc,ValueError) else type(exc).__name__
-            f.update(state='pending',reason=reason,next_attempt=(now+timedelta(minutes=60)).isoformat())
+            if f['state']!='pending':f['pending_since']=now.isoformat()
+            deferred=reason=='match_postponed_or_cancelled'
+            f.update(state='deferred' if deferred else 'pending',reason=reason,next_attempt=(now+timedelta(hours=24 if deferred else 1)).isoformat())
             failures.append({'match_id':mid,'reason':reason})
         finally:
             review._fetch_match_payload=raw_fetch
     pending=[f for f in fixtures.values() if f['state']=='pending']
     overdue=[f for f in pending if datetime.fromisoformat(f['match']['status']['utcTime'].replace('Z','+00:00')) < now-timedelta(hours=24)]
-    stalled=[f for f in overdue if datetime.fromisoformat(f['first_seen']) < now-timedelta(hours=24)]
+    stalled=[f for f in overdue if datetime.fromisoformat(f.get('pending_since',f['first_seen'])) < now-timedelta(hours=24)]
     state.update(updated_at=now.isoformat(),checked={mid:f['verified_at'][:10] for mid,f in fixtures.items() if f['state']=='verified'},
-        checked_this_run=len(chosen),errors=failures,coverage={'expected':len(fixtures),'verified':sum(f['state']=='verified' for f in fixtures.values()),'pending':len(pending),'overdue':len(overdue),'stalled':len(stalled),'excluded':sum(f['state']=='excluded' for f in fixtures.values()),'failed_discovery_days':[d for d,v in discovery.items() if not v['ok']]})
+        checked_this_run=len(chosen),errors=failures,coverage={'expected':len(fixtures),'verified':sum(f['state']=='verified' for f in fixtures.values()),'pending':len(pending),'reverify':sum(f['state']=='reverify' for f in fixtures.values()),'deferred':sum(f['state']=='deferred' for f in fixtures.values()),'overdue':len(overdue),'stalled':len(stalled),'excluded':sum(f['state']=='excluded' for f in fixtures.values()),'failed_discovery_days':[d for d,v in discovery.items() if not v['ok']]})
     path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix('.tmp');tmp.write_text(json.dumps(state,ensure_ascii=False,indent=2)+'\n',encoding='utf-8');tmp.replace(path)
     print('Penalty coverage: '+json.dumps(state['coverage'])+'; processed '+str(len(chosen)))
     if os.environ.get('GITHUB_STEP_SUMMARY'):

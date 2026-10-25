@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import Mock,patch
 from types import SimpleNamespace
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from penalty_review_hot import merge_rows,notify,select_due,validate_payload,run
+from penalty_review_hot import merge_rows,notify,select_due,validate_payload,run,exact_match_payload
 from datetime import datetime,timezone,timedelta
 import copy,json,tempfile,contextlib,io
 
@@ -49,6 +49,15 @@ def payload(mid=1):
                    'matchFacts':{'events':{'ongoing':False,'events':[]}}}}}}
 
 class CoverageTests(unittest.TestCase):
+    def test_exact_api_preferred_over_latest_meeting_html(self):
+        p=payload();r=SimpleNamespace(_fetch_json=Mock(return_value=p['props']['pageProps']),_fetch_match_payload=Mock(side_effect=AssertionError('must not use latest meeting page')))
+        self.assertEqual(exact_match_payload(r,1)['props'],p['props'])
+    def test_wrong_api_identity_falls_back_but_is_not_accepted(self):
+        r=SimpleNamespace(_fetch_json=Mock(return_value=payload(2)['props']['pageProps']),_fetch_match_payload=Mock(return_value=payload(2)))
+        with self.assertRaisesRegex(ValueError,'match_identity_mismatch'):validate_payload(exact_match_payload(r,1),fixture())
+    def test_own_goal_is_counted_in_complete_score(self):
+        p=payload();v=p['props']['pageProps'];v['header']['status']['scoreStr']='0 - 1';v['content']['shotmap']['shots'][0].update(eventType='Goal',isOwnGoal=True)
+        self.assertEqual(validate_payload(p,fixture()),set())
     def test_verified_scoreless_match(self):
         self.assertEqual(validate_payload(payload(),fixture()),set())
     def test_incomplete_data_never_means_no_penalty(self):
@@ -107,7 +116,10 @@ class CoverageTests(unittest.TestCase):
             old=row(1);out.write_text(json.dumps({'rows':[old]}),encoding='utf-8')
             f=fixture(1,'2026-09-01T12:00:00Z');f['first_seen']='2026-09-01T12:00:00+00:00'
             statepath.write_text(json.dumps({'fixtures':{'1':f},'discovery':{}}),encoding='utf-8')
-            p=payload()
+            if mode=='reverify':
+                fs={str(i):{**fixture(i,'2026-10-24T12:00:00Z'),'state':'verified','verified_at':'2026-10-24T19:00:00+00:00','first_seen':'2026-10-23T12:00:00+00:00'} for i in range(1,18)}
+                statepath.write_text(json.dumps({'fixtures':fs,'discovery':{}}),encoding='utf-8')
+            p=payload();p['props']['pageProps']['general']['matchTimeUTCDate']=f['match']['status']['utcTime']
             if mode=='empty':p['props']['pageProps']['content']['shotmap']['shots']=[]
             if mode=='unknown':p['props']['pageProps']['content']['shotmap']['shots'][0].update(situation='Penalty',playerId=7,fullName='Player')
             def build(league,dates,health):
@@ -115,6 +127,11 @@ class CoverageTests(unittest.TestCase):
                 return [{**row(1),'event_evidence':[{'match_id':'1','source_event_id':'1'}]}] if mode=='unknown' else []
             fetch=Mock(return_value={'leagues':[]})
             if mode=='outage':fetch.side_effect=TimeoutError()
+            if mode=='postponed':p['props']['pageProps']['header']['status'].update(cancelled=True,finished=False)
+            if mode=='moved':
+                statepath.write_text(json.dumps({'fixtures':{'1':{**f,'state':'verified','verified_at':'2026-10-24T20:00:00+00:00'}},'discovery':{'20261025':{'ok':True,'expected':1,'match_ids':['1']}}}),encoding='utf-8')
+                p['props']['pageProps']['general']['matchTimeUTCDate']='2026-11-01T12:00:00Z'
+                p['props']['pageProps']['general']['finished']=False
             if mode=='malformed':fetch.return_value={'leagues':[{'id':55,'matches':[{},fixture(2)['match']]}]}
             review=SimpleNamespace(MATCHES_URL='daily',LEAGUE_CONFIGS={'test':{'league_id':55,'output_json':out,'output_csv':d/'review.csv'}},
                 _fetch_json=fetch,_fetch_match_payload=Mock(return_value=p),build_live_review_rows=build,
@@ -123,6 +140,20 @@ class CoverageTests(unittest.TestCase):
             with patch('penalty_review_hot.load',side_effect=[review,alerts]), patch.dict('os.environ',{'GITHUB_STEP_SUMMARY':''}), contextlib.redirect_stdout(io.StringIO()):
                 result=run(root,datetime(2026,10,25,20,tzinfo=timezone.utc))
             return result,json.loads(out.read_text(encoding='utf-8'))
+    def test_reconciliation_overflow_is_not_a_false_stalled_alarm(self):
+        state,_=self.scenario('reverify')
+        self.assertEqual(state['coverage']['stalled'],0)
+        self.assertEqual(state['coverage']['reverify'],1)
+    def test_moved_fixture_does_not_permanently_fail_calendar_day(self):
+        state,_=self.scenario('moved')
+        self.assertEqual(state['coverage']['failed_discovery_days'],[])
+        self.assertEqual(state['fixtures']['1']['date'],'2026-11-01')
+        self.assertEqual(state['coverage']['stalled'],0)
+    def test_postponed_fixture_is_deferred_not_dropped(self):
+        state,_=self.scenario('postponed')
+        self.assertEqual(state['fixtures']['1']['state'],'deferred')
+        self.assertEqual(state['coverage']['stalled'],0)
+        self.assertNotIn('1',state['checked'])
     def test_bad_listing_row_does_not_hide_following_fixture(self):
         state,_=self.scenario('malformed')
         self.assertIn('2',state['fixtures'])
