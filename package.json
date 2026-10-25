@@ -7,7 +7,7 @@
     "dev:next": "node scripts/run-next.mjs dev --webpack",
     "dev:turbo": "node scripts/run-next.mjs dev",
     "daily-odds": "python scripts/run-daily-odds.py",
-    "prebuild": "node scripts/build-tennis-matchday-history.mjs && python scripts/audit-vercel-isr-policy.py && node --test scripts/tests/cpu-budget.test.cjs && node --test scripts/tests/vercel-build-policy.test.cjs && node --test scripts/tests/tip-portraits.test.cjs",
+    "prebuild": "node scripts/check-covered-history.mjs && node scripts/build-tennis-matchday-history.mjs && python scripts/audit-vercel-isr-policy.py && node --test scripts/tests/cpu-budget.test.cjs && node --test scripts/tests/vercel-build-policy.test.cjs && node --test scripts/tests/tip-portraits.test.cjs",
     "build": "node scripts/check-monitor-text.mjs && node scripts/run-next.mjs build && node scripts/check-vercel-trace.mjs && node scripts/compress-matchup-output.mjs",
     "start": "node scripts/run-next.mjs start",
     "lint": "eslint",

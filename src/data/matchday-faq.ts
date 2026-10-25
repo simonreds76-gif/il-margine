@@ -1,7 +1,7 @@
 export const matchdayFaqs = [
   {
     question: 'Is this the complete head to head record?',
-    answer: 'No. The archive covers Premier League, Serie A, La Liga, Bundesliga and Ligue 1 matches from 2012/13 onwards. Lower divisions such as the Championship, domestic cups and European competitions are not included. Club and manager counts refer to this covered history, not all-time meetings. Verified results without odds count as meetings but are excluded from ROI.',
+    answer: 'No. The archive covers Premier League, Serie A, La Liga, Bundesliga and Ligue 1 matches from 2012/13 onwards. The optional Include Championship view adds its regular-season club history only. Manager records remain top-five only. Domestic cups, playoffs, Europe and other lower divisions remain excluded. Club and manager counts refer to this covered history, not all-time meetings. Verified results without odds count as meetings but are excluded from ROI.',
   },
   {
     question: 'How do I use Return Atlas Matchday?',

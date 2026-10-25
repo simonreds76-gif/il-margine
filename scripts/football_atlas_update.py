@@ -470,6 +470,17 @@ def publish(config, helper, version, path, status):
         board_evidence = candidate_get(board['evidenceUrl'])
         if json.loads(board_evidence) != read(checkout / 'public' / board['evidenceUrl'].lstrip('/')):
             raise ValueError('Fixture evidence differs from validated candidate')
+    extension_path = checkout / 'src/data/covered-leagues-release.json'
+    extension_routes = []
+    if extension_path.exists():
+        extension = read(extension_path)
+        if extension['baseBoardVersion'] != board['version']:
+            raise ValueError('Championship history does not match current fixture board')
+        extension_board = read(checkout / 'public' / extension['boardUrl'].lstrip('/'))
+        extension_routes = [extension['historyUrl'], extension['boardUrl'], extension_board['evidenceUrl']]
+        for route in extension_routes:
+            if json.loads(candidate_get(route)) != read(checkout / 'public' / route.lstrip('/')):
+                raise ValueError('Candidate Championship history differs from validated data')
     if api('/v4/aliases/ilmargine.bet')['deploymentId'] != before or run(['git', 'ls-remote', 'origin', 'refs/heads/' + helper.BRANCH], checkout).split()[0] != sha:
         raise RuntimeError('Another release advanced; refusing to replace newer production')
     # Same promotion endpoint used by the CLI, without its personal-user lookup.
@@ -485,6 +496,8 @@ def publish(config, helper, version, path, status):
         checks['https://ilmargine.bet/football-atlas/fixtures'] = lambda data: f'data-version="{board["version"]}"' in data.decode()
     if manager_path.exists():
         checks['https://ilmargine.bet' + manager['indexUrl']] = lambda data: json.loads(data) == read(checkout / 'public' / manager['indexUrl'].lstrip('/'))
+    for route in extension_routes:
+        checks['https://ilmargine.bet' + route] = lambda data, route=route: json.loads(data) == read(checkout / 'public' / route.lstrip('/'))
     verify_live(helper.fetch, checks)
     if api('/v4/aliases/ilmargine.bet')['deploymentId'] != deployment['id']:
         raise RuntimeError('Production changed during live verification; investigate release')

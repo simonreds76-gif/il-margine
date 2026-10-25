@@ -117,7 +117,7 @@ def valid_history(rows, cutoff):
 
 def orient(row, first_is_home):
     raw = row.get('odds')
-    priced = raw and len(raw) == 3 and all(type(p) in (int, float) and 1 < p <= 1000 for p in raw) and row.get('basis') in ('closing', 'last-pre-match', 'bet365-last-pre-match', 'bet365-closing', 'bet365-pre-match')
+    priced = raw and len(raw) == 3 and all(type(p) in (int, float) and 1 < p <= 1000 for p in raw) and row.get('basis') in ('closing', 'last-pre-match', 'bet365-last-pre-match', 'bet365-closing', 'bet365-pre-match', 'pinnacle-pre-match')
     prices = (raw if first_is_home else list(reversed(raw))) if priced else None
     winner = 1 if row['hg'] == row['ag'] else (0 if (row['hg'] > row['ag']) == first_is_home else 2)
     book = sum(1 / p for p in prices) if prices else None
@@ -287,7 +287,17 @@ def refresh(state, *, offline=False, now=None, days=21):
             if len(old.stem.removeprefix('evidence-')) == 12 and all(c in '0123456789abcdef' for c in old.stem.removeprefix('evidence-')):
                 old.unlink()
                 paths.append(old.relative_to(ROOT).as_posix())
-    return {'paths': paths, 'report': report, 'changed': previous != payload}
+    extension_changed = False
+    if (ROOT / 'data/football-atlas/championship-seed.json').exists():
+        import atlas_covered_history
+        paths.extend(atlas_covered_history.sync_forward_checkpoint())
+        extension = atlas_covered_history.refresh(state, offline=True, now=now)
+        paths.extend(extension['paths'])
+        report['championshipHistory'] = extension['report']
+        extension_changed = extension['changed']
+        atomic(state / 'report.json', report)
+    return {'paths': paths, 'report': report, 'changed': previous != payload or extension_changed}
+
 
 
 if __name__ == '__main__':
