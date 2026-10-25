@@ -8,6 +8,7 @@ import time
 import requests
 from aerial_data import ROOT, LEAGUES, utc, read, save, build, validate
 from aerial_source import extract
+from aerial_heights import merge_squad, recover as recover_heights
 
 def page(url):
     response = requests.get(url, timeout=25)
@@ -91,16 +92,21 @@ def refresh(root=ROOT, now=None, online=True, force=False):
             for group in groups:
                 if group.get('title')=='coach': continue
                 for player in group.get('members',[]):
-                    pid=str(player['id']); old=heights.get(pid,{})
-                    if old.get('source_kind')=='reviewed_external': continue
-                    height=player.get('height')
-                    height=height if type(height) in (int,float) and 130<=height<=230 else None
-                    heights[pid]=dict(id=pid,name=player['name'],height_cm=height,team_id=tid,
-                        positions=player.get('positionIdsDesc'),role_group=group['title'],
-                        source_url=source['url'],observed_at=now.isoformat(),source_kind='current_squad',
-                        source_sha256=digest,status='reported')
+                    pid=str(player['id'])
+                    heights[pid]=merge_squad(heights.get(pid,{}),player,tid,group['title'],
+                                             source['url'],digest,now)
             source['observed_at']=now.isoformat()
             save(data/'heights.json.gz',heights);save(data/'roster-sources.json',sources)
+    # Run on every existing publication cycle, independently of the fortnightly
+    # roster rotation. Exact-ID profiles prioritise newly announced starters.
+    # Missing data/one blocked source must not suppress the rest of the board.
+    try:
+        height_health = recover_heights(root, calendar, now, page, online=online)
+        health['height_recovery'] = {k:height_health[k] for k in
+            ('generated_at','missing','upcoming_missing','attempted','recovered','requests_today')}
+    except Exception as exc:
+        health['height_recovery_error'] = dict(at=now.isoformat(),error=str(exc))
+        print(f'::warning::Height recovery unavailable: {exc}')
     payload = build(root, now)
     save(root/'public/fair-odds-lab/aerial.json', payload)
     health.update(last_build_at=now.isoformat(), fixtures=len(payload['fixtures']),
