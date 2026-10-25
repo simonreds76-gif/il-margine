@@ -1,5 +1,9 @@
 export const matchdayFaqs = [
   {
+    question: 'Is this the complete head to head record?',
+    answer: 'No. The archive covers Premier League, Serie A, La Liga, Bundesliga and Ligue 1 matches from 2012/13 onwards. Lower divisions such as the Championship, domestic cups and European competitions are not included. Club and manager counts refer to this covered history, not all-time meetings. Verified results without odds count as meetings but are excluded from ROI.',
+  },
+  {
     question: 'How do I use Return Atlas Matchday?',
     answer: 'Choose a league or search for a team to find an upcoming fixture. Team columns follow the upcoming teams or their managers across all historical venues. Each card shows two records: previous meetings between the managers, including at other clubs, and previous meetings between the clubs. Compare the historical returns for either named team or the draw, then open the card to see the matches, results and recorded odds behind each figure. Returns use the same stake per priced match. Verified results without odds stay in the meeting list and result counts, but are excluded from ROI.',
   },

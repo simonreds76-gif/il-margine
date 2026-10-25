@@ -1,0 +1,6 @@
+.coverage{display:flex;align-items:flex-start;gap:10px;padding:13px 15px;margin:0 0 20px;border:1px solid #293943;border-radius:10px;background:#111b22;color:#aebdc9;font-size:12px;line-height:1.55}
+.coverage>svg{flex:0 0 18px;margin-top:2px;color:#a9cdf5}
+.coverage>div{min-width:0}
+.coverage strong{font-weight:600;color:#e4edf3;font-size:13px}
+.coverage p{margin:4px 0 0;font-size:12px;line-height:1.55;color:#aebdc9}
+@media(max-width:480px){.coverage{padding:11px 12px;gap:8px}.coverage strong{font-size:12px}}

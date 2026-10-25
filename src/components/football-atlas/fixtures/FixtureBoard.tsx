@@ -46,7 +46,8 @@ function RecordRow({ kind, record, unavailable, stale, paired, names }: { kind: 
     <div className="af-h2h-heading"><Icon name={kind === 'Managers' ? 'manager' : 'club'} /><h3>{kind === 'Managers' ? 'Manager' : 'Club'} head to head</h3>
       {!unavailable && record.count > 0 && record.count < 6 && <small>{record.count < 3 ? 'Short history' : 'Few meetings'}</small>}
     </div>
-    <H2HRecord compact showCoverage={false} results={unavailable ? null : record.results ?? null} meetings={unavailable ? null : meetings} names={names} details={returns} />
+    <H2HRecord compact showCoverage={false} coverageLabel="top-five leagues only" results={unavailable ? null : record.results ?? null} meetings={unavailable ? null : meetings} names={names} details={returns} />
+    <p className="af-h2h-coverage">Top-five leagues only · since 2012/13</p>
     {!unavailable && meetings > 0 && <p className="af-h2h-coverage"><span>{meetings} {meetings === 1 ? 'meeting' : 'meetings'} · {record.count} priced</span>{record.firstDate && record.lastDate && <span> · {record.firstDate.slice(0, 4)}{record.firstDate.slice(0, 4) === record.lastDate.slice(0, 4) ? '' : ` to ${record.lastDate.slice(0, 4)}`}</span>}</p>}
   </section>;
 }

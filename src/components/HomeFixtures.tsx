@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ToolEmblem from './ToolEmblem';
 import H2HRecord from './H2HRecord';
+import { FOOTBALL_ARCHIVE_DETAIL } from './FootballArchiveCoverage';
 import FixturePhoto from './FixturePhoto';
 import { homeLeagueLogos, tennisCompetition } from '@/lib/home-competition';
 import { londonDay, upcomingHomeFixtures, type HomeFixture, type HomeHistory, type HomeFixturesData } from '@/lib/home-fixtures';
@@ -13,8 +14,8 @@ import './home-fixtures.css';
 function Portrait({ src, person = false }: { src: string | null; person?: boolean }) {
   return <FixturePhoto src={src} className={`hf-portrait ${person ? 'hf-person' : ''}`} size={48} fallback={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d={person ? 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 22v-4c0-6 16-6 16 0v4' : 'M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z'} /></svg>} />;
 }
-function Record({ history, names }: { history: HomeHistory; names: string[] }) {
-  return <H2HRecord results={history.results} meetings={history.meetings} names={names} />;
+function Record({ history, names, football = false }: { history: HomeHistory; names: string[]; football?: boolean }) {
+  return <H2HRecord results={history.results} meetings={history.meetings} names={names} coverageLabel={football ? 'top-five leagues only' : undefined} />;
 }
 function Fixture({ fixture: f, tennis, now }: { fixture: HomeFixture; tennis: boolean; now: number }) {
   const date = new Date(f.start);
@@ -29,8 +30,8 @@ function Fixture({ fixture: f, tennis, now }: { fixture: HomeFixture; tennis: bo
       {competition.country && <Image className="hf-venue-flag" src={`/flags/${competition.country.code}.png`} width={20} height={14} alt={competition.country.name} title={`Played in ${competition.country.name}`} unoptimized />}
     </span><time dateTime={f.start}>{day} · {time}</time></div>
     <div className="hf-opponents">{f.sides.map((s, i) => <div className="hf-side" key={`${f.id}-${i}`}><Portrait key={s.image} src={s.image} person={tennis} /><h4>{s.name}</h4></div>)}<span className="hf-versus" aria-hidden="true">vs</span></div>
-    <div className="hf-history"><span className="hf-kicker">{tennis ? 'Player' : 'Club'} head to head</span><Record history={f.history} names={f.sides.map(s => s.name)} /></div>
-    {f.managers && <div className="hf-managers"><span className="hf-kicker">Manager head to head</span><div className="hf-manager-names">{f.managers.sides.map((s, i) => <span key={i}><Portrait key={s.image} src={s.image} person /><span>{s.name}</span></span>)}</div><Record history={f.managers.history} names={f.managers.sides.map(s => s.name)} /></div>}
+    <div className="hf-history"><span className="hf-kicker">{tennis ? 'Player' : 'Club'} head to head</span><Record football={!tennis} history={f.history} names={f.sides.map(s => s.name)} /></div>
+    {f.managers && <div className="hf-managers"><span className="hf-kicker">Manager head to head</span><div className="hf-manager-names">{f.managers.sides.map((s, i) => <span key={i}><Portrait key={s.image} src={s.image} person /><span>{s.name}</span></span>)}</div><Record football history={f.managers.history} names={f.managers.sides.map(s => s.name)} /></div>}
     <div className="hf-actions"><Link prefetch={false} href={f.href ?? '/tennis-matchday'} aria-label={`${tennis ? 'Compare' : 'Club history for'} ${f.sides.map(s => s.name).join(' and ')}`}><ToolEmblem name={tennis ? 'matchup' : 'football'} />{tennis ? f.href ? 'Compare players' : 'View tennis fixtures' : 'Club history'}<span aria-hidden="true">↗</span></Link>{f.managers && <Link prefetch={false} href={f.managers.href} aria-label={`Manager history for ${f.sides.map(s => s.name).join(' and ')}`}><ToolEmblem name="managers" />Manager history<span aria-hidden="true">↗</span></Link>}</div>
   </article>;
 }
@@ -58,6 +59,7 @@ export default function HomeFixtures() {
       return <div className="hf-sport" id={`home-${sport}`} key={sport}><div className="hf-sport-heading"><ToolEmblem name={sport === 'football' ? 'matchday' : 'tennis-matchday'} /><div><h3>{title}</h3><span>{sport === 'football' ? 'Five major domestic leagues' : 'ATP player meetings'}</span></div><Link prefetch={false} href={href} aria-label={`All ${sport} fixtures`}>View all ↗</Link></div>
 
         <div className="hf-cards" aria-busy={loading}>{loading ? <><div className="hf-empty hf-skeleton" role="status">Loading upcoming fixtures…</div><div className="hf-empty hf-skeleton" aria-hidden="true" /></> : fixtures.length ? fixtures.map(f => <Fixture key={f.id} fixture={f} tennis={sport === 'tennis'} now={now!} />) : <div className="hf-empty"><ToolEmblem name={sport} /><h4>{failed || stale || !feed?.checkedAt ? 'The schedule needs a refresh' : 'No upcoming matches in this snapshot'}</h4><p>Previous meetings are still available in Return Atlas.</p><Link prefetch={false} href={sport === 'football' ? '/football-atlas' : '/return-atlas'}>Explore historical returns ↗</Link></div>}</div>
+        {sport === 'football' && <p className="hf-coverage">League history since 2012/13. {FOOTBALL_ARCHIVE_DETAIL} These are not all-time H2H records.</p>}
         {feed?.checkedAt && <p className="hf-freshness">Updated {new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(feed.checkedAt))} · UK times</p>}
       </div>;
     })}</div><p className="hf-coverage">Records cover meetings in our archive, across all venues. Open the matchup for dates, price coverage and returns.</p>

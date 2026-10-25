@@ -1,3 +1,4 @@
+import FootballArchiveCoverage from '@/components/FootballArchiveCoverage';
 import { studioMetadata } from "@/lib/share-studio-metadata";
 import AtlasPageHeader from "@/components/AtlasPageHeader";
 import frame from "@/components/ResearchPage.module.css";
@@ -42,6 +43,7 @@ export default function ManagerAtlasPage() {
   return <><main className={`manager-atlas ${frame.page}`}>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
     <AtlasPageHeader edition="managers" description="Compare managers across clubs or head to head. Explore past results and returns for team wins, draws and opponents." />
+    <FootballArchiveCoverage managers />
     <ManagerClient html={html} indexUrl={release.indexUrl} />
     <noscript><p>Enable JavaScript to filter the archive and compare managers. Coverage, explanations and FAQs remain available below.</p></noscript>
     <section className="manager-faq" id="manager-faq"><p className="eyebrow">UNDERSTAND THE RECORD</p><h2>Manager Return Atlas FAQs</h2>{MANAGER_ATLAS_FAQS.map(({ question, answer }) => <details key={question}><summary>{question}</summary><p>{answer}</p></details>)}</section>
