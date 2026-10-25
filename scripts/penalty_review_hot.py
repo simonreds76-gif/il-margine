@@ -109,21 +109,30 @@ def run(root, now=None):
         try:
             day=fetch(review.MATCHES_URL,{'date':date,'timezone':'Europe/London','ccode3':'GBR'})
             if not isinstance(day.get('leagues'),list):raise ValueError('invalid_daily_listing')
-            discovered=0
+            discovered=0;listing_errors=[]
             for league in day['leagues']:
                 lid=league.get('primaryId',league.get('id'))
                 if lid not in by_id:continue
-                for m in league.get('matches',[]):
-                    status=m.get('status') or {}
-                    if not m.get('id') or not status.get('utcTime') or not all((m.get(k) or {}).get('id') for k in ('home','away')):raise ValueError('incomplete_fixture_listing')
-                    mid=str(m['id']);old=fixtures.get(mid,{})
-                    stub={k:copy.deepcopy(m[k]) for k in ('id','home','away','status')}
-                    changed=old and (any(old['match'][k]!=stub[k] for k in ('home','away')) or old['match']['status']['utcTime']!=stub['status']['utcTime'])
-                    entry={**old,'league':by_id[lid],'league_id':lid,'match':stub,'date':status['utcTime'][:10]}
-                    entry.setdefault('state','pending');entry.setdefault('first_seen',now.isoformat())
-                    if changed:entry.update(state='pending',reason='fixture_changed',next_attempt='')
-                    if status.get('cancelled') or status.get('awarded'):entry.update(state='excluded',reason='cancelled_or_awarded')
-                    fixtures[mid]=entry;discovered+=1
+                matches=league.get('matches')
+                if not isinstance(matches,list):
+                    listing_errors.append('missing_league_matches:'+str(lid));continue
+                for m in matches:
+                    try:
+                        status=m.get('status') or {}
+                        if not m.get('id') or not status.get('utcTime') or not all((m.get(k) or {}).get('id') for k in ('home','away')):raise ValueError('incomplete_fixture_listing')
+                        kickoff=datetime.fromisoformat(status['utcTime'].replace('Z','+00:00'))
+                        if kickoff.tzinfo is None:raise ValueError('missing_fixture_timezone')
+                        mid=str(m['id']);old=fixtures.get(mid,{})
+                        stub={k:copy.deepcopy(m[k]) for k in ('id','home','away','status')}
+                        changed=old and (any(old['match'][k]!=stub[k] for k in ('home','away')) or old['match']['status']['utcTime']!=stub['status']['utcTime'])
+                        entry={**old,'league':by_id[lid],'league_id':lid,'match':stub,'date':status['utcTime'][:10]}
+                        entry.setdefault('state','pending');entry.setdefault('first_seen',now.isoformat())
+                        if changed:entry.update(state='pending',reason='fixture_changed',next_attempt='')
+                        if status.get('cancelled') or status.get('awarded'):entry.update(state='excluded',reason='cancelled_or_awarded')
+                        fixtures[mid]=entry;discovered+=1
+                    except Exception as exc:
+                        listing_errors.append(str(exc) if isinstance(exc,ValueError) else type(exc).__name__)
+            if listing_errors:raise ValueError('incomplete_listing:'+','.join(sorted(set(listing_errors))))
             if discovered < discovery.get(date,{}).get('expected',0):raise ValueError('daily_listing_coverage_drop')
             discovery[date]={'ok':True,'checked_at':now.isoformat(),'expected':discovered}
         except Exception as exc:

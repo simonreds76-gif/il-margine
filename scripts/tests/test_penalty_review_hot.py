@@ -6,7 +6,7 @@ from types import SimpleNamespace
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from penalty_review_hot import merge_rows,notify,select_due,validate_payload,run
 from datetime import datetime,timezone,timedelta
-import copy,json,tempfile
+import copy,json,tempfile,contextlib,io
 
 def row(mid,date='2026-10-25'):
     return {'date':date,'actual_taker':'Player','event_evidence':[{'match_id':str(mid)}]}
@@ -115,13 +115,18 @@ class CoverageTests(unittest.TestCase):
                 return [{**row(1),'event_evidence':[{'match_id':'1','source_event_id':'1'}]}] if mode=='unknown' else []
             fetch=Mock(return_value={'leagues':[]})
             if mode=='outage':fetch.side_effect=TimeoutError()
+            if mode=='malformed':fetch.return_value={'leagues':[{'id':55,'matches':[{},fixture(2)['match']]}]}
             review=SimpleNamespace(MATCHES_URL='daily',LEAGUE_CONFIGS={'test':{'league_id':55,'output_json':out,'output_csv':d/'review.csv'}},
                 _fetch_json=fetch,_fetch_match_payload=Mock(return_value=p),build_live_review_rows=build,
                 _write_csv=Mock(),_write_json=lambda path,obj:path.write_text(json.dumps(obj),encoding='utf-8'))
             alerts=SimpleNamespace(has_reliable_pitch_context=lambda r:False)
-            with patch('penalty_review_hot.load',side_effect=[review,alerts]):
+            with patch('penalty_review_hot.load',side_effect=[review,alerts]), patch.dict('os.environ',{'GITHUB_STEP_SUMMARY':''}), contextlib.redirect_stdout(io.StringIO()):
                 result=run(root,datetime(2026,10,25,20,tzinfo=timezone.utc))
             return result,json.loads(out.read_text(encoding='utf-8'))
+    def test_bad_listing_row_does_not_hide_following_fixture(self):
+        state,_=self.scenario('malformed')
+        self.assertIn('2',state['fixtures'])
+        self.assertEqual(len(state['coverage']['failed_discovery_days']),3)
     def test_empty_match_retains_saved_evidence_and_pending_status(self):
         state,queue=self.scenario('empty')
         self.assertEqual(queue['rows'],[row(1)])
