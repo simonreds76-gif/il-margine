@@ -19,6 +19,7 @@ BRANCH = 'codex/fair-odds-daily-pitch-20260908'
 TEAM = 'team_UgA9caW5xCBxDyssrOuTQz7S'
 PROJECT = 'prj_OnvAAAzkpLa5N9uZI3Iy2mwEj6IL'
 DATA = 'src/data/penalty-news.json'
+CHECKPOINT = 'data/penalty-news/capture-state.json'
 
 
 def run(*args, timeout=120):
@@ -44,6 +45,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--state', type=Path, required=True)
     parser.add_argument('--dry-run', action='store_true')
+    parser.add_argument('--mode', choices=['daily', 'post-match'], default='daily')
     args = parser.parse_args()
     args.state = args.state.resolve()
     args.state.mkdir(parents=True, exist_ok=True)
@@ -55,7 +57,11 @@ def main():
         raise RuntimeError('Checkout has unrelated tracked changes')
     if not args.dry_run and run('git', 'rev-parse', '--abbrev-ref', 'HEAD') != BRANCH:
         raise RuntimeError('Publication requires the production branch')
-    run(sys.executable, 'scripts/build-penalty-news.py', '--days', str(config['lookbackDays']),
+    checkpoint = args.state / 'capture-state.json'
+    if (ROOT / CHECKPOINT).exists():
+        shutil.copyfile(ROOT / CHECKPOINT, checkpoint)
+    run(sys.executable, 'scripts/build-penalty-news.py', '--days', '2' if args.mode == 'post-match' else str(config['lookbackDays']),
+        '--mode', args.mode, '--checkpoint', checkpoint,
         '--allow-partial', '--evidence-dir', args.state, timeout=1200)
     capture = json.loads((args.state / 'report.json').read_text())
     print(f"Checked {capture['matchesChecked']}/{capture['matchesExpected']} fixtures; "
@@ -65,14 +71,26 @@ def main():
             summary.write(f"## Penalty News capture\n\nFixtures: {capture['matchesChecked']}/{capture['matchesExpected']}. "
                           f"Reports in archive: {capture['articles']}. Source errors: {len(capture['errors'])}. "
                           f"Held events: {len(capture['excluded'])}.\n\n"
+                          f"Mode: {args.mode}. Deferred fixtures: {capture.get('deferred', 0)}. "
+                          f"Pending fixture IDs: {', '.join(capture.get('pendingMatchIds', [])) or 'none'}.\n\n"
                           "Hierarchy review decisions are not read by this job. Full evidence is attached as an artifact.\n")
     if args.dry_run:
         shutil.copyfile(ROOT / DATA, args.state / 'candidate.json')
         print('Dry run only; no commit or deployment')
+        if capture['errors'] or capture['excluded']:
+            raise RuntimeError('Capture incomplete; inspect retained evidence and pending fixtures')
         return
+    (ROOT / CHECKPOINT).parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(checkpoint, ROOT / CHECKPOINT)
     changed = run('git', 'diff', '--name-only').splitlines()
-    if set(changed) - {DATA} or run('git', 'diff', '--cached', '--name-only'):
-        raise RuntimeError('Only validated news data may be committed')
+    if set(changed) - {DATA, CHECKPOINT} or run('git', 'diff', '--cached', '--name-only'):
+        raise RuntimeError('Only validated news data and its capture checkpoint may be committed')
+    # Capture/retry state must survive even if the deployment service is down.
+    # Git auto-deployment is disabled for this branch; this is not publication.
+    if changed:
+        run('git', 'add', '--', DATA, CHECKPOINT)
+        run('git', 'commit', '-m', 'data: reconcile penalty news and completed fixtures')
+        run('git', 'push', 'origin', 'HEAD:' + BRANCH)
     vercel = shutil.which('vercel') or shutil.which('vercel.cmd')
     if not vercel or not os.environ.get('VERCEL_TOKEN'):
         raise RuntimeError('Existing Vercel publication credentials are unavailable')
@@ -88,10 +106,6 @@ def main():
     if not live_sha:
         raise RuntimeError('Cannot verify current production ancestry')
     run('git', 'merge-base', '--is-ancestor', live_sha, 'HEAD')
-    if changed:
-        run('git', 'add', '--', DATA)
-        run('git', 'commit', '-m', 'data: refresh verified penalty news')
-        run('git', 'push', 'origin', 'HEAD:' + BRANCH)
     sha = run('git', 'rev-parse', 'HEAD')
     data = json.loads((ROOT / DATA).read_text())
     version = data['generatedAt']
@@ -101,6 +115,8 @@ def main():
         (args.state / 'publication.json').write_text(json.dumps({'status': 'already_current', 'sha': sha, 'version': version,
             'deploymentId': live['id'], 'articles': len(data['articles']), 'verifiedAt': datetime.now(timezone.utc).isoformat()}, indent=2))
         print('Published news already matches; no build required')
+        if capture['errors'] or capture['excluded']:
+            raise RuntimeError('Capture incomplete; unresolved fixtures saved for retry')
         return
     request = args.state / 'deployment-request.json'
     request.write_text(json.dumps({'target': 'production', 'name': 'il-margine', 'project': PROJECT,
@@ -138,6 +154,8 @@ def main():
     (args.state / 'publication.json').write_text(json.dumps({'status': 'published', 'sha': sha, 'version': version,
         'deploymentId': deployment['id'], 'articles': len(data['articles']), 'verifiedAt': datetime.now(timezone.utc).isoformat()}, indent=2))
     print(f"Published {len(data['articles'])} verified reports")
+    if capture['errors'] or capture['excluded']:
+        raise RuntimeError('Verified articles published; unresolved fixtures saved for retry')
 
 
 if __name__ == '__main__':

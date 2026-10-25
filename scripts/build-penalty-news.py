@@ -144,6 +144,56 @@ def merge(existing, fresh, completed_ids):
     return sorted(merged, key=lambda a: (a["kickoff"], int(a["minute"].split("+")[0]), a["id"]), reverse=True)
 
 
+def fixture_record(match, league_id):
+    return {'matchId': str(match['id']), 'leagueId': league_id,
+            'homeId': str(match.get('home', {}).get('id', '')),
+            'awayId': str(match.get('away', {}).get('id', '')),
+            'kickoff': match.get('status', {}).get('utcTime', ''),
+            'score': match.get('status', {}).get('scoreStr', '')}
+
+
+def validate_fixture(payload, expected):
+    q = payload.get('props', {}).get('pageProps', {})
+    g, teams = q.get('general', {}), q.get('header', {}).get('teams', [])
+    if str(g.get('matchId')) != expected['matchId'] or g.get('leagueId') != expected['leagueId']:
+        raise ValueError('Match payload identity does not match the requested fixture')
+    if len(teams) != 2 or [str(t.get('id')) for t in teams] != [expected['homeId'], expected['awayId']]:
+        raise ValueError('Match payload belongs to different teams')
+    if expected.get('kickoff') and g.get('matchTimeUTCDate', '')[:10] != expected['kickoff'][:10]:
+        raise ValueError('Match payload date does not match the requested fixture')
+
+
+def due_matches(records, mode, now, limit):
+    """Pending fixtures survive the calendar window; verified fixtures are cached.
+
+    The daily reconciliation checks recent fixtures again for source corrections.
+    One follow-up after two hours catches delayed commentary without fetching
+    every completed match on every half-hourly run.
+    """
+    due = []
+    for mid, record in records.items():
+        if record.get('status') != 'verified':
+            due.append((0, record.get('attemptedAt', ''), mid))
+        elif mode == 'daily' and record.get('inWindow'):
+            due.append((1, record.get('verifiedAt', ''), mid))
+        elif record.get('followUpDue') and record['followUpDue'] <= now:
+            due.append((2, record['followUpDue'], mid))
+    ordered = [item[2] for item in sorted(due)]
+    return ordered[:limit], len(ordered) - limit if len(ordered) > limit else 0
+
+
+def public_packet(previous, articles, now, end_date, complete, count):
+    # Operational freshness belongs in the capture ledger/report, not a new
+    # static-site build. No article changes means exactly the same public file.
+    if previous.get('articles') == articles and previous.get('generatedAt'):
+        return previous
+    return {'schemaVersion': 1, 'generatedAt': now,
+            'coverageStart': min((a['date'] for a in articles), default=end_date),
+            'checkedThrough': end_date if complete else previous.get('checkedThrough', ''),
+            'captureStatus': 'complete' if complete else 'partial',
+            'matchesChecked': count, 'articles': articles}
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--end-date", default=date.today().isoformat())
@@ -151,11 +201,17 @@ def main():
     parser.add_argument("--output", type=Path, default=ROOT / "src/data/penalty-news.json")
     parser.add_argument("--evidence-dir", type=Path, default=ROOT / "outputs/penalty-news-capture")
     parser.add_argument("--offline", action="store_true")
+    parser.add_argument('--mode', choices=['daily', 'post-match'], default='daily')
+    parser.add_argument('--checkpoint', type=Path)
     parser.add_argument('--allow-partial', action='store_true', help='Publish verified fixtures while retaining last good records for failed fixtures')
     args = parser.parse_args()
     if not 1 <= args.days <= 8:
         parser.error("Use a bounded 1–8 day window")
     now = datetime.now(timezone.utc).isoformat()
+    checkpoint = read(args.checkpoint, {'schemaVersion': 1, 'matches': {}}) if args.checkpoint else {'schemaVersion': 1, 'matches': {}}
+    records = checkpoint['matches']
+    for record in records.values():
+        record['inWindow'] = False
     logo_map = read(ROOT / "data/goalscorer/team-logo-map.json", {})
     clubs = {str(v["fotmob_team_id"]): {"name": k, "logo": v.get("logo_path") or f"https://images.fotmob.com/image_resources/logo/teamlogo/{v['fotmob_team_id']}.png"}
              for league in logo_map.get("leagues", {}).values() for k, v in league.get("teams", {}).items() if v.get("fotmob_team_id")}
@@ -184,11 +240,23 @@ def main():
                 atomic_write(path, fixtures)
             for league in fixtures["leagues"]:
                 if league.get("id") in LEAGUES:
-                    match_ids.update(str(m["id"]) for m in league.get("matches", []) if m.get("status", {}).get("finished") is True)
+                    for match in league.get('matches', []):
+                        if match.get('status', {}).get('finished') is not True:
+                            continue
+                        expected = fixture_record(match, league['id'])
+                        mid = expected['matchId']
+                        match_ids.add(mid)
+                        record = records.setdefault(mid, {'status': 'pending'})
+                        if record.get('fixture') != expected:
+                            record.update(status='pending', fixture=expected)
+                        record['inWindow'] = True
         except Exception as exc:
             errors.append({"date": day, "reason": str(exc)})
-    for mid in sorted(match_ids):
+    due, deferred = due_matches(records, args.mode, now, 16 if args.mode == 'post-match' else 128)
+    for mid in due:
         path = args.evidence_dir / f"match-{mid}.json"
+        record = records[mid]
+        record['attemptedAt'] = now
         try:
             if args.offline:
                 packet = read(path, {})
@@ -201,6 +269,7 @@ def main():
                     raise ValueError("Missing match payload")
                 packet = {"sourceUrl": url, "observedAt": now, "payload": json.loads(found.group(1))}
                 atomic_write(path, packet)
+            validate_fixture(packet['payload'], record['fixture'])
             q = packet['payload']['props']['pageProps']
             commentary = {}
             if any(s.get('situation') == 'Penalty' for s in q.get('content', {}).get('shotmap', {}).get('shots', [])):
@@ -227,21 +296,42 @@ def main():
             if not omitted:
                 completed.add(match_id)
                 fresh.extend(articles)
+                first = record.get('firstVerifiedAt')
+                record.update(status='verified', verifiedAt=now, firstVerifiedAt=first or now,
+                              sourceObservedAt=packet['observedAt'],
+                              sourceHash=hashlib.sha256(json.dumps(packet['payload'], sort_keys=True).encode()).hexdigest())
+                record.pop('error', None)
+                if not first:
+                    record['followUpDue'] = (datetime.fromisoformat(now) + timedelta(hours=2)).isoformat()
+                elif record.get('followUpDue', now) <= now:
+                    record.pop('followUpDue', None)
+            else:
+                record.update(status='pending', error='Unresolved penalty event; retained for retry')
             excluded.extend(omitted)
             if articles:
                 print(f"Match {mid}: {len(articles)} verified penalties")
         except Exception as exc:
             errors.append({"matchId": mid, "reason": str(exc)})
+            record.update(status='pending', error=str(exc))
     previous = read(args.output, {"articles": []})
     articles = merge(previous["articles"], fresh, completed)
     report = {"checkedAt": now, "windowEnd": args.end_date, "days": args.days, "matchesChecked": len(completed),
-              "matchesExpected": len(match_ids), "articles": len(articles), "errors": errors, "excluded": excluded}
+              "matchesExpected": len(due), "articles": len(articles), "errors": errors, "excluded": excluded,
+              'mode': args.mode, 'completedInCalendar': len(match_ids), 'deferred': deferred,
+              'cachedVerified': sum(r.get('status') == 'verified' and mid not in due for mid, r in records.items()),
+              'pendingMatchIds': sorted(mid for mid, r in records.items() if r.get('status') != 'verified')}
     report['incidentCoverage'] = {'verified': sum(bool(a.get('incident')) for a in fresh), 'total': len(fresh),
                                   'missing': [a['id'] for a in fresh if not a.get('incident')]}
     report['enrichmentWarnings'] = enrichment_warnings
     atomic_write(args.evidence_dir / "report.json", report)
+    if args.checkpoint:
+        # Keep unresolved fixtures indefinitely; prune only old verified entries.
+        cutoff = (datetime.fromisoformat(now) - timedelta(days=45)).isoformat()
+        checkpoint['matches'] = {mid: {k: v for k, v in r.items() if k != 'inWindow'} for mid, r in records.items()
+                                 if r.get('status') != 'verified' or r.get('verifiedAt', '') >= cutoff}
+        atomic_write(args.checkpoint, checkpoint)
     # Never replace failed fixtures. Independent verified fixtures may advance.
-    if (errors or excluded) and (not args.allow_partial or not completed):
+    if (errors or excluded) and not args.allow_partial:
         print(json.dumps(report, ensure_ascii=False))
         raise SystemExit(1)
     old_articles = {a["id"]: a for a in previous["articles"]}
@@ -250,10 +340,7 @@ def main():
     removed = [a for a in previous["articles"] if a["matchId"] in completed and a["id"] not in {v["id"] for v in articles}]
     if changes or removed:
         atomic_write(args.evidence_dir / f"corrections-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%f')}.json", {"changedAt": now, "changes": changes, "removed": removed})
-    result = {"schemaVersion": 1, "generatedAt": previous.get('generatedAt', now), "coverageStart": min((a["date"] for a in articles), default=args.end_date),
-              "checkedThrough": previous.get('checkedThrough', '') if errors or excluded else args.end_date,
-              "captureStatus": 'partial' if errors or excluded else 'complete',
-              "matchesChecked": len(completed), "articles": articles}
+    result = public_packet(previous, articles, now, args.end_date, not (errors or excluded), len(completed))
     if result != previous:
         result['generatedAt'] = now
         atomic_write(args.output, result)

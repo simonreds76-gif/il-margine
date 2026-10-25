@@ -219,5 +219,91 @@ class PublicationGuards(unittest.TestCase):
             self.run_guard(True, ['', 'codex/penalty-news-preview-20261021'])
 
 
+class PostMatchCapture(unittest.TestCase):
+    setUp = PenaltyNewsTests.setUp
+    run_normalize = PenaltyNewsTests.run_normalize
+
+    def test_wrong_fixture_identity_and_teams_rejected(self):
+        expected = {'matchId': '123', 'leagueId': 47, 'homeId': '1', 'awayId': '2', 'kickoff': '2026-10-18T12:00:00Z'}
+        news.validate_fixture(self.payload, expected)
+        with self.assertRaisesRegex(ValueError, 'identity'):
+            news.validate_fixture(self.payload, dict(expected, matchId='456'))
+        with self.assertRaisesRegex(ValueError, 'teams'):
+            news.validate_fixture(self.payload, dict(expected, homeId='99'))
+        with self.assertRaisesRegex(ValueError, 'date'):
+            news.validate_fixture(self.payload, dict(expected, kickoff='2026-10-19T12:00:00Z'))
+
+    def test_batch_bounded_and_failed_fixtures_not_lost_outside_window(self):
+        records = {str(i): {'status': 'pending', 'inWindow': False} for i in range(20)}
+        due, deferred = news.due_matches(records, 'post-match', '2026-10-25T12:00:00+00:00', 16)
+        self.assertEqual((len(due), deferred), (16, 4))
+        records[due[0]].update(status='verified', verifiedAt='2026-10-25T11:00:00+00:00')
+        self.assertNotIn(due[0], news.due_matches(records, 'post-match', '2026-10-25T12:00:00+00:00', 16)[0])
+
+    def test_followup_for_delayed_commentary_and_daily_corrections(self):
+        r = {'123': {'status': 'verified', 'followUpDue': '2026-10-25T14:00:00+00:00', 'inWindow': True}}
+        self.assertEqual(news.due_matches(r, 'post-match', '2026-10-25T13:00:00+00:00', 16)[0], [])
+        self.assertEqual(news.due_matches(r, 'post-match', '2026-10-25T14:00:00+00:00', 16)[0], ['123'])
+        self.assertEqual(news.due_matches(r, 'daily', '2026-10-25T13:00:00+00:00', 128)[0], ['123'])
+
+    def test_metadata_alone_never_changes_public_revision(self):
+        articles = self.run_normalize()[1]
+        previous = news.public_packet({}, articles, 'old-version', '2026-10-18', True, 68)
+        self.assertEqual(news.public_packet(previous, articles, 'new-version', '2026-10-25', False, 1), previous)
+        changed = deepcopy(articles)
+        changed[0]['title'] = 'Source correction'
+        self.assertEqual(news.public_packet(previous, changed, 'new-version', '2026-10-25', True, 1)['generatedAt'], 'new-version')
+
+    def capture_fixture(self, root, payload):
+        (root / 'data/goalscorer').mkdir(parents=True)
+        (root / 'data/goalscorer/team-logo-map.json').write_text(json.dumps({'leagues': {'epl': {'teams': {'Home': {'fotmob_team_id': 1}}}}}))
+        evidence = root / 'evidence'
+        evidence.mkdir()
+        fixture = {'id': 123, 'home': {'id': 1}, 'away': {'id': 2},
+                   'status': {'finished': True, 'utcTime': '2026-10-18T12:00:00Z', 'scoreStr': '2 - 1'}}
+        news.atomic_write(evidence / 'fixtures-20261018.json', {'leagues': [{'id': 47, 'matches': [fixture]}]})
+        news.atomic_write(evidence / 'match-123.json', {'sourceUrl': 'https://www.fotmob.com/matches/example#123', 'observedAt': '2026-10-18T15:00:00Z', 'payload': payload})
+        return evidence
+
+    def capture(self, root):
+        args = ['build', '--offline', '--allow-partial', '--mode', 'post-match', '--end-date', '2026-10-18', '--days', '1',
+                '--output', str(root / 'news.json'), '--checkpoint', str(root / 'state.json'), '--evidence-dir', str(root / 'evidence')]
+        with patch.object(news, 'ROOT', root), patch('sys.argv', args):
+            news.main()
+        return news.read(root / 'evidence/report.json', {})
+
+    def test_second_run_does_not_fetch_completed_match_or_change_article(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as tmp:
+            root = Path(tmp)
+            evidence = self.capture_fixture(root, self.payload)
+            self.assertEqual(self.capture(root)['matchesChecked'], 1)
+            before = (root / 'news.json').read_bytes()
+            (evidence / 'match-123.json').unlink()
+            report = self.capture(root)
+            self.assertEqual((report['matchesExpected'], report['cachedVerified'], report['errors']), (0, 1, []))
+            self.assertEqual((root / 'news.json').read_bytes(), before)
+
+    def test_missing_source_retried_even_after_calendar_window(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as tmp:
+            root = Path(tmp)
+            evidence = self.capture_fixture(root, self.payload)
+            packet = (evidence / 'match-123.json').read_bytes()
+            (evidence / 'match-123.json').unlink()
+            self.assertEqual(self.capture(root)['pendingMatchIds'], ['123'])
+            news.atomic_write(evidence / 'fixtures-20261018.json', {'leagues': []})
+            (evidence / 'match-123.json').write_bytes(packet)
+            report = self.capture(root)
+            self.assertEqual((report['matchesChecked'], report['pendingMatchIds'], report['articles']), (1, [], 1))
+
+    def test_no_penalty_matches_are_cached_too(self):
+        self.payload['props']['pageProps']['content']['shotmap']['shots'] = []
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as tmp:
+            root = Path(tmp)
+            evidence = self.capture_fixture(root, self.payload)
+            self.assertEqual(self.capture(root)['articles'], 0)
+            (evidence / 'match-123.json').unlink()
+            self.assertEqual(self.capture(root)['matchesExpected'], 0)
+
+
 if __name__ == "__main__":
     unittest.main()
