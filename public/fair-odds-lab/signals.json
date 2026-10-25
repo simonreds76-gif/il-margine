@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-25T14:33:37.998028Z",
+  "generated_at": "2026-10-25T17:50:16.421056Z",
   "source_file": [
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
@@ -34,124 +34,18 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 25,
-  "signals_qualifying": 1,
+  "fixtures_evaluated": 18,
+  "signals_qualifying": 0,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 27,
-    "model_market_gap_gt_10pp": 1
+    "incomplete_prediction_roster": 27
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 1,
-    "added_by_league": {
-      "epl": 1
-    },
+    "eligible_rows": 0,
+    "added_by_league": {},
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [
-    "serie-a"
-  ],
-  "featured_signal_id": "20261025-john-yeboah-f305e9c8b7",
-  "signals": [
-    {
-      "id": "20261025-john-yeboah-f305e9c8b7",
-      "match": {
-        "home_team": "Genoa CFC",
-        "away_team": "Venezia FC",
-        "league": "serie-a",
-        "league_display": "Serie A",
-        "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "2026-10-25T14:00:00Z",
-        "kickoff_display": "Sun 25 Oct 14:00 UK",
-        "fotmob_match_id": "5749713",
-        "fotmob_page_url": "/matches/venezia-vs-genoa/2popf0#5749713",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "John Yeboah",
-        "team": "Venezia",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/serie-a/venezia.png",
-        "team_primary_color": "#0f172a",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 34.3,
-        "fair_odds": 2.91
-      },
-      "market_data": {
-        "best_odds": 3.6,
-        "best_book": "Bet365",
-        "implied_chance_pct": 27.8
-      },
-      "edge": {
-        "price_gap_pp": 6.6,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 92
-        },
-        "share_of_team_chances_pct": 27,
-        "share_of_team_chances_percentile": 95,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 14
-        },
-        "recent_team_form": {
-          "tier": "Quiet",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-10-17",
-          "xg_for_avg": 1.74,
-          "xg_against_avg": 2.43,
-          "xgd_per90": -0.7,
-          "shots_for_avg": 14.0,
-          "shots_against_avg": 19.0,
-          "sot_for_avg": 4.2,
-          "sot_against_avg": 8.2,
-          "corners_for_avg": 3.6,
-          "corners_against_avg": 6.2
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Low",
-          "percentile": 24
-        },
-        "opponent_recent_defence": {
-          "tier": "Positive",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-10-17",
-          "xg_for_avg": 1.15,
-          "xg_against_avg": 1.49,
-          "xgd_per90": -0.34,
-          "shots_for_avg": 11.8,
-          "shots_against_avg": 15.8,
-          "sot_for_avg": 3.4,
-          "sot_against_avg": 5.0,
-          "corners_for_avg": 4.8,
-          "corners_against_avg": 4.8
-        },
-        "fixture_boost_pct": 3,
-        "projected_minutes": 85,
-        "penalty_role": "Not on penalties",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Opponent has been allowing chances recently"
-      ],
-      "risk_flags": []
-    }
-  ]
+  "leagues_covered": [],
+  "featured_signal_id": null,
+  "signals": []
 }
