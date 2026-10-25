@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-25T00:33:22Z",
+  "generated_at": "2026-10-25T13:15:43Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -7,12 +7,12 @@
     "live_routing": false,
     "prospective": {
       "signals": 7,
-      "settled": 3,
-      "pending": 4,
-      "pnl_units": -3.0,
+      "settled": 4,
+      "pending": 3,
+      "pnl_units": -4.0,
       "roi": -1.0,
       "true_close_n": 1,
-      "true_close_coverage": 0.333333,
+      "true_close_coverage": 0.25,
       "mean_true_close_clv": 0.0,
       "side_counts": {
         "under": 7
@@ -37,14 +37,14 @@
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
       "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 318,
+      "scored_rows": 334,
       "scored_fixtures": 19,
-      "eligible_rows": 1,
+      "eligible_rows": 2,
       "eligible_fixtures": 1,
-      "blocked_rows": 317,
+      "blocked_rows": 332,
       "blocker_rows": {
-        "edge_below_3pct": 315,
-        "price_older_than_3h": 92
+        "edge_below_3pct": 330,
+        "price_older_than_3h": 84
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 7,
@@ -70,13 +70,13 @@
     "live_routing": false,
     "prospective": {
       "signals": 107,
-      "settled": 87,
-      "pending": 20,
-      "pnl_units": -2.88,
-      "roi": -0.033103,
-      "true_close_n": 49,
-      "true_close_coverage": 0.563218,
-      "mean_true_close_clv": 0.008072,
+      "settled": 95,
+      "pending": 12,
+      "pnl_units": -2.595,
+      "roi": -0.027316,
+      "true_close_n": 56,
+      "true_close_coverage": 0.589474,
+      "mean_true_close_clv": 0.008658,
       "side_counts": {
         "over": 20,
         "under": 87
@@ -107,7 +107,7 @@
       "eligible_fixtures": 0,
       "blocked_rows": 108,
       "blocker_rows": {
-        "edge_below_3pct": 80,
+        "edge_below_3pct": 78,
         "price_older_than_3h": 108
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,

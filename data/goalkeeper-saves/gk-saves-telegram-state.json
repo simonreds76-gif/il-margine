@@ -2218,16 +2218,113 @@
       },
       "message_id": 647,
       "sent_at": "2026-10-25T00:33:41.431533+00:00"
+    },
+    "72036246|gauthier gallon|3.5|over": {
+      "status": "claimed",
+      "run_token": "40196529028:1",
+      "claimed_at": "2026-10-25T13:16:13.471157+00:00",
+      "signal": {
+        "signal_id": "72036246|gauthier gallon|3.5|over",
+        "created_at": "2026-10-25T13:14:54Z",
+        "event_id": "72036246",
+        "match_date": "2026-10-25",
+        "kickoff_at": "2026-10-25T16:15:00Z",
+        "league": "ligue-1",
+        "home_team": "Olympique Marseille",
+        "away_team": "Le Havre AC",
+        "team": "Le Havre AC",
+        "opponent": "Olympique Marseille",
+        "venue": "away",
+        "goalkeeper": "Gauthier Gallon",
+        "bookmaker": "Bet365",
+        "line": "3.5",
+        "side": "over",
+        "odds_decimal": "2.0000",
+        "model_mean": "4.0004",
+        "model_probability": "0.543858",
+        "push_probability": "0.000000",
+        "fair_odds": "1.839",
+        "edge": "0.087717",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-10-25T13:14:52Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "named_player",
+        "identity_basis": "bookmaker_named_player",
+        "price_comparison": [
+          {
+            "bookmaker": "Bet365",
+            "odds": 2.0,
+            "captured_at": "2026-10-25T13:14:52Z",
+            "contract_scope": "named_player"
+          },
+          {
+            "bookmaker": "Kambi",
+            "odds": 1.68,
+            "captured_at": "2026-10-25T13:14:52Z",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-10-25T13:16:13.471157+00:00"
+      }
+    },
+    "keeper_watch_v1:5749716": {
+      "status": "claimed",
+      "run_token": "40196529028:1",
+      "claimed_at": "2026-10-25T13:16:13.471157+00:00",
+      "signal": {
+        "away": "Juventus Turin",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-25T13:14:52+00:00",
+        "edge": 0.08063650633609432,
+        "event_id": "71945338",
+        "fair_odds": 2.7761416372759062,
+        "goalkeeper": "Guglielmo Vicario",
+        "home": "US Lecce",
+        "kickoff_at": "2026-10-25T17:00:00+00:00",
+        "line": 2.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5749716",
+        "model": "keeper_watch",
+        "odds": 3.0,
+        "overdue": false,
+        "player_id": "538501",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-25T13:14:55.143085+00:00",
+        "side": "over",
+        "status": "pending",
+        "team_id": "9885",
+        "alert_model": "keeper_watch_v1",
+        "signal_id": "keeper_watch_v1:5749716",
+        "created_at": "2026-10-25T13:14:55.143085+00:00",
+        "odds_decimal": 3.0,
+        "home_team": "US Lecce",
+        "away_team": "Juventus Turin",
+        "selection_policy": "keeper_watch_v1",
+        "paper_stake": 0.5,
+        "actual_stake": 0
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-10-25T00:33:34.227429+00:00",
+      "checked_at": "2026-10-25T13:16:13.471157+00:00",
       "added": 1,
       "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-10-25T00:33:34.227429+00:00",
+      "checked_at": "2026-10-25T13:16:13.471157+00:00",
       "added": 1,
       "suppressed": {}
     }

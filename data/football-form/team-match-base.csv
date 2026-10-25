@@ -43867,8 +43867,8 @@ date,league,season,team,team_key,opponent,opponent_key,venue,home_team,away_team
 2026-10-19,serie-a,2026-2027,Cagliari,cagliari,Monza,monza,away,Monza,Cagliari,0,4,2.729,1.836,16,14,5,6,7,2,2.38,3.1,3.1,0.3028,0.3944,football-data,understat
 2026-10-19,serie-a,2026-2027,Parma,parma,Torino,torino,home,Parma,Torino,0,3,,,25,9,8,3,6,2,3.1,3.1,2.45,0.3063,0.3875,football-data,
 2026-10-19,serie-a,2026-2027,Torino,torino,Parma,parma,away,Parma,Torino,3,0,,,9,25,3,8,2,6,3.1,3.1,2.45,0.3875,0.3063,football-data,
-2026-10-21,la-liga,2026-2027,Levante,levante,Ath Bilbao,ath bilbao,home,Levante,Ath Bilbao,3,1,,,12,21,7,4,3,9,3.4,3.5,2.15,0.2815,0.4451,football-data,
-2026-10-21,la-liga,2026-2027,Ath Bilbao,ath bilbao,Levante,levante,away,Levante,Ath Bilbao,1,3,,,21,12,4,7,9,3,3.4,3.5,2.15,0.4451,0.2815,football-data,
+2026-10-21,la-liga,2026-2027,Levante,levante,Ath Bilbao,ath bilbao,home,Levante,Ath Bilbao,3,1,1.843,1.714,12,21,7,4,3,9,3.4,3.5,2.15,0.2815,0.4451,football-data,understat
+2026-10-21,la-liga,2026-2027,Ath Bilbao,ath bilbao,Levante,levante,away,Levante,Ath Bilbao,1,3,1.714,1.843,21,12,4,7,9,3,3.4,3.5,2.15,0.4451,0.2815,football-data,understat
 2026-10-23,bundesliga,2026-2027,VfB Stuttgart,stuttgart,Borussia M.Gladbach,borussia monchengladbach,home,VfB Stuttgart,Borussia M.Gladbach,2,3,1.97918,2.62544,15,16,5,6,6,5,,,,,,fotmob_verified_fulltime,understat
 2026-10-23,bundesliga,2026-2027,Borussia M.Gladbach,borussia monchengladbach,VfB Stuttgart,stuttgart,away,VfB Stuttgart,Borussia M.Gladbach,3,2,2.62544,1.97918,16,15,6,5,5,6,,,,,,fotmob_verified_fulltime,understat
 2026-10-23,epl,2026-2027,Ipswich,ipswich,Nottingham Forest,nottm forest,home,Ipswich,Nottingham Forest,1,1,0.856862,2.75509,7,17,3,5,0,5,,,,,,fotmob_verified_fulltime,understat
@@ -43879,3 +43879,41 @@ date,league,season,team,team_key,opponent,opponent_key,venue,home_team,away_team
 2026-10-23,ligue-1,2026-2027,Nice,nice,Brest,brest,away,Brest,Nice,2,1,0.689003,2.11691,9,13,2,7,7,3,,,,,,fotmob_verified_fulltime,understat
 2026-10-23,serie-a,2026-2027,Torino,torino,Monza,monza,home,Torino,Monza,3,2,1.44549,0.441913,17,7,7,3,3,4,,,,,,fotmob_verified_fulltime,understat
 2026-10-23,serie-a,2026-2027,Monza,monza,Torino,torino,away,Torino,Monza,2,3,0.441913,1.44549,7,17,3,7,4,3,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,bundesliga,2026-2027,FC Cologne,1 koln,Schalke 04,schalke 04,home,FC Cologne,Schalke 04,0,0,1.18778,0.458299,14,9,5,1,6,5,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,bundesliga,2026-2027,Schalke 04,schalke 04,FC Cologne,1 koln,away,FC Cologne,Schalke 04,0,0,0.458299,1.18778,9,14,1,5,5,6,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,bundesliga,2026-2027,Augsburg,augsburg,Union Berlin,union berlin,home,Augsburg,Union Berlin,1,1,2.02302,0.833279,27,6,5,1,5,1,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,bundesliga,2026-2027,Union Berlin,union berlin,Augsburg,augsburg,away,Augsburg,Union Berlin,1,1,0.833279,2.02302,6,27,1,5,1,5,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,bundesliga,2026-2027,Borussia Dortmund,dortmund,Eintracht Frankfurt,ein frankfurt,home,Borussia Dortmund,Eintracht Frankfurt,1,0,1.71646,0.850048,18,8,5,3,13,1,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,bundesliga,2026-2027,Eintracht Frankfurt,ein frankfurt,Borussia Dortmund,dortmund,away,Borussia Dortmund,Eintracht Frankfurt,0,1,0.850048,1.71646,8,18,3,5,1,13,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,bundesliga,2026-2027,Mainz 05,mainz,Werder Bremen,werder bremen,home,Mainz 05,Werder Bremen,2,3,1.86488,2.9473,18,17,8,8,6,6,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,bundesliga,2026-2027,Werder Bremen,werder bremen,Mainz 05,mainz,away,Mainz 05,Werder Bremen,3,2,2.9473,1.86488,17,18,8,8,6,6,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,bundesliga,2026-2027,Paderborn,paderborn,Hamburger SV,hamburg,home,Paderborn,Hamburger SV,1,0,1.36027,0.41876,16,8,6,1,6,3,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,bundesliga,2026-2027,Hamburger SV,hamburg,Paderborn,paderborn,away,Paderborn,Hamburger SV,0,1,0.41876,1.36027,8,16,1,6,3,6,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,bundesliga,2026-2027,RasenBallsport Leipzig,rb leipzig,Elversberg,elversberg,home,RasenBallsport Leipzig,Elversberg,4,0,3.03237,0.764818,13,5,6,1,4,6,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,bundesliga,2026-2027,Elversberg,elversberg,RasenBallsport Leipzig,rb leipzig,away,RasenBallsport Leipzig,Elversberg,0,4,0.764818,3.03237,5,13,1,6,6,4,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,epl,2026-2027,Arsenal,arsenal,Everton,everton,home,Arsenal,Everton,2,0,2.28617,0.721815,20,8,4,3,12,3,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,epl,2026-2027,Everton,everton,Arsenal,arsenal,away,Arsenal,Everton,0,2,0.721815,2.28617,8,20,3,4,3,12,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,epl,2026-2027,Aston Villa,aston villa,Manchester City,man city,home,Aston Villa,Manchester City,2,1,0.645964,2.28542,8,15,2,7,4,7,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,epl,2026-2027,Manchester City,man city,Aston Villa,aston villa,away,Aston Villa,Manchester City,1,2,2.28542,0.645964,15,8,7,2,7,4,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,epl,2026-2027,Chelsea,chelsea,Tottenham,tottenham,home,Chelsea,Tottenham,0,2,0.460466,0.979641,7,15,4,4,4,6,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,epl,2026-2027,Tottenham,tottenham,Chelsea,chelsea,away,Chelsea,Tottenham,2,0,0.979641,0.460466,15,7,4,4,6,4,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,epl,2026-2027,Coventry,coventry,Fulham,fulham,home,Coventry,Fulham,0,1,0.402537,0.572746,13,12,2,3,4,6,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,epl,2026-2027,Fulham,fulham,Coventry,coventry,away,Coventry,Fulham,1,0,0.572746,0.402537,12,13,3,2,6,4,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,la-liga,2026-2027,Atletico Madrid,ath madrid,Deportivo La Coruna,la coruna,home,Atletico Madrid,Deportivo La Coruna,1,0,2.21854,2.23522,20,15,4,5,3,4,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,la-liga,2026-2027,Deportivo La Coruna,la coruna,Atletico Madrid,ath madrid,away,Atletico Madrid,Deportivo La Coruna,0,1,2.23522,2.21854,15,20,5,4,4,3,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,la-liga,2026-2027,Racing Santander,santander,Espanyol,espanol,home,Racing Santander,Espanyol,2,1,2.82622,0.580589,23,11,9,1,9,4,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,la-liga,2026-2027,Espanyol,espanol,Racing Santander,santander,away,Racing Santander,Espanyol,1,2,0.580589,2.82622,11,23,1,9,4,9,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,la-liga,2026-2027,Valencia,valencia,Villarreal,villarreal,home,Valencia,Villarreal,1,2,1.1723,1.506,9,19,5,3,6,9,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,la-liga,2026-2027,Villarreal,villarreal,Valencia,valencia,away,Valencia,Villarreal,2,1,1.506,1.1723,19,9,3,5,9,6,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,la-liga,2026-2027,Rayo Vallecano,vallecano,Elche,elche,home,Rayo Vallecano,Elche,0,3,1.23307,2.40158,18,16,5,9,3,3,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,la-liga,2026-2027,Elche,elche,Rayo Vallecano,vallecano,away,Rayo Vallecano,Elche,3,0,2.40158,1.23307,16,18,9,5,3,3,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,ligue-1,2026-2027,Lens,lens,Paris FC,paris,home,Lens,Paris FC,2,1,0.703139,0.705389,9,4,3,1,6,1,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,ligue-1,2026-2027,Paris FC,paris,Lens,lens,away,Lens,Paris FC,1,2,0.705389,0.703139,4,9,1,3,1,6,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,serie-a,2026-2027,Cagliari,cagliari,Bologna,bologna,home,Cagliari,Bologna,0,2,0.240178,1.78092,4,10,1,5,1,6,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,serie-a,2026-2027,Bologna,bologna,Cagliari,cagliari,away,Cagliari,Bologna,2,0,1.78092,0.240178,10,4,5,1,6,1,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,serie-a,2026-2027,Como,como,Sassuolo,sassuolo,home,Como,Sassuolo,2,0,2.32125,0.286436,14,7,6,0,6,4,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,serie-a,2026-2027,Sassuolo,sassuolo,Como,como,away,Como,Sassuolo,0,2,0.286436,2.32125,7,14,0,6,4,6,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,serie-a,2026-2027,Lazio,lazio,Parma Calcio 1913,parma,home,Lazio,Parma Calcio 1913,2,1,1.66752,0.953123,21,10,5,4,8,3,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,serie-a,2026-2027,Parma Calcio 1913,parma,Lazio,lazio,away,Lazio,Parma Calcio 1913,1,2,0.953123,1.66752,10,21,4,5,3,8,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,serie-a,2026-2027,Napoli,napoli,Roma,roma,home,Napoli,Roma,3,3,2.98059,1.96142,15,24,9,4,2,11,,,,,,fotmob_verified_fulltime,understat
+2026-10-24,serie-a,2026-2027,Roma,roma,Napoli,napoli,away,Napoli,Roma,3,3,1.96142,2.98059,24,15,4,9,11,2,,,,,,fotmob_verified_fulltime,understat

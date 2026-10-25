@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-25T04:50:09Z",
+  "generated_at": "2026-10-25T13:21:54Z",
   "league": "la-liga",
-  "row_count": 4,
+  "row_count": 5,
   "rows": [
     {
       "date": "2026-10-24",
@@ -44,7 +44,7 @@
           "source_event_id": "2987028547",
           "match_id": "5868110",
           "source_url": "https://www.fotmob.com/matches/villarreal-vs-valencia/3grupj#5868110",
-          "observed_at": "2026-10-25T04:50:03+00:00",
+          "observed_at": "2026-10-25T13:21:50+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Valencia",
@@ -115,7 +115,7 @@
           "source_event_id": "2986532883",
           "match_id": "5868107",
           "source_url": "https://www.fotmob.com/matches/rayo-vallecano-vs-elche/2vf3sr#5868107",
-          "observed_at": "2026-10-25T04:50:03+00:00",
+          "observed_at": "2026-10-25T13:21:50+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Rayo Vallecano",
@@ -186,7 +186,7 @@
           "source_event_id": "2986528397",
           "match_id": "5868107",
           "source_url": "https://www.fotmob.com/matches/rayo-vallecano-vs-elche/2vf3sr#5868107",
-          "observed_at": "2026-10-25T04:50:03+00:00",
+          "observed_at": "2026-10-25T13:21:50+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Elche",
@@ -257,7 +257,7 @@
           "source_event_id": "2986515813",
           "match_id": "5868107",
           "source_url": "https://www.fotmob.com/matches/rayo-vallecano-vs-elche/2vf3sr#5868107",
-          "observed_at": "2026-10-25T04:50:03+00:00",
+          "observed_at": "2026-10-25T13:21:50+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Elche",
@@ -287,16 +287,82 @@
           "event_result": "scored"
         }
       ]
+    },
+    {
+      "date": "2026-10-21",
+      "league": "la-liga",
+      "review_source": "fotmob_live",
+      "match": "Levante vs Athletic Club",
+      "team": "Athletic Club",
+      "opponent": "Levante",
+      "actual_taker": "Alex Berenguer",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "67",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Oihan Sancet",
+      "secondary_pre_match": "Nico Williams",
+      "tertiary_pre_match": "Gorka Guruzeta",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Alex Berenguer took 1 penalty attempt and scored for Athletic Club vs Levante. Primary pre-match: Oihan Sancet (unknown). Secondary pre-match: Nico Williams (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/la-liga-penalty-takers.json",
+      "actual_taker_match_status": "Yes - started",
+      "primary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "secondary_on_pitch_at_penalty": "No - bench, on 81'",
+      "tertiary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "actual_taker_on_pitch_at_penalty": "Yes - started",
+      "event_evidence": [
+        {
+          "id": "fotmob|la-liga|5868067|2985446045",
+          "source_event_id": "2985446045",
+          "match_id": "5868067",
+          "source_url": "https://www.fotmob.com/matches/athletic-club-vs-levante/2czq11#5868067",
+          "observed_at": "2026-10-25T13:21:50+00:00",
+          "event_date": "2026-10-21",
+          "season": "2026/27",
+          "team": "Athletic Club",
+          "taker": "Alex Berenguer",
+          "primary": "Oihan Sancet",
+          "primary_on_pitch": null,
+          "on_pitch_proof": {
+            "player": "Oihan Sancet",
+            "minute": 67,
+            "method": "completed_lineup_timeline",
+            "reason": "missing_or_ambiguous_player"
+          },
+          "minute": 67,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Levante vs Athletic Club",
+          "event_result": "scored"
+        }
+      ]
     }
   ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20261019",
+      "20261020",
+      "20261021",
+      "20261022",
       "20261023",
       "20261024",
       "20261025"
     ],
-    "matches_checked": 5
+    "matches_checked": 8
   }
 }

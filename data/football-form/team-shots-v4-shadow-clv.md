@@ -1,6 +1,6 @@
 # Team-Shots CLV Monitor: `team_shots_v4`
 
-Generated: 2026-10-24T12:45:32Z
+Generated: 2026-10-25T13:15:41Z
 Picks input: `data/football-form/team-shots-v4-shadow-signals.csv`
 Odds input: `data/team-shots/team-shots-odds-history.csv`
 
@@ -12,13 +12,13 @@ Odds input: `data/team-shots/team-shots-odds-history.csv`
 - Open/pending: 4
 - Settled PnL: -2.68u
 - Picks with close: 21
-- True-close coverage (<=120m): 9/17 (52.9%)
+- True-close coverage (<=120m): 9/18 (50.0%)
 - Average true-close CLV: -0.40% (n=9)
 - Running mean bias (actual - model): +3.518 shots (n=17)
 - Active side mix: Over 1 / Under 20
 - Registered Over vig allocation: 85.6% (descriptive refits must not alter the lock)
 - Hard-guard blocked: 0
-- Average published-to-close CLV: +0.30%
+- Average published-to-close CLV: +0.40%
 - Allowed-league config valid: yes
 - Allowed leagues: `bundesliga, epl, la-liga, ligue-1, serie-a`
 - Config error: `-`
