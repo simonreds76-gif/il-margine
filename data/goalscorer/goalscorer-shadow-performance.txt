@@ -1,32 +1,32 @@
 Goalscorer Shadow Performance
 =============================
 
-As of:                 2026-10-25T13:39:27Z
+As of:                 2026-10-25T18:23:55Z
 Signals file:          /home/runner/work/il-margine/il-margine/data/goalscorer/goalscorer-shadow-signals.csv
 Clean evaluation start:2026-03-15
 
 All time
-  signals:    462
+  signals:    476
   settled:    405
-  unsettled:  57
+  unsettled:  71
   ROI:        -36.41%
   win rate:   9.88%
   P/L units:  -147.75
   Staked:     405.75
 
 Clean sample
-  signals:    462
+  signals:    476
   settled:    405
-  unsettled:  57
+  unsettled:  71
   ROI:        -36.41%
   win rate:   9.88%
   P/L units:  -147.75
   Staked:     405.75
 
 Last 7 days
-  signals:    90
+  signals:    104
   settled:    47
-  unsettled:  43
+  unsettled:  57
   ROI:        +9.36%
   win rate:   19.15%
   P/L units:  +4.40
@@ -34,6 +34,6 @@ Last 7 days
 
 By signal type (clean sample)
   both             signals=  4 settled=  3 roi=-4.17% win_rate=33.33% pnl=-0.12u
-  penalty_transfer signals= 25 settled= 24 roi=+9.69% win_rate=25.00% pnl=+2.35u
-  shadow_track     signals=423 settled=370 roi=-41.44% win_rate=8.38% pnl=-153.53u
+  penalty_transfer signals= 27 settled= 24 roi=+9.69% win_rate=25.00% pnl=+2.35u
+  shadow_track     signals=435 settled=370 roi=-41.44% win_rate=8.38% pnl=-153.53u
   stacked          signals= 10 settled=  8 roi=+44.38% win_rate=25.00% pnl=+3.55u
