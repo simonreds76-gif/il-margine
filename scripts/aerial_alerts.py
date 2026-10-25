@@ -224,6 +224,8 @@ def send(text, token, chat):
 
 def run(root=ROOT, now=None, transmit=False, sender=send):
     now=now or datetime.now(timezone.utc)
+    # This preference affects only the unpriced watchlist, never Skyline.
+    telegram_enabled=read(root/'config/aerial-alerts.json',{}).get('telegram_enabled') is True
     directory=root/'data/aerial/alerts'
     payload=read(root/'public/fair-odds-lab/aerial.json',{})
     history=read(root/'data/aerial/history.json.gz',{}).get('matches',[])
@@ -265,7 +267,7 @@ def run(root=ROOT, now=None, transmit=False, sender=send):
         while len(text)>3900 and len(row['candidates'])>1:
             row={**row,'candidates':row['candidates'][:-1]}; text=message(row,removed)
         previews.append(text)
-        if transmit and token and chat:
+        if transmit and telegram_enabled and token and chat:
             receipt=sender(text,token,chat)
             if receipt is not None:
                 previous=state['fixtures'].setdefault(row['fixture_id'],{})
@@ -274,7 +276,8 @@ def run(root=ROOT, now=None, transmit=False, sender=send):
                 sent.append({'fixture_id':row['fixture_id'],'stage':row['stage'],'message_id':receipt})
                 save(directory/'state.json',state)
     report=dict(version=VERSION,generated_at=now.isoformat(),policy=POLICY,shortlist=rows,exclusions=exclusions,
-                status='sent' if sent else 'no_new_qualifiers' if not ready else 'credentials_missing' if transmit and (not token or not chat) else 'delivery_failed' if transmit else 'preview',
+                status='disabled' if transmit and not telegram_enabled else 'sent' if sent else 'no_new_qualifiers' if not ready else 'credentials_missing' if transmit and (not token or not chat) else 'delivery_failed' if transmit else 'preview',
+                telegram_enabled=telegram_enabled,
                 sent=sent,prospective_captures=len(ledger),telegram_previews=previews,
                 roi=None,roi_reason='Research counts only; no captured market prices or real stakes.')
     save(directory/'ledger.json',ledger);save(directory/'latest.json',report)

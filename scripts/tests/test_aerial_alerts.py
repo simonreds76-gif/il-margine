@@ -35,6 +35,22 @@ def packet(f=None):
     return dict(version='verified-test-only',generated_at=NOW.isoformat(),fixtures=[f or fixture()])
 
 class Alerts(unittest.TestCase):
+    def test_disabled_watchlist_keeps_capture_without_send_or_delivery_receipt(self):
+        with tempfile.TemporaryDirectory() as d, patch.dict(os.environ,{'OPS_ALERT_TELEGRAM_BOT_TOKEN':'test','OPS_ALERT_TELEGRAM_CHAT_ID':'private'}):
+            root=Path(d)
+            save(root/'public/fair-odds-lab/aerial.json',packet())
+            save(root/'data/aerial/history.json.gz',{'matches':history()})
+            calls=[]
+            def sender(*args):calls.append(args);return 1
+            for config in ({},{'telegram_enabled':False}):
+                save(root/'config/aerial-alerts.json',config)
+                report=run(root,NOW,True,sender)
+                self.assertEqual(report['status'],'disabled')
+                self.assertEqual(report['prospective_captures'],1)
+                self.assertEqual(report['sent'],[])
+            self.assertEqual(calls,[])
+            self.assertFalse((root/'data/aerial/alerts/state.json').exists())
+
     def test_real_evidence_filters_and_no_invented_ev(self):
         rows,_=evaluate(packet(),history(),NOW)
         self.assertEqual([c['player_id'] for c in rows[0]['candidates']],['105'])
@@ -89,6 +105,7 @@ class Alerts(unittest.TestCase):
     def test_delivery_dedup_confirmation_and_preview_not_prospective(self):
         with tempfile.TemporaryDirectory() as d, patch.dict(os.environ,{'OPS_ALERT_TELEGRAM_BOT_TOKEN':'test','OPS_ALERT_TELEGRAM_CHAT_ID':'private'}):
             root=Path(d);save(root/'public/fair-odds-lab/aerial.json',packet());save(root/'data/aerial/history.json.gz',{'matches':history()})
+            save(root/'config/aerial-alerts.json',{'telegram_enabled':True})
             self.assertEqual(run(root,NOW)['prospective_captures'],0)
             calls=[]
             def sender(text,token,chat):calls.append(text);return len(calls)
@@ -103,6 +120,7 @@ class Alerts(unittest.TestCase):
     def test_failure_does_not_mark_delivered_and_withdrawal_is_sent(self):
         with tempfile.TemporaryDirectory() as d, patch.dict(os.environ,{'OPS_ALERT_TELEGRAM_BOT_TOKEN':'test','OPS_ALERT_TELEGRAM_CHAT_ID':'private'}):
             root=Path(d);save(root/'public/fair-odds-lab/aerial.json',packet());save(root/'data/aerial/history.json.gz',{'matches':history()})
+            save(root/'config/aerial-alerts.json',{'telegram_enabled':True})
             self.assertEqual(run(root,NOW,True,lambda *args:None)['status'],'delivery_failed')
             run(root,NOW,True,lambda *args:1)
             f=fixture();f['state']='confirmed';f['teams'][0]['players'][5]['id']='888'
