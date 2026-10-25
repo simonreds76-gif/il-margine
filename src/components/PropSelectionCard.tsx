@@ -3,13 +3,14 @@ import Link from "next/link";
 import TipPortraits from "@/components/TipPortraits";
 import PropMarketIcon from "@/components/PropMarketIcon";
 import BookmakerLogo from "@/components/BookmakerLogo";
+import BetMobileMeta from "@/components/BetMobileMeta";
 import type { Bookmaker } from "@/lib/supabase";
 import type { PropKey, PropRow } from "@/lib/prop-performance";
 const tone = (n: number | null) => n == null || n === 0 ? "text-slate-300" : n > 0 ? "text-emerald-300" : "text-rose-300";
 const signed = (n: number, digits = 2) => `${n > 0 ? "+" : ""}${n.toFixed(digits)}`;
 const dateLabel = (value?: string | null) => value ? new Date(value.slice(0, 10) + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }) : "Date unavailable";
 
-export default function PropSelectionCard({ row, market, href, bookmaker }: { row: PropRow; market: PropKey; href?: string; bookmaker?: Bookmaker }) {
+export default function PropSelectionCard({ row, market, href, bookmaker, grouped = false }: { row: PropRow; market: PropKey; href?: string; bookmaker?: Bookmaker; grouped?: boolean }) {
   // Preserve older entries where the player and selection fields were reversed.
   const reversed = /^(over|under) \d/i.test(row.player || "") && !/^(over|under) \d/i.test(row.selection);
   const player = reversed ? row.selection : row.player || "Selection";
@@ -31,14 +32,15 @@ export default function PropSelectionCard({ row, market, href, bookmaker }: { ro
         {won ? "Won" : settled ? "Lost" : voided ? "Void" : "Pending"}
       </span>
     </div>
-    <div className="mt-3 border-t border-slate-700/50 pt-3"><p className="break-words text-xs font-medium leading-5 text-slate-300">{row.event}</p><p className="mt-0.5 text-[11px] text-slate-400">{dateLabel(row.date || row.match_date)}</p></div>
-    <dl className="mt-3 grid grid-cols-3 divide-x divide-slate-700/60 rounded-lg bg-slate-950/60 py-2.5">
+    <div className={`mt-3 border-t border-slate-700/50 pt-3 ${grouped ? "hidden sm:block" : ""}`}><p className="break-words text-xs font-medium leading-5 text-slate-300">{row.event}</p><p className="mt-0.5 text-[11px] text-slate-400">{dateLabel(row.date || row.match_date)}</p></div>
+    {grouped ? <div className="sm:hidden"><BetMobileMeta tipsLayout odds={row.odds && row.odds > 1 ? row.odds : "N/A"} stake={row.stake} bookmaker={bookmaker} status={row.status} profitLoss={row.profit_loss} showProfit={settled || voided} /></div> : null}
+    <dl className={`mt-3 ${grouped ? "hidden sm:grid" : "grid"} grid-cols-3 divide-x divide-slate-700/60 rounded-lg bg-slate-950/60 py-2.5`}>
       <div className="min-w-0 px-2.5"><dt className="text-[9px] font-medium uppercase tracking-wider text-slate-400">Odds</dt><dd className="mt-1 font-mono text-sm font-semibold tabular-nums text-slate-100">{row.odds && row.odds > 1 ? row.odds.toFixed(2) : "N/A"}</dd></div>
       <div className="min-w-0 px-2.5"><dt className="text-[9px] font-medium uppercase tracking-wider text-slate-400">Stake</dt><dd className="mt-1 font-mono text-sm font-semibold tabular-nums text-slate-100">{row.stake.toFixed(2)}u</dd></div>
       <div className="min-w-0 px-2.5"><dt className="text-[9px] font-medium uppercase tracking-wider text-slate-400">Profit</dt><dd className={`mt-1 font-mono text-sm font-semibold tabular-nums ${tone(settled ? row.profit_loss ?? null : null)}`}>{settled && row.profit_loss != null ? `${signed(row.profit_loss)}u` : voided ? "0.00u" : "Pending"}</dd></div>
     </dl>
     {href || bookmaker ? <div className="mt-3 flex min-h-8 items-center justify-between gap-3">
-      {bookmaker ? <BookmakerLogo bookmaker={bookmaker} size="sm" noLink /> : <span />}
+      {bookmaker ? <span className={grouped ? "hidden sm:block" : ""}><BookmakerLogo bookmaker={bookmaker} size="sm" noLink /></span> : <span />}
       {href ? <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-200">View pick<svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 13 13 3M4 3h9v9" /></svg></span> : null}
     </div> : null}
   </>;

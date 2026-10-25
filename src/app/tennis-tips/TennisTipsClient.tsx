@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import TipsHubIntro, { TipsResearchLink } from "@/components/TipsHubIntro";
 import TennisMatchdayPromo from "@/components/TennisMatchdayPromo";
+import TipsCompetitionPicker from "@/components/TipsCompetitionPicker";
 import TipsCompetitionToolbar from "@/components/TipsCompetitionToolbar";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
@@ -264,6 +265,7 @@ export default function TennisTips({
       <section id="competition-filter" aria-label="Choose a tour or tournament" className="pt-5 pb-6 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <TipsCompetitionToolbar sport="tennis" />
+          <TipsCompetitionPicker options={categoryConfig} value={activeCategory} onChange={setActiveCategory} stats={currentStats} label="Tour or tournament">
           <div className="competition-card-grid">
             {categoryConfig.map((cat) => {
               const catStats = getStatsForCategory(cat.id);
@@ -310,6 +312,7 @@ export default function TennisTips({
               );
             })}
           </div>
+          </TipsCompetitionPicker>
 
         </div>
       </section>
@@ -362,7 +365,7 @@ export default function TennisTips({
                         </div>
                       </div>
                     </div>
-                    <BetMobileMeta odds={pick.odds} bookmaker={pick.bookmaker} stake={pick.stake} />
+                    <BetMobileMeta tipsLayout odds={pick.odds} bookmaker={pick.bookmaker} stake={pick.stake} />
                   </Link>
                 ))}
               </div>
@@ -462,7 +465,7 @@ export default function TennisTips({
                       </div>
                       <ResultBadge status={result.status} size="sm" className="ml-3" />
                     </div>
-                    <BetMobileMeta
+                    <BetMobileMeta tipsLayout
                       odds={result.odds}
                       bookmaker={result.bookmaker}
                       stake={result.stake}

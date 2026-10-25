@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TipsHubIntro, { TipsResearchLink } from "@/components/TipsHubIntro";
+import TipsCompetitionPicker from "@/components/TipsCompetitionPicker";
 import TipsCompetitionToolbar from "@/components/TipsCompetitionToolbar";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
@@ -283,6 +284,7 @@ export default function PlayerProps({
       <section id="competition-filter" aria-label="Choose a league" className="pt-5 pb-6 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <TipsCompetitionToolbar sport="football" />
+          <TipsCompetitionPicker options={leagueConfig} value={activeLeague} onChange={setActiveLeague} stats={currentStats} label="League">
           <div className="competition-card-grid">
             {leagueConfig.map((league) => {
               const leagueStats = getStatsForLeague(league.id);
@@ -329,6 +331,7 @@ export default function PlayerProps({
               );
             })}
           </div>
+          </TipsCompetitionPicker>
 
         </div>
       </section>

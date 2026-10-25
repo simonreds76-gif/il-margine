@@ -143,7 +143,7 @@ function Crest({ team, category }: { team: string | null; category: string }) {
 }
 
 function PickRow({ bet }: { bet: Bet }) {
-  return <PropSelectionCard row={bet} market={classifyProp(bet)} href={publicTipPath(bet)} bookmaker={bet.bookmaker} />;
+  return <PropSelectionCard grouped row={bet} market={classifyProp(bet)} href={publicTipPath(bet)} bookmaker={bet.bookmaker} />;
 }
 
 function Chevron({ open }: { open: boolean }) {
@@ -215,7 +215,7 @@ function MatchCard({ group, mode, open, onToggle }: { group: MatchGroup; mode: M
       </button>
       <div className="border-t border-slate-800/50 px-4 py-2">
         <Link href={publicTipPath(group.bets[0])} prefetch={false} className="text-xs font-medium text-emerald-300 hover:underline">
-          {group.event}: player prop tips &amp; results →
+          <span className="sm:hidden">Match tips &amp; results →</span><span className="hidden sm:inline">{group.event}: player prop tips &amp; results →</span>
         </Link>
       </div>
       {open ? (
