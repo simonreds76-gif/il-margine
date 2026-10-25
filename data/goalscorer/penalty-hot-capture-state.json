@@ -29,6 +29,7 @@
     "5868102": "2026-10-25",
     "5868104": "2026-10-25",
     "5868108": "2026-10-25",
+    "5868105": "2026-10-25",
     "5802969": "2026-10-25",
     "5802964": "2026-10-25",
     "5802965": "2026-10-25",
@@ -39,6 +40,7 @@
     "5749710": "2026-10-25",
     "5749713": "2026-10-25",
     "5749716": "2026-10-25",
+    "5749719": "2026-10-25",
     "5795478": "2026-10-25",
     "5795476": "2026-10-25",
     "5795479": "2026-10-25",
@@ -90,8 +92,8 @@
     "5802966": "2026-10-25",
     "5749718": "2026-10-25"
   },
-  "updated_at": "2026-10-25T21:43:49.845350+00:00",
-  "checked_this_run": 0,
+  "updated_at": "2026-10-25T23:31:04.500683+00:00",
+  "checked_this_run": 2,
   "errors": [],
   "fixtures": {
     "5795486": {
@@ -1538,37 +1540,40 @@
         },
         "away": {
           "id": 8633,
-          "score": 1,
+          "score": 2,
           "name": "Real Madrid",
           "longName": "Real Madrid"
         },
         "status": {
-          "utcTime": "2026-10-25T20:00:00.000Z",
+          "utcTime": "2026-10-25T20:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "25.10.2026 21:02:19",
             "secondHalfStarted": "25.10.2026 22:08:17"
           },
           "periodLength": 45,
-          "finished": false,
+          "finished": true,
           "started": true,
           "cancelled": false,
-          "ongoing": true,
-          "scoreStr": "1 - 1",
-          "liveTime": {
-            "short": "81‎’‎",
-            "shortKey": "",
-            "long": "80:33",
-            "longKey": "",
-            "maxTime": 90,
-            "basePeriod": 90,
-            "addedTime": 0
+          "awarded": false,
+          "scoreStr": "1 - 2",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
           }
         }
       },
       "date": "2026-10-25",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
-      "pending_since": "2026-10-25T19:42:05.047181+00:00"
+      "pending_since": "2026-10-25T19:42:05.047181+00:00",
+      "last_attempt": "2026-10-25T23:31:04.500683+00:00",
+      "attempts": 1,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-10-25T23:31:04.500683+00:00",
+      "penalty_count": 0,
+      "next_attempt": ""
     },
     "5802969": {
       "league": "ligue-1",
@@ -2072,7 +2077,7 @@
           "longName": "Milan"
         },
         "status": {
-          "utcTime": "2026-10-25T19:45:00.000Z",
+          "utcTime": "2026-10-25T19:45:00+00:00",
           "halfs": {
             "firstHalfStarted": "25.10.2026 20:45:17",
             "secondHalfStarted": "25.10.2026 21:47:36"
@@ -2092,9 +2097,15 @@
         }
       },
       "date": "2026-10-25",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
-      "pending_since": "2026-10-25T19:42:05.047181+00:00"
+      "pending_since": "2026-10-25T19:42:05.047181+00:00",
+      "last_attempt": "2026-10-25T23:31:04.500683+00:00",
+      "attempts": 1,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-10-25T23:31:04.500683+00:00",
+      "penalty_count": 0,
+      "next_attempt": ""
     },
     "5795478": {
       "league": "epl",
@@ -4266,7 +4277,7 @@
           "longName": "Athletic Club"
         },
         "status": {
-          "utcTime": "2026-10-21T18:00:00+00:00",
+          "utcTime": "2026-10-21T18:00:00.000Z",
           "numberOfAwayRedCards": 1,
           "halfs": {
             "firstHalfStarted": "21.10.2026 20:03:16",
@@ -4545,7 +4556,7 @@
   "discovery": {
     "20261025": {
       "ok": true,
-      "checked_at": "2026-10-25T21:43:49.845350+00:00",
+      "checked_at": "2026-10-25T23:31:04.500683+00:00",
       "expected": 22,
       "match_ids": [
         "5749710",
@@ -4575,7 +4586,7 @@
     },
     "20261024": {
       "ok": true,
-      "checked_at": "2026-10-25T21:43:49.845350+00:00",
+      "checked_at": "2026-10-25T23:31:04.500683+00:00",
       "expected": 19,
       "match_ids": [
         "5749711",
@@ -4677,7 +4688,7 @@
     },
     "20261021": {
       "ok": true,
-      "checked_at": "2026-10-25T19:46:20.446729+00:00",
+      "checked_at": "2026-10-25T23:31:04.500683+00:00",
       "expected": 1,
       "match_ids": [
         "5868067"
@@ -4707,8 +4718,8 @@
   },
   "coverage": {
     "expected": 91,
-    "verified": 89,
-    "pending": 2,
+    "verified": 91,
+    "pending": 0,
     "reverify": 0,
     "deferred": 0,
     "overdue": 0,
