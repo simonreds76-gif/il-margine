@@ -2,23 +2,19 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 6,
-    "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 6,
-      "goalkeeper_team_unresolved": 6,
-      "missing_priced_edge": 6
-    },
+    "blocked_lines": 0,
+    "blocker_counts": {},
     "candidate_board_preserved": false,
     "eligible_lines": 2,
-    "priced_lines": 26,
+    "priced_lines": 14,
     "provisional_lines": 0,
-    "signals_added": 0,
-    "value_ladder_lines": 3
+    "signals_added": 1,
+    "value_ladder_lines": 2
   },
   "evidence": {
     "clv": 0.052654,
     "clv_matched": 30,
-    "pending": 6,
+    "pending": 7,
     "pnl_units": 15.072,
     "roi": 0.363181,
     "settled": 83,
@@ -27,32 +23,30 @@
       "fotmob_team_keeper_shotmap": 4,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 90,
+    "signals": 91,
     "true_close_coverage": 0.361446,
     "void": 1
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-26T16:18:27.729083+00:00",
+    "checked_at": "2026-10-26T21:11:52.553797+00:00",
     "counts": {
-      "not_fresh_prematch": 22,
-      "offers_saved": 10
+      "offers_saved": 14
     },
-    "saved": 2,
+    "saved": 3,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-26T16:18:27Z",
+  "generated_at": "2026-10-26T21:11:52Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "not_new_fresh_prematch": 22,
-      "unregistered_settlement_rules": 10
+      "unregistered_settlement_rules": 14
     },
     "forecast_fixtures": 85,
     "forecast_keepers": 170,
-    "generated_at": "2026-10-26T16:18:27.763541+00:00",
+    "generated_at": "2026-10-26T21:11:52.597041+00:00",
     "last_capture_at": "2026-10-25T13:14:55.143085+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,

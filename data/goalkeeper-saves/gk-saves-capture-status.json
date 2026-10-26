@@ -1,10 +1,10 @@
 {
   "bookmaker_coverage": {
     "Kambi": {
-      "events_with_save_markets": 2,
+      "events_with_save_markets": 3,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 16
+      "unnamed_or_team_lines": 24
     },
     "Paddy Power": {
       "events_with_save_markets": 0,
@@ -16,14 +16,15 @@
   "capture_errors": [],
   "capture_mode": "close",
   "event_last_checked": {
-    "72036250": "2026-10-26T16:18:26Z",
-    "72478662": "2026-10-26T16:18:26Z"
+    "71945358": "2026-10-26T21:11:50Z",
+    "71945360": "2026-10-26T21:11:50Z",
+    "71945362": "2026-10-26T21:11:50Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 2,
-  "events_supported": 2,
-  "events_with_lines": 2,
-  "generated_at": "2026-10-26T16:18:26Z",
+  "events_selected": 3,
+  "events_supported": 3,
+  "events_with_lines": 3,
+  "generated_at": "2026-10-26T21:11:50Z",
   "last_publication_at": "2026-10-26T15:18:41Z",
   "league_coverage": {
     "bundesliga": {
@@ -35,19 +36,19 @@
       "with_prices": 0
     },
     "la-liga": {
-      "selected": 1,
-      "with_prices": 1
-    },
-    "ligue-1": {
-      "selected": 1,
-      "with_prices": 1
-    },
-    "serie-a": {
       "selected": 0,
       "with_prices": 0
+    },
+    "ligue-1": {
+      "selected": 0,
+      "with_prices": 0
+    },
+    "serie-a": {
+      "selected": 3,
+      "with_prices": 3
     }
   },
-  "market_inventory_rows_added": 134,
+  "market_inventory_rows_added": 207,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Bookings Spread",
@@ -105,24 +106,31 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 10,
-  "rows_observed": 10,
+  "rows_added": 14,
+  "rows_observed": 14,
   "selected_events": [
     {
-      "away": "Olympique Lyon",
-      "competition": "France - Ligue 1",
-      "home": "Paris Saint-Germain",
-      "id": 72036250,
-      "kickoff_at": "2026-10-26T19:30:00Z"
+      "away": "Lazio Rome",
+      "competition": "Italy - Serie A",
+      "home": "Sassuolo Calcio",
+      "id": 71945360,
+      "kickoff_at": "2026-10-27T17:30:00Z"
     },
     {
-      "away": "CA Osasuna",
-      "competition": "Spain - LaLiga",
-      "home": "Sevilla FC",
-      "id": 72478662,
-      "kickoff_at": "2026-10-26T20:00:00Z"
+      "away": "Cagliari Calcio",
+      "competition": "Italy - Serie A",
+      "home": "AS Roma",
+      "id": 71945358,
+      "kickoff_at": "2026-10-27T19:45:00Z"
+    },
+    {
+      "away": "Como 1907",
+      "competition": "Italy - Serie A",
+      "home": "Torino FC",
+      "id": 71945362,
+      "kickoff_at": "2026-10-27T19:45:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 2
+  "three_way_events": 3
 }

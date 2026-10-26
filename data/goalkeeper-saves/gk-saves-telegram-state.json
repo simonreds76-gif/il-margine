@@ -2315,16 +2315,69 @@
         "paper_stake": 0.5,
         "actual_stake": 0
       }
+    },
+    "kambi|71945358|elia caprile|4.5|over": {
+      "status": "claimed",
+      "run_token": "40402229559:1",
+      "claimed_at": "2026-10-26T21:12:17.689897+00:00",
+      "signal": {
+        "signal_id": "kambi|71945358|elia caprile|4.5|over",
+        "created_at": "2026-10-26T21:11:52Z",
+        "event_id": "71945358",
+        "match_date": "2026-10-27",
+        "kickoff_at": "2026-10-27T19:45:00Z",
+        "league": "serie-a",
+        "home_team": "AS Roma",
+        "away_team": "Cagliari Calcio",
+        "team": "Cagliari Calcio",
+        "opponent": "AS Roma",
+        "venue": "away",
+        "goalkeeper": "Elia Caprile",
+        "bookmaker": "Kambi",
+        "line": "4.5",
+        "side": "over",
+        "odds_decimal": "2.2500",
+        "model_mean": "4.6293",
+        "model_probability": "0.476438",
+        "push_probability": "0.000000",
+        "fair_odds": "2.099",
+        "edge": "0.071985",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-10-26T21:11:50Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "team_goalkeeper_away",
+        "identity_basis": "same_fixture_lineup_side",
+        "price_comparison": [
+          {
+            "bookmaker": "Kambi",
+            "odds": 2.25,
+            "captured_at": "2026-10-26T21:11:50Z",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-10-26T21:12:17.689897+00:00"
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-10-26T16:18:44.576286+00:00",
-      "added": 0,
+      "checked_at": "2026-10-26T21:12:17.689897+00:00",
+      "added": 1,
       "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-10-26T16:18:44.576286+00:00",
+      "checked_at": "2026-10-26T21:12:17.689897+00:00",
       "added": 0,
       "suppressed": {}
     }
