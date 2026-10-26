@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-26T13:12:03Z",
+  "generated_at": "2026-10-26T15:29:03Z",
   "league": "bundesliga",
   "row_count": 2,
   "rows": [
@@ -22,15 +22,15 @@
       "primary_pre_match": "Andrej Kramarić",
       "secondary_pre_match": "Tim Lemperle",
       "tertiary_pre_match": "Fisnik Asllani",
-      "primary_lineup_status": "confirmed_bench",
-      "secondary_lineup_status": "unknown",
-      "tertiary_lineup_status": "confirmed_starter",
-      "active_taker_pre_match": "Fisnik Asllani",
-      "active_slot_pre_match": "tertiary",
-      "team_lineup_status": "unknown",
-      "review_type": "primary_reclaimed_from_bench",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "primary_held",
       "review_priority": "low",
-      "editorial_note": "Andrej Kramarić took 1 penalty attempt and scored for Hoffenheim vs Bayer Leverkusen. Primary pre-match: Andrej Kramarić (confirmed_bench). Secondary pre-match: Tim Lemperle (unknown). Pre-match active slot was tertiary -> Fisnik Asllani. Low-priority note: the benched primary later reclaimed the duty after coming on, so the hierarchy likely still stands.",
+      "editorial_note": "Andrej Kramarić took 1 penalty attempt and scored for Hoffenheim vs Bayer Leverkusen. Primary pre-match: Andrej Kramarić (unknown). Secondary pre-match: Tim Lemperle (unknown). No hierarchy change implied from this event.",
       "context_generated_at": "2026-10-25T13:40:28Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json",
       "actual_taker_match_status": "Yes - bench, on 65'",
@@ -44,7 +44,7 @@
           "source_event_id": "2987922859",
           "match_id": "5881201",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881201",
-          "observed_at": "2026-10-26T13:11:55+00:00",
+          "observed_at": "2026-10-26T15:28:58+00:00",
           "event_date": "2026-10-25",
           "season": "2026/27",
           "team": "Hoffenheim",
@@ -117,7 +117,7 @@
           "source_event_id": "2986611147",
           "match_id": "5881202",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881202",
-          "observed_at": "2026-10-26T13:11:55+00:00",
+          "observed_at": "2026-10-26T15:28:58+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Werder Bremen",
@@ -153,7 +153,7 @@
           "source_event_id": "2986634487",
           "match_id": "5881202",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881202",
-          "observed_at": "2026-10-26T13:11:55+00:00",
+          "observed_at": "2026-10-26T15:28:58+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Werder Bremen",
@@ -191,8 +191,6 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261018",
-      "20261019",
       "20261020",
       "20261021",
       "20261022",
@@ -201,6 +199,6 @@
       "20261025",
       "20261026"
     ],
-    "matches_checked": 11
+    "matches_checked": 9
   }
 }
