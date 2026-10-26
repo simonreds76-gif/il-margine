@@ -25,6 +25,7 @@ from goalkeeper_saves_live import (
     predict_mean,
     price_side,
     resolve_goalkeeper,
+    team_goalkeeper_name,
 )
 
 
@@ -220,17 +221,10 @@ def build_candidates(
         contract_side = next((s for s in ("home", "away") if f":team_goalkeeper_{s}:" in str(price_row.get("source") or "")), None)
         identity_basis = "bookmaker_named_player"
         if contract_side:
-            # The feed supplies team contracts. Attach a display keeper only when
-            # the same event's Bet365 names resolve uniquely to this lineup side.
-            mapped = set()
-            for quote in prices:
-                if str(quote.get("event_id")) != str(price_row.get("event_id")) or str(quote.get("bookmaker", "")).casefold() != "bet365":
-                    continue
-                qside, _, qplayer = resolve_goalkeeper(fixture, str(quote.get("player") or ""))
-                if qside == contract_side:
-                    mapped.add(qplayer)
-            player = next(iter(mapped)) if len(mapped) == 1 else ""
-            identity_basis = "same_event_bet365_and_lineup_side" if player else "unresolved_team_keeper"
+            # Preserve the team contract; a separate bookmaker is not identity
+            # evidence. This exact fixture's unique lineup GK is the display name.
+            player = team_goalkeeper_name(fixture, contract_side)
+            identity_basis = "same_fixture_lineup_side" if player else "unresolved_team_keeper"
         side, lineup_status, canonical_player = resolve_goalkeeper(fixture, player)
         if contract_side and side != contract_side:
             side, lineup_status, canonical_player = "", "team_keeper_mapping_unresolved", ""

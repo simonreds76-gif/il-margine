@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from odds_api_allocation import selected_bookmakers
+
 import argparse
 import csv
 import json
@@ -298,7 +300,7 @@ def append_rows(path: Path, rows: list[dict[str, Any]]) -> int:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Capture goalkeeper saves prices and identify market coverage gaps")
-    parser.add_argument("--bookmaker", "--bookmakers", default="Bet365,Kambi", help="Comma-separated selected bookmakers")
+    parser.add_argument("--bookmaker", "--bookmakers", default="Paddy Power,Kambi", help="Comma-separated selected bookmakers")
     parser.add_argument("--days-ahead", type=int, default=7)
     parser.add_argument("--max-events", type=int, default=30)
     parser.add_argument("--kickoff-within-minutes", type=int, default=0)
@@ -307,6 +309,7 @@ def main() -> None:
     parser.add_argument("--status", type=Path, default=DEFAULT_STATUS)
     parser.add_argument("--market-inventory", type=Path, default=DEFAULT_MARKET_INVENTORY)
     args = parser.parse_args()
+    args.bookmaker = selected_bookmakers(args.bookmaker)
 
     load_env()
     api_key = (os.environ.get("ODDS_API_KEY") or os.environ.get("ODDS_API_IO_KEY") or "").strip()
@@ -377,7 +380,7 @@ def main() -> None:
         args.status.parent.mkdir(parents=True, exist_ok=True)
         (args.status.parent / "gk-saves-unmapped-markets.json").write_text(
             json.dumps({"captured_at": captured_at, "contracts": unmapped,
-                        "reason": "Home/away contracts are mapped against same-fixture Bet365 keeper names and lineup sides by the shadow scorer. Combined contracts remain excluded."}, indent=2) + "\n",
+                        "reason": "Home/away contracts are mapped to the unique expected/confirmed goalkeeper on the same fixture and side by the shadow scorer. Combined contracts remain excluded."}, indent=2) + "\n",
             encoding="utf-8")
     rows = extract_rows(
         payload,

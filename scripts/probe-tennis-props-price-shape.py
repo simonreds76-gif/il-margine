@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from odds_api_allocation import selected_bookmakers
+
 import argparse
 import csv
 import json
@@ -148,9 +150,10 @@ def main() -> int:
     parser.add_argument("--date", default=date.today().isoformat())
     parser.add_argument("--lines", default="")
     parser.add_argument("--event-id", default="")
-    parser.add_argument("--bookmaker", default="Bet365")
+    parser.add_argument("--bookmaker", default="Paddy Power,Kambi")
     parser.add_argument("--out", default="")
     args = parser.parse_args()
+    args.bookmaker = selected_bookmakers(args.bookmaker)
 
     load_env()
     api_key = os.environ.get("ODDS_API_KEY") or os.environ.get("ODDS_API_IO_KEY")

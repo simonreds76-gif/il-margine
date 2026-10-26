@@ -311,6 +311,18 @@ def load_lineup_index(paths: Iterable[Path]) -> dict[tuple[str, str, str], dict[
     return index
 
 
+def team_goalkeeper_name(fixture: dict[str, Any] | None, side: str) -> str:
+    """Resolve a team-side contract from its unique expected/confirmed starter."""
+    if not fixture or side not in {"home", "away"}:
+        return ""
+    keepers = {
+        str(p.get("name") or "").strip()
+        for p in fixture.get(f"{side}_starters") or []
+        if str(p.get("role_group") or "").upper() == "GK" and str(p.get("name") or "").strip()
+    }
+    return next(iter(keepers)) if len(keepers) == 1 else ""
+
+
 def resolve_goalkeeper(
     fixture: dict[str, Any] | None,
     player: str,
