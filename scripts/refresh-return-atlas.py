@@ -48,9 +48,9 @@ def write_json(path, value):
     temp.replace(path)
 
 
-def fetch(url):
+def fetch(url, timeout=60):
     request = urllib.request.Request(url, headers={'User-Agent': 'IlMargine-ReturnAtlas/1.0'})
-    with urllib.request.urlopen(request, timeout=60) as response:
+    with urllib.request.urlopen(request, timeout=timeout) as response:
         if response.status != 200:
             raise RuntimeError(f'Source returned HTTP {response.status}')
         data = response.read(30_000_001)
@@ -95,12 +95,39 @@ def source_csv(data, year):
     return len(rows)
 
 
-def live_version(route='return-atlas'):
-    html = fetch(SITE + '/' + route).decode('utf-8')
+def live_version(route='return-atlas', *, timeout=60):
+    html = fetch(SITE + '/' + route, timeout=timeout).decode('utf-8')
     match = re.search(r'/' + re.escape(route) + r'/data/(\d{8}-[a-f0-9]{12})/index.json', html)
     if not match:
         raise RuntimeError('Cannot verify the currently published archive')
     return match.group(1)
+
+
+def wait_for_live_versions(expected, *, attempts=7, delay_seconds=10,
+                           read_version=None, sleep=None):
+    """Allow bounded alias/cache propagation; require both public pages to agree."""
+    if attempts < 1:
+        raise ValueError('At least one public verification attempt is required')
+    read_version = read_version or (lambda route: live_version(route, timeout=10))
+    sleep = sleep or time.sleep
+    observed = {}
+    for attempt in range(1, attempts + 1):
+        observed = {}
+        for route in expected:
+            try:
+                observed[route] = read_version(route)
+            except (OSError, RuntimeError) as exc:
+                # Transport errors can contain URLs; keep diagnostics non-sensitive.
+                observed[route] = 'unavailable:' + type(exc).__name__
+        if observed == expected:
+            return {'attempts': attempt, 'expected': expected, 'observed': observed}
+        print('ATLAS_PUBLIC_VERIFICATION_PENDING ' + json.dumps({
+            'attempt': attempt, 'expected': expected, 'observed': observed}), flush=True)
+        if attempt < attempts:
+            sleep(delay_seconds)
+    raise RuntimeError('Promotion completed but public archive verification failed after '
+                       + str(attempts) + ' attempts: ' + json.dumps({
+                           'expected': expected, 'observed': observed}))
 
 
 def obsolete_versions(versions, new_version, prior_version, live):
@@ -167,8 +194,11 @@ def publish(checkout, version, status, save):
     if current_alias != prior_alias:
         raise RuntimeError('Production changed during build; refusing to replace a newer release')
     run([vercel, 'promote', url, '--yes'], checkout, timeout=180)
-    if live_version() != version or live_version('tennis-matchup') != matchup['version']:
-        raise RuntimeError('Promotion finished but public archive version has not been verified')
+    expected = {'return-atlas': version, 'tennis-matchup': matchup['version']}
+    status.update(status='verifying', deploymentUrl=url, expectedPublicVersions=expected)
+    save()
+    verification = wait_for_live_versions(expected)
+    status['publicVerification'] = {**verification, 'verifiedAt': datetime.now(timezone.utc).isoformat()}
     status.update(status='published', publishedVersion=version, publishedAt=datetime.now(timezone.utc).isoformat(), deploymentUrl=url)
     save()
 
@@ -324,3 +354,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

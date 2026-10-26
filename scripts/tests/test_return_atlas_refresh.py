@@ -2,6 +2,7 @@ import importlib.util
 from pathlib import Path
 import unittest
 from copy import deepcopy
+from unittest.mock import Mock, patch
 
 spec = importlib.util.spec_from_file_location('refresh', Path(__file__).parents[1] / 'refresh-return-atlas.py')
 refresh = importlib.util.module_from_spec(spec)
@@ -53,4 +54,61 @@ class PublicationGateTests(unittest.TestCase):
         self.assertNotIn('other-folder', refresh.obsolete_versions(['other-folder'], *versions[:3]))
 
 
+class PublicPropagationTests(unittest.TestCase):
+    expected = {'return-atlas': '20261025-0f30bd9964e7',
+                'tennis-matchup': '20261026-eb98a6b72549'}
+
+    def test_current_versions_pass_without_sleep(self):
+        sleep = Mock()
+        result = refresh.wait_for_live_versions(self.expected,
+                    read_version=self.expected.__getitem__, sleep=sleep)
+        self.assertEqual(result['attempts'], 1)
+        self.assertEqual(result['observed'], self.expected)
+        sleep.assert_not_called()
+
+    def test_stale_page_is_retried_and_both_routes_are_checked_again(self):
+        reader = Mock(side_effect=['older-atlas', self.expected['tennis-matchup'],
+                                  *self.expected.values()])
+        sleep = Mock()
+        result = refresh.wait_for_live_versions(self.expected, read_version=reader, sleep=sleep)
+        self.assertEqual(result['attempts'], 2)
+        self.assertEqual([c.args[0] for c in reader.call_args_list], list(self.expected) * 2)
+        sleep.assert_called_once_with(10)
+
+    def test_routes_must_match_on_the_same_attempt(self):
+        reader = Mock(side_effect=[self.expected['return-atlas'], 'old-matchup',
+                                  'old-atlas', self.expected['tennis-matchup']])
+        with self.assertRaisesRegex(RuntimeError, 'after 2 attempts'):
+            refresh.wait_for_live_versions(self.expected, attempts=2,
+                                          read_version=reader, sleep=Mock())
+
+    def test_transient_timeout_recovers(self):
+        reader = Mock(side_effect=[TimeoutError('private URL'), self.expected['tennis-matchup'],
+                                  *self.expected.values()])
+        result = refresh.wait_for_live_versions(self.expected, read_version=reader, sleep=Mock())
+        self.assertEqual(result['attempts'], 2)
+
+    def test_permanent_mismatch_still_fails_with_bounded_retries(self):
+        reader, sleep = Mock(return_value='old'), Mock()
+        with self.assertRaisesRegex(RuntimeError, 'expected.*observed'):
+            refresh.wait_for_live_versions(self.expected, attempts=3,
+                                          read_version=reader, sleep=sleep)
+        self.assertEqual(reader.call_count, 6)
+        self.assertEqual(sleep.call_count, 2)
+
+    def test_missing_page_versions_do_not_become_success(self):
+        reader = Mock(side_effect=RuntimeError('private URL'))
+        with self.assertRaises(RuntimeError) as error:
+            refresh.wait_for_live_versions(self.expected, attempts=1,
+                                          read_version=reader, sleep=Mock())
+        self.assertNotIn('private URL', str(error.exception))
+        self.assertIn('unavailable:RuntimeError', str(error.exception))
+
+    def test_default_probe_timeout_is_bounded(self):
+        with patch.object(refresh, 'live_version', side_effect=self.expected.values()) as reader:
+            refresh.wait_for_live_versions(self.expected, sleep=Mock())
+        self.assertTrue(all(c.kwargs == {'timeout': 10} for c in reader.call_args_list))
+
+
 if __name__ == '__main__': unittest.main()
+
