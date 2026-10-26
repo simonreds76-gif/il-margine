@@ -92,8 +92,8 @@
     "5802966": "2026-10-25",
     "5749718": "2026-10-25"
   },
-  "updated_at": "2026-10-25T23:31:04.500683+00:00",
-  "checked_this_run": 2,
+  "updated_at": "2026-10-26T00:18:35.457680+00:00",
+  "checked_this_run": 0,
   "errors": [],
   "fixtures": {
     "5795486": {
@@ -1545,7 +1545,7 @@
           "longName": "Real Madrid"
         },
         "status": {
-          "utcTime": "2026-10-25T20:00:00+00:00",
+          "utcTime": "2026-10-25T20:00:00.000Z",
           "halfs": {
             "firstHalfStarted": "25.10.2026 21:02:19",
             "secondHalfStarted": "25.10.2026 22:08:17"
@@ -2077,7 +2077,7 @@
           "longName": "Milan"
         },
         "status": {
-          "utcTime": "2026-10-25T19:45:00+00:00",
+          "utcTime": "2026-10-25T19:45:00.000Z",
           "halfs": {
             "firstHalfStarted": "25.10.2026 20:45:17",
             "secondHalfStarted": "25.10.2026 21:47:36"
@@ -4550,13 +4550,80 @@
       "verified_at": "2026-10-25T20:05:07.282171+00:00",
       "penalty_count": 0,
       "next_attempt": ""
+    },
+    "5868109": {
+      "league": "la-liga",
+      "league_id": 87,
+      "match": {
+        "id": 5868109,
+        "home": {
+          "id": 8302,
+          "score": 0,
+          "name": "Sevilla",
+          "longName": "Sevilla"
+        },
+        "away": {
+          "id": 8371,
+          "score": 0,
+          "name": "Osasuna",
+          "longName": "Osasuna"
+        },
+        "status": {
+          "utcTime": "2026-10-26T20:00:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "26.10.2026 21:00:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-10-26",
+      "state": "pending",
+      "first_seen": "2026-10-26T00:18:35.457680+00:00",
+      "pending_since": "2026-10-26T00:18:35.457680+00:00"
+    },
+    "5802972": {
+      "league": "ligue-1",
+      "league_id": 53,
+      "match": {
+        "id": 5802972,
+        "home": {
+          "id": 9847,
+          "score": 0,
+          "name": "Paris Saint-Germain",
+          "shortName": "PSG",
+          "longName": "Paris Saint-Germain"
+        },
+        "away": {
+          "id": 9748,
+          "score": 0,
+          "name": "Lyon",
+          "longName": "Lyon"
+        },
+        "status": {
+          "utcTime": "2026-10-26T19:30:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "26.10.2026 20:30:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-10-26",
+      "state": "pending",
+      "first_seen": "2026-10-26T00:18:35.457680+00:00",
+      "pending_since": "2026-10-26T00:18:35.457680+00:00"
     }
   },
   "schema_version": 2,
   "discovery": {
     "20261025": {
       "ok": true,
-      "checked_at": "2026-10-25T23:31:04.500683+00:00",
+      "checked_at": "2026-10-26T00:18:35.457680+00:00",
       "expected": 22,
       "match_ids": [
         "5749710",
@@ -4697,7 +4764,7 @@
     },
     "20261022": {
       "ok": true,
-      "checked_at": "2026-10-25T19:47:19.556531+00:00",
+      "checked_at": "2026-10-26T00:18:35.457680+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -4714,12 +4781,22 @@
         "5881205"
       ],
       "missing_known_ids": []
+    },
+    "20261026": {
+      "ok": true,
+      "checked_at": "2026-10-26T00:18:35.457680+00:00",
+      "expected": 2,
+      "match_ids": [
+        "5802972",
+        "5868109"
+      ],
+      "missing_known_ids": []
     }
   },
   "coverage": {
-    "expected": 91,
+    "expected": 93,
     "verified": 91,
-    "pending": 0,
+    "pending": 2,
     "reverify": 0,
     "deferred": 0,
     "overdue": 0,
