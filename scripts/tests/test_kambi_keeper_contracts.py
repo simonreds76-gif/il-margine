@@ -20,7 +20,7 @@ class KambiContracts(unittest.TestCase):
         home=next(r for r in rows if r['contract_scope']=='team_goalkeeper_home')
         away=next(r for r in rows if r['contract_scope']=='team_goalkeeper_away')
         self.assertEqual(home['goalkeeper'],'David Raya');self.assertEqual(home['candidate_status'],'eligible_shadow')
-        self.assertEqual(away['candidate_status'],'blocked')
+        self.assertEqual(away['goalkeeper'],'Jordan Pickford');self.assertEqual(away['candidate_status'],'eligible_shadow')
         with tempfile.TemporaryDirectory() as d:
             added,ledger=shadow.append_signals(Path(d)/'signals.csv',rows,'2026-10-24T12:00:00Z')
             # Both contracts are captured above, but equal prices produce one
@@ -28,6 +28,22 @@ class KambiContracts(unittest.TestCase):
             self.assertEqual(added,1)
             self.assertEqual({r['bookmaker'] for r in ledger},{'Bet365'})
             self.assertEqual(shadow.append_signals(Path(d)/'signals.csv',rows,'2026-10-24T13:00:00Z')[0],0)
+
+    def test_explicit_side_can_price_without_lineup_but_named_player_cannot(self):
+        common=dict(event_id='1',match_date='2026-10-25',home_team='Arsenal',away_team='Everton',league='epl',line='3.5',side='over',odds_decimal='2.0',captured_at='2026-10-24T12:00:00Z',kickoff_at='2026-10-25T14:00:00Z')
+        offers=[dict(common,bookmaker='Kambi',player=s.title()+' goalkeeper',source=f'odds_api_io:team_goalkeeper_{s}:bookmaker_ml') for s in ('home','away')]
+        offers.append(dict(common,bookmaker='PaddyPower',player='David Raya'))
+        with patch.object(shadow,'build_features',return_value=(tuple(range(9)),[])) as features,patch.object(shadow,'predict_mean',return_value=4),patch.object(shadow,'price_side',return_value=dict(edge=.1,model_probability=.55,push_probability=0,fair_odds=1.818)):
+            rows=shadow.build_candidates(offers,{},dict(alpha=.2),{},'2026-10-24T12:00:00Z')
+        by_name={r['goalkeeper']:r for r in rows}
+        self.assertEqual(by_name['Home goalkeeper']['candidate_status'],'eligible_shadow')
+        self.assertEqual(by_name['Away goalkeeper']['candidate_status'],'eligible_shadow')
+        self.assertEqual(by_name['David Raya']['candidate_status'],'blocked')
+        self.assertEqual([(c.kwargs['team'],c.kwargs['opponent'],c.kwargs['venue']) for c in features.call_args_list],[('Arsenal','Everton','home'),('Everton','Arsenal','away')])
+        self.assertEqual(sum(r['strongest_for_fixture']=='yes' for r in rows),1)
+        with patch.object(shadow,'build_features',return_value=(None,['insufficient_team_history'])):
+            blocked=shadow.build_candidates(offers,{},dict(alpha=.2),{},'2026-10-24T12:00:00Z')
+        self.assertTrue(all(r['candidate_status']=='blocked' for r in blocked))
 
     def test_team_scope_counts_replacement_keeper_not_opponent(self):
         shots=[dict(id=1,teamId=20,eventType='AttemptSaved',keeperId=100),dict(id=2,teamId=20,eventType='AttemptSaved',keeperId=101),dict(id=3,teamId=10,eventType='AttemptSaved',keeperId=200),dict(id=4,teamId=20,eventType='AttemptSaved',keeperId=100,isBlocked=True)]
@@ -52,13 +68,16 @@ class KambiContracts(unittest.TestCase):
                  'shotmap':{'shots':[dict(id=1,teamId=20,eventType='AttemptSaved',keeperId=100)]}}
         payload={'props':{'pageProps':{'header':{'status':{'finished':True},'teams':[{'id':10},{'id':20}]},'content':content}}}
         self.assertEqual(settle.fotmob_mapped_keeper_saves(payload,'home','David Raya')[0],1)
+        self.assertEqual(settle.fotmob_mapped_keeper_saves(payload,'home','Home goalkeeper')[0],1)
         stats['stats'][0]['stats']['Minutes played']['stat']['value']=80
         self.assertIsNone(settle.fotmob_mapped_keeper_saves(payload,'home','David Raya')[0])
+        self.assertIsNone(settle.fotmob_mapped_keeper_saves(payload,'home','Home goalkeeper')[0])
         stats['stats'][0]['stats']['Minutes played']['stat']['value']=90
         content['shotmap']['shots'].append(dict(id=2,teamId=20,eventType='AttemptSaved',keeperId=101))
         self.assertIsNone(settle.fotmob_mapped_keeper_saves(payload,'home','David Raya')[0])
         content['shotmap']['shots'].pop()
         content['lineup']['homeTeam']={'starters':[],'subs':[player]}
         self.assertIsNone(settle.fotmob_mapped_keeper_saves(payload,'home','David Raya')[0])
+        self.assertIsNone(settle.fotmob_mapped_keeper_saves(payload,'home','Home goalkeeper')[0])
 
 if __name__=='__main__':unittest.main()
