@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-26T15:28:57Z",
+  "generated_at": "2026-10-26T21:37:58.862135+00:00",
   "league": "la-liga",
-  "row_count": 5,
+  "row_count": 6,
   "rows": [
     {
       "date": "2026-10-24",
@@ -383,6 +383,79 @@
           "event_result": "scored"
         }
       ]
+    },
+    {
+      "date": "2026-10-18",
+      "league": "la-liga",
+      "review_source": "fotmob_live",
+      "match": "Real Madrid vs Sevilla",
+      "team": "Real Madrid",
+      "opponent": "Sevilla",
+      "actual_taker": "Kylian Mbappé",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "63",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Kylian Mbappé",
+      "secondary_pre_match": "Vinícius Júnior",
+      "tertiary_pre_match": "Jude Bellingham",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Kylian Mbappé took 1 penalty attempt and scored for Real Madrid vs Sevilla. Primary pre-match: Kylian Mbappé (unknown). Secondary pre-match: Vinícius Júnior (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/la-liga-penalty-takers.json",
+      "actual_taker_match_status": "Yes - started, off 85'",
+      "primary_on_pitch_at_penalty": "Yes - started, off 85'",
+      "secondary_on_pitch_at_penalty": "No - unavailable in match squad",
+      "tertiary_on_pitch_at_penalty": "Yes - started, off 70'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 85'",
+      "event_evidence": [
+        {
+          "id": "fotmob|la-liga|5868098|2984299179",
+          "source_event_id": "2984299179",
+          "match_id": "5868098",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868098",
+          "observed_at": "2026-10-26T21:38:08+00:00",
+          "event_date": "2026-10-18",
+          "season": "2026/27",
+          "team": "Real Madrid",
+          "taker": "Kylian Mbappé",
+          "primary": "Kylian Mbappé",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Kylian Mbappé",
+            "minute": 63,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 701154,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 85,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 63,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Real Madrid vs Sevilla",
+          "event_result": "scored"
+        }
+      ]
     }
   ],
   "source_health": {
@@ -398,5 +471,13 @@
       "20261026"
     ],
     "matches_checked": 10
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261018"
+    ],
+    "matches_checked": 1
   }
 }
