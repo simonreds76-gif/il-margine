@@ -2,19 +2,18 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 8,
+    "blocked_lines": 6,
     "blocker_counts": {
       "goalkeeper_not_matched_to_lineup": 6,
-      "goalkeeper_team_unresolved": 8,
-      "missing_priced_edge": 8,
-      "team_keeper_mapping_unresolved": 2
+      "goalkeeper_team_unresolved": 6,
+      "missing_priced_edge": 6
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 0,
-    "priced_lines": 23,
+    "eligible_lines": 2,
+    "priced_lines": 26,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 2
+    "value_ladder_lines": 3
   },
   "evidence": {
     "clv": 0.057124,
@@ -34,25 +33,26 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-25T23:32:50.312497+00:00",
+    "checked_at": "2026-10-26T14:49:28.406569+00:00",
     "counts": {
-      "offers_saved": 31
+      "not_fresh_prematch": 22,
+      "offers_saved": 10
     },
     "saved": 2,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-25T23:32:49Z",
+  "generated_at": "2026-10-26T14:49:27Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "blocked_or_missing_inputs": 8,
-      "unregistered_settlement_rules": 8
+      "not_new_fresh_prematch": 22,
+      "unregistered_settlement_rules": 10
     },
     "forecast_fixtures": 85,
     "forecast_keepers": 170,
-    "generated_at": "2026-10-25T23:32:50.380099+00:00",
+    "generated_at": "2026-10-26T14:49:28.448756+00:00",
     "last_capture_at": "2026-10-25T13:14:55.143085+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
@@ -60,44 +60,44 @@
     "next_review_at": 100,
     "paired_scores": {
       "current": {
-        "brier": 0.17116574488790554,
-        "log_loss": 0.5160342269270295
+        "brier": 0.17626849922369164,
+        "log_loss": 0.5274058217180426
       },
       "keeper_watch": {
-        "brier": 0.1696339526617397,
-        "log_loss": 0.514257302898693
+        "brier": 0.17458866989522911,
+        "log_loss": 0.5252994554061998
       }
     },
-    "paired_settled_fixtures": 57,
+    "paired_settled_fixtures": 74,
     "paper_stake": 0.5,
     "records": {
       "current": {
-        "losses": 8,
+        "losses": 10,
         "overdue": 0,
-        "pending": 5,
+        "pending": 1,
         "profit": 1.2690000000000003,
         "pushes": 0,
         "review": 0,
-        "roi": 0.14929411764705885,
+        "roi": 0.12690000000000004,
         "selections": 24,
-        "settled": 17,
-        "stake": 8.5,
-        "voids": 2,
-        "wins": 9
+        "settled": 20,
+        "stake": 10.0,
+        "voids": 3,
+        "wins": 10
       },
       "keeper_watch": {
-        "losses": 2,
+        "losses": 3,
         "overdue": 0,
-        "pending": 3,
-        "profit": -1.0,
+        "pending": 1,
+        "profit": -0.5,
         "pushes": 0,
         "review": 0,
-        "roi": -1.0,
+        "roi": -0.25,
         "selections": 5,
-        "settled": 2,
-        "stake": 1.0,
+        "settled": 4,
+        "stake": 2.0,
         "voids": 0,
-        "wins": 0
+        "wins": 1
       }
     },
     "review_milestone": 50,
@@ -151,6 +151,7 @@
         "team_id": "9748"
       },
       {
+        "actual": 4,
         "away": "Juventus Turin",
         "bookmaker": "Bet365",
         "captured_at": "2026-10-25T13:14:52+00:00",
@@ -167,14 +168,14 @@
         "odds": 3.0,
         "overdue": false,
         "player_id": "538501",
-        "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "profit": 1.0,
         "registered_at": "2026-10-25T13:14:55.143085+00:00",
         "side": "over",
-        "status": "pending",
+        "status": "won",
         "team_id": "9885"
       },
       {
+        "actual": 4,
         "away": "Juventus Turin",
         "bookmaker": "Bet365",
         "captured_at": "2026-10-25T13:14:52+00:00",
@@ -191,11 +192,10 @@
         "odds": 3.0,
         "overdue": false,
         "player_id": "538501",
-        "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "profit": 1.0,
         "registered_at": "2026-10-25T13:14:55.143085+00:00",
         "side": "over",
-        "status": "pending",
+        "status": "won",
         "team_id": "9885"
       },
       {
@@ -216,13 +216,14 @@
         "overdue": false,
         "player_id": "27299",
         "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "reason": "verified_different_starting_keeper",
         "registered_at": "2026-10-24T19:48:03.306112+00:00",
         "side": "over",
-        "status": "pending",
+        "status": "void",
         "team_id": "9823"
       },
       {
+        "actual": 1,
         "away": "Le Havre AC",
         "bookmaker": "Bet365",
         "captured_at": "2026-10-25T13:14:52+00:00",
@@ -239,14 +240,14 @@
         "odds": 2.0,
         "overdue": false,
         "player_id": "348409",
-        "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "profit": -0.5,
         "registered_at": "2026-10-25T13:14:55.143085+00:00",
         "side": "over",
-        "status": "pending",
+        "status": "lost",
         "team_id": "9746"
       },
       {
+        "actual": 1,
         "away": "Brentford FC",
         "bookmaker": "Bet365",
         "captured_at": "2026-10-24T00:02:15+00:00",
@@ -263,14 +264,14 @@
         "odds": 2.5,
         "overdue": false,
         "player_id": "776689",
-        "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "profit": -0.5,
         "registered_at": "2026-10-24T00:02:17.895946+00:00",
         "side": "over",
-        "status": "pending",
+        "status": "lost",
         "team_id": "9937"
       },
       {
+        "actual": 1,
         "away": "Brentford FC",
         "bookmaker": "Bet365",
         "captured_at": "2026-10-24T00:02:15+00:00",
@@ -287,11 +288,10 @@
         "odds": 2.5,
         "overdue": false,
         "player_id": "776689",
-        "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "profit": -0.5,
         "registered_at": "2026-10-24T00:02:17.895946+00:00",
         "side": "over",
-        "status": "pending",
+        "status": "lost",
         "team_id": "9937"
       },
       {
@@ -800,10 +800,10 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 46,
-      "incomplete_or_conflicting_full_match_count": 9,
-      "keeper_identity_unresolved": 2,
-      "verified_different_starting_keeper": 5
+      "awaiting_verified_keeper_result": 7,
+      "incomplete_or_conflicting_full_match_count": 12,
+      "keeper_identity_unresolved": 3,
+      "verified_different_starting_keeper": 8
     },
     "start_at": "2026-10-15T15:58:57.141631+00:00",
     "status": "TRACKING"
