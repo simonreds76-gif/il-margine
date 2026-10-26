@@ -1,35 +1,40 @@
 {
-  "generated_at": "2026-10-25T13:13:32.680374+00:00",
+  "generated_at": "2026-10-26T15:14:47.873982+00:00",
   "network_refresh": true,
-  "requests": 44,
-  "recovered": 19,
-  "unresolved": [],
+  "requests": 49,
+  "recovered": 21,
+  "unresolved": [
+    {
+      "fixture": "2026-10-24|ligue-1|toulouse|troyes",
+      "reason": "no_unique_fixture"
+    }
+  ],
   "leagues": {
     "epl": {
-      "latest_completed": "2026-10-24",
-      "completed": 75
+      "latest_completed": "2026-10-25",
+      "completed": 80
     },
     "serie-a": {
-      "latest_completed": "2026-10-24",
-      "completed": 75
+      "latest_completed": "2026-10-25",
+      "completed": 80
     },
     "la-liga": {
-      "latest_completed": "2026-10-24",
-      "completed": 94
+      "latest_completed": "2026-10-25",
+      "completed": 98
     },
     "bundesliga": {
-      "latest_completed": "2026-10-24",
-      "completed": 61
+      "latest_completed": "2026-10-25",
+      "completed": 63
     },
     "ligue-1": {
-      "latest_completed": "2026-10-24",
-      "completed": 65
+      "latest_completed": "2026-10-25",
+      "completed": 71
     }
   },
-  "completed_missing_before": 19,
-  "remaining": 0,
-  "applied_matches": 24,
-  "base_rows": 43918,
-  "latest_input_date": "2026-10-24",
-  "supplement_matches": 79
+  "completed_missing_before": 22,
+  "remaining": 1,
+  "applied_matches": 45,
+  "base_rows": 43960,
+  "latest_input_date": "2026-10-25",
+  "supplement_matches": 100
 }

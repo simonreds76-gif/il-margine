@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-10-26T14:49:26Z",
+  "captured_at": "2026-10-26T15:16:03Z",
   "contracts": [
     {
       "event_id": "72036250",
@@ -31,6 +31,30 @@
       "away": "Olympique Lyon",
       "bookmaker": "Kambi",
       "market": {
+        "name": "Goalkeeper Saves Away",
+        "updatedAt": "2026-10-26T13:29:54.093Z",
+        "odds": [
+          {
+            "hdp": 2.5,
+            "over": "1.35"
+          },
+          {
+            "hdp": 3.5,
+            "over": "1.81"
+          },
+          {
+            "hdp": 4.5,
+            "over": "2.63"
+          }
+        ]
+      }
+    },
+    {
+      "event_id": "72036250",
+      "home": "Paris Saint-Germain",
+      "away": "Olympique Lyon",
+      "bookmaker": "Kambi",
+      "market": {
         "name": "Goalkeeper Saves Home",
         "updatedAt": "2026-10-26T13:29:54.093Z",
         "odds": [
@@ -46,25 +70,25 @@
       }
     },
     {
-      "event_id": "72036250",
-      "home": "Paris Saint-Germain",
-      "away": "Olympique Lyon",
+      "event_id": "72478662",
+      "home": "Sevilla FC",
+      "away": "CA Osasuna",
       "bookmaker": "Kambi",
       "market": {
         "name": "Goalkeeper Saves Away",
-        "updatedAt": "2026-10-26T13:29:54.093Z",
+        "updatedAt": "2026-10-26T14:06:18.878Z",
         "odds": [
           {
             "hdp": 2.5,
-            "over": "1.35"
+            "over": "1.43"
           },
           {
             "hdp": 3.5,
-            "over": "1.81"
+            "over": "1.97"
           },
           {
             "hdp": 4.5,
-            "over": "2.63"
+            "over": "2.95"
           }
         ]
       }
@@ -109,30 +133,6 @@
           {
             "hdp": 2.5,
             "over": "2.16"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "72478662",
-      "home": "Sevilla FC",
-      "away": "CA Osasuna",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "updatedAt": "2026-10-26T14:06:18.878Z",
-        "odds": [
-          {
-            "hdp": 2.5,
-            "over": "1.43"
-          },
-          {
-            "hdp": 3.5,
-            "over": "1.97"
-          },
-          {
-            "hdp": 4.5,
-            "over": "2.95"
           }
         ]
       }
