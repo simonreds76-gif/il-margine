@@ -8,6 +8,8 @@ Supabase.
 
 from __future__ import annotations
 
+from odds_api_allocation import selected_bookmakers
+
 import argparse
 import json
 import os
@@ -278,7 +280,7 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--bookmaker", default="Bet365")
+    parser.add_argument("--bookmaker", default="Paddy Power,Kambi")
     parser.add_argument("--days-ahead", type=int, default=14)
     parser.add_argument("--max-events", type=int, default=10)
     parser.add_argument("--event-id", action="append", default=[])
@@ -286,6 +288,7 @@ def main() -> int:
     parser.add_argument("--json-out", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--report-out", type=Path, default=DEFAULT_REPORT)
     args = parser.parse_args()
+    args.bookmaker = selected_bookmakers(args.bookmaker)
     try:
         payload = run_probe(args)
     except RuntimeError as exc:

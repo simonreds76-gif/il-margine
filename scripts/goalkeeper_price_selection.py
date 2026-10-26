@@ -31,10 +31,9 @@ def contract_key(row):
     side = str(row.get('side') or '').casefold()
     if not event or not player or line is None or line < 0 or side not in ('over', 'under'):
         return None
-    # Kambi team contracts have already been explicitly mapped to a keeper by
-    # the same-event Bet365/lineup resolver. Retain their scope in the row.
+    # Preserve scope and accept verified old and new lineup identity evidence.
     scope = str(row.get('contract_scope') or 'named_player')
-    if scope.startswith('team_goalkeeper_') and row.get('identity_basis') != 'same_event_bet365_and_lineup_side':
+    if scope.startswith('team_goalkeeper_') and row.get('identity_basis') not in {'same_event_bet365_and_lineup_side', 'same_fixture_lineup_side'}:
         return None
     return event, player, line, side
 

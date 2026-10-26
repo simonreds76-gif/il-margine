@@ -8,6 +8,8 @@ one event-discovery request and one multi-odds request, and stores labels only.
 
 from __future__ import annotations
 
+from odds_api_allocation import selected_bookmakers
+
 import argparse
 import json
 import os
@@ -132,7 +134,7 @@ def render(payload: dict[str, Any]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Probe Bet365 football foul markets using two API requests.")
-    parser.add_argument("--bookmaker", default="Bet365")
+    parser.add_argument("--bookmaker", default="Paddy Power,Kambi")
     parser.add_argument("--days-ahead", type=int, default=3)
     parser.add_argument("--max-events", type=int, default=10)
     parser.add_argument("--event-id", action="append", default=[])
@@ -140,6 +142,7 @@ def main() -> int:
     parser.add_argument("--json-out", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--report-out", type=Path, default=DEFAULT_REPORT)
     args = parser.parse_args()
+    args.bookmaker = selected_bookmakers(args.bookmaker)
     load_env(args.env_file)
     api_key = (os.environ.get("ODDS_API_KEY") or os.environ.get("ODDS_API_IO_KEY") or "").strip()
     if not api_key:

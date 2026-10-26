@@ -8,6 +8,8 @@ because it can return soft-book prices like Bet365.
 
 from __future__ import annotations
 
+from odds_api_allocation import selected_bookmakers
+
 import argparse
 import csv
 import html
@@ -23,7 +25,7 @@ import requests
 
 BASE_URL = "https://api.odds-api.io/v3"
 DEFAULT_OUT_DIR = "data/goalscorer/inbox"
-DEFAULT_BOOKMAKERS = "Bet365"
+DEFAULT_BOOKMAKERS = "Paddy Power,Kambi"
 
 LEAGUE_CONFIGS = {
     "serie-a": {
@@ -399,6 +401,7 @@ def main() -> None:
         help="Hard HTTP request cap for this process; 0 means unlimited.",
     )
     args = parser.parse_args()
+    args.bookmakers = selected_bookmakers(args.bookmakers)
 
     load_env()
     api_key = os.environ.get("ODDS_API_KEY") or os.environ.get("ODDS_API_IO_KEY")

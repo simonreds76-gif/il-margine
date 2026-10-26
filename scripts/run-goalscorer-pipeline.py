@@ -18,6 +18,8 @@ Example:
 
 from __future__ import annotations
 
+from odds_api_allocation import selected_bookmakers
+
 import argparse
 import glob
 import json
@@ -227,7 +229,7 @@ def main() -> None:
     parser.add_argument("--bookmaker", default="", help="Optional bookmaker filter for the comparison summary")
     parser.add_argument("--supabase", action="store_true", help="Upload imported odds rows to Supabase")
     parser.add_argument("--fetch-odds-api", action="store_true", help="Fetch live league ATGS prices from odds-api.io into the inbox first")
-    parser.add_argument("--odds-api-bookmakers", default="Bet365", help="Comma-separated bookmakers for odds-api.io")
+    parser.add_argument("--odds-api-bookmakers", default="Paddy Power,Kambi", help="Comma-separated bookmakers for odds-api.io")
     parser.add_argument(
         "--odds-api-max-http-requests",
         type=int,
@@ -265,6 +267,10 @@ def main() -> None:
     parser.add_argument("--shadow-summary", default="", help="Shadow performance summary TXT path")
     parser.add_argument("--upload-live-snapshot", action="store_true", help="Upload the current live goalscorer files snapshot to Supabase")
     args = parser.parse_args()
+    args.odds_api_bookmakers = selected_bookmakers(args.odds_api_bookmakers)
+    if args.live_only and args.bookmaker.casefold() == "bet365":
+        print("Legacy live-only Bet365 comparison filter removed; actual bookmaker labels retained.")
+        args.bookmaker = ""
     league_config = LEAGUE_CONFIGS[args.league]
 
     print("\n" + "=" * 64)
@@ -318,7 +324,7 @@ def main() -> None:
     if args.fetch_lineups and has_new_confirmed(before_lineups, lineups_path) and not args.fetch_odds_api:
         print("Official XI changed: refreshing reference prices (maximum 3 HTTP requests).")
         args.fetch_odds_api = True
-        args.odds_api_bookmakers = "Bet365"
+        args.odds_api_bookmakers = "Paddy Power,Kambi"
         args.odds_api_days_ahead = 1
         args.odds_api_max_http_requests = 3
 

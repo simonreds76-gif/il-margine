@@ -15,6 +15,8 @@ side markets are retained as evidence where supported.
 
 from __future__ import annotations
 
+from odds_api_allocation import selected_bookmakers
+
 import argparse
 import csv
 import html
@@ -35,7 +37,7 @@ from player_name_matching import fold_name_text
 ROOT = Path(__file__).resolve().parent.parent
 BASE_URL = "https://api.odds-api.io/v3"
 OUT_DIR = ROOT / "data" / "tennis-props" / "inbox"
-DEFAULT_BOOKMAKERS = "Bet365"
+DEFAULT_BOOKMAKERS = "Paddy Power,Kambi"
 BREAK_MARKETS = {"player_breaks", "match_breaks"}
 BREAK_POINT_MARKETS = {"player_break_points", "match_break_points"}
 SUPPORTED_TOURNAMENT_KEYWORDS = (
@@ -707,7 +709,7 @@ def run_zero_row_market_probe(api_key: str, events: list[dict[str, Any]], bookma
         probe_events = populated_events[:1]
 
     bookmaker_variants = []
-    for value in [primary_bookmaker, "Bet365", "bet365"]:
+    for value in bookmakers.split(","):
         if value and value not in bookmaker_variants:
             bookmaker_variants.append(value)
 
@@ -744,7 +746,7 @@ def run_zero_row_market_probe(api_key: str, events: list[dict[str, Any]], bookma
             "limit": "20",
         },
     )
-    print(f"    /value-bets tennis Bet365 sample: status={status}; markets={summary}")
+    print(f"    /value-bets tennis selected-book sample: status={status}; markets={summary}")
 
 
 def write_rows(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> None:
@@ -789,6 +791,7 @@ def main() -> None:
     parser.add_argument("--probe-markets", action="store_true", help="Force endpoint/tier probes for hidden tennis markets")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
+    args.bookmakers = selected_bookmakers(args.bookmakers)
 
     load_env()
     api_key = os.environ.get("ODDS_API_KEY") or os.environ.get("ODDS_API_IO_KEY")
@@ -920,7 +923,7 @@ def main() -> None:
         history_added = append_history_rows(history_out, rows)
         print(f"Price history: added {history_added}, file={history_out}")
     else:
-        print("No supported tennis market rows parsed; skipped writing lines file.")
+        print("PRICE_COVERAGE_UNAVAILABLE: no supported tennis props from selected books; this is not a no-value result. Existing lines retained.")
     print(f"Saved audit: {audit_out}")
 
 

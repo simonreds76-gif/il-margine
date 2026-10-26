@@ -385,7 +385,7 @@ def capture_market_prices(args: argparse.Namespace) -> int:
                     "--date", args.as_of,
                     "--days-ahead", str(args.days_ahead),
                     "--max-events", str(args.max_events),
-                    "--bookmakers", "Bet365",
+                    "--bookmakers", "Paddy Power,Kambi",
                 ],
                 "Capture Bet365 tennis count lines before projections",
                 fatal=False,

@@ -1,7 +1,8 @@
 {
-  "verified_at": "2026-10-12T14:53:00Z",
+  "verified_at": "2026-10-26T14:27:00Z",
   "plan": "Free",
-  "selected_bookmakers": ["Bet365", "Kambi"],
-  "paused_capture_bookmakers": ["BetMGM"],
-  "reason": "User approved replacing BetMGM with Kambi for football price coverage. Preserve existing Most Aces forecasts, prices and settlements; pause new BetMGM price requests."
+  "selected_bookmakers": ["Paddy Power", "Kambi"],
+  "paused_capture_bookmakers": ["BetMGM", "Bet365"],
+  "replaced_capture_bookmakers": ["Bet365"],
+  "reason": "User requested testing Paddy Power instead of Bet365 as free access ends. Account and two odds batches verified: Paddy football scorers/shots/SOT; Kambi GK/team shots/corners. No player aces/DF or headed markets observed in the bounded sample. Preserve all historical odds, models, records and settlement."
 }

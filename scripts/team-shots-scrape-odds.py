@@ -20,6 +20,8 @@ Usage:
 
 from __future__ import annotations
 
+from odds_api_allocation import selected_bookmakers
+
 import argparse
 import csv
 import html
@@ -93,12 +95,9 @@ LEAGUE_CONFIGS = {
 
 LIVE_LEAGUES = ["epl", "serie-a", "la-liga", "bundesliga", "ligue-1"]
 
-# Account selection can be changed from the odds-api.io dashboard/API.
-# Live account check on 2026-04-18 showed only Bet365 returning 200 for the
-# team-shots football markets we query. The others force /odds/multi into a
-# 403 fallback path without adding coverage.
-DEFAULT_BOOKMAKERS = "Bet365,Kambi"
-BOOKMAKER_RETRY_FALLBACK = ["Bet365"]
+# Approved free allocation verified 26 October 2026; no unselected-book retries.
+DEFAULT_BOOKMAKERS = "Paddy Power,Kambi"
+BOOKMAKER_RETRY_FALLBACK = []
 
 OUTPUT_FIELDS = [
     "captured_at", "match_date", "event_id", "kickoff_at",
@@ -795,6 +794,7 @@ def main() -> None:
     parser.add_argument("--discover-bookmakers", action="store_true",
                         help="List all bookmakers available on your account and exit")
     args = parser.parse_args()
+    args.bookmakers = selected_bookmakers(args.bookmakers)
     configure_odds_api_http_budget(args.max_odds_api_http_requests)
 
     leagues = LIVE_LEAGUES if args.all_leagues else [args.league or "epl"]
