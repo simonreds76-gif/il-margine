@@ -226,10 +226,17 @@ def build_candidates(
             player = team_goalkeeper_name(fixture, contract_side)
             identity_basis = "same_fixture_lineup_side" if player else "unresolved_team_keeper"
         side, lineup_status, canonical_player = resolve_goalkeeper(fixture, player)
+        if contract_side and not player:
+            # Current v1 uses team histories, so the explicit feed side suffices.
+            # Keep this separate from named-keeper experiments and contracts.
+            side = contract_side
+            lineup_status = "team_contract_name_unconfirmed"
+            canonical_player = f"{contract_side.title()} goalkeeper"
+            identity_basis = "bookmaker_team_side"
         if contract_side and side != contract_side:
             side, lineup_status, canonical_player = "", "team_keeper_mapping_unresolved", ""
         blockers: list[str] = []
-        if lineup_status not in TRACKABLE_STARTER_STATUSES:
+        if lineup_status not in TRACKABLE_STARTER_STATUSES and not (contract_side and identity_basis == "bookmaker_team_side"):
             blockers.append(lineup_status)
 
         team = home if side == "home" else away if side == "away" else ""

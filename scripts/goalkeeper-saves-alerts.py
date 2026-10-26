@@ -137,12 +137,15 @@ def message(row):
             'Tracking stake: 0.5u paper. Real stake: 0u.\n'
             'Original price and forecast locked. Estimated edge is unproven.\n'
             '<a href="https://ilmargine.bet/model-monitor/gk-saves#keeper-watch">Keeper Watch results and ROI (Admin login)</a>')
-    contract_note = ('Market: ' + e('contract_scope').replace('_', ' ') + '. Keeper name matched to Bet365 and the expected/confirmed lineup; check the starter and bookmaker rules.\n') if str(row.get('contract_scope') or '').startswith('team_goalkeeper_') else ''
+    scope = str(row.get('contract_scope') or '')
+    team_contract = scope in {'team_goalkeeper_home', 'team_goalkeeper_away'}
+    display_keeper = scope.removeprefix('team_goalkeeper_').title() + ' goalkeeper' if team_contract else e('goalkeeper')
+    contract_note = 'Team goalkeeper market. Check the starting keeper and the price at your chosen bookmaker; no Bet365 price is implied.\n' if team_contract else ''
     comparison = row.get('price_comparison') or []
     price_note = ('Latest captured comparison: ' + ' | '.join(f"{html.escape(str(q['bookmaker']))} {q['odds']:.2f}" for q in comparison) + '\n') if comparison else ''
     return ('<b>GK saves | New tracked signal</b>\n\n'
         f"<b>{e('home_team')} vs {e('away_team')}</b>\n"
-        f"{e('goalkeeper')} - {e('side').title()} {e('line')} saves\n"
+        f"{display_keeper} - {e('side').title()} {e('line')} saves\n"
         f"{html.escape(str(row.get('bookmaker') or 'Bet365'))} recorded odds: <b>{float(row['odds_decimal']):.2f}</b>\n"
         f"{price_note}"
         f"Fair odds at capture: {float(row['fair_odds']):.2f} | Estimated EV: +{float(row['edge'])*100:.1f}%\n"

@@ -279,6 +279,17 @@ def fotmob_mapped_keeper_saves(payload: dict[str, Any], side: str, goalkeeper: s
     total, metadata = fotmob_team_saves(payload, side)
     if total is None:
         return None, metadata
+    if goalkeeper.casefold() == f"{side} goalkeeper":
+        # Resolve the actual starter retrospectively for a side-only signal.
+        # A substitution remains held for rule review, as for existing contracts.
+        content = (payload.get("props") or {}).get("pageProps", {}).get("content") or {}
+        starters = ((content.get("lineup") or {}).get(side + "Team") or {}).get("starters") or []
+        names = {str(p.get('name') or '').strip() for p in starters
+                 if str(p.get('positionId') or '') == '11' or str(p.get('position') or '').upper() in {'GK', 'GOALKEEPER'}}
+        names.discard('')
+        if len(names) != 1:
+            return None, {"error": "team_keeper_actual_starter_unresolved"}
+        goalkeeper = next(iter(names))
     actual, named = fotmob_player_saves(payload, goalkeeper)
     if actual is None:
         return None, named

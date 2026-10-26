@@ -33,8 +33,14 @@ def contract_key(row):
         return None
     # Preserve scope and accept verified old and new lineup identity evidence.
     scope = str(row.get('contract_scope') or 'named_player')
-    if scope.startswith('team_goalkeeper_') and row.get('identity_basis') not in {'same_event_bet365_and_lineup_side', 'same_fixture_lineup_side'}:
-        return None
+    if scope.startswith('team_goalkeeper_'):
+        if scope not in {'team_goalkeeper_home', 'team_goalkeeper_away'}:
+            return None
+        if row.get('identity_basis') == 'bookmaker_team_side':
+            # Unknown names must not collapse into a named-player contract.
+            player = scope
+        elif row.get('identity_basis') not in {'same_event_bet365_and_lineup_side', 'same_fixture_lineup_side'}:
+            return None
     return event, player, line, side
 
 

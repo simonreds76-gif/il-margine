@@ -124,4 +124,22 @@ class BestPrices(unittest.TestCase):
                    selection_policy='keeper_watch_v1', paper_stake=.5, actual_stake=0)
         self.assertEqual(alerts.claim([watch],state,'x:1',self.now,[]),1)
 
+    def test_unnamed_team_signal_does_not_resend_when_keeper_is_identified(self):
+        side=self.row('Kambi',2.23,goalkeeper='Away goalkeeper',identity_basis='bookmaker_team_side',lineup_status='team_contract_name_unconfirmed')
+        state={}
+        self.assertEqual(alerts.claim([side],state,'x:1',self.now,[side]),1)
+        message=alerts.message(side)
+        self.assertIn('Away goalkeeper - Over 2.5 saves',message)
+        self.assertIn('Kambi recorded odds',message)
+        self.assertNotIn('matched to Bet365',message)
+        state['signals'][side['signal_id']]['status']='sent'
+        self.assertEqual(alerts.claim([self.row('Kambi',2.6)],state,'x:2',self.now,[self.row('Kambi',2.6)]),0)
+
+    def test_unknown_sides_are_not_assumed_to_be_named_keeper_contracts(self):
+        away=self.row('Kambi',2.23,goalkeeper='Away goalkeeper',identity_basis='bookmaker_team_side')
+        home=dict(away,contract_scope='team_goalkeeper_home',goalkeeper='Home goalkeeper')
+        self.assertEqual(len(prices.best_offers([away,home,self.row()],self.now)),3)
+        invalid=dict(away,contract_scope='team_goalkeeper_unknown')
+        self.assertIsNone(prices.contract_key(invalid))
+
 if __name__ == '__main__': unittest.main()
