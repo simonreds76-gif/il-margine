@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-26T15:16:49Z",
+  "generated_at": "2026-10-26T16:18:37Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -37,13 +37,13 @@
     "latest_scan": {
       "state": "NO_EDGE_AFTER_UNLOCK",
       "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 132,
+      "scored_rows": 134,
       "scored_fixtures": 10,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 132,
+      "blocked_rows": 134,
       "blocker_rows": {
-        "edge_below_3pct": 132,
+        "edge_below_3pct": 134,
         "price_older_than_3h": 10
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
