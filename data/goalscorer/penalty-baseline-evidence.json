@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-26T04:54:44Z",
+  "generated_at": "2026-10-26T13:11:41Z",
   "league": "serie-a",
-  "row_count": 3,
+  "row_count": 4,
   "rows": [
     {
       "team": "Atalanta",
@@ -51,6 +51,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-10-25"
+    },
+    {
+      "team": "Milan",
+      "team_key": "milan",
+      "player_name": "Gonçalo Ramos",
+      "player_key": "gon alo ramos",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
+      "observed_share": 1.0,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-18"
     }
   ]
 }

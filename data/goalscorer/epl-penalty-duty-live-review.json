@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-26T04:54:46Z",
+  "generated_at": "2026-10-26T13:11:44Z",
   "league": "epl",
   "row_count": 1,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2987785209",
           "match_id": "5795490",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5795490",
-          "observed_at": "2026-10-26T04:54:44+00:00",
+          "observed_at": "2026-10-26T13:11:41+00:00",
           "event_date": "2026-10-25",
           "season": "2026/27",
           "team": "Hull City",
@@ -76,10 +76,16 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20261018",
+      "20261019",
+      "20261020",
+      "20261021",
+      "20261022",
+      "20261023",
       "20261024",
       "20261025",
       "20261026"
     ],
-    "matches_checked": 9
+    "matches_checked": 15
   }
 }
