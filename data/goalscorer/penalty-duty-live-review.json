@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-26T21:37:58.862135+00:00",
+  "generated_at": "2026-10-26T21:50:07.648825+00:00",
   "league": "serie-a",
   "row_count": 4,
   "rows": [
@@ -174,7 +174,7 @@
       "context_generated_at": "2026-09-02",
       "context_source_path": "data/goalscorer/serie-a-penalty-takers.json",
       "actual_taker_match_status": "Yes - started, off 89'",
-      "primary_on_pitch_at_penalty": "No - unavailable in match squad",
+      "primary_on_pitch_at_penalty": "No - absent from matchday squad",
       "secondary_on_pitch_at_penalty": "No - bench",
       "tertiary_on_pitch_at_penalty": "Yes - started, off 89'",
       "actual_taker_on_pitch_at_penalty": "Yes - started, off 89'",
@@ -184,7 +184,7 @@
           "source_event_id": "2986745901",
           "match_id": "5749711",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749711",
-          "observed_at": "2026-10-26T15:28:34+00:00",
+          "observed_at": "2026-10-26T21:50:12+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Bologna",
@@ -196,11 +196,34 @@
             "minute": 80,
             "added_time": 0,
             "method": "completed_lineup_timeline",
-            "player_id": 661761,
-            "bucket": "unavailable",
-            "substitutions": [],
-            "events": [],
-            "reason": "not_on_pitch"
+            "reason": "absent_from_matchday_squad",
+            "squad_player_ids": [
+              "178732",
+              "46820",
+              "814398",
+              "1173250",
+              "1080669",
+              "888921",
+              "790732",
+              "873956",
+              "414245",
+              "689680",
+              "1044029",
+              "1333066",
+              "2008804",
+              "1661207",
+              "1198712",
+              "1402900",
+              "1696050",
+              "1813717",
+              "1503574",
+              "25587",
+              "935550",
+              "641595",
+              "1283469",
+              "655696",
+              "1344246"
+            ]
           },
           "minute": 80,
           "penalty_kind": "in_match",
@@ -327,7 +350,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261018"
+      "20261024"
     ],
     "matches_checked": 1
   }
