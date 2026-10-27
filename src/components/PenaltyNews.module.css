@@ -86,8 +86,8 @@
 .back { display: inline-flex; gap: 10px; color: #bdcfda; min-height: 44px; align-items: center; font-size: 13px; margin-top: 20px; }
 .clubReports { margin: 0 0 28px; border: 1px solid #30404b; border-radius: 16px; padding: 22px; background: #121c25; }
 .relatedHeading { display: flex; align-items: flex-start; gap: 14px; }
-:global(.public-site) .relatedIcon { width: 36px; height: 36px; flex: none; margin: 0; }
-.relatedHeading h2 { margin: 0; color: #edf3f6; font-size: 20px; line-height: 1.35; }
+:global(.public-site) .relatedHeading .relatedIcon { width: 36px; height: 36px; flex: none; margin: 0; }
+.relatedHeading h2 { margin: 0; color: #edf3f6; font-size: 20px; line-height: 1.35; scroll-margin-top: 100px; }
 .relatedHeading p { color: #adbfcd; font-size: 13px; line-height: 1.6; margin: 6px 0 0; }
 .reportLinks { list-style: none; padding: 0; margin: 14px 0 0; }
 .reportLinks li { border-top: 1px solid #30404b; }
