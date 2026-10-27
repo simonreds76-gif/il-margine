@@ -19,6 +19,8 @@ from odds_api_allocation import selected_bookmakers
 
 import argparse
 import csv
+import gzip
+import json
 import html
 import os
 import re
@@ -37,7 +39,7 @@ from player_name_matching import fold_name_text
 ROOT = Path(__file__).resolve().parent.parent
 BASE_URL = "https://api.odds-api.io/v3"
 OUT_DIR = ROOT / "data" / "tennis-props" / "inbox"
-DEFAULT_BOOKMAKERS = "Paddy Power,Kambi"
+DEFAULT_BOOKMAKERS = "Sisal IT,Kambi"
 BREAK_MARKETS = {"player_breaks", "match_breaks"}
 BREAK_POINT_MARKETS = {"player_break_points", "match_break_points"}
 SUPPORTED_TOURNAMENT_KEYWORDS = (
@@ -119,6 +121,9 @@ OUTPUT_FIELDS = [
     "raw_market_name",
     "raw_outcome_count",
     "raw_label_sample",
+    "provider_updated_at",
+    "source_url",
+    "raw_market_json",
 ]
 AUDIT_FIELDS = [
     "captured_at",
@@ -434,6 +439,9 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
         return rows
     if not market_key:
         return []
+    # Only these Sisal contracts have verified participant and retirement rules.
+    if bookmaker.casefold() == "sisal it" and market_key not in {"aces", "double_faults"}:
+        return []
 
     kickoff = str(event.get("date") or "")
     event_id = str(event.get("id") or "")
@@ -475,6 +483,8 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
         or market_key in {"first_set_total_games", "total_tiebreaks"}
         or is_match_count_total
     )
+    if bookmaker.casefold() == "sisal it" and (output_market not in {"aces", "double_faults"} or len(real_players) != 2):
+        return []
     match_player = clean_player(home)
     match_opponent = clean_player(away)
 
@@ -570,15 +580,21 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
                 "raw_market_name": market_name,
                 "raw_outcome_count": str(len(market.get("odds") or market.get("outcomes") or [])),
                 "raw_label_sample": " | ".join(raw_labels.get((player, opponent, line_text), [])[:4]),
+                "provider_updated_at": str(market.get("updatedAt") or ""),
+                "source_url": str((event.get("urls") or {}).get(bookmaker) or ""),
+                "raw_market_json": json.dumps(market, ensure_ascii=False, separators=(",", ":")) if bookmaker.casefold() == "sisal it" else "",
             }
         )
     return rows
 
 
 def fetch_json(path: str, params: dict[str, Any]) -> Any:
-    response = requests.get(f"{BASE_URL}/{path.lstrip('/')}", params=params, timeout=30)
-    response.raise_for_status()
-    return response.json()
+    try:
+        response = requests.get(f"{BASE_URL}/{path.lstrip('/')}", params=params, timeout=30)
+        response.raise_for_status()
+        return response.json()
+    except (requests.RequestException, ValueError):
+        raise RuntimeError(f"Odds-API {path} failed; credential-bearing URL withheld") from None
 
 
 def fetch_multi(
@@ -758,7 +774,7 @@ def write_rows(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) ->
 
 
 def history_row_key(row: dict[str, str]) -> tuple[str, ...]:
-    return tuple(str(row.get(field) or "").strip() for field in OUTPUT_FIELDS)
+    return tuple(str(row.get(field) or "").strip() for field in OUTPUT_FIELDS if field not in {"provider_updated_at", "source_url", "raw_market_json"})
 
 
 def append_history_rows(path: Path, rows: list[dict[str, str]]) -> int:
@@ -791,7 +807,7 @@ def main() -> None:
     parser.add_argument("--probe-markets", action="store_true", help="Force endpoint/tier probes for hidden tennis markets")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
-    args.bookmakers = selected_bookmakers(args.bookmakers)
+    args.bookmakers = selected_bookmakers(args.bookmakers, scope="tennis_props")
 
     load_env()
     api_key = os.environ.get("ODDS_API_KEY") or os.environ.get("ODDS_API_IO_KEY")
@@ -846,9 +862,22 @@ def main() -> None:
         )
     rows: list[dict[str, str]] = []
     audit_rows: list[dict[str, str]] = []
-    captured_at = now.replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    received_at = datetime.now(timezone.utc)
+    captured_at = received_at.replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    raw_out = OUT_DIR / f"bet365-tennis-market-audit-{received_at.strftime('%Y%m%dT%H%M%SZ')}.json.gz"
+    if not args.dry_run:
+        raw_out.parent.mkdir(parents=True, exist_ok=True)
+        with gzip.open(raw_out, "wt", encoding="utf-8") as handle:
+            json.dump({"captured_at": captured_at, "source": f"{BASE_URL}/odds/multi",
+                       "bookmakers": args.bookmakers, "events": payload}, handle)
     audited_event_ids: set[str] = set()
     for event in payload:
+        try:
+            start = datetime.fromisoformat(str(event.get("date") or "").replace("Z", "+00:00"))
+            if start.tzinfo is None or start <= received_at:
+                continue
+        except ValueError:
+            continue
         for bookmaker, markets in (event.get("bookmakers") or {}).items():
             for market in markets or []:
                 audited_event_ids.add(str(event.get("id") or ""))
