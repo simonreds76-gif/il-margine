@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-27T01:36:17.197045+00:00",
+  "generated_at": "2026-10-27T05:12:49Z",
   "league": "serie-a",
-  "row_count": 3,
+  "row_count": 2,
   "rows": [
     {
       "date": "2026-10-25",
@@ -44,7 +44,7 @@
           "source_event_id": "2987710667",
           "match_id": "5749714",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749714",
-          "observed_at": "2026-10-27T01:27:59+00:00",
+          "observed_at": "2026-10-27T05:12:45+00:00",
           "event_date": "2026-10-25",
           "season": "2026/27",
           "team": "Inter",
@@ -117,7 +117,7 @@
           "source_event_id": "2987795929",
           "match_id": "5749710",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749710",
-          "observed_at": "2026-10-27T01:28:00+00:00",
+          "observed_at": "2026-10-27T05:12:45+00:00",
           "event_date": "2026-10-25",
           "season": "2026/27",
           "team": "Atalanta",
@@ -143,118 +143,16 @@
           "event_result": "scored"
         }
       ]
-    },
-    {
-      "date": "2026-10-24",
-      "league": "serie-a",
-      "review_source": "fotmob_live",
-      "match": "Cagliari vs Bologna",
-      "team": "Bologna",
-      "opponent": "Cagliari",
-      "actual_taker": "Federico Bernardeschi",
-      "actual_role_pre_match": "tertiary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "80",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Riccardo Orsolini",
-      "secondary_pre_match": "Artem Dovbyk",
-      "tertiary_pre_match": "Federico Bernardeschi",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "",
-      "review_type": "expected_backup_shift",
-      "review_priority": "medium",
-      "editorial_note": "Federico Bernardeschi took 1 penalty attempt and scored for Bologna vs Cagliari. Primary pre-match: Riccardo Orsolini (unknown). Secondary pre-match: Artem Dovbyk (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-09-02",
-      "context_source_path": "data/goalscorer/serie-a-penalty-takers.json",
-      "actual_taker_match_status": "Yes - started, off 89'",
-      "primary_on_pitch_at_penalty": "No - absent from matchday squad",
-      "secondary_on_pitch_at_penalty": "No - bench",
-      "tertiary_on_pitch_at_penalty": "Yes - started, off 89'",
-      "actual_taker_on_pitch_at_penalty": "Yes - started, off 89'",
-      "event_evidence": [
-        {
-          "id": "fotmob|serie-a|5749711|2986745901",
-          "source_event_id": "2986745901",
-          "match_id": "5749711",
-          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749711",
-          "observed_at": "2026-10-26T21:50:12+00:00",
-          "event_date": "2026-10-24",
-          "season": "2026/27",
-          "team": "Bologna",
-          "taker": "Federico Bernardeschi",
-          "primary": "Riccardo Orsolini",
-          "primary_on_pitch": false,
-          "on_pitch_proof": {
-            "player": "Riccardo Orsolini",
-            "minute": 80,
-            "added_time": 0,
-            "method": "completed_lineup_timeline",
-            "reason": "absent_from_matchday_squad",
-            "squad_player_ids": [
-              "178732",
-              "46820",
-              "814398",
-              "1173250",
-              "1080669",
-              "888921",
-              "790732",
-              "873956",
-              "414245",
-              "689680",
-              "1044029",
-              "1333066",
-              "2008804",
-              "1661207",
-              "1198712",
-              "1402900",
-              "1696050",
-              "1813717",
-              "1503574",
-              "25587",
-              "935550",
-              "641595",
-              "1283469",
-              "655696",
-              "1344246"
-            ]
-          },
-          "minute": 80,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Cagliari vs Bologna",
-          "event_result": "scored"
-        }
-      ]
     }
   ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261020",
-      "20261021",
-      "20261022",
-      "20261023",
-      "20261024",
       "20261025",
-      "20261026"
+      "20261026",
+      "20261027"
     ],
-    "matches_checked": 10
-  },
-  "hot_source_health": {
-    "complete": true,
-    "errors": [],
-    "dates_requested": [
-      "20261025"
-    ],
-    "matches_checked": 1
+    "matches_checked": 5
   }
 }
