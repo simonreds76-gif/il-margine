@@ -14,6 +14,7 @@ import re
 import unicodedata
 
 from player_name_matching import fold_name_text
+from tennis_count_settlement import determined_count
 
 ROOT = Path(__file__).resolve().parent.parent
 PROPS_DIR = ROOT / "data" / "tennis-props"
@@ -698,7 +699,8 @@ def resolve_count_candidate(
         if fallback_candidate is None:
             fallback_candidate = candidate
         if is_void_score(candidate.get("score")):
-            return candidate, None, "void_score"
+            actual, _ = market_count(candidate, norm_text(signal.get("player")), signal.get("market", ""))
+            return candidate, actual, "incomplete_score"
         actual, note = market_count(candidate, norm_text(signal.get("player")), signal.get("market", ""))
         if actual is not None:
             return candidate, actual, note
@@ -839,7 +841,9 @@ def main() -> int:
             )
             still_pending += 1
             continue
-        if is_void_score(candidate.get("score")):
+        if is_void_score(candidate.get("score")) and not determined_count(
+            row.get("bookmaker"), row.get("market"), actual, row.get("line"), candidate.get("score")
+        ):
             row["settlement_status"] = "void"
             row["actual"] = ""
             row["result"] = "void"

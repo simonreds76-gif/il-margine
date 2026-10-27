@@ -15,7 +15,9 @@ FIELDS = [
     "event_id", "date", "tour", "tournament", "bookmaker", "player", "opponent",
     "market", "line", "over_odds", "under_odds", "capture_ts", "match_start_utc",
     "raw_market_name", "raw_outcome_count", "raw_label_sample",
+    "provider_updated_at", "source_url", "raw_market_json",
 ]
+KEY_FIELDS = [field for field in FIELDS if field not in {"provider_updated_at", "source_url", "raw_market_json"}]
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -48,9 +50,9 @@ def main() -> int:
             for row in (read_csv(output) if output.exists() else [])
             if row.get("event_id") and row.get("capture_ts") and row.get("match_start_utc")
         ]
-        seen = {tuple(str(row.get(field) or "") for field in FIELDS) for row in existing}
+        seen = {tuple(str(row.get(field) or "") for field in KEY_FIELDS) for row in existing}
         for row in rows:
-            key = tuple(str(row.get(field) or "") for field in FIELDS)
+            key = tuple(str(row.get(field) or "") for field in KEY_FIELDS)
             if key not in seen:
                 seen.add(key)
                 existing.append(row)

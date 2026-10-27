@@ -4,17 +4,19 @@
   "selected_bookmakers": [
     "Kambi"
   ],
+  "market_bookmakers": {
+    "tennis_props": ["Sisal IT", "Kambi"]
+  },
   "paused_capture_bookmakers": [
     "BetMGM",
     "Bet365",
-    "Paddy Power",
-    "Sisal IT"
+    "Paddy Power"
   ],
   "replaced_capture_bookmakers": [
     "Bet365",
     "Paddy Power"
   ],
-  "reason": "Approved account switch replaces Paddy Power with Sisal IT, retaining Kambi. Automated requests temporarily use verified Kambi only while Sisal player-market semantics and adapters are assessed. Redirect legacy Paddy/Bet365 arguments to Kambi; do not enable untested Sisal signals. Pinnacle, historical odds, formulas, stakes and deduplication are unchanged.",
+  "reason": "Tennis props use verified Sisal IT individual aces/double-fault totals plus existing Kambi. Other collectors retain Kambi: Sisal unnamed goalkeeper contracts are not enabled by this allocation. Legacy Paddy/Bet365 tennis arguments resolve to the approved tennis pair. Account selections, Pinnacle, formulas and stakes are unchanged.",
   "account_bookmakers": [
     "Sisal IT",
     "Kambi"
