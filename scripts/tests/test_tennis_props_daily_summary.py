@@ -79,6 +79,14 @@ class DailyPaperSummaryTests(unittest.TestCase):
         self.assertEqual(S.daily_summary(self.root,self.today,sender),'already_dispatched')
         sender.assert_called_once()
 
+    def test_sisal_main_lines_do_not_claim_v4_ladder_coverage(self):
+        self.rows([self.row('one')])
+        p=self.root/'data/tennis-props'/f'comparison-v3-aces-{self.today}.csv'
+        p.write_text('bookmaker,market,price_pair_status,capture_ts\nSisal IT,aces,two_way,'+self.today+'T09:00:00Z\n')
+        message,_=S.build(self.root,self.today,{})
+        self.assertIn('no over-only milestone ladder for v4',message)
+        self.assertIn('cannot add ladder forecasts',message)
+
     def test_failed_dispatch_is_retryable_and_preview_does_not_send(self):
         self.rows([self.row('one')])
         sender=Mock(side_effect=RuntimeError('relay failed'))
