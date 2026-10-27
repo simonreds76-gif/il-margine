@@ -4,12 +4,60 @@ const num = (v: unknown, dp = 0, suffix = "") => typeof v === "number" && Number
 const tone = (v: unknown) => typeof v === "number" && v !== 0 ? v > 0 ? "text-emerald-300" : "text-rose-300" : "text-slate-200";
 const time = (v: unknown) => typeof v === "string" && Number.isFinite(Date.parse(v)) ? new Date(v).toLocaleString("en-GB", { timeZone: "Europe/London", dateStyle: "medium", timeStyle: "short" }) : "Unavailable";
 const interval = (v: unknown, dp: number, suffix = "") => Array.isArray(v) && v.length === 2 ? `${num(v[0], dp, suffix)} to ${num(v[1], dp, suffix)}` : "Needs at least two settled fixtures";
-
+function EventComparison({ value, page }: { value: unknown; page: number }) {
+  const comparison = object(value), versions = object(comparison.versions), capture = object(comparison.capture);
+  if (!Object.keys(comparison).length) return <p className="mt-5 rounded-xl border border-amber-800 p-4 text-sm text-amber-200">Event comparison is awaiting its first evidence report.</p>;
+  return <div className="mt-6 rounded-xl border border-cyan-800/60 p-3 sm:p-4">
+    <h3 className="text-lg font-semibold text-white">Same prices. Two paper versions.</h3>
+    <p className="mt-2 text-sm leading-6 text-slate-300">The event-adjusted version tests whether earlier completed matches at this tournament improve our ace estimate. Both versions use the same saved Sisal line and prices, then blend their model probability equally with the margin-free market.</p>
+    <p className="mt-2 text-xs leading-5 text-slate-400">{num(comparison.paired_contracts)} identical forward contracts · Comparison started {time(comparison.registered_at)} UK. Selection counts can differ because each version applies the same 8% EV threshold. The original full record above also includes any contracts excluded from this comparison.</p>
+    <div className="mt-4 grid gap-4 lg:grid-cols-2">{[["original", "Original 50/50"], ["event_adjusted", "Event-adjusted 50/50"]].map(([key, title]) => {
+      const r = object(versions[key]), a = object(object(r.arms).blend50);
+      const selections = Array.isArray(r.selections) ? r.selections.map(object) : [];
+      const bias = Array.isArray(r.bias) ? r.bias.map(object) : [];
+      return <article key={key} className="min-w-0 rounded-xl bg-slate-950/70 p-4">
+        <h4 className="font-semibold text-cyan-100">{title}</h4>
+        <dl className="mt-4 grid grid-cols-2 gap-4 text-sm">
+          <div><dt className="text-xs text-slate-400">Paper ROI</dt><dd className={`mt-1 text-xl font-semibold tabular-nums ${tone(a.roi_pct)}`}>{num(a.roi_pct, 2, "%")}</dd></div>
+          <div><dt className="text-xs text-slate-400">Profit / loss</dt><dd className={`mt-1 text-xl font-semibold tabular-nums ${tone(a.pnl_units)}`}>{num(a.pnl_units, 2, "u")}</dd></div>
+          <div><dt className="text-xs text-slate-400">Wins / losses</dt><dd>{num(a.wins)} / {num(a.losses)}</dd></div>
+          <div><dt className="text-xs text-slate-400">Settled stake</dt><dd>{num(a.stake_units, 0, "u")}</dd></div>
+          <div><dt className="text-xs text-slate-400">Pending / void</dt><dd>{num(a.pending)} / {num(a.void)}</dd></div>
+          <div><dt className="text-xs text-slate-400">Brier / log loss</dt><dd>{num(a.brier, 4)} / {num(a.log_loss, 4)}</dd></div>
+        </dl>
+        <details className="mt-4 text-xs text-slate-300"><summary className="min-h-8 cursor-pointer font-semibold">Format, count bias &amp; uncertainty</summary>
+          <p className="mt-2 leading-5">Paper ROI 95% interval: {interval(object(r.paper_roi_interval).interval_95, 1, "%")}. Lower Brier and log loss are better; negative count bias means underprediction.</p>
+          {Object.entries(object(r.format_results)).map(([format, val]) => { const f = object(val); return <p className="mt-2" key={format}>Best of {format}: {num(f.settled)} settled · {num(f.roi_pct, 2, "%")} ROI · {num(f.pending)} pending.</p>; })}
+          {bias.length ? bias.map(b => <p className="mt-2 leading-5" key={String(b.group)}>{String(b.group)}: predicted {num(b.predicted_mean, 2)} vs actual {num(b.actual_mean, 2)} aces · bias {num(b.bias_aces, 2)} · {num(b.n)} player matches.</p>) : <p className="mt-2">Count bias awaits completed matches.</p>}
+        </details>
+        <details className="mt-4" open><summary className="min-h-8 cursor-pointer text-sm font-semibold">Selections &amp; results · {num(r.selection_count)}</summary>
+          {!selections.length ? <p className="mt-2 text-sm text-slate-400">No qualifying forward selections yet.</p> : <div className="mt-2 space-y-3">{selections.slice((page-1)*40,page*40).map(b => <div key={String(b.id)} className="min-w-0 rounded-lg border border-slate-700 p-3 text-sm">
+            <p className="break-words font-semibold">{String(b.player)} <span className="font-normal text-slate-400">vs {String(b.opponent)}</span></p>
+            <p className="mt-1 break-words text-xs text-slate-400">{time(b.start)} UK · {String(b.tournament)}</p>
+            <p className="mt-2 capitalize">{String(b.side)} {num(b.line,1)} aces · Sisal @ {num(b.odds,2)}</p>
+            <p className="mt-1">Fair {num(b.fair,2)} · EV {typeof b.ev === "number" ? num(b.ev*100,1,"%") : "Unavailable"}</p>
+            <p className={`mt-1 capitalize ${tone(b.profit)}`}>{String(b.status)}{typeof b.profit === "number" ? ` · ${num(b.profit,2,"u")}` : ""}{typeof b.actual === "number" ? ` · ${num(b.actual)} aces` : ""}</p>
+            <p className="mt-2 text-xs text-slate-500">Captured {time(b.captured_at)} UK</p>
+          </div>)}</div>}
+          {selections.length > 0 && (page-1)*40 >= selections.length && <p className="mt-2 text-sm text-slate-400">No selections for this version on this page.</p>}
+        </details>
+      </article>;
+    })}</div>
+    <details className="mt-4 text-xs leading-5 text-slate-400"><summary className="min-h-8 cursor-pointer">Evidence and comparison coverage</summary>
+      <p>Evidence check: {String(capture.state ?? "unavailable")} · {time(capture.checked_at)} UK. {num(comparison.without_event_results)} contracts had no earlier completed main-draw matches and used a neutral event factor.</p>
+      <p className="mt-2">{num(comparison.unpaired_base_records)} original contracts have no comparison record. Missing or late evidence is excluded, never treated as a zero-result tournament.</p>
+      <ul className="mt-2 space-y-1">{Object.entries(object(comparison.unavailable)).map(([reason,n]) => <li key={reason}>{reason.replaceAll("_"," ")}: {String(n)}</li>)}</ul>
+      {comparison.error ? <p className="mt-2 break-words text-amber-200">{String(comparison.error)}</p> : null}
+      <p className="mt-2">Fixed correction, prior calendar dates only, evidence observed before the quote. Review at 50 and 100 independent completed fixtures. No automatic promotion or betting alerts.</p>
+    </details>
+  </div>;
+}
 export default function Sisal5050Panel({ value, page = 1 }: { value: unknown; page?: number }) {
   const report = object(value), arms = object(report.arms), main = object(arms.blend50), health = object(report.capture);
   const selections = Array.isArray(report.selections) ? report.selections.map(object) : [];
   const bias = Array.isArray(report.bias) ? report.bias.map(object) : [];
-  const pages = Math.max(1, Math.ceil(selections.length / 40));
+  const comparisonVersions = Object.values(object(object(report.event_comparison).versions)).map(object);
+  const pages = Math.max(1, Math.ceil(selections.length / 40), ...comparisonVersions.map(r => Math.ceil((Array.isArray(r.selections) ? r.selections.length : 0) / 40)));
   const current = Math.min(pages, Math.max(1, Math.floor(page) || 1));
   return <section id="sisal-5050" className="my-6 min-w-0 scroll-mt-24 rounded-2xl border border-cyan-800/70 bg-slate-900/60 p-4 sm:p-6">
     <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-widest text-cyan-300">ATP aces · Research trial</p><h2 className="mt-2 text-2xl font-semibold text-white">Sisal 50/50</h2></div><span className="rounded-full border border-amber-700/70 px-3 py-2 text-xs text-amber-200">Paper only · no betting alerts</span></div>
@@ -26,6 +74,7 @@ export default function Sisal5050Panel({ value, page = 1 }: { value: unknown; pa
       <p className="mt-3 text-xs leading-5 text-slate-400">Paper ROI uncertainty · fixture bootstrap 95%: {interval(object(report.paper_roi_interval).interval_95, 1, "%")}. {num(main.retirement_settled)} bets settled by an already-determined retirement total.</p>
       <p className="mt-4 text-xs leading-5 text-slate-400">{num(report.quotes)} frozen paired markets · {num(report.completed_contracts)} completed player contracts · {num(report.independent_fixtures)} independent fixtures. Historical replay results are excluded.</p>
       <p className="mt-2 break-words text-xs leading-5 text-slate-400">Started {time(report.registered_at)} UK · Updated {time(report.generated_at)} UK. Capture: {String(health.state ?? "unavailable").replaceAll("_", " ").toLowerCase()}.</p>
+      <EventComparison value={report.event_comparison} page={current} />
       <details className="mt-4 rounded-xl border border-slate-700 p-4"><summary className="min-h-6 cursor-pointer text-sm font-semibold text-cyan-200">Compare probabilities, format and ace-count bias</summary>
         <p className="mt-3 text-xs leading-5 text-slate-400">Brier and log loss use identical completed contracts; lower is better. The market benchmark normally has no selections against its own prices. Count bias is predicted minus actual aces; it is measured before the market blend.</p>
         <div className="mt-4 grid gap-3 md:grid-cols-3">{[["blend50", "50/50 blend"], ["model", "Model only"], ["market", "Margin-free market"]].map(([key, label]) => { const a = object(arms[key]); return <article key={key} className="rounded-lg bg-slate-950/70 p-3 text-sm"><h3 className="font-semibold text-white">{label}</h3><dl className="mt-3 space-y-2"><div className="flex flex-wrap justify-between gap-2"><dt className="text-slate-400">Brier</dt><dd>{num(a.brier, 4)}</dd></div><div className="flex flex-wrap justify-between gap-2"><dt className="text-slate-400">Log loss</dt><dd>{num(a.log_loss, 4)}</dd></div><div className="flex flex-wrap justify-between gap-2"><dt className="text-slate-400">Paper ROI</dt><dd className={tone(a.roi_pct)}>{num(a.roi_pct, 2, "%")}</dd></div></dl></article>; })}</div>
