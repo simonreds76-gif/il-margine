@@ -275,6 +275,130 @@ class WeeklyAtlasTests(unittest.TestCase):
                 w.stage_release(run, root, expected)
 
 
+class ReleaseRaceTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        folder = Path(self.temp.name)
+        self.remote, self.root, self.other = (folder / name for name in ('remote.git', 'collector', 'news'))
+        self.git_run(['git', 'init', '--bare', '-q', str(self.remote)], folder)
+        self.root.mkdir()
+        self.git_run(['git', 'init', '-q', '-b', w.BRANCH], self.root)
+        self.configure(self.root)
+        self.save(self.root, 'src/data/football-atlas-release.json', 'validated-original')
+        self.git_run(['git', 'add', '.'], self.root)
+        self.git_run(['git', 'commit', '-qm', 'Initial validated archive'], self.root)
+        self.git_run(['git', 'remote', 'add', 'origin', str(self.remote)], self.root)
+        self.git_run(['git', 'push', '-q', 'origin', w.BRANCH], self.root)
+        self.git_run(['git', 'clone', '-q', '-b', w.BRANCH, str(self.remote), str(self.other)], folder)
+        self.configure(self.other)
+        self.base = self.git_run(['git', 'rev-parse', 'HEAD'], self.root).strip()
+
+    def git_run(self, args, root):
+        result = subprocess.run(args, cwd=root, capture_output=True, text=True)
+        if result.returncode:
+            raise RuntimeError(result.stderr)
+        return result.stdout
+
+    def configure(self, root):
+        self.git_run(['git', 'config', 'user.email', 'test@example.invalid'], root)
+        self.git_run(['git', 'config', 'user.name', 'Atlas test'], root)
+        self.git_run(['git', 'config', 'core.autocrlf', 'false'], root)
+
+    def save(self, root, path, content):
+        target = root / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content + '\n', encoding='utf-8')
+
+    def advance(self, path='data/penalty-news/capture-state.json', content='newer news'):
+        self.save(self.other, path, content)
+        self.git_run(['git', 'add', '.'], self.other)
+        self.git_run(['git', 'commit', '-qm', 'Concurrent release'], self.other)
+        self.git_run(['git', 'push', '-q', 'origin', w.BRANCH], self.other)
+
+    def candidate(self):
+        path = 'src/data/football-atlas-release.json'
+        self.save(self.root, path, 'validated-new')
+        self.git_run(['git', 'add', path], self.root)
+        self.git_run(['git', 'commit', '-qm', 'Validated Atlas data'], self.root)
+        return {path}
+
+    def test_collection_fast_forwards_without_touching_archive(self):
+        self.advance('src/components/PenaltyNewsFeed.tsx', 'approved SEO release')
+        report = {}
+        w.synchronize_release(self.git_run, self.root, report)
+        self.assertEqual((self.root / 'src/data/football-atlas-release.json').read_text(), 'validated-original\n')
+        self.assertEqual((self.root / 'src/components/PenaltyNewsFeed.tsx').read_text(), 'approved SEO release\n')
+        self.assertEqual(len(report['releaseSynchronizations']), 1)
+
+    def test_late_push_race_replays_only_data_and_preserves_news(self):
+        paths = self.candidate()
+        report, pushed = {}, []
+        def racing_run(args, root):
+            if args[:2] == ['git', 'push'] and not pushed:
+                pushed.append(True)
+                self.advance()
+            return self.git_run(args, root)
+        w.push_release(racing_run, self.root, report, self.base, paths)
+        self.assertEqual((self.root / 'data/penalty-news/capture-state.json').read_text(), 'newer news\n')
+        self.assertEqual((self.root / 'src/data/football-atlas-release.json').read_text(), 'validated-new\n')
+        self.assertEqual(self.git_run(['git', 'ls-remote', 'origin', 'refs/heads/' + w.BRANCH], self.root).split()[0], self.git_run(['git', 'rev-parse', 'HEAD'], self.root).strip())
+        self.assertEqual(len(report['releaseSynchronizations']), 1)
+
+    def test_input_or_pipeline_changes_stay_blocked(self):
+        for path in ('src/data/football-atlas-release.json', 'scripts/manager_atlas_weekly.py',
+                     'config/atlas.json', 'public/manager-atlas/index-123.json', 'package.json'):
+            with self.subTest(path=path):
+                self.advance(path)
+                with self.assertRaisesRegex(ValueError, 'fresh validation required'):
+                    w.synchronize_release(self.git_run, self.root, {})
+                self.assertEqual(self.git_run(['git', 'rev-parse', 'HEAD'], self.root).strip(), self.base)
+
+    def test_dirty_checkout_is_never_reset(self):
+        self.advance()
+        self.save(self.root, 'local-work.txt', 'user edit')
+        with self.assertRaisesRegex(ValueError, 'clean checkout'):
+            w.synchronize_release(self.git_run, self.root, {})
+        self.assertEqual((self.root / 'local-work.txt').read_text(), 'user edit\n')
+
+    def test_unscoped_local_commit_is_not_replayed(self):
+        self.advance()
+        self.candidate()
+        with self.assertRaisesRegex(ValueError, 'one scoped Atlas commit'):
+            w.synchronize_release(self.git_run, self.root, {}, base=self.base, changed_paths={'other.json'})
+
+    def test_overlapping_even_allowlisted_path_is_not_replayed(self):
+        self.advance()
+        paths = self.candidate() | {'data/penalty-news/capture-state.json'}
+        with self.assertRaisesRegex(ValueError, 'fresh validation required'):
+            w.synchronize_release(self.git_run, self.root, {}, base=self.base, changed_paths=paths)
+
+    def test_transport_error_after_accepted_push_is_not_duplicated(self):
+        paths = self.candidate()
+        pushes = []
+        def transport_run(args, root):
+            result = self.git_run(args, root)
+            if args[:2] == ['git', 'push']:
+                pushes.append(args)
+                raise RuntimeError('lost response')
+            return result
+        w.push_release(transport_run, self.root, {}, self.base, paths)
+        self.assertEqual(len(pushes), 1)
+
+    def test_repeated_races_stop_after_three_pushes(self):
+        paths = self.candidate()
+        pushes = []
+        def racing_run(args, root):
+            if args[:2] == ['git', 'push']:
+                pushes.append(args)
+                self.advance(content='news ' + str(len(pushes)))
+            return self.git_run(args, root)
+        with self.assertRaises(RuntimeError):
+            w.push_release(racing_run, self.root, {}, self.base, paths)
+        self.assertEqual(len(pushes), 3)
+        self.assertTrue(all('--force' not in args for args in pushes))
+
+
 class FixtureBoardTests(unittest.TestCase):
     def row(self, **changes):
         return dict(id='h1', date='2026-09-12', league='premier-league', home='Chelsea', away='Arsenal',
