@@ -2,21 +2,307 @@
   "fixtures": [
     {
       "fotmob_match_id": 5881211,
+      "fotmob_page_url": "/matches/elversberg-vs-mainz-05/2pxonq#5881211",
+      "home_fotmob_team_id": 8232,
+      "away_fotmob_team_id": 9905,
       "match_date": "2026-10-30",
       "kickoff_utc": "2026-10-30T19:30:00Z",
       "home_team": "Elversberg",
       "away_team": "Mainz 05",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-2-3-1",
+      "away_formation": "3-5-2",
+      "home_players": [
+        "Nicolas Kristof",
+        "Nicholas Mickelson",
+        "Lukas Pinckert",
+        "Maximilian Rohr",
+        "Lasse Günther",
+        "Felix Keidel",
+        "Łukasz Poręba",
+        "Lukas Petkov",
+        "Frederik Schmahl",
+        "Maurice Krattenmacher",
+        "David Mokwa"
+      ],
+      "away_players": [
+        "Alexander Schwolow",
+        "Danny da Costa",
+        "Stefan Posch",
+        "Kacper Potulski",
+        "Anthony Caci",
+        "Jae-Sung Lee",
+        "Kaishu Sano",
+        "Nadiem Amiri",
+        "Phillipp Mwene",
+        "Sheraldo Becker",
+        "Phillip Tietz"
+      ],
+      "home_starters": [
+        {
+          "name": "Nicolas Kristof",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 1285926,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Nicholas Mickelson",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 633721,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Lukas Pinckert",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 1280560,
+          "shirt_number": "19"
+        },
+        {
+          "name": "Maximilian Rohr",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 1077911,
+          "shirt_number": "31"
+        },
+        {
+          "name": "Lasse Günther",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 1245692,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Felix Keidel",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 1366338,
+          "shirt_number": "43"
+        },
+        {
+          "name": "Łukasz Poręba",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 962113,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Lukas Petkov",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 1093782,
+          "shirt_number": "25"
+        },
+        {
+          "name": "Frederik Schmahl",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 1281256,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Maurice Krattenmacher",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 1412933,
+          "shirt_number": "7"
+        },
+        {
+          "name": "David Mokwa",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 1459758,
+          "shirt_number": "42"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Alexander Schwolow",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-5-2",
+          "position_id": 11,
+          "player_id": 248437,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Danny da Costa",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 33,
+          "player_id": 240537,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Stefan Posch",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 35,
+          "player_id": 557325,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Kacper Potulski",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 37,
+          "player_id": 1800401,
+          "shirt_number": "48"
+        },
+        {
+          "name": "Anthony Caci",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 71,
+          "player_id": 771401,
+          "shirt_number": "19"
+        },
+        {
+          "name": "Jae-Sung Lee",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 73,
+          "player_id": 523749,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Kaishu Sano",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 75,
+          "player_id": 1033111,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Nadiem Amiri",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 77,
+          "player_id": 614449,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Phillipp Mwene",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79,
+          "player_id": 423812,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Sheraldo Becker",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 104,
+          "player_id": 495222,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Phillip Tietz",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 106,
+          "player_id": 686315,
+          "shirt_number": "9"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-10-27T15:52:14.870800+00:00",
-      "changed_at": "2026-10-27T01:28:47.269139+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Jan Gyamerah",
+        "Noah Darvich",
+        "Tom Zimmerschied"
+      ],
+      "away_unavailable": [
+        "Robin Zentner",
+        "Dominik Kohr",
+        "Otto Ruoppi",
+        "Silas Katompa Mvumpa"
+      ],
+      "observed_at": "2026-10-27T20:41:11.680767+00:00",
+      "changed_at": "2026-10-27T20:41:11.680767+00:00"
     }
   ]
 }
