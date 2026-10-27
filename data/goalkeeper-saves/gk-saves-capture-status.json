@@ -1,36 +1,25 @@
 {
   "bookmaker_coverage": {
     "Kambi": {
-      "events_with_save_markets": 8,
+      "events_with_save_markets": 3,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 63
-    },
-    "Paddy Power": {
-      "events_with_save_markets": 0,
-      "named_player_lines": 0,
-      "status": "NO_SAVE_MARKETS",
-      "unnamed_or_team_lines": 0
+      "unnamed_or_team_lines": 25
     }
   },
   "capture_errors": [],
   "capture_mode": "publication",
   "event_last_checked": {
-    "71945350": "2026-10-27T00:49:37Z",
-    "71945352": "2026-10-27T00:49:37Z",
-    "71945354": "2026-10-27T00:49:37Z",
-    "71945356": "2026-10-27T00:49:37Z",
-    "71945358": "2026-10-27T00:49:37Z",
-    "71945360": "2026-10-27T00:49:37Z",
-    "71945362": "2026-10-27T00:49:37Z",
-    "71945364": "2026-10-27T00:49:37Z"
+    "71945358": "2026-10-27T14:35:44Z",
+    "71945360": "2026-10-27T14:35:44Z",
+    "71945362": "2026-10-27T14:35:44Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 8,
-  "events_supported": 8,
-  "events_with_lines": 8,
-  "generated_at": "2026-10-27T00:49:37Z",
-  "last_publication_at": "2026-10-27T00:49:37Z",
+  "events_selected": 3,
+  "events_supported": 3,
+  "events_with_lines": 3,
+  "generated_at": "2026-10-27T14:35:44Z",
+  "last_publication_at": "2026-10-27T14:35:44Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 0,
@@ -49,11 +38,11 @@
       "with_prices": 0
     },
     "serie-a": {
-      "selected": 8,
-      "with_prices": 8
+      "selected": 3,
+      "with_prices": 3
     }
   },
-  "market_inventory_rows_added": 532,
+  "market_inventory_rows_added": 144,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Bookings Spread",
@@ -84,10 +73,6 @@
     "Player Fouls",
     "Player Shots",
     "Player Shots on Target",
-    "Player To Assist",
-    "Player To Be Fouled",
-    "Player To Score or Assist",
-    "Player to be Booked",
     "Spread",
     "Spread HT",
     "Team Total Away",
@@ -108,47 +93,12 @@
     "Totals 2H",
     "Totals HT"
   ],
-  "publication_recovery": true,
+  "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 37,
-  "rows_observed": 37,
+  "rows_added": 14,
+  "rows_observed": 14,
   "selected_events": [
-    {
-      "away": "Bologna FC",
-      "competition": "Italy - Serie A",
-      "home": "AC Milan",
-      "id": 71945352,
-      "kickoff_at": "2026-10-28T17:30:00Z"
-    },
-    {
-      "away": "Udinese Calcio",
-      "competition": "Italy - Serie A",
-      "home": "Parma Calcio",
-      "id": 71945356,
-      "kickoff_at": "2026-10-28T17:30:00Z"
-    },
-    {
-      "away": "Inter Milano",
-      "competition": "Italy - Serie A",
-      "home": "Venezia FC",
-      "id": 71945364,
-      "kickoff_at": "2026-10-28T17:30:00Z"
-    },
-    {
-      "away": "Juventus Turin",
-      "competition": "Italy - Serie A",
-      "home": "Genoa CFC",
-      "id": 71945350,
-      "kickoff_at": "2026-10-28T19:45:00Z"
-    },
-    {
-      "away": "SSC Napoli",
-      "competition": "Italy - Serie A",
-      "home": "AC Monza",
-      "id": 71945354,
-      "kickoff_at": "2026-10-28T19:45:00Z"
-    },
     {
       "away": "Lazio Rome",
       "competition": "Italy - Serie A",
@@ -172,5 +122,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 8
+  "three_way_events": 3
 }

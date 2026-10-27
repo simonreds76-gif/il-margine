@@ -1,6 +1,6 @@
 {
   "api_errors": [],
-  "deferred_not_due": 1,
+  "deferred_not_due": 2,
   "details": [
     {
       "detail": "",
@@ -36,38 +36,6 @@
     },
     {
       "detail": "",
-      "goalkeeper": "Caoimh\u00edn Kelleher",
-      "match": "Hull City vs Brentford FC",
-      "match_date": "2026-10-25",
-      "reason": "settled_fotmob",
-      "signal_id": "72221342|caoimh\u00edn kelleher|2.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Lorenzo Palmisani",
-      "match": "Atalanta BC vs Frosinone Calcio",
-      "match_date": "2026-10-25",
-      "reason": "settled_fotmob",
-      "signal_id": "kambi|71945326|lorenzo palmisani|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Caoimh\u00edn Kelleher",
-      "match": "Hull City vs Brentford FC",
-      "match_date": "2026-10-25",
-      "reason": "settled_fotmob",
-      "signal_id": "kambi|72221342|caoimh\u00edn kelleher|2.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Guglielmo Vicario",
-      "match": "US Lecce vs Juventus Turin",
-      "match_date": "2026-10-25",
-      "reason": "settled_fotmob",
-      "signal_id": "kambi|71945338|guglielmo vicario|1.5|over"
-    },
-    {
-      "detail": "",
       "goalkeeper": "Manuel Neuer",
       "match": "SC Freiburg vs Bayern Munich",
       "match_date": "2026-10-25",
@@ -76,28 +44,27 @@
     },
     {
       "detail": "",
-      "goalkeeper": "Gauthier Gallon",
-      "match": "Olympique Marseille vs Le Havre AC",
-      "match_date": "2026-10-25",
-      "reason": "settled_fotmob",
-      "signal_id": "72036246|gauthier gallon|3.5|over"
+      "goalkeeper": "R\u00e9my Descamps",
+      "match": "Paris Saint-Germain vs Olympique Lyon",
+      "match_date": "2026-10-26",
+      "reason": "fotmob_matched_player_not_goalkeeper",
+      "signal_id": "72036250|r\u00e9my descamps|3.5|over"
     }
   ],
-  "fotmob_requests_used": 13,
-  "generated_at": "2026-10-26T15:17:01Z",
+  "fotmob_requests_used": 11,
+  "generated_at": "2026-10-27T14:36:35Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
-  "pending_due": 5,
-  "pending_total": 6,
+  "pending_due": 6,
+  "pending_total": 8,
   "reason_counts": {
     "fotmob_goalkeeper_not_found": 1,
-    "fotmob_matched_player_not_goalkeeper": 3,
-    "fotmob_save_totals_disagree": 1,
-    "settled_fotmob": 5
+    "fotmob_matched_player_not_goalkeeper": 4,
+    "fotmob_save_totals_disagree": 1
   },
   "requests_used": 0,
-  "settled": 5,
-  "status": "PARTIAL",
+  "settled": 0,
+  "status": "BLOCKED",
   "verified_player_targets": [
     {
       "appearances": 32,
@@ -119,38 +86,20 @@
     {
       "appearances": 32,
       "match_id": 5881204,
-      "status": "saved",
+      "status": "unchanged",
       "targets_sha256": "01138feba5ff462630fd6bd19d4d88f04331e8c20ce8f3e5c50746cf379942fa"
     },
     {
       "appearances": 31,
-      "match_id": 5795490,
-      "status": "saved",
-      "targets_sha256": "6c9387e87489c7fa32afd82c2f21d72ae04536c81cda508d19df567f089bef2d"
-    },
-    {
-      "appearances": 32,
-      "match_id": 5749710,
-      "status": "saved",
-      "targets_sha256": "451a95e73f05668ac2effdce7357a2e5fe906c65c3b8129eaf7b17868b9f31bc"
-    },
-    {
-      "appearances": 31,
-      "match_id": 5749716,
-      "status": "saved",
-      "targets_sha256": "f3dfe18f5aec12d16dc7794c645ea5b75bf3f8d7ac98c34f204b2847980efd3d"
-    },
-    {
-      "appearances": 31,
       "match_id": 5881200,
-      "status": "saved",
+      "status": "unchanged",
       "targets_sha256": "0da9ed2af3fa01dae4d68f43f24187c75407fcfde5ed5eb30dd0a32f45f4231e"
     },
     {
-      "appearances": 32,
-      "match_id": 5802968,
+      "appearances": 31,
+      "match_id": 5802972,
       "status": "saved",
-      "targets_sha256": "13434ebf8f3484c88fa2f34c80498d023f0cf2ebcd3074dc8bc99613d7a7209c"
+      "targets_sha256": "9af11e23ccca053738d88ade2da0382c415503621a6701a12f8637e751e9bf6e"
     }
   ]
 }

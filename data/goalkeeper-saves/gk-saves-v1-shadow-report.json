@@ -2,14 +2,17 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 0,
-    "blocker_counts": {},
+    "blocked_lines": 4,
+    "blocker_counts": {
+      "missing_priced_edge": 4,
+      "missing_registered_feature": 4
+    },
     "candidate_board_preserved": false,
-    "eligible_lines": 4,
-    "priced_lines": 37,
+    "eligible_lines": 1,
+    "priced_lines": 33,
     "provisional_lines": 0,
-    "signals_added": 1,
-    "value_ladder_lines": 2
+    "signals_added": 0,
+    "value_ladder_lines": 3
   },
   "evidence": {
     "clv": 0.052654,
@@ -29,24 +32,26 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-27T00:49:39.568813+00:00",
+    "checked_at": "2026-10-27T14:36:39.066929+00:00",
     "counts": {
-      "offers_saved": 37
+      "already_saved": 3,
+      "not_fresh_prematch": 23
     },
-    "saved": 8,
-    "status": "CAPTURED"
+    "saved": 0,
+    "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-10-27T00:49:38Z",
+  "generated_at": "2026-10-27T14:36:38Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
     "exclusions": {
-      "unregistered_settlement_rules": 37
+      "not_new_fresh_prematch": 23,
+      "unregistered_settlement_rules": 14
     },
     "forecast_fixtures": 85,
     "forecast_keepers": 170,
-    "generated_at": "2026-10-27T00:49:39.624182+00:00",
+    "generated_at": "2026-10-27T14:36:39.086690+00:00",
     "last_capture_at": "2026-10-25T13:14:55.143085+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
@@ -54,21 +59,21 @@
     "next_review_at": 100,
     "paired_scores": {
       "current": {
-        "brier": 0.17626849922369164,
-        "log_loss": 0.5274058217180426
+        "brier": 0.17813007654873358,
+        "log_loss": 0.5318365656857478
       },
       "keeper_watch": {
-        "brier": 0.17458866989522911,
-        "log_loss": 0.5252994554061998
+        "brier": 0.1769815388113856,
+        "log_loss": 0.5315965042484996
       }
     },
-    "paired_settled_fixtures": 74,
+    "paired_settled_fixtures": 77,
     "paper_stake": 0.5,
     "records": {
       "current": {
         "losses": 10,
         "overdue": 0,
-        "pending": 1,
+        "pending": 0,
         "profit": 1.2690000000000003,
         "pushes": 0,
         "review": 0,
@@ -76,13 +81,13 @@
         "selections": 24,
         "settled": 20,
         "stake": 10.0,
-        "voids": 3,
+        "voids": 4,
         "wins": 10
       },
       "keeper_watch": {
         "losses": 3,
         "overdue": 0,
-        "pending": 1,
+        "pending": 0,
         "profit": -0.5,
         "pushes": 0,
         "review": 0,
@@ -90,7 +95,7 @@
         "selections": 5,
         "settled": 4,
         "stake": 2.0,
-        "voids": 0,
+        "voids": 1,
         "wins": 1
       }
     },
@@ -114,10 +119,10 @@
         "overdue": false,
         "player_id": "767014",
         "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "reason": "verified_different_starting_keeper",
         "registered_at": "2026-10-25T00:33:10.603521+00:00",
         "side": "over",
-        "status": "pending",
+        "status": "void",
         "team_id": "9748"
       },
       {
@@ -138,10 +143,10 @@
         "overdue": false,
         "player_id": "767014",
         "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "reason": "verified_different_starting_keeper",
         "registered_at": "2026-10-25T00:33:10.603521+00:00",
         "side": "over",
-        "status": "pending",
+        "status": "void",
         "team_id": "9748"
       },
       {
@@ -794,10 +799,9 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 7,
       "incomplete_or_conflicting_full_match_count": 12,
       "keeper_identity_unresolved": 3,
-      "verified_different_starting_keeper": 8
+      "verified_different_starting_keeper": 10
     },
     "start_at": "2026-10-15T15:58:57.141631+00:00",
     "status": "TRACKING"

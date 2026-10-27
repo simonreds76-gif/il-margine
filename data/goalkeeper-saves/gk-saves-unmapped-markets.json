@@ -1,218 +1,38 @@
 {
-  "captured_at": "2026-10-27T00:49:37Z",
+  "captured_at": "2026-10-27T14:35:44Z",
   "contracts": [
     {
-      "event_id": "71945358",
-      "home": "AS Roma",
-      "away": "Cagliari Calcio",
+      "event_id": "71945360",
+      "home": "Sassuolo Calcio",
+      "away": "Lazio Rome",
+      "bookmaker": "Kambi",
+      "market": {
+        "name": "Goalkeeper Saves Home",
+        "updatedAt": "2026-10-27T08:49:02.256Z",
+        "odds": [
+          {
+            "hdp": 2.5,
+            "over": "1.42"
+          },
+          {
+            "hdp": 3.5,
+            "over": "1.96"
+          },
+          {
+            "hdp": 4.5,
+            "over": "2.90"
+          }
+        ]
+      }
+    },
+    {
+      "event_id": "71945360",
+      "home": "Sassuolo Calcio",
+      "away": "Lazio Rome",
       "bookmaker": "Kambi",
       "market": {
         "name": "Goalkeeper Saves Away",
-        "updatedAt": "2026-10-26T19:29:37.771Z",
-        "odds": [
-          {
-            "hdp": 3.5,
-            "over": "1.63"
-          },
-          {
-            "hdp": 4.5,
-            "over": "2.25"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945358",
-      "home": "AS Roma",
-      "away": "Cagliari Calcio",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "updatedAt": "2026-10-26T21:33:57.335Z",
-        "odds": [
-          {
-            "hdp": 1.5,
-            "over": "1.63"
-          },
-          {
-            "hdp": 2.5,
-            "over": "2.75"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945358",
-      "home": "AS Roma",
-      "away": "Cagliari Calcio",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves",
-        "updatedAt": "2026-10-26T20:34:37.404Z",
-        "odds": [
-          {
-            "hdp": 4.5,
-            "over": "1.33"
-          },
-          {
-            "hdp": 5.5,
-            "over": "1.65"
-          },
-          {
-            "hdp": 6.5,
-            "over": "2.18"
-          },
-          {
-            "hdp": 7.5,
-            "over": "3.00"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945362",
-      "home": "Torino FC",
-      "away": "Como 1907",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "updatedAt": "2026-10-26T22:17:11.507Z",
-        "odds": [
-          {
-            "hdp": 3.5,
-            "over": "1.71"
-          },
-          {
-            "hdp": 4.5,
-            "over": "2.40"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945362",
-      "home": "Torino FC",
-      "away": "Como 1907",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "updatedAt": "2026-10-26T22:17:11.507Z",
-        "odds": [
-          {
-            "hdp": 1.5,
-            "over": "1.34"
-          },
-          {
-            "hdp": 2.5,
-            "over": "1.97"
-          },
-          {
-            "hdp": 3.5,
-            "over": "3.20"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945362",
-      "home": "Torino FC",
-      "away": "Como 1907",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves",
-        "updatedAt": "2026-10-26T22:17:11.507Z",
-        "odds": [
-          {
-            "hdp": 5.5,
-            "over": "1.50"
-          },
-          {
-            "hdp": 6.5,
-            "over": "1.92"
-          },
-          {
-            "hdp": 7.5,
-            "over": "2.55"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945350",
-      "home": "Genoa CFC",
-      "away": "Juventus Turin",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "updatedAt": "2026-10-26T19:21:03.863Z",
-        "odds": [
-          {
-            "hdp": 3.5,
-            "over": "1.64"
-          },
-          {
-            "hdp": 4.5,
-            "over": "2.30"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945350",
-      "home": "Genoa CFC",
-      "away": "Juventus Turin",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves",
-        "updatedAt": "2026-10-26T19:21:03.863Z",
-        "odds": [
-          {
-            "hdp": 5.5,
-            "over": "1.47"
-          },
-          {
-            "hdp": 6.5,
-            "over": "1.86"
-          },
-          {
-            "hdp": 7.5,
-            "over": "2.48"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945350",
-      "home": "Genoa CFC",
-      "away": "Juventus Turin",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "updatedAt": "2026-10-26T19:21:03.863Z",
-        "odds": [
-          {
-            "hdp": 1.5,
-            "over": "1.36"
-          },
-          {
-            "hdp": 2.5,
-            "over": "2.00"
-          },
-          {
-            "hdp": 3.5,
-            "over": "3.25"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945354",
-      "home": "AC Monza",
-      "away": "SSC Napoli",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "updatedAt": "2026-10-26T20:17:09.073Z",
+        "updatedAt": "2026-10-27T08:48:20.945Z",
         "odds": [
           {
             "hdp": 2.5,
@@ -226,317 +46,165 @@
       }
     },
     {
-      "event_id": "71945354",
-      "home": "AC Monza",
-      "away": "SSC Napoli",
+      "event_id": "71945360",
+      "home": "Sassuolo Calcio",
+      "away": "Lazio Rome",
       "bookmaker": "Kambi",
       "market": {
-        "name": "Goalkeeper Saves Away",
-        "updatedAt": "2026-10-26T20:17:09.073Z",
+        "name": "Goalkeeper Saves",
+        "updatedAt": "2026-10-27T08:48:20.945Z",
         "odds": [
           {
-            "hdp": 2.5,
-            "over": "1.70"
+            "hdp": 5.5,
+            "over": "1.41"
           },
           {
-            "hdp": 3.5,
-            "over": "2.55"
+            "hdp": 6.5,
+            "over": "1.76"
+          },
+          {
+            "hdp": 7.5,
+            "over": "2.30"
+          },
+          {
+            "hdp": 8.5,
+            "over": "3.15"
           }
         ]
       }
     },
     {
-      "event_id": "71945354",
-      "home": "AC Monza",
-      "away": "SSC Napoli",
+      "event_id": "71945358",
+      "home": "AS Roma",
+      "away": "Cagliari Calcio",
       "bookmaker": "Kambi",
       "market": {
         "name": "Goalkeeper Saves",
-        "updatedAt": "2026-10-26T17:30:09.735Z",
+        "updatedAt": "2026-10-27T11:10:03.301Z",
         "odds": [
           {
+            "hdp": 4.5,
+            "over": "1.30"
+          },
+          {
             "hdp": 5.5,
-            "over": "1.58"
+            "over": "1.62"
           },
           {
             "hdp": 6.5,
-            "over": "2.05"
+            "over": "2.12"
           },
           {
             "hdp": 7.5,
+            "over": "2.90"
+          }
+        ]
+      }
+    },
+    {
+      "event_id": "71945358",
+      "home": "AS Roma",
+      "away": "Cagliari Calcio",
+      "bookmaker": "Kambi",
+      "market": {
+        "name": "Goalkeeper Saves Home",
+        "updatedAt": "2026-10-27T11:10:03.301Z",
+        "odds": [
+          {
+            "hdp": 1.5,
+            "over": "1.65"
+          },
+          {
+            "hdp": 2.5,
             "over": "2.80"
           }
         ]
       }
     },
     {
-      "event_id": "71945360",
-      "home": "Sassuolo Calcio",
-      "away": "Lazio Rome",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves",
-        "updatedAt": "2026-10-26T08:49:33.201Z",
-        "odds": [
-          {
-            "hdp": 5.5,
-            "over": "1.44"
-          },
-          {
-            "hdp": 6.5,
-            "over": "1.81"
-          },
-          {
-            "hdp": 7.5,
-            "over": "2.38"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945360",
-      "home": "Sassuolo Calcio",
-      "away": "Lazio Rome",
+      "event_id": "71945358",
+      "home": "AS Roma",
+      "away": "Cagliari Calcio",
       "bookmaker": "Kambi",
       "market": {
         "name": "Goalkeeper Saves Away",
-        "updatedAt": "2026-10-26T09:03:36.234Z",
+        "updatedAt": "2026-10-27T11:10:03.301Z",
         "odds": [
           {
-            "hdp": 2.5,
-            "over": "1.52"
+            "hdp": 3.5,
+            "over": "1.58"
           },
           {
-            "hdp": 3.5,
+            "hdp": 4.5,
             "over": "2.17"
           }
         ]
       }
     },
     {
-      "event_id": "71945360",
-      "home": "Sassuolo Calcio",
-      "away": "Lazio Rome",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "updatedAt": "2026-10-26T09:03:36.234Z",
-        "odds": [
-          {
-            "hdp": 2.5,
-            "over": "1.46"
-          },
-          {
-            "hdp": 3.5,
-            "over": "2.02"
-          },
-          {
-            "hdp": 4.5,
-            "over": "3.10"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945352",
-      "home": "AC Milan",
-      "away": "Bologna FC",
+      "event_id": "71945362",
+      "home": "Torino FC",
+      "away": "Como 1907",
       "bookmaker": "Kambi",
       "market": {
         "name": "Goalkeeper Saves",
-        "updatedAt": "2026-10-26T19:57:54.786Z",
+        "updatedAt": "2026-10-27T12:30:50.327Z",
         "odds": [
           {
-            "hdp": 4.5,
-            "over": "1.37"
-          },
-          {
             "hdp": 5.5,
-            "over": "1.73"
+            "over": "1.50"
           },
           {
             "hdp": 6.5,
-            "over": "2.30"
+            "over": "1.91"
           },
           {
             "hdp": 7.5,
-            "over": "3.20"
+            "over": "2.55"
           }
         ]
       }
     },
     {
-      "event_id": "71945352",
-      "home": "AC Milan",
-      "away": "Bologna FC",
+      "event_id": "71945362",
+      "home": "Torino FC",
+      "away": "Como 1907",
       "bookmaker": "Kambi",
       "market": {
         "name": "Goalkeeper Saves Home",
-        "updatedAt": "2026-10-26T19:57:54.786Z",
+        "updatedAt": "2026-10-27T08:56:42.978Z",
+        "odds": [
+          {
+            "hdp": 3.5,
+            "over": "1.71"
+          },
+          {
+            "hdp": 4.5,
+            "over": "2.43"
+          }
+        ]
+      }
+    },
+    {
+      "event_id": "71945362",
+      "home": "Torino FC",
+      "away": "Como 1907",
+      "bookmaker": "Kambi",
+      "market": {
+        "name": "Goalkeeper Saves Away",
+        "updatedAt": "2026-10-27T12:30:50.327Z",
         "odds": [
           {
             "hdp": 1.5,
-            "over": "1.38"
+            "over": "1.35"
           },
           {
             "hdp": 2.5,
-            "over": "2.07"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945352",
-      "home": "AC Milan",
-      "away": "Bologna FC",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "updatedAt": "2026-10-26T19:57:54.786Z",
-        "odds": [
-          {
-            "hdp": 2.5,
-            "over": "1.46"
+            "over": "1.98"
           },
           {
             "hdp": 3.5,
-            "over": "2.04"
-          },
-          {
-            "hdp": 4.5,
-            "over": "3.10"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945356",
-      "home": "Parma Calcio",
-      "away": "Udinese Calcio",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "updatedAt": "2026-10-26T21:09:15.855Z",
-        "odds": [
-          {
-            "hdp": 2.5,
-            "over": "1.64"
-          },
-          {
-            "hdp": 3.5,
-            "over": "2.48"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945356",
-      "home": "Parma Calcio",
-      "away": "Udinese Calcio",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves",
-        "updatedAt": "2026-10-26T21:09:15.855Z",
-        "odds": [
-          {
-            "hdp": 4.5,
-            "over": "1.42"
-          },
-          {
-            "hdp": 5.5,
-            "over": "1.81"
-          },
-          {
-            "hdp": 6.5,
-            "over": "2.48"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945356",
-      "home": "Parma Calcio",
-      "away": "Udinese Calcio",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "updatedAt": "2026-10-26T08:13:28.081Z",
-        "odds": [
-          {
-            "hdp": 2.5,
-            "over": "1.87"
-          },
-          {
-            "hdp": 3.5,
-            "over": "2.95"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945364",
-      "home": "Venezia FC",
-      "away": "Inter Milano",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "updatedAt": "2026-10-26T22:28:40.626Z",
-        "odds": [
-          {
-            "hdp": 2.5,
-            "over": "1.80"
-          },
-          {
-            "hdp": 3.5,
-            "over": "2.80"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945364",
-      "home": "Venezia FC",
-      "away": "Inter Milano",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves",
-        "updatedAt": "2026-10-26T22:28:40.626Z",
-        "odds": [
-          {
-            "hdp": 6.5,
-            "over": "1.56"
-          },
-          {
-            "hdp": 7.5,
-            "over": "1.95"
-          },
-          {
-            "hdp": 8.5,
-            "over": "2.60"
-          }
-        ]
-      }
-    },
-    {
-      "event_id": "71945364",
-      "home": "Venezia FC",
-      "away": "Inter Milano",
-      "bookmaker": "Kambi",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "updatedAt": "2026-10-26T22:28:40.626Z",
-        "odds": [
-          {
-            "hdp": 3.5,
-            "over": "1.44"
-          },
-          {
-            "hdp": 4.5,
-            "over": "1.90"
-          },
-          {
-            "hdp": 5.5,
-            "over": "2.63"
+            "over": "3.15"
           }
         ]
       }
