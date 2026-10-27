@@ -93,6 +93,13 @@ class TrackerTests(unittest.TestCase):
         self.assertEqual(T.outcome(g,dict(w_ace='3',w_svpt='40'),r)['status'],'void')
         self.assertIsNone(T.outcome(g,None,r))
         g['result']='W/O';self.assertEqual(T.outcome(g,None,r)['status'],'void')
+    def test_disqualification_uses_determined_total_rule(self):
+        rows,_=self.capture([quote()]);r=rows[0]
+        for marker in ('DEF','DQ','DISQ'):
+            g=dict(result='6-3 1-0 '+marker,winner_id='1')
+            self.assertEqual(T.outcome(g,{'w_ace':'5','w_svpt':'40'},r)['status'],'settled')
+            self.assertEqual(T.outcome(g,{'w_ace':'3','w_svpt':'40'},r)['status'],'void')
+            self.assertIsNone(T.outcome(g,None,r))
     def test_retired_determined_bets_not_completed_calibration(self):
         rows,_=self.capture([quote()]);out={rows[0]['id']:dict(status='settled',completed=False,actual=6,actual_points=40)}
         report=T.summarize(rows,out,self.reg,{},NOW,{})
