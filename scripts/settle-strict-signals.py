@@ -462,6 +462,10 @@ def ensure_fieldnames(rows: list[dict[str, str]], fieldnames: list[str]) -> list
     for f in SETTLEMENT_FIELDS:
         if f not in out:
             out.append(f)
+    for row in rows:
+        for field in row:
+            if field not in out:
+                out.append(field)
     for r in rows:
         for f in out:
             r.setdefault(f, "")
@@ -603,6 +607,12 @@ def main() -> int:
     now_iso = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     stats = Counter()
     changed = deduped_removed
+    from tennis_strict_schedule_reconciliation import reconcile_and_save_journal
+    reconciled = reconcile_and_save_journal(rows, ROOT, dry_run=args.dry_run)
+    changed += reconciled
+    if reconciled:
+        out_fields = ensure_fieldnames(rows, out_fields)
+        print(f"Verified provisional schedule corrections: {reconciled}; original prices preserved")
 
     for i, row in enumerate(rows, start=1):
         stats["rows_total"] += 1

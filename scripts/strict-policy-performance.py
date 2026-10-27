@@ -103,6 +103,12 @@ def norm_key_val(v: str | None) -> str:
     return (v or "").strip().lower()
 
 
+def performance_date(row: dict[str, str]) -> date | None:
+    # Keep source dates intact; verified schedule repairs belong to the actual
+    # match's reporting window, not the obsolete provisional fixture date.
+    return parse_iso_date(row.get("match_date") if row.get("schedule_reconciliation_version") else row.get("date"))
+
+
 def row_key_val(row: dict[str, str], field: str) -> str:
     if field == "policy_mode":
         return norm_key_val(row.get(field) or "base")
@@ -452,7 +458,7 @@ def append_summary(path: Path, rows: list[dict[str, str]]) -> None:
 def filter_window(rows: list[dict[str, str]], start: date, end: date) -> list[dict[str, str]]:
     out: list[dict[str, str]] = []
     for r in rows:
-        d = parse_iso_date(r.get("date"))
+        d = performance_date(r)
         if d is None:
             continue
         if start <= d <= end:
@@ -580,7 +586,7 @@ def main() -> int:
         print("No report rows available.")
         return 0
 
-    max_date = max((parse_iso_date(r.get("date")) for r in report_rows if parse_iso_date(r.get("date"))), default=None)
+    max_date = max((performance_date(r) for r in report_rows if performance_date(r)), default=None)
     if max_date is None:
         print("No valid date rows in source.")
         return 0
@@ -591,9 +597,9 @@ def main() -> int:
 
     window_start = as_of - timedelta(days=window_days - 1)
     window_rows = filter_window(report_rows, window_start, as_of)
-    all_rows = [r for r in report_rows if parse_iso_date(r.get("date")) is not None and parse_iso_date(r.get("date")) <= as_of]
-    legacy_rows = [r for r in all_rows if (parse_iso_date(r.get("date")) or clean_eval_start) < clean_eval_start]
-    clean_rows = [r for r in all_rows if (parse_iso_date(r.get("date")) or date.min) >= clean_eval_start]
+    all_rows = [r for r in report_rows if performance_date(r) is not None and performance_date(r) <= as_of]
+    legacy_rows = [r for r in all_rows if (performance_date(r) or clean_eval_start) < clean_eval_start]
+    clean_rows = [r for r in all_rows if (performance_date(r) or date.min) >= clean_eval_start]
     clean_window_start = max(window_start, clean_eval_start)
     clean_window_rows = filter_window(clean_rows, clean_window_start, as_of) if as_of >= clean_eval_start else []
 

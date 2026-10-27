@@ -118,6 +118,12 @@ def build(root: Path, target_day: str, previous: dict) -> tuple[str, dict]:
     if report.get('status') == 'PRE_FIT':
         lines.append('No v4 selection alerts yet: calibration is still collecting evidence.')
         lines.append(f"Same-model settled forecasts available: {len(available)}/{minimum}; {max(0, minimum-len(available))} more needed for the sample floor. The monthly fit uses only earlier months; reaching the date alone is not enough.")
+    comparison = root/'data/tennis-props'/f'comparison-v3-aces-{target_day}.csv'
+    if comparison.exists():
+        with comparison.open(encoding='utf-8-sig', newline='') as handle:
+            fresh = [r for r in csv.DictReader(handle) if str(r.get('capture_ts') or '')[:10] == target_day and r.get('market') == 'aces']
+        if fresh and all(r.get('bookmaker') == 'Sisal IT' and r.get('price_pair_status') == 'two_way' for r in fresh):
+            lines.append('PRICE COVERAGE: Sisal has ordinary over/under ace lines, but no over-only milestone ladder for v4. These prices feed the existing aces/DF paper comparison; v4 cannot add ladder forecasts from them under its current rules.')
     if not model_hash:
         lines.append('The frozen model file could not be verified; training readiness is unconfirmed.')
     lines.extend(['', f"EARLIER INPUTS: {older_stats['registered']} forecasts | {older_stats['settled']} settled | {older_stats['pending']} pending | {older_stats['void']} void. Kept separate."])
