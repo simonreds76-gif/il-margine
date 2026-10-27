@@ -19,13 +19,15 @@ spec.loader.exec_module(shadow)
 
 class FreeContinuity(unittest.TestCase):
     def test_legacy_workflow_never_requests_removed_book(self):
-        for requested in ('Bet365', 'Bet365,Kambi', 'bet365', ''):
-            self.assertEqual(selected_bookmakers(requested), 'Paddy Power,Kambi')
+        for requested in ('Bet365', 'Bet365,Kambi', 'bet365', 'Paddy Power', 'Paddy Power,Kambi', ''):
+            self.assertEqual(selected_bookmakers(requested), 'Kambi')
 
     def test_selected_subset_and_unapproved_book(self):
         self.assertEqual(selected_bookmakers('Kambi'), 'Kambi')
         with self.assertRaises(ValueError):
             selected_bookmakers('William Hill')
+        with self.assertRaises(ValueError):
+            selected_bookmakers('Sisal IT')
 
     def test_missing_or_empty_allocation_does_not_auto_select(self):
         with tempfile.TemporaryDirectory() as folder:
