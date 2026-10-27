@@ -37,6 +37,12 @@ export function selectionOutcome(r:SignalRow){
  if(['blocked','quarantined','duplicate'].includes(status))return 'Excluded';
  return text(pick(r,['candidate_status','signal_status']))==='blocked'?'Blocked':'Not settled';
 }
+export function matchesOutcomeFilter(outcome:string,filter:string){
+ if(filter==='pending')return ['Pending','Not settled'].includes(outcome);
+ if(filter==='settled')return ['Won','Lost','Void','Push','Half win','Half loss','Settled'].includes(outcome);
+ if(filter==='excluded')return ['Excluded','Blocked'].includes(outcome);
+ return true;
+}
 export function selectionCard(r:SignalRow,view:string){
  const side=text(pick(r,['selected_side','side','recommended_side'])).toUpperCase();
  const mostAces=view==='most-aces-record';
