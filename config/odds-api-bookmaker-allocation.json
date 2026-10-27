@@ -1,8 +1,22 @@
 {
-  "verified_at": "2026-10-26T14:27:00Z",
+  "verified_at": "2026-10-27T09:23:00Z",
   "plan": "Free",
-  "selected_bookmakers": ["Paddy Power", "Kambi"],
-  "paused_capture_bookmakers": ["BetMGM", "Bet365"],
-  "replaced_capture_bookmakers": ["Bet365"],
-  "reason": "User requested testing Paddy Power instead of Bet365 as free access ends. Account and two odds batches verified: Paddy football scorers/shots/SOT; Kambi GK/team shots/corners. No player aces/DF or headed markets observed in the bounded sample. Preserve all historical odds, models, records and settlement."
+  "selected_bookmakers": [
+    "Kambi"
+  ],
+  "paused_capture_bookmakers": [
+    "BetMGM",
+    "Bet365",
+    "Paddy Power",
+    "Sisal IT"
+  ],
+  "replaced_capture_bookmakers": [
+    "Bet365",
+    "Paddy Power"
+  ],
+  "reason": "Approved account switch replaces Paddy Power with Sisal IT, retaining Kambi. Automated requests temporarily use verified Kambi only while Sisal player-market semantics and adapters are assessed. Redirect legacy Paddy/Bet365 arguments to Kambi; do not enable untested Sisal signals. Pinnacle, historical odds, formulas, stakes and deduplication are unchanged.",
+  "account_bookmakers": [
+    "Sisal IT",
+    "Kambi"
+  ]
 }
