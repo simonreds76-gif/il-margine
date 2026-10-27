@@ -380,6 +380,9 @@ def capture_market_prices(args: argparse.Namespace) -> int:
     if args.skip_odds:
         print("\nMarket capture skipped by --skip-odds.")
         return 0
+    run([sys.executable, str(ROOT / "scripts/tennis_sisal_5050.py"), "--prepare-event"],
+        "Freeze completed tournament evidence before Sisal quotes (paper only)",
+        fatal=False, timeout_seconds=120)
     source_exits: list[int] = []
     if has_odds_key():
         source_exits.append(

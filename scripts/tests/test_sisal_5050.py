@@ -25,7 +25,7 @@ def quote(line=4.5,over=1.9,under=1.9):
 def board():
     return dict(date='2026-10-28',tour='ATP',player='Player One',opponent='Player Two',tournament='Basel',tour_id='77',
         player_id='1',opponent_id='2',round='R32',surface='Hard',history_as_of='2026-10-27',generation_date='2026-10-28',
-        history_fingerprint='hash',projected_aces='3',service_points_estimate='65',expected_match_games='22',
+        history_version='oncourt-current-history-20261007-v1',history_fingerprint=T.hashlib.sha256(b'test baseline').hexdigest(),projected_aces='3',service_points_estimate='65',expected_match_games='22',
         expected_match_games_source='fair_odds',aces_alpha=str(T.ALPHA),v3_eligible='true',v3_model='all_tour_deployment_safe_atp_aces_v1')
 
 def write_csv(path,rows):
@@ -39,6 +39,8 @@ class TrackerTests(unittest.TestCase):
         self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name);self.folder=self.root/T.REL;self.folder.mkdir(parents=True)
         self.reg=dict(registered_at=(NOW-timedelta(hours=1)).isoformat(),artifacts={},config=T.CONFIG)
         self.path=self.root/'quotes.csv'
+        baseline=self.root/'data/tennis-props/player-props-baseline.csv';baseline.parent.mkdir(parents=True,exist_ok=True);baseline.write_bytes(b'test baseline')
+        T.atomic(baseline.parent/'player-history-status.json',dict(state='CURRENT',version='oncourt-current-history-20261007-v1',as_of='2026-10-27',feature_cutoff='Completed results strictly before 2026-10-27',generated_at='2026-10-27T08:00:00+00:00',output_hashes={baseline.name:T.sha(baseline)}))
         write_csv(self.root/T.BOARD,[board()])
         write_csv(self.root/'data/oncourt/today_atp.csv',[dict(tour_id='77',player1_id='1',player2_id='2',round_id='4',date='2026-10-28',result='',complete='',live='')])
         write_csv(self.root/'data/oncourt/tours_atp.csv',[dict(id='77',rank='3',name='Basel')])
@@ -47,6 +49,16 @@ class TrackerTests(unittest.TestCase):
         rows=[] if rows is None else rows;write_csv(self.path,qs)
         h=T.capture(self.root,self.folder,rows,self.path,NOW,self.reg,clock=lambda:NOW)
         return rows,h
+    def test_same_day_exclusive_cutoff_allowed_only_with_verified_history(self):
+        b=board();b['history_as_of']='2026-10-28';write_csv(self.root/T.BOARD,[b])
+        path=self.root/'data/tennis-props/player-history-status.json';status=T.read_json(path,{})
+        status.update(as_of='2026-10-28',feature_cutoff='Completed results strictly before 2026-10-28',generated_at='2026-10-28T08:00:00+00:00');T.atomic(path,status)
+        rows,h=self.capture([quote()]);self.assertEqual(h['added'],1)
+        status['generated_at']='2026-10-28T11:00:00+00:00';T.atomic(path,status)
+        self.assertFalse(T.verified_history(self.root,b,T.stamp(quote()['capture_ts'])))
+        status['generated_at']='2026-10-28T08:00:00+00:00';T.atomic(path,status)
+        (path.parent/'player-props-baseline.csv').write_bytes(b'changed')
+        self.assertFalse(T.verified_history(self.root,b,T.stamp(quote()['capture_ts'])))
     def test_nb_and_blend(self):
         from scipy.stats import nbinom
         for mean in (1,5,15,40):
