@@ -85,7 +85,7 @@ def build(root: Path, target_day: str, previous: dict) -> tuple[str, dict]:
     if len(rows) != report.get('rows_registered') or sum(r.get('settlement_status')=='settled' for r in rows) != report.get('rows_settled'):
         warning.append('Report and saved observations disagree; review the refresh.')
     if health.get('as_of') != target_day or health.get('structural_error') or health.get('state') in {'CORE_RUN_IN_PROGRESS','CORE_RUN_FAILED','PLAYER_HISTORY_BLOCKED','PLAYER_HISTORY_COMPARISON_STALE'}:
-        warning.append('The props pipeline needs a health check.')
+        warning.append('No fresh bookmaker prices passed the check; selection alerts are blocked.' if health.get('state') == 'CAPTURE_STALE' else 'The props pipeline needs a health check.')
     if current_stats['invalid_paper']:
         warning.append(f"{current_stats['invalid_paper']} settled paper selections have incomplete results and are excluded from ROI.")
 
@@ -95,11 +95,11 @@ def build(root: Path, target_day: str, previous: dict) -> tuple[str, dict]:
         lines.extend(['DATA CHECK: '+ ' '.join(warning), 'Figures below are the last recorded evidence, not a fresh betting signal.', ''])
     lines.extend([
         'CORRECTED PLAYER INPUTS',
-        f"{current_stats['registered']} forecasts | {current_stats['settled']} settled across {current_stats['settled_fixtures']} matches | {current_stats['pending']} pending | {current_stats['void']} void",
+        f"{current_stats['registered']} forecasts | {current_stats['settled']} settled across {current_stats['settled_fixtures']} matches | {current_stats['pending']} forecasts awaiting results | {current_stats['void']} void",
         (f"New settlements since the previous daily summary: {current_stats['newly_settled']}" if previous.get('date') else 'Daily tracking starts with this summary; existing settlements are not counted as new today.'),
     ])
     if current_stats['roi'] is None:
-        lines.append('Paper bets: none settled yet. W/L, profit and ROI start when qualifying selections settle.')
+        lines.append(f"Paper selections: {current_stats['paper_pending']} awaiting results; none settled. Forecast observations above are not bets.")
     else:
         lines.append(f"Paper bets: {current_stats['wins']}W / {current_stats['losses']}L / {current_stats['pushes']} push | {current_stats['paper_pending']} pending")
         lines.append(f"Profit {current_stats['profit']:+.2f}u | ROI {current_stats['roi']:+.2f}% | {current_stats['paper_settled']}u settled paper stake")
@@ -112,15 +112,19 @@ def build(root: Path, target_day: str, previous: dict) -> tuple[str, dict]:
     cutoff = date.fromisoformat(target_day).replace(day=1).isoformat()
     fit_ready = [r for r in current if model_hash and r.get('model_sha256') == model_hash and r.get('settlement_status')=='settled'
                  and r.get('date','9999') < cutoff and all(number(r.get(f)) is not None for f in ('actual','mu_v3','mu_mkt'))]
+    available = [r for r in current if model_hash and r.get('model_sha256') == model_hash and r.get('settlement_status') == 'settled' and all(number(r.get(f)) is not None for f in ('actual','mu_v3','mu_mkt'))]
     minimum = int(report.get('minimum_prefit_settled') or 200)
     lines.append(f"Training sample eligible this month: {len(fit_ready)}/{minimum} earlier settled forecasts using these inputs and the same model.")
+    if report.get('status') == 'PRE_FIT':
+        lines.append('No v4 selection alerts yet: calibration is still collecting evidence.')
+        lines.append(f"Same-model settled forecasts available: {len(available)}/{minimum}; {max(0, minimum-len(available))} more needed for the sample floor. The monthly fit uses only earlier months; reaching the date alone is not enough.")
     if not model_hash:
         lines.append('The frozen model file could not be verified; training readiness is unconfirmed.')
     lines.extend(['', f"EARLIER INPUTS: {older_stats['registered']} forecasts | {older_stats['settled']} settled | {older_stats['pending']} pending | {older_stats['void']} void. Kept separate."])
     milestones = [n for n in (50,100,200,600) if current_stats['settled'] >= n and n not in (previous.get('milestones') or [])]
     if milestones:
         lines.append('REVIEW MILESTONE: '+', '.join(map(str,milestones))+' corrected-input forecasts settled. Review evidence; no automatic promotion.')
-    lines.append('Monitor: https://ilmargine.bet/model-monitor/tennis-props?tab=shadow')
+    lines.append('Admin: https://ilmargine.bet/admin\nOpen Model signals and results > Research > Aces v4 calibration.')
     message = '\n'.join(lines)
     if len(message)>3800:
         raise ValueError('Paper summary exceeds the existing Telegram relay limit')

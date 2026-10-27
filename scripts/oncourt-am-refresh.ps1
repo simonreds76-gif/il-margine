@@ -372,10 +372,22 @@ try {
     }
 
     Log "=== Step 8c.1/8: Telegram tennis props delta ==="
-    $propsDigestExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--require-ready", "--new-only", "--paper-summary", "--paper-signals") -Label "daily tennis Telegram props delta" -TimeoutSeconds 90
+    $propsDigestExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--require-ready", "--new-only") -Label "daily tennis Telegram props delta" -TimeoutSeconds 90
     if ($propsDigestExit -ne 0) {
         Log "WARNING: daily tennis Telegram props delta failed/timed out (exit $propsDigestExit); evidence collection remains valid."
     }
+
+    # The installed local evidence producer owns the frozen ledgers/report refresh.
+    if (Test-Path -LiteralPath (Join-Path $root "scripts\tennis-settle-model-evidence.py")) {
+        $settlementEvidenceExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-settle-model-evidence.py") -Label "saved model evidence settlement" -TimeoutSeconds 300
+        if ($settlementEvidenceExit -ne 0) { Set-RunStatusFailure "TennisEvidenceSettlementFailed" "Saved tennis model evidence did not settle successfully." }
+    } else { Log "WARNING: local evidence producer unavailable; v4 freshness checks remain enforced." }
+
+    # v4 evidence must refresh before its daily summary and selection checks.
+    Log "=== Post-step: v4 paper reporting after settlement ==="
+    $paperSummaryExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--paper-summary-only") -Label "v4 daily evidence summary" -TimeoutSeconds 90
+    $paperSignalsExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--paper-signals-only") -Label "v4 fresh paper selections" -TimeoutSeconds 90
+    if ($paperSummaryExit -ne 0 -or $paperSignalsExit -ne 0) { Log "WARNING: v4 paper reporting failed; existing relay dedup permits a safe retry." }
 
     Log "=== Step 8d/8: Append Pinnacle history capture (daily) ==="
     & python scripts\pinnacle-capture-history.py --capture-mode daily 2>&1 | ForEach-Object { Log $_ }
