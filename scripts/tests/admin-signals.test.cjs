@@ -15,3 +15,14 @@ test('Most aces uses the three-way market, including ties, rather than match win
 test('Every curated model view exists in the approved upload catalog',()=>{const catalog=JSON.parse(fs.readFileSync('config/admin-monitor-catalog.json','utf8'));for(const m of display.monitorModels)for(const [id]of m.views)assert.ok(catalog.some(v=>v.id===id),id);assert.ok(!display.monitorModels.some(m=>m.views.some(([id])=>id==='full-refresh')));});
 test('Display profit requires explicit outcome, stake and odds and never supplies a fictional stake',()=>{const won=display.selectionCard({player:'A',odds:'2.02',stake_units:'0.5',result:'win'},'tennis-strict-archive');assert.equal(won.profit,0.51);assert.equal(won.calculatedProfit,true);assert.equal(display.selectionCard({odds:'2.02',result:'win'},'tennis-strict-archive').profit,null);assert.equal(display.selectionCard({odds:'2.02',stake_units:'1',status:'pending'},'tennis-strict-archive').profit,null);assert.equal(display.selectionCard({odds:'2.02',stake_units:'1',result:'win',pnl_units:'0.8'},'tennis-strict-archive').profit,0.8);});
 test('Aces/DF record excludes service-break research while retaining the full source in diagnostics',()=>{const rows=[{market:'aces'},{market:'double_faults'},{market:'player_breaks',decision_mode:'breaks_calibration_unfiltered'}];assert.equal(display.visibleRows(rows,'props-record','props').length,2);assert.equal(display.visibleRows(rows,'props-record','reference').length,3);});
+
+
+test('Awaiting settlement includes failed result lookups without classifying them as new selections or settling them',()=>{
+ const rows=[{settlement_status:'no_match',settlement_note:'No exact result',player:'A'}, {settlement_status:'ambiguous'}, {settlement_status:'pending'}, {result:'win'}, {result:'void'}, {status:'duplicate'}];
+ const before=JSON.stringify(rows);
+ const shown=rows.filter(r=>display.matchesOutcomeFilter(display.selectionCard(r,'tennis-strict-archive').outcome,'pending'));
+ assert.equal(shown.length,3);
+ assert.equal(display.selectionCard(shown[0],'tennis-strict-archive').outcome,'Not settled');
+ assert.equal(display.selectionCard(shown[0],'tennis-strict-archive').profit,null);
+ assert.equal(JSON.stringify(rows),before);
+});
