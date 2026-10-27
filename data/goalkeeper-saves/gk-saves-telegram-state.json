@@ -2370,16 +2370,69 @@
       },
       "message_id": 679,
       "sent_at": "2026-10-26T21:12:25.785523+00:00"
+    },
+    "kambi|71945356|maduka okoye|2.5|over": {
+      "status": "claimed",
+      "run_token": "40428799572:1",
+      "claimed_at": "2026-10-27T00:50:05.685282+00:00",
+      "signal": {
+        "signal_id": "kambi|71945356|maduka okoye|2.5|over",
+        "created_at": "2026-10-27T00:49:38Z",
+        "event_id": "71945356",
+        "match_date": "2026-10-28",
+        "kickoff_at": "2026-10-28T17:30:00Z",
+        "league": "serie-a",
+        "home_team": "Parma Calcio",
+        "away_team": "Udinese Calcio",
+        "team": "Udinese Calcio",
+        "opponent": "Parma Calcio",
+        "venue": "away",
+        "goalkeeper": "Maduka Okoye",
+        "bookmaker": "Kambi",
+        "line": "2.5",
+        "side": "over",
+        "odds_decimal": "1.8700",
+        "model_mean": "3.1619",
+        "model_probability": "0.588808",
+        "push_probability": "0.000000",
+        "fair_odds": "1.698",
+        "edge": "0.101071",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-10-27T00:49:37Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "team_goalkeeper_away",
+        "identity_basis": "same_fixture_lineup_side",
+        "price_comparison": [
+          {
+            "bookmaker": "Kambi",
+            "odds": 1.87,
+            "captured_at": "2026-10-27T00:49:37Z",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-10-27T00:50:05.685282+00:00"
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-10-26T21:12:17.689897+00:00",
+      "checked_at": "2026-10-27T00:50:05.685282+00:00",
       "added": 1,
       "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-10-26T21:12:17.689897+00:00",
+      "checked_at": "2026-10-27T00:50:05.685282+00:00",
       "added": 0,
       "suppressed": {}
     }
