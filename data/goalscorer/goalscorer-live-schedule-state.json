@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T01:28:57Z",
+  "updated_at": "2026-10-27T01:36:27Z",
   "reason": "cycle",
   "last_clv_run_at": "2026-10-24T14:00:04Z",
   "leagues": {
@@ -9,10 +9,10 @@
       "last_detail_run_at": "2026-10-24T13:19:27Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "board",
-      "last_decision": "ran",
-      "last_message": "Ran serie-a in board tier (cadence 55m, fixtures 10).",
-      "next_kickoff_utc": "2026-10-27T17:30:00Z"
+      "last_tier": "off",
+      "last_decision": "off",
+      "last_message": "Skip serie-a: no upcoming fixtures inside schedule window.",
+      "next_kickoff_utc": ""
     },
     "epl": {
       "last_successful_run_at": "2026-10-25T13:39:50Z",
@@ -31,10 +31,10 @@
       "last_detail_run_at": "2026-10-25T13:40:13Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "board",
-      "last_decision": "ran",
-      "last_message": "Ran la-liga in board tier (cadence 55m, fixtures 1).",
-      "next_kickoff_utc": "2026-10-30T20:00:00Z"
+      "last_tier": "off",
+      "last_decision": "off",
+      "last_message": "Skip la-liga: no upcoming fixtures inside schedule window.",
+      "next_kickoff_utc": ""
     },
     "bundesliga": {
       "last_successful_run_at": "2026-10-27T01:28:49Z",
@@ -42,10 +42,10 @@
       "last_detail_run_at": "2026-10-18T13:23:12Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "board",
-      "last_decision": "ran",
-      "last_message": "Ran bundesliga in board tier (cadence 55m, fixtures 1).",
-      "next_kickoff_utc": "2026-10-30T19:30:00Z"
+      "last_tier": "off",
+      "last_decision": "off",
+      "last_message": "Skip bundesliga: no upcoming fixtures inside schedule window.",
+      "next_kickoff_utc": ""
     },
     "ligue-1": {
       "last_successful_run_at": "2026-10-27T01:28:57Z",
@@ -53,10 +53,10 @@
       "last_detail_run_at": "2026-10-24T13:21:19Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "board",
-      "last_decision": "ran",
-      "last_message": "Ran ligue-1 in board tier (cadence 55m, fixtures 2).",
-      "next_kickoff_utc": "2026-10-30T18:00:00Z"
+      "last_tier": "off",
+      "last_decision": "off",
+      "last_message": "Skip ligue-1: no upcoming fixtures inside schedule window.",
+      "next_kickoff_utc": ""
     }
   }
 }
