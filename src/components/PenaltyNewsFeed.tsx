@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { newsDate, newsLeagues, outcomeLabel, type PenaltyArticle } from "@/lib/penalty-news";
+import { newsDate, newsLeagues, outcomeLabel, newsPagePath, NEWS_PAGE_SIZE, type PenaltyArticle } from "@/lib/penalty-news";
 import styles from "./PenaltyNews.module.css";
 
 export function NewsPicture({ src, name, crest = false }: { src: string; name: string; crest?: boolean }) {
@@ -45,21 +45,30 @@ export function PenaltyNewsCard({ article, detail = false }: { article: PenaltyA
   </article>;
 }
 
-export default function PenaltyNewsFeed({ articles }: { articles: PenaltyArticle[] }) {
+export default function PenaltyNewsFeed({ articles, page = 1 }: { articles: PenaltyArticle[]; page?: number }) {
   const [league, setLeague] = useState("all");
   const [club, setClub] = useState("all");
   const [outcome, setOutcome] = useState("all");
-  const [visible, setVisible] = useState(12);
+  const [visible, setVisible] = useState(NEWS_PAGE_SIZE);
   const clubs = useMemo(() => [...new Set(articles.filter(a => league === "all" || a.league === league).map(a => a.club))].sort(), [articles, league]);
   const filtered = articles.filter(a => (league === "all" || a.league === league) && (club === "all" || a.club === club) && (outcome === "all" || (outcome === "scored" ? a.outcome === "scored" : a.outcome !== "scored")));
+  const filtering = league !== "all" || club !== "all" || outcome !== "all";
+  const pageCount = Math.ceil(articles.length / NEWS_PAGE_SIZE);
+  const displayed = filtering ? filtered.slice(0, visible) : articles.slice((page - 1) * NEWS_PAGE_SIZE, page * NEWS_PAGE_SIZE);
+  const pageNumbers = Array.from({ length: pageCount }, (_, i) => i + 1).filter(n => n === 1 || n === pageCount || Math.abs(n - page) <= 1);
   const reset = () => { setLeague("all"); setClub("all"); setOutcome("all"); setVisible(12); };
   return <section aria-label="Penalty reports" id="reports">
     <div className={styles.filters}>
       <div className={styles.leagueFilters} role="group" aria-label="Filter by league"><button type="button" aria-pressed={league === "all"} onClick={() => {setLeague("all"); setClub("all"); setVisible(12);}}>All leagues</button>{newsLeagues.map(l => <button type="button" key={l.key} aria-pressed={league === l.key} onClick={() => { setLeague(l.key); setClub("all"); setVisible(12); }}><Image src={`/league-logos/${l.key}.png`} alt="" width={22} height={22} unoptimized />{l.label}</button>)}</div>
       <div className={styles.selects}><label>Club<select aria-label="Club" value={club} onChange={e => {setClub(e.target.value); setVisible(12);}}><option value="all">All clubs</option>{clubs.map(c => <option key={c}>{c}</option>)}</select></label><label>Outcome<select aria-label="Outcome" value={outcome} onChange={e => {setOutcome(e.target.value); setVisible(12);}}><option value="all">All penalties</option><option value="scored">Scored</option><option value="not-scored">Not scored</option></select></label>{(league !== "all" || club !== "all" || outcome !== "all") && <button type="button" className={styles.reset} onClick={reset}>Clear filters</button>}</div>
     </div>
-    <div className={styles.feedHeading}><h2>The latest from the spot</h2><span role="status">{filtered.length} {filtered.length === 1 ? "report" : "reports"}</span></div>
-    {filtered.length ? <div className={styles.grid}>{filtered.slice(0, visible).map(a => <PenaltyNewsCard key={a.id} article={a} />)}</div> : <div className={styles.empty}><h3>No reports match these filters</h3><p>Try another club or view all penalties in this collection.</p><button type="button" onClick={reset}>View all reports</button></div>}
-    {filtered.length > visible && <button type="button" className={styles.more} onClick={() => setVisible(v => v + 12)}>Show more reports <span aria-hidden="true">↓</span></button>}
+    <div className={styles.feedHeading}><h2>{filtering ? "Matching reports" : page === 1 ? "The latest from the spot" : "Earlier penalty reports"}</h2><span role="status">{filtered.length} {filtered.length === 1 ? "report" : "reports"}{!filtering && pageCount > 1 ? ` · Page ${page} of ${pageCount}` : ""}</span></div>
+    {filtered.length ? <div className={styles.grid}>{displayed.map(a => <PenaltyNewsCard key={a.id} article={a} />)}</div> : <div className={styles.empty}><h3>No reports match these filters</h3><p>Try another club or view all penalties in this collection.</p><button type="button" onClick={reset}>View all reports</button></div>}
+    {filtering && filtered.length > visible && <button type="button" className={styles.more} onClick={() => setVisible(v => v + NEWS_PAGE_SIZE)}>Show more matching reports <span aria-hidden="true">↓</span></button>}
+    {!filtering && pageCount > 1 && <nav className={styles.pagination} aria-label="Penalty News archive pages">
+      {page > 1 && <Link href={`${newsPagePath(page - 1)}#reports`} prefetch={false} rel="prev">← Newer</Link>}
+      {pageNumbers.map((n, i) => <span key={n}>{i > 0 && n - pageNumbers[i - 1] > 1 && <span className={styles.pageGap}>…</span>}<Link href={`${newsPagePath(n)}#reports`} aria-label={`Reports page ${n}`} aria-current={n === page ? "page" : undefined} prefetch={false}>{n}</Link></span>)}
+      {page < pageCount && <Link href={`${newsPagePath(page + 1)}#reports`} prefetch={false} rel="next">Older →</Link>}
+    </nav>}
   </section>;
 }
