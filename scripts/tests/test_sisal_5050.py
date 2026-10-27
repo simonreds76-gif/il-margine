@@ -53,12 +53,15 @@ class TrackerTests(unittest.TestCase):
         b=board();b['history_as_of']='2026-10-28';write_csv(self.root/T.BOARD,[b])
         path=self.root/'data/tennis-props/player-history-status.json';status=T.read_json(path,{})
         status.update(as_of='2026-10-28',feature_cutoff='Completed results strictly before 2026-10-28',generated_at='2026-10-28T08:00:00+00:00');T.atomic(path,status)
+        status['generated_at']='2026-10-28T09:59:30+00:00';T.atomic(path,status)
+        # History can be computed after the quote but must precede the forecast.
+        # Its exclusive calendar cutoff still excludes all same-day results.
         rows,h=self.capture([quote()]);self.assertEqual(h['added'],1)
         status['generated_at']='2026-10-28T11:00:00+00:00';T.atomic(path,status)
-        self.assertFalse(T.verified_history(self.root,b,T.stamp(quote()['capture_ts'])))
+        self.assertFalse(T.verified_history(self.root,b,T.stamp(quote()['capture_ts']),NOW))
         status['generated_at']='2026-10-28T08:00:00+00:00';T.atomic(path,status)
         (path.parent/'player-props-baseline.csv').write_bytes(b'changed')
-        self.assertFalse(T.verified_history(self.root,b,T.stamp(quote()['capture_ts'])))
+        self.assertFalse(T.verified_history(self.root,b,T.stamp(quote()['capture_ts']),NOW))
     def test_nb_and_blend(self):
         from scipy.stats import nbinom
         for mean in (1,5,15,40):

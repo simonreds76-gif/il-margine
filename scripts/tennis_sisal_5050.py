@@ -169,6 +169,7 @@ def feature_reader(root):
     baselines = v['baseline_index'](read_csv(paths[0])); surfaces = v['surface_index'](read_csv(paths[1]))
     names = v['baseline_names_by_tour'](baselines); aliases = v['load_aliases'](read_csv(paths[2]))
     model = lgb.Booster(model_file=str(root/MODEL))
+    paths.append(root/'data/tennis-props/player-history-status.json')
     manifest = {str(p.relative_to(root)):sha(p) for p in paths}
     def evaluate(row):
         original = dict(row, projected_aces=row['incumbent_projected_aces'])
@@ -181,7 +182,7 @@ def feature_reader(root):
         return f, manifest
     return evaluate
 
-def verified_history(root, board, cap):
+def verified_history(root, board, cap, now):
     """as_of is an exclusive cutoff, not the most recent included result date."""
     day=board.get('history_as_of');p=root/'data/tennis-props/player-props-baseline.csv'
     status=read_json(root/'data/tennis-props/player-history-status.json',{})
@@ -189,7 +190,7 @@ def verified_history(root, board, cap):
                 and status.get('state')=='CURRENT' and status.get('as_of')==day
                 and status.get('version')==board.get('history_version')=='oncourt-current-history-20261007-v1'
                 and status.get('feature_cutoff')=='Completed results strictly before '+day
-                and stamp(status.get('generated_at')) and stamp(status['generated_at'])<=cap
+                and stamp(status.get('generated_at')) and stamp(status['generated_at'])<=now
                 and status.get('output_hashes',{}).get(p.name)==board.get('history_fingerprint')==sha(p))
 
 def capture(root, folder, rows, quotes_path, now, reg, clock=None):
@@ -216,7 +217,7 @@ def capture(root, folder, rows, quotes_path, now, reg, clock=None):
             reasons['wrong_model_board'] += 1; continue
         cap = stamp(q['capture_ts'])
         history = b.get('history_as_of', ''); generation = b.get('generation_date', '')
-        if not history or not generation or not history <= generation <= now.date().isoformat() or not verified_history(root,b,cap) or (now.date()-datetime.fromisoformat(history).date()).days > 2:
+        if not history or not generation or not history <= generation <= now.date().isoformat() or not verified_history(root,b,cap,now) or (now.date()-datetime.fromisoformat(history).date()).days > 2:
             reasons['invalid_or_stale_history_cutoff'] += 1; continue
         mu, points, games, alpha = (number(b.get(k)) for k in ('projected_aces','service_points_estimate','expected_match_games','aces_alpha'))
         if None in (mu, points, games, alpha) or min(mu, points, games) <= 0 or abs(alpha-ALPHA)>1e-6 or not b.get('history_fingerprint'):
