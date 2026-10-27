@@ -1,24 +1,26 @@
 {
   "bookmaker_coverage": {
     "Kambi": {
-      "events_with_save_markets": 3,
+      "events_with_save_markets": 5,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 25
+      "unnamed_or_team_lines": 39
     }
   },
   "capture_errors": [],
   "capture_mode": "close",
   "event_last_checked": {
-    "71945358": "2026-10-27T15:32:27Z",
-    "71945360": "2026-10-27T15:32:27Z",
-    "71945362": "2026-10-27T15:32:27Z"
+    "71945350": "2026-10-27T20:14:19Z",
+    "71945352": "2026-10-27T20:14:19Z",
+    "71945354": "2026-10-27T20:14:19Z",
+    "71945356": "2026-10-27T20:14:19Z",
+    "71945364": "2026-10-27T20:14:19Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 3,
-  "events_supported": 3,
-  "events_with_lines": 3,
-  "generated_at": "2026-10-27T15:32:27Z",
+  "events_selected": 5,
+  "events_supported": 5,
+  "events_with_lines": 5,
+  "generated_at": "2026-10-27T20:14:19Z",
   "last_publication_at": "2026-10-27T14:35:44Z",
   "league_coverage": {
     "bundesliga": {
@@ -38,11 +40,11 @@
       "with_prices": 0
     },
     "serie-a": {
-      "selected": 3,
-      "with_prices": 3
+      "selected": 5,
+      "with_prices": 5
     }
   },
-  "market_inventory_rows_added": 144,
+  "market_inventory_rows_added": 240,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Bookings Spread",
@@ -96,31 +98,45 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 14,
-  "rows_observed": 14,
+  "rows_added": 23,
+  "rows_observed": 23,
   "selected_events": [
     {
-      "away": "Lazio Rome",
+      "away": "Bologna FC",
       "competition": "Italy - Serie A",
-      "home": "Sassuolo Calcio",
-      "id": 71945360,
-      "kickoff_at": "2026-10-27T17:30:00Z"
+      "home": "AC Milan",
+      "id": 71945352,
+      "kickoff_at": "2026-10-28T17:30:00Z"
     },
     {
-      "away": "Cagliari Calcio",
+      "away": "Udinese Calcio",
       "competition": "Italy - Serie A",
-      "home": "AS Roma",
-      "id": 71945358,
-      "kickoff_at": "2026-10-27T19:45:00Z"
+      "home": "Parma Calcio",
+      "id": 71945356,
+      "kickoff_at": "2026-10-28T17:30:00Z"
     },
     {
-      "away": "Como 1907",
+      "away": "Inter Milano",
       "competition": "Italy - Serie A",
-      "home": "Torino FC",
-      "id": 71945362,
-      "kickoff_at": "2026-10-27T19:45:00Z"
+      "home": "Venezia FC",
+      "id": 71945364,
+      "kickoff_at": "2026-10-28T17:30:00Z"
+    },
+    {
+      "away": "Juventus Turin",
+      "competition": "Italy - Serie A",
+      "home": "Genoa CFC",
+      "id": 71945350,
+      "kickoff_at": "2026-10-28T19:45:00Z"
+    },
+    {
+      "away": "SSC Napoli",
+      "competition": "Italy - Serie A",
+      "home": "AC Monza",
+      "id": 71945354,
+      "kickoff_at": "2026-10-28T19:45:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 3
+  "three_way_events": 5
 }
