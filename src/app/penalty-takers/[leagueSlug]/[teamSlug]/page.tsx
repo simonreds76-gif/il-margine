@@ -4,6 +4,7 @@ import PenaltyTakerPortrait from "@/components/PenaltyTakerPortrait";
 import { notFound } from "next/navigation";
 import Footer from "@/components/Footer";
 import PageHomeLink from "@/components/PageHomeLink";
+import ClubPenaltyReports from "@/components/ClubPenaltyReports";
 import { BASE_URL } from "@/lib/config";
 import {
   CLUB_PENALTY_SEASON,
@@ -348,6 +349,8 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
             </aside>
           </div>
         </section>
+
+        <ClubPenaltyReports clubUrl={`/penalty-takers/${team.leagueKey}/${team.slug}`} club={team.team} />
 
         <section className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="rounded-2xl border border-slate-800 bg-slate-900/65 p-5 sm:p-6">
