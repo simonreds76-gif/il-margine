@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-26T21:38:59Z",
+  "generated_at": "2026-10-27T01:28:56Z",
   "league": "ligue-1",
   "row_count": 0,
   "stats": {
     "historical_rows": 26556,
     "odds_rows": 0,
     "matched_rows": 0,
-    "missing_player_history": 7,
+    "missing_player_history": 0,
     "missing_team_mapping": 0,
     "fallback_rows": 0,
     "qualified_rows": 0,
-    "roster_resolved_rows": 5,
+    "roster_resolved_rows": 0,
     "high_confidence_rows": 0,
     "medium_confidence_rows": 0,
     "low_confidence_rows": 0,
@@ -21,9 +21,9 @@
     "penalty_transfer_rows": 0,
     "position_upgrade_rows": 0,
     "role_adjusted_rows": 0,
-    "fixtures_with_confirmed_lineups": 1,
+    "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 0,
-    "fixtures_clean": 1,
+    "fixtures_clean": 0,
     "fixtures_degraded": 0,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
@@ -34,226 +34,6 @@
     "not_in_squad_rows": 0,
     "avg_ev": 0.0
   },
-  "fixtures": [
-    {
-      "match_date": "2026-10-26",
-      "home_team": "Paris Saint-Germain",
-      "away_team": "Lyon",
-      "league": "ligue-1",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Matvey Safonov",
-          "status": "plausible",
-          "known_team_keys": [
-            "paris saint germain",
-            "rennes"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Achraf Hakimi",
-          "status": "plausible",
-          "known_team_keys": [
-            "paris saint germain",
-            "rennes"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ilya Zabarnyi",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Willian Pacho",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Warren Zaïre-Emery",
-          "status": "plausible",
-          "known_team_keys": [
-            "paris saint germain",
-            "rennes"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "João Neves",
-          "status": "plausible",
-          "known_team_keys": [
-            "paris saint germain",
-            "rennes"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Vítinha",
-          "status": "plausible",
-          "known_team_keys": [
-            "paris saint germain",
-            "rennes"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Fabián Ruiz",
-          "status": "plausible",
-          "known_team_keys": [
-            "paris saint germain"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Maghnes Akliouche",
-          "status": "plausible",
-          "known_team_keys": [
-            "monaco",
-            "paris saint germain",
-            "rennes"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ferrán Torres",
-          "status": "plausible",
-          "known_team_keys": [
-            "paris saint germain",
-            "rennes"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Désiré Doué",
-          "status": "plausible",
-          "known_team_keys": [
-            "paris saint germain",
-            "rennes"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Dominik Greif",
-          "status": "plausible",
-          "known_team_keys": [
-            "lyon"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Zachary Athekame",
-          "status": "plausible",
-          "known_team_keys": [
-            "lyon"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Felix Bacher",
-          "status": "plausible",
-          "known_team_keys": [
-            "lyon"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Moussa Niakhaté",
-          "status": "plausible",
-          "known_team_keys": [
-            "lyon"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Abner",
-          "status": "plausible",
-          "known_team_keys": [
-            "lyon"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tanner Tessmann",
-          "status": "plausible",
-          "known_team_keys": [
-            "lyon"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tyler Morton",
-          "status": "plausible",
-          "known_team_keys": [
-            "lyon"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Corentin Tolisso",
-          "status": "plausible",
-          "known_team_keys": [
-            "lyon"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ernest Nuamah",
-          "status": "plausible",
-          "known_team_keys": [
-            "lyon"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Khalis Merah",
-          "status": "plausible",
-          "known_team_keys": [
-            "lyon"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Julien Duranville",
-          "status": "plausible",
-          "known_team_keys": [
-            "lyon"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    }
-  ],
+  "fixtures": [],
   "rows": []
 }

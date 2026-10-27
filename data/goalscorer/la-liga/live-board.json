@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-26T21:38:49Z",
+  "generated_at": "2026-10-27T01:28:44Z",
   "league": "la-liga",
   "row_count": 0,
   "stats": {
     "historical_rows": 34735,
     "odds_rows": 0,
     "matched_rows": 0,
-    "missing_player_history": 5,
+    "missing_player_history": 0,
     "missing_team_mapping": 0,
     "fallback_rows": 0,
     "qualified_rows": 0,
-    "roster_resolved_rows": 2,
+    "roster_resolved_rows": 0,
     "high_confidence_rows": 0,
     "medium_confidence_rows": 0,
     "low_confidence_rows": 0,
@@ -21,9 +21,9 @@
     "penalty_transfer_rows": 0,
     "position_upgrade_rows": 0,
     "role_adjusted_rows": 0,
-    "fixtures_with_confirmed_lineups": 1,
+    "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 0,
-    "fixtures_clean": 1,
+    "fixtures_clean": 0,
     "fixtures_degraded": 0,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
@@ -34,215 +34,6 @@
     "not_in_squad_rows": 0,
     "avg_ev": 0.0
   },
-  "fixtures": [
-    {
-      "match_date": "2026-10-26",
-      "home_team": "Sevilla",
-      "away_team": "Osasuna",
-      "league": "la-liga",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Odysseas Vlachodimos",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Juan Iglesias",
-          "status": "plausible",
-          "known_team_keys": [
-            "sevilla"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Andrés Lopez",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Kike Salas",
-          "status": "plausible",
-          "known_team_keys": [
-            "sevilla"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Gabriel Suazo",
-          "status": "plausible",
-          "known_team_keys": [
-            "sevilla"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Chidera Ejuke",
-          "status": "plausible",
-          "known_team_keys": [
-            "sevilla"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lucien Agoumé",
-          "status": "plausible",
-          "known_team_keys": [
-            "sevilla"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Youssouf Fofana",
-          "status": "plausible",
-          "known_team_keys": [
-            "sevilla"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Félix Correia",
-          "status": "plausible",
-          "known_team_keys": [
-            "sevilla"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Isaac Romero",
-          "status": "plausible",
-          "known_team_keys": [
-            "sevilla"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lucas Stassin",
-          "status": "plausible",
-          "known_team_keys": [
-            "sevilla"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Aitor Fernández",
-          "status": "plausible",
-          "known_team_keys": [
-            "osasuna"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Valentin Rosier",
-          "status": "plausible",
-          "known_team_keys": [
-            "osasuna"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Alejandro Catena",
-          "status": "plausible",
-          "known_team_keys": [
-            "osasuna"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Flavien Boyomo",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Abel Bretones",
-          "status": "plausible",
-          "known_team_keys": [
-            "osasuna"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jon Moncayola",
-          "status": "plausible",
-          "known_team_keys": [
-            "osasuna"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lucas Torró",
-          "status": "plausible",
-          "known_team_keys": [
-            "osasuna"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Moi Gómez",
-          "status": "plausible",
-          "known_team_keys": [
-            "osasuna"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Rubén Garcia",
-          "status": "plausible",
-          "known_team_keys": [
-            "osasuna"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ante Budimir",
-          "status": "plausible",
-          "known_team_keys": [
-            "osasuna"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jonathan Dubasin",
-          "status": "plausible",
-          "known_team_keys": [
-            "osasuna"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    }
-  ],
+  "fixtures": [],
   "rows": []
 }
