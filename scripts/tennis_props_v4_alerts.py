@@ -138,7 +138,7 @@ def prepare(root: Path, now: datetime, previous: dict) -> tuple[list[tuple[str, 
             f"Player history verified {row['history_as_of']}.",
             '', record,
             'Recorded at 1u paper stake. Research only; no real stake assigned.',
-            'Monitor: https://ilmargine.bet/model-monitor/tennis-props?tab=shadow',
+            'Monitor: https://ilmargine.bet/admin',
         ])
         if len(text) > 3800:
             raise ValueError('v4 selection exceeds the Telegram relay limit')

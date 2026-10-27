@@ -19,6 +19,8 @@ import tennis_props_daily_summary as S
 
 class DailyPaperSummaryTests(unittest.TestCase):
     def setUp(self):
+        patcher=patch('tennis_astrissimo.alerts',return_value='test_only')
+        patcher.start();self.addCleanup(patcher.stop)
         self.directory=tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
         self.root=Path(self.directory.name)
@@ -121,7 +123,28 @@ class DailyPaperSummaryTests(unittest.TestCase):
 
     def test_existing_post_settlement_step_enables_summary(self):
         source=(SCRIPTS/'oncourt-am-refresh.ps1').read_text(encoding='utf-8')
-        self.assertEqual(source.count('"--new-only", "--paper-summary", "--paper-signals"'),1)
+        self.assertNotIn('"--new-only", "--paper-summary"',source)
+        settlement=source.index('$settlementEvidenceExit =')
+        summary=source.index('"--paper-summary-only"')
+        alerts=source.index('"--paper-signals-only"')
+        self.assertLess(settlement,summary)
+        self.assertLess(summary,alerts)
+        self.assertLess(alerts,source.index('$evidenceSnapshotExit ='))
+
+    def test_prefit_forecasts_are_not_reported_as_paper_selections(self):
+        pending=self.row('pending');pending.update(settlement_status='pending',date=self.today)
+        self.rows([self.row('settled'),pending])
+        report=S.read_json(self.root/S.REPORT);report['status']='PRE_FIT';self.write(S.REPORT,report)
+        self.write('data/tennis-props/pipeline-health.json',dict(as_of=self.today,state='CAPTURE_STALE',structural_error=True))
+        text,state=S.build(self.root,self.today,{})
+        self.assertIn('1 forecasts awaiting results',text)
+        self.assertIn('Paper selections: 0 awaiting results; none settled',text)
+        self.assertIn('No v4 selection alerts yet',text)
+        self.assertIn('1/200; 199 more needed',text)
+        self.assertIn('No fresh bookmaker prices',text)
+        self.assertIn('https://ilmargine.bet/admin',text)
+        self.assertNotIn('/model-monitor/',text)
+        self.assertEqual(state['current_metrics']['paper_pending'],0)
 
     def test_summary_failure_does_not_block_existing_digest(self):
         spec=importlib.util.spec_from_file_location('digest_paper_failure',SCRIPTS/'tennis-daily-signal-digest.py')
