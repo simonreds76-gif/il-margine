@@ -264,14 +264,16 @@ def count(value):
 
 def outcome(game, stat, record):
     text = game.get('result', '').upper()
-    if any(s in text for s in ('W/O', 'WO', 'DEF')):
-        return dict(status='void', completed=False, actual=None, actual_points=None, reason='walkover_or_default')
+    if any(s in text for s in ('W/O', 'WO')):
+        return dict(status='void', completed=False, actual=None, actual_points=None, reason='walkover')
     p = 'w' if game['winner_id'] == record['native']['pid'] else 'l'
     actual = count(stat.get(p+'_ace')) if stat else None
     points = count(stat.get(p+'_svpt')) if stat else None
     if actual is not None and points is not None and (points <= 0 or actual > points):
         return None
-    if any(s in text for s in ('RET', 'ABN', 'ABD')):
+    # Sisal's individual-total rule also covers disqualification during play.
+    # DEF without counts does not prove a pre-match walkover; leave it pending.
+    if any(s in text for s in ('RET', 'ABN', 'ABD', 'DEF', 'DQ', 'DISQ')):
         if actual is None:
             return None  # Missing counts cannot establish whether the total was already determined.
         if actual > float(record['row']['line']):
