@@ -181,6 +181,17 @@ def feature_reader(root):
         return f, manifest
     return evaluate
 
+def verified_history(root, board, cap):
+    """as_of is an exclusive cutoff, not the most recent included result date."""
+    day=board.get('history_as_of');p=root/'data/tennis-props/player-props-baseline.csv'
+    status=read_json(root/'data/tennis-props/player-history-status.json',{})
+    return bool(day and day<=cap.date().isoformat() and p.exists()
+                and status.get('state')=='CURRENT' and status.get('as_of')==day
+                and status.get('version')==board.get('history_version')=='oncourt-current-history-20261007-v1'
+                and status.get('feature_cutoff')=='Completed results strictly before '+day
+                and stamp(status.get('generated_at')) and stamp(status['generated_at'])<=cap
+                and status.get('output_hashes',{}).get(p.name)==board.get('history_fingerprint')==sha(p))
+
 def capture(root, folder, rows, quotes_path, now, reg, clock=None):
     reasons = Counter(); seen = {r['id'] for r in rows}; candidates = []
     if not quotes_path or not quotes_path.exists():
@@ -205,7 +216,7 @@ def capture(root, folder, rows, quotes_path, now, reg, clock=None):
             reasons['wrong_model_board'] += 1; continue
         cap = stamp(q['capture_ts'])
         history = b.get('history_as_of', ''); generation = b.get('generation_date', '')
-        if not history or not generation or not history <= generation <= now.date().isoformat() or history >= cap.date().isoformat() or (now.date()-datetime.fromisoformat(history).date()).days > 2:
+        if not history or not generation or not history <= generation <= now.date().isoformat() or not verified_history(root,b,cap) or (now.date()-datetime.fromisoformat(history).date()).days > 2:
             reasons['invalid_or_stale_history_cutoff'] += 1; continue
         mu, points, games, alpha = (number(b.get(k)) for k in ('projected_aces','service_points_estimate','expected_match_games','aces_alpha'))
         if None in (mu, points, games, alpha) or min(mu, points, games) <= 0 or abs(alpha-ALPHA)>1e-6 or not b.get('history_fingerprint'):
@@ -401,6 +412,8 @@ def run(root=ROOT, quotes=None, settle_only=False, now=None):
             atomic(folder/'registration.json',reg)
         rows=ledger(folder/'observations.jsonl');outcomes=read_json(folder/'outcomes.json',{})
         health=read_json(folder/'capture-status.json',dict(state='AWAITING_FIRST_CAPTURE'))
+        previous_ids={r['id'] for r in rows}
+        comparison_error=None
         if not settle_only:
             try:
                 if reg['artifacts']!=artifacts or reg['config']!=CONFIG:
@@ -409,12 +422,28 @@ def run(root=ROOT, quotes=None, settle_only=False, now=None):
             except Exception as exc:
                 health=dict(state='BLOCKED',checked_at=now.isoformat(),reason=str(exc),added=0)
             atomic(folder/'capture-status.json',health)
+        if not settle_only:
+            try:
+                from sisal_event_comparison import capture_pairs
+                capture_pairs(root,[r for r in rows if r['id'] not in previous_ids],now)
+            except Exception as exc:
+                comparison_error=str(exc)
         reasons=settle(root,rows,outcomes,now);atomic(folder/'outcomes.json',outcomes)
-        report=summarize(rows,outcomes,reg,health,now,reasons);atomic(folder/'report.json',report)
+        report=summarize(rows,outcomes,reg,health,now,reasons)
+        try:
+            from sisal_event_comparison import comparison_report
+            report['event_comparison']=comparison_report(root,rows,outcomes,reg,now)
+            if comparison_error:report['event_comparison']['error']=comparison_error
+        except Exception as exc:
+            report['event_comparison']={'error':str(exc),'versions':{}}
+        atomic(folder/'report.json',report)
         from sisal_5050_reporting import weekly_text
         print(weekly_text(report))
         return 1 if health['state']=='BLOCKED' and not settle_only else 0
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--root',type=Path,default=ROOT);p.add_argument('--quotes',type=Path);p.add_argument('--settle-only',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--root',type=Path,default=ROOT);p.add_argument('--quotes',type=Path);p.add_argument('--settle-only',action='store_true');p.add_argument('--prepare-event',action='store_true');a=p.parse_args()
+    if a.prepare_event:
+        from sisal_event_comparison import prepare
+        print(json.dumps(prepare(a.root),indent=2));raise SystemExit(0)
     raise SystemExit(run(a.root,a.quotes,a.settle_only))
