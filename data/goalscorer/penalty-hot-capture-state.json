@@ -95,8 +95,8 @@
     "5802972": "2026-10-27",
     "5749727": "2026-10-27"
   },
-  "updated_at": "2026-10-27T20:40:12.701280+00:00",
-  "checked_this_run": 1,
+  "updated_at": "2026-10-27T20:55:50.730078+00:00",
+  "checked_this_run": 0,
   "errors": [],
   "fixtures": {
     "5795486": {
@@ -4670,7 +4670,7 @@
           "longName": "Lazio"
         },
         "status": {
-          "utcTime": "2026-10-27T17:30:00+00:00",
+          "utcTime": "2026-10-27T17:30:00.000Z",
           "numberOfHomeRedCards": 1,
           "halfs": {
             "firstHalfStarted": "27.10.2026 18:31:20",
@@ -4721,7 +4721,8 @@
         "status": {
           "utcTime": "2026-10-27T19:45:00.000Z",
           "halfs": {
-            "firstHalfStarted": "27.10.2026 20:45:54"
+            "firstHalfStarted": "27.10.2026 20:45:54",
+            "secondHalfStarted": "27.10.2026 21:48:13"
           },
           "periodLength": 45,
           "finished": false,
@@ -4730,12 +4731,12 @@
           "ongoing": true,
           "scoreStr": "2 - 1",
           "liveTime": {
-            "short": "HT",
-            "shortKey": "halftime_short",
-            "long": "Half-Time",
-            "longKey": "pause_match",
-            "maxTime": 45,
-            "basePeriod": 45,
+            "short": "53‎’‎",
+            "shortKey": "",
+            "long": "52:38",
+            "longKey": "",
+            "maxTime": 90,
+            "basePeriod": 90,
             "addedTime": 0
           }
         }
@@ -4765,7 +4766,8 @@
         "status": {
           "utcTime": "2026-10-27T19:45:00.000Z",
           "halfs": {
-            "firstHalfStarted": "27.10.2026 20:48:26"
+            "firstHalfStarted": "27.10.2026 20:48:26",
+            "secondHalfStarted": "27.10.2026 21:54:19"
           },
           "periodLength": 45,
           "finished": false,
@@ -4774,12 +4776,12 @@
           "ongoing": true,
           "scoreStr": "1 - 0",
           "liveTime": {
-            "short": "HT",
-            "shortKey": "halftime_short",
-            "long": "Half-Time",
-            "longKey": "pause_match",
-            "maxTime": 45,
-            "basePeriod": 45,
+            "short": "47‎’‎",
+            "shortKey": "",
+            "long": "46:32",
+            "longKey": "",
+            "maxTime": 90,
+            "basePeriod": 90,
             "addedTime": 0
           }
         }
@@ -4919,7 +4921,7 @@
     },
     "20261020": {
       "ok": true,
-      "checked_at": "2026-10-26T21:50:07.648825+00:00",
+      "checked_at": "2026-10-27T20:55:50.730078+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -4955,7 +4957,7 @@
     },
     "20261026": {
       "ok": true,
-      "checked_at": "2026-10-27T20:40:12.701280+00:00",
+      "checked_at": "2026-10-27T20:55:50.730078+00:00",
       "expected": 2,
       "match_ids": [
         "5802972",
@@ -4965,7 +4967,7 @@
     },
     "20261027": {
       "ok": true,
-      "checked_at": "2026-10-27T20:40:12.701280+00:00",
+      "checked_at": "2026-10-27T20:55:50.730078+00:00",
       "expected": 3,
       "match_ids": [
         "5749721",
