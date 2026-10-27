@@ -1,11 +1,132 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-26T15:30:30.722236+00:00",
+  "generatedAt": "2026-10-27T20:43:20.975723+00:00",
   "coverageStart": "2026-10-17",
-  "checkedThrough": "2026-10-26",
+  "checkedThrough": "2026-10-27",
   "captureStatus": "complete",
-  "matchesChecked": 61,
+  "matchesChecked": 1,
   "articles": [
+    {
+      "id": "fotmob:5749727:2988889897",
+      "slug": "2026-10-27-davide-frattesi-5749727-2988889897",
+      "matchId": "5749727",
+      "eventId": "2988889897",
+      "date": "2026-10-27",
+      "kickoff": "2026-10-27T17:30:00.000Z",
+      "league": "serie-a",
+      "leagueLabel": "Serie A",
+      "round": "9",
+      "player": "Davide Frattesi",
+      "playerId": 815431,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/815431.png",
+      "club": "Lazio",
+      "clubSlug": "lazio",
+      "clubUrl": "/penalty-takers/serie-a/lazio",
+      "crest": "/team-logos/serie-a/lazio.png",
+      "opponent": "Sassuolo",
+      "home": "Sassuolo",
+      "away": "Lazio",
+      "homeScore": 2,
+      "awayScore": 6,
+      "minute": "61",
+      "outcome": "saved",
+      "title": "Davide Frattesi has penalty saved against Sassuolo",
+      "sentences": [
+        "Davide Frattesi had a penalty saved for Lazio in minute 61 against Sassuolo.",
+        "The match finished Sassuolo 2–6 Lazio."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Gustav Isaksen",
+        "concededBy": "Duje Caleta-Car",
+        "sentence": "Gustav Isaksen won the penalty after a foul by Duje Caleta-Car inside the area.",
+        "evidenceIds": [
+          "2988889181",
+          "2988889191"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 0,
+        "shots": 1,
+        "onTarget": 1,
+        "chances": 0
+      },
+      "keeper": "Stefano Turati",
+      "moment": null,
+      "paragraphs": [
+        "Davide Frattesi had a penalty saved in the 61st minute of Lazio’s 6–2 win over Sassuolo.",
+        "Gustav Isaksen won the penalty after a foul by Duje Caleta-Car inside the area. Stefano Turati kept out the spot kick.",
+        "Davide Frattesi finished with 0 goals and 1 shot, including 1 on target, in 90 minutes. Lazio took 2 penalties in the match and converted 0. The attempts were shared by Mattia Zaccagni and Davide Frattesi."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/sassuolo-vs-lazio/28x1ic#5749727",
+      "eventHash": "e5ef89b9648a0ecbb07bc1672e04a0753d398aa02340b4ddbc1876789660c717",
+      "sourceHash": "7c39b97fb5d6679bb466ccb41ee0906252e46bd7e9ce1c7039ad6039d7165d44",
+      "publishedAt": "2026-10-27T20:43:20.975723+00:00",
+      "updatedAt": "2026-10-27T20:43:20.975723+00:00"
+    },
+    {
+      "id": "fotmob:5749727:2988882903",
+      "slug": "2026-10-27-mattia-zaccagni-5749727-2988882903",
+      "matchId": "5749727",
+      "eventId": "2988882903",
+      "date": "2026-10-27",
+      "kickoff": "2026-10-27T17:30:00.000Z",
+      "league": "serie-a",
+      "leagueLabel": "Serie A",
+      "round": "9",
+      "player": "Mattia Zaccagni",
+      "playerId": 541555,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/541555.png",
+      "club": "Lazio",
+      "clubSlug": "lazio",
+      "clubUrl": "/penalty-takers/serie-a/lazio",
+      "crest": "/team-logos/serie-a/lazio.png",
+      "opponent": "Sassuolo",
+      "home": "Sassuolo",
+      "away": "Lazio",
+      "homeScore": 2,
+      "awayScore": 6,
+      "minute": "50",
+      "outcome": "saved",
+      "title": "Mattia Zaccagni has penalty saved against Sassuolo",
+      "sentences": [
+        "Mattia Zaccagni had a penalty saved for Lazio in minute 50 against Sassuolo.",
+        "The match finished Sassuolo 2–6 Lazio."
+      ],
+      "cause": "handball",
+      "incident": {
+        "type": "handball",
+        "wonBy": null,
+        "concededBy": "Simone Cinquegrano",
+        "sentence": "The penalty was awarded for a handball by Simone Cinquegrano.",
+        "evidenceIds": [
+          "2988882749"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 1,
+        "shots": 5,
+        "onTarget": 2,
+        "chances": 4
+      },
+      "keeper": "Stefano Turati",
+      "moment": null,
+      "paragraphs": [
+        "Mattia Zaccagni had a penalty saved in the 50th minute of Lazio’s 6–2 win over Sassuolo.",
+        "The penalty was awarded for a handball by Simone Cinquegrano. Stefano Turati kept out the spot kick.",
+        "Mattia Zaccagni finished with 1 goal and 5 shots, including 2 on target, in 90 minutes. Lazio took 2 penalties in the match and converted 0. The attempts were shared by Mattia Zaccagni and Davide Frattesi."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/sassuolo-vs-lazio/28x1ic#5749727",
+      "eventHash": "5f9d134b3c762b4e7659169d8f620de62e2ffd59d108d5a39a1e657ad662a0fe",
+      "sourceHash": "d53a3cd98d1c8faa4b29a163baa20c3fc062d25e1db471d7b3e7e9f1475a4f61",
+      "publishedAt": "2026-10-27T20:43:20.975723+00:00",
+      "updatedAt": "2026-10-27T20:43:20.975723+00:00"
+    },
     {
       "id": "fotmob:5802968:2988052191",
       "slug": "2026-10-25-josh-maja-5802968-2988052191",
