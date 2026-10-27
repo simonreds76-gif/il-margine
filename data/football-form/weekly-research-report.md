@@ -1,25 +1,27 @@
 # Weekly Research Lane Report
 
-- Generated: 2026-10-20T15:46:59Z
+- Generated: 2026-10-27T16:50:18Z
 - Overall read: observe live sample
 
 ## Football Counts vNext
 
 - Team Shots v4: count PASS; prospective AUTHORIZED_SHADOW; promotion BLOCKED.
-- Team Shots v4 evidence: 4 signals, 3 settled, -3.00u, ROI -100.0%, true-close CLV +0.0%.
+- Team Shots v4 evidence: 7 signals, 7 settled, -3.17u, ROI -45.2%, true-close CLV +0.9%.
 - Team Shots v4 warm-up tracking (not bets): 14 signals, 14 settled / 0 pending, +0.32u, ROI +2.3%.
-- Team Shots v4 latest scan: ELIGIBLE_CANDIDATES_PRESENT; 16 rows / 4 fixtures scored; 0 fixtures passed edge but were warm-up blocked; blockers {'edge_below_3pct': 15}.
+- Team Shots v4 latest scan: NO_EDGE_AFTER_UNLOCK; 116 rows / 8 fixtures scored; 0 fixtures passed edge but were warm-up blocked; blockers {'edge_below_3pct': 116, 'price_older_than_3h': 24}.
 - Corners v3: count PASS; prospective AUTHORIZED_SHADOW; promotion BLOCKED.
-- Corners v3 evidence: 83 signals, 83 settled, +1.12u, ROI +1.3%, true-close CLV +0.5%.
+- Corners v3 evidence: 126 signals, 107 settled, -4.91u, ROI -4.6%, true-close CLV +1.0%.
 - Corners v3 warm-up tracking (not bets): 36 signals, 36 settled / 0 pending, -2.50u, ROI -7.0%.
-- Corners v3 latest scan: POST_UNLOCK_NO_SCORED_CANDIDATES; 0 rows / 0 fixtures scored; 0 fixtures passed edge but were warm-up blocked; blockers -.
+- Corners v3 latest scan: ELIGIBLE_CANDIDATES_PRESENT; 154 rows / 31 fixtures scored; 0 fixtures passed edge but were warm-up blocked; blockers {'edge_below_3pct': 116, 'price_older_than_3h': 6}.
 - Corners v4 G0 research: FAIL; 6901/10889 enriched; latest holdout MAE delta -0.0074; real-market Brier delta +0.0090 on n=431; line gates 0/5 passed; failed 7.5, 8.5, 9.5, 10.5, 11.5, 12.5.
 - Neither experiment changes live routing or stakes.
 - API-Football count archive: 0 fixtures; latest -; last run 15/30 requests.
 - Cross-provider agreement: 0/0 API fixtures matched; status no_overlap.
 - Team Fouls: F1 COUNT_GATE_FAIL_MARKET_BLOCKED; F2 COUNT_GATE_FAIL_EXTERNAL_GATES_BLOCKED; M2 WAIT_OR_FAIL; market prices BLOCKED; signals disabled.
-- Goalkeeper Saves v1: count PASS on 42,958 observations; discovery OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED (10 probe Over lines); latest capture NO_GOALKEEPER_SAVE_LINES (0 events selected / 0 rows / 0 with 1X2); prospective SIGNALS_COLLECTING with 10 priced lines, 0 eligible, 0 predicted-XI research rows, 74 signals and 70 settled; blockers {}; ROI +50.4%, CLV +5.4% n=22; promotion BLOCKED.
-GK paper comparison | TRACKING | Keeper Watch: 0W/2L, -1.00u, ROI -100.0%, pending 0, review 0, overdue 0 | paired current: 6W/4L, +1.70u, ROI +34.0%, pending 0, review 1, overdue 1 | paired fixtures 38; review 50 | no automatic promotion
+- Goalkeeper Saves v1: count PASS on 42,958 observations; discovery OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED (10 probe Over lines); latest capture CAPTURED (3 events selected / 14 rows / 3 with 1X2); prospective SIGNALS_COLLECTING with 33 priced lines, 2 eligible, 0 predicted-XI research rows, 92 signals and 83 settled; blockers {'missing_priced_edge': 4, 'missing_registered_feature': 4}; ROI +36.3%, CLV +5.3% n=30; promotion BLOCKED.
+Calibrated Shots [ZERO-STAKE, retained prospective cohorts]: hypothetical ROI +11.0%, settled 23, pending 0 | COLLECTING | 90 paired fixtures | version paired-market-offset-20261019-club-alias-v3
+Opponent Shots [SHADOW]: forward 43W/51L, ROI -13.9%, pending 2 | COLLECTING_FIXED_POLICY | scan 2026-10-27T16:45:45Z
+GK paper comparison | TRACKING | Keeper Watch: 1W/3L, -0.50u, ROI -25.0%, pending 0, review 0, overdue 0 | paired current: 10W/10L, +1.27u, ROI +12.7%, pending 0, review 0, overdue 0 | paired fixtures 77; review 50 | no automatic promotion
 - New provider fields remain diagnostic-only until source definitions and coverage are accepted.
 
 ## Team Shots V3 EMA20 Research
@@ -29,7 +31,7 @@ GK paper comparison | TRACKING | Keeper Watch: 0W/2L, -1.00u, ROI -100.0%, pendi
 - Blocked leagues: -
 - Canonical-only fixtures: blocked
 - Last-90 segment gate: 1140 rows, current MAE 3.7320, V3 MAE 3.6413, improvement +2.4%
-- Live CLV sample: 73 published, 73 settled
+- Live CLV sample: 79 published, 79 settled
 - Avg published-to-close CLV: +0.3%
 - P/L sample: +10.93u
 - Action: continue
@@ -60,11 +62,11 @@ GK paper comparison | TRACKING | Keeper Watch: 0W/2L, -1.00u, ROI -100.0%, pendi
 - Held-out calibration (n=63,545): raw -> beta Brier 0.08554 -> 0.08528 (delta -0.00026); log loss 0.30413 -> 0.29885 (delta -0.00528); ECE +2.02% -> +0.81% (delta -1.20%).
 - Mean probability: raw +8.38% | beta +10.43% | actual +10.30%.
 - Beta calibration: 4/4 fold wins | probability gate FAIL | market gate UNAVAILABLE.
-- Real-price CLV coverage: 0/91 (0.0%) | true closes 0.
-- Settled ledger: 88/91 settled, 21W/64L, -15.72u, ROI -17.9%.
+- Real-price CLV coverage: 0/99 (0.0%) | true closes 0.
+- Settled ledger: 94/99 settled, 21W/70L, -21.73u, ROI -23.1%.
 - Extreme-gap quarantine: 0/0 settled, +0.00u at 1u evaluation stakes, ROI -.
 - Extreme-gap by league: no rows registered yet.
-- Evidence freshness: FRESH (2026-10-18T13:22:57Z).
+- Evidence freshness: FRESH (2026-10-26T15:29:15Z).
 - Decision: KEEP_RESEARCH | blockers: fifth fold pending, probability gate fail, market ROI gate unavailable, no matched closing prices, no settled extreme-gap rows.
 
 ## Assist Value V1 Research Gate
@@ -74,7 +76,7 @@ GK paper comparison | TRACKING | Keeper Watch: 0W/2L, -1.00u, ROI -100.0%, pendi
 - Settlement gate: FAIL | player-assist agreement 0.00%.
 - Market gate: FAIL | 1305 matched player prices across 8 calendar days.
 - Prospective ledger: 0/0 settled (target 100), +0.00u, ROI -.
-- Evidence freshness: FRESH (2026-10-20T15:46:47Z).
+- Evidence freshness: FRESH (2026-10-27T16:50:05Z).
 - Automation budget: Friday-Sunday 07:10 UTC, August-May; <= 10 Odds-API calls/run and <= 30 calls/week; zero database reads/writes.
 - No public output, staking, database writes or automatic promotion are authorised.
 
@@ -106,7 +108,7 @@ GK paper comparison | TRACKING | Keeper Watch: 0W/2L, -1.00u, ROI -100.0%, pendi
 
 ## Tennis Props v3 Prospective Evidence
 
-- Snapshot: 2026-10-20T09:25:46Z
+- Snapshot: 2026-10-27T10:27:01Z
 - ATP aces gate: PASS on Clay, Hard
 - Holdout MAE improvement: +3.33%
 - Prospective sample: 50 settled, 0 pending, 49 events
@@ -125,21 +127,21 @@ GK paper comparison | TRACKING | Keeper Watch: 0W/2L, -1.00u, ROI -100.0%, pendi
 ## Tennis Aces/DF Prospective Decision
 
 Tennis Aces/DF Weekly Decision Report
-Generated UTC: 2026-10-20T09:26:34Z
+Generated UTC: 2026-10-27T13:08:03Z
 Status: COLLECTING_EVIDENCE (never auto-promoted)
 
-Sample: 204/235 settled; 9 pending (4 due, 5 future, 0 unknown); 22 void
-Record: 99W/105L/0P
-P/L: -6.85u | ROI: -3.4%
-CLV: +2.12% mean; 26.4% positive; n=121
-Calibration: Brier 0.239464; predicted 58.9%; actual 48.5%; gap 10.3pp; n=204
-Feed: MILESTONE_SHADOW_READY; matched 689/802; two-way 0; over-only 802; public bettable 0
+Sample: 220/261 settled; 16 pending (11 due, 5 future, 0 unknown); 25 void
+Record: 103W/117L/0P
+P/L: -14.66u | ROI: -6.7%
+CLV: +2.11% mean; 28.1% positive; n=139
+Calibration: Brier 0.244128; predicted 58.9%; actual 46.8%; gap 12.1pp; n=220
+Feed: SHADOW_EVIDENCE_READY; matched 28/28; two-way 28; over-only 0; public bettable 0
 
 By market:
-- aces: 62/72 settled, -4.55u, ROI -7.3%
-- double_faults: 142/163 settled, -2.30u, ROI -1.6%
+- aces: 64/73 settled, -4.05u, ROI -6.3%
+- double_faults: 156/188 settled, -10.61u, ROI -6.8%
 
-Blockers: settled sample 204/300; Slam coverage 1/2; CLV sample 121/300; one-sided price feed (0 two-way rows)
+Blockers: settled sample 220/300; Slam coverage 1/2; CLV sample 139/300
 Promotion gate: Human review only after 300 settled lines across at least two Slams, non-negative ROI, mean CLV >= +1%, positive CLV >= 55%, at least 100 calibrated win/loss rows with Brier <= 0.25 and absolute calibration gap <= 5pp, plus approved price integrity and a healthy pipeline.
 
 Service Breaks v1 [INTERNAL]: OUTCOME_PASS | player ATP/WTA PASS | match ATP/WTA PASS | real price evidence NO_CAPTURE_OR_LEDGER_EVIDENCE | prospective 0 | strict 0 rows/0 settled/+0.00u/ROI - | Bet365-only 0 rows/0 settled/+0.00u/ROI - | count calibration 0/0 settled | NOT SELLABLE
@@ -157,23 +159,27 @@ Service Breaks v1 [INTERNAL]: OUTCOME_PASS | player ATP/WTA PASS | match ATP/WTA
 - Team-shots V3 is not proven profitable live yet; it is the first broad research candidate that passed the backtest segment gates.
 - Corners V0 is narrower and deliberately blocked in two leagues. That is a discipline feature, not a failure.
 - Goalscorer V2 fixes live/backtest mechanics, but it is not a betting edge until captured prices validate it.
-- Assist V1 passed count calibration and settlement integrity, but remains frozen until 90-day market calibration and 100 prospective settled signals pass.
+- Assist V1: count gate PASS; settlement gate FAIL. Remains frozen until all registered evidence gates pass.
 - Tennis ML gap-guard remains a safety brake. The backtest is not stable enough to unblock those big market-disagreement ML dogs.
 - Tennis props v3 remains prospective shadow evidence; historical accuracy alone does not authorise tips.
 - The next real evidence is CLV and settled live sample. Until 50 settled picks, do not overreact to wins/losses.
 
 
-Astra models SHADOW ONLY | Astra Aces [oncourt-current-history-20261007-v1]: 75 settled fixtures; 585 pending quotes; baseline ROI -71.8% (50 selected lines), Astra ROI -73.1% (46 selected lines) | Astra DF [oncourt-current-history-20261007-v1]: 81 settled fixtures; 750 pending quotes; baseline ROI +16.6% (91 selected lines), Astra ROI -0.1% (135 selected lines) | data FRESH; multiple lines per match are correlated. Review floors: 200 fixtures, 8 weeks, 4 tournaments within each input version. Manual review before promotion.
+Ace Compass v1 [PAPER ONLY]
+0W/0L | +0.00u on 0u | No settled bets yet | 0 pending, 0 void, 0 overdue.
+Prediction bias awaits completed matches. Capture: NO_NEW_ELIGIBLE_QUOTES. Historical +10.79%/19 bets stays separate.
+
+Astra models FULL-BOARD PAPER, including lines blocked by normal signal filters; 1u per selected line | Astra Aces [oncourt-current-history-20261007-v1]: 135 settled fixtures; 64 unresolved quote records (0 older than 48h); baseline ROI -36.6% (78 selected lines), Astra ROI -38.0% (70 selected lines), Astra odds >=5.00: 2W/47L, -27.00u | Astra DF [oncourt-current-history-20261007-v1]: 151 settled fixtures; 97 unresolved quote records (0 older than 48h); baseline ROI -25.5% (172 selected lines), Astra ROI -31.3% (243 selected lines), Astra odds >=5.00: 6W/90L, -39.50u | data FRESH; multiple lines per match are correlated. Review floors: 200 fixtures, 8 weeks, 4 tournaments within each input version. Manual review before promotion.
 
 
-Astra Volume PAPER ONLY: 1W/2L, ROI -21.45%, 1 pending (1 overdue). Paired fixtures settled 48; review at 50 and 100. Capture WAITING_FOR_FRESH_ELIGIBLE_FORECAST at 2026-10-20T09:12:00.485677+00:00. No verified closing-price coverage.
+Astra Volume PAPER ONLY: 2W/2L, ROI +18.40%, 0 pending (0 overdue). Paired fixtures settled 58; review at 50 and 100. Capture WAITING_FOR_FRESH_ELIGIBLE_FORECAST at 2026-10-27T10:16:30.780642+00:00. No verified closing-price coverage.
 Hardcourt Scout | Challenger outdoor hard | PAPER ONLY
-0W / 1L | ROI -100.00% | -1.00u on 1u
-0 pending (0 overdue), 0 void, 0 quarantined. 1u hypothetical stakes; zero real stake. Review at 50 and 100 settled selections. Capture WAITING_FOR_ELIGIBLE_FIXTURES at 2026-10-20T09:26:19.456345+00:00. Report 2026-10-20T09:26:27.967509+00:00. Historical +22.65% replay excluded; closing prices unverified.
+0W / 0L | ROI awaits first settled selection | +0.00u on 0u
+1 pending (0 overdue), 0 void, 0 quarantined. 1u hypothetical stakes; zero real stake. Review at 50 and 100 settled selections. Capture WAITING_FOR_ELIGIBLE_FIXTURES at 2026-10-27T10:27:41.712339+00:00. Report 2026-10-27T10:27:48.503231+00:00. Historical +22.65% replay excluded; closing prices unverified.
 
 MODEL REVIEW WATCHLIST
-Calibrated Shots [ZERO-STAKE]: forward ROI awaiting evidence, settled 0, pending 0 | SNAPSHOT_UNAVAILABLE
+Calibrated Shots [ZERO-STAKE, retained prospective cohorts]: hypothetical ROI +11.0%, settled 23, pending 0 | COLLECTING | 90 paired fixtures | version paired-market-offset-20261019-club-alias-v3
 EMA20 v3 / v4 / Opponent paired comparison [RESEARCH]: historical replay ROI unknown, n=? | prospective capture DAILY_EXISTING_FOOTBALL_COUNTS_WORKFLOW | review weekly; historical bets are not forward evidence.
 Astra Volume [RESEARCH]: historical replay ROI +7.25%, n=69 | prospective capture CONNECTED_FIRST_CAPTURE_VERIFIED | review weekly; historical bets are not forward evidence.
-Opponent Shots [SHADOW]: forward 34W/41L, ROI -15.4%, pending 0 | COLLECTING_FIXED_POLICY | scan 2026-10-20T15:42:38Z
-Astrissimo [RESEARCH]: historical replay ROI unknown, n=? | prospective capture UNKNOWN | review weekly; historical bets are not forward evidence.
+Opponent Shots [SHADOW]: forward 43W/51L, ROI -13.9%, pending 2 | COLLECTING_FIXED_POLICY | scan 2026-10-27T16:45:45Z
+Astrissimo [PAPER ONLY]: -100.00% ROI; capture WAITING_FOR_FRESH_ELIGIBLE_FORECAST
