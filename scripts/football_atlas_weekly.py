@@ -379,6 +379,58 @@ def stage_release(run, root, changed_paths):
         raise ValueError(f'Unexpected staged files: extra={sorted(unexpected)}, missing={sorted(missing)}, unstaged={sorted(remaining)}')
 
 
+def synchronize_release(run, root, report, *, base=None, changed_paths=()):
+    """Carry unrelated presentation/news commits forward, never stale Atlas inputs.
+
+    Before writers run the checkout must be clean and can only fast-forward.
+    After writing, only the single scoped data commit may be replayed. Unknown
+    paths, collection code, configuration and all Atlas inputs require a fresh run.
+    """
+    if run(['git', 'status', '--porcelain'], root).strip():
+        raise ValueError('Release synchronization requires a clean checkout')
+    head = run(['git', 'rev-parse', 'HEAD'], root).strip()
+    base = base or head
+    run(['git', 'fetch', '--no-tags', 'origin', 'refs/heads/' + BRANCH], root)
+    remote = run(['git', 'rev-parse', 'FETCH_HEAD'], root).strip()
+    if remote in (base, head):
+        return remote
+    run(['git', 'merge-base', '--is-ancestor', base, remote], root)
+    upstream = set(run(['git', 'diff', '--no-renames', '--name-only', base, remote], root).splitlines())
+    allowed_prefixes = ('src/app/', 'src/components/', 'src/lib/', 'src/styles/',
+                        'data/penalty-news/', 'public/penalty-news/',
+                        'src/data/penalty-news', 'scripts/tests/penalty-news')
+    blocked = {path for path in upstream if not path.startswith(allowed_prefixes)}
+    blocked.update(upstream.intersection(changed_paths))
+    if blocked:
+        raise ValueError('Release inputs changed; fresh validation required: ' + ', '.join(sorted(blocked)))
+    if head == base:
+        run(['git', 'merge', '--ff-only', remote], root)
+    else:
+        parents = run(['git', 'rev-list', '--parents', '-n', '1', head], root).split()
+        local = set(run(['git', 'diff', '--no-renames', '--name-only', base, head], root).splitlines())
+        if parents != [head, base] or not local or not local.issubset(set(changed_paths)):
+            raise ValueError('Release synchronization requires one scoped Atlas commit')
+        run(['git', 'rebase', '--onto', remote, base], root)
+    report.setdefault('releaseSynchronizations', []).append({'from': base, 'onto': remote, 'paths': sorted(upstream)})
+    return remote
+
+
+def push_release(run, root, report, base, changed_paths):
+    """Retry only verified non-overlapping branch advances; never force-push."""
+    for attempt in range(3):
+        base = synchronize_release(run, root, report, base=base, changed_paths=changed_paths)
+        try:
+            run(['git', 'push', 'origin', 'HEAD:' + BRANCH], root)
+            return
+        except RuntimeError:
+            head = run(['git', 'rev-parse', 'HEAD'], root).strip()
+            remote = run(['git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH], root).split()[0]
+            if remote == head:  # Server accepted the commit before a transport error.
+                return
+            if remote == base or attempt == 2:
+                raise
+
+
 def recover_fixture_board(state, manifest, report, *, dry_run=False):
     """A historical ingestion failure must not block a validated new schedule.
 
@@ -391,8 +443,8 @@ def recover_fixture_board(state, manifest, report, *, dry_run=False):
         run = helper.run
         if run(['git', 'status', '--porcelain'], ROOT).strip():
             raise ValueError('Fixture recovery requires a clean production checkout')
-        if run(['git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH], ROOT).split()[0] != run(['git', 'rev-parse', 'HEAD'], ROOT).strip():
-            raise ValueError('Release advanced before fixture recovery')
+        synchronize_release(run, ROOT, report)
+        base = run(['git', 'rev-parse', 'HEAD'], ROOT).strip()
     board = atlas_fixture_board.refresh(state)
     report['fixtureBoard'] = board['report']
     if dry_run:
@@ -401,7 +453,7 @@ def recover_fixture_board(state, manifest, report, *, dry_run=False):
     if board['changed']:
         stage_release(run, ROOT, set(board['paths']))
         run(['git', 'commit', '-m', 'data: refresh Matchday while retaining validated Atlas history'], ROOT)
-        run(['git', 'push', 'origin', 'HEAD:' + BRANCH], ROOT)
+        push_release(run, ROOT, report, base, set(board['paths']))
     publish(state, manifest, report)
     report['fixtureRecovery'] = 'published'
 
@@ -450,8 +502,8 @@ def main():
             dirty = run(['git', 'status', '--porcelain'], ROOT).strip()
             if dirty:
                 raise ValueError('Publication checkout dirty: ' + dirty[:1000])
-            if run(['git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH], ROOT).split()[0] != run(['git', 'rev-parse', 'HEAD'], ROOT).strip():
-                raise ValueError('Release branch advanced during collection; rerun against latest commit')
+            synchronize_release(run, ROOT, report)
+            base = run(['git', 'rev-parse', 'HEAD'], ROOT).strip()
             live_html = helper.fetch('https://ilmargine.bet/football-atlas').decode()
             changed_paths=set()
             if report['newMatches']:
@@ -498,7 +550,7 @@ def main():
             if changed_paths:
                 stage_release(run, ROOT, changed_paths)
                 run(['git', 'commit', '-m', f'data: update Football and Manager Atlas through {manifest["through"]}'], ROOT)
-                run(['git', 'push', 'origin', 'HEAD:' + BRANCH], ROOT)
+                push_release(run, ROOT, report, base, changed_paths)
             needs_publish = bool(changed_paths) or manifest['version'] not in live_html or managers['manifest']['version'] not in manager_live_html
             if not needs_publish:
                 try:
