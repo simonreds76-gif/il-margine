@@ -1,16 +1,16 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_save_markets": 3,
-      "named_player_lines": 33,
+      "events_with_save_markets": 1,
+      "named_player_lines": 11,
       "status": "NAMED_PLAYER_LINES",
       "unnamed_or_team_lines": 0
     },
     "Grosvenor": {
-      "events_with_save_markets": 3,
+      "events_with_save_markets": 2,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 14
+      "unnamed_or_team_lines": 10
     },
     "Paddy Power": {
       "events_with_save_markets": 0,
@@ -20,34 +20,33 @@
     }
   },
   "capture_errors": [],
-  "capture_mode": "publication",
+  "capture_mode": "close",
   "direct_source": {
     "bookmaker": "Grosvenor",
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 303,
+      "current_quotes": 282,
       "mapped_quotes": 0,
       "paper_selections": 0,
       "price_or_status_changes": 0,
       "rules": "unverified"
     },
-    "matched": 3,
+    "matched": 2,
     "missing": [],
-    "requests": 4,
-    "rows": 246
+    "requests": 3,
+    "rows": 203
   },
   "discovery_retries": 0,
   "event_last_checked": {
-    "71945348": "2026-10-28T19:37:58Z",
-    "71945350": "2026-10-28T19:37:58Z",
-    "71945354": "2026-10-28T19:37:58Z"
+    "71945346": "2026-10-28T21:19:47Z",
+    "71945348": "2026-10-28T21:19:47Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 3,
-  "events_supported": 3,
-  "events_with_lines": 3,
-  "generated_at": "2026-10-28T19:37:58Z",
+  "events_selected": 2,
+  "events_supported": 2,
+  "events_with_lines": 2,
+  "generated_at": "2026-10-28T21:19:47Z",
   "last_publication_at": "2026-10-28T19:37:58Z",
   "league_coverage": {
     "bundesliga": {
@@ -67,11 +66,11 @@
       "with_prices": 0
     },
     "serie-a": {
-      "selected": 3,
-      "with_prices": 3
+      "selected": 2,
+      "with_prices": 2
     }
   },
-  "market_inventory_rows_added": 97,
+  "market_inventory_rows_added": 63,
   "market_names_observed": [
     "Anytime Assist",
     "Anytime Goalscorer",
@@ -90,7 +89,6 @@
     "ML",
     "ML HT",
     "Player Fouls",
-    "Player Headed Shots on Target",
     "Player Saves",
     "Player Shots",
     "Player Shots on Target",
@@ -108,13 +106,13 @@
     "errors": [],
     "excluded": {
       "conflicting_quotes": 0,
-      "fixture_not_eligible": 937,
-      "stale_or_missing_market_poll": 2,
-      "unmatched_or_unsupported_fixture": 365
+      "fixture_not_eligible": 917,
+      "stale_or_missing_market_poll": 3,
+      "unmatched_or_unsupported_fixture": 363
     },
-    "market_count": 4,
-    "quote_count": 105,
-    "received_at": "2026-10-28T19:38:02.669332+00:00",
+    "market_count": 1,
+    "quote_count": 11,
+    "received_at": "2026-10-28T21:19:50.271794+00:00",
     "requests": 1,
     "source": "moviodds_bet365",
     "status": "OK"
@@ -122,22 +120,15 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 47,
-  "rows_observed": 47,
+  "rows_added": 21,
+  "rows_observed": 21,
   "selected_events": [
     {
-      "away": "Juventus Turin",
+      "away": "Atalanta BC",
       "competition": "Italy - Serie A",
-      "home": "Genoa CFC",
-      "id": 71945350,
-      "kickoff_at": "2026-10-28T19:45:00Z"
-    },
-    {
-      "away": "SSC Napoli",
-      "competition": "Italy - Serie A",
-      "home": "AC Monza",
-      "id": 71945354,
-      "kickoff_at": "2026-10-28T19:45:00Z"
+      "home": "ACF Fiorentina",
+      "id": 71945346,
+      "kickoff_at": "2026-10-29T19:45:00Z"
     },
     {
       "away": "US Lecce",
@@ -148,5 +139,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 3
+  "three_way_events": 2
 }

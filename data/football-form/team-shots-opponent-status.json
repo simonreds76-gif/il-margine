@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-28T20:37:15Z",
+  "generated_at": "2026-10-28T21:20:01Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -23,7 +23,7 @@
     "scored_fixtures": 0,
     "explanation": "0 fresh paired contracts; 0 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: outside_capture_window=6, stale_price=68."
   },
-  "settled_this_run": 2,
+  "settled_this_run": 0,
   "result_source": {
     "bundesliga": {
       "football_data_latest": "2026-10-25",
@@ -103,5 +103,5 @@
   },
   "review_policy": "Review after 150 settled fixtures and at least 8 weeks; require positive ROI, at least 70% true closing coverage, positive mean CLV and calibration review. Manual promotion only.",
   "review_status": "COLLECTING_FIXED_POLICY",
-  "age_days": 45
+  "age_days": 46
 }

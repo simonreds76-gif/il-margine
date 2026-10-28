@@ -1,550 +1,6 @@
 {
-  "captured_at": "2026-10-28T19:37:58Z",
+  "captured_at": "2026-10-28T21:19:47Z",
   "contracts": [
-    {
-      "event_id": "71945350",
-      "home": "Genoa CFC",
-      "away": "Juventus Turin",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 4.5,
-            "over": 2.25
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911589",
-        "source_offer_id": "2708669449",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911589.json",
-        "updatedAt": "2026-10-28T19:14:08Z",
-        "captured_at": "2026-10-28T19:37:58+00:00",
-        "raw_offer": {
-          "id": 2708669449,
-          "closed": "2026-10-28T19:45:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - Genoa (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Genoa (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911589,
-          "outcomes": [
-            {
-              "id": 4390276914,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 2250,
-              "line": 4500,
-              "type": "OT_OVER",
-              "betOfferId": 2708669449,
-              "changedDate": "2026-10-28T19:14:08Z",
-              "oddsFractional": "5/4",
-              "oddsAmerican": "125",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "MAIN_LINE",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945350",
-      "home": "Genoa CFC",
-      "away": "Juventus Turin",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 2.5,
-            "over": 2.12
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911589",
-        "source_offer_id": "2708669458",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911589.json",
-        "updatedAt": "2026-10-28T19:14:09Z",
-        "captured_at": "2026-10-28T19:37:58+00:00",
-        "raw_offer": {
-          "id": 2708669458,
-          "closed": "2026-10-28T19:45:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Juventus (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Juventus (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911589,
-          "outcomes": [
-            {
-              "id": 4390276932,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 2120,
-              "line": 2500,
-              "type": "OT_OVER",
-              "betOfferId": 2708669458,
-              "changedDate": "2026-10-28T19:14:09Z",
-              "oddsFractional": "11/10",
-              "oddsAmerican": "112",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945350",
-      "home": "Genoa CFC",
-      "away": "Juventus Turin",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 1.5,
-            "over": 1.41
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911589",
-        "source_offer_id": "2708669460",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911589.json",
-        "updatedAt": "2026-10-28T19:14:09Z",
-        "captured_at": "2026-10-28T19:37:58+00:00",
-        "raw_offer": {
-          "id": 2708669460,
-          "closed": "2026-10-28T19:45:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Juventus (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Juventus (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911589,
-          "outcomes": [
-            {
-              "id": 4390276936,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1410,
-              "line": 1500,
-              "type": "OT_OVER",
-              "betOfferId": 2708669460,
-              "changedDate": "2026-10-28T19:14:09Z",
-              "oddsFractional": "2/5",
-              "oddsAmerican": "-245",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "MAIN_LINE",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945350",
-      "home": "Genoa CFC",
-      "away": "Juventus Turin",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 3.5,
-            "over": 1.63
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911589",
-        "source_offer_id": "2708703609",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911589.json",
-        "updatedAt": "2026-10-28T19:14:08Z",
-        "captured_at": "2026-10-28T19:37:58+00:00",
-        "raw_offer": {
-          "id": 2708703609,
-          "closed": "2026-10-28T19:45:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - Genoa (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Genoa (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911589,
-          "outcomes": [
-            {
-              "id": 4390266970,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1630,
-              "line": 3500,
-              "type": "OT_OVER",
-              "betOfferId": 2708703609,
-              "changedDate": "2026-10-28T19:14:08Z",
-              "oddsFractional": "8/13",
-              "oddsAmerican": "-159",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945354",
-      "home": "AC Monza",
-      "away": "SSC Napoli",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 2.5,
-            "over": 1.38
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911595",
-        "source_offer_id": "2708663337",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911595.json",
-        "updatedAt": "2026-10-28T19:37:15Z",
-        "captured_at": "2026-10-28T19:37:58+00:00",
-        "raw_offer": {
-          "id": 2708663337,
-          "closed": "2026-10-28T19:45:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - Monza (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Monza (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911595,
-          "outcomes": [
-            {
-              "id": 4390264154,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1380,
-              "line": 2500,
-              "type": "OT_OVER",
-              "betOfferId": 2708663337,
-              "changedDate": "2026-10-28T19:37:15Z",
-              "oddsFractional": "4/11",
-              "oddsAmerican": "-265",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945354",
-      "home": "AC Monza",
-      "away": "SSC Napoli",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 3.5,
-            "over": 1.88
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911595",
-        "source_offer_id": "2708672256",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911595.json",
-        "updatedAt": "2026-10-28T19:37:15Z",
-        "captured_at": "2026-10-28T19:37:58+00:00",
-        "raw_offer": {
-          "id": 2708672256,
-          "closed": "2026-10-28T19:45:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - Monza (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Monza (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911595,
-          "outcomes": [
-            {
-              "id": 4390285606,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1880,
-              "line": 3500,
-              "type": "OT_OVER",
-              "betOfferId": 2708672256,
-              "changedDate": "2026-10-28T19:37:15Z",
-              "oddsFractional": "22/25",
-              "oddsAmerican": "-114",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945354",
-      "home": "AC Monza",
-      "away": "SSC Napoli",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 3.5,
-            "over": 2.6
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911595",
-        "source_offer_id": "2708672294",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911595.json",
-        "updatedAt": "2026-10-28T19:37:15Z",
-        "captured_at": "2026-10-28T19:37:58+00:00",
-        "raw_offer": {
-          "id": 2708672294,
-          "closed": "2026-10-28T19:45:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Napoli (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Napoli (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911595,
-          "outcomes": [
-            {
-              "id": 4390285682,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 2600,
-              "line": 3500,
-              "type": "OT_OVER",
-              "betOfferId": 2708672294,
-              "changedDate": "2026-10-28T19:37:15Z",
-              "oddsFractional": "8/5",
-              "oddsAmerican": "160",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945354",
-      "home": "AC Monza",
-      "away": "SSC Napoli",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 2.5,
-            "over": 1.71
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911595",
-        "source_offer_id": "2708700475",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911595.json",
-        "updatedAt": "2026-10-28T19:37:15Z",
-        "captured_at": "2026-10-28T19:37:58+00:00",
-        "raw_offer": {
-          "id": 2708700475,
-          "closed": "2026-10-28T19:45:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Napoli (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Napoli (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911595,
-          "outcomes": [
-            {
-              "id": 4390272712,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1710,
-              "line": 2500,
-              "type": "OT_OVER",
-              "betOfferId": 2708700475,
-              "changedDate": "2026-10-28T19:37:15Z",
-              "oddsFractional": "7/10",
-              "oddsAmerican": "-141",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "MAIN_LINE",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945354",
-      "home": "AC Monza",
-      "away": "SSC Napoli",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 4.5,
-            "over": 2.75
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911595",
-        "source_offer_id": "2709853528",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911595.json",
-        "updatedAt": "2026-10-28T19:37:15Z",
-        "captured_at": "2026-10-28T19:37:58+00:00",
-        "raw_offer": {
-          "id": 2709853528,
-          "closed": "2026-10-28T19:45:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - Monza (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Monza (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911595,
-          "outcomes": [
-            {
-              "id": 4393912043,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 2750,
-              "line": 4500,
-              "type": "OT_OVER",
-              "betOfferId": 2709853528,
-              "changedDate": "2026-10-28T19:37:15Z",
-              "oddsFractional": "7/4",
-              "oddsAmerican": "175",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "MAIN_LINE",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
     {
       "event_id": "71945348",
       "home": "Frosinone Calcio",
@@ -555,15 +11,15 @@
         "odds": [
           {
             "hdp": 4.5,
-            "over": 2.0
+            "over": 1.98
           }
         ],
         "source": "grosvenor_direct",
         "source_event_id": "1027911616",
         "source_offer_id": "2708680623",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911616.json",
-        "updatedAt": "2026-10-28T12:13:05Z",
-        "captured_at": "2026-10-28T19:37:58+00:00",
+        "updatedAt": "2026-10-28T20:35:52Z",
+        "captured_at": "2026-10-28T21:19:47+00:00",
         "raw_offer": {
           "id": 2708680623,
           "closed": "2026-10-29T17:30:00Z",
@@ -585,13 +41,13 @@
               "id": 4390249997,
               "label": "Over",
               "englishLabel": "Over",
-              "odds": 2000,
+              "odds": 1980,
               "line": 4500,
               "type": "OT_OVER",
               "betOfferId": 2708680623,
-              "changedDate": "2026-10-28T12:13:05Z",
-              "oddsFractional": "Evens",
-              "oddsAmerican": "100",
+              "changedDate": "2026-10-28T20:35:52Z",
+              "oddsFractional": "49/50",
+              "oddsAmerican": "-103",
               "status": "OPEN",
               "cashOutStatus": "DISABLED",
               "displayOrder": 0
@@ -616,15 +72,15 @@
         "odds": [
           {
             "hdp": 2.5,
-            "over": 1.65
+            "over": 1.63
           }
         ],
         "source": "grosvenor_direct",
         "source_event_id": "1027911616",
         "source_offer_id": "2708680653",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911616.json",
-        "updatedAt": "2026-10-28T12:13:05Z",
-        "captured_at": "2026-10-28T19:37:58+00:00",
+        "updatedAt": "2026-10-28T20:35:53Z",
+        "captured_at": "2026-10-28T21:19:47+00:00",
         "raw_offer": {
           "id": 2708680653,
           "closed": "2026-10-29T17:30:00Z",
@@ -646,13 +102,13 @@
               "id": 4390299430,
               "label": "Over",
               "englishLabel": "Over",
-              "odds": 1650,
+              "odds": 1630,
               "line": 2500,
               "type": "OT_OVER",
               "betOfferId": 2708680653,
-              "changedDate": "2026-10-28T12:13:05Z",
-              "oddsFractional": "13/20",
-              "oddsAmerican": "-155",
+              "changedDate": "2026-10-28T20:35:53Z",
+              "oddsFractional": "8/13",
+              "oddsAmerican": "-159",
               "status": "OPEN",
               "cashOutStatus": "DISABLED",
               "displayOrder": 0
@@ -677,15 +133,15 @@
         "odds": [
           {
             "hdp": 3.5,
-            "over": 1.5
+            "over": 1.48
           }
         ],
         "source": "grosvenor_direct",
         "source_event_id": "1027911616",
         "source_offer_id": "2708686419",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911616.json",
-        "updatedAt": "2026-10-28T12:13:05Z",
-        "captured_at": "2026-10-28T19:37:58+00:00",
+        "updatedAt": "2026-10-28T20:35:52Z",
+        "captured_at": "2026-10-28T21:19:47+00:00",
         "raw_offer": {
           "id": 2708686419,
           "closed": "2026-10-29T17:30:00Z",
@@ -707,13 +163,13 @@
               "id": 4390281977,
               "label": "Over",
               "englishLabel": "Over",
-              "odds": 1500,
+              "odds": 1480,
               "line": 3500,
               "type": "OT_OVER",
               "betOfferId": 2708686419,
-              "changedDate": "2026-10-28T12:13:05Z",
-              "oddsFractional": "1/2",
-              "oddsAmerican": "-200",
+              "changedDate": "2026-10-28T20:35:52Z",
+              "oddsFractional": "12/25",
+              "oddsAmerican": "-210",
               "status": "OPEN",
               "cashOutStatus": "DISABLED",
               "displayOrder": 0
@@ -737,15 +193,15 @@
         "odds": [
           {
             "hdp": 3.5,
-            "over": 2.48
+            "over": 2.43
           }
         ],
         "source": "grosvenor_direct",
         "source_event_id": "1027911616",
         "source_offer_id": "2708686451",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911616.json",
-        "updatedAt": "2026-10-28T12:13:05Z",
-        "captured_at": "2026-10-28T19:37:58+00:00",
+        "updatedAt": "2026-10-28T20:35:53Z",
+        "captured_at": "2026-10-28T21:19:47+00:00",
         "raw_offer": {
           "id": 2708686451,
           "closed": "2026-10-29T17:30:00Z",
@@ -767,13 +223,13 @@
               "id": 4390282041,
               "label": "Over",
               "englishLabel": "Over",
-              "odds": 2480,
+              "odds": 2430,
               "line": 3500,
               "type": "OT_OVER",
               "betOfferId": 2708686451,
-              "changedDate": "2026-10-28T12:13:05Z",
-              "oddsFractional": "29/20",
-              "oddsAmerican": "148",
+              "changedDate": "2026-10-28T20:35:53Z",
+              "oddsFractional": "7/5",
+              "oddsAmerican": "143",
               "status": "OPEN",
               "cashOutStatus": "DISABLED",
               "displayOrder": 0
@@ -797,15 +253,15 @@
         "odds": [
           {
             "hdp": 5.5,
-            "over": 2.9
+            "over": 2.8
           }
         ],
         "source": "grosvenor_direct",
         "source_event_id": "1027911616",
         "source_offer_id": "2708819334",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911616.json",
-        "updatedAt": "2026-10-28T12:13:05Z",
-        "captured_at": "2026-10-28T19:37:58+00:00",
+        "updatedAt": "2026-10-28T20:35:52Z",
+        "captured_at": "2026-10-28T21:19:47+00:00",
         "raw_offer": {
           "id": 2708819334,
           "closed": "2026-10-29T17:30:00Z",
@@ -827,13 +283,315 @@
               "id": 4390643269,
               "label": "Over",
               "englishLabel": "Over",
-              "odds": 2900,
+              "odds": 2800,
               "line": 5500,
               "type": "OT_OVER",
               "betOfferId": 2708819334,
-              "changedDate": "2026-10-28T12:13:05Z",
-              "oddsFractional": "19/10",
-              "oddsAmerican": "190",
+              "changedDate": "2026-10-28T20:35:52Z",
+              "oddsFractional": "9/5",
+              "oddsAmerican": "180",
+              "status": "OPEN",
+              "cashOutStatus": "DISABLED",
+              "displayOrder": 0
+            }
+          ],
+          "tags": [
+            "OFFERED_PREMATCH",
+            "BET_BUILDER"
+          ],
+          "cashOutStatus": "ENABLED"
+        }
+      }
+    },
+    {
+      "event_id": "71945346",
+      "home": "ACF Fiorentina",
+      "away": "Atalanta BC",
+      "bookmaker": "Grosvenor",
+      "market": {
+        "name": "Goalkeeper Saves Home",
+        "odds": [
+          {
+            "hdp": 2.5,
+            "over": 1.55
+          }
+        ],
+        "source": "grosvenor_direct",
+        "source_event_id": "1027911620",
+        "source_offer_id": "2708666591",
+        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911620.json",
+        "updatedAt": "2026-10-28T16:31:31Z",
+        "captured_at": "2026-10-28T21:19:47+00:00",
+        "raw_offer": {
+          "id": 2708666591,
+          "closed": "2026-10-29T19:45:00Z",
+          "criterion": {
+            "id": 2100086018,
+            "label": "Goalkeeper Saves - Fiorentina (Settled using Opta data)",
+            "englishLabel": "Goalkeeper Saves - Fiorentina (Settled using Opta data)",
+            "order": [],
+            "lifetime": "FULL_TIME"
+          },
+          "betOfferType": {
+            "id": 6,
+            "name": "Over/Under",
+            "englishName": "Over/Under"
+          },
+          "eventId": 1027911620,
+          "outcomes": [
+            {
+              "id": 4390305735,
+              "label": "Over",
+              "englishLabel": "Over",
+              "odds": 1550,
+              "line": 2500,
+              "type": "OT_OVER",
+              "betOfferId": 2708666591,
+              "changedDate": "2026-10-28T16:31:31Z",
+              "oddsFractional": "11/20",
+              "oddsAmerican": "-182",
+              "status": "OPEN",
+              "cashOutStatus": "DISABLED",
+              "displayOrder": 0
+            }
+          ],
+          "tags": [
+            "OFFERED_PREMATCH",
+            "MAIN_LINE",
+            "BET_BUILDER"
+          ],
+          "cashOutStatus": "ENABLED"
+        }
+      }
+    },
+    {
+      "event_id": "71945346",
+      "home": "ACF Fiorentina",
+      "away": "Atalanta BC",
+      "bookmaker": "Grosvenor",
+      "market": {
+        "name": "Goalkeeper Saves Home",
+        "odds": [
+          {
+            "hdp": 3.5,
+            "over": 2.25
+          }
+        ],
+        "source": "grosvenor_direct",
+        "source_event_id": "1027911620",
+        "source_offer_id": "2708669568",
+        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911620.json",
+        "updatedAt": "2026-10-28T16:31:31Z",
+        "captured_at": "2026-10-28T21:19:47+00:00",
+        "raw_offer": {
+          "id": 2708669568,
+          "closed": "2026-10-29T19:45:00Z",
+          "criterion": {
+            "id": 2100086018,
+            "label": "Goalkeeper Saves - Fiorentina (Settled using Opta data)",
+            "englishLabel": "Goalkeeper Saves - Fiorentina (Settled using Opta data)",
+            "order": [],
+            "lifetime": "FULL_TIME"
+          },
+          "betOfferType": {
+            "id": 6,
+            "name": "Over/Under",
+            "englishName": "Over/Under"
+          },
+          "eventId": 1027911620,
+          "outcomes": [
+            {
+              "id": 4390277152,
+              "label": "Over",
+              "englishLabel": "Over",
+              "odds": 2250,
+              "line": 3500,
+              "type": "OT_OVER",
+              "betOfferId": 2708669568,
+              "changedDate": "2026-10-28T16:31:31Z",
+              "oddsFractional": "5/4",
+              "oddsAmerican": "125",
+              "status": "OPEN",
+              "cashOutStatus": "DISABLED",
+              "displayOrder": 0
+            }
+          ],
+          "tags": [
+            "OFFERED_PREMATCH",
+            "BET_BUILDER"
+          ],
+          "cashOutStatus": "ENABLED"
+        }
+      }
+    },
+    {
+      "event_id": "71945346",
+      "home": "ACF Fiorentina",
+      "away": "Atalanta BC",
+      "bookmaker": "Grosvenor",
+      "market": {
+        "name": "Goalkeeper Saves Away",
+        "odds": [
+          {
+            "hdp": 4.5,
+            "over": 2.75
+          }
+        ],
+        "source": "grosvenor_direct",
+        "source_event_id": "1027911620",
+        "source_offer_id": "2708714975",
+        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911620.json",
+        "updatedAt": "2026-10-28T16:31:31Z",
+        "captured_at": "2026-10-28T21:19:47+00:00",
+        "raw_offer": {
+          "id": 2708714975,
+          "closed": "2026-10-29T19:45:00Z",
+          "criterion": {
+            "id": 2100086017,
+            "label": "Goalkeeper Saves - Atalanta (Settled using Opta data)",
+            "englishLabel": "Goalkeeper Saves - Atalanta (Settled using Opta data)",
+            "order": [],
+            "lifetime": "FULL_TIME"
+          },
+          "betOfferType": {
+            "id": 6,
+            "name": "Over/Under",
+            "englishName": "Over/Under"
+          },
+          "eventId": 1027911620,
+          "outcomes": [
+            {
+              "id": 4390305889,
+              "label": "Over",
+              "englishLabel": "Over",
+              "odds": 2750,
+              "line": 4500,
+              "type": "OT_OVER",
+              "betOfferId": 2708714975,
+              "changedDate": "2026-10-28T16:31:31Z",
+              "oddsFractional": "7/4",
+              "oddsAmerican": "175",
+              "status": "OPEN",
+              "cashOutStatus": "DISABLED",
+              "displayOrder": 0
+            }
+          ],
+          "tags": [
+            "OFFERED_PREMATCH",
+            "MAIN_LINE",
+            "BET_BUILDER"
+          ],
+          "cashOutStatus": "ENABLED"
+        }
+      }
+    },
+    {
+      "event_id": "71945346",
+      "home": "ACF Fiorentina",
+      "away": "Atalanta BC",
+      "bookmaker": "Grosvenor",
+      "market": {
+        "name": "Goalkeeper Saves Away",
+        "odds": [
+          {
+            "hdp": 3.5,
+            "over": 1.88
+          }
+        ],
+        "source": "grosvenor_direct",
+        "source_event_id": "1027911620",
+        "source_offer_id": "2708714976",
+        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911620.json",
+        "updatedAt": "2026-10-28T16:31:31Z",
+        "captured_at": "2026-10-28T21:19:47+00:00",
+        "raw_offer": {
+          "id": 2708714976,
+          "closed": "2026-10-29T19:45:00Z",
+          "criterion": {
+            "id": 2100086017,
+            "label": "Goalkeeper Saves - Atalanta (Settled using Opta data)",
+            "englishLabel": "Goalkeeper Saves - Atalanta (Settled using Opta data)",
+            "order": [],
+            "lifetime": "FULL_TIME"
+          },
+          "betOfferType": {
+            "id": 6,
+            "name": "Over/Under",
+            "englishName": "Over/Under"
+          },
+          "eventId": 1027911620,
+          "outcomes": [
+            {
+              "id": 4390305891,
+              "label": "Over",
+              "englishLabel": "Over",
+              "odds": 1880,
+              "line": 3500,
+              "type": "OT_OVER",
+              "betOfferId": 2708714976,
+              "changedDate": "2026-10-28T16:31:31Z",
+              "oddsFractional": "22/25",
+              "oddsAmerican": "-114",
+              "status": "OPEN",
+              "cashOutStatus": "DISABLED",
+              "displayOrder": 0
+            }
+          ],
+          "tags": [
+            "OFFERED_PREMATCH",
+            "BET_BUILDER"
+          ],
+          "cashOutStatus": "ENABLED"
+        }
+      }
+    },
+    {
+      "event_id": "71945346",
+      "home": "ACF Fiorentina",
+      "away": "Atalanta BC",
+      "bookmaker": "Grosvenor",
+      "market": {
+        "name": "Goalkeeper Saves Away",
+        "odds": [
+          {
+            "hdp": 2.5,
+            "over": 1.38
+          }
+        ],
+        "source": "grosvenor_direct",
+        "source_event_id": "1027911620",
+        "source_offer_id": "2708714977",
+        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911620.json",
+        "updatedAt": "2026-10-28T16:31:31Z",
+        "captured_at": "2026-10-28T21:19:47+00:00",
+        "raw_offer": {
+          "id": 2708714977,
+          "closed": "2026-10-29T19:45:00Z",
+          "criterion": {
+            "id": 2100086017,
+            "label": "Goalkeeper Saves - Atalanta (Settled using Opta data)",
+            "englishLabel": "Goalkeeper Saves - Atalanta (Settled using Opta data)",
+            "order": [],
+            "lifetime": "FULL_TIME"
+          },
+          "betOfferType": {
+            "id": 6,
+            "name": "Over/Under",
+            "englishName": "Over/Under"
+          },
+          "eventId": 1027911620,
+          "outcomes": [
+            {
+              "id": 4390305893,
+              "label": "Over",
+              "englishLabel": "Over",
+              "odds": 1380,
+              "line": 2500,
+              "type": "OT_OVER",
+              "betOfferId": 2708714977,
+              "changedDate": "2026-10-28T16:31:31Z",
+              "oddsFractional": "4/11",
+              "oddsAmerican": "-265",
               "status": "OPEN",
               "cashOutStatus": "DISABLED",
               "displayOrder": 0
