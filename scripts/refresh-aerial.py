@@ -1,4 +1,4 @@
-"""Bounded enrichment inside the existing football cloud publisher. No odds calls."""
+"""Bounded enrichment and private header capture in the existing football publisher."""
 from datetime import datetime, timezone, timedelta
 from hashlib import sha256
 import argparse
@@ -133,8 +133,10 @@ def publish(client, root=ROOT, now=None):
         try:
             from skyline_paper import run as skyline_run
             from skyline_store import restore as skyline_restore, persist as skyline_persist
+            from paddy_headed import capture as paddy_capture
             skyline_restore(root)
-            skyline_report = skyline_run(root, now=now, capture=True)
+            paddy_capture(root, payload, now=now)
+            skyline_report = skyline_run(root, now=datetime.now(timezone.utc), capture=True)
             skyline_persist(root, skyline_report)
         except Exception as exc:
             failed=read(data/'skyline/report.json',{})

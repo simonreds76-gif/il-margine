@@ -1,0 +1,42 @@
+Paddy / Skyline source integration, 28 October 2026
+
+Scope: a price and settlement adapter, not a new probability model. Frozen
+Skyline artifacts, thresholds, 1u paper stakes, league coverage and existing
+record keys remain unchanged. No headed-goal selections are generated.
+
+The existing aerial publisher requests exact Paddy competitions for currently
+upcoming supported fixtures, then batches the two explicit header market types.
+Maximum eight requests / 55-second start budget; no 403/429 retries. Failed
+captures keep their original quote timestamp, successful withdrawals clear old
+quotes, and the existing two-hour price limit still applies. Private raw latest
+files stay out of website deployment bundles. Individual runner evidence and
+latest quotes are retained in the existing private Skyline snapshot.
+
+Fixtures require football event type, correct competition, oriented club aliases
+and exact kickoff. Players require a unique full-name match in the current XI.
+Unmapped players remain quote research. Only confirmed XIs enter the ledger.
+The highest current eligible headed-SOT price is selected. The original record
+key excludes bookmaker, preventing another alert on a later source/price change.
+
+Old records keep named-starter own-stat settlement. New Paddy records use its
+participation rule, plus Super Sub for EPL under the rules checked 28 October.
+The promotion rules must be reviewed before 1 July 2027. Extra time is excluded.
+Replacement chains use explicit completed-match substitution pairs; missing or
+ambiguous evidence remains pending. A named-player hit can settle independently
+of missing substitution evidence. A nonstarter who later plays remains a runner
+under Paddy's rule, but does not enter named-starter calibration evaluation.
+
+Model probabilities and selection EV retain the named-player event and receive
+no invented promotion uplift. Bookmaker-contract ROI and named-player Brier/log
+loss use different outcomes where a replacement hits. Contract-specific stats
+are also retained; historical results are never regraded onto the new contract.
+The source is statistical evidence, not a bookmaker settlement receipt; Opta
+replacement attribution and source corrections can require manual review.
+
+Official rules:
+https://helpcenter.paddypower.com/app/answers/detail/a_id/10079/
+https://helpcenter.paddypower.com/app/answers/detail/football-soccer-rules/
+
+Source route verified locally with real prices. It is a public website interface,
+not a guaranteed free developer API. Health explicitly distinguishes failed
+access, fixture mapping gaps and absent sampled markets. No account changes.

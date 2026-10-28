@@ -8,6 +8,7 @@ from pathlib import Path
 from aerial_data import read, save
 from aerial_market_capture import quoted_markets
 from skyline_model import History, POLICY, VARIANTS, utc, valid, height_gap, predict, qualifies
+from skyline_contracts import best_quote, settle as settle_contract
 
 
 def digest(value):
@@ -25,6 +26,8 @@ def resolve(record, matches, now):
     m=matches.get(str(record['fixture_id']))
     if not m or utc(m['date'])+timedelta(hours=3)>now: return None
     if utc(m['date']) != utc(record['kickoff']): return None
+    if record.get('quote',{}).get('bookmaker')=='Paddy Power':
+        return settle_contract(record,m,now)
     rows=[p for p in m['players'] if str(p['id'])==record['player_id'] and str(p.get('team_id'))==record['team_id']]
     if len(rows)!=1: return None
     p=rows[0]
@@ -43,7 +46,8 @@ def summarize(records, outcomes, variant, now):
     for r in records:
         if variant not in r['predictions']: continue
         o=outcomes.get(r['key'],{});status=o.get('status','pending');p=r['predictions'][variant]
-        if status in ('win','loss'):paired.append((p,int(status=='win')))
+        model_status=o.get('model_status',status)
+        if model_status in ('win','loss'):paired.append((p,int(model_status=='win')))
         if r['selections'].get(variant):bets.append((r,status))
     settled=[(r,s) for r,s in bets if s in ('win','loss')]
     profit=sum(r['odds']-1 if s=='win' else -1 for r,s in settled)
@@ -65,6 +69,8 @@ def run(root, now=None, capture=False):
     model_hash=digest(artifact)
     payload=read(root/'public/fair-odds-lab/aerial.json',{})
     prices=read(root/'data/goalkeeper-saves/aerial-headed-market-prices.json',{})
+    paddy=read(root/'data/aerial/paddy/prices.json',{})
+    prices={**prices,'events':prices.get('events',[])+paddy.get('events',[])}
     archive=read(root/'data/aerial/history.json.gz',{}).get('matches',[])
     heights=read(root/'data/aerial/heights.json.gz',{})
     # Read-only research context is built solely from completed prior days.
@@ -93,15 +99,16 @@ def run(root, now=None, capture=False):
                 if not features:excluded['insufficient_history']+=1;continue
                 c={'player':player['name'],'team_id':str(t['id']),'markets_to_check':['1+ headed shot on target']}
                 quotes=quoted_markets(f,c,prices,now)
-                if len(quotes)!=1:excluded['no_fresh_exact_price']+=1;continue
-                quote=quotes[0];predictions=predict(features,artifact)
+                quote=best_quote(quotes)
+                if quote is None:excluded['no_fresh_exact_price']+=1;continue
+                predictions=predict(features,artifact)
                 key=digest([artifact['version'],str(f['id']),str(player['id']),'headed_sot_over_0.5'])
                 record=dict(key=key,version=artifact['version'],model_sha256=model_hash,captured_at=now.isoformat(),
                     fixture_id=str(f['id']),player_id=str(player['id']),team_id=str(t['id']),player=player['name'],
                     team=t['name'],match=' v '.join(t['name'] for t in teams),competition=f['competition'],kickoff=f['kickoff'],
                     lineup=f['state'],lineup_observed_at=f['observed_at'],lineup_hash=digest(ids),
                     height_evidence={str(pid):heights.get(str(pid)) for pid in [player['id']]+[p['id'] for p in teams[1-i]['players']]},
-                    market='1+ headed shot on target',odds=quote['odds'],quote=quote,features=features,predictions=predictions,
+                    market='1+ headed shot on target',odds=quote['odds'],quote=quote,compared_quotes=quotes,features=features,predictions=predictions,
                     selections={v:qualifies(p,quote['odds'],features['expected_minutes']) for v,p in predictions.items()},
                     cohort='prospective_paper' if capture and f['state']=='confirmed' else 'preview',stake_policy=POLICY)
                 board.append(record)
@@ -124,7 +131,9 @@ def run(root, now=None, capture=False):
     compact=lambda r:dict(key=r['key'],player=r['player'],match=r['match'],kickoff=r['kickoff'],lineup=r['lineup'],
         odds=r['odds'],price_at=r['quote']['captured_at'],predictions=r['predictions'],selections=r['selections'],
         captured_at=r['captured_at'],status=outcomes.get(r['key'],{}).get('status','pending'),
-        headed_sot=outcomes.get(r['key'],{}).get('headed_sot'),expected_minutes=r['features']['expected_minutes'])
+        headed_sot=outcomes.get(r['key'],{}).get('headed_sot'),expected_minutes=r['features']['expected_minutes'],
+        bookmaker=r['quote'].get('bookmaker','Bet365'),contract=r['quote'].get('contract','legacy_named_starter'),
+        model_status=outcomes.get(r['key'],{}).get('model_status',outcomes.get(r['key'],{}).get('status')))
     ledger=sorted(records,key=lambda r:r['kickoff'],reverse=True)
     paired=[r for r in records if all(v in r['predictions'] for v in VARIANTS)]
     report=dict(version=artifact['version'],name='Skyline',generated_at=now.isoformat(),status='CAPTURING' if capture else 'PREVIEW',
@@ -132,8 +141,12 @@ def run(root, now=None, capture=False):
         stats={v:summarize(records,outcomes,v,now) for v in VARIANTS},
         paired_stats={v:summarize(paired,outcomes,v,now) for v in VARIANTS},exclusions=dict(excluded),
         board=[compact(r) for r in board],ledger=[compact(r) for r in ledger[:1000]],ledger_total=len(ledger),
-        research=research,price_generated_at=prices.get('generated_at'),lineup_generated_at=generated,
-        settlement_policy='1u paper, own headed SOT only, void if not a starter. No Sub On Play On or promotional settlement. Source counts are not bookmaker receipts.',
+        research=research,price_generated_at=max(prices.get('generated_at') or '',paddy.get('generated_at') or '') or None,lineup_generated_at=generated,
+        price_sources={'paddy':read(root/'data/aerial/paddy/status.json',{})},
+        paddy_quotes=paddy,
+        contract_stats={c:{v:summarize([r for r in records if r['quote'].get('contract','legacy_named_starter')==c],outcomes,v,now) for v in VARIANTS}
+                        for c in sorted({r['quote'].get('contract','legacy_named_starter') for r in records})},
+        settlement_policy='1u paper. Legacy records retain own-stat/starter rules. Paddy records use participation and applicable Super Sub replacement chains; missing evidence stays pending. Accuracy uses named-player outcomes only. Source counts are not bookmaker receipts.',
         historical_roi=None,paired_settled_fixtures=len({r['fixture_id'] for r in paired if outcomes.get(r['key'],{}).get('status') in ('win','loss')}),paired_forward_count=sum(all(v in r['predictions'] for v in VARIANTS) and outcomes.get(r['key'],{}).get('status') in ('win','loss') for r in records))
     save(directory/'report.json',report)
     return report

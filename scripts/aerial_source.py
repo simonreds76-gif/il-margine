@@ -97,8 +97,10 @@ def extract(p, row):
                 'shotmap': bool(shots_ok), 'delivery': all(t['corners'] is not None and t['crosses_attempted'] is not None for t in delivery),
                 'player_aerials_complete': bool(players) and all(p['aerials_won'] is not None for p in players),
                 'outfield_aerials_complete': bool(outfield) and all(p['aerials_won'] is not None for p in outfield)}
+    from skyline_contracts import evidence as settlement_evidence
     return {'id': row['id'], 'league_id': row['league_id'], 'season': row['season'],
             'date': row['date'], 'home_id': row['home_id'], 'away_id': row['away_id'],
+            'settlement_evidence': settlement_evidence(p, row, players, lineup_ok),
             'coverage': coverage, 'players': players, 'delivery': delivery, 'exceptions': exceptions}
 
 
