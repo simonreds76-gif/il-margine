@@ -301,7 +301,7 @@
         "Jofre Carreras",
         "Kike García"
       ],
-      "observed_at": "2026-10-28T16:37:21.421080+00:00",
+      "observed_at": "2026-10-28T18:49:31.669866+00:00",
       "changed_at": "2026-10-28T00:30:17.338401+00:00"
     },
     {
@@ -319,7 +319,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-28T16:37:21.421080+00:00",
+      "observed_at": "2026-10-28T18:49:31.669866+00:00",
       "changed_at": "2026-10-28T00:30:17.338401+00:00"
     },
     {
@@ -622,7 +622,7 @@
         "Johnny Cardoso",
         "Koke"
       ],
-      "observed_at": "2026-10-28T16:37:21.421080+00:00",
+      "observed_at": "2026-10-28T18:49:31.669866+00:00",
       "changed_at": "2026-10-28T13:32:44.667396+00:00"
     },
     {
@@ -928,26 +928,313 @@
         "Miguel Román",
         "Borja Iglesias"
       ],
-      "observed_at": "2026-10-28T16:37:21.421080+00:00",
+      "observed_at": "2026-10-28T18:49:31.669866+00:00",
       "changed_at": "2026-10-28T16:37:21.421080+00:00"
     },
     {
       "fotmob_match_id": 5868112,
+      "fotmob_page_url": "/matches/real-betis-vs-malaga/2tj4zi#5868112",
+      "home_fotmob_team_id": 8603,
+      "away_fotmob_team_id": 9864,
       "match_date": "2026-10-31",
       "kickoff_utc": "2026-10-31T17:30:00Z",
       "home_team": "Real Betis",
       "away_team": "Málaga",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-2-3-1",
+      "away_formation": "4-1-4-1",
+      "home_players": [
+        "Álvaro Vallés",
+        "Ángel Ortiz",
+        "Diego Llorente",
+        "Natan",
+        "Valentín Gómez",
+        "Marc Roca",
+        "Dani Ceballos",
+        "Antony",
+        "Isco",
+        "Abdessamad Ezzalzouli",
+        "Nelson Deossa"
+      ],
+      "away_players": [
+        "Alfonso Herrero",
+        "Carlos Puga",
+        "Ángel Recio",
+        "Einar Galilea",
+        "Rafita",
+        "Ramón Enríquez",
+        "David Larrubia",
+        "Carlos Dotor",
+        "Dani Lorenzo",
+        "Adam Aznou",
+        "Adrián Niño"
+      ],
+      "home_starters": [
+        {
+          "name": "Álvaro Vallés",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 999171,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Ángel Ortiz",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 1580522,
+          "shirt_number": "12"
+        },
+        {
+          "name": "Diego Llorente",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 420568,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Natan",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 1188375,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Valentín Gómez",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 1338016,
+          "shirt_number": "16"
+        },
+        {
+          "name": "Marc Roca",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 640220,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Dani Ceballos",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 531629,
+          "shirt_number": "25"
+        },
+        {
+          "name": "Antony",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 967622,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Isco",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 191315,
+          "shirt_number": "22"
+        },
+        {
+          "name": "Abdessamad Ezzalzouli",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 1209399,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Nelson Deossa",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 1315711,
+          "shirt_number": "18"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Alfonso Herrero",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-1-4-1",
+          "position_id": 11,
+          "player_id": 616538,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Carlos Puga",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-1-4-1",
+          "position_id": 32,
+          "player_id": 1668274,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Ángel Recio",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-1-4-1",
+          "position_id": 34,
+          "player_id": 1260010,
+          "shirt_number": "15"
+        },
+        {
+          "name": "Einar Galilea",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-1-4-1",
+          "position_id": 36,
+          "player_id": 516803,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Rafita",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-1-4-1",
+          "position_id": 38,
+          "player_id": 1717331,
+          "shirt_number": "31"
+        },
+        {
+          "name": "Ramón Enríquez",
+          "line_index": 1,
+          "line_size": 1,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-1-4-1",
+          "position_id": 65,
+          "player_id": 1082957,
+          "shirt_number": "6"
+        },
+        {
+          "name": "David Larrubia",
+          "line_index": 2,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-1-4-1",
+          "position_id": 82,
+          "player_id": 1108863,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Carlos Dotor",
+          "line_index": 2,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-1-4-1",
+          "position_id": 84,
+          "player_id": 1209421,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Dani Lorenzo",
+          "line_index": 2,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-1-4-1",
+          "position_id": 86,
+          "player_id": 1317624,
+          "shirt_number": "22"
+        },
+        {
+          "name": "Adam Aznou",
+          "line_index": 2,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-1-4-1",
+          "position_id": 88,
+          "player_id": 1573563,
+          "shirt_number": "39"
+        },
+        {
+          "name": "Adrián Niño",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-1-4-1",
+          "position_id": 115,
+          "player_id": 1403695,
+          "shirt_number": "21"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-10-28T16:37:21.421080+00:00",
-      "changed_at": "2026-10-28T00:30:17.338401+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Facundo Bernal",
+        "Juan Hernández"
+      ],
+      "away_unavailable": [
+        "Diego Murillo",
+        "Aarón Ochoa",
+        "Joaquín Muñoz",
+        "Pablo Martínez",
+        "Juan Cruz",
+        "Julen Lobete"
+      ],
+      "observed_at": "2026-10-28T18:49:31.669866+00:00",
+      "changed_at": "2026-10-28T18:49:31.669866+00:00"
     }
   ]
 }
