@@ -22,6 +22,11 @@ ROOT = Path(__file__).resolve().parents[1]
 LEAGUES = {47: ("epl", "Premier League"), 55: ("serie-a", "Serie A"),
            87: ("la-liga", "La Liga"), 54: ("bundesliga", "Bundesliga"), 53: ("ligue-1", "Ligue 1")}
 OUTCOMES = {"Goal": "scored", "AttemptSaved": "saved", "ShotSaved": "saved", "Miss": "missed", "Post": "woodwork"}
+FINAL_DATA_GRACE = timedelta(hours=1)
+
+
+class AwaitingFinalData(ValueError):
+    """The fixture list is final but the exact match page is still live."""
 
 
 def slug(value):
@@ -46,10 +51,14 @@ def normalize(payload, source_url, observed_at, club_map, commentary=None, notes
     g, h, c = q.get("general", {}), q.get("header", {}), q.get("content", {})
     league = LEAGUES.get(g.get("leagueId"))
     status = h.get("status", {})
-    if not league or g.get("finished") is not True or status.get("finished") is not True:
-        raise ValueError("Not a completed supported league match")
+    if not league:
+        raise ValueError("Not a supported league match")
     if status.get("cancelled") or status.get("awarded"):
         raise ValueError("Cancelled or awarded match")
+    if g.get("finished") is False or status.get("finished") is False:
+        raise AwaitingFinalData("Match detail is not final yet")
+    if g.get("finished") is not True or status.get("finished") is not True:
+        raise ValueError("Missing explicit completed-match evidence")
     teams = h.get("teams", [])
     if len(teams) != 2 or any(type(t.get("score")) is not int for t in teams):
         raise ValueError("Missing final score")
@@ -226,6 +235,7 @@ def main():
             time.sleep(2 ** attempt)
         response.raise_for_status()
     errors, excluded, fresh, completed = [], [], [], set()
+    waiting_for_final = []
     args.evidence_dir.mkdir(parents=True, exist_ok=True)
     enrichment_warnings = []
     match_ids = set()
@@ -301,6 +311,7 @@ def main():
                               sourceObservedAt=packet['observedAt'],
                               sourceHash=hashlib.sha256(json.dumps(packet['payload'], sort_keys=True).encode()).hexdigest())
                 record.pop('error', None)
+                record.pop('finalDataPendingSince', None)
                 if not first:
                     record['followUpDue'] = (datetime.fromisoformat(now) + timedelta(hours=2)).isoformat()
                 elif record.get('followUpDue', now) <= now:
@@ -310,6 +321,18 @@ def main():
             excluded.extend(omitted)
             if articles:
                 print(f"Match {mid}: {len(articles)} verified penalties")
+        except AwaitingFinalData as exc:
+            # Different source caches can cross full time several minutes apart.
+            # Keep this exact fixture pending, never publish its live snapshot,
+            # and escalate if it fails to become final within the bounded grace.
+            since = record.setdefault('finalDataPendingSince', now)
+            age = datetime.fromisoformat(now) - datetime.fromisoformat(since)
+            record.update(status='pending', error=str(exc))
+            if age >= FINAL_DATA_GRACE:
+                errors.append({'matchId': mid, 'reason': 'Final match detail still unavailable after one hour',
+                               'pendingSince': since})
+            else:
+                waiting_for_final.append({'matchId': mid, 'reason': str(exc), 'pendingSince': since})
         except Exception as exc:
             errors.append({"matchId": mid, "reason": str(exc)})
             record.update(status='pending', error=str(exc))
@@ -317,6 +340,7 @@ def main():
     articles = merge(previous["articles"], fresh, completed)
     report = {"checkedAt": now, "windowEnd": args.end_date, "days": args.days, "matchesChecked": len(completed),
               "matchesExpected": len(due), "articles": len(articles), "errors": errors, "excluded": excluded,
+              'waitingForFinalData': waiting_for_final,
               'mode': args.mode, 'completedInCalendar': len(match_ids), 'deferred': deferred,
               'cachedVerified': sum(r.get('status') == 'verified' and mid not in due for mid, r in records.items()),
               'pendingMatchIds': sorted(mid for mid, r in records.items() if r.get('status') != 'verified')}
@@ -331,7 +355,7 @@ def main():
                                  if r.get('status') != 'verified' or r.get('verifiedAt', '') >= cutoff}
         atomic_write(args.checkpoint, checkpoint)
     # Never replace failed fixtures. Independent verified fixtures may advance.
-    if (errors or excluded) and not args.allow_partial:
+    if (errors or excluded or waiting_for_final) and not args.allow_partial:
         print(json.dumps(report, ensure_ascii=False))
         raise SystemExit(1)
     old_articles = {a["id"]: a for a in previous["articles"]}
@@ -340,7 +364,8 @@ def main():
     removed = [a for a in previous["articles"] if a["matchId"] in completed and a["id"] not in {v["id"] for v in articles}]
     if changes or removed:
         atomic_write(args.evidence_dir / f"corrections-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%f')}.json", {"changedAt": now, "changes": changes, "removed": removed})
-    result = public_packet(previous, articles, now, args.end_date, not (errors or excluded), len(completed))
+    result = public_packet(previous, articles, now, args.end_date,
+                           not (errors or excluded or report['pendingMatchIds']), len(completed))
     if result != previous:
         result['generatedAt'] = now
         atomic_write(args.output, result)
