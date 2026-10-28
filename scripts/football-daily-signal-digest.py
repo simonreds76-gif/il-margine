@@ -48,8 +48,9 @@ def kickoff_label(value: object) -> str:
     return parsed.astimezone(timezone.utc).strftime("%H:%M UTC")
 
 
-def count_candidates(rows: list[dict[str, str]], target_day: str, model: str) -> list[dict[str, object]]:
+def count_candidates(rows: list[dict[str, str]], target_day: str, model: str, *, now=None, tracked_rows=None) -> list[dict[str, object]]:
     strongest: dict[str, dict[str, object]] = {}
+    tracked={r.get('match_id'):r for r in tracked_rows or []}
     for row in rows:
         if row_day(row) != target_day or str(row.get("model") or "") != model:
             continue
@@ -62,6 +63,15 @@ def count_candidates(rows: list[dict[str, str]], target_day: str, model: str) ->
         match_id = str(row.get("match_id") or row.get("match") or "").strip()
         if not match_id:
             continue
+        original=tracked.get(match_id)
+        if tracked_rows is not None and (not original or original.get('pick_id') != row.get('pick_id')):
+            continue
+        if now is not None:
+            from football_best_prices import stamp,MAX_PRICE_SECONDS
+            captured=stamp(row.get('price_captured_at_utc'))
+            kickoff=stamp(row.get('kickoff_utc'))
+            if not captured or not kickoff or kickoff<=now or not 0 <= (now-captured).total_seconds() <= MAX_PRICE_SECONDS:
+                continue
         candidate = {
             "id": str(row.get("pick_id") or f"{model}|{match_id}|{row.get('selection')}").strip(),
             "model": model,
@@ -73,6 +83,8 @@ def count_candidates(rows: list[dict[str, str]], target_day: str, model: str) ->
             "odds": number(row.get("book_odds")),
             "fair": number(row.get("model_fair_odds")),
             "edge": edge,
+            "captured_at": row.get('price_captured_at_utc',''),
+            "original": original,
         }
         existing = strongest.get(match_id)
         if existing is None or float(candidate["edge"]) > float(existing["edge"]):
@@ -131,9 +143,12 @@ def goalkeeper_candidates(rows: list[dict[str, str]], target_day: str,
 
 def build_candidates(target_day: str) -> dict[str, list[dict[str, object]]]:
     counts = read_csv(COUNTS_BOARD)
+    now=datetime.now(timezone.utc)
     return {
-        "TEAM SHOTS V4 | CURRENT ALERT MODEL": count_candidates(counts, target_day, "team_shots_v4"),
-        "CORNERS V3": count_candidates(counts, target_day, "corners_v3"),
+        "TEAM SHOTS V4 | CURRENT ALERT MODEL": count_candidates(counts, target_day, "team_shots_v4",now=now,
+            tracked_rows=read_csv(ROOT/'data/football-form/team-shots-v4-shadow-signals.csv')),
+        "CORNERS V3": count_candidates(counts, target_day, "corners_v3",now=now,
+            tracked_rows=read_csv(ROOT/'data/football-form/corners-v3-shadow-signals.csv')),
         "GK SAVES V1": goalkeeper_candidates(read_csv(GK_BOARD), target_day, read_csv(GK_LEDGER)),
     }
 
@@ -181,6 +196,11 @@ def candidate_block(row: dict[str, object]) -> str:
             lines.append(f"Original tracking: @{float(original['odds_decimal']):.2f} | fair {float(original['fair_odds']):.2f} | EV {float(original['edge']):+.1%} ({original.get('captured_at', '')}). Record unchanged.")
         elif row.get("status") == "VALUE LADDER":
             lines.append("Price comparison only; not a new tracked selection.")
+    elif row.get('captured_at'):
+        lines.append(f"Quote confirmed: {row['captured_at']}")
+        original=row.get('original') or {}
+        if original and (original.get('bookmaker')!=row.get('bookmaker') or number(original.get('book_odds'))!=row.get('odds')):
+            lines.append(f"Paper record remains @{float(original['book_odds']):.2f} {original['bookmaker']}; current price shown above.")
     return "\n".join(lines)
 
 
@@ -262,9 +282,21 @@ def main() -> int:
 
     now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     for message, identities in messages:
-        send_telegram(message, token, chat_id)
+        # Claim before sending. A timeout is an uncertain delivery, not permission
+        # to send the same bet again. The existing workflow persists this state.
         for identity in identities:
-            state["sent"][identity] = {"sent_at": now, "fixture_date": args.date}
+            state['sent'][identity]={'claimed_at':now,'fixture_date':args.date,'status':'sending'}
+        write_state(args.state,state)
+        try:
+            send_telegram(message, token, chat_id)
+        except Exception as exc:
+            for identity in identities:
+                state['sent'][identity].update(status='uncertain',error=type(exc).__name__)
+            write_state(args.state,state)
+            print(f'::warning::Football digest delivery uncertain; retained claims for manual review ({type(exc).__name__}).')
+            return 0
+        for identity in identities:
+            state["sent"][identity] = {"sent_at": now, "fixture_date": args.date,"status":"sent"}
         write_state(args.state, state)
     if args.date not in state["summary_dates"]:
         state["summary_dates"].append(args.date)

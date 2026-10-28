@@ -274,6 +274,7 @@ class FootballVnextShadowTests(unittest.TestCase):
         kickoff = datetime(2026, 8, 16, 14, tzinfo=UTC)
         base = {
             "league_slug": "epl", "home_team": "Arsenal", "away_team": "Chelsea",
+            "bookmaker": "Pinnacle",
             "line_label": "10.5", "captured_at_dt": captured, "kickoff": kickoff,
         }
         odds_rows = [
@@ -283,7 +284,7 @@ class FootballVnextShadowTests(unittest.TestCase):
         states = defaultdict(SHADOW.EventState)
         form = {"ema20_matches": "20"}
         with (
-            patch.object(SHADOW.PUB, "latest_corners_odds", return_value=odds_rows),
+            patch.object(SHADOW, "latest_corners", return_value=odds_rows),
             patch.object(SHADOW.PUB, "live_form_row", return_value=form),
             patch.object(SHADOW, "latest_event_states", return_value=states),
             patch.object(SHADOW, "corners_features", return_value=(10.0, (0.0,) * 7)),

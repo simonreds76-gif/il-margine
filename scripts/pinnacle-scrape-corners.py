@@ -5,13 +5,14 @@ Scrape Pinnacle corners O/U odds for Big 5 leagues.
 Uses the same Pinnacle guest API as pinnacle-scrape-odds.py (tennis).
 Appends new snapshots to data/corners-ou/pinnacle-corners-odds.csv.
 
-Market detection: 'total' markets at period=0 with line >= 7.0 are corners.
-Goals totals sit at lines 1.5-5.5 - no ambiguity.
+Market detection: full-match totals must belong to an explicitly labelled
+Corners child event with the same parent fixture and kickoff. Line size alone
+cannot distinguish a corners total from an alternative goals total.
 
 Run this before/after placing corners bets to build a CLV log.
-One snapshot per (match, line, side) per six-hour UTC bucket is stored. This
-keeps capture volume bounded while allowing a later pre-kickoff price to act as
-the close instead of permanently retaining the first price seen that day.
+Each actual capture is retained, including confirmations of unchanged prices.
+Existing schedule windows bound requests; legacy bucket arguments do not discard
+fresh confirmations needed for cross-book comparison and closing prices.
 
 Usage:
   python scripts/pinnacle-scrape-corners.py
@@ -114,6 +115,18 @@ def _scrape_league(
         return rows
 
     regular = [m for m in matchups if m.get("type") != "special"]
+    corners_by_parent = {}
+    for child in matchups:
+        parent = child.get('parent') or {}
+        if child.get('units') != 'Corners' or not parent or child.get('parentId') != parent.get('id'):
+            continue
+        if child.get('startTime') != parent.get('startTime'):
+            continue
+        parent_teams = {p.get('alignment'): p.get('name') for p in parent.get('participants', [])}
+        child_teams = {p.get('alignment'): str(p.get('name') or '').removesuffix(' (Corners)') for p in child.get('participants', [])}
+        if not all(parent_teams.get(side) and parent_teams[side] == child_teams.get(side) for side in ('home','away')):
+            continue
+        corners_by_parent.setdefault((parent['id'],parent['startTime']),set()).add(child['id'])
     print(f"  {league_key}: {len(regular)} matches")
 
     for match in regular:
@@ -156,6 +169,8 @@ def _scrape_league(
             continue
 
         for mkt in markets:
+            if mkt.get('matchupId') not in corners_by_parent.get((matchup_id,kickoff_iso),set()):
+                continue
             if mkt.get("type") != "total":
                 continue
             if mkt.get("period") != 0:
@@ -200,6 +215,8 @@ def _scrape_league(
 
 
 def _capture_bucket(captured_at: str, bucket_hours: int = 6) -> str:
+    if bucket_hours == 0:
+        return captured_at
     parsed = _parse_iso_datetime(captured_at)
     if parsed is None:
         return captured_at[:10]
@@ -231,7 +248,9 @@ def main() -> None:
     parser.add_argument("--leagues", default="", help="Comma-separated leagues to scrape (default all Big 5)")
     parser.add_argument("--dry-run", action="store_true", help="Fetch but do not write")
     parser.add_argument("--verbose", "-v", action="store_true")
-    parser.add_argument("--bucket-hours", type=int, default=6, choices=(1, 2, 3, 4, 6, 8, 12, 24))
+    # Retain every actual confirmation, including unchanged prices. A six-hour
+    # bucket discarded the new timestamp and made the comparison look stale.
+    parser.add_argument("--bucket-hours", type=int, default=0, choices=(0, 1, 2, 3, 4, 6, 8, 12, 24))
     parser.add_argument(
         "--kickoff-within-minutes",
         type=int,
@@ -245,9 +264,11 @@ def main() -> None:
     print("=" * 50)
 
     captured_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    capture_bucket = _capture_bucket(captured_at, args.bucket_hours)
+    # Legacy callers still pass --bucket-hours. Retain their request schedule,
+    # but preserve every actual confirmation for cross-book freshness checks.
+    capture_bucket = _capture_bucket(captured_at, 0)
 
-    existing_keys = _load_existing_keys(args.output, args.bucket_hours)
+    existing_keys = _load_existing_keys(args.output, 0)
     print(f"  Existing snapshots: {len(existing_keys)}")
     print(f"  Capture time:       {captured_at}\n")
 

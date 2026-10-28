@@ -14,6 +14,8 @@ spec.loader.exec_module(capture)
 class CaptureDiagnosticsTests(unittest.TestCase):
     def setUp(self):
         capture.configure_odds_api_http_budget(9)
+        p=patch.object(capture,'capture_bet365_counts',side_effect=lambda payload,targets:(payload,{'errors':[]}))
+        p.start();self.addCleanup(p.stop)
 
     def test_shared_discovery_covers_all_leagues_inside_existing_request_budget(self):
         kickoff=(datetime.now(timezone.utc)+timedelta(hours=5)).isoformat()
