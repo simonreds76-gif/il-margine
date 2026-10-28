@@ -122,8 +122,13 @@ def main():
         '--mode', args.mode, '--checkpoint', checkpoint,
         '--allow-partial', '--evidence-dir', args.state, timeout=1200)
     capture = json.loads((args.state / 'report.json').read_text())
+    waiting = capture.get('waitingForFinalData', [])
     print(f"Checked {capture['matchesChecked']}/{capture['matchesExpected']} fixtures; "
-          f"{len(capture['errors'])} source errors; {len(capture['excluded'])} held events")
+          f"{len(capture['errors'])} source errors; {len(capture['excluded'])} held events; "
+          f"{len(waiting)} awaiting final source data")
+    if waiting:
+        print('::notice::Final match data pending for fixture(s) ' + ', '.join(item['matchId'] for item in waiting)
+              + '. Retained for the next existing run; no live-match article published. Escalates after one hour.')
     if os.environ.get('GITHUB_STEP_SUMMARY'):
         with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
             summary.write(f"## Penalty News capture\n\nFixtures: {capture['matchesChecked']}/{capture['matchesExpected']}. "
@@ -131,6 +136,7 @@ def main():
                           f"Held events: {len(capture['excluded'])}.\n\n"
                           f"Mode: {args.mode}. Deferred fixtures: {capture.get('deferred', 0)}. "
                           f"Pending fixture IDs: {', '.join(capture.get('pendingMatchIds', [])) or 'none'}.\n\n"
+                          f"Awaiting final source data within one-hour grace: {len(waiting)}.\n\n"
                           "Hierarchy review decisions are not read by this job. Full evidence is attached as an artifact.\n")
     if args.dry_run:
         shutil.copyfile(ROOT / DATA, args.state / 'candidate.json')
@@ -170,7 +176,8 @@ def main():
     live_page = deployment_page(vercel, 'https://' + live['url'], '/penalty-news')
     if f'data-news-version="{version}"' in live_page:
         (args.state / 'publication.json').write_text(json.dumps({'status': 'already_current', 'sha': live_sha, 'sourceSha': source_sha, 'version': version,
-            'deploymentId': live['id'], 'articles': len(data['articles']), 'verifiedAt': datetime.now(timezone.utc).isoformat()}, indent=2))
+            'deploymentId': live['id'], 'articles': len(data['articles']), 'verifiedAt': datetime.now(timezone.utc).isoformat(),
+            'pendingMatchIds': capture.get('pendingMatchIds', []), 'waitingForFinalData': waiting}, indent=2))
         print('Published news already matches; no build required')
         if capture['errors'] or capture['excluded']:
             raise RuntimeError('Capture incomplete; unresolved fixtures saved for retry')
@@ -210,7 +217,8 @@ def main():
             raise RuntimeError('Promotion has not been verified')
         time.sleep(5)
     (args.state / 'publication.json').write_text(json.dumps({'status': 'published', 'sha': sha, 'sourceSha': source_sha, 'liveParent': live_sha, 'version': version,
-        'deploymentId': deployment['id'], 'articles': len(data['articles']), 'verifiedAt': datetime.now(timezone.utc).isoformat()}, indent=2))
+        'deploymentId': deployment['id'], 'articles': len(data['articles']), 'verifiedAt': datetime.now(timezone.utc).isoformat(),
+        'pendingMatchIds': capture.get('pendingMatchIds', []), 'waitingForFinalData': waiting}, indent=2))
     print(f"Published {len(data['articles'])} verified reports")
     if capture['errors'] or capture['excluded']:
         raise RuntimeError('Verified articles published; unresolved fixtures saved for retry')

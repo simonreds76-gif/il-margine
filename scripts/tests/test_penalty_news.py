@@ -250,12 +250,14 @@ class PublicationLiveTree(unittest.TestCase):
             with patch.object(publisher,'ROOT',root),self.assertRaisesRegex(RuntimeError,'regress'):
                 publisher.news_tree(source,live,evidence)
 
-    def test_current_news_needs_no_ancestry_check_or_deployment(self):
+    def run_current_news(self, capture=None):
         with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as tmp:
             root=Path(tmp);(root/'config').mkdir();(root/'config/penalty-news-publication.json').write_text('{"enabled":true,"lookbackDays":8}')
             (root/publisher.DATA).parent.mkdir(parents=True);(root/publisher.DATA).write_text('{"generatedAt":"same","articles":[]}')
             state=root/'evidence';state.mkdir();(state/'capture-state.json').write_text('{}')
-            (state/'report.json').write_text('{"matchesChecked":0,"matchesExpected":0,"errors":[],"excluded":[],"articles":0}')
+            report = {'matchesChecked': 0, 'matchesExpected': 0, 'errors': [], 'excluded': [], 'articles': 0}
+            report.update(capture or {})
+            (state/'report.json').write_text(json.dumps(report))
             def command(*args,**kw):
                 if args[:2]==('git','status'):return ''
                 if args==('git','rev-parse','--abbrev-ref','HEAD'):return publisher.BRANCH
@@ -269,7 +271,23 @@ class PublicationLiveTree(unittest.TestCase):
                 raise AssertionError('Unexpected command '+str(args))
             with patch.object(publisher,'ROOT',root),patch.object(publisher,'run',side_effect=command),patch.object(publisher.shutil,'which',return_value='vercel'),patch.dict(publisher.os.environ,{'VERCEL_TOKEN':'test-only'}),patch('sys.argv',['publish','--state',str(state)]):
                 publisher.main()
-            self.assertEqual(json.loads((state/'publication.json').read_text())['status'],'already_current')
+            return json.loads((state/'publication.json').read_text())
+
+    def test_current_news_needs_no_ancestry_check_or_deployment(self):
+        self.assertEqual(self.run_current_news()['status'], 'already_current')
+
+    def test_final_data_wait_is_visible_without_failing_or_building(self):
+        waiting = [{'matchId': '123', 'pendingSince': '2026-10-28T21:00:00+00:00'}]
+        receipt = self.run_current_news({'waitingForFinalData': waiting, 'pendingMatchIds': ['123']})
+        self.assertEqual(receipt['status'], 'already_current')
+        self.assertEqual(receipt['waitingForFinalData'], waiting)
+        self.assertEqual(receipt['pendingMatchIds'], ['123'])
+
+    def test_overdue_or_invalid_data_still_fails_after_publication_check(self):
+        for issue in ({'errors': [{'matchId': '123', 'reason': 'Final data overdue'}]},
+                      {'excluded': [{'matchId': '123', 'reason': 'Ambiguous penalty'}]}):
+            with self.subTest(issue=issue), self.assertRaisesRegex(RuntimeError, 'Capture incomplete'):
+                self.run_current_news(issue)
 
 
 class PostMatchCapture(unittest.TestCase):
@@ -356,6 +374,70 @@ class PostMatchCapture(unittest.TestCase):
             self.assertEqual(self.capture(root)['articles'], 0)
             (evidence / 'match-123.json').unlink()
             self.assertEqual(self.capture(root)['matchesExpected'], 0)
+
+    def test_live_detail_waits_then_recovers_penalty_once_without_losing_old_news(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as tmp:
+            root = Path(tmp)
+            old = self.run_normalize()[1]
+            previous = news.public_packet({}, old, 'old-version', '2026-10-18', True, 1)
+            news.atomic_write(root / 'news.json', previous)
+            self.payload['props']['pageProps']['general']['finished'] = False
+            self.payload['props']['pageProps']['header']['status']['finished'] = False
+            evidence = self.capture_fixture(root, self.payload)
+            first = self.capture(root)
+            self.assertEqual(first['errors'], [])
+            self.assertEqual(first['matchesChecked'], 0)
+            self.assertEqual(first['pendingMatchIds'], ['123'])
+            self.assertEqual(len(first['waitingForFinalData']), 1)
+            self.assertEqual(news.read(root / 'news.json', {}), previous)
+            since = first['waitingForFinalData'][0]['pendingSince']
+            self.assertEqual(self.capture(root)['waitingForFinalData'][0]['pendingSince'], since)
+            packet = news.read(evidence / 'match-123.json', {})
+            packet['payload']['props']['pageProps']['general']['finished'] = True
+            packet['payload']['props']['pageProps']['header']['status']['finished'] = True
+            news.atomic_write(evidence / 'match-123.json', packet)
+            recovered = self.capture(root)
+            self.assertEqual((recovered['matchesChecked'], recovered['articles']), (1, 1))
+            self.assertEqual(recovered['pendingMatchIds'], [])
+            self.assertEqual(recovered['waitingForFinalData'], [])
+            self.assertNotIn('finalDataPendingSince', news.read(root / 'state.json', {})['matches']['123'])
+            self.assertEqual(self.capture(root)['articles'], 1)
+
+    def test_final_data_wait_escalates_after_one_hour_without_resetting_clock(self):
+        self.payload['props']['pageProps']['header']['status']['finished'] = False
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as tmp:
+            root = Path(tmp)
+            self.capture_fixture(root, self.payload)
+            self.capture(root)
+            checkpoint = news.read(root / 'state.json', {})
+            since = (news.datetime.now(news.timezone.utc) - news.timedelta(hours=1)).isoformat()
+            checkpoint['matches']['123']['finalDataPendingSince'] = since
+            news.atomic_write(root / 'state.json', checkpoint)
+            report = self.capture(root)
+            self.assertEqual(report['waitingForFinalData'], [])
+            self.assertEqual(report['pendingMatchIds'], ['123'])
+            self.assertEqual(report['errors'][0]['pendingSince'], since)
+            self.assertIn('one hour', report['errors'][0]['reason'])
+
+    def test_bad_identity_and_missing_final_evidence_do_not_get_grace(self):
+        for problem in ('identity', 'missing_status', 'cancelled', 'missing_shots'):
+            with self.subTest(problem=problem), tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as tmp:
+                root = Path(tmp)
+                payload = deepcopy(self.payload)
+                page = payload['props']['pageProps']
+                if problem == 'identity':
+                    page['general'].update(matchId=999, finished=False)
+                elif problem == 'missing_status':
+                    del page['header']['status']['finished']
+                elif problem == 'cancelled':
+                    page['header']['status'].update(cancelled=True, finished=False)
+                else:
+                    del page['content']['shotmap']
+                self.capture_fixture(root, payload)
+                report = self.capture(root)
+                self.assertEqual(len(report['errors']), 1)
+                self.assertEqual(report['waitingForFinalData'], [])
+                self.assertEqual(report['pendingMatchIds'], ['123'])
 
 
 if __name__ == "__main__":
