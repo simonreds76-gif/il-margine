@@ -39,3 +39,16 @@ test('evening run timestamps show London time including summer time', () => {
   assert.match(refreshTime('2026-10-28T21:49:23.4682053Z'), /21:49/);
   assert.match(refreshTime('2026-09-26T21:13:32Z'), /22:13/);
 });
+
+test('current pipeline progress is shown without declaring completion', () => {
+  const message = tennisRefreshStatusMessage({ state: 'started', phase: 'props', progress_message: 'Capturing fresh aces and double-fault prices.' });
+  assert.equal(message, 'Capturing fresh aces and double-fault prices.');
+  assert.equal(tennisRefreshIsActive({ state: 'started' }), true);
+});
+
+test('successful zero-new check does not imply Telegram delivery', () => {
+  const message = tennisRefreshStatusMessage({ state: 'completed', telegram_status: 'checked_no_new', telegram_new_signals: 0 });
+  assert.match(message, /No new qualifying selections/);
+  assert.match(message, /earlier alerts were not repeated/);
+  assert.doesNotMatch(message, /relay queued|30 minutes/);
+});
