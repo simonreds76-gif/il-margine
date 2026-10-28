@@ -980,6 +980,11 @@ def main() -> None:
     else:
         print("PRICE_COVERAGE_UNAVAILABLE: no supported tennis props from selected books; this is not a no-value result. Existing lines retained.")
     print(f"Saved audit: {audit_out}")
+    # The installed Sisal comparison must see fresh quotes even if a later
+    # projection build times out, or the caller requested capture-only mode.
+    # Hosts without the local frozen model remain capture-only explicitly.
+    from sisal_capture_handoff import run as handoff_sisal
+    print('Sisal paper handoff: '+json.dumps(handoff_sisal(ROOT, out)))
 
 
 if __name__ == "__main__":
