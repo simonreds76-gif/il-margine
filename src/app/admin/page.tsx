@@ -6,6 +6,7 @@ import BookmakerThumb from "@/components/BookmakerThumb";
 import { supabase, Bet, Bookmaker } from "@/lib/supabase";
 import { formatOdds } from "@/lib/format";
 import { stripTipSeoMarker } from "@/lib/tip-seo";
+import { refreshTime, tennisRefreshIsActive, tennisRefreshStatusMessage, type TennisRefreshCommand } from "@/lib/tennis-refresh-status";
 
 const MonthlyBreakdown = dynamic(() => import("@/components/MonthlyBreakdown"), {
   ssr: false,
@@ -87,6 +88,9 @@ export default function AdminPanel() {
   const [tennisRefreshLoading, setTennisRefreshLoading] = useState(false);
   const [tennisRefreshMessage, setTennisRefreshMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [tennisRefreshRequestId, setTennisRefreshRequestId] = useState<string | null>(null);
+  const [tennisRefreshCommand, setTennisRefreshCommand] = useState<TennisRefreshCommand | null>(null);
+  const tennisRefreshGeneration = useRef(0);
+  const tennisRefreshSubmitting = useRef(false);
   const [telegramAnalytics, setTelegramAnalytics] = useState<TelegramClickAnalytics | null>(null);
   const [telegramAnalyticsLoading, setTelegramAnalyticsLoading] = useState(false);
   const [telegramAnalyticsError, setTelegramAnalyticsError] = useState<string | null>(null);
@@ -454,75 +458,90 @@ export default function AdminPanel() {
     }
   };
 
+  // Restore the latest request after navigation, without starting another run.
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    const controller = new AbortController();
+    const generation = tennisRefreshGeneration.current;
+    void fetch("/api/admin/tennis-refresh", { cache: "no-store", signal: controller.signal })
+      .then(async (res) => {
+        if (!res.ok) return;
+        const data = await res.json();
+        if (controller.signal.aborted || generation !== tennisRefreshGeneration.current || !data.command) return;
+        const command = data.command as TennisRefreshCommand;
+        setTennisRefreshCommand(command);
+        setTennisRefreshMessage({ type: command.state === "failed" ? "error" : "success", text: tennisRefreshStatusMessage(command) });
+        if (tennisRefreshIsActive(command) && command.request_id) {
+          setTennisRefreshLoading(true);
+          setTennisRefreshRequestId(command.request_id);
+        }
+      }).catch(() => { /* A later click or page visit can retry this read. */ });
+    return () => controller.abort();
+  }, [isLoggedIn]);
+
   const handleTennisRefresh = async () => {
+    if (tennisRefreshSubmitting.current) return;
+    tennisRefreshSubmitting.current = true;
+    tennisRefreshGeneration.current += 1;
     setTennisRefreshLoading(true);
     setTennisRefreshMessage(null);
-    const res = await fetch("/api/admin/tennis-refresh", { method: "POST" });
-    const data = await res.json().catch(() => ({}));
-    if (res.ok) {
-      setTennisRefreshRequestId(data.command?.request_id || null);
-      setTennisRefreshMessage({
-        type: "success",
-        text: data.message || "Fair-odds refresh queued. Waiting for the laptop pipeline.",
-      });
-    } else if (res.status === 409 && data.command?.request_id) {
-      setTennisRefreshRequestId(data.command.request_id);
-      setTennisRefreshMessage({
-        type: "success",
-        text: "A fair-odds refresh is already active. Following that run instead of creating a duplicate.",
-      });
-    } else {
+    setTennisRefreshCommand(null);
+    try {
+      const res = await fetch("/api/admin/tennis-refresh", { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if ((res.ok || res.status === 409) && data.command?.request_id) {
+        setTennisRefreshCommand(data.command);
+        setTennisRefreshRequestId(data.command.request_id);
+        setTennisRefreshMessage({ type: "success", text: tennisRefreshStatusMessage(data.command) });
+      } else {
+        setTennisRefreshLoading(false);
+        setTennisRefreshMessage({ type: "error", text: data.error || "Unable to start tennis refresh" });
+      }
+    } catch {
       setTennisRefreshLoading(false);
-      setTennisRefreshMessage({ type: "error", text: data.error || "Unable to start tennis refresh" });
+      setTennisRefreshMessage({ type: "error", text: "Connection lost while queuing. Reload Admin to check whether your request was accepted before retrying." });
+    } finally {
+      tennisRefreshSubmitting.current = false;
     }
   };
 
   useEffect(() => {
     if (!tennisRefreshRequestId) return;
-    let cancelled = false;
+    const controller = new AbortController();
+    let timer: ReturnType<typeof setTimeout> | undefined;
 
     const poll = async () => {
-      const res = await fetch(`/api/admin/tennis-refresh?request_id=${encodeURIComponent(tennisRefreshRequestId)}`, {
-        cache: "no-store",
-      });
-      const data = await res.json().catch(() => ({}));
-      if (cancelled) return;
-      if (!res.ok) {
-        setTennisRefreshLoading(false);
-        setTennisRefreshRequestId(null);
-        setTennisRefreshMessage({ type: "error", text: data.error || "Unable to read tennis refresh status" });
-        return;
-      }
-
-      const command = data.command || {};
-      const state = String(command.state || "pending");
-      if (state === "completed") {
-        const count = Number(command.signal_count || 0);
-        setTennisRefreshLoading(false);
-        setTennisRefreshRequestId(null);
-        setTennisRefreshMessage({
-          type: "success",
-          text: `Completed: ${count} current tennis signal${count === 1 ? "" : "s"}. Telegram relay queued successfully.`,
+      try {
+        const res = await fetch(`/api/admin/tennis-refresh?request_id=${encodeURIComponent(tennisRefreshRequestId)}`, {
+          cache: "no-store", signal: controller.signal,
         });
-      } else if (state === "failed") {
-        setTennisRefreshLoading(false);
-        setTennisRefreshRequestId(null);
-        setTennisRefreshMessage({ type: "error", text: command.error || "Fair-odds refresh failed" });
-      } else {
-        const label = state === "waiting"
-          ? "Waiting for the current tennis job to finish..."
-          : state === "started"
-            ? "Running on the laptop. Fair odds normally take 10-20 minutes..."
-            : "Queued for the laptop; pickup normally takes under two minutes...";
-        setTennisRefreshMessage({ type: "success", text: label });
+        const data = await res.json().catch(() => ({}));
+        if (controller.signal.aborted) return;
+        if (!res.ok) {
+          if (res.status >= 500) throw new Error("Temporary status error");
+          setTennisRefreshLoading(false);
+          setTennisRefreshRequestId(null);
+          setTennisRefreshMessage({ type: "error", text: data.error || "Unable to read tennis refresh status" });
+          return;
+        }
+        const command = data.command as TennisRefreshCommand;
+        setTennisRefreshCommand(command);
+        setTennisRefreshMessage({ type: command.state === "failed" ? "error" : "success", text: tennisRefreshStatusMessage(command) });
+        if (!tennisRefreshIsActive(command)) {
+          setTennisRefreshLoading(false);
+          setTennisRefreshRequestId(null);
+          return;
+        }
+      } catch {
+        if (controller.signal.aborted) return;
+        setTennisRefreshMessage({ type: "error", text: "Status connection interrupted; retrying. Your queued job has not been cancelled." });
       }
+      if (!controller.signal.aborted) timer = setTimeout(() => void poll(), 5_000);
     };
-
     void poll();
-    const timer = window.setInterval(() => void poll(), 5_000);
     return () => {
-      cancelled = true;
-      window.clearInterval(timer);
+      controller.abort();
+      if (timer) clearTimeout(timer);
     };
   }, [tennisRefreshRequestId]);
 
@@ -680,7 +699,7 @@ export default function AdminPanel() {
                 <div className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">On-demand tennis</div>
                 <h2 className="mt-1 font-semibold text-slate-100">Fair odds + Telegram alerts</h2>
                 <p className="mt-1 text-xs text-slate-400">
-                  Starts the existing AM pipeline now on localhost, or queues it securely for the laptop from the hosted Admin. Duplicate runs are blocked.
+                  Use this at any time after OnCourt finishes updating. It imports your saved database, fetches fresh prices and checks for qualifying signals. Keep the laptop on and connected; you do not need the local dev server.
                 </p>
               </div>
               <button
@@ -689,13 +708,34 @@ export default function AdminPanel() {
                 disabled={tennisRefreshLoading}
                 className="shrink-0 rounded-lg border border-cyan-400/40 bg-cyan-400/15 px-4 py-3 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-400/25 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {tennisRefreshLoading ? "Refresh in progress..." : "Run fair odds + alerts"}
+                {tennisRefreshLoading ? "Refresh in progress..." : "Refresh odds + signals now"}
               </button>
             </div>
             {tennisRefreshMessage && (
-              <p className={`mt-2 text-sm ${tennisRefreshMessage.type === "success" ? "text-emerald-400" : "text-red-400"}`}>
+              <p role="status" className={`mt-2 text-sm ${tennisRefreshMessage.type === "success" ? "text-emerald-400" : "text-red-400"}`}>
                 {tennisRefreshMessage.text}
               </p>
+            )}
+            {tennisRefreshCommand && (
+              <div className="mt-3 rounded-lg border border-slate-800 bg-slate-950/60 p-3 text-xs text-slate-400">
+                <p className="mb-3">Request: {refreshTime(tennisRefreshCommand.requested_at)}</p>
+                <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  {[
+                    ["OnCourt database updated", tennisRefreshCommand.oncourt_database_updated_at],
+                    ["OnCourt imported", tennisRefreshCommand.oncourt_extracted_at],
+                    ["Fair odds + signals checked", tennisRefreshCommand.signal_generation_completed_at],
+                  ].map(([label, value]) => (
+                    <div key={label} className="min-w-0">
+                      <dt>{label}</dt>
+                      <dd className="mt-1 font-medium text-slate-200">{refreshTime(value)}</dd>
+                    </div>
+                  ))}
+                </dl>
+                {tennisRefreshCommand.odds_not_before && (
+                  <p className="mt-3">Match-market quotes must be captured after {refreshTime(tennisRefreshCommand.odds_not_before)} for this run.</p>
+                )}
+                <p className="mt-2">A refresh can finish with no qualifying selections. Longer-term player profiles keep their existing scheduled refresh; model settings stay unchanged.</p>
+              </div>
             )}
           </div>
       </section>

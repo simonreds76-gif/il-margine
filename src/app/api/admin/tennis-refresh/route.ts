@@ -76,7 +76,7 @@ async function queueRefresh(req: Request) {
     ok: true,
     mode: "queued",
     command,
-    message: "Fair-odds refresh queued. It normally takes 10-20 minutes; this panel will confirm signal generation and Telegram relay status.",
+    message: "Refresh queued. Keep the laptop on after updating OnCourt. This panel shows the saved database time and completed pricing check; the full run can take 30 minutes or longer.",
   });
 }
 
