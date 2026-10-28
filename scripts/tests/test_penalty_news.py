@@ -269,7 +269,7 @@ class PublicationLiveTree(unittest.TestCase):
                     return '{"id":"live","url":"live.vercel.app","meta":{"githubCommitSha":"different-live-sha"}}'
                 if args[:2]==('vercel','curl'):return '<main data-news-version="same">current articles</main>'
                 raise AssertionError('Unexpected command '+str(args))
-            with patch.object(publisher,'ROOT',root),patch.object(publisher,'run',side_effect=command),patch.object(publisher.shutil,'which',return_value='vercel'),patch.dict(publisher.os.environ,{'VERCEL_TOKEN':'test-only'}),patch('sys.argv',['publish','--state',str(state)]):
+            with patch.object(publisher,'ROOT',root),patch.object(publisher,'run',side_effect=command),patch.object(publisher.shutil,'which',return_value='vercel'),patch.dict(publisher.os.environ,{'VERCEL_TOKEN':'test-only','GITHUB_STEP_SUMMARY':''}),patch('builtins.print'),patch('sys.argv',['publish','--state',str(state)]):
                 publisher.main()
             return json.loads((state/'publication.json').read_text())
 
