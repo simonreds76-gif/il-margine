@@ -66,6 +66,9 @@ def best_candidates(rows,now):
         captured=stamp(row.get('price_captured_at_utc'))
         kickoff=stamp(row.get('kickoff_utc'))
         reasons=[x for x in str(row.get('blocked_reason') or '').split(';') if x]
+        try: valid_price=math.isfinite(float(row['book_odds'])) and float(row['book_odds'])>1
+        except (KeyError,TypeError,ValueError): valid_price=False
+        if not valid_price and 'invalid_price' not in reasons:reasons.append('invalid_price')
         if (not captured or not kickoff or kickoff<=now
                 or not 0 <= (now-captured).total_seconds() <= MAX_PRICE_SECONDS):
             if 'price_not_fresh_10m' not in reasons: reasons.append('price_not_fresh_10m')
@@ -76,7 +79,7 @@ def best_candidates(rows,now):
         grouped.setdefault((row['pick_id'],row['kickoff_utc']),[]).append(row)
     for group in grouped.values():
         usable=[r for r in group if not any(x in str(r.get('blocked_reason','')) for x in
-                   ('price_not_fresh_10m','price_older_than_3h','future_price_timestamp','missing_price_timestamp'))]
+                   ('price_not_fresh_10m','price_older_than_3h','future_price_timestamp','missing_price_timestamp','invalid_price'))]
         usable=[r for r in usable if math.isfinite(float(r['book_odds'])) and float(r['book_odds'])>1]
         if not usable:continue
         best=max(usable,key=lambda r:(float(r['book_odds']),str(r.get('price_captured_at_utc','')),str(r.get('bookmaker',''))))
