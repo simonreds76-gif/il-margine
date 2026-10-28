@@ -2425,16 +2425,75 @@
       },
       "message_id": 682,
       "sent_at": "2026-10-27T00:50:13.016587+00:00"
+    },
+    "kambi|71945352|łukasz skorupski|3.5|over": {
+      "status": "claimed",
+      "run_token": "40692522844:1",
+      "claimed_at": "2026-10-28T13:00:41.638437+00:00",
+      "signal": {
+        "signal_id": "kambi|71945352|łukasz skorupski|3.5|over",
+        "created_at": "2026-10-28T13:00:40Z",
+        "event_id": "71945352",
+        "match_date": "2026-10-28",
+        "kickoff_at": "2026-10-28T17:30:00Z",
+        "league": "serie-a",
+        "home_team": "AC Milan",
+        "away_team": "Bologna FC",
+        "team": "Bologna FC",
+        "opponent": "AC Milan",
+        "venue": "away",
+        "goalkeeper": "Łukasz Skorupski",
+        "bookmaker": "Kambi",
+        "line": "3.5",
+        "side": "over",
+        "odds_decimal": "2.2500",
+        "model_mean": "3.6206",
+        "model_probability": "0.474978",
+        "push_probability": "0.000000",
+        "fair_odds": "2.105",
+        "edge": "0.068700",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-10-28T13:00:36Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "team_goalkeeper_away",
+        "identity_basis": "same_fixture_lineup_side",
+        "price_comparison": [
+          {
+            "bookmaker": "Kambi",
+            "odds": 2.25,
+            "captured_at": "2026-10-28T13:00:36Z",
+            "contract_scope": "team_goalkeeper_away"
+          },
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 2.25,
+            "captured_at": "2026-10-28T13:00:36+00:00",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-10-28T13:00:41.638437+00:00"
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-10-28T00:00:58.409790+00:00",
-      "added": 0,
+      "checked_at": "2026-10-28T13:00:41.638437+00:00",
+      "added": 1,
       "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-10-28T00:00:58.409790+00:00",
+      "checked_at": "2026-10-28T13:00:41.638437+00:00",
       "added": 0,
       "suppressed": {}
     }
