@@ -3,77 +3,67 @@
   "deferred_not_due": 2,
   "details": [
     {
-      "detail": "",
+      "detail": "{\"actual_starter\": \"Massimo Pessina\", \"actual_starter_id\": 1696050, \"match_id\": \"5749696\", \"reason\": \"verified_named_nonstarter\", \"rule_url\": \"https://help.bet365.com/s/en/sportsrules/soccer/match-statistics\", \"selected_keeper\": \"\\u0141ukasz Skorupski\", \"side\": \"away\", \"source_sha256\": \"64fc63083c537730e3cd27a0d558387730440a22487c123e63f9d12e76bc0bad\", \"starter_minutes\": 90}",
       "goalkeeper": "\u0141ukasz Skorupski",
       "match": "US Lecce vs Bologna FC",
       "match_date": "2026-10-11",
-      "reason": "fotmob_matched_player_not_goalkeeper",
+      "reason": "void_verified_named_nonstarter",
       "signal_id": "71945298|\u0142ukasz skorupski|2.5|over"
     },
     {
-      "detail": "",
+      "detail": "{\"actual_saves\": 3, \"goalkeeper\": \"Loris Karius\", \"match_date\": \"2026-10-11\", \"match_id\": \"5881182\", \"player_id\": 287894, \"reason\": \"FotMob's named Karius statistic reports three saves; Sky Sports independently publishes Schalke three saves. Karius is the verified full-match goalkeeper. The shot map has two saved opponent attempts. Preserve that discrepancy in research targets; use the corroborated published count only for this named contract. This is not a general shot-map override.\", \"reviewed_at\": \"2026-10-28T16:33:00Z\", \"reviewed_event_saves\": 2, \"source_urls\": [\"https://www.fotmob.com/api/data/matchDetails?matchId=5881182\", \"https://www.skysports.com/football/sc-freiburg-vs-schalke/7763429947929175232\"], \"team_id\": 10189, \"venue\": \"away\"}",
       "goalkeeper": "Loris Karius",
       "match": "SC Freiburg vs Schalke 04",
       "match_date": "2026-10-11",
-      "reason": "fotmob_save_totals_disagree",
+      "reason": "settled_reviewed_named_count",
       "signal_id": "72513226|loris karius|3.5|over"
     },
     {
-      "detail": "",
+      "detail": "{\"actual_starter\": \"\\u0141ukasz Skorupski\", \"actual_starter_id\": 178732, \"match_id\": \"5749702\", \"reason\": \"verified_named_nonstarter\", \"rule_url\": \"https://help.bet365.com/s/en/sportsrules/soccer/match-statistics\", \"selected_keeper\": \"Massimo Pessina\", \"side\": \"home\", \"source_sha256\": \"74ded6b4ffef4a08ac678bb2cedfad228648d7c64697d94fa2faee0263d200f3\", \"starter_minutes\": 90}",
       "goalkeeper": "Massimo Pessina",
       "match": "Bologna FC vs Inter Milano",
       "match_date": "2026-10-17",
-      "reason": "fotmob_matched_player_not_goalkeeper",
+      "reason": "void_verified_named_nonstarter",
       "signal_id": "71945306|massimo pessina|3.5|over"
     },
     {
-      "detail": "",
+      "detail": "{\"actual_starter\": \"\\u00d8rjan H\\u00e5skjold Nyland\", \"actual_starter_id\": 73409, \"match_id\": \"5881204\", \"reason\": \"verified_named_nonstarter\", \"rule_url\": \"https://help.bet365.com/s/en/sportsrules/soccer/match-statistics\", \"selected_keeper\": \"Maarten Vandevoordt\", \"side\": \"home\", \"source_sha256\": \"39fd77b4f21642b437d857919be714dd1ade26259c260c2792fb4949bcf5318d\", \"starter_minutes\": 90}",
       "goalkeeper": "Maarten Vandevoordt",
       "match": "RB Leipzig vs SV 07 Elversberg",
       "match_date": "2026-10-24",
-      "reason": "fotmob_matched_player_not_goalkeeper",
+      "reason": "void_verified_named_nonstarter",
       "signal_id": "72513258|maarten vandevoordt|2.5|over"
     },
     {
-      "detail": "",
+      "detail": "{\"actual_starter\": \"Jonas Urbig\", \"actual_starter_id\": 1285872, \"match_id\": \"5881200\", \"reason\": \"verified_named_nonstarter\", \"rule_url\": \"https://help.bet365.com/s/en/sportsrules/soccer/match-statistics\", \"selected_keeper\": \"Manuel Neuer\", \"side\": \"away\", \"source_sha256\": \"989fec329942876ea1076c875cb4a8a19e5097e92d07d6f494580394fe4322bf\", \"starter_minutes\": 90}",
       "goalkeeper": "Manuel Neuer",
       "match": "SC Freiburg vs Bayern Munich",
       "match_date": "2026-10-25",
-      "reason": "fotmob_goalkeeper_not_found",
+      "reason": "void_verified_named_nonstarter",
       "signal_id": "72513264|manuel neuer|2.5|over"
     },
     {
-      "detail": "",
+      "detail": "{\"actual_starter\": \"Dominik Greif\", \"actual_starter_id\": 651910, \"match_id\": \"5802972\", \"reason\": \"verified_named_nonstarter\", \"rule_url\": \"https://help.bet365.com/s/en/sportsrules/soccer/match-statistics\", \"selected_keeper\": \"R\\u00e9my Descamps\", \"side\": \"away\", \"source_sha256\": \"a846e3af10d1e3ae7f4550230e8fb1b0a57b794b8c89f706a5b0142b43913164\", \"starter_minutes\": 90}",
       "goalkeeper": "R\u00e9my Descamps",
       "match": "Paris Saint-Germain vs Olympique Lyon",
       "match_date": "2026-10-26",
-      "reason": "fotmob_matched_player_not_goalkeeper",
+      "reason": "void_verified_named_nonstarter",
       "signal_id": "72036250|r\u00e9my descamps|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Elia Caprile",
-      "match": "AS Roma vs Cagliari Calcio",
-      "match_date": "2026-10-27",
-      "reason": "settled_fotmob",
-      "signal_id": "kambi|71945358|elia caprile|4.5|over"
     }
   ],
-  "fotmob_requests_used": 13,
-  "generated_at": "2026-10-28T15:12:00Z",
+  "fotmob_requests_used": 11,
+  "generated_at": "2026-10-28T16:39:57Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
-  "pending_due": 6,
-  "pending_total": 8,
+  "pending_due": 0,
+  "pending_total": 2,
   "reason_counts": {
-    "fotmob_goalkeeper_not_found": 1,
-    "fotmob_matched_player_not_goalkeeper": 4,
-    "fotmob_save_totals_disagree": 1,
-    "settled_fotmob": 1
+    "settled_reviewed_named_count": 1,
+    "void_verified_named_nonstarter": 5
   },
   "requests_used": 0,
-  "settled": 1,
-  "status": "PARTIAL",
+  "settled": 6,
+  "status": "SETTLED",
   "verified_player_targets": [
     {
       "appearances": 32,
@@ -109,12 +99,6 @@
       "match_id": 5802972,
       "status": "unchanged",
       "targets_sha256": "9af11e23ccca053738d88ade2da0382c415503621a6701a12f8637e751e9bf6e"
-    },
-    {
-      "appearances": 32,
-      "match_id": 5749721,
-      "status": "saved",
-      "targets_sha256": "39a78f6b543066c52dbcd57b2b0fbcd94e7c706c165d230e47440b643fdab984"
     }
   ]
 }

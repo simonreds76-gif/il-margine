@@ -15,24 +15,25 @@
     "value_ladder_lines": 2
   },
   "evidence": {
-    "clv": 0.052654,
-    "clv_matched": 30,
-    "pending": 8,
-    "pnl_units": 14.572,
-    "roi": 0.346952,
-    "settled": 84,
+    "clv": 0.050955,
+    "clv_matched": 31,
+    "pending": 2,
+    "pnl_units": 14.072,
+    "roi": 0.331106,
+    "settled": 85,
     "settlement_sources": {
       "fotmob_named_keeper_shotmap": 76,
       "fotmob_team_keeper_shotmap": 5,
+      "independently_reviewed_named_keeper_count": 1,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
     "signals": 93,
-    "true_close_coverage": 0.357143,
-    "void": 1
+    "true_close_coverage": 0.364706,
+    "void": 6
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-28T16:16:42.119017+00:00",
+    "checked_at": "2026-10-28T16:40:01.964640+00:00",
     "counts": {
       "not_fresh_prematch": 13,
       "offers_saved": 46
@@ -40,19 +41,20 @@
     "saved": 5,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-28T16:16:41Z",
+  "generated_at": "2026-10-28T16:40:01Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
-    "coverage": "Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.",
+    "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
+      "before_grosvenor_registration": 19,
       "blocked_or_missing_inputs": 8,
       "not_new_fresh_prematch": 13,
-      "unregistered_settlement_rules": 38
+      "unregistered_settlement_rules": 19
     },
     "forecast_fixtures": 85,
     "forecast_keepers": 170,
-    "generated_at": "2026-10-28T16:16:42.229013+00:00",
+    "generated_at": "2026-10-28T16:40:02.023097+00:00",
     "last_capture_at": "2026-10-25T13:14:55.143085+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
@@ -98,6 +100,38 @@
         "stake": 2.0,
         "voids": 1,
         "wins": 1
+      }
+    },
+    "records_by_bookmaker": {
+      "Bet365": {
+        "current": {
+          "losses": 10,
+          "overdue": 0,
+          "pending": 0,
+          "profit": 1.2690000000000003,
+          "pushes": 0,
+          "review": 0,
+          "roi": 0.12690000000000004,
+          "selections": 24,
+          "settled": 20,
+          "stake": 10.0,
+          "voids": 4,
+          "wins": 10
+        },
+        "keeper_watch": {
+          "losses": 3,
+          "overdue": 0,
+          "pending": 0,
+          "profit": -0.5,
+          "pushes": 0,
+          "review": 0,
+          "roi": -0.25,
+          "selections": 5,
+          "settled": 4,
+          "stake": 2.0,
+          "voids": 1,
+          "wins": 1
+        }
       }
     },
     "review_milestone": 50,
@@ -803,6 +837,11 @@
       "incomplete_or_conflicting_full_match_count": 12,
       "keeper_identity_unresolved": 3,
       "verified_different_starting_keeper": 10
+    },
+    "source_extension": {
+      "Grosvenor": "2026-10-28T16:30:00Z",
+      "exceptions": "Replacement keepers, substitutions and disputed counts remain under review; no inferred voids.",
+      "policy": "grosvenor_full90_scope_agreement_v1"
     },
     "start_at": "2026-10-15T15:58:57.141631+00:00",
     "status": "TRACKING"
