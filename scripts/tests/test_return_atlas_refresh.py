@@ -54,6 +54,53 @@ class PublicationGateTests(unittest.TestCase):
         self.assertNotIn('other-folder', refresh.obsolete_versions(['other-folder'], *versions[:3]))
 
 
+class DescriptionGateTests(unittest.TestCase):
+    def setUp(self):
+        self.old = {'matches': [['vbt-1005169', 'Almaty Open - Almaty', '6-7 6-1 6-3']]}
+
+    def test_observed_added_tiebreak_points_are_audited(self):
+        new = deepcopy(self.old)
+        new['matches'][0][2] = '6-7(6) 6-1 6-3'
+        self.assertEqual(refresh.validate_descriptions(self.old, new), [
+            {'matchId': 'vbt-1005169', 'previousScore': '6-7 6-1 6-3',
+             'score': '6-7(6) 6-1 6-3'}])
+
+    def test_description_only_enrichment_is_not_lost_as_unchanged(self):
+        self.assertTrue(refresh.score_detail_enrichment('7-6 7-6', '7-6(4) 7-6(5)'))
+        self.assertTrue(refresh.score_detail_enrichment('7-6(4) 7-6', '7-6(4) 7-6(5)'))
+
+    def test_unchanged_and_new_rows_do_not_edit_history(self):
+        new = deepcopy(self.old)
+        new['matches'].append(['new', 'Other event', '6-1 6-2'])
+        self.assertEqual(refresh.validate_descriptions(self.old, new), [])
+
+    def test_set_score_retirement_and_invalid_annotation_changes_block(self):
+        for score in ['7-6 6-1 6-3', '6-7 6-2 6-3', '6-7 6-1',
+                      '6-7 6-1 6-3 RET', '6-7(6) 6-1(2) 6-3', '6-7(foo) 6-1 6-3']:
+            with self.subTest(score=score):
+                new = deepcopy(self.old)
+                new['matches'][0][2] = score
+                with self.assertRaisesRegex(ValueError, 'vbt-1005169'):
+                    refresh.validate_descriptions(self.old, new)
+
+    def test_known_tiebreak_points_cannot_change_or_disappear(self):
+        for new in ['6-7(5) 6-1 6-3', '6-7 6-1 6-3']:
+            self.assertFalse(refresh.score_detail_enrichment('6-7(6) 6-1 6-3', new))
+
+    def test_event_edits_and_missing_history_block_with_match_id(self):
+        for operation in ['event', 'missing']:
+            new = deepcopy(self.old)
+            if operation == 'event': new['matches'][0][1] = 'Another event'
+            else: new['matches'] = []
+            with self.assertRaisesRegex(ValueError, 'vbt-1005169'):
+                refresh.validate_descriptions(self.old, new)
+
+    def test_duplicate_or_malformed_descriptions_block(self):
+        for rows in [self.old['matches'] * 2, [['vbt-1005169', 'event']]]:
+            with self.assertRaises(ValueError):
+                refresh.validate_descriptions(self.old, {'matches': rows})
+
+
 class PublicPropagationTests(unittest.TestCase):
     expected = {'return-atlas': '20261025-0f30bd9964e7',
                 'tennis-matchup': '20261026-eb98a6b72549'}

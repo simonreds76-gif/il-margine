@@ -25,6 +25,7 @@ PROJECT = 'prj_OnvAAAzkpLa5N9uZI3Iy2mwEj6IL'
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from matchup_refresh import prepare as prepare_matchup
+from tennis_score_integrity import score_detail_enrichment
 
 
 def run(args, cwd=None, env=None, timeout=600):
@@ -80,6 +81,29 @@ def validate_transition(old, new, as_of):
     if len(candidate) - len(previous) > 400:
         raise ValueError('More than 400 new matches; review large backfill before publication')
     return candidate != previous
+
+
+def validate_descriptions(old_details, new_details):
+    """Retain strict event/set-score checks; audit harmless added tie-break points."""
+    old_rows, new_rows = old_details['matches'], new_details['matches']
+    for rows in (old_rows, new_rows):
+        if any(not isinstance(r, list) or len(r) != 3 for r in rows):
+            raise ValueError('Invalid match description row')
+        if len({r[0] for r in rows}) != len(rows):
+            raise ValueError('Duplicate match description ID')
+    by_id = {r[0]: r for r in new_rows}
+    enrichments = []
+    for previous in old_rows:
+        candidate = by_id.get(previous[0])
+        if candidate == previous:
+            continue
+        if (candidate is None or candidate[1] != previous[1]
+                or not score_detail_enrichment(previous[2], candidate[2])):
+            raise ValueError(f'Existing match description changed: {previous[0]}; '
+                             f'{previous[1:]} -> {candidate[1:] if candidate else None}; review required')
+        enrichments.append({'matchId': previous[0], 'previousScore': previous[2],
+                            'score': candidate[2]})
+    return enrichments
 
 
 def source_csv(data, year):
@@ -262,12 +286,14 @@ def refresh(config, dry_run=False):
         new = read_json(candidate / 'release/public' / new_manifest['indexUrl'].lstrip('/'))
         changed = validate_transition(old, new, as_of)
         # Detect score/event edits even when the numeric return remains unchanged.
+        enrichments = {}
         for player in old['players']:
             old_details = read_json(checkout / 'public' / old_manifest['detailsBase'].lstrip('/') / (player['id'] + '.json'))
             new_details = read_json(candidate / 'release/public' / new_manifest['detailsBase'].lstrip('/') / (player['id'] + '.json'))
-            by_id = {r[0]: r for r in new_details['matches']}
-            if any(by_id.get(r[0]) != r for r in old_details['matches']):
-                raise ValueError('Existing match description changed; review required')
+            for enrichment in validate_descriptions(old_details, new_details):
+                enrichments[enrichment['matchId']] = enrichment
+        changed = changed or bool(enrichments)
+        status['scoreDetailEnrichments'] = list(enrichments.values())
         historical_prices = [cache / f'valuebetennis-{year}.csv' for year in range(2021, current_year + 1)]
         matchup_old, matchup_new, matchup_changed = prepare_matchup(checkout, candidate, new_manifest, as_of, historical_prices)
         status.update(matchupVersion=matchup_new['version'], matchupMatches=matchup_new['matches'], matchupChanged=matchup_changed)

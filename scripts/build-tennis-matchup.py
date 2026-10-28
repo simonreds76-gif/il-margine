@@ -170,7 +170,12 @@ def build(atlas, oncourt, output, as_of, data_only=False, historical_prices=(), 
     all_games = [g for group in games.values() for g in group]
     counts = Counter(key(g) for g in all_games)
     priced_pairs = defaultdict(list)
-    for m in matches: priced_pairs[tuple(sorted((m['p1'],m['p2'])))].append(m)
+    # Resolved priced fixtures are already excluded by their exact priced_keys.
+    # Only unresolved context needs the conservative fuzzy duplicate quarantine:
+    # players can meet in qualifying and again in the main draw a day later.
+    for m in matches:
+        if m['eventKey'] is None:
+            priced_pairs[tuple(sorted((m['p1'],m['p2'])))].append(m)
     for g in all_games:
         k = key(g); t = tours.get(g['tour_id'], {})
         if k in priced_keys or not ('1990-01-01' <= g['date'] < as_of): continue

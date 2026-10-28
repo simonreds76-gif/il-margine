@@ -1,9 +1,12 @@
 import importlib.util
 import csv
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 spec=importlib.util.spec_from_file_location('matchup_builder',Path(__file__).resolve().parents[1]/'build-tennis-matchup.py')
 module=importlib.util.module_from_spec(spec)
@@ -61,5 +64,39 @@ class MatchupBuildTests(unittest.TestCase):
             self.assertIsNone(result['matches'][0]['stats1'])
             self.assertEqual(result['audit']['on_or_after_cutoff'],1)
             self.assertEqual(result['audit']['ambiguous_stats'],1)
+
+    def test_qualifying_meeting_is_not_removed_by_verified_next_day_rematch(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory); oc=root/'oncourt'; oc.mkdir()
+            atlas=root/'version-one'; (atlas/'players').mkdir(parents=True)
+            def write(name,rows):
+                with (oc/name).open('w',newline='',encoding='utf-8') as f:
+                    w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+            write('players_atp.csv',[dict(id='1',name='First Player'),dict(id='2',name='Second Player')])
+            write('tours_atp.csv',[dict(id='t',name='Basel',court_id='3',rank='2',country='SUI')])
+            write('games_atp.csv',[
+                dict(winner_id='1',loser_id='2',tour_id='t',round_id='3',result='7-6(9) 6-3',date='2026-10-25'),
+                dict(winner_id='2',loser_id='1',tour_id='t',round_id='4',result='6-7(5) 7-6(4) 6-4',date='2026-10-26')])
+            write('stat_atp.csv',[dict(winner_id='1',loser_id='2',tour_id='t',round_id='3',w_svpt='71')])
+            index={'players':[{'id':'a','name':'First Player'},{'id':'b','name':'Second Player'}],
+                'surfaces':['indoor-hard'],'sources':['Archive'],
+                'matches':[['main','2026-10-26',0,1,2,2,1,0,0]]}
+            (atlas/'index.json').write_text(json.dumps(index),encoding='utf-8')
+            detail={'version':'version-one','matches':[['main','Basel','6-7(5) 7-6(4) 6-4']]}
+            (atlas/'players/a.json').write_text(json.dumps(detail),encoding='utf-8')
+            module.build(atlas,oc,root/'preview','2026-10-28',data_only=True)
+            result=json.loads((root/'preview/data.json').read_text(encoding='utf-8'))
+            self.assertEqual(len(result['matches']),1)
+            self.assertEqual(len(result['results']),1)
+            self.assertEqual(result['results'][0]['competition'],'Qualifying')
+            self.assertEqual(result['results'][0]['score'],'7-6(9) 6-3')
+            self.assertEqual(result['results'][0]['winner'],0)
+            # If the priced context is unresolved, keep the conservative quarantine.
+            detail['matches'][0][2]='6-4 6-4'
+            (atlas/'players/a.json').write_text(json.dumps(detail),encoding='utf-8')
+            module.build(atlas,oc,root/'unresolved','2026-10-28',data_only=True)
+            unresolved=json.loads((root/'unresolved/data.json').read_text(encoding='utf-8'))
+            self.assertEqual(unresolved['results'],[])
+            self.assertEqual(unresolved['audit']['supplemental_possible_duplicate'],2)
 
 if __name__=='__main__':unittest.main()

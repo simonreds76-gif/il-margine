@@ -2,6 +2,7 @@
 import importlib.util
 import json
 from pathlib import Path
+from tennis_score_integrity import score_detail_enrichment
 
 
 def read(path):
@@ -57,7 +58,7 @@ def validate(old, new):
         if after is None:
             def equivalent(row):
                 return (row['date']==before['date'] and {row['p1'],row['p2']}=={before['p1'],before['p2']}
-                    and row['score']==before['score'] and row['event']==before['event']
+                    and (row['score']==before['score'] or score_detail_enrichment(before['score'], row['score'])) and row['event']==before['event']
                     and [row['p1'],row['p2']][row['winner']]==[before['p1'],before['p2']][before['winner']])
             replacements=[r for r in candidate.values() if equivalent(r)]
             if len(replacements)!=1: raise ValueError(f'H2H meeting disappeared: {mid}')
@@ -67,6 +68,8 @@ def validate(old, new):
                 if before.get(field) and any(v is not None and (after.get(field) or {}).get(k)!=v for k,v in before[field].items()):
                     raise ValueError(f'Existing H2H statistics changed: {mid}')
             for field in ('date','p1','p2','winner','score','event','surface','competition','o1','o2'):
+                if field == 'score' and score_detail_enrichment(before.get(field), after.get(field)):
+                    continue
                 if before.get(field) is not None and after.get(field)!=before[field]:
                     raise ValueError(f'Existing H2H record changed: {mid} ({field})')
     if len(candidate) - len(previous) > 400:
@@ -76,6 +79,8 @@ def validate(old, new):
         if after is None:
             raise ValueError(f'Matchup match disappeared: {mid}')
         for field, value in before.items():
+            if field == 'score' and score_detail_enrichment(value, after.get(field)):
+                continue
             if field.startswith('stats') and value:
                 if not after.get(field) or any(v is not None and after[field].get(k) != v for k, v in value.items()):
                     raise ValueError(f'Existing Matchup statistics changed: {mid}')
