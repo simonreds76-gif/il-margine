@@ -83,7 +83,7 @@
     }
   },
   "real_stake_units": 0,
-  "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion. Club-alias correction registered 19 October 2026; inspect cohort breakdown for consistent-input comparisons.",
+  "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion. Identity repairs registered 28 October 2026; inspect cohort breakdown for consistent-input comparisons.",
   "statshub_status": "NOT_CONNECTED",
   "clv_status": "NOT_YET_MEASURED",
   "review_milestones_fixtures": [
@@ -91,17 +91,17 @@
     150
   ],
   "automatic_promotion": false,
-  "version": "paired-market-offset-20261019-club-alias-v3",
-  "model_fingerprint": "d4723cba0af2b4604f3204e9d1d996542f206fc42313612b2a79117a64d4cce0",
+  "version": "paired-market-offset-20261028-identity-v4",
+  "model_fingerprint": "90a4b82bdc0fb04546d62c53c32e12943250bd7637b31079423ee3023f487fd4",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
-  "preserved_prior_cohort_contracts": 240,
-  "generated_at": "2026-10-28T19:38:47Z",
+  "preserved_prior_cohort_contracts": 374,
+  "generated_at": "2026-10-28T20:37:32Z",
   "new_contracts": 0,
   "scan_exclusions": {},
-  "latest_archived_capture": "2026-10-28T16:16:33.915977+00:00",
+  "latest_archived_capture": "2026-10-28T19:37:51.531677+00:00",
   "latest_result_date": "2026-10-27",
-  "raw_upcoming_rows": 356,
-  "status": "CAPTURE_BLOCKED_MODEL_CHANGE",
+  "raw_upcoming_rows": 86,
+  "status": "WAITING_FOR_FRESH_PAIRED_MARKETS",
   "cohorts": {
     "paired-market-offset-20260930-v2": {
       "contracts": 240,
@@ -293,8 +293,8 @@
     }
   },
   "record_scope": "All retained prospective cohorts; original predictions and prices unchanged.",
-  "capture_status": "BLOCKED_MODEL_CHANGE",
-  "capture_error": "Current paired inference does not match its registered cohort fingerprint",
+  "capture_status": "ACTIVE",
+  "capture_error": null,
   "settlement_source": "exact_fixture_base_and_verified_snapshots",
-  "snapshot_settlement_contracts": 351
+  "snapshot_settlement_contracts": 374
 }
