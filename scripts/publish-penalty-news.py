@@ -22,8 +22,8 @@ DATA = 'src/data/penalty-news.json'
 CHECKPOINT = 'data/penalty-news/capture-state.json'
 
 
-def run(*args, timeout=120):
-    result = subprocess.run([str(v) for v in args], cwd=ROOT, capture_output=True, text=True, timeout=timeout)
+def run(*args, timeout=120, env=None):
+    result = subprocess.run([str(v) for v in args], cwd=ROOT, capture_output=True, text=True, timeout=timeout, env=env)
     if result.returncode:
         # CLI errors may echo configuration; retain only the command name and code.
         raise RuntimeError(f'{Path(str(args[0])).name} exited {result.returncode}')
@@ -39,6 +39,48 @@ def deployment_page(vercel, url, route):
 def api_response(output):
     # Promotion returns HTTP 204. The CLI has already checked HTTP success.
     return json.loads(output) if output.strip() else {}
+
+
+def news_tree(live_sha, source_sha, state):
+    """Overlay only validated news files onto the exact production tree."""
+    live_data = json.loads(run('git', 'show', live_sha + ':' + DATA))
+    source_data = json.loads(run('git', 'show', source_sha + ':' + DATA))
+    live_articles = {a['id']: a for a in live_data['articles']}
+    source_articles = {a['id']: a for a in source_data['articles']}
+    if (source_data['generatedAt'] < live_data['generatedAt'] or
+            set(live_articles) - set(source_articles) or
+            any(source_articles[k].get('updatedAt', '') < a.get('updatedAt', '') for k, a in live_articles.items())):
+        raise RuntimeError('News source would remove or regress published reports')
+    index = state / 'publication.index'
+    index.unlink(missing_ok=True)
+    env = dict(os.environ, GIT_INDEX_FILE=str(index.resolve()))
+    run('git', 'read-tree', live_sha, env=env)
+    for path in (DATA, CHECKPOINT):
+        entry = run('git', 'ls-tree', source_sha, '--', path).split()
+        if len(entry) != 4 or entry[0] != '100644' or entry[1] != 'blob' or entry[3] != path:
+            raise RuntimeError('Expected a regular news data file')
+        run('git', 'update-index', '--add', '--cacheinfo', entry[0], entry[2], path, env=env)
+    tree = run('git', 'write-tree', env=env)
+    changed = set(run('git', 'diff-tree', '--name-only', '-r', live_sha + '^{tree}', tree).splitlines())
+    if changed - {DATA, CHECKPOINT}:
+        raise RuntimeError('Candidate contains changes outside news data')
+    return tree
+
+
+def publication_candidate(live_sha, source_sha, state):
+    run('git', 'fetch', '--no-tags', 'origin', live_sha)
+    tree = news_tree(live_sha, source_sha, state)
+    ref = 'codex/penalty-news-' + live_sha[:12] + '-' + tree[:12]
+    existing = run('git', 'ls-remote', 'origin', 'refs/heads/' + ref)
+    if existing:
+        sha = existing.split()[0]
+        run('git', 'fetch', '--no-tags', 'origin', ref)
+        if run('git', 'show', '-s', '--format=%P', sha) != live_sha or run('git', 'rev-parse', sha + '^{tree}') != tree:
+            raise RuntimeError('Existing publication candidate does not match live parent and news tree')
+    else:
+        sha = run('git', 'commit-tree', tree, '-p', live_sha, '-m', 'data: publish verified penalty news on current live site')
+        run('git', 'push', 'origin', sha + ':refs/heads/' + ref)
+    return sha, ref
 
 
 def main():
@@ -105,23 +147,23 @@ def main():
     live_sha = live.get('meta', {}).get('githubCommitSha')
     if not live_sha:
         raise RuntimeError('Cannot verify current production ancestry')
-    run('git', 'merge-base', '--is-ancestor', live_sha, 'HEAD')
-    sha = run('git', 'rev-parse', 'HEAD')
+    source_sha = run('git', 'rev-parse', 'HEAD')
     data = json.loads((ROOT / DATA).read_text())
     version = data['generatedAt']
     # The collector changes this revision only when the published packet changes.
     live_page = deployment_page(vercel, 'https://' + live['url'], '/penalty-news')
     if f'data-news-version="{version}"' in live_page:
-        (args.state / 'publication.json').write_text(json.dumps({'status': 'already_current', 'sha': sha, 'version': version,
+        (args.state / 'publication.json').write_text(json.dumps({'status': 'already_current', 'sha': live_sha, 'sourceSha': source_sha, 'version': version,
             'deploymentId': live['id'], 'articles': len(data['articles']), 'verifiedAt': datetime.now(timezone.utc).isoformat()}, indent=2))
         print('Published news already matches; no build required')
         if capture['errors'] or capture['excluded']:
             raise RuntimeError('Capture incomplete; unresolved fixtures saved for retry')
         return
+    sha, publication_ref = publication_candidate(live_sha, source_sha, args.state)
     request = args.state / 'deployment-request.json'
     request.write_text(json.dumps({'target': 'production', 'name': 'il-margine', 'project': PROJECT,
                                   'autoAssignCustomDomains': False,
-                                  'gitSource': {'type': 'github', 'repoId': '1148849644', 'ref': BRANCH, 'sha': sha}}))
+                                  'gitSource': {'type': 'github', 'repoId': '1148849644', 'ref': publication_ref, 'sha': sha}}))
     deployment = api('/v13/deployments', '-X', 'POST', '--input', request)
     for _ in range(60):
         deployment = api('/v13/deployments/' + deployment['id'])
@@ -140,7 +182,7 @@ def main():
         page = deployment_page(vercel, url, '/penalty-news/' + a['slug'])
         if f'data-article-id="{a["id"]}"' not in page:
             raise RuntimeError('Candidate article route failed verification')
-    if run('git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH).split()[0] != sha:
+    if run('git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH).split()[0] != source_sha:
         raise RuntimeError('Production branch advanced; refusing stale promotion')
     if api('/v4/aliases/ilmargine.bet')['deploymentId'] != alias:
         raise RuntimeError('Public deployment changed; refusing stale promotion')
@@ -151,7 +193,7 @@ def main():
         if time.monotonic() > deadline:
             raise RuntimeError('Promotion has not been verified')
         time.sleep(5)
-    (args.state / 'publication.json').write_text(json.dumps({'status': 'published', 'sha': sha, 'version': version,
+    (args.state / 'publication.json').write_text(json.dumps({'status': 'published', 'sha': sha, 'sourceSha': source_sha, 'liveParent': live_sha, 'version': version,
         'deploymentId': deployment['id'], 'articles': len(data['articles']), 'verifiedAt': datetime.now(timezone.utc).isoformat()}, indent=2))
     print(f"Published {len(data['articles'])} verified reports")
     if capture['errors'] or capture['excluded']:

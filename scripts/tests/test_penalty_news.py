@@ -5,6 +5,7 @@ import unittest
 from copy import deepcopy
 import json
 import tempfile
+import subprocess
 from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location("penalty_news", Path(__file__).parents[1] / "build-penalty-news.py")
@@ -217,6 +218,53 @@ class PublicationGuards(unittest.TestCase):
     def test_feature_branch_cannot_publish(self):
         with self.assertRaisesRegex(RuntimeError, 'production branch'):
             self.run_guard(True, ['', 'codex/penalty-news-preview-20261021'])
+
+
+class PublicationLiveTree(unittest.TestCase):
+    def test_divergent_source_copies_only_news_onto_live_tree(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as tmp:
+            root=Path(tmp)
+            def git(*args):
+                return subprocess.check_output(['git',*args],cwd=root,text=True,stderr=subprocess.DEVNULL).strip()
+            git('init','-q');git('config','user.name','Test');git('config','user.email','test@example.invalid');git('config','commit.gpgsign','false')
+            for path in (publisher.DATA,publisher.CHECKPOINT):(root/path).parent.mkdir(parents=True,exist_ok=True)
+            packet={'generatedAt':'2026-10-27T12:00:00Z','articles':[{'id':'a','updatedAt':'2026-10-27T12:00:00Z'}]}
+            (root/publisher.DATA).write_text(json.dumps(packet));(root/publisher.CHECKPOINT).write_text('{}');(root/'layout.txt').write_text('base')
+            git('add','.');git('commit','-qm','base');base=git('rev-parse','HEAD')
+            packet['generatedAt']='2026-10-28T12:00:00Z';packet['articles'].append({'id':'b','updatedAt':'2026-10-28T12:00:00Z'})
+            (root/publisher.DATA).write_text(json.dumps(packet));(root/publisher.CHECKPOINT).write_text('{"captured":true}');(root/'layout.txt').write_text('stale source layout')
+            git('add','.');git('commit','-qm','source');source=git('rev-parse','HEAD')
+            git('checkout','-qb','live',base);(root/'layout.txt').write_text('current live UI');git('add','.');git('commit','-qm','live');live=git('rev-parse','HEAD')
+            evidence=root/'evidence';evidence.mkdir()
+            with patch.object(publisher,'ROOT',root):tree=publisher.news_tree(live,source,evidence)
+            self.assertEqual(git('show',tree+':layout.txt'),'current live UI')
+            self.assertEqual(json.loads(git('show',tree+':'+publisher.DATA)),packet)
+            self.assertEqual(set(git('diff-tree','--name-only','-r',live+'^{tree}',tree).splitlines()),{publisher.DATA,publisher.CHECKPOINT})
+            self.assertEqual(git('rev-parse','HEAD'),live)
+            self.assertEqual(len(json.loads((root/publisher.DATA).read_text())['articles']),1)
+            with patch.object(publisher,'ROOT',root),self.assertRaisesRegex(RuntimeError,'regress'):
+                publisher.news_tree(source,live,evidence)
+
+    def test_current_news_needs_no_ancestry_check_or_deployment(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as tmp:
+            root=Path(tmp);(root/'config').mkdir();(root/'config/penalty-news-publication.json').write_text('{"enabled":true,"lookbackDays":8}')
+            (root/publisher.DATA).parent.mkdir(parents=True);(root/publisher.DATA).write_text('{"generatedAt":"same","articles":[]}')
+            state=root/'evidence';state.mkdir();(state/'capture-state.json').write_text('{}')
+            (state/'report.json').write_text('{"matchesChecked":0,"matchesExpected":0,"errors":[],"excluded":[],"articles":0}')
+            def command(*args,**kw):
+                if args[:2]==('git','status'):return ''
+                if args==('git','rev-parse','--abbrev-ref','HEAD'):return publisher.BRANCH
+                if args[:2]==('git','diff'):return ''
+                if args==('git','rev-parse','HEAD'):return 'divergent-source-sha'
+                if len(args)>1 and args[1]=='scripts/build-penalty-news.py':return ''
+                if args[:2]==('vercel','api'):
+                    if '/aliases/' in args[2]:return '{"deploymentId":"live"}'
+                    return '{"id":"live","url":"live.vercel.app","meta":{"githubCommitSha":"different-live-sha"}}'
+                if args[:2]==('vercel','curl'):return '<main data-news-version="same">current articles</main>'
+                raise AssertionError('Unexpected command '+str(args))
+            with patch.object(publisher,'ROOT',root),patch.object(publisher,'run',side_effect=command),patch.object(publisher.shutil,'which',return_value='vercel'),patch.dict(publisher.os.environ,{'VERCEL_TOKEN':'test-only'}),patch('sys.argv',['publish','--state',str(state)]):
+                publisher.main()
+            self.assertEqual(json.loads((state/'publication.json').read_text())['status'],'already_current')
 
 
 class PostMatchCapture(unittest.TestCase):
