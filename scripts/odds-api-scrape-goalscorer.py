@@ -9,6 +9,7 @@ because it can return soft-book prices like Bet365.
 from __future__ import annotations
 
 from odds_api_allocation import selected_bookmakers
+from football_grosvenor import capture_and_merge
 
 import argparse
 import csv
@@ -178,6 +179,8 @@ def _debug_candidate_leagues(events: list, league_key: str) -> list[str]:
 
 def _market_is_atgs(name: str) -> bool:
     text = (name or "").strip().lower()
+    if any(t in text for t in ("header", "headed", "assist", "first half", "second half", "penalty", "outside")):
+        return False
     if "anytime" in text and "goal" in text:
         return True
     if re.search(r"\bto score\b", text) and "first" not in text and "last" not in text:
@@ -218,7 +221,7 @@ def _extract_atgs_rows_for_market(bookmaker: str, event: dict, market: dict, com
                 continue
             rows.append(
                 {
-                    "captured_at": captured_at,
+                    "captured_at": market.get("captured_at") or captured_at,
                     "match_date": str(event.get("date") or "")[:10],
                     "event_id": str(event.get("id") or ""),
                     "kickoff_at": kickoff_at,
@@ -232,7 +235,7 @@ def _extract_atgs_rows_for_market(bookmaker: str, event: dict, market: dict, com
                     "player_name": player_name,
                     "player_team": "",
                     "odds_decimal": f"{odds_decimal:.4f}",
-                    "source": "odds_api_io",
+                    "source": market.get("source", "odds_api_io"),
                     "notes": f"event_id={event.get('id')};market={market_name}",
                 }
             )
@@ -260,7 +263,7 @@ def _extract_atgs_rows_for_market(bookmaker: str, event: dict, market: dict, com
     if player_name and odds_decimal is not None:
         rows.append(
             {
-                "captured_at": captured_at,
+                "captured_at": market.get("captured_at") or captured_at,
                 "match_date": str(event.get("date") or "")[:10],
                 "event_id": str(event.get("id") or ""),
                 "kickoff_at": kickoff_at,
@@ -274,7 +277,7 @@ def _extract_atgs_rows_for_market(bookmaker: str, event: dict, market: dict, com
                 "player_name": player_name,
                 "player_team": "",
                 "odds_decimal": f"{odds_decimal:.4f}",
-                "source": "odds_api_io",
+                "source": market.get("source", "odds_api_io"),
                 "notes": f"event_id={event.get('id')};market={market_name}",
             }
         )
@@ -475,10 +478,12 @@ def main() -> None:
                         if isinstance(single_payload, list):
                             payloads.extend(single_payload)
                 else:
-                    print(f"  odds/multi returned 403 for {bookmaker_list}; continuing without fresh odds for this chunk.")
-                    continue
+                    print(f"  odds/multi returned 403 for {bookmaker_list}; trying the independent direct source.")
+                    pass
             else:
-                raise
+                print(f"  Odds-API returned HTTP {status_code}; trying direct source.")
+        except requests.RequestException as exc:
+            print(f"  Odds-API {type(exc).__name__}; trying direct source.")
         except RequestBudgetExhausted as exc:
             print(f"  {exc}; keeping rows captured before the cap.")
             break
@@ -486,6 +491,8 @@ def main() -> None:
         if retry_budget_exhausted:
             break
 
+        payloads, direct_health = capture_and_merge(
+            payloads, [e for e in target_events if str(e["id"]) in event_ids])
         for event in payloads:
             event_bookmakers = event.get("bookmakers") or {}
             for bookmaker, markets in event_bookmakers.items():

@@ -863,7 +863,7 @@ def main() -> None:
 
     from tennis_grosvenor import capture as capture_grosvenor
     direct, direct_receipt = (capture_grosvenor(days_ahead=args.days_ahead, max_events=args.max_events)
-                              if "kambi" in args.bookmakers.lower() else ([], {}))
+                              if json.loads((ROOT / "config/odds-api-bookmaker-allocation.json").read_text(encoding="utf-8-sig")).get("direct_tennis_grosvenor", True) else ([], {}))
     now = datetime.now(timezone.utc)
     try:
         events, payload = capture_api(api_key, args) if api_key else ([], [])

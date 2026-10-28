@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from odds_api_allocation import selected_bookmakers
+from football_grosvenor import capture_and_merge
 
 import argparse
 import csv
@@ -213,7 +214,7 @@ def extract_rows(
             for market in markets or []:
                 if classify_market(market.get("name")) != "player_saves":
                     continue
-                team_side = {"goalkeeper saves home": "home", "goalkeeper saves away": "away"}.get(normalize_market_name(market.get("name"))) if str(bookmaker).casefold() == "kambi" else None
+                team_side = {"goalkeeper saves home": "home", "goalkeeper saves away": "away"}.get(normalize_market_name(market.get("name"))) if str(bookmaker).casefold() in {"kambi", "grosvenor"} else None
                 for prop in market.get("odds") or []:
                     line = parse_float(prop.get("hdp"))
                     over = parse_float(prop.get("over"))
@@ -224,7 +225,7 @@ def extract_rows(
                     if not player or line is None or not (has_over or has_under):
                         continue
                     base_row = {
-                            "captured_at": captured_at,
+                            "captured_at": market.get("captured_at") or captured_at,
                             "match_date": kickoff[:10],
                             "event_id": event_id,
                             "kickoff_at": kickoff,
@@ -240,7 +241,7 @@ def extract_rows(
                             "home_price": f"{home_price:.4f}" if home_price else "",
                             "draw_price": f"{draw_price:.4f}" if draw_price else "",
                             "away_price": f"{away_price:.4f}" if away_price else "",
-                            "source": f"odds_api_io:team_goalkeeper_{team_side}:{three_way_source}" if team_side else f"odds_api_io:{three_way_source}",
+                            "source": f"{market.get('source', 'odds_api_io')}:team_goalkeeper_{team_side}:{three_way_source}:offer={market.get('source_offer_id', '')}" if team_side else f"odds_api_io:{three_way_source}",
                         }
                     if has_over:
                         rows.append({**base_row, "side": "over", "odds_decimal": f"{over:.4f}"})
@@ -364,6 +365,9 @@ def main() -> None:
         except (requests.RequestException, ValueError) as error:
             # Keep successful batches; no unbounded retry or credential-bearing URL.
             capture_errors.append(f"batch_{offset // 10 + 1}: {type(error).__name__}")
+    payload, direct_health = capture_and_merge(payload, events, now=now, cache_seconds=0)
+    args.bookmaker += ",Grosvenor"
+    capture_errors.extend(direct_health["errors"])
     captured_at = now.isoformat().replace("+00:00", "Z")
     # Preserve non-player contracts for review without fabricating keeper names.
     # This is a bounded latest capture, not a growing duplicate of the odds archive.
@@ -423,6 +427,7 @@ def main() -> None:
         "capture_errors": capture_errors,
         "requests_used": 1 + (len(event_ids) + 9) // 10,
         "request_budget": 4,
+        "direct_source": direct_health,
         "events_supported": len(supported_ids),
         "events_deferred_by_budget": len(supported_ids - set(event_ids)),
         "event_last_checked": {k: (captured_at if k in checked_ids else previous_seen.get(k, "")) for k in supported_ids},

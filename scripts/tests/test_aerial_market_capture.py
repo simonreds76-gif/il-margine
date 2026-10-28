@@ -11,7 +11,8 @@ class Capture(unittest.TestCase):
             p=Path(d)/'prices.json'
             market={'name':'Player Headed Shots on Target','odds':[{'label':'Example','hdp':0.5,'over':'4.50'}]}
             payload=[{'id':12,'bookmakers':{'Bet365':[market,{'name':'Goal Method','odds':[]},{'name':'Player Shots','odds':[]}], 'Other':[{'name':'Headed Goals','odds':[]}]}}]
-            self.assertEqual(retain_headed_markets(p,payload,{'12':{'home':'Home','away':'Away'}},'2026-10-18T12:00:00Z'),2)
+            self.assertEqual(retain_headed_markets(p,payload,{'12':{'home':'Home','away':'Away'}},'2026-10-18T12:00:00Z'),3)
+            self.assertEqual({x['bookmaker'] for x in json.loads(p.read_text())['events']},{'Bet365','Other'})
             e=json.loads(p.read_text())['events'][0]
             self.assertEqual(e['markets'][0],market)
             self.assertEqual(e['home'],'Home')

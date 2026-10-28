@@ -1,0 +1,439 @@
+{
+  "events": [
+    {
+      "id": 1027911598,
+      "name": "AC Milan - Bologna",
+      "nameDelimiter": "-",
+      "englishName": "AC Milan - Bologna",
+      "homeName": "AC Milan",
+      "awayName": "Bologna",
+      "start": "2026-10-28T17:30:00Z",
+      "group": "Serie A",
+      "groupId": 1000095001,
+      "path": [
+        {
+          "id": 1000093190,
+          "name": "Football",
+          "englishName": "Football",
+          "termKey": "football"
+        },
+        {
+          "id": 1000461745,
+          "name": "Italy",
+          "englishName": "Italy",
+          "termKey": "italy"
+        },
+        {
+          "id": 1000095001,
+          "name": "Serie A",
+          "englishName": "Serie A",
+          "termKey": "serie_a"
+        }
+      ],
+      "nonLiveBoCount": 711,
+      "sport": "FOOTBALL",
+      "tags": [
+        "OFFERED_LIVE",
+        "BET_BUILDER",
+        "MATCH"
+      ],
+      "state": "NOT_STARTED",
+      "groupSortOrder": 4003001000000000000,
+      "prematchEnd": "2026-10-28T17:30:00Z"
+    }
+  ],
+  "betOffers": [
+    {
+      "id": 2705766681,
+      "criterion": {
+        "id": 1001159886,
+        "label": "To Score",
+        "englishLabel": "To Score",
+        "shortLabel": "To Score",
+        "shortEnglishLabel": "To Score",
+        "order": [
+          1
+        ],
+        "occurrenceType": "GOALS",
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4380889592,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 7500,
+          "line": 1000,
+          "participant": "Jens Odgaard",
+          "type": "OT_YES",
+          "betOfferId": 2705766681,
+          "changedDate": "2026-10-28T06:53:06Z",
+          "participantId": 1003394817,
+          "oddsFractional": "13/2",
+          "oddsAmerican": "650",
+          "status": "OPEN",
+          "cashOutStatus": "ENABLED",
+          "eventParticipantId": 1000067512,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH",
+        "OFFERED_LIVE",
+        "BET_BUILDER"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2705766705,
+      "criterion": {
+        "id": 1001159897,
+        "label": "Total Corners",
+        "englishLabel": "Total Corners",
+        "order": [],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 6,
+        "name": "Over/Under",
+        "englishName": "Over/Under"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4380889686,
+          "label": "Under",
+          "englishLabel": "Under",
+          "odds": 2300,
+          "line": 7500,
+          "type": "OT_UNDER",
+          "betOfferId": 2705766705,
+          "changedDate": "2026-10-28T11:19:00Z",
+          "oddsFractional": "13/10",
+          "oddsAmerican": "130",
+          "status": "OPEN",
+          "cashOutStatus": "ENABLED",
+          "displayOrder": 1
+        },
+        {
+          "id": 4380889687,
+          "label": "Over",
+          "englishLabel": "Over",
+          "odds": 1540,
+          "line": 7500,
+          "type": "OT_OVER",
+          "betOfferId": 2705766705,
+          "changedDate": "2026-10-28T11:19:00Z",
+          "oddsFractional": "8/15",
+          "oddsAmerican": "-186",
+          "status": "OPEN",
+          "cashOutStatus": "ENABLED",
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH",
+        "OFFERED_LIVE",
+        "BET_BUILDER"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2705766719,
+      "criterion": {
+        "id": 1001264082,
+        "label": "To give an assist (Settled using Opta data)",
+        "englishLabel": "To give an assist (Settled using Opta data)",
+        "shortLabel": "Assist",
+        "shortEnglishLabel": "Assist",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4380889723,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 5500,
+          "line": 1000,
+          "participant": "Adrien Rabiot",
+          "type": "OT_YES",
+          "betOfferId": 2705766719,
+          "changedDate": "2026-10-28T01:33:54Z",
+          "participantId": 1001325757,
+          "oddsFractional": "9/2",
+          "oddsAmerican": "450",
+          "status": "OPEN",
+          "cashOutStatus": "ENABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH",
+        "OFFERED_LIVE",
+        "BET_BUILDER"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2705766772,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 2100086019,
+        "label": "Goalkeeper Saves (Settled using Opta data)",
+        "englishLabel": "Goalkeeper Saves (Settled using Opta data)",
+        "order": [],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 6,
+        "name": "Over/Under",
+        "englishName": "Over/Under"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4380889836,
+          "label": "Over",
+          "englishLabel": "Over",
+          "odds": 1880,
+          "line": 5500,
+          "type": "OT_OVER",
+          "betOfferId": 2705766772,
+          "changedDate": "2026-10-28T11:19:01Z",
+          "oddsFractional": "22/25",
+          "oddsAmerican": "-114",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH",
+        "BET_BUILDER"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2705766775,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1002035671,
+        "label": "Total Shots on Target by Bologna (Settled using Opta data)",
+        "englishLabel": "Total Shots on Target by Bologna (Settled using Opta data)",
+        "order": [],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 6,
+        "name": "Over/Under",
+        "englishName": "Over/Under"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4380889842,
+          "label": "Over",
+          "englishLabel": "Over",
+          "odds": 3600,
+          "line": 4500,
+          "type": "OT_OVER",
+          "betOfferId": 2705766775,
+          "changedDate": "2026-10-28T11:19:01Z",
+          "oddsFractional": "13/5",
+          "oddsAmerican": "260",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "displayOrder": 0
+        },
+        {
+          "id": 4380889843,
+          "label": "Under",
+          "englishLabel": "Under",
+          "odds": 1190,
+          "line": 4500,
+          "type": "OT_UNDER",
+          "betOfferId": 2705766775,
+          "changedDate": "2026-10-28T11:19:01Z",
+          "oddsFractional": "2/11",
+          "oddsAmerican": "-530",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "displayOrder": 1
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH",
+        "BET_BUILDER"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2705772805,
+      "criterion": {
+        "id": 1001159858,
+        "label": "Full Time",
+        "englishLabel": "Full Time",
+        "order": [],
+        "occurrenceType": "GOALS",
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 2,
+        "name": "Match",
+        "englishName": "Match"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4380887147,
+          "label": "1",
+          "englishLabel": "1",
+          "odds": 1650,
+          "participant": "AC Milan",
+          "type": "OT_ONE",
+          "betOfferId": 2705772805,
+          "changedDate": "2026-10-28T11:19:01Z",
+          "participantId": 1000000095,
+          "oddsFractional": "13/20",
+          "oddsAmerican": "-155",
+          "status": "OPEN",
+          "cashOutStatus": "ENABLED",
+          "displayOrder": 0
+        },
+        {
+          "id": 4380887148,
+          "label": "X",
+          "englishLabel": "X",
+          "odds": 3550,
+          "type": "OT_CROSS",
+          "betOfferId": 2705772805,
+          "changedDate": "2026-10-28T11:19:01Z",
+          "oddsFractional": "5/2",
+          "oddsAmerican": "255",
+          "status": "OPEN",
+          "cashOutStatus": "ENABLED",
+          "displayOrder": 1
+        },
+        {
+          "id": 4380887149,
+          "label": "2",
+          "englishLabel": "2",
+          "odds": 5200,
+          "participant": "Bologna",
+          "type": "OT_TWO",
+          "betOfferId": 2705772805,
+          "changedDate": "2026-10-28T11:19:01Z",
+          "participantId": 1000067512,
+          "oddsFractional": "21/5",
+          "oddsAmerican": "420",
+          "status": "OPEN",
+          "cashOutStatus": "ENABLED",
+          "displayOrder": 2
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH",
+        "OFFERED_LIVE",
+        "BET_BUILDER",
+        "MAIN"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708683548,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 2100086017,
+        "label": "Goalkeeper Saves - Bologna (Settled using Opta data)",
+        "englishLabel": "Goalkeeper Saves - Bologna (Settled using Opta data)",
+        "order": [],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 6,
+        "name": "Over/Under",
+        "englishName": "Over/Under"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390269406,
+          "label": "Over",
+          "englishLabel": "Over",
+          "odds": 2250,
+          "line": 3500,
+          "type": "OT_OVER",
+          "betOfferId": 2708683548,
+          "changedDate": "2026-10-28T11:19:01Z",
+          "oddsFractional": "5/4",
+          "oddsAmerican": "125",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH",
+        "MAIN_LINE",
+        "BET_BUILDER"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708683551,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1004544391,
+        "label": "Total Shots by Bologna (Settled using Opta data)",
+        "englishLabel": "Total Shots by Bologna (Settled using Opta data)",
+        "order": [],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 6,
+        "name": "Over/Under",
+        "englishName": "Over/Under"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390269412,
+          "label": "Over",
+          "englishLabel": "Over",
+          "odds": 1720,
+          "line": 9500,
+          "type": "OT_OVER",
+          "betOfferId": 2708683551,
+          "changedDate": "2026-10-28T11:19:01Z",
+          "oddsFractional": "7/10",
+          "oddsAmerican": "-139",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH",
+        "MAIN_LINE",
+        "BET_BUILDER"
+      ],
+      "cashOutStatus": "ENABLED"
+    }
+  ]
+}

@@ -15,7 +15,7 @@ def retain_headed_markets(path, payload, event_index, captured_at):
         try:
             observed = datetime.fromisoformat(event['captured_at'].replace('Z', '+00:00'))
             if timedelta(0) <= now - observed < timedelta(days=2):
-                events[str(event['event_id'])] = event
+                events[(str(event['event_id']), event.get('bookmaker', 'Bet365'))] = event
         except (KeyError, ValueError, TypeError):
             continue
     for event in payload:
@@ -25,16 +25,18 @@ def retain_headed_markets(path, payload, event_index, captured_at):
         meta = {**event_index.get(eid, {}), **event}
         books = event.get('bookmakers') or {}
         # A missing bookmaker is not proof that its markets are absent.
-        book = next((k for k in books if k.casefold() == 'bet365'), None)
-        if book is None:
-            continue
-        markets = [m for m in books[book] or []
-                   if 'head' in str(m.get('name', '')).casefold()
-                   or 'goal method' in str(m.get('name', '')).casefold()]
-        events[eid] = dict(event_id=eid, home=meta.get('home'), away=meta.get('away'),
-                           kickoff=meta.get('date') or meta.get('startTime'),
-                           captured_at=captured_at, bookmaker='Bet365',
-                           source='odds-api.io/v3/odds/multi', markets=markets)
+        for book, offers in books.items():
+            markets = [m for m in offers or []
+                       if 'head' in str(m.get('name', '')).casefold()
+                       or 'goal method' in str(m.get('name', '')).casefold()]
+            # Audit other books without enabling them in the model's separate
+            # verified-contract parser below. Generic Goal Method stays raw.
+            if book.casefold() != 'bet365' and not markets:
+                continue
+            events[(eid, book)] = dict(event_id=eid, home=meta.get('home'), away=meta.get('away'),
+                               kickoff=meta.get('date') or meta.get('startTime'),
+                               captured_at=captured_at, bookmaker=book,
+                               source='grosvenor_direct' if book == 'Grosvenor' else 'odds-api.io/v3/odds/multi', markets=markets)
     result = dict(schema_version=1, generated_at=captured_at,
                   purpose='Exact market evidence; Goal Method is not assumed to be a player market',
                   events=list(events.values()))
