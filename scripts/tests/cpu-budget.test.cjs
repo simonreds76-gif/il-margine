@@ -138,3 +138,29 @@ test('penalty data reuses its date formatter and preserves date output',async()=
  }
  assert.equal(api.formatClubPenaltyDate('invalid'),'invalid');
 });
+
+test('individual tip links remain crawlable but never speculatively prefetch in pick lists',()=>{
+ let checked=0;
+ const walkDir=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walkDir(path.join(dir,e.name)):e.name.endsWith('.tsx')?[path.join(dir,e.name)]:[]);
+ for(const file of walkDir(path.join(root,'src'))){
+  const source=fs.readFileSync(file,'utf8');
+  const ast=ts.createSourceFile(file,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
+  function visit(node){
+   if(ts.isJsxOpeningElement(node)||ts.isJsxSelfClosingElement(node)){
+    const tag=node.tagName.getText(ast);
+    if(tag==='Link'||tag==='TrackedLink'){
+     const attrs=node.attributes.properties;
+     const href=attrs.find(a=>ts.isJsxAttribute(a)&&a.name.text==='href');
+     if(href && (/publicTipPath\(/.test(href.getText(ast))||file.endsWith('PropSelectionCard.tsx'))){
+      checked++;
+      const prefetch=attrs.find(a=>ts.isJsxAttribute(a)&&a.name.text==='prefetch');
+      assert.ok(prefetch && ts.isJsxExpression(prefetch.initializer) && prefetch.initializer.expression?.kind===ts.SyntaxKind.FalseKeyword,`Unbounded tip prefetch: ${path.relative(root,file)}`);
+     }
+    }
+   }
+   ts.forEachChild(node,visit);
+  }
+  visit(ast);
+ }
+ assert.ok(checked>=8,'must check the actual homepage, tennis, props and result-table links');
+});

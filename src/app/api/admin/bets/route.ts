@@ -21,7 +21,10 @@ type RevalidationBet = {
 
 const REVALIDATION_BET_COLUMNS = "id, market, event, match_date";
 
-function revalidatePublicBetSurfaces(...bets: Array<RevalidationBet | null | undefined>) {
+function revalidatePublicBetSurfaces(
+  bets: Array<RevalidationBet | null | undefined>,
+  refreshShareImages = true,
+) {
   for (const id of new Set(bets.map((bet) => bet?.id).filter(Boolean))) {
     // Expire immediately after a successful write: the next portrait request
     // must resolve the corrected club/player, not serve a stale lookup first.
@@ -42,10 +45,10 @@ function revalidatePublicBetSurfaces(...bets: Array<RevalidationBet | null | und
   for (const bet of bets) {
     if (!bet?.id || !bet.event) continue;
     tipPaths.add(`/tips/${slugifyTip(bet.event, bet.id)}`);
-    tipPaths.add(`/tips/${slugifyTip(bet.event, bet.id)}/opengraph-image`);
+    if (refreshShareImages) tipPaths.add(`/tips/${slugifyTip(bet.event, bet.id)}/opengraph-image`);
     const previewPath = tipPreviewPath(bet);
     tipPaths.add(previewPath);
-    tipPaths.add(`${previewPath}/opengraph-image`);
+    if (refreshShareImages) tipPaths.add(`${previewPath}/opengraph-image`);
   }
   for (const path of tipPaths) {
     revalidatePath(path);
@@ -83,7 +86,7 @@ export async function POST(req: Request) {
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 
-  revalidatePublicBetSurfaces(data);
+  revalidatePublicBetSurfaces([data]);
 
   const telegram = await postPlayerPropTipToTelegram(data);
   if (telegram.status === "failed") {
@@ -157,7 +160,13 @@ export async function PATCH(req: Request) {
     .select(REVALIDATION_BET_COLUMNS)
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-  revalidatePublicBetSurfaces(previousBet, updatedBet);
+  // Share images show the original pick, price and stake, never its result.
+  // A settlement still refreshes pages/metadata/portraits, but need not render
+  // identical PNGs again. Unknown fields fail safe to image invalidation.
+  const settlementFields = new Set(["status", "profit_loss", "settled_at"]);
+  const changedFields = Object.keys(updates);
+  const settlementOnly = changedFields.length > 0 && changedFields.every((key) => settlementFields.has(key));
+  revalidatePublicBetSurfaces([previousBet, updatedBet], !settlementOnly);
   return NextResponse.json({ ok: true });
 }
 
@@ -184,6 +193,6 @@ export async function DELETE(req: Request) {
 
   const { error } = await supabase.from("bets").delete().eq("id", Number(id));
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-  revalidatePublicBetSurfaces(previousBet);
+  revalidatePublicBetSurfaces([previousBet]);
   return NextResponse.json({ ok: true });
 }

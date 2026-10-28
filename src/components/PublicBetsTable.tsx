@@ -94,6 +94,7 @@ export default function PublicBetsTable({
             <td className={td.match}>
               <Link
                 href={publicTipPath(bet)}
+                prefetch={false}
                 className="block min-w-0 transition-colors hover:text-emerald-400"
                 title={bet.event}
               >
