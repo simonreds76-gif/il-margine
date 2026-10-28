@@ -347,6 +347,7 @@ export default function TennisTips({
                   <Link
                     key={pick.id}
                     href={publicTipPath(pick)}
+                    prefetch={false}
                     className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
                   >
                     <div className="mb-3 flex items-start gap-3">
@@ -450,6 +451,7 @@ export default function TennisTips({
                   <Link
                     key={result.id}
                     href={publicTipPath(result)}
+                    prefetch={false}
                     className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
                   >
                     <div className="flex items-start justify-between mb-2">

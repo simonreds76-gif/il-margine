@@ -164,6 +164,7 @@ export default function HomepageClient({
                   <Link
                     key={bet.id}
                     href={publicTipPath(bet)}
+                    prefetch={false}
                     className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
                   >
                     <div className="mb-2 flex items-start justify-between">

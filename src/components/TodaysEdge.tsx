@@ -160,6 +160,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
           <div className={styles.picks}>
             {visible.map((pick) => (
               <TrackedLink key={pick.id} href={publicTipPath(pick)}
+                prefetch={false}
                 eventName="homepage_to_pick_click"
                 eventParams={{ bet_id: pick.id, market: pick.market, source: "todays_edge" }}
                 className={styles.pick}>
