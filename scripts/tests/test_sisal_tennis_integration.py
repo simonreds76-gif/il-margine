@@ -20,10 +20,10 @@ capture = module('sisal_capture','tennis-props-scrape-bet365.py')
 settle = module('sisal_settle','tennis-props-settle-shadow.py')
 
 class SisalIntegration(unittest.TestCase):
-    def test_scope_keeps_football_unchanged(self):
-        for old in ('Bet365','Paddy Power,Kambi',''):
-            self.assertEqual(selected_bookmakers(old),'Kambi')
-            self.assertEqual(selected_bookmakers(old,scope='tennis_props'),'Sisal IT,Kambi')
+    def test_scopes_use_verified_new_allocation(self):
+        for old in ('Bet365','Kambi','Paddy Power,Kambi',''):
+            self.assertEqual(selected_bookmakers(old),'Paddy Power')
+            self.assertEqual(selected_bookmakers(old,scope='tennis_props'),'Sisal IT')
 
     def test_exact_sides_prices_source(self):
         event = dict(id=75991582,home='Kym, Jerome',away='Rinderknech, Arthur',date='2026-10-27T12:10:00Z',
