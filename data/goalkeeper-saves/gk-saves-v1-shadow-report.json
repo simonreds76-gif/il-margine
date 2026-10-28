@@ -5,16 +5,16 @@
     "blocked_lines": 0,
     "blocker_counts": {},
     "candidate_board_preserved": false,
-    "eligible_lines": 0,
-    "priced_lines": 57,
+    "eligible_lines": 1,
+    "priced_lines": 68,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 0
+    "value_ladder_lines": 3
   },
   "evidence": {
     "clv": 0.050955,
     "clv_matched": 31,
-    "pending": 2,
+    "pending": 3,
     "pnl_units": 14.072,
     "roi": 0.331106,
     "settled": 85,
@@ -24,36 +24,34 @@
       "independently_reviewed_named_keeper_count": 1,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 93,
+    "signals": 94,
     "true_close_coverage": 0.364706,
     "void": 6
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-28T18:19:48.726451+00:00",
+    "checked_at": "2026-10-28T19:38:58.415389+00:00",
     "counts": {
-      "not_fresh_prematch": 11,
-      "offers_saved": 46
+      "already_saved": 3,
+      "not_fresh_prematch": 21
     },
-    "saved": 3,
-    "status": "CAPTURED"
+    "saved": 0,
+    "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-10-28T18:19:48Z",
+  "generated_at": "2026-10-28T19:38:57Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
-      "before_grosvenor_registration": 1,
-      "not_new_fresh_prematch": 11,
-      "unregistered_settlement_rules": 9
+      "not_new_fresh_prematch": 21
     },
     "forecast_fixtures": 90,
     "forecast_keepers": 180,
-    "generated_at": "2026-10-28T18:19:48.764842+00:00",
+    "generated_at": "2026-10-28T19:38:58.440934+00:00",
     "last_capture_at": "2026-10-28T18:19:48.764842+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 2,
+    "new_forecasts": 0,
     "new_selections": 0,
     "next_review_at": 100,
     "paired_scores": {
@@ -72,12 +70,12 @@
       "current": {
         "losses": 10,
         "overdue": 0,
-        "pending": 0,
+        "pending": 1,
         "profit": 1.2690000000000003,
         "pushes": 0,
         "review": 0,
         "roi": 0.12690000000000004,
-        "selections": 24,
+        "selections": 25,
         "settled": 20,
         "stake": 10.0,
         "voids": 4,
@@ -103,12 +101,12 @@
         "current": {
           "losses": 10,
           "overdue": 0,
-          "pending": 0,
+          "pending": 1,
           "profit": 1.2690000000000003,
           "pushes": 0,
           "review": 0,
           "roi": 0.12690000000000004,
-          "selections": 24,
+          "selections": 25,
           "settled": 20,
           "stake": 10.0,
           "voids": 4,
@@ -132,6 +130,32 @@
     },
     "review_milestone": 50,
     "selections": [
+      {
+        "away": "US Lecce",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-28T19:38:00.514365+00:00",
+        "contract_scope": "named_player",
+        "edge": 0.07962337929186836,
+        "event_id": "71945348",
+        "fair_odds": 2.1998412090314097,
+        "goalkeeper": "Wladimiro Falcone",
+        "home": "Frosinone Calcio",
+        "kickoff_at": "2026-10-29T17:30:00+00:00",
+        "line": 4.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5749723",
+        "model": "current",
+        "odds": 2.375,
+        "overdue": false,
+        "player_id": "362200",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-28T19:38:04.141205+00:00",
+        "settlement_policy": "bet365_named_nonstarter_void_v1",
+        "side": "over",
+        "status": "pending",
+        "team_id": "9888"
+      },
       {
         "away": "Olympique Lyon",
         "bookmaker": "Bet365",

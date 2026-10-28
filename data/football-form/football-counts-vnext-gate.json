@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-28T16:16:52Z",
+  "generated_at": "2026-10-28T19:38:47Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -37,14 +37,16 @@
     "latest_scan": {
       "state": "NO_EDGE_AFTER_UNLOCK",
       "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 88,
-      "scored_fixtures": 6,
+      "scored_rows": 66,
+      "scored_fixtures": 4,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 88,
+      "blocked_rows": 66,
       "blocker_rows": {
-        "edge_below_3pct": 88,
-        "price_older_than_3h": 88
+        "better_fresh_price_available": 2,
+        "edge_below_3pct": 66,
+        "price_not_fresh_10m": 60,
+        "price_older_than_3h": 60
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 9,
@@ -69,19 +71,19 @@
     "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 127,
-      "settled": 108,
-      "pending": 19,
-      "pnl_units": -4.154,
-      "roi": -0.038463,
-      "true_close_n": 69,
-      "true_close_coverage": 0.638889,
-      "mean_true_close_clv": 0.009038,
+      "signals": 129,
+      "settled": 109,
+      "pending": 20,
+      "pnl_units": -5.154,
+      "roi": -0.047284,
+      "true_close_n": 70,
+      "true_close_coverage": 0.642202,
+      "mean_true_close_clv": 0.009046,
       "side_counts": {
-        "over": 23,
-        "under": 104
+        "over": 24,
+        "under": 105
       },
-      "dominant_side_share": 0.818898
+      "dominant_side_share": 0.813953
     },
     "warmup_tracking": {
       "signals": 36,
@@ -101,14 +103,16 @@
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
       "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 152,
-      "scored_fixtures": 31,
-      "eligible_rows": 36,
-      "eligible_fixtures": 16,
-      "blocked_rows": 116,
+      "scored_rows": 914,
+      "scored_fixtures": 39,
+      "eligible_rows": 21,
+      "eligible_fixtures": 5,
+      "blocked_rows": 893,
       "blocker_rows": {
-        "edge_below_3pct": 115,
-        "price_older_than_3h": 8
+        "better_fresh_price_available": 60,
+        "edge_below_3pct": 804,
+        "price_not_fresh_10m": 552,
+        "price_older_than_3h": 406
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 8,
