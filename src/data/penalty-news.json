@@ -1,11 +1,80 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-27T20:43:20.975723+00:00",
+  "generatedAt": "2026-10-28T00:32:17.865639+00:00",
   "coverageStart": "2026-10-17",
-  "checkedThrough": "2026-10-27",
+  "checkedThrough": "2026-10-28",
   "captureStatus": "complete",
-  "matchesChecked": 1,
+  "matchesChecked": 3,
   "articles": [
+    {
+      "id": "fotmob:5749721:2988949893",
+      "slug": "2026-10-27-m-bala-nzola-5749721-2988949893",
+      "matchId": "5749721",
+      "eventId": "2988949893",
+      "date": "2026-10-27",
+      "kickoff": "2026-10-27T19:45:00.000Z",
+      "league": "serie-a",
+      "leagueLabel": "Serie A",
+      "round": "9",
+      "player": "M'Bala Nzola",
+      "playerId": 613334,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/613334.png",
+      "club": "Cagliari",
+      "clubSlug": "cagliari",
+      "clubUrl": "/penalty-takers/serie-a/cagliari",
+      "crest": "/team-logos/serie-a/cagliari.png",
+      "opponent": "Roma",
+      "home": "Roma",
+      "away": "Cagliari",
+      "homeScore": 4,
+      "awayScore": 2,
+      "minute": "10",
+      "outcome": "scored",
+      "title": "M'Bala Nzola scores from the spot against Roma",
+      "sentences": [
+        "M'Bala Nzola converted a penalty for Cagliari in minute 10 against Roma.",
+        "The match finished Roma 4–2 Cagliari."
+      ],
+      "cause": "handball",
+      "incident": {
+        "type": "handball",
+        "wonBy": null,
+        "concededBy": "Niccolò Pisilli",
+        "sentence": "The penalty was awarded for a handball by Niccolò Pisilli.",
+        "evidenceIds": [
+          "2988949447"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 63,
+        "goals": 1,
+        "shots": 5,
+        "onTarget": 1,
+        "chances": 1
+      },
+      "keeper": "Pierluigi Gollini",
+      "moment": {
+        "before": [
+          0,
+          0
+        ],
+        "after": [
+          0,
+          1
+        ]
+      },
+      "paragraphs": [
+        "M'Bala Nzola converted a penalty in the 10th minute of Cagliari’s 2–4 defeat to Roma.",
+        "The penalty was awarded for a handball by Niccolò Pisilli. The goal put the team ahead at 1–0.",
+        "M'Bala Nzola finished with 1 goal and 5 shots, including 1 on target, in 63 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/cagliari-vs-roma/2g8cb2#5749721",
+      "eventHash": "d127b0359a5e9c1a7e339329e34be797ab41538e80f5eefa95c1a474cd4e7177",
+      "sourceHash": "178d0497271660f2ee6fe44ebf8d6755aebd3a4d4ddf1baefde111987c419d01",
+      "publishedAt": "2026-10-28T00:32:17.865639+00:00",
+      "updatedAt": "2026-10-28T00:32:17.865639+00:00"
+    },
     {
       "id": "fotmob:5749727:2988889897",
       "slug": "2026-10-27-davide-frattesi-5749727-2988889897",
