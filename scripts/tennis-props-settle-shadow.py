@@ -515,6 +515,8 @@ def load_oncourt_index(
             for row in read_csv(oncourt_dir / f"tours_{suffix}.csv")
             if row.get("id")
         }
+        tour_ranks = {str(row.get("id") or ""): str(row.get("rank") or "")
+                      for row in read_csv(oncourt_dir / f"tours_{suffix}.csv") if row.get("id")}
         candidate_games: list[tuple[dict[str, str], tuple[str, str, str, str], tuple[str, int, tuple[str, str]]]] = []
         stat_keys: set[tuple[str, str, str, str]] = set()
         for game in iter_csv(oncourt_dir / f"games_{suffix}.csv"):
@@ -579,6 +581,8 @@ def load_oncourt_index(
                     "loser_name": loser_name,
                     "tourney_name": tours.get(stat_key[2], stat_key[2]),
                     "round_id": stat_key[3],
+                    "_tour_id": stat_key[2],
+                    "_tour_rank": tour_ranks.get(stat_key[2], ""),
                     "tourney_date": game_date.strftime("%Y%m%d") if game_date else "",
                     "score": str(game.get("result") or ""),
                     "w_ace": str(stat.get("w_ace") or ""),
