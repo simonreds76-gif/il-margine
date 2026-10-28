@@ -1,27 +1,29 @@
 {
   "bookmaker_coverage": {
     "Kambi": {
-      "events_with_save_markets": 5,
+      "events_with_save_markets": 7,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 39
+      "unnamed_or_team_lines": 55
     }
   },
   "capture_errors": [],
-  "capture_mode": "close",
+  "capture_mode": "publication",
   "event_last_checked": {
-    "71945350": "2026-10-27T20:14:19Z",
-    "71945352": "2026-10-27T20:14:19Z",
-    "71945354": "2026-10-27T20:14:19Z",
-    "71945356": "2026-10-27T20:14:19Z",
-    "71945364": "2026-10-27T20:14:19Z"
+    "71945346": "2026-10-28T00:00:29Z",
+    "71945348": "2026-10-28T00:00:29Z",
+    "71945350": "2026-10-28T00:00:29Z",
+    "71945352": "2026-10-28T00:00:29Z",
+    "71945354": "2026-10-28T00:00:29Z",
+    "71945356": "2026-10-28T00:00:29Z",
+    "71945364": "2026-10-28T00:00:29Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 5,
-  "events_supported": 5,
-  "events_with_lines": 5,
-  "generated_at": "2026-10-27T20:14:19Z",
-  "last_publication_at": "2026-10-27T14:35:44Z",
+  "events_selected": 7,
+  "events_supported": 7,
+  "events_with_lines": 7,
+  "generated_at": "2026-10-28T00:00:29Z",
+  "last_publication_at": "2026-10-28T00:00:29Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 0,
@@ -40,11 +42,11 @@
       "with_prices": 0
     },
     "serie-a": {
-      "selected": 5,
-      "with_prices": 5
+      "selected": 7,
+      "with_prices": 7
     }
   },
-  "market_inventory_rows_added": 240,
+  "market_inventory_rows_added": 336,
   "market_names_observed": [
     "Anytime Goalscorer",
     "Bookings Spread",
@@ -95,12 +97,26 @@
     "Totals 2H",
     "Totals HT"
   ],
-  "publication_recovery": false,
+  "publication_recovery": true,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 23,
-  "rows_observed": 23,
+  "rows_added": 33,
+  "rows_observed": 33,
   "selected_events": [
+    {
+      "away": "US Lecce",
+      "competition": "Italy - Serie A",
+      "home": "Frosinone Calcio",
+      "id": 71945348,
+      "kickoff_at": "2026-10-29T17:30:00Z"
+    },
+    {
+      "away": "Atalanta BC",
+      "competition": "Italy - Serie A",
+      "home": "ACF Fiorentina",
+      "id": 71945346,
+      "kickoff_at": "2026-10-29T19:45:00Z"
+    },
     {
       "away": "Bologna FC",
       "competition": "Italy - Serie A",
@@ -138,5 +154,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 5
+  "three_way_events": 7
 }
