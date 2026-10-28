@@ -1,116 +1,20 @@
-name: Goalscorer Hot Live Poll
-
+name: Paddy Read-only Cloud Probe
 on:
-  schedule:
-    # :10 is the full price/close poll. :40 refreshes lineups only, giving the
-    # public board a 30-minute XI cadence. New official XIs trigger a bounded
-    # odds refresh; lineup-only runs still do not add database snapshots.
-    - cron: "10 10-22 * * *"
-    - cron: "40 10-22 * * *"
   workflow_dispatch:
-    inputs:
-      reason:
-        description: "Why this hosted hot-live poll was triggered"
-        type: string
-        required: false
-
 permissions:
-  contents: write
-
-concurrency:
-  group: golden-with-speed-insights-branch-writes
-  cancel-in-progress: false
-
+  contents: read
 jobs:
-  live-poll:
+  probe:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     steps:
       - uses: actions/checkout@v5
-        with:
-          ref: golden-with-speed-insights
-          token: ${{ github.token }}
-          fetch-depth: 1
-
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
-
-      - name: Install Python deps
-        run: pip install requests
-
-      - name: Create .env.local
-        run: |
-          : > .env.local
-          if [ -n "${{ secrets.ODDS_API_KEY }}" ]; then
-            echo "ODDS_API_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
-            echo "ODDS_API_IO_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
-          fi
-          if [ -n "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
-            echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.local
-          else
-            echo "NEXT_PUBLIC_SUPABASE_URL=https://nuqcgzbagxtbxlqrhtvc.supabase.co" >> .env.local
-          fi
-          if [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
-            echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
-          fi
-          if [ -n "${{ secrets.DATABASE_URL }}" ]; then
-            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env.local
-          elif [ -n "${{ secrets.SUPABASE_DB_URL }}" ]; then
-            echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL }}" >> .env.local
-          fi
-
-      - name: Run hosted hot live poll
-        env:
-          ASSIST_VALUE_SHADOW_ENABLED: ${{ vars.ASSIST_VALUE_SHADOW_ENABLED }}
-          GOALSCORER_LINEUP_ONLY: ${{ github.event.schedule == '40 10-22 * * *' && '1' || '0' }}
-          GOALSCORER_FORCE_REFRESH: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
-        run: python scripts/goalscorer-live-hosted.py
-
-      - name: Build goalscorer monitor snapshot
-        run: |
-          python scripts/build-goalscorer-monitor-snapshot.py
-          python scripts/build-football-form-layer.py --output-dir "${RUNNER_TEMP}/football-form" --skip-validation
-          python scripts/generate-fair-odds-lab.py --team-match-base "${RUNNER_TEMP}/football-form/team-match-base.csv"
-          python scripts/generate-fair-odds-lab-highlights.py
-          python scripts/validate-fair-odds-lab-highlights.py
-
-      - name: Upload Fair Odds Lab artifacts to Vercel Blob
-        env:
-          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
-        run: |
-          if [ -n "${BLOB_READ_WRITE_TOKEN:-}" ]; then
-            python -m pip install -r scripts/requirements-blob.txt
-          fi
-          python scripts/upload-fair-odds-lab-blob.py
-
-      - name: Upload goalscorer monitor snapshot
-        if: github.event.schedule != '40 10-22 * * *'
-        env:
-          ENABLE_SUPABASE_SNAPSHOT_UPLOADS: ${{ vars.ENABLE_SUPABASE_SNAPSHOT_UPLOADS }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: |
-          if [ "${ENABLE_SUPABASE_SNAPSHOT_UPLOADS:-0}" = "1" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
-            python scripts/build-goalscorer-monitor-snapshot.py --supabase
-          else
-            echo "::warning::Supabase snapshot upload disabled or key missing; skipping monitor snapshot upload."
-          fi
-
-      - name: Commit and push if new data
-        env:
-          ASSIST_VALUE_SHADOW_ENABLED: ${{ vars.ASSIST_VALUE_SHADOW_ENABLED }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          bash scripts/git-add-goalscorer-deploy-artifacts.sh
-          if [ "${ASSIST_VALUE_SHADOW_ENABLED:-0}" = "1" ]; then
-            git add -f \
-              data/assist-value/assist-value-shadow-signals.csv \
-              data/assist-value/assist-value-model-report.txt \
-              data/assist-value/research/assist-value-v1-prospective.csv 2>/dev/null || true
-          fi
-          if git diff --cached --quiet; then
-            echo "No goalscorer live changes to commit."
-            exit 0
-          fi
-          git commit -m "chore: hosted goalscorer hot live poll"
-          bash scripts/ci-safe-push.sh golden-with-speed-insights
+          python-version: '3.11'
+      - run: pip install requests
+      - run: python scripts/probe-paddy-cloud.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paddy-cloud-probe
+          path: paddy-cloud-probe.json
