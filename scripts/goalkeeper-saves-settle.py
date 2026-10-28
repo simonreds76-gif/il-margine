@@ -11,6 +11,7 @@ import argparse
 import csv
 import json
 import os
+from hashlib import sha256
 from collections import Counter, defaultdict
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
@@ -245,6 +246,91 @@ def fotmob_player_saves(payload: dict[str, Any], goalkeeper: str) -> tuple[int |
         "position": "GK",
         "source": "fotmob_named_keeper_shotmap",
     }
+
+
+def fotmob_named_nonstarter(payload: dict[str, Any], signal: dict[str, str]) -> dict[str, Any] | None:
+    """Prove a Bet365 named-player nonstart, never infer it from missing saves.
+
+    The caller has validated the exact fixture/date/clubs. Bet365's published
+    player-stat rule voids nonstarters. Team-goalkeeper contracts are different
+    and must never use this rule. Require a complete XI and a different keeper
+    independently recorded for the full match, including when the pick is absent
+    from the squad. An incomplete lineup or a name collision stays unresolved.
+    """
+    if (str(signal.get('bookmaker') or '').casefold() != 'bet365'
+            or str(signal.get('contract_scope') or '').startswith('team_goalkeeper_')):
+        return None
+    side = signal.get('venue')
+    name = str(signal.get('goalkeeper') or '').strip()
+    if side not in {'home', 'away'} or len(name.split()) < 2:
+        return None
+    page = (payload.get('props') or {}).get('pageProps') or {}
+    if (page.get('general') or {}).get('finished') is not True:
+        return None
+    content = page.get('content') or {}
+    lineup = content.get('lineup') or {}
+    team = lineup.get(side + 'Team') or {}
+    starters = team.get('starters') or []
+    if len(starters) != 11 or len({str(p.get('id') or '') for p in starters}) != 11:
+        return None
+    if any(not p.get('id') or not p.get('name') for p in starters):
+        return None
+    if any(person_match_score(name, p.get('name')) for p in starters):
+        return None
+    opponent = lineup.get(('away' if side == 'home' else 'home') + 'Team') or {}
+    if any(person_match_score(name, p.get('name')) for bucket in ('starters', 'subs') for p in opponent.get(bucket) or []):
+        return None
+    keepers = [p for p in starters if str(p.get('positionId')) == '11']
+    if len(keepers) != 1:
+        return None
+    keeper = keepers[0]
+    try:
+        minutes = count(stat_values((content.get('playerStats') or {}).get(str(keeper['id'])) or {}).get('minutes_played'))
+    except ValueError:
+        return None
+    if minutes != 90:
+        return None
+    return {'reason': 'verified_named_nonstarter', 'match_id': (page.get('general') or {}).get('matchId'),
+            'side': side, 'selected_keeper': name, 'actual_starter_id': keeper['id'],
+            'actual_starter': keeper['name'], 'starter_minutes': minutes,
+            'source_sha256': sha256(json.dumps(page, sort_keys=True).encode()).hexdigest(),
+            'rule_url': 'https://help.bet365.com/s/en/sportsrules/soccer/match-statistics'}
+
+
+def void_named_nonstarter(signal: dict[str, str], settled_at: str) -> None:
+    signal.update(status='void', result='void', actual_saves='', pnl_units='0.0000',
+                  settled_at=settled_at, settlement_source='fotmob_verified_named_nonstarter',
+                  close_odds='', clv='')
+
+
+def reviewed_named_count(payload, signal, metadata, path=None):
+    """Apply a dated, independently corroborated count only to its exact conflict."""
+    if (str(signal.get('bookmaker') or '').casefold() != 'bet365'
+            or str(signal.get('contract_scope') or '').startswith('team_goalkeeper_')
+            or metadata.get('error') != 'fotmob_save_totals_disagree'):
+        return None
+    path = path or ROOT / 'config/gk-reviewed-counts.json'
+    if not path.exists(): return None
+    records = json.loads(path.read_text(encoding='utf-8')).get('records') or []
+    page = (payload.get('props') or {}).get('pageProps') or {}
+    general = page.get('general') or {}; content = page.get('content') or {}
+    matches = [r for r in records if str(r['match_id']) == str(general.get('matchId'))
+               and r['match_date'] == str(general.get('matchTimeUTCDate') or '')[:10]]
+    if len(matches) != 1 or general.get('finished') is not True: return None
+    r = matches[0]; side = r['venue']; pid = str(r['player_id'])
+    if (signal.get('venue') != side or signal.get('goalkeeper') != r['goalkeeper']
+            or str((general.get(side+'Team') or {}).get('id')) != str(r['team_id'])
+            or metadata.get('player_id') != r['player_id']
+            or metadata.get('explicit_saves') != r['actual_saves']
+            or metadata.get('event_saves') != r['reviewed_event_saves']
+            or len(r.get('source_urls') or []) < 2 or not r.get('reviewed_at')): return None
+    starters = ((content.get('lineup') or {}).get(side+'Team') or {}).get('starters') or []
+    keepers = [p for p in starters if str(p.get('positionId')) == '11']
+    if len(keepers) != 1 or str(keepers[0].get('id')) != pid: return None
+    try:
+        minutes = count(stat_values((content.get('playerStats') or {}).get(pid) or {}).get('minutes_played'))
+    except ValueError: return None
+    return r if minutes == 90 else None
 
 
 def fotmob_team_saves(payload: dict[str, Any], side: str) -> tuple[int | None, dict[str, Any]]:
@@ -568,8 +654,21 @@ def main() -> None:
                 continue
         scope = str(signal.get("contract_scope") or "")
         team_contract = scope.startswith("team_goalkeeper_")
+        nonstarter = fotmob_named_nonstarter(match_cache[match_id], signal)
+        if nonstarter:
+            void_named_nonstarter(signal, now)
+            settled += 1
+            record(signal, 'void_verified_named_nonstarter', json.dumps(nonstarter, sort_keys=True))
+            continue
         actual, metadata = (fotmob_mapped_keeper_saves(match_cache[match_id], scope.removeprefix("team_goalkeeper_"), str(signal.get("goalkeeper") or ""))
                             if team_contract else fotmob_player_saves(match_cache[match_id], str(signal.get("goalkeeper") or "")))
+        reviewed = reviewed_named_count(match_cache[match_id], signal, metadata) if actual is None else None
+        if reviewed:
+            settle_row(signal, reviewed['actual_saves'], latest_close(odds_rows, signal), now,
+                       source='independently_reviewed_named_keeper_count')
+            settled += 1
+            record(signal, 'settled_reviewed_named_count', json.dumps(reviewed, sort_keys=True))
+            continue
         if actual is None:
             record(signal, str(metadata.get("error") or "fotmob_goalkeeper_stats_not_found"))
             if not team_contract:
