@@ -17,3 +17,7 @@ scripts/__pycache__
 
 # Local all-candidate ML research snapshots; never upload to Git or Vercel.
 data/tennis-ml-research/
+
+# Private quote research is collected by Python, never used by site functions.
+data/goalkeeper-saves/headed-goal-quotes.json
+data/goalkeeper-saves/headed-goal-quote-history/

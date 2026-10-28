@@ -134,6 +134,7 @@ def capture_and_merge(payload, targets, *, now=None, cache_path=CACHE, get=None,
     """
     global _catalog, _started
     receipt = dict(bookmaker=BOOK, requests=0, matched=0, rows=0, errors=[], missing=[], deferred=[])
+    research_captures = []
     if not force and not enabled():
         return payload, receipt
     now = now or datetime.now(timezone.utc)
@@ -195,6 +196,7 @@ def capture_and_merge(payload, targets, *, now=None, cache_path=CACHE, get=None,
                 current = merged.setdefault(eid, {**target, 'bookmakers': {}})
                 current.setdefault('bookmakers', {})[BOOK] = normalized['bookmakers'][BOOK]
                 current.setdefault('urls', {}).update(normalized['urls'])
+                research_captures.append(dict(raw=cached['data'], target=target, captured_at=cached['captured_at']))
                 receipt['matched'] += 1
                 receipt['rows'] += len(normalized['bookmakers'][BOOK])
             except (requests.RequestException, ValueError, TypeError, KeyError) as exc:
@@ -206,6 +208,14 @@ def capture_and_merge(payload, targets, *, now=None, cache_path=CACHE, get=None,
         tmp = cache_path.with_suffix(f'.{os.getpid()}.tmp')
         tmp.write_bytes(gzip.compress(json.dumps(cache, ensure_ascii=False).encode('utf-8')))
         tmp.replace(cache_path)
+    # Separate quote-only evidence from the same responses. Never normalize
+    # headed goals into scorer/Skyline markets or generate additional requests.
+    try:
+        from headed_goal_quotes import retain, read
+        aerial = read(ROOT/'public/fair-odds-lab/aerial.json', {})
+        receipt['headed_goal_research'] = retain(cache_path.parent, research_captures, now=now, aerial=aerial)
+    except (OSError, ValueError, TypeError, KeyError) as exc:
+        receipt['errors'].append(f'headed_goal_research:{type(exc).__name__}')
     status_path = cache_path.with_suffix('.status.json')
     status_path.parent.mkdir(parents=True, exist_ok=True)
     status_path.write_text(json.dumps(dict(captured_at=now.isoformat(), **receipt), indent=2)+'\n', encoding='utf-8')

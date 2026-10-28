@@ -1,0 +1,860 @@
+{
+  "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911598.json",
+  "captured_at": "2026-10-28T13:23:51.757232+00:00",
+  "raw_evidence_sha256": "5fa94b4cc788b0afb2950adc9f3da745f982807126176e662b073c14d922ca3b",
+  "events": [
+    {
+      "id": 1027911598,
+      "name": "AC Milan - Bologna",
+      "nameDelimiter": "-",
+      "englishName": "AC Milan - Bologna",
+      "homeName": "AC Milan",
+      "awayName": "Bologna",
+      "start": "2026-10-28T17:30:00Z",
+      "group": "Serie A",
+      "groupId": 1000095001,
+      "path": [
+        {
+          "id": 1000093190,
+          "name": "Football",
+          "englishName": "Football",
+          "termKey": "football"
+        },
+        {
+          "id": 1000461745,
+          "name": "Italy",
+          "englishName": "Italy",
+          "termKey": "italy"
+        },
+        {
+          "id": 1000095001,
+          "name": "Serie A",
+          "englishName": "Serie A",
+          "termKey": "serie_a"
+        }
+      ],
+      "nonLiveBoCount": 711,
+      "sport": "FOOTBALL",
+      "tags": [
+        "OFFERED_LIVE",
+        "BET_BUILDER",
+        "MATCH"
+      ],
+      "state": "NOT_STARTED",
+      "groupSortOrder": 4003001000000000000,
+      "prematchEnd": "2026-10-28T17:30:00Z"
+    }
+  ],
+  "betOffers": [
+    {
+      "id": 2708683620,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390269552,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 14000,
+          "line": 1000,
+          "participant": "Koni De Winter",
+          "type": "OT_YES",
+          "betOfferId": 2708683620,
+          "changedDate": "2026-10-28T06:53:08Z",
+          "participantId": 1007006280,
+          "oddsFractional": "13/1",
+          "oddsAmerican": "1300",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708683621,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390269554,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 14000,
+          "line": 1000,
+          "participant": "Sankhoun Diawara",
+          "type": "OT_YES",
+          "betOfferId": 2708683621,
+          "changedDate": "2026-10-28T06:53:07Z",
+          "participantId": 1030525058,
+          "oddsFractional": "13/1",
+          "oddsAmerican": "1300",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708683622,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390269556,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 12000,
+          "line": 1000,
+          "participant": "Filippo Terracciano",
+          "type": "OT_YES",
+          "betOfferId": 2708683622,
+          "changedDate": "2026-10-28T06:53:06Z",
+          "participantId": 1007351483,
+          "oddsFractional": "11/1",
+          "oddsAmerican": "1100",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708683623,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390269558,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 11500,
+          "line": 1000,
+          "participant": "Federico Bernardeschi",
+          "type": "OT_YES",
+          "betOfferId": 2708683623,
+          "changedDate": "2026-10-28T06:53:08Z",
+          "participantId": 1002260723,
+          "oddsFractional": "21/2",
+          "oddsAmerican": "1050",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000067512,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708683624,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390269560,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 8000,
+          "line": 1000,
+          "participant": "Alphadjo Cissè",
+          "type": "OT_YES",
+          "betOfferId": 2708683624,
+          "changedDate": "2026-10-28T06:53:06Z",
+          "participantId": 1030158266,
+          "oddsFractional": "7/1",
+          "oddsAmerican": "700",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708683625,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390269562,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 6000,
+          "line": 1000,
+          "participant": "Gonçalo Ramos",
+          "type": "OT_YES",
+          "betOfferId": 2708683625,
+          "changedDate": "2026-10-28T11:18:24Z",
+          "participantId": 1006976643,
+          "oddsFractional": "5/1",
+          "oddsAmerican": "500",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708683626,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390269564,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 11500,
+          "line": 1000,
+          "participant": "Davide Bartesaghi",
+          "type": "OT_YES",
+          "betOfferId": 2708683626,
+          "changedDate": "2026-10-28T07:44:13Z",
+          "participantId": 1030068826,
+          "oddsFractional": "21/2",
+          "oddsAmerican": "1050",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708692511,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390288084,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 14000,
+          "line": 1000,
+          "participant": "Mario Gila",
+          "type": "OT_YES",
+          "betOfferId": 2708692511,
+          "changedDate": "2026-10-28T06:53:08Z",
+          "participantId": 1028237219,
+          "oddsFractional": "13/1",
+          "oddsAmerican": "1300",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708692513,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390288088,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 12000,
+          "line": 1000,
+          "participant": "Christian Pulisic",
+          "type": "OT_YES",
+          "betOfferId": 2708692513,
+          "changedDate": "2026-10-28T01:33:54Z",
+          "participantId": 1003043173,
+          "oddsFractional": "11/1",
+          "oddsAmerican": "1100",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708692514,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390288090,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 9000,
+          "line": 1000,
+          "participant": "Artem Dovbyk",
+          "type": "OT_YES",
+          "betOfferId": 2708692514,
+          "changedDate": "2026-10-28T06:53:07Z",
+          "participantId": 1004478781,
+          "oddsFractional": "8/1",
+          "oddsAmerican": "800",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000067512,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708694858,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390246949,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 11000,
+          "line": 1000,
+          "participant": "Strahinja Pavlovic",
+          "type": "OT_YES",
+          "betOfferId": 2708694858,
+          "changedDate": "2026-10-28T06:53:07Z",
+          "participantId": 1005802312,
+          "oddsFractional": "10/1",
+          "oddsAmerican": "1000",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708694860,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390246953,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 15000,
+          "line": 1000,
+          "participant": "Ardon Jashari",
+          "type": "OT_YES",
+          "betOfferId": 2708694860,
+          "changedDate": "2026-10-26T19:11:18Z",
+          "participantId": 1030132433,
+          "oddsFractional": "14/1",
+          "oddsAmerican": "1400",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708694861,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390246955,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 14000,
+          "line": 1000,
+          "participant": "Eivind Helland",
+          "type": "OT_YES",
+          "betOfferId": 2708694861,
+          "changedDate": "2026-10-28T10:38:59Z",
+          "participantId": 1030044660,
+          "oddsFractional": "13/1",
+          "oddsAmerican": "1300",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000067512,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708694864,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390246961,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 13000,
+          "line": 1000,
+          "participant": "Adrien Rabiot",
+          "type": "OT_YES",
+          "betOfferId": 2708694864,
+          "changedDate": "2026-10-28T06:53:08Z",
+          "participantId": 1001325757,
+          "oddsFractional": "12/1",
+          "oddsAmerican": "1200",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708694865,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390246963,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 15000,
+          "line": 1000,
+          "participant": "Pervis Estupiñán",
+          "type": "OT_YES",
+          "betOfferId": 2708694865,
+          "changedDate": "2026-10-28T01:33:53Z",
+          "participantId": 1003366965,
+          "oddsFractional": "14/1",
+          "oddsAmerican": "1400",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708694866,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390246965,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 14000,
+          "line": 1000,
+          "participant": "Fikayo Tomori",
+          "type": "OT_YES",
+          "betOfferId": 2708694866,
+          "changedDate": "2026-10-28T07:39:19Z",
+          "participantId": 1002746624,
+          "oddsFractional": "13/1",
+          "oddsAmerican": "1300",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708694868,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390246969,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 8000,
+          "line": 1000,
+          "participant": "Francesco Camarda",
+          "type": "OT_YES",
+          "betOfferId": 2708694868,
+          "changedDate": "2026-10-28T07:39:19Z",
+          "participantId": 1030118891,
+          "oddsFractional": "7/1",
+          "oddsAmerican": "700",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2708694876,
+      "closed": "2026-10-28T17:30:00Z",
+      "criterion": {
+        "id": 1001159730,
+        "label": "To score from a header",
+        "englishLabel": "To score from a header",
+        "shortLabel": "Header",
+        "shortEnglishLabel": "Header",
+        "order": [
+          1
+        ],
+        "lifetime": "FULL_TIME"
+      },
+      "betOfferType": {
+        "id": 127,
+        "name": "Player Occurrence Line",
+        "englishName": "Player Occurrence Line"
+      },
+      "eventId": 1027911598,
+      "outcomes": [
+        {
+          "id": 4390246985,
+          "label": "Yes",
+          "englishLabel": "Yes",
+          "odds": 10000,
+          "line": 1000,
+          "participant": "Yunus Musah",
+          "type": "OT_YES",
+          "betOfferId": 2708694876,
+          "changedDate": "2026-10-28T06:53:07Z",
+          "participantId": 1007109277,
+          "oddsFractional": "9/1",
+          "oddsAmerican": "900",
+          "status": "OPEN",
+          "cashOutStatus": "DISABLED",
+          "eventParticipantId": 1000000095,
+          "displayOrder": 0
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH"
+      ],
+      "cashOutStatus": "ENABLED"
+    }
+  ]
+}
