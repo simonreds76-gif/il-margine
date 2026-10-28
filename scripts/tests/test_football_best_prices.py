@@ -30,6 +30,12 @@ def candidate(book='Bet365',odds=2.5,**changes):
         model_fair_odds=2,selection='over 8.5',edge=.25,blocked_reason='',**changes)
 
 class BestPriceTests(unittest.TestCase):
+    def test_invalid_quote_cannot_escape_when_no_valid_alternative_exists(self):
+        for price in [float('inf'),float('nan'),0,1,None,'invalid']:
+            row=candidate(odds=price)
+            self.assertEqual(prices.best_candidates([row],NOW),[])
+            self.assertIn('invalid_price',row['blocked_reason'])
+
     def test_higher_price_wins_even_when_other_book_has_higher_estimated_edge(self):
         rows=[candidate(),{**candidate('Grosvenor',2.2),'edge':.4},candidate('Pinnacle',2.3)]
         winner=prices.best_candidates(rows,NOW)
