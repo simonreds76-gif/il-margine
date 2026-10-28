@@ -576,14 +576,14 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
                 "line": line_text,
                 "over_odds": f"{prices['over_odds']:.4f}" if prices.get("over_odds") else "",
                 "under_odds": f"{prices['under_odds']:.4f}" if prices.get("under_odds") else "",
-                "capture_ts": str(event.get("captured_at") or captured_at),
+                "capture_ts": str(market.get("captured_at") or event.get("captured_at") or captured_at),
                 "match_start_utc": kickoff,
                 "raw_market_name": market_name,
                 "raw_outcome_count": str(len(market.get("odds") or market.get("outcomes") or [])),
                 "raw_label_sample": " | ".join(raw_labels.get((player, opponent, line_text), [])[:4]),
                 "provider_updated_at": str(market.get("updatedAt") or ""),
                 "source_url": str((event.get("urls") or {}).get(bookmaker) or ""),
-                "raw_market_json": json.dumps(market, ensure_ascii=False, separators=(",", ":")) if bookmaker.casefold() in {"sisal it", "grosvenor"} else "",
+                "raw_market_json": json.dumps(market, ensure_ascii=False, separators=(",", ":")) if bookmaker.casefold() in {"sisal it", "grosvenor"} or market.get("source") == "moviodds_bet365" else "",
             }
         )
     return rows
@@ -871,6 +871,10 @@ def main() -> None:
         print(f"PRICE_SOURCE_FAILED: {exc}; independent Grosvenor capture retained")
         events, payload = [], []
     payload.extend(direct)
+    from moviodds_prices import capture as capture_moviodds
+    moviodds, moviodds_receipt = capture_moviodds("tennis", targets=events, days_ahead=args.days_ahead)
+    payload.extend(moviodds)
+    print("MoviOdds Bet365: " + json.dumps(moviodds_receipt))
     print(f"Grosvenor direct: {direct_receipt.get('market_count', 0)} markets; "
           f"{direct_receipt.get('requests', 0)} public requests; errors={direct_receipt.get('errors', [])}")
     rows: list[dict[str, str]] = []
@@ -882,7 +886,7 @@ def main() -> None:
         raw_out.parent.mkdir(parents=True, exist_ok=True)
         with gzip.open(raw_out, "wt", encoding="utf-8") as handle:
             json.dump({"captured_at": captured_at, "source": f"{BASE_URL}/odds/multi",
-                       "bookmakers": args.bookmakers, "events": payload, "grosvenor_receipt": direct_receipt}, handle)
+                       "bookmakers": args.bookmakers, "events": payload, "grosvenor_receipt": direct_receipt, "moviodds_receipt": moviodds_receipt}, handle)
     audited_event_ids: set[str] = set()
     for event in payload:
         try:
@@ -971,6 +975,10 @@ def main() -> None:
                        "market_name": f"<DIRECT_{direct_receipt.get('status', 'DISABLED')}>",
                        "odds_count": str(direct_receipt.get("market_count", 0)),
                        "sample_labels": json.dumps({k: v for k, v in direct_receipt.items() if k != "events"})})
+    audit_rows.append({"captured_at": captured_at, "bookmaker": "Bet365",
+        "market_name": f"<MOVIODDS_{moviodds_receipt.get('status', 'DISABLED')}>",
+        "odds_count": str(moviodds_receipt.get("quote_count", 0)),
+        "sample_labels": json.dumps(moviodds_receipt)})
     write_rows(audit_out, audit_rows, AUDIT_FIELDS)
     if rows:
         write_rows(out, rows, OUTPUT_FIELDS)
