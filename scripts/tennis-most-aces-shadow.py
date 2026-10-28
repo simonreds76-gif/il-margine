@@ -319,12 +319,18 @@ def settle(ledger: list[dict[str, str]], index: dict[tuple[str, str], list[dict[
             target_date = date.fromisoformat(row["date"])
         except (KeyError, ValueError):
             continue
+        if row.get("bookmaker") == "Grosvenor":
+            start = parse_datetime(row.get("match_start_utc"))
+            if not start or datetime.now(timezone.utc) <= start:
+                row["settlement_note"] = "match_not_started"
+                continue
         candidates = []
         source_index = direct_index if row.get("bookmaker") == "Grosvenor" else index
         for match in (source_index or {}).get(pair_key(row.get("player1"), row.get("player2")), []):
             played = sackmann_date(match)
             same_event = (row.get("bookmaker") != "Grosvenor" or
-                          norm_name(match.get("tourney_name")) == norm_name(row.get("tournament")))
+                          (played == target_date and
+                           norm_name(match.get("tourney_name")) == norm_name(row.get("tournament"))))
             if same_event and played and abs((played - target_date).days) <= 2:
                 candidates.append((abs((played - target_date).days), match))
         if not candidates:
