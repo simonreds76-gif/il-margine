@@ -48,12 +48,13 @@ type KeeperWatchRecord = {
 };
 type KeeperWatchReport = {
   status?: string; reason?: string; start_at?: string; last_capture_at?: string;
+  coverage?: string;
   forecast_fixtures?: number; paired_settled_fixtures?: number;
   next_review_at?: number | null; review_milestone?: number | null;
   records?: Record<string, KeeperWatchRecord>;
   paired_scores?: Record<string, { brier?: number | null; log_loss?: number | null }>;
   selections?: Array<{ model: string; match_id: string; player_id: string; kickoff_at: string;
-    home: string; away: string; goalkeeper: string; side: string; line: number; odds: number;
+    home: string; away: string; goalkeeper: string; side: string; line: number; odds: number; bookmaker?: string;
     status: string; profit: number; actual?: number; reason?: string; lineup_status?: string }>;
 };
 
@@ -65,6 +66,7 @@ function KeeperWatch({ report }: { report?: KeeperWatchReport }) {
       <StatusPill label={plain(report.status)} tone="border-violet-400/30 bg-violet-400/10 text-violet-200" />
     </div>
     <p className="mt-2 max-w-3xl text-sm text-slate-300">Does individual keeper history improve our saves prices? Both versions use the same captured markets. The current model is unchanged. Each selection uses 0.5 paper units and no real stake.</p>
+    {report.coverage && <p className="mt-2 max-w-3xl text-xs text-slate-400">Price coverage: {report.coverage}</p>}
     {report.reason && <p className="mt-2 text-sm text-amber-200">Needs review: {plain(report.reason)}</p>}
     <div className="mt-4 grid gap-3 sm:grid-cols-2">
       {([['keeper_watch', 'Keeper Watch v1'], ['current', 'Current model comparison']] as const).map(([key, label]) => {
@@ -89,7 +91,7 @@ function KeeperWatch({ report }: { report?: KeeperWatchReport }) {
       <div className="mt-3 grid gap-2 md:grid-cols-2">{report.selections?.map(r => <article key={`${r.model}:${r.match_id}`} className="min-w-0 rounded-lg bg-slate-900 p-3 text-sm">
         <p className="text-xs text-violet-300">{r.model === 'keeper_watch' ? 'Keeper Watch' : 'Current comparison'} · {formatDateTimeLabel(r.kickoff_at)}</p>
         <p className="mt-1 break-words font-medium text-slate-100">{r.home} vs {r.away}</p>
-        <p className="mt-1 break-words text-slate-300">{r.goalkeeper} · {r.side} {r.line} saves @ {r.odds.toFixed(2)} Bet365</p>
+        <p className="mt-1 break-words text-slate-300">{r.goalkeeper} · {r.side} {r.line} saves @ {r.odds.toFixed(2)} {r.bookmaker || 'Bookmaker not recorded'}</p>
         <p className={cn('mt-1', resultTone(r.status))}>{plain(r.status)}{r.actual == null ? '' : ` · ${r.actual} saves`}{['won', 'lost'].includes(r.status) ? ` · ${units(r.profit)}` : ''}</p>
         <p className="mt-1 text-xs text-slate-400">{plain(r.lineup_status)}{r.reason ? ` · ${plain(r.reason)}` : ''}</p>
       </article>)}</div>
