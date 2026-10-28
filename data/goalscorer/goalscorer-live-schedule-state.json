@@ -1,62 +1,62 @@
 {
-  "updated_at": "2026-10-28T00:42:41Z",
+  "updated_at": "2026-10-28T14:49:06Z",
   "reason": "cycle",
   "last_clv_run_at": "2026-10-24T14:00:04Z",
   "leagues": {
     "serie-a": {
-      "last_successful_run_at": "2026-10-28T00:29:46Z",
-      "last_price_run_at": "2026-10-28T00:29:46Z",
-      "last_detail_run_at": "2026-10-24T13:19:27Z",
+      "last_successful_run_at": "2026-10-28T14:47:28Z",
+      "last_price_run_at": "2026-10-28T14:47:28Z",
+      "last_detail_run_at": "2026-10-28T14:47:28Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip serie-a: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "distant",
+      "last_decision": "ran",
+      "last_message": "Ran serie-a in distant tier (cadence 1m, fixtures 13).",
+      "next_kickoff_utc": "2026-10-28T17:30:00Z"
     },
     "epl": {
-      "last_successful_run_at": "2026-10-28T00:30:05Z",
-      "last_price_run_at": "2026-10-28T00:30:05Z",
-      "last_detail_run_at": "2026-10-18T12:53:04Z",
+      "last_successful_run_at": "2026-10-28T14:47:53Z",
+      "last_price_run_at": "2026-10-28T14:47:53Z",
+      "last_detail_run_at": "2026-10-28T14:47:53Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip epl: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "distant",
+      "last_decision": "ran",
+      "last_message": "Ran epl in distant tier (cadence 1m, fixtures 8).",
+      "next_kickoff_utc": "2026-10-31T12:30:00Z"
     },
     "la-liga": {
-      "last_successful_run_at": "2026-10-28T00:30:21Z",
-      "last_price_run_at": "2026-10-28T00:30:21Z",
-      "last_detail_run_at": "2026-10-25T13:40:13Z",
+      "last_successful_run_at": "2026-10-28T14:48:14Z",
+      "last_price_run_at": "2026-10-28T14:48:14Z",
+      "last_detail_run_at": "2026-10-28T14:48:14Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip la-liga: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "distant",
+      "last_decision": "ran",
+      "last_message": "Ran la-liga in distant tier (cadence 1m, fixtures 6).",
+      "next_kickoff_utc": "2026-10-30T20:00:00Z"
     },
     "bundesliga": {
-      "last_successful_run_at": "2026-10-28T00:30:39Z",
-      "last_price_run_at": "2026-10-28T00:30:39Z",
-      "last_detail_run_at": "2026-10-18T13:23:12Z",
+      "last_successful_run_at": "2026-10-28T14:48:41Z",
+      "last_price_run_at": "2026-10-28T14:48:41Z",
+      "last_detail_run_at": "2026-10-28T14:48:41Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip bundesliga: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "distant",
+      "last_decision": "ran",
+      "last_message": "Ran bundesliga in distant tier (cadence 1m, fixtures 8).",
+      "next_kickoff_utc": "2026-10-30T19:30:00Z"
     },
     "ligue-1": {
-      "last_successful_run_at": "2026-10-28T00:30:53Z",
-      "last_price_run_at": "2026-10-28T00:30:53Z",
-      "last_detail_run_at": "2026-10-24T13:21:19Z",
+      "last_successful_run_at": "2026-10-28T14:49:01Z",
+      "last_price_run_at": "2026-10-28T14:49:01Z",
+      "last_detail_run_at": "2026-10-28T14:49:01Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip ligue-1: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "distant",
+      "last_decision": "ran",
+      "last_message": "Ran ligue-1 in distant tier (cadence 1m, fixtures 5).",
+      "next_kickoff_utc": "2026-10-30T18:00:00Z"
     }
   }
 }

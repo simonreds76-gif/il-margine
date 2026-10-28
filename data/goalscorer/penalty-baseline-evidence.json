@@ -1,9 +1,41 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-28T05:49:55Z",
+  "generated_at": "2026-10-28T14:47:31Z",
   "league": "serie-a",
-  "row_count": 3,
+  "row_count": 6,
   "rows": [
+    {
+      "team": "Atalanta",
+      "team_key": "atalanta",
+      "player_name": "Éderson",
+      "player_key": "derson",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-25"
+    },
+    {
+      "team": "Bologna",
+      "team_key": "bologna",
+      "player_name": "Federico Bernardeschi",
+      "player_key": "federico bernardeschi",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-24"
+    },
     {
       "team": "Cagliari",
       "team_key": "cagliari",
@@ -19,6 +51,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-10-27"
+    },
+    {
+      "team": "Inter",
+      "team_key": "inter",
+      "player_name": "Piotr Zieliński",
+      "player_key": "piotr zieli ski",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-25"
     },
     {
       "team": "Lazio",
