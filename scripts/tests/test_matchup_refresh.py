@@ -23,6 +23,17 @@ class RefreshTests(unittest.TestCase):
     def test_date_only_does_not_deploy(self):
         new=deepcopy(self.data);new['asOf']='2026-09-27'
         self.assertFalse(validate(self.data,new))
+    def test_tiebreak_enrichment_in_priced_and_extra_history(self):
+        for lane in ['matches', 'results']:
+            old = deepcopy(self.data)
+            old[lane] = [dict(id='score',date='2026-09-20',p1=0,p2=1,winner=0,
+                o1=2,o2=2,score='6-7 6-1 6-3',event='Test',surface='clay',competition='ATP')]
+            new = deepcopy(old)
+            new[lane][0]['score'] = '6-7(6) 6-1 6-3'
+            self.assertTrue(validate(old,new))
+            for score in ['7-6 6-1 6-3', '6-7 6-2 6-3', '6-7 6-1 6-3 RET']:
+                new[lane][0]['score'] = score
+                with self.assertRaises(ValueError): validate(old,new)
     def test_missing_statistics_can_be_filled(self):
         new=deepcopy(self.data);new['matches'][0]['stats2']={'aces':[4,70]}
         self.assertTrue(validate(self.data,new))
