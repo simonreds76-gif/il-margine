@@ -25,7 +25,7 @@ class NewGkTests(unittest.TestCase):
   now=datetime.now(timezone.utc);events=[{'id':i,'league':'France - Ligue 1','date':(now+timedelta(hours=4)).isoformat()} for i in range(1,31)]
   with tempfile.TemporaryDirectory() as folder:
    p=Path(folder);argv=['capture','--history',str(p/'h.csv'),'--status',str(p/'s.json'),'--market-inventory',str(p/'m.csv')]
-   with patch.object(sys,'argv',argv),patch.object(capture,'load_env'),patch.dict(os.environ,{'ODDS_API_KEY':'test'}),patch.object(capture,'request_json',side_effect=[events,[],capture.requests.exceptions.ReadTimeout(),[]]) as request,patch('builtins.print'):
+   with patch.object(sys,'argv',argv),patch.object(capture,'load_env'),patch.dict(os.environ,{'ODDS_API_KEY':'test'}),patch.object(capture,'request_json',side_effect=[events,[],capture.requests.exceptions.ReadTimeout(),[]]) as request,patch.object(capture,'capture_and_merge',return_value=([],{'errors':[]})),patch('builtins.print'):
     capture.main()
    d=json.loads((p/'s.json').read_text());self.assertEqual(request.call_count,4);self.assertEqual(d['status'],'PARTIAL_CAPTURE_FAILURE');self.assertEqual(d['requests_used'],4);self.assertEqual(sum(bool(x) for x in d['event_last_checked'].values()),20)
  def row(self,now):
