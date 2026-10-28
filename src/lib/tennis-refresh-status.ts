@@ -2,6 +2,9 @@ export type TennisRefreshCommand = {
   request_id?: string;
   state?: string;
   error?: string;
+  phase?: string;
+  progress_message?: string;
+  telegram_new_signals?: number;
   requested_at?: string;
   oncourt_database_updated_at?: string;
   oncourt_extracted_at?: string;
@@ -23,11 +26,14 @@ export function tennisRefreshStatusMessage(command: TennisRefreshCommand): strin
     // the number of selections still eligible after this refresh.
     const delivery = command.telegram_status === "relay_queued"
       ? " Telegram relay queued; this is not confirmation of delivery."
-      : " Check the signals in Monitor for the latest selections.";
+      : command.telegram_status === "checked_no_new"
+        ? " No new qualifying selections to send; earlier alerts were not repeated."
+        : " Check the signals in Monitor for the latest selections.";
     return `Refresh completed. Fair prices and qualifying selections checked.${delivery}`;
   }
-  if (command.state === "waiting") return "Waiting for the current tennis job to finish. This request will then use a new extraction and price check.";
-  if (command.state === "started") return "Refreshing on the laptop. The full run can take 30 minutes or longer; you can leave this page and return to check its status.";
+  if (command.progress_message && tennisRefreshIsActive(command)) return command.progress_message;
+  if (command.state === "waiting") return "Waiting for shared input access. Historical reporting yields between operations so this refresh can run next.";
+  if (command.state === "started") return "Refreshing saved OnCourt inputs, prices and selections on the laptop. Historical reports run separately; you can leave this page and return.";
   return "Queued for the laptop. Keep it on and connected; pickup normally takes under two minutes.";
 }
 
