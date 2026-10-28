@@ -11,6 +11,7 @@ import csv
 import json
 import os
 import re
+import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -56,6 +57,34 @@ def request_json(path: str, params: dict[str, Any]) -> Any:
     response = requests.get(f"{BASE_URL}{path}", params=params, timeout=45)
     response.raise_for_status()
     return response.json()
+
+
+class DiscoveryFailure(RuntimeError):
+    def __init__(self, attempts: int, error: Exception):
+        self.attempts = attempts
+        self.error_kind = type(error).__name__
+        # Provider exceptions can contain the API key in their request URL.
+        super().__init__(f"Fixture discovery failed after {attempts} attempt(s): {self.error_kind}")
+
+
+def discover_events(params: dict[str, Any]) -> tuple[list[dict[str, Any]], int]:
+    """Retry one transient discovery failure; both attempts count toward four calls."""
+    for attempt in (1, 2):
+        try:
+            result = request_json("/events", params)
+            if not isinstance(result, list):
+                raise ValueError("Unexpected fixture payload")
+            return result, attempt
+        except (requests.RequestException, ValueError) as error:
+            transient = isinstance(error, (requests.Timeout, requests.ConnectionError)) or (
+                isinstance(error, requests.HTTPError)
+                and error.response is not None
+                and error.response.status_code in (502, 503, 504)
+            )
+            if attempt == 2 or not transient:
+                raise DiscoveryFailure(attempt, error) from None
+            time.sleep(2)
+    raise AssertionError("unreachable")
 
 
 def event_league(event: dict[str, Any]) -> str:
@@ -326,24 +355,35 @@ def main() -> None:
     capture_mode, cutoff_minutes, publication_recovery = capture_window(
         args.capture_mode, args.kickoff_within_minutes, previous, now,
     )
-    discovered = request_json(
-        "/events",
-        {
+    try:
+        discovered, discovery_requests = discover_events({
             "apiKey": api_key,
             "sport": "football",
             "status": "pending",
             "from": now.isoformat().replace("+00:00", "Z"),
             "to": (now + timedelta(days=max(1, args.days_ahead))).isoformat().replace("+00:00", "Z"),
             "limit": 5000,
-        },
-    )
+        })
+    except DiscoveryFailure as error:
+        # Preserve the last successful quote files, checkpoint and capture time.
+        # Fail explicitly so no downstream step treats an outage as zero markets.
+        args.status.parent.mkdir(parents=True, exist_ok=True)
+        args.status.write_text(json.dumps({**previous,
+            "status": "FIXTURE_DISCOVERY_FAILED",
+            "last_attempt_at": datetime.now(UTC).isoformat(),
+            "capture_errors": [str(error)], "requests_used": error.attempts,
+            "request_budget": 4, "rows_observed": 0, "rows_added": 0,
+        }, indent=2) + "\n", encoding="utf-8")
+        raise SystemExit(str(error)) from None
+    # Discovery may have taken 90 seconds: exclude fixtures that have since begun.
+    now = datetime.now(UTC).replace(microsecond=0)
     previous_seen = previous.get("event_last_checked", {})
     # Obtain the uncapped count separately for honest coverage telemetry.
     supported_ids = {str(e["id"]) for e in (discovered if isinstance(discovered, list) else [])
                      if supported_events([e], max_events=1, kickoff_within_minutes=cutoff_minutes, now=now)}
     events = supported_events(
         discovered if isinstance(discovered, list) else [],
-        max_events=min(30, max(1, args.max_events)),
+        max_events=min((4 - discovery_requests) * 10, max(1, args.max_events)),
         kickoff_within_minutes=cutoff_minutes,
         now=now, last_seen=previous_seen,
     )
@@ -425,7 +465,8 @@ def main() -> None:
         "generated_at": captured_at,
         "status": "PARTIAL_CAPTURE_FAILURE" if capture_errors else "CAPTURED" if rows else "NO_GOALKEEPER_SAVE_LINES",
         "capture_errors": capture_errors,
-        "requests_used": 1 + (len(event_ids) + 9) // 10,
+        "requests_used": discovery_requests + (len(event_ids) + 9) // 10,
+        "discovery_retries": discovery_requests - 1,
         "request_budget": 4,
         "direct_source": direct_health,
         "events_supported": len(supported_ids),
