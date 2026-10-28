@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-27T20:41:05Z",
+  "generated_at": "2026-10-28T00:30:19Z",
   "league": "la-liga",
   "row_count": 20,
   "stats": {
@@ -22,9 +22,9 @@
     "position_upgrade_rows": 0,
     "role_adjusted_rows": 0,
     "fixtures_with_confirmed_lineups": 0,
-    "fixtures_with_expected_lineups": 0,
+    "fixtures_with_expected_lineups": 1,
     "fixtures_clean": 0,
-    "fixtures_degraded": 1,
+    "fixtures_degraded": 2,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
     "confirmed_bench_rows": 0,
@@ -35,6 +35,220 @@
     "avg_ev": -0.7278908000000001
   },
   "fixtures": [
+    {
+      "match_date": "2026-10-30",
+      "home_team": "Villarreal",
+      "away_team": "Espanyol",
+      "league": "la-liga",
+      "competition": "",
+      "bookmaker": "",
+      "lineup_input": "expected_xi",
+      "trust_tier": "T2",
+      "corruption_score": 0.0,
+      "corruption_flags": [],
+      "home_player_checks": [
+        {
+          "name": "Péter Gulácsi",
+          "status": "plausible",
+          "known_team_keys": [
+            "villarreal"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Santiago Mouriño",
+          "status": "plausible",
+          "known_team_keys": [
+            "villarreal"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Juan Foyth",
+          "status": "plausible",
+          "known_team_keys": [
+            "villarreal"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Renato Veiga",
+          "status": "plausible",
+          "known_team_keys": [
+            "villarreal"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Alex Freeman",
+          "status": "plausible",
+          "known_team_keys": [
+            "villarreal"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Tajon Buchanan",
+          "status": "plausible",
+          "known_team_keys": [
+            "villarreal"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Carlos Maciá",
+          "status": "plausible",
+          "known_team_keys": [
+            "villarreal"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Santi Comesaña",
+          "status": "plausible",
+          "known_team_keys": [
+            "villarreal"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Alberto Moleiro",
+          "status": "plausible",
+          "known_team_keys": [
+            "villarreal"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Gerard Moreno",
+          "status": "plausible",
+          "known_team_keys": [
+            "villarreal"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Ayoze Pérez",
+          "status": "plausible",
+          "known_team_keys": [
+            "villarreal"
+          ],
+          "score": 0.0,
+          "flags": []
+        }
+      ],
+      "away_player_checks": [
+        {
+          "name": "Ángel Fortuno",
+          "status": "plausible",
+          "known_team_keys": [
+            "espanyol"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Omar El Hilali",
+          "status": "plausible",
+          "known_team_keys": [
+            "espanyol"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Unai Núñez",
+          "status": "plausible",
+          "known_team_keys": [
+            "espanyol"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Leandro Cabrera",
+          "status": "plausible",
+          "known_team_keys": [
+            "espanyol"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Quilindschy Hartman",
+          "status": "plausible",
+          "known_team_keys": [
+            "espanyol"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Javi Hernández",
+          "status": "plausible",
+          "known_team_keys": [
+            "espanyol"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Edu Expósito",
+          "status": "plausible",
+          "known_team_keys": [
+            "espanyol"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Pol Lozano",
+          "status": "plausible",
+          "known_team_keys": [
+            "espanyol"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Bryan Zaragoza",
+          "status": "plausible",
+          "known_team_keys": [
+            "espanyol"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Roberto Fernández",
+          "status": "plausible",
+          "known_team_keys": [
+            "espanyol"
+          ],
+          "score": 0.0,
+          "flags": []
+        },
+        {
+          "name": "Álex Calatrava",
+          "status": "plausible",
+          "known_team_keys": [
+            "espanyol"
+          ],
+          "score": 0.0,
+          "flags": []
+        }
+      ]
+    },
     {
       "match_date": "2026-10-30",
       "home_team": "Villarreal CF",
@@ -54,8 +268,8 @@
   ],
   "rows": [
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -156,8 +370,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -258,8 +472,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -360,8 +574,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -462,8 +676,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -564,8 +778,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -666,8 +880,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -768,8 +982,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -870,8 +1084,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -972,8 +1186,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -1074,8 +1288,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -1176,8 +1390,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -1278,8 +1492,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -1380,8 +1594,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -1482,8 +1696,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -1584,8 +1798,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -1686,8 +1900,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -1788,8 +2002,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -1890,8 +2104,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
@@ -1992,8 +2206,8 @@
       "notes": "event_id=72478684;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-10-27T20:41:05Z",
-      "captured_at": "2026-10-27T20:41:03Z",
+      "compared_at": "2026-10-28T00:30:19Z",
+      "captured_at": "2026-10-28T00:30:18Z",
       "match_date": "2026-10-30",
       "kickoff": "",
       "bookmaker": "Kambi",
