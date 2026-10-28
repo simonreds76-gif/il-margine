@@ -1,28 +1,26 @@
 {
-  "verified_at": "2026-10-27T09:23:00Z",
+  "verified_at": "2026-10-28",
   "plan": "Free",
   "selected_bookmakers": [
-    "Kambi"
+    "Paddy Power"
   ],
   "market_bookmakers": {
     "tennis_props": [
-      "Sisal IT",
-      "Kambi"
+      "Sisal IT"
     ]
   },
   "paused_capture_bookmakers": [
     "BetMGM",
-    "Bet365",
-    "Paddy Power"
+    "Bet365"
   ],
   "replaced_capture_bookmakers": [
     "Bet365",
-    "Paddy Power"
+    "Kambi"
   ],
-  "reason": "Tennis props use verified Sisal IT individual aces/double-fault totals plus existing Kambi. Other collectors retain Kambi: Sisal unnamed goalkeeper contracts are not enabled by this allocation. Legacy Paddy/Bet365 tennis arguments resolve to the approved tennis pair. Account selections, Pinnacle, formulas and stakes are unchanged.",
+  "reason": "Paddy Power supplies football API prices; Sisal IT supplies individual tennis props. Grosvenor independently supplies verified Kambi football and tennis contracts directly. Legacy removed-book arguments resolve by market scope. Keep actual bookmaker labels, original event IDs and alert deduplication; Pinnacle and model formulas are unchanged.",
   "account_bookmakers": [
     "Sisal IT",
-    "Kambi"
+    "Paddy Power"
   ],
   "direct_football_grosvenor": true,
   "direct_tennis_grosvenor": true
