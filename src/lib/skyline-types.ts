@@ -5,6 +5,7 @@ export type SkylineRow = {
   predictions: Partial<Record<SkylineVariant, number>>;
   selections: Partial<Record<SkylineVariant, boolean>>;
   status: string; headed_sot: number | null;
+  bookmaker?: string; contract?: string; model_status?: string | null;
 };
 export type SkylineStats = {
   selections: number; settled: number; wins: number; losses: number; void: number;
@@ -26,4 +27,6 @@ export type SkylineReport = {
   board: SkylineRow[]; ledger: SkylineRow[]; ledger_total: number;
   research: SkylineResearch; settlement_policy: string;
   paired_forward_count: number; exclusions: Record<string, number>;
+  price_sources?: { paddy?: { status: string; generated_at: string; fixtures: number; headed_sot: number; headed_goals: number } };
+  contract_stats?: Record<string, Record<SkylineVariant, SkylineStats>>;
 };
