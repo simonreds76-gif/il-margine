@@ -216,6 +216,13 @@ def event_three_way_prices(
     prices = three_way_prices(meta, bookmaker_name)
     if all(prices):
         return *prices, "event_metadata"
+    # New public source supplies GK ladders only. Reuse the exact fixture's
+    # already-captured reference market, without labelling its 1X2 as Bet365.
+    markets = (event.get("bookmakers") or {}).get(bookmaker_name, [])
+    if markets and all(m.get("source") == "moviodds_bet365" for m in markets):
+        prices = three_way_prices(event, "Grosvenor")
+        if all(prices):
+            return *prices, "reference_1x2_grosvenor"
     return None, None, None, "missing"
 
 
@@ -270,7 +277,7 @@ def extract_rows(
                             "home_price": f"{home_price:.4f}" if home_price else "",
                             "draw_price": f"{draw_price:.4f}" if draw_price else "",
                             "away_price": f"{away_price:.4f}" if away_price else "",
-                            "source": f"{market.get('source', 'odds_api_io')}:team_goalkeeper_{team_side}:{three_way_source}:offer={market.get('source_offer_id', '')}" if team_side else f"odds_api_io:{three_way_source}",
+                            "source": f"{market.get('source', 'odds_api_io')}:team_goalkeeper_{team_side}:{three_way_source}:offer={market.get('source_offer_id', '')}" if team_side else f"{market.get('source', 'odds_api_io')}:{three_way_source}",
                         }
                     if has_over:
                         rows.append({**base_row, "side": "over", "odds_decimal": f"{over:.4f}"})
@@ -408,6 +415,11 @@ def main() -> None:
     payload, direct_health = capture_and_merge(payload, events, now=now, cache_seconds=0)
     args.bookmaker += ",Grosvenor"
     capture_errors.extend(direct_health["errors"])
+    from moviodds_prices import merge_football
+    payload, moviodds_health = merge_football(payload, events, days_ahead=args.days_ahead,
+        raw_path=args.status.parent / "moviodds-direct-latest.json.gz")
+    args.bookmaker += ",Bet365"
+    capture_errors.extend(moviodds_health["errors"])
     captured_at = now.isoformat().replace("+00:00", "Z")
     # Preserve non-player contracts for review without fabricating keeper names.
     # This is a bounded latest capture, not a growing duplicate of the odds archive.
@@ -469,6 +481,7 @@ def main() -> None:
         "discovery_retries": discovery_requests - 1,
         "request_budget": 4,
         "direct_source": direct_health,
+        "moviodds_source": moviodds_health,
         "events_supported": len(supported_ids),
         "events_deferred_by_budget": len(supported_ids - set(event_ids)),
         "event_last_checked": {k: (captured_at if k in checked_ids else previous_seen.get(k, "")) for k in supported_ids},

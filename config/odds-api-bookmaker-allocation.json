@@ -23,5 +23,19 @@
     "Paddy Power"
   ],
   "direct_football_grosvenor": true,
-  "direct_tennis_grosvenor": true
+  "direct_tennis_grosvenor": true,
+  "direct_moviodds": {
+    "soccer": true,
+    "tennis": true
+  },
+  "moviodds_verified_markets": [
+    "named goalkeeper saves",
+    "individual aces milestones",
+    "individual double faults milestones"
+  ],
+  "moviodds_excluded_markets": [
+    "headed shots on target: stale and no displayed price validation",
+    "match totals",
+    "Most Aces"
+  ]
 }
