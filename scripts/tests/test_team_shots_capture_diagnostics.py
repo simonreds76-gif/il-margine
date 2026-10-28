@@ -29,7 +29,7 @@ class CaptureDiagnosticsTests(unittest.TestCase):
                 'name':'Total Shots Home','odds':[{'hdp':12.5,'over':'1.9','under':'1.9'}]
             }]}} for e in events if str(e['id']) in ids]
             return odds
-        with patch.object(capture.requests,'get',side_effect=response) as get:
+        with patch.object(capture.requests,'get',side_effect=response) as get, patch.object(capture, 'capture_and_merge', side_effect=lambda payload, targets: (payload, {'errors':[]})):
             rows=[]
             for league in capture.LEAGUE_CONFIGS:
                 found,_,_=capture.scrape_odds_api('test',league,'Bet365',days_ahead=2,kickoff_within_minutes=1440)

@@ -8,6 +8,7 @@ player assist markets and writes into data/assist-value by default.
 from __future__ import annotations
 
 from odds_api_allocation import selected_bookmakers
+from football_grosvenor import capture_and_merge
 
 import argparse
 import csv
@@ -236,7 +237,7 @@ def _extract_assist_rows_for_market(bookmaker: str, event: dict, market: dict, c
                 continue
             rows.append(
                 {
-                    "captured_at": captured_at,
+                    "captured_at": market.get("captured_at") or captured_at,
                     "match_date": str(event.get("date") or "")[:10],
                     "event_id": str(event.get("id") or ""),
                     "kickoff_at": kickoff_at,
@@ -250,7 +251,7 @@ def _extract_assist_rows_for_market(bookmaker: str, event: dict, market: dict, c
                     "player_name": player_name,
                     "player_team": "",
                     "odds_decimal": f"{odds_decimal:.4f}",
-                    "source": "odds_api_io",
+                    "source": market.get("source", "odds_api_io"),
                     "notes": f"event_id={event.get('id')};market={market_name};selection={raw_label}",
                 }
             )
@@ -278,7 +279,7 @@ def _extract_assist_rows_for_market(bookmaker: str, event: dict, market: dict, c
     if player_name and odds_decimal is not None:
         rows.append(
             {
-                "captured_at": captured_at,
+                "captured_at": market.get("captured_at") or captured_at,
                 "match_date": str(event.get("date") or "")[:10],
                 "event_id": str(event.get("id") or ""),
                 "kickoff_at": kickoff_at,
@@ -292,7 +293,7 @@ def _extract_assist_rows_for_market(bookmaker: str, event: dict, market: dict, c
                 "player_name": player_name,
                 "player_team": "",
                 "odds_decimal": f"{odds_decimal:.4f}",
-                "source": "odds_api_io",
+                "source": market.get("source", "odds_api_io"),
                 "notes": f"event_id={event.get('id')};market={market_name}",
             }
         )
@@ -537,11 +538,12 @@ def main() -> None:
                 payloads.extend(odds_payload)
         except requests.HTTPError as exc:
             status_code = exc.response.status_code if exc.response is not None else None
-            if status_code == 403:
-                print(f"  odds/multi returned 403 for {bookmaker_list}; continuing without fresh odds for this chunk.")
-                continue
-            raise
+            print(f"  Odds-API returned HTTP {status_code}; trying direct source.")
+        except requests.RequestException as exc:
+            print(f"  Odds-API {type(exc).__name__}; trying direct source.")
 
+        payloads, direct_health = capture_and_merge(
+            payloads, [e for e in target_events if str(e["id"]) in event_ids])
         for event in payloads:
             event_bookmakers = event.get("bookmakers") or {}
             for bookmaker, markets in event_bookmakers.items():

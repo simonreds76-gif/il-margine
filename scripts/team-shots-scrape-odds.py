@@ -21,6 +21,7 @@ Usage:
 from __future__ import annotations
 
 from odds_api_allocation import selected_bookmakers
+from football_grosvenor import capture_and_merge
 
 import argparse
 import csv
@@ -440,13 +441,16 @@ def scrape_odds_api(
     captured = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
     event_ids = [str(e["id"]) for e in matched]
-    payload, payload_errors = _fetch_odds_api_payload(
-        api_key,
-        event_ids,
-        bookmakers_str,
-        max_requests=max_odds_requests,
-    )
+    try:
+        payload, payload_errors = _fetch_odds_api_payload(
+            api_key, event_ids, bookmakers_str, max_requests=max_odds_requests,
+        )
+    except requests.RequestException as exc:
+        payload, payload_errors = [], [f"odds_api:{type(exc).__name__}"]
     provider_errors.extend(payload_errors)
+    payload, direct_health = capture_and_merge(payload, matched)
+    diagnostic["direct_source"] = direct_health
+    provider_errors.extend(direct_health["errors"])
     rows = _extract_odds_api_rows(payload, config, captured)
 
     if not rows:
@@ -529,7 +533,7 @@ def _extract_odds_api_rows(payload: List[dict], config: dict, captured: str) -> 
                 for prop in market.get("odds") or []:
                     for parsed in _extract_line_and_side(prop, market_name):
                         rows.append({
-                        "captured_at": captured,
+                        "captured_at": market.get("captured_at") or captured,
                         "match_date": kickoff[:10],
                         "event_id": event_id,
                         "kickoff_at": kickoff,
@@ -543,8 +547,8 @@ def _extract_odds_api_rows(payload: List[dict], config: dict, captured: str) -> 
                         "line": parsed["line"],
                         "side": parsed["side"],
                         "odds_decimal": f"{parsed['odds_decimal']:.4f}",
-                        "source": "odds_api_io",
-                        "notes": f"market={market_name}",
+                        "source": market.get("source", "odds_api_io"),
+                        "notes": f"market={market_name};offer={market.get('source_offer_id','')};updated={market.get('updatedAt','')}",
                     })
     return rows
 
