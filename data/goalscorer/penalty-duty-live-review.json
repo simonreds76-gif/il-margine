@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-28T05:49:55Z",
+  "generated_at": "2026-10-28T14:46:48.372235+00:00",
   "league": "serie-a",
-  "row_count": 3,
+  "row_count": 5,
   "rows": [
     {
       "date": "2026-10-27",
@@ -210,6 +210,164 @@
           "event_result": "scored"
         }
       ]
+    },
+    {
+      "date": "2026-10-25",
+      "league": "serie-a",
+      "review_source": "fotmob_live",
+      "match": "Inter vs Fiorentina",
+      "team": "Inter",
+      "opponent": "Fiorentina",
+      "actual_taker": "Piotr Zieliński",
+      "actual_role_pre_match": "tertiary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "90",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Hakan Çalhanoğlu",
+      "secondary_pre_match": "Lautaro Martínez",
+      "tertiary_pre_match": "Piotr Zieliński",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "expected_backup_shift",
+      "review_priority": "medium",
+      "editorial_note": "Piotr Zieliński took 1 penalty attempt and scored for Inter vs Fiorentina. Primary pre-match: Hakan Çalhanoğlu (unknown). Secondary pre-match: Lautaro Martínez (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/serie-a-penalty-takers.json",
+      "actual_taker_match_status": "Yes - bench, on 78'",
+      "primary_on_pitch_at_penalty": "No - started, off 78'",
+      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "tertiary_on_pitch_at_penalty": "Yes - bench, on 78'",
+      "actual_taker_on_pitch_at_penalty": "Yes - bench, on 78'",
+      "event_evidence": [
+        {
+          "id": "fotmob|serie-a|5749714|2987710667",
+          "source_event_id": "2987710667",
+          "match_id": "5749714",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749714",
+          "observed_at": "2026-10-28T14:46:51+00:00",
+          "event_date": "2026-10-25",
+          "season": "2026/27",
+          "team": "Inter",
+          "taker": "Piotr Zieliński",
+          "primary": "Hakan Çalhanoğlu",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Hakan Çalhanoğlu",
+            "minute": 90,
+            "added_time": 7,
+            "method": "completed_lineup_timeline",
+            "player_id": 304733,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 78,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 90,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Inter vs Fiorentina",
+          "event_result": "scored"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-25",
+      "league": "serie-a",
+      "review_source": "fotmob_live",
+      "match": "Atalanta vs Frosinone",
+      "team": "Atalanta",
+      "opponent": "Frosinone",
+      "actual_taker": "Éderson",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "33",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Franck Kessié",
+      "secondary_pre_match": "Gianluca Scamacca",
+      "tertiary_pre_match": "Charles De Ketelaere",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Éderson took 1 penalty attempt and scored for Atalanta vs Frosinone. Primary pre-match: Franck Kessié (unknown). Secondary pre-match: Gianluca Scamacca (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/serie-a-penalty-takers.json",
+      "actual_taker_match_status": "Yes - started",
+      "primary_on_pitch_at_penalty": "No - absent from matchday squad",
+      "secondary_on_pitch_at_penalty": "No - bench, on 77'",
+      "tertiary_on_pitch_at_penalty": "Yes - started, off 77'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started",
+      "event_evidence": [
+        {
+          "id": "fotmob|serie-a|5749710|2987795929",
+          "source_event_id": "2987795929",
+          "match_id": "5749710",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749710",
+          "observed_at": "2026-10-28T14:46:52+00:00",
+          "event_date": "2026-10-25",
+          "season": "2026/27",
+          "team": "Atalanta",
+          "taker": "Éderson",
+          "primary": "Franck Kessié",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Franck Kessié",
+            "minute": 33,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "reason": "absent_from_matchday_squad",
+            "squad_player_ids": [
+              "1013021",
+              "902651",
+              "1190029",
+              "1692456",
+              "244811",
+              "1012842",
+              "957203",
+              "741049",
+              "1095432",
+              "1113694",
+              "833638",
+              "1191093",
+              "446266",
+              "1053714",
+              "1050178",
+              "721089",
+              "212630",
+              "1837500",
+              "1594763",
+              "1756869"
+            ]
+          },
+          "minute": 33,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Atalanta vs Frosinone",
+          "event_result": "scored"
+        }
+      ]
     }
   ],
   "source_health": {
@@ -221,5 +379,13 @@
       "20261028"
     ],
     "matches_checked": 3
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261025"
+    ],
+    "matches_checked": 1
   }
 }
