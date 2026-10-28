@@ -77,6 +77,11 @@ def main() -> int:
         description="Daily odds pipeline: Pinnacle -> fair odds -> strict report + shadow profiles"
     )
     parser.add_argument("--skip-strict-report", action="store_true", help="Skip strict policy report step")
+    parser.add_argument(
+        "--skip-recent-activity",
+        action="store_true",
+        help="Skip the current-fixture form/fatigue refresh (manual diagnostics only)",
+    )
     parser.add_argument("--strict-policy-mode", choices=("base", "overlay"), default=os.environ.get("STRICT_POLICY_PRODUCTION_MODE", "base"))
     parser.add_argument("--strict-report-date", default="", help="Optional UTC date YYYY-MM-DD passed to strict report")
     parser.add_argument("--strict-report-output", default=str(STRICT_SIGNAL_PATHS.live))
@@ -107,9 +112,46 @@ def main() -> int:
     os.environ.setdefault("STRICT_HARD_CALIBRATION_LIVE", "0")
     os.environ.setdefault("STRICT_HARD_CALIBRATION_PROFILES", "strict")
 
+    # Context records refresh independently of live pricing. This collector only
+    # writes data/tennis-ml-research/context-records-v1; it never publishes tables.
+    run_cmd(
+        [sys.executable, str(ROOT / "scripts" / "refresh-tennis-context-research.py")],
+        label="0/6 Player context history (research only; live inputs unchanged)",
+        fatal=False,
+        timeout_seconds=180,
+    )
+
+    # Chronological style evidence stays isolated from all live pricing tables.
+    run_cmd(
+        [sys.executable, str(ROOT / "scripts" / "refresh-tennis-matchup-history.py"),
+         "--root", str(ROOT)],
+        label="0/6 Big-server and matchup histories (research only)",
+        fatal=False,
+        timeout_seconds=420,
+    )
+
+    # Required production inputs: a failed rebuild must not price with stale tables.
+    run_cmd(
+        [sys.executable, str(ROOT / "scripts" / "tennis_pricing_context.py"),
+         "--root", str(ROOT)],
+        label="0/6 Live altitude, leftie and big-server inputs",
+        fatal=True,
+        timeout_seconds=240,
+    )
+
+    if not args.skip_recent_activity:
+        run_cmd(
+            [sys.executable, str(ROOT / "scripts" / "oncourt-compute-recent-activity.py")],
+            label="1/6 Recent activity (form/fatigue/rust inputs)",
+            fatal=True,
+            timeout_seconds=step_timeout,
+        )
+    else:
+        print("\n=== 1/6 Recent activity skipped (--skip-recent-activity) ===")
+
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "pinnacle-scrape-odds.py"), "--active-leagues-only"],
-        label="1/6 Pinnacle scraper (writes to bookmaker_odds_snapshot)",
+        label="2/6 Pinnacle scraper (writes to bookmaker_odds_snapshot)",
         fatal=True,
         timeout_seconds=step_timeout,
     )
@@ -122,7 +164,7 @@ def main() -> int:
     )
 
     run_cmd(
-        [sys.executable, str(ROOT / "scripts" / "oncourt-compute-fair-odds.py"), "--skip-handicap-values"],
+        [sys.executable, str(ROOT / "scripts" / "oncourt-compute-fair-odds.py"), "--skip-handicap-values", "--category-shadow"],
         label="3/6 Fair odds pipeline",
         fatal=True,
         timeout_seconds=step_timeout,
@@ -131,6 +173,16 @@ def main() -> int:
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "compute-handicap-values.py")],
         label="4/6 Handicap values (spread edge)",
+        fatal=False,
+        timeout_seconds=step_timeout,
+    )
+
+    # Research-only anomaly capture. This never changes routing or stakes: it
+    # freezes extreme ML gaps and the same player's real Pinnacle handicap so
+    # nightly settlement can test the two hypotheses independently.
+    run_cmd(
+        [sys.executable, str(ROOT / "scripts" / "tennis-model-market-gap-audit.py")],
+        label="4b/6 Extreme model/market gap audit (research only)",
         fatal=False,
         timeout_seconds=step_timeout,
     )
@@ -184,6 +236,38 @@ def main() -> int:
             fatal=False,
             timeout_seconds=step_timeout,
             env_overrides={"SPREAD_V1_ENABLE_CORRECTION_ONLY": "1"},
+        )
+
+        # BO5 handicap maths is tracked separately from the BO3-calibrated
+        # Spread v1 lane. It is raw, zero-stake evidence until its own real-
+        # price sample passes the promotion gates.
+        run_cmd(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "compute-handicap-values.py"),
+                "--bo5-only",
+                "--allow-bo5",
+                "--disable-calibration",
+            ],
+            label="5c/6 Grand Slam BO5 handicap values (research only)",
+            fatal=False,
+            timeout_seconds=step_timeout,
+        )
+        bo5_cmd = [
+            sys.executable,
+            str(ROOT / "scripts" / "strict-policy-report.py"),
+            "--append",
+            "--signal-profile",
+            "slam_bo5",
+        ]
+        if args.strict_report_date:
+            bo5_cmd.extend(["--date", args.strict_report_date])
+        run_cmd(
+            bo5_cmd,
+            label="5d/6 Grand Slam BO5 handicap evidence append",
+            fatal=False,
+            timeout_seconds=step_timeout,
+            env_overrides={"INTERNAL_RESEARCH_LANES": "1"},
         )
 
         if _env_bool("STRICT_CPI_SPEED_SHADOW_ENABLED", False):

@@ -76,6 +76,12 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-signals-spreadshadow settlement failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Step 6b/13: Settle Grand Slam BO5 zero-stake evidence CSV ==="
+& python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-slam-bo5-archive.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: slam_bo5 evidence settlement failed (exit $LASTEXITCODE), continuing..."
+}
+
 Log "=== Step 7/13: Clay calibrated legacy settlement removed after failed ROI audit ==="
 
 Log "=== Step 7b/13: Settle Challenger ML v2 prospective evidence CSV ==="
@@ -142,6 +148,12 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-policy-performance spread_shadow failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Step 11b/13: Grand Slam BO5 zero-stake evidence performance ==="
+& python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-slam-bo5-archive.csv --report-txt data\backtest\strict-policy-performance-slam-bo5-weekly.txt --summary-csv data\backtest\strict-policy-performance-slam-bo5-weekly.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: strict-policy-performance slam_bo5 failed (exit $LASTEXITCODE), continuing..."
+}
+
 Log "=== Step 12/13: Clay calibrated legacy performance removed after failed ROI audit ==="
 
 Log "=== Step 12b/13: Challenger ML v2 prospective performance ==="
@@ -174,10 +186,38 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-policy-performance cpi_speed_shadow failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Post-step: Settle saved props and paired model evidence ==="
+& python scripts\tennis-settle-model-evidence.py 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) { throw "Tennis evidence settlement failed; inspect the settlement log" }
+
 Log "=== Post-step: Tennis shadow proof report ==="
 & python scripts\tennis-shadow-proof-report.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: tennis-shadow-proof-report failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Post-step: Settle extreme model/market gap hypotheses ==="
+& python scripts\settle-strict-signals.py --csv data\backtest\tennis-model-market-gap-archive.csv --no-backup 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: extreme-gap hypothesis settlement failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Post-step: Extreme-gap ML closing-line audit ==="
+& python scripts\audit-strict-clv.py --signals data\backtest\tennis-model-market-gap-archive.csv --bet-type match --detail-csv data\backtest\tennis-model-market-gap-clv-ml.csv --summary-txt data\backtest\tennis-model-market-gap-clv-ml.txt --unmatched-csv data\backtest\tennis-model-market-gap-clv-ml-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: extreme-gap ML CLV audit failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Post-step: Extreme-gap spread closing-line audit ==="
+& python scripts\audit-strict-clv.py --signals data\backtest\tennis-model-market-gap-archive.csv --bet-type spread --detail-csv data\backtest\tennis-model-market-gap-clv-spread.csv --summary-txt data\backtest\tennis-model-market-gap-clv-spread.txt --unmatched-csv data\backtest\tennis-model-market-gap-clv-spread-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: extreme-gap spread CLV audit failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Post-step: Extreme model/market gap report ==="
+& python scripts\tennis-model-market-gap-report.py 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: extreme-gap report failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "============================================"

@@ -177,6 +177,15 @@ def delivery_details(command: dict[str, Any]) -> dict[str, Any]:
     if started_at and (ready_at is None or ready_at < started_at):
         raise RuntimeError("Fair-odds task finished without generating fresh signals for this request")
 
+    refresh_started = parse_time(ready.get("started_at"))
+    extracted_at = parse_time(ready.get("oncourt_extracted_at"))
+    odds_floor = parse_time(ready.get("odds_not_before"))
+    requested_at = parse_time(command.get("requested_at")) or started_at
+    if not ready.get("refresh_id") or refresh_started is None or extracted_at is None or odds_floor is None:
+        raise RuntimeError("Refresh finished without verified fresh OnCourt/odds metadata")
+    if (requested_at and refresh_started < requested_at) or extracted_at < refresh_started or odds_floor < refresh_started:
+        raise RuntimeError("Refresh inputs belong to an earlier run")
+
     state = read_json_file(DIGEST_STATE)
     dispatched_at = parse_time(state.get("dispatched_at"))
     dispatched_for_request = bool(
@@ -212,6 +221,10 @@ def delivery_details(command: dict[str, Any]) -> dict[str, Any]:
     signal_ids = state.get("signal_ids")
     signal_count = len(signal_ids) if isinstance(signal_ids, list) else 0
     return {
+        "refresh_id": ready.get("refresh_id"),
+        "oncourt_database_updated_at": ready.get("oncourt_database_updated_at"),
+        "oncourt_extracted_at": ready.get("oncourt_extracted_at"),
+        "odds_not_before": ready.get("odds_not_before"),
         "signal_date": ready_date,
         "signal_count": signal_count,
         "signal_generation_completed_at": ready.get("completed_at"),

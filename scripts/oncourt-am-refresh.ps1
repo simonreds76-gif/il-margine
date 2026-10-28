@@ -1,3 +1,5 @@
+param([switch]$CoreOnly, [switch]$NoTelegram)
+
 # Il Margine - AM Tennis Refresh
 # Lighter daytime refresh: refresh today's OnCourt schedule/tours, then odds/fair-odds/shadow append.
 
@@ -22,7 +24,6 @@ if ([string]::IsNullOrWhiteSpace($env:CHALLENGER_ML_ENABLE)) { $env:CHALLENGER_M
 if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED)) { $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_BO3_ENABLED)) { $env:STRICT_CLAY_BO3_ENABLED = "1" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_GRASS_BO3_ENABLED)) { $env:STRICT_GRASS_BO3_ENABLED = "1" }
-# Retired pending identity-clean gate regeneration; retained archives are diagnostic only.
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CPI_SPEED_SHADOW_ENABLED)) { $env:STRICT_CPI_SPEED_SHADOW_ENABLED = "0" }
 if ([string]::IsNullOrWhiteSpace($env:CLAY_BO3_ML_ENABLE)) { $env:CLAY_BO3_ML_ENABLE = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_HARD_CALIBRATION_MODE)) { $env:STRICT_POLICY_HARD_CALIBRATION_MODE = "off" }
@@ -144,26 +145,42 @@ if ($null -eq $lockHandle) {
 }
 
 $runStatus = Start-RunStatus -Pipeline "oncourt-am-refresh" -Trigger "schedule"
+$refreshStartedAt = (Get-Date).ToUniversalTime().ToString("o")
+$refreshId = [guid]::NewGuid().ToString()
+$env:TENNIS_REFRESH_STARTED_AT = $refreshStartedAt
 $runStatusFinal = "failed"
 $runStatusErrorRecord = $null
 $runStatusErrorType = $null
 $runStatusErrorMessage = $null
 
 try {
+    $sourceDatabase = Get-Item -LiteralPath "C:\Program Files (x86)\OnCourt\OnCourt.mdb" -ErrorAction Stop
+    $sourceDatabaseUpdatedAt = $sourceDatabase.LastWriteTimeUtc.ToString("o")
     Log "============================================"
     Log "  AM Tennis Refresh started at $timestamp"
     Log "============================================"
 
-    Log "=== Step 1/8: OnCourt extract (fresh today/tours CSVs) ==="
+    Log "=== Step 1/8: Fresh OnCourt extraction (run $refreshId) ==="
+    Log "Source database last updated UTC: $sourceDatabaseUpdatedAt"
     $py32 = "C:\Python312-32\python.exe"
-    if (Test-Path $py32) {
-        & $py32 scripts\oncourt-extract-all.py 2>&1 | ForEach-Object { Log $_ }
-        if ($LASTEXITCODE -ne 0) {
-            Log "WARNING: OnCourt extract had errors (exit $LASTEXITCODE), continuing..."
-        }
-    } else {
-        Log "WARNING: 32-bit Python not found at $py32, skipping extract"
+    if (-not (Test-Path -LiteralPath $py32)) {
+        throw "32-bit OnCourt extractor is unavailable. Fresh refresh stopped."
     }
+    $extractExit = Invoke-LoggedProcess -FilePath $py32 -ArgumentList @("scripts\oncourt-extract-all.py") -Label "Fresh OnCourt extract" -TimeoutSeconds 600
+    if ($extractExit -ne 0) {
+        throw "OnCourt extraction failed (exit $extractExit). Old exports will not be reused."
+    }
+    foreach ($csvName in @("today_atp.csv", "players_atp.csv", "tours_atp.csv", "games_atp.csv", "stat_atp.csv")) {
+        $csv = Get-Item -LiteralPath (Join-Path $dataDir "oncourt\$csvName") -ErrorAction Stop
+        if ($csv.LastWriteTimeUtc -lt [datetime]::Parse($refreshStartedAt).ToUniversalTime() -or $csv.Length -eq 0) {
+            throw "Fresh OnCourt extraction did not replace $csvName."
+        }
+    }
+    $afterExtractDatabase = Get-Item -LiteralPath $sourceDatabase.FullName
+    if ($afterExtractDatabase.LastWriteTimeUtc.ToString("o") -ne $sourceDatabaseUpdatedAt -or $afterExtractDatabase.Length -ne $sourceDatabase.Length) {
+        throw "OnCourt was updated during extraction. Wait for its update to finish and retry."
+    }
+    $oncourtExtractedAt = (Get-Date).ToUniversalTime().ToString("o")
 
     Log "=== Step 2/8: Supabase sync (--quick --current-players) ==="
     $supabaseSyncExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\oncourt-load-supabase.py", "--quick", "--current-players") -Label "Supabase quick current-player sync" -TimeoutSeconds $supabaseSyncTimeoutSeconds
@@ -233,6 +250,24 @@ try {
         }
     } else {
         Log "Spread v1 shadow skipped (STRICT_SPREAD_V1_SHADOW_ENABLED=0)."
+    }
+    Log "Grand Slam BO5 handicap evidence (raw probabilities, zero stake)."
+    & python scripts\compute-handicap-values.py --bo5-only --allow-bo5 --disable-calibration 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -eq 0) {
+        $prevInternalResearch = $env:INTERNAL_RESEARCH_LANES
+        $env:INTERNAL_RESEARCH_LANES = "1"
+        try {
+            & python scripts\strict-policy-report.py --append --signal-profile slam_bo5 2>&1 | ForEach-Object { Log $_ }
+            if ($LASTEXITCODE -ne 0) {
+                Log "WARNING: slam_bo5 evidence append failed (exit $LASTEXITCODE), continuing..."
+            }
+        }
+        finally {
+            if ($null -eq $prevInternalResearch) { Remove-Item Env:\INTERNAL_RESEARCH_LANES -ErrorAction SilentlyContinue }
+            else { $env:INTERNAL_RESEARCH_LANES = $prevInternalResearch }
+        }
+    } else {
+        Log "WARNING: BO5 handicap calculation failed (exit $LASTEXITCODE), continuing..."
     }
     Log "Clay calibrated legacy lane removed after failed ROI audit."
     if ($challengerMlEnabled) {
@@ -323,7 +358,18 @@ try {
         status = "ok"
         completed_at = (Get-Date).ToUniversalTime().ToString("o")
         pipeline = "oncourt-am-refresh"
+        refresh_id = $refreshId
+        started_at = $refreshStartedAt
+        oncourt_database_updated_at = $sourceDatabaseUpdatedAt
+        oncourt_extracted_at = $oncourtExtractedAt
+        odds_not_before = $refreshStartedAt
     } | ConvertTo-Json | Set-Content -Path $signalReadyPath -Encoding ASCII
+
+    if ($CoreOnly) {
+        Log "Core fresh refresh validated. Optional props, Telegram and Atlas publication skipped."
+        $runStatusFinal = "ok"
+        exit 0
+    }
 
     Log "=== Step 7/8: Settlement/performance skipped in AM task ==="
     Log "Nightly tennis settlement/performance is handled by oncourt-daily.ps1 at 22:30 to keep AM refresh fast."
@@ -331,13 +377,15 @@ try {
     Log "=== Post-step: spread_v1 refresh skipped in AM task (nightly/weekly only) ==="
 
     Log "=== Post-step: Daily tennis Telegram digest ==="
-    $digestExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--require-ready", "--props-pending") -Label "daily tennis Telegram digest" -TimeoutSeconds 90
+    $digestExit = 0
+    if (-not $NoTelegram) { $digestExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--require-ready", "--props-pending") -Label "daily tennis Telegram digest" -TimeoutSeconds 90 }
     if ($digestExit -ne 0) {
         Log "WARNING: daily tennis Telegram digest failed/timed out (exit $digestExit); signal generation remains valid."
     }
 
     Log "=== Step 8a/8: Capture tennis props prices ==="
-    # Reuse the hosted job after a missed schedule; at most one fallback per UTC day.
+    # Recover a missed hosted schedule once per UTC day, after the core digest.
+    # The helper skips provider requests when fresh data or an active run exists.
     $hostedCaptureExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\ensure-tennis-props-capture.py") -Label "hosted tennis props freshness recovery" -TimeoutSeconds 420
     if ($hostedCaptureExit -ne 0) {
         Log "WARNING: hosted tennis props recovery could not confirm fresh prices; comparison freshness checks remain enforced."
@@ -360,6 +408,8 @@ try {
     $tennisPropsCompareExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--as-of", (Get-Date -Format "yyyy-MM-dd"), "--comparison-only", "--skip-derived-boards") -Label "tennis props hosted-price comparison" -TimeoutSeconds 420
     if ($tennisPropsCompareExit -ne 0) {
         Log "WARNING: tennis props hosted-price comparison failed (exit $tennisPropsCompareExit), continuing..."
+        # Coverage limitations may be expected, but stale/missing data or a
+        # crashed comparison must reach the existing operations failure alert.
         $propsHealth = $null
         try { $propsHealth = Get-Content -LiteralPath (Join-Path $root "data\tennis-props\pipeline-health.json") -Raw | ConvertFrom-Json } catch {}
         $priceFreshnessFailed = $null -eq $propsHealth -or
@@ -372,22 +422,24 @@ try {
     }
 
     Log "=== Step 8c.1/8: Telegram tennis props delta ==="
-    $propsDigestExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--require-ready", "--new-only") -Label "daily tennis Telegram props delta" -TimeoutSeconds 90
+    $propsDigestExit = 0
+    if (-not $NoTelegram) { $propsDigestExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--require-ready", "--new-only") -Label "daily tennis Telegram props delta" -TimeoutSeconds 90 }
     if ($propsDigestExit -ne 0) {
         Log "WARNING: daily tennis Telegram props delta failed/timed out (exit $propsDigestExit); evidence collection remains valid."
     }
 
-    # The installed local evidence producer owns the frozen ledgers/report refresh.
-    if (Test-Path -LiteralPath (Join-Path $root "scripts\tennis-settle-model-evidence.py")) {
-        $settlementEvidenceExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-settle-model-evidence.py") -Label "saved model evidence settlement" -TimeoutSeconds 300
-        if ($settlementEvidenceExit -ne 0) { Set-RunStatusFailure "TennisEvidenceSettlementFailed" "Saved tennis model evidence did not settle successfully." }
-    } else { Log "WARNING: local evidence producer unavailable; v4 freshness checks remain enforced." }
+    # Deliver fresh selections before the slower historical settlement pass.
+    Log "=== Post-step: Settle saved model evidence independently of capture ==="
+    $settlementEvidenceExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-settle-model-evidence.py") -Label "saved model evidence settlement" -TimeoutSeconds 300
+    if ($settlementEvidenceExit -ne 0) { Set-RunStatusFailure "TennisEvidenceSettlementFailed" "Saved tennis model evidence did not settle successfully." }
 
     # v4 evidence must refresh before its daily summary and selection checks.
     Log "=== Post-step: v4 paper reporting after settlement ==="
-    $paperSummaryExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--paper-summary-only") -Label "v4 daily evidence summary" -TimeoutSeconds 90
-    $paperSignalsExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--paper-signals-only") -Label "v4 fresh paper selections" -TimeoutSeconds 90
-    if ($paperSummaryExit -ne 0 -or $paperSignalsExit -ne 0) { Log "WARNING: v4 paper reporting failed; existing relay dedup permits a safe retry." }
+    if (-not $NoTelegram) {
+        $paperSummaryExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--paper-summary-only") -Label "v4 daily evidence summary" -TimeoutSeconds 90
+        $paperSignalsExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--paper-signals-only") -Label "v4 fresh paper selections" -TimeoutSeconds 90
+        if ($paperSummaryExit -ne 0 -or $paperSignalsExit -ne 0) { Log "WARNING: v4 paper reporting failed; existing relay dedup permits a safe retry." }
+    }
 
     Log "=== Step 8d/8: Append Pinnacle history capture (daily) ==="
     & python scripts\pinnacle-capture-history.py --capture-mode daily 2>&1 | ForEach-Object { Log $_ }
@@ -399,6 +451,19 @@ try {
     $evidenceSnapshotExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-evidence-snapshot.py", "--supabase") -Label "tennis evidence snapshot" -TimeoutSeconds 120
     if ($evidenceSnapshotExit -ne 0) {
         Log "WARNING: tennis evidence snapshot failed/timed out (exit $evidenceSnapshotExit), continuing..."
+    }
+
+    # Return Atlas uses the existing hidden morning job, after all betting alerts.
+    # The machine-local config opts this host in; no secret belongs in this file.
+    $atlasConfigPath = "D:\IlMargine\return-atlas-automation\config.json"
+    $atlasRunnerPath = "D:\IlMargine\return-atlas-automation\checkout\scripts\refresh-return-atlas.py"
+    if (Test-Path -LiteralPath $atlasConfigPath) {
+        Log "=== Post-step: validated Return Atlas refresh ==="
+        $atlasExit = Invoke-LoggedProcess -FilePath "C:\Python314\python.exe" -ArgumentList @($atlasRunnerPath, "--config", $atlasConfigPath) -Label "Return Atlas automatic publication" -TimeoutSeconds 3600
+        if ($atlasExit -ne 0) {
+            Set-RunStatusFailure "ReturnAtlasRefreshFailed" "Return Atlas refresh failed; inspect D:\IlMargine\return-atlas-automation\status.json."
+            Log "WARNING: Return Atlas refresh failed (exit $atlasExit); the last validated public archive is retained."
+        }
     }
 
     Log "============================================"
