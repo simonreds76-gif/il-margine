@@ -1,6 +1,7 @@
 import "server-only";
 import { isAdminSession } from "@/lib/admin-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { inspectTeamShotsLiveSource, readTeamShotsLiveFile } from "@/lib/team-shots-live-files";
 import catalog from "../../config/admin-monitor-catalog.json";
 export {catalog};
 type Manifest = {id:string;available:boolean;modified_at?:string;error?:string};
@@ -10,6 +11,18 @@ export async function readAdminSignalFile(id: string | null):Promise<SavedView> 
   if (!await isAdminSession()) throw new Error("Unauthorized");
   const view=catalog.find(v=>v.id===id);
   if (id && !view) throw new Error("Unknown model view");
+  // GK evidence belongs to the scheduled football worker. The Windows tennis
+  // bundle retains a dated fallback, but must not replace the canonical ledger.
+  if (id && view?.file.startsWith("data/goalkeeper-saves/")) {
+    const [content, source] = await Promise.all([
+      readTeamShotsLiveFile(view.file), inspectTeamShotsLiveSource(view.file),
+    ]);
+    if (source.source === "missing" || !content) throw new Error("Scheduled goalkeeper snapshot unavailable.");
+    const modified = source.source === "hosted" ? source.hostedFileMtime : source.localFileMtime;
+    const generated = source.source === "hosted" ? source.hostedGeneratedAt : source.localSnapshotGeneratedAt;
+    return { generated_at: generated ?? modified ?? "", manifest: [{ id, available: true, modified_at: modified ?? undefined }],
+      content, source: "Scheduled football snapshot" };
+  }
   const read=async(key:string,selection:string)=>{
     try{return await getSupabaseAdmin().from("goalscorer_live_snapshot").select(selection).eq("snapshot_key",key).abortSignal(AbortSignal.timeout(10000)).single();}
     catch{return {data:null,error:true};}
