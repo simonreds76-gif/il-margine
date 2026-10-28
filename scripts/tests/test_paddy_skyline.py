@@ -114,6 +114,7 @@ class PaddySkyline(unittest.TestCase):
         m['players']=[];m['settlement_evidence']['roster']['15']={'team_id':'1','played':False}
         self.assertEqual(settle(r,m,NOW)['status'],'void')
 
+    @patch.dict('os.environ', {'GITHUB_ACTIONS':'false'})
     def test_capture_error_keeps_old_timestamp_and_empty_success_clears(self):
         import requests
         with tempfile.TemporaryDirectory() as d:

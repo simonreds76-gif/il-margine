@@ -8,6 +8,7 @@ from datetime import datetime, timezone, timedelta
 from hashlib import sha256
 import json
 import math
+import os
 import re
 import time
 from urllib.parse import urlparse
@@ -151,6 +152,18 @@ def capture(root, payload, now=None, get=None, post=None, force=False):
     status = dict(generated_at=now.isoformat(), requests=0, fixtures=0, headed_sot=0,
                   headed_goals=0, mapped_quotes=0, missing=[], errors=[])
     last = read(directory/'status.json', {})
+    # Verified 28 Oct: both website and API return country-related HTTP 403
+    # from the hosted runner. Consume the existing private local capture instead;
+    # never retry it through another location or relabel its original timestamp.
+    if os.environ.get('GITHUB_ACTIONS') == 'true':
+        status = dict(last) if last else dict(status, status='LOCAL_CAPTURE_AWAITING_PC')
+        status['transport'] = 'local_pc_private_snapshot'
+        if last and last.get('status') == 'CAPTURED':
+            age = now-utc(last['generated_at'])
+            status['status'] = 'LOCAL_CAPTURE_READY' if timedelta(0) <= age <= timedelta(hours=2) else 'LOCAL_CAPTURE_STALE'
+        save(directory/'status.json', status)
+        print('Paddy header capture: '+json.dumps(status))
+        return status
     if not force and last.get('generated_at') and timedelta(0) <= now-utc(last['generated_at']) < timedelta(minutes=5):
         return {**last, 'cache_reused': True}
     targets = sorted([f for f in payload.get('fixtures', [])
@@ -214,6 +227,8 @@ def capture(root, payload, now=None, get=None, post=None, force=False):
     except (requests.RequestException, ValueError, TypeError, KeyError, OSError) as exc:
         # Never expose a request URL containing client configuration in health logs.
         status.update(status='FAILED', errors=[type(exc).__name__])
+        if isinstance(exc, requests.HTTPError) and exc.response is not None:
+            status['http_status'] = exc.response.status_code
     save(directory/'status.json', status)
     print('Paddy header capture: '+json.dumps(status))
     return status

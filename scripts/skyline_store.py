@@ -55,6 +55,10 @@ def restore(root):
     if not rows:return
     state=rows[0]['payload']
     if state.get('version')!='skyline-v1':raise ValueError('Wrong private Skyline state version')
+    source=state.get('source_prices',{}).get('paddy')
+    if source:
+        save(root/'data/aerial/paddy/prices.json', source['prices'])
+        save(root/'data/aerial/paddy/status.json', source['status'])
     directory=root/'data/aerial/skyline'
     for kind in ('forecasts','outcomes'):
         for key,value in state.get(kind,{}).items():
