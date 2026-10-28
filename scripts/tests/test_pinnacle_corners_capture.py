@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import importlib.util
+import json
+import copy
 import sys
 import tempfile
 import unittest
@@ -17,6 +19,27 @@ SPEC.loader.exec_module(CAPTURE)
 
 
 class PinnacleCornersCaptureTests(unittest.TestCase):
+    def test_real_corners_require_explicit_matching_child_event(self):
+        raw=json.loads((Path(__file__).parent/'fixtures/pinnacle-counts.json').read_text())
+        # A goals alternative at a corners-like threshold must not leak in.
+        goals={**raw['markets'][0],'type':'total','period':0,'key':'s;0;ou;9.5','status':'open',
+               'prices':[{'designation':'over','price':9900}]}
+        for broken in (False,True):
+            fixtures=copy.deepcopy(raw['fixtures'])
+            if broken:fixtures[1]['parentId']=999
+            with patch.object(CAPTURE,'_get',side_effect=[fixtures,raw['markets']+[goals]]),patch.object(CAPTURE.time,'sleep'):
+                rows=CAPTURE._scrape_league('serie-a',2436,'2026-10-28T19:25:12Z',False)
+            if broken:self.assertEqual(rows,[])
+            else:
+                self.assertTrue(rows)
+                self.assertTrue(all(r['odds_decimal']<100 for r in rows))
+                self.assertTrue(all(r['home_team']=='Monza' and r['away_team']=='Napoli' for r in rows))
+
+    def test_new_confirmations_retain_exact_timestamps(self):
+        first='2026-10-28T18:01:00Z';second='2026-10-28T18:05:00Z'
+        self.assertNotEqual(CAPTURE._capture_bucket(first,0),CAPTURE._capture_bucket(second,0))
+        self.assertEqual(CAPTURE._capture_bucket(first,0),first)
+
     def test_six_hour_buckets_retain_morning_and_evening_prices(self) -> None:
         self.assertEqual(CAPTURE._capture_bucket("2026-08-22T08:15:00Z"), "2026-08-22T06")
         self.assertEqual(CAPTURE._capture_bucket("2026-08-22T17:15:00Z"), "2026-08-22T12")

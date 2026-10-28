@@ -215,7 +215,7 @@ def build_control_odds_rows(
                 normalized = normalize_market_name(market_name)
                 category = classify_market(market_name)
                 base = {
-                    "captured_at": captured_at,
+                    "captured_at": market.get("captured_at") or captured_at,
                     "match_date": kickoff[:10],
                     "event_id": event_id,
                     "kickoff_at": kickoff,
@@ -224,7 +224,7 @@ def build_control_odds_rows(
                     "competition": competition,
                     "home_team": home_team,
                     "away_team": away_team,
-                    "source": "odds_api_io",
+                    "source": market.get("source") or "odds_api_io",
                     "notes": f"market={market_name}",
                 }
                 if category == "match_odds" and normalized != "ml ht":

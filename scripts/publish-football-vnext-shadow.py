@@ -29,6 +29,7 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from football_counts import prob_over  # noqa: E402
+from football_best_prices import best_candidates, fresh_pair, latest_corners
 from football_market import blend_logit, proportional_devig, shading_aware_devig  # noqa: E402
 
 
@@ -60,6 +61,8 @@ EXTRA_FIELDS = [
     "model_mean",
     "distribution_parameter",
     "signal_status",
+    "price_source",
+    "compared_prices",
 ]
 
 
@@ -217,6 +220,7 @@ def candidate_row(
         "away_team": away,
         "team": team,
         "bookmaker": source.get("bookmaker") or "Pinnacle",
+        "price_source": source.get("source", "pinnacle" if source.get("bookmaker", "Pinnacle") == "Pinnacle" else ""),
         "selection": selection,
         "line": line,
         "side": side,
@@ -337,7 +341,7 @@ def score_team_shots(
     match_odds_rows: list[dict] | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     latest = PUB.latest_team_shots_odds(odds_rows, now)
-    pairs = paired_rows(latest, ("league_slug", "home_team", "away_team", "team", "line_label", "bookmaker"))
+    pairs = paired_rows(latest, ("kickoff", "league_slug", "home_team", "away_team", "team", "line_label", "bookmaker"))
     accepted: list[dict[str, Any]] = []
     candidates: list[dict[str, Any]] = []
     min_edge = float(lock["selection_rules"]["minimum_edge"])
@@ -413,6 +417,7 @@ def score_team_shots(
         ):
             edge = (probability * float(source["odds"])) - 1.0
             blocked: list[str] = pair_price_blockers(pair, now)
+            if not fresh_pair(pair,now): blocked.append("price_not_fresh_10m")
             if 4 <= matchday <= 6 and min(team_neff, opponent_neff) < 6:
                 blocked.append("early_neff_below_6")
             if 4 <= matchday <= 6 and abs(raw_probability - market_probability) > market_gap_cap:
@@ -432,7 +437,7 @@ def score_team_shots(
             row["model_input_version"] = "v4-1x2-asof-20260912"
             if not blocked:
                 accepted.append(row)
-    return cap_signals(accepted), candidates
+    return cap_signals(best_candidates(candidates,now)), candidates
 
 
 @dataclass
@@ -551,8 +556,8 @@ def score_corners(
     lock: dict[str, Any],
     now: datetime,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    latest = PUB.latest_corners_odds(odds_rows, now)
-    pairs = paired_rows(latest, ("league_slug", "home_team", "away_team", "line_label"))
+    latest = latest_corners(odds_rows,now,PUB)
+    pairs = paired_rows(latest, ("kickoff", "league_slug", "home_team", "away_team", "line_label", "bookmaker"))
     states_by_date = {}
     accepted: list[dict[str, Any]] = []
     candidates: list[dict[str, Any]] = []
@@ -618,11 +623,12 @@ def score_corners(
         ):
             edge = (probability * float(source["odds"])) - 1.0
             blocked: list[str] = pair_price_blockers(pair, now)
+            if not fresh_pair(pair,now): blocked.append("price_not_fresh_10m")
             if edge < min_edge:
                 blocked.append("edge_below_3pct")
             status = "eligible" if not blocked else "blocked"
             row = candidate_row(
-                model=CORNERS_MODEL, source={**source, "bookmaker": "Pinnacle"}, team="", side=side,
+                model=CORNERS_MODEL, source=source, team="", side=side,
                 probability=probability, raw_probability=probability, market_probability=market_probability,
                 edge=edge, matchday=matchday, team_neff=home_neff, opponent_neff=away_neff,
                 model_mean=predicted_mean, distribution_parameter=alpha, status=status,
@@ -633,7 +639,7 @@ def score_corners(
                 accepted.append(row)
     for row in candidates:
         row["model_input_version"] = "v3-event-asof-20260912"
-    return cap_signals(accepted), candidates
+    return cap_signals(best_candidates(candidates,now)), candidates
 
 
 def main() -> int:
@@ -642,6 +648,7 @@ def main() -> int:
     parser.add_argument("--team-odds", type=Path, default=PUB.DEFAULT_TEAM_ODDS)
     parser.add_argument("--match-odds", type=Path, default=MATCH_ODDS_INPUT)
     parser.add_argument("--corners-odds", type=Path, default=PUB.DEFAULT_CORNERS_PINNACLE)
+    parser.add_argument("--corners-other-odds",type=Path,default=ROOT/'data/corners-ou/bet365-corners-odds-history.csv')
     parser.add_argument("--events", type=Path, default=EVENTS_INPUT)
     parser.add_argument("--team-params", type=Path, default=TEAM_PARAMS)
     parser.add_argument("--team-lock", type=Path, default=TEAM_LOCK)
@@ -665,7 +672,7 @@ def main() -> int:
         match_odds_rows=PUB.load_csv(args.match_odds),
     )
     corners_signals, corners_candidates = score_corners(
-        by_team=by_team, by_league=by_league, odds_rows=PUB.load_csv(args.corners_odds),
+        by_team=by_team, by_league=by_league, odds_rows=PUB.load_csv(args.corners_odds)+PUB.load_csv(args.corners_other_odds),
         event_rows=PUB.load_csv(args.events), params=load_json(args.corners_params),
         lock=load_json(args.corners_lock), now=now,
     )

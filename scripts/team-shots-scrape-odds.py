@@ -22,6 +22,7 @@ from __future__ import annotations
 
 from odds_api_allocation import selected_bookmakers
 from football_grosvenor import capture_and_merge
+from moviodds_count_prices import capture_and_merge as capture_bet365_counts
 
 import argparse
 import csv
@@ -451,6 +452,9 @@ def scrape_odds_api(
     payload, direct_health = capture_and_merge(payload, matched)
     diagnostic["direct_source"] = direct_health
     provider_errors.extend(direct_health["errors"])
+    payload, bet365_health = capture_bet365_counts(payload, matched)
+    diagnostic["bet365_count_source"] = bet365_health
+    provider_errors.extend(bet365_health["errors"])
     rows = _extract_odds_api_rows(payload, config, captured)
 
     if not rows:

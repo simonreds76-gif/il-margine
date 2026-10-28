@@ -230,7 +230,7 @@ def settle_corners(rows: list[dict[str, Any]], results: Mapping[str, dict]) -> i
             continue
 
         line = _pf(row.get("line"))
-        odds = _pf(row.get("pinnacle_price_at_publication"))
+        odds = _pf(row.get("book_price_at_publication") or row.get("pinnacle_price_at_publication"))
         if not math.isfinite(odds) or odds <= 1 or str(row.get("side") or "").lower() not in {"over", "under"}:
             continue
         market_result, pnl = settle_market(str(row.get("side") or ""), line, float(total), odds)

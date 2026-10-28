@@ -44,6 +44,10 @@ OUTPUT_FIELDS = [
     "line",
     "side",
     "model",
+    "bookmaker",
+    "book_price_at_publication",
+    "price_source",
+    "compared_prices",
     "model_fair_odds",
     "model_implied_prob",
     "raw_model_probability",
@@ -248,9 +252,11 @@ def build_pick_row(
 
     # Keep the price of the published selection, even when a later archive
     # backfill supplies a different snapshot at the publication timestamp.
-    price_publication = pf(pick.get("pinnacle_price_at_publication") or pick.get("book_odds"))
+    bookmaker = pick.get("bookmaker") or "Pinnacle"
+    price_publication = pf(pick.get("book_price_at_publication") or pick.get("book_odds") or pick.get("pinnacle_price_at_publication"))
     if price_publication is None:
-        price_publication = price_at_or_before(items, published)
+        price_publication = price_at_or_before(items, published) if bookmaker == "Pinnacle" else None
+    pinnacle_publication = price_publication if bookmaker == "Pinnacle" else price_at_or_before(items,published)
     price_3h = price_at_or_before(items, kickoff - timedelta(hours=3) if kickoff else None)
     price_1h = price_at_or_before(items, kickoff - timedelta(hours=1) if kickoff else None)
     close_snapshot = snapshot_at_or_before(items, kickoff)
@@ -279,7 +285,8 @@ def build_pick_row(
     movement_to_close = ""
     if price_publication and close:
         published_to_close_clv = round((price_publication / close) - 1.0, 6)
-        movement_to_close = round(close - price_publication, 6)
+    if pinnacle_publication and close:
+        movement_to_close = round(close - pinnacle_publication, 6)
 
     model_to_close_clv = ""
     if model_prob and close:
@@ -304,6 +311,10 @@ def build_pick_row(
         "line": line,
         "side": side,
         "model": pick.get("model", ""),
+        "bookmaker": bookmaker,
+        "book_price_at_publication": round(price_publication,6) if price_publication else "",
+        "price_source": pick.get("price_source", ""),
+        "compared_prices": pick.get("compared_prices", ""),
         "model_fair_odds": round(model_fair, 6) if model_fair else "",
         "model_implied_prob": round(model_prob, 6) if model_prob else "",
         "raw_model_probability": pick.get("raw_model_probability", ""),
@@ -318,7 +329,7 @@ def build_pick_row(
         "model_input_version": pick.get("model_input_version", ""),
         "price_captured_at_utc": pick.get("price_captured_at_utc", ""),
         "signal_status": pick.get("signal_status", ""),
-        "pinnacle_price_at_publication": round(price_publication, 6) if price_publication else "",
+        "pinnacle_price_at_publication": round(pinnacle_publication, 6) if pinnacle_publication else "",
         "pinnacle_price_3h_pre_kickoff": round(price_3h, 6) if price_3h else "",
         "pinnacle_price_1h_pre_kickoff": round(price_1h, 6) if price_1h else "",
         "pinnacle_price_close": round(close, 6) if close else "",
@@ -491,7 +502,7 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, pinnacle_path: P
         "",
         "- `current_model_would_have_priced` must be true for publication while canonical-only evidence is below threshold.",
         "- `time_to_kickoff_hours` records publication timing so CLV can be interpreted by lead time.",
-        "- `published_to_close_clv` tracks the taken/published Pinnacle price versus close.",
+        "- `published_to_close_clv` compares the original recorded bookmaker price with the Pinnacle close; the execution bookmaker and price are stored separately.",
         "- `close_lag_minutes` records how far the selected close snapshot was from kickoff; `true_close=true` requires <=120 minutes.",
         "- `model_to_close_clv` tracks the model-implied probability versus close.",
         "- `confidence_guard_applied=true` means the row must not be treated as a published pick.",

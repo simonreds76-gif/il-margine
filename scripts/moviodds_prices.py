@@ -55,10 +55,10 @@ def enabled(sport):
     return cfg.get('direct_moviodds', {}).get(sport, False)
 
 
-def download(sport, get=None):
+def download(sport, get=None, groups=None):
     # Requests transparently decompresses gzip; cap decompressed bytes too.
     # One request, no retry loop, no account key and no browser bypass.
-    response = (get or requests.get)(URL, params={'sport': sport, 'groups': ','.join(GROUPS[sport]), 'links': '1'},
+    response = (get or requests.get)(URL, params={'sport': sport, 'groups': ','.join(groups or GROUPS[sport]), 'links': '1'},
                                     headers={'Accept-Encoding': 'gzip', 'User-Agent': 'IlMargineResearch/1.0'},
                                     timeout=(5, 20), stream=True)
     try:
@@ -74,7 +74,7 @@ def download(sport, get=None):
         response.close()
 
 
-def normalize(data, sport, now, *, targets=(), days_ahead=3):
+def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
     skipped = Counter()
     if (not isinstance(data, dict) or data.get('warming') or data.get('warming_up')
             or not fresh(data.get('server_time'), now, timedelta(minutes=2))
@@ -128,7 +128,7 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3):
                 event = {'id': 'bet365:'+str(m['id']), 'home': m['home'], 'away': m['away'],
                          'date': m['kickoff_utc'], 'league': {'name': tour+' - '+tournament}}
         markets = []
-        for gid, (original_name, name) in GROUPS[sport].items():
+        for gid, (original_name, name) in (groups or GROUPS[sport]).items():
             status = (m.get('group_status') or {}).get(gid) or {}
             polled = status.get('polled_at')
             if (status.get('stale') or status.get('suspended') or status.get('removed')
@@ -152,6 +152,32 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3):
                 allowed_ids = {'177703', '177769'} if gid == '177703' else {gid}
                 if str(q.get('market_id')) not in allowed_ids:
                     skipped['unverified_market_id'] += 1
+                    continue
+                if gid in {'50532', '10235'}:
+                    # Exact full-match two-way contracts, never SOT, team corners,
+                    # first-half totals or three-way corner markets.
+                    fraction = re.fullmatch(r'(\d+)/(\d+)', str(q.get('odds_frac') or ''))
+                    label = re.fullmatch(r'(Over|Under) (\d+(?:\.\d+)?)', str(q.get('label') or ''))
+                    side = label[1].lower() if gid == '50532' and label else str(q.get('side') or '').lower()
+                    try:
+                        line = float(q['line'])
+                        valid_line = (math.isfinite(line) and line > 0 and line % 1 == .5
+                                      and float(q['handicap']) == line)
+                    except (KeyError, TypeError, ValueError):
+                        valid_line = False
+                    club = ''
+                    if gid == '50532':
+                        sides = [s for s in ('home','away') if q.get('side') and team_key(q['side']) == team_key(m[s])]
+                        if len(sides) == 1: club = sides[0]
+                    if (not valid_line or side not in {'over','under'}
+                            or (gid == '50532' and (not label or not club or float(label[2]) != line))
+                            or not fraction or int(fraction[2]) == 0
+                            or abs(price-(1+int(fraction[1])/int(fraction[2]))) > 1e-7):
+                        skipped['invalid_count_contract'] += 1
+                        continue
+                    k = (club, line, side)
+                    if k in props and props[k]['price'] != price: conflicts.add(k)
+                    props[k] = {'club':club,'hdp':line,'side':side,'price':price,'raw_quote':q}
                     continue
                 player = str(q.get('line' if sport == 'soccer' else 'side') or '').strip()
                 milestone = re.fullmatch(r'([1-9]\d*)\+', str(q.get('side' if sport == 'soccer' else 'line') or ''))
@@ -185,6 +211,21 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3):
                 props[k] = {'label': player, 'hdp': line, 'over': price, 'raw_quote': q}
             odds = [v for k, v in props.items() if k not in conflicts]
             skipped['conflicting_quotes'] += len(conflicts)
+            if gid in {'50532','10235'}:
+                paired = {}
+                for p in odds: paired.setdefault((p['club'],p['hdp']),{})[p['side']] = p
+                for (club, line), sides in paired.items():
+                    if set(sides) != {'over','under'}:
+                        skipped['unpaired_count_market'] += 1
+                        continue
+                    markets.append({'name': f'Total Shots {club.title()}' if club else 'Corners Totals',
+                        'odds':[{'hdp':line,'over':sides['over']['price'],'under':sides['under']['price']}],
+                        'source':'moviodds_bet365','source_event_id':str(m['id']),'source_group_id':gid,
+                        'source_url':URL+'?sport=soccer&groups='+gid,'captured_at':polled,
+                        'updatedAt':max(p['raw_quote']['ts'] for p in sides.values()),
+                        'raw_group_status':status,'raw_quotes':[p['raw_quote'] for p in sides.values()],
+                        'settlement_policy':'full_match_90_minutes_plus_stoppage_no_extra_time'})
+                continue
             if odds:
                 markets.append({'name': name, 'odds': odds, 'source': 'moviodds_bet365',
                                 'source_event_id': str(m['id']), 'source_group_id': gid,
