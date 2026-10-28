@@ -47,7 +47,7 @@ def retain_headed_markets(path, payload, event_index, captured_at):
     return sum(len(e['markets']) for e in result['events'])
 
 
-def quoted_markets(fixture, candidate, snapshot, now):
+def _bet365_quotes(fixture, candidate, snapshot, now):
     """Exact fixture/team/player joins only. Ambiguous or stale quotes stay absent."""
     import re
     import math
@@ -116,3 +116,8 @@ def quoted_markets(fixture, candidate, snapshot, now):
                 source=event['source'],source_market=market_name,source_label=label,source_price_field=field))
     # Do not pick the best of conflicting duplicate prices.
     return [rows[0] for rows in quotes.values() if len({q['odds'] for q in rows})==1]
+
+
+def quoted_markets(fixture, candidate, snapshot, now):
+    from paddy_headed import quoted
+    return _bet365_quotes(fixture, candidate, snapshot, now) + quoted(fixture, candidate, snapshot, now)

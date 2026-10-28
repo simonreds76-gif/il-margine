@@ -19,7 +19,8 @@ def eligible(record, state, now):
             and record['model_sha256']==report['model_sha256']
             and VARIANT in report.get('stats',{})
             and any(r.get('key')==record['key'] and r.get('lineup')=='confirmed' for r in report.get('board',[]))
-            and record['quote'].get('bookmaker')=='Bet365'
+            and (record['quote'].get('bookmaker')=='Bet365' or
+                 (record['quote'].get('bookmaker')=='Paddy Power' and record['quote'].get('contract') in ('paddy_super_sub_v1','paddy_named_player_v1')))
             and report.get('status')=='CAPTURING'
             and timedelta(0)<=now-utc(report['generated_at'])<=timedelta(hours=3)
             and timedelta(0)<=now-utc(record['captured_at'])<=timedelta(hours=2)
@@ -37,7 +38,7 @@ def message(record, state, now):
     quote=utc(record['quote']['captured_at']).astimezone(ZoneInfo('Europe/London'))
     lines=['SKYLINE v1 | PAPER ONLY | BASELINE',record['match'],
         record['player']+' | 1+ headed shot on target',
-        f"Bet365 recorded odds: {record['odds']:.2f}",
+        f"{record['quote'].get('bookmaker','Bet365')} recorded odds: {record['odds']:.2f}",
         f'Model fair odds: {1/p:.2f} | Estimated EV: {(p*record["odds"]-1)*100:+.1f}%',
         f'Estimated chance: {p*100:.1f}% | CONFIRMED XI',
         f'Kickoff: {kickoff:%d %b %H:%M %Z}',f'Price captured: {quote:%d %b %H:%M %Z}','',
@@ -48,8 +49,10 @@ def message(record, state, now):
     else:lines += ['No settled selections yet; ROI not established.']
     lines += [f"{stats['pending']} pending | {stats['void']} void",'',
         '1u paper tracking, zero real stake. Experimental selection, not an established edge.',
-        'Original price locked for the record. Check current Bet365 odds and market terms.',
-        'https://ilmargine.bet/model-monitor/skyline']
+        'Original price locked for the record. Check current bookmaker odds and market terms.',
+        'Admin > Monitor > Skyline: https://ilmargine.bet/admin']
+    if record['quote'].get('contract')=='paddy_super_sub_v1':
+        lines.insert(7,'Paddy Super Sub: replacement counts for settlement. Fair odds/EV above use the named player only; no promotion uplift.')
     return '\n'.join(lines)
 
 def run(root, now=None, transmit=False, sender=send, reader=fetch, writer=update):
