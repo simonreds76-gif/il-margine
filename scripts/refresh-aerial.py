@@ -134,8 +134,11 @@ def publish(client, root=ROOT, now=None):
             from skyline_paper import run as skyline_run
             from skyline_store import restore as skyline_restore, persist as skyline_persist
             from paddy_headed import capture as paddy_capture
+            from moviodds_prices import refresh_headed
             skyline_restore(root)
             paddy_capture(root, payload, now=now)
+            headed_health=refresh_headed(root,payload)
+            print('Skyline headed-price capture: '+json.dumps(headed_health))
             skyline_report = skyline_run(root, now=datetime.now(timezone.utc), capture=True)
             skyline_persist(root, skyline_report)
         except Exception as exc:
