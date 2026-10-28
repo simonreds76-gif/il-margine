@@ -23,6 +23,7 @@ FIELDS = [
     "event_id", "date", "tour", "tournament", "bookmaker", "player1", "player2",
     "player1_odds", "draw_odds", "player2_odds", "capture_ts", "match_start_utc",
     "raw_market_name", "raw_outcome_count", "raw_label_sample",
+    "provider_updated_at", "source_url", "raw_market_json",
 ]
 AUDIT_FIELDS = [
     "captured_at", "source_endpoint", "event_id", "kickoff_at", "bookmaker", "tour", "tournament",
@@ -147,7 +148,10 @@ def extract_rows(payload: list[dict[str, Any]], captured_at: str, common) -> lis
                     "player1_odds": f"{prices[0]:.4f}",
                     "draw_odds": f"{prices[1]:.4f}",
                     "player2_odds": f"{prices[2]:.4f}",
-                    "capture_ts": captured_at,
+                    "capture_ts": str(event.get("captured_at") or captured_at),
+                    "provider_updated_at": str(market.get("updatedAt") or ""),
+                    "source_url": str((event.get("urls") or {}).get(bookmaker) or ""),
+                    "raw_market_json": json.dumps(market, ensure_ascii=False, separators=(",", ":")),
                     "match_start_utc": str(event.get("date") or ""),
                     "raw_market_name": market_name,
                     "raw_outcome_count": str(len(outcomes)),

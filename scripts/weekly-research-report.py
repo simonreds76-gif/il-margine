@@ -2140,6 +2140,12 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     if not most_aces_suspended():
         lines.append(f"Most Aces Direct: {paired.get('paired_events', 0)} paired fixtures | "
                      f"Brier difference {signed_number(paired.get('brier_delta_direct_minus_control'), 4)} | outcome research; prices assessed separately")
+    if not most_aces_suspended():
+        for model, summary in (payload.get("tennis_most_aces_prices") or {}).items():
+            label = "Direct" if model == TENNIS_MOST_ACES_DIRECT_MODEL else "Count comparison"
+            lines.append(f"Most Aces {label} paper: {summary.get('eligible_settled', 0)} eligible settled | "
+                         f"ROI {pct(summary.get('roi_pct'))} | {number(summary.get('pnl_units')):+.2f}u | "
+                         "1u paper per eligible selection; no real stake")
     from tennis_hardcourt_scout import weekly_text as hardcourt_scout_text
     lines.append(hardcourt_scout_text(payload.get("tennis_hardcourt_scout") or {}))
     lines.append(context_forward_text(payload))

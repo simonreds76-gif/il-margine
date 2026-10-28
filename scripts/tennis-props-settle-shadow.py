@@ -841,6 +841,11 @@ def main() -> int:
             )
             still_pending += 1
             continue
+        if row.get("bookmaker") == "Grosvenor" and is_void_score(candidate.get("score")):
+            row["settlement_status"] = "pending"
+            row["settlement_note"] = "grosvenor_unfinished_contract_review_required"
+            still_pending += 1
+            continue
         if is_void_score(candidate.get("score")) and not determined_count(
             row.get("bookmaker"), row.get("market"), actual, row.get("line"), candidate.get("score")
         ):

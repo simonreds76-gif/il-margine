@@ -6,6 +6,7 @@ import os
 import runpy
 import tempfile
 import unittest
+from unittest.mock import patch
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -15,6 +16,20 @@ REPORT = runpy.run_path(str(ROOT / "scripts" / "weekly-research-report.py"), run
 
 
 class WeeklyResearchReportTests(unittest.TestCase):
+    def setUp(self):
+        # These fixtures describe suspension; do not depend on deployment config.
+        guard = patch.dict(REPORT["tennis_telegram_text"].__globals__, {"most_aces_suspended": lambda: True})
+        guard.start()
+        self.addCleanup(guard.stop)
+
+    def test_resumed_most_aces_reports_price_roi_without_betting_alert(self):
+        payload = {"generated_at": "2026-10-28T11:30:00Z", "tennis_most_aces_prices": {"most_aces_direct_1x2_v1": {
+            "eligible_settled": 4, "roi_pct": 12.5, "pnl_units": 0.5}}}
+        with patch.dict(REPORT["tennis_telegram_text"].__globals__, {"most_aces_suspended": lambda: False}):
+            message = REPORT["tennis_telegram_text"](payload)
+        self.assertIn("Most Aces Direct paper: 4 eligible settled", message)
+        self.assertIn("1u paper per eligible selection; no real stake", message)
+
     @staticmethod
     def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)

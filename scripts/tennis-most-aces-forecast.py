@@ -479,7 +479,20 @@ def main() -> int:
     board_rows = read_csv(Path(args.board))
     for additional in args.additional_board:
         board_rows.extend(read_csv(Path(additional)))
-    added = 0 if most_aces_suspended() else register(board_rows, ledger)
+    # Never restart a paused research lane by registering yesterday's board.
+    # The fresh price capture provides an independently observed future start.
+    from tennis_grosvenor import utc
+    now = datetime.now(UTC)
+    captures = read_csv(PROPS / "inbox" / f"betmgm-most-aces-1x2-{now.date().isoformat()}.csv")
+    future = {(r.get("date"), pair_key(r.get("player1"), r.get("player2")), SETTLE.norm_text(r.get("tournament")))
+              for r in captures if utc(r.get("match_start_utc")) and utc(r.get("capture_ts"))
+              and utc(r["capture_ts"]) <= now < utc(r["match_start_utc"])
+              and (now - utc(r["capture_ts"])).total_seconds() <= 1800}
+    fresh_boards = [r for r in board_rows
+                    if (r.get("date"), pair_key(r.get("player1"), r.get("player2")), SETTLE.norm_text(r.get("tournament"))) in future
+                    and utc(r.get("generated_at_utc"))
+                    and 0 <= (now - utc(r["generated_at_utc"])).total_seconds() <= 21600]
+    added = 0 if most_aces_suspended() else register(fresh_boards, ledger)
     settled_now = settle(ledger, Path(args.sackmann_dir), Path(args.oncourt_dir))
     ledger.sort(key=lambda row: (row.get("date", ""), row.get("forecast_id", "")))
     write_csv(Path(args.ledger), ledger)
