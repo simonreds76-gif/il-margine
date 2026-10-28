@@ -25,7 +25,7 @@ interface PublicBetsTableProps {
 const th = {
   icon: "w-[2.75rem] px-1.5 py-3 text-center md:w-[3.75rem] md:px-2.5",
   date: "w-[5.25rem] px-2.5 py-3 text-center",
-  match: "w-[25%] px-4 py-3 text-center",
+  match: "w-[25%] px-4 py-3 text-left",
   player: "w-[15%] px-4 py-3 text-center",
   selection: "w-[18%] px-4 py-3 text-center",
   odds: "w-[5.5rem] border-l border-slate-800/50 px-4 py-3 text-center",
@@ -39,7 +39,7 @@ const th = {
 const td = {
   icon: "px-1.5 py-3.5 text-center align-middle md:px-2.5",
   date: "px-2.5 py-3.5 text-center align-middle text-sm whitespace-nowrap text-slate-400",
-  match: "px-4 py-3.5 text-center align-middle font-medium text-slate-200",
+  match: "px-4 py-3.5 text-left align-middle font-medium text-slate-200",
   player: "px-4 py-3.5 text-center align-middle text-slate-300",
   selection: "px-4 py-3.5 text-center align-middle text-slate-300",
   odds: "border-l border-slate-800/50 px-4 py-3.5 text-center align-middle",
@@ -98,7 +98,14 @@ export default function PublicBetsTable({
                 className="block min-w-0 transition-colors hover:text-emerald-400"
                 title={bet.event}
               >
-                <span className="flex items-center justify-center gap-2">{!isSettled && <TipPortraits portraits={bet.artwork} size="compact" />}<span className="min-w-0 break-words">{bet.event}</span></span>
+                <span className="flex items-center gap-2">
+                  {!isSettled && (
+                    <span className="w-[68px] shrink-0">
+                      <TipPortraits portraits={bet.artwork} size="compact" />
+                    </span>
+                  )}
+                  <span className="min-w-0 break-words">{bet.event}</span>
+                </span>
               </Link>
             </td>
             <td className={td.player}>
