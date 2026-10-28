@@ -15,7 +15,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-28T00:30:01.923210+00:00",
+      "observed_at": "2026-10-28T13:32:26.886610+00:00",
       "changed_at": "2026-10-28T00:30:01.923210+00:00"
     },
     {
@@ -33,7 +33,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-28T00:30:01.923210+00:00",
+      "observed_at": "2026-10-28T13:32:26.886610+00:00",
       "changed_at": "2026-10-28T00:30:01.923210+00:00"
     },
     {
@@ -51,26 +51,316 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-28T00:30:01.923210+00:00",
+      "observed_at": "2026-10-28T13:32:26.886610+00:00",
       "changed_at": "2026-10-28T00:30:01.923210+00:00"
     },
     {
       "fotmob_match_id": 5795498,
+      "fotmob_page_url": "/matches/chelsea-vs-manchester-united/2w9xj5#5795498",
+      "home_fotmob_team_id": 8455,
+      "away_fotmob_team_id": 10260,
       "match_date": "2026-10-31",
       "kickoff_utc": "2026-10-31T12:30:00Z",
       "home_team": "Chelsea",
       "away_team": "Manchester United",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-4-2-1",
+      "away_formation": "4-2-3-1",
+      "home_players": [
+        "Mike Penders",
+        "Josh Acheampong",
+        "Maxence Lacroix",
+        "Levi Colwill",
+        "Pedro Neto",
+        "Moisés Caicedo",
+        "Jordan Henderson",
+        "Jorrel Hato",
+        "Cole Palmer",
+        "Geovany Quenda",
+        "Morgan Rogers"
+      ],
+      "away_players": [
+        "Senne Lammens",
+        "Leny Yoro",
+        "Harry Maguire",
+        "Ayden Heaven",
+        "Diogo Dalot",
+        "Andrey Santos",
+        "Carlos Baleba",
+        "Amad Diallo",
+        "Youri Tielemans",
+        "Mason Mount",
+        "Bryan Mbeumo"
+      ],
+      "home_starters": [
+        {
+          "name": "Mike Penders",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-2-1",
+          "position_id": 11,
+          "player_id": 1319972,
+          "shirt_number": "39"
+        },
+        {
+          "name": "Josh Acheampong",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 33,
+          "player_id": 1400216,
+          "shirt_number": "34"
+        },
+        {
+          "name": "Maxence Lacroix",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 35,
+          "player_id": 950485,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Levi Colwill",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 37,
+          "player_id": 1096400,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Pedro Neto",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 62,
+          "player_id": 843040,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Moisés Caicedo",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 64,
+          "player_id": 1137668,
+          "shirt_number": "25"
+        },
+        {
+          "name": "Jordan Henderson",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66,
+          "player_id": 156008,
+          "shirt_number": "14"
+        },
+        {
+          "name": "Jorrel Hato",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 68,
+          "player_id": 1413846,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Cole Palmer",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84,
+          "player_id": 1096353,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Geovany Quenda",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86,
+          "player_id": 1530314,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Morgan Rogers",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-2-1",
+          "position_id": 105,
+          "player_id": 883080,
+          "shirt_number": "17"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Senne Lammens",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 1178602,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Leny Yoro",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 1358581,
+          "shirt_number": "15"
+        },
+        {
+          "name": "Harry Maguire",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 255610,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Ayden Heaven",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 1559639,
+          "shirt_number": "26"
+        },
+        {
+          "name": "Diogo Dalot",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 751550,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Andrey Santos",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 1372921,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Carlos Baleba",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1352713,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Amad Diallo",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 1070052,
+          "shirt_number": "16"
+        },
+        {
+          "name": "Youri Tielemans",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 465960,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Mason Mount",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 750032,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Bryan Mbeumo",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 923312,
+          "shirt_number": "19"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-10-28T00:30:01.923210+00:00",
-      "changed_at": "2026-10-28T00:30:01.923210+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Emiliano Martínez",
+        "Pep Chavarría",
+        "Reece James",
+        "Jamie Gittens",
+        "João Pedro"
+      ],
+      "away_unavailable": [
+        "Luke Shaw",
+        "Kobbie Mainoo",
+        "Manuel Ugarte",
+        "Benjamin Šeško",
+        "Marcus Rashford",
+        "Patrick Dorgu"
+      ],
+      "observed_at": "2026-10-28T13:32:26.886610+00:00",
+      "changed_at": "2026-10-28T13:32:26.886610+00:00"
     },
     {
       "fotmob_match_id": 5795499,
@@ -87,7 +377,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-28T00:30:01.923210+00:00",
+      "observed_at": "2026-10-28T13:32:26.886610+00:00",
       "changed_at": "2026-10-28T00:30:01.923210+00:00"
     },
     {
@@ -105,7 +395,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-28T00:30:01.923210+00:00",
+      "observed_at": "2026-10-28T13:32:26.886610+00:00",
       "changed_at": "2026-10-28T00:30:01.923210+00:00"
     },
     {
@@ -123,7 +413,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-28T00:30:01.923210+00:00",
+      "observed_at": "2026-10-28T13:32:26.886610+00:00",
       "changed_at": "2026-10-28T00:30:01.923210+00:00"
     },
     {
@@ -141,7 +431,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-10-28T00:30:01.923210+00:00",
+      "observed_at": "2026-10-28T13:32:26.886610+00:00",
       "changed_at": "2026-10-28T00:30:01.923210+00:00"
     }
   ]
