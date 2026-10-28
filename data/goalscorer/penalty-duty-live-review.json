@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-27T20:40:12.701280+00:00",
+  "generated_at": "2026-10-28T00:29:09.394680+00:00",
   "league": "serie-a",
-  "row_count": 5,
+  "row_count": 6,
   "rows": [
     {
       "date": "2026-10-27",
@@ -135,6 +135,79 @@
           "finished": true,
           "match": "Sassuolo vs Lazio",
           "event_result": "missed"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "league": "serie-a",
+      "review_source": "fotmob_live",
+      "match": "Roma vs Cagliari",
+      "team": "Cagliari",
+      "opponent": "Roma",
+      "actual_taker": "M'Bala Nzola",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "10",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Daniel Maldini",
+      "secondary_pre_match": "Alessandro Deiola",
+      "tertiary_pre_match": "Yerry Mina",
+      "primary_lineup_status": "confirmed_bench",
+      "secondary_lineup_status": "confirmed_starter",
+      "tertiary_lineup_status": "confirmed_starter",
+      "active_taker_pre_match": "Alessandro Deiola",
+      "active_slot_pre_match": "secondary",
+      "team_lineup_status": "unknown",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "M'Bala Nzola took 1 penalty attempt and scored for Cagliari vs Roma. Primary pre-match: Daniel Maldini (confirmed_bench). Secondary pre-match: Alessandro Deiola (confirmed_starter). Pre-match active slot was secondary -> Alessandro Deiola. Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-10-27T20:40:50Z",
+      "context_source_path": "data/goalscorer/penalty-duty-context.json",
+      "actual_taker_match_status": "Yes - started, off 63'",
+      "primary_on_pitch_at_penalty": "No - bench, on 76'",
+      "secondary_on_pitch_at_penalty": "Yes - started, off 76'",
+      "tertiary_on_pitch_at_penalty": "Yes - started",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 63'",
+      "event_evidence": [
+        {
+          "id": "fotmob|serie-a|5749721|2988949893",
+          "source_event_id": "2988949893",
+          "match_id": "5749721",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749721",
+          "observed_at": "2026-10-28T00:29:10+00:00",
+          "event_date": "2026-10-27",
+          "season": "2026/27",
+          "team": "Cagliari",
+          "taker": "M'Bala Nzola",
+          "primary": "Daniel Maldini",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Daniel Maldini",
+            "minute": 10,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 1072054,
+            "bucket": "subs",
+            "substitutions": [
+              {
+                "type": "subin",
+                "time": 76,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 10,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Roma vs Cagliari",
+          "event_result": "scored"
         }
       ]
     },
@@ -318,7 +391,7 @@
           "source_event_id": "2986745901",
           "match_id": "5749711",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749711",
-          "observed_at": "2026-10-27T14:54:44+00:00",
+          "observed_at": "2026-10-28T00:29:12+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Bologna",
@@ -387,7 +460,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261027"
+      "20261024"
     ],
     "matches_checked": 1
   }
