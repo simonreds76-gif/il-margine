@@ -1,11 +1,11 @@
 {
-  "version": "paired-market-offset-20261019-club-alias-v3",
-  "registered_at": "2026-10-19",
-  "model_fingerprint": "d4723cba0af2b4604f3204e9d1d996542f206fc42313612b2a79117a64d4cce0",
-  "previous_version": "paired-market-offset-20260930-v2",
-  "previous_fingerprint": "934de9b700fe013c26d54fefa1c5ccfa82af2f0bd98748b242cda712d9ad3e0d",
-  "reason": "Four verified club aliases from goalkeeper fix #171 change identity joins. Keep all original forecasts and prices; capture subsequent contracts under a distinct revision. No weights, probability formula, selection thresholds or real stakes changed.",
+  "version": "paired-market-offset-20261028-identity-v4",
+  "registered_at": "2026-10-28",
+  "model_fingerprint": "90a4b82bdc0fb04546d62c53c32e12943250bd7637b31079423ee3023f487fd4",
+  "previous_version": "paired-market-offset-20261019-club-alias-v3",
+  "previous_fingerprint": "d4723cba0af2b4604f3204e9d1d996542f206fc42313612b2a79117a64d4cce0",
+  "reason": "Shared exact club identities and the existing best-fresh-price execution policy. Pricing formula, frozen parameters and thresholds unchanged. Preserve all original contracts; do not recapture or select again for an existing fixture.",
   "real_stake_units": 0,
   "automatic_promotion": false,
-  "historical_contracts_preserved": 240
+  "historical_contracts_preserved": 374
 }

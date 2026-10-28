@@ -28,7 +28,7 @@ spec.loader.exec_module(O)
 V, PUB = O.V, O.PUB
 MODELS = ('ema20_v3', 'v4', 'opponent', 'shots_market_offset_v1')
 CALIBRATION_PATH = ROOT/'data/team-shots/shots-market-offset-v1.json'
-VERSION = 'paired-market-offset-20261019-club-alias-v3'
+VERSION = 'paired-market-offset-20261028-identity-v4'
 
 class ModelFingerprintMismatch(ValueError):
     """Hold new forecasts without preventing independent settlement/reporting."""
@@ -44,7 +44,8 @@ def model_fingerprint():
         'scripts/publish-football-research-picks.py','scripts/build-football-form-layer.py',
         'scripts/backtest-football-form-layer.py','scripts/team_shots_opponent.py',
         'scripts/team-shots-opponent-shadow.py','scripts/football_counts.py','scripts/football_market.py',
-        'scripts/football_team_names.py','scripts/settlement_utils.py','scripts/football_form_integrity.py','data/team-shots/team-shots-v4-params.json',
+        'scripts/football_team_names.py','scripts/settlement_utils.py','scripts/football_form_integrity.py',
+        'scripts/football_best_prices.py','data/team-shots/team-shots-v4-params.json',
         'data/team-shots/team-shots-v4-lock.json','data/team-shots/team-shots-opponent-config.json',
         'data/team-shots/shots-market-offset-v1.json']
     values={name:hashlib.sha256((ROOT/name).read_text(encoding='utf8').encode()).hexdigest() for name in names}

@@ -14,6 +14,16 @@ from settlement_utils import normalize_team_name
 
 
 FORM_TEAM_ALIASES = {
+    "dep a coruna": "la coruna",
+    "atl madrid": "ath madrid",
+    "internazionale": "inter",
+    "1 koln": "koln",
+    "cologne": "koln",
+    "borussia monchengladbach": "m gladbach",
+    "strasbourg alsace": "strasbourg",
+    "paderborn 07": "paderborn",
+    "racing club lens": "lens",
+    "stade brest 29": "brest",
     "angers sco": "angers",
     "aj auxerre": "auxerre",
     "stade rennais": "rennes",

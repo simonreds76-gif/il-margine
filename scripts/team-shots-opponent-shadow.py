@@ -17,6 +17,7 @@ from team_shots_opponent import ROOT, key, read_base, history_before, mean_for
 from football_counts import prob_over
 from football_market import blend_logit, proportional_devig
 from football_fixture_resolutions import apply_reviewed_voids
+from football_count_results import count_result_index
 
 def module(name, filename):
     spec = importlib.util.spec_from_file_location(name, ROOT/'scripts'/filename)
@@ -120,7 +121,8 @@ def track(ledger, odds, config):
         output.append(row)
     results,freshness,_,_ = SETTLE.load_results_snapshot(None)
     results.update(SETTLE.load_manual_settlement_results(SETTLE.OVERRIDES_PATH))
-    settled = SETTLE.settle_team_shots([r for r in output if r.get('result')!='void'],results)
+    settled = SETTLE.settle_team_shots([r for r in output if r.get('result')!='void'],results,
+        exact_results=count_result_index(ROOT,datetime.now(timezone.utc)))
     return output,settled,freshness
 
 def closing_values(rows):
