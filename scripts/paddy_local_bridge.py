@@ -6,7 +6,7 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 import requests
 from aerial_data import read, save, utc
-from paddy_headed import capture
+from paddy_headed import capture, DIRECT_COLLECTION_ENABLED
 from skyline_store import update
 
 PUBLIC_AERIAL='https://jsuu8rjgs8aaukun.public.blob.vercel-storage.com/fair-odds-lab/aerial.json'
@@ -22,6 +22,7 @@ def publish(root, prices, status, writer=update):
 
 
 def run(root, now=None, get=requests.get, collector=capture, writer=update):
+    if not DIRECT_COLLECTION_ENABLED: return {'status':'DISABLED_BY_USER'}
     now=now or datetime.now(timezone.utc)
     if os.environ.get('GITHUB_ACTIONS') == 'true': return {'status':'LOCAL_ONLY'}
     directory=root/'data/aerial/paddy'

@@ -12,6 +12,8 @@ from skyline_store import restore
 
 NOW=datetime(2026,10,28,15,tzinfo=timezone.utc)
 
+@patch('paddy_headed.DIRECT_COLLECTION_ENABLED', True)
+@patch('paddy_local_bridge.DIRECT_COLLECTION_ENABLED', True)
 class PaddyBridgeTests(unittest.TestCase):
     def test_cloud_never_requests_restricted_hosts_and_expiry_stays_original(self):
         with tempfile.TemporaryDirectory() as d, patch.dict('os.environ',{'GITHUB_ACTIONS':'true'}):
@@ -72,5 +74,24 @@ class PaddyBridgeTests(unittest.TestCase):
             get=Mock(side_effect=ValueError('test missing snapshot'))
             self.assertEqual(run(root,NOW+timedelta(minutes=21),get=get)['status'],'FAILED')
             self.assertFalse((directory/'bridge.lock').exists())
+
+class DirectPaddyDisabledTests(unittest.TestCase):
+    def test_revocation_makes_no_requests_and_discards_active_quotes(self):
+        from paddy_headed import quoted
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d);get=Mock(side_effect=AssertionError('No website request'))
+            post=Mock(side_effect=AssertionError('No website request'))
+            save(root/'data/aerial/paddy/prices.json',{'events':[{'stale':True}]})
+            self.assertEqual(capture(root,{},NOW,get=get,post=post)['status'],'DISABLED_BY_USER')
+            self.assertEqual(read(root/'data/aerial/paddy/prices.json')['events'],[])
+            self.assertEqual(run(root,NOW,get=get)['status'],'DISABLED_BY_USER')
+            self.assertEqual(quoted({}, {}, {}, NOW),[])
+            get.assert_not_called();post.assert_not_called()
+
+    def test_existing_direct_forecast_cannot_send_an_alert(self):
+        from test_skyline_alerts import fixture
+        from skyline_alerts import eligible
+        r,state=fixture();r['quote'].update(bookmaker='Paddy Power',contract='paddy_super_sub_v1')
+        self.assertFalse(eligible(r,state,datetime.fromisoformat(r['captured_at'])))
 
 if __name__=='__main__':unittest.main()

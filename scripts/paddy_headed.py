@@ -19,6 +19,8 @@ from football_team_names import football_form_team_key
 from player_name_matching import fold_name_text
 
 BOOK = 'Paddy Power'
+# Explicit user revocation, 28 October 2026. No website access or quote use.
+DIRECT_COLLECTION_ENABLED = False
 COMPETITIONS = {'Premier League': 10932509, 'Serie A': 81, 'Bundesliga': 59,
                 'La Liga': 117, 'Ligue 1': 55}
 TYPES = {'PLAYER_TO_HAVE_1_OR_MORE_HEADED_SHOTS_ON_TARGET': '1+ headed shot on target',
@@ -116,6 +118,8 @@ def normalize(event, fixture, markets, captured_at, raw_hash):
 
 
 def quoted(fixture, candidate, snapshot, now):
+    if not DIRECT_COLLECTION_ENABLED:
+        return []
     if not any(e.get('bookmaker')==BOOK for e in snapshot.get('events', [])):
         return []
     teams = fixture.get('teams', [])
@@ -151,6 +155,11 @@ def capture(root, payload, now=None, get=None, post=None, force=False):
     get, post = get or requests.get, post or requests.post
     status = dict(generated_at=now.isoformat(), requests=0, fixtures=0, headed_sot=0,
                   headed_goals=0, mapped_quotes=0, missing=[], errors=[])
+    if not DIRECT_COLLECTION_ENABLED:
+        status['status'] = 'DISABLED_BY_USER'
+        save(directory/'prices.json', dict(generated_at=now.isoformat(), events=[]))
+        save(directory/'status.json', status)
+        return status
     last = read(directory/'status.json', {})
     # Verified 28 Oct: both website and API return country-related HTTP 403
     # from the hosted runner. Consume the existing private local capture instead;
