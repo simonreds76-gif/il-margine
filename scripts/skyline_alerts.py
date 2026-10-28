@@ -1,6 +1,7 @@
 """Private primary Skyline paper alerts, using the immutable forecast price."""
 from datetime import datetime, timezone, timedelta
 import os
+import paddy_headed
 from zoneinfo import ZoneInfo
 from aerial_alerts import send
 from skyline_model import utc
@@ -20,7 +21,7 @@ def eligible(record, state, now):
             and VARIANT in report.get('stats',{})
             and any(r.get('key')==record['key'] and r.get('lineup')=='confirmed' for r in report.get('board',[]))
             and (record['quote'].get('bookmaker')=='Bet365' or
-                 (record['quote'].get('bookmaker')=='Paddy Power' and record['quote'].get('contract') in ('paddy_super_sub_v1','paddy_named_player_v1')))
+                 (paddy_headed.DIRECT_COLLECTION_ENABLED and record['quote'].get('bookmaker')=='Paddy Power' and record['quote'].get('contract') in ('paddy_super_sub_v1','paddy_named_player_v1')))
             and report.get('status')=='CAPTURING'
             and timedelta(0)<=now-utc(report['generated_at'])<=timedelta(hours=3)
             and timedelta(0)<=now-utc(record['captured_at'])<=timedelta(hours=2)

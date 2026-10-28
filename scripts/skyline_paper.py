@@ -69,7 +69,8 @@ def run(root, now=None, capture=False):
     model_hash=digest(artifact)
     payload=read(root/'public/fair-odds-lab/aerial.json',{})
     prices=read(root/'data/goalkeeper-saves/aerial-headed-market-prices.json',{})
-    paddy=read(root/'data/aerial/paddy/prices.json',{})
+    from paddy_headed import DIRECT_COLLECTION_ENABLED
+    paddy=read(root/'data/aerial/paddy/prices.json',{}) if DIRECT_COLLECTION_ENABLED else {}
     prices={**prices,'events':prices.get('events',[])+paddy.get('events',[])}
     archive=read(root/'data/aerial/history.json.gz',{}).get('matches',[])
     heights=read(root/'data/aerial/heights.json.gz',{})

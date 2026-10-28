@@ -28,6 +28,7 @@ def source(fixture):
     return event, {'1.2':market}
 
 
+@patch('paddy_headed.DIRECT_COLLECTION_ENABLED', True)
 class PaddySkyline(unittest.TestCase):
     def test_exact_fixture_market_and_identity(self):
         with tempfile.TemporaryDirectory() as d:
