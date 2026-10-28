@@ -1,0 +1,174 @@
+{
+  "betOffers": [
+    {
+      "id": 2709213195,
+      "criterion": {
+        "id": 1001159722,
+        "label": "Total Aces",
+        "englishLabel": "Total Aces",
+        "order": [
+          1
+        ]
+      },
+      "betOfferType": {
+        "id": 6,
+        "name": "Over/Under",
+        "englishName": "Over/Under"
+      },
+      "eventId": 1029614433,
+      "outcomes": [
+        {
+          "id": 4391853928,
+          "label": "Over",
+          "englishLabel": "Over",
+          "odds": 1530,
+          "line": 21500,
+          "type": "OT_OVER",
+          "betOfferId": 2709213195,
+          "changedDate": "2026-10-28T10:30:30Z",
+          "oddsFractional": "13/25",
+          "oddsAmerican": "-190",
+          "status": "OPEN",
+          "cashOutStatus": "ENABLED",
+          "displayOrder": 0
+        },
+        {
+          "id": 4391853929,
+          "label": "Under",
+          "englishLabel": "Under",
+          "odds": 2300,
+          "line": 21500,
+          "type": "OT_UNDER",
+          "betOfferId": 2709213195,
+          "changedDate": "2026-10-28T10:30:30Z",
+          "oddsFractional": "13/10",
+          "oddsAmerican": "130",
+          "status": "OPEN",
+          "cashOutStatus": "ENABLED",
+          "displayOrder": 1
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH",
+        "OFFERED_LIVE",
+        "MAIN_LINE",
+        "BET_BUILDER"
+      ],
+      "cashOutStatus": "ENABLED"
+    },
+    {
+      "id": 2709216106,
+      "criterion": {
+        "id": 1001229607,
+        "label": "Most Aces",
+        "englishLabel": "Most Aces",
+        "order": [
+          1
+        ]
+      },
+      "betOfferType": {
+        "id": 2,
+        "name": "Match",
+        "englishName": "Match"
+      },
+      "eventId": 1029614433,
+      "outcomes": [
+        {
+          "id": 4391830532,
+          "label": "1",
+          "englishLabel": "1",
+          "odds": 2500,
+          "participant": "Tallon Griekspoor",
+          "type": "OT_ONE",
+          "betOfferId": 2709216106,
+          "changedDate": "2026-10-27T12:35:01Z",
+          "participantId": 1002123604,
+          "oddsFractional": "6/4",
+          "oddsAmerican": "150",
+          "status": "OPEN",
+          "cashOutStatus": "ENABLED",
+          "displayOrder": 0
+        },
+        {
+          "id": 4391830533,
+          "label": "X",
+          "englishLabel": "X",
+          "odds": 11500,
+          "type": "OT_CROSS",
+          "betOfferId": 2709216106,
+          "changedDate": "2026-10-28T10:29:41Z",
+          "oddsFractional": "21/2",
+          "oddsAmerican": "1050",
+          "status": "OPEN",
+          "cashOutStatus": "ENABLED",
+          "displayOrder": 1
+        },
+        {
+          "id": 4391830534,
+          "label": "2",
+          "englishLabel": "2",
+          "odds": 1680,
+          "participant": "Brandon Nakashima",
+          "type": "OT_TWO",
+          "betOfferId": 2709216106,
+          "changedDate": "2026-10-28T10:29:41Z",
+          "participantId": 1003597224,
+          "oddsFractional": "4/6",
+          "oddsAmerican": "-148",
+          "status": "OPEN",
+          "cashOutStatus": "ENABLED",
+          "displayOrder": 2
+        }
+      ],
+      "tags": [
+        "OFFERED_PREMATCH",
+        "OFFERED_LIVE",
+        "BET_BUILDER"
+      ],
+      "cashOutStatus": "ENABLED"
+    }
+  ],
+  "events": [
+    {
+      "id": 1029614433,
+      "name": "Tallon Griekspoor - Brandon Nakashima",
+      "nameDelimiter": "-",
+      "englishName": "Tallon Griekspoor - Brandon Nakashima",
+      "homeName": "Tallon Griekspoor",
+      "awayName": "Brandon Nakashima",
+      "start": "2026-10-28T12:30:00Z",
+      "group": "Vienna",
+      "groupId": 1000096178,
+      "path": [
+        {
+          "id": 1000093193,
+          "name": "Tennis",
+          "englishName": "Tennis",
+          "termKey": "tennis"
+        },
+        {
+          "id": 1000093324,
+          "name": "ATP",
+          "englishName": "ATP",
+          "termKey": "atp"
+        },
+        {
+          "id": 1000096178,
+          "name": "Vienna",
+          "englishName": "Vienna",
+          "termKey": "vienna"
+        }
+      ],
+      "nonLiveBoCount": 44,
+      "sport": "TENNIS",
+      "tags": [
+        "OFFERED_LIVE",
+        "BET_BUILDER",
+        "MATCH"
+      ],
+      "state": "NOT_STARTED",
+      "groupSortOrder": 7001041000000000000,
+      "prematchEnd": "2026-10-28T12:30:00Z"
+    }
+  ]
+}

@@ -20,6 +20,7 @@ from odds_api_allocation import selected_bookmakers
 import argparse
 import csv
 import gzip
+import importlib.util
 import json
 import html
 import os
@@ -575,14 +576,14 @@ def extract_rows(event: dict[str, Any], bookmaker: str, market: dict[str, Any], 
                 "line": line_text,
                 "over_odds": f"{prices['over_odds']:.4f}" if prices.get("over_odds") else "",
                 "under_odds": f"{prices['under_odds']:.4f}" if prices.get("under_odds") else "",
-                "capture_ts": captured_at,
+                "capture_ts": str(event.get("captured_at") or captured_at),
                 "match_start_utc": kickoff,
                 "raw_market_name": market_name,
                 "raw_outcome_count": str(len(market.get("odds") or market.get("outcomes") or [])),
                 "raw_label_sample": " | ".join(raw_labels.get((player, opponent, line_text), [])[:4]),
                 "provider_updated_at": str(market.get("updatedAt") or ""),
                 "source_url": str((event.get("urls") or {}).get(bookmaker) or ""),
-                "raw_market_json": json.dumps(market, ensure_ascii=False, separators=(",", ":")) if bookmaker.casefold() == "sisal it" else "",
+                "raw_market_json": json.dumps(market, ensure_ascii=False, separators=(",", ":")) if bookmaker.casefold() in {"sisal it", "grosvenor"} else "",
             }
         )
     return rows
@@ -795,25 +796,7 @@ def append_history_rows(path: Path, rows: list[dict[str, str]]) -> int:
     return added
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(description="Scrape Bet365 tennis props/side-market lines from odds-api.io")
-    parser.add_argument("--date", default=datetime.now(timezone.utc).date().isoformat())
-    parser.add_argument("--days-ahead", type=int, default=2)
-    parser.add_argument("--bookmakers", default=DEFAULT_BOOKMAKERS)
-    parser.add_argument("--max-events", type=int, default=64)
-    parser.add_argument("--out", default="")
-    parser.add_argument("--audit-out", default="")
-    parser.add_argument("--history-out", default="")
-    parser.add_argument("--probe-markets", action="store_true", help="Force endpoint/tier probes for hidden tennis markets")
-    parser.add_argument("--dry-run", action="store_true")
-    args = parser.parse_args()
-    args.bookmakers = selected_bookmakers(args.bookmakers, scope="tennis_props")
-
-    load_env()
-    api_key = os.environ.get("ODDS_API_KEY") or os.environ.get("ODDS_API_IO_KEY")
-    if not api_key:
-        raise SystemExit("Set ODDS_API_KEY or ODDS_API_IO_KEY in .env.local to use odds-api.io.")
-
+def capture_api(api_key, args):
     now = datetime.now(timezone.utc)
     from_iso = now.replace(microsecond=0).isoformat().replace("+00:00", "Z")
     to_iso = (now + timedelta(days=args.days_ahead)).replace(microsecond=0).isoformat().replace("+00:00", "Z")
@@ -836,8 +819,6 @@ def main() -> None:
             "selected main-tour events: "
             + ", ".join(f"{name}={count}" for name, count in sorted(selected_tournaments.items()))
         )
-    if not events:
-        return
 
     event_ids = [str(event.get("id")) for event in events if event.get("id")]
     payload = fetch_multi(api_key, event_ids, args.bookmakers)
@@ -860,6 +841,38 @@ def main() -> None:
                 markets="Player Props",
             )
         )
+    return events, payload
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Scrape Bet365 tennis props/side-market lines from odds-api.io")
+    parser.add_argument("--date", default=datetime.now(timezone.utc).date().isoformat())
+    parser.add_argument("--days-ahead", type=int, default=2)
+    parser.add_argument("--bookmakers", default=DEFAULT_BOOKMAKERS)
+    parser.add_argument("--max-events", type=int, default=64)
+    parser.add_argument("--out", default="")
+    parser.add_argument("--audit-out", default="")
+    parser.add_argument("--history-out", default="")
+    parser.add_argument("--probe-markets", action="store_true", help="Force endpoint/tier probes for hidden tennis markets")
+    parser.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args()
+    args.bookmakers = selected_bookmakers(args.bookmakers, scope="tennis_props")
+
+    load_env()
+    api_key = os.environ.get("ODDS_API_KEY") or os.environ.get("ODDS_API_IO_KEY")
+
+    from tennis_grosvenor import capture as capture_grosvenor
+    direct, direct_receipt = (capture_grosvenor(days_ahead=args.days_ahead, max_events=args.max_events)
+                              if "kambi" in args.bookmakers.lower() else ([], {}))
+    now = datetime.now(timezone.utc)
+    try:
+        events, payload = capture_api(api_key, args) if api_key else ([], [])
+    except RuntimeError as exc:
+        print(f"PRICE_SOURCE_FAILED: {exc}; independent Grosvenor capture retained")
+        events, payload = [], []
+    payload.extend(direct)
+    print(f"Grosvenor direct: {direct_receipt.get('market_count', 0)} markets; "
+          f"{direct_receipt.get('requests', 0)} public requests; errors={direct_receipt.get('errors', [])}")
     rows: list[dict[str, str]] = []
     audit_rows: list[dict[str, str]] = []
     received_at = datetime.now(timezone.utc)
@@ -869,7 +882,7 @@ def main() -> None:
         raw_out.parent.mkdir(parents=True, exist_ok=True)
         with gzip.open(raw_out, "wt", encoding="utf-8") as handle:
             json.dump({"captured_at": captured_at, "source": f"{BASE_URL}/odds/multi",
-                       "bookmakers": args.bookmakers, "events": payload}, handle)
+                       "bookmakers": args.bookmakers, "events": payload, "grosvenor_receipt": direct_receipt}, handle)
     audited_event_ids: set[str] = set()
     for event in payload:
         try:
@@ -945,6 +958,19 @@ def main() -> None:
             print(row)
         print(f"dry-run only; would write {out}")
         return
+    # Retain the compatibility filenames consumed by the existing cloud job.
+    # Every row identifies its real bookmaker; these are not BetMGM prices.
+    spec = importlib.util.spec_from_file_location("most_aces_capture", ROOT / "scripts/tennis-most-aces-capture.py")
+    most = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(most)
+    most_rows = most.extract_rows(direct, captured_at, most.load_common())
+    if most_rows:
+        most.write_csv(out.parent / f"betmgm-most-aces-1x2-{args.date}.csv", most_rows)
+        most.append_history(out.parent / f"betmgm-most-aces-history-{month}.csv", most_rows)
+    audit_rows.append({"captured_at": captured_at, "bookmaker": "Grosvenor",
+                       "market_name": f"<DIRECT_{direct_receipt.get('status', 'DISABLED')}>",
+                       "odds_count": str(direct_receipt.get("market_count", 0)),
+                       "sample_labels": json.dumps({k: v for k, v in direct_receipt.items() if k != "events"})})
     write_rows(audit_out, audit_rows, AUDIT_FIELDS)
     if rows:
         write_rows(out, rows, OUTPUT_FIELDS)

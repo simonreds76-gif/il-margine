@@ -6,6 +6,8 @@ from __future__ import annotations
 import argparse
 import csv
 import math
+import importlib.util
+import sys
 from collections import defaultdict
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -36,6 +38,7 @@ FIELDS = [
     "actual_player1_aces", "actual_player2_aces", "outcome", "result", "pnl",
     "model_brier", "model_logloss", "market_brier", "market_logloss",
     "settled_at_utc", "settlement_note", "model", "notes",
+    "price_captured_at", "forecast_generated_at", "source_url", "provider_updated_at", "raw_market_json",
 ]
 
 
@@ -75,11 +78,12 @@ def parse_datetime(value: object) -> datetime | None:
 
 
 def market_key(row: dict[str, str]) -> str:
+    book = str(row.get("bookmaker") or "BetMGM").strip().casefold()
     event_id = str(row.get("event_id") or "").strip()
     if event_id:
-        return f"betmgm|{event_id}|most_aces"
+        return f"{book}|{event_id}|most_aces"
     players = "|".join(pair_key(row.get("player1"), row.get("player2")))
-    return f"betmgm|{row.get('date','')}|{players}|most_aces"
+    return f"{book}|{row.get('date','')}|{players}|most_aces"
 
 
 def observation_id(row: dict[str, str]) -> str:
@@ -114,6 +118,17 @@ def orient_board(board: dict[str, str], capture: dict[str, str]) -> dict[str, st
 def registration_row(board: dict[str, str], capture: dict[str, str]) -> dict[str, str] | None:
     if str(board.get("quote_status") or "").upper() != "READY":
         return None
+    if capture.get("bookmaker") == "Grosvenor":
+        now = datetime.now(timezone.utc)
+        captured = parse_datetime(capture.get("capture_ts"))
+        generated = parse_datetime(board.get("generated_at_utc"))
+        start = parse_datetime(capture.get("match_start_utc"))
+        if (not all((captured, generated, start)) or not captured <= now < start
+                or generated > now or (now - captured).total_seconds() > 1800
+                or (now - generated).total_seconds() > 21600
+                or board.get("date") != capture.get("date")
+                or norm_name(board.get("tournament")) != norm_name(capture.get("tournament"))):
+            return None
     prices = (
         number(capture.get("player1_odds")),
         number(capture.get("draw_odds")),
@@ -163,7 +178,13 @@ def registration_row(board: dict[str, str], capture: dict[str, str]) -> dict[str
         reasons.append("LOW_COUNT_CONFIDENCE")
     eligible = not reasons
     row = {
-        "registered_at_utc": capture.get("capture_ts", ""),
+        "registered_at_utc": (datetime.now(timezone.utc).isoformat(timespec="seconds")
+                              if capture.get("bookmaker") == "Grosvenor" else capture.get("capture_ts", "")),
+        "price_captured_at": capture.get("capture_ts", ""),
+        "forecast_generated_at": board.get("generated_at_utc", ""),
+        "source_url": capture.get("source_url", ""),
+        "provider_updated_at": capture.get("provider_updated_at", ""),
+        "raw_market_json": capture.get("raw_market_json", ""),
         "event_id": capture.get("event_id", ""),
         "date": capture.get("date", ""),
         "tour": board.get("tour", ""),
@@ -288,7 +309,7 @@ def sackmann_date(row: dict[str, str]) -> date | None:
         return None
 
 
-def settle(ledger: list[dict[str, str]], index: dict[tuple[str, str], list[dict[str, str]]]) -> int:
+def settle(ledger: list[dict[str, str]], index: dict[tuple[str, str], list[dict[str, str]]], *, direct_index=None) -> int:
     settled = 0
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
     for row in ledger:
@@ -299,15 +320,24 @@ def settle(ledger: list[dict[str, str]], index: dict[tuple[str, str], list[dict[
         except (KeyError, ValueError):
             continue
         candidates = []
-        for match in index.get(pair_key(row.get("player1"), row.get("player2")), []):
+        source_index = direct_index if row.get("bookmaker") == "Grosvenor" else index
+        for match in (source_index or {}).get(pair_key(row.get("player1"), row.get("player2")), []):
             played = sackmann_date(match)
-            if played and abs((played - target_date).days) <= 2:
+            same_event = (row.get("bookmaker") != "Grosvenor" or
+                          norm_name(match.get("tourney_name")) == norm_name(row.get("tournament")))
+            if same_event and played and abs((played - target_date).days) <= 2:
                 candidates.append((abs((played - target_date).days), match))
         if not candidates:
             row["settlement_note"] = "sackmann_match_not_found"
             continue
+        if row.get("bookmaker") == "Grosvenor" and len(candidates) != 1:
+            row["settlement_note"] = "ambiguous_exact_fixture"
+            continue
         match = min(candidates, key=lambda item: item[0])[1]
         score = str(match.get("score") or "").upper()
+        if row.get("bookmaker") == "Grosvenor" and (not score or any(token in score for token in ("RET", "W/O", "WO", "DEF", "ABD"))):
+            row["settlement_note"] = "grosvenor_unfinished_contract_review_required"
+            continue
         if any(token in score for token in ("RET", "W/O", "WO", "DEF", "ABD")):
             row.update({
                 "settlement_status": "void", "result": "void", "pnl": "0.000",
@@ -370,14 +400,14 @@ def write_report(path: Path, rows: list[dict[str, str]]) -> None:
     model_brier = mean(settled, "model_brier")
     market_brier = mean(settled, "market_brier")
     lines = [
-        "BetMGM Most Aces 1X2 shadow evidence",
+        "Most Aces 1X2 paper evidence (bookmaker recorded per row)",
         f"Generated UTC: {datetime.now(timezone.utc).isoformat(timespec='seconds')}",
         "Status: research-only; ATP Hard/Clay; no live staking.",
         f"Rows: {len(rows)} | settled: {len(settled)} | pending: {sum(row.get('settlement_status') == 'pending' for row in rows)}",
         f"Eligible shadow bets settled: {len(eligible)} | P/L {pnl:+.2f}u | ROI {(100.0 * pnl / len(eligible)) if eligible else 0.0:+.1f}%",
         f"Model Brier: {model_brier:.6f}" if model_brier is not None else "Model Brier: pending",
-        f"De-vigged BetMGM Brier: {market_brier:.6f}" if market_brier is not None else "De-vigged BetMGM Brier: pending",
-        f"CLV: coverage {len(clv)}/{len(rows)} | mean {(mean(clv, 'clv_pct') or 0.0):+.2f}%",
+        f"De-vigged bookmaker Brier: {market_brier:.6f}" if market_brier is not None else "De-vigged bookmaker Brier: pending",
+        f"Last pre-start sample (not verified closing line): coverage {len(clv)}/{len(rows)} | mean {(mean(clv, 'clv_pct') or 0.0):+.2f}%",
         "Gate: no profitability claim before real-price settlement and positive CLV evidence.",
     ]
     for model in sorted({row.get("model", "") for row in rows if row.get("model")}):
@@ -437,7 +467,24 @@ def main() -> int:
     for path in sorted(pattern.parent.glob(pattern.name)):
         history.extend(read_csv(path))
     closes = update_closes(ledger, history)
-    settled = settle(ledger, sackmann_matches(Path(args.sackmann_dir)))
+    direct_index = defaultdict(list)
+    direct_pending = [dict(date=r.get("date"), tour=r.get("tour"), tournament=r.get("tournament"),
+                           player=r.get("player1"), opponent=r.get("player2")) for r in ledger
+                      if r.get("bookmaker") == "Grosvenor" and r.get("settlement_status") == "pending"]
+    if direct_pending:
+        spec = importlib.util.spec_from_file_location("most_aces_counts", ROOT / "scripts/tennis-props-settle-shadow.py")
+        counts = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = counts
+        spec.loader.exec_module(counts)
+        # OnCourt carries match dates; do not substitute a tournament week-start.
+        oncourt = counts.load_oncourt_index(ROOT / "data/oncourt", direct_pending)
+        for signal in direct_pending:
+            pair = pair_key(signal["player"], signal["opponent"])
+            key = (signal["tour"].upper(), int(signal["date"][:4]), pair)
+            for match in oncourt.get(key, []):
+                if match not in direct_index[pair]:
+                    direct_index[pair].append(match)
+    settled = settle(ledger, sackmann_matches(Path(args.sackmann_dir)), direct_index=direct_index)
     write_csv(Path(args.ledger), ledger)
     write_report(Path(args.report), ledger)
     print(f"Most Aces shadow: added={added}, closes={closes}, settled={settled}, rows={len(ledger)}")

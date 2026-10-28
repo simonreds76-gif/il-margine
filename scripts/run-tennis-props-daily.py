@@ -152,6 +152,11 @@ def select_market_file(as_of: str, lookback_days: int = 3) -> Path | None:
 
 
 def select_most_aces_file(as_of: str, lookback_days: int = 3) -> Path | None:
+    # Automated Grosvenor uses the cloud job's existing compatibility filename.
+    # Prefer today's complete capture to an older connected-browser import.
+    automated = PROPS_DIR / "inbox" / f"betmgm-most-aces-1x2-{as_of}.csv"
+    if has_market_rows(automated):
+        return automated
     exact = most_aces_lines_file(as_of)
     if has_market_rows(exact):
         return exact
@@ -211,7 +216,7 @@ def run_most_aces_shadow(as_of: str, capture: Path | None = None) -> None:
     selected = capture or select_most_aces_file(as_of)
     if selected and has_market_rows(selected):
         cmd.extend(["--capture", str(selected)])
-    run(cmd, "Update BetMGM Most Aces 1X2 shadow evidence", fatal=False)
+    run(cmd, "Update Most Aces 1X2 paper evidence", fatal=False)
 
 
 def run_comparison(as_of: str, market_file: Path) -> bool:
@@ -393,9 +398,9 @@ def capture_market_prices(args: argparse.Namespace) -> int:
                     "--date", args.as_of,
                     "--days-ahead", str(args.days_ahead),
                     "--max-events", str(args.max_events),
-                    "--bookmakers", "Paddy Power,Kambi",
+                    "--bookmakers", "Sisal IT,Kambi",
                 ],
-                "Capture Bet365 tennis count lines before projections",
+                "Capture Sisal/Kambi and Grosvenor stat bets before projections",
                 fatal=False,
                 timeout_seconds=180,
             )
