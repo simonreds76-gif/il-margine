@@ -45,7 +45,9 @@ export function tennisOverviewRows(snapshot: EvidenceObject): TennisOverviewRow[
   }
   result.push(row("venue", "Venue ace adjustment", object(sections.tennis_venue_ace_factor_v1), "research", "Research only", "Venue experiment. Its recorded selection ROI alone does not measure improvement over the baseline."));
   const mostAces = object(sections.tennis_most_aces_forecast);
-  result.push(row("most_aces", "Most aces", { pending: mostAces.rows_pending, generated_at: mostAces.generated_at_utc }, "blocked", "Integrity review", `Forecast observations settled: ${numeric(mostAces.rows_settled) ?? "unavailable"}; quarantined: ${numeric(mostAces.rows_quarantined) ?? "unavailable"}. These are not priced model bets and do not establish ROI.`));
+  const mostAcesPrices = object(sections.tennis_most_aces_prices);
+  const hasMostAcesPrices = Object.values(mostAcesPrices).some((entry) => (numeric(object(entry).registered) ?? 0) > 0);
+  result.push(row("most_aces", "Most aces forecasts", { pending: mostAces.rows_pending, generated_at: mostAces.generated_at_utc }, hasMostAcesPrices ? "research" : "blocked", hasMostAcesPrices ? "Paper price tracking" : "Awaiting matched prices", `Forecast observations settled: ${numeric(mostAces.rows_settled) ?? "unavailable"}; quarantined: ${numeric(mostAces.rows_quarantined) ?? "unavailable"}. Forecast counts are separate from priced selections. ${hasMostAcesPrices ? "The detailed Most Aces ledger contains captured bookmaker prices and paper results by model." : "No matched price record is available in this snapshot."}`));
   const contextForward = object(sections.tennis_context_forward);
   const contextCapture = object(contextForward.capture);
   const contextStatus = String(contextCapture.status ?? "Tracking status unavailable").replaceAll("_", " ").toLowerCase();

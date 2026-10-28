@@ -12,7 +12,7 @@ export const monitorModels:MonitorModel[] = [
  {id:'astrissimo',name:'Astrissimo',group:'research',note:'Forward paper trial, separate from the live tennis model.',views:[['astrissimo-v1','Performance & selections']]},
  {id:'astra',name:'Astra Volume',group:'research',note:'Frozen forward paper trial. Current corrected inputs are shown separately from earlier inputs.',views:[['context-forward-v1','Performance']]},
  {id:'aces4',name:'Aces v4 calibration',group:'research',note:'Calibration observations are not bets. Only rows explicitly flagged as v4 signals appear as selections.',views:[['v4-report','Progress'],['aces-v4','Flagged selections']]},
- {id:'mostaces',name:'Most aces',group:'research',note:'Active paper research using verified browser prices. A forecast alone is not a value selection.',views:[['most-aces','Match forecasts'],['most-aces-record','Research observations']]},
+ {id:'mostaces',name:'Most aces',group:'research',note:'Paper research using captured bookmaker prices. The ledger identifies each source; a forecast alone is not a value selection.',views:[['most-aces','Match forecasts'],['most-aces-record','Research observations']]},
  {id:'calibration',name:'Shots calibration',group:'research',note:'Comparison research, not the current Telegram selection model.',views:[['shots-calibration','Progress']]}
 ];
 const tennisModel=monitorModels.find(m=>m.id==='tennis')!;
