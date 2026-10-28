@@ -1,0 +1,38 @@
+name: Football count contract checks
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [golden-with-speed-insights, main]
+    paths:
+      - 'scripts/*football*.py'
+      - 'scripts/*team*shots*.py'
+      - 'scripts/settlement*.py'
+      - 'scripts/refresh-football-count-evidence.py'
+      - 'scripts/tests/test_count_identity_recovery.py'
+      - 'data/team-shots/*params.json'
+      - 'data/team-shots/*lock.json'
+      - 'data/team-shots/*config.json'
+      - 'data/team-shots/paired-reference-cohort.json'
+      - 'data/team-shots/shots-market-offset-v1.json'
+      - '.github/workflows/football-count-contract-check.yml'
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - name: Check identities, settlement, first prices and registered inference
+        run: >-
+          python -m unittest
+          scripts.tests.test_count_identity_recovery
+          scripts.tests.test_team_shots_paired_reference
+          scripts.tests.test_football_count_evidence_isolation
+          scripts.tests.test_football_vnext_shadow
+          scripts.tests.test_football_count_pending_queue
+          scripts.tests.test_football_best_prices
+          scripts.tests.test_team_shots_opponent_shadow

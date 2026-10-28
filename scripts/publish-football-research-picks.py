@@ -29,6 +29,7 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from settlement_utils import normalize_team_name  # noqa: E402
+from football_team_names import football_form_team_key  # noqa: E402
 
 
 DEFAULT_TEAM_BASE = ROOT / "data" / "football-form" / "team-match-base.csv"
@@ -193,16 +194,7 @@ def clean_display_team(value: str) -> str:
 
 
 def team_key(value: str) -> str:
-    raw = clean_text(value)
-    if raw in TEAM_KEY_ALIASES:
-        return TEAM_KEY_ALIASES[raw]
-    normalized = normalize_team_name(value)
-    if normalized in TEAM_KEY_ALIASES:
-        return TEAM_KEY_ALIASES[normalized]
-    stripped = " ".join(token for token in raw.split() if token not in EXTRA_GENERIC_TOKENS).strip()
-    if stripped in TEAM_KEY_ALIASES:
-        return TEAM_KEY_ALIASES[stripped]
-    return stripped or normalized or raw
+    return football_form_team_key(value)
 
 
 def league_slug(value: str) -> str:

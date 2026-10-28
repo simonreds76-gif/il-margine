@@ -43,7 +43,7 @@ def main():
         'latest_result_date':max((r['date'] for r in results),default=None),
         'settlement_source':'exact_fixture_base_and_verified_snapshots',
         'snapshot_settlement_contracts':len(audit)}
-    status['interpretation']+=' Club-alias correction registered 19 October 2026; inspect cohort breakdown for consistent-input comparisons.'
+    status['interpretation']+=' Identity repairs registered 28 October 2026; inspect cohort breakdown for consistent-input comparisons.'
     if capture_error:status.update(status='CAPTURE_BLOCKED_MODEL_CHANGE',new_contracts=0)
     for out,data in [(target,status),(form/'team-shots-paired-settlement-audit.json',dict(generated_at=P.PUB.fmt_dt(now),results=audit))]:
         temp=out.with_suffix('.tmp');temp.write_text(json.dumps(data,indent=2)+'\n',encoding='utf8');temp.replace(out)

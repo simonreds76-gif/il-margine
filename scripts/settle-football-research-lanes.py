@@ -17,6 +17,8 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 from settlement_audit import build_settlement_audit, load_settlement_overrides, write_audit
+from football_count_results import count_result_index, exact_result
+from football_team_names import football_form_team_key
 from settlement_utils import (
     ROOT,
     build_fixture_key,
@@ -58,7 +60,7 @@ def _parse_optional_int(raw: object) -> int | None:
 
 
 def _norm_team(text: str) -> str:
-    return normalize_team_name((text or "").replace("(Corners)", ""))
+    return football_form_team_key((text or "").replace("(Corners)", ""))
 
 
 def _display(path: Path) -> str:
@@ -175,7 +177,7 @@ def merge_manual_corner_results(results: dict[str, dict], manual_results: Mappin
     return merged
 
 
-def settle_team_shots(rows: list[dict[str, Any]], results: Mapping[str, dict]) -> int:
+def settle_team_shots(rows: list[dict[str, Any]], results: Mapping[str, dict], *, exact_results=None) -> int:
     settled = 0
     now = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     for row in rows:
@@ -183,7 +185,7 @@ def settle_team_shots(rows: list[dict[str, Any]], results: Mapping[str, dict]) -
         if result in SETTLED_RESULTS:
             continue
         row["result"] = "pending"
-        fixture = result_for_fixture(results, row)
+        fixture = exact_result(row,exact_results,datetime.now(timezone.utc)) if exact_results is not None else result_for_fixture(results, row)
         if not fixture:
             continue
         if fixture.get("home_shots") is None or fixture.get("away_shots") is None:
@@ -208,11 +210,13 @@ def settle_team_shots(rows: list[dict[str, Any]], results: Mapping[str, dict]) -
         row["result"] = market_result
         row["pnl_units"] = round(pnl, 3)
         row["settled_at"] = now
+        if exact_results is not None:
+            row['settlement_source']=fixture.get('source','')+' | '+fixture.get('evidence_path','')
         settled += 1
     return settled
 
 
-def settle_corners(rows: list[dict[str, Any]], results: Mapping[str, dict]) -> int:
+def settle_corners(rows: list[dict[str, Any]], results: Mapping[str, dict], *, exact_results=None) -> int:
     settled = 0
     now = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     for row in rows:
@@ -220,7 +224,7 @@ def settle_corners(rows: list[dict[str, Any]], results: Mapping[str, dict]) -> i
         if result in SETTLED_RESULTS:
             continue
         row["result"] = "pending"
-        fixture = result_for_fixture(results, row)
+        fixture = exact_result(row,exact_results,datetime.now(timezone.utc)) if exact_results is not None else result_for_fixture(results, row)
         if not fixture:
             continue
         total = fixture.get("total_corners")
@@ -281,8 +285,11 @@ def main() -> None:
     team_rows: list[dict[str, Any]] = [dict(row) for row in load_csv(args.team_shots)]
     corner_rows: list[dict[str, Any]] = [dict(row) for row in load_csv(args.corners)]
 
-    team_settled = settle_team_shots(team_rows, team_results)
-    corner_settled = settle_corners(corner_rows, corner_results)
+    # vNext lanes use league/date/orientation-exact evidence. Legacy callers retain
+    # their existing path; historical settled rows are never rewritten.
+    exact = count_result_index(ROOT,datetime.now(timezone.utc))
+    team_settled = settle_team_shots(team_rows, team_results,exact_results=exact if args.team_model in {'team_shots_v4','team-shots-v4-shadow'} else None)
+    corner_settled = settle_corners(corner_rows, corner_results,exact_results=exact if args.corners_model in {'corners_v3','corners-v3-shadow'} else None)
 
     if team_rows:
         write_csv(args.team_shots, team_rows, extras=("actual_team_shots", "settled_at"))

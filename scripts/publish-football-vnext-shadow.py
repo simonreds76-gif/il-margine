@@ -111,12 +111,16 @@ def stamp_publications(existing: list[dict], fresh: list[dict], now: datetime) -
 
 def merge_shadow_ledger(existing: list[dict], fresh: list[dict]) -> list[dict]:
     """Freeze the first actual selection; later calibration only changes the board."""
-    fixtures = {row.get("match_id") for row in existing}
+    def identity(row):
+        if all(row.get(k) for k in ('match_date','league','home_team','away_team')):
+            return (row['match_date'],row['league'],PUB.team_key(row['home_team']),PUB.team_key(row['away_team']))
+        return row.get('match_id')
+    fixtures = {identity(row) for row in existing}
     output = list(existing)
     for row in fresh:
-        if row.get("match_id") not in fixtures:
+        if identity(row) not in fixtures:
             output.append(row)
-            fixtures.add(row.get("match_id"))
+            fixtures.add(identity(row))
     return sorted(output, key=lambda row: (row.get("kickoff_utc", ""), row.get("pick_id", "")))
 
 
@@ -311,6 +315,12 @@ def is_fixture_team(team: str, home: str, away: str) -> bool:
 
 def team_alpha(params: dict[str, Any], league: str, team: str) -> float:
     entry = params.get("team_alpha", {}).get(f"{league}|{PUB.team_key(team)}")
+    if entry is None:
+        matches = [v for k,v in params.get('team_alpha',{}).items()
+                   if k.split('|',1)[0]==league and PUB.team_key(k.split('|',1)[-1])==PUB.team_key(team)]
+        if len({float(v['alpha']) for v in matches if v.get('alpha') is not None})>1:
+            raise ValueError('Conflicting frozen team dispersion aliases')
+        entry = matches[0] if matches else None
     if isinstance(entry, dict) and entry.get("alpha") is not None:
         return float(entry["alpha"])
     if params.get("league_alpha", {}).get(league) is not None:
@@ -343,6 +353,7 @@ def score_team_shots(
     lock: dict[str, Any],
     now: datetime,
     match_odds_rows: list[dict] | None = None,
+    input_gaps: list[dict] | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     latest = PUB.latest_team_shots_odds(odds_rows, now)
     pairs = paired_rows(latest, ("kickoff", "league_slug", "home_team", "away_team", "team", "line_label", "bookmaker"))
@@ -384,6 +395,9 @@ def score_team_shots(
                 baseline_cache=baseline_cache,
             )
             if team_form is None or opponent_form is None:
+                if input_gaps is not None:
+                    input_gaps.append(dict(date=day.isoformat(),league=league,home=home,away=away,team=team,
+                        reason='missing_team_history',missing=[name for name,form in [(team,team_form),(opponent,opponent_form)] if form is None]))
                 continue
             if strength is not None:
                 _, home_probability, away_probability = strength
@@ -392,6 +406,9 @@ def score_team_shots(
                 opponent_form.update(market_team_win_prob=opponent_probability, market_opp_win_prob=team_probability)
             lam_value = PUB.BACKTEST.canonical_team_shots_ema20_lambda(team_form, opponent_form, use_market=True)
             if lam_value is None:
+                if input_gaps is not None:
+                    input_gaps.append(dict(date=day.isoformat(),league=league,home=home,away=away,team=team,
+                        reason='insufficient_prior_history'))
                 continue
             alpha_value = team_alpha(params, league, team)
             matchday_value = min(
@@ -672,10 +689,12 @@ def main() -> int:
     PUB.ensure_team_base(args.team_base)
     base_rows = PUB.load_csv(args.team_base)
     by_team, by_league = PUB.build_base_indexes(base_rows)
+    input_gaps=[]
     team_signals, team_candidates = score_team_shots(
         by_team=by_team, by_league=by_league, odds_rows=PUB.load_csv(args.team_odds),
         params=load_json(args.team_params), lock=load_json(args.team_lock), now=now,
         match_odds_rows=PUB.load_csv(args.match_odds),
+        input_gaps=input_gaps,
     )
     corners_signals, corners_candidates = score_corners(
         by_team=by_team, by_league=by_league, odds_rows=PUB.load_csv(args.corners_odds)+PUB.load_csv(args.corners_other_odds),
@@ -705,6 +724,12 @@ def main() -> int:
         team_candidates + corners_candidates,
         key=lambda row: (row.get("kickoff_utc", ""), row.get("model", ""), -float(row.get("edge") or 0.0)),
     ))
+    health_path=args.candidates_output.parent/'count-input-identity-health.json'
+    unique_gaps=list({json.dumps(r,sort_keys=True):r for r in input_gaps}.values())
+    health_path.write_text(json.dumps(dict(generated_at=PUB.fmt_dt(now),
+        status='INPUT_GAPS' if unique_gaps else 'OK',missing_history=unique_gaps,
+        scored_fixtures=len({r['match_id'] for r in team_candidates})),indent=2)+'\n',encoding='utf8')
+    if unique_gaps:print(f'WARNING: {len(unique_gaps)} team/fixture inputs unavailable; see {health_path.name}')
     print(
         f"Team Shots v4: {len(team_signals)} fresh eligible, "
         f"{len(team_warmup)} warm-up tracking, {len(team_ledger)} ledger rows"

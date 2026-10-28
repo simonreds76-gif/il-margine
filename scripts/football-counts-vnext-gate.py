@@ -367,6 +367,9 @@ def main() -> int:
         json.loads((ROOT / "data/team-shots/team-shots-v4-params.json").read_text(encoding="utf-8")),
         json.loads((ROOT / "data/team-shots/team-shots-v4-lock.json").read_text(encoding="utf-8")),
     )
+    identity_health=ROOT/'data/football-form/count-input-identity-health.json'
+    if identity_health.exists():
+        payload['team_shots_v4']['input_health']=load_json(identity_health)
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.json.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")

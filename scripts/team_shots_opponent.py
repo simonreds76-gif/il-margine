@@ -18,15 +18,7 @@ PRIOR_MATCHES = 8
 MIN_HISTORY = 6
 
 def key(value):
-    canonical = football_form_team_key(PUBLISHER.team_key(value))
-    aliases = {'dep a coruna': 'la coruna', 'atl madrid': 'ath madrid',
-               'tsg hoffenheim': 'hoffenheim', 'nottingham forest': "nott m forest",
-               'tottenham hotspur': 'tottenham', 'athletic bilbao': 'ath bilbao',
-               'deportivo alaves': 'alaves', 'rcd mallorca': 'mallorca',
-               'olympique marseille': 'marseille', 'stade rennais': 'rennes',
-               'strasbourg alsace': 'strasbourg', 'paderborn 07': 'paderborn',
-               'ipswich town': 'ipswich', 'hull city': 'hull', 'west ham united': 'west ham', 'cologne': 'koln'}
-    return aliases.get(canonical, canonical)
+    return football_form_team_key(value)
 
 
 def market_identity(row):
