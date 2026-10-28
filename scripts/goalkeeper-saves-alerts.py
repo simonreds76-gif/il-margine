@@ -126,11 +126,15 @@ def claim(rows, state, token, now, offers=None):
 def message(row):
     e = lambda k: html.escape(str(row.get(k) or ''))
     if row.get('alert_model') == 'keeper_watch_v1':
+        scope = str(row.get('contract_scope') or '')
+        note = ('Team goalkeeper contract; model uses the named predicted starter. Check the official XI.\n'
+                if scope.startswith('team_goalkeeper_') else '')
         return ('<b>Keeper Watch v1 | PAPER selection</b>\n'
             'Separate experiment from the current GK saves model.\n\n'
             f"<b>{e('home_team')} vs {e('away_team')}</b>\n"
             f"{e('goalkeeper')} | {e('side').title()} {e('line')} saves\n"
-            f"Bet365 recorded odds: <b>{float(row['odds_decimal']):.2f}</b>\n"
+            f"{html.escape(str(row.get('bookmaker') or 'Bet365'))} recorded odds: <b>{float(row['odds_decimal']):.2f}</b>\n"
+            f"{note}"
             f"Keeper Watch fair odds: {float(row['fair_odds']):.2f} | Estimated EV: {float(row['edge'])*100:+.1f}%\n"
             f"Kickoff: {e('kickoff_at')}\nCaptured: {e('captured_at')}\n"
             f"Lineup: {e('lineup_status').replace('_',' ')}\n\n"

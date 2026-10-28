@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import goalkeeper_keeper_watch as w
@@ -119,5 +120,33 @@ class KeeperWatchTests(unittest.TestCase):
     def test_weekly_empty_state_clear(self):
         text=w.weekly_text(self.run_watch([]))
         self.assertIn('AWAITING_FIRST_CAPTURE',text);self.assertIn('awaiting settlement',text)
+
+    def test_grosvenor_registration_is_forward_only_and_requires_team_side(self):
+        row={**self.row,'bookmaker':'Grosvenor','contract_scope':'team_goalkeeper_home'}
+        self.assertEqual(self.run_watch([row])['forecast_keepers'],0)
+        with patch.object(w,'GROSVENOR_START','2026-01-19T08:00:00Z'):
+            for scope in ('named_player','team_goalkeeper_away'):
+                self.assertEqual(self.run_watch([{**row,'contract_scope':scope}])['forecast_keepers'],0)
+            report=self.run_watch([row])
+        self.assertEqual(report['new_selections'],2)
+        self.assertEqual(report['records_by_bookmaker']['Grosvenor']['keeper_watch']['pending'],1)
+        self.assertTrue(all(r['settlement_policy']==w.TEAM_POLICY for r in report['selections']))
+
+    def test_team_contract_replacement_is_held_not_voided(self):
+        row={**self.row,'bookmaker':'Grosvenor','contract_scope':'team_goalkeeper_home'}
+        with patch.object(w,'GROSVENOR_START','2026-01-19T08:00:00Z'):self.run_watch([row])
+        self.result()
+        path=self.root/'data/aerial/keeper-history.json.gz';data=read(path)
+        data['fixtures']['100'][0]['keepers'][0]['player_id']=99;write(path,data)
+        result=self.run_watch([],self.now+timedelta(days=3))
+        self.assertEqual(result['records']['keeper_watch']['review'],1)
+        self.assertEqual(result['records']['keeper_watch']['voids'],0)
+
+    def test_grosvenor_agreeing_full_match_settles_at_locked_price(self):
+        row={**self.row,'bookmaker':'Grosvenor','contract_scope':'team_goalkeeper_home'}
+        with patch.object(w,'GROSVENOR_START','2026-01-19T08:00:00Z'):self.run_watch([row])
+        self.result();report=self.run_watch([],self.now+timedelta(days=3))
+        self.assertEqual(report['records_by_bookmaker']['Grosvenor']['keeper_watch']['wins'],1)
+        self.assertEqual(report['records_by_bookmaker']['Grosvenor']['keeper_watch']['profit'],.5)
 
 if __name__=='__main__':unittest.main()

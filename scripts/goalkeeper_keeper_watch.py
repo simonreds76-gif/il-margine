@@ -14,6 +14,8 @@ from goalkeeper_saves_live import predict_mean, price_side
 LEAGUES = {'47':'epl','87':'la-liga','55':'serie-a','54':'bundesliga','53':'ligue-1'}
 LABELS = {'Premier League':'epl','LaLiga':'la-liga','Serie A':'serie-a','Bundesliga':'bundesliga','Ligue 1':'ligue-1'}
 LINES = (1.5, 2.5, 3.5, 4.5, 5.5)
+GROSVENOR_START = '2026-10-28T16:30:00Z'
+TEAM_POLICY = 'grosvenor_full90_scope_agreement_v1'
 
 
 def digest(value):
@@ -105,6 +107,16 @@ def outcome(row, outcomes, now):
     if r.get('conflict'):return {'status':'review','reason':'conflicting_source_versions'}
     if r['kickoff'][:10]!=row['kickoff_at'][:10]:return {'status':'review','reason':'fixture_date_mismatch'}
     people=[k for k in r['keepers'] if str(k['player_id'])==row['player_id'] and str(k['team_id'])==row['team_id']]
+    if row.get('contract_scope', '').startswith('team_goalkeeper_'):
+        # The forecast remains for its registered keeper. Never apply Bet365's
+        # named-player nonstarter void to a team contract or silently use a
+        # replacement keeper. Grade only when both interpretations coincide.
+        if (row.get('settlement_policy') != TEAM_POLICY or len(people) != 1
+                or people[0].get('started') is not True or people[0].get('minutes') != 90
+                or not r.get('full_match_agreement')):
+            return {'status':'review','reason':'team_keeper_participation_or_rules_review'}
+        return {'status':'verified','actual':people[0]['saves'],
+                'source_hash':r['source_hash'],'settled_at':now.isoformat()}
     if not people and r.get('full_match_agreement'):
         # A verified different starter for this exact team proves this selection
         # was a nonstarter. Missing/incomplete lineups still require review.
@@ -156,7 +168,15 @@ def run(candidates, live_params, root, *, now=None):
         if not ids:skips['exact_identity_unavailable']+=1;continue
         features=list(row['_research_features'])
         if len(features)!=9 or not all(math.isfinite(x) for x in features):raise ValueError('Invalid features')
-        if row['bookmaker'].casefold()!='bet365':skips['unregistered_settlement_rules']+=1;continue
+        scope=row.get('contract_scope') or 'named_player'
+        policy='bet365_named_nonstarter_void_v1'
+        if row['bookmaker'].casefold()=='grosvenor':
+            if captured < timestamp(GROSVENOR_START):skips['before_grosvenor_registration']+=1;continue
+            if scope != 'team_goalkeeper_'+row['venue']:
+                skips['unregistered_settlement_rules']+=1;continue
+            policy=TEAM_POLICY
+        elif row['bookmaker'].casefold()!='bet365' or scope!='named_player':
+            skips['unregistered_settlement_rules']+=1;continue
         odds=float(row['odds_decimal']);line=float(row['line'])
         if not math.isfinite(odds) or odds<=1 or not math.isfinite(line) or line<0 or row['side'] not in ('over','under'):
             skips['invalid_market']+=1;continue
@@ -168,7 +188,8 @@ def run(candidates, live_params, root, *, now=None):
         base={**ids,'event_id':str(row['event_id']),'kickoff_at':kickoff.isoformat(),'captured_at':captured.isoformat(),
             'registered_at':now.isoformat(),'goalkeeper':row['goalkeeper'],'home':row['home_team'],'away':row['away_team'],
             'league':row['league'],'lineup_status':row['lineup_status'],'features':features,'candidate_features':candidate_features,
-            'history':coverage,'history_sha256':history_hash,'config_sha256':config_hash,'actual_stake':0}
+            'history':coverage,'history_sha256':history_hash,'config_sha256':config_hash,'actual_stake':0,
+            'contract_scope':scope,'settlement_policy':policy}
         models={'current':(live_params,control_mu),'keeper_watch':(config['candidate_params'],candidate_mu)}
         forecast={**base,'models':{n:{'mean':mu,'probabilities':[price_side('over',x,2,mu,p['alpha'])['model_probability'] for x in LINES]}
                     for n,(p,mu) in models.items()}}
@@ -226,10 +247,14 @@ def run(candidates, live_params, root, *, now=None):
         'paired_settled_fixtures':n,'paired_scores':metrics,'review_milestone':100 if n>=100 else 50 if n>=50 else None,
         'next_review_at':50 if n<50 else 100 if n<100 else None,'exclusions':dict(skips),'settlement_reasons':dict(reasons),
         'records':{name:summary_rows([r for r in scored if r['model']==name]) for name in ('current','keeper_watch')},
+        'records_by_bookmaker':{book:{name:summary_rows([r for r in scored if r['model']==name and r['bookmaker']==book])
+            for name in ('current','keeper_watch')} for book in sorted({r['bookmaker'] for r in scored})},
+        'source_extension':{'Grosvenor':GROSVENOR_START,'policy':TEAM_POLICY,
+            'exceptions':'Replacement keepers, substitutions and disputed counts remain under review; no inferred voids.'},
         'selections':[{k:r[k] for k in ('model','match_id','player_id','team_id','event_id','kickoff_at','registered_at',
             'captured_at','home','away','goalkeeper','side','line','bookmaker','odds','fair_odds','edge','lineup_status',
-            'status','profit','actual','reason','overdue') if k in r} for r in sorted(scored,key=lambda r:r['kickoff_at'],reverse=True)],
-        'coverage':'Captured Bet365 lines only; no claim of complete bookmaker coverage. No historical replay in this forward record.'}
+            'status','profit','actual','reason','overdue','contract_scope','settlement_policy') if k in r} for r in sorted(scored,key=lambda r:r['kickoff_at'],reverse=True)],
+        'coverage':'Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.'}
     write(folder/'report.json',report)
     return report
 
