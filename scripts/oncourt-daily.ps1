@@ -6,7 +6,7 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $root
 . (Join-Path $root "scripts\use-local-python.ps1") -RepoRoot $root
-. (Join-Path $root "scripts\task-lock.ps1")
+. (Join-Path $root "scripts\tennis-priority.ps1")
 . (Join-Path $root "scripts\_lib\run_status.ps1")
 
 $dataDir = Join-Path $root "data"
@@ -29,7 +29,6 @@ if ([string]::IsNullOrWhiteSpace($env:CHALLENGER_ML_ENABLE)) { $env:CHALLENGER_M
 if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED)) { $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_BO3_ENABLED)) { $env:STRICT_CLAY_BO3_ENABLED = "1" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_GRASS_BO3_ENABLED)) { $env:STRICT_GRASS_BO3_ENABLED = "1" }
-# Retired pending identity-clean gate regeneration; retained archives are diagnostic only.
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CPI_SPEED_SHADOW_ENABLED)) { $env:STRICT_CPI_SPEED_SHADOW_ENABLED = "0" }
 if ([string]::IsNullOrWhiteSpace($env:CLAY_BO3_ML_ENABLE)) { $env:CLAY_BO3_ML_ENABLE = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_HARD_CALIBRATION_MODE)) { $env:STRICT_POLICY_HARD_CALIBRATION_MODE = "off" }
@@ -176,7 +175,7 @@ function Set-RunStatusFailure([string]$Type, [string]$Message) {
     $script:runStatusErrorMessage = $Message
 }
 
-$lockHandle = Enter-TaskLock -LockName "tennis-automation" -RootPath $root -WaitSeconds 1800 -PollSeconds 10
+$lockHandle = Enter-TennisPriorityLock -RootPath $root
 if ($null -eq $lockHandle) {
     Log "Another tennis automation run stayed active for 30 minutes; exiting."
     exit 0
@@ -257,11 +256,11 @@ if (-not $step6Synced) {
     exit 1
 }
 
-Log "=== Step 6c/10: Tennis count-markets research board ==="
-$tennisPropsExit = Invoke-LoggedProcessWithRetry -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--days-ahead", "3", "--max-events", "128") -Label "tennis count-markets board" -TimeoutSeconds 900 -Attempts 1
+Log "=== Step 6c/10: Tennis aces/DF research board ==="
+$tennisPropsExit = Invoke-LoggedProcessWithRetry -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--days-ahead", "3", "--max-events", "128", "--refresh-sackmann-current-season") -Label "tennis props aces/DF board" -TimeoutSeconds 900 -Attempts 1
 if ($tennisPropsExit -ne 0) {
-    Log "ERROR: tennis count-markets board failed/timed out (exit $tennisPropsExit); continuing remaining diagnostics"
-    Set-RunStatusFailure "TennisPropsFailed" "tennis count-markets board failed/timed out (exit $tennisPropsExit)"
+    Log "ERROR: tennis props aces/DF board failed/timed out (exit $tennisPropsExit); continuing remaining diagnostics"
+    Set-RunStatusFailure "TennisPropsFailed" "tennis props aces/DF board failed/timed out (exit $tennisPropsExit)"
 }
 
 Invoke-NightlyV4Alerts -PropsRefreshExit $tennisPropsExit
@@ -305,6 +304,25 @@ if ($spreadV1ShadowEnabled) {
     }
 } else {
     Log "=== Step 8b/10: Spread v1 shadow skipped (STRICT_SPREAD_V1_SHADOW_ENABLED=0) ==="
+}
+
+Log "=== Step 8b2/10: Grand Slam BO5 handicap evidence (raw probabilities, zero stake) ==="
+& python scripts\compute-handicap-values.py --bo5-only --allow-bo5 --disable-calibration 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -eq 0) {
+    $prevInternalResearch = $env:INTERNAL_RESEARCH_LANES
+    $env:INTERNAL_RESEARCH_LANES = "1"
+    try {
+        & python scripts\strict-policy-report.py --append --signal-profile slam_bo5 2>&1 | ForEach-Object { Log $_ }
+        if ($LASTEXITCODE -ne 0) {
+            Log "WARNING: slam_bo5 evidence append failed (exit $LASTEXITCODE), continuing..."
+        }
+    }
+    finally {
+        if ($null -eq $prevInternalResearch) { Remove-Item Env:\INTERNAL_RESEARCH_LANES -ErrorAction SilentlyContinue }
+        else { $env:INTERNAL_RESEARCH_LANES = $prevInternalResearch }
+    }
+} else {
+    Log "WARNING: BO5 handicap calculation failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Step 8c/10: Clay calibrated legacy lane removed after failed ROI audit ==="
@@ -394,11 +412,14 @@ if ($cpiSpeedShadowEnabled) {
 
 # Step 9: Settle/report immediately after nightly append so results are ready by the next morning.
 Log "=== Step 9/10: Nightly tennis settlement/performance ==="
-& powershell -ExecutionPolicy Bypass -NoProfile -File scripts\oncourt-settle-nightly.ps1 2>&1 | ForEach-Object { Log $_ }
+Exit-TaskLock $lockHandle
+$lockHandle = $null
+& powershell -ExecutionPolicy Bypass -NoProfile -File scripts\oncourt-settle-nightly.ps1 -CooperativeLock 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: nightly tennis settlement failed (exit $LASTEXITCODE), continuing..."
 }
 
+$lockHandle = Enter-TennisPriorityLock -RootPath $root
 Log "=== Astrissimo: daily paper record and new selections ==="
 $astrissimoExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--astrissimo-only") -Label "Astrissimo paper alerts" -TimeoutSeconds 90
 if ($astrissimoExit -ne 0) { Log "WARNING: Astrissimo paper alerts failed (exit $astrissimoExit)" }

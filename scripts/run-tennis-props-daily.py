@@ -10,10 +10,12 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import os
 import subprocess
 import sys
-from datetime import date, timedelta
+import tempfile
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from model_lifecycle import most_aces_suspended
 
@@ -77,7 +79,7 @@ def combined_lines_file(as_of: str) -> Path:
 
 
 def most_aces_lines_file(as_of: str) -> Path:
-    return PROPS_DIR / "inbox" / f"betmgm-most-aces-1x2-{as_of}.csv"
+    return PROPS_DIR / "inbox" / f"bet365-most-aces-1x2-{as_of}.csv"
 
 
 def has_market_rows(path: Path) -> bool:
@@ -219,8 +221,12 @@ def run_most_aces_shadow(as_of: str, capture: Path | None = None) -> None:
     run(cmd, "Update Most Aces 1X2 paper evidence", fatal=False)
 
 
-def run_comparison(as_of: str, market_file: Path) -> bool:
+def run_comparison(
+    as_of: str, market_file: Path, *, include_challengers: bool = True,
+    timeout_seconds: int | None = None,
+) -> bool:
     comparison = PROPS_DIR / f"comparison-{as_of}.csv"
+    mark_pipeline_blocked(as_of, market_file, "canonical_comparison", running=True)
     # A failed rebuild must not leave a same-date file that looks current.
     if comparison.exists():
         comparison.unlink()
@@ -235,7 +241,17 @@ def run_comparison(as_of: str, market_file: Path) -> bool:
         ],
         "Compare Bet365 lines with projections",
         fatal=False,
+        timeout_seconds=timeout_seconds,
     )
+    if exit_code != 0 or not has_market_rows(comparison):
+        # Some failures occur after a partial CSV was written. It is no more
+        # trustworthy than the previous comparison that was removed above.
+        if comparison.exists():
+            comparison.unlink()
+        mark_pipeline_blocked(as_of, market_file, "canonical_comparison")
+        return False
+    if not include_challengers:
+        return True
     v3_board = PROPS_DIR / "shadow" / "aces-v3-projection-board.csv"
     if has_market_rows(v3_board):
         run(
@@ -252,7 +268,7 @@ def run_comparison(as_of: str, market_file: Path) -> bool:
             "Compare v3 ATP ace shadow projections with Bet365",
             fatal=False,
         )
-    return exit_code == 0 and has_market_rows(comparison)
+    return True
 
 
 def run_shadow_tracking(as_of: str) -> None:
@@ -307,7 +323,7 @@ def run_shadow_tracking(as_of: str) -> None:
                 "--allow-medium",
             ],
             "Append tennis props shadow signals",
-            fatal=False,
+            fatal=True,
         )
     else:
         print(f"WARNING: exact-date comparison missing; shadow append skipped: {comparison}")
@@ -317,7 +333,7 @@ def run_shadow_tracking(as_of: str) -> None:
             str(ROOT / "scripts" / "tennis-props-settle-shadow.py"),
         ],
         "Settle tennis props shadow signals",
-        fatal=False,
+        fatal=True,
     )
     run(
         [
@@ -325,7 +341,7 @@ def run_shadow_tracking(as_of: str) -> None:
             str(ROOT / "scripts" / "tennis-props-model-report.py"),
         ],
         "Build tennis props model monitor report",
-        fatal=False,
+        fatal=True,
     )
     run(
         [
@@ -335,7 +351,8 @@ def run_shadow_tracking(as_of: str) -> None:
         "Refresh tennis derivative evidence gates",
         fatal=False,
     )
-    # Optional v4 research must never delay the core append/settle/report path.
+    # The v4 challenger can consume its full timeout. Keep it behind the core
+    # append/settle/report path so optional research cannot suppress alerts.
     v4_cmd = [
         sys.executable,
         str(ROOT / "scripts" / "tennis-props-aces-over-v4.py"),
@@ -361,7 +378,85 @@ def write_pipeline_health(as_of: str, market_file: Path | None, *, strict: bool 
     ]
     if strict:
         cmd.append("--strict")
-    return run(cmd, "Write tennis props pipeline health", fatal=False)
+    return run(cmd, "Write tennis props pipeline health", fatal=False, timeout_seconds=15)
+
+
+def mark_pipeline_blocked(as_of: str, market_file: Path | None, step: str, *, running: bool = False) -> None:
+    """A failed or interrupted core refresh cannot retain a healthy artifact."""
+    payload = {
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "as_of": as_of,
+        "state": "CORE_RUN_IN_PROGRESS" if running else "CORE_RUN_FAILED",
+        "structural_error": True,
+        "core_failure": step,
+        "lines_file": str(market_file or combined_lines_file(as_of)),
+        "comparison_file": str(PROPS_DIR / f"comparison-{as_of}.csv"),
+        "actionable_shadow_rows": 0,
+        "actionable_public_rows": 0,
+        "break_state": "PIPELINE_UNHEALTHY",
+        "top_shadow_blocker": step,
+    }
+    PROPS_DIR.mkdir(parents=True, exist_ok=True)
+    for filename, content in (
+        ("pipeline-health.json", json.dumps(payload, indent=2) + "\n"),
+        ("pipeline-health.txt", f"Tennis props pipeline health\nState: {payload['state']}\nStep: {step}\nCurrent recommendations blocked.\n"),
+    ):
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=PROPS_DIR, prefix=".health-", delete=False) as handle:
+            handle.write(content)
+            temporary = Path(handle.name)
+        temporary.replace(PROPS_DIR / filename)
+
+
+def comparison_failure(as_of: str, market_file: Path) -> int:
+    mark_pipeline_blocked(as_of, market_file, "canonical_comparison")
+    return 1
+
+
+def run_monitor_only(as_of: str, *, selections_only: bool = False) -> int:
+    """Refresh the canonical monitor locally, without capture or experiments."""
+    market_file = None
+    step = "select_combined_prices"
+    mark_pipeline_blocked(as_of, None, step, running=True)
+    try:
+        market_file = select_market_file(as_of)
+        if market_file is None:
+            mark_pipeline_blocked(as_of, None, "market_prices_missing")
+            return 1
+        step = "canonical_comparison"
+        if not run_comparison(as_of, market_file, include_challengers=False, timeout_seconds=25):
+            return comparison_failure(as_of, market_file)
+        commands = (
+            ("shadow_registration", "tennis-props-shadow-tracker.py", ["--date", as_of, "--comparison", str(PROPS_DIR / f"comparison-{as_of}.csv"), "--allow-medium"], 15),
+            ("shadow_settlement", "tennis-props-settle-shadow.py", [], 90),
+            ("model_report", "tennis-props-model-report.py", [], 25),
+        )
+        if selections_only:
+            commands = tuple(command for command in commands if command[0] == "shadow_registration")
+        for step, script, arguments, timeout in commands:
+            mark_pipeline_blocked(as_of, market_file, step, running=True)
+            code = run([sys.executable, str(ROOT / "scripts" / script), *arguments], step, fatal=False, timeout_seconds=timeout)
+            if code != 0:
+                mark_pipeline_blocked(as_of, market_file, step)
+                return code
+        step = "pipeline_health"
+        code = write_pipeline_health(as_of, market_file, strict=True)
+        if code != 0:
+            try:
+                health = json.loads((PROPS_DIR / "pipeline-health.json").read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                health = {}
+            # Strict health exits nonzero for a correctly diagnosed stale or
+            # incomplete feed. Preserve that explanation when it was written.
+            reported_failure = (
+                health.get("as_of") == as_of and health.get("structural_error") is True
+                and health.get("state") not in {"CORE_RUN_IN_PROGRESS", "CORE_RUN_FAILED", None}
+            )
+            if not reported_failure:
+                mark_pipeline_blocked(as_of, market_file, step)
+        return code
+    except (Exception, SystemExit):
+        mark_pipeline_blocked(as_of, market_file, step)
+        raise
 
 
 def sync_hosted_captures(as_of: str, lookback_days: int) -> None:
@@ -422,6 +517,13 @@ def capture_market_prices(args: argparse.Namespace) -> int:
         print("\nWARNING: no local odds-api key; Bet365/BetMGM capture skipped.")
 
     if os.name == "nt" and not args.skip_bet365_direct:
+        # The public connected browser works, but unattended browser access is
+        # blocked. Consume only newly provided evidence; never retry the block.
+        most_evidence = PROPS_DIR / 'inbox' / f'bet365-most-props-evidence-{args.as_of}.json'
+        if most_evidence.exists():
+            run([sys.executable, str(ROOT / 'scripts' / 'tennis-most-props-bet365-direct.py'),
+                 '--date', args.as_of, '--evidence-json', str(most_evidence)],
+                'Validate connected-browser Most Aces/Double Faults prices', fatal=False, timeout_seconds=30)
         source_exits.append(
             run(
                 [
@@ -462,9 +564,14 @@ def run_comparison_only(
     skip_sync: bool,
     lookback_days: int,
     skip_derived_boards: bool = False,
+    selections_only: bool = False,
 ) -> int:
+    mark_pipeline_blocked(as_of, None, "comparison_refresh", running=True)
     if not skip_sync:
         sync_hosted_captures(as_of, lookback_days)
+    if skip_derived_boards:
+        # Manual refresh needs the bounded current board, not slow research lanes.
+        return run_monitor_only(as_of, selections_only=selections_only)
     market_file = select_market_file(as_of)
     if market_file is None:
         print(f"WARNING: no hosted/local Bet365 capture contains {as_of} events.")
@@ -473,7 +580,7 @@ def run_comparison_only(
         refresh_derived_ace_boards(as_of)
     print(f"Using hosted/local Bet365 capture: {market_file}")
     if not run_comparison(as_of, market_file):
-        return write_pipeline_health(as_of, market_file, strict=True)
+        return comparison_failure(as_of, market_file)
     run_shadow_tracking(as_of)
     return write_pipeline_health(as_of, market_file, strict=True)
 
@@ -484,11 +591,14 @@ def main() -> int:
     parser.add_argument("--start-year", type=int, default=2022)
     parser.add_argument("--end-year", type=int, default=date.today().year)
     parser.add_argument("--refresh-sackmann", action="store_true", help="Download fresh ATP/WTA Sackmann CSVs first")
+    parser.add_argument("--refresh-sackmann-current-season", action="store_true", help="Refresh only the end-year season; preserve earlier training snapshots")
     parser.add_argument("--skip-odds", action="store_true", help="Do not scrape Bet365 lines even if a key is configured")
     parser.add_argument("--skip-betsbk", action="store_true", help="Skip the local public BetsBK US Open props fallback")
     parser.add_argument("--skip-bet365-direct", action="store_true", help="Skip the Windows-local direct Bet365 service-break fallback")
     parser.add_argument("--require-odds", action="store_true", help="Fail if the Bet365 odds scrape cannot run")
+    parser.add_argument("--selections-only", action="store_true", help="Register current selections; leave historical settlements/reports to the scheduled run")
     parser.add_argument("--comparison-only", action="store_true", help="Sync hosted prices and refresh comparison/tracking without rebuilding projections")
+    parser.add_argument("--monitor-only", action="store_true", help="Bounded local canonical comparison, tracking, settlement, report and health; no capture, sync or experiments")
     parser.add_argument("--skip-derived-boards", action="store_true", help="Skip slow derived ace boards during a fast comparison pass")
     parser.add_argument("--capture-only", action="store_true", help="Capture bookmaker tennis count prices without rebuilding projections")
     parser.add_argument("--skip-hosted-sync", action="store_true", help="Do not sync captures from the golden data branch")
@@ -497,11 +607,18 @@ def main() -> int:
     parser.add_argument("--max-events", type=int, default=128)
     args = parser.parse_args()
 
+    if args.selections_only and not (args.monitor_only or (args.comparison_only and args.skip_derived_boards)):
+        parser.error("--selections-only requires --monitor-only or --comparison-only --skip-derived-boards")
     load_env()
     PROPS_DIR.mkdir(parents=True, exist_ok=True)
 
+    if args.monitor_only:
+        return run_monitor_only(args.as_of, selections_only=args.selections_only)
+
     if args.capture_only:
         return capture_market_prices(args)
+
+    mark_pipeline_blocked(args.as_of, None, "full_refresh", running=True)
 
     if args.comparison_only:
         return run_comparison_only(
@@ -509,14 +626,15 @@ def main() -> int:
             skip_sync=args.skip_hosted_sync,
             lookback_days=args.hosted_lookback_days,
             skip_derived_boards=args.skip_derived_boards,
+            selections_only=args.selections_only,
         )
 
     # Capture first. The projection board can take several minutes and is
     # deliberately timeout-bounded by the scheduled task; prices must not be
     # lost merely because that independent research build runs long.
-    early_scrape_exit = capture_market_prices(args)
+    capture_market_prices(args)
 
-    if args.refresh_sackmann:
+    if args.refresh_sackmann or args.refresh_sackmann_current_season:
         run(
             [
                 sys.executable,
@@ -524,12 +642,13 @@ def main() -> int:
                 "--tour",
                 "both",
                 "--start-year",
-                str(args.start_year),
+                str(args.end_year if args.refresh_sackmann_current_season else args.start_year),
                 "--end-year",
                 str(args.end_year),
             ],
             "Refresh Sackmann ATP/WTA snapshots",
             fatal=False,
+            timeout_seconds=240,
         )
 
     run(
@@ -562,6 +681,16 @@ def main() -> int:
         "Build tennis props projection board",
         fatal=True,
     )
+    run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "tennis-props-feature-audit.py"),
+            "--as-of", args.as_of,
+        ],
+        "Audit recent OnCourt break-point and second-serve feature coverage",
+        fatal=False,
+        timeout_seconds=120,
+    )
     refresh_derived_ace_boards(args.as_of)
 
     if not args.skip_hosted_sync:
@@ -572,14 +701,16 @@ def main() -> int:
         market_file = select_market_file(args.as_of)
         if market_file:
             print(f"Using hosted/local Bet365 capture: {market_file}")
-            run_comparison(args.as_of, market_file)
+            if not run_comparison(args.as_of, market_file):
+                return comparison_failure(args.as_of, market_file)
         run_shadow_tracking(args.as_of)
         return write_pipeline_health(args.as_of, market_file, strict=bool(market_file))
     if not has_odds_key():
         market_file = select_market_file(args.as_of)
         if market_file:
             print(f"\nLocal odds key missing; using hosted Bet365 capture: {market_file}")
-            run_comparison(args.as_of, market_file)
+            if not run_comparison(args.as_of, market_file):
+                return comparison_failure(args.as_of, market_file)
             run_shadow_tracking(args.as_of)
             health_exit = write_pipeline_health(args.as_of, market_file, strict=True)
             if health_exit != 0:
@@ -593,12 +724,11 @@ def main() -> int:
         run_shadow_tracking(args.as_of)
         return 0
 
-    scrape_exit = early_scrape_exit
     market_file = select_market_file(args.as_of)
-    if scrape_exit == 0:
-        market_file = lines_file(args.as_of) if has_market_rows(lines_file(args.as_of)) else market_file
-        if market_file:
-            run_comparison(args.as_of, market_file)
+    # The selected snapshot is the canonical union of all captured bookmakers,
+    # including usable fallback snapshots when one capture source failed.
+    if market_file and not run_comparison(args.as_of, market_file):
+        return comparison_failure(args.as_of, market_file)
     run_shadow_tracking(args.as_of)
     health_exit = write_pipeline_health(args.as_of, market_file, strict=bool(market_file))
     if health_exit != 0:

@@ -16,6 +16,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
@@ -36,6 +37,9 @@ DEFAULT_WORKFLOW = "tennis-daily-signal-digest.yml"
 DEFAULT_REF = "golden-with-speed-insights"
 TELEGRAM_LIMIT = 3900
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from tennis_alert_performance import attach_performance, retain_dispatch
+
 
 @dataclass(frozen=True)
 class Lane:
@@ -47,7 +51,7 @@ class Lane:
 
 LANES = (
     Lane("STRICT", BACKTEST / "strict-signals-live.csv", "CORE", 0),
-    Lane("VOL200", BACKTEST / "strict-signals-volume200-live.csv", "SHADOW / DO NOT BET", 10),
+    Lane("VOL200", BACKTEST / "strict-signals-volume200-live.csv", "TRACKED EXPANSION", 10),
     Lane("SPREAD V1", BACKTEST / "strict-signals-spreadv1-live.csv", "SHADOW / RESEARCH", 20),
     Lane("GRASS BO3", BACKTEST / "strict-signals-grass_bo3-live.csv", "SHADOW / RESEARCH", 30),
     Lane("CLAY BO3", BACKTEST / "strict-signals-clay_bo3-live.csv", "SHADOW / RESEARCH", 31),
@@ -65,6 +69,10 @@ class Signal:
     edge_pct: float | None
     time_utc: str = ""
     key: tuple[str, ...] = field(default_factory=tuple)
+    performance_text: str = ""
+    performance_source: dict[str, str] = field(default_factory=dict)
+    scheduled_start_utc: str = ""
+    captured_at: str = ""
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -101,8 +109,21 @@ def norm(value: object) -> str:
     return " ".join(str(value or "").strip().lower().split())
 
 
+def row_event_date(row: dict[str, str]) -> str:
+    """Return only a confirmed event date, never a generation-date fallback."""
+    status = (row.get("schedule_status") or "").strip().lower()
+    scheduled = (row.get("scheduled_date") or row.get("match_date") or "").strip()
+    if scheduled:
+        return scheduled
+    if status in {"tbd", "unknown", "unconfirmed"}:
+        return ""
+    # Backward compatibility for rows written before schedule metadata existed.
+    return (row.get("date") or "").strip()
+
+
 def row_to_signal(row: dict[str, str], lane: Lane, target_date: str) -> Signal | None:
-    if row.get("date") != target_date or not is_pending(row):
+    event_date = row_event_date(row)
+    if event_date != target_date or not is_pending(row):
         return None
     player1 = (row.get("player1") or "").strip()
     player2 = (row.get("player2") or "").strip()
@@ -139,7 +160,7 @@ def row_to_signal(row: dict[str, str], lane: Lane, target_date: str) -> Signal |
         selection += f" | {fmt_stake(stake)}"
 
     pair = tuple(sorted((norm(player1), norm(player2))))
-    key = (target_date, *pair, norm(selected), key_market)
+    key = (event_date, *pair, norm(selected), key_market)
     return Signal(
         section=lane.section,
         priority=lane.priority,
@@ -147,13 +168,15 @@ def row_to_signal(row: dict[str, str], lane: Lane, target_date: str) -> Signal |
         match=f"{player1} vs {player2}",
         selection=selection,
         edge_pct=edge,
+        scheduled_start_utc=(row.get("scheduled_start_utc") or "").strip(),
         time_utc=time_utc,
         key=key,
     )
 
 
 def gap_replacement_signal(row: dict[str, str], target_date: str) -> Signal | None:
-    if row.get("date") != target_date or not is_pending(row):
+    event_date = row_event_date(row)
+    if event_date != target_date or not is_pending(row):
         return None
     if (row.get("bet_type") or "match").strip().lower() == "spread":
         return None
@@ -223,7 +246,8 @@ def gap_replacement_signal(row: dict[str, str], target_date: str) -> Signal | No
         selection=selection,
         edge_pct=edge,
         time_utc=(row.get("time_utc") or "").strip(),
-        key=(target_date, *pair, norm(selected), "ml"),
+        key=(event_date, *pair, norm(selected), "ml"),
+        performance_source=dict(row),
     )
 
 def fresh_prematch_prop(row: dict[str, str], now: datetime) -> bool:
@@ -238,12 +262,13 @@ def fresh_prematch_prop(row: dict[str, str], now: datetime) -> bool:
     return is_pending(row) and capture <= now < start and now - capture <= timedelta(hours=6)
 
 
-def props_signals(target_date: str, *, now: datetime | None = None) -> list[Signal]:
+def props_signals(target_date: str, comparison_date: str | None = None, *, now: datetime | None = None) -> list[Signal]:
     now = now or datetime.now(UTC)
-    path = PROPS / f"comparison-{target_date}.csv"
+    path = PROPS / f"comparison-{comparison_date or target_date}.csv"
     signals: list[Signal] = []
     for row in read_csv(path):
-        if (row.get("date") or "").strip() != target_date:
+        event_date = row_event_date(row)
+        if event_date != target_date:
             continue
         if not fresh_prematch_prop(row, now):
             continue
@@ -292,9 +317,9 @@ def props_signals(target_date: str, *, now: datetime | None = None) -> list[Sign
             section = f"{source_name} PROPS" if is_bettable else f"{source_name} PROPS WATCHLIST"
             labels = ["ACES/DF"] if is_bettable else ["ACES/DF WATCH"]
         signal_key = (
-            (target_date, *pair, norm(subject), market)
+            (event_date, *pair, norm(subject), market)
             if is_service_break_market
-            else (target_date, *pair, norm(subject), market, f"{line:g}", side)
+            else (event_date, *pair, norm(subject), market, f"{line:g}", side)
         )
         signals.append(
             Signal(
@@ -304,6 +329,9 @@ def props_signals(target_date: str, *, now: datetime | None = None) -> list[Sign
                 match=f"{player} vs {opponent}",
                 selection=selection,
                 edge_pct=edge,
+                performance_source=dict(row),
+                scheduled_start_utc=(row.get("match_start_utc") or "").strip(),
+                captured_at=(row.get("capture_ts") or row.get("captured_at") or "").strip(),
                 time_utc=(row.get("match_start_utc") or "").strip(),
                 key=signal_key,
             )
@@ -311,7 +339,7 @@ def props_signals(target_date: str, *, now: datetime | None = None) -> list[Sign
     return signals
 
 
-def collect_signals(target_date: str) -> tuple[list[Signal], list[str]]:
+def collect_signals(target_date: str, comparison_date: str | None = None) -> tuple[list[Signal], list[str]]:
     merged: dict[tuple[str, ...], Signal] = {}
     lane_counts: dict[str, int] = {}
     for lane in LANES:
@@ -351,7 +379,7 @@ def collect_signals(target_date: str) -> tuple[list[Signal], list[str]]:
                     existing.labels.append(label)
     lane_counts["GUARD EXPANSION"] = gap_count
 
-    props = props_signals(target_date)
+    props = props_signals(target_date, comparison_date) if comparison_date else props_signals(target_date)
     lane_counts["ACES/DF"] = len(props)
     for signal in props:
         merged.setdefault(comparison_key(signal), signal)
@@ -372,8 +400,37 @@ def collect_signals(target_date: str) -> tuple[list[Signal], list[str]]:
     return signals, empty
 
 
+def collect_upcoming_signals(target_date: str, days_ahead: int = 3, *, now: datetime | None = None) -> tuple[list[Signal], list[str]]:
+    """Read the current snapshot across event dates, including overnight Asia fixtures."""
+    now = now or datetime.now(UTC)
+    merged = {}
+    empty = None
+    for offset in range(days_ahead + 1):
+        event_date = (date.fromisoformat(target_date) + timedelta(days=offset)).isoformat()
+        signals, absent = collect_signals(event_date, comparison_date=target_date)
+        empty = set(absent) if empty is None else empty.intersection(absent)
+        for signal in signals:
+            if signal.priority >= 40:
+                try:
+                    captured = datetime.fromisoformat(signal.captured_at.replace('Z', '+00:00'))
+                    age = (now - captured).total_seconds()
+                    if captured.tzinfo is None or age < -300 or age > 6 * 3600:
+                        continue
+                except (ValueError, TypeError):
+                    continue
+            if signal.scheduled_start_utc:
+                try:
+                    start = datetime.fromisoformat(signal.scheduled_start_utc.replace('Z', '+00:00'))
+                    if start.tzinfo is None or start <= now:
+                        continue
+                except ValueError:
+                    continue
+            merged[signal_id(signal)] = signal
+    return sorted(merged.values(), key=lambda signal: (signal.priority, signal.key[0], signal.match)), sorted(empty or [])
+
+
 def retained_signal_ids(state, target_date, signals):
-    previous = state.get("signal_ids", []) if state.get("date") == target_date else []
+    previous = state.get("signal_ids", [])
     return sorted(set(previous) | {signal_id(signal) for signal in signals})
 
 
@@ -391,11 +448,15 @@ def render_messages(
     *,
     update_only: bool = False,
     props_pending: bool = False,
+    days_ahead: int = 0,
 ) -> list[str]:
     signals, empty_lanes = scope_digest(signals, empty_lanes, props_pending)
     display_date = date.fromisoformat(target_date).strftime("%a %d %b").upper()
     title = "IL MARGINE TENNIS SIGNAL UPDATE" if update_only else "IL MARGINE TENNIS SIGNALS"
     header = f"{title} - {display_date}\nGenerated from the latest completed odds refresh."
+    if days_ahead:
+        end = (date.fromisoformat(target_date) + timedelta(days=days_ahead)).strftime("%a %d %b").upper()
+        header += f"\nUpcoming fixtures through {end}; fixture dates below are UTC."
     if update_only:
         header += "\nOnly selections not included in the earlier alert are shown."
     if props_pending:
@@ -407,17 +468,19 @@ def render_messages(
             current_section = signal.section
             blocks.append(f"\n{current_section}")
         label = "/".join(signal.labels)
-        blocks.append(f"[{label}] {signal.match}\n{signal.selection}")
+        fixture = signal.key[0] if signal.key else target_date
+        detail = f"\n{signal.performance_text}" if signal.performance_text else ""
+        blocks.append(f"[{label}] {signal.match} | {fixture}\n{signal.selection}{detail}")
     if not signals and props_pending:
         blocks.append("\nNo qualifying match winner or handicap selections in this pass.")
     elif not signals:
-        blocks.append("\nNo qualifying signals today.")
+        blocks.append("\nNo qualifying signals in this fixture window." if days_ahead else "\nNo qualifying signals today.")
     if empty_lanes:
         blocks.append("\nNo signals: " + ", ".join(empty_lanes))
     blocks.append(
-        "\nStatus guide: CORE is the established betting lane at the stake shown. "
-        "APPROVED MASTERS FLIP is a scoped Strict bet. Volume 200, PROVISIONAL, "
-        "SHADOW/RESEARCH and WATCHLIST rows are evidence only, not bets."
+        "\nStatus guide: CORE and TRACKED EXPANSION are betting lanes at the stake shown. "
+        "APPROVED MASTERS FLIP is a scoped Strict bet. PROVISIONAL selections are 0.5u "
+        "forward trials. SHADOW/RESEARCH and WATCHLIST rows are evidence only, not bets."
     )
 
     messages: list[str] = []
@@ -431,6 +494,13 @@ def render_messages(
         current = f"{title} - {display_date} (continued)\n{block}"
     messages.append(current)
     return messages
+
+
+def atomic_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + f".{os.getpid()}.tmp")
+    temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    temporary.replace(path)
 
 
 def load_state(path: Path) -> dict[str, object]:
@@ -467,13 +537,11 @@ def comparison_key(signal: Signal) -> tuple[str, ...]:
 def new_signals_since_state(
     signals: list[Signal], state: dict[str, object], target_date: str
 ) -> list[Signal]:
-    if state.get("date") != target_date:
-        return signals
     previous = state.get("signal_ids")
     if not isinstance(previous, list):
         # A legacy state cannot prove which individual selections were sent.
         return signals
-    previous_ids = {comparison_id(str(value)) for value in previous}
+    previous_ids = {comparison_id(str(value)) for value in previous + list(state.get("pending_signal_ids") or [])}
     return [signal for signal in signals if comparison_id(signal_id(signal)) not in previous_ids]
 
 
@@ -548,9 +616,11 @@ def dispatch(messages: list[str], *, repository: str, workflow: str, ref: str) -
             print("GitHub Telegram relay dispatched via gh CLI.")
             return
         gh_error = (result.stderr or result.stdout).strip()[:300]
-        print(f"WARNING: gh relay dispatch failed; using HTTP fallback: {gh_error}", file=sys.stderr)
-    except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
-        print(f"WARNING: gh relay dispatch unavailable; using HTTP fallback: {type(exc).__name__}", file=sys.stderr)
+        raise RuntimeError(f"GitHub relay dispatch failed; not retrying an ambiguous delivery: {gh_error}")
+    except FileNotFoundError:
+        print("gh unavailable; using HTTP relay.", file=sys.stderr)
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError("Relay acknowledgement timed out; automatic resend blocked to prevent duplicates") from exc
 
     token = github_token()
     payload = json.dumps({"ref": ref, "inputs": {"payload_b64": encoded}}).encode("utf-8")
@@ -576,11 +646,13 @@ def dispatch(messages: list[str], *, repository: str, workflow: str, ref: str) -
         raise RuntimeError(f"GitHub Telegram relay dispatch failed: {exc}") from exc
 
 
-def main() -> int:
+def digest_main() -> int:
     parser = argparse.ArgumentParser(description="Send today's local tennis signal digest to Telegram")
     parser.add_argument("--date", default=date.today().isoformat())
+    parser.add_argument("--days-ahead", type=int, choices=range(0, 8), default=3)
     parser.add_argument("--report", default=str(DEFAULT_REPORT))
     parser.add_argument("--state", default=str(DEFAULT_STATE))
+    parser.add_argument("--receipt", type=Path, help="Write this pass's check/delivery receipt, including zero new selections")
     parser.add_argument("--ready-state", default=str(DEFAULT_READY_STATE))
     parser.add_argument("--repository", default=os.environ.get("TENNIS_DIGEST_GITHUB_REPOSITORY", DEFAULT_REPOSITORY))
     parser.add_argument("--workflow", default=DEFAULT_WORKFLOW)
@@ -655,9 +727,10 @@ def main() -> int:
         print(f"Telegram digest skipped: signal generation is not ready for {args.date}.")
         return 0
 
-    signals, empty_lanes = collect_signals(args.date)
+    signals, empty_lanes = collect_upcoming_signals(args.date, args.days_ahead)
+    attach_performance(signals, ROOT)
     signals, empty_lanes = scope_digest(signals, empty_lanes, args.props_pending)
-    messages = render_messages(args.date, signals, empty_lanes, props_pending=args.props_pending)
+    messages = render_messages(args.date, signals, empty_lanes, props_pending=args.props_pending, days_ahead=args.days_ahead)
     rendered = "\n\n--- MESSAGE BREAK ---\n\n".join(messages) + "\n"
     report_path = Path(args.report)
     report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -670,59 +743,81 @@ def main() -> int:
     if args.print_only:
         print(f"Digest preview only: {len(signals)} unique signals in {len(messages)} message(s)")
         return 0
-    if not args.force and state.get("date") == args.date and state.get("digest_hash") == digest_hash:
-        print("Telegram digest unchanged; dispatch skipped.")
+    checked_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    if state.get("pending_signal_ids"):
+        raise RuntimeError("Previous relay acknowledgement is unresolved; verify its run before clearing pending IDs. Automatic resend blocked.")
+    dispatch_signals = signals if args.force else new_signals_since_state(signals, state, args.date)
+    next_state = {**state, "date": args.date, "digest_hash": digest_hash,
+                  "signal_ids": retained_signal_ids(state, args.date, []),
+                  "checked_at": checked_at, "updated_at": checked_at,
+                  "last_dispatched_count": 0}
+    if not dispatch_signals:
+        atomic_json(state_path, next_state)
+        if args.receipt:
+            atomic_json(args.receipt, {"checked_at": checked_at, "dispatched_count": 0,
+                                      "status": "checked_no_new"})
+        print("Telegram digest has no new selections; dispatch skipped.")
         return 0
-
-    dispatch_signals = signals
-    dispatch_messages = messages
-    if args.new_only and not args.force:
-        dispatch_signals = new_signals_since_state(signals, state, args.date)
-        if not dispatch_signals:
-            preserved_dispatch = {}
-            if state.get("date") == args.date and state.get("dispatched_at"):
-                preserved_dispatch["dispatched_at"] = state["dispatched_at"]
-            state_path.parent.mkdir(parents=True, exist_ok=True)
-            state_path.write_text(
-                json.dumps(
-                    {
-                        **preserved_dispatch,
-                        "date": args.date,
-                        "digest_hash": digest_hash,
-                        "messages": len(messages),
-                        "signal_ids": retained_signal_ids(state, args.date, signals),
-                        "updated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-                    },
-                    indent=2,
-                )
-                + "\n",
-                encoding="utf-8",
-            )
-            print("Telegram digest has no new selections; dispatch skipped.")
-            return 0
-        dispatch_messages = render_messages(args.date, dispatch_signals, [], props_pending=args.props_pending, update_only=True)
-
+    dispatch_messages = render_messages(args.date, dispatch_signals, [], props_pending=args.props_pending,
+                                       update_only=True, days_ahead=args.days_ahead)
+    # Persist the attempt before sending. If acknowledgement is lost, fail
+    # visibly and require reconciliation rather than automatically double-send.
+    atomic_json(state_path, {**next_state, "pending_signal_ids": [signal_id(s) for s in dispatch_signals],
+                            "pending_since": checked_at})
     dispatch(dispatch_messages, repository=args.repository, workflow=args.workflow, ref=args.ref)
-    state_path.parent.mkdir(parents=True, exist_ok=True)
-    state_path.write_text(
-        json.dumps(
-            {
-                "date": args.date,
-                "digest_hash": digest_hash,
-                "messages": len(messages),
-                "signal_ids": retained_signal_ids(state, args.date, signals),
-                "dispatched_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-            },
-            indent=2,
-        )
-        + "\n",
-        encoding="utf-8",
-    )
+    dispatched_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    atomic_json(state_path, {**next_state, "signal_ids": retained_signal_ids(state, args.date, dispatch_signals),
+                            "dispatched_at": dispatched_at, "last_dispatched_count": len(dispatch_signals)})
+    if args.receipt:
+        atomic_json(args.receipt, {"checked_at": checked_at, "dispatched_at": dispatched_at,
+                                  "dispatched_count": len(dispatch_signals), "status": "relay_queued"})
+    try:
+        retain_dispatch(dispatch_signals, ROOT, dispatch_messages)
+    except (OSError, ValueError) as exc:
+        print(f"ERROR: relay accepted but alert record could not be saved: {exc}", file=sys.stderr)
+        return 1
     print(
         f"Telegram relay dispatched: {len(dispatch_signals)} new unique signals "
         f"in {len(dispatch_messages)} message(s)"
     )
     return 0
+
+
+def main() -> int:
+    # Protect read/check/reserve/send as one operation even when a caller is
+    # started outside the scheduled parent mutex. Never delete this lock file.
+    state_parser = argparse.ArgumentParser(add_help=False)
+    state_parser.add_argument("--state", default=str(DEFAULT_STATE))
+    known, _ = state_parser.parse_known_args()
+    path = Path(known.state + ".lock")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a+b") as handle:
+        if path.stat().st_size == 0:
+            handle.write(b"0")
+            handle.flush()
+        deadline = time.monotonic() + 60
+        while True:
+            try:
+                handle.seek(0)
+                if os.name == "nt":
+                    import msvcrt
+                    msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+                else:
+                    import fcntl
+                    fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except OSError:
+                if time.monotonic() >= deadline:
+                    raise RuntimeError("Another tennis digest is still checking/sending; no duplicate dispatch attempted")
+                time.sleep(0.2)
+        try:
+            return digest_main()
+        finally:
+            handle.seek(0)
+            if os.name == "nt":
+                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+            else:
+                fcntl.flock(handle, fcntl.LOCK_UN)
 
 
 if __name__ == "__main__":
