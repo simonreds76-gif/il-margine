@@ -9,7 +9,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +18,9 @@ ROOT = Path(__file__).resolve().parents[1]
 ENV_FILES = (ROOT / ".env.local", ROOT / "env.local")
 COMMAND_KEY = "automation.tennis_fair_odds_request"
 AM_TASK = "IlMargine-Daily-AM"
+MANUAL_TASK = "IlMargine-OnDemand"
+PRIORITY_REQUEST = ROOT / "data/locks/tennis-on-demand-request.json"
+MANUAL_STATUS = ROOT / "data/backtest/tennis-on-demand-status.json"
 NIGHT_TASK = "IlMargine-Daily"
 ACTIVE_STATES = {"pending", "waiting", "dispatching", "started"}
 READY_STATE = ROOT / "data" / "backtest" / "tennis-signal-generation-status.json"
@@ -193,30 +196,9 @@ def delivery_details(command: dict[str, Any]) -> dict[str, Any]:
         and dispatched_at is not None
         and (started_at is None or dispatched_at >= started_at)
     )
-    if not dispatched_for_request:
-        result = subprocess.run(
-            [
-                sys.executable,
-                str(DIGEST_SCRIPT),
-                "--date",
-                ready_date,
-                "--require-ready",
-                "--force",
-            ],
-            cwd=ROOT,
-            capture_output=True,
-            text=True,
-            errors="replace",
-            timeout=120,
-            check=False,
-        )
-        if result.returncode != 0:
-            detail = (result.stderr or result.stdout or "unknown digest error").strip()
-            raise RuntimeError(f"Telegram digest dispatch failed: {detail[-500:]}")
-        state = read_json_file(DIGEST_STATE)
-        dispatched_at = parse_time(state.get("dispatched_at"))
-        if state.get("date") != ready_date or dispatched_at is None:
-            raise RuntimeError("Telegram digest completed without recording its dispatch")
+    checked_at = parse_time(state.get("checked_at") or state.get("updated_at"))
+    if not dispatched_for_request and (checked_at is None or (started_at and checked_at < started_at)):
+        raise RuntimeError("No fresh Telegram selection-check receipt; refusing to force a resend")
 
     signal_ids = state.get("signal_ids")
     signal_count = len(signal_ids) if isinstance(signal_ids, list) else 0
@@ -228,71 +210,89 @@ def delivery_details(command: dict[str, Any]) -> dict[str, Any]:
         "signal_date": ready_date,
         "signal_count": signal_count,
         "signal_generation_completed_at": ready.get("completed_at"),
-        "telegram_status": "relay_queued",
+        "telegram_status": "relay_queued" if dispatched_for_request else "checked_no_new",
         "telegram_dispatched_at": state.get("dispatched_at"),
     }
+
+
+def write_priority(command: dict[str, Any]) -> None:
+    PRIORITY_REQUEST.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"request_id": command["request_id"], "requested_at": command["requested_at"],
+               "expires_at": (datetime.now(timezone.utc) + timedelta(hours=2)).isoformat()}
+    temporary = PRIORITY_REQUEST.with_suffix(f".{os.getpid()}.tmp")
+    temporary.write_text(json.dumps(payload), encoding="utf-8")
+    temporary.replace(PRIORITY_REQUEST)
+
+
+def clear_priority(command: dict[str, Any]) -> None:
+    if read_json_file(PRIORITY_REQUEST).get("request_id") == command.get("request_id"):
+        PRIORITY_REQUEST.unlink(missing_ok=True)
+
+
+def manual_details(command: dict[str, Any], receipt: dict[str, Any]) -> dict[str, Any]:
+    if receipt.get("request_id") != command.get("request_id") or receipt.get("state") != "completed":
+        raise RuntimeError(receipt.get("error") or "Manual task stopped without its completed receipt")
+    requested = parse_time(command.get("requested_at"))
+    started = parse_time(receipt.get("started_at"))
+    extracted = parse_time(receipt.get("oncourt_extracted_at"))
+    odds = parse_time(receipt.get("odds_not_before"))
+    completed = parse_time(receipt.get("completed_at"))
+    if not receipt.get("refresh_id") or not all((requested, started, extracted, odds, completed)):
+        raise RuntimeError("Missing fresh-input evidence for manual completion")
+    if not (requested <= started <= extracted <= completed and started <= odds <= completed):
+        raise RuntimeError("Manual input receipt belongs to an earlier run")
+    if receipt.get("telegram_status") not in {"relay_queued", "checked_no_new"}:
+        raise RuntimeError("Manual task did not verify its Telegram selection checks")
+    return {key: value for key, value in receipt.items() if key not in {"state", "request_id", "requested_at"}}
 
 
 def process_command(command: dict[str, Any]) -> dict[str, Any] | None:
     state = str(command.get("state") or "")
     if state not in ACTIVE_STATES:
         return None
-
-    am = task_snapshot(AM_TASK)
-    night = task_snapshot(NIGHT_TASK)
-
+    task_name = str(command.get("task") or MANUAL_TASK)
+    # Fixed allowlist; never run a task name supplied arbitrarily through the DB.
+    if task_name not in {MANUAL_TASK, AM_TASK}:
+        return transition(command, "failed", error="Unknown refresh task")
+    task = task_snapshot(task_name)
     if state in {"pending", "waiting"}:
-        if not am["exists"]:
-            return transition(command, "failed", error=f"{AM_TASK} is not installed on the laptop")
-        if am["running"] or night["running"]:
-            active_task = AM_TASK if am["running"] else NIGHT_TASK
-            return transition(command, "waiting", waiting_for=active_task)
-
-        dispatching = transition(command, "dispatching", dispatching_at=utc_now())
-        write_command(dispatching)
+        if not task["exists"]:
+            return transition(command, "failed", error=f"{task_name} is not installed on the laptop")
+        if task["running"]:
+            return transition(command, "waiting", waiting_for=task_name)
+        write_priority(command)
+        dispatching = transition(command, "dispatching", task=MANUAL_TASK, dispatching_at=utc_now())
         try:
-            start_task(AM_TASK)
+            write_command(dispatching)
+            start_task(MANUAL_TASK)
         except Exception as exc:
+            clear_priority(command)
             return transition(dispatching, "failed", error=str(exc))
-        return transition(dispatching, "started", local_started_at=utc_now(), task=AM_TASK)
+        return transition(dispatching, "started", local_started_at=utc_now(),
+                          progress_message="Queued for exclusive input access; historical reports yield between steps.")
 
-    if state == "dispatching":
-        if am["running"]:
-            return transition(command, "started", local_started_at=utc_now(), task=AM_TASK)
-        dispatching_at = parse_time(command.get("dispatching_at"))
-        if dispatching_at and (datetime.now(timezone.utc) - dispatching_at).total_seconds() < 300:
-            return None
-        return transition(command, "failed", error="Task dispatch did not reach a running state")
-
-    started_at = parse_time(command.get("local_started_at"))
-    if am["running"] or (started_at and (datetime.now(timezone.utc) - started_at).total_seconds() < 30):
+    receipt = read_json_file(MANUAL_STATUS) if task_name == MANUAL_TASK else {}
+    matched = receipt.get("request_id") == command.get("request_id")
+    if state == "dispatching" and task["running"]:
+        command = transition(command, "started", local_started_at=command.get("dispatching_at") or utc_now())
+    if task["running"]:
+        if matched:
+            details = {k: v for k, v in receipt.items() if k not in {"state", "request_id", "requested_at", "updated_at"}}
+            if any(command.get(k) != v for k, v in details.items()):
+                return transition(command, "started", **details)
+        return command if state == "dispatching" else None
+    started_at = parse_time(command.get("local_started_at") or command.get("dispatching_at"))
+    if started_at and (datetime.now(timezone.utc) - started_at).total_seconds() < 30:
         return None
-    last_result = am.get("last_result")
-    if last_result == 0:
-        try:
-            details = delivery_details(command)
-        except Exception as exc:
-            return transition(
-                command,
-                "failed",
-                completed_at=utc_now(),
-                last_result=last_result,
-                error=str(exc),
-            )
-        return transition(
-            command,
-            "completed",
-            completed_at=utc_now(),
-            last_result=last_result,
-            **details,
-        )
-    return transition(
-        command,
-        "failed",
-        completed_at=utc_now(),
-        last_result=last_result,
-        error=f"{AM_TASK} finished with scheduler result {last_result}",
-    )
+    try:
+        if task.get("last_result") != 0:
+            raise RuntimeError((receipt.get("error") if matched else None) or f"{task_name} finished with scheduler result {task.get('last_result')}")
+        details = manual_details(command, receipt) if task_name == MANUAL_TASK else delivery_details(command)
+        return transition(command, "completed", last_result=0, **details)
+    except Exception as exc:
+        return transition(command, "failed", completed_at=utc_now(), last_result=task.get("last_result"), error=str(exc))
+    finally:
+        clear_priority(command)
 
 
 def main() -> int:

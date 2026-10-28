@@ -1,187 +1,51 @@
-import importlib.util
-import json
-import subprocess
-import tempfile
-import unittest
+import importlib.util, json, tempfile, unittest
 from pathlib import Path
 from unittest.mock import patch
 
+SCRIPT = Path(__file__).resolve().parents[1] / 'poll-automation-commands.py'
+spec = importlib.util.spec_from_file_location('priority_poller', SCRIPT)
+p = importlib.util.module_from_spec(spec); spec.loader.exec_module(p)
 
-SCRIPT = Path(__file__).resolve().parents[1] / "poll-automation-commands.py"
-SPEC = importlib.util.spec_from_file_location("poll_automation_commands", SCRIPT)
-assert SPEC and SPEC.loader
-poller = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(poller)
+class PollerTests(unittest.TestCase):
+ def setUp(self):
+  self.temp=tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
+  self.root=Path(self.temp.name)
+  for key,name in [('PRIORITY_REQUEST','priority.json'),('MANUAL_STATUS','status.json')]:
+   mock=patch.object(p,key,self.root/name); mock.start(); self.addCleanup(mock.stop)
+  self.command={'request_id':'request-1','state':'pending','requested_at':'2026-10-28T20:00:00Z'}
+ def test_manual_starts_without_waiting_for_background_tasks(self):
+  with patch.object(p,'task_snapshot',return_value={'exists':True,'running':False,'last_result':0}) as snapshot, patch.object(p,'start_task') as start, patch.object(p,'write_command'):
+   result=p.process_command(self.command)
+  self.assertEqual(result['state'],'started'); start.assert_called_once_with(p.MANUAL_TASK)
+  snapshot.assert_called_once_with(p.MANUAL_TASK)
+  self.assertEqual(p.read_json_file(p.PRIORITY_REQUEST)['request_id'],'request-1')
+ def test_failed_launch_releases_priority(self):
+  with patch.object(p,'task_snapshot',return_value={'exists':True,'running':False}),patch.object(p,'start_task',side_effect=RuntimeError('failed')),patch.object(p,'write_command'):
+   result=p.process_command(self.command)
+  self.assertEqual(result['state'],'failed'); self.assertFalse(p.PRIORITY_REQUEST.exists())
+ def receipt(self):
+  return {**self.command,'state':'completed','refresh_id':'fresh','started_at':'2026-10-28T20:01:00Z','oncourt_extracted_at':'2026-10-28T20:02:00Z','odds_not_before':'2026-10-28T20:01:00Z','completed_at':'2026-10-28T20:10:00Z','telegram_status':'checked_no_new','telegram_new_signals':0}
+ def test_no_new_selections_is_success_without_forcing_resend(self):
+  p.write_priority(self.command); p.MANUAL_STATUS.write_text(json.dumps(self.receipt()))
+  with patch.object(p,'task_snapshot',return_value={'exists':True,'running':False,'last_result':0}),patch.object(p.subprocess,'run') as run:
+   result=p.process_command({**self.command,'state':'started','task':p.MANUAL_TASK,'local_started_at':'2026-10-28T20:01:00Z'})
+  self.assertEqual(result['state'],'completed'); self.assertEqual(result['telegram_new_signals'],0)
+  self.assertFalse(p.PRIORITY_REQUEST.exists()); run.assert_not_called()
+ def test_wrong_request_stale_inputs_or_disabled_alerts_cannot_pass(self):
+  for change in [{'request_id':'other'},{'oncourt_extracted_at':'2026-10-27T20:02:00Z'},{'telegram_status':'disabled_for_validation'}]:
+   with self.subTest(change=change),self.assertRaises(RuntimeError): p.manual_details(self.command,{**self.receipt(),**change})
+ def test_progress_keeps_request_active_until_task_stops(self):
+  p.MANUAL_STATUS.write_text(json.dumps({**self.command,'state':'started','phase':'props','progress_message':'Capturing current prices'}))
+  with patch.object(p,'task_snapshot',return_value={'exists':True,'running':True}):
+   result=p.process_command({**self.command,'state':'started','task':p.MANUAL_TASK})
+  self.assertEqual(result['state'],'started'); self.assertEqual(result['phase'],'props')
+ def test_scheduler_failure_releases_priority(self):
+  p.write_priority(self.command)
+  with patch.object(p,'task_snapshot',return_value={'exists':True,'running':False,'last_result':1}):
+   result=p.process_command({**self.command,'state':'started','task':p.MANUAL_TASK})
+  self.assertEqual(result['state'],'failed'); self.assertFalse(p.PRIORITY_REQUEST.exists())
+ def test_never_clears_another_requests_priority(self):
+  p.write_priority({**self.command,'request_id':'other'}); p.clear_priority(self.command)
+  self.assertTrue(p.PRIORITY_REQUEST.exists())
 
-
-class PollAutomationCommandsTests(unittest.TestCase):
-    def test_pending_request_starts_am_task(self):
-        command = {"request_id": "request-1", "state": "pending", "requested_at": poller.utc_now()}
-        with (
-            patch.object(poller, "task_snapshot", side_effect=[
-                {"exists": True, "running": False, "last_result": 0},
-                {"exists": True, "running": False, "last_result": 0},
-            ]),
-            patch.object(poller, "start_task") as start_task,
-            patch.object(poller, "write_command") as write_command,
-        ):
-            updated = poller.process_command(command)
-
-        self.assertEqual(updated["state"], "started")
-        start_task.assert_called_once_with(poller.AM_TASK)
-        self.assertEqual(write_command.call_args.args[0]["state"], "dispatching")
-
-    def test_pending_request_waits_when_nightly_task_is_running(self):
-        command = {"request_id": "request-2", "state": "pending", "requested_at": poller.utc_now()}
-        with (
-            patch.object(poller, "task_snapshot", side_effect=[
-                {"exists": True, "running": False, "last_result": 0},
-                {"exists": True, "running": True, "last_result": 0},
-            ]),
-            patch.object(poller, "start_task") as start_task,
-        ):
-            updated = poller.process_command(command)
-
-        self.assertEqual(updated["state"], "waiting")
-        self.assertEqual(updated["waiting_for"], poller.NIGHT_TASK)
-        start_task.assert_not_called()
-
-    def test_started_request_records_scheduler_failure(self):
-        command = {
-            "request_id": "request-3",
-            "state": "started",
-            "requested_at": "2026-08-15T08:00:00+00:00",
-            "local_started_at": "2026-08-15T08:00:00+00:00",
-        }
-        with patch.object(poller, "task_snapshot", side_effect=[
-            {"exists": True, "running": False, "last_result": 2},
-            {"exists": True, "running": False, "last_result": 0},
-        ]):
-            updated = poller.process_command(command)
-
-        self.assertEqual(updated["state"], "failed")
-        self.assertEqual(updated["last_result"], 2)
-
-    def test_started_request_records_signal_and_telegram_completion(self):
-        command = {
-            "request_id": "request-4",
-            "state": "started",
-            "requested_at": "2026-08-15T08:00:00+00:00",
-            "local_started_at": "2026-08-15T08:00:00+00:00",
-        }
-        delivery = {
-            "signal_date": "2026-08-15",
-            "signal_count": 3,
-            "telegram_status": "relay_queued",
-            "telegram_dispatched_at": "2026-08-15T08:12:00Z",
-        }
-        with (
-            patch.object(poller, "task_snapshot", side_effect=[
-                {"exists": True, "running": False, "last_result": 0},
-                {"exists": True, "running": False, "last_result": 0},
-            ]),
-            patch.object(poller, "delivery_details", return_value=delivery),
-        ):
-            updated = poller.process_command(command)
-
-        self.assertEqual(updated["state"], "completed")
-        self.assertEqual(updated["signal_count"], 3)
-        self.assertEqual(updated["telegram_status"], "relay_queued")
-
-    def test_started_request_surfaces_telegram_failure(self):
-        command = {
-            "request_id": "request-5",
-            "state": "started",
-            "requested_at": "2026-08-15T08:00:00+00:00",
-            "local_started_at": "2026-08-15T08:00:00+00:00",
-        }
-        with (
-            patch.object(poller, "task_snapshot", side_effect=[
-                {"exists": True, "running": False, "last_result": 0},
-                {"exists": True, "running": False, "last_result": 0},
-            ]),
-            patch.object(poller, "delivery_details", side_effect=RuntimeError("relay failed")),
-        ):
-            updated = poller.process_command(command)
-
-        self.assertEqual(updated["state"], "failed")
-        self.assertIn("relay failed", updated["error"])
-
-    def test_delivery_details_does_not_resend_current_dispatch(self):
-        with tempfile.TemporaryDirectory() as temp_dir:
-            ready_path = Path(temp_dir) / "ready.json"
-            digest_path = Path(temp_dir) / "digest.json"
-            ready_path.write_text(
-                json.dumps({
-                    "date": "2026-08-15",
-                    "status": "ok",
-                    "completed_at": "2026-08-15T08:10:00Z",
-                }),
-                encoding="utf-8",
-            )
-            digest_path.write_text(
-                json.dumps({
-                    "date": "2026-08-15",
-                    "signal_ids": ["a", "b"],
-                    "dispatched_at": "2026-08-15T08:11:00Z",
-                }),
-                encoding="utf-8",
-            )
-            command = {"local_started_at": "2026-08-15T08:00:00Z"}
-            with (
-                patch.object(poller, "READY_STATE", ready_path),
-                patch.object(poller, "DIGEST_STATE", digest_path),
-                patch.object(poller.subprocess, "run") as run,
-            ):
-                details = poller.delivery_details(command)
-
-        run.assert_not_called()
-        self.assertEqual(details["signal_count"], 2)
-        self.assertEqual(details["telegram_status"], "relay_queued")
-
-    def test_delivery_details_forces_digest_when_manual_run_was_suppressed(self):
-        with tempfile.TemporaryDirectory() as temp_dir:
-            ready_path = Path(temp_dir) / "ready.json"
-            digest_path = Path(temp_dir) / "digest.json"
-            ready_path.write_text(
-                json.dumps({
-                    "date": "2026-08-15",
-                    "status": "ok",
-                    "completed_at": "2026-08-15T08:10:00Z",
-                }),
-                encoding="utf-8",
-            )
-            digest_path.write_text(
-                json.dumps({
-                    "date": "2026-08-15",
-                    "signal_ids": ["a"],
-                    "dispatched_at": "2026-08-15T07:00:00Z",
-                }),
-                encoding="utf-8",
-            )
-
-            def force_digest(*_args, **_kwargs):
-                digest_path.write_text(
-                    json.dumps({
-                        "date": "2026-08-15",
-                        "signal_ids": ["a"],
-                        "dispatched_at": "2026-08-15T08:12:00Z",
-                    }),
-                    encoding="utf-8",
-                )
-                return subprocess.CompletedProcess([], 0, "ok", "")
-
-            command = {"local_started_at": "2026-08-15T08:00:00Z"}
-            with (
-                patch.object(poller, "READY_STATE", ready_path),
-                patch.object(poller, "DIGEST_STATE", digest_path),
-                patch.object(poller.subprocess, "run", side_effect=force_digest) as run,
-            ):
-                details = poller.delivery_details(command)
-
-        self.assertIn("--force", run.call_args.args[0])
-        self.assertEqual(details["telegram_dispatched_at"], "2026-08-15T08:12:00Z")
-
-
-if __name__ == "__main__":
-    unittest.main()
+if __name__=='__main__': unittest.main()

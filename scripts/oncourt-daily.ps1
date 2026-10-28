@@ -6,7 +6,7 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $root
 . (Join-Path $root "scripts\use-local-python.ps1") -RepoRoot $root
-. (Join-Path $root "scripts\task-lock.ps1")
+. (Join-Path $root "scripts\tennis-priority.ps1")
 . (Join-Path $root "scripts\_lib\run_status.ps1")
 
 $dataDir = Join-Path $root "data"
@@ -175,7 +175,7 @@ function Set-RunStatusFailure([string]$Type, [string]$Message) {
     $script:runStatusErrorMessage = $Message
 }
 
-$lockHandle = Enter-TaskLock -LockName "tennis-automation" -RootPath $root -WaitSeconds 1800 -PollSeconds 10
+$lockHandle = Enter-TennisPriorityLock -RootPath $root
 if ($null -eq $lockHandle) {
     Log "Another tennis automation run stayed active for 30 minutes; exiting."
     exit 0
@@ -412,11 +412,14 @@ if ($cpiSpeedShadowEnabled) {
 
 # Step 9: Settle/report immediately after nightly append so results are ready by the next morning.
 Log "=== Step 9/10: Nightly tennis settlement/performance ==="
-& powershell -ExecutionPolicy Bypass -NoProfile -File scripts\oncourt-settle-nightly.ps1 2>&1 | ForEach-Object { Log $_ }
+Exit-TaskLock $lockHandle
+$lockHandle = $null
+& powershell -ExecutionPolicy Bypass -NoProfile -File scripts\oncourt-settle-nightly.ps1 -CooperativeLock 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: nightly tennis settlement failed (exit $LASTEXITCODE), continuing..."
 }
 
+$lockHandle = Enter-TennisPriorityLock -RootPath $root
 Log "=== Astrissimo: daily paper record and new selections ==="
 $astrissimoExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--astrissimo-only") -Label "Astrissimo paper alerts" -TimeoutSeconds 90
 if ($astrissimoExit -ne 0) { Log "WARNING: Astrissimo paper alerts failed (exit $astrissimoExit)" }

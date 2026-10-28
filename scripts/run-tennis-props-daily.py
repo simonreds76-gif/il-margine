@@ -412,7 +412,7 @@ def comparison_failure(as_of: str, market_file: Path) -> int:
     return 1
 
 
-def run_monitor_only(as_of: str) -> int:
+def run_monitor_only(as_of: str, *, selections_only: bool = False) -> int:
     """Refresh the canonical monitor locally, without capture or experiments."""
     market_file = None
     step = "select_combined_prices"
@@ -430,6 +430,8 @@ def run_monitor_only(as_of: str) -> int:
             ("shadow_settlement", "tennis-props-settle-shadow.py", [], 90),
             ("model_report", "tennis-props-model-report.py", [], 25),
         )
+        if selections_only:
+            commands = tuple(command for command in commands if command[0] == "shadow_registration")
         for step, script, arguments, timeout in commands:
             mark_pipeline_blocked(as_of, market_file, step, running=True)
             code = run([sys.executable, str(ROOT / "scripts" / script), *arguments], step, fatal=False, timeout_seconds=timeout)
@@ -562,13 +564,14 @@ def run_comparison_only(
     skip_sync: bool,
     lookback_days: int,
     skip_derived_boards: bool = False,
+    selections_only: bool = False,
 ) -> int:
     mark_pipeline_blocked(as_of, None, "comparison_refresh", running=True)
     if not skip_sync:
         sync_hosted_captures(as_of, lookback_days)
     if skip_derived_boards:
         # Manual refresh needs the bounded current board, not slow research lanes.
-        return run_monitor_only(as_of)
+        return run_monitor_only(as_of, selections_only=selections_only)
     market_file = select_market_file(as_of)
     if market_file is None:
         print(f"WARNING: no hosted/local Bet365 capture contains {as_of} events.")
@@ -593,6 +596,7 @@ def main() -> int:
     parser.add_argument("--skip-betsbk", action="store_true", help="Skip the local public BetsBK US Open props fallback")
     parser.add_argument("--skip-bet365-direct", action="store_true", help="Skip the Windows-local direct Bet365 service-break fallback")
     parser.add_argument("--require-odds", action="store_true", help="Fail if the Bet365 odds scrape cannot run")
+    parser.add_argument("--selections-only", action="store_true", help="Register current selections; leave historical settlements/reports to the scheduled run")
     parser.add_argument("--comparison-only", action="store_true", help="Sync hosted prices and refresh comparison/tracking without rebuilding projections")
     parser.add_argument("--monitor-only", action="store_true", help="Bounded local canonical comparison, tracking, settlement, report and health; no capture, sync or experiments")
     parser.add_argument("--skip-derived-boards", action="store_true", help="Skip slow derived ace boards during a fast comparison pass")
@@ -603,11 +607,13 @@ def main() -> int:
     parser.add_argument("--max-events", type=int, default=128)
     args = parser.parse_args()
 
+    if args.selections_only and not (args.monitor_only or (args.comparison_only and args.skip_derived_boards)):
+        parser.error("--selections-only requires --monitor-only or --comparison-only --skip-derived-boards")
     load_env()
     PROPS_DIR.mkdir(parents=True, exist_ok=True)
 
     if args.monitor_only:
-        return run_monitor_only(args.as_of)
+        return run_monitor_only(args.as_of, selections_only=args.selections_only)
 
     if args.capture_only:
         return capture_market_prices(args)
@@ -620,6 +626,7 @@ def main() -> int:
             skip_sync=args.skip_hosted_sync,
             lookback_days=args.hosted_lookback_days,
             skip_derived_boards=args.skip_derived_boards,
+            selections_only=args.selections_only,
         )
 
     # Capture first. The projection board can take several minutes and is

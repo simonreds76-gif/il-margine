@@ -28,12 +28,12 @@ class RefreshScopeTests(unittest.TestCase):
         self.assertEqual(signals, [core])
         self.assertEqual(empty, [])
 
-    def test_partial_pass_preserves_sent_props_and_next_day_resets(self):
+    def test_partial_pass_preserves_sent_props_across_midnight(self):
         prop, core = self.signal(45), self.signal(0)
         state = {"date": "2026-10-19", "signal_ids": [M.signal_id(prop)]}
         self.assertEqual(set(M.retained_signal_ids(state, "2026-10-19", [core])),
                          {M.signal_id(prop), M.signal_id(core)})
-        self.assertEqual(M.retained_signal_ids(state, "2026-10-20", []), [])
+        self.assertEqual(M.retained_signal_ids(state, "2026-10-20", []), [M.signal_id(prop)])
 
     def test_completed_pass_keeps_props_and_normal_rendering(self):
         prop = self.signal(45)

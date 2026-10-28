@@ -76,6 +76,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Daily odds pipeline: Pinnacle -> fair odds -> strict report + shadow profiles"
     )
+    parser.add_argument("--on-demand", action="store_true", help="Fresh live inputs and prices; defer historical research reports")
     parser.add_argument("--skip-strict-report", action="store_true", help="Skip strict policy report step")
     parser.add_argument(
         "--skip-recent-activity",
@@ -112,23 +113,24 @@ def main() -> int:
     os.environ.setdefault("STRICT_HARD_CALIBRATION_LIVE", "0")
     os.environ.setdefault("STRICT_HARD_CALIBRATION_PROFILES", "strict")
 
-    # Context records refresh independently of live pricing. This collector only
-    # writes data/tennis-ml-research/context-records-v1; it never publishes tables.
-    run_cmd(
-        [sys.executable, str(ROOT / "scripts" / "refresh-tennis-context-research.py")],
-        label="0/6 Player context history (research only; live inputs unchanged)",
-        fatal=False,
-        timeout_seconds=180,
-    )
+    if not args.on_demand:
+        # Context records refresh independently of live pricing. This collector only
+        # writes data/tennis-ml-research/context-records-v1; it never publishes tables.
+        run_cmd(
+            [sys.executable, str(ROOT / "scripts" / "refresh-tennis-context-research.py")],
+            label="0/6 Player context history (research only; live inputs unchanged)",
+            fatal=False,
+            timeout_seconds=180,
+        )
 
-    # Chronological style evidence stays isolated from all live pricing tables.
-    run_cmd(
-        [sys.executable, str(ROOT / "scripts" / "refresh-tennis-matchup-history.py"),
-         "--root", str(ROOT)],
-        label="0/6 Big-server and matchup histories (research only)",
-        fatal=False,
-        timeout_seconds=420,
-    )
+        # Chronological style evidence stays isolated from all live pricing tables.
+        run_cmd(
+            [sys.executable, str(ROOT / "scripts" / "refresh-tennis-matchup-history.py"),
+             "--root", str(ROOT)],
+            label="0/6 Big-server and matchup histories (research only)",
+            fatal=False,
+            timeout_seconds=420,
+        )
 
     # Required production inputs: a failed rebuild must not price with stale tables.
     run_cmd(
@@ -177,15 +179,16 @@ def main() -> int:
         timeout_seconds=step_timeout,
     )
 
-    # Research-only anomaly capture. This never changes routing or stakes: it
-    # freezes extreme ML gaps and the same player's real Pinnacle handicap so
-    # nightly settlement can test the two hypotheses independently.
-    run_cmd(
-        [sys.executable, str(ROOT / "scripts" / "tennis-model-market-gap-audit.py")],
-        label="4b/6 Extreme model/market gap audit (research only)",
-        fatal=False,
-        timeout_seconds=step_timeout,
-    )
+    if not args.on_demand:
+        # Research-only anomaly capture. This never changes routing or stakes: it
+        # freezes extreme ML gaps and the same player's real Pinnacle handicap so
+        # nightly settlement can test the two hypotheses independently.
+        run_cmd(
+            [sys.executable, str(ROOT / "scripts" / "tennis-model-market-gap-audit.py")],
+            label="4b/6 Extreme model/market gap audit (research only)",
+            fatal=False,
+            timeout_seconds=step_timeout,
+        )
 
     if not args.skip_strict_report:
         strict_cmd = [

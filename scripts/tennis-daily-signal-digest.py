@@ -16,6 +16,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
@@ -429,7 +430,7 @@ def collect_upcoming_signals(target_date: str, days_ahead: int = 3, *, now: date
 
 
 def retained_signal_ids(state, target_date, signals):
-    previous = state.get("signal_ids", []) if state.get("date") == target_date else []
+    previous = state.get("signal_ids", [])
     return sorted(set(previous) | {signal_id(signal) for signal in signals})
 
 
@@ -495,6 +496,13 @@ def render_messages(
     return messages
 
 
+def atomic_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + f".{os.getpid()}.tmp")
+    temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    temporary.replace(path)
+
+
 def load_state(path: Path) -> dict[str, object]:
     if not path.exists():
         return {}
@@ -529,13 +537,11 @@ def comparison_key(signal: Signal) -> tuple[str, ...]:
 def new_signals_since_state(
     signals: list[Signal], state: dict[str, object], target_date: str
 ) -> list[Signal]:
-    if state.get("date") != target_date:
-        return signals
     previous = state.get("signal_ids")
     if not isinstance(previous, list):
         # A legacy state cannot prove which individual selections were sent.
         return signals
-    previous_ids = {comparison_id(str(value)) for value in previous}
+    previous_ids = {comparison_id(str(value)) for value in previous + list(state.get("pending_signal_ids") or [])}
     return [signal for signal in signals if comparison_id(signal_id(signal)) not in previous_ids]
 
 
@@ -610,9 +616,11 @@ def dispatch(messages: list[str], *, repository: str, workflow: str, ref: str) -
             print("GitHub Telegram relay dispatched via gh CLI.")
             return
         gh_error = (result.stderr or result.stdout).strip()[:300]
-        print(f"WARNING: gh relay dispatch failed; using HTTP fallback: {gh_error}", file=sys.stderr)
-    except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
-        print(f"WARNING: gh relay dispatch unavailable; using HTTP fallback: {type(exc).__name__}", file=sys.stderr)
+        raise RuntimeError(f"GitHub relay dispatch failed; not retrying an ambiguous delivery: {gh_error}")
+    except FileNotFoundError:
+        print("gh unavailable; using HTTP relay.", file=sys.stderr)
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError("Relay acknowledgement timed out; automatic resend blocked to prevent duplicates") from exc
 
     token = github_token()
     payload = json.dumps({"ref": ref, "inputs": {"payload_b64": encoded}}).encode("utf-8")
@@ -638,12 +646,13 @@ def dispatch(messages: list[str], *, repository: str, workflow: str, ref: str) -
         raise RuntimeError(f"GitHub Telegram relay dispatch failed: {exc}") from exc
 
 
-def main() -> int:
+def digest_main() -> int:
     parser = argparse.ArgumentParser(description="Send today's local tennis signal digest to Telegram")
     parser.add_argument("--date", default=date.today().isoformat())
     parser.add_argument("--days-ahead", type=int, choices=range(0, 8), default=3)
     parser.add_argument("--report", default=str(DEFAULT_REPORT))
     parser.add_argument("--state", default=str(DEFAULT_STATE))
+    parser.add_argument("--receipt", type=Path, help="Write this pass's check/delivery receipt, including zero new selections")
     parser.add_argument("--ready-state", default=str(DEFAULT_READY_STATE))
     parser.add_argument("--repository", default=os.environ.get("TENNIS_DIGEST_GITHUB_REPOSITORY", DEFAULT_REPOSITORY))
     parser.add_argument("--workflow", default=DEFAULT_WORKFLOW)
@@ -734,54 +743,34 @@ def main() -> int:
     if args.print_only:
         print(f"Digest preview only: {len(signals)} unique signals in {len(messages)} message(s)")
         return 0
-    if not args.force and state.get("date") == args.date and state.get("digest_hash") == digest_hash:
-        print("Telegram digest unchanged; dispatch skipped.")
+    checked_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    if state.get("pending_signal_ids"):
+        raise RuntimeError("Previous relay acknowledgement is unresolved; verify its run before clearing pending IDs. Automatic resend blocked.")
+    dispatch_signals = signals if args.force else new_signals_since_state(signals, state, args.date)
+    next_state = {**state, "date": args.date, "digest_hash": digest_hash,
+                  "signal_ids": retained_signal_ids(state, args.date, []),
+                  "checked_at": checked_at, "updated_at": checked_at,
+                  "last_dispatched_count": 0}
+    if not dispatch_signals:
+        atomic_json(state_path, next_state)
+        if args.receipt:
+            atomic_json(args.receipt, {"checked_at": checked_at, "dispatched_count": 0,
+                                      "status": "checked_no_new"})
+        print("Telegram digest has no new selections; dispatch skipped.")
         return 0
-
-    dispatch_signals = signals
-    dispatch_messages = messages
-    if args.new_only and not args.force:
-        dispatch_signals = new_signals_since_state(signals, state, args.date)
-        if not dispatch_signals:
-            preserved_dispatch = {}
-            if state.get("date") == args.date and state.get("dispatched_at"):
-                preserved_dispatch["dispatched_at"] = state["dispatched_at"]
-            state_path.parent.mkdir(parents=True, exist_ok=True)
-            state_path.write_text(
-                json.dumps(
-                    {
-                        **preserved_dispatch,
-                        "date": args.date,
-                        "digest_hash": digest_hash,
-                        "messages": len(messages),
-                        "signal_ids": retained_signal_ids(state, args.date, signals),
-                        "updated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-                    },
-                    indent=2,
-                )
-                + "\n",
-                encoding="utf-8",
-            )
-            print("Telegram digest has no new selections; dispatch skipped.")
-            return 0
-        dispatch_messages = render_messages(args.date, dispatch_signals, [], props_pending=args.props_pending, update_only=True, days_ahead=args.days_ahead)
-
+    dispatch_messages = render_messages(args.date, dispatch_signals, [], props_pending=args.props_pending,
+                                       update_only=True, days_ahead=args.days_ahead)
+    # Persist the attempt before sending. If acknowledgement is lost, fail
+    # visibly and require reconciliation rather than automatically double-send.
+    atomic_json(state_path, {**next_state, "pending_signal_ids": [signal_id(s) for s in dispatch_signals],
+                            "pending_since": checked_at})
     dispatch(dispatch_messages, repository=args.repository, workflow=args.workflow, ref=args.ref)
-    state_path.parent.mkdir(parents=True, exist_ok=True)
-    state_path.write_text(
-        json.dumps(
-            {
-                "date": args.date,
-                "digest_hash": digest_hash,
-                "messages": len(messages),
-                "signal_ids": retained_signal_ids(state, args.date, signals),
-                "dispatched_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-            },
-            indent=2,
-        )
-        + "\n",
-        encoding="utf-8",
-    )
+    dispatched_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    atomic_json(state_path, {**next_state, "signal_ids": retained_signal_ids(state, args.date, dispatch_signals),
+                            "dispatched_at": dispatched_at, "last_dispatched_count": len(dispatch_signals)})
+    if args.receipt:
+        atomic_json(args.receipt, {"checked_at": checked_at, "dispatched_at": dispatched_at,
+                                  "dispatched_count": len(dispatch_signals), "status": "relay_queued"})
     try:
         retain_dispatch(dispatch_signals, ROOT, dispatch_messages)
     except (OSError, ValueError) as exc:
@@ -792,6 +781,43 @@ def main() -> int:
         f"in {len(dispatch_messages)} message(s)"
     )
     return 0
+
+
+def main() -> int:
+    # Protect read/check/reserve/send as one operation even when a caller is
+    # started outside the scheduled parent mutex. Never delete this lock file.
+    state_parser = argparse.ArgumentParser(add_help=False)
+    state_parser.add_argument("--state", default=str(DEFAULT_STATE))
+    known, _ = state_parser.parse_known_args()
+    path = Path(known.state + ".lock")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a+b") as handle:
+        if path.stat().st_size == 0:
+            handle.write(b"0")
+            handle.flush()
+        deadline = time.monotonic() + 60
+        while True:
+            try:
+                handle.seek(0)
+                if os.name == "nt":
+                    import msvcrt
+                    msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+                else:
+                    import fcntl
+                    fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except OSError:
+                if time.monotonic() >= deadline:
+                    raise RuntimeError("Another tennis digest is still checking/sending; no duplicate dispatch attempted")
+                time.sleep(0.2)
+        try:
+            return digest_main()
+        finally:
+            handle.seek(0)
+            if os.name == "nt":
+                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+            else:
+                fcntl.flock(handle, fcntl.LOCK_UN)
 
 
 if __name__ == "__main__":
