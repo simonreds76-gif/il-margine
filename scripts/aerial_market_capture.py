@@ -36,7 +36,8 @@ def retain_headed_markets(path, payload, event_index, captured_at):
             events[(eid, book)] = dict(event_id=eid, home=meta.get('home'), away=meta.get('away'),
                                kickoff=meta.get('date') or meta.get('startTime'),
                                captured_at=captured_at, bookmaker=book,
-                               source='grosvenor_direct' if book == 'Grosvenor' else 'odds-api.io/v3/odds/multi', markets=markets)
+                               source=('moviodds_bet365' if markets and all(m.get('source')=='moviodds_bet365' for m in markets)
+                                       else 'grosvenor_direct' if book == 'Grosvenor' else 'odds-api.io/v3/odds/multi'), markets=markets)
     result = dict(schema_version=1, generated_at=captured_at,
                   purpose='Exact market evidence; Goal Method is not assumed to be a player market',
                   events=list(events.values()))
@@ -91,6 +92,17 @@ def _bet365_quotes(fixture, candidate, snapshot, now):
     event=matches[0];quotes={}
     for market in event.get('markets', []):
         market_name=market.get('name','')
+        captured_at=event['captured_at']
+        if market.get('source')=='moviodds_bet365' or event.get('source')=='moviodds_bet365':
+            # Retaining a snapshot must never refresh its prices. Recheck the
+            # exact market poll at use time, including after a collector outage.
+            from moviodds_prices import fresh
+            status=market.get('raw_group_status') or {}
+            captured_at=market.get('captured_at')
+            if (market.get('source_group_id')!='177727' or market_name!='Player Headed Shots on Target'
+                    or captured_at!=status.get('polled_at') or not fresh(captured_at,now)
+                    or any(status.get(k) for k in ('stale','suspended','removed'))):
+                continue
         for prop in market.get('odds', []):
             label=str(prop.get('label') or '')
             parsed=re.fullmatch(r'(.+?) \(Header\) \(([12])\)',label) if market_name=='Goal Method' else re.fullmatch(r'(.+?) \(([12])\)',label)
@@ -112,12 +124,21 @@ def _bet365_quotes(fixture, candidate, snapshot, now):
             if key not in candidate['markets_to_check'] or value is None:
                 continue
             quotes.setdefault(key,[]).append(dict(market=key,odds=value,bookmaker='Bet365',
-                captured_at=event['captured_at'],event_id=event['event_id'],
-                source=event['source'],source_market=market_name,source_label=label,source_price_field=field))
+                captured_at=captured_at,event_id=event['event_id'],
+                source=market.get('source') or event['source'],source_market=market_name,source_label=label,source_price_field=field,
+                **({'source_event_id':market.get('source_event_id'),'raw_quote':prop.get('raw_quote'),
+                    'raw_group_status':market.get('raw_group_status'),'contract':'bet365_named_nonstarter_void_v1'}
+                   if market.get('source')=='moviodds_bet365' else {})))
     # Do not pick the best of conflicting duplicate prices.
     return [rows[0] for rows in quotes.values() if len({q['odds'] for q in rows})==1]
 
 
 def quoted_markets(fixture, candidate, snapshot, now):
     from paddy_headed import quoted
-    return _bet365_quotes(fixture, candidate, snapshot, now) + quoted(fixture, candidate, snapshot, now)
+    direct=_bet365_quotes(fixture,candidate,snapshot.get('moviodds',{}),now)
+    old=_bet365_quotes(fixture,candidate,snapshot,now)
+    # Prefer a fresh verified direct quote over the same book's older snapshot;
+    # preserve other markets/books. The immutable paper ledger still locks its
+    # first forecast and the existing alert key prevents repeat notifications.
+    current={q['market'] for q in direct}
+    return direct+[q for q in old if q['market'] not in current]+quoted(fixture,candidate,snapshot,now)

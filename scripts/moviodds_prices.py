@@ -1,7 +1,7 @@
 """Bounded Bet365 price source; no credentials, model changes or inferred prices.
 
 Verified 2026-10-28 against the rendered sportsbook. Only named-player full-match
-GK saves / aces / double faults. Headed SOT remains unverified and excluded.
+GK saves / aces / double faults, plus verified named-player headed SOT.
 Freshness uses the individual market's poll, never its last price change or the
 fixture poll. All original quotes remain in the private capture evidence.
 """
@@ -22,7 +22,8 @@ import requests
 
 ROOT = Path(__file__).resolve().parents[1]
 URL = 'https://moviodds.com/odds'
-GROUPS = {'soccer': {'177703': ('Goalkeeper Saves', 'Player Saves')},
+GROUPS = {'soccer': {'177703': ('Goalkeeper Saves', 'Player Saves'),
+                     '177727': ('Headed Shots on Target', 'Player Headed Shots on Target')},
           'tennis': {'130440': ('Ace Totals', 'Player Aces'),
                      '130443': ('Double Fault Totals', 'Player Double Faults')}}
 LEAGUES = {'England Premier League': 'england-premier-league',
@@ -148,7 +149,7 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3):
                     skipped['invalid_or_suspended_quote'] += 1
                     continue
                 # Exact verified market IDs: no set/period/combined contracts.
-                allowed_ids = {'177703', '177769'} if sport == 'soccer' else {gid}
+                allowed_ids = {'177703', '177769'} if gid == '177703' else {gid}
                 if str(q.get('market_id')) not in allowed_ids:
                     skipped['unverified_market_id'] += 1
                     continue
@@ -158,13 +159,22 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3):
                     skipped['non_named_player_or_non_milestone'] += 1
                     continue
                 line = int(milestone[1])-.5
-                if sport == 'soccer':
+                if sport == 'soccer' and (gid != '177727' or q.get('handicap') is not None):
                     try:
                         if float(q.get('handicap')) != line:
                             raise ValueError()
                     except (TypeError, ValueError):
                         skipped['line_disagreement'] += 1
                         continue
+                if gid == '177727':
+                    # The source explicitly supplies the player's club in n2.
+                    # Never guess the side from player ordering or name alone.
+                    sides = [i+1 for i, s in enumerate(('home', 'away'))
+                             if q.get('n2') and team_key(q['n2']) == team_key(m[s])]
+                    if len(sides) != 1:
+                        skipped['unmapped_player_team'] += 1
+                        continue
+                    player = f'{player} ({sides[0]})'
                 fraction = re.fullmatch(r'(\d+)/(\d+)', str(q.get('odds_frac') or ''))
                 if not fraction or int(fraction[2]) == 0 or abs(price-(1+int(fraction[1])/int(fraction[2]))) > 1e-7:
                     skipped['fraction_decimal_disagreement'] += 1
@@ -229,3 +239,36 @@ def merge_football(payload, targets, *, days_ahead=7, **kwargs):
             existing[0].setdefault('bookmakers', {}).update(e['bookmakers'])
             existing[0].setdefault('urls', {}).update(e['urls'])
     return result, receipt
+
+
+def refresh_headed(root, payload, now=None):
+    """One bounded price read on the existing Skyline publication cycle.
+
+    The independent hourly GK job can precede lineup publication by more than
+    the price lifetime. Refresh here rather than relaxing the freshness rule.
+    This writes only a separate price snapshot, never forecasts or results.
+    """
+    from aerial_market_capture import retain_headed_markets
+    now = now or datetime.now(timezone.utc)
+    leagues = {'Premier League':'england-premier-league','Serie A':'italy-serie-a',
+               'Bundesliga':'germany-bundesliga','La Liga':'spain-la-liga','Ligue 1':'france-ligue-1'}
+    targets = []
+    for f in payload.get('fixtures', []):
+        teams=f.get('teams', []);start=utc(f.get('kickoff'))
+        if (f.get('competition') not in leagues or f.get('state') not in ('expected','confirmed')
+                or len(teams)!=2 or not start or not now+timedelta(minutes=5)<start<=now+timedelta(hours=30)):
+            continue
+        targets.append({'id':'aerial:'+str(f['id']),'home':teams[0]['name'],'away':teams[1]['name'],
+                        'date':f['kickoff'],'league':{'slug':leagues[f['competition']]}})
+    folder=Path(root)/'data/aerial/moviodds';folder.mkdir(parents=True,exist_ok=True)
+    if targets:
+        events, receipt=capture('soccer',targets=targets,days_ahead=2,raw_path=folder/'latest.json.gz')
+    else:
+        events, receipt=[], {'source':'moviodds_bet365','status':'NO_ELIGIBLE_FIXTURES','requests':0,'errors':[]}
+    retain_headed_markets(folder/'prices.json',events,{},now.isoformat())
+    receipt['generated_at']=now.isoformat()
+    receipt['headed_quotes']=sum(len(m['odds']) for e in events for m in e['bookmakers']['Bet365']
+                                  if m['name']=='Player Headed Shots on Target')
+    temp=folder/'status.tmp';temp.write_text(json.dumps(receipt,indent=2)+'\n',encoding='utf-8')
+    temp.replace(folder/'status.json')
+    return receipt

@@ -12,6 +12,9 @@ VARIANT='baseline'
 def eligible(record, state, now):
     try:
         report=state.get('report',{})
+        if record.get('quote',{}).get('source')=='moviodds_bet365':
+            from moviodds_prices import fresh
+            if not fresh(record['quote'].get('captured_at'),now):return False
         return (record['version']=='skyline-v1'
             and record['cohort']=='prospective_paper' and record['lineup']=='confirmed'
             and record['selections'].get(VARIANT) is True
