@@ -32,15 +32,15 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-28T15:12:05.000760+00:00",
+    "checked_at": "2026-10-28T15:46:17.791222+00:00",
     "counts": {
-      "already_saved": 5,
-      "not_fresh_prematch": 13
+      "not_fresh_prematch": 13,
+      "offers_saved": 46
     },
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "saved": 5,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-10-28T15:12:04Z",
+  "generated_at": "2026-10-28T15:46:17Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
@@ -52,7 +52,7 @@
     },
     "forecast_fixtures": 85,
     "forecast_keepers": 170,
-    "generated_at": "2026-10-28T15:12:05.027316+00:00",
+    "generated_at": "2026-10-28T15:46:17.898193+00:00",
     "last_capture_at": "2026-10-25T13:14:55.143085+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
