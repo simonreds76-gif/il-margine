@@ -229,6 +229,8 @@ class PublicationLiveTree(unittest.TestCase):
             git('init','-q');git('config','user.name','Test');git('config','user.email','test@example.invalid');git('config','commit.gpgsign','false')
             for path in (publisher.DATA,publisher.CHECKPOINT):(root/path).parent.mkdir(parents=True,exist_ok=True)
             packet={'generatedAt':'2026-10-27T12:00:00Z','articles':[{'id':'a','updatedAt':'2026-10-27T12:00:00Z'}]}
+            live_config={'ignoreCommand':'original build guard','git':{'deploymentEnabled':{'main':False}},'headers':[{'source':'/','headers':[]}]}
+            (root/'vercel.json').write_text(json.dumps(live_config))
             (root/publisher.DATA).write_text(json.dumps(packet));(root/publisher.CHECKPOINT).write_text('{}');(root/'layout.txt').write_text('base')
             git('add','.');git('commit','-qm','base');base=git('rev-parse','HEAD')
             packet['generatedAt']='2026-10-28T12:00:00Z';packet['articles'].append({'id':'b','updatedAt':'2026-10-28T12:00:00Z'})
@@ -239,7 +241,10 @@ class PublicationLiveTree(unittest.TestCase):
             with patch.object(publisher,'ROOT',root):tree=publisher.news_tree(live,source,evidence)
             self.assertEqual(git('show',tree+':layout.txt'),'current live UI')
             self.assertEqual(json.loads(git('show',tree+':'+publisher.DATA)),packet)
-            self.assertEqual(set(git('diff-tree','--name-only','-r',live+'^{tree}',tree).splitlines()),{publisher.DATA,publisher.CHECKPOINT})
+            self.assertEqual(set(git('diff-tree','--name-only','-r',live+'^{tree}',tree).splitlines()),{publisher.DATA,publisher.CHECKPOINT,'vercel.json'})
+            published_config=json.loads(git('show',tree+':vercel.json'))
+            self.assertFalse(published_config['git']['deploymentEnabled'].pop(publisher.PUBLICATION_PREFIX+'*'))
+            self.assertEqual(published_config,live_config)
             self.assertEqual(git('rev-parse','HEAD'),live)
             self.assertEqual(len(json.loads((root/publisher.DATA).read_text())['articles']),1)
             with patch.object(publisher,'ROOT',root),self.assertRaisesRegex(RuntimeError,'regress'):

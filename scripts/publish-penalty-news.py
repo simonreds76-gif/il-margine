@@ -20,10 +20,11 @@ TEAM = 'team_UgA9caW5xCBxDyssrOuTQz7S'
 PROJECT = 'prj_OnvAAAzkpLa5N9uZI3Iy2mwEj6IL'
 DATA = 'src/data/penalty-news.json'
 CHECKPOINT = 'data/penalty-news/capture-state.json'
+PUBLICATION_PREFIX = 'codex/penalty-news-publish-'
 
 
-def run(*args, timeout=120, env=None):
-    result = subprocess.run([str(v) for v in args], cwd=ROOT, capture_output=True, text=True, timeout=timeout, env=env)
+def run(*args, timeout=120, env=None, input_text=None):
+    result = subprocess.run([str(v) for v in args], cwd=ROOT, capture_output=True, text=True, timeout=timeout, env=env, input=input_text)
     if result.returncode:
         # CLI errors may echo configuration; retain only the command name and code.
         raise RuntimeError(f'{Path(str(args[0])).name} exited {result.returncode}')
@@ -60,9 +61,24 @@ def news_tree(live_sha, source_sha, state):
         if len(entry) != 4 or entry[0] != '100644' or entry[1] != 'blob' or entry[3] != path:
             raise RuntimeError('Expected a regular news data file')
         run('git', 'update-index', '--add', '--cacheinfo', entry[0], entry[2], path, env=env)
+    # The explicit staged build below owns publication. Prevent an additional
+    # automatic Git preview for its private candidate branch, preserving every
+    # other setting from the exact live deployment.
+    config = json.loads(run('git', 'show', live_sha + ':vercel.json'))
+    rules = config.setdefault('git', {}).get('deploymentEnabled', True)
+    if rules is not False:
+        if rules is True:
+            rules = {}
+        # A broad true wildcard would override the narrow false rule on Vercel.
+        if any(value is True for value in rules.values()):
+            raise RuntimeError('Review conflicting automatic deployment rules before news publication')
+        rules[PUBLICATION_PREFIX + '*'] = False
+        config['git']['deploymentEnabled'] = rules
+        blob = run('git', 'hash-object', '-w', '--stdin', input_text=json.dumps(config, indent=2) + '\n')
+        run('git', 'update-index', '--cacheinfo', '100644', blob, 'vercel.json', env=env)
     tree = run('git', 'write-tree', env=env)
     changed = set(run('git', 'diff-tree', '--name-only', '-r', live_sha + '^{tree}', tree).splitlines())
-    if changed - {DATA, CHECKPOINT}:
+    if changed - {DATA, CHECKPOINT, 'vercel.json'}:
         raise RuntimeError('Candidate contains changes outside news data')
     return tree
 
@@ -70,7 +86,7 @@ def news_tree(live_sha, source_sha, state):
 def publication_candidate(live_sha, source_sha, state):
     run('git', 'fetch', '--no-tags', 'origin', live_sha)
     tree = news_tree(live_sha, source_sha, state)
-    ref = 'codex/penalty-news-' + live_sha[:12] + '-' + tree[:12]
+    ref = PUBLICATION_PREFIX + live_sha[:12] + '-' + tree[:12]
     existing = run('git', 'ls-remote', 'origin', 'refs/heads/' + ref)
     if existing:
         sha = existing.split()[0]
