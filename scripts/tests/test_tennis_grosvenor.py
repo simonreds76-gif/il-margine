@@ -124,6 +124,9 @@ class GrosvenorTests(unittest.TestCase):
         self.assertEqual(shadow.settle([row], {}, direct_index={key: [retired]}), 0)
         self.assertIn('contract_review', row['settlement_note'])
         self.assertEqual(shadow.settle([row], {}, direct_index={key: [dict(match, tourney_name='Elsewhere')]}), 0)
+        self.assertEqual(shadow.settle([row], {}, direct_index={key: [dict(match, tourney_date='20260728')]}), 0)
+        future = dict(row, match_start_utc=(datetime.now(timezone.utc) + timedelta(hours=1)).isoformat())
+        self.assertEqual(shadow.settle([future], {}, direct_index={key: [match]}), 0)
         self.assertEqual(shadow.settle([row], {}, direct_index={key: [match]}), 1)
         self.assertEqual((row['outcome'], row['result'], row['pnl']), ('P1', 'win', '0.800'))
 
