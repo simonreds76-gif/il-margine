@@ -61,6 +61,28 @@ function harness({ fail = false, empty = false, noSquad = false, updateError = f
   return {load,pick,invalidations,paths,counts:()=>({fetches,queries})};
 }
 
+test('current ATP Berrettini shorthand resolves to the verified Matteo portrait',()=>{
+  const h=harness(); const artwork=h.load(path.join(root,'src/lib/tip-artwork.ts')).getTipArtwork;
+  const pick={id:1255,market:'tennis',category:'atp',event:'Cobolli vs Berrettini',player:'Berrettini',match_date:'2026-10-29'};
+  assert.equal(artwork(pick)[1].name,'Matteo Berrettini');
+  assert.equal(artwork(pick)[1].src,'https://a.espncdn.com/i/headshots/tennis/players/full/2622.png');
+  assert.equal(artwork({...pick,event:'Berrettini vs Cobolli'})[0].name,'Matteo Berrettini');
+  assert.equal(pick.event,'Cobolli vs Berrettini','artwork must not change the saved pick');
+});
+
+test('Berrettini shorthand never overrides Jacopo, Challenger ambiguity or historical ATP records',()=>{
+  const h=harness(); const artwork=h.load(path.join(root,'src/lib/tip-artwork.ts')).getTipArtwork;
+  const pick={market:'tennis',category:'atp',event:'Matteo Berrettini vs Jacopo Berrettini',player:null,match_date:'2026-10-29'};
+  assert.deepEqual(artwork(pick).map(p=>p.name),['Matteo Berrettini','Jacopo Berrettini']);
+  assert.equal(artwork(pick)[1].src,null);
+  for(const edit of [{category:'challenger'},{category:'wta'},{match_date:'2023-12-31'}]) {
+    assert.equal(artwork({...pick,event:'Cobolli vs Berrettini',...edit})[1].src,null);
+  }
+  assert.equal(artwork({...pick,category:'challenger'})[0].name,'Matteo Berrettini');
+  assert.equal(artwork({...pick,event:'Cobolli vs Zverev'})[1].name,'Alexander Zverev');
+  assert.equal(artwork({...pick,event:'Cobolli vs Mischa Zverev'})[1].name,'Mischa Zverev');
+});
+
 test('a new surname-only pick gets a real club-scoped portrait without a curated player entry',async()=>{
   const h=harness();
   const artwork=h.load(path.join(root,'src/lib/tip-artwork.ts')).getTipArtwork(h.pick);

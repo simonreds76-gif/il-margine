@@ -13,6 +13,12 @@ const words = (name: string) => foldNameText(name).toLowerCase().replace(/[^a-z0
 const leagueKeys: Record<string, string> = { pl: "epl", seriea: "serie-a", laliga: "la-liga", bundesliga: "bundesliga", ligue1: "ligue-1" };
 const clubAliases: Record<string, string> = { psg: "parissaintgermain", acmilan: "milan" };
 const clubKey = (club: string) => clubAliases[key(club)] ?? key(club);
+// Verified editorial surname shorthand in current ATP picks. Full names still
+// resolve exactly, and ambiguous names outside this context remain unresolved.
+const currentAtpPortraitAliases: Record<string, string> = {
+  zverev: "Alexander Zverev",
+  berrettini: "Matteo Berrettini",
+};
 
 // The URL must change with the saved identity, even when the bet ID stays the
 // same. This also resets the portrait component's failed-image state on edit.
@@ -60,9 +66,8 @@ function tennisPortrait(name: string): TipPortrait {
 export function getTipArtwork(pick: PickIdentity): TipPortrait[] {
   const sides = participants(pick.event);
   if (pick.market === "tennis") {
-    // Current editorial shorthand for the active ATP player; full names remain
-    // exact, including Mischa Zverev. Restricted to the ATP category.
-    return sides.map((name) => tennisPortrait(pick.category === "atp" && (!pick.match_date || pick.match_date >= "2024-01-01") && key(name) === "zverev" ? "Alexander Zverev" : name));
+    const useCurrentAtpShorthand = pick.category === "atp" && (!pick.match_date || pick.match_date >= "2024-01-01");
+    return sides.map((name) => tennisPortrait(useCurrentAtpShorthand ? currentAtpPortraitAliases[key(name)] ?? name : name));
   }
   const name = pick.player?.trim();
   const clubPortraits = sides.map((club): TipPortrait => ({ name: club, src: resolveTeamLogoPath(club, pick.category), kind: "club" }));
