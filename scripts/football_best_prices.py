@@ -1,9 +1,46 @@
 """Execution-price comparison only: no model probability or parameter changes."""
 import json
 import math
+import copy
 from datetime import datetime, timezone
 
 MAX_PRICE_SECONDS=600
+
+
+def add_execution_quotes(candidates,latest,now,minimum_edge,publisher):
+    """A one-sided offer may execute a priced contract, but cannot calibrate it.
+
+    Reuse an intact fresh reference pair's model probability for the exact
+    fixture/team/line/side. No synthetic Under, cross-book devig or new model.
+    """
+    def contract(row,quote=False):
+        return (row['kickoff'] if quote else stamp(row['kickoff_utc']),
+                row['league_slug'] if quote else row['league'],
+                publisher.team_key(row['home_team']),publisher.team_key(row['away_team']),
+                publisher.team_key(row.get('team','')),str(row['line_label'] if quote else row['line']),row['side'])
+    refs={};existing=set()
+    for row in candidates:
+        key=contract(row);existing.add((key,row['bookmaker']))
+        if any(reason in row.get('blocked_reason','') for reason in
+               ('price_not_fresh_10m','price_older_than_3h','future_price_timestamp','missing_price_timestamp')):continue
+        captured=stamp(row.get('price_captured_at_utc'))
+        if captured and 0 <= (now-captured).total_seconds() <= MAX_PRICE_SECONDS:
+            refs.setdefault(key,[]).append(row)
+    for quote in latest:
+        key=contract(quote,True);book=quote['bookmaker'];captured=quote.get('captured_at_dt')
+        if ((key,book) in existing or key not in refs or not captured or quote['kickoff']<=now
+                or not 0 <= (now-captured).total_seconds() <= MAX_PRICE_SECONDS):continue
+        reference=max(refs[key],key=lambda r:(float(r['book_odds']),r['bookmaker']))
+        row=copy.deepcopy(reference)
+        edge=float(row['model_implied_prob'])*float(quote['odds'])-1
+        reasons=[r for r in row['blocked_reason'].split(';') if r and r!='edge_below_3pct']
+        if edge<minimum_edge:reasons.append('edge_below_3pct')
+        row.update(bookmaker=book,book_odds=round(float(quote['odds']),6),edge=round(edge,6),
+                   price_source=quote.get('source',''),price_captured_at_utc=publisher.fmt_dt(captured),
+                   probability_reference_bookmaker=reference['bookmaker'],
+                   probability_reference_captured_at_utc=reference['price_captured_at_utc'],
+                   blocked_reason=';'.join(reasons))
+        candidates.append(row);existing.add((key,book))
 
 
 def stamp(value):

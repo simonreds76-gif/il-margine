@@ -51,6 +51,23 @@ class BestPriceTests(unittest.TestCase):
               {**candidate('Grosvenor',2.1),'kickoff_utc':'2026-10-28T20:00:00Z'}]
         self.assertEqual(len(prices.best_candidates(rows,NOW)),3)
 
+    def test_one_sided_execution_uses_unchanged_complete_reference_probability(self):
+        base=dict(kickoff_at='2026-10-28T19:45:00Z',captured_at='2026-10-28T18:44:00Z',
+                  competition='Serie A',home_team='Monza',away_team='Napoli',team='Monza',line='10.5')
+        rows=[dict(base,bookmaker='Bet365',side=s,odds_decimal=2) for s in ['over','under']]
+        rows.append(dict(base,bookmaker='Grosvenor',side='over',odds_decimal=2.5))
+        with patch.object(shadow.PUB,'live_form_row',return_value={'ema20_matches':20}), \
+             patch.object(shadow.PUB.BACKTEST,'canonical_team_shots_ema20_lambda',return_value=13), \
+             patch.object(shadow,'blend_logit',return_value=.6):
+            signals,candidates=shadow.score_team_shots(by_team={},by_league={},odds_rows=rows,
+                params={'pooled_alpha':.1,'market':{'model_weight':.5,'over_vig_share':.5}},
+                lock={'selection_rules':{'minimum_edge':.03}},now=NOW)
+        self.assertEqual(len(signals),1);self.assertEqual(signals[0]['bookmaker'],'Grosvenor')
+        self.assertEqual(signals[0]['model_implied_prob'],.6)
+        self.assertEqual(signals[0]['probability_reference_bookmaker'],'Bet365')
+        self.assertEqual(signals[0]['book_odds'],2.5);self.assertEqual(signals[0]['edge'],.5)
+        self.assertFalse(any(r['bookmaker']=='Grosvenor' and r['side']=='under' for r in candidates))
+
     def test_corners_keeps_each_book_pair_and_actual_price(self):
         base=dict(kickoff_at='2026-10-28T19:45:00Z',captured_at='2026-10-28T18:44:00Z',
                   competition='Serie A',home_team='Genoa',away_team='Juventus',line='8.5',market='MATCH_CORNERS')

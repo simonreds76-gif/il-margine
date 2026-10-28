@@ -29,7 +29,7 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from football_counts import prob_over  # noqa: E402
-from football_best_prices import best_candidates, fresh_pair, latest_corners
+from football_best_prices import best_candidates, fresh_pair, latest_corners, add_execution_quotes
 from football_market import blend_logit, proportional_devig, shading_aware_devig  # noqa: E402
 
 
@@ -63,6 +63,8 @@ EXTRA_FIELDS = [
     "signal_status",
     "price_source",
     "compared_prices",
+    "probability_reference_bookmaker",
+    "probability_reference_captured_at_utc",
 ]
 
 
@@ -221,6 +223,8 @@ def candidate_row(
         "team": team,
         "bookmaker": source.get("bookmaker") or "Pinnacle",
         "price_source": source.get("source", "pinnacle" if source.get("bookmaker", "Pinnacle") == "Pinnacle" else ""),
+        "probability_reference_bookmaker": source.get("bookmaker") or "Pinnacle",
+        "probability_reference_captured_at_utc": PUB.fmt_dt(source["captured_at_dt"]),
         "selection": selection,
         "line": line,
         "side": side,
@@ -437,6 +441,7 @@ def score_team_shots(
             row["model_input_version"] = "v4-1x2-asof-20260912"
             if not blocked:
                 accepted.append(row)
+    add_execution_quotes(candidates,latest,now,min_edge,PUB)
     return cap_signals(best_candidates(candidates,now)), candidates
 
 
@@ -639,6 +644,7 @@ def score_corners(
                 accepted.append(row)
     for row in candidates:
         row["model_input_version"] = "v3-event-asof-20260912"
+    add_execution_quotes(candidates,latest,now,min_edge,PUB)
     return cap_signals(best_candidates(candidates,now)), candidates
 
 
