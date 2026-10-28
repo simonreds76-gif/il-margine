@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-28T15:25:54Z",
+  "generated_at": "2026-10-28T16:35:58.554842+00:00",
   "league": "ligue-1",
   "row_count": 2,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2988052191",
           "match_id": "5802968",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802968",
-          "observed_at": "2026-10-28T15:25:53+00:00",
+          "observed_at": "2026-10-28T16:36:00+00:00",
           "event_date": "2026-10-25",
           "season": "2026/27",
           "team": "Le Havre",
@@ -158,5 +158,13 @@
       "20261028"
     ],
     "matches_checked": 9
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261025"
+    ],
+    "matches_checked": 1
   }
 }
