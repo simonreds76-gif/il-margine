@@ -1270,7 +1270,7 @@
       "followUpDue": "2026-10-28T23:41:41.250975+00:00"
     },
     "5749725": {
-      "status": "pending",
+      "status": "verified",
       "fixture": {
         "matchId": "5749725",
         "leagueId": 55,
@@ -1279,8 +1279,12 @@
         "kickoff": "2026-10-28T19:45:00.000Z",
         "score": "1 - 4"
       },
-      "attemptedAt": "2026-10-28T21:41:41.250975+00:00",
-      "error": "Not a completed supported league match"
+      "attemptedAt": "2026-10-28T21:54:17.080585+00:00",
+      "verifiedAt": "2026-10-28T21:54:17.080585+00:00",
+      "firstVerifiedAt": "2026-10-28T21:54:17.080585+00:00",
+      "sourceObservedAt": "2026-10-28T21:54:17.080585+00:00",
+      "sourceHash": "9dda321caef09a382abb745513bda938004bdc29115be6f31ac3f59f2b76b928",
+      "followUpDue": "2026-10-28T23:54:17.080585+00:00"
     }
   }
 }
