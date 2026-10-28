@@ -1,4 +1,5 @@
 import json
+import hashlib
 import subprocess
 import sys
 import tempfile
@@ -45,5 +46,19 @@ class HandoffTests(unittest.TestCase):
             self.runner.side_effect=error
             self.assertEqual(H.run(self.root,self.quotes,runner=self.runner)['state'],state)
             self.assertTrue(self.quotes.exists())
+
+    def test_changed_history_refreshes_only_frozen_paper_board_first(self):
+        self.install()
+        generator=self.root/'scripts/tennis-props-v3-live.py';generator.write_text('# frozen generator')
+        registration=self.root/'data/tennis-props/shadow/sisal-5050-v1/registration.json'
+        registration.write_text(json.dumps({'artifacts':{'scripts/tennis-props-v3-live.py':hashlib.sha256(generator.read_bytes()).hexdigest()}}))
+        (self.root/'data/tennis-props/player-history-status.json').write_text(json.dumps({'as_of':'2026-10-28','output_hashes':{'player-props-baseline.csv':'new'}}))
+        report=H.run(self.root,self.quotes,runner=self.runner)
+        self.assertTrue(report['paper_board_refreshed'])
+        self.assertEqual(self.runner.call_args_list[0].args[0],[sys.executable,str(generator)])
+        self.assertTrue(self.runner.call_args_list[1].args[0][1].endswith('tennis_sisal_5050.py'))
+        self.runner.reset_mock();generator.write_text('# altered')
+        self.assertEqual(H.run(self.root,self.quotes,runner=self.runner)['state'],'PAPER_INPUT_REFRESH_BLOCKED')
+        self.runner.assert_not_called()
 
 if __name__=='__main__':unittest.main()
