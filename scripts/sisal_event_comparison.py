@@ -17,6 +17,31 @@ FROZEN = [str(T.MODEL),str(T.GENERATOR),'scripts/tennis_props_model.py',
           'scripts/tennis_event_integrity.py','scripts/sisal_event_comparison.py']
 
 def folder(root): return root/T.REL/SUB
+SELF = 'scripts/sisal_event_comparison.py'
+
+def register_source_revision(root, now, expected_old, expected_new):
+    """Explicit, dated input-scope repair; never rewrite the original registration."""
+    p=folder(root)
+    with T.lock(root/T.REL), T.lock(p):
+        reg=T.read_json(p/'registration.json',None)
+        if not reg or reg['policy']!=POLICY:raise ValueError('missing_or_changed_registration')
+        hashes={n:T.sha(root/n) for n in FROZEN}
+        if reg['artifacts'][SELF]!=expected_old or hashes[SELF]!=expected_new:
+            raise ValueError('revision_hash_mismatch')
+        if any(hashes[n]!=h for n,h in reg['artifacts'].items() if n!=SELF):
+            raise ValueError('non_source_artifact_changed')
+        revision=dict(id='singles-evidence-scope-20261028',effective_from=now.isoformat(),
+            artifact=SELF,previous_hash=expected_old,current_hash=expected_new,
+            reason='Exclude identified doubles from required singles evidence; pricing policy unchanged')
+        path=p/'source-filter-revision.json'
+        if path.exists():
+            existing=T.read_json(path,{})
+            if any(existing.get(k)!=revision[k] for k in ('id','artifact','previous_hash','current_hash')):
+                raise ValueError('source_revision_already_registered')
+            return existing
+        T.atomic(path,revision)
+        return revision
+
 def register(root, now):
     p=folder(root);p.mkdir(parents=True,exist_ok=True)
     hashes={n:T.sha(root/n) for n in FROZEN}
@@ -24,9 +49,29 @@ def register(root, now):
     if reg is None:
         reg=dict(registered_at=now.isoformat(),policy=POLICY,artifacts=hashes)
         T.atomic(p/'registration.json',reg)
-    if reg['policy']!=POLICY or reg['artifacts']!=hashes:
+    expected=dict(reg['artifacts']);revision=T.read_json(p/'source-filter-revision.json',None)
+    if revision:
+        if (revision.get('id')!='singles-evidence-scope-20261028' or revision.get('artifact')!=SELF
+            or revision.get('previous_hash')!=expected[SELF]
+            or T.stamp(revision.get('effective_from')) is None
+            or T.stamp(revision['effective_from'])<T.stamp(reg['registered_at'])):
+            raise ValueError('invalid_source_revision')
+        expected[SELF]=revision['current_hash']
+    if reg['policy']!=POLICY or expected!=hashes:
         raise ValueError('event_comparison_frozen_policy_or_artifact_changed')
-    return reg
+    return dict(reg,artifacts=expected,source_revision=revision,
+                effective_from=revision['effective_from'] if revision else reg['registered_at'])
+
+def required_singles(games,names,tids,score):
+    """Keep unknown identities as gaps; exclude only positively identified doubles."""
+    known={tid:set() for tid in tids};excluded=Counter()
+    for g in games:
+        tid=g['tour_id']
+        if tid not in known or int(g['round_id'])<4 or score(g['result']) is None:continue
+        if any('/' in names.get(g[k],'') for k in ('winner_id','loser_id')):
+            excluded[tid]+=1;continue
+        known[tid].add(tuple(g[k] for k in ('winner_id','loser_id','tour_id','round_id')))
+    return known,dict(excluded)
 
 def neutral_mean(record, score, corrections):
     """Neutralise the incumbent INPUT, never the final V3 output.
@@ -95,7 +140,7 @@ def _prepare(root,p,now,reg):
     eligible={tid for tid,t in tours.items() if B['is_supported_main_tour'](t) and t['date']>=f'{now.year-5}-01-01'}
     games=[g for g in T.read_csv(S/'games_atp.csv') if g['tour_id'] in eligible and g['date']<now.date().isoformat()]
     stats=[s for s in T.read_csv(S/'stat_atp.csv') if s['tour_id'] in eligible]
-    known={tid:{tuple(g[k] for k in ('winner_id','loser_id','tour_id','round_id')) for g in games if g['tour_id']==tid and int(g['round_id'])>=4 and C.score(g['result']) is not None} for tid in tids}
+    known,excluded_doubles=required_singles(games,names,tids,C.score)
     stats,games,excluded=clean_event_rows(stats,games,names)
     key=lambda x:tuple(x[k] for k in ('winner_id','loser_id','tour_id','round_id'))
     si={key(s):s for s in stats};surface=court_surfaces(S/'courts.csv',combine_hard=True)
@@ -146,6 +191,7 @@ def _prepare(root,p,now,reg):
         row.update(first_observed_complete_at=observed.isoformat(),manifest=manifest,artifact_hashes=reg['artifacts'])
         T.append(p/'evidence.jsonl',evidence,row)
     status=dict(state='READY',checked_at=observed.isoformat(),prepared_at=observed.isoformat(),editions=sorted(tids),missing_by_edition=dict(missing),missing_fixtures=[dict(edition=tid,fixture=list(k),reason=invalid.get(k,'missing_or_rejected_statistics')) for tid,keys in known.items() for k in sorted(keys-set(valid))],added=len(new),evidence_rows=len(evidence),manifest=manifest,clean_exclusions=excluded)
+    status.update(excluded_doubles_by_edition=excluded_doubles,source_revision=reg.get('source_revision'))
     T.atomic(p/'evidence-status.json',status)
     return status
 
@@ -165,10 +211,11 @@ def capture_pairs(root,records,now):
     corrections=runpy.run_path(str(root/'scripts/tennis_props_model.py'))['SLAM_COUNT_BIAS_CORRECTION'] if records else {}
     for r in records:
         if r['id'] in seen:continue
-        pair=dict(id=r['id'],base_hash=r['hash'],registered_at=now.isoformat(),state='UNAVAILABLE')
+        pair=dict(id=r['id'],base_hash=r['hash'],registered_at=now.isoformat(),state='UNAVAILABLE',source_revision=reg.get('source_revision'))
         try:
             cap=T.stamp(r['row']['capture_ts']);prepared=T.stamp(status.get('prepared_at'))
             if cap<T.stamp(reg['registered_at']):raise ValueError('price_precedes_comparison_registration')
+            if cap<T.stamp(reg.get('effective_from',reg['registered_at'])):raise ValueError('price_precedes_source_revision')
             if status.get('state')!='READY' or not prepared or prepared>cap or (cap-prepared).total_seconds()>24*3600:raise ValueError('event_evidence_not_verified_before_quote')
             tid=r['native']['tid']
             if tid not in status['editions']:raise ValueError('edition_not_verified')
@@ -200,7 +247,7 @@ def comparison_report(root,rows,outcomes,reg,now):
             r=index[x['id']];records.append(dict(r,arms=x[armkey],mean=x.get('mean',r['mean']) if name=='event_adjusted' else r['mean']))
         summary=T.summarize(records,outcomes,reg,{},now,{})
         versions[name]=dict(summary,model='Original 50/50' if name=='original' else POLICY['name'])
-    return dict(policy=POLICY,registered_at=registration.get('registered_at'),paired_contracts=len(accepted),
+    return dict(policy=POLICY,registered_at=registration.get('registered_at'),source_revision=T.read_json(p/'source-filter-revision.json',None),paired_contracts=len(accepted),
                 unavailable=Counter(x.get('reason','unknown') for x in pairs if x['state']!='PAIRED'),
                 without_event_results=sum(x['evidence_rows']==0 for x in accepted),versions=versions,
                 capture=T.read_json(p/'evidence-status.json',{}),ledger_head=pairs[-1]['hash'] if pairs else None,

@@ -62,6 +62,37 @@ class ComparisonTests(unittest.TestCase):
     def test_frozen_artifact_rejects_change(self):
         (self.root/E.FROZEN[0]).write_text('changed')
         with self.assertRaises(ValueError):E.register(self.root,NOW)
+    def test_singles_scope_keeps_unknown_identities_and_missing_stats(self):
+        def g(a,b,round='4',result='6-4 6-4'):
+            return dict(winner_id=a,loser_id=b,tour_id='77',round_id=round,result=result)
+        games=[g('1','2'),g('3','4'),g('5','2'),g('1','2','3'),g('1','2','5','W/O')]
+        known,excluded=E.required_singles(games,{'1':'One','2':'Two','3':'A/B','4':'C/D'},['77'],lambda s:None if s=='W/O' else (2,0))
+        self.assertEqual(known['77'],{('1','2','77','4'),('5','2','77','4')})
+        self.assertEqual(excluded,{'77':1})
+    def test_source_revision_is_explicit_and_preserves_original_evidence(self):
+        original=(self.p/'registration.json').read_bytes();old=T.sha(self.root/E.SELF)
+        (self.root/E.SELF).write_text('# repaired singles scope');new=T.sha(self.root/E.SELF)
+        with self.assertRaises(ValueError):E.register(self.root,NOW)
+        revision=E.register_source_revision(self.root,NOW,old,new)
+        self.assertEqual(E.register(self.root,NOW)['source_revision'],revision)
+        self.assertEqual((self.p/'registration.json').read_bytes(),original)
+        self.assertEqual(len(T.ledger(self.p/'evidence.jsonl')),1)
+        E.capture_pairs(self.root,[record()],NOW)
+        self.assertEqual(T.ledger(self.p/'pairs.jsonl')[0]['reason'],'price_precedes_source_revision')
+        # A later rebuild must never revise this rejected old quote.
+        r=record();r['row']['capture_ts']=(NOW+timedelta(minutes=1)).isoformat()
+        E.capture_pairs(self.root,[r],NOW+timedelta(minutes=2))
+        self.assertEqual(len(T.ledger(self.p/'pairs.jsonl')),1)
+        self.assertEqual(T.ledger(self.p/'pairs.jsonl')[0]['state'],'UNAVAILABLE')
+    def test_revision_does_not_authorise_model_changes_or_later_code_edits(self):
+        old=T.sha(self.root/E.SELF);(self.root/E.SELF).write_text('# repair')
+        new=T.sha(self.root/E.SELF);E.register_source_revision(self.root,NOW,old,new)
+        (self.root/E.FROZEN[0]).write_text('# changed model')
+        with self.assertRaises(ValueError):E.register(self.root,NOW)
+        with self.assertRaises(ValueError):E.register_source_revision(self.root,NOW,old,new)
+        (self.root/E.FROZEN[0]).write_text('# frozen')
+        (self.root/E.SELF).write_text('# arbitrary later code')
+        with self.assertRaises(ValueError):E.register(self.root,NOW)
     def test_neutral_changes_input_not_final_mean(self):
         r=record();r['board'].update(current_env_ace_factor='.95',ace_rate_adj='.07')
         f=[]
