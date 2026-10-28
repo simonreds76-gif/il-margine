@@ -1,5 +1,7 @@
 import copy
 import unittest
+import json
+from unittest.mock import Mock
 from test_gk_fotmob_identity import settle
 
 
@@ -54,6 +56,25 @@ class NamedNonstarterTests(unittest.TestCase):
         settle.void_named_nonstarter(s, '2026-10-28T16:00:00Z')
         self.assertEqual((s['status'], s['actual_saves'], s['pnl_units']), ('void', '', '0.0000'))
         self.assertEqual((s['odds_decimal'], s['stake_units'], s['model_probability']), ('2.625', '.5', '.51'))
+
+    def test_reviewed_count_is_exact_and_does_not_repair_training_events(self):
+        p=copy.deepcopy(self.page);g=p['props']['pageProps']['general']
+        g.update(matchTimeUTCDate='2026-10-11T15:30:00Z',homeTeam={'id':22})
+        signal={**self.signal,'goalkeeper':'Actual Goalie'}
+        evidence={'match_id':'12','match_date':'2026-10-11','player_id':11,'team_id':22,
+                  'goalkeeper':'Actual Goalie','venue':'home','actual_saves':3,'reviewed_event_saves':2,
+                  'reviewed_at':'2026-10-28','source_urls':['https://one.example','https://two.example']}
+        path=Mock();path.exists.return_value=True;path.read_text.return_value=json.dumps({'records':[evidence]})
+        metadata={'error':'fotmob_save_totals_disagree','player_id':11,'explicit_saves':3,'event_saves':2}
+        before=copy.deepcopy(p)
+        self.assertEqual(settle.reviewed_named_count(p,signal,metadata,path)['actual_saves'],3)
+        self.assertEqual(p,before)
+        for change in ({'player_id':99},{'explicit_saves':4},{'event_saves':1},{'error':'missing'}):
+            self.assertIsNone(settle.reviewed_named_count(p,signal,{**metadata,**change},path))
+        for change in ({'goalkeeper':'Wrong Name'},{'venue':'away'},{'contract_scope':'team_goalkeeper_home'}):
+            self.assertIsNone(settle.reviewed_named_count(p,{**signal,**change},metadata,path))
+        g['matchId']='99'
+        self.assertIsNone(settle.reviewed_named_count(p,signal,metadata,path))
 
 
 if __name__ == '__main__': unittest.main()
