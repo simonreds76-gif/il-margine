@@ -44,3 +44,13 @@ test('forecast outcomes and pre-fit closes are not passed off as betting results
   assert.equal(find(snapshot, 'props_v4').closes, null);
   assert.equal(find(snapshot, 'props_v4').roi, null);
 });
+
+test('captured Most Aces contracts remove the stale unsupported-source label without fabricating ROI', () => {
+  const row = find({ sections: {
+    tennis_most_aces_forecast: { rows_settled: 100, accuracy_pct: 61 },
+    tennis_most_aces_prices: { direct_1x2: { registered: 8 } },
+  } }, 'most_aces');
+  assert.equal(row.status, 'Paper price tracking');
+  assert.equal(row.roi, null);
+  assert.equal(row.settled, null);
+});

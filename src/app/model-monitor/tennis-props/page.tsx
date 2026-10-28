@@ -1851,6 +1851,8 @@ function MostAcesPanel({
 }) {
   const today = londonDateIso();
   const probability = (row: CsvRow) => Math.max(n(row.p_player1), n(row.p_draw), n(row.p_player2));
+  const capturedBooks = [...new Set(observations.map((row) => row.bookmaker?.trim()).filter(Boolean))].sort();
+  const capturedBookLabel = capturedBooks.length ? capturedBooks.join(", ") : "No captured bookmaker prices";
   const visible = rows.filter((row) => row.date >= today);
   visible.sort((a, b) => {
     if (sortKey === "favourite") return probability(b) - probability(a);
@@ -1933,7 +1935,7 @@ function MostAcesPanel({
 
   return (
     <SectionCard
-      title="BetMGM Most Aces 1X2"
+      title="Most Aces 1X2 · Paper research"
       subtitle={`Correlated ATP Hard/Clay shadow pricer. Stage-0 ${String(validation.status || "MISSING")} on ${String(correlated.n || 0)} untouched matches; current artifact ${stamp}.`}
     >
       <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-7">
@@ -1943,7 +1945,7 @@ function MostAcesPanel({
         <MetricTile label="Draws" value={String(outcomes.DRAW || 0)} sub="10.2% in holdout" tone="text-amber-300" />
         <MetricTile label="A0 forward settled" value={String(settled)} sub={`${numeric(controlForward.rows_registered)} registered`} tone={settled ? "text-cyan-300" : "text-slate-400"} />
         <MetricTile label="Forward score" value={Number.isFinite(accuracy) ? `${accuracy.toFixed(1)}%` : "-"} sub={Number.isFinite(forwardBrier) ? `Brier ${forwardBrier.toFixed(4)}` : "awaiting results"} tone={settled ? "text-emerald-300" : "text-slate-400"} />
-        <MetricTile label="BetMGM prices" value={String(observations.length)} sub={observations.length ? "captured 1X2 quotes" : "FEED EMPTY - no ROI/CLV"} tone={observations.length ? "text-emerald-300" : "text-rose-300"} />
+        <MetricTile label="Captured prices" value={String(observations.length)} sub={capturedBookLabel} tone={observations.length ? "text-slate-100" : "text-amber-300"} />
       </div>
 
       {Object.keys(directValidation).length ? (
@@ -1993,8 +1995,8 @@ function MostAcesPanel({
       <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-xs leading-relaxed text-amber-100/80 sm:flex-row sm:items-center sm:justify-between">
         <p>
           {observations.length
-            ? `${observations.length} BetMGM market capture${observations.length === 1 ? "" : "s"} matched. Value and CLV remain shadow-only.`
-            : "BetMGM lists Stat Bets on its site, but the configured odds feed has not exposed the three-way prices. Fair-odds forecasts are still registered and scored from actual ace counts; no ROI or value is claimed."}
+            ? `${observations.length} matched market observation${observations.length === 1 ? "" : "s"} from ${capturedBookLabel}. Original bookmaker names and prices are retained. Only qualifying priced selections contribute to paper ROI; forecast accuracy is separate.`
+            : "No matched three-way prices in this snapshot. Forecasts can still be scored against actual ace counts; a forecast alone is not a priced selection or a betting return."}
         </p>
         <div className="flex shrink-0 flex-wrap gap-2">
           {sortOptions.map((option) => (
