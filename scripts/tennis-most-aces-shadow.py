@@ -309,6 +309,17 @@ def sackmann_date(row: dict[str, str]) -> date | None:
         return None
 
 
+def same_result_event(row, match):
+    expected, actual = norm_name(row.get('tournament')), norm_name(match.get('tourney_name'))
+    if not expected or not actual:return False
+    if expected == actual:return True
+    # OnCourt's structured main-tour label is "sponsor/event - location".
+    # A lower-tier event in the same city cannot satisfy this mapping.
+    raw = str(match.get('tourney_name') or '')
+    return (match.get('_settlement_source') == 'oncourt' and str(match.get('_tour_rank')) in {'1','2','3','4'}
+            and ' - ' in raw and norm_name(raw.rsplit(' - ',1)[1]) == expected)
+
+
 def settle(ledger: list[dict[str, str]], index: dict[tuple[str, str], list[dict[str, str]]], *, direct_index=None) -> int:
     settled = 0
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -325,18 +336,19 @@ def settle(ledger: list[dict[str, str]], index: dict[tuple[str, str], list[dict[
                 row["settlement_note"] = "match_not_started"
                 continue
         candidates = []
-        source_index = direct_index if row.get("bookmaker") == "Grosvenor" else index
-        for match in (source_index or {}).get(pair_key(row.get("player1"), row.get("player2")), []):
+        pair = pair_key(row.get("player1"), row.get("player2"))
+        exact = [m for m in (direct_index or {}).get(pair, [])
+                 if sackmann_date(m) == target_date and same_result_event(row,m)]
+        # Prefer independently matched actual match dates for every bookmaker.
+        source_rows = exact if exact else (index or {}).get(pair, []) if row.get('bookmaker') != 'Grosvenor' else []
+        for match in source_rows:
             played = sackmann_date(match)
-            same_event = (row.get("bookmaker") != "Grosvenor" or
-                          (played == target_date and
-                           norm_name(match.get("tourney_name")) == norm_name(row.get("tournament"))))
-            if same_event and played and abs((played - target_date).days) <= 2:
+            if same_result_event(row,match) and played == target_date:
                 candidates.append((abs((played - target_date).days), match))
         if not candidates:
-            row["settlement_note"] = "sackmann_match_not_found"
+            row["settlement_note"] = "exact_fixture_result_or_ace_counts_unavailable"
             continue
-        if row.get("bookmaker") == "Grosvenor" and len(candidates) != 1:
+        if len(candidates) != 1:
             row["settlement_note"] = "ambiguous_exact_fixture"
             continue
         match = min(candidates, key=lambda item: item[0])[1]
@@ -354,8 +366,9 @@ def settle(ledger: list[dict[str, str]], index: dict[tuple[str, str], list[dict[
         winner = norm_name(match.get("winner_name"))
         first = norm_name(row.get("player1"))
         try:
-            winner_aces = int(round(float(match["w_ace"])))
-            loser_aces = int(round(float(match["l_ace"])))
+            values = [float(match[k]) for k in ('w_ace','l_ace')]
+            if any(not math.isfinite(v) or v < 0 or not v.is_integer() for v in values):raise ValueError('invalid ace count')
+            winner_aces,loser_aces = map(int,values)
         except (KeyError, TypeError, ValueError):
             row["settlement_note"] = "missing_ace_stats"
             continue
@@ -386,7 +399,7 @@ def settle(ledger: list[dict[str, str]], index: dict[tuple[str, str], list[dict[
             "market_brier": f"{market_brier:.6f}",
             "market_logloss": f"{-math.log(max(market_probabilities[outcome_index], 1e-12)):.6f}",
             "settled_at_utc": now,
-            "settlement_note": f"sackmann:{match.get('tourney_name','')}:{score}",
+            "settlement_note": f"{match.get('_settlement_source','sackmann')}:{match.get('tourney_name','')}:{score}",
         })
         settled += 1
     return settled
@@ -476,7 +489,7 @@ def main() -> int:
     direct_index = defaultdict(list)
     direct_pending = [dict(date=r.get("date"), tour=r.get("tour"), tournament=r.get("tournament"),
                            player=r.get("player1"), opponent=r.get("player2")) for r in ledger
-                      if r.get("bookmaker") == "Grosvenor" and r.get("settlement_status") == "pending"]
+                      if r.get("settlement_status") == "pending"]
     if direct_pending:
         spec = importlib.util.spec_from_file_location("most_aces_counts", ROOT / "scripts/tennis-props-settle-shadow.py")
         counts = importlib.util.module_from_spec(spec)
@@ -486,7 +499,7 @@ def main() -> int:
         oncourt = counts.load_oncourt_index(ROOT / "data/oncourt", direct_pending)
         for signal in direct_pending:
             pair = pair_key(signal["player"], signal["opponent"])
-            key = (signal["tour"].upper(), int(signal["date"][:4]), pair)
+            key = (signal["tour"].upper(), int(signal["date"][:4]), counts.pair_key(signal["player"],signal["opponent"]))
             for match in oncourt.get(key, []):
                 if match not in direct_index[pair]:
                     direct_index[pair].append(match)

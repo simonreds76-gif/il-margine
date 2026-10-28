@@ -15,6 +15,40 @@ SPEC.loader.exec_module(MODULE)
 
 
 class MostAcesShadowTests(unittest.TestCase):
+    def result(self,**changes):
+        return dict(dict(winner_name='Player One',loser_name='Player Two',tourney_name='Sponsor Open - Basel',
+                         tourney_date='20260729',score='6-4 6-4',w_ace='5',l_ace='7',
+                         _settlement_source='oncourt',_tour_rank='2'),**changes)
+
+    def test_completed_exact_oncourt_result_settles_legacy_and_current_books(self):
+        for book in ('Bet365','Grosvenor'):
+            row=MODULE.registration_row(self.board(),self.capture())
+            row.update(bookmaker=book,tournament='Basel')
+            before={k:row[k] for k in ('selected_odds','p_player1','p_draw','p_player2','bet_eligible','observation_id')}
+            index={MODULE.pair_key('Player One','Player Two'):[self.result()]}
+            self.assertEqual(MODULE.settle([row],{},direct_index=index),1)
+            self.assertEqual(row['actual_player1_aces'],'5');self.assertEqual(row['actual_player2_aces'],'7')
+            self.assertEqual(row['result'],'loss');self.assertEqual(row['pnl'],'-1.000')
+            self.assertTrue(row['settlement_note'].startswith('oncourt:'))
+            self.assertEqual(before,{k:row[k] for k in before})
+            self.assertEqual(MODULE.settle([row],{},direct_index=index),0)
+
+    def test_wrong_event_date_tier_and_ambiguous_result_remain_pending(self):
+        for result in (self.result(tourney_date='20260728'),self.result(tourney_name='Other - Vienna'),
+                       self.result(_tour_rank='0'),self.result(w_ace='3.5')):
+            row=MODULE.registration_row(self.board(),self.capture());row.update(bookmaker='Bet365',tournament='Basel')
+            index={MODULE.pair_key('Player One','Player Two'):[result]}
+            self.assertEqual(MODULE.settle([row],{},direct_index=index),0)
+            self.assertEqual(row['settlement_status'],'pending')
+        row=MODULE.registration_row(self.board(),self.capture());row.update(bookmaker='Bet365',tournament='Basel')
+        self.assertEqual(MODULE.settle([row],{},direct_index={MODULE.pair_key('Player One','Player Two'):[self.result(),self.result()]}),0)
+        self.assertEqual(row['settlement_note'],'ambiguous_exact_fixture')
+
+    def test_three_way_draw_is_graded_as_draw_not_a_two_way_push(self):
+        row=MODULE.registration_row(self.board(),self.capture());row.update(bookmaker='Bet365',tournament='Basel',recommended_side='DRAW',selected_odds='8.0')
+        self.assertEqual(MODULE.settle([row],{},direct_index={MODULE.pair_key('Player One','Player Two'):[self.result(w_ace='7')]}),1)
+        self.assertEqual(row['outcome'],'DRAW');self.assertEqual(row['pnl'],'7.000')
+
     def test_accent_recapture_preserves_historical_observation_id(self):
         board = dict(self.board(), player1="Łukasz Kubot", player2="Tomáš Macháč")
         capture = dict(self.capture(), event_id="", player1="Łukasz Kubot", player2="Tomáš Macháč")
