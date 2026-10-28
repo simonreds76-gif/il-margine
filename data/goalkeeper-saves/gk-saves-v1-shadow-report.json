@@ -8,11 +8,11 @@
       "missing_registered_feature": 9
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 2,
+    "eligible_lines": 1,
     "priced_lines": 50,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 2
+    "value_ladder_lines": 4
   },
   "evidence": {
     "clv": 0.050955,
@@ -33,7 +33,7 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-28T16:40:01.964640+00:00",
+    "checked_at": "2026-10-28T17:17:43.585601+00:00",
     "counts": {
       "not_fresh_prematch": 13,
       "offers_saved": 46
@@ -41,23 +41,23 @@
     "saved": 5,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-28T16:40:01Z",
+  "generated_at": "2026-10-28T17:17:43Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
-      "before_grosvenor_registration": 19,
+      "before_grosvenor_registration": 2,
       "blocked_or_missing_inputs": 8,
       "not_new_fresh_prematch": 13,
       "unregistered_settlement_rules": 19
     },
-    "forecast_fixtures": 85,
-    "forecast_keepers": 170,
-    "generated_at": "2026-10-28T16:40:02.023097+00:00",
-    "last_capture_at": "2026-10-25T13:14:55.143085+00:00",
+    "forecast_fixtures": 89,
+    "forecast_keepers": 178,
+    "generated_at": "2026-10-28T17:17:43.635477+00:00",
+    "last_capture_at": "2026-10-28T17:17:43.635477+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 0,
+    "new_forecasts": 8,
     "new_selections": 0,
     "next_review_at": 100,
     "paired_scores": {
@@ -834,6 +834,7 @@
       }
     ],
     "settlement_reasons": {
+      "awaiting_verified_keeper_result": 8,
       "incomplete_or_conflicting_full_match_count": 12,
       "keeper_identity_unresolved": 3,
       "verified_different_starting_keeper": 10
