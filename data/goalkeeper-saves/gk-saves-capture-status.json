@@ -2,7 +2,7 @@
   "bookmaker_coverage": {
     "Bet365": {
       "events_with_save_markets": 2,
-      "named_player_lines": 21,
+      "named_player_lines": 20,
       "status": "NAMED_PLAYER_LINES",
       "unnamed_or_team_lines": 0
     },
@@ -20,13 +20,13 @@
     }
   },
   "capture_errors": [],
-  "capture_mode": "publication",
+  "capture_mode": "close",
   "direct_source": {
     "bookmaker": "Grosvenor",
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 338,
+      "current_quotes": 339,
       "mapped_quotes": 0,
       "paper_selections": 0,
       "price_or_status_changes": 0,
@@ -35,18 +35,18 @@
     "matched": 2,
     "missing": [],
     "requests": 3,
-    "rows": 206
+    "rows": 207
   },
   "discovery_retries": 0,
   "event_last_checked": {
-    "71945346": "2026-10-29T15:17:18Z",
-    "71945348": "2026-10-29T15:17:18Z"
+    "71945346": "2026-10-29T16:24:33Z",
+    "71945348": "2026-10-29T16:24:33Z"
   },
   "events_deferred_by_budget": 0,
   "events_selected": 2,
   "events_supported": 2,
   "events_with_lines": 2,
-  "generated_at": "2026-10-29T15:17:18Z",
+  "generated_at": "2026-10-29T16:24:33Z",
   "last_publication_at": "2026-10-29T15:17:18Z",
   "league_coverage": {
     "bundesliga": {
@@ -107,12 +107,12 @@
     "errors": [],
     "excluded": {
       "conflicting_quotes": 0,
-      "fixture_not_eligible": 686,
-      "unmatched_or_unsupported_fixture": 824
+      "fixture_not_eligible": 678,
+      "unmatched_or_unsupported_fixture": 861
     },
     "market_count": 4,
-    "quote_count": 169,
-    "received_at": "2026-10-29T15:17:23.301362+00:00",
+    "quote_count": 168,
+    "received_at": "2026-10-29T16:24:39.039764+00:00",
     "requests": 1,
     "source": "moviodds_bet365",
     "status": "OK"
@@ -120,8 +120,8 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 32,
-  "rows_observed": 32,
+  "rows_added": 31,
+  "rows_observed": 31,
   "selected_events": [
     {
       "away": "US Lecce",

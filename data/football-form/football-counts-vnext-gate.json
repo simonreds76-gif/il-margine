@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29T15:18:09Z",
+  "generated_at": "2026-10-29T16:25:00Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -65,7 +65,7 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-10-29T15:17:45Z",
+      "generated_at": "2026-10-29T16:24:45Z",
       "status": "OK",
       "missing_history": [],
       "scored_fixtures": 2
@@ -109,15 +109,15 @@
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
       "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 1644,
+      "scored_rows": 1646,
       "scored_fixtures": 52,
-      "eligible_rows": 73,
-      "eligible_fixtures": 24,
-      "blocked_rows": 1571,
+      "eligible_rows": 6,
+      "eligible_fixtures": 2,
+      "blocked_rows": 1640,
       "blocker_rows": {
-        "better_fresh_price_available": 282,
-        "edge_below_3pct": 1371,
-        "price_not_fresh_10m": 880,
+        "better_fresh_price_available": 24,
+        "edge_below_3pct": 1374,
+        "price_not_fresh_10m": 1588,
         "price_older_than_3h": 656
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,

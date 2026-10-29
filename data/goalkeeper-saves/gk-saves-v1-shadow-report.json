@@ -9,7 +9,7 @@
     "priced_lines": 57,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 9
+    "value_ladder_lines": 11
   },
   "evidence": {
     "clv": 0.050955,
@@ -30,15 +30,15 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-29T15:18:27.026995+00:00",
+    "checked_at": "2026-10-29T16:24:40.510708+00:00",
     "counts": {
-      "already_saved": 2,
-      "not_fresh_prematch": 25
+      "not_fresh_prematch": 25,
+      "offers_saved": 32
     },
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "saved": 2,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-10-29T15:18:26Z",
+  "generated_at": "2026-10-29T16:24:39Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
@@ -48,7 +48,7 @@
     },
     "forecast_fixtures": 96,
     "forecast_keepers": 192,
-    "generated_at": "2026-10-29T15:18:27.050041+00:00",
+    "generated_at": "2026-10-29T16:24:40.579418+00:00",
     "last_capture_at": "2026-10-29T01:14:00.214888+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
