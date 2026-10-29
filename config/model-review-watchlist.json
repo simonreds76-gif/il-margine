@@ -188,6 +188,12 @@
         100
       ],
       "next_action": "Compare identical-fixture Brier/log loss against margin-removed Pinnacle, then full 1u paper ROI; investigate capture failures and overdue settlements. Frozen weights. ATP-only subset chosen after retrospective research. Never combine 24 historical bets with new forecasts."
+    },
+    {
+      "id": "hardcourt_scout",
+      "report_key": "tennis_hardcourt_scout",
+      "scope": "Frozen Challenger outdoor Hard baseline plus Fable correction in the same first-capture packets/report. Both 1u paper, zero real stake. Same locked prices/exact outcomes. Paired Brier/log loss and probability bins, separate ROI/W-L/stakes/pending/void/overdue. New comparison starts at registration; no historical enrolment. Missing history falls back to baseline; source/code failures unavailable. Review at 50/100 paired fixtures alongside existing Scout milestones. No new tracker/schedule/alerts; no auto-promotion.",
+      "comparison_report": "tennis_hardcourt_scout.fable_comparison"
     }
   ],
   "review_checks": [

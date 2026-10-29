@@ -321,12 +321,16 @@ def weekly_text(report):
     if not report:return 'Hardcourt Scout: private paper evidence snapshot missing.'
     roi=report.get('roi_pct');record=f"ROI {roi:+.2f}%" if roi is not None else 'ROI awaits first settled selection'
     c=report.get('capture') or {}
-    return (f"Hardcourt Scout | Challenger outdoor hard | PAPER ONLY\n"
+    text = (f"Hardcourt Scout | Challenger outdoor hard | PAPER ONLY\n"
             f"{report.get('wins',0)}W / {report.get('losses',0)}L | {record} | {report.get('pnl_units',0):+.2f}u on {report.get('stake_units',0):g}u\n"
             f"{report.get('pending',0)} pending ({report.get('overdue',0)} overdue), {report.get('void',0)} void, {report.get('quarantined',0)} quarantined. "
             f"1u hypothetical stakes; zero real stake. Review at 50 and 100 settled selections. "
             f"Capture {c.get('state','UNKNOWN')} at {c.get('checked_at','unknown')}. "
             f"Report {report.get('generated_at','unknown')}. Historical +22.65% replay excluded; closing prices unverified.")
+    if report.get('fable_comparison'):
+        from tennis_scout_opposition import weekly_text as comparison_text
+        text += '\n' + comparison_text(report['fable_comparison'])
+    return text
 
 
 if __name__=='__main__':
@@ -335,3 +339,4 @@ if __name__=='__main__':
     if args.register:register(args.root)
     report=summarize(args.root)
     print(weekly_text(report))
+
