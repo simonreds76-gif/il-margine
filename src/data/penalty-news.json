@@ -1,11 +1,81 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-28T21:41:41.250975+00:00",
+  "generatedAt": "2026-10-29T21:50:38.034496+00:00",
   "coverageStart": "2026-10-17",
-  "checkedThrough": "2026-10-28",
-  "captureStatus": "partial",
-  "matchesChecked": 4,
+  "checkedThrough": "2026-10-29",
+  "captureStatus": "complete",
+  "matchesChecked": 2,
   "articles": [
+    {
+      "id": "fotmob:5749723:2989805511",
+      "slug": "2026-10-29-giacomo-calo-5749723-2989805511",
+      "matchId": "5749723",
+      "eventId": "2989805511",
+      "date": "2026-10-29",
+      "kickoff": "2026-10-29T17:30:00.000Z",
+      "league": "serie-a",
+      "leagueLabel": "Serie A",
+      "round": "9",
+      "player": "Giacomo Calò",
+      "playerId": 746829,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/746829.png",
+      "club": "Frosinone",
+      "clubSlug": "frosinone",
+      "clubUrl": "/penalty-takers/serie-a/frosinone",
+      "crest": "/team-logos/serie-a/frosinone.png",
+      "opponent": "Lecce",
+      "home": "Frosinone",
+      "away": "Lecce",
+      "homeScore": 5,
+      "awayScore": 1,
+      "minute": "45+1",
+      "outcome": "scored",
+      "title": "Giacomo Calò scores from the spot against Lecce",
+      "sentences": [
+        "Giacomo Calò converted a penalty for Frosinone in minute 45+1 against Lecce.",
+        "The match finished Frosinone 5–1 Lecce."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Giorgi Kvernadze",
+        "concededBy": "Jamil Siebert",
+        "sentence": "Giorgi Kvernadze won the penalty after a foul by Jamil Siebert inside the area.",
+        "evidenceIds": [
+          "2989804279",
+          "2989804283"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 77,
+        "goals": 1,
+        "shots": 3,
+        "onTarget": 2,
+        "chances": 4
+      },
+      "keeper": "Wladimiro Falcone",
+      "moment": {
+        "before": [
+          1,
+          0
+        ],
+        "after": [
+          2,
+          0
+        ]
+      },
+      "paragraphs": [
+        "Giacomo Calò converted a penalty in added time (45+1 minutes) of Frosinone’s 5–1 win over Lecce.",
+        "Giorgi Kvernadze won the penalty after a foul by Jamil Siebert inside the area. The goal extended the lead at 2–0.",
+        "Giacomo Calò finished with 1 goal and 3 shots, including 2 on target, in 77 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/lecce-vs-frosinone/38gwll#5749723",
+      "eventHash": "bb5691b3f58b1fc7988887eae467d5d2aeb30457af48591dcf5f69375948b275",
+      "sourceHash": "beafd94c2ece5d4df2b199d45d05917d5c0f323ec6ad0b9d46708e0b4b821c19",
+      "publishedAt": "2026-10-29T21:50:38.034496+00:00",
+      "updatedAt": "2026-10-29T21:50:38.034496+00:00"
+    },
     {
       "id": "fotmob:5749726:2989366931",
       "slug": "2026-10-28-adrian-bernabe-5749726-2989366931",
