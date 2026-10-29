@@ -187,6 +187,9 @@ def observe(root, get, now):
     status=evaluate(list(required.values()),elo,profiles,metadata,now)
     status['stored_forecast_count']=len(fixtures)
     status['unpriced_export_candidates']=len(required)-len(fixtures)
+    stored_keys={fixture_key(f) for f in fixtures}
+    status['stored_forecasts_missing_elo']=sum(bool(f['missing_elo_keys']) for f in status['fixtures'] if f['fixture_key'] in stored_keys)
+    status['unpriced_candidates_missing_elo']=sum(bool(f['missing_elo_keys']) for f in status['fixtures'] if f['fixture_key'] not in stored_keys)
     status['scheduled_export_exclusions']=ignored
     return {'observed_at':now.isoformat(), 'status':status, 'forecasts':fixtures,
             'elo_rows':elo, 'profile_rows':profiles, 'metadata':metadata,
@@ -235,7 +238,8 @@ def text(status):
     if freshness!='CURRENT': state=f'{state}; health check {freshness.lower()}'
     bad = ', '.join(k+': '+v for k,v in status.get('checks',{}).items() if v!='CURRENT')
     return (f"Tennis input health: {state}. Elo refresh lineage unverified; "
-            f"{status.get('fixtures_with_missing_elo','?')}/{status.get('fixture_count','?')} checked fixtures missing Elo inputs. "
+            f"Stored forecasts missing Elo: {status.get('stored_forecasts_missing_elo','?')}/{status.get('stored_forecast_count','?')}; "
+            f"unpriced candidates missing Elo: {status.get('unpriced_candidates_missing_elo','?')}/{status.get('unpriced_export_candidates','?')}. "
             +(f'Other checks: {bad}. ' if bad else '')+
             'Fresh odds do not certify input freshness. Existing pricing unchanged.')
 
