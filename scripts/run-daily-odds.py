@@ -15,6 +15,7 @@ import argparse
 import os
 import subprocess
 import sys
+import uuid
 from pathlib import Path
 
 from signal_storage import STRICT_SIGNAL_PATHS
@@ -165,11 +166,26 @@ def main() -> int:
         timeout_seconds=min(step_timeout, 180),
     )
 
+    # Independent read-only health observer; no changes to model hashes,
+    # selection rules, alert keys or frozen research registrations.
+    input_health_run = uuid.uuid4().hex
+    run_cmd(
+        [sys.executable, str(ROOT / "scripts" / "tennis_input_health.py"),
+         "--phase", "before", "--run-id", input_health_run],
+        label="Tennis input health before pricing", fatal=False, timeout_seconds=45,
+    )
+
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "oncourt-compute-fair-odds.py"), "--skip-handicap-values", "--category-shadow"],
         label="3/6 Fair odds pipeline",
         fatal=True,
         timeout_seconds=step_timeout,
+    )
+
+    run_cmd(
+        [sys.executable, str(ROOT / "scripts" / "tennis_input_health.py"),
+         "--phase", "after", "--run-id", input_health_run],
+        label="Tennis input health after pricing", fatal=False, timeout_seconds=45,
     )
 
     run_cmd(

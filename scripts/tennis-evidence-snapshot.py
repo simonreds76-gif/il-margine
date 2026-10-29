@@ -110,7 +110,9 @@ def stable_hash_value(value: Any) -> Any:
 def build_snapshot() -> dict[str, Any]:
     module = load_report_module()
     tennis_model_evidence = module.tennis_model_evidence_summary()
+    from tennis_input_health import summary as input_health_summary
     sections = {
+        "tennis_input_health": input_health_summary(module.load_json(ROOT / "data/tennis-input-health/status.json")),
         "tennis_ml_gap_guard": module.ml_gap_guard_summary(),
         # The Windows pipeline owns the current lane ledgers. Hosted copies can
         # lag for months, so transport their compact summaries with the other

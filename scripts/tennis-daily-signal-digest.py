@@ -482,6 +482,8 @@ def render_messages(
     display_date = date.fromisoformat(target_date).strftime("%a %d %b").upper()
     title = "IL MARGINE TENNIS SIGNAL UPDATE" if update_only else "IL MARGINE TENNIS SIGNALS"
     header = f"{title} - {display_date}\nGenerated from the latest completed odds refresh."
+    from tennis_input_health import load_status, text as health_text
+    header += "\n" + health_text(load_status(ROOT))
     if days_ahead:
         end = (date.fromisoformat(target_date) + timedelta(days=days_ahead)).strftime("%a %d %b").upper()
         header += f"\nUpcoming fixtures through {end}; fixture dates below are UTC."

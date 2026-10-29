@@ -1548,6 +1548,7 @@ def build_payload() -> dict[str, Any]:
     assist_value_research = assist_value_research_summary()
     goalkeeper_saves_research = goalkeeper_saves_research_summary()
     automation_budget = load_json(AUTOMATION_BUDGET)
+    tennis_input_health = load_json(ROOT / "data/tennis-input-health/status.json")
     tennis_snapshot = load_tennis_evidence_snapshot()
     snapshot_sections = tennis_snapshot.get("sections") if isinstance(tennis_snapshot, dict) else None
     snapshot_freshness = evidence_freshness(str(tennis_snapshot.get("generated_at") or ""))
@@ -1556,6 +1557,7 @@ def build_payload() -> dict[str, Any]:
         for key in ("lanes", "lane_source", "gap_source_status", "gap_status", "gap_replacements", "side_flip_by_surface"):
             if key in snapshot_model_evidence:
                 tennis_model_evidence[key] = snapshot_model_evidence[key]
+        tennis_input_health = snapshot_sections.get("tennis_input_health") or tennis_input_health
         tennis_ace_compass = snapshot_sections.get("tennis_ace_compass") or tennis_ace_compass
         tennis_sisal_5050 = snapshot_sections.get("tennis_sisal_5050") or tennis_sisal_5050
         tennis_rate_trend = snapshot_sections.get("tennis_rate_trend") or tennis_rate_trend
@@ -1608,6 +1610,7 @@ def build_payload() -> dict[str, Any]:
             "f2": team_fouls_f2,
             "m2": team_fouls_m2,
         },
+        "tennis_input_health": tennis_input_health,
         "tennis_ml_gap_guard": tennis_gap_guard,
         "tennis_model_evidence": tennis_model_evidence,
         "tennis_props_v3": tennis_props_v3,
@@ -2109,6 +2112,8 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     source = payload.get('tennis_evidence_source') or {}
     lines = ['Il Margine weekly tennis review', f"Generated: {payload['generated_at']}",
              f"Evidence: {source.get('status', 'UNAVAILABLE')} | {source.get('generated_at', 'unknown')}", '']
+    from tennis_input_health import text as input_health_text
+    lines.append(input_health_text(payload.get('tennis_input_health') or {}))
     for key, label in [('strict', 'Strict'), ('challenger', 'Challenger ML v2')]:
         lane = lanes.get(key) or {}
         clv = lane.get('clv') or {}
