@@ -101,9 +101,14 @@
     "5749724": "2026-10-29",
     "5749725": "2026-10-29"
   },
-  "updated_at": "2026-10-29T01:47:16.868527+00:00",
-  "checked_this_run": 16,
-  "errors": [],
+  "updated_at": "2026-10-29T01:55:55.330241+00:00",
+  "checked_this_run": 1,
+  "errors": [
+    {
+      "match_id": "5749714",
+      "reason": "unresolved_player_timeline"
+    }
+  ],
   "fixtures": {
     "5795486": {
       "league": "epl",
@@ -1915,12 +1920,12 @@
       "state": "pending",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
       "pending_since": "2026-10-28T14:46:48.372235+00:00",
-      "last_attempt": "2026-10-28T21:38:16.814856+00:00",
-      "attempts": 6,
+      "last_attempt": "2026-10-29T01:55:55.330241+00:00",
+      "attempts": 7,
       "reason": "unresolved_player_timeline",
       "verified_at": "2026-10-27T01:27:52.523321+00:00",
       "penalty_count": 1,
-      "next_attempt": "2026-10-28T22:38:16.814856+00:00"
+      "next_attempt": "2026-10-29T02:55:55.330241+00:00"
     },
     "5749710": {
       "league": "serie-a",
@@ -4966,7 +4971,7 @@
           "longName": "Juventus"
         },
         "status": {
-          "utcTime": "2026-10-28T19:45:00+00:00",
+          "utcTime": "2026-10-28T19:45:00.000Z",
           "halfs": {
             "firstHalfStarted": "28.10.2026 20:46:30",
             "secondHalfStarted": "28.10.2026 21:50:08"
@@ -5014,7 +5019,7 @@
           "longName": "Napoli"
         },
         "status": {
-          "utcTime": "2026-10-28T19:45:00+00:00",
+          "utcTime": "2026-10-28T19:45:00.000Z",
           "halfs": {
             "firstHalfStarted": "28.10.2026 20:46:01",
             "secondHalfStarted": "28.10.2026 21:50:08"
@@ -5263,7 +5268,7 @@
     },
     "20261023": {
       "ok": true,
-      "checked_at": "2026-10-28T16:35:58.554842+00:00",
+      "checked_at": "2026-10-29T01:55:55.330241+00:00",
       "expected": 5,
       "match_ids": [
         "5749718",
@@ -5297,7 +5302,7 @@
     },
     "20261028": {
       "ok": true,
-      "checked_at": "2026-10-29T01:47:16.868527+00:00",
+      "checked_at": "2026-10-29T01:55:55.330241+00:00",
       "expected": 5,
       "match_ids": [
         "5749720",
@@ -5310,7 +5315,7 @@
     },
     "20261029": {
       "ok": true,
-      "checked_at": "2026-10-29T01:47:16.868527+00:00",
+      "checked_at": "2026-10-29T01:55:55.330241+00:00",
       "expected": 2,
       "match_ids": [
         "5749722",
