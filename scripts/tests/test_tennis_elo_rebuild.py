@@ -88,6 +88,12 @@ class OperationalTests(unittest.TestCase):
             (f/'games_atp.csv').write_text(header+row)
             got=settle(p,out)[0];self.assertEqual(got['y'],0);self.assertEqual(got['actual_games'],19);self.assertEqual(got['actual_margin_p1'],-5)
             self.assertEqual(got['actual_stats']['1']['ace'],5)
+            (f/'games_atp.csv').write_text(header+row+'8,4,1,2,2026-10-29,6-0 6-0\n')
+            quarantined=settle(p,out)[0]
+            self.assertEqual(quarantined['result'],'quarantined');self.assertNotIn('y',quarantined)
+            self.assertEqual(quarantined['correction_history'][0]['y'],0)
+            (f/'games_atp.csv').write_text(header+row)
+            self.assertEqual(settle(p,out)[0]['result'],'settled')
             (out/'ledger.json').write_text(json.dumps([r]));(f/'games_atp.csv').write_text(header+row+'8,4,1,2,2026-10-29,6-0 6-0\n')
             got=settle(p,out)[0];self.assertEqual(got['result'],'pending');self.assertEqual(got['settlement_health'],'ambiguous_native_results')
     def test_no_data_not_zero_roi(self):
