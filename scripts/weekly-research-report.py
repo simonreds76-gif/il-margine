@@ -1531,6 +1531,7 @@ def build_payload() -> dict[str, Any]:
     tennis_model_evidence = tennis_model_evidence_summary()
     tennis_props_v3 = tennis_props_v3_snapshot()
     tennis_ace_compass = load_json(ROOT / "data/tennis-props/shadow/ace-compass-v1/report.json")
+    tennis_elo_rebuild = load_json(ROOT / "data/tennis-elo-rebuild/report.json")
     tennis_sisal_5050 = load_json(ROOT / "data/tennis-props/shadow/sisal-5050-v1/report.json")
     tennis_rate_trend = rate_trend_summary()
     tennis_full_refresh = full_refresh_summary()
@@ -1559,6 +1560,7 @@ def build_payload() -> dict[str, Any]:
                 tennis_model_evidence[key] = snapshot_model_evidence[key]
         tennis_input_health = snapshot_sections.get("tennis_input_health") or tennis_input_health
         tennis_ace_compass = snapshot_sections.get("tennis_ace_compass") or tennis_ace_compass
+        tennis_elo_rebuild = snapshot_sections.get("tennis_elo_rebuild") or tennis_elo_rebuild
         tennis_sisal_5050 = snapshot_sections.get("tennis_sisal_5050") or tennis_sisal_5050
         tennis_rate_trend = snapshot_sections.get("tennis_rate_trend") or tennis_rate_trend
         tennis_full_refresh = snapshot_sections.get("tennis_full_refresh") or tennis_full_refresh
@@ -1615,6 +1617,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_model_evidence": tennis_model_evidence,
         "tennis_props_v3": tennis_props_v3,
         "tennis_ace_compass": tennis_ace_compass,
+        "tennis_elo_rebuild": tennis_elo_rebuild,
         "tennis_sisal_5050": tennis_sisal_5050,
         "tennis_rate_trend": tennis_rate_trend,
         "tennis_full_refresh": tennis_full_refresh,
@@ -1926,6 +1929,8 @@ def render_report(payload: dict[str, Any]) -> str:
     from ace_compass_reporting import weekly_text as ace_compass_text
     lines.extend(["", ace_compass_text(payload.get("tennis_ace_compass") or {})])
     from sisal_5050_reporting import weekly_text as sisal_5050_text
+    from tennis_elo_shadow import weekly_text as elo_rebuild_text
+    lines.extend(["", elo_rebuild_text(payload.get("tennis_elo_rebuild") or {})])
     lines.extend(["", sisal_5050_text(payload.get("tennis_sisal_5050") or {})])
     lines.extend(["", rate_trend_text(payload)])
     from tennis_hardcourt_scout import weekly_text as hardcourt_scout_text
@@ -2138,6 +2143,8 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     from ace_compass_reporting import weekly_text as ace_compass_text
     lines.append(ace_compass_text(payload.get("tennis_ace_compass") or {}))
     from sisal_5050_reporting import weekly_text as sisal_5050_text
+    from tennis_elo_shadow import weekly_text as elo_rebuild_text
+    lines.append(elo_rebuild_text(payload.get("tennis_elo_rebuild") or {}))
     lines.append(sisal_5050_text(payload.get("tennis_sisal_5050") or {}))
     lines.append(rate_trend_text(payload))
     most = payload.get('tennis_most_aces_forecast') or {}
