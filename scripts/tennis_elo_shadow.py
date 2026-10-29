@@ -208,16 +208,22 @@ def settle(root,output):
         if g.get('date','')<'2026-10-29':continue
         key=':'.join([g['tour_id'],g['round_id'],*sorted([g['winner_id'],g['loser_id']],key=int)])
         index[key].append(g)
+    def quarantine(r, reason):
+        r['settlement_health']=reason
+        if r['result']=='settled':
+            r.setdefault('correction_history',[]).append({k:r.get(k) for k in ('result','y','score','result_date','actual_games','actual_stats')})
+            r['result']='quarantined'
+            for key in ('y','score','result_date','actual_games','actual_margin_p1','actual_stats'):r.pop(key,None)
     for r in ledger:
         matches=index.get(r['key'],[])
         unique={digest(g):g for g in matches};matches=list(unique.values())
         if len(matches)!=1:
-            if matches:r['settlement_health']='ambiguous_native_results'
+            quarantine(r, 'ambiguous_native_results' if matches else 'result_not_available')
             continue
         g=matches[0];kick=r['kickoff'][:10]
-        if not kick<=g['date']<=(date.fromisoformat(kick)+timedelta(days=7)).isoformat():r['settlement_health']='result_date_outside_fixture';continue
+        if not kick<=g['date']<=(date.fromisoformat(kick)+timedelta(days=7)).isoformat():quarantine(r,'result_date_outside_fixture');continue
         if not completed_score(g.get('result')):
-            r['settlement_health']='unfinished_or_void_rules_unverified';continue
+            quarantine(r,'unfinished_or_void_rules_unverified');continue
         y=int(int(g['winner_id'])==int(r['baseline']['player1_id']))
         import re
         sets=[(int(a),int(b)) for a,b in re.findall(r'(\d+)-(\d+)',g['result'])]
@@ -273,7 +279,7 @@ def summarize(ledger,arm):
     downstream={k:{'observations':len(v),'bias':sum(v)/len(v),'mae':sum(abs(x) for x in v)/len(v)} for k,v in errors.items()}
     downstream['handicap_raw_shape']={'fixtures':len(h_brier),'brier':sum(h_brier)/len(h_brier) if h_brier else None}
     downstream['count_most_aces']={'fixtures':len(most_ll),'log_loss':sum(most_ll)/len(most_ll) if most_ll else None}
-    return {'captured_fixtures':len(ledger),'pending_fixtures':sum(r['result']=='pending' for r in ledger),'downstream':downstream,'settled_fixtures':len(complete),'settled_bets':stake,'wins':sum(x[0] for x in bets),'losses':sum(not x[0] for x in bets),
+    return {'captured_fixtures':len(ledger),'pending_fixtures':sum(r['result']=='pending' for r in ledger),'quarantined_fixtures':sum(r['result']=='quarantined' for r in ledger),'downstream':downstream,'settled_fixtures':len(complete),'settled_bets':stake,'wins':sum(x[0] for x in bets),'losses':sum(not x[0] for x in bets),
         'pending_bets':sum(r['result']=='pending' and bool(r[arm+'_selection'].get('lane')) for r in ledger),
         'stake':stake,'profit':round(profit,6),'roi_pct':100*profit/stake if stake else None,
         'brier':sum((r[arm]['p1_win_prob']-r['y'])**2 for r in complete)/len(complete) if complete else None,
@@ -327,6 +333,7 @@ def weekly_text(r):
     for arm,m in atp.items():
         roi=f"{m['roi_pct']:+.2f}%" if m.get('roi_pct') is not None else 'not available'
         lines.append(f"{arm}: {m['wins']}W/{m['losses']}L, {m['stake']}u, {m['profit']:+.2f}u; ROI {roi}; {m['pending_bets']} pending bets.")
+    if current.get('quarantined_fixtures',0):lines.append(f"RESULTS NEED REVIEW: {current['quarantined_fixtures']} quarantined fixtures excluded from ROI.")
     action=r.get('capture_health',{}).get('capture_action')
     if action and action not in ('captured','daily_capture_limit'):lines.append('CAPTURE: '+action.replace('_',' '))
     if r.get('capture_health',{}).get('status')=='failed':lines.append('CAPTURE NEEDS ATTENTION: '+r['capture_health'].get('error','unknown'))
