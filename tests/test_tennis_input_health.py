@@ -16,6 +16,16 @@ class InputHealth(unittest.TestCase):
         return h.evaluate(self.fixtures,elo if elo is not None else self.elo,self.elo,meta or self.meta,self.now)
     def test_present_ratings_never_certified_without_lineage(self):
         r=self.report();self.assertEqual(r['status'],'UNVERIFIED');self.assertEqual(r['fixtures_with_missing_elo'],0)
+    def test_unpriced_gap_not_reported_as_broken_stored_forecast(self):
+        candidate=dict(tour_id=4,round_id=5,player1_id=3,player2_id=4,surface='Hard')
+        get=lambda table,params: self.fixtures if table=='daily_fair_odds' else self.elo
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as tmp,patch.object(h,'scheduled_candidates',return_value=([candidate],{})):
+            r=h.observe(Path(tmp),get,self.now)['status']
+        self.assertEqual(r['stored_forecasts_missing_elo'],0)
+        self.assertEqual(r['unpriced_candidates_missing_elo'],1)
+        self.assertEqual(r['stored_forecast_count'],1)
+        self.assertEqual(r['unpriced_export_candidates'],1)
+        self.assertIn('Stored forecasts missing Elo: 0/1',h.text(r))
     def test_one_fresh_timestamp_does_not_hide_old_or_missing(self):
         self.elo[0]['updated_at']=self.now.isoformat();r=self.report(self.elo[:-1]);self.assertEqual(r['status'],'MISSING');self.assertFalse(r['timestamp_is_verified_refresh_cutoff'])
     def test_zero_match_counts_are_not_default_elo(self):
