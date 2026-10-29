@@ -339,6 +339,30 @@ def props_signals(target_date: str, comparison_date: str | None = None, *, now: 
     return signals
 
 
+def most_aces_signals(target_date: str, *, now: datetime | None = None) -> list[Signal]:
+    from tennis_most_aces_current import alert_rows, COUNT_MODEL
+    now=now or datetime.now(UTC)
+    try:
+        report=json.loads((PROPS/'shadow/most-aces-current.json').read_text(encoding='utf-8'))
+    except (OSError,ValueError):
+        return []
+    output=[]
+    for row in alert_rows(report,now):
+        if row['date'] != target_date:continue
+        side=row['recommended_side']; outcome={'P1':'player1','P2':'player2','DRAW':'draw'}[side]
+        selected='Tie' if side=='DRAW' else row[outcome]
+        pair=tuple(sorted((norm(row['player1']),norm(row['player2']))))
+        source=dict(row,market='most_aces',model_id=COUNT_MODEL)
+        output.append(Signal(section='MOST ACES 1X2 · PAPER ONLY',priority=46,labels=['MOST ACES PAPER'],
+            match=f"{row['player1']} vs {row['player2']}",
+            selection=f"{selected} most aces @ {row['selected_odds']} {row['bookmaker']} | fair {row[f'fair_{outcome}']} | estimated EV {row[f'value_{outcome}_pct']}% | zero real stake",
+            edge_pct=float(row[f'value_{outcome}_pct']),
+            key=(row['date'],*pair,norm(selected),'most_aces_1x2',norm(row['tournament'])),
+            scheduled_start_utc=row['match_start_utc'],captured_at=row['price_captured_at'],
+            performance_source=source))
+    return output
+
+
 def collect_signals(target_date: str, comparison_date: str | None = None) -> tuple[list[Signal], list[str]]:
     merged: dict[tuple[str, ...], Signal] = {}
     lane_counts: dict[str, int] = {}
@@ -383,6 +407,10 @@ def collect_signals(target_date: str, comparison_date: str | None = None) -> tup
     lane_counts["ACES/DF"] = len(props)
     for signal in props:
         merged.setdefault(comparison_key(signal), signal)
+    most_aces=most_aces_signals(target_date)
+    lane_counts['MOST ACES PAPER']=len(most_aces)
+    for signal in most_aces:
+        merged.setdefault(comparison_key(signal),signal)
 
     signals = sorted(
         merged.values(),

@@ -176,6 +176,7 @@ def refresh_derived_ace_boards(as_of: str) -> None:
         [sys.executable, str(ROOT / "scripts" / "tennis-props-v3-live.py")],
         "Build v3 ATP ace prospective shadow board",
         fatal=False,
+        timeout_seconds=120,
     )
     if most_aces_suspended():
         print("Most Aces suspended; ordinary aces/DF boards continue. Existing forecasts still settle.")
@@ -186,6 +187,8 @@ def refresh_derived_ace_boards(as_of: str) -> None:
         fatal=False,
         timeout_seconds=180,
     )
+
+
     run(
         [
             sys.executable,
@@ -197,6 +200,26 @@ def refresh_derived_ace_boards(as_of: str) -> None:
         fatal=False,
         timeout_seconds=180,
     )
+
+
+def refresh_current_most_aces(as_of: str) -> None:
+    """Bounded current boards, without historical settlement/reporting."""
+    if most_aces_suspended():
+        return
+    for script, arguments, output in [('tennis-props-v3-live.py', [], 'aces-v3-projection-board.csv'),
+            ('build-tennis-most-aces-board.py', [], 'most-aces-1x2-board.csv'),
+            ('tennis-most-aces-direct-live.py', ['--as-of', as_of], 'most-aces-direct-1x2-board.csv')]:
+        started = datetime.now(timezone.utc).timestamp()
+        code = run([sys.executable, str(ROOT / 'scripts' / script), *arguments], script, fatal=False, timeout_seconds=60)
+        target = PROPS_DIR / 'shadow' / output
+        if code or not target.exists() or target.stat().st_mtime < started:
+            (PROPS_DIR / 'shadow/most-aces-current.json').write_text(json.dumps({
+                'generated_at': datetime.now(timezone.utc).isoformat(), 'status': 'REFRESH_FAILED',
+                'failed_step': script, 'matches': [], 'records': [],
+                'note': 'Most Aces refresh failed. Earlier boards are not fresh signals.'}), encoding='utf-8')
+            return
+    run([sys.executable, str(ROOT / 'scripts/tennis_most_aces_current.py'), '--as-of', as_of],
+        'Compare current Most Aces 1X2 prices and register paper observations', fatal=False, timeout_seconds=30)
 
 
 def run_most_aces_shadow(as_of: str, capture: Path | None = None) -> None:
@@ -219,6 +242,8 @@ def run_most_aces_shadow(as_of: str, capture: Path | None = None) -> None:
     if selected and has_market_rows(selected):
         cmd.extend(["--capture", str(selected)])
     run(cmd, "Update Most Aces 1X2 paper evidence", fatal=False)
+    run([sys.executable, str(ROOT / 'scripts/tennis_most_aces_current.py'), '--as-of', as_of],
+        'Refresh current Most Aces comparison', fatal=False, timeout_seconds=30)
 
 
 def run_comparison(
@@ -439,6 +464,7 @@ def run_monitor_only(as_of: str, *, selections_only: bool = False) -> int:
                 mark_pipeline_blocked(as_of, market_file, step)
                 return code
         step = "pipeline_health"
+        refresh_current_most_aces(as_of)
         code = write_pipeline_health(as_of, market_file, strict=True)
         if code != 0:
             try:
@@ -500,19 +526,9 @@ def capture_market_prices(args: argparse.Namespace) -> int:
                 timeout_seconds=180,
             )
         )
-        run(
-            [
-                sys.executable,
-                str(ROOT / "scripts" / "tennis-most-aces-capture.py"),
-                "--date", args.as_of,
-                "--days-ahead", str(args.days_ahead),
-                "--max-events", str(args.max_events),
-                "--bookmakers", "BetMGM",
-            ],
-            "Capture BetMGM Most Aces 1X2 before projections",
-            fatal=False,
-            timeout_seconds=180,
-        )
+        # The shared collector already saves complete Most Aces markets from
+        # selected books and Grosvenor. Do not overwrite those with a removed
+        # BetMGM account request or spend another provider request budget.
     else:
         print("\nWARNING: no local odds-api key; Bet365/BetMGM capture skipped.")
 

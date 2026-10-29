@@ -21,6 +21,7 @@
     "price_capture": true,
     "settle_existing": true,
     "telegram_review": true,
-    "reason": "28 October: verified Grosvenor/Kambi full-match ace markets connected at user request. Fixed paper models only, no new betting alerts. Unfinished contracts require settlement review."
+    "reason": "29 October: bounded current-board refresh and count-model paper alerts; Direct remains comparison only. No formula, threshold, real stake or schedule change.",
+    "telegram_signals": "count_model_paper_only"
   }
 }
