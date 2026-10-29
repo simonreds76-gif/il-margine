@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-29T15:44:39Z",
+  "generated_at": "2026-10-29T16:54:02.216042+00:00",
   "league": "la-liga",
   "row_count": 4,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2987028547",
           "match_id": "5868110",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868110",
-          "observed_at": "2026-10-29T15:44:37+00:00",
+          "observed_at": "2026-10-29T16:54:04+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Valencia",
@@ -310,5 +310,13 @@
       "20261029"
     ],
     "matches_checked": 10
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261026"
+    ],
+    "matches_checked": 1
   }
 }

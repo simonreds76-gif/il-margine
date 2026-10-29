@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-29T15:44:35Z",
+  "generated_at": "2026-10-29T16:54:02.216042+00:00",
   "league": "serie-a",
   "row_count": 7,
   "rows": [
@@ -397,7 +397,7 @@
           "source_event_id": "2987795929",
           "match_id": "5749710",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749710",
-          "observed_at": "2026-10-29T15:44:29+00:00",
+          "observed_at": "2026-10-29T16:54:06+00:00",
           "event_date": "2026-10-25",
           "season": "2026/27",
           "team": "Atalanta",
@@ -546,5 +546,13 @@
       "20261029"
     ],
     "matches_checked": 18
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261025"
+    ],
+    "matches_checked": 1
   }
 }
