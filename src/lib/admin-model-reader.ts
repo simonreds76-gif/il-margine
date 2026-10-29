@@ -23,6 +23,7 @@ export async function readAdminModels() {
     if (typeof content === "string") report = JSON.parse(content);
   } catch { /* Display unavailable; never invent a zero record. */ }
   return { rows: modelRows(tennis?.sections, report), selections: savedSelections(tennis?.sections), sisal5050: obj(tennis?.sections).tennis_sisal_5050,
+    eloRebuild: obj(tennis?.sections).tennis_elo_rebuild,
     inputHealth: obj(tennis?.sections).tennis_input_health,
     sources: [{name: "Tennis snapshot", date: tennis?.generated_at, available: !!tennis?.sections},
       {name: "Football report", date: obj(report).generated_at, available: !!report}], checkedAt: Date.now() };
