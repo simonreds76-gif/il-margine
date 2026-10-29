@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import Sisal5050Panel from "@/components/model-monitor/Sisal5050Panel";
 import { isAdminSession } from "@/lib/admin-auth";
 import { readAdminModels } from "@/lib/admin-model-reader";
-import { snapshotAge, type ModelRow } from "@/lib/admin-model-summary";
+import { snapshotAge, obj, type ModelRow } from "@/lib/admin-model-summary";
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
@@ -30,12 +30,26 @@ function ModelCard({r, now}: {r: ModelRow; now: number}) {
 export default async function AdminModels({ searchParams }: { searchParams: Promise<{ sisalPage?: string }> }) {
   if (!await isAdminSession()) redirect("/admin");
   const data = await readAdminModels();
+  const inputHealth = obj(data.inputHealth);
+  const inputChecked = typeof inputHealth.checked_at === 'string' ? inputHealth.checked_at : null;
+  const count = (key: string) => typeof inputHealth[key] === 'number' && Number.isFinite(inputHealth[key]) ? format(inputHealth[key]) : 'Not supplied';
   const params = await searchParams;
   const researchIds=new Set(['astra','tennis_astrissimo','tennis_hardcourt_scout','aces-v4']);
   const current=data.rows.filter(r=>!researchIds.has(r.id)&&!r.id.startsWith('props-'));
   const groups=[...new Set(current.map(r=>r.group))];
   return <main className="min-h-screen bg-[#0f1117] px-4 py-8 text-slate-100 sm:px-6"><div className="mx-auto max-w-6xl">
     <header className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-widest text-emerald-300">Il Margine · Private</p><h1 className="mt-2 text-3xl font-bold">Model monitor</h1><p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-300">Choose a current model to inspect its selections, prices and results. Research trials have their own section below.</p></div><nav aria-label="Monitor actions" className="flex flex-wrap gap-2"><a href="/admin" className="rounded-xl border border-slate-600 px-4 py-3 text-sm hover:bg-slate-800">Back to Admin</a><a href="/admin/penalties" className="rounded-xl border border-slate-600 px-4 py-3 text-sm hover:bg-slate-800">Penalty reviews</a><a href="/admin/models" className="rounded-xl border border-emerald-400/40 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200 hover:bg-emerald-400/20">Refresh records</a></nav></header>
+    <section aria-labelledby="tennis-input-health" className="mt-6 rounded-2xl border border-amber-400/40 bg-amber-400/5 p-4 sm:p-5">
+      <h2 id="tennis-input-health" className="text-base font-semibold text-amber-100">Tennis input checks</h2>
+      <p className="mt-2 text-sm leading-relaxed text-slate-200">Elo refresh lineage is unverified. Fresh bookmaker odds do not confirm that player ratings are current. Pricing formulas remain unchanged.</p>
+      <p className="mt-2 text-xs text-amber-200">{inputChecked ? `${snapshotAge(inputChecked, data.checkedAt)} check · ${date(inputChecked)} UK` : 'Health check unavailable'} · {typeof inputHealth.status === 'string' ? inputHealth.status.replaceAll('_', ' ') : 'UNKNOWN'}</p>
+      <dl className="mt-4 grid grid-cols-1 gap-3 text-sm sm:grid-cols-3">
+        <div><dt className="text-slate-400">Stored forecasts checked</dt><dd className="mt-1 font-semibold tabular-nums">{count('stored_forecast_count')}</dd></div>
+        <div><dt className="text-slate-400">Stored forecasts missing Elo</dt><dd className="mt-1 font-semibold tabular-nums">{count('stored_forecasts_missing_elo')}</dd></div>
+        <div><dt className="text-slate-400">Unpriced candidates missing Elo</dt><dd className="mt-1 font-semibold tabular-nums">{count('unpriced_candidates_missing_elo')} / {count('unpriced_export_candidates')}</dd></div>
+      </dl>
+      <details className="mt-4 text-sm"><summary className="min-h-11 cursor-pointer py-3 text-amber-100">What this check covers</summary><p className="mt-2 leading-relaxed text-slate-300">Checks run around each existing daily or on-demand forecast. They observe stored inputs before and after the run; they are not an atomic trace of the exact reads inside the pricing engine. Missing inputs expose existing fallback behaviour. A present row is not proof of freshness.</p><ul className="mt-3 space-y-1 text-slate-300">{Object.entries(obj(inputHealth.checks)).map(([key, value]) => <li key={key}>{key.replaceAll('_', ' ')}: {typeof value === 'string' ? value.replaceAll('_', ' ').toLowerCase() : 'unavailable'}</li>)}</ul></details>
+    </section>
     <a href="/admin/models/signals" className="my-6 inline-flex min-h-12 items-center rounded-xl border border-emerald-400/40 bg-emerald-400/10 px-5 py-3 font-semibold text-emerald-200">Browse signals &amp; results →</a>
     <nav aria-label="Tennis forecasts" className="mb-6 grid gap-3 sm:grid-cols-2"><a href="/admin/models/signals?model=props&view=props-board" className="min-w-0 rounded-xl border border-cyan-400/30 bg-cyan-400/5 p-4"><strong className="text-cyan-100">Aces forecasts</strong><span className="mt-1 block text-sm text-slate-300">Expected aces per player and match total &rarr;</span></a><a href="/admin/models/signals?model=mostaces&view=most-aces-current" className="min-w-0 rounded-xl border border-slate-600 p-4"><strong>Most Aces 1X2</strong><span className="mt-1 block text-sm text-slate-300">Three fair odds, bookmaker prices and paper research &rarr;</span></a></nav>
     <a href="/model-monitor/skyline" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-cyan-400/30 bg-cyan-400/5 p-5"><span><strong className="text-lg text-cyan-200">Skyline</strong><span className="mt-1 block text-sm text-slate-300">Headed shots on target · Bet365 comparison · Paper ROI</span></span><span className="text-sm text-cyan-200">Open paper monitor →</span></a>
