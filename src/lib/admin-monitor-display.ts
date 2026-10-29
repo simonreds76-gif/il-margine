@@ -12,7 +12,7 @@ export const monitorModels:MonitorModel[] = [
  {id:'astrissimo',name:'Astrissimo',group:'research',note:'Forward paper trial, separate from the live tennis model.',views:[['astrissimo-v1','Performance & selections']]},
  {id:'astra',name:'Astra Volume',group:'research',note:'Frozen forward paper trial. Current corrected inputs are shown separately from earlier inputs.',views:[['context-forward-v1','Performance']]},
  {id:'aces4',name:'Aces v4 calibration',group:'research',note:'Calibration observations are not bets. Only rows explicitly flagged as v4 signals appear as selections.',views:[['v4-report','Progress'],['aces-v4','Flagged selections']]},
- {id:'mostaces',name:'Most aces',group:'research',note:'Paper research using captured bookmaker prices. The ledger identifies each source; a forecast alone is not a value selection.',views:[['most-aces','Match forecasts'],['most-aces-record','Research observations']]},
+ {id:'mostaces',name:'Most aces',group:'research',note:'Paper research using captured bookmaker prices. The ledger identifies each source; a forecast alone is not a value selection.',views:[['most-aces-current','Fair odds & bookmakers'],['most-aces','Direct forecasts'],['most-aces-record','Research observations']]},
  {id:'calibration',name:'Shots calibration',group:'research',note:'Comparison research, not the current Telegram selection model.',views:[['shots-calibration','Progress']]}
 ];
 const tennisModel=monitorModels.find(m=>m.id==='tennis')!;
@@ -95,4 +95,31 @@ export function visibleRows(rows:SignalRow[],view:string,model:string){
  if(view==='aces-v4')return rows.filter(r=>truth(r.v4_signal));
  if(view==='football-candidates'&&['shots','corners'].includes(model))return rows.filter(r=>r.model===(model==='shots'?'team_shots_v4':'corners_v3'));
  return rows;
+}
+
+export function pairedAceTotal(rows:SignalRow[]):number|null {
+ if(rows.length!==2)return null;
+ const [a,b]=rows;
+ const name=(v:unknown)=>text(v).trim().toLocaleLowerCase('en');
+ if(!name(a.player)||name(a.player)===name(b.player)||name(a.player)!==name(b.opponent)||name(b.player)!==name(a.opponent))return null;
+ if(['date','tour','tournament','surface','round','event_id'].some(k=>text(a[k])!==text(b[k])))return null;
+ const x=numeric(a.projected_aces),y=numeric(b.projected_aces);
+ return x===null||y===null||x<0||y<0?null:x+y;
+}
+
+export function tournamentHistory(row:SignalRow) {
+ let parsed:unknown=row.tournament_round_log;
+ try { if(typeof parsed==='string')parsed=JSON.parse(parsed); } catch { parsed=null; }
+ const cutoff=text(row.date).slice(0,10);
+ const logs=(Array.isArray(parsed)?parsed:[]).filter((r):r is SignalRow=>
+  Boolean(r&&typeof r==='object'&&!Array.isArray(r)&&text(r.opponent)&&/^\d{4}-\d{2}-\d{2}$/.test(text(r.date))&&(!cutoff||text(r.date)<=cutoff)))
+  .sort((a,b)=>text(a.date).localeCompare(text(b.date)));
+ const count=(v:unknown)=>{const n=numeric(v);return n!==null&&Number.isInteger(n)&&n>=0?n:null;};
+ const total=(field:string)=>{
+  const known=logs.map(r=>count(r[field])).filter((v):v is number=>v!==null);
+  return {value:known.length?known.reduce((sum,v)=>sum+v,0):null,covered:known.length};
+ };
+ const expected=numeric(row.same_tournament_matches);
+ return {logs,aces:total('aces'),dfs:total('dfs'),expected,
+  incomplete:expected!==null&&expected>logs.length,available:Array.isArray(parsed)};
 }
