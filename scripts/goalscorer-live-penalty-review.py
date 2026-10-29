@@ -219,6 +219,8 @@ def _event_name(value: object) -> str:
 PENALTY_PLAYER_IDENTITIES = {
     "jaden philogene": "1089645",
     "raul garcia de haro": "1094778",
+    # Verified in Inter's provider squad (team 8636) on 2026-10-29.
+    "lautaro martinez": "690230",
 }
 
 
@@ -338,13 +340,24 @@ def _on_pitch_at(team_lineup: dict, player_name: str, minute: int, added_time: i
 
     if not found and team_lineup.get("_confirmed_complete_squad"):
         target = _event_name(player_name).split()
+        def distinct_registered_namesake(player):
+            # A verified missing ID plus explicit different full given names
+            # distinguishes e.g. Lautaro from Josep Martinez. Initials, missing
+            # metadata and unregistered identities remain ambiguous.
+            given = _event_name(player.get("firstName")).split()
+            surname = _event_name(player.get("lastName")).split()
+            return bool(known_id and len(target) >= 2 and given and surname
+                        and surname == target[1:] and len(given[0]) > 1 and len(target[0]) > 1
+                        and not (given[0].startswith(target[0]) or target[0].startswith(given[0]))
+                        and str(player.get("id")) != known_id)
         # Do not claim absence when an abbreviated/variant name might be present.
         names = [_event_name(p.get("name")).split() for b in ("starters", "subs", "unavailable")
-                 for p in team_lineup.get(b, []) if isinstance(p, dict)]
+                 for p in team_lineup.get(b, []) if isinstance(p, dict) and not distinct_registered_namesake(p)]
         plausible = any(a == b or (min(len(a), len(b)) >= 4 and (a.startswith(b) or b.startswith(a)))
                         for a in target for n in names for b in n)
         if len(target) >= 2 and not plausible:
-            return False, dict(proof, reason="absent_from_matchday_squad", squad_player_ids=[str(p["id"]) for b in ("starters", "subs") for p in team_lineup[b]])
+            return False, dict(proof, reason="absent_from_matchday_squad", registered_player_id=known_id,
+                               squad_player_ids=[str(p["id"]) for b in ("starters", "subs") for p in team_lineup[b]])
     if len(found) != 1:
         return None, dict(proof, reason="missing_or_ambiguous_player")
     bucket, player = found[0]

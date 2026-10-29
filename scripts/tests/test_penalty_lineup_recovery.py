@@ -38,6 +38,26 @@ class RecoveryTests(unittest.TestCase):
             self.assertTrue(r._on_pitch_at(self.timeline(self.team(name,pid)),alias,30)[0])
             self.assertIsNone(r._on_pitch_at(self.timeline(self.team(name,999)),alias,30)[0])
 
+    def test_registered_absence_distinguishes_full_given_names(self):
+        team=self.team()
+        team['subs']=[{'id':772168,'name':'Josep Martinez','firstName':'Josep','lastName':'Martinez'}]
+        verified=self.timeline(team)
+        present,proof=r._on_pitch_at(verified,'Lautaro Martinez',90,7)
+        self.assertFalse(present)
+        self.assertEqual(proof['registered_player_id'],'690230')
+        self.assertEqual(proof['reason'],'absent_from_matchday_squad')
+        self.assertIsNone(r._on_pitch_at(verified,'Mauro Martinez',90,7)[0])
+        self.assertIsNone(r._on_pitch_at(self.timeline(team,standard=False),'Lautaro Martinez',90,7)[0])
+        for given in ('L','Lautaro',''):
+            ambiguous=self.team()
+            ambiguous['subs']=[{'id':772168,'name':f'{given} Martinez','firstName':given,'lastName':'Martinez'}]
+            if given == 'Lautaro':
+                # The exact display name is an existing resolver path; test the
+                # guarded ambiguity path with the provider's abbreviated name.
+                ambiguous['subs'][0]['name']='L. Martinez'
+            self.assertIsNone(r._on_pitch_at(self.timeline(ambiguous),'Lautaro Martinez',90,7)[0])
+        self.assertTrue(r._on_pitch_at(self.timeline(self.team('Lautaro Martinez',690230)), 'Lautaro Martinez',90,7)[0])
+
     def test_added_time_is_preserved_and_exact_ties_remain_unknown(self):
         team=self.team();team['subs']=[{'id':12,'name':'Backup Player'}]
         team=self.timeline(team,[{'type':'Substitution','isHome':True,'time':90,'overloadTime':1,'swap':[{'id':12},{'id':1}]}])
