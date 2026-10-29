@@ -1,17 +1,17 @@
 {
-  "updated_at": "2026-10-29T17:03:38Z",
+  "updated_at": "2026-10-29T17:15:22Z",
   "reason": "cycle",
   "last_clv_run_at": "2026-10-24T14:00:04Z",
   "leagues": {
     "serie-a": {
-      "last_successful_run_at": "2026-10-29T16:54:50Z",
+      "last_successful_run_at": "2026-10-29T17:15:22Z",
       "last_price_run_at": "2026-10-29T16:54:50Z",
       "last_detail_run_at": "2026-10-28T14:47:28Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "close",
-      "last_decision": "waiting",
-      "last_message": "Skip serie-a: cadence 10m not due yet.",
+      "last_decision": "ran",
+      "last_message": "Ran serie-a in close tier (cadence 10m, fixtures 1).",
       "next_kickoff_utc": "2026-10-29T17:30:00Z"
     },
     "epl": {
