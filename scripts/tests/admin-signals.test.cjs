@@ -47,3 +47,13 @@ test('Current tournament totals retain zeros, disclose missing values and exclud
  assert.equal(display.tournamentHistory({tournament_round_log:'broken'}).aces.value,null);
  assert.equal(display.tournamentHistory({tournament_round_log:'[]'}).aces.value,null);
 });
+
+test('Most Aces current display selects the refreshed Direct cohort without borrowing old results',()=>{
+ const old='most_aces_direct_1x2_v1',fresh=old+'_oncourt_20261029',count='v3_aces_gaussian_copula_nb2_evidence_tiers_v3';
+ const matches=[{model:count},{model:fresh}],records=[{model:old,wins:0,losses:4},{model:fresh,wins:0,losses:0}];
+ const selected=display.currentMostAcesModel(matches,records,'direct');
+ assert.equal(selected,fresh);assert.equal(records.find(r=>r.model===selected).losses,0);
+ assert.equal(display.currentMostAcesModel(matches,records,'count'),count);
+ assert.equal(display.currentMostAcesModel([],[{model:old}],'direct'),old);
+ assert.equal(display.currentMostAcesModel([],records,'direct'),fresh);
+});
