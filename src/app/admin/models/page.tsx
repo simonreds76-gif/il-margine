@@ -1,3 +1,4 @@
+import HardcourtScoutPanel from "@/components/model-monitor/HardcourtScoutPanel";
 import { redirect } from "next/navigation";
 import EloRebuildPanel from "@/components/model-monitor/EloRebuildPanel";
 import Sisal5050Panel from "@/components/model-monitor/Sisal5050Panel";
@@ -56,10 +57,12 @@ export default async function AdminModels({ searchParams }: { searchParams: Prom
     <a href="/model-monitor/skyline" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-cyan-400/30 bg-cyan-400/5 p-5"><span><strong className="text-lg text-cyan-200">Skyline</strong><span className="mt-1 block text-sm text-slate-300">Headed shots on target · Bet365 comparison · Paper ROI</span></span><span className="text-sm text-cyan-200">Open paper monitor →</span></a>
     <p className="mb-6 text-xs leading-relaxed text-slate-400">ROI is profit divided by settled stake. Records remain separate because models can select the same match. A unit is the recorded reference stake.</p>
     {groups.map((g,i)=><section key={g} id={`group-${i}`} className="mb-9"><h2 className="mb-4 text-xl font-semibold">{g==='Football research'?'Football models':g}</h2><div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{current.filter(r=>r.group===g).map(r=><ModelCard key={r.id} r={r} now={data.checkedAt}/>)}</div></section>)}
+    <HardcourtScoutPanel value={data.hardcourtScout} />
     <EloRebuildPanel value={data.eloRebuild} />
     <Sisal5050Panel value={data.sisal5050} page={Number(params.sisalPage) || 1} />
-    <details className="mb-6 rounded-2xl border border-slate-700 p-5"><summary className="cursor-pointer text-xl font-semibold">Research trials <span className="ml-2 text-sm font-normal text-slate-400">Paper only</span></summary><p className="mt-3 text-sm text-slate-400">Separate experiments. Their results do not replace the current models.</p><div className="mt-5 grid gap-4 md:grid-cols-2">{data.rows.filter(r=>researchIds.has(r.id)).map(r=><ModelCard key={r.id} r={r} now={data.checkedAt}/>)}</div></details>
+    <details className="mb-6 rounded-2xl border border-slate-700 p-5"><summary className="cursor-pointer text-xl font-semibold">Research trials <span className="ml-2 text-sm font-normal text-slate-400">Paper only</span></summary><p className="mt-3 text-sm text-slate-400">Separate experiments. Their results do not replace the current models.</p><div className="mt-5 grid gap-4 md:grid-cols-2">{data.rows.filter(r=>researchIds.has(r.id)&&r.id!=='tennis_hardcourt_scout').map(r=><ModelCard key={r.id} r={r} now={data.checkedAt}/>)}</div></details>
     <details className="rounded-2xl border border-slate-700 p-5"><summary className="cursor-pointer text-sm text-slate-300">Data freshness and market breakdowns</summary><div className="mt-4 space-y-3">{data.sources.map(s=>{const d=typeof s.date==='string'?s.date:null;return <p key={s.name} className="text-sm text-slate-400">{s.name}: {!s.available?'Unavailable':snapshotAge(d,data.checkedAt)} · {date(d)} UK</p>;})}</div><p className="mt-3 text-xs text-slate-400">A recent report does not confirm every capture or settlement is current.</p><div className="mt-5 grid gap-4 md:grid-cols-2">{data.rows.filter(r=>r.id.startsWith('props-')).map(r=><ModelCard key={r.id} r={r} now={data.checkedAt}/>)}</div></details>
     <aside className="mt-6 text-sm leading-relaxed text-slate-400">This dashboard reads existing private snapshots only. Refreshing it does not run a model or send alerts. Use the existing tennis run control in Admin to queue a forecast; the Windows machine must be awake for local OnCourt processing. Older local diagnostics remain available on your PC.</aside>
   </div></main>;
 }
+
