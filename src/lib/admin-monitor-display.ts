@@ -123,3 +123,9 @@ export function tournamentHistory(row:SignalRow) {
  return {logs,aces:total('aces'),dfs:total('dfs'),expected,
   incomplete:expected!==null&&expected>logs.length,available:Array.isArray(parsed)};
 }
+export function currentMostAcesModel(matches: SignalRow[], records: SignalRow[], lane: string): string {
+  if (lane === 'count') return 'v3_aces_gaussian_copula_nb2_evidence_tiers_v3';
+  const legacy = 'most_aces_direct_1x2_v1';
+  const refreshed = (rows: SignalRow[]) => rows.map(row => text(row.model)).filter(model => model.startsWith(legacy + '_')).sort().at(-1);
+  return refreshed(matches) || refreshed(records) || legacy;
+}
