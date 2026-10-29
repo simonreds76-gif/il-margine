@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-29T17:03:21.997574+00:00",
+  "generated_at": "2026-10-29T17:14:39.042938+00:00",
   "league": "serie-a",
   "row_count": 7,
   "rows": [
@@ -315,7 +315,7 @@
       "context_source_path": "data/goalscorer/serie-a-penalty-takers.json",
       "actual_taker_match_status": "Yes - bench, on 78'",
       "primary_on_pitch_at_penalty": "No - started, off 78'",
-      "secondary_on_pitch_at_penalty": "Unknown - missing or ambiguous player",
+      "secondary_on_pitch_at_penalty": "No - absent from matchday squad",
       "tertiary_on_pitch_at_penalty": "Yes - bench, on 78'",
       "actual_taker_on_pitch_at_penalty": "Yes - bench, on 78'",
       "event_evidence": [
@@ -324,7 +324,7 @@
           "source_event_id": "2987710667",
           "match_id": "5749714",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749714",
-          "observed_at": "2026-10-29T15:44:29+00:00",
+          "observed_at": "2026-10-29T17:14:44+00:00",
           "event_date": "2026-10-25",
           "season": "2026/27",
           "team": "Inter",

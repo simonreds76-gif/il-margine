@@ -28,14 +28,19 @@
     "5881200": "2026-10-29",
     "5868102": "2026-10-29",
     "5868104": "2026-10-29",
+    "5868108": "2026-10-29",
+    "5868105": "2026-10-29",
     "5802969": "2026-10-29",
     "5802964": "2026-10-29",
     "5802965": "2026-10-29",
+    "5802968": "2026-10-29",
     "5802970": "2026-10-29",
     "5802971": "2026-10-29",
+    "5749714": "2026-10-29",
     "5749710": "2026-10-29",
     "5749713": "2026-10-29",
     "5749716": "2026-10-29",
+    "5749719": "2026-10-29",
     "5795478": "2026-10-25",
     "5795476": "2026-10-25",
     "5795479": "2026-10-25",
@@ -97,8 +102,8 @@
     "5749724": "2026-10-29",
     "5749725": "2026-10-29"
   },
-  "updated_at": "2026-10-29T17:03:21.997574+00:00",
-  "checked_this_run": 16,
+  "updated_at": "2026-10-29T17:14:39.042938+00:00",
+  "checked_this_run": 5,
   "errors": [],
   "fixtures": {
     "5795486": {
@@ -1502,7 +1507,7 @@
           "longName": "Levante"
         },
         "status": {
-          "utcTime": "2026-10-25T17:30:00.000Z",
+          "utcTime": "2026-10-25T17:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "25.10.2026 18:30:36",
             "secondHalfStarted": "25.10.2026 19:34:46"
@@ -1522,13 +1527,13 @@
         }
       },
       "date": "2026-10-25",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
       "pending_since": "2026-10-25T19:42:05.047181+00:00",
-      "last_attempt": "2026-10-28T16:35:58.554842+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-10-28T16:35:58.554842+00:00",
+      "last_attempt": "2026-10-29T17:14:39.042938+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-10-29T17:14:39.042938+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -1550,7 +1555,7 @@
           "longName": "Real Madrid"
         },
         "status": {
-          "utcTime": "2026-10-25T20:00:00.000Z",
+          "utcTime": "2026-10-25T20:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "25.10.2026 21:02:19",
             "secondHalfStarted": "25.10.2026 22:08:17"
@@ -1570,13 +1575,13 @@
         }
       },
       "date": "2026-10-25",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
       "pending_since": "2026-10-25T19:42:05.047181+00:00",
-      "last_attempt": "2026-10-28T16:35:58.554842+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-10-28T16:35:58.554842+00:00",
+      "last_attempt": "2026-10-29T17:14:39.042938+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-10-29T17:14:39.042938+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -1744,7 +1749,7 @@
           "longName": "Le Havre"
         },
         "status": {
-          "utcTime": "2026-10-25T16:15:00.000Z",
+          "utcTime": "2026-10-25T16:15:00+00:00",
           "halfs": {
             "firstHalfStarted": "25.10.2026 17:15:21",
             "secondHalfStarted": "25.10.2026 18:17:43"
@@ -1764,14 +1769,14 @@
         }
       },
       "date": "2026-10-25",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
       "pending_since": "2026-10-25T19:42:05.047181+00:00",
-      "last_attempt": "2026-10-28T16:35:58.554842+00:00",
-      "attempts": 4,
-      "reason": "daily_reconciliation",
+      "last_attempt": "2026-10-29T17:14:39.042938+00:00",
+      "attempts": 5,
+      "reason": "penalties_verified",
       "next_attempt": "",
-      "verified_at": "2026-10-28T16:35:58.554842+00:00",
+      "verified_at": "2026-10-29T17:14:39.042938+00:00",
       "penalty_count": 1
     },
     "5802970": {
@@ -1888,7 +1893,7 @@
           "longName": "Fiorentina"
         },
         "status": {
-          "utcTime": "2026-10-25T11:30:00.000Z",
+          "utcTime": "2026-10-25T11:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "25.10.2026 12:32:17",
             "secondHalfStarted": "25.10.2026 13:35:48"
@@ -1908,15 +1913,15 @@
         }
       },
       "date": "2026-10-25",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
       "pending_since": "2026-10-28T14:46:48.372235+00:00",
-      "last_attempt": "2026-10-29T01:55:55.330241+00:00",
-      "attempts": 7,
-      "reason": "unresolved_player_timeline",
-      "verified_at": "2026-10-27T01:27:52.523321+00:00",
+      "last_attempt": "2026-10-29T17:14:39.042938+00:00",
+      "attempts": 8,
+      "reason": "penalties_verified",
+      "verified_at": "2026-10-29T17:14:39.042938+00:00",
       "penalty_count": 1,
-      "next_attempt": "2026-10-29T02:55:55.330241+00:00"
+      "next_attempt": ""
     },
     "5749710": {
       "league": "serie-a",
@@ -2082,7 +2087,7 @@
           "longName": "Milan"
         },
         "status": {
-          "utcTime": "2026-10-25T19:45:00.000Z",
+          "utcTime": "2026-10-25T19:45:00+00:00",
           "halfs": {
             "firstHalfStarted": "25.10.2026 20:45:17",
             "secondHalfStarted": "25.10.2026 21:47:36"
@@ -2102,13 +2107,13 @@
         }
       },
       "date": "2026-10-25",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-25T19:34:58.045709+00:00",
       "pending_since": "2026-10-25T19:42:05.047181+00:00",
-      "last_attempt": "2026-10-28T16:35:58.554842+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-10-28T16:35:58.554842+00:00",
+      "last_attempt": "2026-10-29T17:14:39.042938+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-10-29T17:14:39.042938+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -4282,7 +4287,7 @@
           "longName": "Athletic Club"
         },
         "status": {
-          "utcTime": "2026-10-21T18:00:00+00:00",
+          "utcTime": "2026-10-21T18:00:00.000Z",
           "numberOfAwayRedCards": 1,
           "halfs": {
             "firstHalfStarted": "21.10.2026 20:03:16",
@@ -5243,7 +5248,7 @@
     },
     "20261021": {
       "ok": true,
-      "checked_at": "2026-10-28T21:38:16.814856+00:00",
+      "checked_at": "2026-10-29T17:14:39.042938+00:00",
       "expected": 1,
       "match_ids": [
         "5868067"
@@ -5293,7 +5298,7 @@
     },
     "20261028": {
       "ok": true,
-      "checked_at": "2026-10-29T17:03:21.997574+00:00",
+      "checked_at": "2026-10-29T17:14:39.042938+00:00",
       "expected": 5,
       "match_ids": [
         "5749720",
@@ -5306,7 +5311,7 @@
     },
     "20261029": {
       "ok": true,
-      "checked_at": "2026-10-29T17:03:21.997574+00:00",
+      "checked_at": "2026-10-29T17:14:39.042938+00:00",
       "expected": 2,
       "match_ids": [
         "5749722",
@@ -5317,12 +5322,12 @@
   },
   "coverage": {
     "expected": 103,
-    "verified": 96,
-    "pending": 3,
-    "reverify": 4,
+    "verified": 101,
+    "pending": 2,
+    "reverify": 0,
     "deferred": 0,
-    "overdue": 1,
-    "stalled": 1,
+    "overdue": 0,
+    "stalled": 0,
     "excluded": 0,
     "failed_discovery_days": []
   }
