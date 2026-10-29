@@ -1,17 +1,89 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-29T05:54:23Z",
+  "generated_at": "2026-10-29T15:44:37Z",
   "league": "epl",
-  "row_count": 0,
-  "rows": [],
+  "row_count": 1,
+  "rows": [
+    {
+      "date": "2026-10-25",
+      "league": "epl",
+      "review_source": "fotmob_live",
+      "match": "Hull City vs Brentford",
+      "team": "Hull City",
+      "opponent": "Brentford",
+      "actual_taker": "Oli McBurnie",
+      "actual_role_pre_match": "secondary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "24",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Matt Crooks",
+      "secondary_pre_match": "Oli McBurnie",
+      "tertiary_pre_match": "",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "expected_backup_shift",
+      "review_priority": "medium",
+      "editorial_note": "Oli McBurnie took 1 penalty attempt and scored for Hull City vs Brentford. Primary pre-match: Matt Crooks (unknown). Secondary pre-match: Oli McBurnie (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
+      "context_generated_at": "2026-10-18T09:33:08.668Z",
+      "context_source_path": "admin_penalty_state:editorial",
+      "actual_taker_match_status": "Yes - started, off 86'",
+      "primary_on_pitch_at_penalty": "No - bench",
+      "secondary_on_pitch_at_penalty": "Yes - started, off 86'",
+      "tertiary_on_pitch_at_penalty": "Not assigned - hierarchy slot empty",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 86'",
+      "event_evidence": [
+        {
+          "id": "fotmob|epl|5795490|2987785209",
+          "source_event_id": "2987785209",
+          "match_id": "5795490",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5795490",
+          "observed_at": "2026-10-29T15:44:35+00:00",
+          "event_date": "2026-10-25",
+          "season": "2026/27",
+          "team": "Hull City",
+          "taker": "Oli McBurnie",
+          "primary": "Matt Crooks",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Matt Crooks",
+            "minute": 24,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 280507,
+            "bucket": "subs",
+            "substitutions": [],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 24,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Hull City vs Brentford",
+          "event_result": "scored"
+        }
+      ]
+    }
+  ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20261023",
+      "20261024",
+      "20261025",
+      "20261026",
       "20261027",
       "20261028",
       "20261029"
     ],
-    "matches_checked": 0
+    "matches_checked": 10
   }
 }
