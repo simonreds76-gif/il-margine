@@ -1,16 +1,16 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_save_markets": 0,
-      "named_player_lines": 0,
-      "status": "NO_SAVE_MARKETS",
+      "events_with_save_markets": 2,
+      "named_player_lines": 21,
+      "status": "NAMED_PLAYER_LINES",
       "unnamed_or_team_lines": 0
     },
     "Grosvenor": {
-      "events_with_save_markets": 7,
+      "events_with_save_markets": 2,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 24
+      "unnamed_or_team_lines": 11
     },
     "Paddy Power": {
       "events_with_save_markets": 0,
@@ -26,56 +26,51 @@
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 90,
+      "current_quotes": 338,
       "mapped_quotes": 0,
       "paper_selections": 0,
-      "price_or_status_changes": 29,
+      "price_or_status_changes": 0,
       "rules": "unverified"
     },
-    "matched": 7,
+    "matched": 2,
     "missing": [],
-    "requests": 11,
-    "rows": 617
+    "requests": 3,
+    "rows": 206
   },
   "discovery_retries": 0,
   "event_last_checked": {
-    "71945346": "2026-10-29T01:13:53Z",
-    "71945348": "2026-10-29T01:13:53Z",
-    "72036256": "2026-10-29T01:13:53Z",
-    "72036258": "2026-10-29T01:13:53Z",
-    "72036266": "2026-10-29T01:13:53Z",
-    "72478684": "2026-10-29T01:13:53Z",
-    "72513290": "2026-10-29T01:13:53Z"
+    "71945346": "2026-10-29T15:17:18Z",
+    "71945348": "2026-10-29T15:17:18Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 7,
-  "events_supported": 7,
-  "events_with_lines": 7,
-  "generated_at": "2026-10-29T01:13:53Z",
-  "last_publication_at": "2026-10-29T01:13:53Z",
+  "events_selected": 2,
+  "events_supported": 2,
+  "events_with_lines": 2,
+  "generated_at": "2026-10-29T15:17:18Z",
+  "last_publication_at": "2026-10-29T15:17:18Z",
   "league_coverage": {
     "bundesliga": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 0,
+      "with_prices": 0
     },
     "epl": {
       "selected": 0,
       "with_prices": 0
     },
     "la-liga": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 0,
+      "with_prices": 0
     },
     "ligue-1": {
-      "selected": 3,
-      "with_prices": 3
+      "selected": 0,
+      "with_prices": 0
     },
     "serie-a": {
       "selected": 2,
       "with_prices": 2
     }
   },
-  "market_inventory_rows_added": 187,
+  "market_inventory_rows_added": 66,
   "market_names_observed": [
     "Anytime Assist",
     "Anytime Goalscorer",
@@ -94,6 +89,8 @@
     "ML",
     "ML HT",
     "Player Fouls",
+    "Player Headed Shots on Target",
+    "Player Saves",
     "Player Shots",
     "Player Shots on Target",
     "Player To Assist",
@@ -109,58 +106,23 @@
   "moviodds_source": {
     "errors": [],
     "excluded": {
-      "fixture_not_eligible": 952,
-      "stale_or_missing_market_poll": 14,
-      "unmatched_or_unsupported_fixture": 392
+      "conflicting_quotes": 0,
+      "fixture_not_eligible": 686,
+      "unmatched_or_unsupported_fixture": 824
     },
-    "market_count": 0,
-    "quote_count": 0,
-    "received_at": "2026-10-29T01:13:58.630504+00:00",
+    "market_count": 4,
+    "quote_count": 169,
+    "received_at": "2026-10-29T15:17:23.301362+00:00",
     "requests": 1,
     "source": "moviodds_bet365",
-    "status": "NO_VERIFIED_MARKETS"
+    "status": "OK"
   },
-  "publication_recovery": true,
+  "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 24,
-  "rows_observed": 24,
+  "rows_added": 32,
+  "rows_observed": 32,
   "selected_events": [
-    {
-      "away": "Paris Saint-Germain",
-      "competition": "France - Ligue 1",
-      "home": "Le Havre AC",
-      "id": 72036256,
-      "kickoff_at": "2026-10-30T18:00:00Z"
-    },
-    {
-      "away": "Stade Rennais FC",
-      "competition": "France - Ligue 1",
-      "home": "OGC Nice",
-      "id": 72036266,
-      "kickoff_at": "2026-10-30T18:00:00Z"
-    },
-    {
-      "away": "FSV Mainz",
-      "competition": "Germany - Bundesliga",
-      "home": "SV 07 Elversberg",
-      "id": 72513290,
-      "kickoff_at": "2026-10-30T19:30:00Z"
-    },
-    {
-      "away": "Espanyol Barcelona",
-      "competition": "Spain - LaLiga",
-      "home": "Villarreal CF",
-      "id": 72478684,
-      "kickoff_at": "2026-10-30T20:00:00Z"
-    },
-    {
-      "away": "Racing Club De Lens",
-      "competition": "France - Ligue 1",
-      "home": "Lille OSC",
-      "id": 72036258,
-      "kickoff_at": "2026-10-30T20:05:00Z"
-    },
     {
       "away": "US Lecce",
       "competition": "Italy - Serie A",
@@ -177,5 +139,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 7
+  "three_way_events": 2
 }

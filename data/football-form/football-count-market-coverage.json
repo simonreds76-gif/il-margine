@@ -10,17 +10,18 @@
         "France - Ligue 1",
         "Germany - Bundesliga",
         "Italy - Serie A",
+        "Premier League",
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 26,
-      "paired_price_events": 4,
+      "events": 34,
+      "paired_price_events": 12,
       "pairing_unknown_events": 22,
       "raw_market_names": [
         "Bookings Totals",
         "Number of Cards In Match"
       ],
-      "rows": 46,
+      "rows": 54,
       "status": "PAIRED_PRICES_OBSERVED"
     },
     "match_fouls_total": {
@@ -68,13 +69,13 @@
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 23,
+      "events": 38,
       "paired_price_events": 0,
       "pairing_unknown_events": 16,
       "raw_market_names": [
         "Player To Be Fouled"
       ],
-      "rows": 23,
+      "rows": 38,
       "status": "MARKET_NAME_ONLY"
     },
     "player_fouls_committed": {
@@ -93,13 +94,13 @@
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 24,
+      "events": 39,
       "paired_price_events": 0,
       "pairing_unknown_events": 16,
       "raw_market_names": [
         "Player Fouls"
       ],
-      "rows": 24,
+      "rows": 39,
       "status": "MARKET_NAME_ONLY"
     },
     "team_cards_total": {
@@ -134,7 +135,7 @@
       "status": "NOT_OBSERVED"
     }
   },
-  "generated_at": "2026-10-28T19:38:04Z",
+  "generated_at": "2026-10-29T15:17:24Z",
   "policy": {
     "definition_gate": "Bookmaker settlement definitions must be reconciled against the result source before ROI is scored.",
     "live_staking": "BLOCKED",

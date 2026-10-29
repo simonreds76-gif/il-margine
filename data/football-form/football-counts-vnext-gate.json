@@ -1,21 +1,21 @@
 {
-  "generated_at": "2026-10-29T01:14:16Z",
+  "generated_at": "2026-10-29T15:18:09Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
     "market_gate": "BLOCKED_PENDING_2026_27_TRUE_CLOSE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 7,
+      "signals": 8,
       "settled": 7,
-      "pending": 0,
+      "pending": 1,
       "pnl_units": -3.167,
       "roi": -0.452429,
       "true_close_n": 2,
       "true_close_coverage": 0.285714,
       "mean_true_close_clv": 0.009166,
       "side_counts": {
-        "under": 7
+        "under": 8
       },
       "dominant_side_share": 1.0
     },
@@ -35,15 +35,16 @@
       "dominant_side_share": 0.928571
     },
     "latest_scan": {
-      "state": "NO_EDGE_AFTER_UNLOCK",
-      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 30,
+      "state": "ELIGIBLE_CANDIDATES_PRESENT",
+      "explanation": "At least one candidate passed every locked shadow gate.",
+      "scored_rows": 42,
       "scored_fixtures": 2,
-      "eligible_rows": 0,
-      "eligible_fixtures": 0,
-      "blocked_rows": 30,
+      "eligible_rows": 1,
+      "eligible_fixtures": 1,
+      "blocked_rows": 41,
       "blocker_rows": {
-        "edge_below_3pct": 30,
+        "better_fresh_price_available": 4,
+        "edge_below_3pct": 41,
         "price_not_fresh_10m": 30,
         "price_older_than_3h": 30
       },
@@ -64,7 +65,7 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-10-29T01:14:05Z",
+      "generated_at": "2026-10-29T15:17:45Z",
       "status": "OK",
       "missing_history": [],
       "scored_fixtures": 2
@@ -76,19 +77,19 @@
     "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 129,
-      "settled": 109,
-      "pending": 20,
-      "pnl_units": -5.154,
-      "roi": -0.047284,
-      "true_close_n": 70,
-      "true_close_coverage": 0.642202,
-      "mean_true_close_clv": 0.009046,
+      "signals": 143,
+      "settled": 111,
+      "pending": 32,
+      "pnl_units": -5.269,
+      "roi": -0.047468,
+      "true_close_n": 72,
+      "true_close_coverage": 0.648649,
+      "mean_true_close_clv": 0.009336,
       "side_counts": {
-        "over": 24,
-        "under": 105
+        "over": 34,
+        "under": 109
       },
-      "dominant_side_share": 0.813953
+      "dominant_side_share": 0.762238
     },
     "warmup_tracking": {
       "signals": 36,
@@ -108,16 +109,16 @@
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
       "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 1310,
+      "scored_rows": 1644,
       "scored_fixtures": 52,
-      "eligible_rows": 7,
-      "eligible_fixtures": 2,
-      "blocked_rows": 1303,
+      "eligible_rows": 73,
+      "eligible_fixtures": 24,
+      "blocked_rows": 1571,
       "blocker_rows": {
-        "better_fresh_price_available": 24,
-        "edge_below_3pct": 1095,
-        "price_not_fresh_10m": 1256,
-        "price_older_than_3h": 1256
+        "better_fresh_price_available": 282,
+        "edge_below_3pct": 1371,
+        "price_not_fresh_10m": 880,
+        "price_older_than_3h": 656
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 8,
@@ -126,6 +127,6 @@
       "operational_alert_required": false,
       "operational_alert_code": null
     },
-    "promotion_gate": "BLOCKED"
+    "promotion_gate": "PASS"
   }
 }
