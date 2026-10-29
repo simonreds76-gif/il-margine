@@ -424,6 +424,14 @@ Log "=== Astrissimo: daily paper record and new selections ==="
 $astrissimoExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--astrissimo-only") -Label "Astrissimo paper alerts" -TimeoutSeconds 90
 if ($astrissimoExit -ne 0) { Log "WARNING: Astrissimo paper alerts failed (exit $astrissimoExit)" }
 
+# All selections have been sent. Research may not hold up an on-demand refresh.
+Exit-TaskLock $lockHandle
+$lockHandle = $null
+Log "=== Elo Rebuild: bounded ATP paper comparison (no alerts) ==="
+$eloPaperExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis_elo_shadow.py") -Label "Elo Rebuild paper comparison" -TimeoutSeconds 600
+if ($eloPaperExit -ne 0) { Log "WARNING: Elo Rebuild paper capture failed/timed out (exit $eloPaperExit); live pricing unchanged" }
+$lockHandle = Enter-TennisPriorityLock -RootPath $root
+
 Log "=== Step 9b/10: Compact tennis evidence snapshot ==="
 $evidenceSnapshotExit = Invoke-LoggedProcessWithRetry -FilePath "python" -ArgumentList @("scripts\tennis-evidence-snapshot.py", "--supabase") -Label "tennis evidence snapshot" -TimeoutSeconds 120 -Attempts 1
 if ($evidenceSnapshotExit -ne 0) {

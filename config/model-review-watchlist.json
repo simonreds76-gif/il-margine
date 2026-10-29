@@ -86,6 +86,17 @@
       "id": "sisal_5050",
       "report_key": "tennis_sisal_5050",
       "scope": "Fixed 50/50 model and margin-free Sisal ATP aces O/U, paper only; no betting alerts. First valid pre-match pair, one contract per player/fixture. Full ROI plus paired calibration and count bias; BO3/BO5 separate. Review at 50/100 independent fixtures and season end. No automatic promotion."
+    },
+    {
+      "id": "elo_rebuild_v1",
+      "report_key": "tennis_elo_rebuild",
+      "scope": "Frozen K22 rebuilt Elo in full unchanged hybrid; ATP paired prospective diagnostic only, one capture/day after alerts, zero real stake. Challenger v1 rejected on 3410 retrospective reconstructed fixtures; initial observations retained, no new Challenger capture.",
+      "forward_report": "data/tennis-elo-rebuild/report.json",
+      "review_milestones_settled_fixtures": [
+        300
+      ],
+      "automatic_promotion": false,
+      "next_action": "Compare paired log loss/Brier against actual incumbent and same-time market; games/handicap/count diagnostics; ROI descriptive. At300 stop for manual review: negative or inconclusive ends v1. Check source health, capture freshness, exact settlements, excluded start times and code-hash drift. No extra Telegram alerts or refits."
     }
   ],
   "candidates": [
