@@ -327,6 +327,8 @@ def weekly_text(r):
     for arm,m in atp.items():
         roi=f"{m['roi_pct']:+.2f}%" if m.get('roi_pct') is not None else 'not available'
         lines.append(f"{arm}: {m['wins']}W/{m['losses']}L, {m['stake']}u, {m['profit']:+.2f}u; ROI {roi}; {m['pending_bets']} pending bets.")
+    action=r.get('capture_health',{}).get('capture_action')
+    if action and action not in ('captured','daily_capture_limit'):lines.append('CAPTURE: '+action.replace('_',' '))
     if r.get('capture_health',{}).get('status')=='failed':lines.append('CAPTURE NEEDS ATTENTION: '+r['capture_health'].get('error','unknown'))
     lines.append('Review at 300 settled priced ATP fixtures; no automatic promotion.')
     return '\n'.join(lines)
@@ -353,6 +355,9 @@ def main():
         with process_lock(out):
             if not a.settle_only:
                 c,_=rebuild(a.root,out,datetime.now(timezone.utc).date().isoformat());status=capture(a.root,out,c)
+                if status.get('skipped') not in (None,'daily_capture_limit'):
+                    declines=load(out/'declines.json',[]);declines.append({'at':datetime.now(timezone.utc).isoformat(),'reason':status['skipped']})
+                    atomic(out/'declines.json',declines)
                 atomic(out/'health.json',{'status':'ok','checked_at':datetime.now(timezone.utc).isoformat(),'capture_action':status.get('skipped','captured')})
             settle(a.root,out);r=report(out);print(weekly_text(r));return 0
     except BlockingIOError:
