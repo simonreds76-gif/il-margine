@@ -7,6 +7,7 @@ import argparse
 import csv
 import importlib.util
 import json
+import math
 import re
 import unicodedata
 from datetime import datetime, timedelta, timezone
@@ -53,17 +54,13 @@ def decimal(value: object) -> float | None:
         parsed = float(str(value).strip())
     except (TypeError, ValueError):
         return None
-    return parsed if parsed > 1.0 else None
+    return parsed if math.isfinite(parsed) and parsed > 1.0 else None
 
 
 def is_most_aces_market(name: object) -> bool:
     text = norm_name(name)
-    return "ace" in text and (
-        "most ace" in text
-        or "serve most" in text
-        or "highest ace" in text
-        or "ace match bet" in text
-    )
+    return text in {"most aces", "most aces 1x2", "player to serve most aces", "to serve most aces", "highest aces", "ace match betting"}
+
 
 
 def outcome_price(outcome: dict[str, Any]) -> float | None:
@@ -84,13 +81,13 @@ def outcome_label(outcome: dict[str, Any]) -> str:
 
 def classify_label(label: object, player1: str, player2: str) -> str | None:
     text = norm_name(label)
-    if text in {"draw", "tie", "equal", "same number", "same amount"} or "draw" in text or "tie" in text:
+    if text in {"draw", "tie", "equal", "same number", "same amount"}:
         return "DRAW"
     first = norm_name(player1)
     second = norm_name(player2)
-    if text and (text == first or text in first or first in text):
+    if text and (text == first):
         return "P1"
-    if text and (text == second or text in second or second in text):
+    if text and (text == second):
         return "P2"
     return None
 
@@ -148,7 +145,7 @@ def extract_rows(payload: list[dict[str, Any]], captured_at: str, common) -> lis
                     "player1_odds": f"{prices[0]:.4f}",
                     "draw_odds": f"{prices[1]:.4f}",
                     "player2_odds": f"{prices[2]:.4f}",
-                    "capture_ts": str(event.get("captured_at") or captured_at),
+                    "capture_ts": str(market.get("captured_at") or event.get("captured_at") or captured_at),
                     "provider_updated_at": str(market.get("updatedAt") or ""),
                     "source_url": str((event.get("urls") or {}).get(bookmaker) or ""),
                     "raw_market_json": json.dumps(market, ensure_ascii=False, separators=(",", ":")),

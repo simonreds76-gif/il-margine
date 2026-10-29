@@ -176,7 +176,13 @@ def attach_performance(signals: list[Any], root: Path, *, now: datetime | None =
         market = "handicap" if len(signal.key) > 4 and signal.key[4].startswith("spread:") else "ml"
         key = (label, market, signal.performance_source.get("market"), signal.performance_source.get("tour"), props_side(signal.performance_source), *(signal.performance_source.get(k, "") for k in ("model_id", "model_version", "variant_id")))
         if key not in cached:
-            if label in PROVISIONAL.values():
+            if label == 'MOST ACES PAPER':
+                from tennis_most_aces_current import record, COUNT_MODEL
+                r=record(read_csv(root/'data/tennis-props/shadow/most-aces-1x2-observations.csv'),COUNT_MODEL)
+                cached[key]=(f"Count-model paper research: {r['wins']}W/{r['losses']}L; "
+                             + (f"ROI {r['roi']:+.1f}% ({r['profit']:+.2f}u / {r['stake']}u). " if r['settled'] else 'No settled paper bets. ')
+                             + 'Small experimental sample, not a proven edge. This is the model research record, not an alerted-bets record.')
+            elif label in PROVISIONAL.values():
                 cached[key] = provisional_text(root, label, now)
             elif label in REPORTS:
                 cached[key] = saved_report(root, label, market, now)

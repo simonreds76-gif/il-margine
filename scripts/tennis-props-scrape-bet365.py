@@ -967,9 +967,10 @@ def main() -> None:
     spec = importlib.util.spec_from_file_location("most_aces_capture", ROOT / "scripts/tennis-most-aces-capture.py")
     most = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(most)
-    most_rows = most.extract_rows(direct, captured_at, most.load_common())
+    most_rows = most.extract_rows(payload, captured_at, most.load_common())
+    # Empty snapshots also replace stale same-day captures.
+    most.write_csv(out.parent / f"betmgm-most-aces-1x2-{args.date}.csv", most_rows)
     if most_rows:
-        most.write_csv(out.parent / f"betmgm-most-aces-1x2-{args.date}.csv", most_rows)
         most.append_history(out.parent / f"betmgm-most-aces-history-{month}.csv", most_rows)
     audit_rows.append({"captured_at": captured_at, "bookmaker": "Grosvenor",
                        "market_name": f"<DIRECT_{direct_receipt.get('status', 'DISABLED')}>",

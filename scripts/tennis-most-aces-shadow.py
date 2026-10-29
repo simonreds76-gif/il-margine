@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare, register, close and settle the BetMGM Most Aces 1X2 shadow lane."""
+"""Compare, register, close and settle bookmaker-specific Most Aces 1X2 research."""
 
 from __future__ import annotations
 
@@ -116,6 +116,31 @@ def orient_board(board: dict[str, str], capture: dict[str, str]) -> dict[str, st
 
 
 def registration_row(board: dict[str, str], capture: dict[str, str]) -> dict[str, str] | None:
+    if capture.get('market') not in (None, '', 'most_aces'):
+        return None
+    book = str(capture.get('bookmaker','')).casefold()
+    if book not in {'grosvenor','bet365','betmgm'}:
+        return None
+    if book in {'grosvenor','bet365'}:
+        now = datetime.now(timezone.utc)
+        stamp, start = parse_datetime(capture.get('capture_ts')), parse_datetime(capture.get('match_start_utc'))
+        generated = parse_datetime(board.get('generated_at_utc'))
+        if (not all((stamp, start, generated)) or not stamp <= now < start
+                or not 0 <= (now-stamp).total_seconds() <= 1800
+                or not 0 <= (now-generated).total_seconds() <= 21600
+                or board.get('date') != capture.get('date')
+                or norm_name(board.get('tournament')) != norm_name(capture.get('tournament'))):
+            return None
+    if str(capture.get('bookmaker','')).casefold() == 'bet365':
+        now = datetime.now(timezone.utc)
+        stamp, start = parse_datetime(capture.get('capture_ts')), parse_datetime(capture.get('match_start_utc'))
+        generated = parse_datetime(board.get('generated_at_utc'))
+        if not stamp or not start or not stamp <= now < start or (now-stamp).total_seconds()>21600:
+            return None
+        if not generated or not 0 <= (now-generated).total_seconds() <= 86400:
+            return None
+        if not capture.get('evidence_sha256') or not capture.get('source_url'):
+            return None
     if str(board.get("quote_status") or "").upper() != "READY":
         return None
     if capture.get("bookmaker") == "Grosvenor":
@@ -143,6 +168,8 @@ def registration_row(board: dict[str, str], capture: dict[str, str]) -> dict[str
         return None
     p1_price, draw_price, p2_price = prices  # type: ignore[misc]
     p1, draw, p2 = probabilities  # type: ignore[misc]
+    if min(prices) <= 1 or min(probabilities) < 0 or max(probabilities) > 1 or abs(sum(probabilities)-1)>0.00002:
+        return None
     market_p1, market_draw, market_p2, overround = devig_three_way(prices)  # type: ignore[arg-type]
     model_market_gap_pp = 100.0 * max(
         abs(p1 - market_p1),
@@ -179,7 +206,7 @@ def registration_row(board: dict[str, str], capture: dict[str, str]) -> dict[str
     eligible = not reasons
     row = {
         "registered_at_utc": (datetime.now(timezone.utc).isoformat(timespec="seconds")
-                              if capture.get("bookmaker") == "Grosvenor" else capture.get("capture_ts", "")),
+                              if str(capture.get("bookmaker", "")).casefold() in {"grosvenor", "bet365"} else capture.get("capture_ts", "")),
         "price_captured_at": capture.get("capture_ts", ""),
         "forecast_generated_at": board.get("generated_at_utc", ""),
         "source_url": capture.get("source_url", ""),
@@ -221,7 +248,7 @@ def registration_row(board: dict[str, str], capture: dict[str, str]) -> dict[str
         "match_start_utc": capture.get("match_start_utc", ""),
         "settlement_status": "pending",
         "model": board.get("model", ""),
-        "notes": "MOST_ACES_1X2_RESEARCH_ONLY",
+        "notes": "MOST_ACES_1X2_RESEARCH_ONLY" + (f"|SOURCE={capture['source_url']}|SHA256={capture.get('evidence_sha256','')}|QUOTE_TS={capture.get('capture_ts','')}" if capture.get('source_url') else ''),
     }
     row["observation_id"] = observation_id(row)
     return row
@@ -470,7 +497,7 @@ def main() -> int:
         help="Register another model board against the same captured prices.",
     )
     parser.add_argument("--capture", default="")
-    parser.add_argument("--history-glob", default=str(PROPS / "inbox" / "betmgm-most-aces-history-*.csv"))
+    parser.add_argument("--history-glob", default=str(PROPS / "inbox" / "*-most-aces-history-*.csv"))
     parser.add_argument("--ledger", default=str(DEFAULT_LEDGER))
     parser.add_argument("--report", default=str(DEFAULT_REPORT))
     parser.add_argument("--sackmann-dir", default=str(DEFAULT_SACKMANN))
