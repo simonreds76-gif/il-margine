@@ -48,6 +48,8 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 
 
 def primary_label(signal: Any) -> str | None:
+    if 'MOST ACES PAPER' in signal.labels:
+        return 'MOST ACES PAPER'
     if signal.section in PROVISIONAL:
         return PROVISIONAL[signal.section]
     return next((label for label in signal.labels if label in REPORTS), None)

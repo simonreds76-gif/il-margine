@@ -688,6 +688,7 @@ def digest_main() -> int:
     parser.add_argument("--require-ready", action="store_true")
     parser.add_argument("--props-pending", action="store_true", help="Scope the early alert to match markets while props refresh separately.")
     parser.add_argument("--print-only", action="store_true")
+    parser.add_argument("--most-aces-only", action="store_true", help="Check only the existing Count Most Aces paper lane, using the shared delivery deduplication.")
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--astrissimo-only", action="store_true", help="Send only Astrissimo fresh signals and its once-daily paper record.")
     parser.add_argument("--paper-summary", action="store_true", help="Include the once-daily ace paper-model progress report.")
@@ -708,7 +709,7 @@ def digest_main() -> int:
 
     # Astrissimo uses the existing daily/admin relay and its own durable dedup state.
     # Summary-only passes do not send selection alerts from another model.
-    if not args.paper_summary_only and not args.paper_signals_only:
+    if not args.paper_summary_only and not args.paper_signals_only and not args.most_aces_only:
         from tennis_astrissimo import alerts as astrissimo_alerts
         try:
             astrissimo_alerts(ROOT,
@@ -756,6 +757,9 @@ def digest_main() -> int:
         return 0
 
     signals, empty_lanes = collect_upcoming_signals(args.date, args.days_ahead)
+    if args.most_aces_only:
+        signals = [s for s in signals if 'MOST ACES PAPER' in s.labels]
+        empty_lanes = []
     attach_performance(signals, ROOT)
     signals, empty_lanes = scope_digest(signals, empty_lanes, args.props_pending)
     messages = render_messages(args.date, signals, empty_lanes, props_pending=args.props_pending, days_ahead=args.days_ahead)
