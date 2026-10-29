@@ -189,7 +189,7 @@ def refresh_derived_ace_boards(as_of: str) -> None:
     )
 
 
-    run(
+    direct_code = run(
         [
             sys.executable,
             str(ROOT / "scripts" / "tennis-most-aces-direct-live.py"),
@@ -200,6 +200,9 @@ def refresh_derived_ace_boards(as_of: str) -> None:
         fatal=False,
         timeout_seconds=180,
     )
+    if direct_code:
+        MOST_ACES_DIRECT_BOARD.write_text('', encoding='utf-8')
+        print('WARNING: Direct research refresh failed; prior Direct board cleared, Count continues.')
 
 
 def refresh_current_most_aces(as_of: str) -> None:
@@ -213,6 +216,12 @@ def refresh_current_most_aces(as_of: str) -> None:
         code = run([sys.executable, str(ROOT / 'scripts' / script), *arguments], script, fatal=False, timeout_seconds=60)
         target = PROPS_DIR / 'shadow' / output
         if code or not target.exists() or target.stat().st_mtime < started:
+            if script == 'tennis-most-aces-direct-live.py':
+                # Direct is an independent experiment, never the alert authority.
+                # Clear its current board so stale rows cannot be registered.
+                target.write_text('', encoding='utf-8')
+                print('WARNING: Direct research refresh failed; Count paper comparison continues.')
+                continue
             (PROPS_DIR / 'shadow/most-aces-current.json').write_text(json.dumps({
                 'generated_at': datetime.now(timezone.utc).isoformat(), 'status': 'REFRESH_FAILED',
                 'failed_step': script, 'matches': [], 'records': [],

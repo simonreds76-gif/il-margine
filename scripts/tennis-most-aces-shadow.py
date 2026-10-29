@@ -184,7 +184,7 @@ def registration_row(board: dict[str, str], capture: dict[str, str]) -> dict[str
     recommended = max(values, key=values.get)
     selected_odds = {"P1": p1_price, "DRAW": draw_price, "P2": p2_price}[recommended]
     model = str(board.get("model") or "")
-    if model == "most_aces_direct_1x2_v1":
+    if model in {"most_aces_direct_1x2_v1", "most_aces_direct_1x2_v1_oncourt_20261029"}:
         confidence_ok = (
             board.get("live_parity_status") == "EXACT_REGISTERED_FEATURES"
             and board.get("evidence_tier") in {"RECENT", "CAREER"}

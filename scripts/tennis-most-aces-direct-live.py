@@ -19,6 +19,7 @@ import pandas as pd
 
 from tennis_props_names import norm_name
 from model_lifecycle import most_aces_suspended
+from tennis_direct_history import load as load_current_history, COHORT, player_gap
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,13 +35,14 @@ DEFAULT_LEVEL_FACTORS = (
 DEFAULT_MODEL_DIR = PROPS / "experiments" / "most-aces-direct-1x2"
 DEFAULT_OUT = PROPS / "shadow" / "most-aces-direct-1x2-board.csv"
 DEFAULT_REPORT = PROPS / "shadow" / "most-aces-direct-1x2-live-parity.json"
-MODEL_NAME = "most_aces_direct_1x2_v1"
+MODEL_NAME = COHORT
 VISIBLE_QUOTE_STATUSES = {
     "READY",
     "HISTORICAL_ESTIMATE",
     "COVERAGE_GAP_ESTIMATE",
 }
 FIELDS = [
+    "history_cohort", "player1_history_through", "player2_history_through", "history_source_through",
     "generated_at_utc",
     "feature_as_of",
     "date",
@@ -278,8 +280,12 @@ def feature_side(
     opponent_name = str(side.get("opponent") or "")
     player_baseline = str(side.get("player_baseline_name") or player_name)
     opponent_baseline = str(side.get("opponent_baseline_name") or opponent_name)
-    player_id = sackmann_ids.get(norm_name(player_baseline), "")
-    opponent_id = sackmann_ids.get(norm_name(opponent_baseline), "")
+    if side.get('player_id') and 'oc:'+str(side['player_id']) not in sackmann_ids:
+        raise ValueError('No unambiguous Direct source identity: '+player_name)
+    if opponent_side.get('player_id') and 'oc:'+str(opponent_side['player_id']) not in sackmann_ids:
+        raise ValueError('No unambiguous Direct source identity: '+opponent_name)
+    player_id = sackmann_ids.get('oc:'+str(side.get('player_id') or '')) or sackmann_ids.get(norm_name(player_baseline), "")
+    opponent_id = sackmann_ids.get('oc:'+str(opponent_side.get('player_id') or '')) or sackmann_ids.get(norm_name(opponent_baseline), "")
     if not player_id or not opponent_id:
         missing = player_name if not player_id else opponent_name
         raise ValueError(f"Sackmann player ID missing: {missing}")
@@ -426,9 +432,20 @@ def main() -> int:
         include_qual_chall=True,
         level_factors=level_factors,
     )
+    try:
+        matches, history_report = load_current_history(ROOT, matches, as_of, level_factors)
+    except (OSError, ValueError) as exc:
+        write_csv(args.out, [])
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        args.report.write_text(json.dumps({'status':'BLOCKED_STALE_OR_INVALID_HISTORY',
+            'model':MODEL_NAME, 'error':str(exc), 'generated_at_utc':datetime.now(timezone.utc).isoformat()},indent=2),encoding='utf-8')
+        print('Direct fresh history blocked: '+str(exc))
+        return 2
     state = v3.build_feature_state(matches, as_of=as_of)
-    latest = latest_metadata(matches, as_of)
+    latest = latest_metadata([r for r in matches if r['_tour']=='ATP'], as_of)
     sackmann_ids = baseline_id_index(read_csv(args.baseline))
+    for identity in history_report['identity_crosswalk']:
+        sackmann_ids['oc:'+identity['oncourt_id']] = identity['archive_id']
     oncourt_players = oncourt_player_index(read_csv(ONCOURT / "players_atp.csv"))
     tours = {
         str(row.get("id") or ""): row
@@ -500,6 +517,12 @@ def main() -> int:
                 latest=latest,
                 tours=tours,
             )
+            for meta in (left_meta, right_meta):
+                included = str(latest.get(str(meta['player_id']),{}).get('date',''))
+                if not included:
+                    raise ValueError('No verified Direct history for player: '+str(meta['player_id']))
+                if player_gap(str(meta['player_id']), included, history_report):
+                    raise ValueError('Recent completed player match missing validated inputs: '+str(meta['player_id']))
             pair = direct_data.pairwise_feature_row(
                 left_features,
                 right_features,
@@ -527,6 +550,10 @@ def main() -> int:
         visible = quote_status in VISIBLE_QUOTE_STATUSES
         predicted = ("P1", "DRAW", "P2")[int(np.argmax(probabilities))]
         output.append({
+            "history_cohort": MODEL_NAME,
+            "player1_history_through": str(latest.get(str(left_meta['player_id']),{}).get('date','')),
+            "player2_history_through": str(latest.get(str(right_meta['player_id']),{}).get('date','')),
+            "history_source_through": history_report['latest_appended'],
             "generated_at_utc": generated,
             "feature_as_of": as_of.isoformat(),
             "date": str(forecast.get("date") or ""),
@@ -563,13 +590,14 @@ def main() -> int:
             "model": MODEL_NAME,
             "scope": "ATP_HARD_CLAY_PROSPECTIVE_SHADOW",
             "notes": (
-                "DIRECT_1X2_PROSPECTIVE_SHADOW|"
+                "DIRECT_1X2_FRESH_INPUT_COHORT_20261029|"
                 "OUTCOME_ONLY_NO_PRICE_NO_ROI_NO_CLV"
             ),
         })
 
     write_csv(args.out, output)
     report = {
+        "history": history_report,
         "generated_at_utc": generated,
         "feature_as_of": as_of.isoformat(),
         "model": MODEL_NAME,
