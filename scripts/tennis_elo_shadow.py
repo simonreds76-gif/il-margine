@@ -200,6 +200,7 @@ def capture(root,output,candidate):
 def settle(root,output):
     from tennis_event_integrity import completed_score
     ledger=load(output/'ledger.json',[]);index=defaultdict(list)
+    previous={r['key']:{k:r.get(k) for k in ('result','settlement_health','score')} for r in ledger}
     stat_index=defaultdict(list);wanted={r['key'] for r in ledger}
     for g in read_csv(root/'data/oncourt/stat_atp.csv'):
         k=':'.join([g['tour_id'],g['round_id'],*sorted([g['winner_id'],g['loser_id']],key=int)])
@@ -246,6 +247,9 @@ def settle(root,output):
                     actual[pid]=values
                 outcome['actual_stats']=actual
         r.update(outcome)
+    for r in ledger:
+        current={k:r.get(k) for k in ('result','settlement_health','score')}
+        if current!=previous[r['key']]:r.setdefault('settlement_events',[]).append({'at':datetime.now(timezone.utc).isoformat(),'before':previous[r['key']],'after':current})
     atomic(output/'ledger.json',ledger);return ledger
 
 def summarize(ledger,arm):

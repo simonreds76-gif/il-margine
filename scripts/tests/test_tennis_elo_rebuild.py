@@ -92,6 +92,7 @@ class OperationalTests(unittest.TestCase):
             quarantined=settle(p,out)[0]
             self.assertEqual(quarantined['result'],'quarantined');self.assertNotIn('y',quarantined)
             self.assertEqual(quarantined['correction_history'][0]['y'],0)
+            self.assertEqual(quarantined['settlement_events'][-1]['after']['result'],'quarantined');self.assertIn('at',quarantined['settlement_events'][-1])
             (f/'games_atp.csv').write_text(header+row)
             self.assertEqual(settle(p,out)[0]['result'],'settled')
             (out/'ledger.json').write_text(json.dumps([r]));(f/'games_atp.csv').write_text(header+row+'8,4,1,2,2026-10-29,6-0 6-0\n')
