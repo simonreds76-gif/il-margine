@@ -2763,7 +2763,7 @@
       "sent_at": "2026-10-30T01:22:16.360959+00:00"
     },
     "72478684|ángel fortuno|3.5|over": {
-      "status": "claimed",
+      "status": "sent",
       "run_token": "41027928879:1",
       "claimed_at": "2026-10-30T08:40:03.145978+00:00",
       "signal": {
@@ -2818,11 +2818,13 @@
             "contract_scope": "team_goalkeeper_away"
           }
         ],
-        "price_checked_at": "2026-10-30T08:40:03.145978+00:00"
-      }
+        "price_checked_at": "2026-10-30T08:40:08.837153+00:00"
+      },
+      "message_id": 724,
+      "sent_at": "2026-10-30T08:40:09.287048+00:00"
     },
     "keeper_watch_v1:5868120": {
-      "status": "claimed",
+      "status": "sent",
       "run_token": "41027928879:1",
       "claimed_at": "2026-10-30T08:40:03.145978+00:00",
       "signal": {
@@ -2859,7 +2861,9 @@
         "selection_policy": "keeper_watch_v1",
         "paper_stake": 0.5,
         "actual_stake": 0
-      }
+      },
+      "message_id": 725,
+      "sent_at": "2026-10-30T08:40:09.727469+00:00"
     }
   },
   "preparation_checks": {
