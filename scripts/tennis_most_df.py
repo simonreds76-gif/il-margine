@@ -193,7 +193,7 @@ def summary(records,outcomes,capture,reg,now):
 def weekly_text(r):
     if not r:return 'Most DF: no paper evidence snapshot.'
     roi=f"{r['roi_pct']:+.2f}%" if r.get('roi_pct') is not None else 'not available'
-    return f"Most DF | PAPER OBSERVATION ONLY | {r.get('wins',0)}W/{r.get('losses',0)}L | {r.get('pnl_units',0):+.2f}u on {r.get('stake_units',0):g}u | ROI {roi} | {r.get('pending',0)} pending ({r.get('overdue',0)} overdue). {r.get('settled_fixtures',0)}/150 independent settled fixtures. Capture: {r.get('capture',{}).get('state','UNKNOWN')}. No betting alerts; unvalidated independent-count benchmark."
+    return f"Most DF | PAPER OBSERVATION ONLY | {r.get('wins',0)}W/{r.get('losses',0)}L | {r.get('pnl_units',0):+.2f}u on {r.get('stake_units',0):g}u | ROI {roi} | {r.get('pending',0)} pending ({r.get('overdue',0)} overdue). {r.get('settled_fixtures',0)}/150 independent settled fixtures. Capture: {r.get('capture',{}).get('state','UNKNOWN')}. {'Fresh qualifying paper alerts enabled' if r.get('alerts_enabled') else 'Alerts disabled'}; unvalidated independent-count benchmark."
 def run(root,now=None,register=False,settle_only=False,capture_only=False):
     now=now or datetime.now(timezone.utc);folder=root/REL
     with locked(folder):
@@ -202,12 +202,18 @@ def run(root,now=None,register=False,settle_only=False,capture_only=False):
             if not register:raise ValueError('Most DF not registered')
             atomic(path,dict(config=CONFIG,registered_at=now.isoformat(),code_sha256=sha256(Path(__file__).read_bytes()).hexdigest(),model_sha256=sha256((root/'scripts/tennis_props_model.py').read_bytes()).hexdigest()))
         reg=readj(path)
-        if reg['config']!=CONFIG or reg['code_sha256']!=sha256(Path(__file__).read_bytes()).hexdigest() or reg['model_sha256']!=sha256((root/'scripts/tennis_props_model.py').read_bytes()).hexdigest():raise ValueError('Most DF frozen implementation changed')
+        from tennis_most_df_delivery import activated
+        delivery_enabled=activated(root,reg,now)
+        if reg['config']!=CONFIG or (reg['code_sha256']!=sha256(Path(__file__).read_bytes()).hexdigest() and not delivery_enabled) or reg['model_sha256']!=sha256((root/'scripts/tennis_props_model.py').read_bytes()).hexdigest():raise ValueError('Most DF frozen implementation changed')
         if now<stamp(reg['registered_at']):raise ValueError('Cannot capture before registration')
         health=readj(folder/'capture-status.json') if settle_only else capture(root,folder,reg,now)
         records=[readj(p) for p in sorted((folder/'captures').glob('*.json'))];outcomes=readj(folder/'outcomes.json')
         if not capture_only:settle(root,records,outcomes,now)
-        report=summary(records,outcomes,health,reg,now);atomic(folder/'outcomes.json',outcomes);atomic(folder/'capture-status.json',health);atomic(folder/'report.json',report)
+        report=summary(records,outcomes,health,reg,now)
+        report['alerts_enabled']=delivery_enabled
+        if delivery_enabled:
+            report['note']='Uncalibrated independent DF benchmark. Qualifying fresh selections use the existing deduplicated paper Telegram digest; 1u reference, zero real stake. Retirements await contract review. Original registration, probabilities and first entry odds are unchanged.'
+        atomic(folder/'outcomes.json',outcomes);atomic(folder/'capture-status.json',health);atomic(folder/'report.json',report)
         return report
 if __name__=='__main__':
     ap=argparse.ArgumentParser();ap.add_argument('--root',type=Path,default=ROOT);ap.add_argument('--register',action='store_true');ap.add_argument('--settle-only',action='store_true');ap.add_argument('--capture-only',action='store_true');a=ap.parse_args()

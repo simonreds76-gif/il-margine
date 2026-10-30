@@ -368,6 +368,23 @@ def most_aces_signals(target_date: str, *, now: datetime | None = None) -> list[
     return output
 
 
+
+def most_df_signals(target_date: str, *, now: datetime | None = None) -> list[Signal]:
+    from tennis_most_df_delivery import alert_rows
+    output=[]
+    for row in alert_rows(ROOT, now=now):
+        if row['date'] != target_date: continue
+        s=row['selection']; side=s['outcome']
+        selected=row['names'][0] if side==0 else row['names'][1] if side==2 else 'Tie'
+        output.append(Signal(section='MOST DOUBLE FAULTS 1X2 · PAPER ONLY', priority=47,
+            labels=['MOST DF PAPER'], match=' vs '.join(row['names']),
+            selection=f"{selected} most double faults @ {fmt_odds(s['odds'])} {s['bookmaker']} | fair {fmt_odds(s['fair_odds'])} | estimated EV {s['ev_pct']:+.1f}% | 1u paper, zero real stake",
+            edge_pct=s['ev_pct'], key=(row['date'],row['fixture'],'most_df_1x2'),
+            scheduled_start_utc=row['start'],captured_at=s['captured_at'],
+            performance_source={'market':'most_df','model_id':'most-df-independent-nb-v1'}))
+    return output
+
+
 def collect_signals(target_date: str, comparison_date: str | None = None) -> tuple[list[Signal], list[str]]:
     merged: dict[tuple[str, ...], Signal] = {}
     lane_counts: dict[str, int] = {}
@@ -416,6 +433,9 @@ def collect_signals(target_date: str, comparison_date: str | None = None) -> tup
     lane_counts['MOST ACES PAPER']=len(most_aces)
     for signal in most_aces:
         merged.setdefault(comparison_key(signal),signal)
+
+    for signal in most_df_signals(target_date):
+        merged.setdefault(comparison_key(signal), signal)
 
     signals = sorted(
         merged.values(),
@@ -695,6 +715,7 @@ def digest_main() -> int:
     parser.add_argument("--require-ready", action="store_true")
     parser.add_argument("--props-pending", action="store_true", help="Scope the early alert to match markets while props refresh separately.")
     parser.add_argument("--print-only", action="store_true")
+    parser.add_argument("--most-df-only", action="store_true", help="Only fresh Most DF paper selections; shared durable deduplication.")
     parser.add_argument("--most-aces-only", action="store_true", help="Check only the existing Count Most Aces paper lane, using the shared delivery deduplication.")
     parser.add_argument("--count-markets-only", action="store_true", help="Check only Most Aces and match-total ace/DF paper selections with the shared delivery deduplication.")
     parser.add_argument("--force", action="store_true")
@@ -718,7 +739,7 @@ def digest_main() -> int:
 
     # Astrissimo uses the existing daily/admin relay and its own durable dedup state.
     # Summary-only passes do not send selection alerts from another model.
-    if not args.paper_summary_only and not args.paper_signals_only and not args.most_aces_only and not args.count_markets_only:
+    if not args.paper_summary_only and not args.paper_signals_only and not args.most_aces_only and not args.count_markets_only and not args.most_df_only:
         from tennis_astrissimo import alerts as astrissimo_alerts
         try:
             astrissimo_alerts(ROOT,
@@ -770,8 +791,11 @@ def digest_main() -> int:
     if args.most_aces_only:
         signals = [s for s in signals if 'MOST ACES PAPER' in s.labels]
         empty_lanes = []
+    if args.most_df_only:
+        signals = [s for s in signals if 'MOST DF PAPER' in s.labels]
+        empty_lanes = []
     if args.count_markets_only:
-        signals = [s for s in signals if any(label in s.labels for label in ('MOST ACES PAPER','ACES/DF TOTALS PAPER'))]
+        signals = [s for s in signals if any(label in s.labels for label in ('MOST ACES PAPER','MOST DF PAPER','ACES/DF TOTALS PAPER'))]
         empty_lanes = []
     attach_performance(signals, ROOT)
     signals, empty_lanes = scope_digest(signals, empty_lanes, args.props_pending)

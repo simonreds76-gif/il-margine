@@ -48,6 +48,8 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 
 
 def primary_label(signal: Any) -> str | None:
+    if 'MOST DF PAPER' in signal.labels:
+        return 'MOST DF PAPER'
     if 'MOST ACES PAPER' in signal.labels:
         return 'MOST ACES PAPER'
     if signal.section in PROVISIONAL:
@@ -178,7 +180,15 @@ def attach_performance(signals: list[Any], root: Path, *, now: datetime | None =
         market = "handicap" if len(signal.key) > 4 and signal.key[4].startswith("spread:") else "ml"
         key = (label, market, signal.performance_source.get("market"), signal.performance_source.get("tour"), props_side(signal.performance_source), *(signal.performance_source.get(k, "") for k in ("model_id", "model_version", "variant_id")))
         if key not in cached:
-            if label == 'MOST ACES PAPER':
+            if label == 'MOST DF PAPER':
+                try:
+                    r=json.loads((root/'data/tennis-props/shadow/most-df-v1/report.json').read_text())
+                    cached[key]=(f"Most DF paper: {r['wins']}W/{r['losses']}L; "
+                        + (f"ROI {r['roi_pct']:+.2f}% ({r['pnl_units']:+.2f}u / {r['stake_units']:g}u). " if r['settled'] else 'No settled selections; ROI unavailable. ')
+                        + f"{r['pending']} pending. Experimental, uncalibrated; not a proven edge.")
+                except (OSError,ValueError,KeyError,TypeError):
+                    cached[key]='Most DF paper record unavailable; zero real stake.'
+            elif label == 'MOST ACES PAPER':
                 from tennis_most_aces_current import record, COUNT_MODEL
                 r=record(read_csv(root/'data/tennis-props/shadow/most-aces-1x2-observations.csv'),COUNT_MODEL)
                 cached[key]=(f"Count-model paper research: {r['wins']}W/{r['losses']}L; "
