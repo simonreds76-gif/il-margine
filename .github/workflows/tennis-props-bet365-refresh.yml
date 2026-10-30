@@ -134,6 +134,8 @@ jobs:
             data/tennis-props/inbox/bet365-tennis-market-audit-*.csv
             data/tennis-props/inbox/betmgm-most-aces-1x2-*.csv
             data/tennis-props/inbox/betmgm-most-aces-history-*.csv
+            data/tennis-props/inbox/most-df-1x2-*.csv
+            data/tennis-props/inbox/most-df-history-*.csv
             data/tennis-props/inbox/betmgm-tennis-market-audit-*.csv
             data/tennis-props/inbox/bet365-price-shape-probe-*.json
           if-no-files-found: warn
@@ -148,6 +150,8 @@ jobs:
           git add -f data/tennis-props/inbox/bet365-tennis-market-audit-*.csv || true
           git add -f data/tennis-props/inbox/betmgm-most-aces-1x2-*.csv || true
           git add -f data/tennis-props/inbox/betmgm-most-aces-history-*.csv || true
+          git add -f data/tennis-props/inbox/most-df-1x2-*.csv || true
+          git add -f data/tennis-props/inbox/most-df-history-*.csv || true
           git add -f data/tennis-props/inbox/betmgm-tennis-market-audit-*.csv || true
           if git diff --cached --quiet; then
             echo "No tennis props odds changes to commit."
