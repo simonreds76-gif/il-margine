@@ -972,6 +972,10 @@ def main() -> None:
     most.write_csv(out.parent / f"betmgm-most-aces-1x2-{args.date}.csv", most_rows)
     if most_rows:
         most.append_history(out.parent / f"betmgm-most-aces-history-{month}.csv", most_rows)
+    df_rows = most.extract_rows(payload, captured_at, most.load_common(), market_kind='dfs')
+    most.write_csv(out.parent / f"most-df-1x2-{args.date}.csv", df_rows)
+    if df_rows:
+        most.append_history(out.parent / f"most-df-history-{month}.csv", df_rows)
     audit_rows.append({"captured_at": captured_at, "bookmaker": "Grosvenor",
                        "market_name": f"<DIRECT_{direct_receipt.get('status', 'DISABLED')}>",
                        "odds_count": str(direct_receipt.get("market_count", 0)),

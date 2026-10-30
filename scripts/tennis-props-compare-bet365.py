@@ -19,6 +19,7 @@ from tennis_props_model import (
 )
 
 from player_name_matching import fold_name_text
+from tennis_price_identity import canonical_price_name
 from tennis_paper_prices import latest_snapshot_rows, TOTALS as PAPER_TOTALS
 
 
@@ -175,7 +176,7 @@ def norm_name(value: object) -> str:
     text = "".join(ch for ch in text if not unicodedata.combining(ch))
     text = text.lower()
     text = re.sub(r"[^a-z0-9]+", " ", text)
-    return " ".join(text.split())
+    return canonical_price_name(" ".join(text.split()))
 
 
 def is_placeholder_player(value: object) -> bool:

@@ -325,6 +325,8 @@ def run_shadow_tracking(as_of: str) -> None:
         "Capture and settle Sisal 50/50 paper evidence (no alerts)", fatal=False, timeout_seconds=240,
     )
     run_most_aces_shadow(as_of)
+    run([sys.executable, str(ROOT / 'scripts/tennis_most_df.py')],
+        'Capture and settle Most DF paper observations (no alerts)', fatal=False, timeout_seconds=60)
     v3_comparison = PROPS_DIR / f"comparison-v3-aces-{as_of}.csv"
     venue_comparison = PROPS_DIR / f"comparison-venue-ace-v1-{as_of}.csv"
     comparison = PROPS_DIR / f"comparison-{as_of}.csv"
@@ -474,6 +476,8 @@ def run_monitor_only(as_of: str, *, selections_only: bool = False) -> int:
                 return code
         step = "pipeline_health"
         refresh_current_most_aces(as_of)
+        run([sys.executable, str(ROOT / 'scripts/tennis_most_df.py'), '--capture-only'],
+            'Record current Most DF paper comparison (no historical wait or alerts)', fatal=False, timeout_seconds=15)
         code = write_pipeline_health(as_of, market_file, strict=True)
         if code != 0:
             try:

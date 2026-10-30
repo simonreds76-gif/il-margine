@@ -54,7 +54,7 @@ def normalize(payload, requested_id, captured_at, days_ahead=2):
     for offer in payload.get("betOffers", []):
         name = offer.get("criterion", {}).get("englishLabel")
         if (str(offer.get("eventId")) != str(requested_id)
-                or name not in {"Total Aces", "Most Aces"}
+                or name not in {"Total Aces", "Most Aces", "Total Double Faults", "Most Double Faults"}
                 or "OFFERED_PREMATCH" not in offer.get("tags", [])):
             continue
         outcomes = offer.get("outcomes", [])
@@ -64,7 +64,7 @@ def normalize(payload, requested_id, captured_at, days_ahead=2):
         by_type = {o.get("type"): o for o in outcomes}
         if len(by_type) != len(outcomes):
             continue
-        if name == "Total Aces":
+        if name in {"Total Aces", "Total Double Faults"}:
             if set(by_type) != {"OT_OVER", "OT_UNDER"} or offer.get("betOfferType", {}).get("id") != 6:
                 continue
             over, under = by_type["OT_OVER"], by_type["OT_UNDER"]

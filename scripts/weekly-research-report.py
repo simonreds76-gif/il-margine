@@ -1543,6 +1543,7 @@ def build_payload() -> dict[str, Any]:
     tennis_venue_ace_v1 = venue_ace_factor_v1_summary()
     tennis_most_aces_forecast = load_json(TENNIS_MOST_ACES_FORECAST_JSON)
     tennis_most_aces_prices = most_aces_price_summary()
+    tennis_most_df = load_json(ROOT / "data/tennis-props/shadow/most-df-v1/report.json")
     tennis_props_benchmark = tennis_props_market_benchmark()
     tennis_props_shadow = tennis_props_shadow_decision()
     goalscorer_research = goalscorer_research_summary()
@@ -1572,6 +1573,7 @@ def build_payload() -> dict[str, Any]:
         tennis_venue_ace_v1 = snapshot_sections.get("tennis_venue_ace_factor_v1") or tennis_venue_ace_v1
         tennis_most_aces_forecast = snapshot_sections.get("tennis_most_aces_forecast") or tennis_most_aces_forecast
         tennis_most_aces_prices = snapshot_sections.get("tennis_most_aces_prices") or tennis_most_aces_prices
+        tennis_most_df = snapshot_sections.get("tennis_most_df") or tennis_most_df
         tennis_props_benchmark = snapshot_sections.get("tennis_props_market_benchmark") or tennis_props_benchmark
         tennis_props_shadow = snapshot_sections.get("tennis_props_shadow_decision") or tennis_props_shadow
 
@@ -1630,6 +1632,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_venue_ace_factor_v1": tennis_venue_ace_v1,
         "tennis_most_aces_forecast": tennis_most_aces_forecast,
         "tennis_most_aces_prices": tennis_most_aces_prices,
+        "tennis_most_df": tennis_most_df,
         "tennis_props_market_benchmark": tennis_props_benchmark,
         "tennis_props_shadow_decision": tennis_props_shadow,
         "tennis_evidence_source": {
@@ -1932,6 +1935,8 @@ def render_report(payload: dict[str, Any]) -> str:
     from tennis_elo_shadow import weekly_text as elo_rebuild_text
     lines.extend(["", elo_rebuild_text(payload.get("tennis_elo_rebuild") or {})])
     lines.extend(["", sisal_5050_text(payload.get("tennis_sisal_5050") or {})])
+    from most_df_reporting import weekly_text as most_df_text
+    lines.extend(["", most_df_text(payload.get("tennis_most_df") or {})])
     lines.extend(["", rate_trend_text(payload)])
     from tennis_hardcourt_scout import weekly_text as hardcourt_scout_text
     lines.extend(["", full_refresh_text(payload), context_forward_text(payload), hardcourt_scout_text(payload.get("tennis_hardcourt_scout") or {})])
@@ -2146,6 +2151,8 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     from tennis_elo_shadow import weekly_text as elo_rebuild_text
     lines.append(elo_rebuild_text(payload.get("tennis_elo_rebuild") or {}))
     lines.append(sisal_5050_text(payload.get("tennis_sisal_5050") or {}))
+    from most_df_reporting import weekly_text as most_df_text
+    lines.append(most_df_text(payload.get("tennis_most_df") or {}))
     lines.append(rate_trend_text(payload))
     most = payload.get('tennis_most_aces_forecast') or {}
     paired = most.get('paired_comparison') or {}
