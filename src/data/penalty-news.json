@@ -1,11 +1,211 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-29T21:50:38.034496+00:00",
+  "generatedAt": "2026-10-30T21:32:01.162166+00:00",
   "coverageStart": "2026-10-17",
-  "checkedThrough": "2026-10-29",
+  "checkedThrough": "2026-10-30",
   "captureStatus": "complete",
-  "matchesChecked": 2,
+  "matchesChecked": 3,
   "articles": [
+    {
+      "id": "fotmob:5802978:2990080309",
+      "slug": "2026-10-30-boulaye-dia-5802978-2990080309",
+      "matchId": "5802978",
+      "eventId": "2990080309",
+      "date": "2026-10-30",
+      "kickoff": "2026-10-30T18:00:00.000Z",
+      "league": "ligue-1",
+      "leagueLabel": "Ligue 1",
+      "round": "9",
+      "player": "Boulaye Dia",
+      "playerId": 972120,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/972120.png",
+      "club": "Rennes",
+      "clubSlug": "rennes",
+      "clubUrl": "/penalty-takers/ligue-1/rennes",
+      "crest": "/team-logos/ligue-1/rennes.png",
+      "opponent": "Nice",
+      "home": "Nice",
+      "away": "Rennes",
+      "homeScore": 5,
+      "awayScore": 2,
+      "minute": "58",
+      "outcome": "scored",
+      "title": "Boulaye Dia scores from the spot against Nice",
+      "sentences": [
+        "Boulaye Dia converted a penalty for Rennes in minute 58 against Nice.",
+        "The match finished Nice 5–2 Rennes."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Mousa Al Tamari",
+        "concededBy": "Niels Nkounkou",
+        "sentence": "Mousa Al Tamari won the penalty after a foul by Niels Nkounkou inside the area.",
+        "evidenceIds": [
+          "2990079061",
+          "2990079029"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 68,
+        "goals": 1,
+        "shots": 2,
+        "onTarget": 2,
+        "chances": 3
+      },
+      "keeper": "Yéhvann Diouf",
+      "moment": {
+        "before": [
+          4,
+          1
+        ],
+        "after": [
+          4,
+          2
+        ]
+      },
+      "paragraphs": [
+        "Boulaye Dia converted a penalty in the 58th minute of Rennes’s 2–5 defeat to Nice.",
+        "Mousa Al Tamari won the penalty after a foul by Niels Nkounkou inside the area. The goal reduced the deficit at 2–4.",
+        "Boulaye Dia finished with 1 goal and 2 shots, including 2 on target, in 68 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/nice-vs-rennes/37bvse#5802978",
+      "eventHash": "c25bade81d1edd7a0cf29aa3dfbee588e5f90781bb9a5ec54678a4db3a638692",
+      "sourceHash": "26ce948e8e09799cdb0c5ebbce06183e7fd96aa84f598c5d7a49c61d1cffaae4",
+      "publishedAt": "2026-10-30T21:32:01.162166+00:00",
+      "updatedAt": "2026-10-30T21:32:01.162166+00:00"
+    },
+    {
+      "id": "fotmob:5802978:2990050685",
+      "slug": "2026-10-30-elye-wahi-5802978-2990050685",
+      "matchId": "5802978",
+      "eventId": "2990050685",
+      "date": "2026-10-30",
+      "kickoff": "2026-10-30T18:00:00.000Z",
+      "league": "ligue-1",
+      "leagueLabel": "Ligue 1",
+      "round": "9",
+      "player": "Elye Wahi",
+      "playerId": 1213430,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/1213430.png",
+      "club": "Nice",
+      "clubSlug": "nice",
+      "clubUrl": "/penalty-takers/ligue-1/nice",
+      "crest": "/team-logos/ligue-1/nice.png",
+      "opponent": "Rennes",
+      "home": "Nice",
+      "away": "Rennes",
+      "homeScore": 5,
+      "awayScore": 2,
+      "minute": "34",
+      "outcome": "scored",
+      "title": "Elye Wahi scores from the spot against Rennes",
+      "sentences": [
+        "Elye Wahi converted a penalty for Nice in minute 34 against Rennes.",
+        "The match finished Nice 5–2 Rennes."
+      ],
+      "cause": null,
+      "incident": null,
+      "stats": {
+        "minutes": 85,
+        "goals": 3,
+        "shots": 6,
+        "onTarget": 4,
+        "chances": 1
+      },
+      "keeper": "Nicolas Lemaître",
+      "moment": {
+        "before": [
+          1,
+          1
+        ],
+        "after": [
+          2,
+          1
+        ]
+      },
+      "paragraphs": [
+        "Elye Wahi converted a penalty in the 34th minute of Nice’s 5–2 win over Rennes.",
+        "The goal put the team ahead at 2–1.",
+        "Elye Wahi finished with 3 goals and 6 shots, including 4 on target, in 85 minutes. Nice took 2 penalties in the match and converted 2. Elye Wahi took both."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/nice-vs-rennes/37bvse#5802978",
+      "eventHash": "4bc3ee70771db4d0ab2fcacddeacfa49ba50c650fd2f70ef7809a2163eb002b1",
+      "sourceHash": "dfb0f6dbf03d666f4f25a59f1178c2cc6ad791afbd3943b71736d8a942de8c03",
+      "publishedAt": "2026-10-30T21:32:01.162166+00:00",
+      "updatedAt": "2026-10-30T21:32:01.162166+00:00"
+    },
+    {
+      "id": "fotmob:5802978:2990038851",
+      "slug": "2026-10-30-elye-wahi-5802978-2990038851",
+      "matchId": "5802978",
+      "eventId": "2990038851",
+      "date": "2026-10-30",
+      "kickoff": "2026-10-30T18:00:00.000Z",
+      "league": "ligue-1",
+      "leagueLabel": "Ligue 1",
+      "round": "9",
+      "player": "Elye Wahi",
+      "playerId": 1213430,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/1213430.png",
+      "club": "Nice",
+      "clubSlug": "nice",
+      "clubUrl": "/penalty-takers/ligue-1/nice",
+      "crest": "/team-logos/ligue-1/nice.png",
+      "opponent": "Rennes",
+      "home": "Nice",
+      "away": "Rennes",
+      "homeScore": 5,
+      "awayScore": 2,
+      "minute": "12",
+      "outcome": "scored",
+      "title": "Elye Wahi scores from the spot against Rennes",
+      "sentences": [
+        "Elye Wahi converted a penalty for Nice in minute 12 against Rennes.",
+        "The match finished Nice 5–2 Rennes."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Elye Wahi",
+        "concededBy": "Nicolas Lemaître",
+        "sentence": "Elye Wahi won the penalty after a foul by Nicolas Lemaître inside the area.",
+        "evidenceIds": [
+          "2990037853",
+          "2990037837"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 85,
+        "goals": 3,
+        "shots": 6,
+        "onTarget": 4,
+        "chances": 1
+      },
+      "keeper": "Nicolas Lemaître",
+      "moment": {
+        "before": [
+          0,
+          0
+        ],
+        "after": [
+          1,
+          0
+        ]
+      },
+      "paragraphs": [
+        "Elye Wahi converted a penalty in the 12th minute of Nice’s 5–2 win over Rennes.",
+        "Elye Wahi won the penalty after a foul by Nicolas Lemaître inside the area. The goal put the team ahead at 1–0.",
+        "Elye Wahi finished with 3 goals and 6 shots, including 4 on target, in 85 minutes. Nice took 2 penalties in the match and converted 2. Elye Wahi took both."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/nice-vs-rennes/37bvse#5802978",
+      "eventHash": "b7e4b4fd84fd3c89b0cc5269bd407fd05b46d078c2138dcd76f98097befa3aff",
+      "sourceHash": "6be0a80a347932285c727e859c53dabb6eb1a20551a8ae1f394a21a91e2075b9",
+      "publishedAt": "2026-10-30T21:32:01.162166+00:00",
+      "updatedAt": "2026-10-30T21:32:01.162166+00:00"
+    },
     {
       "id": "fotmob:5749723:2989805511",
       "slug": "2026-10-29-giacomo-calo-5749723-2989805511",
