@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-29T21:46:12.252029+00:00",
+  "generated_at": "2026-10-30T01:55:45.336047+00:00",
   "league": "serie-a",
   "row_count": 8,
   "rows": [
@@ -324,7 +324,7 @@
           "source_event_id": "2988949893",
           "match_id": "5749721",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749721",
-          "observed_at": "2026-10-29T15:44:29+00:00",
+          "observed_at": "2026-10-30T01:55:50+00:00",
           "event_date": "2026-10-27",
           "season": "2026/27",
           "team": "Cagliari",
@@ -555,7 +555,7 @@
           "source_event_id": "2986745901",
           "match_id": "5749711",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749711",
-          "observed_at": "2026-10-29T15:44:29+00:00",
+          "observed_at": "2026-10-30T01:55:47+00:00",
           "event_date": "2026-10-24",
           "season": "2026/27",
           "team": "Bologna",
@@ -568,6 +568,7 @@
             "added_time": 0,
             "method": "completed_lineup_timeline",
             "reason": "absent_from_matchday_squad",
+            "registered_player_id": null,
             "squad_player_ids": [
               "178732",
               "46820",
