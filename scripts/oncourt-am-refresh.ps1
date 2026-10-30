@@ -488,6 +488,10 @@ try {
     # Deliver fresh selections before the slower historical settlement pass.
     Log "=== Post-step: Settle saved model evidence independently of capture ==="
     $lockHandle = Enter-TennisPriorityLock -RootPath $root
+    # Capture the frozen paper comparison after alerts. The on-demand path has
+    # already returned above; no new schedule or live prediction is introduced.
+    $compassCaptureExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis_ace_compass.py", "--comparison", (Join-Path $root "data\tennis-props\comparison-$refreshDate.csv")) -Label "Ace Compass native-fixture paper capture" -TimeoutSeconds 240
+    if ($compassCaptureExit -ne 0) { Set-RunStatusFailure "AceCompassCaptureFailed" "Frozen Ace Compass paper capture needs attention; live pricing is unchanged." }
     $settlementEvidenceExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-settle-model-evidence.py") -Label "saved model evidence settlement" -TimeoutSeconds 300
     if ($settlementEvidenceExit -ne 0) { Set-RunStatusFailure "TennisEvidenceSettlementFailed" "Saved tennis model evidence did not settle successfully." }
 

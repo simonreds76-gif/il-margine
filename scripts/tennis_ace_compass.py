@@ -29,9 +29,21 @@ def atomic(p,obj):
     os.replace(q,p)
 @contextmanager
 def lock(folder):
-    folder.mkdir(parents=True,exist_ok=True);p=folder/'.writer.lock';fd=os.open(p,os.O_CREAT|os.O_EXCL|os.O_WRONLY)
-    try:os.write(fd,str(os.getpid()).encode());yield
-    finally:os.close(fd);p.unlink()
+    # OS-released lock: a bounded pipeline timeout must not block all later runs.
+    folder.mkdir(parents=True,exist_ok=True)
+    with (folder/'.writer.lock').open('a+b') as f:
+        f.seek(0);f.write(b'0');f.flush();f.seek(0)
+        if os.name=='nt':
+            import msvcrt
+            msvcrt.locking(f.fileno(),msvcrt.LK_NBLCK,1)
+        else:
+            import fcntl
+            fcntl.flock(f,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        try:yield
+        finally:
+            f.seek(0)
+            if os.name=='nt':msvcrt.locking(f.fileno(),msvcrt.LK_UNLCK,1)
+            else:fcntl.flock(f,fcntl.LOCK_UN)
 def ledger(path):
     rows=[];previous=''
     for line in path.read_text().splitlines() if path.exists() else []:
@@ -44,6 +56,36 @@ def append(path,rows,r):
     with path.open('a',encoding='utf8') as f:f.write(json.dumps(r,sort_keys=True,allow_nan=False)+'\n');f.flush();os.fsync(f.fileno())
     rows.append(r)
 def fingerprint(code):return {n:sha(code/'scripts'/n) for n in ('tennis_ace_compass.py','ace_compass_engine.py','ace_compass_integrity.py')}
+
+def verified_implementation(folder, registration, implementation):
+    """A separately installed recorder-only amendment preserves the frozen model."""
+    if registration['config'] != CONFIG:raise ValueError('frozen_config_changed')
+    if registration['implementation'] == implementation:return registration
+    amendment = readj(folder/'recorder-amendment-20261030.json', {})
+    old = registration['implementation']
+    if (amendment.get('reason') != 'exact_native_round_identity'
+            or amendment.get('before') != old or amendment.get('after') != implementation
+            or amendment.get('config_hash') != digest(CONFIG)
+            or any(old[n] != implementation[n] for n in old if n != 'tennis_ace_compass.py')):
+        raise ValueError('frozen_implementation_changed')
+    return dict(registration, implementation=implementation)
+
+def native_round(board, today):
+    """Resolve the exact unplayed native fixture; never guess IDs from labels."""
+    ids = {str(board.get('player_id','')), str(board.get('opponent_id',''))}
+    if len(ids) != 2 or '' in ids:return None, 'native_identity_missing'
+    matches = [r for r in today if str(r.get('tour_id')) == str(board.get('tour_id'))
+               and {str(r.get('player1_id')), str(r.get('player2_id'))} == ids
+               and r.get('date') == board.get('date')]
+    if not matches:return None, 'native_fixture_missing'
+    if any(r.get('result') or r.get('complete') or r.get('live') for r in matches):
+        return None, 'native_fixture_started_or_completed'
+    rounds = {str(r.get('round_id','')) for r in matches}
+    if len(rounds) != 1:return None, 'native_fixture_ambiguous'
+    rid = next(iter(rounds))
+    if not rid.isdigit() or E.event_phase(rid) is None:return None, 'native_round_invalid'
+    if board.get('round_id') not in (None, '', rid):return None, 'native_round_conflict'
+    return rid, None
 def source_manifest(root,now):
     paths=[root/'data/oncourt'/f'{k}_atp.csv' for k in ('players','games','stat','tours')]
     for p in paths:
@@ -69,12 +111,18 @@ def join_board(row,board):
 def capture(root,code,folder,rows,comparison,now,registration):
     health=Counter();quotes=E.read(comparison) if comparison and comparison.exists() else []
     board=E.read(root/'data/tennis-props/player-props-board.csv');pending=[];seen={r['id'] for r in rows}
+    today_path=root/'data/oncourt/today_atp.csv'
+    today=E.read(today_path) if today_path.exists() else []
+    native_hash=sha(today_path) if today_path.exists() else None
     for q in sorted(quotes,key=lambda r:r.get('capture_ts','')):
         reason=eligible(q,now)
         if reason:health[reason]+=1;continue
         b=join_board(q,board)
         if not b or b.get('generation_date')!=now.date().isoformat():health['board_missing_or_stale']+=1;continue
-        if not all(b.get(k) for k in ('tour_id','round','player_id','opponent_id')):health['native_identity_missing']+=1;continue
+        if not all(b.get(k) for k in ('tour_id','player_id','opponent_id')):health['native_identity_missing']+=1;continue
+        round_id,reason=native_round(b,today)
+        if reason:health[reason]+=1;continue
+        b=dict(b,round_display=b.get('round'),round=round_id)
         fk=identity(b);rid=digest([fk,b['player_id'],E.norm(q['bookmaker']),float(q['line'])])
         if rid in seen:health['already_registered']+=1;continue
         pending.append((q,b,fk,rid));seen.add(rid)
@@ -103,9 +151,10 @@ def capture(root,code,folder,rows,comparison,now,registration):
         p=E.predict(f,float(q['line']),float(q['over_odds']))
         stratum=('Challenger' if t['rank']=='1' else 'ATP')+' '+phase.replace('_',' ')
         predictions.append(dict(id=rid,fixture_key=fk,player_key=fk+':'+b['player_id'],registered_at=now.isoformat(),row=q,
-            native=dict(tid=b['tour_id'],round=b['round'],pid=b['player_id'],opp=b['opponent_id']),surface=sf,stratum=stratum,
+            native=dict(tid=b['tour_id'],round=b['round'],pid=b['player_id'],opp=b['opponent_id'],round_display=b.get('round_display'),fixture_source_hash=native_hash),surface=sf,stratum=stratum,
             features={k:float(v) for k,v in f.items()},input_hash=cachekey,**p))
     if source_manifest(root,datetime.now(timezone.utc))!=manifest:raise ValueError('source_changed_during_capture')
+    if not today_path.exists() or sha(today_path)!=native_hash:raise ValueError('native_fixture_changed_during_capture')
     atomic(folder/'inputs'/f'{cachekey}.json',dict(manifest=manifest,cutoff=now.date().isoformat(),audit=audit,implementation=registration['implementation']))
     for r in predictions:
         if stamp(r['row']['match_start_utc'])<=datetime.now(timezone.utc):health['started_during_build']+=1;continue
@@ -185,8 +234,8 @@ def run(root,code,comparison=None,settle_only=False):
         capture_status=readj(folder/'capture-status.json',dict(state='AWAITING_FIRST_RUN'))
         if not settle_only:
             try:
-                if reg['implementation']!=imp or reg['config']!=CONFIG:raise ValueError('frozen_implementation_changed')
-                capture_status=capture(root,code,folder,rows,comparison,now,reg)
+                active_reg=verified_implementation(folder,reg,imp)
+                capture_status=capture(root,code,folder,rows,comparison,now,active_reg)
             except Exception as exc:capture_status=dict(state='BLOCKED',checked_at=now.isoformat(),reason=str(exc),added=0)
             atomic(folder/'capture-status.json',capture_status)
         settle(root,rows,outcomes,now);atomic(folder/'outcomes.json',outcomes)
