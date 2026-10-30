@@ -197,9 +197,12 @@ Log "============================================"
 Log "=== Step 1/10: OnCourt extract ==="
 $py32 = "C:\Python312-32\python.exe"
 if (Test-Path $py32) {
-    & $py32 scripts\oncourt-extract-all.py 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        Log "ERROR: OnCourt extract failed (exit $LASTEXITCODE)"
+    # Preserve full native stderr; PowerShell 5 must not abort on its first line.
+    $extractExit = Invoke-LoggedProcess -FilePath $py32 -ArgumentList @("scripts\oncourt-extract-all.py") -Label "OnCourt extract" -TimeoutSeconds 1200
+    if ($extractExit -ne 0) {
+        $extractTail = ($script:LastProcessOutputLines | Select-Object -Last 12) -join [Environment]::NewLine
+        Log "ERROR: OnCourt extract failed (exit $extractExit)"
+        Set-RunStatusFailure "OnCourtExtractFailed" "OnCourt extract exit $extractExit. $extractTail"
         exit 1
     }
 } else {
