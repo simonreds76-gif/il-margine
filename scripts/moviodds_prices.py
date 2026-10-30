@@ -25,7 +25,9 @@ URL = 'https://moviodds.com/odds'
 GROUPS = {'soccer': {'177703': ('Goalkeeper Saves', 'Player Saves'),
                      '177727': ('Headed Shots on Target', 'Player Headed Shots on Target')},
           'tennis': {'130440': ('Ace Totals', 'Player Aces'),
-                     '130443': ('Double Fault Totals', 'Player Double Faults')}}
+                     '130443': ('Double Fault Totals', 'Player Double Faults'),
+                     '130317': ('Most Aces/Double Faults', 'Most Aces'),
+                     '130328': ('Match Total Aces/Double Faults', 'Match Total Counts')}}
 LEAGUES = {'England Premier League': 'england-premier-league',
            'Italy Serie A': 'italy-serie-a', 'Spain La Liga': 'spain-la-liga',
            'Germany Bundesliga I': 'germany-bundesliga',
@@ -153,6 +155,35 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
                 if str(q.get('market_id')) not in allowed_ids:
                     skipped['unverified_market_id'] += 1
                     continue
+                if sport == 'tennis' and gid in {'130317', '130328'}:
+                    fraction = re.fullmatch(r'(\d+)/(\d+)', str(q.get('odds_frac') or ''))
+                    if (not fraction or int(fraction[2]) == 0
+                            or abs(price-(1+int(fraction[1])/int(fraction[2]))) > 1e-7):
+                        skipped['fraction_decimal_disagreement'] += 1
+                        continue
+                    stat, side = q.get('line'), str(q.get('side') or '')
+                    if gid == '130317':
+                        # This group also contains Most Double Faults; never feed it to Most Aces.
+                        if stat != 'Aces' or key(side) not in {key(m['home']), key(m['away']), 'tie'}:
+                            skipped['unsupported_most_count_outcome'] += 1
+                            continue
+                        k = key(side)
+                        value = {'label': side, 'odds': price, 'raw_quote': q}
+                    else:
+                        try:
+                            line = float(q['handicap'])
+                            valid = math.isfinite(line) and line >= 0 and line % .5 == 0 and float(q['label']) == line
+                        except (KeyError, ValueError, TypeError):
+                            valid = False
+                        if not valid or stat not in {'Aces', 'Double Faults'} or side not in {'Over', 'Under'}:
+                            skipped['invalid_match_count_contract'] += 1
+                            continue
+                        k = (stat, line, side.lower())
+                        value = {'stat': stat, 'hdp': line, 'side': side.lower(), 'odds': price, 'raw_quote': q}
+                    if k in props and props[k]['odds'] != price:
+                        conflicts.add(k)
+                    props[k] = value
+                    continue
                 if gid in {'50532', '10235'}:
                     # Exact full-match two-way contracts, never SOT, team corners,
                     # first-half totals or three-way corner markets.
@@ -211,6 +242,30 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
                 props[k] = {'label': player, 'hdp': line, 'over': price, 'raw_quote': q}
             odds = [v for k, v in props.items() if k not in conflicts]
             skipped['conflicting_quotes'] += len(conflicts)
+            if sport == 'tennis' and gid in {'130317', '130328'}:
+                meta = {'source': 'moviodds_bet365', 'source_event_id': str(m['id']),
+                        'source_group_id': gid, 'source_url': URL+'?sport=tennis&groups='+gid,
+                        'captured_at': polled, 'raw_group_status': status,
+                        'settlement_policy': 'full_match; retirement_void_unless_determined'}
+                if gid == '130317':
+                    if {key(p['label']) for p in odds} != {key(m['home']), key(m['away']), 'tie'}:
+                        skipped['incomplete_most_aces_1x2'] += 1
+                        continue
+                    markets.append({**meta, 'name': 'Most Aces', 'odds': odds,
+                                    'updatedAt': max(p['raw_quote']['ts'] for p in odds)})
+                else:
+                    paired = {}
+                    for p in odds:
+                        paired.setdefault((p['stat'], p['hdp']), {})[p['side']] = p
+                    for (stat, line), sides in paired.items():
+                        if set(sides) != {'over', 'under'}:
+                            skipped['unpaired_match_count_market'] += 1
+                            continue
+                        markets.append({**meta, 'name': 'Totals ('+stat+')',
+                            'odds': [{'hdp': line, 'over': sides['over']['odds'], 'under': sides['under']['odds']}],
+                            'raw_quotes': [p['raw_quote'] for p in sides.values()],
+                            'updatedAt': max(p['raw_quote']['ts'] for p in sides.values())})
+                continue
             if gid in {'50532','10235'}:
                 paired = {}
                 for p in odds: paired.setdefault((p['club'],p['hdp']),{})[p['side']] = p
@@ -313,3 +368,4 @@ def refresh_headed(root, payload, now=None):
     temp=folder/'status.tmp';temp.write_text(json.dumps(receipt,indent=2)+'\n',encoding='utf-8')
     temp.replace(folder/'status.json')
     return receipt
+

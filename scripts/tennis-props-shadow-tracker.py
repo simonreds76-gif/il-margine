@@ -13,6 +13,7 @@ import csv
 from datetime import datetime, timezone, date
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
+from tennis_paper_prices import best_total_rows
 import re
 import unicodedata
 
@@ -541,9 +542,12 @@ def build_signal(row: dict[str, str], source: Path, args: argparse.Namespace) ->
         if picked is None or picked[0] != shadow_side:
             return None
     elif scope == "match_total":
-        if (row.get("bettable") or "").strip().lower() != "true":
+        paper_total = decision_mode == 'two_way_match_total_shadow' and row.get('trackable_shadow') == 'true'
+        if (row.get("bettable") or "").strip().lower() != "true" and not paper_total:
             return None
-        picked = pick_side(row, args.min_value, args.allow_watch)
+        picked = pick_side(row, args.min_value, args.allow_watch or paper_total)
+        if paper_total and picked and picked[0] != row.get('shadow_side'):
+            return None
     else:
         if (row.get("trackable_shadow") or "").strip().lower() != "true":
             return None
@@ -756,7 +760,7 @@ def main() -> int:
     }
     added = 0
     repriced = 0
-    for row in read_csv(comparison):
+    for row in best_total_rows(read_csv(comparison)):
         if is_break_market(row):
             original = existing_break_decisions.get(prospective_decision_key(row))
             if original is not None:
@@ -794,3 +798,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

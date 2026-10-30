@@ -19,6 +19,7 @@ from tennis_props_model import (
 )
 
 from player_name_matching import fold_name_text
+from tennis_paper_prices import latest_snapshot_rows, TOTALS as PAPER_TOTALS
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -566,6 +567,35 @@ def apply_decision_gates(rows: list[dict[str, str]], args: argparse.Namespace, n
             row["decision_mode"] = "two_way_player_shadow" if two_way_shadow else "one_sided_over_shadow"
         else:
             row["decision_mode"] = "blocked"
+
+    apply_match_total_paper_gates(rows, args, now)
+
+
+def apply_match_total_paper_gates(rows, args, now):
+    """Correct informational-note blocking in paper totals only; public gate stays frozen."""
+    fresh_rows = latest_snapshot_rows([r for r in rows if r.get('market') in PAPER_TOTALS], now)
+    # Use the existing main-threshold rule, then compare ALL books at that threshold.
+    copies = [dict(r) for r in fresh_rows]
+    select_main_lines(copies)
+    main_lines = {(line_group_key(r), parse_float(r.get('line'))) for r in copies if r.get('main_line') == 'true'}
+    informational = re.compile(r'^(?:TOURNAMENT_DEBUT|SAME_TOURNAMENT_N\d+|EVENT_ENV_N\d+|SURFACE_BASELINE_ONLY)$')
+    for row in rows:
+        if row.get('market') not in PAPER_TOTALS:
+            continue
+        reasons = [r for r in row.get('block_reasons', '').split('|') if r and r not in {'BOARD_WARNINGS', 'NOT_MAIN_LINE'}]
+        if not any(row is r for r in fresh_rows):
+            reasons.append('STALE_OR_INVALID_PAPER_PRICE')
+        if (line_group_key(row), parse_float(row.get('line'))) not in main_lines:
+            reasons.append('NOT_MAIN_LINE')
+        notes = [n.strip().upper() for n in row.get('notes', '').split('|') if n.strip()]
+        if any(not informational.fullmatch(n) for n in notes):
+            reasons.append('BOARD_WARNINGS')
+        candidate = best_candidate(row, args)
+        row['trackable_shadow'] = bool_text(not reasons and candidate is not None)
+        row['shadow_side'] = candidate[0] if not reasons and candidate else ''
+        row['shadow_block_reasons'] = '|'.join(dict.fromkeys(reasons))
+        if row['trackable_shadow'] == 'true' and row.get('bettable') != 'true':
+            row['decision_mode'] = 'two_way_match_total_shadow'
 
 
 def market_mean(board_row: dict[str, str], market: str) -> float | None:
@@ -1319,3 +1349,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

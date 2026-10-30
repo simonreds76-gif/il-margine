@@ -10,6 +10,7 @@ import json
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from tennis_paper_prices import latest_snapshot_rows
 
 ROOT = Path(__file__).resolve().parents[1]
 COUNT_MODEL = 'v3_aces_gaussian_copula_nb2_evidence_tiers_v3'
@@ -74,6 +75,7 @@ def tournament_players(board, projections, shadow):
     return players
 
 def compare(boards, captures, ledger, now, shadow, projections=()):
+    captures = latest_snapshot_rows(captures, now)
     matches = []
     for board in boards:
         prices = []
@@ -112,6 +114,7 @@ def main():
     captures=[]
     for prefix in ['betmgm','bet365']:
         captures.extend(shadow.read_csv(props/'inbox'/f'{prefix}-most-aces-1x2-{args.as_of}.csv'))
+    captures = latest_snapshot_rows(captures)
     ledger=shadow.read_csv(shadow.DEFAULT_LEDGER)
     added=0 if shadow.most_aces_suspended() else shadow.register(boards,captures,ledger)
     # Existing observations are never repriced, settled or modified here.
@@ -124,3 +127,4 @@ def main():
     return 0
 
 if __name__=='__main__':raise SystemExit(main())
+

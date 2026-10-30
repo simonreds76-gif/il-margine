@@ -263,10 +263,11 @@ def fresh_prematch_prop(row: dict[str, str], now: datetime) -> bool:
 
 
 def props_signals(target_date: str, comparison_date: str | None = None, *, now: datetime | None = None) -> list[Signal]:
+    from tennis_paper_prices import best_total_rows, TOTALS
     now = now or datetime.now(UTC)
     path = PROPS / f"comparison-{comparison_date or target_date}.csv"
     signals: list[Signal] = []
-    for row in read_csv(path):
+    for row in best_total_rows(read_csv(path), now):
         event_date = row_event_date(row)
         if event_date != target_date:
             continue
@@ -316,6 +317,10 @@ def props_signals(target_date: str, comparison_date: str | None = None, *, now: 
         else:
             section = f"{source_name} PROPS" if is_bettable else f"{source_name} PROPS WATCHLIST"
             labels = ["ACES/DF"] if is_bettable else ["ACES/DF WATCH"]
+        if market in TOTALS:
+            section = f"{source_name} MATCH TOTALS · PAPER ONLY"
+            labels = ['ACES/DF TOTALS PAPER']
+            selection += ' | paper only; zero real stake'
         signal_key = (
             (event_date, *pair, norm(subject), market)
             if is_service_break_market
@@ -691,6 +696,7 @@ def digest_main() -> int:
     parser.add_argument("--props-pending", action="store_true", help="Scope the early alert to match markets while props refresh separately.")
     parser.add_argument("--print-only", action="store_true")
     parser.add_argument("--most-aces-only", action="store_true", help="Check only the existing Count Most Aces paper lane, using the shared delivery deduplication.")
+    parser.add_argument("--count-markets-only", action="store_true", help="Check only Most Aces and match-total ace/DF paper selections with the shared delivery deduplication.")
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--astrissimo-only", action="store_true", help="Send only Astrissimo fresh signals and its once-daily paper record.")
     parser.add_argument("--paper-summary", action="store_true", help="Include the once-daily ace paper-model progress report.")
@@ -712,7 +718,7 @@ def digest_main() -> int:
 
     # Astrissimo uses the existing daily/admin relay and its own durable dedup state.
     # Summary-only passes do not send selection alerts from another model.
-    if not args.paper_summary_only and not args.paper_signals_only and not args.most_aces_only:
+    if not args.paper_summary_only and not args.paper_signals_only and not args.most_aces_only and not args.count_markets_only:
         from tennis_astrissimo import alerts as astrissimo_alerts
         try:
             astrissimo_alerts(ROOT,
@@ -763,6 +769,9 @@ def digest_main() -> int:
     signals, empty_lanes = collect_upcoming_signals(args.date, args.days_ahead)
     if args.most_aces_only:
         signals = [s for s in signals if 'MOST ACES PAPER' in s.labels]
+        empty_lanes = []
+    if args.count_markets_only:
+        signals = [s for s in signals if any(label in s.labels for label in ('MOST ACES PAPER','ACES/DF TOTALS PAPER'))]
         empty_lanes = []
     attach_performance(signals, ROOT)
     signals, empty_lanes = scope_digest(signals, empty_lanes, args.props_pending)
@@ -858,3 +867,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
