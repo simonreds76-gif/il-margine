@@ -140,10 +140,13 @@ def capture(root,output,candidate):
     if now.timestamp()-source.stat().st_mtime>48*3600:raise ValueError('Native export older than48h')
     hashes={p:sha(root/p) for p in MODEL_FILES}
     registration=load(output/'registration.json')
-    if registration and registration['model_hashes']!=hashes:raise ValueError('Live model changed; paired cohort needs review')
+    from tennis_observation_amendments import accepted_observation_amendment
+    observation_amendment = accepted_observation_amendment(output, hashlib.sha256((output/'registration.json').read_bytes()).hexdigest(), registration['model_hashes'], hashes, 'model', now) if registration else None
+    if registration and registration['model_hashes']!=hashes and not observation_amendment:raise ValueError('Live model changed; paired cohort needs review')
     dh={p:sha(root/p) for p in DOWNSTREAM_FILES}
     dr=load(output/'downstream-registration.json')
-    if dr and dr['hashes']!=dh:raise ValueError('Downstream model changed; review required')
+    downstream_observation_amendment = accepted_observation_amendment(output, hashlib.sha256((output/'downstream-registration.json').read_bytes()).hexdigest(), dr['hashes'], dh, 'downstream', now) if dr else None
+    if dr and dr['hashes']!=dh and not downstream_observation_amendment:raise ValueError('Downstream model changed; review required')
     quotes,qhash=load_quotes(root,now)
     # No extra odds download; empty prices are a coverage condition, not an edge.
     ratings={(r['player_id'],r['surface']):r['elo'] for r in candidate['ratings']}
@@ -170,7 +173,7 @@ def capture(root,output,candidate):
         row={'key':key,'captured_at':completed.isoformat(),'compute_started_at':now.isoformat(),'as_of_exclusive':day,'kickoff':q['kickoff_iso'],
              'tournament':a['tour_name'],'category':a['official_category'],'surface':a['surface'],'player1':a['player1'],'player2':a['player2'],
              'baseline':a,'candidate':b,'quote':q,'baseline_selection':selection(a,q,policy),'candidate_selection':selection(b,q,policy),
-             'result':'pending','history_hash':candidate['history_hash'],'rating_hash':candidate['rating_hash'],'model_hashes':hashes}
+             'result':'pending','history_hash':candidate['history_hash'],'rating_hash':candidate['rating_hash'],'model_hashes':hashes,'observation_amendment_sha256':observation_amendment,'downstream_observation_amendment_sha256':downstream_observation_amendment}
         added.append(row)
     stamp=now.strftime('%Y%m%dT%H%M%SZ');evidence=output/'evidence'
     data={'captured_at':completed.isoformat(),'compute_started_at':now.isoformat(),'query_responses':packets,'baseline':list(baseline.values()),'candidate':list(challenger.values()),

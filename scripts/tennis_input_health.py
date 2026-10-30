@@ -195,7 +195,7 @@ def observe(root, get, now):
             'elo_rows':elo, 'profile_rows':profiles, 'metadata':metadata,
             'file_hashes':{p:file_hash(root/p) for p in MODEL_FILES+SOURCE_FILES},
             'capture_semantics':'Observed tables, not an atomic trace of model reads; never retroactively labelled prospective.',
-            'raw_expected_games':None, 'raw_expected_games_status':'NOT_EMITTED_BY_FROZEN_ENGINE'}
+            'raw_expected_games':None, 'raw_expected_games_status':'NOT_READ_BY_BRACKETING_OBSERVER_SEE_VERSIONED_ML_COMPONENTS'}
 
 def scheduled_candidates(root):
     import re

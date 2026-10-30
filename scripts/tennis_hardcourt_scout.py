@@ -164,7 +164,10 @@ def capture(root,rows,now=None,as_of=None,forecast_generated_at=None):
     with locked(folder):
         reg=read(folder/'registration.json');reasons=Counter()
         if not reg or not utc(reg.get('registered_at')) or now<utc(reg['registered_at']):raise ValueError('tracker not registered')
-        if reg['model_hashes']!=hashes(root) or reg['model_environment']!=environment(root):raise ValueError('frozen model code or environment changed')
+        from tennis_observation_amendments import accepted_observation_amendment
+        current_hashes=hashes(root)
+        observation_amendment=accepted_observation_amendment(folder, sha256((folder/'registration.json').read_bytes()).hexdigest(), reg['model_hashes'], current_hashes, 'model', now)
+        if (reg['model_hashes']!=current_hashes and not observation_amendment) or reg['model_environment']!=environment(root):raise ValueError('frozen model code or environment changed')
         if reg['rules']!=RULES:raise ValueError('frozen rules changed')
         if str(as_of)!=now.date().isoformat():raise ValueError('forecast must be freshly generated today')
         forecast_stamp=utc(forecast_generated_at) if forecast_generated_at else now
@@ -194,7 +197,7 @@ def capture(root,rows,now=None,as_of=None,forecast_generated_at=None):
                 players=[str(row['player1_id']),str(row['player2_id'])],names=[row['player1'],row['player2']],
                 tournament=row['tour_name'],surface='Hard',category='Challenger',
                 probability=p,market_probability=q['market_p1'],selection=selection,quote=q,
-                components=row,price_hashes=price_hashes,registration_sha256=sha256((folder/'registration.json').read_bytes()).hexdigest(),
+                components=row,price_hashes=price_hashes,observation_amendment_sha256=observation_amendment,implementation_hashes=current_hashes,registration_sha256=sha256((folder/'registration.json').read_bytes()).hexdigest(),
                 paper_stake=1 if selection['qualifies'] else 0,actual_stake=0)))
         if len(pending)>150:raise ValueError('unexpected fixture volume')
         for path,packet in pending:immutable(path,packet);reasons['captured']+=1
