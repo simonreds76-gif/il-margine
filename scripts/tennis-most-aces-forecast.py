@@ -236,6 +236,18 @@ def mean(rows: list[dict[str, str]], field: str) -> float | None:
     return sum(clean) / len(clean) if clean else None
 
 
+def draw_probability_summary(rows: list[dict[str, str]]) -> dict[str, Any]:
+    """Probability calibration differs from the rate at which DRAW wins argmax."""
+    paired = [(row, number(row.get("p_draw"))) for row in rows]
+    paired = [(row, p) for row, p in paired if p is not None and 0.0 <= p <= 1.0]
+    return {
+        "predicted_draw_rate_pct": 100.0 * sum(p for _, p in paired) / len(paired) if paired else None,
+        "draw_probability_rows": len(paired),
+        "actual_draw_rate_on_probability_rows_pct": 100.0 * sum(row.get("actual_outcome") == "DRAW" for row, _ in paired) / len(paired) if paired else None,
+        "modal_draw_prediction_rate_pct": 100.0 * sum(row.get("predicted_outcome") == "DRAW" for row in rows) / len(rows) if rows else None,
+    }
+
+
 def model_summary(rows: list[dict[str, str]]) -> dict[str, Any]:
     settled_rows = [row for row in rows if row.get("settlement_status") == "settled"]
     correct = sum(row.get("prediction_correct") == "yes" for row in settled_rows)
@@ -249,9 +261,7 @@ def model_summary(rows: list[dict[str, str]]) -> dict[str, Any]:
         "accuracy_pct": (100.0 * correct / len(settled_rows)) if settled_rows else None,
         "brier": mean(settled_rows, "model_brier"),
         "logloss": mean(settled_rows, "model_logloss"),
-        "predicted_draw_rate_pct": (
-            100.0 * predicted_draw / len(settled_rows) if settled_rows else None
-        ),
+        **draw_probability_summary(settled_rows),
         "actual_draw_rate_pct": (
             100.0 * actual_draw / len(settled_rows) if settled_rows else None
         ),
@@ -382,7 +392,7 @@ def report_payload(rows: list[dict[str, str]]) -> dict[str, Any]:
             ],
             "value",
         ),
-        "predicted_draw_rate_pct": (100.0 * predicted_draw / len(settled_rows)) if settled_rows else None,
+        **draw_probability_summary(settled_rows),
         "actual_draw_rate_pct": (100.0 * actual_draw / len(settled_rows)) if settled_rows else None,
         "models": models,
         "paired_comparison": paired_comparison(rows),
@@ -417,8 +427,9 @@ def write_report(path: Path, json_path: Path, payload: dict[str, Any]) -> None:
         f"Brier: {metric('brier', 4)} | log loss: {metric('logloss', 4)}",
         f"Player ace-count MAE: {metric('player_count_mae', 3)}",
         (
-            f"Draw rate: predicted {metric('predicted_draw_rate_pct', 1)}% | "
-            f"actual {metric('actual_draw_rate_pct', 1)}%"
+            f"Tie probability: mean forecast {metric('predicted_draw_rate_pct', 1)}% | "
+            f"observed on paired rows {metric('actual_draw_rate_on_probability_rows_pct', 1)}% "
+            f"({payload.get('draw_probability_rows', 0)} forecasts); modal tie picks {metric('modal_draw_prediction_rate_pct', 1)}%"
         ),
         "No profitability claim: prices, value, ROI and CLV are unavailable.",
         "Review gate: 200 settled prospective forecasts; no automatic parameter changes.",
