@@ -2761,17 +2761,116 @@
       },
       "message_id": 723,
       "sent_at": "2026-10-30T01:22:16.360959+00:00"
+    },
+    "72478684|ángel fortuno|3.5|over": {
+      "status": "claimed",
+      "run_token": "41027928879:1",
+      "claimed_at": "2026-10-30T08:40:03.145978+00:00",
+      "signal": {
+        "signal_id": "72478684|ángel fortuno|3.5|over",
+        "created_at": "2026-10-30T08:40:01Z",
+        "event_id": "72478684",
+        "match_date": "2026-10-30",
+        "kickoff_at": "2026-10-30T20:00:00Z",
+        "league": "la-liga",
+        "home_team": "Villarreal CF",
+        "away_team": "Espanyol Barcelona",
+        "team": "Espanyol Barcelona",
+        "opponent": "Villarreal CF",
+        "venue": "away",
+        "goalkeeper": "Ángel Fortuno",
+        "bookmaker": "Bet365",
+        "line": "3.5",
+        "side": "over",
+        "odds_decimal": "1.8000",
+        "model_mean": "4.5061",
+        "model_probability": "0.625850",
+        "push_probability": "0.000000",
+        "fair_odds": "1.598",
+        "edge": "0.126530",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-10-30T08:39:55.163295934Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "named_player",
+        "identity_basis": "bookmaker_named_player",
+        "price_comparison": [
+          {
+            "bookmaker": "Bet365",
+            "odds": 1.8,
+            "captured_at": "2026-10-30T08:39:55.163295934Z",
+            "contract_scope": "named_player"
+          },
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 1.46,
+            "captured_at": "2026-10-30T08:39:56+00:00",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-10-30T08:40:03.145978+00:00"
+      }
+    },
+    "keeper_watch_v1:5868120": {
+      "status": "claimed",
+      "run_token": "41027928879:1",
+      "claimed_at": "2026-10-30T08:40:03.145978+00:00",
+      "signal": {
+        "away": "Espanyol Barcelona",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-10-30T08:39:55.163295+00:00",
+        "contract_scope": "named_player",
+        "edge": 0.0814940802932631,
+        "event_id": "72478684",
+        "fair_odds": 2.542778596859538,
+        "goalkeeper": "Ángel Fortuno",
+        "home": "Villarreal CF",
+        "kickoff_at": "2026-10-30T20:00:00+00:00",
+        "line": 4.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5868120",
+        "model": "keeper_watch",
+        "odds": 2.75,
+        "overdue": false,
+        "player_id": "1184772",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-30T08:40:02.685227+00:00",
+        "settlement_policy": "bet365_named_nonstarter_void_v1",
+        "side": "over",
+        "status": "pending",
+        "team_id": "8558",
+        "alert_model": "keeper_watch_v1",
+        "signal_id": "keeper_watch_v1:5868120",
+        "created_at": "2026-10-30T08:40:02.685227+00:00",
+        "odds_decimal": 2.75,
+        "home_team": "Villarreal CF",
+        "away_team": "Espanyol Barcelona",
+        "selection_policy": "keeper_watch_v1",
+        "paper_stake": 0.5,
+        "actual_stake": 0
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-10-30T01:22:06.316677+00:00",
-      "added": 4,
+      "checked_at": "2026-10-30T08:40:03.145978+00:00",
+      "added": 1,
       "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-10-30T01:22:06.316677+00:00",
-      "added": 0,
+      "checked_at": "2026-10-30T08:40:03.145978+00:00",
+      "added": 1,
       "suppressed": {}
     }
   }
