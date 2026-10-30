@@ -128,14 +128,14 @@ def evaluate(fixtures, elo, profiles, metadata, now):
     if metadata.get('history_status') != 'CURRENT': checks['player_count_history']='INVALID'
     gaps = sum(bool(r['missing_elo_keys']) for r in rows)
     return {'version':'tennis-input-health-v1', 'checked_at':now.isoformat(),
-            'status':'MISSING' if gaps or not fixtures else 'UNVERIFIED',
+            'status':'MISSING' if gaps or not fixtures else 'ELO_LINEAGE_UNVERIFIED',
             'reason':'elo_refresh_writer_and_cutoff_not_verified',
             'fixture_count':len(fixtures), 'elo_rows':len(elo), 'fixtures_with_missing_elo':gaps,
             'fixtures_with_missing_v2_profile':sum(bool(r['missing_v2_profile_ids']) for r in rows),
             'elo_content_sha256':fp, 'elo_oldest_row_timestamp':timestamps[0] if timestamps else None,
             'elo_newest_row_timestamp':timestamps[-1] if timestamps else None,
             'zero_match_count_rows':sum(r.get('match_count')==0 for r in elo),
-            'timestamp_is_verified_refresh_cutoff':False, 'checks':checks,
+            'timestamp_is_verified_refresh_cutoff':False, 'elo_coverage':'MISSING' if gaps else 'COMPLETE', 'elo_lineage':'UNVERIFIED', 'checks':checks,
             'pricing_and_stakes_changed':False, 'fixtures':rows,
             'capture_note':'Bracketing observations, not an atomic trace of engine reads. No historical vintage reconstructed.',
             'retention':'Lossless gzip; at most 128 MiB / 10000 captures. On capacity limit health warns; pricing continues. No automatic deletion.',
@@ -200,14 +200,17 @@ def observe(root, get, now):
 def scheduled_candidates(root):
     import re
     folder=root/'data/oncourt'
-    if not all((folder/n).exists() for n in ('today_atp.csv','tours_atp.csv','courts.csv')): return [],{'export_missing':1}
+    if not all((folder/n).exists() for n in ('today_atp.csv','tours_atp.csv','courts.csv','players_atp.csv')): return [],{'export_missing':1}
     def csv_rows(n):
         with (folder/n).open(encoding='utf-8-sig',newline='') as f:return list(csv.DictReader(f))
     tours={r['id']:r for r in csv_rows('tours_atp.csv')}
     # Import the same canonical court mapping already used by the pricing engine.
     from tennis_source_contract import court_surfaces
     courts=court_surfaces(folder/'courts.csv')
-    result=[]; ignored={'self_pair_draw_placeholder':0,'invalid_player_id':0}
+    names={r['id']:str(r.get('name','')).strip() for r in csv_rows('players_atp.csv')}
+    result=[]; ignored={'self_pair_draw_placeholder':0,'invalid_player_id':0,
+                        'identified_doubles':0,'named_draw_placeholder':0}
+    placeholders={'unknown player','bye','qualifier','lucky loser','tbd','tba'}
     for f in csv_rows('today_atp.csv'):
         if str(f.get('result','')).strip(): continue
         if any(not str(f.get(k,'')).isdigit() or int(f[k])<=0 for k in ('player1_id','player2_id')):
@@ -218,6 +221,13 @@ def scheduled_candidates(root):
         if re.search(r'\b[MW]\d{1,2}\b',name) or 'ITF' in name or 'FUTURES' in name: continue
         rank=int(t['rank']) if str(t.get('rank','')).isdigit() else 99
         eligible=rank<=3 or any(n in name for n in ('CHALLENGER','ATP','MASTERS','GRAND SLAM','WIMBLEDON','AUSTRALIAN OPEN','FRENCH OPEN','US OPEN'))
+        if not eligible: continue
+        participants=[names.get(f[k],'') for k in ('player1_id','player2_id')]
+        if any('/' in n or '&' in n for n in participants):
+            ignored['identified_doubles']+=1;continue
+        if any(n.casefold() in placeholders for n in participants):
+            ignored['named_draw_placeholder']+=1;continue
+        # An absent identity remains an auditable gap; never silently discard it.
         if eligible: result.append({**f,'surface':courts.get(t.get('court_id'),'N/A')})
     return result,ignored
 
@@ -239,7 +249,8 @@ def text(status):
     bad = ', '.join(k+': '+v for k,v in status.get('checks',{}).items() if v!='CURRENT')
     return (f"Tennis input health: {state}. Elo refresh lineage unverified; "
             f"Stored forecasts missing Elo: {status.get('stored_forecasts_missing_elo','?')}/{status.get('stored_forecast_count','?')}; "
-            f"unpriced candidates missing Elo: {status.get('unpriced_candidates_missing_elo','?')}/{status.get('unpriced_export_candidates','?')}. "
+            f"eligible unpriced singles missing Elo: {status.get('unpriced_candidates_missing_elo','?')}/{status.get('unpriced_export_candidates','?')}. "
+            f"Excluded doubles/draw placeholders: {status.get('scheduled_export_exclusions',{}).get('identified_doubles',0)}/{status.get('scheduled_export_exclusions',{}).get('named_draw_placeholder',0)}. "
             +(f'Other checks: {bad}. ' if bad else '')+
             'Fresh odds do not certify input freshness. Existing pricing unchanged.')
 

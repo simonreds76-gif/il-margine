@@ -57,9 +57,11 @@ def register(root, now):
             or T.stamp(revision['effective_from'])<T.stamp(reg['registered_at'])):
             raise ValueError('invalid_source_revision')
         expected[SELF]=revision['current_hash']
-    if reg['policy']!=POLICY or expected!=hashes:
+    from sisal_observation_amendment import accepted_observation_amendment
+    amendment=accepted_observation_amendment(p,T.sha(p/'registration.json'),expected,hashes,'event',now)
+    if reg['policy']!=POLICY or (expected!=hashes and not amendment):
         raise ValueError('event_comparison_frozen_policy_or_artifact_changed')
-    return dict(reg,artifacts=expected,source_revision=revision,
+    return dict(reg,artifacts=hashes,source_revision=revision,observation_amendment_sha256=amendment,
                 effective_from=revision['effective_from'] if revision else reg['registered_at'])
 
 def required_singles(games,names,tids,score):
@@ -117,8 +119,8 @@ def prepare(root, now=None):
     """
     now=now or datetime.now(timezone.utc);p=folder(root)
     with T.lock(root/T.REL), T.lock(p):
-        reg=register(root,now)
         try:
+            reg=register(root,now)
             return _prepare(root,p,now,reg)
         except Exception as exc:
             T.atomic(p/'evidence-status.json',dict(state='BLOCKED',checked_at=now.isoformat(),reason=str(exc)))
@@ -188,10 +190,10 @@ def _prepare(root,p,now,reg):
     if any(T.sha(root/n)!=h for n,h in manifest.items()):raise ValueError('event_sources_changed_during_read')
     observed=datetime.now(timezone.utc)
     for row in new:
-        row.update(first_observed_complete_at=observed.isoformat(),manifest=manifest,artifact_hashes=reg['artifacts'])
+        row.update(first_observed_complete_at=observed.isoformat(),manifest=manifest,artifact_hashes=reg['artifacts'],observation_amendment_sha256=reg.get('observation_amendment_sha256'))
         T.append(p/'evidence.jsonl',evidence,row)
     status=dict(state='READY',checked_at=observed.isoformat(),prepared_at=observed.isoformat(),editions=sorted(tids),missing_by_edition=dict(missing),missing_fixtures=[dict(edition=tid,fixture=list(k),reason=invalid.get(k,'missing_or_rejected_statistics')) for tid,keys in known.items() for k in sorted(keys-set(valid))],added=len(new),evidence_rows=len(evidence),manifest=manifest,clean_exclusions=excluded)
-    status.update(excluded_doubles_by_edition=excluded_doubles,source_revision=reg.get('source_revision'))
+    status.update(excluded_doubles_by_edition=excluded_doubles,source_revision=reg.get('source_revision'),observation_amendment_sha256=reg.get('observation_amendment_sha256'))
     T.atomic(p/'evidence-status.json',status)
     return status
 
@@ -211,7 +213,7 @@ def capture_pairs(root,records,now):
     corrections=runpy.run_path(str(root/'scripts/tennis_props_model.py'))['SLAM_COUNT_BIAS_CORRECTION'] if records else {}
     for r in records:
         if r['id'] in seen:continue
-        pair=dict(id=r['id'],base_hash=r['hash'],registered_at=now.isoformat(),state='UNAVAILABLE',source_revision=reg.get('source_revision'))
+        pair=dict(id=r['id'],base_hash=r['hash'],registered_at=now.isoformat(),state='UNAVAILABLE',source_revision=reg.get('source_revision'),observation_amendment_sha256=reg.get('observation_amendment_sha256'))
         try:
             cap=T.stamp(r['row']['capture_ts']);prepared=T.stamp(status.get('prepared_at'))
             if cap<T.stamp(reg['registered_at']):raise ValueError('price_precedes_comparison_registration')

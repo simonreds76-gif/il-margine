@@ -15,7 +15,7 @@ from pathlib import Path
 import shutil
 import tempfile
 
-VERSION = 'oncourt-current-history-20261007-v1'
+VERSION = 'oncourt-current-history-20261030-v2'
 ROOT = Path(__file__).resolve().parents[1]
 MAX_RESULT_AGE_DAYS = 14
 MAX_EXPORT_AGE_HOURS = 48
@@ -126,17 +126,21 @@ def prepare(root, as_of, output):
     validate_source_audit(audit,as_of)
     baseline=adapter.build(as_of,histories,True)
     if len(baseline)<100:raise ValueError('Incomplete current baseline')
+    from tennis_props_identity_health import verify_identity_buckets
+    identity_audit=verify_identity_buckets(root,baseline)
     activities,excluded,activity_dates=activity(root,as_of,baseline,adapter)
     write(output/'player-props-baseline.csv',baseline)
     write(output/'player-props-activity.csv',activities)
     source_audit=json.loads((output/'source-audit.json').read_text(encoding='utf-8'))
     source_audit['hashes']['data/oncourt/courts.csv']=sha(source/'courts.csv')
+    for identity_source in ('data/tennis-props/player-name-aliases.csv','data/sackmann/atp_players.csv','data/sackmann/wta_players.csv'):
+        source_audit['hashes'][identity_source]=sha(root/identity_source)
     for name,digest in source_audit['hashes'].items():
         if sha(root/name)!=digest:raise ValueError('Input changed during history rebuild: '+name)
     status=dict(state='CURRENT',version=VERSION,as_of=as_of.isoformat(),generated_at=now.isoformat(),
         feature_cutoff='Completed results strictly before '+as_of.isoformat(),
         baseline_rows=len(baseline),activity_rows=len(activities),sources=audit,
-        activity_latest_results=activity_dates,activity_exclusions=excluded,
+        identity_audit=identity_audit,activity_latest_results=activity_dates,activity_exclusions=excluded,
         source_hashes=source_audit['hashes'],
         output_hashes={name:sha(output/name) for name in ('player-props-baseline.csv','player-props-activity.csv')},
         max_result_age_days=MAX_RESULT_AGE_DAYS,max_export_age_hours=MAX_EXPORT_AGE_HOURS,
