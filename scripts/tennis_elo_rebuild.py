@@ -22,6 +22,10 @@ def atomic(path, value):
     tmp.write_text(json.dumps(value, sort_keys=True, separators=(',', ':'), allow_nan=False), encoding='utf8')
     tmp.replace(path)
 
+def source_manifest(root, paths):
+    # Canonical portable keys; filesystem separators are not source changes.
+    return {p.relative_to(root).as_posix():sha(p) for p in paths}
+
 def source_history(root):
     from tennis_direct_history import crosswalk
     from tennis_event_integrity import completed_score, event_phase
@@ -29,7 +33,7 @@ def source_history(root):
     native=root/'data/oncourt'; sack=root/'data/sackmann'
     source=[native/'players_atp.csv',native/'tours_atp.csv',native/'games_atp.csv',native/'courts.csv',sack/'atp_players.csv',root/'data/tennis-props/player-name-aliases.csv']
     paths=sorted(sack.glob('atp_matches_*.csv')); source+=paths
-    before={str(p.relative_to(root)):sha(p) for p in source}
+    before=source_manifest(root, source)
     players=list(read_csv(source[0])); names={r['id']:r['name'] for r in players}
     tours={r['id']:r for r in read_csv(source[1])}; surfaces=court_surfaces(source[3],combine_hard=False)
     mapping,audit=crosswalk(players,list(read_csv(source[4])),list(read_csv(source[5])))
@@ -89,7 +93,7 @@ def source_history(root):
             sack_audit['primary_reconciled']+=1
     rows=sorted((r for k,r in keys.items() if k not in conflicts),key=lambda r:(r['available_date'],r['tournament_id'],r['round'],r['key']))
     excluded['conflicting_fixture']=len(conflicts)
-    if before!={str(p.relative_to(root)):sha(p) for p in source}:raise ValueError('Source changed during rebuild')
+    if before!=source_manifest(root, source):raise ValueError('Source changed during rebuild')
     return rows,{'source_hashes':before,'native_exclusions':dict(excluded),
                  'archive_reconciliation':dict(sack_audit),'unique_crosswalk':len(unique),'ambiguous_crosswalk':sum(len(v)>1 for v in inverse.values()),
                  'sources':dict(Counter(r['source'] for r in rows)),
