@@ -1,9 +1,185 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-30T15:41:15Z",
+  "generated_at": "2026-10-30T21:28:28.336160+00:00",
   "league": "ligue-1",
-  "row_count": 1,
+  "row_count": 3,
   "rows": [
+    {
+      "date": "2026-10-30",
+      "league": "ligue-1",
+      "review_source": "fotmob_live",
+      "match": "Nice vs Rennes",
+      "team": "Nice",
+      "opponent": "Rennes",
+      "actual_taker": "Elye Wahi",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 2,
+      "penalties_scored": 2,
+      "distinct_takers_in_match": 1,
+      "minute": "12, 34",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Elye Wahi",
+      "secondary_pre_match": "Gauthier Hein",
+      "tertiary_pre_match": "Sofiane Diop",
+      "primary_lineup_status": "expected_starter",
+      "secondary_lineup_status": "expected_starter",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "Elye Wahi",
+      "active_slot_pre_match": "primary",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Elye Wahi took 2 penalty attempts and scored for Nice vs Rennes. Primary pre-match: Elye Wahi (expected_starter). Secondary pre-match: Gauthier Hein (expected_starter). Pre-match active slot was primary -> Elye Wahi. No hierarchy change implied from this event.",
+      "context_generated_at": "2026-10-30T16:43:14Z",
+      "context_source_path": "data/goalscorer/ligue-1/penalty-duty-context.json",
+      "actual_taker_match_status": "Yes - started, off 85'",
+      "primary_on_pitch_at_penalty": "Yes - started, off 85'",
+      "secondary_on_pitch_at_penalty": "No - bench, on 68'",
+      "tertiary_on_pitch_at_penalty": "Yes - started, off 68'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 85'",
+      "event_evidence": [
+        {
+          "id": "fotmob|ligue-1|5802978|2990038851",
+          "source_event_id": "2990038851",
+          "match_id": "5802978",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802978",
+          "observed_at": "2026-10-30T21:28:30+00:00",
+          "event_date": "2026-10-30",
+          "season": "2026/27",
+          "team": "Nice",
+          "taker": "Elye Wahi",
+          "primary": "Elye Wahi",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Elye Wahi",
+            "minute": 12,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 1213430,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 85,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 12,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Nice vs Rennes",
+          "event_result": "scored"
+        },
+        {
+          "id": "fotmob|ligue-1|5802978|2990050685",
+          "source_event_id": "2990050685",
+          "match_id": "5802978",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802978",
+          "observed_at": "2026-10-30T21:28:30+00:00",
+          "event_date": "2026-10-30",
+          "season": "2026/27",
+          "team": "Nice",
+          "taker": "Elye Wahi",
+          "primary": "Elye Wahi",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Elye Wahi",
+            "minute": 34,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 1213430,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 85,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 34,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Nice vs Rennes",
+          "event_result": "scored"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-30",
+      "league": "ligue-1",
+      "review_source": "fotmob_live",
+      "match": "Nice vs Rennes",
+      "team": "Rennes",
+      "opponent": "Nice",
+      "actual_taker": "Boulaye Dia",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "58",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Estéban Lepaul",
+      "secondary_pre_match": "Ludovic Blas",
+      "tertiary_pre_match": "Issa Soumaré",
+      "primary_lineup_status": "expected_out",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Boulaye Dia took 1 penalty attempt and scored for Rennes vs Nice. Primary pre-match: Estéban Lepaul (expected_out). Secondary pre-match: Ludovic Blas (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-10-30T16:43:14Z",
+      "context_source_path": "data/goalscorer/ligue-1/penalty-duty-context.json",
+      "actual_taker_match_status": "Yes - started, off 68'",
+      "primary_on_pitch_at_penalty": "No - unavailable in match squad",
+      "secondary_on_pitch_at_penalty": "No - bench",
+      "tertiary_on_pitch_at_penalty": "No - bench, on 68'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 68'",
+      "event_evidence": [
+        {
+          "id": "fotmob|ligue-1|5802978|2990080309",
+          "source_event_id": "2990080309",
+          "match_id": "5802978",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802978",
+          "observed_at": "2026-10-30T21:28:30+00:00",
+          "event_date": "2026-10-30",
+          "season": "2026/27",
+          "team": "Rennes",
+          "taker": "Boulaye Dia",
+          "primary": "Estéban Lepaul",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Estéban Lepaul",
+            "minute": 58,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 1280225,
+            "bucket": "unavailable",
+            "substitutions": [],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 58,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Nice vs Rennes",
+          "event_result": "scored"
+        }
+      ]
+    },
     {
       "date": "2026-10-25",
       "league": "ligue-1",
@@ -91,5 +267,13 @@
       "20261030"
     ],
     "matches_checked": 8
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261025"
+    ],
+    "matches_checked": 1
   }
 }
