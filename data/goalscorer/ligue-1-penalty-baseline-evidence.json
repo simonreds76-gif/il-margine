@@ -1,7 +1,24 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-30T05:56:11Z",
+  "generated_at": "2026-10-30T15:41:34Z",
   "league": "ligue-1",
-  "row_count": 0,
-  "rows": []
+  "row_count": 1,
+  "rows": [
+    {
+      "team": "Le Havre",
+      "team_key": "le havre",
+      "player_name": "Josh Maja",
+      "player_key": "josh maja",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-25"
+    }
+  ]
 }
