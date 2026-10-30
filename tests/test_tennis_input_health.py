@@ -15,7 +15,7 @@ class InputHealth(unittest.TestCase):
     def report(self,elo=None,meta=None):
         return h.evaluate(self.fixtures,elo if elo is not None else self.elo,self.elo,meta or self.meta,self.now)
     def test_present_ratings_never_certified_without_lineage(self):
-        r=self.report();self.assertEqual(r['status'],'UNVERIFIED');self.assertEqual(r['fixtures_with_missing_elo'],0)
+        r=self.report();self.assertEqual(r['status'],'ELO_LINEAGE_UNVERIFIED');self.assertEqual(r['fixtures_with_missing_elo'],0)
     def test_unpriced_gap_not_reported_as_broken_stored_forecast(self):
         candidate=dict(tour_id=4,round_id=5,player1_id=3,player2_id=4,surface='Hard')
         get=lambda table,params: self.fixtures if table=='daily_fair_odds' else self.elo
@@ -29,7 +29,7 @@ class InputHealth(unittest.TestCase):
     def test_one_fresh_timestamp_does_not_hide_old_or_missing(self):
         self.elo[0]['updated_at']=self.now.isoformat();r=self.report(self.elo[:-1]);self.assertEqual(r['status'],'MISSING');self.assertFalse(r['timestamp_is_verified_refresh_cutoff'])
     def test_zero_match_counts_are_not_default_elo(self):
-        r=self.report();self.assertEqual(r['zero_match_count_rows'],4);self.assertEqual(r['status'],'UNVERIFIED')
+        r=self.report();self.assertEqual(r['zero_match_count_rows'],4);self.assertEqual(r['status'],'ELO_LINEAGE_UNVERIFIED')
     def test_duplicate_rating_rejected(self):
         with self.assertRaises(ValueError):self.report(self.elo+self.elo[:1])
     def test_nan_rejected(self):
