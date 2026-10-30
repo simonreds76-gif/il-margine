@@ -41,7 +41,7 @@ class VerifiedMarkets(unittest.TestCase):
 
     def test_real_contracts_parse_separately_with_evidence_and_fresh_poll(self):
         events, markets = self.markets()
-        self.assertEqual({m['name'] for m in markets}, {'Most Aces','Totals (Aces)','Totals (Double Faults)'})
+        self.assertEqual({m['name'] for m in markets}, {'Most Aces','Most Double Faults','Totals (Aces)','Totals (Double Faults)'})
         most = capture.extract_rows(events, 'wrong', scraper)
         self.assertEqual(len(most), 1)
         self.assertEqual(len(most[0]['evidence_sha256']), 64)
