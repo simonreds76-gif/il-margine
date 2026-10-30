@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-29T21:26:04Z",
+  "generated_at": "2026-10-30T01:21:17Z",
   "purpose": "Exact market evidence; Goal Method is not assumed to be a player market",
   "events": [
     {
@@ -4050,6 +4050,1280 @@
           }
         }
       ]
+    },
+    {
+      "event_id": "72221354",
+      "home": "AFC Bournemouth",
+      "away": "Leeds United",
+      "kickoff": "2026-10-31T15:00:00Z",
+      "captured_at": "2026-10-30T01:21:17Z",
+      "bookmaker": "Bet365",
+      "source": "odds-api.io/v3/odds/multi",
+      "markets": []
+    },
+    {
+      "event_id": "72221358",
+      "home": "Chelsea FC",
+      "away": "Manchester United",
+      "kickoff": "2026-10-31T12:30:00Z",
+      "captured_at": "2026-10-30T01:21:17Z",
+      "bookmaker": "Bet365",
+      "source": "odds-api.io/v3/odds/multi",
+      "markets": []
+    },
+    {
+      "event_id": "72221366",
+      "home": "Manchester City",
+      "away": "Brighton & Hove Albion",
+      "kickoff": "2026-10-31T15:00:00Z",
+      "captured_at": "2026-10-30T01:21:17Z",
+      "bookmaker": "Bet365",
+      "source": "moviodds_bet365",
+      "markets": [
+        {
+          "name": "Player Headed Shots on Target",
+          "odds": [
+            {
+              "label": "Abduqodir Khusanov (1)",
+              "hdp": 0.5,
+              "over": 29,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321376914",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Abduqodir Khusanov",
+                "odds_dec": 29,
+                "odds_frac": "28/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Allan Andrade (1)",
+              "hdp": 0.5,
+              "over": 6,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321376935",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Allan Andrade",
+                "odds_dec": 6,
+                "odds_frac": "5/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Ayyoub Bouaddi (1)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321376958",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Ayyoub Bouaddi",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Elliot Anderson (1)",
+              "hdp": 0.5,
+              "over": 10,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321376968",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Elliot Anderson",
+                "odds_dec": 10,
+                "odds_frac": "9/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Enzo Fernandez (1)",
+              "hdp": 0.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321376977",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Enzo Fernandez",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Erling Haaland (1)",
+              "hdp": 0.5,
+              "over": 2.625,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321376988",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Erling Haaland",
+                "odds_dec": 2.625,
+                "odds_frac": "13/8",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Floyd Samba (1)",
+              "hdp": 0.5,
+              "over": 3.75,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321376997",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Floyd Samba",
+                "odds_dec": 3.75,
+                "odds_frac": "11/4",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Iliman-Cheikh Ndiaye (1)",
+              "hdp": 0.5,
+              "over": 9,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377010",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Iliman-Cheikh Ndiaye",
+                "odds_dec": 9,
+                "odds_frac": "8/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Jeremy Doku (1)",
+              "hdp": 0.5,
+              "over": 17,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377025",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Jeremy Doku",
+                "odds_dec": 17,
+                "odds_frac": "16/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Josko Gvardiol (1)",
+              "hdp": 0.5,
+              "over": 7,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377033",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Josko Gvardiol",
+                "odds_dec": 7,
+                "odds_frac": "6/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Kaden Braithwaite (1)",
+              "hdp": 0.5,
+              "over": 10,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377036",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Kaden Braithwaite",
+                "odds_dec": 10,
+                "odds_frac": "9/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Marc Guehi (1)",
+              "hdp": 0.5,
+              "over": 5,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377043",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Marc Guehi",
+                "odds_dec": 5,
+                "odds_frac": "4/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Mateo Kovacic (1)",
+              "hdp": 0.5,
+              "over": 26,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377046",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Mateo Kovacic",
+                "odds_dec": 26,
+                "odds_frac": "25/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Nico O'Reilly (1)",
+              "hdp": 0.5,
+              "over": 4.5,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377052",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Nico O'Reilly",
+                "odds_dec": 4.5,
+                "odds_frac": "7/2",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Matheus Nunes (1)",
+              "hdp": 0.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377054",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Matheus Nunes",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-29T23:07:19.218954892Z"
+              }
+            },
+            {
+              "label": "Phil Foden (1)",
+              "hdp": 0.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377057",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Phil Foden",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Rayan Ait Nouri (1)",
+              "hdp": 0.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377064",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Rayan Ait Nouri",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Rayan Cherki (1)",
+              "hdp": 0.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377077",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Rayan Cherki",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Rico Lewis (1)",
+              "hdp": 0.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377085",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Rico Lewis",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-29T23:07:19.218954892Z"
+              }
+            },
+            {
+              "label": "Ruben Dias (1)",
+              "hdp": 0.5,
+              "over": 9,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377093",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Ruben Dias",
+                "odds_dec": 9,
+                "odds_frac": "8/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Ryan McAidoo (1)",
+              "hdp": 0.5,
+              "over": 4.5,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377102",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Ryan McAidoo",
+                "odds_dec": 4.5,
+                "odds_frac": "7/2",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Vitor Reis (1)",
+              "hdp": 0.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321377112",
+                "n2": "Man City",
+                "side": "1+",
+                "line": "Vitor Reis",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Charalampos Kostoulas (2)",
+              "hdp": 0.5,
+              "over": 6.5,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321382799",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Charalampos Kostoulas",
+                "odds_dec": 6.5,
+                "odds_frac": "11/2",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Chema Andres (2)",
+              "hdp": 0.5,
+              "over": 6,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321382830",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Chema Andres",
+                "odds_dec": 6,
+                "odds_frac": "5/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Diego Gomez (2)",
+              "hdp": 0.5,
+              "over": 6,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321382854",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Diego Gomez",
+                "odds_dec": 6,
+                "odds_frac": "5/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Ferdi (2)",
+              "hdp": 0.5,
+              "over": 23,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321382875",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Ferdi",
+                "odds_dec": 23,
+                "odds_frac": "22/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Georginio Rutter (2)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321382887",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Georginio Rutter",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Ibrahim Osman (2)",
+              "hdp": 0.5,
+              "over": 3.4,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321382897",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Ibrahim Osman",
+                "odds_dec": 3.4,
+                "odds_frac": "12/5",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Jack Hinshelwood (2)",
+              "hdp": 0.5,
+              "over": 3.75,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321382909",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Jack Hinshelwood",
+                "odds_dec": 3.75,
+                "odds_frac": "11/4",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Jaouen Hadjam (2)",
+              "hdp": 0.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321382938",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Jaouen Hadjam",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Joao Pedro Costinha (2)",
+              "hdp": 0.5,
+              "over": 26,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321382966",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Joao Pedro Costinha",
+                "odds_dec": 26,
+                "odds_frac": "25/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Lewis Dunk (2)",
+              "hdp": 0.5,
+              "over": 10,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321382978",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Lewis Dunk",
+                "odds_dec": 10,
+                "odds_frac": "9/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Luka Vuskovic (2)",
+              "hdp": 0.5,
+              "over": 5.5,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321382992",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Luka Vuskovic",
+                "odds_dec": 5.5,
+                "odds_frac": "9/2",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Malick Yalcouye (2)",
+              "hdp": 0.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321383009",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Malick Yalcouye",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Matt O'Riley (2)",
+              "hdp": 0.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321383027",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Matt O'Riley",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Maxim De Cuyper (2)",
+              "hdp": 0.5,
+              "over": 19,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321383039",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Maxim De Cuyper",
+                "odds_dec": 19,
+                "odds_frac": "18/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Michael Svoboda (2)",
+              "hdp": 0.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321383056",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Michael Svoboda",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Olivier Boscagli (2)",
+              "hdp": 0.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321383081",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Olivier Boscagli",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Pascal Gross (2)",
+              "hdp": 0.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321383112",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Pascal Gross",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Pascal Struijk (2)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321383140",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Pascal Struijk",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Promise David (2)",
+              "hdp": 0.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321383156",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Promise David",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Shane Nti (2)",
+              "hdp": 0.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321383175",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Shane Nti",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Yasin Ayari (2)",
+              "hdp": 0.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321383209",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Yasin Ayari",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Younes Ibrahim (2)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321383229",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Younes Ibrahim",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Zadok Yohanna (2)",
+              "hdp": 0.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321383243",
+                "n2": "Brighton",
+                "side": "1+",
+                "line": "Zadok Yohanna",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Floyd Samba (1)",
+              "hdp": 1.5,
+              "over": 21,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459284",
+                "n2": "Man City",
+                "side": "2+",
+                "line": "Floyd Samba",
+                "odds_dec": 21,
+                "odds_frac": "20/1",
+                "ts": "2026-10-29T23:07:19.218954892Z"
+              }
+            },
+            {
+              "label": "Josko Gvardiol (1)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459298",
+                "n2": "Man City",
+                "side": "2+",
+                "line": "Josko Gvardiol",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Marc Guehi (1)",
+              "hdp": 1.5,
+              "over": 29,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459307",
+                "n2": "Man City",
+                "side": "2+",
+                "line": "Marc Guehi",
+                "odds_dec": 29,
+                "odds_frac": "28/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Chema Andres (2)",
+              "hdp": 1.5,
+              "over": 41,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459319",
+                "n2": "Brighton",
+                "side": "2+",
+                "line": "Chema Andres",
+                "odds_dec": 41,
+                "odds_frac": "40/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Charalampos Kostoulas (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459328",
+                "n2": "Brighton",
+                "side": "2+",
+                "line": "Charalampos Kostoulas",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Yasin Ayari (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459338",
+                "n2": "Brighton",
+                "side": "2+",
+                "line": "Yasin Ayari",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Promise David (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459345",
+                "n2": "Brighton",
+                "side": "2+",
+                "line": "Promise David",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Erling Haaland (1)",
+              "hdp": 1.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459351",
+                "n2": "Man City",
+                "side": "2+",
+                "line": "Erling Haaland",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Erling Haaland (1)",
+              "hdp": 2.5,
+              "over": 41,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459361",
+                "n2": "Man City",
+                "side": "3+",
+                "line": "Erling Haaland",
+                "odds_dec": 41,
+                "odds_frac": "40/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Jack Hinshelwood (2)",
+              "hdp": 1.5,
+              "over": 21,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459370",
+                "n2": "Brighton",
+                "side": "2+",
+                "line": "Jack Hinshelwood",
+                "odds_dec": 21,
+                "odds_frac": "20/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Diego Gomez (2)",
+              "hdp": 1.5,
+              "over": 41,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459375",
+                "n2": "Brighton",
+                "side": "2+",
+                "line": "Diego Gomez",
+                "odds_dec": 41,
+                "odds_frac": "40/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Allan Andrade (1)",
+              "hdp": 1.5,
+              "over": 41,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459383",
+                "n2": "Man City",
+                "side": "2+",
+                "line": "Allan Andrade",
+                "odds_dec": 41,
+                "odds_frac": "40/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Iliman-Cheikh Ndiaye (1)",
+              "hdp": 1.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459393",
+                "n2": "Man City",
+                "side": "2+",
+                "line": "Iliman-Cheikh Ndiaye",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Ruben Dias (1)",
+              "hdp": 1.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459399",
+                "n2": "Man City",
+                "side": "2+",
+                "line": "Ruben Dias",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Ibrahim Osman (2)",
+              "hdp": 1.5,
+              "over": 17,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459404",
+                "n2": "Brighton",
+                "side": "2+",
+                "line": "Ibrahim Osman",
+                "odds_dec": 17,
+                "odds_frac": "16/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Luka Vuskovic (2)",
+              "hdp": 1.5,
+              "over": 34,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459412",
+                "n2": "Brighton",
+                "side": "2+",
+                "line": "Luka Vuskovic",
+                "odds_dec": 34,
+                "odds_frac": "33/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Enzo Fernandez (1)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459419",
+                "n2": "Man City",
+                "side": "2+",
+                "line": "Enzo Fernandez",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Nico O'Reilly (1)",
+              "hdp": 1.5,
+              "over": 26,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459427",
+                "n2": "Man City",
+                "side": "2+",
+                "line": "Nico O'Reilly",
+                "odds_dec": 26,
+                "odds_frac": "25/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Ryan McAidoo (1)",
+              "hdp": 1.5,
+              "over": 26,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459436",
+                "n2": "Man City",
+                "side": "2+",
+                "line": "Ryan McAidoo",
+                "odds_dec": 26,
+                "odds_frac": "25/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Rayan Cherki (1)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "321459442",
+                "n2": "Man City",
+                "side": "2+",
+                "line": "Rayan Cherki",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            },
+            {
+              "label": "Ibrahim Osman (2)",
+              "hdp": 2.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202201751",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "331907179",
+                "n2": "Brighton",
+                "side": "3+",
+                "line": "Ibrahim Osman",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-29T10:55:17.955306947Z"
+              }
+            }
+          ],
+          "source": "moviodds_bet365",
+          "source_event_id": "202201751",
+          "source_group_id": "177727",
+          "source_url": "https://moviodds.com/odds?sport=soccer&groups=177727",
+          "captured_at": "2026-10-30T01:19:22.764126985Z",
+          "updatedAt": "2026-10-29T23:07:19.218954892Z",
+          "settlement_policy": "bet365_named_nonstarter_void_v1; standard_no_promotional_replacement",
+          "raw_group_status": {
+            "polled_at": "2026-10-30T01:19:22.764126985Z"
+          }
+        }
+      ]
+    },
+    {
+      "event_id": "71945380",
+      "home": "AC Milan",
+      "away": "Inter Milano",
+      "kickoff": "2026-10-31T19:45:00Z",
+      "captured_at": "2026-10-30T01:21:17Z",
+      "bookmaker": "Bet365",
+      "source": "odds-api.io/v3/odds/multi",
+      "markets": []
+    },
+    {
+      "event_id": "72513274",
+      "home": "Bayern Munich",
+      "away": "Borussia Dortmund",
+      "kickoff": "2026-10-31T17:30:00Z",
+      "captured_at": "2026-10-30T01:21:17Z",
+      "bookmaker": "Bet365",
+      "source": "odds-api.io/v3/odds/multi",
+      "markets": []
+    },
+    {
+      "event_id": "72036256",
+      "home": "Le Havre AC",
+      "away": "Paris Saint-Germain",
+      "kickoff": "2026-10-30T18:00:00Z",
+      "captured_at": "2026-10-30T01:21:17Z",
+      "bookmaker": "Bet365",
+      "source": "odds-api.io/v3/odds/multi",
+      "markets": []
+    },
+    {
+      "event_id": "72036258",
+      "home": "Lille OSC",
+      "away": "Racing Club De Lens",
+      "kickoff": "2026-10-30T20:05:00Z",
+      "captured_at": "2026-10-30T01:21:17Z",
+      "bookmaker": "Bet365",
+      "source": "odds-api.io/v3/odds/multi",
+      "markets": []
     }
   ]
 }
