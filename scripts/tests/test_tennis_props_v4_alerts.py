@@ -169,6 +169,39 @@ class V4SelectionTests(unittest.TestCase):
             A.selection_alerts(self.root, '2026-10-06', self.sender, now=self.now)
         self.sender.assert_not_called()
 
+    def test_inflight_refresh_crossing_midnight_defers_without_alert_or_ledger_write(self):
+        now = datetime(2026, 10, 30, 0, 7, tzinfo=timezone.utc)
+        with patch.object(A, 'prepare', side_effect=AssertionError('No stale preparation')):
+            result = A.selection_alerts(self.root, '2026-10-29', self.sender, now=now,
+                                       refresh_started_at='2026-10-29T23:40:20Z')
+        self.assertEqual(result, 'deferred_date_rollover')
+        status = A.read_json(self.root/A.STATUS)
+        self.assertEqual(status['state'], 'DEFERRED_DATE_ROLLOVER')
+        self.assertEqual(status['source_date'], '2026-10-29')
+        self.assertEqual(status['required_date'], '2026-10-30')
+        self.assertFalse((self.root/A.STATE).exists())
+        self.sender.assert_not_called()
+
+    def test_rollover_does_not_allow_old_or_invalid_refresh_replays(self):
+        now = datetime(2026, 10, 30, 0, 7, tzinfo=timezone.utc)
+        for started in [None, 'bad', '2026-10-29T23:40:20', '2026-10-30T00:08:00Z',
+                        '2026-10-29T20:00:00Z', '2026-10-28T23:40:20Z']:
+            with self.subTest(started=started), self.assertRaises(ValueError):
+                A.selection_alerts(self.root, '2026-10-29', self.sender, now=now, refresh_started_at=started)
+        self.sender.assert_not_called()
+
+    def test_bst_midnight_is_a_uk_boundary_not_utc_midnight(self):
+        now = datetime(2026, 7, 1, 23, 5, tzinfo=timezone.utc)
+        self.assertEqual(A.selection_alerts(self.root, '2026-07-01', self.sender, now=now,
+                         refresh_started_at='2026-07-01T22:45:00Z'), 'deferred_date_rollover')
+        self.sender.assert_not_called()
+
+    def test_utc_dated_refresh_started_after_bst_midnight_also_defers(self):
+        now = datetime(2026, 7, 1, 23, 30, tzinfo=timezone.utc)
+        self.assertEqual(A.selection_alerts(self.root, '2026-07-01', self.sender, now=now,
+                         refresh_started_at='2026-07-01T23:10:00Z'), 'deferred_date_rollover')
+        self.sender.assert_not_called()
+
     def test_hook_does_not_require_ml_ready_and_only_mode_does_not_replay(self):
         spec = importlib.util.spec_from_file_location('v4_digest_hook', SCRIPTS/'tennis-daily-signal-digest.py')
         module = importlib.util.module_from_spec(spec)
@@ -186,6 +219,7 @@ class V4SelectionTests(unittest.TestCase):
         sys.modules[spec.name] = module
         spec.loader.exec_module(module)
         with patch.object(sys, 'argv', ['digest', '--paper-signals', '--require-ready']), \
+             patch('tennis_astrissimo.alerts', return_value=None), \
              patch.object(A, 'selection_alerts', side_effect=RuntimeError('blocked')), \
              patch.object(module, 'signal_generation_is_ready', return_value=False):
             self.assertEqual(module.main(), 0)

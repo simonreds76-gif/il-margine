@@ -45,13 +45,23 @@ def contract_key(row):
 
 
 def current_offers(rows, now):
-    """Use the newest fixture capture only, never yesterday's better quote."""
+    """Compare each book's latest poll, allowing bounded source polling skew.
+
+    MoviOdds retains its upstream market poll time; Grosvenor uses collection
+    time. Requiring equal timestamps silently discards valid Bet365 offers.
+    Keep the newest poll per fixture/book and at most ten minutes of skew,
+    matching the MoviOdds ingestion limit. Older lines from that book stay out.
+    """
     newest = {}
+    fixture_newest = {}
     for row in rows:
         captured = stamp(row.get('captured_at'))
         event = str(row.get('event_id') or '')
-        if event and captured and captured <= now:
-            newest[event] = max(newest.get(event, captured), captured)
+        book = str(row.get('bookmaker') or '').casefold()
+        if event and book and captured and captured <= now:
+            source = (event, book)
+            newest[source] = max(newest.get(source, captured), captured)
+            fixture_newest[event] = max(fixture_newest.get(event, captured), captured)
     offers = []
     for row in rows:
         key = contract_key(row)
@@ -59,7 +69,9 @@ def current_offers(rows, now):
         odds = number(row.get('odds_decimal'))
         if (not key or not captured or not kickoff or not kickoff > now
                 or not timedelta(0) <= now-captured <= timedelta(hours=6)
-                or captured != newest.get(key[0]) or odds is None or odds <= 1
+                or captured != newest.get((key[0], str(row.get('bookmaker') or '').casefold()))
+                or fixture_newest[key[0]]-captured > timedelta(minutes=10)
+                or odds is None or odds <= 1
                 or not row.get('bookmaker') or row.get('blockers')
                 or row.get('candidate_status') == 'blocked'):
             continue

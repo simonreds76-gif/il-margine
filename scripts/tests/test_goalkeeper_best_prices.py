@@ -69,9 +69,26 @@ class BestPrices(unittest.TestCase):
             rows = [self.row(), self.row('Kambi', 3, **changes)]
             self.assertEqual([r['bookmaker'] for r in prices.best_offers(rows, self.now)], ['Bet365'])
 
-    def test_previous_capture_not_mistaken_for_current_availability(self):
-        rows = [self.row(captured_at=(self.now-timedelta(minutes=2)).isoformat()), self.row('Kambi', 2.23)]
-        self.assertEqual([r['bookmaker'] for r in prices.best_offers(rows, self.now)], ['Kambi'])
+    def test_async_source_poll_keeps_better_bet365_and_comparison(self):
+        rows = [self.row(captured_at=(self.now-timedelta(minutes=2)).isoformat()), self.row('Grosvenor', 2.23)]
+        shadow.mark_primary_selections(rows)
+        self.assertEqual([r['bookmaker'] for r in rows if r['strongest_for_fixture']=='yes'], ['Bet365'])
+        reason, comparison = prices.alert_price_check(rows[0], rows, self.now)
+        self.assertIsNone(reason)
+        self.assertEqual([q['bookmaker'] for q in comparison], ['Bet365', 'Grosvenor'])
+        self.assertEqual(prices.alert_price_check(rows[1], rows, self.now)[0], 'better_bookmaker_price_available')
+
+    def test_newer_same_book_poll_removes_old_price_and_missing_line(self):
+        rows = [self.row(odds=2.8, captured_at=(self.now-timedelta(minutes=2)).isoformat()),
+                self.row(odds=2.7, line='4.5', captured_at=(self.now-timedelta(minutes=2)).isoformat()),
+                self.row(odds=2.1), self.row('Grosvenor', 2.23)]
+        best = prices.best_offers(rows, self.now)
+        self.assertEqual([(r['bookmaker'], r['line']) for r in best], [('Grosvenor','2.5')])
+
+    def test_source_skew_is_bounded_and_paddy_competes_normally(self):
+        rows = [self.row(odds=3, captured_at=(self.now-timedelta(minutes=11)).isoformat()),
+                self.row('Grosvenor', 2.23), self.row('Paddy Power', 2.6, captured_at=(self.now-timedelta(minutes=3)).isoformat())]
+        self.assertEqual([r['bookmaker'] for r in prices.best_offers(rows, self.now)], ['Paddy Power'])
 
     def test_only_one_new_fixture_record_and_original_price_never_changed(self):
         rows = [self.row('Kambi', 2.23), self.row()]

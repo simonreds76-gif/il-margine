@@ -697,6 +697,7 @@ def digest_main() -> int:
     parser.add_argument("--paper-summary-only", action="store_true", help="Send only the ace paper-model summary, without repeating selections.")
     parser.add_argument("--paper-signals", action="store_true", help="Include fresh qualifying v4 paper selections, deduplicated across days.")
     parser.add_argument("--paper-signals-only", action="store_true", help="Check only fresh v4 paper selections without replaying the normal digest.")
+    parser.add_argument("--refresh-started-at", help="Original refresh timestamp; allows deferring v4 safely if this run crossed UK midnight.")
     parser.add_argument(
         "--new-only",
         action="store_true",
@@ -746,6 +747,7 @@ def digest_main() -> int:
                 ROOT, args.date,
                 lambda messages: dispatch(messages, repository=args.repository, workflow=args.workflow, ref=args.ref),
                 print_only=args.print_only,
+                refresh_started_at=args.refresh_started_at,
             )
         except (OSError, ValueError, RuntimeError) as exc:
             if args.paper_signals_only:
