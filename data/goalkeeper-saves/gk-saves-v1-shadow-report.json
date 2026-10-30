@@ -2,18 +2,18 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 20,
+    "blocked_lines": 15,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 20,
-      "goalkeeper_team_unresolved": 20,
-      "missing_priced_edge": 20
+      "goalkeeper_not_matched_to_lineup": 15,
+      "goalkeeper_team_unresolved": 15,
+      "missing_priced_edge": 15
     },
     "candidate_board_preserved": false,
     "eligible_lines": 10,
-    "priced_lines": 249,
+    "priced_lines": 216,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 34
+    "value_ladder_lines": 29
   },
   "evidence": {
     "clv": 0.051099,
@@ -34,29 +34,29 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-30T16:14:20.420320+00:00",
+    "checked_at": "2026-10-30T21:02:50.222090+00:00",
     "counts": {
-      "not_fresh_prematch": 66,
-      "offers_saved": 203
+      "not_fresh_prematch": 22,
+      "offers_saved": 209
     },
-    "saved": 18,
+    "saved": 20,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-30T16:14:19Z",
+  "generated_at": "2026-10-30T21:02:49Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
       "blocked_or_missing_inputs": 5,
-      "not_new_fresh_prematch": 66
+      "not_new_fresh_prematch": 22
     },
     "forecast_fixtures": 116,
-    "forecast_keepers": 234,
-    "generated_at": "2026-10-30T16:14:20.483455+00:00",
-    "last_capture_at": "2026-10-30T15:06:38.721607+00:00",
+    "forecast_keepers": 235,
+    "generated_at": "2026-10-30T21:02:50.281235+00:00",
+    "last_capture_at": "2026-10-30T21:02:50.281235+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 0,
+    "new_forecasts": 1,
     "new_selections": 0,
     "next_review_at": 100,
     "paired_scores": {
@@ -1149,7 +1149,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 52,
+      "awaiting_verified_keeper_result": 53,
       "incomplete_or_conflicting_full_match_count": 12,
       "keeper_identity_unresolved": 3,
       "team_keeper_participation_or_rules_review": 1,

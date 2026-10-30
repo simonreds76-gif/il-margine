@@ -1,16 +1,16 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_save_markets": 11,
-      "named_player_lines": 112,
+      "events_with_save_markets": 7,
+      "named_player_lines": 65,
       "status": "NAMED_PLAYER_LINES",
       "unnamed_or_team_lines": 0
     },
     "Grosvenor": {
-      "events_with_save_markets": 18,
+      "events_with_save_markets": 20,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 71
+      "unnamed_or_team_lines": 85
     },
     "Paddy Power": {
       "events_with_save_markets": 0,
@@ -26,44 +26,47 @@
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 460,
+      "current_quotes": 285,
       "mapped_quotes": 0,
       "paper_selections": 0,
       "price_or_status_changes": 0,
       "rules": "unverified"
     },
-    "matched": 19,
+    "matched": 22,
     "missing": [],
-    "requests": 24,
-    "rows": 1643
+    "requests": 27,
+    "rows": 1948
   },
   "discovery_retries": 0,
   "event_last_checked": {
-    "71945368": "2026-10-30T16:14:09Z",
-    "72036256": "2026-10-30T16:14:09Z",
-    "72036258": "2026-10-30T16:14:09Z",
-    "72036266": "2026-10-30T16:14:09Z",
-    "72221354": "2026-10-30T16:14:09Z",
-    "72221356": "2026-10-30T16:14:09Z",
-    "72221358": "2026-10-30T16:14:09Z",
-    "72221360": "2026-10-30T16:14:09Z",
-    "72221362": "2026-10-30T16:14:09Z",
-    "72221366": "2026-10-30T16:14:09Z",
-    "72478678": "2026-10-30T16:14:09Z",
-    "72478682": "2026-10-30T16:14:09Z",
-    "72478684": "2026-10-30T16:14:09Z",
-    "72513276": "2026-10-30T16:14:09Z",
-    "72513280": "2026-10-30T16:14:09Z",
-    "72513284": "2026-10-30T16:14:09Z",
-    "72513286": "2026-10-30T16:14:09Z",
-    "72513288": "2026-10-30T16:14:09Z",
-    "72513290": "2026-10-30T16:14:09Z"
+    "71945368": "2026-10-30T21:02:37Z",
+    "71945380": "2026-10-30T21:02:37Z",
+    "71945384": "2026-10-30T21:02:37Z",
+    "72036272": "2026-10-30T21:02:37Z",
+    "72221352": "2026-10-30T21:02:37Z",
+    "72221354": "2026-10-30T21:02:37Z",
+    "72221356": "2026-10-30T21:02:37Z",
+    "72221358": "2026-10-30T21:02:37Z",
+    "72221360": "2026-10-30T21:02:37Z",
+    "72221362": "2026-10-30T21:02:37Z",
+    "72221366": "2026-10-30T21:02:37Z",
+    "72221370": "2026-10-30T21:02:37Z",
+    "72478668": "2026-10-30T21:02:37Z",
+    "72478674": "2026-10-30T21:02:37Z",
+    "72478678": "2026-10-30T21:02:37Z",
+    "72478682": "2026-10-30T21:02:37Z",
+    "72513274": "2026-10-30T21:02:37Z",
+    "72513276": "2026-10-30T21:02:37Z",
+    "72513280": "2026-10-30T21:02:37Z",
+    "72513284": "2026-10-30T21:02:37Z",
+    "72513286": "2026-10-30T21:02:37Z",
+    "72513288": "2026-10-30T21:02:37Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 19,
-  "events_supported": 19,
-  "events_with_lines": 18,
-  "generated_at": "2026-10-30T16:14:09Z",
+  "events_selected": 22,
+  "events_supported": 22,
+  "events_with_lines": 20,
+  "generated_at": "2026-10-30T21:02:37Z",
   "last_publication_at": "2026-10-30T15:06:29Z",
   "league_coverage": {
     "bundesliga": {
@@ -71,23 +74,23 @@
       "with_prices": 6
     },
     "epl": {
-      "selected": 6,
-      "with_prices": 6
+      "selected": 8,
+      "with_prices": 8
     },
     "la-liga": {
-      "selected": 3,
-      "with_prices": 3
+      "selected": 4,
+      "with_prices": 4
     },
     "ligue-1": {
-      "selected": 3,
-      "with_prices": 3
+      "selected": 1,
+      "with_prices": 1
     },
     "serie-a": {
-      "selected": 1,
-      "with_prices": 0
+      "selected": 3,
+      "with_prices": 1
     }
   },
-  "market_inventory_rows_added": 523,
+  "market_inventory_rows_added": 626,
   "market_names_observed": [
     "Anytime Assist",
     "Anytime Goalscorer",
@@ -106,7 +109,6 @@
     "ML",
     "ML HT",
     "Player Fouls",
-    "Player Headed Shots on Target",
     "Player Saves",
     "Player Shots",
     "Player Shots on Target",
@@ -124,64 +126,78 @@
     "errors": [],
     "excluded": {
       "conflicting_quotes": 0,
-      "fixture_not_eligible": 419,
-      "stale_or_missing_market_poll": 23,
-      "unmatched_or_unsupported_fixture": 1482
+      "fixture_not_eligible": 360,
+      "stale_or_missing_market_poll": 35,
+      "unmatched_or_unsupported_fixture": 1433
     },
-    "market_count": 13,
-    "quote_count": 235,
-    "received_at": "2026-10-30T16:14:19.274321+00:00",
+    "market_count": 7,
+    "quote_count": 65,
+    "received_at": "2026-10-30T21:02:48.794312+00:00",
     "requests": 1,
     "source": "moviodds_bet365",
     "status": "OK"
   },
   "publication_recovery": false,
   "request_budget": 4,
-  "requests_used": 3,
-  "rows_added": 183,
-  "rows_observed": 183,
+  "requests_used": 4,
+  "rows_added": 150,
+  "rows_observed": 150,
   "selected_events": [
     {
-      "away": "Paris Saint-Germain",
-      "competition": "France - Ligue 1",
-      "home": "Le Havre AC",
-      "id": 72036256,
-      "kickoff_at": "2026-10-30T18:00:00Z"
+      "away": "AS Roma",
+      "competition": "Italy - Serie A",
+      "home": "Udinese Calcio",
+      "id": 71945384,
+      "kickoff_at": "2026-10-31T17:00:00Z"
     },
     {
-      "away": "Stade Rennais FC",
-      "competition": "France - Ligue 1",
-      "home": "OGC Nice",
-      "id": 72036266,
-      "kickoff_at": "2026-10-30T18:00:00Z"
+      "away": "Crystal Palace",
+      "competition": "England - Premier League",
+      "home": "Tottenham Hotspur",
+      "id": 72221370,
+      "kickoff_at": "2026-10-31T17:30:00Z"
     },
     {
-      "away": "RC Celta de Vigo",
-      "competition": "Spain - LaLiga",
-      "home": "Rayo Vallecano",
-      "id": 72478682,
-      "kickoff_at": "2026-10-31T15:15:00Z"
-    },
-    {
-      "away": "FSV Mainz",
+      "away": "Borussia Dortmund",
       "competition": "Germany - Bundesliga",
-      "home": "SV 07 Elversberg",
-      "id": 72513290,
-      "kickoff_at": "2026-10-30T19:30:00Z"
+      "home": "Bayern Munich",
+      "id": 72513274,
+      "kickoff_at": "2026-10-31T17:30:00Z"
     },
     {
-      "away": "Espanyol Barcelona",
+      "away": "Malaga CF",
       "competition": "Spain - LaLiga",
-      "home": "Villarreal CF",
-      "id": 72478684,
-      "kickoff_at": "2026-10-30T20:00:00Z"
+      "home": "Real Betis Seville",
+      "id": 72478668,
+      "kickoff_at": "2026-10-31T17:30:00Z"
     },
     {
-      "away": "Racing Club De Lens",
+      "away": "Le Mans FC",
       "competition": "France - Ligue 1",
-      "home": "Lille OSC",
-      "id": 72036258,
-      "kickoff_at": "2026-10-30T20:05:00Z"
+      "home": "ESTAC Troyes",
+      "id": 72036272,
+      "kickoff_at": "2026-10-31T19:45:00Z"
+    },
+    {
+      "away": "Inter Milano",
+      "competition": "Italy - Serie A",
+      "home": "AC Milan",
+      "id": 71945380,
+      "kickoff_at": "2026-10-31T19:45:00Z"
+    },
+    {
+      "away": "Fulham FC",
+      "competition": "England - Premier League",
+      "home": "Aston Villa",
+      "id": 72221352,
+      "kickoff_at": "2026-10-31T20:00:00Z"
+    },
+    {
+      "away": "Deportivo Alaves",
+      "competition": "Spain - LaLiga",
+      "home": "FC Barcelona",
+      "id": 72478674,
+      "kickoff_at": "2026-10-31T20:00:00Z"
     },
     {
       "away": "Manchester United",
@@ -273,8 +289,15 @@
       "home": "Manchester City",
       "id": 72221366,
       "kickoff_at": "2026-10-31T15:00:00Z"
+    },
+    {
+      "away": "RC Celta de Vigo",
+      "competition": "Spain - LaLiga",
+      "home": "Rayo Vallecano",
+      "id": 72478682,
+      "kickoff_at": "2026-10-31T15:15:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 18
+  "three_way_events": 20
 }
