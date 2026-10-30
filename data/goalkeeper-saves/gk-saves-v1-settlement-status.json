@@ -1,48 +1,34 @@
 {
   "api_errors": [],
-  "deferred_not_due": 1,
+  "deferred_not_due": 7,
   "details": [
     {
       "detail": "",
-      "goalkeeper": "Maduka Okoye",
-      "match": "Parma Calcio vs Udinese Calcio",
-      "match_date": "2026-10-28",
+      "goalkeeper": "Wladimiro Falcone",
+      "match": "Frosinone Calcio vs US Lecce",
+      "match_date": "2026-10-29",
       "reason": "settled_fotmob",
-      "signal_id": "kambi|71945356|maduka okoye|2.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "\u0141ukasz Skorupski",
-      "match": "AC Milan vs Bologna FC",
-      "match_date": "2026-10-28",
-      "reason": "settled_fotmob",
-      "signal_id": "kambi|71945352|\u0142ukasz skorupski|3.5|over"
+      "signal_id": "71945348|wladimiro falcone|4.5|over"
     }
   ],
-  "fotmob_requests_used": 3,
-  "generated_at": "2026-10-29T15:18:25Z",
+  "fotmob_requests_used": 2,
+  "generated_at": "2026-10-30T15:07:42Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 0,
-  "pending_total": 1,
+  "pending_total": 7,
   "reason_counts": {
-    "settled_fotmob": 2
+    "settled_fotmob": 1
   },
   "requests_used": 0,
-  "settled": 2,
+  "settled": 1,
   "status": "SETTLED",
   "verified_player_targets": [
     {
       "appearances": 32,
-      "match_id": 5749726,
+      "match_id": 5749723,
       "status": "saved",
-      "targets_sha256": "331bc341379891fb5f44753e99561a139252d7b765a9344b70599d52b9f8a6d5"
-    },
-    {
-      "appearances": 32,
-      "match_id": 5749720,
-      "status": "saved",
-      "targets_sha256": "c754a9d5246447c87c4f5714de73e747d2b1835168a54cebc18f2f56bbf16046"
+      "targets_sha256": "cfe4b81008e648e3f2a0b950b04a813b74a172561f1dbb2d8f4bb82f8c8fc896"
     }
   ]
 }

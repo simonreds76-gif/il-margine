@@ -2,26 +2,23 @@
   "categories": {
     "match_cards_total": {
       "bookmakers": [
-        "Bet365",
         "Paddy Power"
       ],
       "competitions": [
         "England - Premier League",
-        "France - Ligue 1",
-        "Germany - Bundesliga",
         "Italy - Serie A",
+        "La Liga",
         "Premier League",
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 34,
-      "paired_price_events": 12,
-      "pairing_unknown_events": 22,
+      "events": 21,
+      "paired_price_events": 21,
+      "pairing_unknown_events": 11,
       "raw_market_names": [
-        "Bookings Totals",
-        "Number of Cards In Match"
+        "Bookings Totals"
       ],
-      "rows": 54,
+      "rows": 32,
       "status": "PAIRED_PRICES_OBSERVED"
     },
     "match_fouls_total": {
@@ -35,28 +32,17 @@
       "status": "NOT_OBSERVED"
     },
     "player_cards": {
-      "bookmakers": [
-        "Bet365"
-      ],
-      "competitions": [
-        "England - Premier League",
-        "France - Ligue 1",
-        "Germany - Bundesliga",
-        "Italy - Serie A",
-        "Spain - LaLiga"
-      ],
-      "events": 23,
+      "bookmakers": [],
+      "competitions": [],
+      "events": 0,
       "paired_price_events": 0,
-      "pairing_unknown_events": 23,
-      "raw_market_names": [
-        "Player Cards"
-      ],
-      "rows": 23,
-      "status": "MARKET_NAME_ONLY"
+      "pairing_unknown_events": 0,
+      "raw_market_names": [],
+      "rows": 0,
+      "status": "NOT_OBSERVED"
     },
     "player_fouled": {
       "bookmakers": [
-        "Bet365",
         "Paddy Power"
       ],
       "competitions": [
@@ -69,23 +55,23 @@
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 38,
+      "events": 32,
       "paired_price_events": 0,
-      "pairing_unknown_events": 16,
+      "pairing_unknown_events": 28,
       "raw_market_names": [
         "Player To Be Fouled"
       ],
-      "rows": 38,
+      "rows": 60,
       "status": "MARKET_NAME_ONLY"
     },
     "player_fouls_committed": {
       "bookmakers": [
-        "Bet365",
         "Paddy Power"
       ],
       "competitions": [
         "Bundesliga",
         "England - Premier League",
+        "France - Ligue 1",
         "Germany - Bundesliga",
         "Italy - Serie A",
         "La Liga",
@@ -94,35 +80,24 @@
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 39,
+      "events": 32,
       "paired_price_events": 0,
-      "pairing_unknown_events": 16,
+      "pairing_unknown_events": 28,
       "raw_market_names": [
         "Player Fouls"
       ],
-      "rows": 39,
+      "rows": 60,
       "status": "MARKET_NAME_ONLY"
     },
     "team_cards_total": {
-      "bookmakers": [
-        "Bet365"
-      ],
-      "competitions": [
-        "England - Premier League",
-        "France - Ligue 1",
-        "Germany - Bundesliga",
-        "Italy - Serie A",
-        "Spain - LaLiga"
-      ],
-      "events": 22,
+      "bookmakers": [],
+      "competitions": [],
+      "events": 0,
       "paired_price_events": 0,
-      "pairing_unknown_events": 22,
-      "raw_market_names": [
-        "Bookings Totals Away",
-        "Bookings Totals Home"
-      ],
-      "rows": 44,
-      "status": "MARKET_NAME_ONLY"
+      "pairing_unknown_events": 0,
+      "raw_market_names": [],
+      "rows": 0,
+      "status": "NOT_OBSERVED"
     },
     "team_fouls_total": {
       "bookmakers": [],
@@ -135,7 +110,7 @@
       "status": "NOT_OBSERVED"
     }
   },
-  "generated_at": "2026-10-29T15:17:24Z",
+  "generated_at": "2026-10-30T15:06:38Z",
   "policy": {
     "definition_gate": "Bookmaker settlement definitions must be reconciled against the result source before ROI is scored.",
     "live_staking": "BLOCKED",

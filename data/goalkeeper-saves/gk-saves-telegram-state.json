@@ -2864,17 +2864,135 @@
       },
       "message_id": 725,
       "sent_at": "2026-10-30T08:40:09.727469+00:00"
+    },
+    "72221362|christian walton|3.5|over": {
+      "status": "claimed",
+      "run_token": "41077234756:1",
+      "claimed_at": "2026-10-30T15:07:44.831229+00:00",
+      "signal": {
+        "signal_id": "72221362|christian walton|3.5|over",
+        "created_at": "2026-10-30T15:06:37Z",
+        "event_id": "72221362",
+        "match_date": "2026-10-31",
+        "kickoff_at": "2026-10-31T15:00:00Z",
+        "league": "epl",
+        "home_team": "Hull City",
+        "away_team": "Ipswich Town",
+        "team": "Ipswich Town",
+        "opponent": "Hull City",
+        "venue": "away",
+        "goalkeeper": "Christian Walton",
+        "bookmaker": "Bet365",
+        "line": "3.5",
+        "side": "over",
+        "odds_decimal": "3.0000",
+        "model_mean": "3.1268",
+        "model_probability": "0.377980",
+        "push_probability": "0.000000",
+        "fair_odds": "2.646",
+        "edge": "0.133939",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-10-30T15:04:09.745204429Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "named_player",
+        "identity_basis": "bookmaker_named_player",
+        "price_comparison": [
+          {
+            "bookmaker": "Bet365",
+            "odds": 3.0,
+            "captured_at": "2026-10-30T15:04:09.745204429Z",
+            "contract_scope": "named_player"
+          },
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 2.55,
+            "captured_at": "2026-10-30T15:06:29+00:00",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-10-30T15:07:44.831229+00:00"
+      }
+    },
+    "72221354|djordje petrović|2.5|over": {
+      "status": "claimed",
+      "run_token": "41077234756:1",
+      "claimed_at": "2026-10-30T15:07:44.831229+00:00",
+      "signal": {
+        "signal_id": "72221354|djordje petrović|2.5|over",
+        "created_at": "2026-10-30T15:06:37Z",
+        "event_id": "72221354",
+        "match_date": "2026-10-31",
+        "kickoff_at": "2026-10-31T15:00:00Z",
+        "league": "epl",
+        "home_team": "AFC Bournemouth",
+        "away_team": "Leeds United",
+        "team": "AFC Bournemouth",
+        "opponent": "Leeds United",
+        "venue": "home",
+        "goalkeeper": "Djordje Petrović",
+        "bookmaker": "Bet365",
+        "line": "2.5",
+        "side": "over",
+        "odds_decimal": "2.6250",
+        "model_mean": "2.3921",
+        "model_probability": "0.420533",
+        "push_probability": "0.000000",
+        "fair_odds": "2.378",
+        "edge": "0.103900",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-10-30T15:04:09.32362365Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "named_player",
+        "identity_basis": "bookmaker_named_player",
+        "price_comparison": [
+          {
+            "bookmaker": "Bet365",
+            "odds": 2.625,
+            "captured_at": "2026-10-30T15:04:09.32362365Z",
+            "contract_scope": "named_player"
+          },
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 2.25,
+            "captured_at": "2026-10-30T15:06:29+00:00",
+            "contract_scope": "team_goalkeeper_home"
+          }
+        ],
+        "price_checked_at": "2026-10-30T15:07:44.831229+00:00"
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-10-30T08:40:03.145978+00:00",
-      "added": 1,
+      "checked_at": "2026-10-30T15:07:44.831229+00:00",
+      "added": 2,
       "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-10-30T08:40:03.145978+00:00",
-      "added": 1,
+      "checked_at": "2026-10-30T15:07:44.831229+00:00",
+      "added": 0,
       "suppressed": {}
     }
   }
