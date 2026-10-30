@@ -62,27 +62,21 @@ function publishedTime(value: string): string {
     : `Posted ${publishedDate.format(date)} · ${londonTime.format(date)}`;
 }
 
-function selectVisiblePicks(picks: EdgeBet[], filter: Filter): EdgeBet[] {
-  const filtered = picks.filter((pick) => filter === "all" || pick.market === filter);
-  if (filter !== "all") return filtered.slice(0, 3);
-
-  const eventCounts = new Map<string, number>();
-  const balanced = filtered.filter((pick) => {
-    const count = eventCounts.get(pick.event) ?? 0;
-    if (count >= 3) return false;
-    eventCounts.set(pick.event, count + 1);
-    return true;
-  });
-  const visible = balanced.slice(0, 3);
-
-  if (picks.some((pick) => pick.market === "tennis") && !visible.some((pick) => pick.market === "tennis")) {
-    const tennisPick = picks.find((pick) => pick.market === "tennis");
-    if (tennisPick) {
-      if (visible.length === 3) visible[2] = tennisPick;
-      else visible.push(tennisPick);
+function selectVisiblePicks(picks: EdgeBet[], filter: Filter, today: string | null): EdgeBet[] {
+  const filtered = picks
+    .filter((pick) => (filter === "all" || pick.market === filter)
+      && (!today || !pick.match_date || pick.match_date >= today))
+    .sort((a, b) => (a.match_date || "9999").localeCompare(b.match_date || "9999")
+      || b.posted_at.localeCompare(a.posted_at)
+      || String(b.id).localeCompare(String(a.id)));
+  const visible = filtered.slice(0, 3);
+  // Keep sport variety only within the same day, never at today's expense.
+  if (filter === "all" && !visible.some((pick) => pick.market === "tennis")) {
+    const tennis = filtered.find((pick) => pick.market === "tennis");
+    if (tennis && visible.length === 3 && tennis.match_date === visible[2].match_date) {
+      visible[2] = tennis;
     }
   }
-
   return visible;
 }
 
@@ -107,7 +101,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
     }),
     [picks],
   );
-  const visible = useMemo(() => selectVisiblePicks(picks, filter), [filter, picks]);
+  const visible = useMemo(() => selectVisiblePicks(picks, filter, today), [filter, picks, today]);
   const cardRoutes = filter === "all" && counts.props > 0 && counts.tennis > 0
     ? [
         { href: "/player-props#picks", label: `Football picks (${counts.props})`, filter: "props" },

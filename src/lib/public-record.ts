@@ -110,6 +110,9 @@ export async function fetchHomePayload() {
   if (!hasSupabaseAdminConfig()) return emptyHomePayload();
 
   const supabase = getSupabaseAdmin();
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/London", year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date());
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
   const cutoff = sevenDaysAgo.toISOString();
@@ -130,7 +133,12 @@ export async function fetchHomePayload() {
         .from("bets")
         .select("*, bookmaker:bookmakers(*)")
         .eq("status", "pending")
+        // Order before limiting: tomorrow's newly posted tips must not hide today's.
+        // Older unsettled picks remain in the full record, not the upcoming preview.
+        .or(`match_date.gte.${today},match_date.is.null`)
+        .order("match_date", { ascending: true, nullsFirst: false })
         .order("posted_at", { ascending: false })
+        .order("id", { ascending: false })
         .limit(20),
       supabase
         .from("bets")

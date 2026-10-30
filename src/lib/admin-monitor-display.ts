@@ -13,7 +13,7 @@ export const monitorModels:MonitorModel[] = [
  {id:'astra',name:'Astra Volume',group:'research',note:'Frozen forward paper trial. Current corrected inputs are shown separately from earlier inputs.',views:[['context-forward-v1','Performance']]},
  {id:'aces4',name:'Aces v4 calibration',group:'research',note:'Calibration observations are not bets. Only rows explicitly flagged as v4 signals appear as selections.',views:[['v4-report','Progress'],['aces-v4','Flagged selections']]},
  {id:'mostaces',name:'Most aces',group:'research',note:'Paper research using captured bookmaker prices. The ledger identifies each source; a forecast alone is not a value selection.',views:[['most-aces-current','Fair odds & bookmakers'],['most-aces','Direct forecasts'],['most-aces-record','Research observations']]},
- {id:'mostdf',name:'Most double faults',group:'research',note:'Independent-count paper benchmark, not validated betting advice. First pre-match forecasts and best fresh prices; 1u reference stakes. No Telegram alerts while contract and pricing validation is incomplete.',views:[['most-df-current','Performance & selections']]},
+ {id:'mostdf',name:'Most double faults',group:'research',note:'Independent-count paper benchmark, not validated betting advice. First pre-match forecasts and best fresh prices; 1u reference stakes. Qualifying fresh selections appear in the existing paper Telegram digest. Unfinished matches await contract review.',views:[['most-df-current','Performance & selections']]},
  {id:'calibration',name:'Shots calibration',group:'research',note:'Comparison research, not the current Telegram selection model.',views:[['shots-calibration','Progress']]}
 ];
 const tennisModel=monitorModels.find(m=>m.id==='tennis')!;
@@ -55,7 +55,7 @@ export function selectionCard(r:SignalRow,view:string){
  const ou=['OVER','UNDER'].includes(side)?`${side==='OVER'?'Over':'Under'} ${text(r.line)} ${market|| (view.startsWith('gk-')?'saves':'')}`.trim():'';
  const line=numeric(r.spread_line);
  const suppliedSelection=text(r.selection);
- const selection=mostAces?(side==='DRAW'||side==='TIE'||side==='X'?'Tie for most aces':`${selected} · Most aces`):paired?(spread?`${selected} ${line===null?'handicap':`${line>0?'+':''}${line} games`}`:`${selected}${selectedIndex?' to win':''}`):suppliedSelection||[selected,ou||(view.includes('public')?'to score':'')].filter(Boolean).join(' · ');
+ const selection=mostAces?(side==='DRAW'||side==='TIE'||side==='X'?'Tie for most aces':`${selected} Â· Most aces`):paired?(spread?`${selected} ${line===null?'handicap':`${line>0?'+':''}${line} games`}`:`${selected}${selectedIndex?' to win':''}`):suppliedSelection||[selected,ou||(view.includes('public')?'to score':'')].filter(Boolean).join(' Â· ');
  let odds=numeric(pick(r,['selected_odds','odds_decimal','odds','book_price_at_publication','book_odds','best_bookmaker_odds']));
  let fair=numeric(pick(r,['fair_odds','model_fair_odds']));
  let ev=numeric(pick(r,['ev_pct','value_pct','edge_v4_pct']));
