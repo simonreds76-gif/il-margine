@@ -1,903 +1,6 @@
 {
   "fixtures": [
     {
-      "fotmob_match_id": 5749722,
-      "fotmob_page_url": "/matches/atalanta-vs-fiorentina/2en1cd#5749722",
-      "home_fotmob_team_id": 8535,
-      "away_fotmob_team_id": 8524,
-      "match_date": "2026-10-29",
-      "kickoff_utc": "2026-10-29T19:45:00Z",
-      "home_team": "Fiorentina",
-      "away_team": "Atalanta",
-      "home_status": "Confirmed Lineup",
-      "away_status": "Confirmed Lineup",
-      "lineup_type": "standard",
-      "home_formation": "4-3-3",
-      "away_formation": "4-2-3-1",
-      "home_players": [
-        "David de Gea",
-        "Álex Jiménez",
-        "Radu Drăgușin",
-        "Viery",
-        "João Mário",
-        "Cher Ndour",
-        "Nicolò Fagioli",
-        "Marco Brescianini",
-        "Franco Mastantuono",
-        "Mateo Pellegrino",
-        "Alieu Njie"
-      ],
-      "away_players": [
-        "Marco Carnesecchi",
-        "Davide Zappacosta",
-        "Thomas Kristensen",
-        "Relja Obrić",
-        "Lorenzo Bernasconi",
-        "Gianluca Gaetano",
-        "Éderson",
-        "Eljif Elmas",
-        "Charles De Ketelaere",
-        "Nicola Zalewski",
-        "Nikola Krstović"
-      ],
-      "home_starters": [
-        {
-          "name": "David de Gea",
-          "line_index": -1,
-          "line_size": 1,
-          "role_score": 0,
-          "role_group": "GK",
-          "formation": "4-3-3",
-          "position_id": 11,
-          "player_id": 182917,
-          "shirt_number": "43"
-        },
-        {
-          "name": "Álex Jiménez",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 32,
-          "player_id": 1526689,
-          "shirt_number": "20"
-        },
-        {
-          "name": "Radu Drăgușin",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 34,
-          "player_id": 1203661,
-          "shirt_number": "3"
-        },
-        {
-          "name": "Viery",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 36,
-          "player_id": 1501917,
-          "shirt_number": "33"
-        },
-        {
-          "name": "João Mário",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 38,
-          "player_id": 958421,
-          "shirt_number": "17"
-        },
-        {
-          "name": "Cher Ndour",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 73,
-          "player_id": 1246009,
-          "shirt_number": "27"
-        },
-        {
-          "name": "Nicolò Fagioli",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 75,
-          "player_id": 951712,
-          "shirt_number": "44"
-        },
-        {
-          "name": "Marco Brescianini",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 77,
-          "player_id": 950596,
-          "shirt_number": "4"
-        },
-        {
-          "name": "Franco Mastantuono",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 103,
-          "player_id": 1607566,
-          "shirt_number": "30"
-        },
-        {
-          "name": "Mateo Pellegrino",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 105,
-          "player_id": 1224237,
-          "shirt_number": "32"
-        },
-        {
-          "name": "Alieu Njie",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 107,
-          "player_id": 1607014,
-          "shirt_number": "25"
-        }
-      ],
-      "away_starters": [
-        {
-          "name": "Marco Carnesecchi",
-          "line_index": -1,
-          "line_size": 1,
-          "role_score": 0,
-          "role_group": "GK",
-          "formation": "4-2-3-1",
-          "position_id": 11,
-          "player_id": 1013021,
-          "shirt_number": "29"
-        },
-        {
-          "name": "Davide Zappacosta",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 32,
-          "player_id": 244811,
-          "shirt_number": "77"
-        },
-        {
-          "name": "Thomas Kristensen",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 34,
-          "player_id": 1190029,
-          "shirt_number": "31"
-        },
-        {
-          "name": "Relja Obrić",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 36,
-          "player_id": 1692456,
-          "shirt_number": "40"
-        },
-        {
-          "name": "Lorenzo Bernasconi",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 38,
-          "player_id": 1191093,
-          "shirt_number": "47"
-        },
-        {
-          "name": "Gianluca Gaetano",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64,
-          "player_id": 1012842,
-          "shirt_number": "70"
-        },
-        {
-          "name": "Éderson",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66,
-          "player_id": 957203,
-          "shirt_number": "13"
-        },
-        {
-          "name": "Eljif Elmas",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83,
-          "player_id": 741049,
-          "shirt_number": "99"
-        },
-        {
-          "name": "Charles De Ketelaere",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85,
-          "player_id": 1095432,
-          "shirt_number": "17"
-        },
-        {
-          "name": "Nicola Zalewski",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87,
-          "player_id": 1053714,
-          "shirt_number": "59"
-        },
-        {
-          "name": "Nikola Krstović",
-          "line_index": 3,
-          "line_size": 1,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-2-3-1",
-          "position_id": 115,
-          "player_id": 833638,
-          "shirt_number": "90"
-        }
-      ],
-      "home_subs": [
-        "Christ Inao Oulaï",
-        "Wilfried Gnonto",
-        "Beto",
-        "Pote",
-        "Luca Lezzerini",
-        "Oliver Christensen",
-        "Dennis Beldenti",
-        "Dodô",
-        "Valde",
-        "Antonio Pirrò",
-        "Brando Mazzeo"
-      ],
-      "home_substitute_entries": [
-        {
-          "name": "Christ Inao Oulaï",
-          "player_id": "1666494",
-          "role_group": "MID"
-        },
-        {
-          "name": "Wilfried Gnonto",
-          "player_id": "1107286",
-          "role_group": "FW"
-        },
-        {
-          "name": "Beto",
-          "player_id": "1079485",
-          "role_group": "FW"
-        },
-        {
-          "name": "Pote",
-          "player_id": "875133",
-          "role_group": "FW"
-        },
-        {
-          "name": "Luca Lezzerini",
-          "player_id": "282059",
-          "role_group": "GK"
-        },
-        {
-          "name": "Oliver Christensen",
-          "player_id": "806972",
-          "role_group": "GK"
-        },
-        {
-          "name": "Dennis Beldenti",
-          "player_id": "2424411",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Dodô",
-          "player_id": "750734",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Valde",
-          "player_id": "1712399",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Antonio Pirrò",
-          "player_id": "1838526",
-          "role_group": "FW"
-        },
-        {
-          "name": "Brando Mazzeo",
-          "player_id": "1835436",
-          "role_group": "FW"
-        }
-      ],
-      "away_subs": [
-        "Giorgio Scalvini",
-        "Mario Pašalić",
-        "Jonathan Rowe",
-        "Kamaldeen Sulemana",
-        "Marco Sportiello",
-        "Mattia Sonzogni",
-        "Matteo Plaia",
-        "Lazar Samardžić",
-        "Javison Idele"
-      ],
-      "away_substitute_entries": [
-        {
-          "name": "Giorgio Scalvini",
-          "player_id": "1202358",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Mario Pašalić",
-          "player_id": "446266",
-          "role_group": "MID"
-        },
-        {
-          "name": "Jonathan Rowe",
-          "player_id": "1113694",
-          "role_group": "FW"
-        },
-        {
-          "name": "Kamaldeen Sulemana",
-          "player_id": "1130691",
-          "role_group": "MID"
-        },
-        {
-          "name": "Marco Sportiello",
-          "player_id": "212630",
-          "role_group": "GK"
-        },
-        {
-          "name": "Mattia Sonzogni",
-          "player_id": "1837500",
-          "role_group": "GK"
-        },
-        {
-          "name": "Matteo Plaia",
-          "player_id": "1594763",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Lazar Samardžić",
-          "player_id": "1050178",
-          "role_group": "MID"
-        },
-        {
-          "name": "Javison Idele",
-          "player_id": "1756869",
-          "role_group": "FW"
-        }
-      ],
-      "home_unavailable": [
-        "Luca Ranieri",
-        "Marin Pongračić",
-        "Arthur Atta",
-        "Fabiano Parisi"
-      ],
-      "away_unavailable": [
-        "Thomas Pompei",
-        "Isak Hien",
-        "Odilon Kossounou",
-        "Sead Kolašinac",
-        "Franck Kessié",
-        "Giacomo Raspadori",
-        "Raoul Bellanova",
-        "Gianluca Scamacca"
-      ],
-      "observed_at": "2026-10-29T21:46:42.480471+00:00",
-      "changed_at": "2026-10-29T21:46:42.480471+00:00"
-    },
-    {
-      "fotmob_match_id": 5749723,
-      "fotmob_page_url": "/matches/lecce-vs-frosinone/38gwll#5749723",
-      "home_fotmob_team_id": 9891,
-      "away_fotmob_team_id": 9888,
-      "match_date": "2026-10-29",
-      "kickoff_utc": "2026-10-29T17:30:00Z",
-      "home_team": "Frosinone",
-      "away_team": "Lecce",
-      "home_status": "Confirmed Lineup",
-      "away_status": "Confirmed Lineup",
-      "lineup_type": "standard",
-      "home_formation": "4-2-3-1",
-      "away_formation": "3-4-2-1",
-      "home_players": [
-        "Lorenzo Palmisani",
-        "Anthony Oyono",
-        "Gabriele Calvani",
-        "Ilario Monterisi",
-        "Aleksa Terzić",
-        "Giacomo Calò",
-        "Matteo Cichella",
-        "Farès Ghedjemis",
-        "Romano Schmid",
-        "Giorgi Kvernadze",
-        "Antonio Raimondo"
-      ],
-      "away_players": [
-        "Wladimiro Falcone",
-        "Jamil Siebert",
-        "Tiago Gabriel",
-        "Corrie Ndaba",
-        "Danilo Veiga",
-        "Youssef Maleh",
-        "Oumar Ngom",
-        "Antonino Gallo",
-        "Omri Gandelman",
-        "Joël Monteiro",
-        "Paco Esteban"
-      ],
-      "home_starters": [
-        {
-          "name": "Lorenzo Palmisani",
-          "line_index": -1,
-          "line_size": 1,
-          "role_score": 0,
-          "role_group": "GK",
-          "formation": "4-2-3-1",
-          "position_id": 11,
-          "player_id": 1289655,
-          "shirt_number": "22"
-        },
-        {
-          "name": "Anthony Oyono",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 32,
-          "player_id": 1235421,
-          "shirt_number": "20"
-        },
-        {
-          "name": "Gabriele Calvani",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 34,
-          "player_id": 1415326,
-          "shirt_number": "3"
-        },
-        {
-          "name": "Ilario Monterisi",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 36,
-          "player_id": 1117058,
-          "shirt_number": "30"
-        },
-        {
-          "name": "Aleksa Terzić",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 38,
-          "player_id": 992025,
-          "shirt_number": "71"
-        },
-        {
-          "name": "Giacomo Calò",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64,
-          "player_id": 746829,
-          "shirt_number": "14"
-        },
-        {
-          "name": "Matteo Cichella",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66,
-          "player_id": 1670272,
-          "shirt_number": "16"
-        },
-        {
-          "name": "Farès Ghedjemis",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83,
-          "player_id": 1523327,
-          "shirt_number": "7"
-        },
-        {
-          "name": "Romano Schmid",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85,
-          "player_id": 749488,
-          "shirt_number": "10"
-        },
-        {
-          "name": "Giorgi Kvernadze",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87,
-          "player_id": 1342748,
-          "shirt_number": "17"
-        },
-        {
-          "name": "Antonio Raimondo",
-          "line_index": 3,
-          "line_size": 1,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-2-3-1",
-          "position_id": 115,
-          "player_id": 1256534,
-          "shirt_number": "9"
-        }
-      ],
-      "away_starters": [
-        {
-          "name": "Wladimiro Falcone",
-          "line_index": -1,
-          "line_size": 1,
-          "role_score": 0,
-          "role_group": "GK",
-          "formation": "3-4-2-1",
-          "position_id": 11,
-          "player_id": 362200,
-          "shirt_number": "30"
-        },
-        {
-          "name": "Jamil Siebert",
-          "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 33,
-          "player_id": 1185260,
-          "shirt_number": "5"
-        },
-        {
-          "name": "Tiago Gabriel",
-          "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 35,
-          "player_id": 1574492,
-          "shirt_number": "44"
-        },
-        {
-          "name": "Corrie Ndaba",
-          "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 37,
-          "player_id": 1041508,
-          "shirt_number": "3"
-        },
-        {
-          "name": "Danilo Veiga",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 62,
-          "player_id": 1306664,
-          "shirt_number": "17"
-        },
-        {
-          "name": "Youssef Maleh",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 64,
-          "player_id": 789243,
-          "shirt_number": "14"
-        },
-        {
-          "name": "Oumar Ngom",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 66,
-          "player_id": 1332538,
-          "shirt_number": "79"
-        },
-        {
-          "name": "Antonino Gallo",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 68,
-          "player_id": 879065,
-          "shirt_number": "25"
-        },
-        {
-          "name": "Omri Gandelman",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84,
-          "player_id": 1202114,
-          "shirt_number": "16"
-        },
-        {
-          "name": "Joël Monteiro",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 86,
-          "player_id": 1187691,
-          "shirt_number": "99"
-        },
-        {
-          "name": "Paco Esteban",
-          "line_index": 3,
-          "line_size": 1,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-4-2-1",
-          "position_id": 105,
-          "player_id": 1417101,
-          "shirt_number": "22"
-        }
-      ],
-      "home_subs": [
-        "Daniel Bîrligea",
-        "Seydou Fini",
-        "Anouar El Azzouzi",
-        "Luis Hasa",
-        "Omar Fayed",
-        "Giorgio Cittadini",
-        "Matteo Pisseri",
-        "Sebastiano Desplanches",
-        "Enzo Tchato",
-        "Gabriele Bracaglia",
-        "Kevin Akpoguma",
-        "Wisdom Amey",
-        "Alessio Zerbin",
-        "Patrizio Masini",
-        "Tomás Bobček"
-      ],
-      "home_substitute_entries": [
-        {
-          "name": "Daniel Bîrligea",
-          "player_id": "1135820",
-          "role_group": "FW"
-        },
-        {
-          "name": "Seydou Fini",
-          "player_id": "1445163",
-          "role_group": "FW"
-        },
-        {
-          "name": "Anouar El Azzouzi",
-          "player_id": "1285119",
-          "role_group": "MID"
-        },
-        {
-          "name": "Luis Hasa",
-          "player_id": "1402924",
-          "role_group": "MID"
-        },
-        {
-          "name": "Omar Fayed",
-          "player_id": "1510384",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Giorgio Cittadini",
-          "player_id": "1327513",
-          "role_group": ""
-        },
-        {
-          "name": "Matteo Pisseri",
-          "player_id": "415425",
-          "role_group": "GK"
-        },
-        {
-          "name": "Sebastiano Desplanches",
-          "player_id": "1280112",
-          "role_group": "GK"
-        },
-        {
-          "name": "Enzo Tchato",
-          "player_id": "1332850",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Gabriele Bracaglia",
-          "player_id": "1396091",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Kevin Akpoguma",
-          "player_id": "353519",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Wisdom Amey",
-          "player_id": "1250568",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Alessio Zerbin",
-          "player_id": "850295",
-          "role_group": "MID"
-        },
-        {
-          "name": "Patrizio Masini",
-          "player_id": "1189223",
-          "role_group": "MID"
-        },
-        {
-          "name": "Tomás Bobček",
-          "player_id": "1024946",
-          "role_group": "FW"
-        }
-      ],
-      "away_subs": [
-        "Amar Fatah",
-        "Nikola Štulić",
-        "Olaf Gorter",
-        "Konan N’Dri",
-        "Mohamed Kaba",
-        "Alexandru Borbei",
-        "Marco Bleve",
-        "Ali Dembélé",
-        "Elijah Scott",
-        "Gaby Jean",
-        "Sadik Fofana"
-      ],
-      "away_substitute_entries": [
-        {
-          "name": "Amar Fatah",
-          "player_id": "1311977",
-          "role_group": "FW"
-        },
-        {
-          "name": "Nikola Štulić",
-          "player_id": "1178314",
-          "role_group": "FW"
-        },
-        {
-          "name": "Olaf Gorter",
-          "player_id": "1414124",
-          "role_group": "MID"
-        },
-        {
-          "name": "Konan N’Dri",
-          "player_id": "1027594",
-          "role_group": "FW"
-        },
-        {
-          "name": "Mohamed Kaba",
-          "player_id": "1299869",
-          "role_group": "MID"
-        },
-        {
-          "name": "Alexandru Borbei",
-          "player_id": "1103196",
-          "role_group": "GK"
-        },
-        {
-          "name": "Marco Bleve",
-          "player_id": "506322",
-          "role_group": "GK"
-        },
-        {
-          "name": "Ali Dembélé",
-          "player_id": "1429871",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Elijah Scott",
-          "player_id": "1666206",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Gaby Jean",
-          "player_id": "1388474",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Sadik Fofana",
-          "player_id": "1285732",
-          "role_group": "MID"
-        }
-      ],
-      "home_unavailable": [
-        "Florian Grillitsch"
-      ],
-      "away_unavailable": [
-        "Willem Geubbels",
-        "Ivan Ilić",
-        "Kialonda Gaspar",
-        "Lassana Coulibaly",
-        "Medon Berisha",
-        "Santiago Pierotti"
-      ],
-      "observed_at": "2026-10-29T21:46:42.480471+00:00",
-      "changed_at": "2026-10-29T21:46:42.480471+00:00"
-    },
-    {
       "fotmob_match_id": 5749732,
       "fotmob_page_url": "/matches/monza-vs-bologna/27p2f2#5749732",
       "home_fotmob_team_id": 9857,
@@ -1199,7 +302,7 @@
         "Yvan Kouadio Maye",
         "Matteo Pessina"
       ],
-      "observed_at": "2026-10-29T21:46:42.480471+00:00",
+      "observed_at": "2026-10-30T01:56:16.860960+00:00",
       "changed_at": "2026-10-28T14:47:18.307945+00:00"
     },
     {
@@ -1495,12 +598,9 @@
       "home_unavailable": [
         "Ruben Loftus-Cheek",
         "Pietro Terracciano",
-        "Mario Gila",
         "Matteo Gabbia",
-        "Adrien Rabiot",
         "Alexis Saelemaekers",
-        "Samuel Chukwueze",
-        "Diego Moreira"
+        "Samuel Chukwueze"
       ],
       "away_unavailable": [
         "Benjamin Pavard",
@@ -1509,7 +609,7 @@
         "Luis Henrique",
         "Lautaro Martínez"
       ],
-      "observed_at": "2026-10-29T21:46:42.480471+00:00",
+      "observed_at": "2026-10-30T01:56:16.860960+00:00",
       "changed_at": "2026-10-28T21:38:43.503292+00:00"
     },
     {
@@ -1815,7 +915,7 @@
         "Manu Koné",
         "Paulo Dybala"
       ],
-      "observed_at": "2026-10-29T21:46:42.480471+00:00",
+      "observed_at": "2026-10-30T01:56:16.860960+00:00",
       "changed_at": "2026-10-28T18:48:40.261773+00:00"
     },
     {
@@ -2122,7 +1222,7 @@
         "Marin Šverko",
         "Andrea Adorante"
       ],
-      "observed_at": "2026-10-29T21:46:42.480471+00:00",
+      "observed_at": "2026-10-30T01:56:16.860960+00:00",
       "changed_at": "2026-10-29T14:04:15.954815+00:00"
     },
     {
@@ -2423,7 +1523,7 @@
         "Niccolò Fortini",
         "Ricardo Rodríguez"
       ],
-      "observed_at": "2026-10-29T21:46:42.480471+00:00",
+      "observed_at": "2026-10-30T01:56:16.860960+00:00",
       "changed_at": "2026-10-29T14:04:15.954815+00:00"
     },
     {
@@ -2736,7 +1836,7 @@
         "Leonardo Spinazzola",
         "Stanislav Lobotka"
       ],
-      "observed_at": "2026-10-29T21:46:42.480471+00:00",
+      "observed_at": "2026-10-30T01:56:16.860960+00:00",
       "changed_at": "2026-10-29T21:46:42.480471+00:00"
     },
     {
@@ -3039,7 +2139,7 @@
         "Mattia Felici",
         "Riyad Idrissi"
       ],
-      "observed_at": "2026-10-29T21:46:42.480471+00:00",
+      "observed_at": "2026-10-30T01:56:16.860960+00:00",
       "changed_at": "2026-10-29T14:04:15.954815+00:00"
     },
     {
@@ -3342,8 +2442,44 @@
         "Elias Havel",
         "Lorenzo Venturino"
       ],
-      "observed_at": "2026-10-29T21:46:42.480471+00:00",
+      "observed_at": "2026-10-30T01:56:16.860960+00:00",
       "changed_at": "2026-10-29T17:15:14.913397+00:00"
+    },
+    {
+      "fotmob_match_id": 5749731,
+      "match_date": "2026-11-02",
+      "kickoff_utc": "2026-11-02T19:45:00Z",
+      "home_team": "Atalanta",
+      "away_team": "Parma",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-10-30T01:56:16.860960+00:00",
+      "changed_at": "2026-10-30T01:56:16.860960+00:00"
+    },
+    {
+      "fotmob_match_id": 5749738,
+      "match_date": "2026-11-02",
+      "kickoff_utc": "2026-11-02T17:30:00Z",
+      "home_team": "Sassuolo",
+      "away_team": "Fiorentina",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-10-30T01:56:16.860960+00:00",
+      "changed_at": "2026-10-30T01:56:16.860960+00:00"
     }
   ]
 }

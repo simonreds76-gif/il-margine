@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-29T21:47:17Z",
+  "generated_at": "2026-10-30T01:56:53Z",
   "league": "epl",
-  "row_count": 30,
+  "row_count": 32,
   "rows": [
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-28",
       "home_team": "Manchester City",
       "away_team": "Brighton & Hove Albion",
@@ -65,7 +65,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-28",
       "home_team": "Manchester City",
       "away_team": "Brighton & Hove Albion",
@@ -130,7 +130,127 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
+      "match_date": "2026-10-29",
+      "home_team": "Everton",
+      "away_team": "Newcastle United",
+      "team": "Everton",
+      "team_key": "everton",
+      "opponent": "Newcastle United",
+      "opponent_key": "newcastle united",
+      "is_home": 1,
+      "lineup_input": "confirmed_xi",
+      "trust_tier": "T1",
+      "fixture_corruption_score": 0.0,
+      "fixture_corruption_flags": [],
+      "team_lineup_status": "unknown",
+      "starter_names": [
+        "Jordan Pickford",
+        "Merlin Röhl",
+        "James Tarkowski",
+        "Jake O'Brien",
+        "Vitaliy Mykolenko",
+        "Hayden Hackney",
+        "James Garner",
+        "Tyler Dibling",
+        "Kiernan Dewsbury-Hall",
+        "Tyrique George",
+        "Thierno Barry"
+      ],
+      "bench_names": [
+        "Harrison Armstrong",
+        "Charly Alcaraz",
+        "Brennan Johnson",
+        "Ainsley Maitland-Niles",
+        "Christian Nørgaard",
+        "Mark Travers",
+        "Tom King",
+        "Michael Keane",
+        "Braiden Graham"
+      ],
+      "unavailable_names": [
+        "Jarrad Branthwaite",
+        "Jack Grealish"
+      ],
+      "primary": "James Garner",
+      "secondary": "Thierno Barry",
+      "tertiary": "Kiernan Dewsbury-Hall",
+      "primary_lineup_status": "confirmed_starter",
+      "primary_match_name": "James Garner",
+      "secondary_lineup_status": "confirmed_starter",
+      "secondary_match_name": "Thierno Barry",
+      "tertiary_lineup_status": "confirmed_starter",
+      "tertiary_match_name": "Kiernan Dewsbury-Hall",
+      "active_taker_pre_match": "James Garner",
+      "active_slot_pre_match": "primary",
+      "penalty_transfer_pre_match": 0,
+      "inherited_from_pre_match": "",
+      "transfer_level_pre_match": ""
+    },
+    {
+      "league": "epl",
+      "compared_at": "2026-10-30T01:56:53Z",
+      "match_date": "2026-10-29",
+      "home_team": "Everton",
+      "away_team": "Newcastle United",
+      "team": "Newcastle United",
+      "team_key": "newcastle united",
+      "opponent": "Everton",
+      "opponent_key": "everton",
+      "is_home": 0,
+      "lineup_input": "confirmed_xi",
+      "trust_tier": "T1",
+      "fixture_corruption_score": 0.0,
+      "fixture_corruption_flags": [],
+      "team_lineup_status": "unknown",
+      "starter_names": [
+        "Lukás Hornícek",
+        "Amar Dedić",
+        "Fabian Schär",
+        "Daniel Burn",
+        "Lewis Hall",
+        "Jacob Ramsey",
+        "Nico González",
+        "Jacob Murphy",
+        "Joseph Willock",
+        "Harvey Barnes",
+        "William Osula"
+      ],
+      "bench_names": [
+        "Joelinton",
+        "Anthony Elanga",
+        "Yoane Wissa",
+        "Bazoumana Touré",
+        "Sean Steur",
+        "Nick Pope",
+        "Malick Thiaw",
+        "Sven Botman",
+        "Aladji Bamba"
+      ],
+      "unavailable_names": [
+        "Lewis Miley",
+        "Matias Fernandez-Pardo",
+        "Ewen Jaouen",
+        "Valentino Livramento"
+      ],
+      "primary": "Yoane Wissa",
+      "secondary": "Matias Fernandez-Pardo",
+      "tertiary": "William Osula",
+      "primary_lineup_status": "confirmed_bench",
+      "primary_match_name": "Yoane Wissa",
+      "secondary_lineup_status": "not_in_squad",
+      "secondary_match_name": "Matias Fernandez-Pardo",
+      "tertiary_lineup_status": "confirmed_starter",
+      "tertiary_match_name": "William Osula",
+      "active_taker_pre_match": "William Osula",
+      "active_slot_pre_match": "tertiary",
+      "penalty_transfer_pre_match": 1,
+      "inherited_from_pre_match": "Yoane Wissa",
+      "transfer_level_pre_match": "tertiary"
+    },
+    {
+      "league": "epl",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "AFC Bournemouth",
       "away_team": "Leeds United",
@@ -181,7 +301,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "AFC Bournemouth",
       "away_team": "Leeds United",
@@ -231,7 +351,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Aston Villa",
       "away_team": "Fulham",
@@ -281,7 +401,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Aston Villa",
       "away_team": "Fulham",
@@ -330,7 +450,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Aston Villa",
       "away_team": "Fulham FC",
@@ -380,7 +500,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Aston Villa",
       "away_team": "Fulham FC",
@@ -429,7 +549,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Brentford",
       "away_team": "Nottingham Forest",
@@ -480,7 +600,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Brentford",
       "away_team": "Nottingham Forest",
@@ -530,7 +650,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Brentford FC",
       "away_team": "Nottingham Forest",
@@ -581,7 +701,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Brentford FC",
       "away_team": "Nottingham Forest",
@@ -631,7 +751,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Chelsea",
       "away_team": "Manchester United",
@@ -683,7 +803,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Chelsea",
       "away_team": "Manchester United",
@@ -713,7 +833,6 @@
       "bench_names": [],
       "unavailable_names": [
         "Luke Shaw",
-        "Kobbie Mainoo",
         "Manuel Ugarte",
         "Benjamin Šeško",
         "Marcus Rashford",
@@ -736,7 +855,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Chelsea FC",
       "away_team": "Manchester United",
@@ -788,7 +907,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Chelsea FC",
       "away_team": "Manchester United",
@@ -818,7 +937,6 @@
       "bench_names": [],
       "unavailable_names": [
         "Luke Shaw",
-        "Kobbie Mainoo",
         "Manuel Ugarte",
         "Benjamin Šeško",
         "Marcus Rashford",
@@ -841,7 +959,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Coventry City",
       "away_team": "Sunderland",
@@ -893,7 +1011,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Coventry City",
       "away_team": "Sunderland",
@@ -943,7 +1061,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Coventry City",
       "away_team": "Sunderland AFC",
@@ -995,7 +1113,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Coventry City",
       "away_team": "Sunderland AFC",
@@ -1045,7 +1163,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Hull City",
       "away_team": "Ipswich Town",
@@ -1100,7 +1218,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Hull City",
       "away_team": "Ipswich Town",
@@ -1149,7 +1267,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Manchester City",
       "away_team": "Brighton & Hove Albion",
@@ -1208,7 +1326,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Manchester City",
       "away_team": "Brighton & Hove Albion",
@@ -1273,7 +1391,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Tottenham Hotspur",
       "away_team": "Crystal Palace",
@@ -1329,7 +1447,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-10-31",
       "home_team": "Tottenham Hotspur",
       "away_team": "Crystal Palace",
@@ -1358,11 +1476,9 @@
       ],
       "bench_names": [],
       "unavailable_names": [
-        "Quinten Timber",
         "Chadi Riad",
         "Takehiro Tomiyasu",
-        "Ismaïla Sarr",
-        "Jørgen Strand Larsen"
+        "Ismaïla Sarr"
       ],
       "primary": "Jean-Philippe Mateta",
       "secondary": "Ismaïla Sarr",
@@ -1381,7 +1497,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-11-01",
       "home_team": "Liverpool",
       "away_team": "Arsenal",
@@ -1434,7 +1550,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-11-01",
       "home_team": "Liverpool",
       "away_team": "Arsenal",
@@ -1487,7 +1603,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-11-01",
       "home_team": "Liverpool FC",
       "away_team": "Arsenal FC",
@@ -1540,7 +1656,7 @@
     },
     {
       "league": "epl",
-      "compared_at": "2026-10-29T21:47:17Z",
+      "compared_at": "2026-10-30T01:56:53Z",
       "match_date": "2026-11-01",
       "home_team": "Liverpool FC",
       "away_team": "Arsenal FC",
