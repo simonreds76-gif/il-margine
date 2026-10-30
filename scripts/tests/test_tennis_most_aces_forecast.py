@@ -163,5 +163,20 @@ class MostAcesForecastTests(unittest.TestCase):
         self.assertEqual(report["status"], "EVIDENCE_BUILDING")
 
 
+    def test_tie_probability_is_not_modal_prediction_frequency(self):
+        rows = [
+            {"settlement_status": "settled", "p_draw": "0.1", "predicted_outcome": "PLAYER1", "actual_outcome": "DRAW"},
+            {"settlement_status": "settled", "p_draw": "0.2", "predicted_outcome": "PLAYER2", "actual_outcome": "PLAYER2"},
+            {"settlement_status": "pending", "p_draw": "0.9", "predicted_outcome": "DRAW"},
+        ]
+        summary = FORECAST.model_summary(rows)
+        self.assertAlmostEqual(summary["predicted_draw_rate_pct"], 15.0)
+        self.assertEqual(summary["modal_draw_prediction_rate_pct"], 0.0)
+        self.assertEqual(summary["actual_draw_rate_on_probability_rows_pct"], 50.0)
+        self.assertEqual(summary["draw_probability_rows"], 2)
+        self.assertIsNone(FORECAST.draw_probability_summary([])["predicted_draw_rate_pct"])
+        self.assertEqual(FORECAST.draw_probability_summary([{"p_draw": "nan"}, {"p_draw": "2"}])["draw_probability_rows"], 0)
+
+
 if __name__ == "__main__":
     unittest.main()
