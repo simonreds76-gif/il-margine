@@ -1,0 +1,65 @@
+ISOLATED PUBLISHED ELO INPUTS — 30 OCTOBER 2026
+
+Scope
+The collector records published Tennis Abstract/Sackmann ATP and WTA Elo
+snapshots. It does not compute a new rating algorithm, update player_elo,
+call pricing models, select bets, settle records, or send Telegram messages.
+The live pricing engine does not read data/tennis-elo-source.
+
+Automation
+Existing morning and nightly research tails call scripts/tennis_elo_source.py
+after betting alerts. The on-demand refresh returns before this work.
+One shared per-tour/UTC-day reservation and OS lock permit at most one HTTP
+attempt per tour per day across these callers. Two public pages, no API key.
+No new schedule. A 90-second process-tree timeout is followed by
+--mark-interrupted, preserving the last good snapshot and daily reservation.
+The next day can try normally. Routine lock contention returns SKIPPED.
+An abruptly powered-off PC may retain RUNNING until the next invocation;
+the OS lock releases on exit and next-day collection is not blocked by it.
+
+Evidence and validation
+data/tennis-elo-source/{atp,wta}/status.json records latest state and last_good.
+raw/, parsed/, snapshots/ contain hash-addressed immutable evidence. Only
+status changes in place. Snapshot availability starts at observed_at,
+including new identity/parser versions; the source's update date alone is
+not a verified pre-match availability time. No historical backdating.
+
+Complete HTML/table, contiguous ranks, required columns, sane rating ranges,
+unique profile keys, row floors and prior-coverage checks must pass. Future,
+regressed or >14-day-old source dates fail. Failures retain last_good;
+snapshot_current independently rejects stale/future/hash-invalid evidence.
+
+Identity mapping requires unique exact full names or explicit aliases,
+corroborated by matching native and Sackmann birthdate/country. No initials
+or surname-only guessing. Unknown fields in duplicate archive rows are not
+contradictions; those archive IDs remain unverified and are never merged.
+Known conflicting identities, source homonyms and competing native-ID claims
+are quarantined with reasons. This is an Elo map, not a history-merging rule.
+
+hElo/cElo/gElo are already blended overall/surface ratings. They are typed as
+surface_blended, never raw surface. I.hard uses a hard-blend proxy in the
+offline diagnostic only; the source publishes no distinct indoor rating.
+No inversion of rounded blended ratings is attempted.
+
+Retention
+128 MiB ceiling per tour, warning above 80%; no automatic evidence deletion.
+Unchanged source/mapping/parser retains its original observation. Raw and
+parsed evidence are deduplicated by hash. On warning, archive old immutable
+files by hash to separate cold storage, verify recoverability and keep the
+last-good snapshot plus referenced raw/parsed artifacts accessible before
+removing local copies. This archival step is not automated or authorised
+by the collector. Capacity exhaustion is a visible failure, not silent loss.
+
+Validation / interpretation
+28 regression tests plus real process-timeout recovery were verified.
+The 30 October offline full-engine diagnostic reproduces 47 saved baseline
+forecasts; 44 have both players in the validated source. Rune, Demin and
+Dominko are not on that edition's page. All arms use identical saved inputs,
+apart from the stated Elo substitution / in-memory surface interpretation.
+Recent-activity opponent-strength aggregates remain frozen. This measures
+partial direct sensitivity, neither a lower bound nor full refresh impact.
+Current ratings must not be applied retrospectively to claim backtest ROI.
+
+Live formulas, ledgers and alerts remain unchanged. Further evaluation needs
+genuinely pre-match ratings/inputs/odds and identical settled fixture cohorts.
+Today's price movements do not establish improved accuracy or profitability.
