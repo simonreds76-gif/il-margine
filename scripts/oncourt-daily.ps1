@@ -430,6 +430,18 @@ if ($astrissimoExit -ne 0) { Log "WARNING: Astrissimo paper alerts failed (exit 
 # All selections have been sent. Research may not hold up an on-demand refresh.
 Exit-TaskLock $lockHandle
 $lockHandle = $null
+# Isolated published Elo snapshots; no live rating writer or model calls.
+# Alerts were sent and the tennis priority lock released above.
+try {
+    $eloSourceExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis_elo_source.py") -Label "Published Elo research inputs" -TimeoutSeconds 90
+    if ($eloSourceExit -ne 0) {
+        Log "WARNING: isolated Elo source check failed/timed out; live pricing unchanged"
+        $null = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis_elo_source.py", "--mark-interrupted") -Label "Elo source interruption status" -TimeoutSeconds 10
+    }
+} catch {
+    Log "WARNING: isolated Elo source process error; live pricing unchanged: $($_.Exception.Message)"
+}
+
 Log "=== Elo Rebuild: bounded ATP paper comparison (no alerts) ==="
 try {
     $eloPaperExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis_elo_shadow.py") -Label "Elo Rebuild paper comparison" -TimeoutSeconds 600
