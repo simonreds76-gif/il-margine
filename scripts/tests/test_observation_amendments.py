@@ -10,7 +10,7 @@ class AmendmentTests(unittest.TestCase):
         self.temp=tempfile.TemporaryDirectory(dir=Path.cwd());self.folder=Path(self.temp.name)
         self.now=datetime(2026,10,30,21,tzinfo=timezone.utc);self.before={'engine':'before','model':'same'};self.after={'engine':'after','model':'same'}
         self.proof=self.folder/'observation-proof-20261030.json';self.proof.write_text('{"pricing_ast_identical":true}')
-        self.data={'scope':'instrumentation-only-20261030','pricing_changed':False,'effective_at_utc':(self.now-timedelta(minutes=1)).isoformat(),'parity_proof_sha256':hashlib.sha256(self.proof.read_bytes()).hexdigest(),'guard_sha256':hashlib.sha256(Path(guard.__file__).read_bytes()).hexdigest(),'sections':{'model':{'registration_sha256':'original','before':self.before,'after':self.after}}};self.save()
+        self.data={'scope':'instrumentation-only-20261030','pricing_changed':False,'effective_at_utc':(self.now-timedelta(minutes=1)).isoformat(),'parity_proof_sha256':hashlib.sha256(self.proof.read_bytes()).hexdigest(),'guard_sha256':hashlib.sha256(Path(guard.__file__).read_bytes()).hexdigest(),'sections':{'model':{'registration_sha256':'original','before':self.before,'after':self.after,'caller_guard_file':'tennis_elo_shadow.py','caller_guard_sha256':hashlib.sha256((Path(guard.__file__).parent/'tennis_elo_shadow.py').read_bytes()).hexdigest()}}};self.save()
     def tearDown(self):self.temp.cleanup()
     def save(self):self.path=self.folder/'observation-amendment-20261030.json';self.path.write_text(json.dumps(self.data))
     def accept(self,**kw):return guard.accepted_observation_amendment(self.folder,kw.get('reg','original'),kw.get('before',self.before),kw.get('after',self.after),kw.get('section','model'),kw.get('now',self.now))
@@ -26,5 +26,7 @@ class AmendmentTests(unittest.TestCase):
         self.proof.write_text('{"pricing_ast_identical":true}');self.data['guard_sha256']='wrong';self.save();self.assertIsNone(self.accept())
     def test_unapproved_scope_and_missing_file(self):
         self.data['pricing_changed']=True;self.save();self.assertIsNone(self.accept());self.path.unlink();self.assertIsNone(self.accept())
+    def test_caller_guard_is_pinned(self):
+        self.data['sections']['model']['caller_guard_sha256']='wrong';self.save();self.assertIsNone(self.accept())
 
 if __name__=='__main__':unittest.main()

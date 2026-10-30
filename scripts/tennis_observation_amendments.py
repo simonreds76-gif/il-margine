@@ -16,4 +16,7 @@ def accepted_observation_amendment(folder, registration_hash, before, after, sec
     proof=folder/'observation-proof-20261030.json'
     if not proof.exists() or hashlib.sha256(proof.read_bytes()).hexdigest()!=data.get('parity_proof_sha256'):return None
     if hashlib.sha256(Path(__file__).read_bytes()).hexdigest()!=data.get('guard_sha256'):return None
+    caller=entry.get('caller_guard_file')
+    if caller not in {'tennis_hardcourt_scout.py','tennis_elo_shadow.py'}:return None
+    if hashlib.sha256((Path(__file__).parent/caller).read_bytes()).hexdigest()!=entry.get('caller_guard_sha256'):return None
     return hashlib.sha256(path.read_bytes()).hexdigest()
