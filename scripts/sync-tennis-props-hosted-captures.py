@@ -132,6 +132,7 @@ def synchronize(
             "bet365-lines",
             "bet365-tennis-market-audit",
             "betmgm-most-aces-1x2",
+            "most-df-1x2",
             "betmgm-tennis-market-audit",
         ):
             relative = f"data/tennis-props/inbox/{stem}-{day}.csv"
@@ -149,7 +150,7 @@ def synchronize(
         for offset in range(max(0, lookback_days) + 1)
     }
     for month in sorted(months):
-        for stem in ("bet365-lines-history", "betmgm-most-aces-history"):
+        for stem in ("bet365-lines-history", "betmgm-most-aces-history", "most-df-history"):
             relative = f"data/tennis-props/inbox/{stem}-{month}.csv"
             content = remote_blob(remote_ref, relative)
             if content is None:

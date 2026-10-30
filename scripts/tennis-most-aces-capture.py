@@ -119,7 +119,9 @@ def extract_market_prices(
     return prices["P1"], prices["DRAW"], prices["P2"]
 
 
-def extract_rows(payload: list[dict[str, Any]], captured_at: str, common) -> list[dict[str, str]]:
+def extract_rows(payload: list[dict[str, Any]], captured_at: str, common, *, market_kind: str = 'aces') -> list[dict[str, str]]:
+    if market_kind not in {'aces', 'dfs'}:
+        raise ValueError('Unsupported three-way count market')
     rows: list[dict[str, str]] = []
     for event in payload:
         player1 = common.clean_player(event.get("home") or event.get("home_team") or "")
@@ -129,7 +131,8 @@ def extract_rows(payload: list[dict[str, Any]], captured_at: str, common) -> lis
         for bookmaker, markets in (event.get("bookmakers") or {}).items():
             for market in markets or []:
                 market_name = str(market.get("name") or "")
-                if not is_most_aces_market(market_name):
+                recognized = is_most_aces_market(market_name) if market_kind == 'aces' else norm_name(market_name) == 'most double faults'
+                if not recognized:
                     continue
                 prices = extract_market_prices(market, player1, player2)
                 if not prices:

@@ -163,12 +163,12 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
                         continue
                     stat, side = q.get('line'), str(q.get('side') or '')
                     if gid == '130317':
-                        # This group also contains Most Double Faults; never feed it to Most Aces.
-                        if stat != 'Aces' or key(side) not in {key(m['home']), key(m['away']), 'tie'}:
+                        # Both statistics share a provider group; retain separate contract keys.
+                        if stat not in {'Aces', 'Double Faults'} or key(side) not in {key(m['home']), key(m['away']), 'tie'}:
                             skipped['unsupported_most_count_outcome'] += 1
                             continue
-                        k = key(side)
-                        value = {'label': side, 'odds': price, 'raw_quote': q}
+                        k = (stat, key(side))
+                        value = {'stat': stat, 'label': side, 'odds': price, 'raw_quote': q}
                     else:
                         try:
                             line = float(q['handicap'])
@@ -248,11 +248,14 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
                         'captured_at': polled, 'raw_group_status': status,
                         'settlement_policy': 'full_match; retirement_void_unless_determined'}
                 if gid == '130317':
-                    if {key(p['label']) for p in odds} != {key(m['home']), key(m['away']), 'tie'}:
-                        skipped['incomplete_most_aces_1x2'] += 1
-                        continue
-                    markets.append({**meta, 'name': 'Most Aces', 'odds': odds,
-                                    'updatedAt': max(p['raw_quote']['ts'] for p in odds)})
+                    for stat in ('Aces', 'Double Faults'):
+                        selected = [p for p in odds if p['stat'] == stat]
+                        if not selected: continue
+                        if {key(p['label']) for p in selected} != {key(m['home']), key(m['away']), 'tie'}:
+                            skipped['incomplete_most_count_1x2'] += 1
+                            continue
+                        markets.append({**meta, 'name': 'Most '+stat, 'odds': selected,
+                                        'updatedAt': max(p['raw_quote']['ts'] for p in selected)})
                 else:
                     paired = {}
                     for p in odds:
