@@ -455,7 +455,7 @@ try {
         }
         if ($digestExit -ne 0 -or $propsDigestExit -ne 0) { throw "New-selection Telegram check failed." }
         if (-not $NoTelegram) {
-            $paperSignalsExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--date", $refreshDate, "--paper-signals-only") -Label "v4 new paper selections" -TimeoutSeconds 90
+            $paperSignalsExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--date", $refreshDate, "--paper-signals-only", "--refresh-started-at", $refreshStartedAt) -Label "v4 new paper selections" -TimeoutSeconds 90
             if ($paperSignalsExit -ne 0) { throw "v4 new-selection check failed." }
         }
         Write-TennisManualProgress $root $manualRequest "uploading" "Fresh prices and selection checks complete. Updating the private Monitor."
@@ -499,7 +499,7 @@ try {
     $lockHandle = Enter-TennisPriorityLock -RootPath $root
     if (-not $NoTelegram) {
         $paperSummaryExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--paper-summary-only") -Label "v4 daily evidence summary" -TimeoutSeconds 90
-        $paperSignalsExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--date", $refreshDate, "--paper-signals-only") -Label "v4 fresh paper selections" -TimeoutSeconds 90
+        $paperSignalsExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--date", $refreshDate, "--paper-signals-only", "--refresh-started-at", $refreshStartedAt) -Label "v4 fresh paper selections" -TimeoutSeconds 90
         if ($paperSummaryExit -ne 0 -or $paperSignalsExit -ne 0) { Log "WARNING: v4 paper reporting failed; existing relay dedup permits a safe retry." }
     }
 
@@ -554,4 +554,3 @@ finally {
 }
 
 if ($runStatusFinal -ne "ok") { exit 1 }
-

@@ -146,9 +146,23 @@ def prepare(root: Path, now: datetime, previous: dict) -> tuple[list[tuple[str, 
     return messages, dict(status, state='READY' if messages else 'NO_NEW_QUALIFYING_SELECTIONS', new=len(messages), excluded=dict(excluded))
 
 
-def selection_alerts(root: Path, target_day: str, sender: Callable[[list[str]], None], *, print_only: bool = False, now: datetime | None = None) -> str:
+def selection_alerts(root: Path, target_day: str, sender: Callable[[list[str]], None], *, print_only: bool = False, now: datetime | None = None, refresh_started_at: str | None = None) -> str:
     now = now or datetime.now(timezone.utc)
     if target_day != now.astimezone(UK).date().isoformat():
+        started = timestamp(refresh_started_at)
+        # An in-flight refresh can cross UK midnight. Do not relabel yesterday's
+        # inputs or send stale bets; defer this optional lane and allow the
+        # completed match/props refresh to upload its truthful timestamps.
+        if (started and timedelta(0) <= now-started <= timedelta(hours=2)
+                and target_day == started.date().isoformat()
+                and now.astimezone(UK).date() == started.date()+timedelta(days=1)):
+            status = dict(state='DEFERRED_DATE_ROLLOVER', checked_at=now.isoformat(),
+                          refresh_started_at=started.isoformat(), source_date=target_day,
+                          required_date=now.astimezone(UK).date().isoformat(), eligible=0, new=0,
+                          warnings=['Refresh crossed UK midnight; v4 needs current-day inputs before alerting.'])
+            write_json(root/STATUS, status)
+            print('v4 selection alerts: DEFERRED_DATE_ROLLOVER | no selections sent; refresh current-day inputs.')
+            return 'deferred_date_rollover'
         raise ValueError('v4 selection alerts must use the current UK date')
     path = root/STATE
     previous = read_json(path)
