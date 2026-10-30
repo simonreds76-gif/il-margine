@@ -1249,6 +1249,29 @@ def project_side(
             else schedule.get("player1_id") or ""
         ),
         "surface": surface,
+        "_count_diagnostics": {
+            "expected_games_input": expected_games or match_games_default,
+            "expected_games_source": expected_games_source,
+            "fair_total_row_as_read": fair_total_row,
+            "expected_games_source_timestamp_status": "NOT_QUERIED_BY_EXISTING_ADAPTER",
+            "service_points": projection.expected_service_points,
+            "service_games": projection.expected_service_games,
+            "ace_rate_pre_opponent": projection.ace_rate_pre_opponent,
+            "opponent_return_ratio": projection.opponent_return_ratio,
+            "opponent_return_factor": projection.opponent_return_factor,
+            "ace_rate_adjusted": projection.ace_rate,
+            "df_rate_adjusted": projection.df_rate,
+            "ace_count_correction": projection.ace_count_correction,
+            "df_count_correction_effective": projection.expected_dfs - projection.df_rate * projection.expected_service_points,
+            "expected_aces_unrounded": projection.expected_aces,
+            "expected_dfs_unrounded": projection.expected_dfs,
+            "player_service_point_win": projection.player_service_point_win,
+            "opponent_service_point_win": projection.opponent_service_point_win,
+            "same_event_ace_weight": projection.same_tournament_ace_weight,
+            "same_event_df_weight": projection.same_tournament_df_weight,
+            "current_env_ace_factor": projection.current_env_ace_factor,
+            "current_env_df_factor": projection.current_env_df_factor,
+        },
         "projected_aces": fmt(projection.expected_aces),
         "projected_dfs": fmt(projection.expected_dfs),
         "projected_breaks_for": fmt(projection.expected_breaks_for),
@@ -1435,6 +1458,10 @@ def main() -> None:
         normalize_match_break_totals(row_a, row_b)
         rows.extend([row_a, row_b])
 
+    count_diagnostics = []
+    for row in rows:
+        detail = row.pop("_count_diagnostics", {})
+        count_diagnostics.append({"forecast": dict(row), "intermediates": detail})
     for row in rows:
         row['history_version'] = history['version']
         row['history_as_of'] = history['as_of']
@@ -1544,6 +1571,19 @@ def main() -> None:
         "source",
     ]
     write_csv(Path(args.out), rows, fieldnames)
+    try:
+        from tennis_count_diagnostics import capture_count_inputs
+        diagnostic_status = capture_count_inputs(ROOT, count_diagnostics, history, [
+            Path(__file__), ROOT / "scripts/tennis_props_model.py",
+            ROOT / "scripts/tennis_count_diagnostics.py",
+            Path(args.baseline), Path(args.activity), Path(args.factors),
+            Path(args.surface_baselines), Path(args.aliases), Path(args.out),
+        ], board_path=Path(args.out))
+        print("Count input evidence: " + diagnostic_status)
+    except Exception as exc:
+        print("WARNING: count input evidence unavailable (" + type(exc).__name__ + "); pricing unchanged.")
+
+
     report = {"as_of": args.as_of, "version": "same-event-phase-reference-v2", "cutoff": "results dated strictly before as_of", "excluded": CURRENT_EVENT_EXCLUSIONS, "events": [{"tour": key[0], "tour_id": key[1], **value} for key, value in current_tournament_environment.items()]}
     report_path = Path(args.out).with_suffix(".environment.json")
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")

@@ -3699,6 +3699,7 @@ def main():
         )
         match_pmf = match_games_pmf(p_a_eg, p_b_eg, best_of=5 if totals_best_of_5 else 3)
         exp_games = expected_total_games_from_pmf(match_pmf)
+        diagnostic_raw_games = exp_games
 
         # Tournament residual shift (e.g. court speed effects not captured by venue SPW)
         tour_shift_entry = tour_shift_lookup.get((tid, surface)) if tid is not None else None
@@ -3845,6 +3846,18 @@ def main():
             "p_rank": round(p_rank, 6) if p_rank is not None else None,
             "series": series_bucket,
             "component_weights": {"serve_return": sr_weight, "elo": elo_weight, "rank": rank_weight},
+            "opportunity_diagnostics": {
+                "schema_version": 1, "timing_status": "actual_calculation_not_a_verified_prematch_capture",
+                "raw_expected_games": diagnostic_raw_games,
+                "post_tournament_clamped_games": exp_games,
+                "tournament_residual_adjustment": tournament_total_adjustment,
+                "ou_shift": ou_shift, "final_expected_games_unrounded": exp_games_cal,
+                "final_expected_games_published": out[-1]["expected_total_games"],
+                "p_a_unrounded": p_a_eg, "p_b_unrounded": p_b_eg,
+                "best_of": 5 if totals_best_of_5 else 3,
+                "venue_spw": venue_spw, "spw_center": avg_spw_surface,
+                "cpi_used_in_totals": cpi_used_in_totals,
+            },
         })
 
     print(f"Computed {len(out)} fair odds rows")
