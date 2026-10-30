@@ -7,6 +7,7 @@ import argparse
 import csv
 import importlib.util
 import json
+import hashlib
 import math
 import re
 import unicodedata
@@ -24,7 +25,7 @@ FIELDS = [
     "event_id", "date", "tour", "tournament", "bookmaker", "player1", "player2",
     "player1_odds", "draw_odds", "player2_odds", "capture_ts", "match_start_utc",
     "raw_market_name", "raw_outcome_count", "raw_label_sample",
-    "provider_updated_at", "source_url", "raw_market_json",
+    "provider_updated_at", "source_url", "raw_market_json", "evidence_sha256",
 ]
 AUDIT_FIELDS = [
     "captured_at", "source_endpoint", "event_id", "kickoff_at", "bookmaker", "tour", "tournament",
@@ -134,6 +135,7 @@ def extract_rows(payload: list[dict[str, Any]], captured_at: str, common) -> lis
                 if not prices:
                     continue
                 outcomes = market.get("odds") or market.get("outcomes") or []
+                raw_market = json.dumps(market, ensure_ascii=False, separators=(",", ":"))
                 rows.append({
                     "event_id": str(event.get("id") or ""),
                     "date": str(event.get("date") or "")[:10],
@@ -147,8 +149,9 @@ def extract_rows(payload: list[dict[str, Any]], captured_at: str, common) -> lis
                     "player2_odds": f"{prices[2]:.4f}",
                     "capture_ts": str(market.get("captured_at") or event.get("captured_at") or captured_at),
                     "provider_updated_at": str(market.get("updatedAt") or ""),
-                    "source_url": str((event.get("urls") or {}).get(bookmaker) or ""),
-                    "raw_market_json": json.dumps(market, ensure_ascii=False, separators=(",", ":")),
+                    "source_url": str((event.get("urls") or {}).get(bookmaker) or market.get('source_url') or ""),
+                    "raw_market_json": raw_market,
+                    "evidence_sha256": hashlib.sha256(raw_market.encode('utf-8')).hexdigest(),
                     "match_start_utc": str(event.get("date") or ""),
                     "raw_market_name": market_name,
                     "raw_outcome_count": str(len(outcomes)),
@@ -314,3 +317,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
