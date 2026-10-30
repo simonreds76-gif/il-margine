@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-10-30T19:30:00Z",
       "home_team": "Elversberg",
       "away_team": "Mainz 05",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "3-5-2",
       "home_players": [
@@ -33,9 +33,9 @@
         "Stefan Posch",
         "Kacper Potulski",
         "Anthony Caci",
-        "Nadiem Amiri",
+        "Paul Nebel",
         "Kaishu Sano",
-        "Jae-Sung Lee",
+        "Nadiem Amiri",
         "Phillipp Mwene",
         "Sheraldo Becker",
         "Phillip Tietz"
@@ -220,15 +220,15 @@
           "shirt_number": "19"
         },
         {
-          "name": "Nadiem Amiri",
+          "name": "Paul Nebel",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
           "formation": "3-5-2",
           "position_id": 73,
-          "player_id": 614449,
-          "shirt_number": "10"
+          "player_id": 1175939,
+          "shirt_number": "8"
         },
         {
           "name": "Kaishu Sano",
@@ -242,15 +242,15 @@
           "shirt_number": "6"
         },
         {
-          "name": "Jae-Sung Lee",
+          "name": "Nadiem Amiri",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
           "formation": "3-5-2",
           "position_id": 77,
-          "player_id": 523749,
-          "shirt_number": "7"
+          "player_id": 614449,
+          "shirt_number": "10"
         },
         {
           "name": "Phillipp Mwene",
@@ -286,10 +286,122 @@
           "shirt_number": "9"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Nicholas Mickelson",
+        "Frederik Schmahl",
+        "Cole Campbell",
+        "Raif Adam",
+        "Luca Schnellbacher",
+        "Tim Boss",
+        "Florian Le Joncour",
+        "Amara Condé",
+        "Noel Futkeu"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Nicholas Mickelson",
+          "player_id": "633721",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Frederik Schmahl",
+          "player_id": "1281256",
+          "role_group": "MID"
+        },
+        {
+          "name": "Cole Campbell",
+          "player_id": "1288195",
+          "role_group": "FW"
+        },
+        {
+          "name": "Raif Adam",
+          "player_id": "1730149",
+          "role_group": "MID"
+        },
+        {
+          "name": "Luca Schnellbacher",
+          "player_id": "459010",
+          "role_group": "FW"
+        },
+        {
+          "name": "Tim Boss",
+          "player_id": "659051",
+          "role_group": "GK"
+        },
+        {
+          "name": "Florian Le Joncour",
+          "player_id": "594886",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Amara Condé",
+          "player_id": "763990",
+          "role_group": "MID"
+        },
+        {
+          "name": "Noel Futkeu",
+          "player_id": "1138725",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Lennard Maloney",
+        "Silvan Widmer",
+        "Benedict Hollerbach",
+        "Ransford Königsdörffer",
+        "Eric Martel",
+        "Alexander Schwolow",
+        "Fabio Gruber",
+        "Stefan Bell",
+        "Jae-Sung Lee"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Lennard Maloney",
+          "player_id": "921197",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Silvan Widmer",
+          "player_id": "275034",
+          "role_group": "MID"
+        },
+        {
+          "name": "Benedict Hollerbach",
+          "player_id": "1185568",
+          "role_group": "FW"
+        },
+        {
+          "name": "Ransford Königsdörffer",
+          "player_id": "1121170",
+          "role_group": "FW"
+        },
+        {
+          "name": "Eric Martel",
+          "player_id": "1199283",
+          "role_group": "MID"
+        },
+        {
+          "name": "Alexander Schwolow",
+          "player_id": "248437",
+          "role_group": "GK"
+        },
+        {
+          "name": "Fabio Gruber",
+          "player_id": "1362417",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Stefan Bell",
+          "player_id": "193901",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Jae-Sung Lee",
+          "player_id": "523749",
+          "role_group": "MID"
+        }
+      ],
       "home_unavailable": [
         "Noah Darvich",
         "Jan Gyamerah",
@@ -300,8 +412,8 @@
         "Dominik Kohr",
         "Silas Katompa Mvumpa"
       ],
-      "observed_at": "2026-10-30T16:42:44.132891+00:00",
-      "changed_at": "2026-10-29T14:06:01.966854+00:00"
+      "observed_at": "2026-10-30T21:30:03.320718+00:00",
+      "changed_at": "2026-10-30T21:30:03.320718+00:00"
     },
     {
       "fotmob_match_id": 5881206,
@@ -606,7 +718,7 @@
         "Philipp Treu",
         "Florent Muslija"
       ],
-      "observed_at": "2026-10-30T16:42:44.132891+00:00",
+      "observed_at": "2026-10-30T21:30:03.320718+00:00",
       "changed_at": "2026-10-30T13:56:43.327171+00:00"
     },
     {
@@ -916,7 +1028,7 @@
         "Leo Sauer",
         "Tiago Tomás"
       ],
-      "observed_at": "2026-10-30T16:42:44.132891+00:00",
+      "observed_at": "2026-10-30T21:30:03.320718+00:00",
       "changed_at": "2026-10-30T13:56:43.327171+00:00"
     },
     {
@@ -1222,7 +1334,7 @@
         "Justin Lerma",
         "Konstantinos Karetsas"
       ],
-      "observed_at": "2026-10-30T16:42:44.132891+00:00",
+      "observed_at": "2026-10-30T21:30:03.320718+00:00",
       "changed_at": "2026-10-30T13:56:43.327171+00:00"
     },
     {
@@ -1531,7 +1643,7 @@
         "Timur Gayret",
         "Oliver Batista Meier"
       ],
-      "observed_at": "2026-10-30T16:42:44.132891+00:00",
+      "observed_at": "2026-10-30T21:30:03.320718+00:00",
       "changed_at": "2026-10-30T13:56:43.327171+00:00"
     },
     {
@@ -1839,7 +1951,7 @@
         "Assan Ouédraogo",
         "Marc Guiu"
       ],
-      "observed_at": "2026-10-30T16:42:44.132891+00:00",
+      "observed_at": "2026-10-30T21:30:03.320718+00:00",
       "changed_at": "2026-10-30T13:56:43.327171+00:00"
     },
     {
@@ -2149,7 +2261,7 @@
         "Alexander Prass",
         "Patrick Wimmer"
       ],
-      "observed_at": "2026-10-30T16:42:44.132891+00:00",
+      "observed_at": "2026-10-30T21:30:03.320718+00:00",
       "changed_at": "2026-10-30T13:56:43.327171+00:00"
     },
     {
@@ -2454,7 +2566,7 @@
         "Fábio Vieira",
         "Yussuf Poulsen"
       ],
-      "observed_at": "2026-10-30T16:42:44.132891+00:00",
+      "observed_at": "2026-10-30T21:30:03.320718+00:00",
       "changed_at": "2026-10-30T13:56:43.327171+00:00"
     },
     {
@@ -2763,7 +2875,7 @@
         "Ragnar Ache",
         "Thijs Dallinga"
       ],
-      "observed_at": "2026-10-30T16:42:44.132891+00:00",
+      "observed_at": "2026-10-30T21:30:03.320718+00:00",
       "changed_at": "2026-10-30T13:56:43.327171+00:00"
     }
   ]
