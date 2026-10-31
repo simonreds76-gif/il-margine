@@ -1,14 +1,30 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-30T15:41:34Z",
+  "generated_at": "2026-10-31T05:52:00Z",
   "league": "ligue-1",
-  "row_count": 1,
+  "row_count": 2,
   "rows": [
     {
-      "team": "Le Havre",
-      "team_key": "le havre",
-      "player_name": "Josh Maja",
-      "player_key": "josh maja",
+      "team": "Nice",
+      "team_key": "nice",
+      "player_name": "Elye Wahi",
+      "player_key": "elye wahi",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
+      "observed_share": 1.0,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-30"
+    },
+    {
+      "team": "Rennes",
+      "team_key": "rennes",
+      "player_name": "Boulaye Dia",
+      "player_key": "boulaye dia",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
@@ -18,7 +34,7 @@
         "fotmob_live"
       ],
       "event_count": 1,
-      "last_event_date": "2026-10-25"
+      "last_event_date": "2026-10-30"
     }
   ]
 }
