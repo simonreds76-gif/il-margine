@@ -1,0 +1,54 @@
+Published Elo full-input research comparison -- 31 October 2026
+
+This arm runs inside the existing bounded Elo Rebuild paper comparison after
+daily signals. It uses the existing settlement, private snapshot and weekly
+review paths. No new schedule, Telegram betting alerts or live pricing writes.
+
+The control is the actual current full model. The research arm substitutes the
+validated published overall/surface ratings AND recomputes recent opponent Elo
+averages. Everything else uses the same formulas and inputs. All changed in-memory
+inputs are restored. Missing player/opponent ratings or non-reproducible activity
+exclude a pair; never use 1500 defaults or mix rating sources in paired evidence.
+
+Published surface ratings already contain an overall/surface blend. The incumbent
+writer's semantics remain unverified. This is a source-replacement experiment,
+not a clean test of rating freshness alone. WTA is not included in this arm.
+
+Only predictions calculated before verified kickoff with an already observed
+source snapshot and an existing Pinnacle quote at most two hours old enter the
+forward ledger. Quotes are normalized to player order. There is no extra odds
+download. Old snapshot dates do not establish historical availability. Offline
+sensitivity results must never be called prospective results or betting ROI.
+
+Storage: data/tennis-elo-rebuild/published-source. Frozen forecasts are append-only;
+outcomes are separate. Source, engine, policy and handicap calibration hashes are
+registered. A changed dependency blocks further capture for manual review.
+Exact native edition, both player IDs, round and saved kickoff date are required
+to settle. Retirements/walkovers are research voids. Date ambiguity is explicit;
+no silent nearest-date or qualifying/main-draw joins. Changed kickoff evidence
+requires a separate audited amendment, not an edited original forecast.
+
+Report incumbent-all, incumbent-paired and published-paired separately, ATP and
+Challenger separately, and by surface. Primary accuracy is paired log loss and
+Brier, with descriptive edition-clustered uncertainty. Handicap calibration uses
+the identical common priced, live-gate-valid non-push fixtures in both arms.
+Production H0 pair/fallback, correction, sign-flip and market gates are retained;
+BO5 handicaps and quarter-line bets are excluded. Pushes refund paper stakes.
+
+Primary paper ROI uses the available Strict hard-court/Masters gates. It is a
+hypothetical reconstruction, not an actual issued-bet record (injury/editorial
+overlays are unavailable). Broad EV>=5% is separately labelled diagnostic. All
+paper bets are flat 1u; ROI uses settled win/loss stakes, excluding pending,
+voids and pushes. Zero real stake. Neither arm may be automatically promoted.
+
+Review at 300 independently settled paired fixtures AND ten tournament editions,
+separately by tier. Challenger published-rating coverage is sparse and may take
+months. Existing K22 Challenger stop remains unchanged; this separate published
+source arm does not revive that rejected candidate. Existing top-level K22
+review gates can stop the shared collector for manual review.
+
+Validated by regression checks for dependency recomputation/restoration, missing
+ratings, reversed quotes, stale/future prices, started matches, immutable capture,
+duplicate prevention, exact settlement, push/void ROI and stale-context fail-fast.
+The normal pipeline refreshes live context; research only validates it and stops
+if stale. It never repairs live inputs as a side effect of a comparison.

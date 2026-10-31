@@ -12,6 +12,12 @@ from pathlib import Path
 import requests
 from tennis_elo_rebuild import VERSION, atomic, digest, read_csv, rebuild, sha
 
+# The instrumented live module prepends its runtime scripts to sys.path.
+# Bind this actual research entry point before helper imports can find a stale
+# second copy. Fingerprints must hash the collector that is really executing.
+if __name__ == '__main__':
+    sys.modules['tennis_elo_shadow'] = sys.modules[__name__]
+
 RELATIVE=Path('data/tennis-elo-rebuild')
 MODEL_FILES=('scripts/oncourt-compute-fair-odds.py','scripts/live_model_v2.py','scripts/matchup_model.py','src/lib/tennis_prob.py','scripts/tennis-model-market-gap-audit.py')
 DOWNSTREAM_FILES=('scripts/build-tennis-props-board.py','scripts/compute-handicap-values.py','scripts/tennis-props-v3-live.py','scripts/build-tennis-most-aces-board.py')
@@ -41,6 +47,11 @@ def instrument(source):
     control = _compute_fixture_rows("category_corrected", ml_only=ELO_ML_ONLY)
     if baseline != control: raise ValueError("Elo identity replay failed")
     old_elo = dict(elo_lookup)
+    published = None
+    if ELO_PUBLISHED:
+        from tennis_published_elo_comparison import compare_inputs
+        published = compare_inputs(ELO_ROOT, _compute_fixture_rows, baseline, elo_lookup,
+                                   recent_activity_by_player, date.today())
     elo_lookup.clear()
     elo_lookup.update(ELO_CANDIDATE)
     has_overall_elo = any(s == "Overall" for p,s in elo_lookup)
@@ -48,7 +59,7 @@ def instrument(source):
         if pid in ELO_OPPONENTS:
             row["avg_opponent_elo"] = ELO_OPPONENTS[pid]
     candidate = _compute_fixture_rows("category_corrected", ml_only=ELO_ML_ONLY)
-    return {"baseline": baseline, "candidate": candidate, "incumbent_ratings": old_elo}
+    return {"baseline": baseline, "candidate": candidate, "incumbent_ratings": old_elo, "published": published}
 '''
     source=source.replace(anchor,replacement+anchor,1)
     marker='            exp_games = expected_total_games_from_pmf(match_pmf)'
@@ -65,7 +76,7 @@ def instrument(source):
     tree.body=[n for n in tree.body if not (isinstance(n,ast.If) and isinstance(n.test,ast.Compare) and isinstance(n.test.left,ast.Name) and n.test.left.id=='__name__')]
     return tree
 
-def run_engine(root, candidate, averages, *, request=None, as_of=None, ml_only=False):
+def run_engine(root, candidate, averages, *, request=None, as_of=None, ml_only=False, published=False):
     path=root/'scripts/oncourt-compute-fair-odds.py';tree=instrument(path.read_text(encoding='utf-8-sig'))
     m=types.ModuleType('elo_shadow_engine');m.__file__=str(path);sys.modules[m.__name__]=m
     real_request=requests.request;old_argv=sys.argv;packets=[]
@@ -90,7 +101,7 @@ def run_engine(root, candidate, averages, *, request=None, as_of=None, ml_only=F
         requests.request=guarded;requests.get=lambda url,**kw:guarded('GET',url,**kw)
         requests.post=requests.patch=requests.put=requests.delete=forbidden
         exec(compile(tree,str(path),'exec'),m.__dict__)
-        m.ELO_CANDIDATE=candidate;m.ELO_OPPONENTS=averages;m.ELO_ML_ONLY=ml_only
+        m.ELO_CANDIDATE=candidate;m.ELO_OPPONENTS=averages;m.ELO_ML_ONLY=ml_only;m.ELO_PUBLISHED=published;m.ELO_ROOT=root
         if as_of:
             class Clock(date):
                 @classmethod
@@ -127,6 +138,10 @@ def capture(root,output,candidate):
     from tennis_category_shadow import load_quotes,quote_for,selection,load_policy,utc
     now=datetime.now(timezone.utc);day=now.date().isoformat()
     if manual_pending(root):return {'skipped':'manual_refresh_has_priority'}
+    # Fail before database pagination when the normal input refresh is incomplete.
+    # Research must never refresh or replace live inputs itself.
+    from tennis_pricing_context import load_inputs
+    load_inputs(root)
     epoch=input_epoch(root)
     if len(list((output/'evidence').glob(now.strftime('%Y%m%d')+'*.gz'))) >= MAX_DAILY_CAPTURES:
         return {'skipped':'daily_capture_limit'}
@@ -151,7 +166,7 @@ def capture(root,output,candidate):
     # No extra odds download; empty prices are a coverage condition, not an edge.
     ratings={(r['player_id'],r['surface']):r['elo'] for r in candidate['ratings']}
     averages=opponent_averages(root,ratings,now.date())
-    result,packets,log=run_engine(root,ratings,averages)
+    result,packets,log=run_engine(root,ratings,averages,published=True)
     baseline,bexcluded=joined(result,'baseline');challenger,cexcluded=joined(result,'candidate')
     if baseline.keys()!=challenger.keys():raise ValueError('Candidate changed fixture universe')
     if hashes!={p:sha(root/p) for p in MODEL_FILES}:raise ValueError('Source changed during capture')
@@ -177,13 +192,16 @@ def capture(root,output,candidate):
         added.append(row)
     stamp=now.strftime('%Y%m%dT%H%M%SZ');evidence=output/'evidence'
     data={'captured_at':completed.isoformat(),'compute_started_at':now.isoformat(),'query_responses':packets,'baseline':list(baseline.values()),'candidate':list(challenger.values()),
-          'candidate_ratings':candidate['ratings'],'dependent_opponent_averages':averages,
+          'candidate_ratings':candidate['ratings'],'dependent_opponent_averages':averages,'published_source_comparison':result.get('published'),
           'source_hashes':{**hashes,**dh},'candidate_hash':candidate['rating_hash'],'quotes_hashes':qhash,'exclusions':{'baseline':bexcluded,'candidate':cexcluded}}
     raw=gzip.compress(json.dumps(data,separators=(',',':'),allow_nan=False).encode(),mtime=0)
     evidence.mkdir(parents=True,exist_ok=True)
     if sum(p.stat().st_size for p in evidence.glob('*.gz'))+len(raw)>MAX_EVIDENCE_BYTES:raise ValueError('Evidence capacity reached; preserve records and request archive')
     with (evidence/(stamp+'.json.gz')).open('xb') as f:f.write(raw)
     atomic(output/'ledger.json',ledger+added)
+    from tennis_published_elo_comparison import save_capture
+    save_capture(root, output, result.get('published'), baseline, quotes, completed,
+                 source_hashes=hashes, evidence_path=evidence/(stamp+'.json.gz'))
     if not dr:atomic(output/'downstream-registration.json',{'hashes':dh,'started':completed.isoformat()})
     common=[(v,result['incumbent_ratings'][k]) for k,v in ratings.items() if k in result['incumbent_ratings']]
     def sd(v):
@@ -313,6 +331,8 @@ def report(output):
         'score':r.get('score'),'quote':r['quote'],'captured_at':r['captured_at'],
         **{a:{'probability':r[a]['p1_win_prob'],'selection':r[a+'_selection']} for a in ('baseline','candidate')}} for r in ledger[-100:]]
     result['record_limit']=100
+    from tennis_published_elo_comparison import report as published_report
+    result['published_source'] = published_report(output)
     atomic(output/'report.json',result)
     # Flat rows are consumable by the existing private Monitor record browser.
     rows=[]
@@ -326,6 +346,8 @@ def report(output):
                 'fair_odds':round(1/(p if side=='P1' else 1-p),3) if side else None,'stake':1 if side else 0,
                 'result':('W' if won else 'L') if won is not None else r['result'],'profit':(price-1 if won else -1) if won is not None else None,
                 'paper_only':True,'captured_at':r['captured_at']})
+    from tennis_published_elo_comparison import selection_rows
+    rows.extend(selection_rows(output))
     target=output/'selections.csv';stream=io.StringIO(newline='')
     fields=list(rows[0]) if rows else ['date','match','model','selection','market','odds','stake','result','profit','paper_only']
     w=csv.DictWriter(stream,fieldnames=fields);w.writeheader();w.writerows(rows)
@@ -345,6 +367,8 @@ def weekly_text(r):
     if action and action not in ('captured','daily_capture_limit'):lines.append('CAPTURE: '+action.replace('_',' '))
     if r.get('capture_health',{}).get('status')=='failed':lines.append('CAPTURE NEEDS ATTENTION: '+r['capture_health'].get('error','unknown'))
     lines.append('Review at 300 settled priced ATP fixtures; no automatic promotion.')
+    from tennis_published_elo_comparison import weekly_text as published_weekly
+    lines.extend(published_weekly(r.get('published_source',{})))
     return '\n'.join(lines)
 
 @contextlib.contextmanager
@@ -373,7 +397,10 @@ def main():
                     declines=load(out/'declines.json',[]);declines.append({'at':datetime.now(timezone.utc).isoformat(),'reason':status['skipped']})
                     atomic(out/'declines.json',declines)
                 atomic(out/'health.json',{'status':'ok','checked_at':datetime.now(timezone.utc).isoformat(),'capture_action':status.get('skipped','captured')})
-            settle(a.root,out);r=report(out);print(weekly_text(r));return 0
+            settle(a.root,out)
+            from tennis_published_elo_comparison import settle as published_settle
+            published_settle(a.root,out)
+            r=report(out);print(weekly_text(r));return 0
     except BlockingIOError:
         print('Elo Rebuild already running; no duplicate run.');return 0
     except Exception as e:

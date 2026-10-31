@@ -96,7 +96,14 @@
         300
       ],
       "automatic_promotion": false,
-      "next_action": "Compare paired log loss/Brier against actual incumbent and same-time market; games/handicap/count diagnostics; ROI descriptive. At300 stop for manual review: negative or inconclusive ends v1. Check source health, capture freshness, exact settlements, excluded start times and code-hash drift. No extra Telegram alerts or refits."
+      "next_action": "Compare paired log loss/Brier against actual incumbent and same-time market; games/handicap/count diagnostics; ROI descriptive. At300 stop for manual review: negative or inconclusive ends v1. Check source health, capture freshness, exact settlements, excluded start times and code-hash drift. No extra Telegram alerts or refits.",
+      "published_source_arm": {
+        "report_path": "published_source",
+        "scope": "Published overall/surface ratings plus dependent opponent averages in unchanged full model; incumbent-all/current-paired/published-paired, ATP and Challenger separate. K22 Challenger stop unchanged. No live rating writes.",
+        "review": "300 independent settled pairs and >=10 editions per tier; sparse Challenger coverage explicit. Paired log loss/Brier before ROI. No automatic promotion.",
+        "roi": "Flat1u hypothetical available Strict gates primary; EV>=5% diagnostic separately; exact fresh Pinnacle quotes. H0 handicap gates and push refunds retained.",
+        "health": "Verify observed source date, all player/opponent ratings, current activity parity, immutable dependency hashes, exact results and quote coverage. Never backdate."
+      }
     }
   ],
   "candidates": [
