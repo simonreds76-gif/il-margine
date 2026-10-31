@@ -204,6 +204,8 @@ def _build_editorial_note(
         context_bits.append("Low-priority note: the benched primary later reclaimed the duty after coming on, so the hierarchy likely still stands.")
     elif review_type == "expected_backup_shift":
         context_bits.append("Looks like the expected backup took over because the primary was unavailable or inactive.")
+    elif review_type == "expected_backup_held":
+        context_bits.append("Expected backup took the penalty with every higher-ranked taker confirmed off the pitch. No hierarchy change implied.")
     elif review_type == "backup_jump_with_primary_available":
         context_bits.append("Strong review flag: a ranked backup took it while the primary still looked available.")
     elif review_type == "unranked_taker":
@@ -242,6 +244,12 @@ def _classify_review_type(
         return "primary_held"
 
     if actual_role in {"secondary", "tertiary"}:
+        pitch = context.get("_penalty_pitch_status") or {}
+        higher_slots = HIERARCHY_SLOTS[:HIERARCHY_SLOTS.index(actual_role)]
+        if (str(pitch.get(actual_role, "")).startswith("Yes -")
+                and all(not context.get(slot) or str(pitch.get(slot, "")).startswith("No -")
+                        for slot in higher_slots)):
+            return "expected_backup_held"
         if actual_role == active_slot or not primary_available:
             return "expected_backup_shift"
         return "backup_jump_with_primary_available"
@@ -259,6 +267,19 @@ def build_review_rows(context_rows: List[dict], data_paths: Iterable[str], days_
     penalty_role_for_player = penalty_utils["penalty_role_for_player"]
 
     context_by_key = {_context_key(row): row for row in context_rows}
+    # The daily path must use the same saved Admin orders as the live collector.
+    # Logs lack exact kickoffs: previous-day edits only, never assume same-day timing.
+    from penalty_alert_reviews import load_reviews, editorial_hierarchy, apply_editorial_hierarchy
+    import os
+    editorial = load_reviews(ROOT) if os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or (ROOT / ".env.local").exists() else {"clubs": {}}
+    seasons = {}
+    for context in context_by_key.values():
+        league = context.get("league", "")
+        if league not in seasons:
+            path = ROOT / "data" / "goalscorer" / f"{league}-penalty-takers.json"
+            seasons[league] = _load_json(path).get("_meta", {}).get("season", {}).get("label", "") if path.exists() else ""
+        approved = editorial_hierarchy(editorial, league, context.get("team", ""), seasons[league])
+        context.update(apply_editorial_hierarchy(context, approved, str(context.get("match_date", "")) + "T00:00:00Z"))
     historical_rows = load_match_logs(list(data_paths))
     if not historical_rows:
         return []

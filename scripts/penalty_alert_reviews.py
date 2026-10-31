@@ -89,6 +89,56 @@ def club_key(league, club):
     return str(league).lower() + "|" + aliases.get(name, name)
 
 
+def editorial_hierarchy(state, league, club, season):
+    """Use the same season-scoped Admin authority as the public club page."""
+    entry = state.get("clubs", {}).get(club_key(league, club), {})
+    order = entry.get("order") or {}
+    if not season or entry.get("season") != season:
+        return None
+    if not all(isinstance(order.get(slot), str) for slot in ("primary", "secondary", "tertiary")):
+        return None
+    return {**order, "_generated_at": entry.get("at", ""),
+            "_source_path": "admin_penalty_state:editorial"}
+
+
+def apply_editorial_hierarchy(context, approved, as_of):
+    """An order saved before the fixture overrides stale, nonempty context slots.
+
+    Player-specific lineup observations follow the player, never the old rank.
+    Later or undated edits cannot rewrite historical pre-match evidence.
+    """
+    merged = dict(context)
+    if not approved or not as_of:
+        return merged
+    try:
+        saved = datetime.fromisoformat(str(approved.get("_generated_at", "")).replace("Z", "+00:00"))
+        cutoff = datetime.fromisoformat(str(as_of).replace("Z", "+00:00"))
+        if saved.tzinfo is None or cutoff.tzinfo is None or saved > cutoff:
+            return merged
+    except (ValueError, TypeError):
+        return merged
+    slots = ("primary", "secondary", "tertiary")
+    if not all(isinstance(approved.get(slot), str) for slot in slots):
+        return merged
+    from goalscorer_penalty_utils import norm_text
+    observations = {norm_text(context.get(slot) or ""): {
+        suffix: context.get(slot + suffix, "") for suffix in ("_lineup_status", "_match_name")
+    } for slot in slots if context.get(slot)}
+    for slot in slots:
+        player = approved[slot].strip()
+        merged[slot] = player
+        for suffix in ("_lineup_status", "_match_name"):
+            merged[slot + suffix] = observations.get(norm_text(player), {}).get(suffix, "")
+    active = norm_text(context.get("active_taker_pre_match") or "")
+    merged["active_slot_pre_match"] = next((s for s in slots if active and norm_text(merged[s]) == active), "")
+    if not merged["active_slot_pre_match"]:
+        merged["active_taker_pre_match"] = ""
+    merged["_generated_at"] = approved["_generated_at"]
+    merged["_source_path"] = approved.get("_source_path") or "admin_penalty_state:editorial"
+    merged.pop("_hierarchy_unrecorded", None)
+    return merged
+
+
 def reviewed_clubs(state):
     dates = {}
 

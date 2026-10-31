@@ -462,13 +462,14 @@ def _load_context_map(paths: Iterable[Path]) -> Dict[tuple[str, str, str], dict]
 
 
 def _load_hierarchy_map(path: Path, team_key_func) -> Dict[str, dict]:
-    from penalty_alert_reviews import club_key
+    from penalty_alert_reviews import editorial_hierarchy
     league = path.name.removesuffix("-penalty-takers.json")
-    editorial = _editorial_state().get("clubs", {})
+    editorial = _editorial_state()
     payload = _load_json(path)
     loaded: Dict[str, dict] = {}
     if not isinstance(payload, dict):
         return loaded
+    season = payload.get("_meta", {}).get("season", {}).get("label", "")
     for team_name, entry in payload.items():
         if str(team_name).startswith("_") or not isinstance(entry, dict):
             continue
@@ -483,11 +484,9 @@ def _load_hierarchy_map(path: Path, team_key_func) -> Dict[str, dict]:
             "_generated_at": str(last_verified.get("date") or entry.get("public_updated_at") or ""),
             "_source_path": _display_path(path),
         }
-        approved = editorial.get(club_key(league, team_name))
-        if approved and str(approved.get("at", ""))[:10] >= loaded[key]["_generated_at"][:10]:
-            order = approved.get("order") or {}
-            if all(isinstance(order.get(k), str) for k in ("primary", "secondary", "tertiary")):
-                loaded[key]["_approved_override"] = {**order, "_generated_at": approved["at"], "_source_path": "admin_penalty_state:editorial"}
+        approved = editorial_hierarchy(editorial, league, team_name, season)
+        if approved:
+            loaded[key]["_approved_override"] = approved
     return loaded
 
 
@@ -514,13 +513,11 @@ def _apply_hierarchy_fallback(context: dict, fallback: dict | None, as_of: str =
     if not fallback:
         return merged
     approved = fallback.get("_approved_override")
-    if approved and as_of:
-        # Today's editorial change must never be relabelled as a pre-match order.
-        try:
-            if datetime.fromisoformat(approved["_generated_at"].replace("Z", "+00:00")) <= datetime.fromisoformat(as_of.replace("Z", "+00:00")):
-                fallback = approved
-        except (ValueError, TypeError):
-            pass
+    if approved:
+        from penalty_alert_reviews import apply_editorial_hierarchy
+        corrected = apply_editorial_hierarchy(merged, approved, as_of)
+        if corrected != merged:
+            return corrected
     if as_of:
         try:
             stamp = str(fallback.get("_generated_at") or "")
@@ -821,6 +818,13 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str], diagnos
             return ("Yes - " if present else "No - ") + detail
         primary_pitch, secondary_pitch, tertiary_pitch = (pitch_status(hierarchy[k]) for k in ("primary", "secondary", "tertiary"))
         actual_pitch = pitch_status(player_name)
+
+        # Only a single, fully observed penalty can confirm routine backup duty.
+        if attempts == 1:
+            context["_penalty_pitch_status"] = dict(zip(
+                ("primary", "secondary", "tertiary"),
+                (primary_pitch, secondary_pitch, tertiary_pitch),
+            ))
 
         review_type = classify_review_type(
             context=context,
