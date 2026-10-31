@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-31T19:32:58Z",
+  "generated_at": "2026-10-31T22:49:28Z",
   "purpose": "Exact market evidence; Goal Method is not assumed to be a player market",
   "events": [
     {
@@ -5356,10 +5356,1430 @@
       "home": "Racing Santander",
       "away": "Real Madrid",
       "kickoff": "2026-11-01T15:15:00Z",
-      "captured_at": "2026-10-31T15:30:12Z",
+      "captured_at": "2026-10-31T22:49:28Z",
       "bookmaker": "Bet365",
-      "source": "odds-api.io/v3/odds/multi",
-      "markets": []
+      "source": "moviodds_bet365",
+      "markets": [
+        {
+          "name": "Player Headed Shots on Target",
+          "odds": [
+            {
+              "label": "Aaron Martin (1)",
+              "hdp": 0.5,
+              "over": 41,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059366",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Aaron Martin",
+                "odds_dec": 41,
+                "odds_frac": "40/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Alvaro Mantilla (1)",
+              "hdp": 0.5,
+              "over": 21,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059371",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Alvaro Mantilla",
+                "odds_dec": 21,
+                "odds_frac": "20/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Andre Almeida (1)",
+              "hdp": 0.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059376",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Andre Almeida",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Andres Martin (1)",
+              "hdp": 0.5,
+              "over": 10,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059380",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Andres Martin",
+                "odds_dec": 10,
+                "odds_frac": "9/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Asier Villalibre (1)",
+              "hdp": 0.5,
+              "over": 3,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059382",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Asier Villalibre",
+                "odds_dec": 3,
+                "odds_frac": "2/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Diego Diaz (1)",
+              "hdp": 0.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059387",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Diego Diaz",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Facundo Gonzalez (1)",
+              "hdp": 0.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059392",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Facundo Gonzalez",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Giorgi Guliashvili (1)",
+              "hdp": 0.5,
+              "over": 4.5,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059395",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Giorgi Guliashvili",
+                "odds_dec": 4.5,
+                "odds_frac": "7/2",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Gustavo Puerta (1)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059398",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Gustavo Puerta",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Iker Luque (1)",
+              "hdp": 0.5,
+              "over": 10,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059402",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Iker Luque",
+                "odds_dec": 10,
+                "odds_frac": "9/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Inigo Sainz-Maza (1)",
+              "hdp": 0.5,
+              "over": 34,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059406",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Inigo Sainz-Maza",
+                "odds_dec": 34,
+                "odds_frac": "33/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Inigo Vicente (1)",
+              "hdp": 0.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059415",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Inigo Vicente",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Ivan Martin (1)",
+              "hdp": 0.5,
+              "over": 26,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059421",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Ivan Martin",
+                "odds_dec": 26,
+                "odds_frac": "25/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Jeanuel Belocian (1)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059423",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Jeanuel Belocian",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Jorge Salinas (1)",
+              "hdp": 0.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059428",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Jorge Salinas",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Juan Carlos Arana (1)",
+              "hdp": 0.5,
+              "over": 3.75,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059432",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Juan Carlos Arana",
+                "odds_dec": 3.75,
+                "odds_frac": "11/4",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Maguette Gueye (1)",
+              "hdp": 0.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059434",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Maguette Gueye",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Manu Hernando (1)",
+              "hdp": 0.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059438",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Manu Hernando",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Matteo Prati (1)",
+              "hdp": 0.5,
+              "over": 19,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059444",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Matteo Prati",
+                "odds_dec": 19,
+                "odds_frac": "18/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Pablo Garcia (1)",
+              "hdp": 0.5,
+              "over": 6.5,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059446",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Pablo Garcia",
+                "odds_dec": 6.5,
+                "odds_frac": "11/2",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Pablo Ramon (1)",
+              "hdp": 0.5,
+              "over": 26,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059450",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Pablo Ramon",
+                "odds_dec": 26,
+                "odds_frac": "25/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Pedro Felipe (1)",
+              "hdp": 0.5,
+              "over": 21,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059457",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Pedro Felipe",
+                "odds_dec": 21,
+                "odds_frac": "20/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Sergio Canales (1)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059464",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Sergio Canales",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Yassir Zabiri (1)",
+              "hdp": 0.5,
+              "over": 3,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337059469",
+                "n2": "Racing Santander",
+                "side": "1+",
+                "line": "Yassir Zabiri",
+                "odds_dec": 3,
+                "odds_frac": "2/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Alvaro Carreras (2)",
+              "hdp": 0.5,
+              "over": 34,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337063900",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Alvaro Carreras",
+                "odds_dec": 34,
+                "odds_frac": "33/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Antonio Rudiger (2)",
+              "hdp": 0.5,
+              "over": 6.5,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337063918",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Antonio Rudiger",
+                "odds_dec": 6.5,
+                "odds_frac": "11/2",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Arda Guler (2)",
+              "hdp": 0.5,
+              "over": 3.75,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337063931",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Arda Guler",
+                "odds_dec": 3.75,
+                "odds_frac": "11/4",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Aurelien Tchouameni (2)",
+              "hdp": 0.5,
+              "over": 5,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337063957",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Aurelien Tchouameni",
+                "odds_dec": 5,
+                "odds_frac": "4/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Brahim Diaz (2)",
+              "hdp": 0.5,
+              "over": 2.625,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337063973",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Brahim Diaz",
+                "odds_dec": 2.625,
+                "odds_frac": "13/8",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Carlos Espi (2)",
+              "hdp": 0.5,
+              "over": 1.7272727272727273,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337063984",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Carlos Espi",
+                "odds_dec": 1.7272727272727273,
+                "odds_frac": "8/11",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Endrick (2)",
+              "hdp": 0.5,
+              "over": 4,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337063990",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Endrick",
+                "odds_dec": 4,
+                "odds_frac": "3/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Dean Huijsen (2)",
+              "hdp": 0.5,
+              "over": 4.5,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337063996",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Dean Huijsen",
+                "odds_dec": 4.5,
+                "odds_frac": "7/2",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Denzel Dumfries (2)",
+              "hdp": 0.5,
+              "over": 5.5,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337064001",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Denzel Dumfries",
+                "odds_dec": 5.5,
+                "odds_frac": "9/2",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Eduardo Camavinga (2)",
+              "hdp": 0.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337064007",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Eduardo Camavinga",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Federico Valverde (2)",
+              "hdp": 0.5,
+              "over": 3.25,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337064012",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Federico Valverde",
+                "odds_dec": 3.25,
+                "odds_frac": "9/4",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Eder Militao (2)",
+              "hdp": 0.5,
+              "over": 4,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337064016",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Eder Militao",
+                "odds_dec": 4,
+                "odds_frac": "3/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Ibrahima Konate (2)",
+              "hdp": 0.5,
+              "over": 5.5,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337064022",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Ibrahima Konate",
+                "odds_dec": 5.5,
+                "odds_frac": "9/2",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Jude Bellingham (2)",
+              "hdp": 0.5,
+              "over": 2.375,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337064040",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Jude Bellingham",
+                "odds_dec": 2.375,
+                "odds_frac": "11/8",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Kylian Mbappe (2)",
+              "hdp": 0.5,
+              "over": 7,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337064044",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Kylian Mbappe",
+                "odds_dec": 7,
+                "odds_frac": "6/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Marc Cucurella (2)",
+              "hdp": 0.5,
+              "over": 7,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337064050",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Marc Cucurella",
+                "odds_dec": 7,
+                "odds_frac": "6/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Bernardo Silva (2)",
+              "hdp": 0.5,
+              "over": 29,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337064056",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Bernardo Silva",
+                "odds_dec": 29,
+                "odds_frac": "28/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Thiago Pitarch (2)",
+              "hdp": 0.5,
+              "over": 7,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337064063",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Thiago Pitarch",
+                "odds_dec": 7,
+                "odds_frac": "6/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Trent Alexander-Arnold (2)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337064069",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Trent Alexander-Arnold",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Yan Diomande (2)",
+              "hdp": 0.5,
+              "over": 3,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337064073",
+                "n2": "Real Madrid",
+                "side": "1+",
+                "line": "Yan Diomande",
+                "odds_dec": 3,
+                "odds_frac": "2/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Aurelien Tchouameni (2)",
+              "hdp": 1.5,
+              "over": 29,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337192807",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Aurelien Tchouameni",
+                "odds_dec": 29,
+                "odds_frac": "28/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Brahim Diaz (2)",
+              "hdp": 1.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337192828",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Brahim Diaz",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Brahim Diaz (2)",
+              "hdp": 2.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337192848",
+                "n2": "Real Madrid",
+                "side": "3+",
+                "line": "Brahim Diaz",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Endrick (2)",
+              "hdp": 1.5,
+              "over": 23,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337192874",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Endrick",
+                "odds_dec": 23,
+                "odds_frac": "22/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Ibrahima Konate (2)",
+              "hdp": 1.5,
+              "over": 34,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337192914",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Ibrahima Konate",
+                "odds_dec": 34,
+                "odds_frac": "33/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Pablo Garcia (1)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337192941",
+                "n2": "Racing Santander",
+                "side": "2+",
+                "line": "Pablo Garcia",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Maguette Gueye (1)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337192965",
+                "n2": "Racing Santander",
+                "side": "2+",
+                "line": "Maguette Gueye",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Juan Carlos Arana (1)",
+              "hdp": 1.5,
+              "over": 21,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337192981",
+                "n2": "Racing Santander",
+                "side": "2+",
+                "line": "Juan Carlos Arana",
+                "odds_dec": 21,
+                "odds_frac": "20/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Carlos Espi (2)",
+              "hdp": 1.5,
+              "over": 4.5,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337192999",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Carlos Espi",
+                "odds_dec": 4.5,
+                "odds_frac": "7/2",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Carlos Espi (2)",
+              "hdp": 2.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193019",
+                "n2": "Real Madrid",
+                "side": "3+",
+                "line": "Carlos Espi",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Carlos Espi (2)",
+              "hdp": 3.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193042",
+                "n2": "Real Madrid",
+                "side": "4+",
+                "line": "Carlos Espi",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Marc Cucurella (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193067",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Marc Cucurella",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Jorge Salinas (1)",
+              "hdp": 1.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193088",
+                "n2": "Racing Santander",
+                "side": "2+",
+                "line": "Jorge Salinas",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Federico Valverde (2)",
+              "hdp": 1.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193110",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Federico Valverde",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Federico Valverde (2)",
+              "hdp": 2.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193134",
+                "n2": "Real Madrid",
+                "side": "3+",
+                "line": "Federico Valverde",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Asier Villalibre (1)",
+              "hdp": 1.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193156",
+                "n2": "Racing Santander",
+                "side": "2+",
+                "line": "Asier Villalibre",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Asier Villalibre (1)",
+              "hdp": 2.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193188",
+                "n2": "Racing Santander",
+                "side": "3+",
+                "line": "Asier Villalibre",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Eder Militao (2)",
+              "hdp": 1.5,
+              "over": 23,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193210",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Eder Militao",
+                "odds_dec": 23,
+                "odds_frac": "22/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Thiago Pitarch (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193236",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Thiago Pitarch",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Jude Bellingham (2)",
+              "hdp": 1.5,
+              "over": 10,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193258",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Jude Bellingham",
+                "odds_dec": 10,
+                "odds_frac": "9/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Jude Bellingham (2)",
+              "hdp": 2.5,
+              "over": 34,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193282",
+                "n2": "Real Madrid",
+                "side": "3+",
+                "line": "Jude Bellingham",
+                "odds_dec": 34,
+                "odds_frac": "33/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Dean Huijsen (2)",
+              "hdp": 1.5,
+              "over": 26,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193313",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Dean Huijsen",
+                "odds_dec": 26,
+                "odds_frac": "25/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Giorgi Guliashvili (1)",
+              "hdp": 1.5,
+              "over": 29,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193331",
+                "n2": "Racing Santander",
+                "side": "2+",
+                "line": "Giorgi Guliashvili",
+                "odds_dec": 29,
+                "odds_frac": "28/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Yan Diomande (2)",
+              "hdp": 1.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193368",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Yan Diomande",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Yan Diomande (2)",
+              "hdp": 2.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193406",
+                "n2": "Real Madrid",
+                "side": "3+",
+                "line": "Yan Diomande",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Arda Guler (2)",
+              "hdp": 1.5,
+              "over": 21,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193420",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Arda Guler",
+                "odds_dec": 21,
+                "odds_frac": "20/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Kylian Mbappe (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193433",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Kylian Mbappe",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Denzel Dumfries (2)",
+              "hdp": 1.5,
+              "over": 29,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193446",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Denzel Dumfries",
+                "odds_dec": 29,
+                "odds_frac": "28/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Yassir Zabiri (1)",
+              "hdp": 1.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193458",
+                "n2": "Racing Santander",
+                "side": "2+",
+                "line": "Yassir Zabiri",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Yassir Zabiri (1)",
+              "hdp": 2.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193469",
+                "n2": "Racing Santander",
+                "side": "3+",
+                "line": "Yassir Zabiri",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Antonio Rudiger (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193480",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Antonio Rudiger",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Eduardo Camavinga (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337193488",
+                "n2": "Real Madrid",
+                "side": "2+",
+                "line": "Eduardo Camavinga",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Andres Martin (1)",
+              "hdp": 1.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337209429",
+                "n2": "Racing Santander",
+                "side": "2+",
+                "line": "Andres Martin",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            },
+            {
+              "label": "Iker Luque (1)",
+              "hdp": 1.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202426496",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337209563",
+                "n2": "Racing Santander",
+                "side": "2+",
+                "line": "Iker Luque",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-31T22:02:06.146988193Z"
+              }
+            }
+          ],
+          "source": "moviodds_bet365",
+          "source_event_id": "202426496",
+          "source_group_id": "177727",
+          "source_url": "https://moviodds.com/odds?sport=soccer&groups=177727",
+          "captured_at": "2026-10-31T22:44:08.660689158Z",
+          "updatedAt": "2026-10-31T22:02:06.146988193Z",
+          "settlement_policy": "bet365_named_nonstarter_void_v1; standard_no_promotional_replacement",
+          "raw_group_status": {
+            "polled_at": "2026-10-31T22:44:08.660689158Z"
+          }
+        }
+      ]
     },
     {
       "event_id": "71945376",
@@ -6590,7 +8010,7 @@
       "home": "Como 1907",
       "away": "Venezia FC",
       "kickoff": "2026-11-01T11:30:00Z",
-      "captured_at": "2026-10-31T15:30:12Z",
+      "captured_at": "2026-10-31T22:49:28Z",
       "bookmaker": "Bet365",
       "source": "odds-api.io/v3/odds/multi",
       "markets": []
@@ -6620,7 +8040,2373 @@
       "home": "Liverpool FC",
       "away": "Arsenal FC",
       "kickoff": "2026-11-01T16:30:00Z",
-      "captured_at": "2026-10-31T19:32:58Z",
+      "captured_at": "2026-10-31T22:49:28Z",
+      "bookmaker": "Bet365",
+      "source": "odds-api.io/v3/odds/multi",
+      "markets": []
+    },
+    {
+      "event_id": "72478676",
+      "home": "Getafe CF",
+      "away": "Sevilla FC",
+      "kickoff": "2026-11-01T13:00:00Z",
+      "captured_at": "2026-10-31T22:49:28Z",
+      "bookmaker": "Bet365",
+      "source": "moviodds_bet365",
+      "markets": [
+        {
+          "name": "Player Headed Shots on Target",
+          "odds": [
+            {
+              "label": "Abdelkabir Abqar (1)",
+              "hdp": 0.5,
+              "over": 21,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009088",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Abdelkabir Abqar",
+                "odds_dec": 21,
+                "odds_frac": "20/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Alberto Risco (1)",
+              "hdp": 0.5,
+              "over": 6,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009107",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Alberto Risco",
+                "odds_dec": 6,
+                "odds_frac": "5/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Andres Garcia (1)",
+              "hdp": 0.5,
+              "over": 17,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009115",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Andres Garcia",
+                "odds_dec": 17,
+                "odds_frac": "16/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Dakonam Djene (1)",
+              "hdp": 0.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009125",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Dakonam Djene",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Enes Unal (1)",
+              "hdp": 0.5,
+              "over": 7,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009134",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Enes Unal",
+                "odds_dec": 7,
+                "odds_frac": "6/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Francho Serrano (1)",
+              "hdp": 0.5,
+              "over": 17,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009145",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Francho Serrano",
+                "odds_dec": 17,
+                "odds_frac": "16/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Ivan Azon (1)",
+              "hdp": 0.5,
+              "over": 4.5,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009153",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Ivan Azon",
+                "odds_dec": 4.5,
+                "odds_frac": "7/2",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Jean Valou (1)",
+              "hdp": 0.5,
+              "over": 23,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009167",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Jean Valou",
+                "odds_dec": 23,
+                "odds_frac": "22/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Johan Mojica (1)",
+              "hdp": 0.5,
+              "over": 26,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009176",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Johan Mojica",
+                "odds_dec": 26,
+                "odds_frac": "25/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Kiko Femenia (1)",
+              "hdp": 0.5,
+              "over": 41,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009195",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Kiko Femenia",
+                "odds_dec": 41,
+                "odds_frac": "40/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Mancha Davinchi (1)",
+              "hdp": 0.5,
+              "over": 17,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009212",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Mancha Davinchi",
+                "odds_dec": 17,
+                "odds_frac": "16/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Mario Martin (1)",
+              "hdp": 0.5,
+              "over": 10,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009219",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Mario Martin",
+                "odds_dec": 10,
+                "odds_frac": "9/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Martin Satriano (1)",
+              "hdp": 0.5,
+              "over": 3.25,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009228",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Martin Satriano",
+                "odds_dec": 3.25,
+                "odds_frac": "9/4",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Moya Borja Mayoral (1)",
+              "hdp": 0.5,
+              "over": 4,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009253",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Moya Borja Mayoral",
+                "odds_dec": 4,
+                "odds_frac": "3/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Nemanja Gudelj (1)",
+              "hdp": 0.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009279",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Nemanja Gudelj",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Orel Mangala (1)",
+              "hdp": 0.5,
+              "over": 21,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009297",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Orel Mangala",
+                "odds_dec": 21,
+                "odds_frac": "20/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Ramon Terrats (1)",
+              "hdp": 0.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009308",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Ramon Terrats",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Saba Sazonov (1)",
+              "hdp": 0.5,
+              "over": 7,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009317",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Saba Sazonov",
+                "odds_dec": 7,
+                "odds_frac": "6/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Sebastian Boselli (1)",
+              "hdp": 0.5,
+              "over": 7,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009322",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Sebastian Boselli",
+                "odds_dec": 7,
+                "odds_frac": "6/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Zaid Romero (1)",
+              "hdp": 0.5,
+              "over": 5.5,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009328",
+                "n2": "Getafe",
+                "side": "1+",
+                "line": "Zaid Romero",
+                "odds_dec": 5.5,
+                "odds_frac": "9/2",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Alfonso Gonzalez (2)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009338",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Alfonso Gonzalez",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Andres Castrin (2)",
+              "hdp": 0.5,
+              "over": 17,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009346",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Andres Castrin",
+                "odds_dec": 17,
+                "odds_frac": "16/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Arouna Sangante (2)",
+              "hdp": 0.5,
+              "over": 9,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009351",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Arouna Sangante",
+                "odds_dec": 9,
+                "odds_frac": "8/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Chidera Ejuke (2)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009357",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Chidera Ejuke",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Felix Correia (2)",
+              "hdp": 0.5,
+              "over": 10,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009360",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Felix Correia",
+                "odds_dec": 10,
+                "odds_frac": "9/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Gabriel Suazo (2)",
+              "hdp": 0.5,
+              "over": 19,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009365",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Gabriel Suazo",
+                "odds_dec": 19,
+                "odds_frac": "18/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Gerard Peque Fernandez (2)",
+              "hdp": 0.5,
+              "over": 5.5,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009370",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Gerard Peque Fernandez",
+                "odds_dec": 5.5,
+                "odds_frac": "9/2",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Giorgi Kochorashvili (2)",
+              "hdp": 0.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009376",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Giorgi Kochorashvili",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Isaac Romero (2)",
+              "hdp": 0.5,
+              "over": 6,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009384",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Isaac Romero",
+                "odds_dec": 6,
+                "odds_frac": "5/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Jon Guridi (2)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009393",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Jon Guridi",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Jose Carmona (2)",
+              "hdp": 0.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009401",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Jose Carmona",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Juan Iglesias (2)",
+              "hdp": 0.5,
+              "over": 10,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009403",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Juan Iglesias",
+                "odds_dec": 10,
+                "odds_frac": "9/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Kike Salas (2)",
+              "hdp": 0.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009409",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Kike Salas",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Lucas Stassin (2)",
+              "hdp": 0.5,
+              "over": 5,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009414",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Lucas Stassin",
+                "odds_dec": 5,
+                "odds_frac": "4/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Lucien Agoume (2)",
+              "hdp": 0.5,
+              "over": 17,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009416",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Lucien Agoume",
+                "odds_dec": 17,
+                "odds_frac": "16/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Manu Bueno (2)",
+              "hdp": 0.5,
+              "over": 19,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009418",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Manu Bueno",
+                "odds_dec": 19,
+                "odds_frac": "18/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Miguel Sierra (2)",
+              "hdp": 0.5,
+              "over": 6,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009420",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Miguel Sierra",
+                "odds_dec": 6,
+                "odds_frac": "5/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Nico Guillen (2)",
+              "hdp": 0.5,
+              "over": 21,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009422",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Nico Guillen",
+                "odds_dec": 21,
+                "odds_frac": "20/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Robbie Ure (2)",
+              "hdp": 0.5,
+              "over": 5.5,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009425",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Robbie Ure",
+                "odds_dec": 5.5,
+                "odds_frac": "9/2",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Ruben Vargas (2)",
+              "hdp": 0.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009437",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Ruben Vargas",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Youssouf Fofana (2)",
+              "hdp": 0.5,
+              "over": 10,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337009442",
+                "n2": "Sevilla",
+                "side": "1+",
+                "line": "Youssouf Fofana",
+                "odds_dec": 10,
+                "odds_frac": "9/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Moya Borja Mayoral (1)",
+              "hdp": 1.5,
+              "over": 23,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062415",
+                "n2": "Getafe",
+                "side": "2+",
+                "line": "Moya Borja Mayoral",
+                "odds_dec": 23,
+                "odds_frac": "22/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Nemanja Gudelj (1)",
+              "hdp": 1.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062425",
+                "n2": "Getafe",
+                "side": "2+",
+                "line": "Nemanja Gudelj",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Sebastian Boselli (1)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062438",
+                "n2": "Getafe",
+                "side": "2+",
+                "line": "Sebastian Boselli",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Zaid Romero (1)",
+              "hdp": 1.5,
+              "over": 29,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062447",
+                "n2": "Getafe",
+                "side": "2+",
+                "line": "Zaid Romero",
+                "odds_dec": 29,
+                "odds_frac": "28/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Enes Unal (1)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062457",
+                "n2": "Getafe",
+                "side": "2+",
+                "line": "Enes Unal",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Lucas Stassin (2)",
+              "hdp": 1.5,
+              "over": 29,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062466",
+                "n2": "Sevilla",
+                "side": "2+",
+                "line": "Lucas Stassin",
+                "odds_dec": 29,
+                "odds_frac": "28/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Ruben Vargas (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062480",
+                "n2": "Sevilla",
+                "side": "2+",
+                "line": "Ruben Vargas",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Ivan Azon (1)",
+              "hdp": 1.5,
+              "over": 26,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062494",
+                "n2": "Getafe",
+                "side": "2+",
+                "line": "Ivan Azon",
+                "odds_dec": 26,
+                "odds_frac": "25/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Martin Satriano (1)",
+              "hdp": 1.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062528",
+                "n2": "Getafe",
+                "side": "2+",
+                "line": "Martin Satriano",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Martin Satriano (1)",
+              "hdp": 2.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062550",
+                "n2": "Getafe",
+                "side": "3+",
+                "line": "Martin Satriano",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Kike Salas (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062569",
+                "n2": "Sevilla",
+                "side": "2+",
+                "line": "Kike Salas",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Robbie Ure (2)",
+              "hdp": 1.5,
+              "over": 34,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062581",
+                "n2": "Sevilla",
+                "side": "2+",
+                "line": "Robbie Ure",
+                "odds_dec": 34,
+                "odds_frac": "33/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Saba Sazonov (1)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062595",
+                "n2": "Getafe",
+                "side": "2+",
+                "line": "Saba Sazonov",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Alberto Risco (1)",
+              "hdp": 1.5,
+              "over": 41,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062605",
+                "n2": "Getafe",
+                "side": "2+",
+                "line": "Alberto Risco",
+                "odds_dec": 41,
+                "odds_frac": "40/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Gerard Peque Fernandez (2)",
+              "hdp": 1.5,
+              "over": 34,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062615",
+                "n2": "Sevilla",
+                "side": "2+",
+                "line": "Gerard Peque Fernandez",
+                "odds_dec": 34,
+                "odds_frac": "33/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Giorgi Kochorashvili (2)",
+              "hdp": 1.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062626",
+                "n2": "Sevilla",
+                "side": "2+",
+                "line": "Giorgi Kochorashvili",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Isaac Romero (2)",
+              "hdp": 1.5,
+              "over": 41,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062635",
+                "n2": "Sevilla",
+                "side": "2+",
+                "line": "Isaac Romero",
+                "odds_dec": 41,
+                "odds_frac": "40/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Miguel Sierra (2)",
+              "hdp": 1.5,
+              "over": 41,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337062646",
+                "n2": "Sevilla",
+                "side": "2+",
+                "line": "Miguel Sierra",
+                "odds_dec": 41,
+                "odds_frac": "40/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Arouna Sangante (2)",
+              "hdp": 1.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337070247",
+                "n2": "Sevilla",
+                "side": "2+",
+                "line": "Arouna Sangante",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Felix Correia (2)",
+              "hdp": 1.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337070311",
+                "n2": "Sevilla",
+                "side": "2+",
+                "line": "Felix Correia",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            },
+            {
+              "label": "Mario Martin (1)",
+              "hdp": 1.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202426494",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "337070355",
+                "n2": "Getafe",
+                "side": "2+",
+                "line": "Mario Martin",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-31T21:38:05.785544464Z"
+              }
+            }
+          ],
+          "source": "moviodds_bet365",
+          "source_event_id": "202426494",
+          "source_group_id": "177727",
+          "source_url": "https://moviodds.com/odds?sport=soccer&groups=177727",
+          "captured_at": "2026-10-31T22:44:07.859925025Z",
+          "updatedAt": "2026-10-31T21:38:05.785544464Z",
+          "settlement_policy": "bet365_named_nonstarter_void_v1; standard_no_promotional_replacement",
+          "raw_group_status": {
+            "polled_at": "2026-10-31T22:44:07.859925025Z"
+          }
+        }
+      ]
+    },
+    {
+      "event_id": "71945374",
+      "home": "Juventus Turin",
+      "away": "SSC Napoli",
+      "kickoff": "2026-11-01T19:45:00Z",
+      "captured_at": "2026-10-31T22:49:28Z",
+      "bookmaker": "Bet365",
+      "source": "moviodds_bet365",
+      "markets": [
+        {
+          "name": "Player Headed Shots on Target",
+          "odds": [
+            {
+              "label": "Andrea Cambiaso (1)",
+              "hdp": 0.5,
+              "over": 21,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329410829",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Andrea Cambiaso",
+                "odds_dec": 21,
+                "odds_frac": "20/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Augusto Owusu (1)",
+              "hdp": 0.5,
+              "over": 7,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329410874",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Augusto Owusu",
+                "odds_dec": 7,
+                "odds_frac": "6/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Daniele Rugani (1)",
+              "hdp": 0.5,
+              "over": 6.5,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329410931",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Daniele Rugani",
+                "odds_dec": 6.5,
+                "odds_frac": "11/2",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Douglas Luiz (1)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329410982",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Douglas Luiz",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Edon Zhegrova (1)",
+              "hdp": 0.5,
+              "over": 7,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329411001",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Edon Zhegrova",
+                "odds_dec": 7,
+                "odds_frac": "6/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Federico Gatti (1)",
+              "hdp": 0.5,
+              "over": 5.5,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329411025",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Federico Gatti",
+                "odds_dec": 5.5,
+                "odds_frac": "9/2",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Francisco Conceicao (1)",
+              "hdp": 0.5,
+              "over": 10,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329411040",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Francisco Conceicao",
+                "odds_dec": 10,
+                "odds_frac": "9/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Jeremie Boga (1)",
+              "hdp": 0.5,
+              "over": 3.75,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329411051",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Jeremie Boga",
+                "odds_dec": 3.75,
+                "odds_frac": "11/4",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Jhon Lucumi (1)",
+              "hdp": 0.5,
+              "over": 7,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329411073",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Jhon Lucumi",
+                "odds_dec": 7,
+                "odds_frac": "6/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Kerim Alajbegovic (1)",
+              "hdp": 0.5,
+              "over": 4.5,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329411102",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Kerim Alajbegovic",
+                "odds_dec": 4.5,
+                "odds_frac": "7/2",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Lloyd Kelly (1)",
+              "hdp": 0.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329411127",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Lloyd Kelly",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Bremer (1)",
+              "hdp": 0.5,
+              "over": 5,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329411141",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Bremer",
+                "odds_dec": 5,
+                "odds_frac": "4/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Nick Woltemade (1)",
+              "hdp": 0.5,
+              "over": 2.2,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329411159",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Nick Woltemade",
+                "odds_dec": 2.2,
+                "odds_frac": "6/5",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Pape Sarr (1)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329411174",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Pape Sarr",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Pierre Kalulu Kyatengwa (1)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329411190",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Pierre Kalulu Kyatengwa",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Randal Kolo Muani (1)",
+              "hdp": 0.5,
+              "over": 3.5,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329411225",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Randal Kolo Muani",
+                "odds_dec": 3.5,
+                "odds_frac": "5/2",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Teun Koopmeiners (1)",
+              "hdp": 0.5,
+              "over": 19,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329411240",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Teun Koopmeiners",
+                "odds_dec": 19,
+                "odds_frac": "18/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Weston McKennie (1)",
+              "hdp": 0.5,
+              "over": 3.25,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329411249",
+                "n2": "Juventus",
+                "side": "1+",
+                "line": "Weston McKennie",
+                "odds_dec": 3.25,
+                "odds_frac": "9/4",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Amir Rrahmani (2)",
+              "hdp": 0.5,
+              "over": 9,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418733",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Amir Rrahmani",
+                "odds_dec": 9,
+                "odds_frac": "8/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Andre-Franck Anguissa (2)",
+              "hdp": 0.5,
+              "over": 7,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418735",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Andre-Franck Anguissa",
+                "odds_dec": 7,
+                "odds_frac": "6/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Antonio Vergara (2)",
+              "hdp": 0.5,
+              "over": 7,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418737",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Antonio Vergara",
+                "odds_dec": 7,
+                "odds_frac": "6/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Benoit Badiashile (2)",
+              "hdp": 0.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418739",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Benoit Badiashile",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Billy Gilmour (2)",
+              "hdp": 0.5,
+              "over": 23,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418741",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Billy Gilmour",
+                "odds_dec": 23,
+                "odds_frac": "22/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Costantino Favasuli (2)",
+              "hdp": 0.5,
+              "over": 21,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418743",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Costantino Favasuli",
+                "odds_dec": 21,
+                "odds_frac": "20/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "de Almeida Alisson Santos (2)",
+              "hdp": 0.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418745",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "de Almeida Alisson Santos",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Giovane Nascimento (2)",
+              "hdp": 0.5,
+              "over": 6,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418747",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Giovane Nascimento",
+                "odds_dec": 6,
+                "odds_frac": "5/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Giovanni Di Lorenzo (2)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418749",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Giovanni Di Lorenzo",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Kevin De Bruyne (2)",
+              "hdp": 0.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418751",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Kevin De Bruyne",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Leonardo Spinazzola (2)",
+              "hdp": 0.5,
+              "over": 23,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418753",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Leonardo Spinazzola",
+                "odds_dec": 23,
+                "odds_frac": "22/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Lorenzo Lucca (2)",
+              "hdp": 0.5,
+              "over": 2.2,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418757",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Lorenzo Lucca",
+                "odds_dec": 2.2,
+                "odds_frac": "6/5",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Luca Marianucci (2)",
+              "hdp": 0.5,
+              "over": 6.5,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418759",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Luca Marianucci",
+                "odds_dec": 6.5,
+                "odds_frac": "11/2",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Mathias Olivera (2)",
+              "hdp": 0.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418761",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Mathias Olivera",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Matteo Politano (2)",
+              "hdp": 0.5,
+              "over": 13,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418765",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Matteo Politano",
+                "odds_dec": 13,
+                "odds_frac": "12/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Noa Lang (2)",
+              "hdp": 0.5,
+              "over": 11,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418767",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Noa Lang",
+                "odds_dec": 11,
+                "odds_frac": "10/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Rafa Marin (2)",
+              "hdp": 0.5,
+              "over": 7,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418769",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Rafa Marin",
+                "odds_dec": 7,
+                "odds_frac": "6/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Rasmus Hojlund (2)",
+              "hdp": 0.5,
+              "over": 5,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418775",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Rasmus Hojlund",
+                "odds_dec": 5,
+                "odds_frac": "4/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Sam Beukema (2)",
+              "hdp": 0.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418782",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Sam Beukema",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Scott McTominay (2)",
+              "hdp": 0.5,
+              "over": 3.4,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418787",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Scott McTominay",
+                "odds_dec": 3.4,
+                "odds_frac": "12/5",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Stanislav Lobotka (2)",
+              "hdp": 0.5,
+              "over": 26,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329418794",
+                "n2": "Napoli",
+                "side": "1+",
+                "line": "Stanislav Lobotka",
+                "odds_dec": 26,
+                "odds_frac": "25/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Daniele Rugani (1)",
+              "hdp": 1.5,
+              "over": 41,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431691",
+                "n2": "Juventus",
+                "side": "2+",
+                "line": "Daniele Rugani",
+                "odds_dec": 41,
+                "odds_frac": "40/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Scott McTominay (2)",
+              "hdp": 1.5,
+              "over": 17,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431711",
+                "n2": "Napoli",
+                "side": "2+",
+                "line": "Scott McTominay",
+                "odds_dec": 17,
+                "odds_frac": "16/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Kerim Alajbegovic (1)",
+              "hdp": 1.5,
+              "over": 26,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431733",
+                "n2": "Juventus",
+                "side": "2+",
+                "line": "Kerim Alajbegovic",
+                "odds_dec": 26,
+                "odds_frac": "25/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Amir Rrahmani (2)",
+              "hdp": 1.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431743",
+                "n2": "Napoli",
+                "side": "2+",
+                "line": "Amir Rrahmani",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Giovane Nascimento (2)",
+              "hdp": 1.5,
+              "over": 41,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431749",
+                "n2": "Napoli",
+                "side": "2+",
+                "line": "Giovane Nascimento",
+                "odds_dec": 41,
+                "odds_frac": "40/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Bremer (1)",
+              "hdp": 1.5,
+              "over": 29,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431774",
+                "n2": "Juventus",
+                "side": "2+",
+                "line": "Bremer",
+                "odds_dec": 29,
+                "odds_frac": "28/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Lorenzo Lucca (2)",
+              "hdp": 1.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431795",
+                "n2": "Napoli",
+                "side": "2+",
+                "line": "Lorenzo Lucca",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Lorenzo Lucca (2)",
+              "hdp": 2.5,
+              "over": 29,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431826",
+                "n2": "Napoli",
+                "side": "3+",
+                "line": "Lorenzo Lucca",
+                "odds_dec": 29,
+                "odds_frac": "28/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Luca Marianucci (2)",
+              "hdp": 1.5,
+              "over": 41,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431844",
+                "n2": "Napoli",
+                "side": "2+",
+                "line": "Luca Marianucci",
+                "odds_dec": 41,
+                "odds_frac": "40/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Nick Woltemade (1)",
+              "hdp": 1.5,
+              "over": 8,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431873",
+                "n2": "Juventus",
+                "side": "2+",
+                "line": "Nick Woltemade",
+                "odds_dec": 8,
+                "odds_frac": "7/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Nick Woltemade (1)",
+              "hdp": 2.5,
+              "over": 29,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431886",
+                "n2": "Juventus",
+                "side": "3+",
+                "line": "Nick Woltemade",
+                "odds_dec": 29,
+                "odds_frac": "28/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Augusto Owusu (1)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431911",
+                "n2": "Juventus",
+                "side": "2+",
+                "line": "Augusto Owusu",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Weston McKennie (1)",
+              "hdp": 1.5,
+              "over": 15,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431917",
+                "n2": "Juventus",
+                "side": "2+",
+                "line": "Weston McKennie",
+                "odds_dec": 15,
+                "odds_frac": "14/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Weston McKennie (1)",
+              "hdp": 2.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431929",
+                "n2": "Juventus",
+                "side": "3+",
+                "line": "Weston McKennie",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Jeremie Boga (1)",
+              "hdp": 1.5,
+              "over": 21,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431935",
+                "n2": "Juventus",
+                "side": "2+",
+                "line": "Jeremie Boga",
+                "odds_dec": 21,
+                "odds_frac": "20/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "de Almeida Alisson Santos (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431946",
+                "n2": "Napoli",
+                "side": "2+",
+                "line": "de Almeida Alisson Santos",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Andre-Franck Anguissa (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431957",
+                "n2": "Napoli",
+                "side": "2+",
+                "line": "Andre-Franck Anguissa",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Rafa Marin (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431965",
+                "n2": "Napoli",
+                "side": "2+",
+                "line": "Rafa Marin",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Edon Zhegrova (1)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431977",
+                "n2": "Juventus",
+                "side": "2+",
+                "line": "Edon Zhegrova",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Benoit Badiashile (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329431989",
+                "n2": "Napoli",
+                "side": "2+",
+                "line": "Benoit Badiashile",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Randal Kolo Muani (1)",
+              "hdp": 1.5,
+              "over": 19,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329432015",
+                "n2": "Juventus",
+                "side": "2+",
+                "line": "Randal Kolo Muani",
+                "odds_dec": 19,
+                "odds_frac": "18/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Rasmus Hojlund (2)",
+              "hdp": 1.5,
+              "over": 29,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329432034",
+                "n2": "Napoli",
+                "side": "2+",
+                "line": "Rasmus Hojlund",
+                "odds_dec": 29,
+                "odds_frac": "28/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Federico Gatti (1)",
+              "hdp": 1.5,
+              "over": 29,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329432052",
+                "n2": "Juventus",
+                "side": "2+",
+                "line": "Federico Gatti",
+                "odds_dec": 29,
+                "odds_frac": "28/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Antonio Vergara (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329432064",
+                "n2": "Napoli",
+                "side": "2+",
+                "line": "Antonio Vergara",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Sam Beukema (2)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329432072",
+                "n2": "Napoli",
+                "side": "2+",
+                "line": "Sam Beukema",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Jhon Lucumi (1)",
+              "hdp": 1.5,
+              "over": 51,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "329432087",
+                "n2": "Juventus",
+                "side": "2+",
+                "line": "Jhon Lucumi",
+                "odds_dec": 51,
+                "odds_frac": "50/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            },
+            {
+              "label": "Scott McTominay (2)",
+              "hdp": 2.5,
+              "over": 67,
+              "raw_quote": {
+                "fixture_id": "202426286",
+                "group_id": "177727",
+                "group_name": "Headed Shots on Target",
+                "market_id": "177727",
+                "sel_id": "331413771",
+                "n2": "Napoli",
+                "side": "3+",
+                "line": "Scott McTominay",
+                "odds_dec": 67,
+                "odds_frac": "66/1",
+                "ts": "2026-10-31T21:59:05.367630012Z"
+              }
+            }
+          ],
+          "source": "moviodds_bet365",
+          "source_event_id": "202426286",
+          "source_group_id": "177727",
+          "source_url": "https://moviodds.com/odds?sport=soccer&groups=177727",
+          "captured_at": "2026-10-31T22:47:06.542122599Z",
+          "updatedAt": "2026-10-31T21:59:05.367630012Z",
+          "settlement_policy": "bet365_named_nonstarter_void_v1; standard_no_promotional_replacement",
+          "raw_group_status": {
+            "polled_at": "2026-10-31T22:47:06.542122599Z"
+          }
+        }
+      ]
+    },
+    {
+      "event_id": "72513278",
+      "home": "Eintracht Frankfurt",
+      "away": "Hamburger SV",
+      "kickoff": "2026-11-01T16:30:00Z",
+      "captured_at": "2026-10-31T22:49:28Z",
       "bookmaker": "Bet365",
       "source": "odds-api.io/v3/odds/multi",
       "markets": []
