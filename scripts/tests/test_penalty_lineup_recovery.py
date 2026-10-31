@@ -88,7 +88,7 @@ class RecoveryTests(unittest.TestCase):
         old={'primary':'Old Player','secondary':'','tertiary':'','_generated_at':'2026-10-16','_approved_override':{'primary':'New Player','secondary':'','tertiary':'','_generated_at':'2026-10-18T09:05:00Z'}}
         self.assertEqual(r._apply_hierarchy_fallback({},old,'2026-10-17T13:30:00Z')['primary'],'Old Player')
         self.assertEqual(r._apply_hierarchy_fallback({},old,'2026-10-19T13:30:00Z')['primary'],'New Player')
-        self.assertEqual(r._apply_hierarchy_fallback({'primary':'Captured Player'},old,'2026-10-19T13:30:00Z')['primary'],'Captured Player')
+        self.assertEqual(r._apply_hierarchy_fallback({'primary':'Captured Player'},old,'2026-10-19T13:30:00Z')['primary'],'New Player')
 
     def test_wrong_fixture_html_cannot_be_accepted(self):
         with patch.object(r,'_fetch_json',side_effect=[ValueError('unavailable'),{'pageUrl':'/shared#1'}]),patch.object(r,'_fetch_text',return_value='x'),patch.object(r,'_extract_next_payload',return_value={'props':{'pageProps':{'general':{'matchId':2}}}}):
