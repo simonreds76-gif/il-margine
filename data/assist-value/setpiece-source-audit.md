@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-10-30T14:00:38+00:00`
+Fetched at UTC: `2026-10-31T13:34:54+00:00`
 
 ## Decision
 
@@ -14,14 +14,14 @@ Overall: **PASS_SOURCE_LAYER**
 ## RotoWire
 
 - Teams with set-piece blocks: `96/96`
-- Player role rows extracted: `725`
+- Player role rows extracted: `729`
 
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
-| bundesliga | 18 | 18 | 115 | 10 |
-| epl | 20 | 20 | 145 | 11 |
-| la-liga | 20 | 20 | 173 | 13 |
-| ligue-1 | 18 | 18 | 135 | 12 |
+| bundesliga | 18 | 18 | 116 | 11 |
+| epl | 20 | 20 | 145 | 12 |
+| la-liga | 20 | 20 | 173 | 14 |
+| ligue-1 | 18 | 18 | 138 | 12 |
 | serie-a | 20 | 20 | 157 | 12 |
 
 ## FPL API
@@ -32,7 +32,7 @@ Overall: **PASS_SOURCE_LAYER**
 - Players with set-piece role fields: `143`
 - Registered season: `2026/27`
 - Exact 20-team roster match: `YES`
-- Snapshot valid until UTC: `2026-11-06T14:00:38+00:00`
+- Snapshot valid until UTC: `2026-11-07T13:34:54+00:00`
 
 ## SetPieceTakers
 
@@ -45,21 +45,21 @@ Overall: **PASS_SOURCE_LAYER**
 
 | League | Team | Player | Last-5 corner share | Season corner share | Corner total |
 |---|---|---|---:|---:|---:|
-| bundesliga | FSV Mainz 05 | Nadiem Amiri | 100.0% | 100.0% | 22 |
-| bundesliga | SV 07 Elversberg | Felix Keidel | 100.0% | 100.0% | 18 |
 | ligue-1 | Angers | Branco van den Boomen | 100.0% | 97.92% | 47 |
+| bundesliga | SV 07 Elversberg | Felix Keidel | 93.33% | 95.45% | 21 |
 | serie-a | Frosinone | Giacomo Calo | 93.1% | 95.74% | 45 |
+| bundesliga | FSV Mainz 05 | Nadiem Amiri | 91.67% | 96.3% | 26 |
 | epl | Leeds United | Anton Stach | 89.47% | 81.25% | 26 |
-| bundesliga | Bayer Leverkusen | Aleix Garcia | 84.21% | 91.84% | 45 |
-| ligue-1 | Lens | Florian Thauvin | 83.33% | 80.33% | 49 |
+| bundesliga | Bayer Leverkusen | Aleix Garcia | 83.33% | 91.84% | 45 |
 | la-liga | Málaga | Pablo Martinez | 80.0% | 72.09% | 31 |
 | serie-a | Como | Luis Milla | 80.0% | 64.71% | 33 |
+| ligue-1 | Lens | Florian Thauvin | 78.95% | 80.95% | 51 |
 | ligue-1 | Brest | Joris Chotard | 78.57% | 90.32% | 28 |
 | ligue-1 | AJ Auxerre | Romain Faivre | 78.26% | 65.71% | 23 |
 | la-liga | Real Madrid | Arda Guler | 73.91% | 54.1% | 33 |
-| serie-a | Monza | Samuele Birindelli | 72.22% | 41.94% | 13 |
-| bundesliga | RB Leipzig | David Raum | 71.43% | 90.0% | 36 |
 | epl | Coventry City | Jack Rudoni | 69.23% | 40.0% | 10 |
+| epl | Crystal Palace | Adam Wharton | 66.67% | 57.14% | 20 |
+| bundesliga | RB Leipzig | David Raum | 66.67% | 90.0% | 36 |
 
 ## Outputs
 
