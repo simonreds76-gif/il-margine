@@ -1,9 +1,76 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-31T15:42:59.547250+00:00",
+  "generated_at": "2026-10-31T19:57:02.281798+00:00",
   "league": "bundesliga",
-  "row_count": 1,
+  "row_count": 2,
   "rows": [
+    {
+      "date": "2026-10-31",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "match": "Schalke 04 vs RB Leipzig",
+      "team": "RB Leipzig",
+      "opponent": "Schalke 04",
+      "actual_taker": "Antonio Nusa",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "37",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Christopher Nkunku",
+      "secondary_pre_match": "Rômulo",
+      "tertiary_pre_match": "David Raum",
+      "primary_lineup_status": "confirmed_bench",
+      "secondary_lineup_status": "confirmed_starter",
+      "tertiary_lineup_status": "confirmed_starter",
+      "active_taker_pre_match": "Rômulo",
+      "active_slot_pre_match": "secondary",
+      "team_lineup_status": "unknown",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Antonio Nusa took 1 penalty attempt and scored for RB Leipzig vs Schalke 04. Primary pre-match: Christopher Nkunku (confirmed_bench). Secondary pre-match: Rômulo (confirmed_starter). Pre-match active slot was secondary -> Rômulo. Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-10-31T15:44:50Z",
+      "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json",
+      "actual_taker_match_status": "Yes - started",
+      "primary_on_pitch_at_penalty": "No - bench",
+      "secondary_on_pitch_at_penalty": "Yes - started, off 85'",
+      "tertiary_on_pitch_at_penalty": "Yes - started",
+      "actual_taker_on_pitch_at_penalty": "Yes - started",
+      "event_evidence": [
+        {
+          "id": "fotmob|bundesliga|5881212|2990608265",
+          "source_event_id": "2990608265",
+          "match_id": "5881212",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881212",
+          "observed_at": "2026-10-31T19:57:05+00:00",
+          "event_date": "2026-10-31",
+          "season": "2026/27",
+          "team": "RB Leipzig",
+          "taker": "Antonio Nusa",
+          "primary": "Christopher Nkunku",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Christopher Nkunku",
+            "minute": 37,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 704523,
+            "bucket": "subs",
+            "substitutions": [],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 37,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Schalke 04 vs RB Leipzig",
+          "event_result": "scored"
+        }
+      ]
+    },
     {
       "date": "2026-10-25",
       "league": "bundesliga",
@@ -96,7 +163,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261024"
+      "20261031"
     ],
     "matches_checked": 1
   }
