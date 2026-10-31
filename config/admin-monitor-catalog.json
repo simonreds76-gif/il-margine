@@ -1,357 +1,357 @@
 [
   {
     "id": "tennis-strict-live",
-    "label": "Strict \u00b7 latest selections",
+    "label": "Strict · latest selections",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-live.csv",
     "kind": "board"
   },
   {
     "id": "tennis-strict-archive",
-    "label": "Strict \u00b7 record",
+    "label": "Strict · record",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-archive.csv",
     "kind": "ledger"
   },
   {
     "id": "tennis-volume200-live",
-    "label": "Volume 200 \u00b7 latest selections",
+    "label": "Volume 200 · latest selections",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-volume200-live.csv",
     "kind": "board"
   },
   {
     "id": "tennis-volume200-archive",
-    "label": "Volume 200 \u00b7 record",
+    "label": "Volume 200 · record",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-volume200-archive.csv",
     "kind": "ledger"
   },
   {
     "id": "tennis-volume200u-live",
-    "label": "Volume expansion \u00b7 latest selections",
+    "label": "Volume expansion · latest selections",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-volume200u-live.csv",
     "kind": "board"
   },
   {
     "id": "tennis-volume200u-archive",
-    "label": "Volume expansion \u00b7 record",
+    "label": "Volume expansion · record",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-volume200u-archive.csv",
     "kind": "ledger"
   },
   {
     "id": "tennis-spreadv1-live",
-    "label": "Handicaps v1 \u00b7 latest selections",
+    "label": "Handicaps v1 · latest selections",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-spreadv1-live.csv",
     "kind": "board"
   },
   {
     "id": "tennis-spreadv1-archive",
-    "label": "Handicaps v1 \u00b7 record",
+    "label": "Handicaps v1 · record",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-spreadv1-archive.csv",
     "kind": "ledger"
   },
   {
     "id": "tennis-challenger-ml-v2-live",
-    "label": "Challenger ML v2 \u00b7 latest selections",
+    "label": "Challenger ML v2 · latest selections",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-challenger-ml-v2-live.csv",
     "kind": "board"
   },
   {
     "id": "tennis-challenger-ml-v2-archive",
-    "label": "Challenger ML v2 \u00b7 record",
+    "label": "Challenger ML v2 · record",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-challenger-ml-v2-archive.csv",
     "kind": "ledger"
   },
   {
     "id": "tennis-clay_bo3-live",
-    "label": "Clay BO3 \u00b7 latest selections",
+    "label": "Clay BO3 · latest selections",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-clay_bo3-live.csv",
     "kind": "board"
   },
   {
     "id": "tennis-clay_bo3-archive",
-    "label": "Clay BO3 \u00b7 record",
+    "label": "Clay BO3 · record",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-clay_bo3-archive.csv",
     "kind": "ledger"
   },
   {
     "id": "tennis-grass_bo3-live",
-    "label": "Grass BO3 \u00b7 latest selections",
+    "label": "Grass BO3 · latest selections",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-grass_bo3-live.csv",
     "kind": "board"
   },
   {
     "id": "tennis-grass_bo3-archive",
-    "label": "Grass BO3 \u00b7 record",
+    "label": "Grass BO3 · record",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-grass_bo3-archive.csv",
     "kind": "ledger"
   },
   {
     "id": "tennis-slam-bo5-live",
-    "label": "Grand Slam BO5 \u00b7 latest selections",
+    "label": "Grand Slam BO5 · latest selections",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-slam-bo5-live.csv",
     "kind": "board"
   },
   {
     "id": "tennis-slam-bo5-archive",
-    "label": "Grand Slam BO5 \u00b7 record",
+    "label": "Grand Slam BO5 · record",
     "group": "Tennis match markets",
     "file": "data/backtest/strict-signals-slam-bo5-archive.csv",
     "kind": "ledger"
   },
   {
     "id": "context-forward-v1",
-    "label": "Astra Volume \u00b7 report",
+    "label": "Astra Volume · report",
     "group": "Tennis research",
     "file": "data/tennis-ml-research/context-forward-v1/report.json",
     "kind": "report"
   },
   {
     "id": "astrissimo-v1",
-    "label": "Astrissimo \u00b7 report",
+    "label": "Astrissimo · report",
     "group": "Tennis research",
     "file": "data/tennis-ml-research/astrissimo-v1/report.json",
     "kind": "report"
   },
   {
     "id": "hardcourt-scout-v1",
-    "label": "Hardcourt Scout \u00b7 report",
+    "label": "Hardcourt Scout · report",
     "group": "Tennis research",
     "file": "data/tennis-ml-research/hardcourt-scout-v1/report.json",
     "kind": "report"
   },
   {
     "id": "props-board",
-    "label": "Aces and double faults \u00b7 fair prices",
+    "label": "Aces and double faults · fair prices",
     "group": "Tennis props",
     "file": "data/tennis-props/player-props-board.csv",
     "kind": "board"
   },
   {
     "id": "props-record",
-    "label": "Aces and double faults \u00b7 tracked selections",
+    "label": "Aces and double faults · tracked selections",
     "group": "Tennis props",
     "file": "data/tennis-props/shadow/aces-dfs-shadow-signals.csv",
     "kind": "ledger"
   },
   {
     "id": "aces-v3",
-    "label": "Aces v3 \u00b7 tracked selections",
+    "label": "Aces v3 · tracked selections",
     "group": "Tennis props",
     "file": "data/tennis-props/shadow/aces-v3-shadow-signals.csv",
     "kind": "ledger"
   },
   {
     "id": "aces-v4",
-    "label": "Aces v4 \u00b7 observations and signal flags",
+    "label": "Aces v4 · observations and signal flags",
     "group": "Tennis props",
     "file": "data/tennis-props/shadow/aces-over-v4-observations.csv",
     "kind": "observations"
   },
   {
     "id": "most-aces",
-    "label": "Most aces \u00b7 price board",
+    "label": "Most aces · price board",
     "group": "Tennis props",
     "file": "data/tennis-props/shadow/most-aces-direct-1x2-board.csv",
     "kind": "board"
   },
   {
     "id": "most-aces-record",
-    "label": "Most aces \u00b7 observations",
+    "label": "Most aces · observations",
     "group": "Tennis props",
     "file": "data/tennis-props/shadow/most-aces-1x2-observations.csv",
     "kind": "observations"
   },
   {
     "id": "props-health",
-    "label": "Tennis props \u00b7 capture health",
+    "label": "Tennis props · capture health",
     "group": "Tennis props",
     "file": "data/tennis-props/pipeline-health.json",
     "kind": "report"
   },
   {
     "id": "full-refresh",
-    "label": "Full refresh \u00b7 report",
+    "label": "Full refresh · report",
     "group": "Tennis props",
     "file": "data/tennis-props/shadow/full-refresh-v1/report.json",
     "kind": "report"
   },
   {
     "id": "v4-report",
-    "label": "Aces v4 \u00b7 report",
+    "label": "Aces v4 · report",
     "group": "Tennis props",
     "file": "data/tennis-props/backtest/aces-over-v4-weekly-report.json",
     "kind": "report"
   },
   {
     "id": "team-shots-v4-shadow-signals.csv",
-    "label": "Team shots v4 \u00b7 registrations",
+    "label": "Team shots v4 · registrations",
     "group": "Football models",
     "file": "data/football-form/team-shots-v4-shadow-signals.csv",
     "kind": "ledger"
   },
   {
     "id": "team-shots-v4-shadow-clv.csv",
-    "label": "Team shots v4 \u00b7 results and CLV",
+    "label": "Team shots v4 · results and CLV",
     "group": "Football models",
     "file": "data/football-form/team-shots-v4-shadow-clv.csv",
     "kind": "ledger"
   },
   {
     "id": "corners-v3-shadow-signals.csv",
-    "label": "Corners v3 \u00b7 registrations",
+    "label": "Corners v3 · registrations",
     "group": "Football models",
     "file": "data/football-form/corners-v3-shadow-signals.csv",
     "kind": "ledger"
   },
   {
     "id": "corners-v3-shadow-clv.csv",
-    "label": "Corners v3 \u00b7 results and CLV",
+    "label": "Corners v3 · results and CLV",
     "group": "Football models",
     "file": "data/football-form/corners-v3-shadow-clv.csv",
     "kind": "ledger"
   },
   {
     "id": "football-candidates",
-    "label": "Shots and corners \u00b7 current candidates",
+    "label": "Shots and corners · current candidates",
     "group": "Football models",
     "file": "data/football-form/football-counts-vnext-candidates.csv",
     "kind": "candidates"
   },
   {
     "id": "football-health",
-    "label": "Shots and corners \u00b7 model health",
+    "label": "Shots and corners · model health",
     "group": "Football models",
     "file": "data/football-form/football-counts-vnext-gate.json",
     "kind": "report"
   },
   {
     "id": "shots-calibration",
-    "label": "Shots calibration \u00b7 paired evidence",
+    "label": "Shots calibration · paired evidence",
     "group": "Football models",
     "file": "data/football-form/team-shots-paired-reference-status.json",
     "kind": "report"
   },
   {
     "id": "gk-record",
-    "label": "Goalkeeper saves \u00b7 tracked selections",
+    "label": "Goalkeeper saves · tracked selections",
     "group": "Football models",
     "file": "data/goalkeeper-saves/gk-saves-v1-shadow-signals.csv",
     "kind": "ledger"
   },
   {
     "id": "gk-candidates",
-    "label": "Goalkeeper saves \u00b7 value ladder",
+    "label": "Goalkeeper saves · value ladder",
     "group": "Football models",
     "file": "data/goalkeeper-saves/gk-saves-v1-candidates.csv",
     "kind": "candidates"
   },
   {
     "id": "gk-provisional",
-    "label": "Goalkeeper saves \u00b7 provisional candidates",
+    "label": "Goalkeeper saves · provisional candidates",
     "group": "Football models",
     "file": "data/goalkeeper-saves/gk-saves-v1-provisional.csv",
     "kind": "candidates"
   },
   {
     "id": "gk-report",
-    "label": "Goalkeeper saves \u00b7 report",
+    "label": "Goalkeeper saves · report",
     "group": "Football models",
     "file": "data/goalkeeper-saves/gk-saves-v1-shadow-report.json",
     "kind": "report"
   },
   {
     "id": "gk-health",
-    "label": "Goalkeeper saves \u00b7 capture health",
+    "label": "Goalkeeper saves · capture health",
     "group": "Football models",
     "file": "data/goalkeeper-saves/gk-saves-capture-status.json",
     "kind": "report"
   },
   {
     "id": "goalscorer-board",
-    "label": "Goalscorer \u00b7 signals, lineups and health",
+    "label": "Goalscorer · signals, lineups and health",
     "group": "Football models",
     "file": "data/goalscorer/goalscorer-monitor-snapshot.json",
     "kind": "report"
   },
   {
     "id": "goalscorer-public",
-    "label": "Serie A \u00b7 public selections",
+    "label": "Serie A · public selections",
     "group": "Goalscorer",
     "file": "data/goalscorer/goalscorer-public-signals.csv",
     "kind": "ledger"
   },
   {
     "id": "goalscorer-shadow",
-    "label": "Serie A \u00b7 shadow selections",
+    "label": "Serie A · shadow selections",
     "group": "Goalscorer",
     "file": "data/goalscorer/goalscorer-shadow-signals.csv",
     "kind": "ledger"
   },
   {
     "id": "epl-public",
-    "label": "epl \u00b7 public selections",
+    "label": "epl · public selections",
     "group": "Goalscorer",
     "file": "data/goalscorer/epl-public-signals.csv",
     "kind": "ledger"
   },
   {
     "id": "epl-shadow",
-    "label": "epl \u00b7 shadow selections",
+    "label": "epl · shadow selections",
     "group": "Goalscorer",
     "file": "data/goalscorer/epl-shadow-signals.csv",
     "kind": "ledger"
   },
   {
     "id": "la-liga-public",
-    "label": "la-liga \u00b7 public selections",
+    "label": "la-liga · public selections",
     "group": "Goalscorer",
     "file": "data/goalscorer/la-liga-public-signals.csv",
     "kind": "ledger"
   },
   {
     "id": "la-liga-shadow",
-    "label": "la-liga \u00b7 shadow selections",
+    "label": "la-liga · shadow selections",
     "group": "Goalscorer",
     "file": "data/goalscorer/la-liga-shadow-signals.csv",
     "kind": "ledger"
   },
   {
     "id": "bundesliga-public",
-    "label": "bundesliga \u00b7 public selections",
+    "label": "bundesliga · public selections",
     "group": "Goalscorer",
     "file": "data/goalscorer/bundesliga-public-signals.csv",
     "kind": "ledger"
   },
   {
     "id": "bundesliga-shadow",
-    "label": "bundesliga \u00b7 shadow selections",
+    "label": "bundesliga · shadow selections",
     "group": "Goalscorer",
     "file": "data/goalscorer/bundesliga-shadow-signals.csv",
     "kind": "ledger"
   },
   {
     "id": "ligue-1-public",
-    "label": "ligue-1 \u00b7 public selections",
+    "label": "ligue-1 · public selections",
     "group": "Goalscorer",
     "file": "data/goalscorer/ligue-1-public-signals.csv",
     "kind": "ledger"
   },
   {
     "id": "ligue-1-shadow",
-    "label": "ligue-1 \u00b7 shadow selections",
+    "label": "ligue-1 · shadow selections",
     "group": "Goalscorer",
     "file": "data/goalscorer/ligue-1-shadow-signals.csv",
     "kind": "ledger"
@@ -362,5 +362,26 @@
     "group": "Tennis props",
     "file": "data/tennis-props/shadow/most-aces-current.json",
     "kind": "report"
+  },
+  {
+    "id": "tennis-indoor-report",
+    "label": "Indoor Scout Â· ROI and capture health",
+    "group": "Tennis match markets",
+    "file": "data/tennis-ml-research/indoor-scout-v1/report.json",
+    "kind": "report"
+  },
+  {
+    "id": "tennis-indoor-selections",
+    "label": "Indoor Scout Â· paper selections and results",
+    "group": "Tennis match markets",
+    "file": "data/tennis-ml-research/indoor-scout-v1/selections.csv",
+    "kind": "ledger"
+  },
+  {
+    "id": "tennis-indoor-forecasts",
+    "label": "Indoor Scout Â· all forecasts and rejections",
+    "group": "Tennis match markets",
+    "file": "data/tennis-ml-research/indoor-scout-v1/forecasts.csv",
+    "kind": "board"
   }
 ]

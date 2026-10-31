@@ -15,7 +15,7 @@ function date(value: string | null) {
 }
 const recordLinks: Record<string,string> = {
  strict:'model=tennis&view=tennis-strict-archive', volume_200:'model=tennis&view=tennis-volume200-archive',challenger:'model=tennis&view=tennis-challenger-ml-v2-archive',spread_v1:'model=handicaps&view=tennis-spreadv1-archive',
- props:'model=props',gk:'model=saves',team_shots_v4:'model=shots',corners_v3:'model=corners',astra:'model=astra',tennis_astrissimo:'model=astrissimo',tennis_hardcourt_scout:'model=scout','aces-v4':'model=aces4'
+ props:'model=props',gk:'model=saves',team_shots_v4:'model=shots',corners_v3:'model=corners',astra:'model=astra',tennis_astrissimo:'model=astrissimo',tennis_hardcourt_scout:'model=scout',tennis_indoor_paper:'model=indoor','aces-v4':'model=aces4'
 };
 function ModelCard({r, now}: {r: ModelRow; now: number}) {
   const age = snapshotAge(r.date, now);
@@ -31,7 +31,7 @@ export default async function AdminModels({ searchParams }: { searchParams: Prom
   if (!await isAdminSession()) redirect("/admin");
   const data = await readAdminModels();
   const params = await searchParams;
-  const researchIds=new Set(['astra','tennis_astrissimo','tennis_hardcourt_scout','aces-v4']);
+  const researchIds=new Set(['astra','tennis_astrissimo','tennis_hardcourt_scout','tennis_indoor_paper','aces-v4']);
   const current=data.rows.filter(r=>!researchIds.has(r.id)&&!r.id.startsWith('props-'));
   const groups=[...new Set(current.map(r=>r.group))];
   return <main className="min-h-screen bg-[#0f1117] px-4 py-8 text-slate-100 sm:px-6"><div className="mx-auto max-w-6xl">
