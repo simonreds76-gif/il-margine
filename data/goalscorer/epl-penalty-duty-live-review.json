@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-31T19:57:02.281798+00:00",
+  "generated_at": "2026-10-31T23:21:16.462809+00:00",
   "league": "epl",
-  "row_count": 3,
+  "row_count": 4,
   "rows": [
     {
       "date": "2026-10-31",
@@ -164,6 +164,79 @@
       ]
     },
     {
+      "date": "2026-10-31",
+      "league": "epl",
+      "review_source": "fotmob_live",
+      "match": "Aston Villa vs Fulham",
+      "team": "Aston Villa",
+      "opponent": "Fulham",
+      "actual_taker": "John McGinn",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 0,
+      "distinct_takers_in_match": 1,
+      "minute": "16",
+      "event_type": "Post",
+      "event_result": "missed",
+      "primary_pre_match": "Emiliano Buendía",
+      "secondary_pre_match": "Tammy Abraham",
+      "tertiary_pre_match": "Ross Barkley",
+      "primary_lineup_status": "confirmed_bench",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "confirmed_bench",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "John McGinn took 1 penalty attempt and missed for Aston Villa vs Fulham. Primary pre-match: Emiliano Buendía (confirmed_bench). Secondary pre-match: Tammy Abraham (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-10-31T19:57:51Z",
+      "context_source_path": "data/goalscorer/epl/penalty-duty-context.json",
+      "actual_taker_match_status": "Yes - started, off 87'",
+      "primary_on_pitch_at_penalty": "No - bench, on 66'",
+      "secondary_on_pitch_at_penalty": "No - absent from matchday squad",
+      "tertiary_on_pitch_at_penalty": "No - bench, on 79'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 87'",
+      "event_evidence": [
+        {
+          "id": "fotmob|epl|5795496|2991086329",
+          "source_event_id": "2991086329",
+          "match_id": "5795496",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5795496",
+          "observed_at": "2026-10-31T23:21:21+00:00",
+          "event_date": "2026-10-31",
+          "season": "2026/27",
+          "team": "Aston Villa",
+          "taker": "John McGinn",
+          "primary": "Emiliano Buendía",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Emiliano Buendía",
+            "minute": 16,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 610184,
+            "bucket": "subs",
+            "substitutions": [
+              {
+                "type": "subin",
+                "time": 66,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 16,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Aston Villa vs Fulham",
+          "event_result": "missed"
+        }
+      ]
+    },
+    {
       "date": "2026-10-25",
       "league": "epl",
       "review_source": "fotmob_live",
@@ -249,7 +322,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261031"
+      "20261024"
     ],
     "matches_checked": 1
   }

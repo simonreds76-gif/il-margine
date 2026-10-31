@@ -1,9 +1,82 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-31T19:57:02.281798+00:00",
+  "generated_at": "2026-10-31T23:21:16.462809+00:00",
   "league": "la-liga",
-  "row_count": 3,
+  "row_count": 4,
   "rows": [
+    {
+      "date": "2026-10-24",
+      "league": "la-liga",
+      "review_source": "fotmob_live",
+      "match": "Valencia vs Villarreal",
+      "team": "Valencia",
+      "opponent": "Villarreal",
+      "actual_taker": "Pepelu",
+      "actual_role_pre_match": "secondary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "38",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Hugo Duro",
+      "secondary_pre_match": "Pepelu",
+      "tertiary_pre_match": "Arnaut Danjuma",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "expected_backup_held",
+      "review_priority": "low",
+      "editorial_note": "Pepelu took 1 penalty attempt and scored for Valencia vs Villarreal. Primary pre-match: Hugo Duro (unknown). Secondary pre-match: Pepelu (unknown). Expected backup took the penalty with every higher-ranked taker confirmed off the pitch. No hierarchy change implied.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/la-liga-penalty-takers.json",
+      "actual_taker_match_status": "Yes - started",
+      "primary_on_pitch_at_penalty": "No - bench, on 77'",
+      "secondary_on_pitch_at_penalty": "Yes - started",
+      "tertiary_on_pitch_at_penalty": "Yes - started",
+      "actual_taker_on_pitch_at_penalty": "Yes - started",
+      "event_evidence": [
+        {
+          "id": "fotmob|la-liga|5868110|2987028547",
+          "source_event_id": "2987028547",
+          "match_id": "5868110",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868110",
+          "observed_at": "2026-10-31T23:21:22+00:00",
+          "event_date": "2026-10-24",
+          "season": "2026/27",
+          "team": "Valencia",
+          "taker": "Pepelu",
+          "primary": "Hugo Duro",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Hugo Duro",
+            "minute": 38,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 929838,
+            "bucket": "subs",
+            "substitutions": [
+              {
+                "type": "subin",
+                "time": 77,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 38,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Valencia vs Villarreal",
+          "event_result": "scored"
+        }
+      ]
+    },
     {
       "date": "2026-10-24",
       "league": "la-liga",
@@ -242,7 +315,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261031"
+      "20261025"
     ],
     "matches_checked": 1
   }
