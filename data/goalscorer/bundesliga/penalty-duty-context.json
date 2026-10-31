@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-31T15:44:50Z",
+  "generated_at": "2026-10-31T19:58:26Z",
   "league": "bundesliga",
-  "row_count": 20,
+  "row_count": 18,
   "rows": [
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-10-31",
       "home_team": "Augsburg",
       "away_team": "Freiburg",
@@ -34,15 +34,15 @@
         "Michael Gregoritsch"
       ],
       "bench_names": [
+        "Mert Kömür",
+        "Rodrigo Ribeiro",
+        "Alexis Claude-Maurice",
+        "Marius Wolf",
+        "Uchenna Ogundu",
         "Nediljko Labrović",
         "Young-Woo Seol",
-        "Alexis Claude-Maurice",
         "Loris Husic",
-        "Marius Wolf",
-        "Mert Kömür",
-        "Tim Schnitzer",
-        "Rodrigo Ribeiro",
-        "Uchenna Ogundu"
+        "Tim Schnitzer"
       ],
       "unavailable_names": [
         "Sima Suso",
@@ -70,7 +70,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-10-31",
       "home_team": "Augsburg",
       "away_team": "Freiburg",
@@ -99,14 +99,14 @@
       ],
       "bench_names": [
         "Igor Matanović",
+        "Keisuke Goto",
+        "Vincenzo Grifo",
+        "Max Rosenfelder",
+        "Cyriaque Irié",
         "Jannik Huth",
         "Anthony Jung",
         "Christian Günter",
-        "Max Rosenfelder",
-        "Patrick Osterhage",
-        "Cyriaque Irié",
-        "Keisuke Goto",
-        "Vincenzo Grifo"
+        "Patrick Osterhage"
       ],
       "unavailable_names": [
         "Philipp Treu",
@@ -129,7 +129,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-10-31",
       "home_team": "Bayer Leverkusen",
       "away_team": "VfB Stuttgart",
@@ -157,15 +157,15 @@
         "Patrik Schick"
       ],
       "bench_names": [
-        "Janis Blaswich",
-        "Robert Andrich",
-        "Tim Oermann",
         "Jonas Hofmann",
-        "Kenan Doganay",
+        "Robert Andrich",
         "Malik Tillman",
+        "Victor Okoh Boniface",
+        "Janis Blaswich",
+        "Tim Oermann",
+        "Kenan Doganay",
         "Montrell Culbreath",
-        "Dustin Buck",
-        "Victor Okoh Boniface"
+        "Dustin Buck"
       ],
       "unavailable_names": [
         "Kennet Eichhorn",
@@ -193,7 +193,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-10-31",
       "home_team": "Bayer Leverkusen",
       "away_team": "VfB Stuttgart",
@@ -221,14 +221,14 @@
         "Ermedin Demirović"
       ],
       "bench_names": [
-        "Fabian Bredlow",
-        "Ameen Al Dakhil",
         "Finn Jeltsch",
-        "Lorenz Assignon",
         "Maximilian Mittelstädt",
         "Nikolas Nartey",
-        "Yanik Spalt",
+        "Ameen Al Dakhil",
         "Dženan Pejčinović",
+        "Fabian Bredlow",
+        "Lorenz Assignon",
+        "Yanik Spalt",
         "Tiago Tomás"
       ],
       "unavailable_names": [
@@ -255,109 +255,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
-      "match_date": "2026-10-31",
-      "home_team": "Bayern Munich",
-      "away_team": "Borussia Dortmund",
-      "team": "Bayern Munich",
-      "team_key": "bayern munich",
-      "opponent": "Borussia Dortmund",
-      "opponent_key": "borussia dortmund",
-      "is_home": 1,
-      "lineup_input": "expected_xi",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": [],
-      "team_lineup_status": "unknown",
-      "starter_names": [
-        "Jonas Urbig",
-        "Konrad Laimer",
-        "Dayot Upamecano",
-        "Jonathan Tah",
-        "Josip Stanišić",
-        "Joshua Kimmich",
-        "Aleksandar Pavlović",
-        "Michael Olise",
-        "Ismael Saibari",
-        "Alphonso Davies",
-        "Harry Kane"
-      ],
-      "bench_names": [],
-      "unavailable_names": [
-        "Manuel Neuer",
-        "Bara Ndiaye",
-        "Jamal Musiala",
-        "Luis Díaz"
-      ],
-      "primary": "Harry Kane",
-      "secondary": "Arijon Ibrahimović",
-      "tertiary": "Jamal Musiala",
-      "primary_lineup_status": "expected_starter",
-      "primary_match_name": "Harry Kane",
-      "secondary_lineup_status": "unknown",
-      "secondary_match_name": "",
-      "tertiary_lineup_status": "expected_out",
-      "tertiary_match_name": "Jamal Musiala",
-      "active_taker_pre_match": "Harry Kane",
-      "active_slot_pre_match": "primary",
-      "penalty_transfer_pre_match": 0,
-      "inherited_from_pre_match": "",
-      "transfer_level_pre_match": ""
-    },
-    {
-      "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
-      "match_date": "2026-10-31",
-      "home_team": "Bayern Munich",
-      "away_team": "Borussia Dortmund",
-      "team": "Borussia Dortmund",
-      "team_key": "borussia dortmund",
-      "opponent": "Bayern Munich",
-      "opponent_key": "bayern munich",
-      "is_home": 0,
-      "lineup_input": "expected_xi",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": [],
-      "team_lineup_status": "unknown",
-      "starter_names": [
-        "Gregor Kobel",
-        "Joane Gadou",
-        "Waldemar Anton",
-        "Nico Schlotterbeck",
-        "Julian Ryerson",
-        "Joey Veerman",
-        "Felix Nmecha",
-        "Daniel Svensson",
-        "Jobe Bellingham",
-        "Carney Chukwuemeka",
-        "Serhou Guirassy"
-      ],
-      "bench_names": [],
-      "unavailable_names": [
-        "Kauã Prates",
-        "Emre Can",
-        "Giannis Konstantelias",
-        "Justin Lerma"
-      ],
-      "primary": "Ramy Bensebaini",
-      "secondary": "Serhou Guirassy",
-      "tertiary": "Félix Nmecha",
-      "primary_lineup_status": "unknown",
-      "primary_match_name": "",
-      "secondary_lineup_status": "expected_starter",
-      "secondary_match_name": "Serhou Guirassy",
-      "tertiary_lineup_status": "expected_starter",
-      "tertiary_match_name": "Felix Nmecha",
-      "active_taker_pre_match": "Serhou Guirassy",
-      "active_slot_pre_match": "secondary",
-      "penalty_transfer_pre_match": 1,
-      "inherited_from_pre_match": "Ramy Bensebaini",
-      "transfer_level_pre_match": "secondary"
-    },
-    {
-      "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-10-31",
       "home_team": "Bayern München",
       "away_team": "Borussia Dortmund",
@@ -366,8 +264,8 @@
       "opponent": "Borussia Dortmund",
       "opponent_key": "borussia dortmund",
       "is_home": 1,
-      "lineup_input": "expected_xi",
-      "trust_tier": "T2",
+      "lineup_input": "confirmed_xi",
+      "trust_tier": "T1",
       "fixture_corruption_score": 0.0,
       "fixture_corruption_flags": [],
       "team_lineup_status": "unknown",
@@ -375,16 +273,26 @@
         "Jonas Urbig",
         "Konrad Laimer",
         "Dayot Upamecano",
-        "Jonathan Tah",
-        "Josip Stanišić",
+        "Min-Jae Kim",
+        "Alphonso Davies",
         "Joshua Kimmich",
         "Aleksandar Pavlović",
         "Michael Olise",
         "Ismael Saibari",
-        "Alphonso Davies",
+        "Serge Gnabry",
         "Harry Kane"
       ],
-      "bench_names": [],
+      "bench_names": [
+        "Nathaniel Brown",
+        "Josip Stanišić",
+        "Lennart Karl",
+        "Sven Ulreich",
+        "Hiroki Ito",
+        "Jonathan Tah",
+        "Sacha Boey",
+        "Tom Bischof",
+        "Tim Binder"
+      ],
       "unavailable_names": [
         "Manuel Neuer",
         "Bara Ndiaye",
@@ -394,11 +302,11 @@
       "primary": "Harry Kane",
       "secondary": "Arijon Ibrahimović",
       "tertiary": "Jamal Musiala",
-      "primary_lineup_status": "expected_starter",
+      "primary_lineup_status": "confirmed_starter",
       "primary_match_name": "Harry Kane",
       "secondary_lineup_status": "unknown",
       "secondary_match_name": "",
-      "tertiary_lineup_status": "expected_out",
+      "tertiary_lineup_status": "not_in_squad",
       "tertiary_match_name": "Jamal Musiala",
       "active_taker_pre_match": "Harry Kane",
       "active_slot_pre_match": "primary",
@@ -408,7 +316,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-10-31",
       "home_team": "Bayern München",
       "away_team": "Borussia Dortmund",
@@ -417,8 +325,8 @@
       "opponent": "Bayern München",
       "opponent_key": "bayern munich",
       "is_home": 0,
-      "lineup_input": "expected_xi",
-      "trust_tier": "T2",
+      "lineup_input": "confirmed_xi",
+      "trust_tier": "T1",
       "fixture_corruption_score": 0.0,
       "fixture_corruption_flags": [],
       "team_lineup_status": "unknown",
@@ -427,7 +335,7 @@
         "Joane Gadou",
         "Waldemar Anton",
         "Nico Schlotterbeck",
-        "Julian Ryerson",
+        "Maximilian Beier",
         "Joey Veerman",
         "Felix Nmecha",
         "Daniel Svensson",
@@ -435,7 +343,17 @@
         "Carney Chukwuemeka",
         "Serhou Guirassy"
       ],
-      "bench_names": [],
+      "bench_names": [
+        "Marcel Sabitzer",
+        "Konstantinos Karetsas",
+        "Fábio Silva",
+        "Julian Ryerson",
+        "Samuele Inácio",
+        "Alexander Meyer",
+        "Filippo Mane",
+        "Ramy Bensebaini",
+        "Ethan Nwaneri"
+      ],
       "unavailable_names": [
         "Kauã Prates",
         "Emre Can",
@@ -445,11 +363,11 @@
       "primary": "Ramy Bensebaini",
       "secondary": "Serhou Guirassy",
       "tertiary": "Félix Nmecha",
-      "primary_lineup_status": "unknown",
-      "primary_match_name": "",
-      "secondary_lineup_status": "expected_starter",
+      "primary_lineup_status": "confirmed_bench",
+      "primary_match_name": "Ramy Bensebaini",
+      "secondary_lineup_status": "confirmed_starter",
       "secondary_match_name": "Serhou Guirassy",
-      "tertiary_lineup_status": "expected_starter",
+      "tertiary_lineup_status": "confirmed_starter",
       "tertiary_match_name": "Felix Nmecha",
       "active_taker_pre_match": "Serhou Guirassy",
       "active_slot_pre_match": "secondary",
@@ -459,7 +377,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-10-31",
       "home_team": "Borussia Mönchengladbach",
       "away_team": "Paderborn",
@@ -487,15 +405,15 @@
         "Shuto Machino"
       ],
       "bench_names": [
+        "Isac Lidberg",
+        "Ko Itakura",
+        "Jens Castrop",
+        "Nicolas-Gerrit Kühn",
         "Jan Olschowsky",
         "David Herold",
-        "Ko Itakura",
         "Yukhym Konoplya",
-        "Jens Castrop",
         "Kevin Stöger",
-        "Mathieu Nguefack",
-        "Isac Lidberg",
-        "Nicolas-Gerrit Kühn"
+        "Mathieu Nguefack"
       ],
       "unavailable_names": [
         "Kevin Diks",
@@ -523,7 +441,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-10-31",
       "home_team": "Borussia Mönchengladbach",
       "away_team": "Paderborn",
@@ -552,14 +470,14 @@
       ],
       "bench_names": [
         "Steffen Tigges",
-        "Markus Schubert",
         "Felix Götze",
+        "Laurin Ulrich",
+        "Rayan Philippe",
+        "Markus Schubert",
         "Clemens Lippmann",
         "Jonah Sticker",
-        "Laurin Ulrich",
         "Ruben Müller",
-        "Deniz Zeitler",
-        "Rayan Philippe"
+        "Deniz Zeitler"
       ],
       "unavailable_names": [
         "Marcel Hoffmeier",
@@ -585,7 +503,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-10-31",
       "home_team": "Schalke 04",
       "away_team": "RB Leipzig",
@@ -613,14 +531,14 @@
         "Hee-Chan Hwang"
       ],
       "bench_names": [
+        "Dejan Ljubičić",
+        "Edin Džeko",
+        "Junior Dina Ebimbe",
+        "Bryan Lasme",
         "Johannes Siebeking",
         "Kevin Müller",
-        "Dejan Ljubičić",
         "Edion Gashi",
-        "Junior Dina Ebimbe",
         "Finn Porath",
-        "Bryan Lasme",
-        "Edin Džeko",
         "Jean-Paul Ndiaye"
       ],
       "unavailable_names": [
@@ -650,7 +568,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-10-31",
       "home_team": "Schalke 04",
       "away_team": "RB Leipzig",
@@ -678,15 +596,15 @@
         "Rômulo"
       ],
       "bench_names": [
+        "Christoph Baumgartner",
+        "Ridle Baku",
+        "Tidiam Gomis",
+        "Johan Bakayoko",
+        "Nicolas Seiwald",
         "Ørjan Håskjold Nyland",
         "Abdoul Koné",
         "Max Finkgräfe",
-        "Ridle Baku",
-        "Christoph Baumgartner",
-        "Nicolas Seiwald",
-        "Christopher Nkunku",
-        "Johan Bakayoko",
-        "Tidiam Gomis"
+        "Christopher Nkunku"
       ],
       "unavailable_names": [
         "Maxime Estève",
@@ -710,7 +628,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-10-31",
       "home_team": "Werder Bremen",
       "away_team": "Hoffenheim",
@@ -739,11 +657,11 @@
       ],
       "bench_names": [
         "Eren Dinkçi",
-        "Alexander Schlager",
         "Mick Schmetgens",
+        "Senne Lynen",
         "Oskar Wójcik",
         "Dariusz Stalmach",
-        "Senne Lynen",
+        "Alexander Schlager",
         "Cedric Itten",
         "Justin Njinmah",
         "Kenny Quetant"
@@ -774,7 +692,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-10-31",
       "home_team": "Werder Bremen",
       "away_team": "Hoffenheim",
@@ -802,15 +720,15 @@
         "Fisnik Asllani"
       ],
       "bench_names": [
+        "Tim Lemperle",
+        "Cajetan Lenz",
+        "Jykese Fields",
+        "Yasin Zor",
+        "Valentin Lässig",
         "Luca Philipp",
         "Bernardo",
-        "Valentin Lässig",
-        "Cajetan Lenz",
         "Klaus Gjasula",
-        "Jykese Fields",
-        "Oskar Hencke",
-        "Tim Lemperle",
-        "Yasin Zor"
+        "Oskar Hencke"
       ],
       "unavailable_names": [
         "Bambasé Conté",
@@ -838,7 +756,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-11-01",
       "home_team": "Eintracht Frankfurt",
       "away_team": "Hamburger SV",
@@ -886,7 +804,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-11-01",
       "home_team": "Eintracht Frankfurt",
       "away_team": "Hamburger SV",
@@ -939,7 +857,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-11-01",
       "home_team": "Union Berlin",
       "away_team": "1. FC Cologne",
@@ -991,7 +909,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-11-01",
       "home_team": "Union Berlin",
       "away_team": "1. FC Cologne",
@@ -1044,7 +962,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-11-01",
       "home_team": "Union Berlin",
       "away_team": "1. FC Köln",
@@ -1096,7 +1014,7 @@
     },
     {
       "league": "bundesliga",
-      "compared_at": "2026-10-31T15:44:50Z",
+      "compared_at": "2026-10-31T19:58:26Z",
       "match_date": "2026-11-01",
       "home_team": "Union Berlin",
       "away_team": "1. FC Köln",
