@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-30T15:06:47Z",
+  "fetched_at": "2026-10-31T14:36:05Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
@@ -1212,7 +1212,7 @@
       "football_data_latest": "2026-10-25",
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "lag_days": 5,
+      "lag_days": 6,
       "source": "football-data",
       "source_latest": "2026-10-25",
       "target_dates": [
@@ -1222,8 +1222,8 @@
         "2026-11-01",
         "2026-11-02"
       ],
-      "target_fixture_count": 5,
-      "unresolved_fixture_count": 5
+      "target_fixture_count": 7,
+      "unresolved_fixture_count": 7
     },
     "epl": {
       "api_football_count": 0,
@@ -2753,13 +2753,26 @@
           "referee": "S Attwell",
           "source": "football-data",
           "total_corners": 9
+        },
+        "2026-10-31|chelsea|man united": {
+          "away_corners": 7,
+          "away_shots": 12,
+          "away_sot": 5,
+          "away_team": "man united",
+          "home_corners": 8,
+          "home_shots": 18,
+          "home_sot": 9,
+          "home_team": "chelsea",
+          "match_id": 5795498,
+          "source": "fotmob",
+          "total_corners": 15
         }
       },
       "football_data_count": 80,
       "football_data_latest": "2026-10-25",
-      "fotmob_count": 0,
-      "fotmob_latest": null,
-      "lag_days": 5,
+      "fotmob_count": 1,
+      "fotmob_latest": "2026-10-31",
+      "lag_days": 6,
       "source": "football-data",
       "source_latest": "2026-10-25",
       "target_dates": [
@@ -2770,7 +2783,7 @@
         "2026-11-03"
       ],
       "target_fixture_count": 6,
-      "unresolved_fixture_count": 6
+      "unresolved_fixture_count": 5
     },
     "la-liga": {
       "api_football_count": 0,
@@ -4661,13 +4674,26 @@
           "referee": null,
           "source": "football-data",
           "total_corners": 11
+        },
+        "2026-10-30|villarreal|espanol": {
+          "away_corners": 3,
+          "away_shots": 5,
+          "away_sot": 3,
+          "away_team": "espanol",
+          "home_corners": 7,
+          "home_shots": 14,
+          "home_sot": 4,
+          "home_team": "villarreal",
+          "match_id": 5868120,
+          "source": "fotmob",
+          "total_corners": 10
         }
       },
       "football_data_count": 99,
       "football_data_latest": "2026-10-26",
-      "fotmob_count": 0,
-      "fotmob_latest": null,
-      "lag_days": 4,
+      "fotmob_count": 1,
+      "fotmob_latest": "2026-10-30",
+      "lag_days": 5,
       "source": "football-data",
       "source_latest": "2026-10-26",
       "target_dates": [
@@ -4675,10 +4701,11 @@
         "2026-10-30",
         "2026-10-31",
         "2026-11-01",
-        "2026-11-02"
+        "2026-11-02",
+        "2026-11-03"
       ],
-      "target_fixture_count": 8,
-      "unresolved_fixture_count": 8
+      "target_fixture_count": 10,
+      "unresolved_fixture_count": 9
     },
     "ligue-1": {
       "api_football_count": 0,
@@ -6056,13 +6083,52 @@
           "referee": null,
           "source": "football-data",
           "total_corners": 11
+        },
+        "2026-10-30|le havre|paris saint germain": {
+          "away_corners": 3,
+          "away_shots": 15,
+          "away_sot": 10,
+          "away_team": "paris saint germain",
+          "home_corners": 5,
+          "home_shots": 14,
+          "home_sot": 5,
+          "home_team": "le havre",
+          "match_id": 5802973,
+          "source": "fotmob",
+          "total_corners": 8
+        },
+        "2026-10-30|lille|lens": {
+          "away_corners": 2,
+          "away_shots": 5,
+          "away_sot": 3,
+          "away_team": "lens",
+          "home_corners": 10,
+          "home_shots": 16,
+          "home_sot": 7,
+          "home_team": "lille",
+          "match_id": 5802974,
+          "source": "fotmob",
+          "total_corners": 12
+        },
+        "2026-10-30|nice|rennes": {
+          "away_corners": 7,
+          "away_shots": 18,
+          "away_sot": 9,
+          "away_team": "rennes",
+          "home_corners": 4,
+          "home_shots": 17,
+          "home_sot": 8,
+          "home_team": "nice",
+          "match_id": 5802978,
+          "source": "fotmob",
+          "total_corners": 11
         }
       },
       "football_data_count": 72,
       "football_data_latest": "2026-10-26",
-      "fotmob_count": 0,
-      "fotmob_latest": null,
-      "lag_days": 4,
+      "fotmob_count": 3,
+      "fotmob_latest": "2026-10-30",
+      "lag_days": 5,
       "source": "football-data",
       "source_latest": "2026-10-26",
       "target_dates": [
@@ -6072,8 +6138,8 @@
         "2026-11-01",
         "2026-11-02"
       ],
-      "target_fixture_count": 6,
-      "unresolved_fixture_count": 6
+      "target_fixture_count": 8,
+      "unresolved_fixture_count": 5
     },
     "serie-a": {
       "api_football_count": 0,
@@ -7797,22 +7863,21 @@
       },
       "football_data_count": 90,
       "football_data_latest": "2026-10-29",
-      "fotmob_count": 2,
-      "fotmob_latest": "2026-10-29",
-      "lag_days": 1,
+      "fotmob_count": 0,
+      "fotmob_latest": null,
+      "lag_days": 2,
       "source": "football-data",
       "source_latest": "2026-10-29",
       "target_dates": [
-        "2026-10-28",
-        "2026-10-29",
         "2026-10-30",
         "2026-10-31",
         "2026-11-01",
-        "2026-11-02"
+        "2026-11-02",
+        "2026-11-03"
       ],
-      "target_fixture_count": 8,
-      "unresolved_fixture_count": 6
+      "target_fixture_count": 7,
+      "unresolved_fixture_count": 7
     }
   },
-  "snapshot_date": "2026-10-30"
+  "snapshot_date": "2026-10-31"
 }

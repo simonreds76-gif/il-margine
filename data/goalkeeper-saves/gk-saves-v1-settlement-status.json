@@ -1,34 +1,33 @@
 {
   "api_errors": [],
-  "deferred_not_due": 7,
+  "deferred_not_due": 6,
   "details": [
     {
       "detail": "",
-      "goalkeeper": "Wladimiro Falcone",
-      "match": "Frosinone Calcio vs US Lecce",
-      "match_date": "2026-10-29",
-      "reason": "settled_fotmob",
-      "signal_id": "71945348|wladimiro falcone|4.5|over"
+      "goalkeeper": "\u00c1ngel Fortuno",
+      "match": "Villarreal CF vs Espanyol Barcelona",
+      "match_date": "2026-10-30",
+      "reason": "fotmob_save_totals_disagree",
+      "signal_id": "72478684|\u00e1ngel fortuno|3.5|over"
     }
   ],
   "fotmob_requests_used": 2,
-  "generated_at": "2026-10-30T15:07:42Z",
+  "generated_at": "2026-10-31T14:36:44Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
-  "pending_due": 0,
+  "pending_due": 1,
   "pending_total": 7,
   "reason_counts": {
-    "settled_fotmob": 1
+    "fotmob_save_totals_disagree": 1
   },
   "requests_used": 0,
-  "settled": 1,
-  "status": "SETTLED",
+  "settled": 0,
+  "status": "BLOCKED",
   "verified_player_targets": [
     {
-      "appearances": 32,
-      "match_id": 5749723,
-      "status": "saved",
-      "targets_sha256": "cfe4b81008e648e3f2a0b950b04a813b74a172561f1dbb2d8f4bb82f8c8fc896"
+      "match_id": 5868120,
+      "reason": "explicit player totals disagree with reconciled events",
+      "status": "rejected"
     }
   ]
 }
