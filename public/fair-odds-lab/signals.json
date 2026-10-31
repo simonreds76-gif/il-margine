@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-10-31T01:47:10.588169Z",
+  "generated_at": "2026-10-31T13:25:59.717584Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -34,18 +35,127 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 43,
-  "signals_qualifying": 0,
+  "fixtures_evaluated": 41,
+  "signals_qualifying": 1,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 108
+    "incomplete_prediction_roster": 89,
+    "model_probability_below_floor": 2,
+    "lineup_not_public_quality": 1,
+    "model_market_gap_gt_10pp": 3,
+    "market_odds_above_cap": 1
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 0,
-    "added_by_league": {},
+    "eligible_rows": 3,
+    "added_by_league": {
+      "bundesliga": 3
+    },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [],
-  "featured_signal_id": null,
-  "signals": []
+  "leagues_covered": [
+    "serie-a"
+  ],
+  "featured_signal_id": "20261031-tommaso-pobega-04faf8a055",
+  "signals": [
+    {
+      "id": "20261031-tommaso-pobega-04faf8a055",
+      "match": {
+        "home_team": "Bologna FC",
+        "away_team": "AC Monza",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-10-31T14:00:00Z",
+        "kickoff_display": "Sat 31 Oct 14:00 UK",
+        "fotmob_match_id": "5749732",
+        "fotmob_page_url": "/matches/monza-vs-bologna/27p2f2#5749732",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Tommaso Pobega",
+        "team": "Bologna",
+        "position": "MID",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/bologna.png",
+        "team_primary_color": "#1e3a8a",
+        "team_secondary_color": "#b91c1c",
+        "team_shirt_pattern": "halves"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 27.0,
+        "fair_odds": 3.7
+      },
+      "market_data": {
+        "best_odds": 5.5,
+        "best_book": "Grosvenor",
+        "implied_chance_pct": 18.2
+      },
+      "edge": {
+        "price_gap_pp": 8.8,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 85
+        },
+        "share_of_team_chances_pct": 18,
+        "share_of_team_chances_percentile": 87,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 73
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-10-28",
+          "xg_for_avg": 1.65,
+          "xg_against_avg": 1.59,
+          "xgd_per90": 0.06,
+          "shots_for_avg": 10.0,
+          "shots_against_avg": 12.4,
+          "sot_for_avg": 4.0,
+          "sot_against_avg": 4.0,
+          "corners_for_avg": 3.0,
+          "corners_against_avg": 5.0
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 75
+        },
+        "opponent_recent_defence": {
+          "tier": "High",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-10-28",
+          "xg_for_avg": 1.23,
+          "xg_against_avg": 2.23,
+          "xgd_per90": -1.0,
+          "shots_for_avg": 12.4,
+          "shots_against_avg": 17.2,
+          "sot_for_avg": 5.2,
+          "sot_against_avg": 6.8,
+          "corners_for_avg": 4.2,
+          "corners_against_avg": 4.8
+        },
+        "fixture_boost_pct": 31,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    }
+  ]
 }

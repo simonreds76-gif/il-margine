@@ -406,7 +406,7 @@
         "Jack Grealish"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-10-31T01:35:18.928281+00:00",
+      "observed_at": "2026-10-31T13:24:14.248266+00:00",
       "changed_at": "2026-10-30T01:56:47.226187+00:00"
     },
     {
@@ -711,7 +711,7 @@
         "Joe Rodon",
         "Mateo Joseph"
       ],
-      "observed_at": "2026-10-31T01:35:18.928281+00:00",
+      "observed_at": "2026-10-31T13:24:14.248266+00:00",
       "changed_at": "2026-10-30T16:41:53.221125+00:00"
     },
     {
@@ -1012,7 +1012,7 @@
       "away_unavailable": [
         "Ryan Sessegnon"
       ],
-      "observed_at": "2026-10-31T01:35:18.928281+00:00",
+      "observed_at": "2026-10-31T13:24:14.248266+00:00",
       "changed_at": "2026-10-30T16:41:53.221125+00:00"
     },
     {
@@ -1318,7 +1318,7 @@
         "Nicolò Savona",
         "Igor Jesus"
       ],
-      "observed_at": "2026-10-31T01:35:18.928281+00:00",
+      "observed_at": "2026-10-31T13:24:14.248266+00:00",
       "changed_at": "2026-10-30T16:41:53.221125+00:00"
     },
     {
@@ -1330,23 +1330,23 @@
       "kickoff_utc": "2026-10-31T12:30:00Z",
       "home_team": "Chelsea",
       "away_team": "Manchester United",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "3-4-2-1",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Mike Penders",
         "Josh Acheampong",
-        "Levi Colwill",
         "Wesley Fofana",
-        "Pedro Neto",
-        "Moisés Caicedo",
-        "Jordan Henderson",
+        "Levi Colwill",
         "Marco Palestra",
+        "Roméo Lavia",
+        "Moisés Caicedo",
+        "Estêvão",
         "Cole Palmer",
         "Morgan Rogers",
-        "Danny Welbeck"
+        "Pedro Neto"
       ],
       "away_players": [
         "Senne Lammens",
@@ -1354,8 +1354,8 @@
         "Harry Maguire",
         "Lisandro Martínez",
         "Diogo Dalot",
-        "Kobbie Mainoo",
         "Carlos Baleba",
+        "Andrey Santos",
         "Amad Diallo",
         "Bruno Fernandes",
         "Matheus Cunha",
@@ -1368,7 +1368,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-2-1",
+          "formation": "4-2-3-1",
           "position_id": 11,
           "player_id": 1319972,
           "shirt_number": "39"
@@ -1376,112 +1376,112 @@
         {
           "name": "Josh Acheampong",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 33,
+          "formation": "4-2-3-1",
+          "position_id": 32,
           "player_id": 1400216,
           "shirt_number": "34"
         },
         {
-          "name": "Levi Colwill",
-          "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 35,
-          "player_id": 1096400,
-          "shirt_number": "6"
-        },
-        {
           "name": "Wesley Fofana",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 37,
+          "formation": "4-2-3-1",
+          "position_id": 34,
           "player_id": 917802,
           "shirt_number": "3"
         },
         {
-          "name": "Pedro Neto",
-          "line_index": 1,
+          "name": "Levi Colwill",
+          "line_index": 0,
           "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 62,
-          "player_id": 843040,
-          "shirt_number": "7"
-        },
-        {
-          "name": "Moisés Caicedo",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 64,
-          "player_id": 1137668,
-          "shirt_number": "25"
-        },
-        {
-          "name": "Jordan Henderson",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 66,
-          "player_id": 156008,
-          "shirt_number": "14"
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 1096400,
+          "shirt_number": "6"
         },
         {
           "name": "Marco Palestra",
-          "line_index": 1,
+          "line_index": 0,
           "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 68,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
           "player_id": 1473806,
           "shirt_number": "2"
         },
         {
-          "name": "Cole Palmer",
-          "line_index": 2,
+          "name": "Roméo Lavia",
+          "line_index": 1,
           "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 1190867,
+          "shirt_number": "45"
+        },
+        {
+          "name": "Moisés Caicedo",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1137668,
+          "shirt_number": "25"
+        },
+        {
+          "name": "Estêvão",
+          "line_index": 2,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84,
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 1580774,
+          "shirt_number": "41"
+        },
+        {
+          "name": "Cole Palmer",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
           "player_id": 1096353,
           "shirt_number": "10"
         },
         {
           "name": "Morgan Rogers",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 86,
+          "formation": "4-2-3-1",
+          "position_id": 87,
           "player_id": 883080,
           "shirt_number": "17"
         },
         {
-          "name": "Danny Welbeck",
+          "name": "Pedro Neto",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-2-1",
-          "position_id": 105,
-          "player_id": 113836,
-          "shirt_number": "18"
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 843040,
+          "shirt_number": "7"
         }
       ],
       "away_starters": [
@@ -1541,26 +1541,26 @@
           "shirt_number": "2"
         },
         {
-          "name": "Kobbie Mainoo",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64,
-          "player_id": 1292810,
-          "shirt_number": "37"
-        },
-        {
           "name": "Carlos Baleba",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
-          "position_id": 66,
+          "position_id": 64,
           "player_id": 1352713,
           "shirt_number": "20"
+        },
+        {
+          "name": "Andrey Santos",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1372921,
+          "shirt_number": "17"
         },
         {
           "name": "Amad Diallo",
@@ -1607,10 +1607,122 @@
           "shirt_number": "19"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Teddy Sharman-Lowe",
+        "Malo Gusto",
+        "Olutayo Subuloye",
+        "Pep Chavarría",
+        "Mahdi Nicoll-Jazuli",
+        "Valentín Barco",
+        "Danny Welbeck",
+        "Emanuel Emegha",
+        "Geovany Quenda"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Teddy Sharman-Lowe",
+          "player_id": "1117871",
+          "role_group": "GK"
+        },
+        {
+          "name": "Malo Gusto",
+          "player_id": "1197250",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Olutayo Subuloye",
+          "player_id": "1682325",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Pep Chavarría",
+          "player_id": "988805",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Mahdi Nicoll-Jazuli",
+          "player_id": "1720243",
+          "role_group": "MID"
+        },
+        {
+          "name": "Valentín Barco",
+          "player_id": "1272440",
+          "role_group": "MID"
+        },
+        {
+          "name": "Danny Welbeck",
+          "player_id": "113836",
+          "role_group": "FW"
+        },
+        {
+          "name": "Emanuel Emegha",
+          "player_id": "1183148",
+          "role_group": "FW"
+        },
+        {
+          "name": "Geovany Quenda",
+          "player_id": "1530314",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Karl Darlow",
+        "Ayden Heaven",
+        "Matthijs de Ligt",
+        "Noussair Mazraoui",
+        "Kobbie Mainoo",
+        "Mason Mount",
+        "Youri Tielemans",
+        "Joshua Zirkzee",
+        "Shea Lacey"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Karl Darlow",
+          "player_id": "163604",
+          "role_group": "GK"
+        },
+        {
+          "name": "Ayden Heaven",
+          "player_id": "1559639",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Matthijs de Ligt",
+          "player_id": "769895",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Noussair Mazraoui",
+          "player_id": "775539",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Kobbie Mainoo",
+          "player_id": "1292810",
+          "role_group": "MID"
+        },
+        {
+          "name": "Mason Mount",
+          "player_id": "750032",
+          "role_group": "MID"
+        },
+        {
+          "name": "Youri Tielemans",
+          "player_id": "465960",
+          "role_group": "MID"
+        },
+        {
+          "name": "Joshua Zirkzee",
+          "player_id": "950830",
+          "role_group": "FW"
+        },
+        {
+          "name": "Shea Lacey",
+          "player_id": "1436260",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
         "Aaron Anselmino",
         "Emiliano Martínez",
@@ -1627,8 +1739,8 @@
         "Marcus Rashford",
         "Patrick Dorgu"
       ],
-      "observed_at": "2026-10-31T01:35:18.928281+00:00",
-      "changed_at": "2026-10-30T21:29:18.028917+00:00"
+      "observed_at": "2026-10-31T13:24:14.248266+00:00",
+      "changed_at": "2026-10-31T13:24:14.248266+00:00"
     },
     {
       "fotmob_match_id": 5795499,
@@ -1932,7 +2044,7 @@
         "Daniel Ballard",
         "Romaine Mundle"
       ],
-      "observed_at": "2026-10-31T01:35:18.928281+00:00",
+      "observed_at": "2026-10-31T13:24:14.248266+00:00",
       "changed_at": "2026-10-30T16:41:53.221125+00:00"
     },
     {
@@ -2239,7 +2351,7 @@
         "Saša Lukić",
         "Jack Taylor"
       ],
-      "observed_at": "2026-10-31T01:35:18.928281+00:00",
+      "observed_at": "2026-10-31T13:24:14.248266+00:00",
       "changed_at": "2026-10-30T16:41:53.221125+00:00"
     },
     {
@@ -2543,7 +2655,7 @@
         "Kaoru Mitoma",
         "Zadok Yohanna"
       ],
-      "observed_at": "2026-10-31T01:35:18.928281+00:00",
+      "observed_at": "2026-10-31T13:24:14.248266+00:00",
       "changed_at": "2026-10-30T16:41:53.221125+00:00"
     },
     {
@@ -2850,7 +2962,7 @@
         "Takehiro Tomiyasu",
         "Ismaïla Sarr"
       ],
-      "observed_at": "2026-10-31T01:35:18.928281+00:00",
+      "observed_at": "2026-10-31T13:24:14.248266+00:00",
       "changed_at": "2026-10-30T16:41:53.221125+00:00"
     },
     {
@@ -2885,13 +2997,13 @@
         "Ben White",
         "Ezri Konsa",
         "Gabriel",
-        "Myles Lewis-Skelly",
-        "Martín Zubimendi",
-        "Mikel Merino",
-        "Kai Havertz",
+        "Riccardo Calafiori",
+        "Bruno Guimarães",
+        "Declan Rice",
+        "Noni Madueke",
         "Martin Ødegaard",
         "Eberechi Eze",
-        "Viktor Gyökeres"
+        "Kai Havertz"
       ],
       "home_starters": [
         {
@@ -3062,48 +3174,48 @@
           "shirt_number": "6"
         },
         {
-          "name": "Myles Lewis-Skelly",
+          "name": "Riccardo Calafiori",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-2-3-1",
           "position_id": 38,
-          "player_id": 1406436,
-          "shirt_number": "49"
+          "player_id": 1105912,
+          "shirt_number": "33"
         },
         {
-          "name": "Martín Zubimendi",
+          "name": "Bruno Guimarães",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
           "position_id": 64,
-          "player_id": 1031325,
-          "shirt_number": "36"
+          "player_id": 850354,
+          "shirt_number": "39"
         },
         {
-          "name": "Mikel Merino",
+          "name": "Declan Rice",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
           "position_id": 66,
-          "player_id": 574645,
-          "shirt_number": "23"
+          "player_id": 654096,
+          "shirt_number": "41"
         },
         {
-          "name": "Kai Havertz",
+          "name": "Noni Madueke",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 83,
-          "player_id": 749736,
-          "shirt_number": "29"
+          "player_id": 1084981,
+          "shirt_number": "20"
         },
         {
           "name": "Martin Ødegaard",
@@ -3128,15 +3240,15 @@
           "shirt_number": "10"
         },
         {
-          "name": "Viktor Gyökeres",
+          "name": "Kai Havertz",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-2-3-1",
           "position_id": 115,
-          "player_id": 664500,
-          "shirt_number": "14"
+          "player_id": 749736,
+          "shirt_number": "29"
         }
       ],
       "home_subs": [],
@@ -3144,23 +3256,21 @@
       "away_subs": [],
       "away_substitute_entries": [],
       "home_unavailable": [
+        "Víctor Muñoz",
+        "Dominik Szoboszlai",
         "Conor Bradley",
         "Giovanni Leoni",
         "Jeremie Frimpong",
-        "Dominik Szoboszlai",
-        "Hugo Ekitiké",
-        "Víctor Muñoz"
+        "Hugo Ekitiké"
       ],
       "away_unavailable": [
-        "Riccardo Calafiori",
+        "Christos Tzolis",
         "William Saliba",
         "Bukayo Saka",
-        "Christos Tzolis",
-        "Max Dowman",
-        "Noni Madueke"
+        "Max Dowman"
       ],
-      "observed_at": "2026-10-31T01:35:18.928281+00:00",
-      "changed_at": "2026-10-29T21:47:12.563294+00:00"
+      "observed_at": "2026-10-31T13:24:14.248266+00:00",
+      "changed_at": "2026-10-31T13:24:14.248266+00:00"
     }
   ]
 }
