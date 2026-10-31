@@ -107,16 +107,40 @@ def load_players(path: Path) -> list[dict[str, Any]]:
     return players
 
 
-def build_player_resolver(players: list[dict[str, Any]]):
+def build_player_resolver(players: list[dict[str, Any]], reviewed_aliases=None):
+    # Reuse reviewed identity evidence, never surname-only or fuzzy matching.
+    # An alias is valid only while the native ID, full name and DOB still agree.
+    if reviewed_aliases is None:
+        path = ROOT / "config" / "tennis-elo-source-aliases.json"
+        reviewed_aliases = json.loads(path.read_text(encoding="utf-8")) if path.exists() else []
     normalized: dict[str, set[int]] = defaultdict(set)
     compact: dict[str, set[int]] = defaultdict(set)
     reversed_full: dict[str, set[int]] = defaultdict(set)
+    by_id = defaultdict(list)
     for row in players:
         pid = int(row["id"])
+        by_id[pid].append(row)
         norm = normalize(row.get("name"))
         normalized[norm].add(pid)
         compact[norm.replace(" ", "")].add(pid)
         reversed_full[" ".join(reversed(norm.split()))].add(pid)
+
+    aliases: dict[str, set[int]] = defaultdict(set)
+    for row in reviewed_aliases:
+        if row.get("tour") != "ATP" or not row.get("evidence"):
+            continue
+        pid = int(row.get("native_id") or 0)
+        targets = by_id.get(pid, [])
+        if len(targets) != 1:
+            continue
+        target = targets[0]
+        if (normalize(target.get("name")) != normalize(row.get("native_name"))
+                or not row.get("birthdate")
+                or str(target.get("birthdate", ""))[:10] != row["birthdate"]):
+            continue
+        alias = normalize(row.get("source_name"))
+        if alias:
+            aliases[alias].add(pid)
 
     def resolve(name: str) -> tuple[int | None, str | None]:
         norm = normalize(name)
@@ -124,7 +148,12 @@ def build_player_resolver(players: list[dict[str, Any]]):
             (normalized.get(norm, set()), "normalized_full"),
             (compact.get(norm.replace(" ", ""), set()), "compact_full"),
             (reversed_full.get(norm, set()), "reversed_full"),
+            (aliases.get(norm, set()), "reviewed_id_name_dob_alias"),
         )
+        # Conflicting evidence is not permission to select the first match.
+        all_candidates = set().union(*(candidates for candidates, _ in attempts))
+        if len(all_candidates) != 1:
+            return None, None
         for candidates, method in attempts:
             if len(candidates) == 1:
                 return next(iter(candidates)), method
@@ -211,15 +240,29 @@ def supabase_config() -> tuple[str, dict[str, str]]:
 
 
 def fetch_open_pairs(base: str, headers: dict[str, str]) -> set[tuple[int, int, int]]:
-    response = requests.get(
-        f"{base}/rest/v1/oncourt_today",
-        headers=headers,
-        params={"select": "tour_id,player1_id,player2_id", "limit": "5000"},
-        timeout=60,
-    )
-    response.raise_for_status()
+    # Supabase caps each response at 1000 even when limit=5000 is requested.
+    # Read every page before deciding a scheduled match is absent.
+    rows = []
+    offset = 0
+    while True:
+        response = requests.get(
+            f"{base}/rest/v1/oncourt_today",
+            headers=headers,
+            params={"select": "tour_id,player1_id,player2_id", "limit": "1000",
+                    "offset": str(offset),
+                    "order": "tour_id.asc,round_id.asc,draw.asc,player1_id.asc,player2_id.asc"},
+            timeout=60,
+        )
+        response.raise_for_status()
+        page = response.json() or []
+        rows.extend(page)
+        if len(page) < 1000:
+            break
+        offset += 1000
+        if offset >= 100000:
+            raise RuntimeError("Unexpected qualifying fixture population; no inserts permitted")
     pairs: set[tuple[int, int, int]] = set()
-    for row in response.json() or []:
+    for row in rows:
         try:
             tour_id = int(row["tour_id"])
             pair = sorted((int(row["player1_id"]), int(row["player2_id"])))
