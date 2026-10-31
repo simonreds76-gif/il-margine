@@ -6,7 +6,7 @@ import json
 import re
 import time
 import requests
-from aerial_data import ROOT, LEAGUES, utc, read, save, build, validate
+from aerial_data import ROOT, LEAGUES, utc, read, save, build, validate, public_bytes
 from aerial_source import extract
 from aerial_heights import merge_squad, recover as recover_heights
 
@@ -148,7 +148,7 @@ def publish(client, root=ROOT, now=None):
                 save(data/'skyline/report.json',failed)
             save(data/'skyline/health.json', {'status':'FAILED','generated_at':now.isoformat(),'error':type(exc).__name__})
             print(f'::warning::Skyline paper capture failed: {type(exc).__name__}')
-        body = json.dumps(payload, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode()
+        body = public_bytes(payload)
         # One atomic object contains data and its version; never a partially updated board.
         client.put('fair-odds-lab/aerial.json', body, access='public', content_type='application/json',
                    overwrite=True, cache_control_max_age=60)

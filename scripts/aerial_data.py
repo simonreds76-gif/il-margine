@@ -22,9 +22,13 @@ def read(path, default=None):
         return default
     return json.loads(gzip.decompress(path.read_bytes()) if path.suffix == '.gz' else path.read_bytes())
 
+def public_bytes(data):
+    """The exact UTF-8 representation validated, saved and uploaded to the board."""
+    return json.dumps(data, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf-8')
+
 def save(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
-    body = json.dumps(data, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode()
+    body = public_bytes(data)
     tmp = path.with_suffix(path.suffix + '.tmp')
     tmp.write_bytes(gzip.compress(body, mtime=0) if path.suffix == '.gz' else body)
     tmp.replace(path)
@@ -178,7 +182,7 @@ def validate(payload, now=None):
                 for s in p['histories'].values():
                     if any(r['date'] >= f['kickoff'][:10] or r['fixture_id'] == f['id'] for r in s['appearances']):
                         raise ValueError('Future or target-match history leaked into comparison')
-    if len(json.dumps(payload).encode()) > 4_000_000:
+    if len(public_bytes(payload)) > 4_000_000:
         raise ValueError('Public board exceeds 4 MB budget')
     return True
 
