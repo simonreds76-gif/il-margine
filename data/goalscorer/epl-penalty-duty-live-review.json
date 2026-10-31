@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-31T23:21:16.462809+00:00",
+  "generated_at": "2026-10-31T23:40:33.950689+00:00",
   "league": "epl",
   "row_count": 4,
   "rows": [
@@ -253,22 +253,22 @@
       "event_result": "scored",
       "primary_pre_match": "Matt Crooks",
       "secondary_pre_match": "Oli McBurnie",
-      "tertiary_pre_match": "",
+      "tertiary_pre_match": "David Akintola",
       "primary_lineup_status": "",
       "secondary_lineup_status": "",
       "tertiary_lineup_status": "",
       "active_taker_pre_match": "",
       "active_slot_pre_match": "",
       "team_lineup_status": "",
-      "review_type": "expected_backup_shift",
-      "review_priority": "medium",
-      "editorial_note": "Oli McBurnie took 1 penalty attempt and scored for Hull City vs Brentford. Primary pre-match: Matt Crooks (unknown). Secondary pre-match: Oli McBurnie (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
+      "review_type": "expected_backup_held",
+      "review_priority": "low",
+      "editorial_note": "Oli McBurnie took 1 penalty attempt and scored for Hull City vs Brentford. Primary pre-match: Matt Crooks (unknown). Secondary pre-match: Oli McBurnie (unknown). Expected backup took the penalty with every higher-ranked taker confirmed off the pitch. No hierarchy change implied.",
       "context_generated_at": "2026-10-18T09:33:08.668Z",
       "context_source_path": "admin_penalty_state:editorial",
       "actual_taker_match_status": "Yes - started, off 86'",
       "primary_on_pitch_at_penalty": "No - bench",
       "secondary_on_pitch_at_penalty": "Yes - started, off 86'",
-      "tertiary_on_pitch_at_penalty": "Not assigned - hierarchy slot empty",
+      "tertiary_on_pitch_at_penalty": "No - absent from matchday squad",
       "actual_taker_on_pitch_at_penalty": "Yes - started, off 86'",
       "event_evidence": [
         {
@@ -276,7 +276,7 @@
           "source_event_id": "2987785209",
           "match_id": "5795490",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5795490",
-          "observed_at": "2026-10-31T14:49:39+00:00",
+          "observed_at": "2026-10-31T23:40:39+00:00",
           "event_date": "2026-10-25",
           "season": "2026/27",
           "team": "Hull City",
@@ -322,7 +322,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261024"
+      "20261025"
     ],
     "matches_checked": 1
   }
