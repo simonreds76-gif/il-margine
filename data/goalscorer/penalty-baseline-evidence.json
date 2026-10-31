@@ -1,9 +1,41 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-31T05:51:58Z",
+  "generated_at": "2026-10-31T14:50:17Z",
   "league": "serie-a",
-  "row_count": 1,
+  "row_count": 8,
   "rows": [
+    {
+      "team": "Atalanta",
+      "team_key": "atalanta",
+      "player_name": "Éderson",
+      "player_key": "derson",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-25"
+    },
+    {
+      "team": "Cagliari",
+      "team_key": "cagliari",
+      "player_name": "M'Bala Nzola",
+      "player_key": "m bala nzola",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-27"
+    },
     {
       "team": "Frosinone",
       "team_key": "frosinone",
@@ -19,6 +51,86 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-10-29"
+    },
+    {
+      "team": "Inter",
+      "team_key": "inter",
+      "player_name": "Piotr Zieliński",
+      "player_key": "piotr zieli ski",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-25"
+    },
+    {
+      "team": "Lazio",
+      "team_key": "lazio",
+      "player_name": "Davide Frattesi",
+      "player_key": "davide frattesi",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-27"
+    },
+    {
+      "team": "Lazio",
+      "team_key": "lazio",
+      "player_name": "Mattia Zaccagni",
+      "player_key": "mattia zaccagni",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-27"
+    },
+    {
+      "team": "Monza",
+      "team_key": "monza",
+      "player_name": "Gustavo Varela",
+      "player_key": "gustavo varela",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-31"
+    },
+    {
+      "team": "Parma",
+      "team_key": "parma",
+      "player_name": "Adrián Bernabé",
+      "player_key": "adri n bernab",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-28"
     }
   ]
 }
