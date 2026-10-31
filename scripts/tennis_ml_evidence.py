@@ -16,6 +16,12 @@ def capture_components(root: Path, rows: list[dict], captured_at: datetime | Non
     now = captured_at or datetime.now(timezone.utc)
     if now.tzinfo is None: raise ValueError('capture timestamp must be timezone aware')
     now = now.astimezone(timezone.utc)
+    # Paper-only observer; no live forecasting or delivery changes.
+    try:
+        from tennis_indoor_paper import observe
+        observe(root, rows, now=now, forecast_generated_at=now.isoformat())
+    except Exception as exc:
+        print("Indoor Scout observer unavailable:", type(exc).__name__)
     # Only caller-supplied forecast fields are serialized; never environment/secrets.
     body = json.dumps(rows, sort_keys=True, separators=(',', ':'), allow_nan=False)
     digest = hashlib.sha256(body.encode()).hexdigest()

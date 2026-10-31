@@ -108,6 +108,11 @@ def stable_hash_value(value: Any) -> Any:
 
 
 def build_snapshot() -> dict[str, Any]:
+    from tennis_indoor_paper import refresh as refresh_indoor
+    try:
+        refresh_indoor(ROOT)
+    except Exception as exc:
+        print("Indoor Scout report unavailable:", type(exc).__name__)
     module = load_report_module()
     tennis_model_evidence = module.tennis_model_evidence_summary()
     from tennis_input_health import summary as input_health_summary
@@ -121,6 +126,7 @@ def build_snapshot() -> dict[str, Any]:
         "tennis_monitor_integrity": build_integrity(ROOT),
         "tennis_props_v3": module.tennis_props_v3_snapshot(),
         "tennis_ace_compass": module.load_json(ROOT / "data/tennis-props/shadow/ace-compass-v1/report.json"),
+        "tennis_indoor_paper": module.load_json(ROOT / "data/tennis-ml-research/indoor-scout-v1/report.json"),
         "tennis_elo_rebuild": module.load_json(ROOT / "data/tennis-elo-rebuild/report.json"),
         "tennis_sisal_5050": module.load_json(ROOT / "data/tennis-props/shadow/sisal-5050-v1/report.json"),
         "tennis_rate_trend": module.rate_trend_summary(),
