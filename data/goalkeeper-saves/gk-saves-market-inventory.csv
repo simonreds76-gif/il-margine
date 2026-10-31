@@ -135635,3 +135635,821 @@ captured_at,event_id,kickoff_at,bookmaker,competition,home_team,away_team,market
 2026-10-30T21:02:37Z,72478682,2026-10-31T15:15:00Z,Grosvenor,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Goalkeeper Saves Home,player_saves,1,1,0,Over 3.5
 2026-10-30T21:02:37Z,72478682,2026-10-31T15:15:00Z,Grosvenor,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Goalkeeper Saves Away,player_saves,1,1,0,Over 2.5
 2026-10-30T21:02:37Z,72478682,2026-10-31T15:15:00Z,Grosvenor,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Total Shots Away,shots_control,1,1,0,Over 10.5
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Spread,other,6,0,0,
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Totals,other,9,9,6,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Corners Totals,corners_control,5,5,5,Over/Under 8.5 | Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Anytime Goalscorer,other,49,1,0,Adrian Lahdo | Akor Adams | Alberto Dossena | Albion Rrahmani | Ale Gomes | Alex Valle | Alfred Duncan | Antoine Hainaut
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Player To Be Fouled,player_fouled,129,3,0,Adrian Lahdo | Adrian Lahdo | Adrian Lahdo | Akor Adams | Akor Adams | Akor Adams | Alberto Dossena | Alberto Dossena
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Player to be Booked,other,47,1,0,Adrian Lahdo | Akor Adams | Alberto Dossena | Albion Rrahmani | Ale Gomes | Alex Valle | Alfred Duncan | Antoine Hainaut
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Player To Assist,other,47,1,0,Adrian Lahdo | Akor Adams | Alberto Dossena | Albion Rrahmani | Ale Gomes | Alex Valle | Alfred Duncan | Antoine Hainaut
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Player Shots,shots_control,141,3,0,Adrian Lahdo | Adrian Lahdo | Adrian Lahdo | Akor Adams | Akor Adams | Akor Adams | Alberto Dossena | Alberto Dossena
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Player Fouls,player_fouls_committed,141,3,0,Adrian Lahdo | Adrian Lahdo | Adrian Lahdo | Akor Adams | Akor Adams | Akor Adams | Alberto Dossena | Alberto Dossena
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Player To Score or Assist,other,47,1,0,Adrian Lahdo | Akor Adams | Alberto Dossena | Albion Rrahmani | Ale Gomes | Alex Valle | Alfred Duncan | Antoine Hainaut
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Paddy Power,Italy - Serie A,Como 1907,Venezia FC,Player Shots on Target,shots_control,110,3,0,Adrian Lahdo | Adrian Lahdo | Adrian Lahdo | Akor Adams | Akor Adams | Akor Adams | Alberto Dossena | Alberto Dossena
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Grosvenor,Italy - Serie A,Como 1907,Venezia FC,Anytime Goalscorer,other,1,0,0,Matteo Dagasso
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Grosvenor,Italy - Serie A,Como 1907,Venezia FC,Corners Totals,corners_control,1,1,1,Over/Under 10.5
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Grosvenor,Italy - Serie A,Como 1907,Venezia FC,Anytime Assist,other,1,0,0,Andrea Adorante
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Grosvenor,Italy - Serie A,Como 1907,Venezia FC,Corners Totals Home,corners_control,1,1,1,Over/Under 8.5
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Grosvenor,Italy - Serie A,Como 1907,Venezia FC,Corners Totals Away,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Grosvenor,Italy - Serie A,Como 1907,Venezia FC,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Grosvenor,Italy - Serie A,Como 1907,Venezia FC,Goalkeeper Saves Home,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Grosvenor,Italy - Serie A,Como 1907,Venezia FC,Goalkeeper Saves Away,player_saves,1,1,0,Over 4.5
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Grosvenor,Italy - Serie A,Como 1907,Venezia FC,Total Shots Home,shots_control,1,1,0,Over 21.5
+2026-10-31T01:03:03Z,71945370,2026-11-01T11:30:00Z,Grosvenor,Italy - Serie A,Como 1907,Venezia FC,Total Shots Away,shots_control,1,1,0,Over 10.5
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Spread,other,4,0,0,
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Totals HT,other,4,4,3,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Corners Totals,corners_control,4,4,4,Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Anytime Goalscorer,other,45,1,0,Abdel Abqar | Alberto Risco | Alfon Gonzalez | Andres Castrin | Andres Garcia | Arouna Sangante | Borja Mayoral | Chidera Ejuke
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Player Fouls,player_fouls_committed,108,3,0,Abdel Abqar | Abdel Abqar | Abdel Abqar | Alfon Gonzalez | Alfon Gonzalez | Alfon Gonzalez | Andres Castrin | Andres Castrin
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Player To Be Fouled,player_fouled,108,3,0,Abdel Abqar | Abdel Abqar | Abdel Abqar | Alfon Gonzalez | Alfon Gonzalez | Alfon Gonzalez | Andres Castrin | Andres Castrin
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Player To Assist,other,38,1,0,Abdel Abqar | Alfon Gonzalez | Andres Castrin | Andres Garcia | Arouna Sangante | Borja Mayoral | Chidera Ejuke | Dani Carvajal
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Player Shots,shots_control,123,3,0,Abdel Abqar | Abdel Abqar | Abdel Abqar | Alberto Risco | Alberto Risco | Alberto Risco | Alfon Gonzalez | Alfon Gonzalez
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Player To Score or Assist,other,38,1,0,Abdel Abqar | Alfon Gonzalez | Andres Castrin | Andres Garcia | Arouna Sangante | Borja Mayoral | Chidera Ejuke | Dani Carvajal
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Paddy Power,Spain - LaLiga,Getafe CF,Sevilla FC,Player Shots on Target,shots_control,100,3,0,Abdel Abqar | Alberto Risco | Alberto Risco | Alberto Risco | Alfon Gonzalez | Alfon Gonzalez | Alfon Gonzalez | Andres Castrin
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Grosvenor,Spain - LaLiga,Getafe CF,Sevilla FC,Anytime Goalscorer,other,1,0,0,Dani Carvajal
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Grosvenor,Spain - LaLiga,Getafe CF,Sevilla FC,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Grosvenor,Spain - LaLiga,Getafe CF,Sevilla FC,Anytime Assist,other,1,0,0,Iván Azón
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Grosvenor,Spain - LaLiga,Getafe CF,Sevilla FC,Corners Totals Home,corners_control,1,1,1,Over/Under 4.5
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Grosvenor,Spain - LaLiga,Getafe CF,Sevilla FC,Corners Totals,corners_control,1,1,1,Over/Under 7.5
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Grosvenor,Spain - LaLiga,Getafe CF,Sevilla FC,Corners Totals Away,corners_control,1,1,1,Over/Under 4.5
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Grosvenor,Spain - LaLiga,Getafe CF,Sevilla FC,Goalkeeper Saves Away,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Grosvenor,Spain - LaLiga,Getafe CF,Sevilla FC,Total Shots Away,shots_control,1,1,0,Over 11.5
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Grosvenor,Spain - LaLiga,Getafe CF,Sevilla FC,Goalkeeper Saves Home,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72478676,2026-11-01T13:00:00Z,Grosvenor,Spain - LaLiga,Getafe CF,Sevilla FC,Total Shots Home,shots_control,1,1,0,Over 11.5
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Spread,other,4,0,0,
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Totals,other,9,9,6,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Corners Totals,corners_control,5,5,5,Over/Under 8.5 | Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Anytime Goalscorer,other,22,1,0,Alexander Isak | Alexis Mac Allister | Bradley Barcola | Bruno Guimaraes | Cody Gakpo | Declan Rice | Eberechi Eze | Ezri Konsa
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Player To Assist,other,22,1,0,Alexander Isak | Alexis Mac Allister | Bradley Barcola | Bruno Guimaraes | Cody Gakpo | Declan Rice | Eberechi Eze | Ezri Konsa
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Player To Be Fouled,player_fouled,66,3,0,Alexander Isak | Alexander Isak | Alexander Isak | Alexis Mac Allister | Alexis Mac Allister | Alexis Mac Allister | Bradley Barcola | Bradley Barcola
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Player Shots,shots_control,66,3,0,Alexander Isak | Alexander Isak | Alexander Isak | Alexis Mac Allister | Alexis Mac Allister | Alexis Mac Allister | Bradley Barcola | Bradley Barcola
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Player Shots on Target,shots_control,55,3,0,Alexander Isak | Alexander Isak | Alexander Isak | Alexis Mac Allister | Alexis Mac Allister | Alexis Mac Allister | Bradley Barcola | Bradley Barcola
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Player to be Booked,other,22,1,0,Alexander Isak | Alexis Mac Allister | Bradley Barcola | Bruno Guimaraes | Cody Gakpo | Declan Rice | Eberechi Eze | Ezri Konsa
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Player Fouls,player_fouls_committed,66,3,0,Alexander Isak | Alexander Isak | Alexander Isak | Alexis Mac Allister | Alexis Mac Allister | Alexis Mac Allister | Bradley Barcola | Bradley Barcola
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Player To Score or Assist,other,22,1,0,Alexander Isak | Alexis Mac Allister | Bradley Barcola | Bruno Guimaraes | Cody Gakpo | Declan Rice | Eberechi Eze | Ezri Konsa
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Paddy Power,England - Premier League,Liverpool FC,Arsenal FC,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Grosvenor,England - Premier League,Liverpool FC,Arsenal FC,Corners Totals,corners_control,1,1,1,Over/Under 8.5
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Grosvenor,England - Premier League,Liverpool FC,Arsenal FC,Corners Totals Away,corners_control,1,1,1,Over/Under 4.5
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Grosvenor,England - Premier League,Liverpool FC,Arsenal FC,Anytime Assist,other,1,0,0,Florian Wirtz
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Grosvenor,England - Premier League,Liverpool FC,Arsenal FC,Anytime Goalscorer,other,1,0,0,Milos Kerkez
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Grosvenor,England - Premier League,Liverpool FC,Arsenal FC,Corners Totals Home,corners_control,1,1,1,Over/Under 5.5
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Grosvenor,England - Premier League,Liverpool FC,Arsenal FC,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Grosvenor,England - Premier League,Liverpool FC,Arsenal FC,Goalkeeper Saves Away,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Grosvenor,England - Premier League,Liverpool FC,Arsenal FC,Total Shots Away,shots_control,1,1,0,Over 13.5
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Grosvenor,England - Premier League,Liverpool FC,Arsenal FC,Total Shots Home,shots_control,1,1,0,Over 13.5
+2026-10-31T01:03:03Z,72221364,2026-11-01T16:30:00Z,Grosvenor,England - Premier League,Liverpool FC,Arsenal FC,Goalkeeper Saves Home,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Olympique Lyon,Angers SCO,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Olympique Lyon,Angers SCO,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Olympique Lyon,Angers SCO,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Olympique Lyon,Angers SCO,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Olympique Lyon,Angers SCO,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Olympique Lyon,Angers SCO,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Olympique Lyon,Angers SCO,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Olympique Lyon,Angers SCO,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Olympique Lyon,Angers SCO,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Olympique Lyon,Angers SCO,Anytime Goalscorer,other,38,1,0,Abner Vinicius | Adil Hamdani | Amine Sbai | Anthony Bermont | Bane Diatta | Branco van den Boomen | Carlens Arcus | Clinton Mata
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Olympique Lyon,Angers SCO,Player Shots on Target,shots_control,62,3,0,Abner Vinicius | Abner Vinicius | Abner Vinicius | Amine Sbai | Amine Sbai | Amine Sbai | Anthony Bermont | Anthony Bermont
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Olympique Lyon,Angers SCO,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Olympique Lyon,Angers SCO,Player Shots,shots_control,87,3,0,Abner Vinicius | Abner Vinicius | Abner Vinicius | Amine Sbai | Amine Sbai | Amine Sbai | Anthony Bermont | Anthony Bermont
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Olympique Lyon,Angers SCO,Anytime Goalscorer,other,1,0,0,Keito Nakamura
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Olympique Lyon,Angers SCO,Corners Totals,corners_control,1,1,1,Over/Under 10.5
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Olympique Lyon,Angers SCO,Goalkeeper Saves Away,player_saves,1,1,0,Over 4.5
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Olympique Lyon,Angers SCO,Anytime Assist,other,1,0,0,Jim Allevinah
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Olympique Lyon,Angers SCO,Corners Totals Away,corners_control,1,1,1,Over/Under 2.5
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Olympique Lyon,Angers SCO,Total Shots Home,shots_control,1,1,0,Over 17.5
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Olympique Lyon,Angers SCO,Corners Totals Home,corners_control,1,1,1,Over/Under 6.5
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Olympique Lyon,Angers SCO,Goalkeeper Saves Home,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Olympique Lyon,Angers SCO,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72036262,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Olympique Lyon,Angers SCO,Total Shots Away,shots_control,1,1,0,Over 9.5
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Paris FC,AS Monaco,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Paris FC,AS Monaco,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Paris FC,AS Monaco,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Paris FC,AS Monaco,Totals,other,9,9,6,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Paris FC,AS Monaco,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Paris FC,AS Monaco,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Paris FC,AS Monaco,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Paris FC,AS Monaco,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Paris FC,AS Monaco,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Paris FC,AS Monaco,Anytime Goalscorer,other,42,1,0,Adama Camara | Aleksandr Golovin | Anis Soubeir | Christian Mawissa | Denis Zakaria | Diego Coppola | Edan Diop | Emmanuel Mbemba
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Paris FC,AS Monaco,Player Shots on Target,shots_control,80,3,0,Aleksandr Golovin | Aleksandr Golovin | Aleksandr Golovin | Christian Mawissa | Christian Mawissa | Denis Zakaria | Denis Zakaria | Diego Coppola
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Paris FC,AS Monaco,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Paddy Power,France - Ligue 1,Paris FC,AS Monaco,Player Shots,shots_control,108,3,0,Adama Camara | Adama Camara | Adama Camara | Aleksandr Golovin | Aleksandr Golovin | Aleksandr Golovin | Christian Mawissa | Christian Mawissa
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Paris FC,AS Monaco,Corners Totals,corners_control,1,1,1,Over/Under 12.5
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Paris FC,AS Monaco,Anytime Assist,other,1,0,0,Vanderson
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Paris FC,AS Monaco,Corners Totals Away,corners_control,1,1,1,Over/Under 6.5
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Paris FC,AS Monaco,Corners Totals Home,corners_control,1,1,1,Over/Under 6.5
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Paris FC,AS Monaco,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Paris FC,AS Monaco,Anytime Goalscorer,other,1,0,0,Aleksandr Golovin
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Paris FC,AS Monaco,Total Shots Home,shots_control,1,1,0,Over 14.5
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Paris FC,AS Monaco,Total Shots Away,shots_control,1,1,0,Over 12.5
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Paris FC,AS Monaco,Goalkeeper Saves Home,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72036268,2026-11-01T16:15:00Z,Grosvenor,France - Ligue 1,Paris FC,AS Monaco,Goalkeeper Saves Away,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Paddy Power,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Paddy Power,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Paddy Power,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Paddy Power,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Paddy Power,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Paddy Power,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Paddy Power,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Paddy Power,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Paddy Power,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Paddy Power,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Anytime Goalscorer,other,43,1,0,Aristide Zossou | Arthur Piedfort | Axel Tuanzebe | Cameron Archer | Christ Makosso | Clement Akpa | Conrad Harder | Danny Namaso
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Paddy Power,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Player Shots on Target,shots_control,75,3,0,Aristide Zossou | Aristide Zossou | Aristide Zossou | Axel Tuanzebe | Cameron Archer | Cameron Archer | Cameron Archer | Christ Makosso
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Paddy Power,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Player Shots,shots_control,105,3,0,Aristide Zossou | Aristide Zossou | Aristide Zossou | Arthur Piedfort | Arthur Piedfort | Arthur Piedfort | Axel Tuanzebe | Axel Tuanzebe
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Paddy Power,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Grosvenor,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Corners Totals,corners_control,1,1,1,Over/Under 12.5
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Grosvenor,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Anytime Goalscorer,other,1,0,0,Cameron Archer
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Grosvenor,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Anytime Assist,other,1,0,0,Gessime Yassine
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Grosvenor,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Corners Totals Away,corners_control,1,1,1,Over/Under 4.5
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Grosvenor,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Corners Totals Home,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Grosvenor,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Grosvenor,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Total Shots Away,shots_control,1,1,0,Over 10.5
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Grosvenor,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Total Shots Home,shots_control,1,1,0,Over 15.5
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Grosvenor,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Goalkeeper Saves Away,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Grosvenor,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Goalkeeper Saves Home,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72036270,2026-11-01T14:00:00Z,Bet365,France - Ligue 1,Strasbourg Alsace,AJ Auxerre,Player Saves,player_saves,10,5,0,Filip Jorgensen | Paul Nardi | Filip Jorgensen | Filip Jorgensen | Filip Jorgensen | Filip Jorgensen | Paul Nardi | Paul Nardi
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Spread,other,7,0,0,
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Totals,other,9,9,7,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Corners Totals,corners_control,4,4,4,Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Anytime Goalscorer,other,47,1,0,Aaron Martin | Alvaro Carreras | Alvaro Mantilla | Andre Almeida | Andres Martin | Antonio Rudiger | Arda Guler | Asier Villalibre
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Player Fouls,player_fouls_committed,120,3,0,Aaron Martin | Aaron Martin | Aaron Martin | Alvaro Carreras | Alvaro Carreras | Alvaro Carreras | Alvaro Mantilla | Alvaro Mantilla
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Player Shots,shots_control,119,3,0,Aaron Martin | Aaron Martin | Aaron Martin | Alvaro Carreras | Alvaro Carreras | Alvaro Carreras | Alvaro Mantilla | Alvaro Mantilla
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Player To Assist,other,40,1,0,Aaron Martin | Alvaro Carreras | Alvaro Mantilla | Andre Almeida | Andres Martin | Antonio Rudiger | Arda Guler | Asier Villalibre
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Player To Score or Assist,other,40,1,0,Aaron Martin | Alvaro Carreras | Alvaro Mantilla | Andre Almeida | Andres Martin | Antonio Rudiger | Arda Guler | Asier Villalibre
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Player Shots on Target,shots_control,103,3,0,Aaron Martin | Aaron Martin | Alvaro Carreras | Alvaro Carreras | Alvaro Mantilla | Andre Almeida | Andre Almeida | Andres Martin
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Paddy Power,Spain - LaLiga,Racing Santander,Real Madrid,Player To Be Fouled,player_fouled,117,3,0,Aaron Martin | Aaron Martin | Aaron Martin | Alvaro Carreras | Alvaro Carreras | Alvaro Carreras | Alvaro Mantilla | Alvaro Mantilla
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Grosvenor,Spain - LaLiga,Racing Santander,Real Madrid,Corners Totals,corners_control,1,1,1,Over/Under 13.5
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Grosvenor,Spain - LaLiga,Racing Santander,Real Madrid,Anytime Goalscorer,other,1,0,0,Yan Diomande
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Grosvenor,Spain - LaLiga,Racing Santander,Real Madrid,Corners Totals Away,corners_control,1,1,1,Over/Under 8.5
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Grosvenor,Spain - LaLiga,Racing Santander,Real Madrid,Anytime Assist,other,1,0,0,Andrés Martín
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Grosvenor,Spain - LaLiga,Racing Santander,Real Madrid,Corners Totals Home,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Grosvenor,Spain - LaLiga,Racing Santander,Real Madrid,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Grosvenor,Spain - LaLiga,Racing Santander,Real Madrid,Total Shots Away,shots_control,1,1,0,Over 19.5
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Grosvenor,Spain - LaLiga,Racing Santander,Real Madrid,Goalkeeper Saves Away,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Grosvenor,Spain - LaLiga,Racing Santander,Real Madrid,Total Shots Home,shots_control,1,1,0,Over 12.5
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Grosvenor,Spain - LaLiga,Racing Santander,Real Madrid,Goalkeeper Saves Home,player_saves,1,1,0,Over 5.5
+2026-10-31T01:03:03Z,72478680,2026-11-01T15:15:00Z,Bet365,Spain - LaLiga,Racing Santander,Real Madrid,Player Saves,player_saves,16,7,0,Julen Agirrezabala | Andriy Lunin | Thibaut Courtois | Thibaut Courtois | Thibaut Courtois | Thibaut Courtois | Thibaut Courtois | Andriy Lunin
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Totals,other,9,9,6,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Corners Totals,corners_control,5,5,5,Over/Under 8.5 | Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Anytime Goalscorer,other,45,1,0,Aleksa Terzic | Alessio Cacciamani | Alessio Zerbin | Anouar El Azzouzi | Anthony Oyono | Antonio Raimondo | Ardian Ismajli | Cesare Casadei
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Player To Be Fouled,player_fouled,132,3,0,Aleksa Terzic | Aleksa Terzic | Aleksa Terzic | Alessio Cacciamani | Alessio Cacciamani | Alessio Cacciamani | Alessio Zerbin | Alessio Zerbin
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Player to be Booked,other,45,1,0,Aleksa Terzic | Alessio Cacciamani | Alessio Zerbin | Anouar El Azzouzi | Anthony Oyono | Antonio Raimondo | Ardian Ismajli | Cesare Casadei
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Player To Assist,other,45,1,0,Aleksa Terzic | Alessio Cacciamani | Alessio Zerbin | Anouar El Azzouzi | Anthony Oyono | Antonio Raimondo | Ardian Ismajli | Cesare Casadei
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Player Shots on Target,shots_control,110,3,0,Aleksa Terzic | Aleksa Terzic | Alessio Cacciamani | Alessio Cacciamani | Alessio Cacciamani | Alessio Zerbin | Alessio Zerbin | Alessio Zerbin
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Player Shots,shots_control,135,3,0,Aleksa Terzic | Aleksa Terzic | Aleksa Terzic | Alessio Cacciamani | Alessio Cacciamani | Alessio Cacciamani | Alessio Zerbin | Alessio Zerbin
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Player Fouls,player_fouls_committed,135,3,0,Aleksa Terzic | Aleksa Terzic | Aleksa Terzic | Alessio Cacciamani | Alessio Cacciamani | Alessio Cacciamani | Alessio Zerbin | Alessio Zerbin
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Torino FC,Player To Score or Assist,other,45,1,0,Aleksa Terzic | Alessio Cacciamani | Alessio Zerbin | Anouar El Azzouzi | Anthony Oyono | Antonio Raimondo | Ardian Ismajli | Cesare Casadei
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Torino FC,Anytime Assist,other,1,0,0,Gvidas Gineitis
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Torino FC,Corners Totals,corners_control,1,1,1,Over/Under 9.5
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Torino FC,Corners Totals Away,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Torino FC,Anytime Goalscorer,other,1,0,0,Farès Ghedjemis
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Torino FC,Corners Totals Home,corners_control,1,1,1,Over/Under 5.5
+2026-10-31T01:03:03Z,71945372,2026-11-01T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Torino FC,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Totals,other,9,9,6,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Corners Totals,corners_control,5,5,5,Over/Under 8.5 | Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Anytime Goalscorer,other,50,1,0,Adam Marusic | Adam Obert | Adrian Przyborek | Alessandro Deiola | Alessandro Romano | Alessandro Sugamele | Alfonso Pedraza | Alieu Fadera
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Player To Assist,other,43,1,0,Adam Marusic | Adam Obert | Alessandro Deiola | Alessandro Romano | Alfonso Pedraza | Alieu Fadera | Andrea Pinamonti | Daniel Maldini
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Player Shots on Target,shots_control,104,3,0,Adam Marusic | Adam Marusic | Adam Obert | Adam Obert | Alessandro Deiola | Alessandro Deiola | Alessandro Deiola | Alessandro Romano
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Player to be Booked,other,44,1,0,Adam Marusic | Adam Obert | Alessandro Deiola | Alessandro Romano | Alfonso Pedraza | Alieu Fadera | Andrea Pinamonti | Daniel Maldini
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Player To Score or Assist,other,43,1,0,Adam Marusic | Adam Obert | Alessandro Deiola | Alessandro Romano | Alfonso Pedraza | Alieu Fadera | Andrea Pinamonti | Daniel Maldini
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Player Shots,shots_control,132,3,0,Adam Marusic | Adam Marusic | Adam Marusic | Adam Obert | Adam Obert | Adam Obert | Alessandro Deiola | Alessandro Deiola
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Player Fouls,player_fouls_committed,132,3,0,Adam Marusic | Adam Marusic | Adam Marusic | Adam Obert | Adam Obert | Adam Obert | Alessandro Deiola | Alessandro Deiola
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Paddy Power,Italy - Serie A,Lazio Rome,Cagliari Calcio,Player To Be Fouled,player_fouled,132,3,0,Adam Marusic | Adam Marusic | Adam Marusic | Adam Obert | Adam Obert | Adam Obert | Alessandro Deiola | Alessandro Deiola
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Grosvenor,Italy - Serie A,Lazio Rome,Cagliari Calcio,Corners Totals,corners_control,1,1,1,Over/Under 10.5
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Grosvenor,Italy - Serie A,Lazio Rome,Cagliari Calcio,Anytime Goalscorer,other,1,0,0,M'Bala Nzola
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Grosvenor,Italy - Serie A,Lazio Rome,Cagliari Calcio,Anytime Assist,other,1,0,0,Kenneth Taylor
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Grosvenor,Italy - Serie A,Lazio Rome,Cagliari Calcio,Corners Totals Away,corners_control,1,1,1,Over/Under 2.5
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Grosvenor,Italy - Serie A,Lazio Rome,Cagliari Calcio,Corners Totals Home,corners_control,1,1,1,Over/Under 4.5
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Grosvenor,Italy - Serie A,Lazio Rome,Cagliari Calcio,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,71945376,2026-11-01T14:00:00Z,Bet365,Italy - Serie A,Lazio Rome,Cagliari Calcio,Player Saves,player_saves,22,7,0,Christos Mandas | Edoardo Motta | Alen Sherri | Boris Radunovic | Christos Mandas | Christos Mandas | Christos Mandas | Edoardo Motta
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Paddy Power,Germany - Bundesliga,Union Berlin,1. FC Cologne,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Paddy Power,Germany - Bundesliga,Union Berlin,1. FC Cologne,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Paddy Power,Germany - Bundesliga,Union Berlin,1. FC Cologne,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Paddy Power,Germany - Bundesliga,Union Berlin,1. FC Cologne,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Paddy Power,Germany - Bundesliga,Union Berlin,1. FC Cologne,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Paddy Power,Germany - Bundesliga,Union Berlin,1. FC Cologne,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Paddy Power,Germany - Bundesliga,Union Berlin,1. FC Cologne,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Paddy Power,Germany - Bundesliga,Union Berlin,1. FC Cologne,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Paddy Power,Germany - Bundesliga,Union Berlin,1. FC Cologne,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Paddy Power,Germany - Bundesliga,Union Berlin,1. FC Cologne,Anytime Goalscorer,other,40,1,0,Alessio Castro-Montes | Aljoscha Kemlein | Andras Schafer | Assad Kotya-Fofana | Borna Sosa | Christopher Trimmel | Derrick Kohn | Emmanuel Latte Lath
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Paddy Power,Germany - Bundesliga,Union Berlin,1. FC Cologne,Player Shots on Target,shots_control,80,3,0,Aljoscha Kemlein | Aljoscha Kemlein | Borna Sosa | Borna Sosa | Christopher Trimmel | Christopher Trimmel | Derrick Kohn | Derrick Kohn
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Paddy Power,Germany - Bundesliga,Union Berlin,1. FC Cologne,Player Shots,shots_control,108,3,0,Alessio Castro-Montes | Alessio Castro-Montes | Alessio Castro-Montes | Aljoscha Kemlein | Aljoscha Kemlein | Aljoscha Kemlein | Andras Schafer | Andras Schafer
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Paddy Power,Germany - Bundesliga,Union Berlin,1. FC Cologne,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Grosvenor,Germany - Bundesliga,Union Berlin,1. FC Cologne,Total Shots Home,shots_control,1,1,0,Over 14.5
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Grosvenor,Germany - Bundesliga,Union Berlin,1. FC Cologne,Anytime Goalscorer,other,1,0,0,Marvin Friedrich
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Grosvenor,Germany - Bundesliga,Union Berlin,1. FC Cologne,Corners Totals Home,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Grosvenor,Germany - Bundesliga,Union Berlin,1. FC Cologne,Corners Totals Away,corners_control,1,1,1,Over/Under 5.5
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Grosvenor,Germany - Bundesliga,Union Berlin,1. FC Cologne,Corners Totals,corners_control,1,1,1,Over/Under 10.5
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Grosvenor,Germany - Bundesliga,Union Berlin,1. FC Cologne,Goalkeeper Saves Home,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Grosvenor,Germany - Bundesliga,Union Berlin,1. FC Cologne,Anytime Assist,other,1,0,0,Tom Rothe
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Grosvenor,Germany - Bundesliga,Union Berlin,1. FC Cologne,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Grosvenor,Germany - Bundesliga,Union Berlin,1. FC Cologne,Goalkeeper Saves Away,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72513282,2026-11-01T14:30:00Z,Grosvenor,Germany - Bundesliga,Union Berlin,1. FC Cologne,Total Shots Away,shots_control,1,1,0,Over 13.5
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Spread,other,4,0,0,
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Corners Totals,corners_control,4,4,4,Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Anytime Goalscorer,other,51,1,0,Aaron Mayol | Abiel Osorio | Adam Boayar | Aimar Blazquez | Alex Panach | Ali Houary | Aliou Dieng | Alvaro Padilla
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Player To Assist,other,46,1,0,Aaron Mayol | Abiel Osorio | Ali Houary | Aliou Dieng | Arnau Martinez | Arnaut Danjuma | Bambo Diaby | Buba Sangare
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Player Fouls,player_fouls_committed,135,3,0,Aaron Mayol | Aaron Mayol | Aaron Mayol | Abiel Osorio | Abiel Osorio | Abiel Osorio | Ali Houary | Ali Houary
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Player To Be Fouled,player_fouled,129,3,0,Abiel Osorio | Abiel Osorio | Abiel Osorio | Ali Houary | Ali Houary | Ali Houary | Aliou Dieng | Aliou Dieng
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Player To Score or Assist,other,46,1,0,Aaron Mayol | Abiel Osorio | Ali Houary | Aliou Dieng | Arnau Martinez | Arnaut Danjuma | Bambo Diaby | Buba Sangare
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Player Shots,shots_control,141,3,0,Aaron Mayol | Aaron Mayol | Aaron Mayol | Abiel Osorio | Abiel Osorio | Abiel Osorio | Adam Boayar | Adam Boayar
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Paddy Power,Spain - LaLiga,Elche CF,Valencia CF,Player Shots on Target,shots_control,108,3,0,Aaron Mayol | Aaron Mayol | Abiel Osorio | Abiel Osorio | Abiel Osorio | Adam Boayar | Adam Boayar | Adam Boayar
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Grosvenor,Spain - LaLiga,Elche CF,Valencia CF,Anytime Goalscorer,other,1,0,0,Javi Guerra
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Grosvenor,Spain - LaLiga,Elche CF,Valencia CF,Anytime Assist,other,1,0,0,Javier Morcillo
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Grosvenor,Spain - LaLiga,Elche CF,Valencia CF,Corners Totals,corners_control,1,1,1,Over/Under 7.5
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Grosvenor,Spain - LaLiga,Elche CF,Valencia CF,Corners Totals Home,corners_control,1,1,1,Over/Under 6.5
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Grosvenor,Spain - LaLiga,Elche CF,Valencia CF,Corners Totals Away,corners_control,1,1,1,Over/Under 4.5
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Grosvenor,Spain - LaLiga,Elche CF,Valencia CF,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Grosvenor,Spain - LaLiga,Elche CF,Valencia CF,Total Shots Away,shots_control,1,1,0,Over 13.5
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Grosvenor,Spain - LaLiga,Elche CF,Valencia CF,Total Shots Home,shots_control,1,1,0,Over 13.5
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Grosvenor,Spain - LaLiga,Elche CF,Valencia CF,Goalkeeper Saves Home,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72478672,2026-11-01T17:30:00Z,Grosvenor,Spain - LaLiga,Elche CF,Valencia CF,Goalkeeper Saves Away,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Corners Totals,corners_control,4,4,4,Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Anytime Goalscorer,other,50,1,0,Aihen Munoz | Aitor Paredes | Alejandro Rego | Alex Berenguer | Alex Lebarbier | Alex Marchal | Alvaro Djalo | Ander Barrenetxea
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Player Shots on Target,shots_control,108,3,0,Aihen Munoz | Aihen Munoz | Aitor Paredes | Aitor Paredes | Alejandro Rego | Alejandro Rego | Alejandro Rego | Alex Berenguer
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Player To Score or Assist,other,42,1,0,Aihen Munoz | Aitor Paredes | Alejandro Rego | Alex Berenguer | Alvaro Djalo | Ander Barrenetxea | Arsen Zakharyan | Aymeric Laporte
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Player Fouls,player_fouls_committed,126,3,0,Aihen Munoz | Aihen Munoz | Aihen Munoz | Aitor Paredes | Aitor Paredes | Aitor Paredes | Alejandro Rego | Alejandro Rego
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Player To Assist,other,42,1,0,Aihen Munoz | Aitor Paredes | Alejandro Rego | Alex Berenguer | Alvaro Djalo | Ander Barrenetxea | Arsen Zakharyan | Aymeric Laporte
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Player Shots,shots_control,132,3,0,Aihen Munoz | Aihen Munoz | Aihen Munoz | Aitor Paredes | Aitor Paredes | Aitor Paredes | Alejandro Rego | Alejandro Rego
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Paddy Power,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Player To Be Fouled,player_fouled,126,3,0,Aihen Munoz | Aihen Munoz | Aihen Munoz | Aitor Paredes | Aitor Paredes | Aitor Paredes | Alejandro Rego | Alejandro Rego
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Grosvenor,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Corners Totals,corners_control,1,1,1,Over/Under 10.5
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Grosvenor,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Corners Totals Home,corners_control,1,1,1,Over/Under 7.5
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Grosvenor,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Anytime Goalscorer,other,1,0,0,Beñat Gerenabarrena
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Grosvenor,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Corners Totals Away,corners_control,1,1,1,Over/Under 5.5
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Grosvenor,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Anytime Assist,other,1,0,0,Peio Canales
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Grosvenor,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Grosvenor,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Total Shots Home,shots_control,1,1,0,Over 14.5
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Grosvenor,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Total Shots Away,shots_control,1,1,0,Over 10.5
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Grosvenor,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Goalkeeper Saves Away,player_saves,1,1,0,Over 4.5
+2026-10-31T01:03:03Z,72478666,2026-11-01T20:00:00Z,Grosvenor,Spain - LaLiga,Athletic Bilbao,Real Sociedad San Sebastian,Goalkeeper Saves Home,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Draw No Bet,other,1,0,0,
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Corners Totals,corners_control,5,5,5,Over/Under 8.5 | Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Anytime Goalscorer,other,20,1,0,Amad Diallo | Bruno Fernandes | Bryan Mbeumo | Carlos Baleba | Cole Palmer | Danny Welbeck | Diogo Dalot | Harry Maguire
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Player to be Booked,other,20,1,0,Amad Diallo | Bruno Fernandes | Bryan Mbeumo | Carlos Baleba | Cole Palmer | Danny Welbeck | Diogo Dalot | Harry Maguire
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Player To Assist,other,20,1,0,Amad Diallo | Bruno Fernandes | Bryan Mbeumo | Carlos Baleba | Cole Palmer | Danny Welbeck | Diogo Dalot | Harry Maguire
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Player To Score or Assist,other,20,1,0,Amad Diallo | Bruno Fernandes | Bryan Mbeumo | Carlos Baleba | Cole Palmer | Danny Welbeck | Diogo Dalot | Harry Maguire
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Player To Be Fouled,player_fouled,60,3,0,Amad Diallo | Amad Diallo | Amad Diallo | Bruno Fernandes | Bruno Fernandes | Bruno Fernandes | Bryan Mbeumo | Bryan Mbeumo
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Player Shots,shots_control,60,3,0,Amad Diallo | Amad Diallo | Amad Diallo | Bruno Fernandes | Bruno Fernandes | Bruno Fernandes | Bryan Mbeumo | Bryan Mbeumo
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Player Shots on Target,shots_control,47,3,0,Amad Diallo | Amad Diallo | Amad Diallo | Bruno Fernandes | Bruno Fernandes | Bruno Fernandes | Bryan Mbeumo | Bryan Mbeumo
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Paddy Power,England - Premier League,Chelsea FC,Manchester United,Player Fouls,player_fouls_committed,60,3,0,Amad Diallo | Amad Diallo | Amad Diallo | Bruno Fernandes | Bruno Fernandes | Bruno Fernandes | Bryan Mbeumo | Bryan Mbeumo
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Grosvenor,England - Premier League,Chelsea FC,Manchester United,Anytime Goalscorer,other,1,0,0,Josh Acheampong
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Grosvenor,England - Premier League,Chelsea FC,Manchester United,Anytime Assist,other,1,0,0,Matheus Cunha
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Grosvenor,England - Premier League,Chelsea FC,Manchester United,Corners Totals,corners_control,1,1,1,Over/Under 12.5
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Grosvenor,England - Premier League,Chelsea FC,Manchester United,Corners Totals Away,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Grosvenor,England - Premier League,Chelsea FC,Manchester United,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Grosvenor,England - Premier League,Chelsea FC,Manchester United,Corners Totals Home,corners_control,1,1,1,Over/Under 4.5
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Grosvenor,England - Premier League,Chelsea FC,Manchester United,Total Shots Away,shots_control,1,1,0,Over 11.5
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Grosvenor,England - Premier League,Chelsea FC,Manchester United,Total Shots Home,shots_control,1,1,0,Over 14.5
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Grosvenor,England - Premier League,Chelsea FC,Manchester United,Goalkeeper Saves Away,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Grosvenor,England - Premier League,Chelsea FC,Manchester United,Goalkeeper Saves Home,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Bet365,England - Premier League,Chelsea FC,Manchester United,Player Saves,player_saves,10,6,0,Mike Penders | Senne Lammens | Senne Lammens | Senne Lammens | Senne Lammens | Senne Lammens | Mike Penders | Mike Penders
+2026-10-31T01:03:03Z,72221358,2026-10-31T12:30:00Z,Bet365,England - Premier League,Chelsea FC,Manchester United,Player Headed Shots on Target,shots_control,51,2,0,Danny Welbeck (1) | Estevao (1) | Geovany Quenda (1) | Jordan Henderson (1) | Jorrel Hato (1) | Josh Acheampong (1) | Levi Colwill (1) | Pedro Neto (1)
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Draw No Bet,other,1,0,0,
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Spread,other,4,0,0,
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Totals,other,9,9,6,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Corners Totals,corners_control,5,5,5,Over/Under 8.5 | Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Anytime Goalscorer,other,47,1,0,Adam Bakoune | Andrea Carboni | Andrea Colpani | Artem Dovbyk | Arthur Theate | Cyril Ngonge | Dany Mota | Ebenezer Akinsanmiro
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Player To Score or Assist,other,44,1,0,Adam Bakoune | Andrea Carboni | Andrea Colpani | Artem Dovbyk | Arthur Theate | Cyril Ngonge | Dany Mota | Ebenezer Akinsanmiro
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Player To Be Fouled,player_fouled,126,3,0,Adam Bakoune | Adam Bakoune | Adam Bakoune | Andrea Carboni | Andrea Carboni | Andrea Carboni | Andrea Colpani | Andrea Colpani
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Player To Assist,other,44,1,0,Adam Bakoune | Andrea Carboni | Andrea Colpani | Artem Dovbyk | Arthur Theate | Cyril Ngonge | Dany Mota | Ebenezer Akinsanmiro
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Player Fouls,player_fouls_committed,132,3,0,Adam Bakoune | Adam Bakoune | Adam Bakoune | Andrea Carboni | Andrea Carboni | Andrea Carboni | Andrea Colpani | Andrea Colpani
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Player Shots,shots_control,135,3,0,Adam Bakoune | Adam Bakoune | Adam Bakoune | Andrea Carboni | Andrea Carboni | Andrea Carboni | Andrea Colpani | Andrea Colpani
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Player to be Booked,other,44,1,0,Adam Bakoune | Andrea Carboni | Andrea Colpani | Artem Dovbyk | Arthur Theate | Cyril Ngonge | Dany Mota | Ebenezer Akinsanmiro
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Player Shots on Target,shots_control,106,3,0,Adam Bakoune | Adam Bakoune | Andrea Carboni | Andrea Colpani | Andrea Colpani | Andrea Colpani | Artem Dovbyk | Artem Dovbyk
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Paddy Power,Italy - Serie A,Bologna FC,AC Monza,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Grosvenor,Italy - Serie A,Bologna FC,AC Monza,Corners Totals,corners_control,1,1,1,Over/Under 9.5
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Grosvenor,Italy - Serie A,Bologna FC,AC Monza,Anytime Goalscorer,other,1,0,0,Andrea Carboni
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Grosvenor,Italy - Serie A,Bologna FC,AC Monza,Anytime Assist,other,1,0,0,Jens Odgaard
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Grosvenor,Italy - Serie A,Bologna FC,AC Monza,Corners Totals Away,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Grosvenor,Italy - Serie A,Bologna FC,AC Monza,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,71945368,2026-10-31T14:00:00Z,Grosvenor,Italy - Serie A,Bologna FC,AC Monza,Corners Totals Home,corners_control,1,1,1,Over/Under 5.5
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,Anytime Goalscorer,other,38,1,0,Alexi Koum | Alexis Vossah | Amine Gouiri | Amine Harit | Angel Gomes | Aron Donnum | Bamo Meite | Casper Tengstedt
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,Player To Score or Assist,other,28,1,0,Alexis Vossah | Amine Gouiri | Amine Harit | Angel Gomes | Aron Donnum | Bamo Meite | Casper Tengstedt | CJ Egan-Riley
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,Player Shots,shots_control,93,3,0,Alexis Vossah | Alexis Vossah | Alexis Vossah | Amine Gouiri | Amine Gouiri | Amine Gouiri | Amine Harit | Amine Harit
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,Player To Assist,other,28,1,0,Alexis Vossah | Amine Gouiri | Amine Harit | Angel Gomes | Aron Donnum | Bamo Meite | Casper Tengstedt | CJ Egan-Riley
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,Player Shots on Target,shots_control,68,3,0,Amine Gouiri | Amine Gouiri | Amine Gouiri | Amine Harit | Amine Harit | Amine Harit | Aron Donnum | Aron Donnum
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Paddy Power,France - Ligue 1,Olympique Marseille,Toulouse FC,Player Fouls,player_fouls_committed,69,3,0,Alexis Vossah | Alexis Vossah | Alexis Vossah | Amine Gouiri | Amine Gouiri | Amine Gouiri | Amine Harit | Amine Harit
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Grosvenor,France - Ligue 1,Olympique Marseille,Toulouse FC,Corners Totals,corners_control,1,1,1,Over/Under 7.5
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Grosvenor,France - Ligue 1,Olympique Marseille,Toulouse FC,Anytime Goalscorer,other,1,0,0,Angel Gomes
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Grosvenor,France - Ligue 1,Olympique Marseille,Toulouse FC,Goalkeeper Saves Home,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Grosvenor,France - Ligue 1,Olympique Marseille,Toulouse FC,Anytime Assist,other,1,0,0,Emerson Palmieri
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Grosvenor,France - Ligue 1,Olympique Marseille,Toulouse FC,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Grosvenor,France - Ligue 1,Olympique Marseille,Toulouse FC,Corners Totals Away,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Grosvenor,France - Ligue 1,Olympique Marseille,Toulouse FC,Total Shots Away,shots_control,1,1,0,Over 12.5
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Grosvenor,France - Ligue 1,Olympique Marseille,Toulouse FC,Corners Totals Home,corners_control,1,1,1,Over/Under 5.5
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Grosvenor,France - Ligue 1,Olympique Marseille,Toulouse FC,Goalkeeper Saves Away,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72036264,2026-11-01T19:45:00Z,Grosvenor,France - Ligue 1,Olympique Marseille,Toulouse FC,Total Shots Home,shots_control,1,1,0,Over 15.5
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Paddy Power,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Paddy Power,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Paddy Power,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Paddy Power,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Totals,other,9,9,6,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Paddy Power,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Paddy Power,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Paddy Power,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Paddy Power,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Paddy Power,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Half Time / Full Time,other,8,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Paddy Power,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Anytime Goalscorer,other,41,1,0,Albert Gronbaek | Albert Sambi Lokonga | Alexander Rossing-Lelesiit | Ansgar Knauff | Ayoube Amaimouni-Echghouyab | Bakery Jatta | Can Uzun | David Moller Wolfe
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Paddy Power,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Player Shots on Target,shots_control,77,3,0,Albert Gronbaek | Albert Gronbaek | Albert Gronbaek | Alexander Rossing-Lelesiit | Alexander Rossing-Lelesiit | Alexander Rossing-Lelesiit | Ansgar Knauff | Ansgar Knauff
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Paddy Power,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Paddy Power,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Player Shots,shots_control,96,3,0,Albert Gronbaek | Albert Gronbaek | Albert Gronbaek | Albert Sambi Lokonga | Albert Sambi Lokonga | Albert Sambi Lokonga | Alexander Rossing-Lelesiit | Alexander Rossing-Lelesiit
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Grosvenor,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Anytime Goalscorer,other,1,0,0,Noël Aséko Nkili
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Grosvenor,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Corners Totals,corners_control,1,1,1,Over/Under 10.5
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Grosvenor,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Total Shots Home,shots_control,1,1,0,Over 17.5
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Grosvenor,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Goalkeeper Saves Away,player_saves,1,1,0,Over 4.5
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Grosvenor,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Total Shots Away,shots_control,1,1,0,Over 11.5
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Grosvenor,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Corners Totals Home,corners_control,1,1,1,Over/Under 6.5
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Grosvenor,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Anytime Assist,other,1,0,0,Albert Gronbaek
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Grosvenor,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Grosvenor,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Goalkeeper Saves Home,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72513278,2026-11-01T16:30:00Z,Grosvenor,Germany - Bundesliga,Eintracht Frankfurt,Hamburger SV,Corners Totals Away,corners_control,1,1,1,Over/Under 2.5
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Spread,other,4,0,0,
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Totals HT,other,4,4,3,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Corners Totals,corners_control,5,5,5,Over/Under 8.5 | Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Anytime Goalscorer,other,46,1,0,Alessandro Marcandalli | Alex Amorim | Ali Dembele | Amar Fatah | Antonino Gallo | Cody Drameh | Corrie Ndaba | Danilo Veiga
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Player To Be Fouled,player_fouled,126,3,0,Alessandro Marcandalli | Alessandro Marcandalli | Alessandro Marcandalli | Alex Amorim | Alex Amorim | Alex Amorim | Ali Dembele | Ali Dembele
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Player Fouls,player_fouls_committed,129,3,0,Alessandro Marcandalli | Alessandro Marcandalli | Alessandro Marcandalli | Alex Amorim | Alex Amorim | Alex Amorim | Ali Dembele | Ali Dembele
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Player To Assist,other,43,1,0,Alessandro Marcandalli | Alex Amorim | Ali Dembele | Amar Fatah | Antonino Gallo | Cody Drameh | Corrie Ndaba | Danilo Veiga
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Player Shots on Target,shots_control,105,3,0,Alessandro Marcandalli | Alex Amorim | Alex Amorim | Alex Amorim | Ali Dembele | Ali Dembele | Amar Fatah | Amar Fatah
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Player to be Booked,other,44,1,0,Alessandro Marcandalli | Alex Amorim | Ali Dembele | Amar Fatah | Antonino Gallo | Cody Drameh | Corrie Ndaba | Danilo Veiga
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Player Shots,shots_control,132,3,0,Alessandro Marcandalli | Alessandro Marcandalli | Alessandro Marcandalli | Alex Amorim | Alex Amorim | Alex Amorim | Ali Dembele | Ali Dembele
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Paddy Power,Italy - Serie A,US Lecce,Genoa CFC,Player To Score or Assist,other,43,1,0,Alessandro Marcandalli | Alex Amorim | Ali Dembele | Amar Fatah | Antonino Gallo | Cody Drameh | Corrie Ndaba | Danilo Veiga
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Grosvenor,Italy - Serie A,US Lecce,Genoa CFC,Corners Totals Away,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Grosvenor,Italy - Serie A,US Lecce,Genoa CFC,Anytime Goalscorer,other,1,0,0,Gaby Jean
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Grosvenor,Italy - Serie A,US Lecce,Genoa CFC,Anytime Assist,other,1,0,0,Morten Frendrup
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Grosvenor,Italy - Serie A,US Lecce,Genoa CFC,Corners Totals,corners_control,1,1,1,Over/Under 8.5
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Grosvenor,Italy - Serie A,US Lecce,Genoa CFC,Corners Totals Home,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,71945378,2026-11-01T17:00:00Z,Grosvenor,Italy - Serie A,US Lecce,Genoa CFC,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Draw No Bet,other,1,0,0,
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Corners Totals,corners_control,5,5,5,Over/Under 8.5 | Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Anytime Goalscorer,other,45,1,0,Ademola Lookman | Adrian de la Fuente | Aissa Mandi | Alejandro Grimaldo | Alexander Sorloth | Alex Baena | Arnau Ortiz | Axel Tape
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Player to be Booked,other,42,1,0,Ademola Lookman | Adrian de la Fuente | Aissa Mandi | Alejandro Grimaldo | Alexander Sorloth | Alex Baena | Arnau Ortiz | Axel Tape
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Player Shots,shots_control,129,3,0,Ademola Lookman | Ademola Lookman | Ademola Lookman | Adrian de la Fuente | Adrian de la Fuente | Adrian de la Fuente | Aissa Mandi | Aissa Mandi
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Player To Be Fouled,player_fouled,120,3,0,Ademola Lookman | Ademola Lookman | Ademola Lookman | Adrian de la Fuente | Adrian de la Fuente | Adrian de la Fuente | Aissa Mandi | Aissa Mandi
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Player To Score or Assist,other,42,1,0,Ademola Lookman | Adrian de la Fuente | Aissa Mandi | Alejandro Grimaldo | Alexander Sorloth | Alex Baena | Arnau Ortiz | Axel Tape
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Player Shots on Target,shots_control,112,3,0,Ademola Lookman | Ademola Lookman | Ademola Lookman | Adrian de la Fuente | Adrian de la Fuente | Adrian de la Fuente | Aissa Mandi | Aissa Mandi
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Player Fouls,player_fouls_committed,123,3,0,Ademola Lookman | Ademola Lookman | Ademola Lookman | Adrian de la Fuente | Adrian de la Fuente | Adrian de la Fuente | Aissa Mandi | Aissa Mandi
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Paddy Power,Spain - LaLiga,Levante UD,Atletico Madrid,Player To Assist,other,42,1,0,Ademola Lookman | Adrian de la Fuente | Aissa Mandi | Alejandro Grimaldo | Alexander Sorloth | Alex Baena | Arnau Ortiz | Axel Tape
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Grosvenor,Spain - LaLiga,Levante UD,Atletico Madrid,Corners Totals,corners_control,1,1,1,Over/Under 11.5
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Grosvenor,Spain - LaLiga,Levante UD,Atletico Madrid,Anytime Goalscorer,other,1,0,0,Ifeanyi Ndukwe
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Grosvenor,Spain - LaLiga,Levante UD,Atletico Madrid,Corners Totals Away,corners_control,1,1,1,Over/Under 7.5
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Grosvenor,Spain - LaLiga,Levante UD,Atletico Madrid,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Grosvenor,Spain - LaLiga,Levante UD,Atletico Madrid,Anytime Assist,other,1,0,0,Rodrigo Mendoza
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Grosvenor,Spain - LaLiga,Levante UD,Atletico Madrid,Corners Totals Home,corners_control,1,1,1,Over/Under 5.5
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Grosvenor,Spain - LaLiga,Levante UD,Atletico Madrid,Goalkeeper Saves Away,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Grosvenor,Spain - LaLiga,Levante UD,Atletico Madrid,Goalkeeper Saves Home,player_saves,1,1,0,Over 4.5
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Grosvenor,Spain - LaLiga,Levante UD,Atletico Madrid,Total Shots Away,shots_control,1,1,0,Over 15.5
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Grosvenor,Spain - LaLiga,Levante UD,Atletico Madrid,Total Shots Home,shots_control,1,1,0,Over 11.5
+2026-10-31T01:03:03Z,72478678,2026-10-31T13:00:00Z,Bet365,Spain - LaLiga,Levante UD,Atletico Madrid,Player Saves,player_saves,11,6,0,Mathew Ryan | Jan Oblak | Mathew Ryan | Mathew Ryan | Mathew Ryan | Mathew Ryan | Mathew Ryan | Jan Oblak
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Spread,other,4,0,0,
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Corners Totals,corners_control,4,4,4,Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Anytime Goalscorer,other,37,1,0,Amir Rrahmani | Andrea Cambiaso | Antonio Merola | Antonio Vergara | Arman Durmisi | Augusto Owusu | Billy Gilmour | Bremer
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Player to be Booked,other,33,1,0,Amir Rrahmani | Andrea Cambiaso | Antonio Vergara | Augusto Owusu | Billy Gilmour | Bremer | Daniele Rugani | Douglas Luiz
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Player Shots on Target,shots_control,83,3,0,Amir Rrahmani | Amir Rrahmani | Andrea Cambiaso | Andrea Cambiaso | Antonio Vergara | Antonio Vergara | Antonio Vergara | Augusto Owusu
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Player To Score or Assist,other,33,1,0,Amir Rrahmani | Andrea Cambiaso | Antonio Vergara | Augusto Owusu | Billy Gilmour | Bremer | Daniele Rugani | Douglas Luiz
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Player Shots,shots_control,99,3,0,Amir Rrahmani | Amir Rrahmani | Amir Rrahmani | Andrea Cambiaso | Andrea Cambiaso | Andrea Cambiaso | Antonio Vergara | Antonio Vergara
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Player To Be Fouled,player_fouled,96,3,0,Amir Rrahmani | Amir Rrahmani | Amir Rrahmani | Andrea Cambiaso | Andrea Cambiaso | Andrea Cambiaso | Antonio Vergara | Antonio Vergara
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Player To Assist,other,33,1,0,Amir Rrahmani | Andrea Cambiaso | Antonio Vergara | Augusto Owusu | Billy Gilmour | Bremer | Daniele Rugani | Douglas Luiz
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Paddy Power,Italy - Serie A,Juventus Turin,SSC Napoli,Player Fouls,player_fouls_committed,99,3,0,Amir Rrahmani | Amir Rrahmani | Amir Rrahmani | Andrea Cambiaso | Andrea Cambiaso | Andrea Cambiaso | Antonio Vergara | Antonio Vergara
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Grosvenor,Italy - Serie A,Juventus Turin,SSC Napoli,Corners Totals,corners_control,1,1,1,Over/Under 12.5
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Grosvenor,Italy - Serie A,Juventus Turin,SSC Napoli,Anytime Assist,other,1,0,0,Pape Sarr
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Grosvenor,Italy - Serie A,Juventus Turin,SSC Napoli,Anytime Goalscorer,other,1,0,0,Andrea Cambiaso
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Grosvenor,Italy - Serie A,Juventus Turin,SSC Napoli,Corners Totals Home,corners_control,1,1,1,Over/Under 6.5
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Grosvenor,Italy - Serie A,Juventus Turin,SSC Napoli,Corners Totals Away,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Grosvenor,Italy - Serie A,Juventus Turin,SSC Napoli,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Grosvenor,Italy - Serie A,Juventus Turin,SSC Napoli,Total Shots Away,shots_control,1,1,0,Over 10.5
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Grosvenor,Italy - Serie A,Juventus Turin,SSC Napoli,Goalkeeper Saves Home,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Grosvenor,Italy - Serie A,Juventus Turin,SSC Napoli,Total Shots Home,shots_control,1,1,0,Over 15.5
+2026-10-31T01:03:03Z,71945374,2026-11-01T19:45:00Z,Grosvenor,Italy - Serie A,Juventus Turin,SSC Napoli,Goalkeeper Saves Away,player_saves,1,1,0,Over 4.5
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Draw No Bet,other,1,0,0,
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Spread,other,6,0,0,
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Totals,other,9,9,6,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Anytime Goalscorer,other,38,1,0,Afonso Moreira | Aleix Garcia | Ameen Al-Dakhil | Atakan Karazor | Ben Hawighorst | Bilal El Khannouss | Chris Fuhrich | Deniz Undav
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Anytime Goalscorer,other,1,0,0,Julian Chabot
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Total Shots Away,shots_control,1,1,0,Over 13.5
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Anytime Assist,other,1,0,0,Guela Doué
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Corners Totals,corners_control,1,1,1,Over/Under 9.5
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Goalkeeper Saves Home,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Corners Totals Away,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Corners Totals Home,corners_control,1,1,1,Over/Under 5.5
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Total Shots Home,shots_control,1,1,0,Over 17.5
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Goalkeeper Saves Away,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72513276,2026-10-31T14:30:00Z,Bet365,Germany - Bundesliga,Bayer Leverkusen,VfB Stuttgart,Player Headed Shots on Target,shots_control,76,3,0,Afonso Moreira (1) | Aleix Garcia (1) | Christian Kofane (1) | Edmond Tapsoba (1) | Eliesse Ben Seghir (1) | Ezequiel Fernandez (1) | Facundo Medina (1) | Guela Doue (1)
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Schalke 04,RB Leipzig,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Schalke 04,RB Leipzig,Draw No Bet,other,1,0,0,
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Schalke 04,RB Leipzig,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Schalke 04,RB Leipzig,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Schalke 04,RB Leipzig,Totals,other,9,9,6,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Schalke 04,RB Leipzig,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Schalke 04,RB Leipzig,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Schalke 04,RB Leipzig,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Schalke 04,RB Leipzig,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Schalke 04,RB Leipzig,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Schalke 04,RB Leipzig,Anytime Goalscorer,other,42,1,0,Abdoul Kone | Adil Aouchiche | Andrija Maksimovic | Antonio Nusa | Benjamin Henrichs | Benno Kaltefleiter | Brajan Gruda | Bryan Lasme
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Schalke 04,RB Leipzig,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Schalke 04,RB Leipzig,Anytime Goalscorer,other,1,0,0,Hee-Chan Hwang
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Schalke 04,RB Leipzig,Corners Totals Away,corners_control,1,1,1,Over/Under 6.5
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Schalke 04,RB Leipzig,Corners Totals Home,corners_control,1,1,1,Over/Under 6.5
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Schalke 04,RB Leipzig,Corners Totals,corners_control,1,1,1,Over/Under 9.5
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Schalke 04,RB Leipzig,Anytime Assist,other,1,0,0,Eric Junior Dina Ebimbe
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Schalke 04,RB Leipzig,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Schalke 04,RB Leipzig,Total Shots Home,shots_control,1,1,0,Over 12.5
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Schalke 04,RB Leipzig,Total Shots Away,shots_control,1,1,0,Over 16.5
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Schalke 04,RB Leipzig,Goalkeeper Saves Away,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72513288,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Schalke 04,RB Leipzig,Goalkeeper Saves Home,player_saves,1,1,0,Over 4.5
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Draw No Bet,other,1,0,0,
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Corners Totals,corners_control,5,5,5,Over/Under 8.5 | Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Anytime Goalscorer,other,22,1,0,Dango Ouattara | Daniel Munoz | Dan Ndoye | Igor Thiago | Jaidon Anthony | Jair Cunha | James McAtee | Keane Lewis-Potter
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Player to be Booked,other,22,1,0,Dango Ouattara | Daniel Munoz | Dan Ndoye | Igor Thiago | Jaidon Anthony | Jair Cunha | James McAtee | Keane Lewis-Potter
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Player Shots,shots_control,66,3,0,Dango Ouattara | Dango Ouattara | Dango Ouattara | Daniel Munoz | Daniel Munoz | Daniel Munoz | Dan Ndoye | Dan Ndoye
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Player To Assist,other,22,1,0,Dango Ouattara | Daniel Munoz | Dan Ndoye | Igor Thiago | Jaidon Anthony | Jair Cunha | James McAtee | Keane Lewis-Potter
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Player To Score or Assist,other,22,1,0,Dango Ouattara | Daniel Munoz | Dan Ndoye | Igor Thiago | Jaidon Anthony | Jair Cunha | James McAtee | Keane Lewis-Potter
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Player Shots on Target,shots_control,56,3,0,Dango Ouattara | Dango Ouattara | Dango Ouattara | Daniel Munoz | Daniel Munoz | Daniel Munoz | Dan Ndoye | Dan Ndoye
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Player Fouls,player_fouls_committed,66,3,0,Dango Ouattara | Dango Ouattara | Dango Ouattara | Daniel Munoz | Daniel Munoz | Daniel Munoz | Dan Ndoye | Dan Ndoye
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Brentford FC,Nottingham Forest,Player To Be Fouled,player_fouled,66,3,0,Dango Ouattara | Dango Ouattara | Dango Ouattara | Daniel Munoz | Daniel Munoz | Daniel Munoz | Dan Ndoye | Dan Ndoye
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Brentford FC,Nottingham Forest,Anytime Assist,other,1,0,0,Dango Ouattara
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Brentford FC,Nottingham Forest,Anytime Goalscorer,other,1,0,0,Dango Ouattara
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Brentford FC,Nottingham Forest,Corners Totals,corners_control,1,1,1,Over/Under 10.5
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Brentford FC,Nottingham Forest,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Brentford FC,Nottingham Forest,Corners Totals Home,corners_control,1,1,1,Over/Under 4.5
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Brentford FC,Nottingham Forest,Corners Totals Away,corners_control,1,1,1,Over/Under 4.5
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Brentford FC,Nottingham Forest,Total Shots Away,shots_control,1,1,0,Over 11.5
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Brentford FC,Nottingham Forest,Total Shots Home,shots_control,1,1,0,Over 15.5
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Brentford FC,Nottingham Forest,Goalkeeper Saves Home,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Brentford FC,Nottingham Forest,Goalkeeper Saves Away,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72221356,2026-10-31T15:00:00Z,Bet365,England - Premier League,Brentford FC,Nottingham Forest,Player Saves,player_saves,11,7,0,Caoimhin Kelleher | Matz Sels | Caoimhin Kelleher | Caoimhin Kelleher | Caoimhin Kelleher | Caoimhin Kelleher | Matz Sels | Matz Sels
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Draw No Bet,other,1,0,0,
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Spread,other,4,0,0,
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Totals,other,9,9,6,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Corners Totals,corners_control,5,5,5,Over/Under 8.5 | Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Anytime Goalscorer,other,20,1,0,Abdoul Ouattara | Abdul Fatawu | Dara O'Shea | Elliot Stroud | Emersonn | Exequiel Palacios | Florentino | Issa Diop
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Player to be Booked,other,20,1,0,Abdoul Ouattara | Abdul Fatawu | Dara O'Shea | Elliot Stroud | Emersonn | Exequiel Palacios | Florentino | Issa Diop
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Player Shots,shots_control,60,3,0,Abdoul Ouattara | Abdoul Ouattara | Abdoul Ouattara | Abdul Fatawu | Abdul Fatawu | Abdul Fatawu | Dara O'Shea | Dara O'Shea
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Player To Assist,other,20,1,0,Abdoul Ouattara | Abdul Fatawu | Dara O'Shea | Elliot Stroud | Emersonn | Exequiel Palacios | Florentino | Issa Diop
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Player Fouls,player_fouls_committed,60,3,0,Abdoul Ouattara | Abdoul Ouattara | Abdoul Ouattara | Abdul Fatawu | Abdul Fatawu | Abdul Fatawu | Dara O'Shea | Dara O'Shea
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Player Shots on Target,shots_control,47,3,0,Abdoul Ouattara | Abdoul Ouattara | Abdul Fatawu | Abdul Fatawu | Abdul Fatawu | Dara O'Shea | Dara O'Shea | Elliot Stroud
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Player To Score or Assist,other,20,1,0,Abdoul Ouattara | Abdul Fatawu | Dara O'Shea | Elliot Stroud | Emersonn | Exequiel Palacios | Florentino | Issa Diop
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Hull City,Ipswich Town,Player To Be Fouled,player_fouled,60,3,0,Abdoul Ouattara | Abdoul Ouattara | Abdoul Ouattara | Abdul Fatawu | Abdul Fatawu | Abdul Fatawu | Dara O'Shea | Dara O'Shea
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Hull City,Ipswich Town,Anytime Goalscorer,other,1,0,0,Florentino Luis
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Hull City,Ipswich Town,Corners Totals Home,corners_control,1,1,1,Over/Under 4.5
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Hull City,Ipswich Town,Anytime Assist,other,1,0,0,Ryan Giles
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Hull City,Ipswich Town,Corners Totals,corners_control,1,1,1,Over/Under 11.5
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Hull City,Ipswich Town,Corners Totals Away,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Hull City,Ipswich Town,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Hull City,Ipswich Town,Goalkeeper Saves Home,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Hull City,Ipswich Town,Goalkeeper Saves Away,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Hull City,Ipswich Town,Total Shots Home,shots_control,1,1,0,Over 13.5
+2026-10-31T01:03:03Z,72221362,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Hull City,Ipswich Town,Total Shots Away,shots_control,1,1,0,Over 11.5
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,FC Augsburg,SC Freiburg,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,FC Augsburg,SC Freiburg,Draw No Bet,other,1,0,0,
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,FC Augsburg,SC Freiburg,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,FC Augsburg,SC Freiburg,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,FC Augsburg,SC Freiburg,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,FC Augsburg,SC Freiburg,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,FC Augsburg,SC Freiburg,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,FC Augsburg,SC Freiburg,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,FC Augsburg,SC Freiburg,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,FC Augsburg,SC Freiburg,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,FC Augsburg,SC Freiburg,Anytime Goalscorer,other,40,1,0,Anthony Jung | Anton Kade | Arijon Ibrahimovic | Berkay Yilmaz | Bruno Ogbus | Chrislain Matsima | Christian Gunter | Cyriaque Irie
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,FC Augsburg,SC Freiburg,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,FC Augsburg,SC Freiburg,Anytime Goalscorer,other,1,0,0,Marius Wolf
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,FC Augsburg,SC Freiburg,Corners Totals Away,corners_control,1,1,1,Over/Under 5.5
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,FC Augsburg,SC Freiburg,Corners Totals,corners_control,1,1,1,Over/Under 9.5
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,FC Augsburg,SC Freiburg,Corners Totals Home,corners_control,1,1,1,Over/Under 6.5
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,FC Augsburg,SC Freiburg,Anytime Assist,other,1,0,0,Marius Wolf
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,FC Augsburg,SC Freiburg,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,FC Augsburg,SC Freiburg,Total Shots Away,shots_control,1,1,0,Over 14.5
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,FC Augsburg,SC Freiburg,Total Shots Home,shots_control,1,1,0,Over 14.5
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,FC Augsburg,SC Freiburg,Goalkeeper Saves Away,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72513280,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,FC Augsburg,SC Freiburg,Goalkeeper Saves Home,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Draw No Bet,other,1,0,0,
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Spread,other,6,0,0,
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Totals,other,9,9,6,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Anytime Goalscorer,other,39,1,0,Adam Daghim | Adam Hlozek | Amos Pieper | Andrej Kramaric | Arthur | Bambase Conte | Bernardo | Cajetan Lenz
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Goalkeeper Saves Away,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Anytime Goalscorer,other,1,0,0,Mats Rots
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Corners Totals,corners_control,1,1,1,Over/Under 12.5
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Total Shots Away,shots_control,1,1,0,Over 14.5
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Corners Totals Home,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Goalkeeper Saves Home,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Anytime Assist,other,1,0,0,Ozan Kabak
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Corners Totals Away,corners_control,1,1,1,Over/Under 6.5
+2026-10-31T01:03:03Z,72513286,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Werder Bremen,TSG Hoffenheim,Total Shots Home,shots_control,1,1,0,Over 14.5
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Draw No Bet,other,1,0,0,
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Totals,other,9,9,6,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Corners Totals,corners_control,5,5,5,Over/Under 8.5 | Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Anytime Goalscorer,other,23,1,0,Adam Smith | Adrien Truffert | Antonio Silva | Anton Stach | Ao Tanaka | Brenden Aaronson | Dominic Calvert-Lewin | Ethan Ampadu
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Player To Be Fouled,player_fouled,69,3,0,Adam Smith | Adam Smith | Adam Smith | Adrien Truffert | Adrien Truffert | Adrien Truffert | Antonio Silva | Antonio Silva
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Player Fouls,player_fouls_committed,69,3,0,Adam Smith | Adam Smith | Adam Smith | Adrien Truffert | Adrien Truffert | Adrien Truffert | Antonio Silva | Antonio Silva
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Player Shots on Target,shots_control,55,3,0,Adam Smith | Adrien Truffert | Adrien Truffert | Antonio Silva | Antonio Silva | Anton Stach | Anton Stach | Anton Stach
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Player To Score or Assist,other,23,1,0,Adam Smith | Adrien Truffert | Antonio Silva | Anton Stach | Ao Tanaka | Brenden Aaronson | Dominic Calvert-Lewin | Ethan Ampadu
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Player Shots,shots_control,69,3,0,Adam Smith | Adam Smith | Adam Smith | Adrien Truffert | Adrien Truffert | Adrien Truffert | Antonio Silva | Antonio Silva
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Player To Assist,other,23,1,0,Adam Smith | Adrien Truffert | Antonio Silva | Anton Stach | Ao Tanaka | Brenden Aaronson | Dominic Calvert-Lewin | Ethan Ampadu
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,AFC Bournemouth,Leeds United,Player to be Booked,other,23,1,0,Adam Smith | Adrien Truffert | Antonio Silva | Anton Stach | Ao Tanaka | Brenden Aaronson | Dominic Calvert-Lewin | Ethan Ampadu
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,AFC Bournemouth,Leeds United,Anytime Goalscorer,other,1,0,0,Adam Smith
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,AFC Bournemouth,Leeds United,Corners Totals,corners_control,1,1,1,Over/Under 11.5
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,AFC Bournemouth,Leeds United,Anytime Assist,other,1,0,0,Eli Junior Kroupi
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,AFC Bournemouth,Leeds United,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,AFC Bournemouth,Leeds United,Corners Totals Away,corners_control,1,1,1,Over/Under 5.5
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,AFC Bournemouth,Leeds United,Corners Totals Home,corners_control,1,1,1,Over/Under 7.5
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,AFC Bournemouth,Leeds United,Total Shots Away,shots_control,1,1,0,Over 10.5
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,AFC Bournemouth,Leeds United,Total Shots Home,shots_control,1,1,0,Over 17.5
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,AFC Bournemouth,Leeds United,Goalkeeper Saves Away,player_saves,1,1,0,Over 4.5
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,AFC Bournemouth,Leeds United,Goalkeeper Saves Home,player_saves,1,1,0,Over 1.5
+2026-10-31T01:03:03Z,72221354,2026-10-31T15:00:00Z,Bet365,England - Premier League,AFC Bournemouth,Leeds United,Player Saves,player_saves,9,6,0,Djordje Petrovic | James Trafford | Djordje Petrovic | Djordje Petrovic | James Trafford | James Trafford | James Trafford | James Trafford
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Draw No Bet,other,1,0,0,
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Spread,other,6,0,0,
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Totals,other,9,9,6,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Corners Totals,corners_control,5,5,5,Over/Under 8.5 | Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Anytime Goalscorer,other,23,1,0,Charalampos Kostoulas | Chema Andres | Costinha | Diego Gomez | Elliot Anderson | Enzo Fernandez | Erling Haaland | Ferdi Kadioglu
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Player To Score or Assist,other,23,1,0,Charalampos Kostoulas | Chema Andres | Costinha | Diego Gomez | Elliot Anderson | Enzo Fernandez | Erling Haaland | Ferdi Kadioglu
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Player Shots on Target,shots_control,59,3,0,Charalampos Kostoulas | Charalampos Kostoulas | Charalampos Kostoulas | Chema Andres | Chema Andres | Chema Andres | Costinha | Costinha
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Player to be Booked,other,23,1,0,Charalampos Kostoulas | Chema Andres | Costinha | Diego Gomez | Elliot Anderson | Enzo Fernandez | Erling Haaland | Ferdi Kadioglu
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Player Fouls,player_fouls_committed,69,3,0,Charalampos Kostoulas | Charalampos Kostoulas | Charalampos Kostoulas | Chema Andres | Chema Andres | Chema Andres | Costinha | Costinha
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Player Shots,shots_control,69,3,0,Charalampos Kostoulas | Charalampos Kostoulas | Charalampos Kostoulas | Chema Andres | Chema Andres | Chema Andres | Costinha | Costinha
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Player To Assist,other,23,1,0,Charalampos Kostoulas | Chema Andres | Costinha | Diego Gomez | Elliot Anderson | Enzo Fernandez | Erling Haaland | Ferdi Kadioglu
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Manchester City,Brighton & Hove Albion,Player To Be Fouled,player_fouled,69,3,0,Charalampos Kostoulas | Charalampos Kostoulas | Charalampos Kostoulas | Chema Andres | Chema Andres | Chema Andres | Costinha | Costinha
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Manchester City,Brighton & Hove Albion,Anytime Goalscorer,other,1,0,0,Erling Haaland
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Manchester City,Brighton & Hove Albion,Corners Totals Home,corners_control,1,1,1,Over/Under 5.5
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Manchester City,Brighton & Hove Albion,Corners Totals Away,corners_control,1,1,1,Over/Under 5.5
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Manchester City,Brighton & Hove Albion,Anytime Assist,other,1,0,0,Maxim De Cuyper
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Manchester City,Brighton & Hove Albion,Corners Totals,corners_control,1,1,1,Over/Under 10.5
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Manchester City,Brighton & Hove Albion,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Manchester City,Brighton & Hove Albion,Total Shots Home,shots_control,1,1,0,Over 16.5
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Manchester City,Brighton & Hove Albion,Total Shots Away,shots_control,1,1,0,Over 11.5
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Manchester City,Brighton & Hove Albion,Goalkeeper Saves Away,player_saves,1,1,0,Over 4.5
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Manchester City,Brighton & Hove Albion,Goalkeeper Saves Home,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Bet365,England - Premier League,Manchester City,Brighton & Hove Albion,Player Saves,player_saves,11,7,0,Gianluigi Donnarumma | Bart Verbruggen | Gianluigi Donnarumma | Gianluigi Donnarumma | Gianluigi Donnarumma | Gianluigi Donnarumma | Bart Verbruggen | Bart Verbruggen
+2026-10-31T01:03:03Z,72221366,2026-10-31T15:00:00Z,Bet365,England - Premier League,Manchester City,Brighton & Hove Albion,Player Headed Shots on Target,shots_control,86,4,0,Abduqodir Khusanov (1) | Allan Andrade (1) | Ayyoub Bouaddi (1) | Dexter Oliver (1) | Elliot Anderson (1) | Enzo Fernandez (1) | Erling Haaland (1) | Floyd Samba (1)
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Draw No Bet,other,1,0,0,
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Spread,other,4,0,0,
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Totals HT,other,4,4,3,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Corners Totals,corners_control,5,5,5,Over/Under 8.5 | Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Anytime Goalscorer,other,48,1,0,Abdoulaye Faye | Adria Pedrosa | Aleix Febas | Alemao | Alvaro Garcia | Andrei Ratiu | Andres Antanon | Angel Arcos
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Player Shots on Target,shots_control,99,3,0,Abdoulaye Faye | Abdoulaye Faye | Adria Pedrosa | Adria Pedrosa | Aleix Febas | Aleix Febas | Alemao | Alemao
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Player to be Booked,other,40,1,0,Abdoulaye Faye | Adria Pedrosa | Aleix Febas | Alemao | Alvaro Garcia | Andrei Ratiu | Couhaib Driouech | Ferran Jutgla
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Player To Be Fouled,player_fouled,114,3,0,Abdoulaye Faye | Abdoulaye Faye | Abdoulaye Faye | Adria Pedrosa | Adria Pedrosa | Adria Pedrosa | Aleix Febas | Aleix Febas
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Player Fouls,player_fouls_committed,114,3,0,Abdoulaye Faye | Abdoulaye Faye | Abdoulaye Faye | Adria Pedrosa | Adria Pedrosa | Adria Pedrosa | Aleix Febas | Aleix Febas
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Player To Assist,other,40,1,0,Abdoulaye Faye | Adria Pedrosa | Aleix Febas | Alemao | Alvaro Garcia | Andrei Ratiu | Couhaib Driouech | Ferran Jutgla
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Player Shots,shots_control,123,3,0,Abdoulaye Faye | Abdoulaye Faye | Abdoulaye Faye | Adria Pedrosa | Adria Pedrosa | Adria Pedrosa | Aleix Febas | Aleix Febas
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Player To Score or Assist,other,40,1,0,Abdoulaye Faye | Adria Pedrosa | Aleix Febas | Alemao | Alvaro Garcia | Andrei Ratiu | Couhaib Driouech | Ferran Jutgla
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Paddy Power,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Grosvenor,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Anytime Goalscorer,other,1,0,0,Javi Rodríguez
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Grosvenor,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Grosvenor,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Corners Totals,corners_control,1,1,1,Over/Under 10.5
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Grosvenor,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Anytime Assist,other,1,0,0,Pablo Durán
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Grosvenor,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Corners Totals Home,corners_control,1,1,1,Over/Under 5.5
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Grosvenor,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Corners Totals Away,corners_control,1,1,1,Over/Under 5.5
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Grosvenor,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Total Shots Home,shots_control,1,1,0,Over 14.5
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Grosvenor,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Goalkeeper Saves Home,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Grosvenor,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Goalkeeper Saves Away,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72478682,2026-10-31T15:15:00Z,Grosvenor,Spain - LaLiga,Rayo Vallecano,RC Celta de Vigo,Total Shots Away,shots_control,1,1,0,Over 10.5
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Draw No Bet,other,1,0,0,
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Spread,other,4,0,0,
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Corners Totals,corners_control,5,5,5,Over/Under 8.5 | Over/Under 9.5 | Over/Under 10.5 | Over/Under 11.5 | Over/Under 12.5
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Bookings Totals,match_cards_total,3,3,3,Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Anytime Goalscorer,other,25,1,0,Bobby Thomas | Brandon Thomas-Asante | Brian Brobbey | Caleb Yirenkyi | Chris Rigg | Enzo Le Fee | Ethan Pinnock | Granit Xhaka
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Player To Score or Assist,other,25,1,0,Bobby Thomas | Brandon Thomas-Asante | Brian Brobbey | Caleb Yirenkyi | Chris Rigg | Enzo Le Fee | Ethan Pinnock | Granit Xhaka
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Player to be Booked,other,25,1,0,Bobby Thomas | Brandon Thomas-Asante | Brian Brobbey | Caleb Yirenkyi | Chris Rigg | Enzo Le Fee | Ethan Pinnock | Granit Xhaka
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Player To Be Fouled,player_fouled,75,3,0,Bobby Thomas | Bobby Thomas | Bobby Thomas | Brandon Thomas-Asante | Brandon Thomas-Asante | Brandon Thomas-Asante | Brian Brobbey | Brian Brobbey
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Player To Assist,other,25,1,0,Bobby Thomas | Brandon Thomas-Asante | Brian Brobbey | Caleb Yirenkyi | Chris Rigg | Enzo Le Fee | Ethan Pinnock | Granit Xhaka
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Player Shots,shots_control,75,3,0,Bobby Thomas | Bobby Thomas | Bobby Thomas | Brandon Thomas-Asante | Brandon Thomas-Asante | Brandon Thomas-Asante | Brian Brobbey | Brian Brobbey
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Player Shots on Target,shots_control,60,3,0,Bobby Thomas | Bobby Thomas | Brandon Thomas-Asante | Brandon Thomas-Asante | Brandon Thomas-Asante | Brian Brobbey | Brian Brobbey | Brian Brobbey
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Paddy Power,England - Premier League,Coventry City,Sunderland AFC,Player Fouls,player_fouls_committed,75,3,0,Bobby Thomas | Bobby Thomas | Bobby Thomas | Brandon Thomas-Asante | Brandon Thomas-Asante | Brandon Thomas-Asante | Brian Brobbey | Brian Brobbey
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Coventry City,Sunderland AFC,Corners Totals,corners_control,1,1,1,Over/Under 9.5
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Coventry City,Sunderland AFC,Anytime Goalscorer,other,1,0,0,Dayann Methalie
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Coventry City,Sunderland AFC,Anytime Assist,other,1,0,0,Frank Onyeka
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Coventry City,Sunderland AFC,Corners Totals Away,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Coventry City,Sunderland AFC,Corners Totals Home,corners_control,1,1,1,Over/Under 3.5
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Coventry City,Sunderland AFC,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Coventry City,Sunderland AFC,Goalkeeper Saves Home,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Coventry City,Sunderland AFC,Goalkeeper Saves Away,player_saves,1,1,0,Over 2.5
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Coventry City,Sunderland AFC,Total Shots Home,shots_control,1,1,0,Over 15.5
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Grosvenor,England - Premier League,Coventry City,Sunderland AFC,Total Shots Away,shots_control,1,1,0,Over 13.5
+2026-10-31T01:03:03Z,72221360,2026-10-31T15:00:00Z,Bet365,England - Premier League,Coventry City,Sunderland AFC,Player Saves,player_saves,10,5,0,Carl Rushworth | Robin Roefs | Carl Rushworth | Carl Rushworth | Carl Rushworth | Carl Rushworth | Robin Roefs | Robin Roefs
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Draw No Bet,other,1,0,0,
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Double Chance,other,1,0,0,
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Spread,other,5,0,0,
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Totals,other,9,9,5,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5 | Over/Under 4.5 | Over/Under 5.5 | Over/Under 6.5 | Over/Under 7.5
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Both Teams To Score,other,1,0,0,
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,ML HT,other,1,0,0,
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Totals HT,other,4,4,4,Over/Under 0.5 | Over/Under 1.5 | Over/Under 2.5 | Over/Under 3.5
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,European Handicap,other,4,0,0,
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Half Time / Full Time,other,9,0,0,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Anytime Goalscorer,other,47,1,0,Albert Millgramm | Clemens Lippmann | Daiki Hashioka | David Herold | Deniz Zeitler | Fabio Chiarodia | Felix Gotze | Florian Neuhaus
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Paddy Power,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Correct Score,other,78,0,0,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,ML,match_odds,1,0,0,
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Goalkeeper Saves Home,player_saves,1,1,0,Over 3.5
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Anytime Goalscorer,other,1,0,0,Daiki Hashioka
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Corners Totals Home,corners_control,1,1,1,Over/Under 4.5
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Corners Totals,corners_control,1,1,1,Over/Under 8.5
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Corners Totals Away,corners_control,1,1,1,Over/Under 4.5
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Anytime Assist,other,1,0,0,Jonah Sticker
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Total Shots Home,shots_control,1,1,0,Over 16.5
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Total Shots Away,shots_control,1,1,0,Over 12.5
+2026-10-31T01:03:03Z,72513284,2026-10-31T14:30:00Z,Grosvenor,Germany - Bundesliga,Borussia Monchengladbach,SC Paderborn 07,Goalkeeper Saves Away,player_saves,1,1,0,Over 3.5
