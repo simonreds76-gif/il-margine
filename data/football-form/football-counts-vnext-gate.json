@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31T15:30:47Z",
+  "generated_at": "2026-10-31T19:33:29Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -37,19 +37,19 @@
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
       "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 61,
-      "scored_fixtures": 9,
+      "scored_rows": 53,
+      "scored_fixtures": 8,
       "eligible_rows": 3,
       "eligible_fixtures": 2,
-      "blocked_rows": 58,
+      "blocked_rows": 50,
       "blocker_rows": {
-        "better_fresh_price_available": 17,
-        "edge_below_3pct": 57,
-        "price_not_fresh_10m": 8,
-        "price_older_than_3h": 8
+        "better_fresh_price_available": 15,
+        "edge_below_3pct": 49,
+        "price_not_fresh_10m": 6,
+        "price_older_than_3h": 6
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": 8,
+      "matchday_min": 9,
       "matchday_max": 11,
       "next_unlock": null,
       "operational_alert_required": false,
@@ -65,10 +65,10 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-10-31T15:30:32Z",
+      "generated_at": "2026-10-31T19:33:14Z",
       "status": "OK",
       "missing_history": [],
-      "scored_fixtures": 9
+      "scored_fixtures": 8
     }
   },
   "corners_v3": {
@@ -109,16 +109,16 @@
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
       "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 1128,
-      "scored_fixtures": 35,
-      "eligible_rows": 40,
-      "eligible_fixtures": 8,
-      "blocked_rows": 1088,
+      "scored_rows": 986,
+      "scored_fixtures": 31,
+      "eligible_rows": 43,
+      "eligible_fixtures": 10,
+      "blocked_rows": 943,
       "blocker_rows": {
-        "better_fresh_price_available": 132,
-        "edge_below_3pct": 932,
-        "price_not_fresh_10m": 762,
-        "price_older_than_3h": 506
+        "better_fresh_price_available": 140,
+        "edge_below_3pct": 807,
+        "price_not_fresh_10m": 596,
+        "price_older_than_3h": 596
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 8,

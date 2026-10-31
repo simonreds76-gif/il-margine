@@ -2982,16 +2982,69 @@
         ],
         "price_checked_at": "2026-10-30T15:07:44.831229+00:00"
       }
+    },
+    "grosvenor|71945378|justin bijlow|2.5|over": {
+      "status": "claimed",
+      "run_token": "41234685844:1",
+      "claimed_at": "2026-10-31T19:33:46.020736+00:00",
+      "signal": {
+        "signal_id": "grosvenor|71945378|justin bijlow|2.5|over",
+        "created_at": "2026-10-31T19:33:08Z",
+        "event_id": "71945378",
+        "match_date": "2026-11-01",
+        "kickoff_at": "2026-11-01T17:00:00Z",
+        "league": "serie-a",
+        "home_team": "US Lecce",
+        "away_team": "Genoa CFC",
+        "team": "Genoa CFC",
+        "opponent": "US Lecce",
+        "venue": "away",
+        "goalkeeper": "Justin Bijlow",
+        "bookmaker": "Grosvenor",
+        "line": "2.5",
+        "side": "over",
+        "odds_decimal": "1.8400",
+        "model_mean": "3.1385",
+        "model_probability": "0.584270",
+        "push_probability": "0.000000",
+        "fair_odds": "1.712",
+        "edge": "0.075057",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-10-31T19:32:58+00:00",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "team_goalkeeper_away",
+        "identity_basis": "same_fixture_lineup_side",
+        "price_comparison": [
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 1.84,
+            "captured_at": "2026-10-31T19:32:58+00:00",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-10-31T19:33:46.020736+00:00"
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-10-31T15:31:06.861771+00:00",
-      "added": 0,
+      "checked_at": "2026-10-31T19:33:46.020736+00:00",
+      "added": 1,
       "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-10-31T15:31:06.861771+00:00",
+      "checked_at": "2026-10-31T19:33:46.020736+00:00",
       "added": 0,
       "suppressed": {}
     }

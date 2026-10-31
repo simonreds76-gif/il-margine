@@ -2,24 +2,24 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 78,
+    "blocked_lines": 53,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 75,
-      "goalkeeper_team_unresolved": 75,
-      "missing_priced_edge": 78,
+      "goalkeeper_not_matched_to_lineup": 50,
+      "goalkeeper_team_unresolved": 50,
+      "missing_priced_edge": 53,
       "missing_registered_feature": 3
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 0,
-    "priced_lines": 201,
+    "eligible_lines": 2,
+    "priced_lines": 159,
     "provisional_lines": 0,
-    "signals_added": 0,
-    "value_ladder_lines": 12
+    "signals_added": 1,
+    "value_ladder_lines": 5
   },
   "evidence": {
     "clv": 0.051099,
     "clv_matched": 32,
-    "pending": 7,
+    "pending": 8,
     "pnl_units": 12.572,
     "roi": 0.285727,
     "settled": 88,
@@ -29,36 +29,36 @@
       "independently_reviewed_named_keeper_count": 1,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 101,
+    "signals": 102,
     "true_close_coverage": 0.363636,
     "void": 6
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-31T15:30:27.324658+00:00",
+    "checked_at": "2026-10-31T19:33:09.101621+00:00",
     "counts": {
-      "not_fresh_prematch": 65,
-      "offers_saved": 214
+      "not_fresh_prematch": 49,
+      "offers_saved": 163
     },
-    "saved": 15,
+    "saved": 17,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-10-31T15:30:26Z",
+  "generated_at": "2026-10-31T19:33:08Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
-      "blocked_or_missing_inputs": 57,
-      "not_new_fresh_prematch": 65
+      "blocked_or_missing_inputs": 35,
+      "not_new_fresh_prematch": 49
     },
-    "forecast_fixtures": 131,
-    "forecast_keepers": 266,
-    "generated_at": "2026-10-31T15:30:27.397641+00:00",
-    "last_capture_at": "2026-10-31T15:30:27.397641+00:00",
+    "forecast_fixtures": 132,
+    "forecast_keepers": 268,
+    "generated_at": "2026-10-31T19:33:09.166930+00:00",
+    "last_capture_at": "2026-10-31T19:33:09.166930+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 1,
-    "new_selections": 0,
+    "new_forecasts": 2,
+    "new_selections": 1,
     "next_review_at": 100,
     "paired_scores": {
       "current": {
@@ -76,12 +76,12 @@
       "current": {
         "losses": 12,
         "overdue": 0,
-        "pending": 6,
+        "pending": 7,
         "profit": 0.26900000000000035,
         "pushes": 0,
         "review": 1,
         "roi": 0.024454545454545486,
-        "selections": 33,
+        "selections": 34,
         "settled": 22,
         "stake": 11.0,
         "voids": 4,
@@ -137,12 +137,12 @@
         "current": {
           "losses": 0,
           "overdue": 0,
-          "pending": 4,
+          "pending": 5,
           "profit": 0,
           "pushes": 0,
           "review": 0,
           "roi": null,
-          "selections": 4,
+          "selections": 5,
           "settled": 0,
           "stake": 0.0,
           "voids": 0,
@@ -166,6 +166,32 @@
     },
     "review_milestone": 50,
     "selections": [
+      {
+        "away": "Genoa CFC",
+        "bookmaker": "Grosvenor",
+        "captured_at": "2026-10-31T19:32:58+00:00",
+        "contract_scope": "team_goalkeeper_away",
+        "edge": 0.07505697677637757,
+        "event_id": "71945378",
+        "fair_odds": 1.7115371926773126,
+        "goalkeeper": "Justin Bijlow",
+        "home": "US Lecce",
+        "kickoff_at": "2026-11-01T17:00:00+00:00",
+        "line": 2.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5749737",
+        "model": "current",
+        "odds": 1.84,
+        "overdue": false,
+        "player_id": "721533",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-10-31T19:33:09.166930+00:00",
+        "settlement_policy": "grosvenor_full90_scope_agreement_v1",
+        "side": "over",
+        "status": "pending",
+        "team_id": "10233"
+      },
       {
         "away": "Borussia Dortmund",
         "bookmaker": "Grosvenor",
@@ -1150,7 +1176,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 73,
+      "awaiting_verified_keeper_result": 75,
       "incomplete_or_conflicting_full_match_count": 12,
       "keeper_identity_unresolved": 3,
       "team_keeper_participation_or_rules_review": 6,
