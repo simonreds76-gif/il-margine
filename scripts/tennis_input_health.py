@@ -191,6 +191,13 @@ def observe(root, get, now):
     status['stored_forecasts_missing_elo']=sum(bool(f['missing_elo_keys']) for f in status['fixtures'] if f['fixture_key'] in stored_keys)
     status['unpriced_candidates_missing_elo']=sum(bool(f['missing_elo_keys']) for f in status['fixtures'] if f['fixture_key'] not in stored_keys)
     status['scheduled_export_exclusions']=ignored
+    from tennis_elo_health import annotate_sources
+    names = {}
+    player_file = root/'data/oncourt/players_atp.csv'
+    if player_file.exists():
+        with player_file.open(encoding='utf-8-sig',newline='') as handle:
+            names = {int(r['id']): r['name'] for r in csv.DictReader(handle) if str(r.get('id','')).isdigit()}
+    annotate_sources(root, status, elo, now, names)
     return {'observed_at':now.isoformat(), 'status':status, 'forecasts':fixtures,
             'elo_rows':elo, 'profile_rows':profiles, 'metadata':metadata,
             'file_hashes':{p:file_hash(root/p) for p in MODEL_FILES+SOURCE_FILES},
@@ -247,12 +254,18 @@ def text(status):
     freshness=age_state(status.get('checked_at'),datetime.now(timezone.utc),2)
     if freshness!='CURRENT': state=f'{state}; health check {freshness.lower()}'
     bad = ', '.join(k+': '+v for k,v in status.get('checks',{}).items() if v!='CURRENT')
-    return (f"Tennis input health: {state}. Elo refresh lineage unverified; "
+    sources=status.get('elo_sources',{}).get('published_research',{})
+    published='; '.join(f"{tour} {s.get('state','UNAVAILABLE')} (edition {s.get('publication_date','unknown')})" for tour,s in sources.items())
+    missing=status.get('missing_elo_players',[])
+    gaps='; '.join(f"{p['name']}: {', '.join(p['missing_surfaces'])}" for p in missing[:6])
+    return (f"Tennis input health: {state}. Live Elo provenance remains unverified; "
             f"Stored forecasts missing Elo: {status.get('stored_forecasts_missing_elo','?')}/{status.get('stored_forecast_count','?')}; "
             f"eligible unpriced singles missing Elo: {status.get('unpriced_candidates_missing_elo','?')}/{status.get('unpriced_export_candidates','?')}. "
             f"Excluded doubles/draw placeholders: {status.get('scheduled_export_exclusions',{}).get('identified_doubles',0)}/{status.get('scheduled_export_exclusions',{}).get('named_draw_placeholder',0)}. "
             +(f'Other checks: {bad}. ' if bad else '')+
-            'Fresh odds do not certify input freshness. Existing pricing unchanged.')
+            (f'Missing rating inputs: {gaps}. ' if gaps else '')+
+            (f'Published Elo research source: {published}; not applied to live prices. ' if published else '')+
+            'Legacy row timestamps do not establish the last rating refresh. Existing pricing unchanged.')
 
 def unchanged_after_results(root, previous, data):
     """Conservative cross-day check on exact native IDs in the local fixture export.
