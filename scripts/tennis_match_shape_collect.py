@@ -10,7 +10,8 @@ from pathlib import Path
 import time
 import requests
 from tennis_grosvenor import BASE, PARAMS, eligible
-from tennis_match_shape import RELATIVE, parse_receipt, refresh, digest, immutable, read
+from tennis_match_shape import RELATIVE, parse_receipt, refresh, digest, immutable, read, atomic
+from tennis_match_shape_prepare import prepare, readiness
 
 
 def collect(get=requests.get, max_events=4):
@@ -43,8 +44,12 @@ def collect(get=requests.get, max_events=4):
 def capture_shared(root,receipt):
     out=root/RELATIVE
     if not (out/'registration.json').exists():return {}
+    prepared=prepare(root)
+    if not prepared['ready']:
+        atomic(out/'capture-status.json',dict(state='INPUT_REFRESH_REQUIRED',reason=prepared['reason'],captured=0,checked_at=datetime.now(timezone.utc).isoformat()))
+        return refresh(root,settle_only=True)
     clock=datetime.now(timezone.utc)
-    if not parse_receipt(receipt,clock):
+    if prepared.get('refreshed') or not parse_receipt(receipt,clock):
         receipt=collect()
     path=out/'quote-evidence'/(digest(receipt)+'.json')
     if not path.exists():immutable(path,receipt)
@@ -56,6 +61,10 @@ def refresh_saved(root):
     out=root/RELATIVE
     if not (out/'registration.json').exists():return {}
     clock=datetime.now(timezone.utc)
+    current=readiness(root,clock)
+    if not current['ready']:
+        atomic(out/'capture-status.json',dict(state='INPUT_REFRESH_REQUIRED',reason=current['reason'],captured=0,checked_at=clock.isoformat()))
+        return refresh(root,clock,settle_only=True)
     paths=sorted((out/'quote-evidence').glob('*.json'),key=lambda p:p.stat().st_mtime,reverse=True)[:4]
     for path in paths:
         if path.stat().st_size>32*1024*1024:continue
