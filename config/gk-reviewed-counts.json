@@ -16,6 +16,22 @@
         "https://www.skysports.com/football/sc-freiburg-vs-schalke/7763429947929175232"
       ],
       "reason": "FotMob's named Karius statistic reports three saves; Sky Sports independently publishes Schalke three saves. Karius is the verified full-match goalkeeper. The shot map has two saved opponent attempts. Preserve that discrepancy in research targets; use the corroborated published count only for this named contract. This is not a general shot-map override."
+    },
+    {
+      "match_id": "5868120",
+      "match_date": "2026-10-30",
+      "player_id": 1184772,
+      "team_id": 8558,
+      "goalkeeper": "Ángel Fortuno",
+      "venue": "away",
+      "actual_saves": 5,
+      "reviewed_event_saves": 4,
+      "reviewed_at": "2026-11-01T11:37:01.697212+00:00",
+      "source_urls": [
+        "https://www.fotmob.com/api/data/matchDetails?matchId=5868120",
+        "https://www.sofascore.com/news/villarreal-0-1-espanyol-compact-defending-one-set-piece-three-points"
+      ],
+      "reason": "FotMob named player statistic and the separately published Sofascore match report both record five saves for Fortuno, verified as the full-match Espanyol goalkeeper. The shot map contains four. Use the corroborated published count for this exact Bet365 named-player contract only; retain the event-count conflict in research data. Both counts put Over 3.5 above its threshold. No general source override."
     }
   ]
 }
