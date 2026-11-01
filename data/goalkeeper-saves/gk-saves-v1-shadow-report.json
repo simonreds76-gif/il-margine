@@ -2,18 +2,18 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 37,
+    "blocked_lines": 32,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 37,
-      "goalkeeper_team_unresolved": 37,
-      "missing_priced_edge": 37
+      "goalkeeper_not_matched_to_lineup": 32,
+      "goalkeeper_team_unresolved": 32,
+      "missing_priced_edge": 32
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 3,
-    "priced_lines": 140,
+    "eligible_lines": 4,
+    "priced_lines": 125,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 15
+    "value_ladder_lines": 19
   },
   "evidence": {
     "clv": 0.051099,
@@ -34,26 +34,26 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-11-01T15:17:30.388690+00:00",
+    "checked_at": "2026-11-01T16:23:20.290440+00:00",
     "counts": {
-      "already_saved": 9,
-      "not_fresh_prematch": 21
+      "not_fresh_prematch": 28,
+      "offers_saved": 129
     },
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "saved": 7,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-11-01T15:17:29Z",
+  "generated_at": "2026-11-01T16:23:19Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
-      "blocked_or_missing_inputs": 32,
-      "not_new_fresh_prematch": 21
+      "blocked_or_missing_inputs": 27,
+      "not_new_fresh_prematch": 28
     },
     "forecast_fixtures": 133,
     "forecast_keepers": 272,
-    "generated_at": "2026-11-01T15:17:30.438110+00:00",
+    "generated_at": "2026-11-01T16:23:20.327492+00:00",
     "last_capture_at": "2026-11-01T15:16:20.674411+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,

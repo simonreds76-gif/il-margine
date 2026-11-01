@@ -1,16 +1,16 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_save_markets": 9,
-      "named_player_lines": 122,
+      "events_with_save_markets": 7,
+      "named_player_lines": 90,
       "status": "NAMED_PLAYER_LINES",
       "unnamed_or_team_lines": 0
     },
     "Grosvenor": {
-      "events_with_save_markets": 9,
+      "events_with_save_markets": 7,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 34
+      "unnamed_or_team_lines": 28
     },
     "Paddy Power": {
       "events_with_save_markets": 0,
@@ -20,40 +20,38 @@
     }
   },
   "capture_errors": [],
-  "capture_mode": "publication",
+  "capture_mode": "close",
   "direct_source": {
     "bookmaker": "Grosvenor",
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 176,
+      "current_quotes": 162,
       "mapped_quotes": 0,
       "paper_selections": 0,
-      "price_or_status_changes": 3,
+      "price_or_status_changes": 0,
       "rules": "unverified"
     },
-    "matched": 9,
+    "matched": 7,
     "missing": [],
-    "requests": 14,
-    "rows": 785
+    "requests": 12,
+    "rows": 580
   },
   "discovery_retries": 0,
   "event_last_checked": {
-    "71945374": "2026-11-01T15:16:12Z",
-    "71945378": "2026-11-01T15:16:12Z",
-    "72036262": "2026-11-01T15:16:12Z",
-    "72036264": "2026-11-01T15:16:12Z",
-    "72036268": "2026-11-01T15:16:12Z",
-    "72221364": "2026-11-01T15:16:12Z",
-    "72478666": "2026-11-01T15:16:12Z",
-    "72478672": "2026-11-01T15:16:12Z",
-    "72513278": "2026-11-01T15:16:12Z"
+    "71945374": "2026-11-01T16:23:07Z",
+    "71945378": "2026-11-01T16:23:07Z",
+    "72036264": "2026-11-01T16:23:07Z",
+    "72221364": "2026-11-01T16:23:07Z",
+    "72478666": "2026-11-01T16:23:07Z",
+    "72478672": "2026-11-01T16:23:07Z",
+    "72513278": "2026-11-01T16:23:07Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 9,
-  "events_supported": 9,
-  "events_with_lines": 9,
-  "generated_at": "2026-11-01T15:16:12Z",
+  "events_selected": 7,
+  "events_supported": 7,
+  "events_with_lines": 7,
+  "generated_at": "2026-11-01T16:23:07Z",
   "last_publication_at": "2026-11-01T15:16:12Z",
   "league_coverage": {
     "bundesliga": {
@@ -69,15 +67,15 @@
       "with_prices": 2
     },
     "ligue-1": {
-      "selected": 3,
-      "with_prices": 3
+      "selected": 1,
+      "with_prices": 1
     },
     "serie-a": {
       "selected": 2,
       "with_prices": 2
     }
   },
-  "market_inventory_rows_added": 268,
+  "market_inventory_rows_added": 218,
   "market_names_observed": [
     "Anytime Assist",
     "Anytime Goalscorer",
@@ -105,6 +103,7 @@
     "Player To Score or Assist",
     "Player to be Booked",
     "Spread",
+    "Team Total Home",
     "Total Shots Away",
     "Total Shots Home",
     "Totals",
@@ -114,13 +113,13 @@
     "errors": [],
     "excluded": {
       "conflicting_quotes": 0,
-      "fixture_not_eligible": 567,
-      "stale_or_missing_market_poll": 8,
-      "unmatched_or_unsupported_fixture": 506
+      "fixture_not_eligible": 558,
+      "stale_or_missing_market_poll": 5,
+      "unmatched_or_unsupported_fixture": 417
     },
-    "market_count": 10,
-    "quote_count": 181,
-    "received_at": "2026-11-01T15:16:19.015472+00:00",
+    "market_count": 9,
+    "quote_count": 213,
+    "received_at": "2026-11-01T16:23:19.167253+00:00",
     "requests": 1,
     "source": "moviodds_bet365",
     "status": "OK"
@@ -128,23 +127,9 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 156,
-  "rows_observed": 156,
+  "rows_added": 118,
+  "rows_observed": 118,
   "selected_events": [
-    {
-      "away": "Angers SCO",
-      "competition": "France - Ligue 1",
-      "home": "Olympique Lyon",
-      "id": 72036262,
-      "kickoff_at": "2026-11-01T16:15:00Z"
-    },
-    {
-      "away": "AS Monaco",
-      "competition": "France - Ligue 1",
-      "home": "Paris FC",
-      "id": 72036268,
-      "kickoff_at": "2026-11-01T16:15:00Z"
-    },
     {
       "away": "Arsenal FC",
       "competition": "England - Premier League",
@@ -196,5 +181,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 9
+  "three_way_events": 7
 }
