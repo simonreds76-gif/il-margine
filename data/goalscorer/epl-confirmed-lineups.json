@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-11-01T16:30:00Z",
       "home_team": "Liverpool",
       "away_team": "Arsenal",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -21,15 +21,15 @@
         "Virgil van Dijk",
         "Miloš Kerkez",
         "Alexis Mac Allister",
-        "Ryan Gravenberch",
-        "Bradley Barcola",
-        "Florian Wirtz",
+        "Trey Nyoni",
         "Cody Gakpo",
+        "Florian Wirtz",
+        "Bradley Barcola",
         "Alexander Isak"
       ],
       "away_players": [
         "David Raya",
-        "Ben White",
+        "Jurriën Timber",
         "Ezri Konsa",
         "Gabriel",
         "Riccardo Calafiori",
@@ -37,7 +37,7 @@
         "Declan Rice",
         "Noni Madueke",
         "Martin Ødegaard",
-        "Eberechi Eze",
+        "Christos Tzolis",
         "Kai Havertz"
       ],
       "home_starters": [
@@ -108,26 +108,26 @@
           "shirt_number": "10"
         },
         {
-          "name": "Ryan Gravenberch",
+          "name": "Trey Nyoni",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
           "position_id": 66,
-          "player_id": 956683,
-          "shirt_number": "38"
+          "player_id": 1436258,
+          "shirt_number": "42"
         },
         {
-          "name": "Bradley Barcola",
+          "name": "Cody Gakpo",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 83,
-          "player_id": 1297165,
-          "shirt_number": "29"
+          "player_id": 806552,
+          "shirt_number": "18"
         },
         {
           "name": "Florian Wirtz",
@@ -141,15 +141,15 @@
           "shirt_number": "7"
         },
         {
-          "name": "Cody Gakpo",
+          "name": "Bradley Barcola",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 87,
-          "player_id": 806552,
-          "shirt_number": "18"
+          "player_id": 1297165,
+          "shirt_number": "29"
         },
         {
           "name": "Alexander Isak",
@@ -176,15 +176,15 @@
           "shirt_number": "1"
         },
         {
-          "name": "Ben White",
+          "name": "Jurriën Timber",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-2-3-1",
           "position_id": 32,
-          "player_id": 776151,
-          "shirt_number": "4"
+          "player_id": 942381,
+          "shirt_number": "12"
         },
         {
           "name": "Ezri Konsa",
@@ -264,15 +264,15 @@
           "shirt_number": "8"
         },
         {
-          "name": "Eberechi Eze",
+          "name": "Christos Tzolis",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 87,
-          "player_id": 818975,
-          "shirt_number": "10"
+          "player_id": 1157237,
+          "shirt_number": "17"
         },
         {
           "name": "Kai Havertz",
@@ -286,26 +286,135 @@
           "shirt_number": "29"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
-      "home_unavailable": [
-        "Víctor Muñoz",
+      "home_subs": [
+        "Giorgi Mamardashvili",
+        "Joseph Gomez",
+        "Konstantinos Tsimikas",
+        "Wataru Endo",
         "Dominik Szoboszlai",
+        "Ryan Gravenberch",
+        "Lewis Koumas",
+        "Rio Ngumoha",
+        "Víctor Muñoz"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Giorgi Mamardashvili",
+          "player_id": "948800",
+          "role_group": "GK"
+        },
+        {
+          "name": "Joseph Gomez",
+          "player_id": "568571",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Konstantinos Tsimikas",
+          "player_id": "671529",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Wataru Endo",
+          "player_id": "202643",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Dominik Szoboszlai",
+          "player_id": "846005",
+          "role_group": "MID"
+        },
+        {
+          "name": "Ryan Gravenberch",
+          "player_id": "956683",
+          "role_group": "MID"
+        },
+        {
+          "name": "Lewis Koumas",
+          "player_id": "1364042",
+          "role_group": "FW"
+        },
+        {
+          "name": "Rio Ngumoha",
+          "player_id": "1597668",
+          "role_group": "FW"
+        },
+        {
+          "name": "Víctor Muñoz",
+          "player_id": "1553105",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Kepa Arrizabalaga",
+        "Ben White",
+        "Cristhian Mosquera",
+        "Piero Hincapié",
+        "Eberechi Eze",
+        "Martín Zubimendi",
+        "Mikel Merino",
+        "Myles Lewis-Skelly",
+        "Viktor Gyökeres"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Kepa Arrizabalaga",
+          "player_id": "317564",
+          "role_group": "GK"
+        },
+        {
+          "name": "Ben White",
+          "player_id": "776151",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Cristhian Mosquera",
+          "player_id": "1298907",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Piero Hincapié",
+          "player_id": "1137667",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Eberechi Eze",
+          "player_id": "818975",
+          "role_group": "MID"
+        },
+        {
+          "name": "Martín Zubimendi",
+          "player_id": "1031325",
+          "role_group": "MID"
+        },
+        {
+          "name": "Mikel Merino",
+          "player_id": "574645",
+          "role_group": "MID"
+        },
+        {
+          "name": "Myles Lewis-Skelly",
+          "player_id": "1406436",
+          "role_group": "MID"
+        },
+        {
+          "name": "Viktor Gyökeres",
+          "player_id": "664500",
+          "role_group": "FW"
+        }
+      ],
+      "home_unavailable": [
         "Conor Bradley",
         "Giovanni Leoni",
         "Jeremie Frimpong",
         "Hugo Ekitiké"
       ],
       "away_unavailable": [
-        "Christos Tzolis",
         "William Saliba",
         "Bukayo Saka",
         "Max Dowman"
       ],
-      "observed_at": "2026-11-01T13:58:22.827351+00:00",
-      "changed_at": "2026-10-31T13:24:14.248266+00:00"
+      "observed_at": "2026-11-01T16:48:39.023642+00:00",
+      "changed_at": "2026-11-01T16:48:39.023642+00:00"
     },
     {
       "fotmob_match_id": 5795503,
@@ -605,7 +714,7 @@
         "William Osula"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-11-01T13:58:22.827351+00:00",
+      "observed_at": "2026-11-01T16:48:39.023642+00:00",
       "changed_at": "2026-11-01T11:44:24.091823+00:00"
     }
   ]

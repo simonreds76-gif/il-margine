@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-01T13:59:56.858824Z",
+  "generated_at": "2026-11-01T16:49:35.682265Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -35,111 +35,109 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 19,
+  "fixtures_evaluated": 11,
   "signals_qualifying": 1,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 46,
-    "model_market_gap_gt_10pp": 3
+    "lineup_not_public_quality": 2,
+    "incomplete_prediction_roster": 23,
+    "market_odds_above_cap": 1
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 3,
-    "added_by_league": {
-      "bundesliga": 2,
-      "ligue-1": 1
-    },
+    "eligible_rows": 0,
+    "added_by_league": {},
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
   "leagues_covered": [
-    "bundesliga"
+    "serie-a"
   ],
-  "featured_signal_id": "20261101-marius-bülter-74af05b2f3",
+  "featured_signal_id": "20261101-nikola-stulic-01ba5abae2",
   "signals": [
     {
-      "id": "20261101-marius-bülter-74af05b2f3",
+      "id": "20261101-nikola-stulic-01ba5abae2",
       "match": {
-        "home_team": "Union Berlin",
-        "away_team": "1. FC Cologne",
-        "league": "bundesliga",
-        "league_display": "Bundesliga",
-        "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "2026-11-01T14:30:00Z",
-        "kickoff_display": "Sun 01 Nov 14:30 UK",
-        "fotmob_match_id": "5881213",
-        "fotmob_page_url": "/matches/union-berlin-vs-1-fc-koln/2cqofy#5881213",
+        "home_team": "US Lecce",
+        "away_team": "Genoa CFC",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-11-01T17:00:00Z",
+        "kickoff_display": "Sun 01 Nov 17:00 UK",
+        "fotmob_match_id": "5749737",
+        "fotmob_page_url": "/matches/lecce-vs-genoa/3cj5b9#5749737",
         "lineup_type": "confirmed",
         "venue": ""
       },
       "player": {
-        "name": "Marius Bülter",
-        "team": "FC Cologne",
+        "name": "Nikola Stulic",
+        "team": "Lecce",
         "position": "FW",
         "jersey_label": "",
-        "team_logo_path": "/team-logos/bundesliga/fc-cologne.png",
-        "team_primary_color": "#f8fafc",
+        "team_logo_path": "/team-logos/serie-a/lecce.png",
+        "team_primary_color": "#facc15",
         "team_secondary_color": "#dc2626",
-        "team_shirt_pattern": "solid"
+        "team_shirt_pattern": "vertical-stripes"
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 38.4,
-        "fair_odds": 2.61
+        "scoring_chance_pct": 31.7,
+        "fair_odds": 3.16
       },
       "market_data": {
-        "best_odds": 3.2,
+        "best_odds": 4.3,
         "best_book": "Grosvenor",
-        "implied_chance_pct": 31.2
+        "implied_chance_pct": 23.3
       },
       "edge": {
-        "price_gap_pp": 7.1,
+        "price_gap_pp": 8.4,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 97
+          "percentile": 93
         },
-        "share_of_team_chances_pct": 23,
-        "share_of_team_chances_percentile": 92,
+        "share_of_team_chances_pct": 22,
+        "share_of_team_chances_percentile": 94,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 74
+          "percentile": 56
         },
         "recent_team_form": {
-          "tier": "Positive",
+          "tier": "Quiet",
           "window": 5,
           "matches": 5,
-          "through_date": "2026-10-24",
-          "xg_for_avg": 1.5,
-          "xg_against_avg": 1.2,
-          "xgd_per90": 0.3,
-          "shots_for_avg": 15.0,
-          "shots_against_avg": 13.2,
-          "sot_for_avg": 5.2,
-          "sot_against_avg": 5.4,
-          "corners_for_avg": 5.6,
-          "corners_against_avg": 5.2
+          "through_date": "2026-10-29",
+          "xg_for_avg": 1.62,
+          "xg_against_avg": 2.02,
+          "xgd_per90": -0.39,
+          "shots_for_avg": 14.6,
+          "shots_against_avg": 13.4,
+          "sot_for_avg": 5.8,
+          "sot_against_avg": 4.4,
+          "corners_for_avg": 5.0,
+          "corners_against_avg": 3.8
         },
         "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 95
+          "tier": "Low",
+          "percentile": 27
         },
         "opponent_recent_defence": {
-          "tier": "High",
+          "tier": "Average",
           "window": 5,
           "matches": 5,
-          "through_date": "2026-10-24",
-          "xg_for_avg": 1.08,
-          "xg_against_avg": 2.13,
-          "xgd_per90": -1.05,
-          "shots_for_avg": 11.8,
-          "shots_against_avg": 17.2,
-          "sot_for_avg": 3.4,
-          "sot_against_avg": 6.8,
+          "through_date": "2026-10-28",
+          "xg_for_avg": 0.88,
+          "xg_against_avg": 1.21,
+          "xgd_per90": -0.33,
+          "shots_for_avg": 10.4,
+          "shots_against_avg": 13.8,
+          "sot_for_avg": 3.2,
+          "sot_against_avg": 3.8,
           "corners_for_avg": 3.8,
-          "corners_against_avg": 5.4
+          "corners_against_avg": 6.0
         },
-        "fixture_boost_pct": 1,
+        "fixture_boost_pct": -4,
         "projected_minutes": 85,
         "penalty_role": "Secondary",
         "role_adjustment_factor": 1.0,
@@ -149,9 +147,7 @@
       "confidence_tier": "High",
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
-        "Recent chance quality grades as strong",
-        "Recent team form supports the attacking case",
-        "Opponent defensive profile is a positive matchup"
+        "Recent chance quality grades as strong"
       ],
       "risk_flags": []
     }
