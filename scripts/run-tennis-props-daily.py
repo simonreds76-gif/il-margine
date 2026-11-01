@@ -18,6 +18,7 @@ import tempfile
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from model_lifecycle import most_aces_suspended
+from tennis_pairing_consistency import ensure_props_board, verify_derived_board
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -171,64 +172,69 @@ def select_most_aces_file(as_of: str, lookback_days: int = 3) -> Path | None:
 
 
 def refresh_derived_ace_boards(as_of: str) -> None:
-    """Rebuild every ace board that depends on the main projection artifact."""
-    run(
-        [sys.executable, str(ROOT / "scripts" / "tennis-props-v3-live.py")],
-        "Build v3 ATP ace prospective shadow board",
-        fatal=False,
-        timeout_seconds=120,
-    )
-    if most_aces_suspended():
-        print("Most Aces suspended; ordinary aces/DF boards continue. Existing forecasts still settle.")
-        return
-    run(
-        [sys.executable, str(ROOT / "scripts" / "build-tennis-most-aces-board.py")],
-        "Build correlated Most Aces 1X2 fair board",
-        fatal=False,
-        timeout_seconds=180,
-    )
+    """Full and Admin refreshes share the same current-board validation."""
+    if not refresh_current_most_aces(as_of, register=False):
+        raise RuntimeError('Current derived tennis projections are incomplete')
 
 
-    direct_code = run(
-        [
-            sys.executable,
-            str(ROOT / "scripts" / "tennis-most-aces-direct-live.py"),
-            "--as-of",
-            as_of,
-        ],
-        "Build direct Most Aces 1X2 prospective shadow board",
-        fatal=False,
-        timeout_seconds=180,
-    )
-    if direct_code:
-        MOST_ACES_DIRECT_BOARD.write_text('', encoding='utf-8')
-        print('WARNING: Direct research refresh failed; prior Direct board cleared, Count continues.')
-
-
-def refresh_current_most_aces(as_of: str) -> None:
+def refresh_current_most_aces(as_of: str, *, register: bool = True) -> bool:
     """Bounded current boards, without historical settlement/reporting."""
-    if most_aces_suspended():
-        return
-    for script, arguments, output in [('tennis-props-v3-live.py', [], 'aces-v3-projection-board.csv'),
-            ('build-tennis-most-aces-board.py', [], 'most-aces-1x2-board.csv'),
-            ('tennis-most-aces-direct-live.py', ['--as-of', as_of], 'most-aces-direct-1x2-board.csv')]:
+    from tennis_pairing_consistency import clear_empty_derived_scope
+    empty_scope = clear_empty_derived_scope(ROOT)
+    complete = True
+    builders = [('tennis-props-v3-live.py', [], 'aces-v3-projection-board.csv')]
+    if not most_aces_suspended():
+        builders += [('build-tennis-most-aces-board.py', [], 'most-aces-1x2-board.csv'),
+                     ('tennis-most-aces-direct-live.py', ['--as-of', as_of], 'most-aces-direct-1x2-board.csv')]
+    for script, arguments, output in ([] if empty_scope else builders):
         started = datetime.now(timezone.utc).timestamp()
-        code = run([sys.executable, str(ROOT / 'scripts' / script), *arguments], script, fatal=False, timeout_seconds=60)
+        code = run([sys.executable, str(ROOT / 'scripts' / script), *arguments], script, fatal=False, timeout_seconds=180)
         target = PROPS_DIR / 'shadow' / output
+        if not code and target.exists():
+            try:
+                verify_derived_board(ROOT, output)
+            except (ValueError, KeyError) as exc:
+                print('WARNING: ' + str(exc))
+                code = 1
         if code or not target.exists() or target.stat().st_mtime < started:
             if script == 'tennis-most-aces-direct-live.py':
                 # Direct is an independent experiment, never the alert authority.
                 # Clear its current board so stale rows cannot be registered.
                 target.write_text('', encoding='utf-8')
                 print('WARNING: Direct research refresh failed; Count paper comparison continues.')
+                complete = False
                 continue
             (PROPS_DIR / 'shadow/most-aces-current.json').write_text(json.dumps({
                 'generated_at': datetime.now(timezone.utc).isoformat(), 'status': 'REFRESH_FAILED',
                 'failed_step': script, 'matches': [], 'records': [],
                 'note': 'Most Aces refresh failed. Earlier boards are not fresh signals.'}), encoding='utf-8')
-            return
-    run([sys.executable, str(ROOT / 'scripts/tennis_most_aces_current.py'), '--as-of', as_of],
+            return False
+    if not register or most_aces_suspended():
+        return complete
+    code = run([sys.executable, str(ROOT / 'scripts/tennis_most_aces_current.py'), '--as-of', as_of],
         'Compare current Most Aces 1X2 prices and register paper observations', fatal=False, timeout_seconds=30)
+    return complete and code == 0
+
+
+def refresh_current_paper_lanes(as_of: str) -> bool:
+    """Refresh existing observers from the same boards/prices before Admin returns."""
+    commands = [
+        ('tennis_ace_compass.py', ['--comparison', str(PROPS_DIR / f'comparison-{as_of}.csv')], 240),
+        ('tennis_sisal_5050.py', ['--quotes', str(PROPS_DIR / 'inbox' / f'bet365-lines-{as_of}.csv')], 180),
+        ('tennis-props-aces-over-v4.py', ['--comparison', str(PROPS_DIR / f'comparison-v3-aces-{as_of}.csv')], 180),
+    ]
+    failures = []
+    for script, arguments, timeout in commands:
+        code = run([sys.executable, str(ROOT / 'scripts' / script), *arguments],
+                   'Refresh existing paper lane: ' + script, fatal=False, timeout_seconds=timeout)
+        if code:
+            failures.append({'script': script, 'exit': code})
+    from tennis_pairing_consistency import atomic
+    atomic(ROOT / 'data/tennis-input-health/paper-refresh-status.json', {
+        'checked_at': datetime.now(timezone.utc).isoformat(), 'as_of': as_of,
+        'state': 'FAILED' if failures else 'CURRENT', 'failures': failures,
+        'models_changed': False, 'alerts_sent': 0})
+    return not failures
 
 
 def run_most_aces_shadow(as_of: str, capture: Path | None = None) -> None:
@@ -287,8 +293,16 @@ def run_comparison(
     if not include_challengers:
         return True
     v3_board = PROPS_DIR / "shadow" / "aces-v3-projection-board.csv"
+    v3_comparison = PROPS_DIR / f"comparison-v3-aces-{as_of}.csv"
+    if v3_comparison.exists():
+        v3_comparison.unlink()
     if has_market_rows(v3_board):
-        run(
+        try:
+            verify_derived_board(ROOT, v3_board.name)
+        except (ValueError, KeyError) as exc:
+            print('WARNING: ' + str(exc))
+            return False
+        code = run(
             [
                 sys.executable,
                 str(ROOT / "scripts" / "tennis-props-compare-bet365.py"),
@@ -301,7 +315,12 @@ def run_comparison(
             ],
             "Compare v3 ATP ace shadow projections with Bet365",
             fatal=False,
+            timeout_seconds=60,
         )
+        if code or not v3_comparison.exists():
+            return False
+    else:
+        v3_comparison.write_text("date,player,opponent,market\n", encoding="utf-8")
     return True
 
 
@@ -449,17 +468,20 @@ def comparison_failure(as_of: str, market_file: Path) -> int:
 
 
 def run_monitor_only(as_of: str, *, selections_only: bool = False) -> int:
-    """Refresh the canonical monitor locally, without capture or experiments."""
+    """Refresh current forecasts and existing paper lanes, without odds downloads."""
     market_file = None
     step = "select_combined_prices"
     mark_pipeline_blocked(as_of, None, step, running=True)
     try:
+        step = 'current_pairing_projection_check'
+        ensure_props_board(ROOT, as_of, runner=run)
+        derived_ready = refresh_current_most_aces(as_of)
         market_file = select_market_file(as_of)
         if market_file is None:
             mark_pipeline_blocked(as_of, None, "market_prices_missing")
             return 1
         step = "canonical_comparison"
-        if not run_comparison(as_of, market_file, include_challengers=False, timeout_seconds=25):
+        if not run_comparison(as_of, market_file, include_challengers=True, timeout_seconds=25):
             return comparison_failure(as_of, market_file)
         commands = (
             ("shadow_registration", "tennis-props-shadow-tracker.py", ["--date", as_of, "--comparison", str(PROPS_DIR / f"comparison-{as_of}.csv"), "--allow-medium"], 15),
@@ -475,9 +497,12 @@ def run_monitor_only(as_of: str, *, selections_only: bool = False) -> int:
                 mark_pipeline_blocked(as_of, market_file, step)
                 return code
         step = "pipeline_health"
-        refresh_current_most_aces(as_of)
-        run([sys.executable, str(ROOT / 'scripts/tennis_most_df.py'), '--capture-only'],
+        df_exit = run([sys.executable, str(ROOT / 'scripts/tennis_most_df.py'), '--capture-only'],
             'Record current Most DF paper comparison (no historical wait or alerts)', fatal=False, timeout_seconds=15)
+        paper_ready = refresh_current_paper_lanes(as_of)
+        if not derived_ready or df_exit or not paper_ready:
+            mark_pipeline_blocked(as_of, market_file, 'current_model_refresh_incomplete')
+            return 1
         code = write_pipeline_health(as_of, market_file, strict=True)
         if code != 0:
             try:
@@ -601,6 +626,7 @@ def run_comparison_only(
     if skip_derived_boards:
         # Manual refresh needs the bounded current board, not slow research lanes.
         return run_monitor_only(as_of, selections_only=selections_only)
+    ensure_props_board(ROOT, as_of, runner=run)
     market_file = select_market_file(as_of)
     if market_file is None:
         print(f"WARNING: no hosted/local Bet365 capture contains {as_of} events.")
@@ -627,7 +653,7 @@ def main() -> int:
     parser.add_argument("--require-odds", action="store_true", help="Fail if the Bet365 odds scrape cannot run")
     parser.add_argument("--selections-only", action="store_true", help="Register current selections; leave historical settlements/reports to the scheduled run")
     parser.add_argument("--comparison-only", action="store_true", help="Sync hosted prices and refresh comparison/tracking without rebuilding projections")
-    parser.add_argument("--monitor-only", action="store_true", help="Bounded local canonical comparison, tracking, settlement, report and health; no capture, sync or experiments")
+    parser.add_argument("--monitor-only", action="store_true", help="Current boards, comparisons and existing paper lanes; no new odds download or model fitting")
     parser.add_argument("--skip-derived-boards", action="store_true", help="Skip slow derived ace boards during a fast comparison pass")
     parser.add_argument("--capture-only", action="store_true", help="Capture bookmaker tennis count prices without rebuilding projections")
     parser.add_argument("--skip-hosted-sync", action="store_true", help="Do not sync captures from the golden data branch")

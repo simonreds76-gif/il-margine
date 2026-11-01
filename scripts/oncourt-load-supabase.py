@@ -93,6 +93,16 @@ def load_csv(path):
         return list(csv.DictReader(f))
 
 
+def read_current_schedule(path):
+    # A missing/truncated export is not an empty tennis schedule.
+    with path.open(encoding='utf-8-sig', newline='') as handle:
+        reader = csv.DictReader(handle)
+        required = {'tour_id', 'player1_id', 'player2_id', 'round_id', 'draw', 'result'}
+        if not required.issubset(reader.fieldnames or []):
+            raise ValueError('Current schedule export is incomplete; refusing remote replacement')
+        return list(reader)
+
+
 def current_fixture_player_rows(players_rows, today_rows):
     """Return the player records referenced by the current OnCourt fixture export."""
     current_ids = {
@@ -451,8 +461,8 @@ def _upload_batched(table, rows, on_conflict, transform_fn, label=None):
         data = _dedup(data, on_conflict)
         dups_removed += before - len(data)
         ok = _upsert(table, data, on_conflict)
-        if not ok:
-            _insert(table, data)
+        if not ok and not _insert(table, data):
+            raise RuntimeError(f'{table} batch upload failed; current inputs are not ready')
         ok_count += len(batch)
         elapsed = time.time() - t0
         rate = ok_count / elapsed if elapsed > 0 else 0
@@ -467,6 +477,7 @@ def _upload_batched(table, rows, on_conflict, transform_fn, label=None):
 
 
 def main():
+    schedule_rows = read_current_schedule(DATA_DIR / 'today_atp.csv')
     if not SUPABASE_URL or not SUPABASE_KEY:
         print("ERROR: Missing Supabase credentials.")
         print("  Ensure .env.local has NEXT_PUBLIC_SUPABASE_URL and")
@@ -497,7 +508,8 @@ def main():
     rows = load_csv(DATA_DIR / "courts.csv")
     if rows:
         data = [{"id": _safe_int(r["id"]), "name": r["name"]} for r in rows]
-        _upsert("oncourt_courts", data, "id")
+        if not _upsert("oncourt_courts", data, "id"):
+            raise RuntimeError('oncourt_courts upload failed')
         print(f"  oncourt_courts: {len(data)} rows")
 
     # 2. Players
@@ -608,7 +620,7 @@ def main():
         sys.exit(1)
 
     # 7. Today (delete + insert fresh)
-    rows = load_csv(DATA_DIR / "today_atp.csv")
+    rows = schedule_rows
     if rows:
         data = [
             {
@@ -621,11 +633,24 @@ def main():
             }
             for r in rows
         ]
-        _delete_all("oncourt_today")
-        _insert("oncourt_today", data)
+        replace_current_schedule(data)
         print(f"  oncourt_today: {len(data)} rows")
+    else:
+        # An empty verified export must not leave yesterday's pairings in place.
+        replace_current_schedule([])
+
+    from tennis_pairing_consistency import verify_remote_schedule
+    verified = verify_remote_schedule(Path(__file__).resolve().parents[1])
+    print(f"  Verified current schedule: {verified['rows']} exact native rows")
 
     print("\nDone.")
+
+
+def replace_current_schedule(data):
+    if not _delete_all('oncourt_today'):
+        raise RuntimeError('oncourt_today deletion failed; old schedule must not be priced')
+    if data and not _insert('oncourt_today', data):
+        raise RuntimeError('oncourt_today insert failed; current inputs are not ready')
 
 
 if __name__ == "__main__":
