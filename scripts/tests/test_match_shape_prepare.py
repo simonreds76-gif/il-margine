@@ -26,6 +26,13 @@ class PrepareTests(unittest.TestCase):
             r=P.readiness(self.root,NOW,self.db)
         self.assertEqual(r['reason'],'database_newer_than_exports');get.assert_not_called()
 
+    def test_timeout_keeps_progress_diagnostics(self):
+        import subprocess
+        with self.assertRaises(subprocess.TimeoutExpired):
+            P.run_stage(self.root,'forecast',[sys.executable,'-u','-c',
+                "import time; print('inputs loaded',flush=True); time.sleep(10)"],2)
+        self.assertIn('inputs loaded',(self.out/'preparation/forecast.log').read_text())
+
     def test_new_export_requires_new_forecast(self):
         with patch.object(P,'fresh_components',return_value=(NOW-timedelta(minutes=10),{'rows':[1]})):
             r=P.readiness(self.root,NOW,self.db)

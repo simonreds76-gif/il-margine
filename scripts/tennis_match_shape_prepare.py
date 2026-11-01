@@ -63,9 +63,16 @@ def load_env(root):
 
 def run_stage(root, label, args, timeout):
     folder=root/RELATIVE/'preparation';folder.mkdir(parents=True,exist_ok=True)
-    result=subprocess.run(args,cwd=root,capture_output=True,text=True,errors='replace',timeout=timeout)
-    # Three bounded diagnostic logs, replaced on retry; never serialize env/headers.
-    (folder/(label+'.log')).write_text((result.stdout+'\n'+result.stderr)[-200000:],encoding='utf-8')
+    log=folder/(label+'.log')
+    # Stream diagnostics so a timed-out refresh retains its last completed stage.
+    # Three logs, replaced on retry; never serialize env/headers.
+    try:
+        with log.open('w',encoding='utf-8') as stream:
+            result=subprocess.run(args,cwd=root,stdout=stream,stderr=subprocess.STDOUT,
+                                  timeout=timeout,env={**os.environ,'PYTHONUNBUFFERED':'1'})
+    finally:
+        if log.exists() and log.stat().st_size>200000:
+            log.write_text(log.read_text(encoding='utf-8',errors='replace')[-200000:],encoding='utf-8')
     if result.returncode:raise RuntimeError(label+'_failed_exit_'+str(result.returncode))
 
 
@@ -139,7 +146,7 @@ def prepare(root, clock=None, database=DATABASE, runner=run_stage):
             return {**status,'ready':False,'refreshed':False,'reason':'input_refresh_retry_cooldown: '+previous.get('reason','failed')}
         load_env(root);started=status['source'];steps=[];began=time.monotonic()
         def stage(label,args,timeout):
-            remaining=int(480-(time.monotonic()-began))
+            remaining=int(900-(time.monotonic()-began))
             if remaining<=0:raise RuntimeError('input_recovery_wall_budget')
             runner(root,label,args,min(timeout,remaining));steps.append(label)
         try:
@@ -155,7 +162,7 @@ def prepare(root, clock=None, database=DATABASE, runner=run_stage):
             stage('sync',[sys.executable,str(root/'scripts/oncourt-load-supabase.py'),'--quick','--current-players'],180)
             verified_schedule=verify_remote_schedule(root)
             before_forecast=source_state(root,database)
-            stage('forecast',[sys.executable,str(root/'scripts/tennis_match_shape_prepare.py'),'--root',str(root),'--forecast-only'],240)
+            stage('forecast',[sys.executable,str(root/'scripts/tennis_match_shape_prepare.py'),'--root',str(root),'--forecast-only'],600)
             if source_state(root,database)!=before_forecast:raise RuntimeError('inputs_changed_during_recovery')
             result=readiness(root,datetime.now(timezone.utc),database)
             if not result['ready']:raise RuntimeError(result['reason'])
