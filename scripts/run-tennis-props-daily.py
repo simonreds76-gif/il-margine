@@ -13,6 +13,7 @@ import csv
 import json
 import os
 import subprocess
+from tennis_runtime_health import observed_run, summary as runtime_summary, PROCESS_RUN, DEFAULT_TIMEOUT
 import sys
 import tempfile
 from datetime import date, datetime, timedelta, timezone
@@ -46,9 +47,10 @@ def run(
     fatal: bool = True,
     timeout_seconds: int | None = None,
 ) -> int:
+    timeout_seconds = timeout_seconds or DEFAULT_TIMEOUT
     print(f"\n=== {label} ===")
     try:
-        result = subprocess.run(cmd, cwd=str(ROOT), timeout=timeout_seconds)
+        result = observed_run(cmd, root=ROOT, label=label, cwd=str(ROOT), timeout=timeout_seconds)
     except subprocess.TimeoutExpired:
         msg = f"{label} timed out after {timeout_seconds}s"
         if fatal:
@@ -800,4 +802,7 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    exit_code = main()
+    if runtime_summary(ROOT, run_id=os.environ.get("TENNIS_RUNTIME_RUN_ID") or PROCESS_RUN)["issues"]:
+        exit_code = exit_code or 1
+    raise SystemExit(exit_code)

@@ -84,6 +84,12 @@ function Invoke-LoggedProcess {
     $stdoutPath = Join-Path $env:TEMP ("ilmargine-" + [guid]::NewGuid().ToString() + ".out.log")
     $stderrPath = Join-Path $env:TEMP ("ilmargine-" + [guid]::NewGuid().ToString() + ".err.log")
     $script:LastProcessOutputLines = @()
+    if ($TimeoutSeconds -le 0) { $TimeoutSeconds = 1800 }
+    $runtimeLabel = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($Label))
+    $runtimeScript = [IO.Path]::GetFileName($ArgumentList[0])
+    $runtimeToken = & python scripts/tennis_runtime_health.py begin --label64 $runtimeLabel --script $runtimeScript --timeout $TimeoutSeconds
+    if ($LASTEXITCODE -ne 0) { throw "Could not record start of $Label" }
+    $runtimeExit = 1
     try {
         $proc = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -NoNewWindow -PassThru -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
         # Windows PowerShell only preserves ExitCode reliably if the process handle is opened.
@@ -118,14 +124,18 @@ function Invoke-LoggedProcess {
             $stderrLines | ForEach-Object { Log $_ }
         }
         if ($timedOut) {
+            $runtimeExit = 124
             return 124
         }
         if ($null -eq $proc.ExitCode) {
             Log "WARNING: $Label exit code was unavailable; treating as failure."
             return 1
         }
+        $runtimeExit = $proc.ExitCode
         return $proc.ExitCode
     } finally {
+        & python scripts/tennis_runtime_health.py finish --token $runtimeToken --exit-code $runtimeExit | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw "Could not record completion of $Label" }
         Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
     }
 }
@@ -182,6 +192,7 @@ if ($null -eq $lockHandle) {
 }
 
 $runStatus = Start-RunStatus -Pipeline "oncourt-daily" -Trigger "schedule"
+$env:TENNIS_RUNTIME_RUN_ID = [guid]::NewGuid().ToString()
 $runStatusFinal = "failed"
 $runStatusErrorRecord = $null
 $runStatusErrorType = $null
@@ -476,6 +487,8 @@ Log "=== Post-step: Spread calibration/refit skipped (weekly refresh) ==="
 Log "============================================"
 Log "  Daily Pipeline finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Log "============================================"
+    & python scripts/tennis_runtime_health.py check --run-id $env:TENNIS_RUNTIME_RUN_ID | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) { Set-RunStatusFailure "TennisStepFailed" "A tennis step failed or exceeded its deadline; see runtime health." }
     if ([string]::IsNullOrWhiteSpace($runStatusErrorType)) {
         $runStatusFinal = "ok"
         $runStatusErrorMessage = $null
@@ -487,6 +500,8 @@ catch {
     throw
 }
 finally {
+    try { & powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/tennis-health-check.ps1 -RuntimeOnly }
+    catch { Log "WARNING: runtime watchdog failed: $($_.Exception.Message)" }
     Complete-RunStatus -Run $runStatus -Status $runStatusFinal -ErrorRecord $runStatusErrorRecord -ErrorType $runStatusErrorType -ErrorMessage $runStatusErrorMessage
     Exit-TaskLock $lockHandle
 }

@@ -121,7 +121,10 @@ def build_snapshot() -> dict[str, Any]:
     module = load_report_module()
     tennis_model_evidence = module.tennis_model_evidence_summary()
     from tennis_input_health import summary as input_health_summary
+    from tennis_runtime_health import summary as runtime_summary, overlay_feed_health
+    runtime = runtime_summary(ROOT)
     sections = {
+        "tennis_runtime_health": runtime,
         "tennis_input_health": input_health_summary(module.load_json(ROOT / "data/tennis-input-health/status.json")),
         "tennis_ml_gap_guard": module.ml_gap_guard_summary(),
         # The Windows pipeline owns the current lane ledgers. Hosted copies can
@@ -146,7 +149,7 @@ def build_snapshot() -> dict[str, Any]:
         "tennis_most_df": module.load_json(ROOT / "data/tennis-props/shadow/most-df-v1/report.json"),
         "tennis_props_market_benchmark": module.tennis_props_market_benchmark(),
         "tennis_props_shadow_decision": module.tennis_props_shadow_decision(),
-        "tennis_props_pipeline_health": module.load_json(module.TENNIS_PROPS_PIPELINE_HEALTH),
+        "tennis_props_pipeline_health": overlay_feed_health(module.load_json(module.TENNIS_PROPS_PIPELINE_HEALTH), runtime),
     }
     stable = {
         "schema_version": SCHEMA_VERSION,
