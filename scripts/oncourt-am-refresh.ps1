@@ -156,6 +156,7 @@ $runStatusFinal = "failed"
 $runStatusErrorRecord = $null
 $runStatusErrorType = $null
 $runStatusErrorMessage = $null
+$privateSnapshotAttempted = $false
 
 try {
     $sourceDatabase = Get-Item -LiteralPath "C:\Program Files (x86)\OnCourt\OnCourt.mdb" -ErrorAction Stop
@@ -458,6 +459,7 @@ try {
         # Upload the evidence and its health flags even when an independent
         # delivery check failed. Failures still prevent a successful receipt.
         Write-TennisManualProgress $root $manualRequest "uploading" "Updating the private Monitor with current evidence and health checks."
+        $privateSnapshotAttempted = $true
         $snapshotExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-evidence-snapshot.py", "--supabase") -Label "private Monitor snapshot" -TimeoutSeconds 120
         if ($snapshotExit -ne 0) { throw "Private Monitor upload failed." }
         if ($propsRefreshFailed) {
@@ -569,8 +571,24 @@ catch {
     throw
 }
 finally {
-    Complete-RunStatus -Run $runStatus -Status $runStatusFinal -ErrorRecord $runStatusErrorRecord -ErrorType $runStatusErrorType -ErrorMessage $runStatusErrorMessage
-    Exit-TaskLock $lockHandle
+    try {
+        # Explicit exit 1 bypasses catch. Always close the Admin progress record,
+        # including early source outages, without relabelling stale prices fresh.
+        if ($OnDemand -and $runStatusFinal -ne "ok") {
+            $failureMessage = if ($runStatusErrorMessage) { $runStatusErrorMessage } else { "Fresh tennis refresh did not complete. Check the run log." }
+            Write-TennisManualProgress $root $manualRequest "failed" $failureMessage @{ state = "failed"; error = $failureMessage; completed_at = [datetime]::UtcNow.ToString("o") }
+            if (-not $privateSnapshotAttempted) {
+                $privateSnapshotAttempted = $true
+                try {
+                    $failureSnapshotExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-evidence-snapshot.py", "--supabase") -Label "private Monitor failure health" -TimeoutSeconds 120
+                    if ($failureSnapshotExit -ne 0) { Log "WARNING: failure health snapshot upload failed (exit $failureSnapshotExit)." }
+                } catch { Log "WARNING: failure health upload failed: $($_.Exception.Message)" }
+            }
+        }
+        Complete-RunStatus -Run $runStatus -Status $runStatusFinal -ErrorRecord $runStatusErrorRecord -ErrorType $runStatusErrorType -ErrorMessage $runStatusErrorMessage
+    } finally {
+        Exit-TaskLock $lockHandle
+    }
 }
 
 if ($runStatusFinal -ne "ok") { exit 1 }
