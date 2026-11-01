@@ -8,6 +8,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import re
 import subprocess
 import sys
 
@@ -46,6 +47,23 @@ def native_epoch(root, database=DATABASE):
         if version and path.stat().st_mtime_ns < version:
             raise ValueError('database_newer_than_export:' + name)
         result[name] = {'sha256': sha(path), 'mtime_ns': path.stat().st_mtime_ns}
+    for tour in ('atp', 'wta'):
+        players = {r['id'] for r in csvrows(folder / f'players_{tour}.csv')}
+        tournaments = {r['id']: r for r in csvrows(folder / f'tours_{tour}.csv')}
+        for row in csvrows(folder / f'today_{tour}.csv'):
+            if row.get('result'):
+                continue
+            tournament = tournaments.get(str(row['tour_id']))
+            if tournament is None:
+                raise ValueError(f'native_tournament_identity_missing:{tour}:{row["tour_id"]}')
+            # These models do not forecast ITF/Futures. Such source gaps must
+            # not block valid ATP, Challenger and WTA current pairings.
+            if re.search(r'\b[MW]\d{1,2}\b|ITF|FUTURES', tournament.get('name', '').upper()):
+                continue
+            for field in ('player1_id', 'player2_id'):
+                pid = str(row[field] or '')
+                if pid.isdigit() and int(pid) > 0 and pid not in players:
+                    raise ValueError(f'native_player_identity_missing:{tour}:{pid}')
     return result
 
 

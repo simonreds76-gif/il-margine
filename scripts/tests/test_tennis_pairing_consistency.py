@@ -29,7 +29,7 @@ class PairingTests(unittest.TestCase):
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
         self.root=Path(self.tmp.name);self.db=self.root/'absent.mdb'
         for name in ['courts.csv']+[f'{k}_{t}.csv' for t in ('atp','wta') for k in ('today','players','tours')]:
-            p=self.root/'data/oncourt'/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('id,name\n1,Test\n')
+            p=self.root/'data/oncourt'/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('tour_id,player1_id,player2_id,round_id,draw,result\n1,1,1,1,1,\n' if name.startswith('today') else 'id,name\n1,Test\n')
             os.utime(p,ns=(10,10))
         self.fixture=dict(tour='ATP',tour_id='21362',round='R32',player1_id='76127',player2_id='58149')
         self.rows=[dict(tour='ATP',tour_id='21362',round='R32',player_id=a,opponent_id=b,generation_date='2026-11-01',surface='Hard',date='2026-11-02',tournament='Paris',player=n,opponent=o) for a,b,n,o in [('76127','58149','Darderi','Hijikata'),('58149','76127','Hijikata','Darderi')]]
@@ -49,6 +49,10 @@ class PairingTests(unittest.TestCase):
     def test_updated_wta_export_alone_triggers_rebuild(self):
         p=self.root/'data/oncourt/today_wta.csv';os.utime(p,ns=(10**19,10**19))
         self.assertEqual(self.state()['state'],'REBUILD_REQUIRED')
+    def test_resolved_id_missing_from_player_export_cannot_disappear_silently(self):
+        p=self.root/'data/oncourt/today_wta.csv'
+        p.write_text('tour_id,player1_id,player2_id,round_id,draw,result\n1,1,2,1,1,\n')
+        with self.assertRaisesRegex(ValueError,'native_player_identity_missing:wta:2'):P.native_epoch(self.root,self.db)
     def test_database_newer_than_wta_export_blocks(self):
         self.db.write_text('updated');os.utime(self.db,ns=(2000000000,2000000000))
         for p in (self.root/'data/oncourt').iterdir():
