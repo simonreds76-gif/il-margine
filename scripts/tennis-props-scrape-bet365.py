@@ -891,6 +891,15 @@ def main() -> None:
         try:
             from tennis_breakpoint_evidence import ingest
             ingest(ROOT, direct_receipt or {}, raw_out)
+            # Freeze new BP paper forecasts immediately after the same raw capture.
+            # No extra request, alert or live pricing; absent local registration is a no-op.
+            bp_out = ROOT / 'data/tennis-break-points/forward-c-v1'
+            if (bp_out / 'registration.json').exists():
+                from tennis_breakpoint_forward import capture as capture_bp, summarize as summarize_bp
+                from tennis_breakpoint_evidence import RELATIVE as BP_EVIDENCE, process_lock as bp_lock
+                with bp_lock(bp_out):
+                    capture_bp(ROOT, bp_out, ROOT)
+                    summarize_bp(bp_out, ROOT / BP_EVIDENCE)
         except Exception as exc:
             print(f"WARNING: break-point evidence capture needs review: {type(exc).__name__}")
     audited_event_ids: set[str] = set()
