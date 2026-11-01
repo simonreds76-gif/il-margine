@@ -13,6 +13,7 @@ import shutil
 import subprocess
 import sys
 import time
+import requests
 
 ROOT = Path(__file__).resolve().parents[1]
 BRANCH = 'codex/fair-odds-daily-pitch-20260908'
@@ -40,6 +41,48 @@ def deployment_page(vercel, url, route):
 def api_response(output):
     # Promotion returns HTTP 204. The CLI has already checked HTTP success.
     return json.loads(output) if output.strip() else {}
+
+
+def vercel_read(path):
+    """Bounded read recovery; never repeat a deployment/promotion mutation."""
+    if not re.fullmatch(r'/v4/aliases/ilmargine\.bet|/v13/deployments/[A-Za-z0-9_-]+', path):
+        raise ValueError('Unexpected Vercel read path')
+    token = os.environ.get('VERCEL_TOKEN')
+    if not token:
+        raise RuntimeError('Existing Vercel publication credentials are unavailable')
+    for attempt in range(3):
+        delay = 2 ** (attempt + 1)
+        try:
+            response = requests.get('https://api.vercel.com' + path,
+                params={'teamId': TEAM}, headers={'Authorization': 'Bearer ' + token},
+                timeout=(5, 15), allow_redirects=False)
+        except (requests.Timeout, requests.ConnectionError):
+            failure = 'transport timeout or connection failure'
+        else:
+            if response.status_code == 200:
+                try:
+                    payload = response.json()
+                except ValueError:
+                    raise RuntimeError('Vercel read returned invalid JSON') from None
+                if not isinstance(payload, dict):
+                    raise RuntimeError('Vercel read returned an invalid object')
+                return payload
+            failure = 'HTTP ' + str(response.status_code)
+            if response.status_code != 429 and response.status_code < 500:
+                raise RuntimeError('Vercel read failed: ' + failure)
+            retry_after = response.headers.get('Retry-After')
+            if retry_after:
+                try:
+                    delay = max(delay, float(retry_after))
+                except ValueError:
+                    # Do not retry before an unparsed provider deadline.
+                    raise RuntimeError('Vercel requested a later retry; retaining capture for the next run') from None
+                if not 0 <= delay <= 30:
+                    raise RuntimeError('Vercel requested a later retry; retaining capture for the next run')
+        if attempt == 2:
+            raise RuntimeError('Vercel read unavailable after three bounded attempts: ' + failure) from None
+        print(f'::notice::Vercel read {failure}; retrying in {delay:g}s')
+        time.sleep(delay)
 
 
 def news_tree(live_sha, source_sha, state):
@@ -162,6 +205,8 @@ def main():
     (ROOT / '.vercel/project.json').write_text(json.dumps({'projectId': PROJECT, 'orgId': TEAM, 'projectName': 'il-margine'}))
 
     def api(path, *extra):
+        if not extra:
+            return vercel_read(path)
         return api_response(run(vercel, 'api', path + '?teamId=' + TEAM, *extra, '--raw'))
 
     alias = api('/v4/aliases/ilmargine.bet')['deploymentId']
