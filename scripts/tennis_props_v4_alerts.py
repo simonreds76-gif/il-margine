@@ -15,7 +15,7 @@ import sys
 from typing import Callable
 from zoneinfo import ZoneInfo
 
-from tennis_props_daily_summary import LEDGER, REPORT, VERSION, build, metrics, number, read_json
+from tennis_props_daily_summary import LEDGER, REPORT, VERSION, metrics, number, read_json
 
 STATE = 'data/tennis-props/shadow/aces-over-v4-selection-alert-state.json'
 PREVIEW = 'data/tennis-props/backtest/aces-over-v4-selection-alerts.txt'
@@ -88,18 +88,35 @@ def selection_problem(row: dict, now: datetime, model_hash: str, minimum: int, e
 
 def prepare(root: Path, now: datetime, previous: dict) -> tuple[list[tuple[str, str]], dict]:
     target_day = now.astimezone(UK).date().isoformat()
-    _, summary = build(root, target_day, {})
-    warnings = list(summary['health_warnings'])
+    # The daily/weekly report is a scheduled rendering, not the source of a
+    # selection. Manual refresh deliberately skips historical reporting. Read
+    # and verify the immutable ledger and today's inputs directly; never stamp
+    # an old report as fresh just to satisfy an alert gate.
+    history = read_json(root/'data/tennis-props/player-history-status.json')
+    health = read_json(root/'data/tennis-props/pipeline-health.json')
+    warnings = []
+    if history.get('state') != 'CURRENT' or history.get('version') != VERSION or history.get('as_of') != target_day:
+        warnings.append("Player inputs have not passed today's freshness check.")
+    if (health.get('as_of') != target_day or health.get('structural_error')
+            or health.get('state') in {None, 'CORE_RUN_IN_PROGRESS', 'CORE_RUN_FAILED',
+                                      'PLAYER_HISTORY_BLOCKED', 'PLAYER_HISTORY_COMPARISON_STALE',
+                                      'CAPTURE_STALE', 'FEED_MISSING', 'COMPARISON_MISSING', 'BOARD_MATCH_FAILED'}):
+        warnings.append('The props pipeline needs a health check.')
     report = read_json(root/REPORT)
     updated = timestamp(report.get('generated_at'))
-    if not updated or not timedelta(0) <= now-updated <= timedelta(hours=6):
-        warnings.append('The v4 report is older than six hours or has an invalid timestamp.')
-    status = dict(checked_at=now.isoformat(), history_version=VERSION, eligible=0, new=0, excluded={}, warnings=warnings)
+    report_stale = not updated or not timedelta(0) <= now-updated <= timedelta(hours=6)
+    status = dict(checked_at=now.isoformat(), history_version=VERSION, eligible=0, new=0,
+                  excluded={}, warnings=warnings, record_source='verified_immutable_ledger',
+                  scheduled_report_generated_at=report.get('generated_at'), scheduled_report_stale=report_stale)
     if warnings:
         return [], dict(status, state='BLOCKED_DATA_CHECK')
     with (root/LEDGER).open(encoding='utf-8-sig', newline='') as handle:
         rows = list(csv.DictReader(handle))
     minimum, edge_floor, max_age = verify_ledger(root, rows)
+    status['ledger_rows_verified'] = len(rows)
+    status['scheduled_report_matches_ledger'] = (
+        len(rows) == report.get('rows_registered')
+        and sum(r.get('settlement_status') == 'settled' for r in rows) == report.get('rows_settled'))
     gate = read_json(root/'data/tennis-props/backtest/aces-dfs-v3-all-tour-gate.json')
     relative = ((gate.get('deployment_safe_aces') or {}).get('ATP') or {}).get('model_path')
     if not relative:

@@ -94,6 +94,9 @@ TEAM_ALIASES: Dict[str, str] = {
     "leedsleedsunited": "leedsunited",
     "ipswich": "ipswichtown",
     # Bundesliga
+    # Understat club118 uses Hamburger SV; Football-Data uses Hamburg.
+    # Verified exact-date, same-score fixtures in the 2026 league response.
+    "hamburg": "hamburgersv",
     "dortmund": "borussiadortmund",
     "einfrankfurt": "eintrachtfrankfurt",
     "fckoln": "fccologne",
@@ -140,6 +143,8 @@ TEAM_ALIASES: Dict[str, str] = {
     "eibar": "sdeibar",
     "huesca": "sdhuesca",
     # Serie A
+    # Same club and exact dated scores in the current Understat season.
+    "parma": "parmacalcio1913",
     "milan": "acmilan",
     "inter": "internazionale",
     "verona": "hellasverona",
@@ -349,6 +354,20 @@ def valid_xg_pair(row: dict) -> bool:
         return False
 
 
+def xg_join_health(rows: List[dict], lookup: dict) -> dict:
+    """Expose identity/score gaps before a club silently loses its xG inputs."""
+    gaps = []
+    for row in rows:
+        if valid_xg_pair(row):
+            continue
+        key = f"{row['date']}:{row['_norm_home']}:{row['_norm_away']}"
+        gaps.append(dict(date=row['date'], home=row['home_team'], away=row['away_team'],
+                         reason='score_mismatch' if key in lookup else 'no_exact_fixture'))
+    clubs = sorted({r[side] for r in gaps for side in ('home', 'away')})
+    return dict(matches=len(rows), matched=sum(valid_xg_pair(r) for r in rows),
+                missing=len(gaps), affected_clubs=clubs, fixtures=gaps)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build Football-Data shots with an Understat xG overlay")
     parser.add_argument("--leagues", nargs="+", default=DEFAULT_LEAGUES,
@@ -375,6 +394,7 @@ def main() -> None:
     all_rows: List[dict] = []
     total_matched = 0
     total_rows = 0
+    health = dict(checked_at=datetime.now().astimezone().isoformat(), scopes={})
 
     for league in args.leagues:
         print(f"\n{'='*50}")
@@ -395,6 +415,7 @@ def main() -> None:
                 print(f"  {season}-{season+1}: {len(fd_rows)} matches, fetching xG...", end=" ")
                 xg_data = fetch_understat_xg(league, season)
                 matched, total = merge_xg(fd_rows, xg_data)
+                health['scopes'][f'{league}/{season}'] = xg_join_health(fd_rows, xg_data)
                 total_matched += matched
                 total_rows += total
                 print(f"xG matched {matched}/{total} ({matched/total*100:.0f}%)")
@@ -431,6 +452,7 @@ def main() -> None:
         )
         writer.writeheader()
         writer.writerows(output_rows)
+    args.output.with_suffix('.coverage.json').write_text(json.dumps(health, indent=2)+'\n', encoding='utf-8')
 
     print(f"\n{'='*50}")
     print(f"  SUMMARY")

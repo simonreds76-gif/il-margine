@@ -147,16 +147,37 @@ class V4SelectionTests(unittest.TestCase):
         self.sender.assert_not_called()
         self.assertEqual(A.read_json(self.root/A.STATUS)['state'], 'BLOCKED_DATA_CHECK')
 
-    def test_stale_report_and_stale_history_fail_closed(self):
+    def test_stale_inputs_and_prices_fail_closed(self):
         for relative, payload in [
-            (A.REPORT, dict(generated_at='2026-10-07T06:00:00Z', rows_registered=1, rows_settled=0)),
             ('data/tennis-props/player-history-status.json', dict(state='CURRENT', version=A.VERSION, as_of='2026-10-06')),
+            ('data/tennis-props/pipeline-health.json', dict(as_of=self.today, state='CAPTURE_STALE', structural_error=False)),
         ]:
             self.rows([self.row()])
             self.write(relative, payload)
             with self.assertRaises(RuntimeError):
                 self.run_alerts()
         self.sender.assert_not_called()
+
+    def test_manual_refresh_reads_verified_ledger_without_refreshing_old_report(self):
+        self.rows([self.row(), self.row('won', settlement_status='settled', result='win', pnl='1.5')])
+        self.write(A.REPORT, dict(generated_at='2026-10-06T06:00:00Z', rows_registered=0, rows_settled=0))
+        original_report = (self.root/A.REPORT).read_bytes()
+        messages, status = A.prepare(self.root, self.now, {})
+        self.assertEqual(status['new'], 1)
+        self.assertTrue(status['scheduled_report_stale'])
+        self.assertFalse(status['scheduled_report_matches_ledger'])
+        self.assertEqual(status['ledger_rows_verified'], 2)
+        self.assertIn('1W / 0L', messages[0][1])
+        self.assertIn('P/L +1.50u', messages[0][1])
+        self.assertEqual((self.root/A.REPORT).read_bytes(), original_report)
+        self.verifier.assert_called_once()
+
+    def test_old_report_cannot_release_stale_or_unfitted_selections(self):
+        self.rows([self.row(capture_ts='2026-10-07T06:00:00Z'), self.row('prefit', phase='PRE_FIT')])
+        self.write(A.REPORT, dict(generated_at='2026-10-06T06:00:00Z'))
+        self.assertEqual(self.run_alerts(), 'no_new_selections')
+        self.sender.assert_not_called()
+        self.verifier.assert_called_once()
 
     def test_prefit_only_does_not_send_a_fake_tip(self):
         self.rows([self.row(phase='PRE_FIT', v4_signal='false')])
