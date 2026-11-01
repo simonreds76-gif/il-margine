@@ -1,11 +1,81 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T09:41:12.707282+00:00",
+  "generatedAt": "2026-11-01T15:28:45.394720+00:00",
   "coverageStart": "2026-10-17",
   "checkedThrough": "2026-11-01",
   "captureStatus": "complete",
-  "matchesChecked": 4,
+  "matchesChecked": 63,
   "articles": [
+    {
+      "id": "fotmob:5749733:2991435545",
+      "slug": "2026-11-01-lucas-da-cunha-5749733-2991435545",
+      "matchId": "5749733",
+      "eventId": "2991435545",
+      "date": "2026-11-01",
+      "kickoff": "2026-11-01T11:30:00.000Z",
+      "league": "serie-a",
+      "leagueLabel": "Serie A",
+      "round": "10",
+      "player": "Lucas Da Cunha",
+      "playerId": 1076647,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/1076647.png",
+      "club": "Como",
+      "clubSlug": "como",
+      "clubUrl": "/penalty-takers/serie-a/como",
+      "crest": "/team-logos/serie-a/como.png",
+      "opponent": "Venezia",
+      "home": "Como",
+      "away": "Venezia",
+      "homeScore": 1,
+      "awayScore": 0,
+      "minute": "43",
+      "outcome": "scored",
+      "title": "Lucas Da Cunha scores from the spot against Venezia",
+      "sentences": [
+        "Lucas Da Cunha converted a penalty for Como in minute 43 against Venezia.",
+        "The match finished Como 1–0 Venezia."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Tasos Douvikas",
+        "concededBy": "Juan Jesus",
+        "sentence": "Tasos Douvikas won the penalty after a foul by Juan Jesus inside the area.",
+        "evidenceIds": [
+          "2991434025",
+          "2991434033"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 73,
+        "goals": 1,
+        "shots": 2,
+        "onTarget": 2,
+        "chances": 1
+      },
+      "keeper": "Filip Stanković",
+      "moment": {
+        "before": [
+          0,
+          0
+        ],
+        "after": [
+          1,
+          0
+        ]
+      },
+      "paragraphs": [
+        "Lucas Da Cunha converted a penalty in the 43rd minute of Como’s 1–0 win over Venezia.",
+        "Tasos Douvikas won the penalty after a foul by Juan Jesus inside the area. The goal put the team ahead at 1–0.",
+        "Lucas Da Cunha finished with 1 goal and 2 shots, including 2 on target, in 73 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/venezia-vs-como/2p0ob7#5749733",
+      "eventHash": "bea87adba51feee3a06a8a0ecc43ba77fcfa09ae40c63d6680c8f71492ac776e",
+      "sourceHash": "75459726d123ad891403a8cae8a3bf1b75e316ab2b34b1bcf5907f568d63b789",
+      "publishedAt": "2026-11-01T15:28:45.394720+00:00",
+      "updatedAt": "2026-11-01T15:28:45.394720+00:00"
+    },
     {
       "id": "fotmob:5795496:2991086329",
       "slug": "2026-10-31-john-mcginn-5795496-2991086329",
