@@ -1,5 +1,5 @@
 {
-  "contracts": 447,
+  "contracts": 449,
   "settled_contracts": 422,
   "paired_contracts": 285,
   "paired_fixtures": 111,
@@ -18,7 +18,7 @@
         "pnl_units": -9.0072,
         "roi": -0.12171891891891891,
         "stake_units": 74,
-        "pending": 10,
+        "pending": 11,
         "overdue": 0,
         "unavailable_contracts": 137,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
@@ -95,14 +95,12 @@
   "model_fingerprint": "90a4b82bdc0fb04546d62c53c32e12943250bd7637b31079423ee3023f487fd4",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 374,
-  "generated_at": "2026-11-01T16:23:35Z",
-  "new_contracts": 0,
-  "scan_exclusions": {
-    "stale_price": 16
-  },
-  "latest_archived_capture": "2026-11-01T16:23:05.065102+00:00",
+  "generated_at": "2026-11-01T20:50:20Z",
+  "new_contracts": 2,
+  "scan_exclusions": {},
+  "latest_archived_capture": "2026-11-01T20:49:41.127403+00:00",
   "latest_result_date": "2026-11-01",
-  "raw_upcoming_rows": 354,
+  "raw_upcoming_rows": 105,
   "status": "COLLECTING",
   "cohorts": {
     "paired-market-offset-20260930-v2": {
@@ -294,7 +292,7 @@
       "automatic_promotion": false
     },
     "paired-market-offset-20261028-identity-v4": {
-      "contracts": 73,
+      "contracts": 75,
       "settled_contracts": 48,
       "paired_contracts": 48,
       "paired_fixtures": 21,
@@ -313,7 +311,7 @@
             "pnl_units": -4.8212,
             "roi": -0.301325,
             "stake_units": 16,
-            "pending": 10,
+            "pending": 11,
             "overdue": 0,
             "unavailable_contracts": 0,
             "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
