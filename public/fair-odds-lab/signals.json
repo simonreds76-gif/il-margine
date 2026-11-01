@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-01T11:46:32.386293Z",
+  "generated_at": "2026-11-01T13:59:56.858824Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -35,18 +35,125 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 20,
-  "signals_qualifying": 0,
+  "fixtures_evaluated": 19,
+  "signals_qualifying": 1,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 59
+    "incomplete_prediction_roster": 46,
+    "model_market_gap_gt_10pp": 3
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 0,
-    "added_by_league": {},
+    "eligible_rows": 3,
+    "added_by_league": {
+      "bundesliga": 2,
+      "ligue-1": 1
+    },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [],
-  "featured_signal_id": null,
-  "signals": []
+  "leagues_covered": [
+    "bundesliga"
+  ],
+  "featured_signal_id": "20261101-marius-bülter-74af05b2f3",
+  "signals": [
+    {
+      "id": "20261101-marius-bülter-74af05b2f3",
+      "match": {
+        "home_team": "Union Berlin",
+        "away_team": "1. FC Cologne",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "league_logo_path": "/league-logos/bundesliga.png",
+        "kickoff_utc": "2026-11-01T14:30:00Z",
+        "kickoff_display": "Sun 01 Nov 14:30 UK",
+        "fotmob_match_id": "5881213",
+        "fotmob_page_url": "/matches/union-berlin-vs-1-fc-koln/2cqofy#5881213",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Marius Bülter",
+        "team": "FC Cologne",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/bundesliga/fc-cologne.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#dc2626",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 38.4,
+        "fair_odds": 2.61
+      },
+      "market_data": {
+        "best_odds": 3.2,
+        "best_book": "Grosvenor",
+        "implied_chance_pct": 31.2
+      },
+      "edge": {
+        "price_gap_pp": 7.1,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 97
+        },
+        "share_of_team_chances_pct": 23,
+        "share_of_team_chances_percentile": 92,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 74
+        },
+        "recent_team_form": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-10-24",
+          "xg_for_avg": 1.5,
+          "xg_against_avg": 1.2,
+          "xgd_per90": 0.3,
+          "shots_for_avg": 15.0,
+          "shots_against_avg": 13.2,
+          "sot_for_avg": 5.2,
+          "sot_against_avg": 5.4,
+          "corners_for_avg": 5.6,
+          "corners_against_avg": 5.2
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 95
+        },
+        "opponent_recent_defence": {
+          "tier": "High",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-10-24",
+          "xg_for_avg": 1.08,
+          "xg_against_avg": 2.13,
+          "xgd_per90": -1.05,
+          "shots_for_avg": 11.8,
+          "shots_against_avg": 17.2,
+          "sot_for_avg": 3.4,
+          "sot_against_avg": 6.8,
+          "corners_for_avg": 3.8,
+          "corners_against_avg": 5.4
+        },
+        "fixture_boost_pct": 1,
+        "projected_minutes": 85,
+        "penalty_role": "Secondary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong",
+        "Recent team form supports the attacking case",
+        "Opponent defensive profile is a positive matchup"
+      ],
+      "risk_flags": []
+    }
+  ]
 }
