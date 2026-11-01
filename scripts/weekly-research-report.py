@@ -1535,6 +1535,7 @@ def build_payload() -> dict[str, Any]:
     tennis_elo_rebuild = load_json(ROOT / "data/tennis-elo-rebuild/report.json")
     tennis_sisal_5050 = load_json(ROOT / "data/tennis-props/shadow/sisal-5050-v1/report.json")
     tennis_breakpoint_c = load_json(ROOT / "data/tennis-break-points/forward-c-v1/report.json")
+    tennis_match_shape = load_json(ROOT / "data/tennis-ml-research/match-shape-v1/report.json")
     tennis_rate_trend = rate_trend_summary()
     tennis_full_refresh = full_refresh_summary()
     tennis_context_forward = load_json(ROOT / "data/tennis-ml-research/context-forward-v1/report.json")
@@ -1567,6 +1568,7 @@ def build_payload() -> dict[str, Any]:
         tennis_elo_rebuild = snapshot_sections.get("tennis_elo_rebuild") or tennis_elo_rebuild
         tennis_sisal_5050 = snapshot_sections.get("tennis_sisal_5050") or tennis_sisal_5050
         tennis_breakpoint_c = snapshot_sections.get("tennis_breakpoint_c") or tennis_breakpoint_c
+        tennis_match_shape = snapshot_sections.get("tennis_match_shape") or tennis_match_shape
         tennis_rate_trend = snapshot_sections.get("tennis_rate_trend") or tennis_rate_trend
         tennis_full_refresh = snapshot_sections.get("tennis_full_refresh") or tennis_full_refresh
         tennis_context_forward = snapshot_sections.get("tennis_context_forward") or tennis_context_forward
@@ -1627,6 +1629,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_elo_rebuild": tennis_elo_rebuild,
         "tennis_sisal_5050": tennis_sisal_5050,
         "tennis_breakpoint_c": tennis_breakpoint_c,
+        "tennis_match_shape": tennis_match_shape,
         "tennis_rate_trend": tennis_rate_trend,
         "tennis_full_refresh": tennis_full_refresh,
         "tennis_context_forward": tennis_context_forward,
@@ -1945,6 +1948,8 @@ def render_report(payload: dict[str, Any]) -> str:
     lines.extend(["", elo_rebuild_text(payload.get("tennis_elo_rebuild") or {})])
     lines.extend(["", sisal_5050_text(payload.get("tennis_sisal_5050") or {})])
     lines.extend(["", breakpoint_c_text(payload.get("tennis_breakpoint_c") or {})])
+    from match_shape_reporting import weekly_text as match_shape_text
+    lines.extend(["", match_shape_text(payload.get("tennis_match_shape") or {})])
     from most_df_reporting import weekly_text as most_df_text
     lines.extend(["", most_df_text(payload.get("tennis_most_df") or {})])
     lines.extend(["", rate_trend_text(payload)])
@@ -2165,6 +2170,8 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     lines.append(elo_rebuild_text(payload.get("tennis_elo_rebuild") or {}))
     lines.append(sisal_5050_text(payload.get("tennis_sisal_5050") or {}))
     lines.append(breakpoint_c_text(payload.get("tennis_breakpoint_c") or {}))
+    from match_shape_reporting import weekly_text as match_shape_text
+    lines.append(match_shape_text(payload.get("tennis_match_shape") or {}))
     from most_df_reporting import weekly_text as most_df_text
     lines.append(most_df_text(payload.get("tennis_most_df") or {}))
     lines.append(rate_trend_text(payload))
