@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-31T14:50:20Z",
+  "generated_at": "2026-11-01T06:16:18Z",
   "league": "bundesliga",
-  "row_count": 1,
+  "row_count": 2,
   "rows": [
     {
-      "team": "Hoffenheim",
-      "team_key": "hoffenheim",
-      "player_name": "Andrej Kramarić",
-      "player_key": "andrej kramari",
+      "team": "Bayern München",
+      "team_key": "bayern munich",
+      "player_name": "Harry Kane",
+      "player_key": "harry kane",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
@@ -18,7 +18,23 @@
         "fotmob_live"
       ],
       "event_count": 1,
-      "last_event_date": "2026-10-25"
+      "last_event_date": "2026-10-31"
+    },
+    {
+      "team": "RB Leipzig",
+      "team_key": "rasenballsport leipzig",
+      "player_name": "Antonio Nusa",
+      "player_key": "antonio nusa",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-31"
     }
   ]
 }
