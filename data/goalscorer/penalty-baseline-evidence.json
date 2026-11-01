@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-01T06:16:11Z",
+  "generated_at": "2026-11-01T15:27:36Z",
   "league": "serie-a",
-  "row_count": 3,
+  "row_count": 9,
   "rows": [
     {
       "team": "Bologna",
@@ -19,6 +19,86 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-10-31"
+    },
+    {
+      "team": "Cagliari",
+      "team_key": "cagliari",
+      "player_name": "M'Bala Nzola",
+      "player_key": "m bala nzola",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-27"
+    },
+    {
+      "team": "Como",
+      "team_key": "como",
+      "player_name": "Lucas Da Cunha",
+      "player_key": "lucas da cunha",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-11-01"
+    },
+    {
+      "team": "Frosinone",
+      "team_key": "frosinone",
+      "player_name": "Giacomo Calò",
+      "player_key": "giacomo cal",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-29"
+    },
+    {
+      "team": "Lazio",
+      "team_key": "lazio",
+      "player_name": "Davide Frattesi",
+      "player_key": "davide frattesi",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-27"
+    },
+    {
+      "team": "Lazio",
+      "team_key": "lazio",
+      "player_name": "Mattia Zaccagni",
+      "player_key": "mattia zaccagni",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-27"
     },
     {
       "team": "Monza",
@@ -51,6 +131,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-10-31"
+    },
+    {
+      "team": "Parma",
+      "team_key": "parma",
+      "player_name": "Adrián Bernabé",
+      "player_key": "adri n bernab",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-28"
     }
   ]
 }
