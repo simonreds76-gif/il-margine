@@ -511,6 +511,8 @@ try {
     # Outcomes from saved raw BP quotes, no new prices or notifications.
     try {
         $bpEvidenceExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis_breakpoint_evidence.py") -Label "Break-point exact-result evidence" -TimeoutSeconds 90
+        $bpForwardExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis_breakpoint_forward.py", "--refresh-history") -Label "Break-point frozen paper evidence" -TimeoutSeconds 120
+        if ($bpForwardExit -ne 0) { Log "WARNING: break-point paper evidence needs review; live unchanged" }
         if ($bpEvidenceExit -ne 0) { Log "WARNING: break-point result evidence needs review" }
     } catch { Log "WARNING: break-point result evidence process error" }
 

@@ -109,6 +109,18 @@
       "id": "tennis_indoor_paper",
       "report_key": "tennis_indoor_paper",
       "scope": "Indoor Scout; Masters ML including qualifying; core Strict gates, optional overlays excluded; 1u paper, zero real stake; paired Brier/log loss and ROI; review at 50/100 independent settled fixtures; no automatic promotion"
+    },
+    {
+      "id": "tennis_breakpoint_c",
+      "report_key": "tennis_breakpoint_c",
+      "scope": "Frozen ATP BO3 break-point chances C, including qualifying; Grosvenor paired prices; paper only; zero real stake; no betting alerts",
+      "milestones": [
+        20,
+        100,
+        300,
+        600
+      ],
+      "decision": "20 integrity, 100 descriptive, 300 with 12 editions formal review, 600 second review. No automatic promotion. Native outcomes are not bookmaker grading."
     }
   ],
   "candidates": [

@@ -201,6 +201,7 @@ def settle(root,output=None):
                     elif not counts:state['status']='MISSING_OR_CONFLICTING_STATS'
                     else:
                         state['y']=counts['w_bpfaced']+counts['l_bpfaced']
+                        state['validated_counts']=counts
                         state['status']='COMPLETED_RESEARCH_OUTCOME';state['over_hit']=state['y']>q['line']
                         state['result_source']='native_exact_fixture_reciprocal_bp_counts'
                 elif (now-start).total_seconds()>48*3600:state['status']='OVERDUE_EXACT_FIXTURE_UNRESOLVED'

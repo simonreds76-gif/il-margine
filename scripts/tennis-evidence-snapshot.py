@@ -129,6 +129,7 @@ def build_snapshot() -> dict[str, Any]:
         "tennis_indoor_paper": module.load_json(ROOT / "data/tennis-ml-research/indoor-scout-v1/report.json"),
         "tennis_elo_rebuild": module.load_json(ROOT / "data/tennis-elo-rebuild/report.json"),
         "tennis_sisal_5050": module.load_json(ROOT / "data/tennis-props/shadow/sisal-5050-v1/report.json"),
+        "tennis_breakpoint_c": module.load_json(ROOT / "data/tennis-break-points/forward-c-v1/report.json"),
         "tennis_rate_trend": module.rate_trend_summary(),
         "tennis_full_refresh": module.full_refresh_summary(),
         "tennis_astrissimo": module.load_json(ROOT / "data/tennis-ml-research/astrissimo-v1/report.json"),
