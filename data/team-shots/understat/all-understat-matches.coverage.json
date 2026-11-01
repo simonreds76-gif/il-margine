@@ -1,0 +1,65 @@
+{
+  "checked_at": "2026-11-01T09:41:22.639632+00:00",
+  "scopes": {
+    "epl/2026": {
+      "matches": 80,
+      "matched": 80,
+      "missing": 0,
+      "affected_clubs": [],
+      "fixtures": []
+    },
+    "serie-a/2026": {
+      "matches": 90,
+      "matched": 90,
+      "missing": 0,
+      "affected_clubs": [],
+      "fixtures": []
+    },
+    "la-liga/2026": {
+      "matches": 99,
+      "matched": 99,
+      "missing": 0,
+      "affected_clubs": [],
+      "fixtures": []
+    },
+    "bundesliga/2026": {
+      "matches": 63,
+      "matched": 63,
+      "missing": 0,
+      "affected_clubs": [],
+      "fixtures": []
+    },
+    "ligue-1/2026": {
+      "matches": 72,
+      "matched": 69,
+      "missing": 3,
+      "affected_clubs": [
+        "Lyon",
+        "Paris SG",
+        "Rennes",
+        "Toulouse",
+        "Troyes"
+      ],
+      "fixtures": [
+        {
+          "date": "2026-08-23",
+          "home": "Rennes",
+          "away": "Paris SG",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Toulouse",
+          "away": "Troyes",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-26",
+          "home": "Paris SG",
+          "away": "Lyon",
+          "reason": "no_exact_fixture"
+        }
+      ]
+    }
+  }
+}

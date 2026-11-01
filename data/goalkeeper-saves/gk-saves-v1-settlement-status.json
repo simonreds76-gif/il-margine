@@ -1,7 +1,39 @@
 {
   "api_errors": [],
-  "deferred_not_due": 6,
+  "deferred_not_due": 3,
   "details": [
+    {
+      "detail": "",
+      "goalkeeper": "Dennis Seimen",
+      "match": "Bayer Leverkusen vs VfB Stuttgart",
+      "match_date": "2026-10-31",
+      "reason": "settled_fotmob",
+      "signal_id": "grosvenor|72513276|dennis seimen|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Nahuel Noll",
+      "match": "Borussia Monchengladbach vs SC Paderborn 07",
+      "match_date": "2026-10-31",
+      "reason": "fotmob_save_totals_disagree",
+      "signal_id": "grosvenor|72513284|nahuel noll|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "\u00d8rjan H\u00e5skjold Nyland",
+      "match": "Schalke 04 vs RB Leipzig",
+      "match_date": "2026-10-31",
+      "reason": "fotmob_matched_player_not_goalkeeper",
+      "signal_id": "grosvenor|72513288|\u00f8rjan h\u00e5skjold nyland|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Gregor Kobel",
+      "match": "Bayern Munich vs Borussia Dortmund",
+      "match_date": "2026-10-31",
+      "reason": "settled_fotmob",
+      "signal_id": "grosvenor|72513274|gregor kobel|4.5|over"
+    },
     {
       "detail": "",
       "goalkeeper": "\u00c1ngel Fortuno",
@@ -9,25 +41,78 @@
       "match_date": "2026-10-30",
       "reason": "fotmob_save_totals_disagree",
       "signal_id": "72478684|\u00e1ngel fortuno|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Djordje Petrovi\u0107",
+      "match": "AFC Bournemouth vs Leeds United",
+      "match_date": "2026-10-31",
+      "reason": "settled_fotmob",
+      "signal_id": "72221354|djordje petrovi\u0107|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Christian Walton",
+      "match": "Hull City vs Ipswich Town",
+      "match_date": "2026-10-31",
+      "reason": "settled_fotmob",
+      "signal_id": "72221362|christian walton|3.5|over"
     }
   ],
-  "fotmob_requests_used": 2,
-  "generated_at": "2026-10-31T14:36:44Z",
+  "fotmob_requests_used": 9,
+  "generated_at": "2026-11-01T09:45:47Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
-  "pending_due": 1,
-  "pending_total": 7,
+  "pending_due": 3,
+  "pending_total": 6,
   "reason_counts": {
-    "fotmob_save_totals_disagree": 1
+    "fotmob_matched_player_not_goalkeeper": 1,
+    "fotmob_save_totals_disagree": 2,
+    "settled_fotmob": 4
   },
   "requests_used": 0,
-  "settled": 0,
-  "status": "BLOCKED",
+  "settled": 4,
+  "status": "PARTIAL",
   "verified_player_targets": [
+    {
+      "appearances": 31,
+      "match_id": 5881207,
+      "status": "saved",
+      "targets_sha256": "e9f4c06170296eea4ffefe3d557d4ea30846cc8a67d083a50a2f952891790b71"
+    },
+    {
+      "match_id": 5881209,
+      "reason": "explicit player totals disagree with reconciled events",
+      "status": "rejected"
+    },
+    {
+      "appearances": 31,
+      "match_id": 5881212,
+      "status": "saved",
+      "targets_sha256": "3fb2b43e281e638fdac610e083dbd6d2f7c26b789c5c8ddc3fb1ab2765648d90"
+    },
+    {
+      "appearances": 30,
+      "match_id": 5881208,
+      "status": "saved",
+      "targets_sha256": "249ce752a3cd7f5b90a7ff465337d7c5cac7b12b9019a33f46310c14f98e5984"
+    },
     {
       "match_id": 5868120,
       "reason": "explicit player totals disagree with reconciled events",
       "status": "rejected"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5795495,
+      "status": "saved",
+      "targets_sha256": "7c6dafa9046a62cfc5e5d84f54981245ed2dea39e2ca11a85ec76071dfc625de"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5795500,
+      "status": "saved",
+      "targets_sha256": "abb7652f07b2518a94b508ee7b96b6f97fc9d1ab90eeb33291b4deba2725a282"
     }
   ]
 }

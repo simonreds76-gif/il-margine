@@ -2,90 +2,89 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 53,
+    "blocked_lines": 77,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 39,
-      "goalkeeper_team_unresolved": 39,
-      "missing_priced_edge": 53,
-      "missing_registered_feature": 14
+      "goalkeeper_not_matched_to_lineup": 77,
+      "goalkeeper_team_unresolved": 77,
+      "missing_priced_edge": 77
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 2,
-    "priced_lines": 118,
+    "eligible_lines": 6,
+    "priced_lines": 206,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 5
+    "value_ladder_lines": 19
   },
   "evidence": {
     "clv": 0.051099,
     "clv_matched": 32,
-    "pending": 8,
-    "pnl_units": 12.572,
-    "roi": 0.285727,
-    "settled": 88,
+    "pending": 6,
+    "pnl_units": 11.447,
+    "roi": 0.248848,
+    "settled": 92,
     "settlement_sources": {
-      "fotmob_named_keeper_shotmap": 77,
-      "fotmob_team_keeper_shotmap": 7,
+      "fotmob_named_keeper_shotmap": 79,
+      "fotmob_team_keeper_shotmap": 9,
       "independently_reviewed_named_keeper_count": 1,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 102,
-    "true_close_coverage": 0.363636,
+    "signals": 104,
+    "true_close_coverage": 0.347826,
     "void": 6
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-10-31T22:49:38.192804+00:00",
+    "checked_at": "2026-11-01T09:45:57.340184+00:00",
     "counts": {
-      "not_fresh_prematch": 32,
-      "offers_saved": 139
+      "already_saved": 16,
+      "not_fresh_prematch": 4
     },
-    "saved": 16,
-    "status": "CAPTURED"
+    "saved": 0,
+    "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-10-31T22:49:37Z",
+  "generated_at": "2026-11-01T09:45:56Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
-      "blocked_or_missing_inputs": 36,
-      "not_new_fresh_prematch": 32
+      "blocked_or_missing_inputs": 77,
+      "not_new_fresh_prematch": 4
     },
-    "forecast_fixtures": 132,
-    "forecast_keepers": 269,
-    "generated_at": "2026-10-31T22:49:38.506892+00:00",
-    "last_capture_at": "2026-10-31T22:49:38.506892+00:00",
+    "forecast_fixtures": 133,
+    "forecast_keepers": 271,
+    "generated_at": "2026-11-01T09:45:57.410128+00:00",
+    "last_capture_at": "2026-11-01T09:44:40.109141+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 1,
+    "new_forecasts": 0,
     "new_selections": 0,
     "next_review_at": 100,
     "paired_scores": {
       "current": {
-        "brier": 0.18029123048780313,
-        "log_loss": 0.5373191500745914
+        "brier": 0.18034669706470693,
+        "log_loss": 0.5368781683425748
       },
       "keeper_watch": {
-        "brier": 0.17960816979664773,
-        "log_loss": 0.5386069150555881
+        "brier": 0.18021058958197034,
+        "log_loss": 0.5392268772638614
       }
     },
-    "paired_settled_fixtures": 87,
+    "paired_settled_fixtures": 92,
     "paper_stake": 0.5,
     "records": {
       "current": {
-        "losses": 12,
+        "losses": 15,
         "overdue": 0,
-        "pending": 7,
-        "profit": 0.26900000000000035,
+        "pending": 4,
+        "profit": -0.8559999999999997,
         "pushes": 0,
-        "review": 1,
-        "roi": 0.024454545454545486,
-        "selections": 34,
-        "settled": 22,
-        "stake": 11.0,
+        "review": 2,
+        "roi": -0.06584615384615382,
+        "selections": 36,
+        "settled": 26,
+        "stake": 13.0,
         "voids": 4,
-        "wins": 10
+        "wins": 11
       },
       "keeper_watch": {
         "losses": 3,
@@ -105,16 +104,16 @@
     "records_by_bookmaker": {
       "Bet365": {
         "current": {
-          "losses": 12,
+          "losses": 14,
           "overdue": 0,
           "pending": 2,
-          "profit": 0.26900000000000035,
+          "profit": -0.7309999999999997,
           "pushes": 0,
           "review": 1,
-          "roi": 0.024454545454545486,
-          "selections": 29,
-          "settled": 22,
-          "stake": 11.0,
+          "roi": -0.06091666666666664,
+          "selections": 31,
+          "settled": 24,
+          "stake": 12.0,
           "voids": 4,
           "wins": 10
         },
@@ -135,18 +134,18 @@
       },
       "Grosvenor": {
         "current": {
-          "losses": 0,
+          "losses": 1,
           "overdue": 0,
-          "pending": 5,
-          "profit": 0,
+          "pending": 2,
+          "profit": -0.125,
           "pushes": 0,
-          "review": 0,
-          "roi": null,
+          "review": 1,
+          "roi": -0.125,
           "selections": 5,
-          "settled": 0,
-          "stake": 0.0,
+          "settled": 2,
+          "stake": 1.0,
           "voids": 0,
-          "wins": 0
+          "wins": 1
         },
         "keeper_watch": {
           "losses": 0,
@@ -166,6 +165,32 @@
     },
     "review_milestone": 50,
     "selections": [
+      {
+        "away": "SSC Napoli",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-11-01T09:44:12.955041+00:00",
+        "contract_scope": "named_player",
+        "edge": 0.1303318179215749,
+        "event_id": "71945374",
+        "fair_odds": 2.2117399159805444,
+        "goalkeeper": "Guglielmo Vicario",
+        "home": "Juventus Turin",
+        "kickoff_at": "2026-11-01T19:45:00+00:00",
+        "line": 2.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5749735",
+        "model": "current",
+        "odds": 2.5,
+        "overdue": false,
+        "player_id": "538501",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-11-01T09:44:40.109141+00:00",
+        "settlement_policy": "bet365_named_nonstarter_void_v1",
+        "side": "over",
+        "status": "pending",
+        "team_id": "9885"
+      },
       {
         "away": "Genoa CFC",
         "bookmaker": "Grosvenor",
@@ -193,6 +218,33 @@
         "team_id": "10233"
       },
       {
+        "away": "Hamburger SV",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-11-01T09:44:08.136995+00:00",
+        "contract_scope": "named_player",
+        "edge": 0.09098368487873199,
+        "event_id": "72513278",
+        "fair_odds": 1.6498871843350056,
+        "goalkeeper": "Daniel Heuer Fernandes",
+        "home": "Eintracht Frankfurt",
+        "kickoff_at": "2026-11-01T16:30:00+00:00",
+        "line": 3.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5881210",
+        "model": "current",
+        "odds": 1.8,
+        "overdue": false,
+        "player_id": "406501",
+        "profit": 0,
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-11-01T09:44:40.109141+00:00",
+        "settlement_policy": "bet365_named_nonstarter_void_v1",
+        "side": "over",
+        "status": "pending",
+        "team_id": "9790"
+      },
+      {
+        "actual": 3,
         "away": "Borussia Dortmund",
         "bookmaker": "Grosvenor",
         "captured_at": "2026-10-30T01:21:17+00:00",
@@ -210,15 +262,15 @@
         "odds": 2.07,
         "overdue": false,
         "player_id": "764018",
-        "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "profit": -0.5,
         "registered_at": "2026-10-30T01:21:29.783940+00:00",
         "settlement_policy": "grosvenor_full90_scope_agreement_v1",
         "side": "over",
-        "status": "pending",
+        "status": "lost",
         "team_id": "9789"
       },
       {
+        "actual": 1,
         "away": "Ipswich Town",
         "bookmaker": "Bet365",
         "captured_at": "2026-10-30T15:04:09.745204+00:00",
@@ -236,15 +288,15 @@
         "odds": 3.0,
         "overdue": false,
         "player_id": "512013",
-        "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "profit": -0.5,
         "registered_at": "2026-10-30T15:06:38.721607+00:00",
         "settlement_policy": "bet365_named_nonstarter_void_v1",
         "side": "over",
-        "status": "pending",
+        "status": "lost",
         "team_id": "9902"
       },
       {
+        "actual": 1,
         "away": "Leeds United",
         "bookmaker": "Bet365",
         "captured_at": "2026-10-30T01:19:19.509564+00:00",
@@ -262,12 +314,11 @@
         "odds": 2.625,
         "overdue": false,
         "player_id": "1067256",
-        "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "profit": -0.5,
         "registered_at": "2026-10-30T01:21:29.783940+00:00",
         "settlement_policy": "bet365_named_nonstarter_void_v1",
         "side": "over",
-        "status": "pending",
+        "status": "lost",
         "team_id": "8678"
       },
       {
@@ -297,6 +348,7 @@
         "team_id": "8460"
       },
       {
+        "actual": 6,
         "away": "VfB Stuttgart",
         "bookmaker": "Grosvenor",
         "captured_at": "2026-10-30T01:21:17+00:00",
@@ -314,12 +366,11 @@
         "odds": 1.75,
         "overdue": false,
         "player_id": "1478098",
-        "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "profit": 0.375,
         "registered_at": "2026-10-30T01:21:29.783940+00:00",
         "settlement_policy": "grosvenor_full90_scope_agreement_v1",
         "side": "over",
-        "status": "pending",
+        "status": "won",
         "team_id": "10269"
       },
       {
@@ -341,11 +392,11 @@
         "overdue": false,
         "player_id": "73409",
         "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "reason": "team_keeper_participation_or_rules_review",
         "registered_at": "2026-10-30T01:21:29.783940+00:00",
         "settlement_policy": "grosvenor_full90_scope_agreement_v1",
         "side": "over",
-        "status": "pending",
+        "status": "review",
         "team_id": "178475"
       },
       {
@@ -1176,10 +1227,10 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 76,
+      "awaiting_verified_keeper_result": 67,
       "incomplete_or_conflicting_full_match_count": 12,
       "keeper_identity_unresolved": 3,
-      "team_keeper_participation_or_rules_review": 6,
+      "team_keeper_participation_or_rules_review": 7,
       "verified_different_starting_keeper": 10
     },
     "source_extension": {

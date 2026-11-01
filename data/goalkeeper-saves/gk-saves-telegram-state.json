@@ -3037,16 +3037,134 @@
       },
       "message_id": 739,
       "sent_at": "2026-10-31T19:33:54.534639+00:00"
+    },
+    "71945374|guglielmo vicario|2.5|over": {
+      "status": "claimed",
+      "run_token": "41294173938:1",
+      "claimed_at": "2026-11-01T09:45:58.605932+00:00",
+      "signal": {
+        "signal_id": "71945374|guglielmo vicario|2.5|over",
+        "created_at": "2026-11-01T09:44:39Z",
+        "event_id": "71945374",
+        "match_date": "2026-11-01",
+        "kickoff_at": "2026-11-01T19:45:00Z",
+        "league": "serie-a",
+        "home_team": "Juventus Turin",
+        "away_team": "SSC Napoli",
+        "team": "Juventus Turin",
+        "opponent": "SSC Napoli",
+        "venue": "home",
+        "goalkeeper": "Guglielmo Vicario",
+        "bookmaker": "Bet365",
+        "line": "2.5",
+        "side": "over",
+        "odds_decimal": "2.5000",
+        "model_mean": "2.5250",
+        "model_probability": "0.452133",
+        "push_probability": "0.000000",
+        "fair_odds": "2.212",
+        "edge": "0.130332",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-11-01T09:44:12.955041963Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "named_player",
+        "identity_basis": "bookmaker_named_player",
+        "price_comparison": [
+          {
+            "bookmaker": "Bet365",
+            "odds": 2.5,
+            "captured_at": "2026-11-01T09:44:12.955041963Z",
+            "contract_scope": "named_player"
+          },
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 1.9,
+            "captured_at": "2026-11-01T09:44:28+00:00",
+            "contract_scope": "team_goalkeeper_home"
+          }
+        ],
+        "price_checked_at": "2026-11-01T09:45:58.605932+00:00"
+      }
+    },
+    "72513278|daniel heuer fernandes|3.5|over": {
+      "status": "claimed",
+      "run_token": "41294173938:1",
+      "claimed_at": "2026-11-01T09:45:58.605932+00:00",
+      "signal": {
+        "signal_id": "72513278|daniel heuer fernandes|3.5|over",
+        "created_at": "2026-11-01T09:44:39Z",
+        "event_id": "72513278",
+        "match_date": "2026-11-01",
+        "kickoff_at": "2026-11-01T16:30:00Z",
+        "league": "bundesliga",
+        "home_team": "Eintracht Frankfurt",
+        "away_team": "Hamburger SV",
+        "team": "Hamburger SV",
+        "opponent": "Eintracht Frankfurt",
+        "venue": "away",
+        "goalkeeper": "Daniel Heuer Fernandes",
+        "bookmaker": "Bet365",
+        "line": "3.5",
+        "side": "over",
+        "odds_decimal": "1.8000",
+        "model_mean": "4.3775",
+        "model_probability": "0.606102",
+        "push_probability": "0.000000",
+        "fair_odds": "1.650",
+        "edge": "0.090984",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-11-01T09:44:08.1369959Z",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "named_player",
+        "identity_basis": "bookmaker_named_player",
+        "price_comparison": [
+          {
+            "bookmaker": "Bet365",
+            "odds": 1.8,
+            "captured_at": "2026-11-01T09:44:08.1369959Z",
+            "contract_scope": "named_player"
+          },
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 1.58,
+            "captured_at": "2026-11-01T09:44:28+00:00",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-11-01T09:45:58.605932+00:00"
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-10-31T22:50:13.944807+00:00",
-      "added": 0,
+      "checked_at": "2026-11-01T09:45:58.605932+00:00",
+      "added": 2,
       "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-10-31T22:50:13.944807+00:00",
+      "checked_at": "2026-11-01T09:45:58.605932+00:00",
       "added": 0,
       "suppressed": {}
     }

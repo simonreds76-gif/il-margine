@@ -12,13 +12,13 @@
         "Serie A",
         "Spain - LaLiga"
       ],
-      "events": 22,
-      "paired_price_events": 21,
+      "events": 26,
+      "paired_price_events": 13,
       "pairing_unknown_events": 22,
       "raw_market_names": [
         "Bookings Totals"
       ],
-      "rows": 43,
+      "rows": 35,
       "status": "PAIRED_PRICES_OBSERVED"
     },
     "match_fouls_total": {
@@ -46,7 +46,6 @@
         "Paddy Power"
       ],
       "competitions": [
-        "Bundesliga",
         "England - Premier League",
         "Germany - Bundesliga",
         "Italy - Serie A",
@@ -61,7 +60,7 @@
       "raw_market_names": [
         "Player To Be Fouled"
       ],
-      "rows": 55,
+      "rows": 42,
       "status": "MARKET_NAME_ONLY"
     },
     "player_fouls_committed": {
@@ -69,7 +68,6 @@
         "Paddy Power"
       ],
       "competitions": [
-        "Bundesliga",
         "England - Premier League",
         "France - Ligue 1",
         "Germany - Bundesliga",
@@ -86,7 +84,7 @@
       "raw_market_names": [
         "Player Fouls"
       ],
-      "rows": 57,
+      "rows": 44,
       "status": "MARKET_NAME_ONLY"
     },
     "team_cards_total": {
@@ -110,7 +108,7 @@
       "status": "NOT_OBSERVED"
     }
   },
-  "generated_at": "2026-10-31T14:35:58Z",
+  "generated_at": "2026-11-01T09:44:40Z",
   "policy": {
     "definition_gate": "Bookmaker settlement definitions must be reconciled against the result source before ROI is scored.",
     "live_staking": "BLOCKED",

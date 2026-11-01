@@ -1,243 +1,110 @@
 {
-  "run_at": "2026-11-01T09:39:14Z",
+  "run_at": "2026-11-01T09:45:37Z",
   "model": "corners-v3-shadow",
-  "total_bets": 190,
-  "settled_this_run": 0,
-  "total_settled": 154,
-  "total_pending": 36,
+  "total_bets": 199,
+  "settled_this_run": 16,
+  "total_settled": 170,
+  "total_pending": 29,
   "pending_breakdown": {
-    "future": 19,
+    "future": 28,
     "live": 0,
-    "stale": 17,
+    "stale": 1,
     "old_stale": 0,
     "unknown": 0
   },
   "source_freshness": {
     "bundesliga": {
       "football_data_latest": "2026-10-25",
-      "lag_days": 6,
+      "lag_days": 7,
       "football_data_count": 63,
-      "fotmob_count": 0,
-      "fotmob_latest": null,
+      "fotmob_count": 4,
+      "fotmob_latest": "2026-10-31",
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 3,
       "api_football_requests_remaining_after_league": 7,
       "api_football_error": null,
       "api_football_max_requests": 10,
-      "snapshot_date": "2026-10-31",
-      "snapshot_path": "data/results-snapshot/2026-10-31.json"
+      "snapshot_date": "2026-11-01",
+      "snapshot_path": "data/results-snapshot/2026-11-01.json"
     },
     "epl": {
       "football_data_latest": "2026-10-25",
-      "lag_days": 6,
+      "lag_days": 7,
       "football_data_count": 80,
-      "fotmob_count": 1,
+      "fotmob_count": 7,
+      "fotmob_latest": "2026-10-31",
+      "api_football_count": 0,
+      "api_football_latest": null,
+      "api_football_requests_used": 4,
+      "api_football_requests_remaining_after_league": 3,
+      "api_football_error": null,
+      "api_football_max_requests": 7,
+      "snapshot_date": "2026-11-01",
+      "snapshot_path": "data/results-snapshot/2026-11-01.json"
+    },
+    "la-liga": {
+      "football_data_latest": "2026-10-26",
+      "lag_days": 6,
+      "football_data_count": 99,
+      "fotmob_count": 4,
       "fotmob_latest": "2026-10-31",
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 3,
-      "api_football_requests_remaining_after_league": 4,
+      "api_football_requests_remaining_after_league": 0,
       "api_football_error": null,
-      "api_football_max_requests": 7,
-      "snapshot_date": "2026-10-31",
-      "snapshot_path": "data/results-snapshot/2026-10-31.json"
-    },
-    "la-liga": {
-      "football_data_latest": "2026-10-26",
-      "lag_days": 5,
-      "football_data_count": 99,
-      "fotmob_count": 1,
-      "fotmob_latest": "2026-10-30",
-      "api_football_count": 0,
-      "api_football_latest": null,
-      "api_football_requests_used": 3,
-      "api_football_requests_remaining_after_league": 1,
-      "api_football_error": null,
-      "api_football_max_requests": 4,
-      "snapshot_date": "2026-10-31",
-      "snapshot_path": "data/results-snapshot/2026-10-31.json"
+      "api_football_max_requests": 3,
+      "snapshot_date": "2026-11-01",
+      "snapshot_path": "data/results-snapshot/2026-11-01.json"
     },
     "ligue-1": {
       "football_data_latest": "2026-10-26",
-      "lag_days": 5,
+      "lag_days": 6,
       "football_data_count": 72,
-      "fotmob_count": 3,
-      "fotmob_latest": "2026-10-30",
-      "api_football_count": 0,
-      "api_football_latest": null,
-      "api_football_requests_used": 1,
-      "api_football_requests_remaining_after_league": 0,
-      "api_football_error": null,
-      "api_football_max_requests": 1,
-      "snapshot_date": "2026-10-31",
-      "snapshot_path": "data/results-snapshot/2026-10-31.json"
-    },
-    "serie-a": {
-      "football_data_latest": "2026-10-29",
-      "lag_days": 2,
-      "football_data_count": 90,
-      "fotmob_count": 0,
-      "fotmob_latest": null,
+      "fotmob_count": 1,
+      "fotmob_latest": "2026-10-31",
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 0,
       "api_football_requests_remaining_after_league": 0,
       "api_football_error": null,
       "api_football_max_requests": 10,
-      "snapshot_date": "2026-10-31",
-      "snapshot_path": "data/results-snapshot/2026-10-31.json"
+      "snapshot_date": "2026-11-01",
+      "snapshot_path": "data/results-snapshot/2026-11-01.json"
+    },
+    "serie-a": {
+      "football_data_latest": "2026-10-29",
+      "lag_days": 3,
+      "football_data_count": 90,
+      "fotmob_count": 3,
+      "fotmob_latest": "2026-10-31",
+      "api_football_count": 0,
+      "api_football_latest": null,
+      "api_football_requests_used": 0,
+      "api_football_requests_remaining_after_league": 0,
+      "api_football_error": null,
+      "api_football_max_requests": 10,
+      "snapshot_date": "2026-11-01",
+      "snapshot_path": "data/results-snapshot/2026-11-01.json"
     }
   },
   "stale_rows": [
-    {
-      "match": "Chelsea vs Manchester United",
-      "league": "epl",
-      "line": "9.5",
-      "side": "under",
-      "kickoff": "2026-10-31T12:30:00Z",
-      "hours_elapsed": 21.15
-    },
-    {
-      "match": "Levante vs Atletico Madrid",
-      "league": "la-liga",
-      "line": "9.5",
-      "side": "under",
-      "kickoff": "2026-10-31T13:00:00Z",
-      "hours_elapsed": 20.65
-    },
-    {
-      "match": "Bologna FC vs AC Monza",
-      "league": "serie-a",
-      "line": "12.5",
-      "side": "over",
-      "kickoff": "2026-10-31T14:00:00Z",
-      "hours_elapsed": 19.65
-    },
-    {
-      "match": "Augsburg vs Freiburg",
-      "league": "bundesliga",
-      "line": "9.5",
-      "side": "under",
-      "kickoff": "2026-10-31T14:30:00Z",
-      "hours_elapsed": 19.15
-    },
-    {
-      "match": "Bayer Leverkusen vs VfB Stuttgart",
-      "league": "bundesliga",
-      "line": "8.5",
-      "side": "under",
-      "kickoff": "2026-10-31T14:30:00Z",
-      "hours_elapsed": 19.15
-    },
-    {
-      "match": "Borussia Monchengladbach vs SC Paderborn 07",
-      "league": "bundesliga",
-      "line": "8.5",
-      "side": "under",
-      "kickoff": "2026-10-31T14:30:00Z",
-      "hours_elapsed": 19.15
-    },
-    {
-      "match": "Werder Bremen vs Hoffenheim",
-      "league": "bundesliga",
-      "line": "9.5",
-      "side": "under",
-      "kickoff": "2026-10-31T14:30:00Z",
-      "hours_elapsed": 19.15
-    },
-    {
-      "match": "AFC Bournemouth vs Leeds United",
-      "league": "epl",
-      "line": "12.5",
-      "side": "over",
-      "kickoff": "2026-10-31T15:00:00Z",
-      "hours_elapsed": 18.65
-    },
-    {
-      "match": "Coventry City vs Sunderland AFC",
-      "league": "epl",
-      "line": "11.5",
-      "side": "over",
-      "kickoff": "2026-10-31T15:00:00Z",
-      "hours_elapsed": 18.65
-    },
-    {
-      "match": "Rayo Vallecano vs RC Celta de Vigo",
-      "league": "la-liga",
-      "line": "11.5",
-      "side": "over",
-      "kickoff": "2026-10-31T15:15:00Z",
-      "hours_elapsed": 18.4
-    },
-    {
-      "match": "Udinese Calcio vs AS Roma",
-      "league": "serie-a",
-      "line": "12.5",
-      "side": "over",
-      "kickoff": "2026-10-31T17:00:00Z",
-      "hours_elapsed": 16.65
-    },
-    {
-      "match": "Bayern Munich vs Borussia Dortmund",
-      "league": "bundesliga",
-      "line": "9.5",
-      "side": "under",
-      "kickoff": "2026-10-31T17:30:00Z",
-      "hours_elapsed": 16.15
-    },
-    {
-      "match": "Real Betis Seville vs Malaga CF",
-      "league": "la-liga",
-      "line": "8.5",
-      "side": "under",
-      "kickoff": "2026-10-31T17:30:00Z",
-      "hours_elapsed": 16.15
-    },
     {
       "match": "Lyon vs Angers",
       "league": "ligue-1",
       "line": "9.5",
       "side": "under",
       "kickoff": "2026-10-31T19:45:00Z",
-      "hours_elapsed": 13.9
-    },
-    {
-      "match": "AC Milan vs Inter Milano",
-      "league": "serie-a",
-      "line": "8.5",
-      "side": "under",
-      "kickoff": "2026-10-31T19:45:00Z",
-      "hours_elapsed": 13.9
-    },
-    {
-      "match": "Aston Villa vs Fulham",
-      "league": "epl",
-      "line": "9.5",
-      "side": "under",
-      "kickoff": "2026-10-31T20:00:00Z",
-      "hours_elapsed": 13.65
-    },
-    {
-      "match": "Barcelona vs Alaves",
-      "league": "la-liga",
-      "line": "9.5",
-      "side": "under",
-      "kickoff": "2026-10-31T20:00:00Z",
-      "hours_elapsed": 13.65
+      "hours_elapsed": 14.01
     }
   ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
   "warnings": [
-    "17 stale pending row(s) across 17 fixture(s) (3-48h elapsed)"
+    "1 stale pending row(s) across 1 fixture(s) (3-48h elapsed)"
   ],
-  "errors": [
-    "epl: 4 stale fixture(s) across 4 pending row(s)",
-    "la-liga: 4 stale fixture(s) across 4 pending row(s)",
-    "serie-a: 3 stale fixture(s) across 3 pending row(s)",
-    "bundesliga: 5 stale fixture(s) across 5 pending row(s)"
-  ],
-  "exit_code_recommendation": 1
+  "errors": [],
+  "exit_code_recommendation": 0
 }
