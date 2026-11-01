@@ -90,6 +90,30 @@ def published_source(root, tour, now):
     return result, players
 
 
+def native_research_source(root, now):
+    result={'role':'research_source_only','live_ratings_changed':False,'state':'MISSING_EVIDENCE'}
+    folder=root/'data/tennis-elo-source/native-adult-v1'
+    try:
+        s=json.loads(bounded_bytes(folder/'status.json'))
+        if s['version']!='native-adult-elo-source-v1-20261101' or s['live_writes'] is not False:
+            raise ValueError('invalid_native_source')
+        for filename,field in [('candidate.json','candidate_sha256'),('history.json.gz','history_file_sha256')]:
+            if (folder/filename).stat().st_size>64*1024*1024:raise ValueError('source_size_limit')
+            if hashlib.sha256((folder/filename).read_bytes()).hexdigest()!=s[field]:raise ValueError('source_integrity')
+        observed=stamp(s['checked_at']);cutoff=date.fromisoformat(s['latest_available_result'])
+        if observed>now or cutoff>=date.fromisoformat(s['as_of_exclusive']):raise ValueError('future_source')
+        state=s['state']
+        if now-observed>timedelta(hours=48):state='STALE_OBSERVATION'
+        if (now.date()-cutoff).days>3:state='STALE_RESULT_CUTOFF'
+        result.update(state=state,integrity_verified=True,checked_at=s['checked_at'],
+            latest_available_result=s['latest_available_result'],history_matches=s['history_matches'],rating_rows=s['rating_rows'],
+            candidate_sha256=s['candidate_sha256'],missing_player_followup=s['missing_player_followup'],
+            limitation='Restored adult ITF source; not promoted and not proof of live source freshness.')
+    except FileNotFoundError:pass
+    except (OSError,ValueError,KeyError,TypeError):result.update(state='INVALID_EVIDENCE',integrity_verified=False)
+    return result
+
+
 def annotate_sources(root, status, elo, now, names=None):
     """Attach independent source status without relaxing any legacy health state."""
     names = names or {}
@@ -104,6 +128,7 @@ def annotate_sources(root, status, elo, now, names=None):
                  'timestamp_semantics': 'Legacy writers omitted updated_at; stored dates do not prove last refresh.',
                  'action': 'Keep current ratings; a source substitution requires a separate reviewed model decision.'},
         'published_research': sources,
+        'native_adult_research': native_research_source(root,now),
     }
     missing = {}
     for fixture in status.get('fixtures', []):
