@@ -212,7 +212,7 @@ def refresh_current_most_aces(as_of: str, *, register: bool = True) -> bool:
     if not register or most_aces_suspended():
         return complete
     code = run([sys.executable, str(ROOT / 'scripts/tennis_most_aces_current.py'), '--as-of', as_of],
-        'Compare current Most Aces 1X2 prices and register paper observations', fatal=False, timeout_seconds=30)
+        'Compare current Most Aces 1X2 prices and register paper observations', fatal=False, timeout_seconds=90)
     return complete and code == 0
 
 
@@ -221,7 +221,7 @@ def refresh_current_paper_lanes(as_of: str) -> bool:
     commands = [
         ('tennis_ace_compass.py', ['--comparison', str(PROPS_DIR / f'comparison-{as_of}.csv')], 240),
         ('tennis_sisal_5050.py', ['--quotes', str(PROPS_DIR / 'inbox' / f'bet365-lines-{as_of}.csv')], 180),
-        ('tennis-props-aces-over-v4.py', ['--comparison', str(PROPS_DIR / f'comparison-v3-aces-{as_of}.csv')], 180),
+        ('tennis_v4_current_capture.py', ['--comparison', str(PROPS_DIR / f'comparison-v3-aces-{as_of}.csv')], 90),
     ]
     failures = []
     for script, arguments, timeout in commands:
@@ -258,7 +258,7 @@ def run_most_aces_shadow(as_of: str, capture: Path | None = None) -> None:
         cmd.extend(["--capture", str(selected)])
     run(cmd, "Update Most Aces 1X2 paper evidence", fatal=False)
     run([sys.executable, str(ROOT / 'scripts/tennis_most_aces_current.py'), '--as-of', as_of],
-        'Refresh current Most Aces comparison', fatal=False, timeout_seconds=30)
+        'Refresh current Most Aces comparison', fatal=False, timeout_seconds=90)
 
 
 def run_comparison(
@@ -343,6 +343,12 @@ def run_shadow_tracking(as_of: str) -> None:
          "--quotes", str(PROPS_DIR / "inbox" / f"bet365-lines-{as_of}.csv")],
         "Capture and settle Sisal 50/50 paper evidence (no alerts)", fatal=False, timeout_seconds=240,
     )
+    # Current captures must survive slow historical report/settlement scans.
+    run([sys.executable, str(ROOT / 'scripts/tennis_v4_current_capture.py'),
+         '--comparison', str(PROPS_DIR / f'comparison-v3-aces-{as_of}.csv')],
+        'Capture current v4 evidence before historical reports', fatal=False, timeout_seconds=90)
+    run([sys.executable, str(ROOT / 'scripts/tennis_most_df.py'), '--capture-only'],
+        'Refresh current Most DF report before historical settlement', fatal=False, timeout_seconds=90)
     run_most_aces_shadow(as_of)
     run([sys.executable, str(ROOT / 'scripts/tennis_most_df.py')],
         'Capture and settle Most DF paper observations (no alerts)', fatal=False, timeout_seconds=60)
@@ -498,7 +504,7 @@ def run_monitor_only(as_of: str, *, selections_only: bool = False) -> int:
                 return code
         step = "pipeline_health"
         df_exit = run([sys.executable, str(ROOT / 'scripts/tennis_most_df.py'), '--capture-only'],
-            'Record current Most DF paper comparison (no historical wait or alerts)', fatal=False, timeout_seconds=15)
+            'Record current Most DF paper comparison (no historical wait or alerts)', fatal=False, timeout_seconds=90)
         paper_ready = refresh_current_paper_lanes(as_of)
         if not derived_ready or df_exit or not paper_ready:
             mark_pipeline_blocked(as_of, market_file, 'current_model_refresh_incomplete')
