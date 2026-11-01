@@ -1,5 +1,6 @@
 "use client";
 import {useState} from 'react';
+import TournamentBreakPoints from './TournamentBreakPoints';
 import {numeric, pairedAceTotal, tournamentHistory, text, currentMostAcesModel, type SignalRow} from '@/lib/admin-monitor-display';
 const fmt=(v:unknown,d=1)=>{const n=numeric(v);return n===null?'Not supplied':n.toFixed(d);};
 const stamp=(v:unknown)=>Number.isFinite(Date.parse(text(v)))?new Date(text(v)).toLocaleString('en-GB',{timeZone:'Europe/London',dateStyle:'short',timeStyle:'short'}):'Not supplied';
@@ -18,18 +19,22 @@ export function MostAcesComparison({data}:{data:unknown}) {
 
 
 function TournamentHistory({rows}:{rows:SignalRow[]}) {
+ const [mode,setMode]=useState<'breaks'|'aces'>('breaks');
  return <section className="mt-5 border-t border-slate-700/70 pt-4" aria-label="Current tournament results">
   <h4 className="text-sm font-semibold text-slate-100">This tournament · recorded results</h4>
   <p className="mt-1 text-xs leading-relaxed text-slate-400">Completed matches in this edition, including qualifying where recorded. Counts below are actual results, separate from the next-match forecast.</p>
+  <div className="mt-3 flex flex-wrap gap-2" aria-label="Tournament statistics">
+   {([['breaks','Break-point chances'],['aces','Aces & double faults']] as const).map(([id,label])=><button key={id} type="button" aria-pressed={mode===id} onClick={()=>setMode(id)} className={`min-h-11 rounded-lg border px-3 py-2 text-xs font-medium ${mode===id?'border-cyan-300/40 bg-cyan-300/10 text-cyan-100':'border-slate-600 text-slate-300'} focus-visible:outline focus-visible:outline-cyan-300`}>{label}</button>)}
+  </div>
   <div className="mt-3 grid gap-3">
    {rows.map((row,index)=>{
     const history=tournamentHistory(row);
     return <section key={`${text(row.player)}-${index}`} className="min-w-0 rounded-xl border border-slate-700/70 bg-slate-950/40 p-3" aria-label={`${text(row.player)} tournament history`}>
      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
       <h5 className="break-words text-sm font-semibold text-slate-100">{text(row.player)}</h5>
-      <p className="text-xs text-slate-400">{text(row.tournament)} · {history.logs.length} recorded {history.logs.length===1?'match':'matches'}</p>
+      <p className="text-xs text-slate-400">{text(row.tournament)}{mode==='aces'?` · ${history.logs.length} recorded ${history.logs.length===1?'match':'matches'}`:''}</p>
      </div>
-     {history.logs.length>0?<>
+     {mode==='breaks'?<TournamentBreakPoints row={row}/>:history.logs.length>0?<>
       <dl className="my-3 grid grid-cols-2 gap-3 rounded-lg bg-slate-800/50 p-3">
        {(['aces','dfs'] as const).map(field=>{
         const stat=history[field],complete=stat.covered===history.logs.length&&!history.incomplete;
@@ -43,7 +48,7 @@ function TournamentHistory({rows}:{rows:SignalRow[]}) {
       </table>
       <p className="mt-2 text-[11px] leading-relaxed text-slate-400">Saved OnCourt results through {text(history.logs.at(-1)?.date)}. Matches without statistics may be absent from this log.</p>
      </>:<p className="mt-3 text-xs leading-relaxed text-amber-200">No completed match statistics supplied for this tournament edition. This does not mean zero aces or double faults.</p>}
-     {history.incomplete&&<p className="mt-2 text-xs text-amber-200">Some recorded tournament matches are missing from this round log.</p>}
+     {mode==='aces'&&history.incomplete&&<p className="mt-2 text-xs text-amber-200">Some recorded tournament matches are missing from this round log.</p>}
     </section>;
    })}
    {!rows.length&&<p className="text-xs text-amber-200">Current-tournament history was not supplied in this snapshot.</p>}

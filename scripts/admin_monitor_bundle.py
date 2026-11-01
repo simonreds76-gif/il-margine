@@ -31,4 +31,24 @@ def build_admin_bundle(root: Path) -> dict:
         except (OSError,ValueError,UnicodeError) as error:
             entry.update(available=False,error=type(error).__name__)
         manifest.append(entry)
-    return {'admin_files':files,'admin_manifest':manifest,'admin_bundle_bytes':total}
+    # Historical display enrichment only. Source forecasts/ledgers remain exact
+    # on disk; disclose both the original and transported hashes in the manifest.
+    history_status = 'unavailable'
+    try:
+        from tennis_break_point_history import enrich_files
+        updates = enrich_files(root, files)
+        growth = sum(len(value.encode('utf-8')) - len(files[id].encode('utf-8')) for id, value in updates.items())
+        if total + growth > 12 * 1024 * 1024 or any(len(v.encode('utf-8')) > 4 * 1024 * 1024 for v in updates.values()):
+            raise ValueError('enriched bundle exceeds size limit')
+        for id, content in updates.items():
+            entry = next(e for e in manifest if e['id'] == id)
+            raw = content.encode('utf-8')
+            entry.update(source_sha256=entry['sha256'], sha256=hashlib.sha256(raw).hexdigest(),
+                         size_bytes=len(raw), display_enrichment='tournament-break-points-v1')
+            files[id] = content
+        total += growth
+        history_status = 'included' if updates else 'no_current_player_rows'
+    except (OSError,ValueError,UnicodeError) as error:
+        history_status = f'unavailable:{type(error).__name__}'
+    return {'admin_files':files,'admin_manifest':manifest,'admin_bundle_bytes':total,
+            'admin_break_point_history_status':history_status}
