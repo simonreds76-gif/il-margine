@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import os
 import subprocess
+from tennis_runtime_health import observed_run, summary as runtime_summary, PROCESS_RUN, DEFAULT_TIMEOUT
 import sys
 import uuid
 from pathlib import Path
@@ -49,12 +50,13 @@ def run_cmd(
     timeout_seconds: int | None = None,
     env_overrides: dict[str, str] | None = None,
 ) -> int:
+    timeout_seconds = timeout_seconds or DEFAULT_TIMEOUT
     print(f"\n=== {label} ===\n")
     env = os.environ.copy()
     if env_overrides:
         env.update(env_overrides)
     try:
-        r = subprocess.run(cmd, cwd=str(ROOT), env=env, timeout=timeout_seconds)
+        r = observed_run(cmd, root=ROOT, label=label, cwd=str(ROOT), env=env, timeout=timeout_seconds)
     except subprocess.TimeoutExpired:
         timeout_label = f" after {timeout_seconds}s" if timeout_seconds else ""
         msg = f"{label} timed out{timeout_label}."
@@ -336,4 +338,7 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    exit_code = main()
+    if runtime_summary(ROOT, run_id=os.environ.get("TENNIS_RUNTIME_RUN_ID") or PROCESS_RUN)["issues"]:
+        exit_code = exit_code or 1
+    raise SystemExit(exit_code)

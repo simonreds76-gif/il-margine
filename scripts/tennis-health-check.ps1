@@ -5,7 +5,9 @@
 
 param(
     [int]$StaleHours = 15,
-    [int]$AlertCooldownMinutes = 180
+    [int]$AlertCooldownMinutes = 180,
+    [switch]$RuntimeOnly,
+    [switch]$NoNotify
 )
 
 $ErrorActionPreference = "Stop"
@@ -430,7 +432,43 @@ function Post-Alert([string]$message) {
     return $sent
 }
 
+function Invoke-RuntimeWatchdog {
+    try {
+        $runtimeRaw = & python scripts/tennis_runtime_health.py check --json
+        $runtimeExit = $LASTEXITCODE
+        $runtime = $runtimeRaw | ConvertFrom-Json
+        if ($runtimeExit -notin @(0, 1) -or $runtime.schema_version -ne 1) { throw "Runtime health reader failed" }
+    } catch {
+        $runtime = @{ issues = @(@{ step_id = 'runtime-watchdog'; label = 'Tennis runtime watchdog'; issue = 'HEALTH_UNAVAILABLE'; last_success_at = $null }) }
+    }
+    $runtimeStateFile = Join-Path $root 'data/backtest/tennis-runtime-alert-status.json'
+    $prior = Read-JsonFile $runtimeStateFile
+    $issues = @($runtime.issues)
+    $key = (@($issues | ForEach-Object { "$($_.step_id)" } | Sort-Object) -join '|')
+    if ($issues.Count -eq 0) {
+        # A real recovery rearms the next failure. Never send routine OK alerts.
+        if ($prior.alert_key -and -not $NoNotify) {
+            @{ alert_key = ''; recovered_at = [datetime]::UtcNow.ToString('o') } | ConvertTo-Json | Set-Content -LiteralPath $runtimeStateFile -Encoding UTF8
+        }
+        return 0
+    }
+    $lines = @($issues | Select-Object -First 8 | ForEach-Object {
+        $last = if ($_.last_success_at) { $_.last_success_at } else { 'not yet observed' }
+        "$($_.label): $($_.issue); last success $last"
+    })
+    $message = "Tennis refresh incomplete.`n" + ($lines -join "`n") + "`nPrevious figures remain historical. Models and entry prices were not changed."
+    Log $message
+    if (-not $NoNotify -and $key -ne $prior.alert_key) {
+        if (Post-Alert $message) {
+            @{ alert_key = $key; alerted_at = [datetime]::UtcNow.ToString('o') } | ConvertTo-Json | Set-Content -LiteralPath $runtimeStateFile -Encoding UTF8
+        }
+    }
+    return 1
+}
+
 Import-EnvFiles
+$runtimeWatchExit = Invoke-RuntimeWatchdog
+if ($RuntimeOnly) { exit $runtimeWatchExit }
 
 $nowUtc = [DateTimeOffset]::UtcNow
 $previousHealth = Read-JsonFile $healthFile
@@ -451,15 +489,18 @@ if ($activeRecoveryTasks.Count -gt 0) {
 }
 
 if ($badLanes.Count -eq 0 -and $badTasks.Count -eq 0) {
-    if ($suppressedBadLanes.Count -gt 0) {
+    if ($runtimeWatchExit -ne 0) {
+        $message = "Tennis refresh has failed steps. See the runtime watchdog details above."
+    } elseif ($suppressedBadLanes.Count -gt 0) {
         $taskList = ($activeRecoveryTasks | ForEach-Object { $_.name }) -join ", "
         $message = "Tennis health OK. Refresh in progress via $taskList."
     } else {
         $message = "Tennis health OK. No stale lanes or failing/missing tasks."
     }
     Log $message
-    Write-HealthFile -State "healthy" -Message $message -Lanes $laneHealth -Tasks $taskHealth -LastAlertedAt $previousHealth.last_alerted_at -LastAlertKey $previousHealth.last_alert_key
-    exit 0
+    $combinedState = if ($runtimeWatchExit -eq 0) { "healthy" } else { "alert" }
+    Write-HealthFile -State $combinedState -Message $message -Lanes $laneHealth -Tasks $taskHealth -LastAlertedAt $previousHealth.last_alerted_at -LastAlertKey $previousHealth.last_alert_key
+    exit $runtimeWatchExit
 }
 
 $issueParts = @()
@@ -487,7 +528,7 @@ Log $message
 
 $nextAlertedAt = $previousHealth.last_alerted_at
 $nextAlertKey = $previousHealth.last_alert_key
-if ($shouldAlert) {
+if ($shouldAlert -and -not $NoNotify) {
     if (Post-Alert $message) {
         $nextAlertedAt = $nowUtc.ToString("o")
         $nextAlertKey = $alertKey
