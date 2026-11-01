@@ -7,7 +7,7 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $root
 . (Join-Path $root "scripts\use-local-python.ps1") -RepoRoot $root
-. (Join-Path $root "scripts\task-lock.ps1")
+. (Join-Path $root "scripts\tennis-priority.ps1")
 . (Join-Path $root "scripts\_lib\run_status.ps1")
 
 $dataDir = Join-Path $root "data"
@@ -50,6 +50,20 @@ function Log($msg) {
     Add-Content -Path $logFile -Value $line
 }
 
+function Wait-WeeklyPriority {
+    if ($null -ne (Get-TennisPriorityRequest $root)) {
+        Exit-TaskLock $script:lockHandle
+        $script:lockHandle = $null
+        $script:lockHandle = Enter-TennisPriorityLock -RootPath $root
+    }
+}
+
+function Invoke-WeeklyPython {
+    Wait-WeeklyPriority
+    & python @args
+    $global:LASTEXITCODE = $LASTEXITCODE
+}
+
 function Invoke-LoggedProcess {
     param(
         [Parameter(Mandatory = $true)][string]$FilePath,
@@ -58,6 +72,7 @@ function Invoke-LoggedProcess {
         [int]$TimeoutSeconds = 0
     )
 
+    Wait-WeeklyPriority
     $stdoutPath = Join-Path $env:TEMP ("ilmargine-" + [guid]::NewGuid().ToString() + ".out.log")
     $stderrPath = Join-Path $env:TEMP ("ilmargine-" + [guid]::NewGuid().ToString() + ".err.log")
     try {
@@ -98,7 +113,7 @@ function Set-RunStatusFailure([string]$Type, [string]$Message) {
     $script:runStatusErrorMessage = $Message
 }
 
-$lockHandle = Enter-TaskLock -LockName "tennis-automation" -RootPath $root -WaitSeconds 1800 -PollSeconds 10
+$lockHandle = Enter-TennisPriorityLock -RootPath $root -WaitSeconds 1800
 if ($null -eq $lockHandle) {
     Log "Another tennis automation run stayed active for 30 minutes; exiting."
     exit 0
@@ -132,7 +147,7 @@ if (Test-Path $py32) {
 
 # Step 2: FULL sync to Supabase
 Log "=== Step 2/13: Supabase FULL sync ==="
-& python scripts\oncourt-load-supabase.py 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\oncourt-load-supabase.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "ERROR: Supabase full sync failed (exit $LASTEXITCODE)"
     Set-RunStatusFailure "SupabaseSyncFailed" "Supabase full sync failed (exit $LASTEXITCODE)"
@@ -141,7 +156,7 @@ if ($LASTEXITCODE -ne 0) {
 
 # Step 3: Extended player stats (writes v2 plus backwards-compatible table)
 Log "=== Step 3/12: Compute extended player stats ==="
-& python scripts\oncourt-compute-player-stats-extended.py 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\oncourt-compute-player-stats-extended.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "ERROR: Extended player stats failed (exit $LASTEXITCODE)"
     exit 1
@@ -149,19 +164,19 @@ if ($LASTEXITCODE -ne 0) {
 
 # Step 4: Refresh Sackmann ATP source files
 Log "=== Step 4/12: Refresh Sackmann ATP source files ==="
-& python scripts\sackmann-refresh-data.py --start-year 2023 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\sackmann-refresh-data.py --start-year 2023 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Sackmann refresh failed (exit $LASTEXITCODE), continuing..."
 }
 
 if ($RefreshHistoricalResearch) {
     Log "=== Post-step: Refresh match-total aces/DF holdout gate ==="
-    & python scripts\backtest-tennis-player-props.py --start-year 2022 --end-year 2026 --eval-years 2023 2024 2025 --out-csv data\tennis-props\backtest\aces-dfs-totals-source-rows.csv --out-txt data\tennis-props\backtest\aces-dfs-totals-source-report.txt 2>&1 | ForEach-Object { Log $_ }
+    Invoke-WeeklyPython scripts\backtest-tennis-player-props.py --start-year 2022 --end-year 2026 --eval-years 2023 2024 2025 --out-csv data\tennis-props\backtest\aces-dfs-totals-source-rows.csv --out-txt data\tennis-props\backtest\aces-dfs-totals-source-report.txt 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "WARNING: tennis props totals source refresh failed (exit $LASTEXITCODE), keeping the last verified gate."
     }
     else {
-        & python scripts\backtest-tennis-props-totals.py 2>&1 | ForEach-Object { Log $_ }
+        Invoke-WeeklyPython scripts\backtest-tennis-props-totals.py 2>&1 | ForEach-Object { Log $_ }
         if ($LASTEXITCODE -ne 0) {
             Log "WARNING: tennis props totals Stage-0 failed (exit $LASTEXITCODE), keeping the last verified gate."
         }
@@ -173,35 +188,42 @@ if ($RefreshHistoricalResearch) {
 
 # Step 5: Recompute H2H
 Log "=== Step 5/12: Recompute H2H ==="
-& python scripts\sackmann-compute-h2h.py 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\sackmann-compute-h2h.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: H2H recompute failed (exit $LASTEXITCODE), continuing..."
 }
 
 # Step 6: Recompute advanced stats
 Log "=== Step 6/12: Recompute advanced stats ==="
-& python scripts\sackmann-compute-advanced-stats.py 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\sackmann-compute-advanced-stats.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Advanced stats recompute failed (exit $LASTEXITCODE), continuing..."
 }
 
 # Step 7: Refresh TennisExplorer injured/returning CSV
 Log "=== Step 7/12: Refresh injured players list (TennisExplorer) ==="
-& python scripts\scrape-tennisexplorer-injured.py --max-pages 2 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\scrape-tennisexplorer-injured.py --max-pages 2 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: injured players scrape failed (exit $LASTEXITCODE), continuing..."
 }
 
 # Step 8: Refresh Tennis Abstract CPI/surface-speed table
 Log "=== Step 8/12: Refresh CPI surface-speed table ==="
-& python scripts\scrape-tennisabstract-surface-speed.py 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\scrape-tennisabstract-surface-speed.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: CPI surface-speed refresh failed (exit $LASTEXITCODE), continuing..."
 }
 
 # Step 9: Run settlement/performance before slower external fetches.
 Log "=== Step 9/12: Nightly-style settlement/performance refresh ==="
-& powershell -ExecutionPolicy Bypass -NoProfile -File scripts\oncourt-settle-nightly.ps1 2>&1 | ForEach-Object { Log $_ }
+# The child now owns the same lock one historical operation at a time.
+# Do not retain an outer lock, which would prevent manual refresh priority.
+Exit-TaskLock $lockHandle
+$lockHandle = $null
+& powershell -ExecutionPolicy Bypass -NoProfile -File scripts\oncourt-settle-nightly.ps1 -CooperativeLock 2>&1 | ForEach-Object { Log $_ }
+$settlementExit = $LASTEXITCODE
+$lockHandle = Enter-TennisPriorityLock -RootPath $root
+$global:LASTEXITCODE = $settlementExit
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: nightly settlement refresh failed (exit $LASTEXITCODE), continuing..."
 }
@@ -215,7 +237,7 @@ if ($tennisDataExit -ne 0) {
 
 # Step 11: Weekly strict-signals analysis
 Log "=== Step 11/12: Analyse strict signals ==="
-& python scripts\analyse-strict-signals.py --days 7 --input data\backtest\strict-signals-archive.csv 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\analyse-strict-signals.py --days 7 --input data\backtest\strict-signals-archive.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-signals analysis failed (exit $LASTEXITCODE), continuing..."
 }
@@ -223,18 +245,19 @@ if ($LASTEXITCODE -ne 0) {
 Log "=== Step 11b/12: Clay calibrated legacy analysis removed after failed ROI audit ==="
 
 Log "=== Step 11c/12: Analyse clay bo3 shadow signals ==="
-& python scripts\analyse-strict-signals.py --days 7 --input data\backtest\strict-signals-clay_bo3-archive.csv --report-txt data\backtest\strict-signals-clay_bo3-weekly.txt --summary-csv data\backtest\strict-signals-clay_bo3-weekly.csv 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\analyse-strict-signals.py --days 7 --input data\backtest\strict-signals-clay_bo3-archive.csv --report-txt data\backtest\strict-signals-clay_bo3-weekly.txt --summary-csv data\backtest\strict-signals-clay_bo3-weekly.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: clay bo3 signal analysis failed (exit $LASTEXITCODE), continuing..."
 }
 
 # Step 12: Append Pinnacle history capture (weekly checkpoint)
 Log "=== Step 12/12: Append Pinnacle history capture (weekly) ==="
-& python scripts\pinnacle-capture-history.py --capture-mode weekly 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\pinnacle-capture-history.py --capture-mode weekly 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Pinnacle history append failed (exit $LASTEXITCODE), continuing..."
 }
 
+if ($RefreshHistoricalResearch) {
 Log "=== Post-step: Refresh spread_v1 calibration + correction model ==="
 $handicapArgs = @("scripts\handicap-calibration.py", "--line-source", "auto", "--files") + $spreadFitFiles
 $handicapExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList $handicapArgs -Label "handicap calibration refresh" -TimeoutSeconds $spreadRefreshTimeoutSeconds
@@ -276,63 +299,67 @@ else {
     Log "Clay-only correction fit skipped: base calibration is not valid yet."
 }
 
+} else {
+    Log "Handicap refits skipped; frozen pricing artifacts retained. Explicit research invocation required."
+}
+
 # Weekly CLV audits (captured history first, tennis-data fallback)
 Log "=== Post-step: Strict CLV audit ==="
-& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-archive.csv 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\audit-strict-clv.py --signals data\backtest\strict-signals-archive.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Post-step: ATP ML Research CLV audit ==="
-& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-volume200-archive.csv --signal-date-from 2026-05-27 --policy-mode base --require-verified-kickoff --max-close-lag-minutes 720 --detail-csv data\backtest\strict-clv-audit-volume200-2026.csv --summary-txt data\backtest\strict-clv-audit-volume200-2026.txt --unmatched-csv data\backtest\strict-clv-audit-volume200-2026-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\audit-strict-clv.py --signals data\backtest\strict-signals-volume200-archive.csv --signal-date-from 2026-05-27 --policy-mode base --require-verified-kickoff --max-close-lag-minutes 720 --detail-csv data\backtest\strict-clv-audit-volume200-2026.csv --summary-txt data\backtest\strict-clv-audit-volume200-2026.txt --unmatched-csv data\backtest\strict-clv-audit-volume200-2026-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: ATP ML research CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Post-step: Spread v1 shadow CLV audit ==="
-& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-spreadv1-archive.csv --bet-type spread --detail-csv data\backtest\strict-clv-audit-spreadv1-2026.csv --summary-txt data\backtest\strict-clv-audit-spreadv1-2026.txt 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\audit-strict-clv.py --signals data\backtest\strict-signals-spreadv1-archive.csv --bet-type spread --detail-csv data\backtest\strict-clv-audit-spreadv1-2026.csv --summary-txt data\backtest\strict-clv-audit-spreadv1-2026.txt 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: spread v1 shadow CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Post-step: Challenger ML v2 verified-close CLV audit ==="
-& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-challenger-ml-v2-archive.csv --detail-csv data\backtest\strict-clv-audit-challenger-ml-v2-2026.csv --summary-txt data\backtest\strict-clv-audit-challenger-ml-v2-2026.txt --require-verified-kickoff --max-close-lag-minutes 720 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\audit-strict-clv.py --signals data\backtest\strict-signals-challenger-ml-v2-archive.csv --detail-csv data\backtest\strict-clv-audit-challenger-ml-v2-2026.csv --summary-txt data\backtest\strict-clv-audit-challenger-ml-v2-2026.txt --require-verified-kickoff --max-close-lag-minutes 720 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Challenger ML CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Post-step: Canonical ATP/Challenger real-price market scoring ==="
-& python scripts\score-tennis-spread-history.py --start-date 2026-03-01 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\score-tennis-spread-history.py --start-date 2026-03-01 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: canonical tennis real-price scoring failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Post-step: Clay-fav spread CLV audit ==="
-& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-clay-fav-archive.csv --bet-type spread --detail-csv data\backtest\strict-clv-audit-clay-fav-2026.csv --summary-txt data\backtest\strict-clv-audit-clay-fav-2026.txt 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\audit-strict-clv.py --signals data\backtest\strict-signals-clay-fav-archive.csv --bet-type spread --detail-csv data\backtest\strict-clv-audit-clay-fav-2026.csv --summary-txt data\backtest\strict-clv-audit-clay-fav-2026.txt 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: clay-fav spread CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Post-step: Clay bo3 ML CLV audit ==="
-& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-clay_bo3-archive.csv --detail-csv data\backtest\strict-clv-audit-clay_bo3-2026.csv --summary-txt data\backtest\strict-clv-audit-clay_bo3-2026.txt 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\audit-strict-clv.py --signals data\backtest\strict-signals-clay_bo3-archive.csv --detail-csv data\backtest\strict-clv-audit-clay_bo3-2026.csv --summary-txt data\backtest\strict-clv-audit-clay_bo3-2026.txt 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: clay bo3 ML CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Post-step: Clay bo3 dog-HC CLV audit ==="
-& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-clay_bo3-archive.csv --bet-type spread --detail-csv data\backtest\strict-clv-audit-clay_bo3-spread-2026.csv --summary-txt data\backtest\strict-clv-audit-clay_bo3-spread-2026.txt 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\audit-strict-clv.py --signals data\backtest\strict-signals-clay_bo3-archive.csv --bet-type spread --detail-csv data\backtest\strict-clv-audit-clay_bo3-spread-2026.csv --summary-txt data\backtest\strict-clv-audit-clay_bo3-spread-2026.txt 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: clay bo3 dog-HC CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Post-step: Grass bo3 ML CLV audit ==="
-& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-grass_bo3-archive.csv --detail-csv data\backtest\strict-clv-audit-grass_bo3-2026.csv --summary-txt data\backtest\strict-clv-audit-grass_bo3-2026.txt --unmatched-csv data\backtest\strict-clv-audit-grass_bo3-2026-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\audit-strict-clv.py --signals data\backtest\strict-signals-grass_bo3-archive.csv --detail-csv data\backtest\strict-clv-audit-grass_bo3-2026.csv --summary-txt data\backtest\strict-clv-audit-grass_bo3-2026.txt --unmatched-csv data\backtest\strict-clv-audit-grass_bo3-2026-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: grass bo3 ML CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Post-step: CPI speed shadow ML CLV audit ==="
-& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-cpi_speed-archive.csv --detail-csv data\backtest\strict-clv-audit-cpi_speed-2026.csv --summary-txt data\backtest\strict-clv-audit-cpi_speed-2026.txt --unmatched-csv data\backtest\strict-clv-audit-cpi_speed-2026-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
+Invoke-WeeklyPython scripts\audit-strict-clv.py --signals data\backtest\strict-signals-cpi_speed-archive.csv --detail-csv data\backtest\strict-clv-audit-cpi_speed-2026.csv --summary-txt data\backtest\strict-clv-audit-cpi_speed-2026.txt --unmatched-csv data\backtest\strict-clv-audit-cpi_speed-2026-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: CPI speed shadow ML CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
@@ -341,7 +368,7 @@ Log "=== Post-step: Spread v1 shadow report ==="
 $prevSpreadV1CorrectionOnly = $env:SPREAD_V1_ENABLE_CORRECTION_ONLY
 $env:SPREAD_V1_ENABLE_CORRECTION_ONLY = "1"
 try {
-    & python scripts\spread-v1-report.py 2>&1 | ForEach-Object { Log $_ }
+    Invoke-WeeklyPython scripts\spread-v1-report.py 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "WARNING: spread v1 shadow report failed (exit $LASTEXITCODE), continuing..."
     }
