@@ -114,14 +114,14 @@ def verify_remote_schedule(root, get=None):
             'verified_at': datetime.now(timezone.utc).isoformat()}
 
 
-def expected_props(root, as_of):
+def expected_props(root, as_of, days_ahead=3):
     """Use the current generator's exact scope/round rules; never broaden them."""
     sys.path.insert(0, str(root / 'scripts'))
     spec = importlib.util.spec_from_file_location('_pairing_board_scope', root / 'scripts/build-tennis-props-board.py')
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    schedules = module.oncourt_schedule_rows('ATP', False, as_of, 3)
-    schedules += module.oncourt_schedule_rows('WTA', False, as_of, 3)
+    schedules = module.oncourt_schedule_rows('ATP', False, as_of, days_ahead)
+    schedules += module.oncourt_schedule_rows('WTA', False, as_of, days_ahead)
     return schedules
 
 
@@ -129,9 +129,9 @@ def side_key(row, player, opponent):
     return (str(row['tour']), str(row['tour_id']), str(row['round']), str(player), str(opponent))
 
 
-def board_state(root, as_of, *, expected=None, database=DATABASE):
+def board_state(root, as_of, *, expected=None, database=DATABASE, days_ahead=3):
     epoch = native_epoch(root, database)
-    expected = expected_props(root, as_of) if expected is None else expected
+    expected = expected_props(root, as_of, days_ahead) if expected is None else expected
     want = Counter(side_key(r, r[a], r[b]) for r in expected
                    for a, b in (('player1_id', 'player2_id'), ('player2_id', 'player1_id')))
     path = root / BOARD
@@ -147,20 +147,20 @@ def board_state(root, as_of, *, expected=None, database=DATABASE):
             'board_sha256': sha(path) if path.exists() else None}
 
 
-def ensure_props_board(root, as_of, runner=None):
+def ensure_props_board(root, as_of, runner=None, *, days_ahead=3):
     """Repair a changed draw before any derived model consumes the old board."""
     status_path = root / STATUS
     try:
-        before = board_state(root, as_of)
+        before = board_state(root, as_of, days_ahead=days_ahead)
         rebuilt = before['state'] != 'CURRENT'
         if rebuilt:
             command = [sys.executable, str(root / 'scripts/build-tennis-props-board.py'),
-                       '--as-of', as_of, '--days-ahead', '3']
+                       '--as-of', as_of, '--days-ahead', str(days_ahead)]
             if runner is None:
                 subprocess.run(command, cwd=root, check=True, timeout=600)
             elif runner(command, 'Recover projections from current native pairings', fatal=False, timeout_seconds=600):
                 raise RuntimeError('projection_recovery_failed')
-        after = board_state(root, as_of)
+        after = board_state(root, as_of, days_ahead=days_ahead)
         if after['native_epoch'] != before['native_epoch']:
             raise ValueError('native_pairings_changed_during_board_rebuild')
         if after['state'] != 'CURRENT':

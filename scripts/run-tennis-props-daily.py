@@ -736,6 +736,7 @@ def main() -> int:
         "Build tennis props projection board",
         fatal=True,
     )
+    ensure_props_board(ROOT, args.as_of, runner=run, days_ahead=args.days_ahead)
     run(
         [
             sys.executable,
