@@ -13,6 +13,7 @@ from types import SimpleNamespace
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'scripts'))
 import tennis_match_shape as M
+import tennis_match_shape_collect as COLLECT
 from tennis_match_shape_kernel import joint,tilt,marginal,contract,complete_score,TP
 
 NOW=datetime(2026,11,2,8,tzinfo=timezone.utc)
@@ -100,6 +101,19 @@ class SettlementTests(unittest.TestCase):
 
 
 class CaptureLifecycleTests(unittest.TestCase):
+    def test_atp_topup_is_bounded_and_does_not_take_wta_slots(self):
+        from unittest.mock import Mock
+        now=datetime.now(timezone.utc)
+        event=receipt()['events'][0]['payload']['events'][0]
+        event={**event,'start':(now+timedelta(hours=3)).isoformat()}
+        catalogue={'events':[{'event':{**event,'id':n,'path':[{'termKey':'atp' if n>5 else 'wta'}]}} for n in range(12)]}
+        response=Mock();response.json.side_effect=[catalogue]+[{'events':[],'betOffers':[]}]*4
+        get=Mock(return_value=response)
+        result=COLLECT.collect(get=get,max_events=100)
+        self.assertEqual(result['requests'],5)
+        self.assertEqual([x['requested_id'] for x in result['events']],[6,7,8,9])
+        self.assertEqual(result['errors'],[])
+
     def test_first_capture_deduplicates_and_results_do_not_rewrite_forecasts(self):
         with tempfile.TemporaryDirectory(dir=ROOT/'outputs') as tmp:
             root=Path(tmp)

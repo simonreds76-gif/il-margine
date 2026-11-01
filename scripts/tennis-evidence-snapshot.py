@@ -113,7 +113,7 @@ def build_snapshot() -> dict[str, Any]:
         refresh_indoor(ROOT)
     except Exception as exc:
         print("Indoor Scout report unavailable:", type(exc).__name__)
-    from tennis_match_shape import refresh as refresh_match_shape
+    from tennis_match_shape_collect import refresh_saved as refresh_match_shape
     try:
         refresh_match_shape(ROOT)
     except Exception as exc:
