@@ -1,16 +1,16 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_save_markets": 14,
-      "named_player_lines": 218,
+      "events_with_save_markets": 9,
+      "named_player_lines": 122,
       "status": "NAMED_PLAYER_LINES",
       "unnamed_or_team_lines": 0
     },
     "Grosvenor": {
-      "events_with_save_markets": 16,
+      "events_with_save_markets": 9,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 61
+      "unnamed_or_team_lines": 34
     },
     "Paddy Power": {
       "events_with_save_markets": 0,
@@ -26,65 +26,58 @@
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 336,
+      "current_quotes": 176,
       "mapped_quotes": 0,
       "paper_selections": 0,
-      "price_or_status_changes": 0,
+      "price_or_status_changes": 3,
       "rules": "unverified"
     },
-    "matched": 16,
+    "matched": 9,
     "missing": [],
-    "requests": 21,
-    "rows": 1487
+    "requests": 14,
+    "rows": 785
   },
   "discovery_retries": 0,
   "event_last_checked": {
-    "71945370": "2026-11-01T09:44:28Z",
-    "71945372": "2026-11-01T09:44:28Z",
-    "71945374": "2026-11-01T09:44:28Z",
-    "71945376": "2026-11-01T09:44:28Z",
-    "71945378": "2026-11-01T09:44:28Z",
-    "72036262": "2026-11-01T09:44:28Z",
-    "72036264": "2026-11-01T09:44:28Z",
-    "72036268": "2026-11-01T09:44:28Z",
-    "72036270": "2026-11-01T09:44:28Z",
-    "72221364": "2026-11-01T09:44:28Z",
-    "72478666": "2026-11-01T09:44:28Z",
-    "72478672": "2026-11-01T09:44:28Z",
-    "72478676": "2026-11-01T09:44:28Z",
-    "72478680": "2026-11-01T09:44:28Z",
-    "72513278": "2026-11-01T09:44:28Z",
-    "72513282": "2026-11-01T09:44:28Z"
+    "71945374": "2026-11-01T15:16:12Z",
+    "71945378": "2026-11-01T15:16:12Z",
+    "72036262": "2026-11-01T15:16:12Z",
+    "72036264": "2026-11-01T15:16:12Z",
+    "72036268": "2026-11-01T15:16:12Z",
+    "72221364": "2026-11-01T15:16:12Z",
+    "72478666": "2026-11-01T15:16:12Z",
+    "72478672": "2026-11-01T15:16:12Z",
+    "72513278": "2026-11-01T15:16:12Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 16,
-  "events_supported": 16,
-  "events_with_lines": 16,
-  "generated_at": "2026-11-01T09:44:28Z",
-  "last_publication_at": "2026-11-01T09:44:28Z",
+  "events_selected": 9,
+  "events_supported": 9,
+  "events_with_lines": 9,
+  "generated_at": "2026-11-01T15:16:12Z",
+  "last_publication_at": "2026-11-01T15:16:12Z",
   "league_coverage": {
     "bundesliga": {
-      "selected": 2,
-      "with_prices": 2
+      "selected": 1,
+      "with_prices": 1
     },
     "epl": {
       "selected": 1,
       "with_prices": 1
     },
     "la-liga": {
-      "selected": 4,
-      "with_prices": 4
+      "selected": 2,
+      "with_prices": 2
     },
     "ligue-1": {
-      "selected": 4,
-      "with_prices": 4
+      "selected": 3,
+      "with_prices": 3
     },
     "serie-a": {
-      "selected": 5,
-      "with_prices": 5
+      "selected": 2,
+      "with_prices": 2
     }
   },
-  "market_inventory_rows_added": 480,
+  "market_inventory_rows_added": 268,
   "market_names_observed": [
     "Anytime Assist",
     "Anytime Goalscorer",
@@ -112,7 +105,6 @@
     "Player To Score or Assist",
     "Player to be Booked",
     "Spread",
-    "Team Total Home",
     "Total Shots Away",
     "Total Shots Home",
     "Totals",
@@ -122,72 +114,23 @@
     "errors": [],
     "excluded": {
       "conflicting_quotes": 0,
-      "fixture_not_eligible": 376,
-      "stale_or_missing_market_poll": 15,
-      "unmatched_or_unsupported_fixture": 1019
+      "fixture_not_eligible": 567,
+      "stale_or_missing_market_poll": 8,
+      "unmatched_or_unsupported_fixture": 506
     },
-    "market_count": 17,
-    "quote_count": 428,
-    "received_at": "2026-11-01T09:44:38.311726+00:00",
+    "market_count": 10,
+    "quote_count": 181,
+    "received_at": "2026-11-01T15:16:19.015472+00:00",
     "requests": 1,
     "source": "moviodds_bet365",
     "status": "OK"
   },
   "publication_recovery": false,
   "request_budget": 4,
-  "requests_used": 3,
-  "rows_added": 279,
-  "rows_observed": 279,
+  "requests_used": 2,
+  "rows_added": 156,
+  "rows_observed": 156,
   "selected_events": [
-    {
-      "away": "Venezia FC",
-      "competition": "Italy - Serie A",
-      "home": "Como 1907",
-      "id": 71945370,
-      "kickoff_at": "2026-11-01T11:30:00Z"
-    },
-    {
-      "away": "Sevilla FC",
-      "competition": "Spain - LaLiga",
-      "home": "Getafe CF",
-      "id": 72478676,
-      "kickoff_at": "2026-11-01T13:00:00Z"
-    },
-    {
-      "away": "AJ Auxerre",
-      "competition": "France - Ligue 1",
-      "home": "Strasbourg Alsace",
-      "id": 72036270,
-      "kickoff_at": "2026-11-01T14:00:00Z"
-    },
-    {
-      "away": "Torino FC",
-      "competition": "Italy - Serie A",
-      "home": "Frosinone Calcio",
-      "id": 71945372,
-      "kickoff_at": "2026-11-01T14:00:00Z"
-    },
-    {
-      "away": "Cagliari Calcio",
-      "competition": "Italy - Serie A",
-      "home": "Lazio Rome",
-      "id": 71945376,
-      "kickoff_at": "2026-11-01T14:00:00Z"
-    },
-    {
-      "away": "1. FC Cologne",
-      "competition": "Germany - Bundesliga",
-      "home": "Union Berlin",
-      "id": 72513282,
-      "kickoff_at": "2026-11-01T14:30:00Z"
-    },
-    {
-      "away": "Real Madrid",
-      "competition": "Spain - LaLiga",
-      "home": "Racing Santander",
-      "id": 72478680,
-      "kickoff_at": "2026-11-01T15:15:00Z"
-    },
     {
       "away": "Angers SCO",
       "competition": "France - Ligue 1",
@@ -253,5 +196,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 16
+  "three_way_events": 9
 }
