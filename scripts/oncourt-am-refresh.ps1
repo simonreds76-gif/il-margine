@@ -450,17 +450,21 @@ try {
     if ($OnDemand) {
         # Forecast capture and registrations above are unchanged. Historical
         # settlement, CLV audits and public Atlas publication stay scheduled.
-        if ($tennisPropsCaptureExit -ne 0 -or $tennisPropsBoardExit -ne 0 -or $tennisPropsCompareExit -ne 0) {
+        $propsRefreshFailed = $tennisPropsCaptureExit -ne 0 -or $tennisPropsBoardExit -ne 0 -or $tennisPropsCompareExit -ne 0
+        $paperSignalsExit = 0
+        if (-not $NoTelegram -and -not $propsRefreshFailed) {
+            $paperSignalsExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--date", $refreshDate, "--paper-signals-only", "--refresh-started-at", $refreshStartedAt) -Label "v4 new paper selections" -TimeoutSeconds 90
+        }
+        # Upload the evidence and its health flags even when an independent
+        # delivery check failed. Failures still prevent a successful receipt.
+        Write-TennisManualProgress $root $manualRequest "uploading" "Updating the private Monitor with current evidence and health checks."
+        $snapshotExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-evidence-snapshot.py", "--supabase") -Label "private Monitor snapshot" -TimeoutSeconds 120
+        if ($snapshotExit -ne 0) { throw "Private Monitor upload failed." }
+        if ($propsRefreshFailed) {
             throw "Manual match prices refreshed, but the props refresh needs attention; old props are not reported as fresh."
         }
         if ($digestExit -ne 0 -or $propsDigestExit -ne 0) { throw "New-selection Telegram check failed." }
-        if (-not $NoTelegram) {
-            $paperSignalsExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-daily-signal-digest.py", "--date", $refreshDate, "--paper-signals-only", "--refresh-started-at", $refreshStartedAt) -Label "v4 new paper selections" -TimeoutSeconds 90
-            if ($paperSignalsExit -ne 0) { throw "v4 new-selection check failed." }
-        }
-        Write-TennisManualProgress $root $manualRequest "uploading" "Fresh prices and selection checks complete. Updating the private Monitor."
-        $snapshotExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-evidence-snapshot.py", "--supabase") -Label "private Monitor snapshot" -TimeoutSeconds 120
-        if ($snapshotExit -ne 0) { throw "Private Monitor upload failed." }
+        if ($paperSignalsExit -ne 0) { throw "v4 new-selection check failed." }
         $receipts = @()
         if (-not $NoTelegram) {
             foreach ($receiptPath in @($matchReceiptPath, $propsReceiptPath)) {
