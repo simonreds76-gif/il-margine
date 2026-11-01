@@ -887,6 +887,12 @@ def main() -> None:
         with gzip.open(raw_out, "wt", encoding="utf-8") as handle:
             json.dump({"captured_at": captured_at, "source": f"{BASE_URL}/odds/multi",
                        "bookmakers": args.bookmakers, "events": payload, "grosvenor_receipt": direct_receipt, "moviodds_receipt": moviodds_receipt}, handle)
+        # Reuse saved raw offers for BP research; no extra requests or betting signals.
+        try:
+            from tennis_breakpoint_evidence import ingest
+            ingest(ROOT, direct_receipt or {}, raw_out)
+        except Exception as exc:
+            print(f"WARNING: break-point evidence capture needs review: {type(exc).__name__}")
     audited_event_ids: set[str] = set()
     for event in payload:
         try:

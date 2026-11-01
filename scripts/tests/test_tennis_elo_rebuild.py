@@ -67,7 +67,7 @@ class OperationalTests(unittest.TestCase):
         from tennis_elo_shadow import capture
         with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as d:
             p=Path(d);(p/'evidence').mkdir();(p/'evidence'/datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT010101Z.json.gz')).write_bytes(b'x')
-            with patch('tennis_elo_shadow.run_engine',side_effect=AssertionError('must not run')):
+            with patch('tennis_elo_shadow.run_engine',side_effect=AssertionError('must not run')), patch('tennis_pricing_context.load_inputs',return_value={}):
                 self.assertEqual(capture(p,p,{})['skipped'],'daily_capture_limit')
     def test_lock_prevents_concurrent_writer(self):
         from tennis_elo_shadow import process_lock

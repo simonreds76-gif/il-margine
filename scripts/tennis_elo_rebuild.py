@@ -26,7 +26,7 @@ def source_manifest(root, paths):
     # Canonical portable keys; filesystem separators are not source changes.
     return {p.relative_to(root).as_posix():sha(p) for p in paths}
 
-def source_history(root):
+def source_history(root, *, include_adult_itf=False):
     from tennis_direct_history import crosswalk
     from tennis_event_integrity import completed_score, event_phase
     from tennis_source_contract import court_surfaces
@@ -41,9 +41,10 @@ def source_history(root):
     for a,b in mapping.items(): inverse[b].append(a)
     unique={k:v[0] for k,v in inverse.items() if len(v)==1}
     excluded=Counter(); groups=defaultdict(list); keys={}; conflicts=set()
+    allowed_ranks = {'0','1','2','3','4'} if include_adult_itf else {'1','2','3','4'}
     for g in read_csv(source[2]):
         t=tours.get(g['tour_id'],{}); surface=surfaces.get(t.get('court_id'))
-        if t.get('rank') not in {'1','2','3','4'} or event_phase(g['round_id']) is None:
+        if t.get('rank') not in allowed_ranks or event_phase(g['round_id']) is None:
             excluded['unsupported_level_or_round']+=1;continue
         if surface not in SURFACES: excluded['unknown_surface']+=1;continue
         if not completed_score(g['result']):excluded['unfinished_retirement_walkover']+=1;continue
@@ -99,7 +100,7 @@ def source_history(root):
                  'sources':dict(Counter(r['source'] for r in rows)),
                  'limitations':['Current corrected source snapshot, not historically archived knowledge.',
                    'Archive primary only where unique native identity, completed score and result date reconcile; remaining validated native history retained.',
-                   'Unmatched archive matches withheld; no guessed actual match dates. ATP and Challenger only.']}
+                   'Unmatched archive matches withheld; no guessed actual match dates. '+('Adult ATP, Challenger and ITF.' if include_adult_itf else 'ATP and Challenger only.')]}
 
 def empty_state():return {'version':VERSION,'ratings':{},'counts':{},'last_played':{},'through':None,'matches':0}
 def advance(state, rows, cutoff):

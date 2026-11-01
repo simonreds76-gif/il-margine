@@ -442,6 +442,17 @@ try {
     Log "WARNING: isolated Elo source process error; live pricing unchanged: $($_.Exception.Message)"
 }
 
+# Independent adult-history source after alerts; never replaces live or frozen v1.
+try {
+    $nativeEloExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis_elo_native_source.py") -Label "Adult-history Elo research source" -TimeoutSeconds 180
+    if ($nativeEloExit -ne 0) { Log "WARNING: native Elo research source needs review; live ratings unchanged" }
+} catch { Log "WARNING: native Elo source process error; live ratings unchanged" }
+# Outcomes from saved raw BP quotes, no new prices or notifications.
+try {
+    $bpEvidenceExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis_breakpoint_evidence.py") -Label "Break-point exact-result evidence" -TimeoutSeconds 90
+    if ($bpEvidenceExit -ne 0) { Log "WARNING: break-point result evidence needs review" }
+} catch { Log "WARNING: break-point result evidence process error" }
+
 Log "=== Elo Rebuild: bounded ATP paper comparison (no alerts) ==="
 try {
     $eloPaperExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis_elo_shadow.py") -Label "Elo Rebuild paper comparison" -TimeoutSeconds 600
