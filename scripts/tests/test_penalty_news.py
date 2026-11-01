@@ -6,7 +6,7 @@ from copy import deepcopy
 import json
 import tempfile
 import subprocess
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 spec = importlib.util.spec_from_file_location("penalty_news", Path(__file__).parents[1] / "build-penalty-news.py")
 news = importlib.util.module_from_spec(spec)
@@ -18,6 +18,29 @@ publisher_spec.loader.exec_module(publisher)
 
 
 class PenaltyNewsTests(unittest.TestCase):
+    def test_vercel_read_recovers_timeout_with_exact_scoped_get(self):
+        response=Mock(status_code=200);response.json.return_value={'deploymentId':'verified'}
+        with patch.dict(publisher.os.environ,{'VERCEL_TOKEN':'test-only'}), patch.object(publisher.requests,'get',side_effect=[publisher.requests.Timeout(),response]) as get, patch.object(publisher.time,'sleep') as sleep:
+            self.assertEqual(publisher.vercel_read('/v4/aliases/ilmargine.bet'),{'deploymentId':'verified'})
+        self.assertEqual(get.call_count,2);sleep.assert_called_once_with(2)
+        self.assertEqual(get.call_args.args,('https://api.vercel.com/v4/aliases/ilmargine.bet',))
+        self.assertEqual(get.call_args.kwargs['params'],{'teamId':publisher.TEAM})
+        self.assertFalse(get.call_args.kwargs['allow_redirects'])
+
+    def test_vercel_read_is_bounded_and_does_not_retry_auth(self):
+        for code,count in [(403,1),(503,3)]:
+            response=Mock(status_code=code,headers={})
+            with patch.dict(publisher.os.environ,{'VERCEL_TOKEN':'test-only'}),patch.object(publisher.requests,'get',return_value=response) as get,patch.object(publisher.time,'sleep'),self.assertRaises(RuntimeError):
+                publisher.vercel_read('/v4/aliases/ilmargine.bet')
+            self.assertEqual(get.call_count,count)
+
+    def test_vercel_read_respects_long_cooldown_and_rejects_mutation_paths(self):
+        response=Mock(status_code=429,headers={'Retry-After':'90'})
+        with patch.dict(publisher.os.environ,{'VERCEL_TOKEN':'test-only'}),patch.object(publisher.requests,'get',return_value=response) as get,patch.object(publisher.time,'sleep') as sleep,self.assertRaises(RuntimeError):
+            publisher.vercel_read('/v4/aliases/ilmargine.bet')
+        self.assertEqual(get.call_count,1);sleep.assert_not_called()
+        with self.assertRaises(ValueError):publisher.vercel_read('/v13/deployments')
+
     def setUp(self):
         self.shot = {"id": 100, "situation": "Penalty", "period": "SecondHalf", "eventType": "Goal",
                      "teamId": 1, "playerId": 9, "fullName": "Test Taker", "min": 90, "minAdded": 4}
@@ -269,7 +292,9 @@ class PublicationLiveTree(unittest.TestCase):
                     return '{"id":"live","url":"live.vercel.app","meta":{"githubCommitSha":"different-live-sha"}}'
                 if args[:2]==('vercel','curl'):return '<main data-news-version="same">current articles</main>'
                 raise AssertionError('Unexpected command '+str(args))
-            with patch.object(publisher,'ROOT',root),patch.object(publisher,'run',side_effect=command),patch.object(publisher.shutil,'which',return_value='vercel'),patch.dict(publisher.os.environ,{'VERCEL_TOKEN':'test-only','GITHUB_STEP_SUMMARY':''}),patch('builtins.print'),patch('sys.argv',['publish','--state',str(state)]):
+            def api_read(path):
+                return json.loads(command('vercel','api',path))
+            with patch.object(publisher,'ROOT',root),patch.object(publisher,'run',side_effect=command),patch.object(publisher,'vercel_read',side_effect=api_read),patch.object(publisher.shutil,'which',return_value='vercel'),patch.dict(publisher.os.environ,{'VERCEL_TOKEN':'test-only','GITHUB_STEP_SUMMARY':''}),patch('builtins.print'),patch('sys.argv',['publish','--state',str(state)]):
                 publisher.main()
             return json.loads((state/'publication.json').read_text())
 
