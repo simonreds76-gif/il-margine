@@ -1,9 +1,76 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-01T16:54:15.564269+00:00",
+  "generated_at": "2026-11-01T21:09:53.470727+00:00",
   "league": "la-liga",
-  "row_count": 3,
+  "row_count": 4,
   "rows": [
+    {
+      "date": "2026-11-01",
+      "league": "la-liga",
+      "review_source": "fotmob_live",
+      "match": "Racing Santander vs Real Madrid",
+      "team": "Real Madrid",
+      "opponent": "Racing Santander",
+      "actual_taker": "Kylian Mbappé",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "11",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Kylian Mbappé",
+      "secondary_pre_match": "Vinícius Júnior",
+      "tertiary_pre_match": "Jude Bellingham",
+      "primary_lineup_status": "confirmed_starter",
+      "secondary_lineup_status": "not_in_squad",
+      "tertiary_lineup_status": "confirmed_starter",
+      "active_taker_pre_match": "Kylian Mbappé",
+      "active_slot_pre_match": "primary",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Kylian Mbappé took 1 penalty attempt and scored for Real Madrid vs Racing Santander. Primary pre-match: Kylian Mbappé (confirmed_starter). Secondary pre-match: Vinícius Júnior (not_in_squad). Pre-match active slot was primary -> Kylian Mbappé. No hierarchy change implied from this event.",
+      "context_generated_at": "2026-11-01T16:48:55Z",
+      "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json",
+      "actual_taker_match_status": "Yes - started",
+      "primary_on_pitch_at_penalty": "Yes - started",
+      "secondary_on_pitch_at_penalty": "No - unavailable in match squad",
+      "tertiary_on_pitch_at_penalty": "Yes - started",
+      "actual_taker_on_pitch_at_penalty": "Yes - started",
+      "event_evidence": [
+        {
+          "id": "fotmob|la-liga|5868118|2991679429",
+          "source_event_id": "2991679429",
+          "match_id": "5868118",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868118",
+          "observed_at": "2026-11-01T21:09:56+00:00",
+          "event_date": "2026-11-01",
+          "season": "2026/27",
+          "team": "Real Madrid",
+          "taker": "Kylian Mbappé",
+          "primary": "Kylian Mbappé",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Kylian Mbappé",
+            "minute": 11,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 701154,
+            "bucket": "starters",
+            "substitutions": [],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 11,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Racing Santander vs Real Madrid",
+          "event_result": "scored"
+        }
+      ]
+    },
     {
       "date": "2026-10-24",
       "league": "la-liga",
@@ -242,7 +309,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261024"
+      "20261031"
     ],
     "matches_checked": 1
   }

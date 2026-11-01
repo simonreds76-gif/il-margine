@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-01T16:48:06.184729+00:00",
+  "generated_at": "2026-11-01T21:09:53.470727+00:00",
   "league": "ligue-1",
   "row_count": 3,
   "rows": [
@@ -31,32 +31,31 @@
       "review_type": "unranked_taker",
       "review_priority": "high",
       "editorial_note": "Conrad Harder took 1 penalty attempt and scored for Strasbourg vs Auxerre. Primary pre-match: Joaquín Panichelli (not_in_squad). Secondary pre-match: Sebastian Nanasi (confirmed_bench). Pre-match active slot was tertiary -> Giovanni Reyna. Strong review flag: the taker was not in the tracked top three.",
-      "context_generated_at": "2026-11-01T13:59:16Z",
+      "context_generated_at": "2026-11-01T16:49:09Z",
       "context_source_path": "data/goalscorer/ligue-1/penalty-duty-context.json",
-      "actual_taker_match_status": "Yes - started",
+      "actual_taker_match_status": "Yes - started, off 78'",
       "primary_on_pitch_at_penalty": "No - unavailable in match squad",
       "secondary_on_pitch_at_penalty": "Yes - bench, on 59'",
       "tertiary_on_pitch_at_penalty": "Yes - started, off 66'",
-      "actual_taker_on_pitch_at_penalty": "Yes - started",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 78'",
       "event_evidence": [
         {
           "id": "fotmob|ligue-1|5802980|2991669859",
           "source_event_id": "2991669859",
           "match_id": "5802980",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802980",
-          "observed_at": "2026-11-01T15:27:17+00:00",
+          "observed_at": "2026-11-01T21:09:56+00:00",
           "event_date": "2026-11-01",
           "season": "2026/27",
           "team": "Strasbourg",
           "taker": "Conrad Harder",
           "primary": "Joaquín Panichelli",
-          "primary_on_pitch": null,
+          "primary_on_pitch": false,
           "on_pitch_proof": {
             "player": "Joaquín Panichelli",
             "minute": 62,
             "added_time": 0,
-            "method": "live_lineup_timeline",
-            "observed_through_minute": 66,
+            "method": "completed_lineup_timeline",
             "player_id": 1408580,
             "bucket": "unavailable",
             "substitutions": [],
@@ -66,7 +65,7 @@
           "minute": 62,
           "penalty_kind": "in_match",
           "competitive": true,
-          "finished": false,
+          "finished": true,
           "match": "Strasbourg vs Auxerre",
           "event_result": "scored"
         }
@@ -267,7 +266,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261030"
+      "20261101"
     ],
     "matches_checked": 1
   }
