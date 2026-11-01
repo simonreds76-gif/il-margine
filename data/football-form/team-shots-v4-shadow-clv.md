@@ -1,6 +1,6 @@
 # Team-Shots CLV Monitor: `team_shots_v4`
 
-Generated: 2026-11-01T09:45:29Z
+Generated: 2026-11-01T15:17:02Z
 Picks input: `data/football-form/team-shots-v4-shadow-signals.csv`
 Odds input: `data/team-shots/team-shots-odds-history.csv`
 
@@ -8,13 +8,13 @@ Odds input: `data/team-shots/team-shots-odds-history.csv`
 
 - Picks: 29
 - Active published picks: 29
-- Settled: 24
-- Open/pending: 5
-- Settled PnL: -4.01u
+- Settled: 27
+- Open/pending: 2
+- Settled PnL: -7.01u
 - Picks with close: 29
-- True-close coverage (<=120m): 12/27 (44.4%)
+- True-close coverage (<=120m): 12/29 (41.4%)
 - Average true-close CLV: +0.01% (n=12)
-- Running mean bias (actual - model): +3.874 shots (n=24)
+- Running mean bias (actual - model): +4.103 shots (n=27)
 - Active side mix: Over 1 / Under 28
 - Registered Over vig allocation: 85.6% (descriptive refits must not alter the lock)
 - Hard-guard blocked: 0
@@ -28,15 +28,15 @@ Odds input: `data/team-shots/team-shots-odds-history.csv`
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | Over | 1 | 1 | 0 | 1-0-0 | +0.73u | +72.70% | +0.00% (n=1) |
-| Under | 28 | 23 | 5 | 10-13-0 | -4.74u | -20.60% | +0.52% (n=23) |
+| Under | 28 | 26 | 2 | 10-16-0 | -7.74u | -29.76% | +0.46% (n=26) |
 
 ## Active League Breakdown
 
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | bundesliga | 1 | 1 | 0 | 1-0-0 | +0.83u | +83.30% | +0.00% (n=1) |
-| epl | 4 | 2 | 2 | 1-1-0 | -0.17u | -8.35% | +0.92% (n=2) |
-| la-liga | 14 | 12 | 2 | 6-6-0 | -0.96u | -8.03% | +0.29% (n=12) |
+| epl | 4 | 4 | 0 | 1-3-0 | -2.17u | -54.17% | +0.46% (n=4) |
+| la-liga | 14 | 13 | 1 | 6-7-0 | -1.96u | -15.11% | +0.27% (n=13) |
 | ligue-1 | 3 | 3 | 0 | 1-2-0 | -1.17u | -38.90% | +0.62% (n=3) |
 | serie-a | 7 | 6 | 1 | 2-4-0 | -2.55u | -42.43% | +0.79% (n=6) |
 
@@ -46,8 +46,8 @@ Odds input: `data/team-shots/team-shots-odds-history.csv`
 |---|---:|---:|---:|---:|---:|---:|---:|
 | Over / serie-a | 1 | 1 | 0 | 1-0-0 | +0.73u | +72.70% | +0.00% (n=1) |
 | Under / bundesliga | 1 | 1 | 0 | 1-0-0 | +0.83u | +83.30% | +0.00% (n=1) |
-| Under / epl | 4 | 2 | 2 | 1-1-0 | -0.17u | -8.35% | +0.92% (n=2) |
-| Under / la-liga | 14 | 12 | 2 | 6-6-0 | -0.96u | -8.03% | +0.29% (n=12) |
+| Under / epl | 4 | 4 | 0 | 1-3-0 | -2.17u | -54.17% | +0.46% (n=4) |
+| Under / la-liga | 14 | 13 | 1 | 6-7-0 | -1.96u | -15.11% | +0.27% (n=13) |
 | Under / ligue-1 | 3 | 3 | 0 | 1-2-0 | -1.17u | -38.90% | +0.62% (n=3) |
 | Under / serie-a | 6 | 5 | 1 | 1-4-0 | -3.27u | -65.46% | +0.95% (n=5) |
 

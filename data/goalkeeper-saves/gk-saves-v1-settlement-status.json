@@ -17,30 +17,21 @@
       "match_date": "2026-10-31",
       "reason": "fotmob_matched_player_not_goalkeeper",
       "signal_id": "grosvenor|72513288|\u00f8rjan h\u00e5skjold nyland|2.5|over"
-    },
-    {
-      "detail": "{\"actual_saves\": 5, \"goalkeeper\": \"\\u00c1ngel Fortuno\", \"match_date\": \"2026-10-30\", \"match_id\": \"5868120\", \"player_id\": 1184772, \"reason\": \"FotMob named player statistic and the separately published Sofascore match report both record five saves for Fortuno, verified as the full-match Espanyol goalkeeper. The shot map contains four. Use the corroborated published count for this exact Bet365 named-player contract only; retain the event-count conflict in research data. Both counts put Over 3.5 above its threshold. No general source override.\", \"reviewed_at\": \"2026-11-01T11:37:01.697212+00:00\", \"reviewed_event_saves\": 4, \"source_urls\": [\"https://www.fotmob.com/api/data/matchDetails?matchId=5868120\", \"https://www.sofascore.com/news/villarreal-0-1-espanyol-compact-defending-one-set-piece-three-points\"], \"team_id\": 8558, \"venue\": \"away\"}",
-      "goalkeeper": "\u00c1ngel Fortuno",
-      "match": "Villarreal CF vs Espanyol Barcelona",
-      "match_date": "2026-10-30",
-      "reason": "settled_reviewed_named_count",
-      "signal_id": "72478684|\u00e1ngel fortuno|3.5|over"
     }
   ],
-  "fotmob_requests_used": 5,
-  "generated_at": "2026-11-01T11:42:13Z",
+  "fotmob_requests_used": 3,
+  "generated_at": "2026-11-01T15:17:28Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 2,
   "pending_total": 5,
   "reason_counts": {
     "fotmob_matched_player_not_goalkeeper": 1,
-    "fotmob_save_totals_disagree": 1,
-    "settled_reviewed_named_count": 1
+    "fotmob_save_totals_disagree": 1
   },
   "requests_used": 0,
-  "settled": 1,
-  "status": "PARTIAL",
+  "settled": 0,
+  "status": "BLOCKED",
   "verified_player_targets": [
     {
       "match_id": 5881209,
@@ -50,13 +41,8 @@
     {
       "appearances": 31,
       "match_id": 5881212,
-      "status": "saved",
+      "status": "unchanged",
       "targets_sha256": "ac89593c8c3ec8e66c069c653daf78607b812bc1a1d81bfbd2aee402a0c451af"
-    },
-    {
-      "match_id": 5868120,
-      "reason": "explicit player totals disagree with reconciled events",
-      "status": "rejected"
     }
   ]
 }
