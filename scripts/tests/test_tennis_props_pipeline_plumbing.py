@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from unittest.mock import patch
+from unittest.mock import patch
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -455,32 +456,11 @@ class DailyMarketSelectionTests(unittest.TestCase):
             finally:
                 DAILY.PROPS_DIR = old_props
 
-    def test_fast_comparison_skips_derived_ace_boards(self) -> None:
-        old_select = DAILY.select_market_file
-        old_refresh = DAILY.refresh_derived_ace_boards
-        old_compare = DAILY.run_comparison
-        old_tracking = DAILY.run_shadow_tracking
-        old_health = DAILY.write_pipeline_health
-        marker = Path("market.csv")
-        DAILY.select_market_file = lambda _as_of: marker
-        DAILY.refresh_derived_ace_boards = lambda _as_of: self.fail("derived boards should be skipped")
-        DAILY.run_comparison = lambda _as_of, market: market == marker
-        DAILY.run_shadow_tracking = lambda _as_of: None
-        DAILY.write_pipeline_health = lambda *_args, **_kwargs: 0
-        try:
-            result = DAILY.run_comparison_only(
-                "2026-07-29",
-                skip_sync=True,
-                lookback_days=3,
-                skip_derived_boards=True,
-            )
-            self.assertEqual(result, 0)
-        finally:
-            DAILY.select_market_file = old_select
-            DAILY.refresh_derived_ace_boards = old_refresh
-            DAILY.run_comparison = old_compare
-            DAILY.run_shadow_tracking = old_tracking
-            DAILY.write_pipeline_health = old_health
+    def test_fast_comparison_routes_through_validated_current_refresh(self) -> None:
+        with patch.object(DAILY, "mark_pipeline_blocked"), patch.object(DAILY, "run_monitor_only", return_value=0) as current:
+            self.assertEqual(DAILY.run_comparison_only("2026-07-29", skip_sync=True,
+                lookback_days=3, skip_derived_boards=True, selections_only=True), 0)
+            current.assert_called_once_with("2026-07-29", selections_only=True)
 
     def test_failed_comparison_removes_same_date_stale_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -514,7 +494,7 @@ class DailyMarketSelectionTests(unittest.TestCase):
         self.assertIn('"--require-ready", "--new-only"', am_script)
         self.assertIn('"scripts\\tennis-evidence-snapshot.py", "--supabase"', am_script)
         self.assertIn('"--days-ahead", "3"', am_script)
-        self.assertIn('"tennis props hosted-price comparison" -TimeoutSeconds 420', am_script)
+        self.assertIn('"tennis props hosted-price comparison" -TimeoutSeconds 900', am_script)
 
     def test_close_task_recaptures_only_open_break_watch_fixtures(self) -> None:
         close_script = (SCRIPTS / "pinnacle-close-capture.ps1").read_text(encoding="utf-8")

@@ -114,6 +114,12 @@ def main() -> int:
     os.environ.setdefault("STRICT_HARD_CALIBRATION_LIVE", "0")
     os.environ.setdefault("STRICT_HARD_CALIBRATION_PROFILES", "strict")
 
+    run_cmd(
+        [sys.executable, str(ROOT / 'scripts/tennis_pairing_consistency.py'), '--verify-sync'],
+        label='Verify current native pairings before prices and forecasts',
+        fatal=True, timeout_seconds=90,
+    )
+
     if not args.on_demand:
         # Context records refresh independently of live pricing. This collector only
         # writes data/tennis-ml-research/context-records-v1; it never publishes tables.

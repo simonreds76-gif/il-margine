@@ -187,6 +187,8 @@ try {
         throw "OnCourt was updated during extraction. Wait for its update to finish and retry."
     }
     $oncourtExtractedAt = (Get-Date).ToUniversalTime().ToString("o")
+    $nativePairingExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis_pairing_consistency.py") -Label "ATP/WTA native pairing freshness" -TimeoutSeconds 30
+    if ($nativePairingExit -ne 0) { throw "Native pairing/identity exports are incomplete; pricing stopped." }
 
     Log "=== Step 2/8: Supabase sync (--quick --current-players) ==="
     $supabaseSyncExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\oncourt-load-supabase.py", "--quick", "--current-players") -Label "Supabase quick current-player sync" -TimeoutSeconds $supabaseSyncTimeoutSeconds
@@ -423,7 +425,7 @@ try {
     Log "=== Step 8c/8: Tennis props comparison and settlement ==="
     $propsCompareArguments = @("scripts\run-tennis-props-daily.py", "--as-of", $refreshDate, "--comparison-only", "--skip-derived-boards")
     if ($OnDemand) { $propsCompareArguments += "--selections-only" }
-    $tennisPropsCompareExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList $propsCompareArguments -Label "tennis props hosted-price comparison" -TimeoutSeconds 420
+    $tennisPropsCompareExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList $propsCompareArguments -Label "tennis props hosted-price comparison" -TimeoutSeconds 900
     if ($tennisPropsCompareExit -ne 0) {
         Log "WARNING: tennis props hosted-price comparison failed (exit $tennisPropsCompareExit), continuing..."
         # Coverage limitations may be expected, but stale/missing data or a
