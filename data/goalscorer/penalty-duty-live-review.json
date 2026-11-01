@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-01T21:09:53.470727+00:00",
+  "generated_at": "2026-11-01T21:21:58.648971+00:00",
   "league": "serie-a",
   "row_count": 10,
   "rows": [
@@ -31,7 +31,7 @@
       "review_type": "primary_held",
       "review_priority": "low",
       "editorial_note": "Lucas Da Cunha took 1 penalty attempt and scored for Como vs Venezia. Primary pre-match: Lucas Da Cunha (confirmed_starter). Secondary pre-match: Nico Paz (confirmed_starter). Pre-match active slot was primary -> Lucas Da Cunha. No hierarchy change implied from this event.",
-      "context_generated_at": "2026-11-01T13:58:12Z",
+      "context_generated_at": "2026-11-01T21:10:19Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json",
       "actual_taker_match_status": "Yes - started, off 74'",
       "primary_on_pitch_at_penalty": "Yes - started, off 74'",
@@ -44,7 +44,7 @@
           "source_event_id": "2991435545",
           "match_id": "5749733",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749733",
-          "observed_at": "2026-11-01T16:48:07+00:00",
+          "observed_at": "2026-11-01T21:22:03+00:00",
           "event_date": "2026-11-01",
           "season": "2026/27",
           "team": "Como",
@@ -753,7 +753,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261031"
+      "20261101"
     ],
     "matches_checked": 1
   }
