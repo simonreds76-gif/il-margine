@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-01T06:16:20Z",
+  "generated_at": "2026-11-01T11:43:43.467093+00:00",
   "league": "ligue-1",
-  "row_count": 2,
+  "row_count": 3,
   "rows": [
     {
       "date": "2026-10-30",
@@ -179,6 +179,79 @@
           "event_result": "scored"
         }
       ]
+    },
+    {
+      "date": "2026-10-25",
+      "league": "ligue-1",
+      "review_source": "fotmob_live",
+      "match": "Marseille vs Le Havre",
+      "team": "Le Havre",
+      "opponent": "Marseille",
+      "actual_taker": "Josh Maja",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "77",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Rayan Fofana",
+      "secondary_pre_match": "",
+      "tertiary_pre_match": "",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Josh Maja took 1 penalty attempt and scored for Le Havre vs Marseille. Primary pre-match: Rayan Fofana (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-09-19",
+      "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
+      "actual_taker_match_status": "Yes - bench, on 61'",
+      "primary_on_pitch_at_penalty": "Yes - started, off 84'",
+      "secondary_on_pitch_at_penalty": "Not assigned - hierarchy slot empty",
+      "tertiary_on_pitch_at_penalty": "Not assigned - hierarchy slot empty",
+      "actual_taker_on_pitch_at_penalty": "Yes - bench, on 61'",
+      "event_evidence": [
+        {
+          "id": "fotmob|ligue-1|5802968|2988052191",
+          "source_event_id": "2988052191",
+          "match_id": "5802968",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802968",
+          "observed_at": "2026-11-01T11:43:49+00:00",
+          "event_date": "2026-10-25",
+          "season": "2026/27",
+          "team": "Le Havre",
+          "taker": "Josh Maja",
+          "primary": "Rayan Fofana",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Rayan Fofana",
+            "minute": 77,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 1586559,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 84,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 77,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Marseille vs Le Havre",
+          "event_result": "scored"
+        }
+      ]
     }
   ],
   "source_health": {
@@ -190,5 +263,13 @@
       "20261101"
     ],
     "matches_checked": 4
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261025"
+    ],
+    "matches_checked": 1
   }
 }

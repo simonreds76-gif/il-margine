@@ -1,76 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-01T06:16:18Z",
+  "generated_at": "2026-11-01T11:43:43.467093+00:00",
   "league": "bundesliga",
   "row_count": 2,
   "rows": [
-    {
-      "date": "2026-10-31",
-      "league": "bundesliga",
-      "review_source": "fotmob_live",
-      "match": "Bayern München vs Borussia Dortmund",
-      "team": "Bayern München",
-      "opponent": "Borussia Dortmund",
-      "actual_taker": "Harry Kane",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 0,
-      "distinct_takers_in_match": 1,
-      "minute": "56",
-      "event_type": "Post",
-      "event_result": "missed",
-      "primary_pre_match": "Harry Kane",
-      "secondary_pre_match": "Arijon Ibrahimović",
-      "tertiary_pre_match": "Jamal Musiala",
-      "primary_lineup_status": "confirmed_starter",
-      "secondary_lineup_status": "unknown",
-      "tertiary_lineup_status": "not_in_squad",
-      "active_taker_pre_match": "Harry Kane",
-      "active_slot_pre_match": "primary",
-      "team_lineup_status": "unknown",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Harry Kane took 1 penalty attempt and missed for Bayern München vs Borussia Dortmund. Primary pre-match: Harry Kane (confirmed_starter). Secondary pre-match: Arijon Ibrahimović (unknown). Pre-match active slot was primary -> Harry Kane. No hierarchy change implied from this event.",
-      "context_generated_at": "2026-10-31T23:22:51Z",
-      "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json",
-      "actual_taker_match_status": "Yes - started",
-      "primary_on_pitch_at_penalty": "Yes - started",
-      "secondary_on_pitch_at_penalty": "No - absent from matchday squad",
-      "tertiary_on_pitch_at_penalty": "No - unavailable in match squad",
-      "actual_taker_on_pitch_at_penalty": "Yes - started",
-      "event_evidence": [
-        {
-          "id": "fotmob|bundesliga|5881208|2991003321",
-          "source_event_id": "2991003321",
-          "match_id": "5881208",
-          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881208",
-          "observed_at": "2026-11-01T06:16:16+00:00",
-          "event_date": "2026-10-31",
-          "season": "2026/27",
-          "team": "Bayern München",
-          "taker": "Harry Kane",
-          "primary": "Harry Kane",
-          "primary_on_pitch": true,
-          "on_pitch_proof": {
-            "player": "Harry Kane",
-            "minute": 56,
-            "added_time": 0,
-            "method": "completed_lineup_timeline",
-            "player_id": 194165,
-            "bucket": "starters",
-            "substitutions": [],
-            "events": [],
-            "reason": "on_pitch"
-          },
-          "minute": 56,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Bayern München vs Borussia Dortmund",
-          "event_result": "missed"
-        }
-      ]
-    },
     {
       "date": "2026-10-31",
       "league": "bundesliga",
@@ -137,6 +70,73 @@
           "event_result": "scored"
         }
       ]
+    },
+    {
+      "date": "2026-10-31",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "match": "Bayern München vs Borussia Dortmund",
+      "team": "Bayern München",
+      "opponent": "Borussia Dortmund",
+      "actual_taker": "Harry Kane",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 0,
+      "distinct_takers_in_match": 1,
+      "minute": "56",
+      "event_type": "Post",
+      "event_result": "missed",
+      "primary_pre_match": "Harry Kane",
+      "secondary_pre_match": "Arijon Ibrahimović",
+      "tertiary_pre_match": "Jamal Musiala",
+      "primary_lineup_status": "confirmed_starter",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "not_in_squad",
+      "active_taker_pre_match": "Harry Kane",
+      "active_slot_pre_match": "primary",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Harry Kane took 1 penalty attempt and missed for Bayern München vs Borussia Dortmund. Primary pre-match: Harry Kane (confirmed_starter). Secondary pre-match: Arijon Ibrahimović (unknown). Pre-match active slot was primary -> Harry Kane. No hierarchy change implied from this event.",
+      "context_generated_at": "2026-10-31T23:22:51Z",
+      "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json",
+      "actual_taker_match_status": "Yes - started",
+      "primary_on_pitch_at_penalty": "Yes - started",
+      "secondary_on_pitch_at_penalty": "No - absent from matchday squad",
+      "tertiary_on_pitch_at_penalty": "No - unavailable in match squad",
+      "actual_taker_on_pitch_at_penalty": "Yes - started",
+      "event_evidence": [
+        {
+          "id": "fotmob|bundesliga|5881208|2991003321",
+          "source_event_id": "2991003321",
+          "match_id": "5881208",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881208",
+          "observed_at": "2026-11-01T06:16:16+00:00",
+          "event_date": "2026-10-31",
+          "season": "2026/27",
+          "team": "Bayern München",
+          "taker": "Harry Kane",
+          "primary": "Harry Kane",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Harry Kane",
+            "minute": 56,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 194165,
+            "bucket": "starters",
+            "substitutions": [],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 56,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Bayern München vs Borussia Dortmund",
+          "event_result": "missed"
+        }
+      ]
     }
   ],
   "source_health": {
@@ -148,5 +148,13 @@
       "20261101"
     ],
     "matches_checked": 7
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261025"
+    ],
+    "matches_checked": 1
   }
 }
