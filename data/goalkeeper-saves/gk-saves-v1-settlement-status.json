@@ -4,14 +4,6 @@
   "details": [
     {
       "detail": "",
-      "goalkeeper": "Dennis Seimen",
-      "match": "Bayer Leverkusen vs VfB Stuttgart",
-      "match_date": "2026-10-31",
-      "reason": "settled_fotmob",
-      "signal_id": "grosvenor|72513276|dennis seimen|3.5|over"
-    },
-    {
-      "detail": "",
       "goalkeeper": "Nahuel Noll",
       "match": "Borussia Monchengladbach vs SC Paderborn 07",
       "match_date": "2026-10-31",
@@ -27,59 +19,29 @@
       "signal_id": "grosvenor|72513288|\u00f8rjan h\u00e5skjold nyland|2.5|over"
     },
     {
-      "detail": "",
-      "goalkeeper": "Gregor Kobel",
-      "match": "Bayern Munich vs Borussia Dortmund",
-      "match_date": "2026-10-31",
-      "reason": "settled_fotmob",
-      "signal_id": "grosvenor|72513274|gregor kobel|4.5|over"
-    },
-    {
-      "detail": "",
+      "detail": "{\"actual_saves\": 5, \"goalkeeper\": \"\\u00c1ngel Fortuno\", \"match_date\": \"2026-10-30\", \"match_id\": \"5868120\", \"player_id\": 1184772, \"reason\": \"FotMob named player statistic and the separately published Sofascore match report both record five saves for Fortuno, verified as the full-match Espanyol goalkeeper. The shot map contains four. Use the corroborated published count for this exact Bet365 named-player contract only; retain the event-count conflict in research data. Both counts put Over 3.5 above its threshold. No general source override.\", \"reviewed_at\": \"2026-11-01T11:37:01.697212+00:00\", \"reviewed_event_saves\": 4, \"source_urls\": [\"https://www.fotmob.com/api/data/matchDetails?matchId=5868120\", \"https://www.sofascore.com/news/villarreal-0-1-espanyol-compact-defending-one-set-piece-three-points\"], \"team_id\": 8558, \"venue\": \"away\"}",
       "goalkeeper": "\u00c1ngel Fortuno",
       "match": "Villarreal CF vs Espanyol Barcelona",
       "match_date": "2026-10-30",
-      "reason": "fotmob_save_totals_disagree",
+      "reason": "settled_reviewed_named_count",
       "signal_id": "72478684|\u00e1ngel fortuno|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Djordje Petrovi\u0107",
-      "match": "AFC Bournemouth vs Leeds United",
-      "match_date": "2026-10-31",
-      "reason": "settled_fotmob",
-      "signal_id": "72221354|djordje petrovi\u0107|2.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Christian Walton",
-      "match": "Hull City vs Ipswich Town",
-      "match_date": "2026-10-31",
-      "reason": "settled_fotmob",
-      "signal_id": "72221362|christian walton|3.5|over"
     }
   ],
-  "fotmob_requests_used": 9,
-  "generated_at": "2026-11-01T09:45:47Z",
+  "fotmob_requests_used": 5,
+  "generated_at": "2026-11-01T11:42:13Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
-  "pending_due": 3,
-  "pending_total": 6,
+  "pending_due": 2,
+  "pending_total": 5,
   "reason_counts": {
     "fotmob_matched_player_not_goalkeeper": 1,
-    "fotmob_save_totals_disagree": 2,
-    "settled_fotmob": 4
+    "fotmob_save_totals_disagree": 1,
+    "settled_reviewed_named_count": 1
   },
   "requests_used": 0,
-  "settled": 4,
+  "settled": 1,
   "status": "PARTIAL",
   "verified_player_targets": [
-    {
-      "appearances": 31,
-      "match_id": 5881207,
-      "status": "saved",
-      "targets_sha256": "e9f4c06170296eea4ffefe3d557d4ea30846cc8a67d083a50a2f952891790b71"
-    },
     {
       "match_id": 5881209,
       "reason": "explicit player totals disagree with reconciled events",
@@ -89,30 +51,12 @@
       "appearances": 31,
       "match_id": 5881212,
       "status": "saved",
-      "targets_sha256": "3fb2b43e281e638fdac610e083dbd6d2f7c26b789c5c8ddc3fb1ab2765648d90"
-    },
-    {
-      "appearances": 30,
-      "match_id": 5881208,
-      "status": "saved",
-      "targets_sha256": "249ce752a3cd7f5b90a7ff465337d7c5cac7b12b9019a33f46310c14f98e5984"
+      "targets_sha256": "ac89593c8c3ec8e66c069c653daf78607b812bc1a1d81bfbd2aee402a0c451af"
     },
     {
       "match_id": 5868120,
       "reason": "explicit player totals disagree with reconciled events",
       "status": "rejected"
-    },
-    {
-      "appearances": 32,
-      "match_id": 5795495,
-      "status": "saved",
-      "targets_sha256": "7c6dafa9046a62cfc5e5d84f54981245ed2dea39e2ca11a85ec76071dfc625de"
-    },
-    {
-      "appearances": 32,
-      "match_id": 5795500,
-      "status": "saved",
-      "targets_sha256": "abb7652f07b2518a94b508ee7b96b6f97fc9d1ab90eeb33291b4deba2725a282"
     }
   ]
 }

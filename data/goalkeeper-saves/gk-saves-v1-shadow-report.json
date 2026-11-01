@@ -18,42 +18,42 @@
   "evidence": {
     "clv": 0.051099,
     "clv_matched": 32,
-    "pending": 6,
-    "pnl_units": 11.447,
-    "roi": 0.248848,
-    "settled": 92,
+    "pending": 5,
+    "pnl_units": 11.847,
+    "roi": 0.254774,
+    "settled": 93,
     "settlement_sources": {
       "fotmob_named_keeper_shotmap": 79,
       "fotmob_team_keeper_shotmap": 9,
-      "independently_reviewed_named_keeper_count": 1,
+      "independently_reviewed_named_keeper_count": 2,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
     "signals": 104,
-    "true_close_coverage": 0.347826,
+    "true_close_coverage": 0.344086,
     "void": 6
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-11-01T09:45:57.340184+00:00",
+    "checked_at": "2026-11-01T11:42:16.927835+00:00",
     "counts": {
-      "already_saved": 16,
-      "not_fresh_prematch": 4
+      "not_fresh_prematch": 37,
+      "offers_saved": 246
     },
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "saved": 15,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-11-01T09:45:56Z",
+  "generated_at": "2026-11-01T11:42:16Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
-      "blocked_or_missing_inputs": 77,
-      "not_new_fresh_prematch": 4
+      "blocked_or_missing_inputs": 60,
+      "not_new_fresh_prematch": 37
     },
     "forecast_fixtures": 133,
     "forecast_keepers": 271,
-    "generated_at": "2026-11-01T09:45:57.410128+00:00",
+    "generated_at": "2026-11-01T11:42:17.019201+00:00",
     "last_capture_at": "2026-11-01T09:44:40.109141+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
