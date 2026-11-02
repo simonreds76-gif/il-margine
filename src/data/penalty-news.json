@@ -1,11 +1,81 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T21:12:29.160388+00:00",
+  "generatedAt": "2026-11-02T00:49:13.320059+00:00",
   "coverageStart": "2026-10-17",
-  "checkedThrough": "2026-11-01",
+  "checkedThrough": "2026-11-02",
   "captureStatus": "complete",
-  "matchesChecked": 13,
+  "matchesChecked": 10,
   "articles": [
+    {
+      "id": "fotmob:5868111:2992011199",
+      "slug": "2026-11-01-alex-berenguer-5868111-2992011199",
+      "matchId": "5868111",
+      "eventId": "2992011199",
+      "date": "2026-11-01",
+      "kickoff": "2026-11-01T20:00:00.000Z",
+      "league": "la-liga",
+      "leagueLabel": "La Liga",
+      "round": "11",
+      "player": "Alex Berenguer",
+      "playerId": 574629,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/574629.png",
+      "club": "Athletic Club",
+      "clubSlug": "athletic-club",
+      "clubUrl": "/penalty-takers/la-liga/athletic-club",
+      "crest": "/team-logos/la-liga/athletic-club.png",
+      "opponent": "Real Sociedad",
+      "home": "Athletic Club",
+      "away": "Real Sociedad",
+      "homeScore": 2,
+      "awayScore": 1,
+      "minute": "45+2",
+      "outcome": "scored",
+      "title": "Alex Berenguer scores from the spot against Real Sociedad",
+      "sentences": [
+        "Alex Berenguer converted a penalty for Athletic Club in minute 45+2 against Real Sociedad.",
+        "The match finished Athletic Club 2–1 Real Sociedad."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Nico Williams",
+        "concededBy": "Jon Aramburu",
+        "sentence": "Nico Williams won the penalty after a foul by Jon Aramburu inside the area.",
+        "evidenceIds": [
+          "2992009997",
+          "2992009991"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 1,
+        "shots": 5,
+        "onTarget": 1,
+        "chances": 0
+      },
+      "keeper": "Alex Remiro",
+      "moment": {
+        "before": [
+          1,
+          1
+        ],
+        "after": [
+          2,
+          1
+        ]
+      },
+      "paragraphs": [
+        "Alex Berenguer converted a penalty in added time (45+2 minutes) of Athletic Club’s 2–1 win over Real Sociedad.",
+        "Nico Williams won the penalty after a foul by Jon Aramburu inside the area. The goal put the team ahead at 2–1.",
+        "Alex Berenguer finished with 1 goal and 5 shots, including 1 on target, in 90 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/athletic-club-vs-real-sociedad/2cs4ea#5868111",
+      "eventHash": "44478cb63ef10207bd96304abd8b6cf8882d91a59f131796e1ea38464989bb7f",
+      "sourceHash": "e48f68158e00e9c693a983da1a23a59dc5dad39788cdbf07612724ae2bfd2303",
+      "publishedAt": "2026-11-02T00:49:13.320059+00:00",
+      "updatedAt": "2026-11-02T00:49:13.320059+00:00"
+    },
     {
       "id": "fotmob:5868118:2991679429",
       "slug": "2026-11-01-kylian-mbappe-5868118-2991679429",
