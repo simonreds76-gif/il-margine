@@ -10,10 +10,15 @@ export function formatOdds(odds: number | string): string {
   return isNaN(n) ? "-" : n.toFixed(2);
 }
 
+// Reuse the locale formatter across cards and archive links. Constructing one
+// for every date was the largest application function in the Props CPU trace.
+let matchDateFormatter: Intl.DateTimeFormat | undefined;
+
 /** Match date display: e.g. "7 Feb" */
 export function formatMatchDate(dateStr: string | null | undefined): string {
   if (!dateStr) return "-";
   const d = new Date(dateStr + "T12:00:00");
   if (isNaN(d.getTime())) return "-";
-  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  matchDateFormatter ??= new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short" });
+  return matchDateFormatter.format(d);
 }
