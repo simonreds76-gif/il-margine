@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-02T06:17:32Z",
+  "generated_at": "2026-11-02T16:05:04Z",
   "league": "la-liga",
   "row_count": 2,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2991679429",
           "match_id": "5868118",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868118",
-          "observed_at": "2026-11-02T06:17:29+00:00",
+          "observed_at": "2026-11-02T16:04:55+00:00",
           "event_date": "2026-11-01",
           "season": "2026/27",
           "team": "Real Madrid",
@@ -111,7 +111,7 @@
           "source_event_id": "2992011199",
           "match_id": "5868111",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868111",
-          "observed_at": "2026-11-02T06:17:29+00:00",
+          "observed_at": "2026-11-02T16:04:55+00:00",
           "event_date": "2026-11-01",
           "season": "2026/27",
           "team": "Athletic Club",
@@ -149,10 +149,16 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20261025",
+      "20261026",
+      "20261027",
+      "20261028",
+      "20261029",
+      "20261030",
       "20261031",
       "20261101",
       "20261102"
     ],
-    "matches_checked": 8
+    "matches_checked": 14
   }
 }

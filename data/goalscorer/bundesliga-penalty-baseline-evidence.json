@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-01T15:27:40Z",
+  "generated_at": "2026-11-02T16:05:14Z",
   "league": "bundesliga",
-  "row_count": 2,
+  "row_count": 3,
   "rows": [
     {
       "team": "Bayern München",
@@ -19,6 +19,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-10-31"
+    },
+    {
+      "team": "Hoffenheim",
+      "team_key": "hoffenheim",
+      "player_name": "Andrej Kramarić",
+      "player_key": "andrej kramari",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-25"
     },
     {
       "team": "RB Leipzig",
