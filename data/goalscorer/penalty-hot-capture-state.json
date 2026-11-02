@@ -31,10 +31,12 @@
     "5749729": "2026-11-02",
     "5749730": "2026-11-02",
     "5749732": "2026-11-01",
+    "5749733": "2026-11-02",
     "5749734": "2026-11-01",
     "5749735": "2026-11-02",
     "5749736": "2026-11-01",
     "5749737": "2026-11-01",
+    "5749738": "2026-11-02",
     "5749739": "2026-11-01",
     "5795475": "2026-10-26",
     "5795476": "2026-10-25",
@@ -59,6 +61,7 @@
     "5795495": "2026-11-01",
     "5795496": "2026-11-02",
     "5795497": "2026-11-01",
+    "5795498": "2026-11-02",
     "5795499": "2026-11-01",
     "5795500": "2026-11-01",
     "5795501": "2026-11-01",
@@ -145,18 +148,9 @@
     "5881213": "2026-11-01",
     "5881214": "2026-11-01"
   },
-  "updated_at": "2026-11-02T20:29:31.892954+00:00",
-  "checked_this_run": 13,
-  "errors": [
-    {
-      "match_id": "5795498",
-      "reason": "unresolved_player_timeline"
-    },
-    {
-      "match_id": "5749733",
-      "reason": "unresolved_player_timeline"
-    }
-  ],
+  "updated_at": "2026-11-02T20:43:51.755096+00:00",
+  "checked_this_run": 3,
+  "errors": [],
   "fixtures": {
     "5749700": {
       "league": "serie-a",
@@ -1140,7 +1134,7 @@
           "longName": "Cagliari"
         },
         "status": {
-          "utcTime": "2026-10-27T19:45:00+00:00",
+          "utcTime": "2026-10-27T19:45:00.000Z",
           "halfs": {
             "firstHalfStarted": "27.10.2026 20:45:54",
             "secondHalfStarted": "27.10.2026 21:48:13"
@@ -1430,7 +1424,7 @@
           "longName": "Lazio"
         },
         "status": {
-          "utcTime": "2026-10-27T17:30:00+00:00",
+          "utcTime": "2026-10-27T17:30:00.000Z",
           "numberOfHomeRedCards": 1,
           "halfs": {
             "firstHalfStarted": "27.10.2026 18:31:20",
@@ -1479,7 +1473,7 @@
           "longName": "Como"
         },
         "status": {
-          "utcTime": "2026-10-27T19:45:00+00:00",
+          "utcTime": "2026-10-27T19:45:00.000Z",
           "halfs": {
             "firstHalfStarted": "27.10.2026 20:48:26",
             "secondHalfStarted": "27.10.2026 21:54:19"
@@ -1635,10 +1629,10 @@
           "ongoing": true,
           "scoreStr": "0 - 1",
           "liveTime": {
-            "short": "44‎’‎",
-            "shortKey": "",
-            "long": "43:40",
-            "longKey": "",
+            "short": "HT",
+            "shortKey": "halftime_short",
+            "long": "Half-Time",
+            "longKey": "pause_match",
             "maxTime": 45,
             "basePeriod": 45,
             "addedTime": 0
@@ -1736,13 +1730,15 @@
         }
       },
       "date": "2026-11-01",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-11-01T11:43:43.467093+00:00",
       "pending_since": "2026-11-01T11:43:43.467093+00:00",
-      "last_attempt": "2026-11-02T20:29:31.892954+00:00",
-      "attempts": 4,
-      "reason": "unresolved_player_timeline",
-      "next_attempt": ""
+      "last_attempt": "2026-11-02T20:43:51.755096+00:00",
+      "attempts": 5,
+      "reason": "penalties_verified",
+      "next_attempt": "",
+      "verified_at": "2026-11-02T20:43:51.755096+00:00",
+      "penalty_count": 1
     },
     "5749734": {
       "league": "serie-a",
@@ -1958,7 +1954,7 @@
           "longName": "Fiorentina"
         },
         "status": {
-          "utcTime": "2026-11-02T17:30:00.000Z",
+          "utcTime": "2026-11-02T17:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "02.11.2026 18:31:08",
             "secondHalfStarted": "02.11.2026 19:34:00"
@@ -1978,9 +1974,15 @@
         }
       },
       "date": "2026-11-02",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-11-02T00:46:19.113406+00:00",
-      "pending_since": "2026-11-02T00:46:19.113406+00:00"
+      "pending_since": "2026-11-02T00:46:19.113406+00:00",
+      "last_attempt": "2026-11-02T20:43:51.755096+00:00",
+      "attempts": 1,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-02T20:43:51.755096+00:00",
+      "penalty_count": 0,
+      "next_attempt": ""
     },
     "5749739": {
       "league": "serie-a",
@@ -3211,13 +3213,13 @@
         }
       },
       "date": "2026-10-31",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-11-02T20:29:31.892954+00:00",
-      "last_attempt": "2026-11-02T20:29:31.892954+00:00",
-      "attempts": 3,
-      "reason": "unresolved_player_timeline",
-      "verified_at": "2026-11-01T16:54:15.564269+00:00",
+      "last_attempt": "2026-11-02T20:43:51.755096+00:00",
+      "attempts": 4,
+      "reason": "penalties_verified",
+      "verified_at": "2026-11-02T20:43:51.755096+00:00",
       "penalty_count": 1,
       "next_attempt": ""
     },
@@ -3450,9 +3452,9 @@
           "ongoing": true,
           "scoreStr": "0 - 0",
           "liveTime": {
-            "short": "30‎’‎",
+            "short": "44‎’‎",
             "shortKey": "",
-            "long": "29:02",
+            "long": "43:21",
             "longKey": "",
             "maxTime": 45,
             "basePeriod": 45,
@@ -4464,10 +4466,10 @@
           "ongoing": true,
           "scoreStr": "0 - 0",
           "liveTime": {
-            "short": "45‎’‎",
-            "shortKey": "",
-            "long": "44:20",
-            "longKey": "",
+            "short": "HT",
+            "shortKey": "halftime_short",
+            "long": "Half-Time",
+            "longKey": "pause_match",
             "maxTime": 45,
             "basePeriod": 45,
             "addedTime": 0
@@ -5850,7 +5852,7 @@
         },
         "away": {
           "id": 8371,
-          "score": 0,
+          "score": 1,
           "name": "Osasuna",
           "longName": "Osasuna"
         },
@@ -5864,11 +5866,11 @@
           "started": true,
           "cancelled": false,
           "ongoing": true,
-          "scoreStr": "0 - 0",
+          "scoreStr": "0 - 1",
           "liveTime": {
-            "short": "27‎’‎",
+            "short": "41‎’‎",
             "shortKey": "",
-            "long": "26:34",
+            "long": "40:53",
             "longKey": "",
             "maxTime": 45,
             "basePeriod": 45,
@@ -5996,7 +5998,7 @@
           "longName": "Sevilla"
         },
         "status": {
-          "utcTime": "2026-11-01T13:00:00+00:00",
+          "utcTime": "2026-11-01T13:00:00.000Z",
           "numberOfAwayRedCards": 1,
           "halfs": {
             "firstHalfStarted": "01.11.2026 14:04:45",
@@ -7694,7 +7696,7 @@
     },
     "20261027": {
       "ok": true,
-      "checked_at": "2026-11-01T21:09:53.470727+00:00",
+      "checked_at": "2026-11-02T20:43:51.755096+00:00",
       "expected": 3,
       "match_ids": [
         "5749721",
@@ -7771,7 +7773,7 @@
     },
     "20261101": {
       "ok": true,
-      "checked_at": "2026-11-02T20:29:31.892954+00:00",
+      "checked_at": "2026-11-02T20:43:51.755096+00:00",
       "expected": 16,
       "match_ids": [
         "5749733",
@@ -7795,7 +7797,7 @@
     },
     "20261102": {
       "ok": true,
-      "checked_at": "2026-11-02T20:29:31.892954+00:00",
+      "checked_at": "2026-11-02T20:43:51.755096+00:00",
       "expected": 5,
       "match_ids": [
         "5749731",
@@ -7809,12 +7811,12 @@
   },
   "coverage": {
     "expected": 151,
-    "verified": 144,
-    "pending": 7,
+    "verified": 147,
+    "pending": 4,
     "reverify": 0,
     "deferred": 0,
-    "overdue": 2,
-    "stalled": 1,
+    "overdue": 0,
+    "stalled": 0,
     "excluded": 0,
     "failed_discovery_days": []
   }
