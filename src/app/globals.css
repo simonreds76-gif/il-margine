@@ -5,6 +5,12 @@
 @source "../contexts";
 @source "../lib";
 
+/* Preserve existing consent before hydration without making pages dynamic. */
+html[data-cookie-consent="accepted"] [data-consent-banner],
+html[data-cookie-consent="rejected"] [data-consent-banner] {
+  display: none;
+}
+
 :root {
   --background: #0f1117;
   --foreground: #f1f5f9;

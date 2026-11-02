@@ -9,6 +9,7 @@ import CookieBanner from "@/components/CookieBanner";
 import SpeedInsightsClient from "@/components/SpeedInsightsClient";
 import RouteScopedOverlays from "@/components/RouteScopedOverlays";
 import { BASE_URL, GA_MEASUREMENT_ID } from "@/lib/config";
+import { CONSENT_PREPAINT_SCRIPT } from "@/lib/cookie-consent";
 
 const inter = Inter({ subsets: ["latin"] });
 const DEFAULT_SOCIAL_IMAGE = `${BASE_URL}/brand/20260913/social.png`;
@@ -68,8 +69,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: CONSENT_PREPAINT_SCRIPT }} />
+        <noscript><style>{"[data-consent-banner]{display:none!important}"}</style></noscript>
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <meta name="msvalidate.01" content="FD4A9F8A7202C71E5465E6A51F6B8F62" />
