@@ -1,10 +1,44 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),ts=require('typescript');
-function load(file,imports={}) {const module={exports:{}};vm.runInNewContext(ts.transpileModule(fs.readFileSync(path.resolve(file),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,{module,exports:module.exports,require:n=>imports[n]??require(n),structuredClone,URL,Request,Response,AbortSignal,Date,process:{env:{}}});return module.exports;}
+function load(file,imports={}) {imports={'@/lib/penalty-club-aliases.json':require('../../src/lib/penalty-club-aliases.json'),...imports};const module={exports:{}};vm.runInNewContext(ts.transpileModule(fs.readFileSync(path.resolve(file),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,{module,exports:module.exports,require:n=>imports[n]??require(n),structuredClone,URL,Request,Response,AbortSignal,Date,process:{env:{}}});return module.exports;}
 const model=load('src/lib/penalty-editorial.ts');
 const order={primary:'First',secondary:'Second',tertiary:'Third'};
 const state=()=>({revision:3,payload:{tickets:{other:{status:'deferred',updated_at:'old'}},clubs:{existing:{order,season:'2026/27',at:'old',reason:'evidence',source:''}},audit:[]}});
+
+function reportReader(rows, decisions={}) {
+  const query={select:()=>query,eq:()=>query,abortSignal:()=>query,single:async()=>({data:{generated:'today',watchlist:{rows}}})};
+  const leagues=['epl','serie-a','la-liga','bundesliga','ligue-1'].map(key=>({key,label:key,short:key,teams:Object.keys(JSON.parse(fs.readFileSync(`data/goalscorer/${key}-penalty-takers.json`,'utf8'))).filter(t=>!t.startsWith('_')).map(team=>({team,...order,relativeUrl:'/test',conditionNote:''}))}));
+  return load('src/lib/penalty-admin-reader.ts',{'server-only':{},'@/lib/supabase-server':{getSupabaseAdmin:()=>({from:()=>query})},'@/lib/club-penalty-takers':{readClubPenaltyData:async()=>leagues},'@/lib/goalscorer-penalty-review-state':{readPenaltyReviewState:async()=>decisions},'@/lib/penalty-editorial-store':{readPenaltyEditorial:async()=>state()},'@/lib/penalty-editorial':model});
+}
+
+test('Leipzig, Bayern and Parma tickets resolve to existing editable clubs without changing ticket decisions',async()=>{
+  const rows=[{row_id:'nusa',league:'bundesliga',team:'RB Leipzig'},{row_id:'kane',league:'bundesliga',team:'Bayern München'},{row_id:'bernabe',league:'serie-a',team:'Parma'}];
+  const decisions={nusa:{status:'ignored'},kane:{status:'applied'},bernabe:{status:'deferred'}};
+  const report=await reportReader(rows,decisions).penaltyAdminReport();
+  assert.deepEqual(Array.from(report.tickets,t=>t.clubId),['bundesliga|rasenballsportleipzig','bundesliga|bayernmunich','serie-a|parmacalcio1913']);
+  assert.deepEqual(Array.from(report.tickets,t=>t.status),['ignored','applied','deferred']);
+  assert.deepEqual(Array.from(report.tickets,t=>t.id),['nusa','kane','bernabe']);
+});
+
+test('all registered aliases resolve to their canonical club within the same league',async()=>{
+  const aliases=require('../../src/lib/penalty-club-aliases.json');
+  const rows=Object.entries(aliases).map(([key])=>({row_id:key,league:key.split('|')[0],team:key.split('|')[1]}));
+  const report=await reportReader(rows).penaltyAdminReport();
+  for(const ticket of report.tickets) assert.equal(ticket.clubId,model.penaltyKey(ticket.league,aliases[ticket.id]),ticket.id);
+});
+
+test('unknown display labels can fall back to a verified source name; conflicts and wrong leagues stay blocked',async()=>{
+  const rows=[
+    {row_id:'fallback',league:'bundesliga',public_team:'Unmapped display label',team:'RB Leipzig'},
+    {row_id:'conflict',league:'bundesliga',public_team:'Bayern Munich',team:'RB Leipzig'},
+    {row_id:'league',league:'serie-a',team:'RB Leipzig'},
+    {row_id:'unknown',league:'bundesliga',team:'Leipzig academy'},
+  ];
+  const report=await reportReader(rows).penaltyAdminReport();
+  assert.equal(report.tickets[0].clubId,'bundesliga|rasenballsportleipzig');
+  assert.ok(report.tickets.slice(1).every(t=>t.clubId===null));
+});
 test('Done closes only its ticket and never changes hierarchy or original state',()=>{const s=state();const n=model.editorialChange(s,{action:'done',ticket:'ticket',club:'existing'},order,'2026/27','today','audit');assert.equal(n.tickets.ticket.status,'ignored');assert.deepEqual(n.clubs,s.payload.clubs);assert.deepEqual(n.tickets.other,s.payload.tickets.other);assert.equal(s.payload.tickets.ticket,undefined);assert.equal(n.audit[0].after,null);});
 test('save changes order and closes ticket in one payload; reopen preserves that order',()=>{const next={primary:'Third',secondary:'First',tertiary:'Second'};const n=model.editorialChange(state(),{action:'save',ticket:'ticket',club:'existing',order:next,reason:'New verified evidence',source:'https://example.com/match'},order,'2026/27','today','audit');assert.deepEqual(JSON.parse(JSON.stringify(n.clubs.existing.order)),next);assert.equal(n.tickets.ticket.status,'applied');assert.equal(n.audit[0].before.primary,'First');const r=model.editorialChange({revision:4,payload:n},{action:'reopen',ticket:'ticket',club:'existing'},next,'2026/27','later','a2');assert.equal(r.tickets.ticket.status,'active');assert.equal(JSON.stringify(r.clubs),JSON.stringify(n.clubs));});
 test('invalid names, duplicate players, gaps and unsafe source URLs are rejected',()=>{for(const bad of [{primary:'',secondary:'B',tertiary:''},{primary:'B',secondary:'b',tertiary:''},{primary:'A',secondary:'',tertiary:'C'},{primary:'<script>',secondary:'',tertiary:''}])assert.throws(()=>model.validOrder(bad));assert.throws(()=>model.editorialChange(state(),{action:'save',ticket:'t',club:'c',order,reason:'evidence',source:'javascript:alert(1)'},order,'2026/27','today','a'));});

@@ -4,10 +4,13 @@ import { readClubPenaltyData } from "@/lib/club-penalty-takers";
 import { readPenaltyReviewState } from "@/lib/goalscorer-penalty-review-state";
 import { readPenaltyEditorial } from "@/lib/penalty-editorial-store";
 import { penaltyKey } from "@/lib/penalty-editorial";
+import clubAliases from "@/lib/penalty-club-aliases.json";
 import type { PenaltyAdminReport, ReviewTicket } from "@/lib/penalty-admin-types";
 const text = (x: unknown) => typeof x === "string" ? x : "";
 const normal = (x: string) => penaltyKey("", x);
-const clubAlias: Record<string, string> = {"la-liga|deportivoalaves": "Alaves", "la-liga|deportivoacoruna": "Deportivo La Coruna"};
+// Explicit, league-scoped aliases shared with our existing football identities.
+// Never change the canonical key used by saved editorial orders and decisions.
+const clubAlias: Record<string, string> = clubAliases;
 export async function penaltyAdminReport(): Promise<PenaltyAdminReport> {
   const [state, leagues, decisions, snapshot] = await Promise.all([
     readPenaltyEditorial(), readClubPenaltyData(), readPenaltyReviewState(),
@@ -20,8 +23,12 @@ export async function penaltyAdminReport(): Promise<PenaltyAdminReport> {
   const tickets: ReviewTicket[] = rows.filter(r => text(r.row_id)).map(r => {
     const league = leagues.find(l => [l.key, l.label, l.short].some(s => normal(s) === normal(text(r.league))));
     const team = text(r.public_team) || text(r.team);
-    const lookupTeam = clubAlias[penaltyKey(league?.key ?? "", team)] ?? team;
-    const club = clubs.find(c => c.leagueKey === league?.key && normal(c.team) === normal(lookupTeam));
+    const names = [text(r.public_team), text(r.team)].filter(Boolean).map(name =>
+      normal(clubAlias[penaltyKey(league?.key ?? "", name)] ?? name));
+    const matches = clubs.filter(c => c.leagueKey === league?.key && names.includes(normal(c.team)));
+    // An unknown display name can fall back to the source name; conflicting
+    // identities must still block editing rather than silently pick a club.
+    const club = matches.length === 1 ? matches[0] : undefined;
     return {id: text(r.row_id), clubId: club?.id ?? null, team, league: text(r.league), date: text(r.date) || text(r.generated_at), match: text(r.match) || [team, text(r.opponent)].filter(Boolean).join(" vs "),
       taker: text(r.actual_taker) || text(r.proposed_primary), result: text(r.event_result), reason: text(r.review_type) || text(r.reason), priority: text(r.review_priority), status: decisions[text(r.row_id)]?.status ?? "active",
       evidence: [text(r.editorial_note), ...(["primary", "secondary", "tertiary"] as const).map(slot => {const name = text(r[`${slot}_pre_match`]); return name ? `${slot}: ${name}. At the penalty: ${text(r[`${slot}_on_pitch_at_penalty`]) || "unknown"}` : "";})].filter(Boolean)};
