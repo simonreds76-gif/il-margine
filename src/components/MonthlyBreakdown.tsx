@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
 import RecordIcon from "./RecordIcon";
 import { formatStake } from "@/lib/format";
 
@@ -58,6 +57,9 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
     if (rowsOverride) return;
 
     async function fetch_() {
+      // Only the Admin view reads directly. Public pages already supply rows,
+      // so they must not download the database/auth/realtime client library.
+      const { supabase } = await import("@/lib/supabase");
       const { data, error } = await supabase
         .from(view)
         .select("*")

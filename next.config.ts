@@ -84,6 +84,9 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
+      { protocol: "https", hostname: "images.fotmob.com", pathname: "/image_resources/playerimages/*.png", search: "" },
+      { protocol: "https", hostname: "images.wimbledon.com", pathname: "/wide_nobg/*.png", search: "" },
+      { protocol: "https", hostname: "a.espncdn.com", pathname: "/i/headshots/tennis/players/full/*.png", search: "" },
       {
         protocol: "https",
         hostname: "flagcdn.com",

@@ -13,7 +13,19 @@ const readPick = (id: number) => unstable_cache(async () => {
   return data;
 }, ["tip-portrait-pick-v2", String(id)], { revalidate: 60, tags: [`tip-portrait:${id}`] })();
 
-export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+function portraitRedirect(source: string, request: Request) {
+  const width = new URL(request.url).searchParams.get("thumb");
+  const location = ["64", "96", "256"].includes(width ?? "")
+    ? `/_next/image?url=${encodeURIComponent(source)}&w=${width}&q=75`
+    : source;
+  return new Response(null, { status: 307, headers: {
+    Location: location,
+    "Cache-Control": "public, max-age=300, s-maxage=21600",
+    "X-Content-Type-Options": "nosniff",
+  } });
+}
+
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (!/^[1-9]\d{0,9}$/.test(id)) return new Response(null, { status: 400 });
   try {
@@ -23,21 +35,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     const artwork = pick ? getTipArtwork(pick) : [];
     const known = artwork.length === 1 && artwork[0].kind === "player" ? artwork[0].src : null;
     if (known && /^https:\/\/images\.fotmob\.com\/image_resources\/playerimages\/\d+\.png$/.test(known)) {
-      return new Response(null, { status: 307, headers: {
-        Location: known,
-        "Cache-Control": "public, max-age=300, s-maxage=21600",
-        "X-Content-Type-Options": "nosniff",
-      } });
+      return portraitRedirect(known, request);
     }
     const player = pick ? await resolveTipPortrait(pick) : null;
-    if (player) return new Response(null, {
-      status: 307,
-      headers: {
-        Location: `https://images.fotmob.com/image_resources/playerimages/${player.id}.png`,
-        "Cache-Control": "public, max-age=300, s-maxage=21600",
-        "X-Content-Type-Options": "nosniff",
-      },
-    });
+    if (player) return portraitRedirect(`https://images.fotmob.com/image_resources/playerimages/${player.id}.png`, request);
     return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
   } catch {
     // A source outage must not prevent publishing a tip or break the page.
