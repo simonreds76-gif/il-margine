@@ -99,3 +99,16 @@ test('JS-disabled output hides nonfunctional controls and no request-time API is
   assert.match(layout, /<noscript><style>.*data-consent-banner.*display:none/);
   assert.doesNotMatch(layout, /cookies\(|headers\(/);
 });
+
+test('accepted AI referral visits tolerate blocked storage and do not repeat the event on rerender', () => {
+  let sent=0;
+  const blocked={getItem(){throw new Error('blocked');},setItem(){throw new Error('blocked');}};
+  const scope={exports:{},URL,URLSearchParams,localStorage:blocked,sessionStorage:blocked,
+    document:{referrer:''},window:{gtag:()=>sent++},require:id=>{
+      if(id==='react')return {useEffect:fn=>fn()};
+      if(id==='next/navigation')return {usePathname:()=>'/player-props',useSearchParams:()=>new URLSearchParams('utm_source=chatgpt')};
+      return require(id);
+    }};
+  vm.runInNewContext(compile('src/components/AiReferralTracker.tsx'),scope);
+  scope.exports.default(); scope.exports.default(); assert.equal(sent,1);
+});

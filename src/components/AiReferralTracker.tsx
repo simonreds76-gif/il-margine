@@ -5,6 +5,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 
 const AI_REFERRAL_SESSION_KEY = "ilmargine_ai_referral_logged";
 const FIRST_TOUCH_KEY = "ilmargine_first_touch_source";
+let memoryReferralSource: string | null = null;
 
 declare global {
   interface Window {
@@ -84,7 +85,12 @@ export default function AiReferralTracker() {
       // ignore localStorage failures
     }
 
-    const sentForSession = sessionStorage.getItem(AI_REFERRAL_SESSION_KEY);
+    let sentForSession = memoryReferralSource;
+    try {
+      sentForSession = sessionStorage.getItem(AI_REFERRAL_SESSION_KEY);
+    } catch {
+      // A consented visit still works when the browser blocks storage.
+    }
     if (sentForSession === detected.source) return;
 
     let cancelled = false;
@@ -108,7 +114,12 @@ export default function AiReferralTracker() {
         utm_medium: params.get("utm_medium") || undefined,
         utm_campaign: params.get("utm_campaign") || undefined,
       });
-      sessionStorage.setItem(AI_REFERRAL_SESSION_KEY, detected.source);
+      memoryReferralSource = detected.source;
+      try {
+        sessionStorage.setItem(AI_REFERRAL_SESSION_KEY, detected.source);
+      } catch {
+        // Keep deduplication in memory for this page session instead.
+      }
     };
 
     send();
