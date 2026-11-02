@@ -1,16 +1,16 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_save_markets": 1,
-      "named_player_lines": 11,
+      "events_with_save_markets": 3,
+      "named_player_lines": 51,
       "status": "NAMED_PLAYER_LINES",
       "unnamed_or_team_lines": 0
     },
     "Grosvenor": {
-      "events_with_save_markets": 5,
+      "events_with_save_markets": 4,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 23
+      "unnamed_or_team_lines": 19
     },
     "Paddy Power": {
       "events_with_save_markets": 0,
@@ -26,31 +26,30 @@
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 74,
+      "current_quotes": 377,
       "mapped_quotes": 0,
       "paper_selections": 0,
-      "price_or_status_changes": 0,
+      "price_or_status_changes": 2,
       "rules": "unverified"
     },
-    "matched": 5,
+    "matched": 4,
     "missing": [],
-    "requests": 9,
-    "rows": 494
+    "requests": 8,
+    "rows": 372
   },
   "discovery_retries": 0,
   "event_last_checked": {
-    "71945366": "2026-11-02T01:01:56Z",
-    "71945382": "2026-11-02T01:01:56Z",
-    "72036260": "2026-11-02T01:01:56Z",
-    "72221368": "2026-11-02T01:01:56Z",
-    "72478670": "2026-11-02T01:01:56Z"
+    "71945366": "2026-11-02T18:41:12Z",
+    "72036260": "2026-11-02T18:41:12Z",
+    "72221368": "2026-11-02T18:41:12Z",
+    "72478670": "2026-11-02T18:41:12Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 5,
-  "events_supported": 5,
-  "events_with_lines": 5,
-  "generated_at": "2026-11-02T01:01:56Z",
-  "last_publication_at": "2026-11-02T01:01:56Z",
+  "events_selected": 4,
+  "events_supported": 4,
+  "events_with_lines": 4,
+  "generated_at": "2026-11-02T18:41:12Z",
+  "last_publication_at": "2026-11-02T18:41:12Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 0,
@@ -69,11 +68,11 @@
       "with_prices": 1
     },
     "serie-a": {
-      "selected": 2,
-      "with_prices": 2
+      "selected": 1,
+      "with_prices": 1
     }
   },
-  "market_inventory_rows_added": 149,
+  "market_inventory_rows_added": 122,
   "market_names_observed": [
     "Anytime Assist",
     "Anytime Goalscorer",
@@ -92,6 +91,7 @@
     "ML",
     "ML HT",
     "Player Fouls",
+    "Player Headed Shots on Target",
     "Player Saves",
     "Player Shots",
     "Player Shots on Target",
@@ -109,30 +109,23 @@
     "errors": [],
     "excluded": {
       "conflicting_quotes": 0,
-      "fixture_not_eligible": 402,
-      "stale_or_missing_market_poll": 9,
-      "unmatched_or_unsupported_fixture": 326
+      "fixture_not_eligible": 669,
+      "stale_or_missing_market_poll": 4,
+      "unmatched_or_unsupported_fixture": 302
     },
-    "market_count": 1,
-    "quote_count": 11,
-    "received_at": "2026-11-02T01:02:02.402146+00:00",
+    "market_count": 4,
+    "quote_count": 116,
+    "received_at": "2026-11-02T18:41:16.901488+00:00",
     "requests": 1,
     "source": "moviodds_bet365",
     "status": "OK"
   },
-  "publication_recovery": true,
+  "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 34,
-  "rows_observed": 34,
+  "rows_added": 70,
+  "rows_observed": 70,
   "selected_events": [
-    {
-      "away": "ACF Fiorentina",
-      "competition": "Italy - Serie A",
-      "home": "Sassuolo Calcio",
-      "id": 71945382,
-      "kickoff_at": "2026-11-02T17:30:00Z"
-    },
     {
       "away": "Stade Brest 29",
       "competition": "France - Ligue 1",
@@ -163,5 +156,5 @@
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 5
+  "three_way_events": 4
 }

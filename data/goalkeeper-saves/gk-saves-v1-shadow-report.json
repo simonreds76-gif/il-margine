@@ -2,50 +2,58 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 0,
-    "blocker_counts": {},
+    "blocked_lines": 21,
+    "blocker_counts": {
+      "goalkeeper_not_matched_to_lineup": 21,
+      "goalkeeper_team_unresolved": 21,
+      "missing_priced_edge": 21
+    },
     "candidate_board_preserved": false,
     "eligible_lines": 0,
-    "priced_lines": 34,
+    "priced_lines": 50,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 2
+    "value_ladder_lines": 0
   },
   "evidence": {
-    "clv": 0.051099,
-    "clv_matched": 32,
-    "pending": 5,
-    "pnl_units": 11.847,
-    "roi": 0.254774,
-    "settled": 93,
+    "clv": 0.049783,
+    "clv_matched": 34,
+    "pending": 2,
+    "pnl_units": 12.167,
+    "roi": 0.253479,
+    "settled": 96,
     "settlement_sources": {
-      "fotmob_named_keeper_shotmap": 79,
-      "fotmob_team_keeper_shotmap": 9,
+      "fotmob_named_keeper_shotmap": 81,
+      "fotmob_team_keeper_shotmap": 10,
       "independently_reviewed_named_keeper_count": 2,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
     "signals": 104,
-    "true_close_coverage": 0.344086,
+    "true_close_coverage": 0.354167,
     "void": 6
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-11-02T01:02:03.964393+00:00",
+    "checked_at": "2026-11-02T18:42:32.289753+00:00",
     "counts": {
-      "offers_saved": 34
+      "already_saved": 4,
+      "not_fresh_prematch": 1
     },
-    "saved": 5,
-    "status": "CAPTURED"
+    "saved": 0,
+    "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-11-02T01:02:03Z",
+  "generated_at": "2026-11-02T18:42:31Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
-    "exclusions": {},
+    "exclusions": {
+      "blocked_or_missing_inputs": 21,
+      "not_new_fresh_prematch": 1
+    },
     "forecast_fixtures": 138,
     "forecast_keepers": 282,
-    "generated_at": "2026-11-02T01:02:04.027813+00:00",
+    "generated_at": "2026-11-02T18:42:32.310540+00:00",
     "last_capture_at": "2026-11-01T20:49:53.294138+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
@@ -53,34 +61,34 @@
     "next_review_at": null,
     "paired_scores": {
       "current": {
-        "brier": 0.18314322276952205,
-        "log_loss": 0.5429999498881453
+        "brier": 0.18339475685087758,
+        "log_loss": 0.5439379650070146
       },
       "keeper_watch": {
-        "brier": 0.1836613922688294,
-        "log_loss": 0.5468849988806973
+        "brier": 0.18236472110676977,
+        "log_loss": 0.5442833477750574
       }
     },
-    "paired_settled_fixtures": 103,
+    "paired_settled_fixtures": 118,
     "paper_stake": 0.5,
     "records": {
       "current": {
-        "losses": 15,
-        "overdue": 1,
-        "pending": 3,
-        "profit": -0.8559999999999997,
+        "losses": 16,
+        "overdue": 3,
+        "pending": 0,
+        "profit": -0.9359999999999996,
         "pushes": 0,
-        "review": 3,
-        "roi": -0.06584615384615382,
+        "review": 4,
+        "roi": -0.06685714285714282,
         "selections": 36,
-        "settled": 26,
-        "stake": 13.0,
+        "settled": 28,
+        "stake": 14.0,
         "voids": 4,
-        "wins": 11
+        "wins": 12
       },
       "keeper_watch": {
         "losses": 3,
-        "overdue": 1,
+        "overdue": 2,
         "pending": 0,
         "profit": -0.5,
         "pushes": 0,
@@ -96,16 +104,16 @@
     "records_by_bookmaker": {
       "Bet365": {
         "current": {
-          "losses": 14,
+          "losses": 15,
           "overdue": 1,
-          "pending": 2,
-          "profit": -0.7309999999999997,
+          "pending": 0,
+          "profit": -1.2309999999999997,
           "pushes": 0,
-          "review": 1,
-          "roi": -0.06091666666666664,
+          "review": 2,
+          "roi": -0.09847999999999997,
           "selections": 31,
-          "settled": 24,
-          "stake": 12.0,
+          "settled": 25,
+          "stake": 12.5,
           "voids": 4,
           "wins": 10
         },
@@ -127,21 +135,21 @@
       "Grosvenor": {
         "current": {
           "losses": 1,
-          "overdue": 0,
-          "pending": 1,
-          "profit": -0.125,
+          "overdue": 2,
+          "pending": 0,
+          "profit": 0.29500000000000004,
           "pushes": 0,
           "review": 2,
-          "roi": -0.125,
+          "roi": 0.19666666666666668,
           "selections": 5,
-          "settled": 2,
-          "stake": 1.0,
+          "settled": 3,
+          "stake": 1.5,
           "voids": 0,
-          "wins": 1
+          "wins": 2
         },
         "keeper_watch": {
           "losses": 0,
-          "overdue": 0,
+          "overdue": 1,
           "pending": 0,
           "profit": 0,
           "pushes": 0,
@@ -158,6 +166,7 @@
     "review_milestone": 100,
     "selections": [
       {
+        "actual": 1,
         "away": "SSC Napoli",
         "bookmaker": "Bet365",
         "captured_at": "2026-11-01T09:44:12.955041+00:00",
@@ -175,15 +184,15 @@
         "odds": 2.5,
         "overdue": false,
         "player_id": "538501",
-        "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "profit": -0.5,
         "registered_at": "2026-11-01T09:44:40.109141+00:00",
         "settlement_policy": "bet365_named_nonstarter_void_v1",
         "side": "over",
-        "status": "pending",
+        "status": "lost",
         "team_id": "9885"
       },
       {
+        "actual": 6,
         "away": "Genoa CFC",
         "bookmaker": "Grosvenor",
         "captured_at": "2026-10-31T19:32:58+00:00",
@@ -201,12 +210,11 @@
         "odds": 1.84,
         "overdue": false,
         "player_id": "721533",
-        "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "profit": 0.42000000000000004,
         "registered_at": "2026-10-31T19:33:09.166930+00:00",
         "settlement_policy": "grosvenor_full90_scope_agreement_v1",
         "side": "over",
-        "status": "pending",
+        "status": "won",
         "team_id": "10233"
       },
       {
@@ -228,11 +236,11 @@
         "overdue": false,
         "player_id": "406501",
         "profit": 0,
-        "reason": "awaiting_verified_keeper_result",
+        "reason": "incomplete_or_conflicting_full_match_count",
         "registered_at": "2026-11-01T09:44:40.109141+00:00",
         "settlement_policy": "bet365_named_nonstarter_void_v1",
         "side": "over",
-        "status": "pending",
+        "status": "review",
         "team_id": "9790"
       },
       {
@@ -329,7 +337,7 @@
         "match_id": "5881209",
         "model": "current",
         "odds": 2.23,
-        "overdue": false,
+        "overdue": true,
         "player_id": "1257826",
         "profit": 0,
         "reason": "team_keeper_participation_or_rules_review",
@@ -381,7 +389,7 @@
         "match_id": "5881212",
         "model": "current",
         "odds": 1.8,
-        "overdue": false,
+        "overdue": true,
         "player_id": "73409",
         "profit": 0,
         "reason": "team_keeper_participation_or_rules_review",
@@ -407,7 +415,7 @@
         "match_id": "5881209",
         "model": "keeper_watch",
         "odds": 2.23,
-        "overdue": false,
+        "overdue": true,
         "player_id": "1257826",
         "profit": 0,
         "reason": "team_keeper_participation_or_rules_review",
@@ -1219,10 +1227,10 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 49,
-      "incomplete_or_conflicting_full_match_count": 13,
-      "keeper_identity_unresolved": 3,
-      "team_keeper_participation_or_rules_review": 13,
+      "awaiting_verified_keeper_result": 10,
+      "incomplete_or_conflicting_full_match_count": 16,
+      "keeper_identity_unresolved": 4,
+      "team_keeper_participation_or_rules_review": 19,
       "verified_different_starting_keeper": 11
     },
     "source_extension": {

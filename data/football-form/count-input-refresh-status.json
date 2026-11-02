@@ -1,35 +1,30 @@
 {
-  "generated_at": "2026-11-01T15:14:54.936280+00:00",
+  "generated_at": "2026-11-02T18:37:53.725700+00:00",
   "network_refresh": true,
   "requests": 5,
   "recovered": 0,
   "unresolved": [],
   "leagues": {
     "epl": {
-      "latest_completed": "2026-10-31",
-      "completed": 88
+      "error": "ConnectTimeout"
     },
     "serie-a": {
-      "latest_completed": "2026-10-31",
-      "completed": 93
+      "error": "ConnectTimeout"
     },
     "la-liga": {
-      "latest_completed": "2026-10-31",
-      "completed": 104
+      "error": "ConnectTimeout"
     },
     "bundesliga": {
-      "latest_completed": "2026-10-31",
-      "completed": 70
+      "error": "ConnectTimeout"
     },
     "ligue-1": {
-      "latest_completed": "2026-10-31",
-      "completed": 76
+      "error": "ConnectionError"
     }
   },
   "completed_missing_before": 0,
   "remaining": 0,
-  "applied_matches": 27,
-  "base_rows": 44040,
-  "latest_input_date": "2026-10-31",
+  "applied_matches": 0,
+  "base_rows": 44072,
+  "latest_input_date": "2026-11-01",
   "supplement_matches": 130
 }

@@ -1,50 +1,2765 @@
 {
-  "checked_at": "2026-11-01T15:13:59.765899+00:00",
+  "checked_at": "2026-11-02T18:25:47.884264+00:00",
   "scopes": {
     "epl/2026": {
-      "matches": 80,
-      "matched": 80,
-      "missing": 0,
-      "affected_clubs": [],
-      "fixtures": []
+      "matches": 89,
+      "matched": 0,
+      "missing": 89,
+      "affected_clubs": [
+        "Arsenal",
+        "Aston Villa",
+        "Bournemouth",
+        "Brentford",
+        "Brighton",
+        "Chelsea",
+        "Coventry",
+        "Crystal Palace",
+        "Everton",
+        "Fulham",
+        "Hull",
+        "Ipswich",
+        "Leeds",
+        "Liverpool",
+        "Man City",
+        "Man United",
+        "Newcastle",
+        "Nott'm Forest",
+        "Sunderland",
+        "Tottenham"
+      ],
+      "fixtures": [
+        {
+          "date": "2026-08-21",
+          "home": "Arsenal",
+          "away": "Coventry",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Hull",
+          "away": "Man United",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Everton",
+          "away": "Crystal Palace",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Ipswich",
+          "away": "Sunderland",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Nott'm Forest",
+          "away": "Leeds",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Brentford",
+          "away": "Tottenham",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-23",
+          "home": "Brighton",
+          "away": "Aston Villa",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-23",
+          "home": "Man City",
+          "away": "Bournemouth",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-23",
+          "home": "Newcastle",
+          "away": "Liverpool",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-24",
+          "home": "Fulham",
+          "away": "Chelsea",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-28",
+          "home": "Crystal Palace",
+          "away": "Man City",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Liverpool",
+          "away": "Nott'm Forest",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Bournemouth",
+          "away": "Everton",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Coventry",
+          "away": "Hull",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Tottenham",
+          "away": "Newcastle",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "Chelsea",
+          "away": "Brighton",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "Leeds",
+          "away": "Brentford",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "Sunderland",
+          "away": "Fulham",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "Man United",
+          "away": "Ipswich",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-31",
+          "home": "Aston Villa",
+          "away": "Arsenal",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-04",
+          "home": "Ipswich",
+          "away": "Liverpool",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Newcastle",
+          "away": "Bournemouth",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Brentford",
+          "away": "Sunderland",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Brighton",
+          "away": "Leeds",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Fulham",
+          "away": "Crystal Palace",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Man City",
+          "away": "Coventry",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Nott'm Forest",
+          "away": "Tottenham",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Hull",
+          "away": "Aston Villa",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Everton",
+          "away": "Man United",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Arsenal",
+          "away": "Chelsea",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Aston Villa",
+          "away": "Nott'm Forest",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Bournemouth",
+          "away": "Brentford",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Chelsea",
+          "away": "Hull",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Crystal Palace",
+          "away": "Ipswich",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Liverpool",
+          "away": "Fulham",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Tottenham",
+          "away": "Everton",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Sunderland",
+          "away": "Arsenal",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-13",
+          "home": "Coventry",
+          "away": "Brighton",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-13",
+          "home": "Man United",
+          "away": "Man City",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-14",
+          "home": "Leeds",
+          "away": "Newcastle",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-18",
+          "home": "Brentford",
+          "away": "Chelsea",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Tottenham",
+          "away": "Aston Villa",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Brighton",
+          "away": "Arsenal",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Everton",
+          "away": "Ipswich",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Newcastle",
+          "away": "Hull",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Nott'm Forest",
+          "away": "Coventry",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Bournemouth",
+          "away": "Liverpool",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Leeds",
+          "away": "Crystal Palace",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Man City",
+          "away": "Sunderland",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Fulham",
+          "away": "Man United",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Arsenal",
+          "away": "Leeds",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Aston Villa",
+          "away": "Brentford",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Chelsea",
+          "away": "Bournemouth",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Ipswich",
+          "away": "Fulham",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Sunderland",
+          "away": "Brighton",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Man United",
+          "away": "Tottenham",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Crystal Palace",
+          "away": "Nott'm Forest",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Hull",
+          "away": "Everton",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Liverpool",
+          "away": "Man City",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-12",
+          "home": "Coventry",
+          "away": "Newcastle",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Everton",
+          "away": "Chelsea",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Brentford",
+          "away": "Liverpool",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Fulham",
+          "away": "Hull",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Man City",
+          "away": "Ipswich",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Newcastle",
+          "away": "Aston Villa",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Bournemouth",
+          "away": "Sunderland",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Brighton",
+          "away": "Crystal Palace",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Leeds",
+          "away": "Man United",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Nott'm Forest",
+          "away": "Arsenal",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-19",
+          "home": "Tottenham",
+          "away": "Coventry",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-23",
+          "home": "Ipswich",
+          "away": "Nott'm Forest",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Aston Villa",
+          "away": "Man City",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Arsenal",
+          "away": "Everton",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Coventry",
+          "away": "Fulham",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Chelsea",
+          "away": "Tottenham",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Crystal Palace",
+          "away": "Newcastle",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Hull",
+          "away": "Brentford",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Liverpool",
+          "away": "Brighton",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Man United",
+          "away": "Bournemouth",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Sunderland",
+          "away": "Leeds",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Chelsea",
+          "away": "Man United",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Bournemouth",
+          "away": "Leeds",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Brentford",
+          "away": "Nott'm Forest",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Coventry",
+          "away": "Sunderland",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Hull",
+          "away": "Ipswich",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Man City",
+          "away": "Brighton",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Tottenham",
+          "away": "Crystal Palace",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Aston Villa",
+          "away": "Fulham",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Liverpool",
+          "away": "Arsenal",
+          "reason": "no_exact_fixture"
+        }
+      ]
     },
     "serie-a/2026": {
-      "matches": 90,
-      "matched": 90,
-      "missing": 0,
-      "affected_clubs": [],
-      "fixtures": []
+      "matches": 98,
+      "matched": 0,
+      "missing": 98,
+      "affected_clubs": [
+        "Atalanta",
+        "Bologna",
+        "Cagliari",
+        "Como",
+        "Fiorentina",
+        "Frosinone",
+        "Genoa",
+        "Inter",
+        "Juventus",
+        "Lazio",
+        "Lecce",
+        "Milan",
+        "Monza",
+        "Napoli",
+        "Parma",
+        "Roma",
+        "Sassuolo",
+        "Torino",
+        "Udinese",
+        "Venezia"
+      ],
+      "fixtures": [
+        {
+          "date": "2026-08-22",
+          "home": "Inter",
+          "away": "Monza",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Udinese",
+          "away": "Como",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Genoa",
+          "away": "Napoli",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Parma",
+          "away": "Cagliari",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-23",
+          "home": "Frosinone",
+          "away": "Juventus",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-23",
+          "home": "Venezia",
+          "away": "Lecce",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-23",
+          "home": "Atalanta",
+          "away": "Sassuolo",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-23",
+          "home": "Torino",
+          "away": "Milan",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-24",
+          "home": "Bologna",
+          "away": "Lazio",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-24",
+          "home": "Roma",
+          "away": "Fiorentina",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-28",
+          "home": "Milan",
+          "away": "Venezia",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Fiorentina",
+          "away": "Frosinone",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Monza",
+          "away": "Udinese",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Sassuolo",
+          "away": "Torino",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Juventus",
+          "away": "Parma",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "Napoli",
+          "away": "Como",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "Cagliari",
+          "away": "Inter",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "Lazio",
+          "away": "Genoa",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-31",
+          "home": "Lecce",
+          "away": "Roma",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-31",
+          "home": "Atalanta",
+          "away": "Bologna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-04",
+          "home": "Genoa",
+          "away": "Como",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Fiorentina",
+          "away": "Torino",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Inter",
+          "away": "Napoli",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Roma",
+          "away": "Atalanta",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Frosinone",
+          "away": "Venezia",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Parma",
+          "away": "Monza",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Bologna",
+          "away": "Sassuolo",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Juventus",
+          "away": "Milan",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-07",
+          "home": "Cagliari",
+          "away": "Lecce",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-07",
+          "home": "Udinese",
+          "away": "Lazio",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-11",
+          "home": "Venezia",
+          "away": "Fiorentina",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Genoa",
+          "away": "Frosinone",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Lazio",
+          "away": "Milan",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Atalanta",
+          "away": "Cagliari",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-13",
+          "home": "Lecce",
+          "away": "Monza",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-13",
+          "home": "Napoli",
+          "away": "Bologna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-13",
+          "home": "Sassuolo",
+          "away": "Juventus",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-14",
+          "home": "Como",
+          "away": "Parma",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-14",
+          "home": "Torino",
+          "away": "Roma",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-14",
+          "home": "Inter",
+          "away": "Udinese",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-18",
+          "home": "Monza",
+          "away": "Sassuolo",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Bologna",
+          "away": "Torino",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Udinese",
+          "away": "Cagliari",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Roma",
+          "away": "Inter",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Venezia",
+          "away": "Lazio",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Fiorentina",
+          "away": "Napoli",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Frosinone",
+          "away": "Como",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Parma",
+          "away": "Genoa",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Juventus",
+          "away": "Atalanta",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Milan",
+          "away": "Lecce",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Genoa",
+          "away": "Fiorentina",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Inter",
+          "away": "Parma",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Napoli",
+          "away": "Frosinone",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Como",
+          "away": "Roma",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Lazio",
+          "away": "Monza",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Lecce",
+          "away": "Bologna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Sassuolo",
+          "away": "Milan",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Cagliari",
+          "away": "Juventus",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-12",
+          "home": "Atalanta",
+          "away": "Venezia",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-12",
+          "home": "Torino",
+          "away": "Udinese",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-16",
+          "home": "Frosinone",
+          "away": "Sassuolo",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Venezia",
+          "away": "Napoli",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Bologna",
+          "away": "Inter",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Roma",
+          "away": "Genoa",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Udinese",
+          "away": "Lecce",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Fiorentina",
+          "away": "Como",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Milan",
+          "away": "Atalanta",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Juventus",
+          "away": "Lazio",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-19",
+          "home": "Monza",
+          "away": "Cagliari",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-19",
+          "home": "Parma",
+          "away": "Torino",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-23",
+          "home": "Torino",
+          "away": "Monza",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Cagliari",
+          "away": "Bologna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Como",
+          "away": "Sassuolo",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Napoli",
+          "away": "Roma",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Lazio",
+          "away": "Parma",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Inter",
+          "away": "Fiorentina",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Atalanta",
+          "away": "Frosinone",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Genoa",
+          "away": "Venezia",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Lecce",
+          "away": "Juventus",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Udinese",
+          "away": "Milan",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-27",
+          "home": "Sassuolo",
+          "away": "Lazio",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-27",
+          "home": "Roma",
+          "away": "Cagliari",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-27",
+          "home": "Torino",
+          "away": "Como",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-28",
+          "home": "Milan",
+          "away": "Bologna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-28",
+          "home": "Parma",
+          "away": "Udinese",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-28",
+          "home": "Venezia",
+          "away": "Inter",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-28",
+          "home": "Genoa",
+          "away": "Juventus",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-28",
+          "home": "Monza",
+          "away": "Napoli",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-29",
+          "home": "Frosinone",
+          "away": "Lecce",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-29",
+          "home": "Fiorentina",
+          "away": "Atalanta",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Bologna",
+          "away": "Monza",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Udinese",
+          "away": "Roma",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Milan",
+          "away": "Inter",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Como",
+          "away": "Venezia",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Frosinone",
+          "away": "Torino",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Lazio",
+          "away": "Cagliari",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Lecce",
+          "away": "Genoa",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Juventus",
+          "away": "Napoli",
+          "reason": "no_exact_fixture"
+        }
+      ]
     },
     "la-liga/2026": {
-      "matches": 99,
-      "matched": 99,
-      "missing": 0,
-      "affected_clubs": [],
-      "fixtures": []
+      "matches": 108,
+      "matched": 0,
+      "missing": 108,
+      "affected_clubs": [
+        "Alaves",
+        "Ath Bilbao",
+        "Ath Madrid",
+        "Barcelona",
+        "Betis",
+        "Celta",
+        "Elche",
+        "Espanol",
+        "Getafe",
+        "La Coruna",
+        "Levante",
+        "Malaga",
+        "Osasuna",
+        "Real Madrid",
+        "Santander",
+        "Sevilla",
+        "Sociedad",
+        "Valencia",
+        "Vallecano",
+        "Villarreal"
+      ],
+      "fixtures": [
+        {
+          "date": "2026-08-15",
+          "home": "Alaves",
+          "away": "Getafe",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-15",
+          "home": "Sevilla",
+          "away": "Vallecano",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-16",
+          "home": "Santander",
+          "away": "Villarreal",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-16",
+          "home": "Espanol",
+          "away": "Levante",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-17",
+          "home": "La Coruna",
+          "away": "Elche",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-19",
+          "home": "Ath Madrid",
+          "away": "Malaga",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-20",
+          "home": "Vallecano",
+          "away": "Alaves",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-21",
+          "home": "Betis",
+          "away": "Sociedad",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Ath Bilbao",
+          "away": "Sevilla",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Valencia",
+          "away": "Celta",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Espanol",
+          "away": "Real Madrid",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-23",
+          "home": "Ath Madrid",
+          "away": "Villarreal",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-23",
+          "home": "Getafe",
+          "away": "Santander",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-23",
+          "home": "Elche",
+          "away": "Barcelona",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-24",
+          "home": "Osasuna",
+          "away": "Levante",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-24",
+          "home": "Malaga",
+          "away": "La Coruna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-25",
+          "home": "Valencia",
+          "away": "Betis",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-26",
+          "home": "Real Madrid",
+          "away": "Sociedad",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-27",
+          "home": "Celta",
+          "away": "Osasuna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-27",
+          "home": "Barcelona",
+          "away": "Ath Bilbao",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-28",
+          "home": "Santander",
+          "away": "Elche",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-28",
+          "home": "Alaves",
+          "away": "Villarreal",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Levante",
+          "away": "Betis",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Sociedad",
+          "away": "Espanol",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Sevilla",
+          "away": "Ath Madrid",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "Real Madrid",
+          "away": "Malaga",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "La Coruna",
+          "away": "Valencia",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "Celta",
+          "away": "Ath Bilbao",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-31",
+          "home": "Osasuna",
+          "away": "Getafe",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-31",
+          "home": "Barcelona",
+          "away": "Vallecano",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-03",
+          "home": "Sociedad",
+          "away": "Celta",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-04",
+          "home": "Betis",
+          "away": "Real Madrid",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Ath Bilbao",
+          "away": "Ath Madrid",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Vallecano",
+          "away": "Santander",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Villarreal",
+          "away": "La Coruna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Valencia",
+          "away": "Barcelona",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Alaves",
+          "away": "Osasuna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Malaga",
+          "away": "Levante",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Espanol",
+          "away": "Sevilla",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-07",
+          "home": "Getafe",
+          "away": "Celta",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-07",
+          "home": "Elche",
+          "away": "Sociedad",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-11",
+          "home": "Sevilla",
+          "away": "Valencia",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Santander",
+          "away": "Alaves",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Osasuna",
+          "away": "Espanol",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Ath Bilbao",
+          "away": "Elche",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Real Madrid",
+          "away": "Vallecano",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-13",
+          "home": "Celta",
+          "away": "Malaga",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-13",
+          "home": "Levante",
+          "away": "Barcelona",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-13",
+          "home": "Getafe",
+          "away": "La Coruna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-13",
+          "home": "Sociedad",
+          "away": "Ath Madrid",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-14",
+          "home": "Villarreal",
+          "away": "Betis",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-15",
+          "home": "Vallecano",
+          "away": "Espanol",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-15",
+          "home": "Alaves",
+          "away": "Valencia",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-15",
+          "home": "Elche",
+          "away": "Real Madrid",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-16",
+          "home": "Ath Madrid",
+          "away": "Osasuna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-16",
+          "home": "La Coruna",
+          "away": "Sevilla",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-16",
+          "home": "Barcelona",
+          "away": "Santander",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-17",
+          "home": "Betis",
+          "away": "Getafe",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-17",
+          "home": "Malaga",
+          "away": "Villarreal",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-18",
+          "home": "Espanol",
+          "away": "Elche",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Osasuna",
+          "away": "Vallecano",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Ath Bilbao",
+          "away": "Alaves",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Celta",
+          "away": "Santander",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Sevilla",
+          "away": "Barcelona",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Getafe",
+          "away": "Malaga",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Ath Madrid",
+          "away": "Real Madrid",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "La Coruna",
+          "away": "Betis",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Villarreal",
+          "away": "Levante",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Valencia",
+          "away": "Sociedad",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-09",
+          "home": "Malaga",
+          "away": "Espanol",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Alaves",
+          "away": "Ath Madrid",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Barcelona",
+          "away": "Getafe",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Real Madrid",
+          "away": "Villarreal",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Elche",
+          "away": "Celta",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Sociedad",
+          "away": "La Coruna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Betis",
+          "away": "Osasuna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Santander",
+          "away": "Valencia",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-12",
+          "home": "Levante",
+          "away": "Sevilla",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-16",
+          "home": "La Coruna",
+          "away": "Levante",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Espanol",
+          "away": "Ath Madrid",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Villarreal",
+          "away": "Elche",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Betis",
+          "away": "Barcelona",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Valencia",
+          "away": "Ath Bilbao",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Osasuna",
+          "away": "Santander",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Celta",
+          "away": "Alaves",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Malaga",
+          "away": "Sociedad",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Real Madrid",
+          "away": "Sevilla",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-19",
+          "home": "Getafe",
+          "away": "Vallecano",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-21",
+          "home": "Levante",
+          "away": "Ath Bilbao",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-23",
+          "home": "Alaves",
+          "away": "Malaga",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Vallecano",
+          "away": "Elche",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Santander",
+          "away": "Espanol",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Valencia",
+          "away": "Villarreal",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Ath Madrid",
+          "away": "La Coruna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Ath Bilbao",
+          "away": "Getafe",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Celta",
+          "away": "Betis",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Sociedad",
+          "away": "Levante",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Barcelona",
+          "away": "Real Madrid",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-26",
+          "home": "Sevilla",
+          "away": "Osasuna",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-30",
+          "home": "Villarreal",
+          "away": "Espanol",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Levante",
+          "away": "Ath Madrid",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Vallecano",
+          "away": "Celta",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Betis",
+          "away": "Malaga",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Barcelona",
+          "away": "Alaves",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Getafe",
+          "away": "Sevilla",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Santander",
+          "away": "Real Madrid",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Elche",
+          "away": "Valencia",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Ath Bilbao",
+          "away": "Sociedad",
+          "reason": "no_exact_fixture"
+        }
+      ]
     },
     "bundesliga/2026": {
-      "matches": 63,
-      "matched": 63,
-      "missing": 0,
-      "affected_clubs": [],
-      "fixtures": []
+      "matches": 72,
+      "matched": 0,
+      "missing": 72,
+      "affected_clubs": [
+        "Augsburg",
+        "Bayern Munich",
+        "Dortmund",
+        "Ein Frankfurt",
+        "Elversberg",
+        "FC Koln",
+        "Freiburg",
+        "Hamburg",
+        "Hoffenheim",
+        "Leverkusen",
+        "M'gladbach",
+        "Mainz",
+        "Paderborn",
+        "RB Leipzig",
+        "Schalke 04",
+        "Stuttgart",
+        "Union Berlin",
+        "Werder Bremen"
+      ],
+      "fixtures": [
+        {
+          "date": "2026-08-28",
+          "home": "Bayern Munich",
+          "away": "Stuttgart",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Elversberg",
+          "away": "Leverkusen",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "FC Koln",
+          "away": "Hoffenheim",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Mainz",
+          "away": "Paderborn",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "RB Leipzig",
+          "away": "M'gladbach",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Union Berlin",
+          "away": "Ein Frankfurt",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Dortmund",
+          "away": "Hamburg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "Freiburg",
+          "away": "Werder Bremen",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "Augsburg",
+          "away": "Schalke 04",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-04",
+          "home": "Stuttgart",
+          "away": "FC Koln",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Hoffenheim",
+          "away": "Dortmund",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Leverkusen",
+          "away": "Union Berlin",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "M'gladbach",
+          "away": "Elversberg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Paderborn",
+          "away": "Freiburg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Werder Bremen",
+          "away": "RB Leipzig",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Schalke 04",
+          "away": "Bayern Munich",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Hamburg",
+          "away": "Mainz",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Ein Frankfurt",
+          "away": "Augsburg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-11",
+          "home": "Union Berlin",
+          "away": "Schalke 04",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Augsburg",
+          "away": "Leverkusen",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Dortmund",
+          "away": "Paderborn",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Freiburg",
+          "away": "M'gladbach",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Hoffenheim",
+          "away": "Stuttgart",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Mainz",
+          "away": "Ein Frankfurt",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "FC Koln",
+          "away": "Werder Bremen",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-13",
+          "home": "RB Leipzig",
+          "away": "Hamburg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-13",
+          "home": "Elversberg",
+          "away": "Bayern Munich",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-18",
+          "home": "Bayern Munich",
+          "away": "Union Berlin",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Ein Frankfurt",
+          "away": "Freiburg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Hamburg",
+          "away": "FC Koln",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "M'gladbach",
+          "away": "Mainz",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Werder Bremen",
+          "away": "Augsburg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Stuttgart",
+          "away": "Dortmund",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Leverkusen",
+          "away": "RB Leipzig",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Schalke 04",
+          "away": "Elversberg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Paderborn",
+          "away": "Hoffenheim",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-09",
+          "home": "Dortmund",
+          "away": "Werder Bremen",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Augsburg",
+          "away": "Bayern Munich",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Hoffenheim",
+          "away": "Hamburg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Mainz",
+          "away": "Leverkusen",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Paderborn",
+          "away": "Stuttgart",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Union Berlin",
+          "away": "Elversberg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "RB Leipzig",
+          "away": "Ein Frankfurt",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "FC Koln",
+          "away": "M'gladbach",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Freiburg",
+          "away": "Schalke 04",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-16",
+          "home": "Ein Frankfurt",
+          "away": "FC Koln",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Elversberg",
+          "away": "Augsburg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Hamburg",
+          "away": "Stuttgart",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Schalke 04",
+          "away": "Mainz",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Union Berlin",
+          "away": "Dortmund",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Werder Bremen",
+          "away": "Paderborn",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Bayern Munich",
+          "away": "RB Leipzig",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Leverkusen",
+          "away": "Freiburg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "M'gladbach",
+          "away": "Hoffenheim",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-23",
+          "home": "Stuttgart",
+          "away": "M'gladbach",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Augsburg",
+          "away": "Union Berlin",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "FC Koln",
+          "away": "Schalke 04",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Mainz",
+          "away": "Werder Bremen",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Paderborn",
+          "away": "Hamburg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "RB Leipzig",
+          "away": "Elversberg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Dortmund",
+          "away": "Ein Frankfurt",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Hoffenheim",
+          "away": "Leverkusen",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Freiburg",
+          "away": "Bayern Munich",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-30",
+          "home": "Elversberg",
+          "away": "Mainz",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Augsburg",
+          "away": "Freiburg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Leverkusen",
+          "away": "Stuttgart",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "M'gladbach",
+          "away": "Paderborn",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Schalke 04",
+          "away": "RB Leipzig",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Werder Bremen",
+          "away": "Hoffenheim",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Bayern Munich",
+          "away": "Dortmund",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Union Berlin",
+          "away": "FC Koln",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Ein Frankfurt",
+          "away": "Hamburg",
+          "reason": "no_exact_fixture"
+        }
+      ]
     },
     "ligue-1/2026": {
-      "matches": 72,
-      "matched": 69,
-      "missing": 3,
+      "matches": 80,
+      "matched": 0,
+      "missing": 80,
       "affected_clubs": [
+        "Angers",
+        "Auxerre",
+        "Brest",
+        "Le Havre",
+        "Le Mans",
+        "Lens",
+        "Lille",
+        "Lorient",
         "Lyon",
+        "Marseille",
+        "Monaco",
+        "Nice",
+        "Paris FC",
         "Paris SG",
         "Rennes",
+        "Strasbourg",
         "Toulouse",
         "Troyes"
       ],
       "fixtures": [
         {
+          "date": "2026-08-21",
+          "home": "Marseille",
+          "away": "Strasbourg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Lens",
+          "away": "Auxerre",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Le Mans",
+          "away": "Brest",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Nice",
+          "away": "Lorient",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Toulouse",
+          "away": "Lyon",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-22",
+          "home": "Troyes",
+          "away": "Paris FC",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-23",
+          "home": "Angers",
+          "away": "Lille",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-23",
+          "home": "Le Havre",
+          "away": "Monaco",
+          "reason": "no_exact_fixture"
+        },
+        {
           "date": "2026-08-23",
           "home": "Rennes",
           "away": "Paris SG",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-28",
+          "home": "Lille",
+          "away": "Paris SG",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Strasbourg",
+          "away": "Lens",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Auxerre",
+          "away": "Angers",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Brest",
+          "away": "Toulouse",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Lorient",
+          "away": "Troyes",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-29",
+          "home": "Lyon",
+          "away": "Le Havre",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "Paris FC",
+          "away": "Nice",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "Rennes",
+          "away": "Le Mans",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-08-30",
+          "home": "Monaco",
+          "away": "Marseille",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-03",
+          "home": "Toulouse",
+          "away": "Lille",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-04",
+          "home": "Lyon",
+          "away": "Auxerre",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-04",
+          "home": "Paris SG",
+          "away": "Monaco",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Lens",
+          "away": "Lorient",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Le Havre",
+          "away": "Brest",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-05",
+          "home": "Nice",
+          "away": "Le Mans",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Troyes",
+          "away": "Strasbourg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Angers",
+          "away": "Rennes",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-06",
+          "home": "Marseille",
+          "away": "Paris FC",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-11",
+          "home": "Rennes",
+          "away": "Marseille",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Strasbourg",
+          "away": "Monaco",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Auxerre",
+          "away": "Nice",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Le Havre",
+          "away": "Angers",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Lorient",
+          "away": "Toulouse",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-12",
+          "home": "Paris FC",
+          "away": "Lyon",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-13",
+          "home": "Lille",
+          "away": "Troyes",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-13",
+          "home": "Le Mans",
+          "away": "Lens",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-13",
+          "home": "Brest",
+          "away": "Paris SG",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-18",
+          "home": "Monaco",
+          "away": "Lens",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Paris FC",
+          "away": "Strasbourg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Angers",
+          "away": "Troyes",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Le Mans",
+          "away": "Lorient",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Lyon",
+          "away": "Rennes",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-19",
+          "home": "Toulouse",
+          "away": "Le Havre",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Auxerre",
+          "away": "Brest",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Nice",
+          "away": "Lille",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-09-20",
+          "home": "Marseille",
+          "away": "Paris SG",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-09",
+          "home": "Lens",
+          "away": "Lyon",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Lille",
+          "away": "Le Havre",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Brest",
+          "away": "Angers",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Lorient",
+          "away": "Paris FC",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Monaco",
+          "away": "Toulouse",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-10",
+          "home": "Paris SG",
+          "away": "Le Mans",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Nice",
+          "away": "Strasbourg",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Rennes",
+          "away": "Auxerre",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-11",
+          "home": "Troyes",
+          "away": "Marseille",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-16",
+          "home": "Le Mans",
+          "away": "Toulouse",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Strasbourg",
+          "away": "Paris SG",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Lille",
+          "away": "Brest",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-17",
+          "home": "Troyes",
+          "away": "Lens",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Angers",
+          "away": "Marseille",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Le Havre",
+          "away": "Auxerre",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Lorient",
+          "away": "Monaco",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Paris FC",
+          "away": "Rennes",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-18",
+          "home": "Lyon",
+          "away": "Nice",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-23",
+          "home": "Brest",
+          "away": "Nice",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-24",
+          "home": "Lens",
+          "away": "Paris FC",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Monaco",
+          "away": "Lille",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Angers",
+          "away": "Lorient",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Auxerre",
+          "away": "Le Mans",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Marseille",
+          "away": "Le Havre",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-25",
+          "home": "Rennes",
+          "away": "Strasbourg",
           "reason": "no_exact_fixture"
         },
         {
@@ -57,6 +2772,54 @@
           "date": "2026-10-26",
           "home": "Paris SG",
           "away": "Lyon",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-30",
+          "home": "Le Havre",
+          "away": "Paris SG",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-30",
+          "home": "Nice",
+          "away": "Rennes",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-30",
+          "home": "Lille",
+          "away": "Lens",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-10-31",
+          "home": "Troyes",
+          "away": "Le Mans",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Strasbourg",
+          "away": "Auxerre",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Lyon",
+          "away": "Angers",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Paris FC",
+          "away": "Monaco",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-01",
+          "home": "Marseille",
+          "away": "Toulouse",
           "reason": "no_exact_fixture"
         }
       ]
