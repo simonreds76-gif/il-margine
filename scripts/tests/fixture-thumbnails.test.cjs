@@ -41,3 +41,17 @@ test('a later portrait correction gets a new URL without overwriting its origina
     assert.ok(fs.existsSync(path.join(temp, 'public', Object.values(next)[0])));
   } finally { fs.rmSync(temp, { recursive: true, force: true }); }
 });
+
+test('fixture crests retain identity, transparency and proportions at two times their display size',async()=>{
+  const manifest=require('../../src/lib/fixture-crest-thumbnails.json');
+  assert.equal(Object.keys(manifest).length,Object.keys(require('../../src/lib/team-logo-thumbnails.json')).length);
+  for(const [source,thumbnail] of Object.entries(manifest)) {
+    const input=fs.readFileSync(path.join(root,'public',source));
+    assert.ok(thumbnail.includes(createHash('sha256').update(input).digest('hex').slice(0,12)));
+    const a=await sharp(input).metadata(),b=await sharp(path.join(root,'public',thumbnail)).metadata();
+    assert.ok(b.width<=96 && b.height<=96);
+    assert.equal(b.format,'webp');
+    assert.ok(Math.abs(a.width/a.height-b.width/b.height)<0.025,source);
+    if(a.hasAlpha&&!b.hasAlpha) assert.equal((await sharp(input).stats()).isOpaque,true,source);
+  }
+});

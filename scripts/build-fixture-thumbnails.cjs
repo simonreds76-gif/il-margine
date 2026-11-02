@@ -24,6 +24,22 @@ async function build(root = path.resolve(__dirname, '..')) {
     thumbnailBytes += fs.statSync(output).size;
   }
   fs.writeFileSync(path.join(root, 'src/lib/fixture-portrait-thumbnails.json'), JSON.stringify(manifest, null, 2) + '\n');
+  const crestManifest = {};
+  const logoManifestPath = path.join(root, 'src/lib/team-logo-thumbnails.json');
+  if (fs.existsSync(logoManifestPath)) {
+    const crestDir = path.join(root, 'public/team-logos/fixture-thumbs-v2');
+    fs.mkdirSync(crestDir, { recursive: true });
+    for (const original of Object.keys(JSON.parse(fs.readFileSync(logoManifestPath, 'utf8'))).sort()) {
+      const input = fs.readFileSync(path.join(root, 'public', original));
+      const hash = createHash('sha256').update(input).digest('hex').slice(0, 12);
+      const name = `${original.slice('/team-logos/'.length).replaceAll('/', '-')}-${hash}.webp`;
+      const output = path.join(crestDir, name);
+      if (!fs.existsSync(output)) await sharp(input).resize(96, 96, { fit: 'inside', withoutEnlargement: true })
+        .webp({ quality: 82, alphaQuality: 100 }).toFile(output);
+      crestManifest[original] = `/team-logos/fixture-thumbs-v2/${name}`;
+    }
+  }
+  fs.writeFileSync(path.join(root, 'src/lib/fixture-crest-thumbnails.json'), JSON.stringify(crestManifest, null, 2) + '\n');
   console.log(JSON.stringify({ portraits: Object.keys(manifest).length, originalBytes, thumbnailBytes }));
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { unchangedPublicRows } from "@/lib/unchanged-public-rows";
 import Image from "next/image";
 import Link from "next/link";
 import TipsHubIntro, { TipsResearchLink } from "@/components/TipsHubIntro";
@@ -97,10 +98,10 @@ export default function TennisTips({
       const json = await res.json();
       if (!res.ok) throw new Error(json?.error || "Failed to load tennis record");
 
-      setPendingBets((json.pending ?? []) as Bet[]);
-      setRecentBets((json.recent ?? []) as Bet[]);
-      setStats((json.stats ?? []) as CategoryStats[]);
-      setProgressionRows((json.progression ?? []) as CategoryProgressionRow[]);
+      setPendingBets(current => unchangedPublicRows(current, (json.pending ?? []) as Bet[]));
+      setRecentBets(current => unchangedPublicRows(current, (json.recent ?? []) as Bet[]));
+      setStats(current => unchangedPublicRows(current, (json.stats ?? []) as CategoryStats[]));
+      setProgressionRows(current => unchangedPublicRows(current, (json.progression ?? []) as CategoryProgressionRow[]));
     } catch (error) {
       console.error("Error fetching tennis record:", error);
     } finally {

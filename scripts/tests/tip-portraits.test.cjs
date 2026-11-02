@@ -111,6 +111,23 @@ test('ambiguous surnames, missing clubs, coaches and wrong team payloads do not 
   assert.equal(squad.some(p=>coaches.some(c=>c.id===p.id)),false);
 });
 
+test('small portraits resolve the same verified player before redirecting to the shared image cache',async()=>{
+  const h=harness(),{GET}=h.load(path.join(root,'src/app/api/tip-portrait/[id]/route.ts'));
+  for(const width of ['64','96','256']) {
+    const response=await GET(new Request(`https://example.test/api/tip-portrait/123?v=123abc&thumb=${width}`),{params:Promise.resolve({id:'123'})});
+    const location=new URL(response.headers.get('location'),'https://example.test');
+    assert.equal(location.pathname,'/_next/image');
+    assert.equal(location.searchParams.get('url'),'https://images.fotmob.com/image_resources/playerimages/1186444.png');
+    assert.equal(location.searchParams.get('w'),width);
+    assert.equal(location.searchParams.get('q'),'75');
+  }
+  for(const width of ['100000','https://attacker.test','0']) {
+    const response=await GET(new Request(`https://example.test/api/tip-portrait/123?thumb=${encodeURIComponent(width)}`),{params:Promise.resolve({id:'123'})});
+    assert.equal(response.headers.get('location'),'https://images.fotmob.com/image_resources/playerimages/1186444.png');
+  }
+  assert.deepEqual(h.counts(),{fetches:2,queries:1});
+});
+
 test('source outage, unknown tip and malformed IDs fail safely without arbitrary requests',async()=>{
   for(const config of [{fail:true},{empty:true}]){
     const h=harness(config),{GET}=h.load(path.join(root,'src/app/api/tip-portrait/[id]/route.ts'));

@@ -4,6 +4,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const ts = require('typescript');
+const scope={exports:{}};
+vm.runInNewContext(ts.transpileModule(fs.readFileSync('src/lib/unchanged-public-rows.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,scope);
+const {unchangedPublicRows}=scope.exports;
 const files = ['src/app/HomepageClient.tsx', 'src/app/player-props/PlayerPropsClient.tsx', 'src/app/tennis-tips/TennisTipsClient.tsx'];
 
 // Execute the actual component refresh callback with deferred network responses.
@@ -22,9 +25,9 @@ function harness(file, initialLoading = false) {
   const requests = [];
   const context = {
     refreshInFlight:{current:false}, lastRefreshStarted:{current:0}, Date:{now:()=>now},
-    console:{error:()=>{}},
+    console:{error:()=>{}}, unchangedPublicRows,
     fetch: (url) => new Promise((resolve,reject)=>requests.push({url,resolve,reject})),
-    setLoading:v=>state.loading=v, setPendingBets:v=>state.pending=v, setRecentBets:v=>state.recent=v,
+    setLoading:v=>state.loading=v, setPendingBets:v=>state.pending=typeof v==='function'?v(state.pending):v, setRecentBets:v=>state.recent=typeof v==='function'?v(state.recent):v,
     setStats:()=>{}, setProgressionRows:()=>{}, calculateCombinedStats:()=>{}, setRecordStatus:()=>{},
     setLast7Error:()=>{}, setLast7DaysProfit:()=>{}, setLast7DaysCount:()=>{},
   };
@@ -60,3 +63,18 @@ for (const file of files) {
     assert.equal(h.state.loading,false);
   });
 }
+
+test('identical refreshed records retain their current React reference',()=>{
+  const rows=[{id:1,odds:2,status:'pending',artwork:[{src:'/api/tip-portrait/1?v=abc'}]}];
+  assert.equal(unchangedPublicRows(rows,structuredClone(rows)),rows);
+  const empty=[];assert.equal(unchangedPublicRows(empty,[]),empty);
+});
+test('settlements, identity edits, price changes and added/deleted rows always refresh',()=>{
+  const rows=[{id:1,odds:2,status:'pending',artwork:[{src:'/api/tip-portrait/1?v=abc'}]}];
+  for(const changed of [
+    [{...rows[0],status:'lost',profit_loss:-1}],
+    [{...rows[0],odds:2.5}],
+    [{...rows[0],artwork:[{src:'/api/tip-portrait/1?v=def'}]}],
+    [],[...rows,{id:2}],
+  ]) assert.equal(unchangedPublicRows(rows,changed),changed);
+});
