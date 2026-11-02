@@ -27,7 +27,11 @@ from typing import Dict, Iterable, List
 from zoneinfo import ZoneInfo
 
 import requests
-from goalscorer_penalty_utils import norm_text as normalized_player_name
+from goalscorer_penalty_utils import (
+    KNOWN_GIVEN_NAME_EQUIVALENTS,
+    KNOWN_PLAYER_NAME_EQUIVALENTS,
+    norm_text as normalized_player_name,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -223,6 +227,21 @@ PENALTY_PLAYER_IDENTITIES = {
     "lautaro martinez": "690230",
 }
 
+# Club-scoped because the same display name can identify different players.
+# /api/data/playerData?id=1021382 verified Chelsea (8455), DOB 2001-09-26
+# on 2026-11-02. Never match this identity to another club's Joao Pedro.
+PENALTY_TEAM_PLAYER_IDENTITIES = {("8455", "joao pedro"): "1021382"}
+
+
+def _explicit_player_alias(left, right):
+    """Only curated aliases, never approximate surnames or arbitrary substrings."""
+    left, right = _event_name(left), _event_name(right)
+    if frozenset((left, right)) in KNOWN_PLAYER_NAME_EQUIVALENTS:
+        return True
+    a, b = left.split(), right.split()
+    return bool(len(a) >= 2 and len(b) >= 2 and a[1:] == b[1:]
+                and frozenset((a[0], b[0])) in KNOWN_GIVEN_NAME_EQUIVALENTS)
+
 
 @lru_cache(maxsize=1)
 def _editorial_state():
@@ -326,12 +345,28 @@ def _on_pitch_at(team_lineup: dict, player_name: str, minute: int, added_time: i
             return None, dict(proof, reason="penalty_beyond_observed_timeline")
     if not isinstance(starters, list) or len(starters) != 11 or minute <= 0:
         return None, dict(proof, reason="missing_complete_starting_lineup_or_minute")
-    known_id = PENALTY_PLAYER_IDENTITIES.get(_event_name(player_name))
+    scoped_id = PENALTY_TEAM_PLAYER_IDENTITIES.get((str(team_lineup.get("id")), _event_name(player_name)))
+    known_id = scoped_id or PENALTY_PLAYER_IDENTITIES.get(_event_name(player_name))
+    if scoped_id:
+        players = [p for b in ("starters", "subs", "unavailable") for p in team_lineup.get(b, []) or []
+                   if isinstance(p, dict)]
+        named = [p for p in players if _event_name(p.get("name")) == _event_name(player_name)
+                 or _explicit_player_alias(p.get("name"), player_name)]
+        if any(str(p.get("id")) != scoped_id for p in named):
+            return None, dict(proof, reason="registered_player_identity_conflict")
+        if not any(str(p.get("id")) == scoped_id for p in players):
+            if team_lineup.get("_confirmed_complete_squad"):
+                return False, dict(proof, reason="absent_from_matchday_squad", registered_player_id=scoped_id,
+                                   squad_player_ids=[str(p["id"]) for b in ("starters", "subs") for p in team_lineup[b]])
+            return None, dict(proof, reason="missing_or_ambiguous_player")
     found = [(bucket, player) for bucket in ("starters", "subs", "unavailable") for player in team_lineup.get(bucket, []) or []
              if isinstance(player, dict) and known_id and str(player.get("id")) == known_id]
     if not found:
         found = [(bucket, player) for bucket in ("starters", "subs", "unavailable") for player in team_lineup.get(bucket, []) or []
              if isinstance(player, dict) and _event_name(player.get("name")) == _event_name(player_name)]
+    if not found:
+        found = [(bucket, player) for bucket in ("starters", "subs", "unavailable") for player in team_lineup.get(bucket, []) or []
+                 if isinstance(player, dict) and _explicit_player_alias(player.get("name"), player_name)]
     if not found:
         target = _event_name(player_name).split()
         found = [(bucket, player) for bucket in ("starters", "subs", "unavailable") for player in team_lineup.get(bucket, []) or []
