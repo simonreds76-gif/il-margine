@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-02T00:46:19.113406+00:00",
+  "generated_at": "2026-11-02T01:00:14.314389+00:00",
   "league": "serie-a",
   "row_count": 10,
   "rows": [
@@ -22,17 +22,17 @@
       "primary_pre_match": "Lucas Da Cunha",
       "secondary_pre_match": "Nico Paz",
       "tertiary_pre_match": "Tasos Douvikas",
-      "primary_lineup_status": "confirmed_starter",
-      "secondary_lineup_status": "confirmed_starter",
-      "tertiary_lineup_status": "confirmed_starter",
-      "active_taker_pre_match": "Lucas Da Cunha",
-      "active_slot_pre_match": "primary",
-      "team_lineup_status": "unknown",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
       "review_type": "primary_held",
       "review_priority": "low",
-      "editorial_note": "Lucas Da Cunha took 1 penalty attempt and scored for Como vs Venezia. Primary pre-match: Lucas Da Cunha (confirmed_starter). Secondary pre-match: Nico Paz (confirmed_starter). Pre-match active slot was primary -> Lucas Da Cunha. No hierarchy change implied from this event.",
-      "context_generated_at": "2026-11-01T21:10:19Z",
-      "context_source_path": "data/goalscorer/penalty-duty-context.json",
+      "editorial_note": "Lucas Da Cunha took 1 penalty attempt and scored for Como vs Venezia. Primary pre-match: Lucas Da Cunha (unknown). Secondary pre-match: Nico Paz (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/serie-a-penalty-takers.json",
       "actual_taker_match_status": "Yes - started, off 74'",
       "primary_on_pitch_at_penalty": "Yes - started, off 74'",
       "secondary_on_pitch_at_penalty": "Yes - started, off 73'",
@@ -44,7 +44,7 @@
           "source_event_id": "2991435545",
           "match_id": "5749733",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749733",
-          "observed_at": "2026-11-01T21:22:03+00:00",
+          "observed_at": "2026-11-02T01:00:18+00:00",
           "event_date": "2026-11-01",
           "season": "2026/27",
           "team": "Como",
@@ -748,7 +748,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261025"
+      "20261101"
     ],
     "matches_checked": 1
   }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-02T00:46:19.113406+00:00",
+  "generated_at": "2026-11-02T01:00:14.314389+00:00",
   "league": "ligue-1",
   "row_count": 3,
   "rows": [
@@ -111,7 +111,7 @@
           "source_event_id": "2990038851",
           "match_id": "5802978",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802978",
-          "observed_at": "2026-11-01T15:27:17+00:00",
+          "observed_at": "2026-11-02T01:00:18+00:00",
           "event_date": "2026-10-30",
           "season": "2026/27",
           "team": "Nice",
@@ -147,7 +147,7 @@
           "source_event_id": "2990050685",
           "match_id": "5802978",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802978",
-          "observed_at": "2026-11-01T15:27:17+00:00",
+          "observed_at": "2026-11-02T01:00:18+00:00",
           "event_date": "2026-10-30",
           "season": "2026/27",
           "team": "Nice",
@@ -210,7 +210,7 @@
       "context_generated_at": "2026-10-30T16:43:14Z",
       "context_source_path": "data/goalscorer/ligue-1/penalty-duty-context.json",
       "actual_taker_match_status": "Yes - started, off 68'",
-      "primary_on_pitch_at_penalty": "No - unavailable in match squad",
+      "primary_on_pitch_at_penalty": "No - absent from matchday squad",
       "secondary_on_pitch_at_penalty": "No - bench",
       "tertiary_on_pitch_at_penalty": "No - bench, on 68'",
       "actual_taker_on_pitch_at_penalty": "Yes - started, off 68'",
@@ -220,7 +220,7 @@
           "source_event_id": "2990080309",
           "match_id": "5802978",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802978",
-          "observed_at": "2026-11-01T15:27:17+00:00",
+          "observed_at": "2026-11-02T01:00:18+00:00",
           "event_date": "2026-10-30",
           "season": "2026/27",
           "team": "Rennes",
@@ -232,11 +232,30 @@
             "minute": 58,
             "added_time": 0,
             "method": "completed_lineup_timeline",
-            "player_id": 1280225,
-            "bucket": "unavailable",
-            "substitutions": [],
-            "events": [],
-            "reason": "not_on_pitch"
+            "reason": "absent_from_matchday_squad",
+            "registered_player_id": null,
+            "squad_player_ids": [
+              "625422",
+              "1581722",
+              "1186444",
+              "1079554",
+              "402419",
+              "765466",
+              "562719",
+              "317062",
+              "1553514",
+              "813055",
+              "972120",
+              "924446",
+              "770321",
+              "1553515",
+              "1103837",
+              "1391052",
+              "1841191",
+              "1692872",
+              "1233931",
+              "693171"
+            ]
           },
           "minute": 58,
           "penalty_kind": "in_match",
@@ -266,7 +285,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261031"
+      "20261030"
     ],
     "matches_checked": 1
   }
