@@ -20,13 +20,13 @@
     }
   },
   "capture_errors": [],
-  "capture_mode": "close",
+  "capture_mode": "publication",
   "direct_source": {
     "bookmaker": "Grosvenor",
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 75,
+      "current_quotes": 74,
       "mapped_quotes": 0,
       "paper_selections": 0,
       "price_or_status_changes": 0,
@@ -39,18 +39,18 @@
   },
   "discovery_retries": 0,
   "event_last_checked": {
-    "71945366": "2026-11-01T20:49:45Z",
-    "71945382": "2026-11-01T20:49:45Z",
-    "72036260": "2026-11-01T20:49:45Z",
-    "72221368": "2026-11-01T20:49:45Z",
-    "72478670": "2026-11-01T20:49:45Z"
+    "71945366": "2026-11-02T01:01:56Z",
+    "71945382": "2026-11-02T01:01:56Z",
+    "72036260": "2026-11-02T01:01:56Z",
+    "72221368": "2026-11-02T01:01:56Z",
+    "72478670": "2026-11-02T01:01:56Z"
   },
   "events_deferred_by_budget": 0,
   "events_selected": 5,
   "events_supported": 5,
   "events_with_lines": 5,
-  "generated_at": "2026-11-01T20:49:45Z",
-  "last_publication_at": "2026-11-01T15:16:12Z",
+  "generated_at": "2026-11-02T01:01:56Z",
+  "last_publication_at": "2026-11-02T01:01:56Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 0,
@@ -109,18 +109,18 @@
     "errors": [],
     "excluded": {
       "conflicting_quotes": 0,
-      "fixture_not_eligible": 414,
+      "fixture_not_eligible": 402,
       "stale_or_missing_market_poll": 9,
-      "unmatched_or_unsupported_fixture": 347
+      "unmatched_or_unsupported_fixture": 326
     },
     "market_count": 1,
     "quote_count": 11,
-    "received_at": "2026-11-01T20:49:51.656848+00:00",
+    "received_at": "2026-11-02T01:02:02.402146+00:00",
     "requests": 1,
     "source": "moviodds_bet365",
     "status": "OK"
   },
-  "publication_recovery": false,
+  "publication_recovery": true,
   "request_budget": 4,
   "requests_used": 2,
   "rows_added": 34,

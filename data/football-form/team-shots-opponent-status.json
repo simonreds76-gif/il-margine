@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-01T20:50:02Z",
+  "generated_at": "2026-11-02T01:02:13Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -21,7 +21,7 @@
   "latest_scan": {
     "scored_rows": 4,
     "scored_fixtures": 1,
-    "explanation": "2 fresh paired contracts; 4 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: stale_price=74."
+    "explanation": "2 fresh paired contracts; 4 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: stale_price=105."
   },
   "settled_this_run": 0,
   "result_source": {
@@ -103,5 +103,5 @@
   },
   "review_policy": "Review after 150 settled fixtures and at least 8 weeks; require positive ROI, at least 70% true closing coverage, positive mean CLV and calibration review. Manual promotion only.",
   "review_status": "COLLECTING_FIXED_POLICY",
-  "age_days": 49
+  "age_days": 50
 }
