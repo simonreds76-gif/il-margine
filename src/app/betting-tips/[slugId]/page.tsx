@@ -215,9 +215,9 @@ export default async function BettingPreviewPage({ params }: PageProps) {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(16,185,129,0.16),transparent_38%),radial-gradient(circle_at_88%_28%,rgba(245,158,11,0.09),transparent_28%)]" />
           <div className="relative mx-auto max-w-5xl px-4 py-10 sm:px-6 md:py-16 lg:px-8">
             <nav className="mb-8 flex flex-wrap items-center gap-2 text-sm text-slate-500" aria-label="Breadcrumb">
-              <Link href="/" className="transition-colors hover:text-emerald-300">Home</Link>
+              <Link prefetch={false} href="/" className="transition-colors hover:text-emerald-300">Home</Link>
               <span>/</span>
-              <Link href={hub.href} className="transition-colors hover:text-emerald-300">{hub.label}</Link>
+              <Link prefetch={false} href={hub.href} className="transition-colors hover:text-emerald-300">{hub.label}</Link>
               <span>/</span>
               <span className="text-slate-300">Match preview</span>
             </nav>
@@ -267,7 +267,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
               </Link>
             </nav>}
             <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-500">
-              <Link href="/the-edge" className="text-emerald-300 hover:underline">By Il Margine · Our methodology</Link>
+              <Link prefetch={false} href="/the-edge" className="text-emerald-300 hover:underline">By Il Margine · Our methodology</Link>
               <span>
                 Published <time dateTime={fixture.datePublished} className="font-mono text-slate-300">{formatPublishedDate(fixture.datePublished)}</time>
               </span>
@@ -366,9 +366,9 @@ export default async function BettingPreviewPage({ params }: PageProps) {
                 Judge the approach over the full record, including losses and the number of settled bets.
               </p>
               <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3 text-sm font-semibold text-emerald-300">
-                <Link href="/the-edge" className="hover:underline">Our betting methodology</Link>
-                <Link href="/resources/how-to-read-a-tipster-track-record" className="hover:underline">How to assess a tipster record</Link>
-                <Link href="/track-record" className="hover:underline">All tracked results</Link>
+                <Link prefetch={false} href="/the-edge" className="hover:underline">Our betting methodology</Link>
+                <Link prefetch={false} href="/resources/how-to-read-a-tipster-track-record" className="hover:underline">How to assess a tipster record</Link>
+                <Link prefetch={false} href="/track-record" className="hover:underline">All tracked results</Link>
               </div>
             </section>
 
@@ -394,13 +394,13 @@ export default async function BettingPreviewPage({ params }: PageProps) {
               <p className="mt-3 text-sm leading-6 text-slate-300">
                 Every selection remains in the public ledger at its original posted odds and stake. Results are added after settlement.
               </p>
-              <Link href="/track-record" className="mt-4 inline-flex text-sm font-semibold text-emerald-300 hover:text-emerald-200">
+              <Link prefetch={false} href="/track-record" className="mt-4 inline-flex text-sm font-semibold text-emerald-300 hover:text-emerald-200">
                 View the full record {"->"}
               </Link>
             </div>
             <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">More analysis</p>
-              <Link href={hub.href} className="mt-3 block text-lg font-bold text-white hover:text-emerald-300">
+              <Link prefetch={false} href={hub.href} className="mt-3 block text-lg font-bold text-white hover:text-emerald-300">
                 Browse {hub.label}
               </Link>
               <p className="mt-2 text-sm leading-6 text-slate-500">
