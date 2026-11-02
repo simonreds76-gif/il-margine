@@ -1,29 +1,29 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-01T21:10:31Z",
+  "generated_at": "2026-11-02T00:46:56Z",
   "league": "epl",
-  "row_count": 52,
+  "row_count": 51,
   "stats": {
     "historical_rows": 32984,
     "odds_rows": 53,
-    "matched_rows": 52,
-    "missing_player_history": 4,
+    "matched_rows": 51,
+    "missing_player_history": 5,
     "missing_team_mapping": 0,
     "fallback_rows": 0,
     "qualified_rows": 6,
-    "roster_resolved_rows": 1,
+    "roster_resolved_rows": 0,
     "high_confidence_rows": 0,
     "medium_confidence_rows": 35,
-    "low_confidence_rows": 17,
+    "low_confidence_rows": 16,
     "public_high_signals": 0,
     "public_caveat_signals": 5,
     "shadow_track_rows": 6,
     "penalty_transfer_rows": 0,
     "position_upgrade_rows": 0,
     "role_adjusted_rows": 0,
-    "fixtures_with_confirmed_lineups": 1,
+    "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 2,
-    "fixtures_clean": 1,
+    "fixtures_clean": 0,
     "fixtures_degraded": 2,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
@@ -31,224 +31,10 @@
     "expected_starter_rows": 37,
     "expected_bench_rows": 0,
     "expected_out_rows": 0,
-    "not_in_squad_rows": 15,
-    "avg_ev": -0.49859792307692313
+    "not_in_squad_rows": 14,
+    "avg_ev": -0.488840862745098
   },
   "fixtures": [
-    {
-      "match_date": "2026-11-01",
-      "home_team": "Liverpool",
-      "away_team": "Arsenal",
-      "league": "epl",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Alisson Becker",
-          "status": "plausible",
-          "known_team_keys": [
-            "liverpool"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ronald Araujo",
-          "status": "plausible",
-          "known_team_keys": [
-            "liverpool"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jérémy Jacquet",
-          "status": "plausible",
-          "known_team_keys": [
-            "liverpool"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Virgil van Dijk",
-          "status": "plausible",
-          "known_team_keys": [
-            "liverpool"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Miloš Kerkez",
-          "status": "plausible",
-          "known_team_keys": [
-            "liverpool"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Alexis Mac Allister",
-          "status": "plausible",
-          "known_team_keys": [
-            "liverpool"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Trey Nyoni",
-          "status": "plausible",
-          "known_team_keys": [
-            "liverpool"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Cody Gakpo",
-          "status": "plausible",
-          "known_team_keys": [
-            "liverpool"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Florian Wirtz",
-          "status": "plausible",
-          "known_team_keys": [
-            "liverpool"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Bradley Barcola",
-          "status": "plausible",
-          "known_team_keys": [
-            "liverpool"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Alexander Isak",
-          "status": "plausible",
-          "known_team_keys": [
-            "liverpool"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "David Raya",
-          "status": "plausible",
-          "known_team_keys": [
-            "arsenal"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jurriën Timber",
-          "status": "plausible",
-          "known_team_keys": [
-            "arsenal"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ezri Konsa",
-          "status": "plausible",
-          "known_team_keys": [
-            "arsenal"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Gabriel",
-          "status": "plausible",
-          "known_team_keys": [
-            "arsenal"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Riccardo Calafiori",
-          "status": "plausible",
-          "known_team_keys": [
-            "arsenal"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Bruno Guimarães",
-          "status": "plausible",
-          "known_team_keys": [
-            "arsenal"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Declan Rice",
-          "status": "plausible",
-          "known_team_keys": [
-            "arsenal"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Noni Madueke",
-          "status": "plausible",
-          "known_team_keys": [
-            "arsenal"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Martin Ødegaard",
-          "status": "plausible",
-          "known_team_keys": [
-            "arsenal"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Christos Tzolis",
-          "status": "plausible",
-          "known_team_keys": [
-            "arsenal"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Kai Havertz",
-          "status": "plausible",
-          "known_team_keys": [
-            "arsenal"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    },
     {
       "match_date": "2026-11-02",
       "home_team": "Newcastle United",
@@ -263,10 +49,8 @@
       "home_player_checks": [
         {
           "name": "Lukás Hornícek",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
+          "status": "untracked",
+          "known_team_keys": [],
           "score": 0.0,
           "flags": []
         },
@@ -290,10 +74,8 @@
         },
         {
           "name": "Daniel Burn",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
+          "status": "untracked",
+          "known_team_keys": [],
           "score": 0.0,
           "flags": []
         },
@@ -335,10 +117,8 @@
         },
         {
           "name": "Joseph Willock",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
+          "status": "untracked",
+          "known_team_keys": [],
           "score": 0.0,
           "flags": []
         },
@@ -364,10 +144,8 @@
       "away_player_checks": [
         {
           "name": "Jordan Pickford",
-          "status": "plausible",
-          "known_team_keys": [
-            "everton"
-          ],
+          "status": "untracked",
+          "known_team_keys": [],
           "score": 0.0,
           "flags": []
         },
@@ -475,10 +253,8 @@
       "home_player_checks": [
         {
           "name": "Lukás Hornícek",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
+          "status": "untracked",
+          "known_team_keys": [],
           "score": 0.0,
           "flags": []
         },
@@ -502,10 +278,8 @@
         },
         {
           "name": "Daniel Burn",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
+          "status": "untracked",
+          "known_team_keys": [],
           "score": 0.0,
           "flags": []
         },
@@ -547,10 +321,8 @@
         },
         {
           "name": "Joseph Willock",
-          "status": "plausible",
-          "known_team_keys": [
-            "newcastle united"
-          ],
+          "status": "untracked",
+          "known_team_keys": [],
           "score": 0.0,
           "flags": []
         },
@@ -576,10 +348,8 @@
       "away_player_checks": [
         {
           "name": "Jordan Pickford",
-          "status": "plausible",
-          "known_team_keys": [
-            "everton"
-          ],
+          "status": "untracked",
+          "known_team_keys": [],
           "score": 0.0,
           "flags": []
         },
@@ -676,8 +446,8 @@
   ],
   "rows": [
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -778,8 +548,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -880,8 +650,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -982,8 +752,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -1084,8 +854,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -1186,8 +956,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -1288,8 +1058,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -1390,8 +1160,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -1492,8 +1262,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -1594,8 +1364,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -1696,8 +1466,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -1798,8 +1568,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -1900,8 +1670,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -2002,8 +1772,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -2104,8 +1874,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -2206,8 +1976,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -2308,8 +2078,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -2410,8 +2180,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -2512,8 +2282,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -2614,8 +2384,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -2716,110 +2486,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
-      "match_date": "2026-11-02",
-      "kickoff": "",
-      "bookmaker": "Grosvenor",
-      "competition": "England - Premier League",
-      "home_team": "Newcastle United",
-      "away_team": "Everton FC",
-      "is_home": 0,
-      "player_id": "7083",
-      "player_name": "Christian Nørgaard",
-      "canonical_player_name": "Christian Nørgaard",
-      "player_team": "Everton",
-      "opponent": "Newcastle United",
-      "position": "S",
-      "position_group": "S",
-      "odds_decimal": 11.5,
-      "implied_prob": 0.086957,
-      "model_version": "goalscorer_v1_incomplete_roster",
-      "calibration_version": "raw",
-      "allocation_status": "estimated_roster",
-      "roster_prior_players": 1,
-      "model_p_atgs": 0.0,
-      "model_fair_odds_atgs": 99.0,
-      "model_lambda": 0.0,
-      "team_expected_npxg": 1.5966,
-      "team_share": 0.0,
-      "non_pen_lambda": 0.0,
-      "base_non_pen_lambda": 0.0,
-      "penalty_lambda": 0.0,
-      "base_model_lambda": 0.0,
-      "role_adjustment_factor": 1.0,
-      "role_adjustment_reason": "",
-      "penalty_dependency_share": 0.0,
-      "penalty_dependent": 0,
-      "penalty_share": 0.0,
-      "baseline_penalty_share": 0.0,
-      "baseline_penalty_sample": 0.0,
-      "baseline_penalty_source": "none",
-      "career_player_penalties": 0.0,
-      "career_team_penalties": 0.0,
-      "career_penalty_share": 0.0,
-      "penalty_evidence_share": 0.0,
-      "penalty_evidence_sample": 0.0,
-      "penalty_evidence_source": "",
-      "penalty_evidence_note": "",
-      "is_penalty_taker": 0,
-      "penalty_role": "none",
-      "penalty_share_prior": 0.0,
-      "penalty_share_prior_weight": 0.0,
-      "penalty_hierarchy_boost_xg": 0.0,
-      "penalty_transfer": 0,
-      "penalty_transfer_from": "",
-      "penalty_transfer_level": "",
-      "lineup_state": "not_in_squad",
-      "lineup_status": "not_in_squad",
-      "lineup_source": "fotmob_expected",
-      "lineup_input": "expected_xi",
-      "lineup_match_name": "",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": "",
-      "minutes_estimate": 0.0,
-      "usual_position": "DMC",
-      "usual_position_score": 2,
-      "usual_position_share_10": 1.0,
-      "usual_position_matches_10": 4,
-      "today_position_group": "",
-      "today_position_score": "",
-      "today_formation": "",
-      "position_change_score": "",
-      "position_upgrade": 0,
-      "expected_minutes": 0.0,
-      "recent_matches_8": 8,
-      "recent_npxg_8": 0.171,
-      "recent_np_goals_8": 0.0,
-      "recent_npxg_per90_8": 0.0841,
-      "finishing_luck_8": -0.171,
-      "last_fixture_avg_xga_3": 1.5473,
-      "next_opponent_xga": 1.9005,
-      "fixture_swing_3": 1.2283,
-      "attack_factor": 1.1401,
-      "opp_factor": 1.25,
-      "ev": -1.0,
-      "edge_pct": -100.0,
-      "method": "model",
-      "resolver_source": "live_roster",
-      "historical_minutes": 5519.0,
-      "signal_confidence": "low",
-      "legacy_public_action": "suppress",
-      "public_action": "no_action",
-      "public_policy_reason": "incomplete_prediction_roster",
-      "recommended_stake_units": 0.0,
-      "recommended_stake_band": "",
-      "recommended_stake_label": "",
-      "shadow_action": "no_action",
-      "confidence_reason": "not_in_squad,incomplete_prediction_roster,fixture_t2",
-      "team_lineup_status": "FotMob Expected XI",
-      "source": "grosvenor_direct",
-      "notes": "event_id=72221368;market=Anytime Goalscorer"
-    },
-    {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -2920,8 +2588,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -3022,8 +2690,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -3124,8 +2792,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -3226,8 +2894,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -3328,8 +2996,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -3430,8 +3098,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -3532,8 +3200,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -3634,8 +3302,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -3736,8 +3404,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:27.596688Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:53.119427Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Grosvenor",
@@ -3838,8 +3506,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -3940,8 +3608,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -4042,8 +3710,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -4144,8 +3812,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -4246,110 +3914,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
-      "match_date": "2026-11-02",
-      "kickoff": "",
-      "bookmaker": "Paddy Power",
-      "competition": "England - Premier League",
-      "home_team": "Newcastle United",
-      "away_team": "Everton FC",
-      "is_home": 1,
-      "player_id": "6681",
-      "player_name": "Harvey Barnes",
-      "canonical_player_name": "Harvey Barnes",
-      "player_team": "Newcastle United",
-      "opponent": "Everton FC",
-      "position": "AML",
-      "position_group": "AML",
-      "odds_decimal": 3.1,
-      "implied_prob": 0.322581,
-      "model_version": "goalscorer_v1_incomplete_roster",
-      "calibration_version": "raw",
-      "allocation_status": "expected_roster",
-      "roster_prior_players": 0,
-      "model_p_atgs": 0.309848,
-      "model_fair_odds_atgs": 3.2274,
-      "model_lambda": 0.3708,
-      "team_expected_npxg": 1.5778,
-      "team_share": 0.235,
-      "non_pen_lambda": 0.3708,
-      "base_non_pen_lambda": 0.3708,
-      "penalty_lambda": 0.0,
-      "base_model_lambda": 0.3708,
-      "role_adjustment_factor": 1.0,
-      "role_adjustment_reason": "",
-      "penalty_dependency_share": 0.0,
-      "penalty_dependent": 0,
-      "penalty_share": 0.0,
-      "baseline_penalty_share": 0.0,
-      "baseline_penalty_sample": 1.91,
-      "baseline_penalty_source": "recent_long",
-      "career_player_penalties": 0.0,
-      "career_team_penalties": 17.0,
-      "career_penalty_share": 0.0,
-      "penalty_evidence_share": 0.0,
-      "penalty_evidence_sample": 0.0,
-      "penalty_evidence_source": "",
-      "penalty_evidence_note": "",
-      "is_penalty_taker": 0,
-      "penalty_role": "none",
-      "penalty_share_prior": 0.0,
-      "penalty_share_prior_weight": 0.0,
-      "penalty_hierarchy_boost_xg": 0.0,
-      "penalty_transfer": 0,
-      "penalty_transfer_from": "",
-      "penalty_transfer_level": "",
-      "lineup_state": "expected_starter",
-      "lineup_status": "expected_starter",
-      "lineup_source": "fotmob_expected",
-      "lineup_input": "expected_xi",
-      "lineup_match_name": "Harvey Barnes",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": "",
-      "minutes_estimate": 78.0,
-      "usual_position": "AML",
-      "usual_position_score": 4,
-      "usual_position_share_10": 0.8889,
-      "usual_position_matches_10": 9,
-      "today_position_group": "AM",
-      "today_position_score": 4,
-      "today_formation": "4-2-3-1",
-      "position_change_score": 0,
-      "position_upgrade": 0,
-      "expected_minutes": 78.0,
-      "recent_matches_8": 8,
-      "recent_npxg_8": 1.8869,
-      "recent_np_goals_8": 2.0,
-      "recent_npxg_per90_8": 0.2399,
-      "finishing_luck_8": 0.1131,
-      "last_fixture_avg_xga_3": 1.8249,
-      "next_opponent_xga": 1.6171,
-      "fixture_swing_3": 0.8861,
-      "attack_factor": 1.0282,
-      "opp_factor": 1.1742,
-      "ev": -0.039472,
-      "edge_pct": -3.947,
-      "method": "model",
-      "resolver_source": "history",
-      "historical_minutes": 5133.0,
-      "signal_confidence": "medium",
-      "legacy_public_action": "monitor",
-      "public_action": "no_action",
-      "public_policy_reason": "incomplete_prediction_roster",
-      "recommended_stake_units": 0.0,
-      "recommended_stake_band": "",
-      "recommended_stake_label": "",
-      "shadow_action": "no_action",
-      "confidence_reason": "history_resolver,expected_xi,incomplete_prediction_roster,fixture_t2",
-      "team_lineup_status": "FotMob Expected XI",
-      "source": "odds_api_io",
-      "notes": "event_id=72221368;market=Anytime Goalscorer"
-    },
-    {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -4450,8 +4016,110 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
+      "match_date": "2026-11-02",
+      "kickoff": "",
+      "bookmaker": "Paddy Power",
+      "competition": "England - Premier League",
+      "home_team": "Newcastle United",
+      "away_team": "Everton FC",
+      "is_home": 1,
+      "player_id": "6681",
+      "player_name": "Harvey Barnes",
+      "canonical_player_name": "Harvey Barnes",
+      "player_team": "Newcastle United",
+      "opponent": "Everton FC",
+      "position": "AML",
+      "position_group": "AML",
+      "odds_decimal": 3.0,
+      "implied_prob": 0.333333,
+      "model_version": "goalscorer_v1_incomplete_roster",
+      "calibration_version": "raw",
+      "allocation_status": "expected_roster",
+      "roster_prior_players": 0,
+      "model_p_atgs": 0.309848,
+      "model_fair_odds_atgs": 3.2274,
+      "model_lambda": 0.3708,
+      "team_expected_npxg": 1.5778,
+      "team_share": 0.235,
+      "non_pen_lambda": 0.3708,
+      "base_non_pen_lambda": 0.3708,
+      "penalty_lambda": 0.0,
+      "base_model_lambda": 0.3708,
+      "role_adjustment_factor": 1.0,
+      "role_adjustment_reason": "",
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 1.91,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 17.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "expected_starter",
+      "lineup_status": "expected_starter",
+      "lineup_source": "fotmob_expected",
+      "lineup_input": "expected_xi",
+      "lineup_match_name": "Harvey Barnes",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 0.0,
+      "fixture_corruption_flags": "",
+      "minutes_estimate": 78.0,
+      "usual_position": "AML",
+      "usual_position_score": 4,
+      "usual_position_share_10": 0.8889,
+      "usual_position_matches_10": 9,
+      "today_position_group": "AM",
+      "today_position_score": 4,
+      "today_formation": "4-2-3-1",
+      "position_change_score": 0,
+      "position_upgrade": 0,
+      "expected_minutes": 78.0,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 1.8869,
+      "recent_np_goals_8": 2.0,
+      "recent_npxg_per90_8": 0.2399,
+      "finishing_luck_8": 0.1131,
+      "last_fixture_avg_xga_3": 1.8249,
+      "next_opponent_xga": 1.6171,
+      "fixture_swing_3": 0.8861,
+      "attack_factor": 1.0282,
+      "opp_factor": 1.1742,
+      "ev": -0.070457,
+      "edge_pct": -7.046,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 5133.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "incomplete_prediction_roster",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,expected_xi,incomplete_prediction_roster,fixture_t2",
+      "team_lineup_status": "FotMob Expected XI",
+      "source": "odds_api_io",
+      "notes": "event_id=72221368;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -4552,8 +4220,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -4654,8 +4322,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -4756,8 +4424,110 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
+      "match_date": "2026-11-02",
+      "kickoff": "",
+      "bookmaker": "Paddy Power",
+      "competition": "England - Premier League",
+      "home_team": "Newcastle United",
+      "away_team": "Everton FC",
+      "is_home": 0,
+      "player_id": "12757",
+      "player_name": "Harrison Armstrong",
+      "canonical_player_name": "Harrison Armstrong",
+      "player_team": "Everton",
+      "opponent": "Newcastle United",
+      "position": "DMC",
+      "position_group": "DMC",
+      "odds_decimal": 9.5,
+      "implied_prob": 0.105263,
+      "model_version": "goalscorer_v1_incomplete_roster",
+      "calibration_version": "raw",
+      "allocation_status": "estimated_roster",
+      "roster_prior_players": 1,
+      "model_p_atgs": 0.080531,
+      "model_fair_odds_atgs": 12.4175,
+      "model_lambda": 0.084,
+      "team_expected_npxg": 1.5966,
+      "team_share": 0.0526,
+      "non_pen_lambda": 0.084,
+      "base_non_pen_lambda": 0.084,
+      "penalty_lambda": 0.0,
+      "base_model_lambda": 0.084,
+      "role_adjustment_factor": 1.0,
+      "role_adjustment_reason": "",
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 0.45,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 1.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "expected_starter",
+      "lineup_status": "expected_starter",
+      "lineup_source": "fotmob_expected",
+      "lineup_input": "expected_xi",
+      "lineup_match_name": "Harrison Armstrong",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 0.0,
+      "fixture_corruption_flags": "",
+      "minutes_estimate": 78.0,
+      "usual_position": "DMC",
+      "usual_position_score": 2,
+      "usual_position_share_10": 0.875,
+      "usual_position_matches_10": 8,
+      "today_position_group": "DMC",
+      "today_position_score": 2,
+      "today_formation": "4-2-3-1",
+      "position_change_score": 0,
+      "position_upgrade": 0,
+      "expected_minutes": 78.0,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 0.6795,
+      "recent_np_goals_8": 0.0,
+      "recent_npxg_per90_8": 0.0863,
+      "finishing_luck_8": -0.6795,
+      "last_fixture_avg_xga_3": 1.4273,
+      "next_opponent_xga": 1.9005,
+      "fixture_swing_3": 1.3315,
+      "attack_factor": 1.1401,
+      "opp_factor": 1.25,
+      "ev": -0.234953,
+      "edge_pct": -23.495,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 1229.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "incomplete_prediction_roster",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,expected_xi,incomplete_prediction_roster,fixture_t2",
+      "team_lineup_status": "FotMob Expected XI",
+      "source": "odds_api_io",
+      "notes": "event_id=72221368;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -4858,110 +4628,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
-      "match_date": "2026-11-02",
-      "kickoff": "",
-      "bookmaker": "Paddy Power",
-      "competition": "England - Premier League",
-      "home_team": "Newcastle United",
-      "away_team": "Everton FC",
-      "is_home": 0,
-      "player_id": "12757",
-      "player_name": "Harrison Armstrong",
-      "canonical_player_name": "Harrison Armstrong",
-      "player_team": "Everton",
-      "opponent": "Newcastle United",
-      "position": "DMC",
-      "position_group": "DMC",
-      "odds_decimal": 9.0,
-      "implied_prob": 0.111111,
-      "model_version": "goalscorer_v1_incomplete_roster",
-      "calibration_version": "raw",
-      "allocation_status": "estimated_roster",
-      "roster_prior_players": 1,
-      "model_p_atgs": 0.080531,
-      "model_fair_odds_atgs": 12.4175,
-      "model_lambda": 0.084,
-      "team_expected_npxg": 1.5966,
-      "team_share": 0.0526,
-      "non_pen_lambda": 0.084,
-      "base_non_pen_lambda": 0.084,
-      "penalty_lambda": 0.0,
-      "base_model_lambda": 0.084,
-      "role_adjustment_factor": 1.0,
-      "role_adjustment_reason": "",
-      "penalty_dependency_share": 0.0,
-      "penalty_dependent": 0,
-      "penalty_share": 0.0,
-      "baseline_penalty_share": 0.0,
-      "baseline_penalty_sample": 0.45,
-      "baseline_penalty_source": "recent_long",
-      "career_player_penalties": 0.0,
-      "career_team_penalties": 1.0,
-      "career_penalty_share": 0.0,
-      "penalty_evidence_share": 0.0,
-      "penalty_evidence_sample": 0.0,
-      "penalty_evidence_source": "",
-      "penalty_evidence_note": "",
-      "is_penalty_taker": 0,
-      "penalty_role": "none",
-      "penalty_share_prior": 0.0,
-      "penalty_share_prior_weight": 0.0,
-      "penalty_hierarchy_boost_xg": 0.0,
-      "penalty_transfer": 0,
-      "penalty_transfer_from": "",
-      "penalty_transfer_level": "",
-      "lineup_state": "expected_starter",
-      "lineup_status": "expected_starter",
-      "lineup_source": "fotmob_expected",
-      "lineup_input": "expected_xi",
-      "lineup_match_name": "Harrison Armstrong",
-      "trust_tier": "T2",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": "",
-      "minutes_estimate": 78.0,
-      "usual_position": "DMC",
-      "usual_position_score": 2,
-      "usual_position_share_10": 0.875,
-      "usual_position_matches_10": 8,
-      "today_position_group": "DMC",
-      "today_position_score": 2,
-      "today_formation": "4-2-3-1",
-      "position_change_score": 0,
-      "position_upgrade": 0,
-      "expected_minutes": 78.0,
-      "recent_matches_8": 8,
-      "recent_npxg_8": 0.6795,
-      "recent_np_goals_8": 0.0,
-      "recent_npxg_per90_8": 0.0863,
-      "finishing_luck_8": -0.6795,
-      "last_fixture_avg_xga_3": 1.4273,
-      "next_opponent_xga": 1.9005,
-      "fixture_swing_3": 1.3315,
-      "attack_factor": 1.1401,
-      "opp_factor": 1.25,
-      "ev": -0.275219,
-      "edge_pct": -27.522,
-      "method": "model",
-      "resolver_source": "history",
-      "historical_minutes": 1229.0,
-      "signal_confidence": "medium",
-      "legacy_public_action": "monitor",
-      "public_action": "no_action",
-      "public_policy_reason": "incomplete_prediction_roster",
-      "recommended_stake_units": 0.0,
-      "recommended_stake_band": "",
-      "recommended_stake_label": "",
-      "shadow_action": "no_action",
-      "confidence_reason": "history_resolver,expected_xi,incomplete_prediction_roster,fixture_t2",
-      "team_lineup_status": "FotMob Expected XI",
-      "source": "odds_api_io",
-      "notes": "event_id=72221368;market=Anytime Goalscorer"
-    },
-    {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -5062,8 +4730,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -5164,8 +4832,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -5266,8 +4934,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -5368,8 +5036,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -5470,8 +5138,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -5486,8 +5154,8 @@
       "opponent": "Newcastle United",
       "position": "DR",
       "position_group": "DR",
-      "odds_decimal": 9.0,
-      "implied_prob": 0.111111,
+      "odds_decimal": 8.5,
+      "implied_prob": 0.117647,
       "model_version": "goalscorer_v1_incomplete_roster",
       "calibration_version": "raw",
       "allocation_status": "estimated_roster",
@@ -5553,8 +5221,8 @@
       "fixture_swing_3": 1.3593,
       "attack_factor": 1.1401,
       "opp_factor": 1.25,
-      "ev": -0.764689,
-      "edge_pct": -76.469,
+      "ev": -0.777762,
+      "edge_pct": -77.776,
       "method": "model",
       "resolver_source": "history",
       "historical_minutes": 1087.0,
@@ -5572,8 +5240,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -5674,8 +5342,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -5776,8 +5444,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
@@ -5878,8 +5546,8 @@
       "notes": "event_id=72221368;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-11-01T21:10:31Z",
-      "captured_at": "2026-11-01T21:10:29Z",
+      "compared_at": "2026-11-02T00:46:56Z",
+      "captured_at": "2026-11-02T00:46:55Z",
       "match_date": "2026-11-02",
       "kickoff": "",
       "bookmaker": "Paddy Power",
