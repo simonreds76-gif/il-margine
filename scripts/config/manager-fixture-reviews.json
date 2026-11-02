@@ -132,5 +132,62 @@
     ],
     "source": "https://www.fotmob.com/match/5749706",
     "reviewedAt": "2026-10-23"
+  },
+  "fotmob:5868120": {
+    "providerMatchId": "5868120",
+    "date": "2026-10-30",
+    "league": "la-liga",
+    "home": "Villarreal",
+    "away": "Espanyol",
+    "hg": 0,
+    "ag": 1,
+    "coaches": [
+      {
+        "id": "188060",
+        "name": "Inigo Pérez"
+      },
+      {
+        "id": "1381560",
+        "name": "Eder Sarabia"
+      }
+    ],
+    "source": "https://www.fotmob.com/matches/espanyol-vs-villarreal/2wt7o0#5868120",
+    "checkedAt": "2026-11-02",
+    "observedCoaches": [
+      {
+        "id": "188060",
+        "name": "Inigo Pérez"
+      },
+      {
+        "id": "38578",
+        "name": "Sergio García"
+      }
+    ],
+    "touchlineStandIns": [
+      {
+        "side": "away",
+        "id": "38578",
+        "name": "Sergio García",
+        "reason": "Appointed head coach Eder Sarabia was serving a two-match ban."
+      }
+    ],
+    "reason": "Responsible head coach, not the touchline occupant: Espanyol confirms Sarabia already held the appointment; Garcia stood in during suspension. Both clubs identify the exact completed fixture; Villarreal confirms Inigo Perez. The earlier Garcia interim appointment is not extended over Sarabia’s tenure.",
+    "evidence": [
+      "https://villarrealcf.es/es/inigo-perez-no-hemos-estado-lucidos/",
+      "https://www.rcdespanyol.com/en/new/match-report-rcd-espanyol-bounce-back-with-win-over-villarreal-cf/20939",
+      "https://www.rcdespanyol.com/en/new/Eder%20Sarabia%20appointed%20as%20RCD%20Espanyol%20coach/20944",
+      "https://www.rcdespanyol.com/en/new/primera-sessio-per-a-sergio-garcia/20941",
+      "https://www.fotmob.com/players/1381560/eder-sarabia"
+    ],
+    "reviewedAt": "2026-11-02",
+    "evidenceHashes": {
+      "villarreal": "bae1b6dada9065727753ef7a4255e2d4dbc3dbbfd928c1b3b0ee0037e9e65869",
+      "espanyol": "802956789d131a85289323f9cc365c2e475848e88ce9ddfdec0bd8d0bbf9235b"
+    },
+    "roleBoundaryNotes": {
+      "departure": "Manolo Gonzalez departed 2026-10-27.",
+      "interim": "Sergio Garcia interim announced 2026-10-28 13:14:42, before Sarabia announcement at 18:30:12. Exact contractual clock-time boundary not established.",
+      "appointed": "Sarabia appointed 2026-10-28; match-specific report confirms responsible head coach on 2026-10-30."
+    }
   }
 }

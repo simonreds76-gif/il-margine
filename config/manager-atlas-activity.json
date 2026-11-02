@@ -1,6 +1,6 @@
 {
-  "asOf": "2026-10-05",
-  "reviewBy": "2026-11-02",
+  "asOf": "2026-11-02",
+  "reviewBy": "2026-12-07",
   "scope": "Verified coaching roles from checked 2026/27 rosters and subsequent announcements. Coverage is incomplete, especially outside the five leagues. Missing entries are unknown, never automatically retired. All historical records remain searchable.",
   "entries": {
     "mgr-0644": {
@@ -240,13 +240,18 @@
     },
     "mgr-0239": {
       "name": "Giovanni Stroppa",
-      "status": "active",
+      "status": "unknown",
+      "club": "Venezia",
       "evidence": {
-        "url": "https://www.legaseriea.it/serie-a/news/gli-allenatori-della-serie-a-enilive-2026-27",
-        "published": "2026-07-03"
+        "url": "https://www.veneziafc.it/news/giovanni-stroppa-sollevato-dall-incarico-di-allenatore-della-prima-squadra",
+        "sha256": "5888a9057ddb9e28144f604d864759696076fffd9356b6beece13177fc9b374d",
+        "published": "2026-10-13"
       },
-      "checkedAt": "2026-09-27",
-      "reviewBy": "2026-10-05"
+      "checkedAt": "2026-11-02",
+      "reviewBy": "2026-12-07",
+      "roleEvent": "departure",
+      "effectiveDate": "2026-10-13",
+      "note": "Departure from this club verified. No subsequent coaching role verified; this is not a retirement classification."
     },
     "mgr-0420": {
       "name": "Maurizio Sarri",
@@ -481,13 +486,18 @@
     },
     "mgr-0374": {
       "name": "Manolo González",
-      "status": "active",
+      "status": "unknown",
+      "club": "Espanyol",
       "evidence": {
-        "url": "https://news.bet365.es/es-es/article/entrenadores-equipos-laliga-2026-27/2026051908494437201",
-        "published": "2026-07-14"
+        "url": "https://www.rcdespanyol.com/es/noticia/comunicado-oficial/20933",
+        "sha256": "d90d9fb142228052f4c9d1831de4565d0722a97e6f6dda7cff421a9cc49bb446",
+        "published": "2026-10-27"
       },
-      "checkedAt": "2026-09-27",
-      "reviewBy": "2026-10-05"
+      "checkedAt": "2026-11-02",
+      "reviewBy": "2026-12-07",
+      "roleEvent": "departure",
+      "effectiveDate": "2026-10-27",
+      "note": "Departure from this club verified. No subsequent coaching role verified; this is not a retirement classification."
     },
     "mgr-0169": {
       "name": "Edin Terzic",
@@ -801,7 +811,107 @@
       "reviewBy": "2026-11-02",
       "roleEvent": "appointment",
       "effectiveDate": "2026-09-23"
+    },
+    "mgr-0142": {
+      "name": "Davide Nicola",
+      "status": "active",
+      "club": "Venezia",
+      "evidence": {
+        "url": "https://www.veneziafc.it/news/davide-nicola-nominato-allenatore-della-prima-squadra",
+        "sha256": "791ac0cdd4d7449ee80c2310eb1dc0fcf9ca51653654bf4193c3d4dc61db227d",
+        "published": "2026-10-14"
+      },
+      "checkedAt": "2026-11-02",
+      "reviewBy": "2026-12-07",
+      "roleEvent": "appointment",
+      "effectiveDate": "2026-10-15",
+      "note": "Announcement explicitly says contract effective tomorrow. Oct17 and Oct25 archive assignments already use Nicola; Oct12 retains Stroppa."
+    },
+    "mgr-0687": {
+      "name": "Luis Miguel Ramis",
+      "status": "unknown",
+      "club": "Osasuna",
+      "evidence": {
+        "url": "https://www.osasuna.es/en/luis-miguel-ramis-will-no-longer-serve-as-osasuna-head-coach",
+        "sha256": "94ce9a03d30c5d3c01a04712e231143dd6d637969fe76887a5bc4e9dd40bacd1",
+        "published": "2026-10-12"
+      },
+      "checkedAt": "2026-11-02",
+      "reviewBy": "2026-12-07",
+      "roleEvent": "departure",
+      "effectiveDate": "2026-10-12",
+      "note": "Departure from this club verified. No subsequent coaching role verified; this is not a retirement classification."
+    },
+    "mgr-0273": {
+      "name": "Jagoba Arrasate",
+      "status": "active",
+      "club": "Osasuna",
+      "evidence": {
+        "url": "https://www.osasuna.es/jagoba-arrasate-2029",
+        "sha256": "e955a8e6cc625f2c61b62278a490bbe7eaee6e38267a00e3d29f6cf242f3b477",
+        "published": "2026-10-12"
+      },
+      "checkedAt": "2026-11-02",
+      "reviewBy": "2026-12-07",
+      "roleEvent": "appointment",
+      "effectiveDate": "2026-10-12",
+      "note": "Appointment Oct12; first training Oct14, next match Oct18. Do not use first training as appointment date."
+    },
+    "mgr-0168": {
+      "name": "Eder Sarabia",
+      "status": "active",
+      "club": "Espanyol",
+      "evidence": {
+        "url": "https://www.rcdespanyol.com/en/new/Eder%20Sarabia%20appointed%20as%20RCD%20Espanyol%20coach/20944",
+        "sha256": "c647fa157bf886496933c00e78e8338a81cc5f1f6c505ed84891b76939e5e186",
+        "published": "2026-10-28"
+      },
+      "checkedAt": "2026-11-02",
+      "reviewBy": "2026-12-07",
+      "roleEvent": "appointment",
+      "effectiveDate": "2026-10-28",
+      "note": "Oct30 match report identifies Sarabia as incumbent serving a two-match ban and Garcia in dugout. Under the archive head-coach definition, Sarabia is the responsible manager."
+    },
+    "mgr-0697": {
+      "name": "Yannick Cahuzac",
+      "status": "active",
+      "club": "Lens",
+      "evidence": {
+        "url": "https://www.rclens.fr/fr/equipe-premiere/staff/technique-2026-2027",
+        "sha256": "256cbf5629e4f7e3e9e84fb2b7cbdcd9001a2a964253b112d43194405e7f60b5"
+      },
+      "checkedAt": "2026-11-02",
+      "reviewBy": "2026-12-07",
+      "roleEvent": "current role corroborated",
+      "effectiveDate": null,
+      "note": "Current official staff explicitly calls him head coach. Do not invent a permanent-contract effective date from this undated page; retain Sept18 exact-fixture evidence separately."
+    },
+    "mgr-0677": {
+      "name": "Sergej Jakirović",
+      "status": "active",
+      "club": "Hull",
+      "evidence": {
+        "url": "https://www.premierleague.com/en/news/4325264",
+        "sha256": "f512335c373abeedc0e9ccd8621a6c8a3ea6c925ae16aed80ff9485ec4303e80"
+      },
+      "checkedAt": "2026-11-02",
+      "reviewBy": "2026-12-07",
+      "roleEvent": "current role corroborated",
+      "effectiveDate": "2025-06-11"
+    },
+    "mgr-0678": {
+      "name": "Matthias Jaissle",
+      "status": "active",
+      "club": "Newcastle",
+      "evidence": {
+        "url": "https://www.premierleague.com/en/news/4325264",
+        "sha256": "f512335c373abeedc0e9ccd8621a6c8a3ea6c925ae16aed80ff9485ec4303e80"
+      },
+      "checkedAt": "2026-11-02",
+      "reviewBy": "2026-12-07",
+      "roleEvent": "current role corroborated",
+      "effectiveDate": "2026-08-05"
     }
   },
-  "reviewPolicy": "Monthly review. Keep last verified active roles visible when a review is overdue; never infer a departure from reviewBy. Individual checkedAt dates remain the dates of their evidence reviews."
+  "reviewPolicy": "Monthly review. Keep last verified active roles visible when a review is overdue; never infer a departure from reviewBy. Individual checkedAt dates remain the dates of their evidence reviews. The latest partial review does not recertify unchanged entries."
 }
