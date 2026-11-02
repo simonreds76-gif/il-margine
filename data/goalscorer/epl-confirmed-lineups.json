@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-11-02T20:00:00Z",
       "home_team": "Newcastle United",
       "away_team": "Everton",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -20,22 +20,22 @@
         "Fabian Schär",
         "Daniel Burn",
         "Lewis Hall",
-        "Nico González",
         "Joelinton",
+        "Nico González",
         "Anthony Elanga",
         "Joseph Willock",
         "Harvey Barnes",
-        "Yoane Wissa"
+        "William Osula"
       ],
       "away_players": [
         "Jordan Pickford",
-        "Merlin Röhl",
+        "Jake O'Brien",
         "James Tarkowski",
         "Jarrad Branthwaite",
         "Vitaliy Mykolenko",
         "Harrison Armstrong",
         "James Garner",
-        "Brennan Johnson",
+        "Merlin Röhl",
         "Kiernan Dewsbury-Hall",
         "Tyrique George",
         "Thierno Barry"
@@ -97,26 +97,26 @@
           "shirt_number": "3"
         },
         {
-          "name": "Nico González",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64,
-          "player_id": 1280132,
-          "shirt_number": "6"
-        },
-        {
           "name": "Joelinton",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
-          "position_id": 66,
+          "position_id": 64,
           "player_id": 535936,
           "shirt_number": "7"
+        },
+        {
+          "name": "Nico González",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1280132,
+          "shirt_number": "6"
         },
         {
           "name": "Anthony Elanga",
@@ -152,15 +152,15 @@
           "shirt_number": "11"
         },
         {
-          "name": "Yoane Wissa",
+          "name": "William Osula",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-2-3-1",
           "position_id": 115,
-          "player_id": 666857,
-          "shirt_number": "9"
+          "player_id": 1258092,
+          "shirt_number": "10"
         }
       ],
       "away_starters": [
@@ -176,15 +176,15 @@
           "shirt_number": "1"
         },
         {
-          "name": "Merlin Röhl",
+          "name": "Jake O'Brien",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-2-3-1",
           "position_id": 32,
-          "player_id": 1210384,
-          "shirt_number": "34"
+          "player_id": 1098607,
+          "shirt_number": "15"
         },
         {
           "name": "James Tarkowski",
@@ -242,15 +242,15 @@
           "shirt_number": "37"
         },
         {
-          "name": "Brennan Johnson",
+          "name": "Merlin Röhl",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 83,
-          "player_id": 1076756,
-          "shirt_number": "22"
+          "player_id": 1210384,
+          "shirt_number": "34"
         },
         {
           "name": "Kiernan Dewsbury-Hall",
@@ -286,20 +286,131 @@
           "shirt_number": "11"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Nick Pope",
+        "Malick Thiaw",
+        "Sven Botman",
+        "Aladji Bamba",
+        "Jacob Ramsey",
+        "Sean Steur",
+        "Bazoumana Touré",
+        "Jacob Murphy",
+        "Yoane Wissa"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Nick Pope",
+          "player_id": "280484",
+          "role_group": "GK"
+        },
+        {
+          "name": "Malick Thiaw",
+          "player_id": "1137407",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Sven Botman",
+          "player_id": "956682",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Aladji Bamba",
+          "player_id": "1695681",
+          "role_group": "MID"
+        },
+        {
+          "name": "Jacob Ramsey",
+          "player_id": "1021929",
+          "role_group": "MID"
+        },
+        {
+          "name": "Sean Steur",
+          "player_id": "1643770",
+          "role_group": "MID"
+        },
+        {
+          "name": "Bazoumana Touré",
+          "player_id": "1624586",
+          "role_group": "FW"
+        },
+        {
+          "name": "Jacob Murphy",
+          "player_id": "521148",
+          "role_group": "FW"
+        },
+        {
+          "name": "Yoane Wissa",
+          "player_id": "666857",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Mark Travers",
+        "Ainsley Maitland-Niles",
+        "Michael Keane",
+        "Charly Alcaraz",
+        "Christian Nørgaard",
+        "Hayden Hackney",
+        "Braiden Graham",
+        "Brennan Johnson",
+        "Tyler Dibling"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Mark Travers",
+          "player_id": "731855",
+          "role_group": "GK"
+        },
+        {
+          "name": "Ainsley Maitland-Niles",
+          "player_id": "604089",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Michael Keane",
+          "player_id": "290410",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Charly Alcaraz",
+          "player_id": "1128965",
+          "role_group": "MID"
+        },
+        {
+          "name": "Christian Nørgaard",
+          "player_id": "266520",
+          "role_group": "MID"
+        },
+        {
+          "name": "Hayden Hackney",
+          "player_id": "982394",
+          "role_group": "MID"
+        },
+        {
+          "name": "Braiden Graham",
+          "player_id": "1589726",
+          "role_group": "FW"
+        },
+        {
+          "name": "Brennan Johnson",
+          "player_id": "1076756",
+          "role_group": "FW"
+        },
+        {
+          "name": "Tyler Dibling",
+          "player_id": "1292833",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
         "Lewis Miley",
         "Matias Fernandez-Pardo",
         "Ewen Jaouen",
-        "Valentino Livramento",
-        "William Osula"
+        "Valentino Livramento"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-11-02T16:32:27.344739+00:00",
-      "changed_at": "2026-11-01T11:44:24.091823+00:00"
+      "observed_at": "2026-11-02T20:20:59.173065+00:00",
+      "changed_at": "2026-11-02T20:20:59.173065+00:00"
     }
   ]
 }

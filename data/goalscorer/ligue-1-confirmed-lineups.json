@@ -9,22 +9,22 @@
       "kickoff_utc": "2026-11-02T19:45:00Z",
       "home_team": "Lorient",
       "away_team": "Brest",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Yvon Mvogo",
         "Nathaniel Adjei",
-        "Souleymane Touré",
         "Montassar Talbi",
+        "Souleymane Touré",
         "Dembo Sylla",
         "Arthur Avom",
         "Noah Cadiou",
         "Arsène Kouassi",
         "Jean-Victor Makengo",
-        "Gabin Bernardeau",
+        "Souleymane Faye",
         "Ibrahima Baldé"
       ],
       "away_players": [
@@ -64,26 +64,26 @@
           "shirt_number": "32"
         },
         {
-          "name": "Souleymane Touré",
-          "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 35,
-          "player_id": 1180547,
-          "shirt_number": "95"
-        },
-        {
           "name": "Montassar Talbi",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "3-4-2-1",
-          "position_id": 37,
+          "position_id": 35,
           "player_id": 846392,
           "shirt_number": "3"
+        },
+        {
+          "name": "Souleymane Touré",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 37,
+          "player_id": 1180547,
+          "shirt_number": "95"
         },
         {
           "name": "Dembo Sylla",
@@ -141,15 +141,15 @@
           "shirt_number": "17"
         },
         {
-          "name": "Gabin Bernardeau",
+          "name": "Souleymane Faye",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
           "role_group": "AM",
           "formation": "3-4-2-1",
           "position_id": 86,
-          "player_id": 1668294,
-          "shirt_number": "33"
+          "player_id": 1107257,
+          "shirt_number": "19"
         },
         {
           "name": "Ibrahima Baldé",
@@ -286,23 +286,133 @@
           "shirt_number": "19"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Bingourou Kamara",
+        "Nosa Edward Obaretin",
+        "Srdjan Kuzmić",
+        "Alec Georgen",
+        "Gabin Bernardeau",
         "Noah Mbamba",
+        "Théo Le Bris",
+        "Aiyegun Tosin",
+        "Isak Steiner Jensen"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Bingourou Kamara",
+          "player_id": "564571",
+          "role_group": "GK"
+        },
+        {
+          "name": "Nosa Edward Obaretin",
+          "player_id": "1526621",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Srdjan Kuzmić",
+          "player_id": "1382364",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Alec Georgen",
+          "player_id": "688285",
+          "role_group": "MID"
+        },
+        {
+          "name": "Gabin Bernardeau",
+          "player_id": "1668294",
+          "role_group": "MID"
+        },
+        {
+          "name": "Noah Mbamba",
+          "player_id": "1225704",
+          "role_group": "MID"
+        },
+        {
+          "name": "Théo Le Bris",
+          "player_id": "1292354",
+          "role_group": "MID"
+        },
+        {
+          "name": "Aiyegun Tosin",
+          "player_id": "841395",
+          "role_group": "FW"
+        },
+        {
+          "name": "Isak Steiner Jensen",
+          "player_id": "1202070",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Mathieu Patouillet",
+        "Justin Bourgault",
+        "Luck Zogbé",
+        "Joseph Boende",
+        "Mamady Diambou",
+        "Noah Edjouma",
+        "Djylian N'Guessan",
+        "Giovani Versini",
+        "Ibrahim Kanté"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Mathieu Patouillet",
+          "player_id": "1514445",
+          "role_group": "GK"
+        },
+        {
+          "name": "Justin Bourgault",
+          "player_id": "1668289",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Luck Zogbé",
+          "player_id": "1592417",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Joseph Boende",
+          "player_id": "1427018",
+          "role_group": "MID"
+        },
+        {
+          "name": "Mamady Diambou",
+          "player_id": "1231909",
+          "role_group": "MID"
+        },
+        {
+          "name": "Noah Edjouma",
+          "player_id": "1603990",
+          "role_group": "MID"
+        },
+        {
+          "name": "Djylian N'Guessan",
+          "player_id": "1703371",
+          "role_group": "FW"
+        },
+        {
+          "name": "Giovani Versini",
+          "player_id": "1441955",
+          "role_group": "FW"
+        },
+        {
+          "name": "Ibrahim Kanté",
+          "player_id": "1669616",
+          "role_group": "FW"
+        }
+      ],
+      "home_unavailable": [
+        "Mohamed Bamba",
         "Bandiougou Fadiga",
-        "Panos Katseris",
-        "Mohamed Bamba"
+        "Panos Katseris"
       ],
       "away_unavailable": [
         "Brendan Chardonnet",
-        "Raphaël Le Guen",
-        "Giovani Versini"
+        "Raphaël Le Guen"
       ],
-      "observed_at": "2026-11-02T16:33:06.038477+00:00",
-      "changed_at": "2026-11-01T11:45:32.882541+00:00"
+      "observed_at": "2026-11-02T20:22:18.445628+00:00",
+      "changed_at": "2026-11-02T20:22:18.445628+00:00"
     }
   ]
 }
