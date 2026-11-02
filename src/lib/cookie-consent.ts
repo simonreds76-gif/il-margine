@@ -28,14 +28,17 @@ function syncConsentAttribute() {
 }
 
 export function saveConsent(choice: ConsentChoice) {
+  let persisted = true;
   try {
     window.localStorage.setItem(CONSENT_KEY, choice === "accepted" ? "1" : "0");
     sessionChoice = null;
   } catch {
     sessionChoice = choice;
+    persisted = false;
   }
   syncConsentAttribute();
   window.dispatchEvent(new Event(CONSENT_EVENT));
+  return persisted;
 }
 
 export function subscribeToConsent(onStoreChange: () => void) {

@@ -112,3 +112,26 @@ test('accepted AI referral visits tolerate blocked storage and do not repeat the
   vm.runInNewContext(compile('src/components/AiReferralTracker.tsx'),scope);
   scope.exports.default(); scope.exports.default(); assert.equal(sent,1);
 });
+
+test('policy controls can withdraw session-only consent even when every browser storage API is blocked', () => {
+  const h=harness(null,true); h.consent.saveConsent('accepted');
+  let reloads=0; const messages=[];
+  const blocked={removeItem(){throw new Error('blocked');}};
+  const doc={get cookie(){throw new Error('blocked');}};
+  const win={location:{reload:()=>reloads++},gtag:(...args)=>messages.push(args)};
+  const scope={exports:{},window:win,document:doc,location:{hostname:'ilmargine.bet'},localStorage:blocked,sessionStorage:blocked,
+    require:id=>{
+      if(id==='react')return {useSyncExternalStore:(_s,read)=>read(),useState:()=>['',()=>{}]};
+      if(id==='@/lib/cookie-consent')return h.consent;
+      if(id==='@/lib/config')return {GA_MEASUREMENT_ID:'G-TEST'};
+      return require(id);
+    }};
+  vm.runInNewContext(compile('src/components/CookieSettings.tsx'),scope);
+  const tree=scope.exports.default(); const buttons=tree.props.children[2].props.children;
+  buttons[1].props.onClick();
+  assert.equal(h.consent.readConsentSnapshot(),'rejected');
+  assert.equal(win['ga-disable-G-TEST'],true); assert.equal(reloads,1);
+  assert.equal(messages[0][2].analytics_storage,'denied');
+  buttons[0].props.onClick();
+  assert.equal(h.consent.readConsentSnapshot(),'accepted'); assert.equal(reloads,1,'session-only Allow must not reset itself by reloading');
+});
