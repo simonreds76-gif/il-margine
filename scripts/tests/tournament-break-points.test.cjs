@@ -1,0 +1,10 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),ts=require('typescript');
+const mod={exports:{}};
+vm.runInNewContext(ts.transpileModule(fs.readFileSync('src/lib/tournament-break-points.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{module:mod,exports:mod.exports});
+const {breakPointHistory}=mod.exports;
+const log=(extra={})=>({source_key:'ATP|10|1|2|4',date:'2026-10-29',round_id:'4',opponent:'Two',result:'7-5 6-4',status:'completed',stats_status:'verified',created:6,converted:1,faced:4,saved:2,...extra});
+const row=(logs)=>({player_id:'1',tour_id:'10',tour:'ATP',date:'2026-10-30',break_point_history:JSON.stringify({version:'tournament-break-points-v1',player_id:'1',tour_id:'10',tour:'ATP',before_date:'2026-10-30',logs})});
+test('Totals preserve chances and converted separately, with match chances counted once',()=>{const h=breakPointHistory(row([log()]));assert.equal(h.created,6);assert.equal(h.converted,1);assert.equal(h.faced,4);assert.equal(h.logs[0].matchChances,10);});
+test('Missing, invalid and retired stats are excluded from completed totals, not zeroed',()=>{const h=breakPointHistory(row([log(),log({source_key:'missing',created:null}),log({source_key:'bad',converted:9}),log({source_key:'retired',status:'retired'})]));assert.equal(h.covered,1);assert.equal(h.completed,3);assert.equal(h.partial,1);assert.equal(h.created,6);assert.equal(h.logs.find(x=>x.key==='bad').created,null);});
+test('Zero counts retained; duplicate/same-day/future observations excluded',()=>{const z=log({created:0,converted:0,faced:0,saved:0});const h=breakPointHistory(row([z,z,log({source_key:'future',date:'2026-10-30'})]));assert.equal(h.logs.length,1);assert.equal(h.created,0);assert.equal(h.covered,1);});
+test('Wrong player, edition, tour or date cannot borrow another history; legacy remains unavailable',()=>{for(const change of [{player_id:'9'},{tour_id:'11'},{tour:'WTA'},{date:'2026-10-31'}])assert.equal(breakPointHistory({...row([log()]),...change}).available,false);assert.equal(breakPointHistory({}).available,false);});

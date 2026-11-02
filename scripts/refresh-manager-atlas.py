@@ -56,6 +56,13 @@ def resolve_coach(coach, club, date, registry, crosswalk):
 
 def reviewed_fixture(reviews, fixture_id, provider_id):
     row=reviews.get(fixture_id)
+    # A review can precede the next odds archive release. Bind it to the exact
+    # provider match ID, never a club/name/date wildcard. The caller additionally
+    # verifies date, league, both teams and final score before using either form.
+    provider_row=reviews.get('fotmob:'+str(provider_id))
+    if row is not None and provider_row is not None and row!=provider_row:
+        raise ValueError('Conflicting fixture-specific manager reviews')
+    if row is None:row=provider_row
     if row is not None and (str(row.get('providerMatchId'))!=str(provider_id) or not row.get('evidence') or not row.get('reviewedAt')):
         raise ValueError('Invalid fixture-specific manager review')
     return row

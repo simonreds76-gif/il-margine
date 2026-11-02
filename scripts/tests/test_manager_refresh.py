@@ -66,4 +66,13 @@ class RefreshTests(unittest.TestCase):
         self.assertEqual(mod.club_key('Deportivo A Coruña'),mod.club_key('Deportivo La Coruña'))
         self.assertNotEqual(mod.club_key('Deportivo La Coruña'),mod.club_key('Deportivo Alaves'))
 
+    def test_provider_review_precedes_atlas_id_but_never_matches_another_game(self):
+        row={'providerMatchId':'42','evidence':['https://club.example/report'],'reviewedAt':'2026-11-02'}
+        self.assertIs(mod.reviewed_fixture({'fotmob:42':row},'new-atlas-id',42),row)
+        self.assertIsNone(mod.reviewed_fixture({'fotmob:42':row},'other-game',43))
+        with self.assertRaises(ValueError):
+            mod.reviewed_fixture({'fotmob:42':{**row,'providerMatchId':'43'}},'new-atlas-id',42)
+        with self.assertRaises(ValueError):
+            mod.reviewed_fixture({'fotmob:42':row,'new-atlas-id':{**row,'reviewedAt':'2026-11-01'}},'new-atlas-id',42)
+
 if __name__=='__main__':unittest.main()

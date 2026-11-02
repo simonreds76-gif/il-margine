@@ -23,11 +23,12 @@ test('unpriced results stay in H2H without becoming losing bets or changing ROI'
  assert.deepEqual(resultRecord(managerHistory(matches,'y',defaults,'x')),{W:1,D:0,L:1});
  assert.equal(managerHistory(matches,'x',{...defaults,venue:'away'},'y').length,0);
 });
-test('published Gasperini Fabregas fixture record includes December Roma win and labelled prices',()=>{
+test('published Gasperini Fabregas record through 2025-26 includes December Roma win and labelled prices',()=>{
  const read=p=>JSON.parse(fs.readFileSync(new URL(p,import.meta.url),'utf8'));
  const release=read('../../src/data/manager-atlas-release.json');
  const data=read('../../public'+release.indexUrl);
- const fixtures=data.rows.map(row=>Object.fromEntries(data.columns.map((c,i)=>[c,row[i]])));
+ // Keep this historical ROI regression stable as later seasons are appended.
+ const fixtures=data.rows.map(row=>Object.fromEntries(data.columns.map((c,i)=>[c,row[i]]))).filter(r=>r.date<='2026-06-30');
  const history=managerHistory(fixtures,'mgr-0096',defaults,'mgr-0232');
  assert.equal(history.length,4);assert.deepEqual(resultRecord(history),{W:2,D:0,L:2});
  const december=history.find(r=>r.date==='2025-12-15');
@@ -150,9 +151,20 @@ test('published roster stays populated beyond review dates and matches its sourc
  assert.deepEqual(published,source);
  const activeAt=date=>Object.keys(source.entries).filter(id=>isVerifiedActive(id,source,date));
  assert.deepEqual(activeAt('2026-10-06'),activeAt('2026-10-05'));
- assert.deepEqual(activeAt('2026-12-01'),activeAt('2026-10-05'));
+ assert.deepEqual(activeAt('2026-12-08'),activeAt('2026-11-02'));
  assert.ok(activeAt('2026-10-06').length>0);
  assert.equal(isVerifiedActive('mgr-0094',source,'2026-10-06'),false);
  for(const id of ['mgr-0023','mgr-0032','mgr-0280'])assert.equal(isVerifiedActive(id,source,'2026-10-06'),true);
  assert.equal(source.entries['mgr-0644'].checkedAt,'2026-09-27');
+});
+
+test('November role corrections survive expiry without reviving departed coaches',()=>{
+ const source=JSON.parse(fs.readFileSync(new URL('../../config/manager-atlas-activity.json',import.meta.url),'utf8'));
+ for(const date of ['2026-11-02','2026-12-08']) {
+  for(const id of ['mgr-0239','mgr-0374','mgr-0687'])assert.equal(isVerifiedActive(id,source,date),false);
+  for(const id of ['mgr-0142','mgr-0273','mgr-0168','mgr-0697','mgr-0677','mgr-0678'])assert.equal(isVerifiedActive(id,source,date),true);
+ }
+ assert.equal(source.entries['mgr-0142'].effectiveDate,'2026-10-15');
+ assert.equal(source.entries['mgr-0142'].evidence.published,'2026-10-14');
+ assert.equal(source.entries['mgr-0168'].effectiveDate,'2026-10-28');
 });

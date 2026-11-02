@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+import MatchShapePanel from "@/components/model-monitor/MatchShapePanel";
+import BreakPointPaperPanel from "@/components/model-monitor/BreakPointPaperPanel";
 import Sisal5050Panel from "@/components/model-monitor/Sisal5050Panel";
 import { isAdminSession } from "@/lib/admin-auth";
 import { readAdminModels } from "@/lib/admin-model-reader";
@@ -15,7 +17,7 @@ function date(value: string | null) {
 }
 const recordLinks: Record<string,string> = {
  strict:'model=tennis&view=tennis-strict-archive', volume_200:'model=tennis&view=tennis-volume200-archive',challenger:'model=tennis&view=tennis-challenger-ml-v2-archive',spread_v1:'model=handicaps&view=tennis-spreadv1-archive',
- props:'model=props',gk:'model=saves',team_shots_v4:'model=shots',corners_v3:'model=corners',astra:'model=astra',tennis_astrissimo:'model=astrissimo',tennis_hardcourt_scout:'model=scout','aces-v4':'model=aces4'
+ props:'model=props',gk:'model=saves',team_shots_v4:'model=shots',corners_v3:'model=corners',astra:'model=astra',tennis_astrissimo:'model=astrissimo',tennis_hardcourt_scout:'model=scout',tennis_indoor_paper:'model=indoor','aces-v4':'model=aces4'
 };
 function ModelCard({r, now}: {r: ModelRow; now: number}) {
   const age = snapshotAge(r.date, now);
@@ -31,7 +33,7 @@ export default async function AdminModels({ searchParams }: { searchParams: Prom
   if (!await isAdminSession()) redirect("/admin");
   const data = await readAdminModels();
   const params = await searchParams;
-  const researchIds=new Set(['astra','tennis_astrissimo','tennis_hardcourt_scout','aces-v4']);
+  const researchIds=new Set(['astra','tennis_astrissimo','tennis_hardcourt_scout','tennis_indoor_paper','aces-v4']);
   const current=data.rows.filter(r=>!researchIds.has(r.id)&&!r.id.startsWith('props-'));
   const groups=[...new Set(current.map(r=>r.group))];
   return <main className="min-h-screen bg-[#0f1117] px-4 py-8 text-slate-100 sm:px-6"><div className="mx-auto max-w-6xl">
@@ -41,6 +43,8 @@ export default async function AdminModels({ searchParams }: { searchParams: Prom
     <a href="/model-monitor/skyline" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-cyan-400/30 bg-cyan-400/5 p-5"><span><strong className="text-lg text-cyan-200">Skyline</strong><span className="mt-1 block text-sm text-slate-300">Headed shots on target · Bet365 comparison · Paper ROI</span></span><span className="text-sm text-cyan-200">Open paper monitor →</span></a>
     <p className="mb-6 text-xs leading-relaxed text-slate-400">ROI is profit divided by settled stake. Records remain separate because models can select the same match. A unit is the recorded reference stake.</p>
     {groups.map((g,i)=><section key={g} id={`group-${i}`} className="mb-9"><h2 className="mb-4 text-xl font-semibold">{g==='Football research'?'Football models':g}</h2><div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{current.filter(r=>r.group===g).map(r=><ModelCard key={r.id} r={r} now={data.checkedAt}/>)}</div></section>)}
+    <MatchShapePanel value={data.matchShape} />
+    <BreakPointPaperPanel value={data.breakpointC} />
     <Sisal5050Panel value={data.sisal5050} page={Number(params.sisalPage) || 1} />
     <details className="mb-6 rounded-2xl border border-slate-700 p-5"><summary className="cursor-pointer text-xl font-semibold">Research trials <span className="ml-2 text-sm font-normal text-slate-400">Paper only</span></summary><p className="mt-3 text-sm text-slate-400">Separate experiments. Their results do not replace the current models.</p><div className="mt-5 grid gap-4 md:grid-cols-2">{data.rows.filter(r=>researchIds.has(r.id)).map(r=><ModelCard key={r.id} r={r} now={data.checkedAt}/>)}</div></details>
     <details className="rounded-2xl border border-slate-700 p-5"><summary className="cursor-pointer text-sm text-slate-300">Data freshness and market breakdowns</summary><div className="mt-4 space-y-3">{data.sources.map(s=>{const d=typeof s.date==='string'?s.date:null;return <p key={s.name} className="text-sm text-slate-400">{s.name}: {!s.available?'Unavailable':snapshotAge(d,data.checkedAt)} · {date(d)} UK</p>;})}</div><p className="mt-3 text-xs text-slate-400">A recent report does not confirm every capture or settlement is current.</p><div className="mt-5 grid gap-4 md:grid-cols-2">{data.rows.filter(r=>r.id.startsWith('props-')).map(r=><ModelCard key={r.id} r={r} now={data.checkedAt}/>)}</div></details>

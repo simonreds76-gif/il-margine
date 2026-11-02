@@ -1,6 +1,8 @@
 export type SignalRow = Record<string, unknown>;
 export type MonitorModel = {id:string;name:string;group:'current'|'research';note:string;views:Array<[string,string]>};
 export const monitorModels:MonitorModel[] = [
+ {id:'indoor',name:'Indoor Scout',group:'research',note:'Indoor Masters, including qualifying. Prospective 1u paper record; zero real stake. Core Strict gates only; injury and handicap overlays are not simulated. No betting alerts.',views:[['tennis-indoor-report','ROI & results'],['tennis-indoor-forecasts','All forecasts & rejections']]},
+
  {id:'tennis',name:'Tennis match odds',group:'current',note:'Strict and Volume selections. Each strategy keeps its own record.',views:[['tennis-strict-live','Strict latest'],['tennis-volume200-live','Volume latest'],['tennis-strict-archive','Strict results'],['tennis-volume200-archive','Volume results']]},
  {id:'handicaps',name:'Tennis handicaps',group:'current',note:'Selected player and game handicap, with the recorded price.',views:[['tennis-spreadv1-live','Latest'],['tennis-spreadv1-archive','Results']]},
  {id:'props',name:'Aces & double faults',group:'current',note:'Paper selections for aces and double faults. Match forecasts are separate.',views:[['props-record','Tracked selections'],['aces-v3','ATP aces v3'],['props-board','Match forecasts']]},
