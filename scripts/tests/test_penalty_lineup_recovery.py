@@ -67,6 +67,51 @@ class RecoveryTests(unittest.TestCase):
         self.assertFalse(r._on_pitch_at(team,'First Player',90,2)[0])
         self.assertTrue(r._on_pitch_at(team,'Backup Player',90,2)[0])
 
+    def test_curated_given_alias_uses_actual_timeline(self):
+        team=self.team('Anastasios Douvikas',873270)
+        team['subs']=[{'id':12,'name':'Backup Player'}]
+        team=self.timeline(team,[{'type':'Substitution','isHome':True,'time':74,'swap':[{'id':12},{'id':873270}]}])
+        self.assertTrue(r._on_pitch_at(team,'Tasos Douvikas',43)[0])
+        self.assertFalse(r._on_pitch_at(team,'Tasos Douvikas',80)[0])
+        self.assertIsNone(r._on_pitch_at(team,'Tasos Douvikas',74)[0])
+        self.assertIsNone(r._on_pitch_at(team,'Dimitris Douvikas',43)[0])
+
+    def test_curated_full_alias_and_ambiguous_alias(self):
+        self.assertTrue(r._on_pitch_at(self.timeline(self.team('Joseph Willock',99)),'Joe Willock',40)[0])
+        team=self.team('Anastasios Douvikas',873270)
+        team['subs']=[{'id':999,'name':'Anastasios Douvikas'}]
+        self.assertIsNone(r._on_pitch_at(self.timeline(team),'Tasos Douvikas',43)[0])
+
+    def test_registered_absence_is_club_scoped_despite_shared_token(self):
+        team=self.team('Pedro Neto',843040);team['id']=8455
+        present,proof=r._on_pitch_at(self.timeline(team),'João Pedro',64)
+        self.assertIs(present,False)
+        self.assertEqual(proof['registered_player_id'],'1021382')
+        self.assertEqual(proof['reason'],'absent_from_matchday_squad')
+        team['id']=999
+        self.assertIsNone(r._on_pitch_at(self.timeline(team),'João Pedro',64)[0])
+
+    def test_registered_absence_still_requires_complete_actual_squad(self):
+        team=self.team('Pedro Neto',843040);team['id']=8455
+        self.assertIsNone(r._on_pitch_at(self.timeline(team,standard=False),'João Pedro',64)[0])
+        team['starters'].pop()
+        self.assertIsNone(r._on_pitch_at(self.timeline(team),'João Pedro',64)[0])
+
+    def test_registered_identity_conflict_is_not_absence(self):
+        team=self.team('João Pedro',999);team['id']=8455
+        present,proof=r._on_pitch_at(self.timeline(team),'João Pedro',64)
+        self.assertIsNone(present)
+        self.assertEqual(proof['reason'],'registered_player_identity_conflict')
+
+    def test_registered_player_presence_and_bench_still_use_timeline(self):
+        team=self.team('João Pedro',1021382);team['id']=8455
+        self.assertTrue(r._on_pitch_at(self.timeline(team),'João Pedro',64)[0])
+        team=self.team('Pedro Neto',843040);team['id']=8455
+        team['subs']=[{'id':1021382,'name':'João Pedro'}]
+        team=self.timeline(team,[{'type':'Substitution','isHome':True,'time':70,'swap':[{'id':1021382},{'id':843040}]}])
+        self.assertFalse(r._on_pitch_at(team,'João Pedro',64)[0])
+        self.assertTrue(r._on_pitch_at(team,'João Pedro',80)[0])
+
     def test_empty_hierarchy_slot_is_not_missing_player(self):
         row={k+'_on_pitch_at_penalty':'Not assigned - hierarchy slot empty' for k in ('primary','secondary','tertiary')}
         row['actual_taker_on_pitch_at_penalty']='Yes - started'
