@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-02T20:22:20Z",
+  "generated_at": "2026-11-03T02:54:16Z",
   "league": "ligue-1",
   "row_count": 0,
   "stats": {
     "historical_rows": 26834,
     "odds_rows": 0,
     "matched_rows": 0,
-    "missing_player_history": 6,
+    "missing_player_history": 0,
     "missing_team_mapping": 0,
     "fallback_rows": 0,
     "qualified_rows": 0,
@@ -21,9 +21,9 @@
     "penalty_transfer_rows": 0,
     "position_upgrade_rows": 0,
     "role_adjusted_rows": 0,
-    "fixtures_with_confirmed_lineups": 1,
+    "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 0,
-    "fixtures_clean": 1,
+    "fixtures_clean": 0,
     "fixtures_degraded": 0,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
@@ -34,215 +34,6 @@
     "not_in_squad_rows": 0,
     "avg_ev": 0.0
   },
-  "fixtures": [
-    {
-      "match_date": "2026-11-02",
-      "home_team": "Lorient",
-      "away_team": "Brest",
-      "league": "ligue-1",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Yvon Mvogo",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Nathaniel Adjei",
-          "status": "plausible",
-          "known_team_keys": [
-            "lorient"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Montassar Talbi",
-          "status": "plausible",
-          "known_team_keys": [
-            "lorient"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Souleymane Touré",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Dembo Sylla",
-          "status": "plausible",
-          "known_team_keys": [
-            "lorient"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Arthur Avom",
-          "status": "plausible",
-          "known_team_keys": [
-            "lorient"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Noah Cadiou",
-          "status": "plausible",
-          "known_team_keys": [
-            "lorient"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Arsène Kouassi",
-          "status": "plausible",
-          "known_team_keys": [
-            "lorient"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jean-Victor Makengo",
-          "status": "plausible",
-          "known_team_keys": [
-            "lorient"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Souleymane Faye",
-          "status": "plausible",
-          "known_team_keys": [
-            "lorient"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ibrahima Baldé",
-          "status": "plausible",
-          "known_team_keys": [
-            "lorient"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Egil Selvik",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Kenny Lala",
-          "status": "plausible",
-          "known_team_keys": [
-            "brest"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lucas Tousart",
-          "status": "plausible",
-          "known_team_keys": [
-            "brest"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Gautier Lloris",
-          "status": "plausible",
-          "known_team_keys": [
-            "brest"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Bradley Locko",
-          "status": "plausible",
-          "known_team_keys": [
-            "brest"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Joris Chotard",
-          "status": "plausible",
-          "known_team_keys": [
-            "brest"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Hugo Magnetti",
-          "status": "plausible",
-          "known_team_keys": [
-            "brest"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Mama Baldé",
-          "status": "plausible",
-          "known_team_keys": [
-            "brest"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Kamory Doumbia",
-          "status": "plausible",
-          "known_team_keys": [
-            "brest"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Pathé Mboup",
-          "status": "plausible",
-          "known_team_keys": [
-            "brest"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ludovic Ajorque",
-          "status": "plausible",
-          "known_team_keys": [
-            "brest"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    }
-  ],
+  "fixtures": [],
   "rows": []
 }
