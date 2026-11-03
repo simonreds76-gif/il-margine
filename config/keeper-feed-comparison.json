@@ -1,0 +1,539 @@
+{
+  "schema_version": 1,
+  "activated_at": "2026-11-03T18:39:21.192716+00:00",
+  "max_goal_requests": 30,
+  "max_espn_requests": 40,
+  "max_matches": 20,
+  "days_back": 14,
+  "leagues": {
+    "47": {
+      "goal": "cmr77dvkr005nrx06lp7rvp49",
+      "espn": "eng.1"
+    },
+    "87": {
+      "goal": "cmr77dvnt006nrx063v3w622e",
+      "espn": "esp.1"
+    },
+    "55": {
+      "goal": "cmr77dvpd006yrx06zig7907g",
+      "espn": "ita.1"
+    },
+    "54": {
+      "goal": "cmr77dvgm0002rx06rt2uqxii",
+      "espn": "ger.1"
+    },
+    "53": {
+      "goal": "cmr77dvqg007crx06q1kaceyo",
+      "espn": "fra.1"
+    }
+  },
+  "teams": {
+    "10261": {
+      "name": "Newcastle United",
+      "goal": {
+        "id": "cmr7fpx0g2ybhrx06qvp1kldr",
+        "name": "Newcastle"
+      },
+      "espn": {
+        "id": "361",
+        "name": "Newcastle United"
+      },
+      "verified_fixture": "5795503"
+    },
+    "8668": {
+      "name": "Everton",
+      "goal": {
+        "id": "cmr7hvaw43yv8rx0660amc6is",
+        "name": "Everton"
+      },
+      "espn": {
+        "id": "368",
+        "name": "Everton"
+      },
+      "verified_fixture": "5795503"
+    },
+    "8650": {
+      "name": "Liverpool",
+      "goal": {
+        "id": "cmr7hvad33yp7rx06q6tlbmde",
+        "name": "Liverpool"
+      },
+      "espn": {
+        "id": "364",
+        "name": "Liverpool"
+      },
+      "verified_fixture": "5795501"
+    },
+    "9825": {
+      "name": "Arsenal",
+      "goal": {
+        "id": "cmr7foowe2kf3rx06u6eu3rhl",
+        "name": "Arsenal"
+      },
+      "espn": {
+        "id": "359",
+        "name": "Arsenal"
+      },
+      "verified_fixture": "5795501"
+    },
+    "10252": {
+      "name": "Aston Villa",
+      "goal": {
+        "id": "cmr7hvawd3yvgrx06qjdxxr4v",
+        "name": "Aston Villa"
+      },
+      "espn": {
+        "id": "362",
+        "name": "Aston Villa"
+      },
+      "verified_fixture": "5795496"
+    },
+    "9879": {
+      "name": "Fulham",
+      "goal": {
+        "id": "cmr7hvaw63yvarx06ut7n85z0",
+        "name": "Fulham"
+      },
+      "espn": {
+        "id": "370",
+        "name": "Fulham"
+      },
+      "verified_fixture": "5795496"
+    },
+    "8586": {
+      "name": "Tottenham Hotspur",
+      "goal": {
+        "id": "cmr7fp1wl2n8vrx06vpqq7nfg",
+        "name": "Tottenham"
+      },
+      "espn": {
+        "id": "367",
+        "name": "Tottenham Hotspur"
+      },
+      "verified_fixture": "5795504"
+    },
+    "9826": {
+      "name": "Crystal Palace",
+      "goal": {
+        "id": "cmr7hvad43yp8rx06hrv9xvja",
+        "name": "Crystal Palace"
+      },
+      "espn": {
+        "id": "384",
+        "name": "Crystal Palace"
+      },
+      "verified_fixture": "5795504"
+    },
+    "9783": {
+      "name": "Deportivo A Coruña",
+      "goal": {
+        "id": "cmr7m55r25ee5rx06izw186sh",
+        "name": "Dep. A Coruna"
+      },
+      "espn": {
+        "id": "90",
+        "name": "Deportivo"
+      },
+      "verified_fixture": "5868113"
+    },
+    "8371": {
+      "name": "Osasuna",
+      "goal": {
+        "id": "cmr7m55ty5efxrx06jrlg7ghy",
+        "name": "Osasuna"
+      },
+      "espn": {
+        "id": "97",
+        "name": "Osasuna"
+      },
+      "verified_fixture": "5868113"
+    },
+    "8315": {
+      "name": "Athletic Club",
+      "goal": {
+        "id": "cmr7foowh2kf5rx06io24hby5",
+        "name": "Ath Bilbao"
+      },
+      "espn": {
+        "id": "93",
+        "name": "Athletic Club"
+      },
+      "verified_fixture": "5868111"
+    },
+    "8560": {
+      "name": "Real Sociedad",
+      "goal": {
+        "id": "cmr7m55u35efzrx06wfbx1eip",
+        "name": "Real Sociedad"
+      },
+      "espn": {
+        "id": "89",
+        "name": "Real Sociedad"
+      },
+      "verified_fixture": "5868111"
+    },
+    "10268": {
+      "name": "Elche",
+      "goal": {
+        "id": "cmr7m55u95eg2rx06mp83a95a",
+        "name": "Elche"
+      },
+      "espn": {
+        "id": "3751",
+        "name": "Elche"
+      },
+      "verified_fixture": "5868114"
+    },
+    "10267": {
+      "name": "Valencia",
+      "goal": {
+        "id": "cmr7m55u55eg0rx062cv0y7sr",
+        "name": "Valencia"
+      },
+      "espn": {
+        "id": "94",
+        "name": "Valencia"
+      },
+      "verified_fixture": "5868114"
+    },
+    "8696": {
+      "name": "Racing Santander",
+      "goal": {
+        "id": "cmr7m55rl5eejrx062tzrza9u",
+        "name": "Racing Santander"
+      },
+      "espn": {
+        "id": "87",
+        "name": "Racing Santander"
+      },
+      "verified_fixture": "5868118"
+    },
+    "8633": {
+      "name": "Real Madrid",
+      "goal": {
+        "id": "cmr7fp1wf2n8srx06b3wila7x",
+        "name": "Real Madrid"
+      },
+      "espn": {
+        "id": "86",
+        "name": "Real Madrid"
+      },
+      "verified_fixture": "5868118"
+    },
+    "8524": {
+      "name": "Atalanta",
+      "goal": {
+        "id": "cmr7m6br15t2mrx06k2tlvofz",
+        "name": "Atalanta"
+      },
+      "espn": {
+        "id": "105",
+        "name": "Atalanta"
+      },
+      "verified_fixture": "5749731"
+    },
+    "10167": {
+      "name": "Parma",
+      "goal": {
+        "id": "cmr7m6brh5t2xrx061j6yk7qx",
+        "name": "Parma"
+      },
+      "espn": {
+        "id": "115",
+        "name": "Parma"
+      },
+      "verified_fixture": "5749731"
+    },
+    "7943": {
+      "name": "Sassuolo",
+      "goal": {
+        "id": "cmr7m6brf5t2vrx06qg58pp46",
+        "name": "Sassuolo"
+      },
+      "espn": {
+        "id": "3997",
+        "name": "Sassuolo"
+      },
+      "verified_fixture": "5749738"
+    },
+    "8535": {
+      "name": "Fiorentina",
+      "goal": {
+        "id": "cmr7fp1wq2n8zrx0609jpw8nd",
+        "name": "Fiorentina"
+      },
+      "espn": {
+        "id": "109",
+        "name": "Fiorentina"
+      },
+      "verified_fixture": "5749738"
+    },
+    "9885": {
+      "name": "Juventus",
+      "goal": {
+        "id": "cmr7dko62210erx06fgyh2kp2",
+        "name": "Juventus"
+      },
+      "espn": {
+        "id": "111",
+        "name": "Juventus"
+      },
+      "verified_fixture": "5749735"
+    },
+    "9875": {
+      "name": "Napoli",
+      "goal": {
+        "id": "cmr7m6br45t2orx06ql4em344",
+        "name": "Napoli"
+      },
+      "espn": {
+        "id": "114",
+        "name": "Napoli"
+      },
+      "verified_fixture": "5749735"
+    },
+    "9888": {
+      "name": "Lecce",
+      "goal": {
+        "id": "cmr7m6brj5t2yrx06ac0z83pm",
+        "name": "Lecce"
+      },
+      "espn": {
+        "id": "113",
+        "name": "Lecce"
+      },
+      "verified_fixture": "5749737"
+    },
+    "10233": {
+      "name": "Genoa",
+      "goal": {
+        "id": "cmr7m6brb5t2srx06d3gaq3jw",
+        "name": "Genoa"
+      },
+      "espn": {
+        "id": "3263",
+        "name": "Genoa"
+      },
+      "verified_fixture": "5749737"
+    },
+    "9810": {
+      "name": "Eintracht Frankfurt",
+      "goal": {
+        "id": "cmr79jabj03zjrx06nu74ehg2",
+        "name": "Eintracht Frankfurt"
+      },
+      "espn": {
+        "id": "125",
+        "name": "Eintracht Frankfurt"
+      },
+      "verified_fixture": "5881210"
+    },
+    "9790": {
+      "name": "Hamburger SV",
+      "goal": {
+        "id": "cmr79jabt03zrrx06jei6hwug",
+        "name": "Hamburger SV"
+      },
+      "espn": {
+        "id": "127",
+        "name": "Hamburg SV"
+      },
+      "verified_fixture": "5881210"
+    },
+    "8149": {
+      "name": "Union Berlin",
+      "goal": {
+        "id": "cmr79jabk03zkrx06rddkkrlt",
+        "name": "Union Berlin"
+      },
+      "espn": {
+        "id": "598",
+        "name": "1. FC Union Berlin"
+      },
+      "verified_fixture": "5881213"
+    },
+    "8722": {
+      "name": "1. FC Köln",
+      "goal": {
+        "id": "cmr79jabf03zgrx06blcl9jom",
+        "name": "FC Koln"
+      },
+      "espn": {
+        "id": "122",
+        "name": "FC Cologne"
+      },
+      "verified_fixture": "5881213"
+    },
+    "9823": {
+      "name": "Bayern München",
+      "goal": {
+        "id": "cmr79jab703zerx06eqilba4s",
+        "name": "Bayern Munich"
+      },
+      "espn": {
+        "id": "132",
+        "name": "Bayern Munich"
+      },
+      "verified_fixture": "5881208"
+    },
+    "9789": {
+      "name": "Borussia Dortmund",
+      "goal": {
+        "id": "cmr79jabe03zfrx061s6b1xiw",
+        "name": "Dortmund"
+      },
+      "espn": {
+        "id": "124",
+        "name": "Borussia Dortmund"
+      },
+      "verified_fixture": "5881208"
+    },
+    "8697": {
+      "name": "Werder Bremen",
+      "goal": {
+        "id": "cmr79jab503zdrx060crzccos",
+        "name": "Werder Bremen"
+      },
+      "espn": {
+        "id": "137",
+        "name": "Werder Bremen"
+      },
+      "verified_fixture": "5881214"
+    },
+    "8226": {
+      "name": "Hoffenheim",
+      "goal": {
+        "id": "cmr79jabo03zorx06atqgohi7",
+        "name": "Hoffenheim"
+      },
+      "espn": {
+        "id": "7911",
+        "name": "TSG Hoffenheim"
+      },
+      "verified_fixture": "5881214"
+    },
+    "8689": {
+      "name": "Lorient",
+      "goal": {
+        "id": "cmr7oa1fu6g0hrx066ymc56f8",
+        "name": "Lorient"
+      },
+      "espn": {
+        "id": "273",
+        "name": "Lorient"
+      },
+      "verified_fixture": "5802975"
+    },
+    "8521": {
+      "name": "Brest",
+      "goal": {
+        "id": "cmr7oa1gc6g0vrx06koloherl",
+        "name": "Brest"
+      },
+      "espn": {
+        "id": "6997",
+        "name": "Brest"
+      },
+      "verified_fixture": "5802975"
+    },
+    "8592": {
+      "name": "Marseille",
+      "goal": {
+        "id": "cmr7oa1gn6g15rx06eirmdm2d",
+        "name": "Marseille"
+      },
+      "espn": {
+        "id": "176",
+        "name": "Marseille"
+      },
+      "verified_fixture": "5802977"
+    },
+    "9941": {
+      "name": "Toulouse",
+      "goal": {
+        "id": "cmr7oa1gq6g18rx06nhqgyww7",
+        "name": "Toulouse"
+      },
+      "espn": {
+        "id": "179",
+        "name": "Toulouse"
+      },
+      "verified_fixture": "5802977"
+    },
+    "6379": {
+      "name": "Paris FC",
+      "goal": {
+        "id": "cmr7oa1gt6g1arx060lt9jl3g",
+        "name": "Paris FC"
+      },
+      "espn": {
+        "id": "6851",
+        "name": "Paris FC"
+      },
+      "verified_fixture": "5802979"
+    },
+    "9829": {
+      "name": "Monaco",
+      "goal": {
+        "id": "cmr7oa1fz6g0lrx0652jsbp0f",
+        "name": "Monaco"
+      },
+      "espn": {
+        "id": "174",
+        "name": "AS Monaco"
+      },
+      "verified_fixture": "5802979"
+    },
+    "9748": {
+      "name": "Lyon",
+      "goal": {
+        "id": "cmr7oa1fy6g0krx06hcnp5hzj",
+        "name": "Lyon"
+      },
+      "espn": {
+        "id": "167",
+        "name": "Lyon"
+      },
+      "verified_fixture": "5802976"
+    },
+    "8121": {
+      "name": "Angers",
+      "goal": {
+        "id": "cmr7oa1gh6g10rx06aiokzdy3",
+        "name": "Angers"
+      },
+      "espn": {
+        "id": "7868",
+        "name": "Angers"
+      },
+      "verified_fixture": "5802976"
+    }
+  },
+  "fixture_player_aliases": {
+    "5795503/188058/goal": "1235443171",
+    "5795503/188058/espn": "198138",
+    "5795503/860975/goal": "2886133965",
+    "5795503/860975/espn": "259517",
+    "5795501/319784/goal": "2717644484",
+    "5795501/671529/espn": "226177",
+    "5795501/795179/espn": "236322",
+    "5795496/258269/goal": "2117781005",
+    "5795496/258269/espn": "204679",
+    "5795496/1656860/goal": "123424423",
+    "5795496/1422593/espn": "409541",
+    "5795504/357880/espn": "104943",
+    "5795504/860920/goal": "1551793337",
+    "5795504/860920/espn": "259486",
+    "5795504/1047676/goal": "3174729574",
+    "5868113/574624/goal": "2489774594",
+    "5868111/940743/goal": "3206867717",
+    "5749738/1712399/goal": "3749548014",
+    "5749735/1355574/goal": "3507542890",
+    "5749737/875672/goal": "526807377",
+    "5749737/942193/goal": "1631320972",
+    "5802975/1180547/goal": "1408412730",
+    "5802979/1239590/goal": "2053407184",
+    "5802976/1060604/goal": "1755278586"
+  },
+  "mapping_evidence": "Frozen 20-match audit, 2026-11-03; exact league, kickoff, home/away and completed score; aliases reviewed per fixture only"
+}

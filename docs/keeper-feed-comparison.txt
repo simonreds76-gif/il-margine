@@ -1,0 +1,51 @@
+GOAL / ESPN keeper-source comparison — installed November 2026
+
+This is a private source-quality comparison, not a betting model or new feed
+for live pricing/settlement. No alerts, real stakes, model weights or historical
+records are changed. GOAL_API_KEY lives only in GitHub Actions secrets. Requests
+go only to api.goal-api.com, without redirects. No credentials are retained.
+
+Existing Football Counts morning workflow runs the check once after its normal
+job, even if that job failed. The hourly odds runs do not run this comparison.
+Defaults: 20 fixtures, 30 GOAL calls, 40 ESPN calls, 240 seconds, 14-day lookback.
+Calendar requests are shared within a run and GOAL queries are league-filtered.
+No worldwide scans or automatic large Reep downloads. Deferred/missing fixtures
+remain in the status file; older checks rotate so failures cannot monopolise it.
+
+Source labels come from the retained named keeper-history archive. The join
+requires exact league, kickoff, home/away teams, completed results and same-team
+player membership. Substitutes cannot inherit a starter's totals. Unknowns are
+not zeros. GOAL player minutes are diagnostic only, ESPN shotsFaced is excluded,
+and neither feed establishes claims or xG coverage. Conflicting team/keeper totals
+and native event conflicts quarantine a fixture even if all three save totals
+agree. Agreement is not independent ground truth.
+
+data/goalkeeper-saves/source-comparison/ contains append-only source revisions,
+state and status locally and is Git-ignored. The cloud worker restores/persists
+only the keeper_source_comparison field in the existing server-only private
+snapshot, using compare-and-swap and preserving every other field. GOAL source
+records are never committed to the public repository or public Actions artifacts.
+Original comparisons are retained when providers revise data.
+Installation replay, historical backfill and post-installation collection are
+labelled separately. This is post-match collection, never prospective betting
+evidence. No ROI can be inferred from these agreement counts.
+
+Reep v4 release 2026-10-31.1 is pinned by compressed SHA-256 hashes in
+build-reep-research.py. The compact research supplement is separate from the
+existing live identity-registry.json.gz. Exact namespace-aware provider IDs,
+redirects, entity type, names and global target ownership are checked. Missing,
+ambiguous and conflicting mappings remain unresolved. Reviewed exceptions live
+in config/football-identity-reviewed.json, with dated evidence. A reviewed link
+cannot overwrite an existing or colliding ID. Javi Guerra = FotMob 1284429 /
+ESPN 16340, Valencia midfielder born 13 May 2003, verified against the club and
+ESPN profile; distinct from the older same-name striker.
+
+To rebuild the supplement, use saved verified release files on the research
+drive with scripts/build-reep-research.py --downloads PATH. Do not update the
+release automatically or route it into live models without another review.
+
+Validation: python -m unittest discover -s tests -p test_keeper_feed_comparison.py
+and test_football_identity.py. The existing Football count contract workflow has
+an optional authenticated, read-only keeper_probe dispatch (no commits/alerts).
+The earlier frozen 20-match research cohort can be replayed with --replay PATH
+and a separate --output directory. Never relabel that cohort as forward data.

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "purpose": "Reviewed provider links for private comparisons; never replace existing native IDs",
+  "players": {
+    "1284429": {
+      "name": "Javi Guerra",
+      "birth_date": "2003-05-13",
+      "reviewed_at": "2026-11-03",
+      "targets": {
+        "espn|person|": {
+          "id": "16340",
+          "evidence": [
+            "https://www.valenciacf.com/javi-guerra",
+            "https://site.web.api.espn.com/apis/common/v3/sports/soccer/esp.1/athletes/16340",
+            "FotMob 5868114: Valencia player 1284429, Javier Guerra, shirt 8; ESPN same fixture/team, profile DOB 13/5/2003"
+          ]
+        }
+      }
+    }
+  }
+}

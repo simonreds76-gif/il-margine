@@ -8,6 +8,11 @@ on:
     - cron: "45 9-22 * * *"
   workflow_dispatch:
     inputs:
+      keeper_probe_only:
+        description: "Only test GOAL/ESPN keeper comparison; no models, commits or Telegram"
+        required: false
+        default: false
+        type: boolean
       gk_only:
         description: "Recover GK prices and monitor only (4 Odds API calls; no digest or full rebuild)"
         required: false
@@ -33,6 +38,7 @@ concurrency:
 
 jobs:
   shadow:
+    if: github.event.inputs.keeper_probe_only != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Seasonal gate
@@ -295,3 +301,74 @@ jobs:
           path: ${{ runner.temp }}/football-counts-evidence.patch
           if-no-files-found: ignore
           retention-days: 7
+
+  keeper-source-comparison:
+    # A data-quality shadow, independent of the price/model job succeeding.
+    # Reuse the morning schedule; never run on hourly odds captures.
+    needs: shadow
+    if: >-
+      always() && !cancelled() &&
+      (github.event.schedule == '15 8 * * *' || github.event_name == 'workflow_dispatch') &&
+      github.event.inputs.gk_only != 'true' &&
+      github.event.inputs.keeper_probe_only != 'true' &&
+      github.event.inputs.rebuild_only != 'true' &&
+      github.event.inputs.settlement_only != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - name: Restore existing private keeper comparison
+        id: restore
+        run: python scripts/keeper_feed_store.py restore
+      - name: Compare named keeper saves with GOAL and ESPN
+        id: compare
+        continue-on-error: true
+        env:
+          GOAL_API_KEY: ${{ secrets.GOAL_API_KEY }}
+        run: python scripts/compare-keeper-feeds.py
+      - name: Retain private comparison and coverage exceptions
+        if: always() && steps.restore.outcome == 'success'
+        run: python scripts/keeper_feed_store.py persist
+      - name: Report incomplete source checks
+        if: steps.compare.outcome == 'failure'
+        run: |
+          echo "::error::Keeper source comparison incomplete; saved status lists missing identities, sources or budget deferrals. Live models and settlements are unaffected."
+          exit 1
+
+  keeper-source-verification:
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.keeper_probe_only == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - name: Test mapping, comparison and existing private storage contracts
+        run: |
+          python -m unittest discover -s tests -p test_football_identity.py
+          python -m unittest discover -s tests -p test_keeper_feed_comparison.py
+          python -m unittest discover -s scripts/tests -p test_skyline_store.py
+      - name: Verify fresh authenticated prices-free source responses
+        env:
+          GOAL_API_KEY: ${{ secrets.GOAL_API_KEY }}
+        run: >-
+          python scripts/compare-keeper-feeds.py
+          --output ${{ runner.temp }}/keeper-probe
+          --fixture 5795503 --fixture 5868113 --fixture 5749731
+          --fixture 5881210 --fixture 5802975
