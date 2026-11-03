@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-03T16:41:15Z",
+  "generated_at": "2026-11-03T17:49:14.779605+00:00",
   "league": "ligue-1",
   "row_count": 4,
   "rows": [
@@ -203,7 +203,7 @@
           "source_event_id": "2990038851",
           "match_id": "5802978",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802978",
-          "observed_at": "2026-11-03T16:41:14+00:00",
+          "observed_at": "2026-11-03T17:49:19+00:00",
           "event_date": "2026-10-30",
           "season": "2026/27",
           "team": "Nice",
@@ -239,7 +239,7 @@
           "source_event_id": "2990050685",
           "match_id": "5802978",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802978",
-          "observed_at": "2026-11-03T16:41:14+00:00",
+          "observed_at": "2026-11-03T17:49:19+00:00",
           "event_date": "2026-10-30",
           "season": "2026/27",
           "team": "Nice",
@@ -312,7 +312,7 @@
           "source_event_id": "2990080309",
           "match_id": "5802978",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802978",
-          "observed_at": "2026-11-03T16:41:14+00:00",
+          "observed_at": "2026-11-03T17:49:19+00:00",
           "event_date": "2026-10-30",
           "season": "2026/27",
           "team": "Rennes",
@@ -372,5 +372,13 @@
       "20261103"
     ],
     "matches_checked": 9
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261030"
+    ],
+    "matches_checked": 1
   }
 }

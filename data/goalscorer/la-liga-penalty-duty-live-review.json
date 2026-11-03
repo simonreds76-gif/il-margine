@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-03T16:41:12Z",
+  "generated_at": "2026-11-03T17:49:14.779605+00:00",
   "league": "la-liga",
   "row_count": 2,
   "rows": [
@@ -111,7 +111,7 @@
           "source_event_id": "2992011199",
           "match_id": "5868111",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868111",
-          "observed_at": "2026-11-03T16:41:11+00:00",
+          "observed_at": "2026-11-03T17:49:19+00:00",
           "event_date": "2026-11-01",
           "season": "2026/27",
           "team": "Athletic Club",
@@ -158,5 +158,13 @@
       "20261103"
     ],
     "matches_checked": 10
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261101"
+    ],
+    "matches_checked": 1
   }
 }
