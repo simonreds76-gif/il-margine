@@ -1,16 +1,16 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_save_markets": 2,
-      "named_player_lines": 19,
-      "status": "NAMED_PLAYER_LINES",
+      "events_with_save_markets": 0,
+      "named_player_lines": 0,
+      "status": "NO_SAVE_MARKETS",
       "unnamed_or_team_lines": 0
     },
     "Grosvenor": {
-      "events_with_save_markets": 2,
+      "events_with_save_markets": 0,
       "named_player_lines": 0,
-      "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 11
+      "status": "NO_SAVE_MARKETS",
+      "unnamed_or_team_lines": 0
     },
     "Paddy Power": {
       "events_with_save_markets": 0,
@@ -20,46 +20,43 @@
     }
   },
   "capture_errors": [],
-  "capture_mode": "close",
+  "capture_mode": "publication",
   "direct_source": {
     "bookmaker": "Grosvenor",
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 341,
+      "current_quotes": 0,
       "mapped_quotes": 0,
       "paper_selections": 0,
       "price_or_status_changes": 0,
       "rules": "unverified"
     },
-    "matched": 2,
+    "matched": 0,
     "missing": [],
-    "requests": 4,
-    "rows": 142
+    "requests": 0,
+    "rows": 0
   },
   "discovery_retries": 0,
-  "event_last_checked": {
-    "72221368": "2026-11-02T19:46:48Z",
-    "72478670": "2026-11-02T19:46:48Z"
-  },
+  "event_last_checked": {},
   "events_deferred_by_budget": 0,
-  "events_selected": 2,
-  "events_supported": 2,
-  "events_with_lines": 2,
-  "generated_at": "2026-11-02T19:46:48Z",
-  "last_publication_at": "2026-11-02T18:41:12Z",
+  "events_selected": 0,
+  "events_supported": 0,
+  "events_with_lines": 0,
+  "generated_at": "2026-11-03T02:39:16Z",
+  "last_publication_at": "2026-11-03T02:39:16Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 0,
       "with_prices": 0
     },
     "epl": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 0,
+      "with_prices": 0
     },
     "la-liga": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 0,
+      "with_prices": 0
     },
     "ligue-1": {
       "selected": 0,
@@ -70,75 +67,27 @@
       "with_prices": 0
     }
   },
-  "market_inventory_rows_added": 65,
-  "market_names_observed": [
-    "Anytime Assist",
-    "Anytime Goalscorer",
-    "Bookings Totals",
-    "Both Teams To Score",
-    "Corners Totals",
-    "Corners Totals Away",
-    "Corners Totals Home",
-    "Correct Score",
-    "Double Chance",
-    "Draw No Bet",
-    "European Handicap",
-    "Goalkeeper Saves Away",
-    "Goalkeeper Saves Home",
-    "Half Time / Full Time",
-    "ML",
-    "ML HT",
-    "Player Fouls",
-    "Player Headed Shots on Target",
-    "Player Saves",
-    "Player Shots",
-    "Player Shots on Target",
-    "Player To Assist",
-    "Player To Be Fouled",
-    "Player To Score or Assist",
-    "Player to be Booked",
-    "Spread",
-    "Total Shots Away",
-    "Total Shots Home",
-    "Totals",
-    "Totals HT"
-  ],
+  "market_inventory_rows_added": 0,
+  "market_names_observed": [],
   "moviodds_source": {
     "errors": [],
     "excluded": {
-      "conflicting_quotes": 0,
-      "fixture_not_eligible": 673,
-      "stale_or_missing_market_poll": 1,
-      "unmatched_or_unsupported_fixture": 288
+      "fixture_not_eligible": 619,
+      "unmatched_or_unsupported_fixture": 278
     },
-    "market_count": 3,
-    "quote_count": 83,
-    "received_at": "2026-11-02T19:46:52.007864+00:00",
+    "market_count": 0,
+    "quote_count": 0,
+    "received_at": "2026-11-03T02:39:19.911502+00:00",
     "requests": 1,
     "source": "moviodds_bet365",
-    "status": "OK"
+    "status": "NO_VERIFIED_MARKETS"
   },
-  "publication_recovery": false,
+  "publication_recovery": true,
   "request_budget": 4,
-  "requests_used": 2,
-  "rows_added": 30,
-  "rows_observed": 30,
-  "selected_events": [
-    {
-      "away": "Everton FC",
-      "competition": "England - Premier League",
-      "home": "Newcastle United",
-      "id": 72221368,
-      "kickoff_at": "2026-11-02T20:00:00Z"
-    },
-    {
-      "away": "CA Osasuna",
-      "competition": "Spain - LaLiga",
-      "home": "RC Deportivo de A Coruna",
-      "id": 72478670,
-      "kickoff_at": "2026-11-02T20:00:00Z"
-    }
-  ],
-  "status": "CAPTURED",
-  "three_way_events": 2
+  "requests_used": 1,
+  "rows_added": 0,
+  "rows_observed": 0,
+  "selected_events": [],
+  "status": "NO_GOALKEEPER_SAVE_LINES",
+  "three_way_events": 0
 }
