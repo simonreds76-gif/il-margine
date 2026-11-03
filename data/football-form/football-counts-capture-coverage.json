@@ -1,25 +1,25 @@
 {
-  "generated_at_utc": "2026-11-02T18:42:05Z",
+  "generated_at_utc": "2026-11-03T16:32:26Z",
   "lookback_days": 14,
   "team_shots": {
-    "tracked_fixtures": 198,
-    "fixtures_with_pre_kickoff_snapshot": 198,
+    "tracked_fixtures": 200,
+    "fixtures_with_pre_kickoff_snapshot": 200,
     "fixtures_without_pre_kickoff_snapshot": 0,
-    "true_close_fixtures": 95,
-    "true_close_coverage": 0.479798,
-    "median_close_lag_minutes": 121.25,
-    "p90_close_lag_minutes": 910.59,
+    "true_close_fixtures": 100,
+    "true_close_coverage": 0.5,
+    "median_close_lag_minutes": 120.06,
+    "p90_close_lag_minutes": 958.19,
     "target": 0.7,
     "passes": false
   },
   "corners": {
-    "tracked_fixtures": 106,
-    "fixtures_with_pre_kickoff_snapshot": 106,
+    "tracked_fixtures": 108,
+    "fixtures_with_pre_kickoff_snapshot": 108,
     "fixtures_without_pre_kickoff_snapshot": 0,
     "true_close_fixtures": 54,
-    "true_close_coverage": 0.509434,
-    "median_close_lag_minutes": 104.78,
-    "p90_close_lag_minutes": 3974.88,
+    "true_close_coverage": 0.5,
+    "median_close_lag_minutes": 517.31,
+    "p90_close_lag_minutes": 4049.88,
     "target": 0.5,
     "passes": true
   }

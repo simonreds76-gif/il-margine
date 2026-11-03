@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-03T02:39:36Z",
+  "generated_at": "2026-11-03T16:32:46Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -35,8 +35,8 @@
       "dominant_side_share": 0.928571
     },
     "latest_scan": {
-      "state": "EXPECTED_EMPTY_CAPTURE_WINDOW",
-      "explanation": "The successful Team Shots scan found no supported fixtures in its capture window. Stored corners rows are outside that window.",
+      "state": "POST_UNLOCK_NO_SCORED_CANDIDATES",
+      "explanation": "The peer football-count lane reached matchday 4+, but this lane produced no scored candidates. Check current price capture and fixture joins.",
       "scored_rows": 0,
       "scored_fixtures": 0,
       "eligible_rows": 0,
@@ -47,22 +47,8 @@
       "matchday_min": null,
       "matchday_max": null,
       "next_unlock": null,
-      "operational_alert_required": false,
-      "operational_alert_code": null,
-      "capture_window_evidence": {
-        "capture_at": "2026-11-03T02:39:15Z",
-        "capture_window_end": "2026-11-04T02:39:15Z",
-        "capture_run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/41567346992",
-        "leagues_checked": [
-          "bundesliga",
-          "epl",
-          "la-liga",
-          "ligue-1",
-          "serie-a"
-        ],
-        "events_found": 0,
-        "peer_rows_outside_window": 458
-      },
+      "operational_alert_required": true,
+      "operational_alert_code": "POST_UNLOCK_NO_SCORED_CANDIDATES",
       "rule_feasibility": {
         "affected_rows": 0,
         "rows_capable_of_minimum_edge": 0,
@@ -74,7 +60,7 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-03T02:39:25Z",
+      "generated_at": "2026-11-03T16:32:27Z",
       "status": "OK",
       "missing_history": [],
       "scored_fixtures": 0
@@ -86,19 +72,19 @@
     "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 170,
-      "settled": 146,
-      "pending": 24,
-      "pnl_units": -14.329,
-      "roi": -0.098144,
+      "signals": 173,
+      "settled": 150,
+      "pending": 23,
+      "pnl_units": -13.899,
+      "roi": -0.09266,
       "true_close_n": 73,
-      "true_close_coverage": 0.5,
+      "true_close_coverage": 0.486667,
       "mean_true_close_clv": 0.008838,
       "side_counts": {
         "over": 36,
-        "under": 134
+        "under": 137
       },
-      "dominant_side_share": 0.788235
+      "dominant_side_share": 0.791908
     },
     "warmup_tracking": {
       "signals": 36,
@@ -116,17 +102,17 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "NO_EDGE_AFTER_UNLOCK",
-      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 458,
-      "scored_fixtures": 31,
-      "eligible_rows": 0,
-      "eligible_fixtures": 0,
-      "blocked_rows": 458,
+      "state": "ELIGIBLE_CANDIDATES_PRESENT",
+      "explanation": "At least one candidate passed every locked shadow gate.",
+      "scored_rows": 506,
+      "scored_fixtures": 34,
+      "eligible_rows": 68,
+      "eligible_fixtures": 12,
+      "blocked_rows": 438,
       "blocker_rows": {
-        "edge_below_3pct": 353,
-        "price_not_fresh_10m": 458,
-        "price_older_than_3h": 458
+        "edge_below_3pct": 413,
+        "price_not_fresh_10m": 56,
+        "price_older_than_3h": 56
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 9,
@@ -135,6 +121,6 @@
       "operational_alert_required": false,
       "operational_alert_code": null
     },
-    "promotion_gate": "PASS"
+    "promotion_gate": "BLOCKED"
   }
 }

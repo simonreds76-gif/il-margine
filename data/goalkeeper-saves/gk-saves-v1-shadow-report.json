@@ -30,12 +30,12 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-11-03T02:39:20.680109+00:00",
+    "checked_at": "2026-11-03T16:32:57.939590+00:00",
     "counts": {},
     "saved": 0,
     "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-11-03T02:39:20Z",
+  "generated_at": "2026-11-03T16:32:57Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
@@ -43,7 +43,7 @@
     "exclusions": {},
     "forecast_fixtures": 138,
     "forecast_keepers": 282,
-    "generated_at": "2026-11-03T02:39:20.794681+00:00",
+    "generated_at": "2026-11-03T16:32:57.956613+00:00",
     "last_capture_at": "2026-11-01T20:49:53.294138+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
@@ -51,20 +51,20 @@
     "next_review_at": null,
     "paired_scores": {
       "current": {
-        "brier": 0.18339475685087758,
-        "log_loss": 0.5439379650070146
+        "brier": 0.18312724718911688,
+        "log_loss": 0.5431150848512408
       },
       "keeper_watch": {
-        "brier": 0.18236472110676977,
-        "log_loss": 0.5442833477750574
+        "brier": 0.181913837065032,
+        "log_loss": 0.5428450963067492
       }
     },
-    "paired_settled_fixtures": 118,
+    "paired_settled_fixtures": 122,
     "paper_stake": 0.5,
     "records": {
       "current": {
         "losses": 16,
-        "overdue": 3,
+        "overdue": 4,
         "pending": 0,
         "profit": -0.9359999999999996,
         "pushes": 0,
@@ -95,7 +95,7 @@
       "Bet365": {
         "current": {
           "losses": 15,
-          "overdue": 1,
+          "overdue": 2,
           "pending": 0,
           "profit": -1.2309999999999997,
           "pushes": 0,
@@ -223,7 +223,7 @@
         "match_id": "5881210",
         "model": "current",
         "odds": 1.8,
-        "overdue": false,
+        "overdue": true,
         "player_id": "406501",
         "profit": 0,
         "reason": "incomplete_or_conflicting_full_match_count",
@@ -1217,10 +1217,9 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 10,
       "incomplete_or_conflicting_full_match_count": 16,
       "keeper_identity_unresolved": 4,
-      "team_keeper_participation_or_rules_review": 19,
+      "team_keeper_participation_or_rules_review": 21,
       "verified_different_starting_keeper": 11
     },
     "source_extension": {

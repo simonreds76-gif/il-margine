@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-11-02T18:25:47.884264+00:00",
+  "checked_at": "2026-11-03T16:17:15.777492+00:00",
   "scopes": {
     "epl/2026": {
-      "matches": 89,
+      "matches": 90,
       "matched": 0,
-      "missing": 89,
+      "missing": 90,
       "affected_clubs": [
         "Arsenal",
         "Aston Villa",
@@ -561,13 +561,19 @@
           "home": "Liverpool",
           "away": "Arsenal",
           "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-02",
+          "home": "Newcastle",
+          "away": "Everton",
+          "reason": "no_exact_fixture"
         }
       ]
     },
     "serie-a/2026": {
-      "matches": 98,
+      "matches": 100,
       "matched": 0,
-      "missing": 98,
+      "missing": 100,
       "affected_clubs": [
         "Atalanta",
         "Bologna",
@@ -1178,13 +1184,25 @@
           "home": "Juventus",
           "away": "Napoli",
           "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-02",
+          "home": "Sassuolo",
+          "away": "Fiorentina",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-02",
+          "home": "Atalanta",
+          "away": "Parma",
+          "reason": "no_exact_fixture"
         }
       ]
     },
     "la-liga/2026": {
-      "matches": 108,
+      "matches": 109,
       "matched": 0,
-      "missing": 108,
+      "missing": 109,
       "affected_clubs": [
         "Alaves",
         "Ath Bilbao",
@@ -1855,6 +1873,12 @@
           "home": "Ath Bilbao",
           "away": "Sociedad",
           "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-02",
+          "home": "La Coruna",
+          "away": "Osasuna",
+          "reason": "no_exact_fixture"
         }
       ]
     },
@@ -2318,9 +2342,9 @@
       ]
     },
     "ligue-1/2026": {
-      "matches": 80,
+      "matches": 81,
       "matched": 0,
-      "missing": 80,
+      "missing": 81,
       "affected_clubs": [
         "Angers",
         "Auxerre",
@@ -2820,6 +2844,12 @@
           "date": "2026-11-01",
           "home": "Marseille",
           "away": "Toulouse",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-02",
+          "home": "Lorient",
+          "away": "Brest",
           "reason": "no_exact_fixture"
         }
       ]
