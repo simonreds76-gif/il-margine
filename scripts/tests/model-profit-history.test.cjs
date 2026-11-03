@@ -48,6 +48,9 @@ test('empty and all losing histories preserve zero origin', () => {
   const r = profitWindow(profitHistory([row('2026-10-01', -1), row('2026-10-02', -1)], 'props-record'), null);
   assert.equal(r.opening, 0); assert.equal(r.drawdown, 2);
 });
+test('unresolved status overrides stale outcome and profit fields', () => {
+  assert.equal(profitHistory([row('2026-10-01', 50, { settlement_status: 'pending' }), row('2026-10-01', 20, { settlement_status: 'void' })], 'props-record').settled, 0);
+});
 test('saved current private props ledger reconciles without modifying it', { skip: !process.env.MONITOR_SNAPSHOT_TEST }, () => {
   const d = JSON.parse(fs.readFileSync(process.env.MONITOR_SNAPSHOT_TEST, 'utf8'));
   const s = d.sections.tennis_props_shadow_decision;

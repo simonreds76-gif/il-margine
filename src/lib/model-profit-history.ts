@@ -15,6 +15,7 @@ export function profitHistory(rows: SignalRow[], view: string, model = "referenc
   let omitted = 0;
   const ids = new Set<string>();
   for (const row of visibleRows(rows, view, model)) {
+    if (["pending", "open", "unsettled", "void", "cancelled", "canceled", "quarantined", "excluded", "duplicate", "blocked"].includes(text(pick(row, ["settlement_status", "status"])).trim().toLowerCase())) continue;
     const card = selectionCard(row, view);
     if (!["Won", "Lost", "Push", "Half win", "Half loss", "Settled"].includes(card.outcome)) continue;
     const id = text(pick(row, ["signal_id", "pick_id"]));
