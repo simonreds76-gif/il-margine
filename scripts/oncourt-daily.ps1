@@ -457,6 +457,7 @@ try {
 try {
     $nativeEloExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis_elo_native_source.py") -Label "Adult-history Elo research source" -TimeoutSeconds 180
     if ($nativeEloExit -ne 0) { Log "WARNING: native Elo research source needs review; live ratings unchanged" }
+    $null = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis_input_health.py", "--phase", "standalone") -Label "Elo coverage after research source refresh" -TimeoutSeconds 45
 } catch { Log "WARNING: native Elo source process error; live ratings unchanged" }
 # Outcomes from saved raw BP quotes, no new prices or notifications.
 try {
