@@ -63,6 +63,15 @@ class VerifiedRecoveryTests(unittest.TestCase):
     def test_auth_recovery_still_requires_verified_receipt(self):
         self.assertFalse(self.check(self.receipt(),error_type='ReturnAtlasAuthRequired'))
         self.assertTrue(self.check({**self.receipt(),'verified_commit':'wrong'},error_type='ReturnAtlasAuthRequired'))
+    def test_legacy_generic_failure_requires_exclusive_atlas_diagnosis(self):
+        receipt={**self.receipt(),'diagnosed_error_type':'ReturnAtlasAuthRequired',
+                 'runtime_failed_scripts':['refresh-return-atlas.py'],'runtime_run_id':'original-runtime-run'}
+        self.assertFalse(self.check(receipt,error_type='TennisStepFailed'))
+        for extra in [{}, {'runtime_failed_scripts':['pricing.py']},
+                      {'runtime_failed_scripts':['refresh-return-atlas.py','pricing.py']},
+                      {'runtime_run_id':''}, {'verified_commit':'wrong'}]:
+            candidate=self.receipt() if not extra else {**receipt,**extra}
+            self.assertTrue(self.check(candidate,error_type='TennisStepFailed'))
     def test_receipt_for_another_run_does_not_clear_failure(self):
         self.assertTrue(self.check({**self.receipt(), 'run_id': 'older-run'}))
     def test_different_error_is_not_cleared(self):

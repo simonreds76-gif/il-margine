@@ -21,7 +21,18 @@ def request_json(method, url, headers, payload=None):
 def verified_atlas_recovery(row, details):
     """Accept a run-specific recovery receipt without rewriting failure history."""
     recovery = details.get('ops_failure_resolution')
-    if row.get('error_type') not in ('ReturnAtlasRefreshFailed', 'ReturnAtlasAuthRequired') or not isinstance(recovery, dict):
+    if not isinstance(recovery, dict):
+        return False
+    # Older wrappers masked the Atlas error with a generic final-step failure.
+    # Accept recovery only when the saved runtime diagnosis proves Atlas was
+    # the sole failed step; other generic tennis failures remain actionable.
+    diagnosed_atlas_only = (
+        row.get('error_type') == 'TennisStepFailed'
+        and recovery.get('diagnosed_error_type') == 'ReturnAtlasAuthRequired'
+        and recovery.get('runtime_failed_scripts') == ['refresh-return-atlas.py']
+        and bool(recovery.get('runtime_run_id'))
+    )
+    if row.get('error_type') not in ('ReturnAtlasRefreshFailed', 'ReturnAtlasAuthRequired') and not diagnosed_atlas_only:
         return False
     expected = recovery.get('expected_commit', '')
     version = recovery.get('expected_data_version', '')
