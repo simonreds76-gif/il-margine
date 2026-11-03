@@ -1,9 +1,25 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-03T06:54:54Z",
+  "generated_at": "2026-11-03T16:41:28Z",
   "league": "serie-a",
-  "row_count": 1,
+  "row_count": 6,
   "rows": [
+    {
+      "team": "Bologna",
+      "team_key": "bologna",
+      "player_name": "Federico Bernardeschi",
+      "player_key": "federico bernardeschi",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-31"
+    },
     {
       "team": "Como",
       "team_key": "como",
@@ -19,6 +35,70 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-11-01"
+    },
+    {
+      "team": "Frosinone",
+      "team_key": "frosinone",
+      "player_name": "Giacomo Calò",
+      "player_key": "giacomo cal",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-29"
+    },
+    {
+      "team": "Monza",
+      "team_key": "monza",
+      "player_name": "Gustavo Varela",
+      "player_key": "gustavo varela",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-31"
+    },
+    {
+      "team": "Monza",
+      "team_key": "monza",
+      "player_name": "Patrick Cutrone",
+      "player_key": "patrick cutrone",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-31"
+    },
+    {
+      "team": "Parma",
+      "team_key": "parma",
+      "player_name": "Adrián Bernabé",
+      "player_key": "adri n bernab",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-28"
     }
   ]
 }

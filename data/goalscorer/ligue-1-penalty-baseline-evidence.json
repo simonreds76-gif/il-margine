@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-03T06:55:02Z",
+  "generated_at": "2026-11-03T16:41:29Z",
   "league": "ligue-1",
-  "row_count": 2,
+  "row_count": 4,
   "rows": [
     {
       "team": "Lorient",
@@ -19,6 +19,38 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-11-02"
+    },
+    {
+      "team": "Nice",
+      "team_key": "nice",
+      "player_name": "Elye Wahi",
+      "player_key": "elye wahi",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
+      "observed_share": 1.0,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-30"
+    },
+    {
+      "team": "Rennes",
+      "team_key": "rennes",
+      "player_name": "Boulaye Dia",
+      "player_key": "boulaye dia",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-10-30"
     },
     {
       "team": "Strasbourg",
