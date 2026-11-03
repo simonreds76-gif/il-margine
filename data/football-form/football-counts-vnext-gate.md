@@ -1,6 +1,6 @@
 # Football Counts vNext Gate
 
-- Generated: 2026-11-03T17:19:56Z
+- Generated: 2026-11-03T22:30:39Z
 - This snapshot cannot promote or route bets.
 
 ## Team Shots v4
@@ -25,7 +25,7 @@
 - Prospective signals: 173 (150 settled / 23 pending)
 - Warm-up tracking: 36 (36 settled / 0 pending), -2.50u, ROI -7.0%
 - Latest scan: **NO_EDGE_AFTER_UNLOCK**; 506 rows / 34 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
-- Blockers: {'edge_below_3pct': 413, 'price_not_fresh_10m': 506, 'price_older_than_3h': 56}
+- Blockers: {'edge_below_3pct': 413, 'price_not_fresh_10m': 506, 'price_older_than_3h': 506}
 - P/L / ROI: -13.90u / -9.3%
 - True-close coverage: 73/150 (48.7%)
 - Mean true-close CLV: +0.88%
