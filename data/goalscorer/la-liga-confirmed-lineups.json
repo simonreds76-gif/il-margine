@@ -2,21 +2,306 @@
   "fixtures": [
     {
       "fotmob_match_id": 5868128,
+      "fotmob_page_url": "/matches/sevilla-vs-deportivo-alaves/2q9que#5868128",
+      "home_fotmob_team_id": 8302,
+      "away_fotmob_team_id": 9866,
       "match_date": "2026-11-06",
       "kickoff_utc": "2026-11-06T20:00:00Z",
       "home_team": "Sevilla",
       "away_team": "Deportivo Alavés",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-4-2",
+      "away_formation": "4-5-1",
+      "home_players": [
+        "Odysseas Vlachodimos",
+        "Juan Iglesias",
+        "Andrés Lopez",
+        "Kike Salas",
+        "Gabriel Suazo",
+        "Chidera Ejuke",
+        "Lucien Agoumé",
+        "Youssouf Fofana",
+        "Félix Correia",
+        "Lucas Stassin",
+        "Alfon González"
+      ],
+      "away_players": [
+        "Antonio Sivera",
+        "Jonny Otto",
+        "Nahuel Tenaglia",
+        "Ville Koski",
+        "Youssef Enríquez",
+        "Ángel Pérez",
+        "Ander Guevara",
+        "Carlos Protesoni",
+        "Denis Suárez",
+        "Abderrahman Rebbach",
+        "Lucas Boyé"
+      ],
+      "home_starters": [
+        {
+          "name": "Odysseas Vlachodimos",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-4-2",
+          "position_id": 11,
+          "player_id": 304355,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Juan Iglesias",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 32,
+          "player_id": 1102289,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Andrés Lopez",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 34,
+          "player_id": 1334767,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Kike Salas",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 36,
+          "player_id": 1327489,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Gabriel Suazo",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 38,
+          "player_id": 659490,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Chidera Ejuke",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 72,
+          "player_id": 837270,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Lucien Agoumé",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 74,
+          "player_id": 971790,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Youssouf Fofana",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 76,
+          "player_id": 954621,
+          "shirt_number": "24"
+        },
+        {
+          "name": "Félix Correia",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 78,
+          "player_id": 942358,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Lucas Stassin",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-4-2",
+          "position_id": 104,
+          "player_id": 1398377,
+          "shirt_number": "19"
+        },
+        {
+          "name": "Alfon González",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-4-2",
+          "position_id": 106,
+          "player_id": 926643,
+          "shirt_number": "7"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Antonio Sivera",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-5-1",
+          "position_id": 11,
+          "player_id": 530468,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Jonny Otto",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-5-1",
+          "position_id": 32,
+          "player_id": 360918,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Nahuel Tenaglia",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-5-1",
+          "position_id": 34,
+          "player_id": 860314,
+          "shirt_number": "14"
+        },
+        {
+          "name": "Ville Koski",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-5-1",
+          "position_id": 36,
+          "player_id": 1056461,
+          "shirt_number": "16"
+        },
+        {
+          "name": "Youssef Enríquez",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-5-1",
+          "position_id": 38,
+          "player_id": 1403692,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Ángel Pérez",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-5-1",
+          "position_id": 71,
+          "player_id": 1563022,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Ander Guevara",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-5-1",
+          "position_id": 73,
+          "player_id": 873827,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Carlos Protesoni",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-5-1",
+          "position_id": 75,
+          "player_id": 799914,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Denis Suárez",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-5-1",
+          "position_id": 77,
+          "player_id": 282281,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Abderrahman Rebbach",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-5-1",
+          "position_id": 79,
+          "player_id": 1200941,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Lucas Boyé",
+          "line_index": 2,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-5-1",
+          "position_id": 115,
+          "player_id": 561164,
+          "shirt_number": "15"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-11-03T17:49:39.730584+00:00",
-      "changed_at": "2026-11-03T02:54:07.556349+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Miguel Sierra",
+        "Marcão",
+        "Manu Bueno",
+        "Isaac Romero"
+      ],
+      "away_unavailable": [
+        "Facundo Garcés",
+        "Mikel Rodríguez"
+      ],
+      "observed_at": "2026-11-03T23:16:44.848988+00:00",
+      "changed_at": "2026-11-03T23:16:44.848988+00:00"
     }
   ]
 }
