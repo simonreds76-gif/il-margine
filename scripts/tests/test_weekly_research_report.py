@@ -148,7 +148,15 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertEqual(summary["failed_lines"], ["9.5", "12.5"])
 
     def test_weekly_payload_includes_automation_budget(self) -> None:
-        payload = REPORT["build_payload"]()
+        original = REPORT['load_json']
+        fixtures = {
+            REPORT['GOALKEEPER_SAVES_EVIDENCE']: {'folds': [{'models': {
+                'NB2_FULL': {'brier': .2, 'log_loss': .6},
+                'INCUMBENT': {'brier': .21, 'log_loss': .62}}}]},
+            REPORT['GOALKEEPER_SAVES_MARKET_PROBE']: {'status': 'OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED'},
+        }
+        with patch.dict(REPORT['build_payload'].__globals__, {'load_json': lambda path: fixtures.get(path, original(path))}):
+            payload = REPORT["build_payload"]()
         self.assertIn("automation_budget", payload)
         self.assertIn("corners_v4_g0", payload)
         self.assertIn("goalkeeper_saves_v1", payload)
@@ -163,7 +171,12 @@ class WeeklyResearchReportTests(unittest.TestCase):
         self.assertFalse(payload["tennis_venue_ace_factor_v1"]["automatic_promotion"])
 
     def test_goalscorer_weekly_evidence_is_decision_ready(self) -> None:
-        goalscorer = REPORT["build_payload"]()["goalscorer_v2"]
+        walkforward = ('Pooled metrics\nvariant,n,brier,log_loss,ece\n'
+                       'raw,100,0.2,0.6,0.08\nbeta,100,0.19,0.59,0.06\n\n')
+        original = REPORT['load_text']
+        with patch.dict(REPORT['build_payload'].__globals__, {'load_text': lambda path:
+                walkforward if path.name == 'walkforward-report.txt' else original(path)}):
+            goalscorer = REPORT["build_payload"]()["goalscorer_v2"]
         calibration = goalscorer["calibration"]
         self.assertGreater(calibration["n"], 0)
         self.assertIsNotNone(calibration["raw_brier"])
@@ -224,7 +237,7 @@ class WeeklyResearchReportTests(unittest.TestCase):
         }
         payload["tennis_props_shadow_decision"].update({"settled": 14, "roi_pct": 30.5})
         message = REPORT["telegram_text"](payload)
-        self.assertIn("KEEP COLLECTING: Strict gap is positive but provisional", message)
+        self.assertIn("KEEP COLLECTING: Strict gap research (overlapping) is positive but provisional", message)
         self.assertIn("WATCH ONLY: Aces/DF remains provisional; review all evidence gates", message)
 
     def test_missing_local_gap_evidence_is_not_rendered_as_zero_results(self) -> None:
@@ -236,7 +249,7 @@ class WeeklyResearchReportTests(unittest.TestCase):
             "side_flip_by_surface": {},
         }
         message = REPORT["tennis_telegram_text"](payload)
-        self.assertIn("registered record unavailable", message)
+        self.assertIn("alert-lane record unavailable", message)
         self.assertNotIn("0/150 settled", message)
 
     def test_fresh_local_snapshot_replaces_stale_hosted_tennis_lanes(self) -> None:

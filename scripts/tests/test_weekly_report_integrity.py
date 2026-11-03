@@ -15,8 +15,8 @@ class ReportingRegression(unittest.TestCase):
         self.assertIn('awaiting evidence',text)
     def test_provisional_uses_separate_lane_and_its_stake(self):
         payload={'generated_at':'test','tennis_model_evidence':{'lanes':{'provisional_hard':{'wins':17,'losses':14,'void':1,'roi_pct':28.548,'pnl_units':4.425,'staked_units':15.5}},'gap_replacements':{'strict_gap_10_20_same_side':{'performance':{'settled':53,'pnl_units':13.869,'roi_pct':27.19}}}}}
-        stub=types.SimpleNamespace(weekly_text=lambda _: '')
-        with patch.dict(sys.modules,{'tennis_hardcourt_scout':stub}),patch.object(w,'most_aces_suspended',return_value=True):
+        # Patch the renderer, not the entire shared module imported by Indoor Scout.
+        with patch('tennis_hardcourt_scout.weekly_text',return_value=''),patch.object(w,'most_aces_suspended',return_value=True):
             text=w.tennis_telegram_text(payload)
         self.assertIn('17W/14L',text);self.assertIn('15.50u',text);self.assertNotIn('13.87u',text)
         self.assertIn('Expansion: alert-lane record unavailable',text)

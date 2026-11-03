@@ -10,7 +10,6 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from urllib.parse import urljoin, urlparse, parse_qs
 from urllib.request import Request, urlopen
-from bs4 import BeautifulSoup
 
 VERSION = 'ta-elo-isolated-v1'
 URLS = {t:f'https://www.tennisabstract.com/reports/{t.lower()}_elo_ratings.html' for t in ('ATP','WTA')}
@@ -84,6 +83,9 @@ def fetch(tour):
     return raw
 
 def parse(raw,tour,observed_at,minimum=MIN_ROWS):
+    # Reporting imports the JSON/hash helpers without collecting HTML. Keep the
+    # collector's optional dependency out of the weekly runner's import graph.
+    from bs4 import BeautifulSoup
     if tour not in URLS: raise ValueError('unknown_tour')
     now=utc(observed_at)
     if b'</html>' not in raw.lower() or b'</table>' not in raw.lower():raise ValueError('truncated_source_document')
