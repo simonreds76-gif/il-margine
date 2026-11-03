@@ -28,14 +28,37 @@ from matchup_refresh import prepare as prepare_matchup
 from tennis_score_integrity import score_detail_enrichment
 
 
+class PublicationAuthRequired(RuntimeError):
+    pass
+
+
 def run(args, cwd=None, env=None, timeout=600):
+    is_vercel = Path(str(args[0])).name.lower() in ('vercel', 'vercel.cmd', 'vercel.exe')
+    if is_vercel:
+        # Scheduled publication must never open an interactive device-login flow.
+        env = {**(os.environ if env is None else env), 'CI': '1', 'VERCEL_TELEMETRY_DISABLED': '1'}
     result = subprocess.run([str(a) for a in args], cwd=cwd, env=env, capture_output=True,
                             text=True, encoding='utf-8', errors='replace', timeout=timeout,
                             creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
     if result.returncode:
+        if is_vercel and any(marker in (result.stderr + result.stdout).lower() for marker in (
+                'no existing credentials', 'no-credentials-found', 'token is not valid',
+                'invalid token', 'token has expired', 'authentication required')):
+            raise PublicationAuthRequired('Return Atlas publication requires Vercel CLI sign-in. '
+                                          'Run vercel login deliberately on this PC; forecasts and signals do not need rerunning.')
         # Never print environment variables, authenticated headers or CLI credentials.
         raise RuntimeError(f'{Path(str(args[0])).name} failed ({result.returncode}): {result.stderr[-1800:]}')
     return result.stdout
+
+
+def check_publication_access(checkout):
+    vercel = shutil.which('vercel.cmd') or shutil.which('vercel')
+    if not vercel:
+        raise RuntimeError('Vercel CLI unavailable')
+    project = json.loads(run([vercel, 'api', f'/v9/projects/{PROJECT}?teamId={TEAM}', '--raw'],
+                             checkout, timeout=30))
+    if project.get('id') != PROJECT or project.get('accountId') != TEAM:
+        raise RuntimeError('Vercel publication project/team mismatch; no deployment attempted')
 
 
 def read_json(path):
@@ -236,6 +259,9 @@ def refresh(config, dry_run=False):
     save = lambda: write_json(status_path, status)
     save()
     try:
+        if not dry_run:
+            # Fail promptly before copying archives, committing data or starting a build.
+            check_publication_access(checkout if checkout.exists() else None)
         if not (checkout / '.git').exists():
             if dry_run:
                 raise RuntimeError('Provision the isolated checkout before the dry run')
@@ -348,7 +374,8 @@ def refresh(config, dry_run=False):
             save()
         return status
     except Exception as exc:
-        status.update(status='failed', error=str(exc), failedAt=datetime.now(timezone.utc).isoformat())
+        status.update(status='failed', error=str(exc), errorType=type(exc).__name__,
+                      failedAt=datetime.now(timezone.utc).isoformat())
         save()
         raise
 

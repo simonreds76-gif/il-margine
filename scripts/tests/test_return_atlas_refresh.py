@@ -1,12 +1,56 @@
 import importlib.util
 from pathlib import Path
 import unittest
+import json
+import tempfile
 from copy import deepcopy
 from unittest.mock import Mock, patch
 
 spec = importlib.util.spec_from_file_location('refresh', Path(__file__).parents[1] / 'refresh-return-atlas.py')
 refresh = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(refresh)
+
+
+class PublicationAccessTests(unittest.TestCase):
+    def test_missing_auth_is_specific_and_noninteractive(self):
+        result = Mock(returncode=1, stderr='No existing credentials found', stdout='')
+        with patch.object(refresh.subprocess, 'run', return_value=result) as process:
+            with self.assertRaises(refresh.PublicationAuthRequired):
+                refresh.run(['vercel.cmd', 'api', '/v9/projects/test'])
+        self.assertEqual(process.call_args.kwargs['env']['CI'], '1')
+        self.assertNotIn('login', process.call_args.args[0])
+
+    def test_network_error_is_not_mislabelled_as_missing_auth(self):
+        result = Mock(returncode=1, stderr='Network unavailable', stdout='')
+        with patch.object(refresh.subprocess, 'run', return_value=result):
+            with self.assertRaises(RuntimeError) as failure:
+                refresh.run(['vercel.cmd', 'api', '/v9/projects/test'])
+        self.assertNotIsInstance(failure.exception, refresh.PublicationAuthRequired)
+
+    def test_auth_preflight_requires_the_exact_project_and_team(self):
+        for project in [{'id':refresh.PROJECT, 'accountId':refresh.TEAM},
+                        {'id':'wrong', 'accountId':refresh.TEAM},
+                        {'id':refresh.PROJECT, 'accountId':'wrong'}]:
+            with patch.object(refresh.shutil, 'which', return_value='vercel.cmd'), \
+                 patch.object(refresh, 'run', return_value=json.dumps(project)) as run:
+                if project['id'] == refresh.PROJECT and project['accountId'] == refresh.TEAM:
+                    refresh.check_publication_access(None)
+                else:
+                    with self.assertRaises(RuntimeError): refresh.check_publication_access(None)
+                self.assertEqual(run.call_args.kwargs['timeout'], 30)
+
+    def test_missing_auth_records_failure_before_any_archive_or_git_work(self):
+        with tempfile.TemporaryDirectory() as directory:
+            state=Path(directory)
+            config={'stateDirectory':str(state), 'checkout':str(state/'checkout')}
+            with patch.object(refresh, 'check_publication_access', side_effect=refresh.PublicationAuthRequired('Sign in')), \
+                 patch.object(refresh, 'run') as run:
+                with self.assertRaises(refresh.PublicationAuthRequired): refresh.refresh(config)
+            run.assert_not_called()
+            status=refresh.read_json(state/'status.json')
+            self.assertEqual(status['errorType'], 'PublicationAuthRequired')
+            self.assertEqual(status['status'], 'failed')
+            self.assertFalse((state/'candidate').exists())
 
 
 class PublicationGateTests(unittest.TestCase):
