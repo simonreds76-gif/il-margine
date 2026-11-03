@@ -152,8 +152,8 @@
     "5881213": "2026-11-03",
     "5881214": "2026-11-03"
   },
-  "updated_at": "2026-11-03T17:49:14.779605+00:00",
-  "checked_this_run": 9,
+  "updated_at": "2026-11-03T18:01:01.459216+00:00",
+  "checked_this_run": 0,
   "errors": [],
   "fixtures": {
     "5749700": {
@@ -4346,18 +4346,16 @@
         "home": {
           "id": 9746,
           "score": 1,
-          "name": "Le Havre",
-          "longName": "Le Havre"
+          "name": "Le Havre"
         },
         "away": {
           "id": 9847,
           "score": 5,
           "name": "Paris Saint-Germain",
-          "shortName": "PSG",
-          "longName": "Paris Saint-Germain"
+          "shortName": "PSG"
         },
         "status": {
-          "utcTime": "2026-10-30T18:00:00+00:00",
+          "utcTime": "2026-10-30T18:00:00.000Z",
           "halfs": {
             "firstHalfStarted": "30.10.2026 19:00:36",
             "secondHalfStarted": "30.10.2026 20:04:29"
@@ -4395,17 +4393,15 @@
         "home": {
           "id": 8639,
           "score": 1,
-          "name": "Lille",
-          "longName": "Lille"
+          "name": "Lille"
         },
         "away": {
           "id": 8588,
           "score": 0,
-          "name": "Lens",
-          "longName": "Lens"
+          "name": "Lens"
         },
         "status": {
-          "utcTime": "2026-10-30T20:05:00+00:00",
+          "utcTime": "2026-10-30T20:05:00.000Z",
           "halfs": {
             "firstHalfStarted": "30.10.2026 21:05:30",
             "secondHalfStarted": "30.10.2026 22:06:54"
@@ -4585,17 +4581,15 @@
         "home": {
           "id": 9831,
           "score": 5,
-          "name": "Nice",
-          "longName": "Nice"
+          "name": "Nice"
         },
         "away": {
           "id": 9851,
           "score": 2,
-          "name": "Rennes",
-          "longName": "Rennes"
+          "name": "Rennes"
         },
         "status": {
-          "utcTime": "2026-10-30T18:00:00+00:00",
+          "utcTime": "2026-10-30T18:00:00.000Z",
           "halfs": {
             "firstHalfStarted": "30.10.2026 19:00:16",
             "secondHalfStarted": "30.10.2026 20:04:53"
@@ -6183,17 +6177,15 @@
         "home": {
           "id": 10205,
           "score": 0,
-          "name": "Villarreal",
-          "longName": "Villarreal"
+          "name": "Villarreal"
         },
         "away": {
           "id": 8558,
           "score": 1,
-          "name": "Espanyol",
-          "longName": "Espanyol"
+          "name": "Espanyol"
         },
         "status": {
-          "utcTime": "2026-10-30T20:00:00+00:00",
+          "utcTime": "2026-10-30T20:00:00.000Z",
           "halfs": {
             "firstHalfStarted": "30.10.2026 21:00:27",
             "secondHalfStarted": "30.10.2026 22:02:20"
@@ -7329,19 +7321,17 @@
         "home": {
           "id": 8232,
           "score": 4,
-          "name": "Elversberg",
-          "longName": "Elversberg"
+          "name": "Elversberg"
         },
         "away": {
           "id": 9905,
           "score": 1,
           "name": "Mainz 05",
           "redCards": 1,
-          "shortName": "Mainz",
-          "longName": "Mainz 05"
+          "shortName": "Mainz"
         },
         "status": {
-          "utcTime": "2026-10-30T19:30:00+00:00",
+          "utcTime": "2026-10-30T19:30:00.000Z",
           "numberOfAwayRedCards": 1,
           "halfs": {
             "firstHalfStarted": "30.10.2026 20:30:21",
@@ -7732,7 +7722,7 @@
     },
     "20261030": {
       "ok": true,
-      "checked_at": "2026-11-02T01:00:14.314389+00:00",
+      "checked_at": "2026-11-03T18:01:01.459216+00:00",
       "expected": 5,
       "match_ids": [
         "5802973",
@@ -7799,7 +7789,7 @@
     },
     "20261102": {
       "ok": true,
-      "checked_at": "2026-11-03T17:49:14.779605+00:00",
+      "checked_at": "2026-11-03T18:01:01.459216+00:00",
       "expected": 5,
       "match_ids": [
         "5749731",
@@ -7812,7 +7802,7 @@
     },
     "20261103": {
       "ok": true,
-      "checked_at": "2026-11-03T17:49:14.779605+00:00",
+      "checked_at": "2026-11-03T18:01:01.459216+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
