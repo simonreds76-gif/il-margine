@@ -191,6 +191,24 @@ def observe(root, get, now):
     status['stored_forecasts_missing_elo']=sum(bool(f['missing_elo_keys']) for f in status['fixtures'] if f['fixture_key'] in stored_keys)
     status['unpriced_candidates_missing_elo']=sum(bool(f['missing_elo_keys']) for f in status['fixtures'] if f['fixture_key'] not in stored_keys)
     status['scheduled_export_exclusions']=ignored
+    # Old stored forecasts are not automatically current fixture requirements.
+    # If the schedule cannot be read, keep every stored row in scope and expose
+    # the unavailable schedule rather than silently reporting complete coverage.
+    schedule_available = not ignored.get('export_missing')
+    active_keys = {fixture_key(f) for f in scheduled}
+    for fixture in status['fixtures']:
+        fixture['active_for_coverage'] = not schedule_available or fixture['fixture_key'] in active_keys
+    active = [f for f in status['fixtures'] if f['active_for_coverage']]
+    status['active_schedule_available'] = schedule_available
+    status['active_fixture_count'] = len(active)
+    status['active_fixtures_missing_elo'] = sum(bool(f['missing_elo_keys']) for f in active)
+    status['inactive_stored_forecasts_missing_elo'] = sum(bool(f['missing_elo_keys']) for f in status['fixtures'] if not f['active_for_coverage'])
+    status['active_elo_coverage'] = ('SCHEDULE_UNAVAILABLE' if not schedule_available else
+                                  'MISSING' if status['active_fixtures_missing_elo'] else
+                                  'COMPLETE' if active else 'NO_ACTIVE_FIXTURES')
+    status['stored_input_status'] = status['status']
+    if schedule_available:
+        status['status'] = 'MISSING' if status['active_fixtures_missing_elo'] else 'ELO_LINEAGE_UNVERIFIED'
     from tennis_elo_health import annotate_sources
     names = {}
     player_file = root/'data/oncourt/players_atp.csv'
@@ -257,13 +275,32 @@ def text(status):
     sources=status.get('elo_sources',{}).get('published_research',{})
     published='; '.join(f"{tour} {s.get('state','UNAVAILABLE')} (edition {s.get('publication_date','unknown')})" for tour,s in sources.items())
     missing=status.get('missing_elo_players',[])
-    gaps='; '.join(f"{p['name']}: {', '.join(p['missing_surfaces'])}" for p in missing[:6])
+    descriptions = []
+    for player in missing[:6]:
+        surfaces = []
+        for surface in player['missing_surfaces']:
+            info = player.get('assessments', {}).get(surface, {})
+            kind = info.get('state')
+            if kind == 'NO_VALIDATED_SURFACE_HISTORY':
+                detail = 'no validated surface history; existing fallback still applies'
+            elif kind == 'LIVE_GAP_WITH_RECONSTRUCTED_HISTORY':
+                count = info['validated_match_count']
+                detail = f"{count} validated match{'es' if count != 1 else ''}; reconstructed rating {info['reconstructed_rating']:.1f} remains research-only"
+            else:
+                detail = 'live entry missing; history verification unavailable'
+            if info.get('published_kind') == 'hard_blend_proxy_not_indoor':
+                detail += '; published hard rating is not an indoor record'
+            surfaces.append(surface + ': ' + detail)
+        descriptions.append(player['name'] + ' (' + '; '.join(surfaces) + ')')
+    gaps = '; '.join(descriptions)
     return (f"Tennis input health: {state}. Live Elo provenance remains unverified; "
+            f"Active fixtures missing live Elo: {status.get('active_fixtures_missing_elo','?')}/{status.get('active_fixture_count','?')}. "
             f"Stored forecasts missing Elo: {status.get('stored_forecasts_missing_elo','?')}/{status.get('stored_forecast_count','?')}; "
             f"eligible unpriced singles missing Elo: {status.get('unpriced_candidates_missing_elo','?')}/{status.get('unpriced_export_candidates','?')}. "
             f"Excluded doubles/draw placeholders: {status.get('scheduled_export_exclusions',{}).get('identified_doubles',0)}/{status.get('scheduled_export_exclusions',{}).get('named_draw_placeholder',0)}. "
             +(f'Other checks: {bad}. ' if bad else '')+
             (f'Missing rating inputs: {gaps}. ' if gaps else '')+
+            (f"Inactive saved forecasts with gaps: {status['inactive_stored_forecasts_missing_elo']}. " if status.get('inactive_stored_forecasts_missing_elo') else '')+
             (f'Published Elo research source: {published}; not applied to live prices. ' if published else '')+
             'Legacy row timestamps do not establish the last rating refresh. Existing pricing unchanged.')
 
