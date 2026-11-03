@@ -24,12 +24,114 @@ CHECKPOINT = 'data/penalty-news/capture-state.json'
 PUBLICATION_PREFIX = 'codex/penalty-news-publish-'
 
 
+class GitFailure(RuntimeError):
+    def __init__(self, reason, code):
+        self.reason = reason
+        super().__init__(f'git failed: {reason} (exit {code}); captured evidence retained')
+
+
+def git_failure_reason(message):
+    """Return an allowlisted diagnosis, never credential-bearing CLI output."""
+    message = message.lower()
+    if any(s in message for s in ('authentication failed', 'permission denied', 'error: 403', 'error: 401', 'protected branch', 'gh006', 'gh013')):
+        return 'authentication_or_permission'
+    if any(s in message for s in ('non-fast-forward', 'fetch first', 'cannot lock ref', 'stale info')):
+        return 'branch_advanced'
+    if any(s in message for s in ('timed out', 'could not resolve', 'connection reset', 'remote end hung up', 'error: 502', 'error: 503', 'error: 504')):
+        return 'transport'
+    return 'unclassified'
+
+
 def run(*args, timeout=120, env=None, input_text=None):
     result = subprocess.run([str(v) for v in args], cwd=ROOT, capture_output=True, text=True, timeout=timeout, env=env, input=input_text)
     if result.returncode:
+        if Path(str(args[0])).stem == 'git':
+            raise GitFailure(git_failure_reason(result.stdout + result.stderr), result.returncode)
         # CLI errors may echo configuration; retain only the command name and code.
         raise RuntimeError(f'{Path(str(args[0])).name} exited {result.returncode}')
     return result.stdout.strip()
+
+
+def capture_push(base, state):
+    """Preserve a news-only commit across concurrent, unrelated branch writes.
+
+    Never force-push, replay the collector or overwrite concurrent news edits.
+    Build Git objects on the remote tree; leave the checkout and index alone.
+    """
+    captured = run('git', 'rev-parse', 'HEAD')
+    paths = run('git', 'diff', '--name-only', base, captured).splitlines()
+    if not paths or set(paths) - {DATA, CHECKPOINT}:
+        raise RuntimeError('Capture push requires a news-only commit')
+    receipt = {'captureBase': base, 'captureSha': captured, 'attempts': []}
+    target = captured
+
+    def save(status, **extra):
+        receipt.update(status=status, **extra)
+        (state / 'capture-push.json').write_text(json.dumps(receipt, indent=2))
+
+    def remote_head():
+        run('git', 'fetch', '--no-tags', 'origin', 'refs/heads/' + BRANCH)
+        return run('git', 'rev-parse', 'FETCH_HEAD')
+
+    def contains(head, commit):
+        return run('git', 'merge-base', head, commit) == commit
+
+    save('pending')
+    for attempt in range(1, 4):
+        remote = remote_head()
+        if contains(remote, target):
+            save('saved', sourceSha=remote)
+            return remote
+        if not contains(remote, base):
+            save('blocked', reason='branch_history_changed')
+            raise RuntimeError('News branch history changed; captured evidence retained')
+        if run('git', 'diff', '--name-only', base, remote, '--', DATA, CHECKPOINT):
+            save('blocked', reason='concurrent_news_change')
+            raise RuntimeError('Concurrent news data changed; refusing overwrite; captured evidence retained')
+        if remote != base:
+            index = state / 'capture-push.index'
+            index.unlink(missing_ok=True)
+            env = dict(os.environ, GIT_INDEX_FILE=str(index.resolve()))
+            run('git', 'read-tree', remote, env=env)
+            for path in paths:
+                entry = run('git', 'ls-tree', captured, '--', path).split()
+                if len(entry) != 4 or entry[0:2] != ['100644', 'blob'] or entry[3] != path:
+                    raise RuntimeError('Capture must contain regular news files')
+                run('git', 'update-index', '--add', '--cacheinfo', entry[0], entry[2], path, env=env)
+            tree = run('git', 'write-tree', env=env)
+            if set(run('git', 'diff', '--name-only', remote, tree).splitlines()) - {DATA, CHECKPOINT}:
+                raise RuntimeError('Capture merge changed unrelated files')
+            target = run('git', 'commit-tree', tree, '-p', remote, '-p', captured,
+                         '-m', 'data: preserve penalty news across concurrent branch update')
+        receipt['attempts'].append({'attempt': attempt, 'remoteSha': remote, 'targetSha': target})
+        save('pushing')
+        try:
+            run('git', 'push', 'origin', target + ':refs/heads/' + BRANCH)
+        except (GitFailure, subprocess.TimeoutExpired) as exc:
+            reason = exc.reason if isinstance(exc, GitFailure) else 'transport'
+            receipt['attempts'][-1]['failure'] = reason
+            save('retry_pending')
+            if reason not in {'branch_advanced', 'transport'}:
+                save('blocked', reason=reason)
+                raise
+            print(f'::notice::News capture push {reason}; verifying remote before bounded retry')
+        else:
+            save('saved', sourceSha=target)
+            return target
+    # A timed-out push may already have succeeded. Check before reporting failure.
+    remote = remote_head()
+    if contains(remote, target):
+        save('saved', sourceSha=remote)
+        return remote
+    save('blocked', reason='retry_limit')
+    raise RuntimeError('News capture push exhausted three attempts; captured evidence retained')
+
+
+def verify_current_news(source_sha):
+    run('git', 'fetch', '--no-tags', 'origin', 'refs/heads/' + BRANCH)
+    current = run('git', 'rev-parse', 'FETCH_HEAD')
+    if run('git', 'diff', '--name-only', source_sha, current, '--', DATA, CHECKPOINT):
+        raise RuntimeError('News data advanced; refusing stale promotion')
 
 
 def deployment_page(vercel, url, route):
@@ -158,6 +260,7 @@ def main():
         raise RuntimeError('Checkout has unrelated tracked changes')
     if not args.dry_run and run('git', 'rev-parse', '--abbrev-ref', 'HEAD') != BRANCH:
         raise RuntimeError('Publication requires the production branch')
+    capture_base = run('git', 'rev-parse', 'HEAD')
     checkpoint = args.state / 'capture-state.json'
     if (ROOT / CHECKPOINT).exists():
         shutil.copyfile(ROOT / CHECKPOINT, checkpoint)
@@ -181,8 +284,9 @@ def main():
                           f"Pending fixture IDs: {', '.join(capture.get('pendingMatchIds', [])) or 'none'}.\n\n"
                           f"Awaiting final source data within one-hour grace: {len(waiting)}.\n\n"
                           "Hierarchy review decisions are not read by this job. Full evidence is attached as an artifact.\n")
+    # Retain the exact packet even when Git or deployment publication fails.
+    shutil.copyfile(ROOT / DATA, args.state / 'candidate.json')
     if args.dry_run:
-        shutil.copyfile(ROOT / DATA, args.state / 'candidate.json')
         print('Dry run only; no commit or deployment')
         if capture['errors'] or capture['excluded']:
             raise RuntimeError('Capture incomplete; inspect retained evidence and pending fixtures')
@@ -194,10 +298,11 @@ def main():
         raise RuntimeError('Only validated news data and its capture checkpoint may be committed')
     # Capture/retry state must survive even if the deployment service is down.
     # Git auto-deployment is disabled for this branch; this is not publication.
+    source_sha = capture_base
     if changed:
         run('git', 'add', '--', DATA, CHECKPOINT)
         run('git', 'commit', '-m', 'data: reconcile penalty news and completed fixtures')
-        run('git', 'push', 'origin', 'HEAD:' + BRANCH)
+        source_sha = capture_push(capture_base, args.state)
     vercel = shutil.which('vercel') or shutil.which('vercel.cmd')
     if not vercel or not os.environ.get('VERCEL_TOKEN'):
         raise RuntimeError('Existing Vercel publication credentials are unavailable')
@@ -214,8 +319,7 @@ def main():
     live_sha = live.get('meta', {}).get('githubCommitSha')
     if not live_sha:
         raise RuntimeError('Cannot verify current production ancestry')
-    source_sha = run('git', 'rev-parse', 'HEAD')
-    data = json.loads((ROOT / DATA).read_text())
+    data = json.loads(run('git', 'show', source_sha + ':' + DATA))
     version = data['generatedAt']
     # The collector changes this revision only when the published packet changes.
     live_page = deployment_page(vercel, 'https://' + live['url'], '/penalty-news')
@@ -250,8 +354,7 @@ def main():
         page = deployment_page(vercel, url, '/penalty-news/' + a['slug'])
         if f'data-article-id="{a["id"]}"' not in page:
             raise RuntimeError('Candidate article route failed verification')
-    if run('git', 'ls-remote', 'origin', 'refs/heads/' + BRANCH).split()[0] != source_sha:
-        raise RuntimeError('Production branch advanced; refusing stale promotion')
+    verify_current_news(source_sha)
     if api('/v4/aliases/ilmargine.bet')['deploymentId'] != alias:
         raise RuntimeError('Public deployment changed; refusing stale promotion')
     # The API avoids the CLI's personal-user lookup with a project token.

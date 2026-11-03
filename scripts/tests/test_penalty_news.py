@@ -286,6 +286,7 @@ class PublicationLiveTree(unittest.TestCase):
                 if args==('git','rev-parse','--abbrev-ref','HEAD'):return publisher.BRANCH
                 if args[:2]==('git','diff'):return ''
                 if args==('git','rev-parse','HEAD'):return 'divergent-source-sha'
+                if args==('git','show','divergent-source-sha:'+publisher.DATA):return (root/publisher.DATA).read_text()
                 if len(args)>1 and args[1]=='scripts/build-penalty-news.py':return ''
                 if args[:2]==('vercel','api'):
                     if '/aliases/' in args[2]:return '{"deploymentId":"live"}'
@@ -313,6 +314,141 @@ class PublicationLiveTree(unittest.TestCase):
                       {'excluded': [{'matchId': '123', 'reason': 'Ambiguous penalty'}]}):
             with self.subTest(issue=issue), self.assertRaisesRegex(RuntimeError, 'Capture incomplete'):
                 self.run_current_news(issue)
+
+
+class CapturePushRecovery(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent)
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        self.remote = self.root / 'remote.git'
+        self.worker = self.root / 'worker'
+        self.other = self.root / 'other'
+        self.worker.mkdir()
+        self.git(self.root, 'init', '--bare', '-q', str(self.remote))
+        self.git(self.worker, 'init', '-q')
+        self.git(self.worker, 'checkout', '-qb', publisher.BRANCH)
+        self.configure(self.worker)
+        for path in (publisher.DATA, publisher.CHECKPOINT):
+            (self.worker / path).parent.mkdir(parents=True, exist_ok=True)
+            (self.worker / path).write_text('{}')
+        (self.worker / 'atlas.txt').write_text('old atlas')
+        self.git(self.worker, 'add', '.')
+        self.git(self.worker, 'commit', '-qm', 'base')
+        self.git(self.worker, 'remote', 'add', 'origin', str(self.remote))
+        self.git(self.worker, 'push', '-q', 'origin', 'HEAD')
+        self.base = self.git(self.worker, 'rev-parse', 'HEAD')
+        self.git(self.root, 'clone', '-q', '-b', publisher.BRANCH, str(self.remote), str(self.other))
+        self.configure(self.other)
+        (self.worker / publisher.DATA).write_text('{"article":"new verified news"}')
+        (self.worker / publisher.CHECKPOINT).write_text('{"checked":58}')
+        self.git(self.worker, 'add', '.')
+        self.git(self.worker, 'commit', '-qm', 'capture')
+        self.capture = self.git(self.worker, 'rev-parse', 'HEAD')
+        self.state = self.root / 'evidence'; self.state.mkdir()
+        guard = patch.object(publisher, 'ROOT', self.worker); guard.start(); self.addCleanup(guard.stop)
+
+    @staticmethod
+    def git(cwd, *args):
+        return subprocess.check_output(['git', *args], cwd=cwd, text=True, stderr=subprocess.DEVNULL).strip()
+
+    def configure(self, cwd):
+        for key, value in [('user.name','Test'), ('user.email','test@example.invalid'), ('commit.gpgsign','false')]:
+            self.git(cwd, 'config', key, value)
+
+    def advance(self, path='atlas.txt', value='new atlas'):
+        (self.other / path).write_text(value)
+        self.git(self.other, 'add', '.')
+        self.git(self.other, 'commit', '-qm', 'concurrent change')
+        self.git(self.other, 'push', '-q', 'origin', 'HEAD')
+        return self.git(self.other, 'rev-parse', 'HEAD')
+
+    def remote_head(self):
+        return self.git(self.remote, 'rev-parse', 'refs/heads/' + publisher.BRANCH)
+
+    def test_concurrent_atlas_and_news_both_survive_without_checkout_changes(self):
+        advanced = self.advance()
+        saved = publisher.capture_push(self.base, self.state)
+        self.assertEqual(saved, self.remote_head())
+        self.assertEqual(self.git(self.worker, 'show', saved + ':atlas.txt'), 'new atlas')
+        self.assertEqual(self.git(self.worker, 'show', saved + ':' + publisher.DATA), '{"article":"new verified news"}')
+        self.assertEqual(self.git(self.worker, 'show', saved + ':' + publisher.CHECKPOINT), '{"checked":58}')
+        self.assertEqual(self.git(self.worker, 'merge-base', advanced, saved), advanced)
+        self.assertEqual(self.git(self.worker, 'rev-parse', 'HEAD'), self.capture)
+        self.assertFalse(self.git(self.worker, 'status', '--porcelain'))
+
+    def test_race_after_fetch_is_retried_without_losing_other_data(self):
+        real = publisher.run
+        pushes = []
+        def command(*args, **kwargs):
+            if args[:2] == ('git', 'push'):
+                pushes.append(args)
+                if len(pushes) == 1: self.advance()
+            return real(*args, **kwargs)
+        with patch.object(publisher, 'run', side_effect=command):
+            saved = publisher.capture_push(self.base, self.state)
+        self.assertEqual(len(pushes), 2)
+        self.assertEqual(saved, self.remote_head())
+        self.assertEqual(self.git(self.worker, 'show', saved + ':atlas.txt'), 'new atlas')
+
+    def test_lost_push_acknowledgement_does_not_duplicate_commit(self):
+        real = publisher.run
+        pushes = []
+        def command(*args, **kwargs):
+            result = real(*args, **kwargs)
+            if args[:2] == ('git', 'push'):
+                pushes.append(args)
+                raise publisher.GitFailure('transport', 1)
+            return result
+        with patch.object(publisher, 'run', side_effect=command):
+            saved = publisher.capture_push(self.base, self.state)
+        self.assertEqual(len(pushes), 1)
+        self.assertEqual(saved, self.capture)
+
+    def test_conflicting_news_is_never_overwritten(self):
+        advanced = self.advance(publisher.DATA, '{"article":"another verified report"}')
+        with self.assertRaisesRegex(RuntimeError, 'Concurrent news data'):
+            publisher.capture_push(self.base, self.state)
+        self.assertEqual(self.remote_head(), advanced)
+        self.assertEqual(json.loads((self.state/'capture-push.json').read_text())['reason'], 'concurrent_news_change')
+
+    def test_auth_failure_is_not_retried_and_diagnostics_exclude_secrets(self):
+        real = publisher.run
+        pushes = []
+        def command(*args, **kwargs):
+            if args[:2] == ('git', 'push'):
+                pushes.append(args)
+                raise publisher.GitFailure('authentication_or_permission', 128)
+            return real(*args, **kwargs)
+        with patch.object(publisher, 'run', side_effect=command), self.assertRaises(publisher.GitFailure):
+            publisher.capture_push(self.base, self.state)
+        self.assertEqual(len(pushes), 1)
+        result = subprocess.CompletedProcess(['git'], 128, '', 'https://secret-token@github.com: Authentication failed')
+        with patch.object(publisher.subprocess, 'run', return_value=result), self.assertRaisesRegex(publisher.GitFailure, 'authentication_or_permission') as error:
+            publisher.run('git','push')
+        self.assertNotIn('secret-token', str(error.exception))
+
+    def test_promotion_accepts_unrelated_advance_but_rejects_changed_news(self):
+        publisher.capture_push(self.base, self.state)
+        self.git(self.other, 'pull', '-q', '--ff-only', 'origin', publisher.BRANCH)
+        self.advance()
+        publisher.verify_current_news(self.capture)
+        self.advance(publisher.DATA, '{"article":"newer report"}')
+        with self.assertRaisesRegex(RuntimeError, 'News data advanced'):
+            publisher.verify_current_news(self.capture)
+
+    def test_transport_retries_are_bounded(self):
+        real = publisher.run
+        pushes = []
+        def command(*args, **kwargs):
+            if args[:2] == ('git', 'push'):
+                pushes.append(args)
+                raise publisher.GitFailure('transport', 1)
+            return real(*args, **kwargs)
+        with patch.object(publisher, 'run', side_effect=command), self.assertRaisesRegex(RuntimeError, 'three attempts'):
+            publisher.capture_push(self.base, self.state)
+        self.assertEqual(len(pushes), 3)
+        self.assertEqual(self.remote_head(), self.base)
 
 
 class PostMatchCapture(unittest.TestCase):
