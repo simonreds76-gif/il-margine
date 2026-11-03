@@ -268,3 +268,6 @@ test('failed or unauthorised settlements do not invalidate pages or images', asy
     assert.deepEqual(h.paths,[]);assert.deepEqual(h.invalidations,[]);assert.equal(h.pick.status,undefined);
   }
 });
+
+require('./tip-portrait-lineup.test.cjs');
+
