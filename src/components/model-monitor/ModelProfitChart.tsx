@@ -35,8 +35,8 @@ export default function ModelProfitChart({ history, name }: { history: ProfitHis
       const nearest = points.reduce((best, p) => Math.abs(x(p.date) - target) < Math.abs(x(best.date) - target) ? p : best, points[0]);
       setSelected(nearest.date);
     }} onPointerLeave={() => setSelected(null)}>
-      <title id={`${id}-title`}>{name}: cumulative profit {signed(history.profit)}</title>
-      <desc id={`${id}-description`}>{history.settled} settled selections, by match date. Pending and void bets excluded. Use the date slider below to inspect daily results.</desc>
+      <title id={`${id}-title`}>{`${name}: cumulative profit ${signed(history.profit)}`}</title>
+      <desc id={`${id}-description`}>{`${history.settled} settled selections, by match date. Pending and void bets excluded. Use the date slider below to inspect daily results.`}</desc>
       <defs><clipPath id={`${id}-positive`}><rect x="0" y="0" width={W} height={Math.max(0, zero)} /></clipPath><clipPath id={`${id}-negative`}><rect x="0" y={zero} width={W} height={H - zero} /></clipPath></defs>
       <line x1={left} x2={right} y1={zero} y2={zero} stroke="#64748b" strokeDasharray="3 4" />
       <text x={right} y={Math.max(10, zero - 5)} textAnchor="end" fill="#94a3b8" fontSize="10">0u</text>
