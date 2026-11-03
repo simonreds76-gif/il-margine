@@ -1,224 +1,45 @@
-name: Weekly Research Report
-
+name: Reporting Reliability Verification
 on:
-  schedule:
-    # Run after Tuesday's local 10:05 Europe/London result refresh uploads the
-    # compact tennis evidence snapshot. Monday night leaves late US matches pending.
-    - cron: "30 11 * * 2"
   workflow_dispatch:
-
 permissions:
-  contents: write
-
-concurrency:
-  group: golden-with-speed-insights-branch-writes
-  cancel-in-progress: false
-
+  contents: read
 jobs:
-  report:
+  weekly:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: golden-with-speed-insights
-          token: ${{ github.token }}
-          fetch-depth: 1
-
-      - name: Check out effective default-branch schedules
-        uses: actions/checkout@v5
-        with:
-          ref: main
-          path: .effective-default-branch
-          fetch-depth: 1
-          sparse-checkout-cone-mode: false
+          ref: a7dc4ee7d5c7ae9997e0d3a88699b45e8e889383
           sparse-checkout: |
-            .github/workflows
-
+            scripts
+            config
+            .github
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
-
-      - name: Install Python deps
-        run: pip install requests numpy scipy
-
-      - name: Create .env.local
-        run: |
-          : > .env.local
-          if [ -n "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
-            echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.local
-          else
-            echo "NEXT_PUBLIC_SUPABASE_URL=https://nuqcgzbagxtbxlqrhtvc.supabase.co" >> .env.local
-          fi
-          if [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
-            echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
-          fi
-          if [ -n "${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}" ]; then
-            echo "OPS_ALERT_TELEGRAM_BOT_TOKEN=${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}" >> .env.local
-          fi
-          if [ -n "${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}" ]; then
-            echo "OPS_ALERT_TELEGRAM_CHAT_ID=${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}" >> .env.local
-          fi
-
-      - name: Refresh research CLV monitor reports
-        run: |
-          python scripts/publish-football-research-picks.py
-          python scripts/team-shots-v1-clv-monitor.py \
-            --picks data/football-form/team-shots-v3-ema20-published-picks.csv \
-            --output data/football-form/team-shots-v3-ema20-clv-monitor.csv \
-            --report data/football-form/team-shots-v3-ema20-clv-monitor.md \
-            --allowed-config data/football-form/team-shots-v3-ema20-allowed-leagues.json
-          python scripts/corners-v0-clv-monitor.py
-          python scripts/run-football-vnext-shadow.py
-          if [ -f data/football-form/team-rolling-form.csv ]; then
-            python scripts/corners-v4-g0-diagnostic.py
-          else
-            echo "::warning::Corners v4 G0 diagnostic not run: local-only team-rolling-form.csv is unavailable on the hosted runner."
-            rm -f \
-              data/corners-ou/corners-v4-g0-diagnostic.json \
-              data/corners-ou/corners-v4-g0-diagnostic.md \
-              data/corners-ou/corners-v4-g0-fold-results.csv
-          fi
-          python scripts/api-football-source-agreement.py --allow-empty
-          python scripts/fouls-empirical-baseline.py
-          python scripts/team-fouls-v1-folds.py
-          python scripts/team-fouls-f2-folds.py
-          python scripts/fouls-definition-agreement.py --allow-empty
-          python scripts/tennis-model-variants-shadow.py
-          python scripts/backtest-tennis-player-props-v2.py
-          python scripts/tennis-props-market-observations.py
-          python scripts/tennis-derivatives-pinnacle-coverage.py --allow-missing-creds
-          python scripts/tennis-derivatives-evidence-report.py
-          python scripts/assist-value-settle.py
-          python scripts/assist-value-settle.py \
-            --signals data/assist-value/research/assist-value-v1-prospective.csv \
-            --summary data/assist-value/research/assist-value-v1-prospective-performance.txt
-          python scripts/assist-value-research-gates.py
-          if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
-            python scripts/goalscorer-clv-monitor.py --supabase || {
-              echo "::warning::Goalscorer Supabase CLV read failed; rebuilding from local history instead."
-              python scripts/goalscorer-clv-monitor.py
-            }
-          else
-            python scripts/goalscorer-clv-monitor.py
-          fi
+          python-version: '3.11'
+      - run: pip install requests numpy scipy
+      - name: Validate all weekly report renderers without collection packages
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-
-      - name: Build and send weekly report
-        env:
-          TENNIS_PROPS_V3_WEEKLY_JSON: '${{ vars.TENNIS_PROPS_V3_WEEKLY_JSON }}'
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: |
-          python scripts/audit-automation-budget.py \
-            --workflows-dir .effective-default-branch/.github/workflows \
-            --strict
-          python scripts/football-counts-vnext-gate.py
-          python scripts/weekly-research-report.py
-
-      - name: Upload hosted monitor snapshots
-        env:
-          ENABLE_SUPABASE_SNAPSHOT_UPLOADS: ${{ vars.ENABLE_SUPABASE_SNAPSHOT_UPLOADS }}
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: |
-          python scripts/team-shots-live-snapshot.py
-          python scripts/corners-live-snapshot.py
-          python scripts/build-goalscorer-monitor-snapshot.py
-          if [ "${ENABLE_SUPABASE_SNAPSHOT_UPLOADS:-0}" = "1" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
-            export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://nuqcgzbagxtbxlqrhtvc.supabase.co}"
-            python scripts/team-shots-live-snapshot.py --supabase
-            python scripts/corners-live-snapshot.py --supabase
-            python scripts/build-goalscorer-monitor-snapshot.py --supabase
-          else
-            echo "::warning::Supabase snapshot upload disabled or key missing; hosted monitor snapshot upload skipped."
-          fi
-
-      - name: Upload report artifact
-        uses: actions/upload-artifact@v4
+          PYTHONPATH: scripts
+        run: python -m unittest discover -s scripts/tests -p 'test_weekly*.py' -v
+  penalty:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
         with:
-          name: weekly-research-report
-          path: |
-            data/football-form/weekly-research-report.md
-            data/football-form/weekly-research-report.json
-            data/ops/automation-budget-report.md
-            data/ops/automation-budget-report.json
-            data/football-form/football-counts-vnext-gate.md
-            data/football-form/football-counts-vnext-gate.json
-            data/team-shots/team-shots-v4-fold-report.md
-            data/team-shots/team-shots-v4-lock.json
-            data/corners-ou/corners-v3-fold-report.md
-            data/corners-ou/corners-v3-lock.json
-            data/corners-ou/corners-v4-g0-diagnostic.json
-            data/corners-ou/corners-v4-g0-diagnostic.md
-            data/corners-ou/corners-v4-g0-fold-results.csv
-            data/football-form/team-shots-v3-ema20-clv-monitor.md
-            data/football-form/corners-v0-clv-monitor.md
-            data/football-form/team-shots-v4-shadow-clv.md
-            data/football-form/corners-v3-shadow-clv.md
-            data/football-form/team-shots-v4-settlement-audit.json
-            data/football-form/corners-v3-settlement-audit.json
-            data/football-form/api-football-counts-health.json
-            data/football-form/api-football-counts-health.md
-            data/football-form/api-football-source-agreement.json
-            data/football-form/api-football-source-agreement.md
-            data/football-form/fouls-empirical-baseline.json
-            data/football-form/fouls-empirical-baseline.md
-            data/football-form/team-fouls-v1-fold-report.json
-            data/football-form/team-fouls-v1-fold-report.md
-            data/football-form/team-fouls-v1-fold-results.csv
-            data/football-form/team-fouls-f2-fold-report.json
-            data/football-form/team-fouls-f2-fold-report.md
-            data/football-form/team-fouls-f2-fold-results.csv
-            data/football-form/team-fouls-definition-agreement.json
-            data/football-form/team-fouls-definition-agreement.md
-            data/football-form/team-fouls-fotmob-agreement.csv
-            data/football-form/team-fouls-fotmob-agreement.json
-            data/football-form/team-fouls-fotmob-agreement.md
-            data/goalkeeper-saves/gk-saves-v1-fold-report.md
-            data/goalkeeper-saves/gk-saves-v1-evidence.json
-            data/goalkeeper-saves/gk-saves-market-probe.md
-            data/goalkeeper-saves/gk-saves-market-probe.json
-            data/backtest/model-variants-shadow.csv
-            data/backtest/model-variants-shadow-report.txt
-            data/tennis-props/backtest/aces-dfs-v2-rung1-gate.json
-            data/tennis-props/backtest/aces-dfs-v2-rung1-report.txt
-            data/tennis-props/shadow/market-observations.csv
-            data/tennis-props/shadow/market-observations-report.txt
-            data/tennis-props/shadow/aces-dfs-weekly-decision.json
-            data/tennis-props/shadow/aces-dfs-weekly-decision.txt
-            data/vnext/tennis-derivatives-evidence-status.json
-            data/vnext/tennis-derivatives-evidence-report.txt
-            data/vnext/tennis-derivatives-pinnacle-coverage.json
-            data/goalscorer/fair-odds-lab-clv.csv
-            data/goalscorer/fair-odds-lab-clv-weekly.txt
-            data/goalscorer/backtest/parity-report.txt
-            data/goalscorer/backtest/walkforward-report.txt
-            data/goalscorer/backtest/segment-diagnostics.txt
-            data/assist-value/research/assist-value-gates.json
-            data/assist-value/research/assist-value-research-report.md
-            data/assist-value/research/assist-value-market-history.csv
-            data/assist-value/research/assist-value-v1-prospective.csv
-            data/assist-value/research/assist-value-v1-prospective-performance.txt
-
-      - name: Publish canonical weekly monitor bundle
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f \
-            data/football-form/weekly-research-report.md \
-            data/football-form/weekly-research-report.json \
-            data/team-shots/team-shots-live-snapshot.json \
-            data/corners-ou/corners-live-snapshot.json \
-            data/goalscorer/goalscorer-monitor-snapshot.json
-          if git diff --cached --quiet; then
-            echo "Canonical weekly monitor bundle is already current."
-            exit 0
-          fi
-          git commit -m "chore: publish weekly model evidence"
-          if ! git diff --quiet; then
-            echo "Discarding non-canonical generated worktree changes before safe push."
-            git restore --worktree .
-          fi
-          bash scripts/ci-safe-push.sh golden-with-speed-insights
+          ref: 841cf94291a2bd2f70c63b1d5c48a3ee3efa57ab
+          sparse-checkout: |
+            scripts
+            config
+            src/data
+            data/penalty-news
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: pip install requests==2.32.5
+      - name: Test publication guards and concurrent Git writers
+        env:
+          PYTHONPATH: scripts
+        run: python -m unittest discover -s scripts/tests -p test_penalty_news.py -v
