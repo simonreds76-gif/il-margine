@@ -8,6 +8,13 @@ from ops_morning_failures import check_morning_failure
 ENV = {'NEXT_PUBLIC_SUPABASE_URL':'https://db.example', 'SUPABASE_SERVICE_ROLE_KEY':'test-key', 'OPS_ALERT_TELEGRAM_BOT_TOKEN':'test-token', 'OPS_ALERT_TELEGRAM_CHAT_ID':'test-chat'}
 ROW = {'run_id':'test-run', 'status':'failed', 'started_at':'2026-09-19T10:05:00Z', 'error_type':'ReturnAtlasRefreshFailed', 'details':{'existing':'kept'}}
 class MorningFailureTests(unittest.TestCase):
+    def test_auth_failure_requests_publication_recovery_without_claiming_pricing_failed(self):
+        transport=Mock(side_effect=[[{**ROW,'error_type':'ReturnAtlasAuthRequired'}],{'ok':True},None])
+        self.assertTrue(check_morning_failure(ENV,transport))
+        message=transport.call_args_list[1].args[3]['text']
+        self.assertIn('Vercel CLI sign-in',message)
+        self.assertIn('Retry publication only',message)
+        self.assertNotIn('morning pipeline did not complete',message)
     def test_healthy_latest_run_does_not_send(self):
         transport=Mock(return_value=[{**ROW,'status':'ok'}])
         self.assertFalse(check_morning_failure(ENV,transport))
@@ -53,6 +60,9 @@ class VerifiedRecoveryTests(unittest.TestCase):
         return result
     def test_verified_recovery_clears_alert_without_writing_or_sending(self):
         self.assertFalse(self.check(self.receipt()))
+    def test_auth_recovery_still_requires_verified_receipt(self):
+        self.assertFalse(self.check(self.receipt(),error_type='ReturnAtlasAuthRequired'))
+        self.assertTrue(self.check({**self.receipt(),'verified_commit':'wrong'},error_type='ReturnAtlasAuthRequired'))
     def test_receipt_for_another_run_does_not_clear_failure(self):
         self.assertTrue(self.check({**self.receipt(), 'run_id': 'older-run'}))
     def test_different_error_is_not_cleared(self):

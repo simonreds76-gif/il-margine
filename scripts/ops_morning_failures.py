@@ -21,7 +21,7 @@ def request_json(method, url, headers, payload=None):
 def verified_atlas_recovery(row, details):
     """Accept a run-specific recovery receipt without rewriting failure history."""
     recovery = details.get('ops_failure_resolution')
-    if row.get('error_type') != 'ReturnAtlasRefreshFailed' or not isinstance(recovery, dict):
+    if row.get('error_type') not in ('ReturnAtlasRefreshFailed', 'ReturnAtlasAuthRequired') or not isinstance(recovery, dict):
         return False
     expected = recovery.get('expected_commit', '')
     version = recovery.get('expected_data_version', '')
@@ -71,9 +71,14 @@ def check_morning_failure(env=None, transport=request_json):
     chat = env.get('OPS_ALERT_TELEGRAM_CHAT_ID', '')
     if not token or not chat:
         raise RuntimeError('Morning failure alert cannot send: Telegram credentials missing')
-    atlas = row.get('error_type') == 'ReturnAtlasRefreshFailed'
-    message = 'Morning tennis refresh failed.\n'
-    message += ('Return Atlas could not complete its validated update. Check the publisher status before retrying.\n' if atlas else 'The morning pipeline did not complete successfully; review its run log.\n')
+    atlas = row.get('error_type') in ('ReturnAtlasRefreshFailed', 'ReturnAtlasAuthRequired')
+    message = 'Morning tennis: Return Atlas publication failed.\n' if atlas else 'Morning tennis refresh failed.\n'
+    if row.get('error_type') == 'ReturnAtlasAuthRequired':
+        message += 'Vercel CLI sign-in is required on the publishing PC. Retry publication only; do not rerun pricing or betting alerts.\n'
+    elif atlas:
+        message += 'Return Atlas could not complete its validated update. Check the publisher status before retrying publication.\n'
+    else:
+        message += 'The morning pipeline did not complete successfully; review its run log.\n'
     message += f"Started: {row['started_at']}\nRun: {row['run_id']}\nThe failure needs review; this alert is sent once per failed run."
     response = transport('POST', f'https://api.telegram.org/bot{token}/sendMessage', {}, {'chat_id': chat, 'text': message, 'disable_web_page_preview': True})
     if not isinstance(response, dict) or response.get('ok') is not True:
