@@ -14,6 +14,16 @@ from tennis_elo_rebuild import source_history,advance,empty_state,rating_rows,at
 VERSION='native-adult-elo-source-v1-20261101'
 RELATIVE=Path('data/tennis-elo-source/native-adult-v1')
 
+
+def current_followup(root, ratings):
+    from tennis_elo_health import missing_requirements, research_followup
+    try:
+        status=json.loads((root/'data/tennis-input-health/status.json').read_text(encoding='utf-8-sig'))
+    except (OSError,ValueError):
+        status={}
+    names={int(r['id']):r['name'] for r in __import__('tennis_elo_rebuild').read_csv(root/'data/oncourt/players_atp.csv') if r['id'].isdigit()}
+    return research_followup(ratings,missing_requirements(status),names)
+
 def stream_hash(rows):
     h=hashlib.sha256()
     for row in rows:h.update(json.dumps(row,sort_keys=True,separators=(',',':')).encode()+b'\n')
@@ -33,6 +43,8 @@ def build(root,output,cutoff):
             and prior['candidate_sha256']==sha(output/'candidate.json')
             and prior['history_file_sha256']==sha(output/'history.json.gz')
             and all(sha(root/p)==v for p,v in prior['source_hashes'].items())):
+            prior['missing_player_followup']=current_followup(root,json.loads((output/'candidate.json').read_text())['ratings'])
+            prior['followup_scope']='current active fixture gaps, not a fixed player list'
             prior['checked_at']=datetime.now(timezone.utc).isoformat();atomic(output/'status.json',prior)
             return prior
     except (OSError,ValueError,KeyError):pass
@@ -68,19 +80,12 @@ def build(root,output,cutoff):
         f.write(']')
     tmp.replace(output/'history.json.gz')
     atomic(output/'candidate.json',candidate)
-    focus={35804,65267,121190,128723}
-    names={int(r['id']):r['name'] for r in __import__('tennis_elo_rebuild').read_csv(root/'data/oncourt/players_atp.csv') if r['id'].isdigit()}
-    lookup={(r['player_id'],r['surface']):r for r in ratings}
-    gaps=[{'player_id':p,'name':names.get(p,str(p)),
-           'Overall':lookup.get((p,'Overall')),'I.hard':lookup.get((p,'I.hard'))} for p in sorted(focus)]
-    for gap in gaps:
-        gap['history_quality']={s:'NO_VALIDATED_HISTORY' if gap[s] is None else
-            'THIN_HISTORY' if gap[s]['match_count']<10 else 'OBSERVED_HISTORY'
-            for s in ('Overall','I.hard')}
+    gaps=current_followup(root,ratings)
     status={k:v for k,v in candidate.items() if k not in ('ratings','audit')}
     status.update(state='VALIDATED_RESEARCH_SOURCE',checked_at=candidate['generated_at'],
                   source_export_observed_at=datetime.fromtimestamp((root/'data/oncourt/games_atp.csv').stat().st_mtime,timezone.utc).isoformat(),
                   rating_rows=len(ratings),missing_player_followup=gaps,
+                  followup_scope='current active fixture gaps, not a fixed player list',
                   live_source_state='PROVENANCE_UNVERIFIED',
                   thin_history_note='Fewer than 10 completed matches is a display warning, not a pricing or selection rule.',
                   promotion='never automatic; revised population is not the frozen v1 or a live refresh')
