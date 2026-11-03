@@ -1,6 +1,6 @@
 import "server-only";
 import { createHash } from "node:crypto";
-import tennisPortraits from "@/data/tip-tennis-portraits.json";
+import { resolveTennisPortrait } from "./tennis-portrait.mjs";
 import penaltyPortraits from "../../data/goalscorer/penalty-player-portraits.json";
 import labPortraits from "../../data/goalscorer/lab-player-portraits.json";
 import { foldNameText } from "./player-name-matching";
@@ -9,7 +9,6 @@ import type { TipPortrait } from "./tip-artwork-types";
 
 type PickIdentity = { id?: number; market: string; category: string; event: string; player: string | null; match_date?: string | null };
 const key = (name: string) => foldNameText(name).toLowerCase().replace(/[^a-z0-9]/g, "");
-const words = (name: string) => foldNameText(name).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const leagueKeys: Record<string, string> = { pl: "epl", seriea: "serie-a", laliga: "la-liga", bundesliga: "bundesliga", ligue1: "ligue-1" };
 const clubAliases: Record<string, string> = { psg: "parissaintgermain", acmilan: "milan" };
 const clubKey = (club: string) => clubAliases[key(club)] ?? key(club);
@@ -55,11 +54,7 @@ function participants(event: string): string[] {
 }
 
 function tennisPortrait(name: string): TipPortrait {
-  const query = words(name);
-  const exact = tennisPortraits.filter((row) => words(row.name) === query);
-  const candidates = exact.length ? exact : tennisPortraits.filter((row) => words(row.name).endsWith(` ${query}`));
-  // Never choose between players sharing a surname without a verified alias.
-  const row = candidates.length === 1 ? candidates[0] : null;
+  const row = resolveTennisPortrait(name);
   return { name: row?.name ?? name, src: row?.src ?? null, kind: "player" };
 }
 
