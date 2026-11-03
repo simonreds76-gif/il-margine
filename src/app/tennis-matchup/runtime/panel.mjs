@@ -1,3 +1,4 @@
+import { resolveTennisPortrait } from '../../../lib/tennis-portrait.mjs';
 import {contextPanel} from './context.mjs';
 import {compactOddsComparison,comparisonMetrics} from './comparison.mjs';
 import {atlasResearchHref,readMatchupResearch} from '../../../components/return-atlas/research-links.mjs';
@@ -36,7 +37,7 @@ function populateCountries(){
   if(countries.some(c=>c.code===current)) $('country').value=current;
 }
 function playerCard(player,s,i,companion,surface) {
-  const portrait=data.portraits[player.id]?.url;
+  const portrait=resolveTennisPortrait(player.name)?.src ?? data.portraits[player.id]?.url;
   return `<article class="player-card side-${i}"><div class="identity">${portrait?`<img src="${esc(portrait)}" width="72" height="72" alt="" decoding="async">`:'<span class="portrait-empty" aria-hidden="true">'+esc(player.initials)+'</span>'}<div><p class="eyebrow">${esc(player.country)} · PLAYER ${i+1}</p><h2>${esc(player.name)}</h2></div></div><div class="player-record"><strong>${s.wins}<small> W</small> <span>/</span> ${s.losses}<small> L</small></strong><span>${num(s.n)} matches ${s.n<15?'<b class="sample">Small sample</b>':''}</span></div><p>${s.n?`${date(s.first)} – ${date(s.last)}`:'No matches in this selection'}</p><a class="player-returns-link" href="${esc(atlasResearchHref(player.id,companion.id,surface))}" aria-label="View ${esc(player.name)} betting returns in Return Atlas">${symbol('odds')}<span>Betting returns <span aria-hidden="true">↗</span></span></a></article>`;
 }
 function surfaceCell(s){return `<td class="${s.n<15?'thin':''}"><strong>${pct(s.winRate)}</strong><span>${s.wins} wins · ${s.losses} losses</span><small>${s.n} ${s.n===1?'match':'matches'}${s.n>0&&s.n<15?' · small sample':''}</small></td>`;}
