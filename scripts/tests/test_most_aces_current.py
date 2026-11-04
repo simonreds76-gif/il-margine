@@ -21,6 +21,16 @@ class CurrentTests(unittest.TestCase):
         cap=dict(self.capture,player1='Player Two',player2='Player One',player1_odds='4.5',player2_odds='1.8')
         p=self.report(captures=[cap])['matches'][0]['prices'][0]
         self.assertEqual(p['player1_odds'],'1.8');self.assertEqual(p['candidate']['recommended_side'],'P1')
+
+    def test_verified_merida_alias_keeps_side_prices_and_event_checks(self):
+        board=dict(self.board,player1='Tommy Paul',player2='Daniel Merida Aguilar')
+        cap=dict(self.capture,player1='Daniel Mérida',player2='Tommy Paul',player1_odds='4.5',player2_odds='1.8')
+        report=self.report(boards=[board],captures=[cap])
+        price=report['matches'][0]['prices'][0]
+        self.assertEqual(price['player1_odds'],'1.8');self.assertEqual(price['player2_odds'],'4.5')
+        self.assertEqual(report['matches'][0]['player2'],'Daniel Merida Aguilar')
+        for changed in (dict(cap,player1='Jose Merida'),dict(cap,player2='Paul Jubb'),dict(cap,tournament='Vienna')):
+            self.assertEqual(self.report(boards=[board],captures=[changed])['matches'][0]['prices'],[])
     def test_started_stale_and_wrong_event_not_matched(self):
         for cap in [dict(self.capture,capture_ts=(self.now-timedelta(hours=2)).isoformat()),
                     dict(self.capture,match_start_utc=self.now.isoformat()),dict(self.capture,tournament='Vienna')]:

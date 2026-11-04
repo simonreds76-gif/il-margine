@@ -20,6 +20,10 @@ SPEC.loader.exec_module(MODULE)
 
 
 class LegacyTeamTotalNormalizationTests(unittest.TestCase):
+    def test_verified_merida_alias_matches_full_name_without_surname_fallback(self):
+        self.assertEqual(MODULE.norm_name('Daniel Mérida'),MODULE.norm_name('Daniel Merida Aguilar'))
+        self.assertNotEqual(MODULE.norm_name('José Merida'),MODULE.norm_name('Daniel Merida Aguilar'))
+
     def test_away_team_total_becomes_away_player_market(self) -> None:
         row = {
             "player": "Gonzalo Bueno",
