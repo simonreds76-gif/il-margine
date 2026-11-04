@@ -32,9 +32,6 @@ function portraitLookupUrl(pick: PickIdentity): string | null {
 // Verified FotMob identities for published surname-only selections. Club context
 // prevents assigning a namesake or carrying an old club crest into another fixture.
 const footballPlayers = [
-  // Viking squad and player profile 741561, verified 4 November 2026.
-  // An unavailable opposing squad (e.g. Sabah) must not erase this identity.
-  { name: "Erik Botheim", alias: "Botheim", club: "Viking", id: "741561" },
   // FotMob Slavia squad 7787, verified 22 October 2026. Sabah has no squad feed.
   { name: "David Zima", alias: "Zima", club: "Slavia Prague", id: "1085401" },
   // Verified Malaga appearances and photo; absent from the provider's senior squad list.
