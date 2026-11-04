@@ -12,6 +12,9 @@ import {
   CLUB_PENALTY_PREVIOUS_SEASON,
   CLUB_PENALTY_SEASON,
   buildClubPenaltyCardSummary,
+  clubPenaltyOrderStatus,
+  clubPenaltyRankLabels,
+  formatClubPenaltyDate,
   buildPenaltyDirectory,
   readClubPenaltyData,
   clubPenaltyLeagueUrl,
@@ -75,11 +78,8 @@ function TeamCrest({ team }: { team: ClubPenaltyTeam }) {
 
 function TeamCard({ team }: { team: ClubPenaltyTeam }) {
   const cardId = `club-${team.slug}`;
-  const needsContext = team.hierarchyStatus === "conditional"
-    || team.hierarchyStatus === "disputed"
-    || team.hierarchyStatus === "unknown"
-    || team.hierarchyDepth < 3
-    || team.weakEvidence;
+  const labels = clubPenaltyRankLabels(team);
+  const needsContext = clubPenaltyOrderStatus(team) !== "confirmed" || team.hierarchyDepth < 3;
   const context = needsContext ? buildClubPenaltyCardSummary(team) : "";
   const changedCopy = team.isCarryover
     ? `Carryover from ${CLUB_PENALTY_PREVIOUS_SEASON}`
@@ -110,14 +110,14 @@ function TeamCard({ team }: { team: ClubPenaltyTeam }) {
         <li className="flex min-w-0 items-center gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.07] px-3.5 py-3">
           <PenaltyTakerPortrait name={team.primary} src={team.portraitUrls[0]} rank={1} size="medium" />
           <div className="min-w-0">
-            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-emerald-300/80">First choice</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-emerald-300/80">{labels[0]}</span>
             <strong title={team.primary || "Open position"} className="mt-0.5 block break-words text-xl font-semibold leading-tight text-emerald-100 sm:text-2xl">
               {team.primary || "Open position"}
             </strong>
           </div>
         </li>
         <li className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {[["2", "Second choice", team.secondary], ["3", "Third choice", team.tertiary]].map(([rank, label, value]) => (
+          {[["2", labels[1], team.secondary], ["3", labels[2], team.tertiary]].map(([rank, label, value]) => (
             <div key={rank} className="flex min-w-0 items-center gap-2.5 rounded-xl border border-slate-700/75 bg-slate-950/60 px-3 py-2.5">
               <PenaltyTakerPortrait name={value} src={team.portraitUrls[Number(rank) - 1]} rank={Number(rank)} size="small" />
               <div className="min-w-0">
@@ -135,7 +135,7 @@ function TeamCard({ team }: { team: ClubPenaltyTeam }) {
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div className="text-[11px] leading-5">
             <div className="font-semibold text-emerald-200">
-              Checked{" "}
+              Order reviewed{" "}
               {team.checkedAt ? <time dateTime={team.checkedAt}>{team.checkedLabel}</time> : "pending"}
             </div>
             <div className="text-slate-400">{changedCopy}</div>
@@ -157,9 +157,10 @@ export default async function ClubPenaltyLeaguePage({ params }: PageProps) {
   const url = clubPenaltyLeagueUrl(league.key);
   const title = `${league.label} Penalty Takers ${CLUB_PENALTY_SEASON}`;
   const latestNews = getLatestClubPenaltyNews([league], 6);
+  const latestClubReview = league.teams.map(team => team.checkedAt).filter(Boolean).sort().at(-1);
   const fullHierarchyCount = league.teams.filter((team) => team.hierarchyDepth === 3).length;
-  const openCallCount = league.teams.filter((team) => team.hierarchyStatus === "conditional" || team.hierarchyStatus === "disputed" || team.hierarchyStatus === "unknown").length;
-  const confirmedCount = league.teams.filter((team) => team.hierarchyStatus === "confirmed" || team.hierarchyStatus === "probable").length;
+  const confirmedCount = league.teams.filter((team) => clubPenaltyOrderStatus(team) === "confirmed").length;
+  const openCallCount = league.teams.length - confirmedCount;
   const breadcrumbData = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -216,8 +217,8 @@ export default async function ClubPenaltyLeaguePage({ params }: PageProps) {
           {[
             ["Current clubs", String(league.teams.length)],
             ["Filed orders", String(fullHierarchyCount)],
-            ["Stable / probable", String(confirmedCount)],
-            ["Under review", String(openCallCount)],
+            ["Confirmed", String(confirmedCount)],
+            ["Provisional / under review", String(openCallCount)],
           ].map(([label, value]) => (
             <div key={label} className="rounded-2xl border border-slate-800 bg-slate-950/65 px-4 py-3">
               <div className="font-mono text-[8px] uppercase tracking-[0.16em] text-slate-500">{label}</div>
@@ -232,13 +233,14 @@ export default async function ClubPenaltyLeaguePage({ params }: PageProps) {
               <div className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-400">Penalty order ledger</div>
               <h2 className="mt-2 text-2xl font-semibold text-slate-100">All {league.teams.length} clubs</h2>
             </div>
-            <div className="rounded-full border border-emerald-400/20 bg-emerald-400/8 px-3 py-2 text-xs text-slate-300">
-              <span className="text-slate-500">Board checked</span>{" "}
+            <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/8 px-3 py-2 text-xs leading-5 text-slate-300">
+              <span className="text-slate-500">Board baseline reviewed</span>{" "}
               <strong className="text-emerald-200">{league.boardCheckedLabel || "pending"}</strong>
+              {latestClubReview && latestClubReview !== league.boardCheckedAt ? <div><span className="text-slate-500">Latest club review</span> <time dateTime={latestClubReview}>{formatClubPenaltyDate(latestClubReview)}</time></div> : null}
             </div>
           </div>
           <div className="grid items-stretch gap-4 lg:grid-cols-2">{league.teams.map((team) => <TeamCard key={team.relativeUrl} team={team} />)}</div>
-          <p className="mt-4 text-xs leading-5 text-slate-500">Checked dates record the latest board review. Order dates change only when evidence changes the filed hierarchy.</p>
+          <p className="mt-4 text-xs leading-5 text-slate-500">Clubs are reviewed individually after the board baseline. A new match report does not change the hierarchy or its review date.</p>
         </section>
 
         <div className="mt-12">

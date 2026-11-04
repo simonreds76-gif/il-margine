@@ -4,7 +4,7 @@ import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 
 const title = "Tennis Betting Tips: ATP & Challenger";
 const description =
-  "Independent tennis betting tips with statistical match analysis. Browse ATP and Grand Slam picks, recorded odds, stakes and tracked results.";
+  "Independent ATP, Challenger and Grand Slam tennis tips. Browse match, games, aces and double-fault picks with recorded odds, stakes and tracked results.";
 const url = `${BASE_URL}/tennis-tips`;
 
 export const metadata: Metadata = {

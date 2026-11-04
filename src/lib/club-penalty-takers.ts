@@ -594,38 +594,42 @@ export function buildClubPenaltyDescription(team: ClubPenaltyTeam): string {
     if (team.hierarchyDepth === 1) return `Archived ${team.seasonLabel} penalty record for ${team.team}: ${team.primary} was the filed first choice.`;
     return `Archived ${team.seasonLabel} penalty-taker record for ${team.team}.`;
   }
-  if (team.hierarchyDepth === 0 || team.hierarchyStatus === "unknown") {
-    return `${team.team}'s ${CLUB_PENALTY_SEASON} penalty taker order is not yet verified. Il Margine is monitoring preseason and early-season evidence.`;
-  }
-  if (team.hierarchyDepth === 1) return `Who takes penalties for ${team.team}? ${team.primary} is the current first-choice call for ${CLUB_PENALTY_SEASON}; no backup is verified yet.`;
-  if (team.hierarchyDepth === 2) return `Who takes penalties for ${team.team}? ${team.primary} is first choice and ${team.secondary} is second for ${CLUB_PENALTY_SEASON}; no third choice is filed.`;
-  return `Who takes penalties for ${team.team}? ${team.primary} is first choice, followed by ${team.secondary} and ${team.tertiary} for ${CLUB_PENALTY_SEASON}.`;
+  return buildClubPenaltyLead(team);
+}
+
+// Presentation only: never infer a confirmed role from an incomplete record.
+export function clubPenaltyOrderStatus(team: ClubPenaltyTeam): "confirmed" | "provisional" | "conditional" | "disputed" | "unknown" {
+  if (!team.primary || team.hierarchyDepth === 0 || team.hierarchyStatus === "unknown") return "unknown";
+  if (team.hierarchyStatus === "disputed" || team.hierarchyStatus === "conditional") return team.hierarchyStatus;
+  if (team.hierarchyStatus === "confirmed" && !team.isCarryover && !team.weakEvidence && team.primaryConfidence !== "low") return "confirmed";
+  return "provisional";
+}
+
+export function clubPenaltyRankLabels(team: ClubPenaltyTeam): string[] {
+  return team.isArchived || clubPenaltyOrderStatus(team) === "confirmed"
+    ? ["First choice", "Second choice", "Third choice"]
+    : ["Listed primary", "Listed second", "Listed third"];
 }
 
 export function buildClubPenaltyLead(team: ClubPenaltyTeam): string {
   if (team.isArchived) {
     return `This is the final archived ${team.seasonLabel} order. ${team.team} is not part of the current ${team.leagueLabel} board.`;
   }
-  if (team.hierarchyDepth === 0 || team.hierarchyStatus === "unknown") {
-    return `${team.team}'s current penalty hierarchy is not verified. We are not naming a taker until the evidence is strong enough.`;
-  }
-  if (team.hierarchyStatus === "disputed") {
-    return team.hierarchyDepth >= 2
-      ? `${team.primary} currently leads the disputed ${team.team} order, with ${team.secondary} next in line.`
-      : `${team.primary} currently leads the disputed ${team.team} order. No backup is verified yet.`;
-  }
-  if (team.isCarryover) {
-    return team.hierarchyDepth >= 2
-      ? `${team.primary} leads the carried-over ${team.team} order, with ${team.secondary} next. The hierarchy is being re-verified.`
-      : `${team.primary} leads the carried-over ${team.team} order. No backup is verified yet.`;
-  }
-  return team.hierarchyDepth >= 2
-    ? `${team.primary} is our current ${team.team} penalty taker call, with ${team.secondary} next in line.`
-    : `${team.primary} is our current ${team.team} penalty taker call. No backup is verified yet.`;
+  const status = clubPenaltyOrderStatus(team);
+  if (status === "unknown") return `${team.team}'s current penalty order is unconfirmed. See the evidence and any provisional names listed below.`;
+  const deputy = team.secondary ? `, with ${team.secondary} listed next` : "";
+  if (status === "confirmed") return `${team.primary} is ${team.team}'s first-choice penalty taker${deputy}.`;
+  return `${team.team}'s penalty order is ${status}. ${team.primary} leads our listed order${deputy}; the next taker is not confirmed.`;
 }
 
 export function buildClubPenaltyHierarchyNote(team: ClubPenaltyTeam): string {
   if (team.isArchived) return `This page preserves the filed ${team.seasonLabel} order and does not present it as a current-season hierarchy.`;
+  if (clubPenaltyOrderStatus(team) !== "confirmed") {
+    const names = [team.primary, team.secondary, team.tertiary].filter(Boolean);
+    return names.length
+      ? `Listed order: ${names.join(", ")}. This ${clubPenaltyOrderStatus(team) === "unknown" ? "unconfirmed" : clubPenaltyOrderStatus(team)} order is a projection, not a guaranteed sequence. Read the evidence note for the circumstances behind it.`
+      : "No penalty taker is currently filed. The order awaits verified evidence.";
+  }
   if (team.hierarchyDepth === 3) return `If ${team.primary} is unavailable, ${team.secondary} is the filed second choice and ${team.tertiary} is third.`;
   if (team.hierarchyDepth === 2) return `If ${team.primary} is unavailable, ${team.secondary} is the filed second choice. No third-choice taker is verified, so the final place remains open.`;
   if (team.hierarchyDepth === 1) return `No backup is verified behind ${team.primary}. If the primary is unavailable, the next penalty is an open assignment rather than a guessed hierarchy.`;
@@ -654,9 +658,7 @@ export function buildClubPenaltyFaq(team: ClubPenaltyTeam): ClubPenaltyFaqItem[]
       { question: `Who is ${team.team}'s penalty taker?`, answer: primaryAnswer },
       {
         question: `Who is ${team.team}'s second-choice penalty taker?`,
-        answer: team.hierarchyDepth === 3
-          ? `${team.secondary} is second choice behind ${team.primary}, with ${team.tertiary} filed third.`
-          : `${team.secondary} is second choice behind ${team.primary}. No third-choice taker is verified yet.`,
+        answer: buildClubPenaltyHierarchyNote(team),
       },
     ];
   }
@@ -666,37 +668,19 @@ export function buildClubPenaltyFaq(team: ClubPenaltyTeam): ClubPenaltyFaqItem[]
     {
       question: `Does ${team.team} have a verified backup penalty taker?`,
       answer: team.hierarchyDepth === 1
-        ? `No. ${team.primary} is the only verified name in the current file, so the backup position remains open.`
+        ? `No backup is listed behind ${team.primary}. ${buildClubPenaltyHierarchyNote(team)}`
         : `No. Neither a first-choice nor a backup penalty taker is currently verified.`,
     },
   ];
 }
 
-function firstSentence(value: string): string {
-  const sentence = value.match(/^.*?[.!?](?:\s|$)/)?.[0]?.trim();
-  return sentence || value.trim();
-}
-
 export function buildClubPenaltyCardSummary(team: ClubPenaltyTeam): string {
-  if (team.isArchived) return buildClubPenaltyLead(team);
-  if (team.hierarchyStatus === "unknown") {
-    const context = buildClubPenaltyConditionSummary(team);
-    return context
-      ? firstSentence(context)
-      : "No current penalty hierarchy is published until direct evidence supports it.";
-  }
-  if (team.hierarchyStatus === "disputed") {
-    const context = firstSentence(buildClubPenaltyConditionSummary(team));
-    return context
-      ? `${team.primary} currently leads a disputed order. ${context}`
-      : `${team.primary} currently leads a disputed order that remains under review.`;
-  }
   return buildClubPenaltyLead(team);
 }
 
 /** Small static search index; no client requests or private evidence payload. */
 export function buildPenaltyDirectory(leagues: ClubPenaltyLeague[]) {
   return leagues.map(league => ({ key: league.key, label: league.label, logoPath: league.logoPath,
-    teams: league.teams.map(team => ({ name: team.team, url: team.relativeUrl, logoPath: team.logoPath, players: team.verifiedNames, portraits: team.portraitUrls })),
+    teams: league.teams.map(team => ({ name: team.team, url: team.relativeUrl, logoPath: team.logoPath, players: team.verifiedNames, portraits: team.portraitUrls, rankLabels: clubPenaltyRankLabels(team), status: clubPenaltyOrderStatus(team) })),
   }));
 }

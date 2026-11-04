@@ -434,7 +434,7 @@ export default function PlayerProps({
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
                 <div className="text-[11px] font-mono tracking-[0.18em] text-emerald-400">01</div>
                 <h3 className="mt-3 text-base font-semibold text-slate-100">Player, market, line</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400">A player prop is a bet on one player’s match statistics. Over 1.5 shots means two or more shots; shots on target is a separate market. Check the player and the exact line before comparing prices.</p>
+                <p className="mt-2 text-sm leading-6 text-slate-400">A player prop is a bet on one player’s match statistics. Over 1.5 shots means two or more shots; shots on target is separate. Over 3.5 goalkeeper saves means four or more saves. Check the player and exact line before comparing prices.</p>
               </div>
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
                 <div className="text-[11px] font-mono tracking-[0.18em] text-emerald-400">02</div>

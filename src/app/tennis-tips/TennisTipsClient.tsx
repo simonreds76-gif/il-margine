@@ -533,6 +533,7 @@ export default function TennisTips({
                 <p className="mt-2 text-sm leading-6 text-slate-400">The listed odds are the price recorded at publication. Check your bookmaker’s rules for retirements and walkovers before betting: settlement can differ between bookmakers and markets. Each published pick keeps its own result.</p>
               </div>
           </div>
+          <p className="mt-4 max-w-4xl text-sm leading-6 text-slate-400"><strong className="font-semibold text-slate-200">Aces and double faults:</strong> in a three-way Most Aces or Most Double Faults market, the outcomes are player 1, player 2 or a tie in that statistic. A tie is a separate selection, not a refund on either player. Over/under bets instead depend on the named player or match total and the exact line. Check the market and your bookmaker’s settlement rules.</p>
           <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm">
             <Link href="/tennis-matchup" className="site-button">Explore Tennis Matchup Lab <span aria-hidden="true">↗</span></Link>
             <Link href="/resources/tennis-retirement-rules" className="site-button">Compare tennis retirement rules <span aria-hidden="true">↗</span></Link>

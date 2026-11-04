@@ -1,5 +1,5 @@
 import PenaltyDirectory from "@/components/PenaltyDirectory";
-import { buildPenaltyDirectory } from "@/lib/club-penalty-takers";
+import { buildPenaltyDirectory, clubPenaltyOrderStatus, formatClubPenaltyDate } from "@/lib/club-penalty-takers";
 import Link from "next/link";
 import ClubPenaltyLatestUpdates from "@/components/ClubPenaltyLatestUpdates";
 import Footer from "@/components/Footer";
@@ -36,6 +36,7 @@ function LeagueCard({ league, season }: { league: ClubPenaltyLeague; season: Clu
     .filter((team): team is ClubPenaltyLeague["teams"][number] => Boolean(team));
   const unverified = league.teams.filter((team) => team.hierarchyStatus === "unknown").length;
   const isLive = league.phase === "live";
+  const latestClubReview = league.teams.map(team => team.checkedAt).filter(Boolean).sort().at(-1);
 
   return (
     <article className="group relative overflow-hidden rounded-[28px] border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_18px_55px_rgba(0,0,0,0.2)] transition hover:-translate-y-0.5 hover:border-slate-700 sm:p-6">
@@ -56,8 +57,9 @@ function LeagueCard({ league, season }: { league: ClubPenaltyLeague; season: Clu
 
         <p className="mt-4 text-sm leading-6 text-slate-400">{league.copy}</p>
         <p className="mt-3 text-xs text-slate-300">
-          <span className="text-slate-500">Board checked</span>{" "}
+          <span className="text-slate-500">Board baseline reviewed</span>{" "}
           <span className="font-medium text-emerald-200">{league.boardCheckedLabel || "pending"}</span>
+          {latestClubReview && latestClubReview !== league.boardCheckedAt ? <span className="mt-1 block text-slate-400">Latest club review <time dateTime={latestClubReview}>{formatClubPenaltyDate(latestClubReview)}</time></span> : null}
         </p>
 
         <div className="mt-5 grid grid-cols-3 gap-2">
@@ -81,7 +83,7 @@ function LeagueCard({ league, season }: { league: ClubPenaltyLeague; season: Clu
               <Crest src={team.logoPath} label={team.team} fallback={team.initials} />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-medium text-slate-100">{team.team}</span>
-                <span className="block truncate text-xs text-slate-500">{team.primary}</span>
+                <span className="block truncate text-xs text-slate-500">{team.primary}{clubPenaltyOrderStatus(team) !== "confirmed" ? ` · ${clubPenaltyOrderStatus(team)}` : ""}</span>
               </span>
               <span className="text-slate-600" aria-hidden="true">-&gt;</span>
             </Link>

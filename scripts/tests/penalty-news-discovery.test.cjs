@@ -72,11 +72,13 @@ test('archive metadata is self-canonical, page 1 redirects and invalid pages fai
   for (const n of ['0', '999', '-1', '02', '1.5']) await assert.rejects(() => route.default(params(n)), /404/);
 });
 
-test('article metadata uses the same distinct headline and the matching share image', async () => {
+test('article metadata uses a consistent compact title and preserves the incident dates and URL', async () => {
   const route = load('src/app/penalty-news/[slug]/page.tsx', { ...shared, '@/components/PenaltyNewsFeed': feed, 'next/navigation': { notFound: () => { throw Error('404'); } } });
   for (const a of penaltyNews.articles) {
     const meta = await route.generateMetadata({ params: Promise.resolve({ slug: a.slug }) });
-    assert.equal(meta.openGraph.title, a.title);
+    assert.equal(meta.openGraph.title, helpers.newsSeoTitle(a));
+    assert.equal(meta.title.absolute, meta.openGraph.title);
+    assert.equal(meta.twitter.title, meta.openGraph.title);
     assert.equal(meta.openGraph.images[0].url, helpers.newsImageUrl(a.slug));
     assert.equal(meta.openGraph.publishedTime, a.publishedAt);
     assert.equal(meta.alternates.canonical, `https://ilmargine.bet/penalty-news/${a.slug}`);

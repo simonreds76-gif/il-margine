@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import PageHeading from "@/components/PageHeading";
 import Footer from "@/components/Footer";
 import { PenaltyNewsCard } from "@/components/PenaltyNewsFeed";
-import { newsDate, newsImageUrl, outcomeLabel } from "@/lib/penalty-news";
+import { newsDate, newsImageUrl, newsSeoTitle, outcomeLabel } from "@/lib/penalty-news";
 import { penaltyNews } from "@/lib/penalty-news-data";
 import styles from "@/components/PenaltyNews.module.css";
 
@@ -17,9 +17,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const article = penaltyNews.articles.find(a => a.slug === slug);
   if (!article) return { title: "Report not found" };
   const url = `https://ilmargine.bet/penalty-news/${article.slug}`;
-  return { title: `${article.title} | Penalty News`, description: article.paragraphs[0], alternates: { canonical: url }, robots: { index: true, follow: true },
-    openGraph: { title: article.title, description: article.paragraphs[0], url, type: "article", publishedTime: article.publishedAt, modifiedTime: article.updatedAt, authors: ["Il Margine"], images: [{ url: newsImageUrl(article.slug), width: 1200, height: 630, alt: `${article.player} · ${article.home} ${article.homeScore}–${article.awayScore} ${article.away} · ${article.minute}′ penalty` }] },
-    twitter: { card: "summary_large_image", images: [newsImageUrl(article.slug)] } };
+  const title = newsSeoTitle(article);
+  return { title: { absolute: title }, description: article.paragraphs[0], alternates: { canonical: url }, robots: { index: true, follow: true },
+    openGraph: { title, description: article.paragraphs[0], url, type: "article", publishedTime: article.publishedAt, modifiedTime: article.updatedAt, authors: ["Il Margine"], images: [{ url: newsImageUrl(article.slug), width: 1200, height: 630, alt: `${article.player} · ${article.home} ${article.homeScore}–${article.awayScore} ${article.away} · ${article.minute}′ penalty` }] },
+    twitter: { title, description: article.paragraphs[0], card: "summary_large_image", images: [newsImageUrl(article.slug)] } };
 }
 export default async function PenaltyReport({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
