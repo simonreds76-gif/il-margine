@@ -303,7 +303,7 @@
         "Idrissa Gueye",
         "Vakoun Issouf Bayo"
       ],
-      "observed_at": "2026-11-04T17:58:42.805393+00:00",
+      "observed_at": "2026-11-04T23:37:46.805055+00:00",
       "changed_at": "2026-11-03T23:16:28.468511+00:00"
     },
     {
@@ -607,7 +607,7 @@
         "Florian Grillitsch",
         "Antonio Raimondo"
       ],
-      "observed_at": "2026-11-04T17:58:42.805393+00:00",
+      "observed_at": "2026-11-04T23:37:46.805055+00:00",
       "changed_at": "2026-11-04T14:53:29.807036+00:00"
     },
     {
@@ -910,26 +910,314 @@
         "Jay Enem",
         "Roberto Piccoli"
       ],
-      "observed_at": "2026-11-04T17:58:42.805393+00:00",
+      "observed_at": "2026-11-04T23:37:46.805055+00:00",
       "changed_at": "2026-11-04T17:58:42.805393+00:00"
     },
     {
       "fotmob_match_id": 5749740,
+      "fotmob_page_url": "/matches/sassuolo-vs-roma/2absmd#5749740",
+      "home_fotmob_team_id": 8686,
+      "away_fotmob_team_id": 7943,
       "match_date": "2026-11-07",
       "kickoff_utc": "2026-11-07T19:45:00Z",
       "home_team": "Roma",
       "away_team": "Sassuolo",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-4-2-1",
+      "away_formation": "4-3-3",
+      "home_players": [
+        "Pierluigi Gollini",
+        "Daniele Ghilardi",
+        "Evan N'Dicka",
+        "Mario Hermoso",
+        "Nahuel Molina",
+        "Bryan Cristante",
+        "Marten de Roon",
+        "Wesley",
+        "Matias Soulé",
+        "Rodrigo Mora",
+        "Donyell Malen"
+      ],
+      "away_players": [
+        "Stefano Turati",
+        "Sebastian Walukiewicz",
+        "Jay Idzes",
+        "Fali Candé",
+        "Josh Doig",
+        "Vasilije Adžić",
+        "Nemanja Matić",
+        "Ibrahim Sulemana",
+        "Domenico Berardi",
+        "Sebastiano Esposito",
+        "Armand Laurienté"
+      ],
+      "home_starters": [
+        {
+          "name": "Pierluigi Gollini",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-2-1",
+          "position_id": 11,
+          "player_id": 553849,
+          "shirt_number": "95"
+        },
+        {
+          "name": "Daniele Ghilardi",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 33,
+          "player_id": 1386006,
+          "shirt_number": "87"
+        },
+        {
+          "name": "Evan N'Dicka",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 35,
+          "player_id": 787242,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Mario Hermoso",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 37,
+          "player_id": 671203,
+          "shirt_number": "22"
+        },
+        {
+          "name": "Nahuel Molina",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 62,
+          "player_id": 726345,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Bryan Cristante",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 64,
+          "player_id": 299799,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Marten de Roon",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66,
+          "player_id": 198559,
+          "shirt_number": "15"
+        },
+        {
+          "name": "Wesley",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 68,
+          "player_id": 1320176,
+          "shirt_number": "43"
+        },
+        {
+          "name": "Matias Soulé",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84,
+          "player_id": 1280082,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Rodrigo Mora",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86,
+          "player_id": 1525065,
+          "shirt_number": "86"
+        },
+        {
+          "name": "Donyell Malen",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-2-1",
+          "position_id": 105,
+          "player_id": 660301,
+          "shirt_number": "14"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Stefano Turati",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-3-3",
+          "position_id": 11,
+          "player_id": 869054,
+          "shirt_number": "80"
+        },
+        {
+          "name": "Sebastian Walukiewicz",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 32,
+          "player_id": 860592,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Jay Idzes",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 34,
+          "player_id": 937412,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Fali Candé",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 36,
+          "player_id": 1041522,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Josh Doig",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 38,
+          "player_id": 1130330,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Vasilije Adžić",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 73,
+          "player_id": 1382375,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Nemanja Matić",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 75,
+          "player_id": 115067,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Ibrahim Sulemana",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 77,
+          "player_id": 1396375,
+          "shirt_number": "55"
+        },
+        {
+          "name": "Domenico Berardi",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 103,
+          "player_id": 364520,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Sebastiano Esposito",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 105,
+          "player_id": 1030212,
+          "shirt_number": "94"
+        },
+        {
+          "name": "Armand Laurienté",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 107,
+          "player_id": 935769,
+          "shirt_number": "45"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-11-04T17:58:42.805393+00:00",
-      "changed_at": "2026-11-04T14:53:29.807036+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Mile Svilar",
+        "Devyne Rensch",
+        "Lorenzo Pellegrini",
+        "Manu Koné",
+        "Paulo Dybala"
+      ],
+      "away_unavailable": [
+        "Fedde Leysen",
+        "Daniel Boloca",
+        "Ismaël Koné",
+        "Cristian Volpato"
+      ],
+      "observed_at": "2026-11-04T23:37:46.805055+00:00",
+      "changed_at": "2026-11-04T23:37:46.805055+00:00"
     },
     {
       "fotmob_match_id": 5749748,
@@ -1236,7 +1524,7 @@
         "Santiago Pierotti",
         "Willem Geubbels"
       ],
-      "observed_at": "2026-11-04T17:58:42.805393+00:00",
+      "observed_at": "2026-11-04T23:37:46.805055+00:00",
       "changed_at": "2026-11-04T14:53:29.807036+00:00"
     }
   ]
