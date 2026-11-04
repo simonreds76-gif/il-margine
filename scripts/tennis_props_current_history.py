@@ -38,15 +38,24 @@ def write(path, rows):
         writer.writeheader();writer.writerows(rows)
 
 
+def activity_names(baseline, aliases, normalize):
+    """Use the same explicit identity aliases for activity and count histories."""
+    names=defaultdict(set)
+    for row in baseline:
+        names[(row['tour'].lower(),normalize(row['player_name']))].add((row['player_id'],row['player_name']))
+    for row in aliases:
+        tour=row['tour'].lower()
+        names[(tour,normalize(row['alias']))].update(names[(tour,normalize(row['player_name']))])
+    return names
+
+
 def activity(root, as_of, baseline, adapter):
     """Activity includes completed main, qualifying and Challenger singles.
 
     Count rates retain their existing main-tour scope. Activity does not infer
     inactivity from absent point statistics or a stopped archival feed.
     """
-    names=defaultdict(set)
-    for row in baseline:
-        names[(row['tour'].lower(),adapter.norm(row['player_name']))].add((row['player_id'],row['player_name']))
+    names=activity_names(baseline,read(root/'data/tennis-props/player-name-aliases.csv'),adapter.norm)
     excluded=Counter();buckets={};latest_by_scope={}
     for tour in ('atp','wta'):
         source=root/'data/oncourt'
