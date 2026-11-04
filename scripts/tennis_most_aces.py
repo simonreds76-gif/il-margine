@@ -13,6 +13,7 @@ import numpy as np
 from scipy.stats import nbinom, norm, qmc
 
 from player_name_matching import fold_name_text
+from tennis_price_identity import canonical_price_name
 
 
 DEFAULT_RHO = 0.22
@@ -62,7 +63,7 @@ def norm_name(value: object) -> str:
     value = fold_name_text(value)
     text = unicodedata.normalize("NFKD", str(value or "").strip().lower())
     text = "".join(ch for ch in text if not unicodedata.combining(ch))
-    return " ".join(re.sub(r"[^a-z0-9]+", " ", text).split())
+    return canonical_price_name(" ".join(re.sub(r"[^a-z0-9]+", " ", text).split()))
 
 
 def pair_key(player1: object, player2: object) -> tuple[str, str]:
