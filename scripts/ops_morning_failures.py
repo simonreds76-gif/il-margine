@@ -54,7 +54,22 @@ def verified_atlas_recovery(row, details):
     )
 
 
-def check_morning_failure(env=None, transport=request_json):
+def report_incident(row, notification, env):
+    # An incident is not a checker crash. Keep it visible without repeating
+    # GitHub failure emails after successful delivery/deduplication.
+    run_id = str(row.get('run_id', 'unknown')).replace('\n', ' ')
+    error = str(row.get('error_type') or 'Unclassified').replace('\n', ' ')
+    started = str(row.get('started_at', 'unknown')).replace('\n', ' ')
+    print(f"OPS_MORNING_INCIDENT run={run_id} error={error} notification={notification} recovery=unverified")
+    summary = env.get('GITHUB_STEP_SUMMARY')
+    if summary:
+        with open(summary, 'a', encoding='utf8') as stream:
+            stream.write(f"## Recorded morning incident\n\nRun: `{run_id}`; started: {started}; error: `{error}`.\n\n"
+                         f"Notification: **{notification}**. Original failed-run history retained; recovery is not asserted. "
+                         "The alert checker completed; this is not a new checker failure.\n")
+
+
+def check_morning_failure(env=None, transport=request_json, *, read_only=False):
     env = os.environ if env is None else env
     base = env.get('NEXT_PUBLIC_SUPABASE_URL', '').rstrip('/')
     key = env.get('SUPABASE_SERVICE_ROLE_KEY', '')
@@ -77,6 +92,10 @@ def check_morning_failure(env=None, transport=request_json):
         return False
     if details.get('ops_failure_notified_at'):
         print('OPS_MORNING_FAILURE already notified')
+        report_incident(row, 'already-notified', env)
+        return True
+    if read_only:
+        report_incident(row, 'pending-delivery (read-only)', env)
         return True
     token = env.get('OPS_ALERT_TELEGRAM_BOT_TOKEN', '')
     chat = env.get('OPS_ALERT_TELEGRAM_CHAT_ID', '')
@@ -99,4 +118,5 @@ def check_morning_failure(env=None, transport=request_json):
     query = urlencode({'run_id': 'eq.' + row['run_id'], 'status': 'eq.' + row['status']})
     transport('PATCH', f'{base}/rest/v1/run_status?{query}', {**headers, 'Prefer': 'return=minimal'}, {'details': details})
     print('OPS_MORNING_FAILURE Telegram sent and acknowledged')
+    report_incident(row, 'sent-and-acknowledged', env)
     return True
