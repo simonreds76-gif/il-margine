@@ -125,7 +125,7 @@
       "verified_fixture": "5795504"
     },
     "9783": {
-      "name": "Deportivo A Coruña",
+      "name": "Deportivo A CoruÃ±a",
       "goal": {
         "id": "cmr7m55r25ee5rx06izw186sh",
         "name": "Dep. A Coruna"
@@ -353,7 +353,7 @@
       "verified_fixture": "5881213"
     },
     "8722": {
-      "name": "1. FC Köln",
+      "name": "1. FC KÃ¶ln",
       "goal": {
         "id": "cmr79jabf03zgrx06blcl9jom",
         "name": "FC Koln"
@@ -365,7 +365,7 @@
       "verified_fixture": "5881213"
     },
     "9823": {
-      "name": "Bayern München",
+      "name": "Bayern MÃ¼nchen",
       "goal": {
         "id": "cmr79jab703zerx06eqilba4s",
         "name": "Bayern Munich"
@@ -507,6 +507,204 @@
         "name": "Angers"
       },
       "verified_fixture": "5802976"
+    },
+    "9866": {
+      "name": "Deportivo Alavés",
+      "goal": {
+        "id": "cmr7m55ue5eg4rx06vdyle9qd",
+        "name": "Alaves"
+      },
+      "espn": {
+        "id": "96",
+        "name": "Alavés"
+      },
+      "verified_fixture": "5868115",
+      "reviewed_at": "2026-11-04",
+      "evidence": {
+        "goal_observed_at": "2026-11-03T17:57:52.426Z",
+        "goal_fixture": "cmu74gu2ro7zfqu077zkkemv1",
+        "kickoff": "2026-10-31T20:00:00.000Z",
+        "espn_crosscheck": "2026-11-04 exact fixture calendar",
+        "espn_fixture": "401882836",
+        "espn_kickoff": "2026-10-23T19:00Z",
+        "goal_packet_sha256": "e97a4289dcf375615d23c48a1afeff02a6cf93ba86b4e169daacc0b44ac99810"
+      }
+    },
+    "9864": {
+      "name": "Málaga",
+      "goal": {
+        "id": "cmr7m55qw5ee2rx06xyvf2y3b",
+        "name": "Malaga"
+      },
+      "espn": {
+        "id": "99",
+        "name": "Málaga"
+      },
+      "verified_fixture": "5868112",
+      "reviewed_at": "2026-11-04",
+      "evidence": {
+        "goal_observed_at": "2026-11-03T17:58:16.969Z",
+        "goal_fixture": "cmu74gu2so7zhqu07rmy0s8qy",
+        "kickoff": "2026-10-31T17:30:00.000Z",
+        "espn_crosscheck": "2026-11-04 exact fixture calendar",
+        "espn_fixture": "401882836",
+        "espn_kickoff": "2026-10-23T19:00Z",
+        "goal_packet_sha256": "e97a4289dcf375615d23c48a1afeff02a6cf93ba86b4e169daacc0b44ac99810"
+      }
+    },
+    "8686": {
+      "name": "Roma",
+      "goal": {
+        "id": "cmr7m6brt5t37rx06ixsgl3rc",
+        "name": "AS Roma"
+      },
+      "espn": {
+        "id": "104",
+        "name": "AS Roma"
+      },
+      "verified_fixture": "5749739",
+      "reviewed_at": "2026-11-04",
+      "evidence": {
+        "goal_observed_at": "2026-11-03T17:59:34.495Z",
+        "goal_fixture": "cmu74gm7ao5ooqu071nqzr1h4",
+        "kickoff": "2026-10-31T17:00:00.000Z",
+        "espn_crosscheck": "2026-11-04 exact fixture calendar",
+        "espn_fixture": "401874948",
+        "espn_kickoff": "2026-10-24T16:00Z",
+        "goal_packet_sha256": "e97a4289dcf375615d23c48a1afeff02a6cf93ba86b4e169daacc0b44ac99810"
+      }
+    },
+    "10203": {
+      "name": "Nottingham Forest",
+      "goal": {
+        "id": "cmr7hvawf3yvhrx06187wlp66",
+        "name": "Nottingham"
+      },
+      "espn": {
+        "id": "393",
+        "name": "Nottingham Forest"
+      },
+      "verified_fixture": "5795497",
+      "reviewed_at": "2026-11-04",
+      "evidence": {
+        "goal_observed_at": "2026-11-03T18:02:01.382Z",
+        "goal_fixture": "cmu74gjhno4q8qu07026i6xz3",
+        "kickoff": "2026-10-31T15:00:00.000Z",
+        "espn_crosscheck": "2026-11-04 exact fixture calendar",
+        "espn_fixture": "401879253",
+        "espn_kickoff": "2026-10-23T19:00Z",
+        "goal_packet_sha256": "e97a4289dcf375615d23c48a1afeff02a6cf93ba86b4e169daacc0b44ac99810"
+      }
+    },
+    "8669": {
+      "name": "Coventry City",
+      "goal": {
+        "id": "cmr7huvou3t70rx060qqsehz2",
+        "name": "Coventry"
+      },
+      "espn": {
+        "id": "388",
+        "name": "Coventry City"
+      },
+      "verified_fixture": "5795499",
+      "reviewed_at": "2026-11-04",
+      "evidence": {
+        "goal_observed_at": "2026-11-03T18:02:01.382Z",
+        "goal_fixture": "cmu74gjhqo4qaqu07ov9a5x5a",
+        "kickoff": "2026-10-31T15:00:00.000Z",
+        "espn_crosscheck": "2026-11-04 exact fixture calendar",
+        "espn_fixture": "401879255",
+        "espn_kickoff": "2026-10-24T14:00Z",
+        "goal_packet_sha256": "e97a4289dcf375615d23c48a1afeff02a6cf93ba86b4e169daacc0b44ac99810"
+      }
+    },
+    "9902": {
+      "name": "Ipswich Town",
+      "goal": {
+        "id": "cmr7huvom3t6vrx06c9cpxs1a",
+        "name": "Ipswich"
+      },
+      "espn": {
+        "id": "373",
+        "name": "Ipswich Town"
+      },
+      "verified_fixture": "5795500",
+      "reviewed_at": "2026-11-04",
+      "evidence": {
+        "goal_observed_at": "2026-11-03T18:02:01.382Z",
+        "goal_fixture": "cmu74gjhso4qcqu07qetoajx3",
+        "kickoff": "2026-10-31T15:00:00.000Z",
+        "espn_crosscheck": "2026-11-04 exact fixture calendar",
+        "espn_fixture": "401879253",
+        "espn_kickoff": "2026-10-23T19:00Z",
+        "goal_packet_sha256": "e97a4289dcf375615d23c48a1afeff02a6cf93ba86b4e169daacc0b44ac99810"
+      }
+    },
+    "10269": {
+      "name": "VfB Stuttgart",
+      "goal": {
+        "id": "cmr79jabg03zhrx06z7qf1z8v",
+        "name": "Stuttgart"
+      },
+      "espn": {
+        "id": "134",
+        "name": "VfB Stuttgart"
+      },
+      "verified_fixture": "5881207",
+      "reviewed_at": "2026-11-04",
+      "evidence": {
+        "goal_observed_at": "2026-11-03T18:03:20.207Z",
+        "goal_fixture": "cmu74ghyjo48pqu07wl10q142",
+        "kickoff": "2026-10-31T14:30:00.000Z",
+        "espn_crosscheck": "2026-11-04 exact fixture calendar",
+        "espn_fixture": "401884761",
+        "espn_kickoff": "2026-10-23T18:30Z",
+        "goal_packet_sha256": "e97a4289dcf375615d23c48a1afeff02a6cf93ba86b4e169daacc0b44ac99810"
+      }
+    },
+    "9788": {
+      "name": "Borussia Mönchengladbach",
+      "goal": {
+        "id": "cmr79jab403zcrx067rkbohyz",
+        "name": "B. Monchengladbach"
+      },
+      "espn": {
+        "id": "268",
+        "name": "Borussia Mönchengladbach"
+      },
+      "verified_fixture": "5881209",
+      "reviewed_at": "2026-11-04",
+      "evidence": {
+        "goal_observed_at": "2026-11-03T18:03:20.207Z",
+        "goal_fixture": "cmu74ghylo48rqu07k74wt0wv",
+        "kickoff": "2026-10-31T14:30:00.000Z",
+        "espn_crosscheck": "2026-11-04 exact fixture calendar",
+        "espn_fixture": "401884761",
+        "espn_kickoff": "2026-10-23T18:30Z",
+        "goal_packet_sha256": "e97a4289dcf375615d23c48a1afeff02a6cf93ba86b4e169daacc0b44ac99810"
+      }
+    },
+    "10189": {
+      "name": "Schalke 04",
+      "goal": {
+        "id": "cmr79j1tx00yvrx06zz1xla9h",
+        "name": "Schalke"
+      },
+      "espn": {
+        "id": "133",
+        "name": "Schalke 04"
+      },
+      "verified_fixture": "5881212",
+      "reviewed_at": "2026-11-04",
+      "evidence": {
+        "goal_observed_at": "2026-11-03T18:03:20.207Z",
+        "goal_fixture": "cmu74ghymo48tqu07sfe321l0",
+        "kickoff": "2026-10-31T14:30:00.000Z",
+        "espn_crosscheck": "2026-11-04 exact fixture calendar",
+        "espn_fixture": "401884756",
+        "espn_kickoff": "2026-10-24T13:30Z",
+        "goal_packet_sha256": "e97a4289dcf375615d23c48a1afeff02a6cf93ba86b4e169daacc0b44ac99810"
+      }
     }
   },
   "fixture_player_aliases": {
