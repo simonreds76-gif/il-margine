@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import math
+import re
 import importlib.util
 import sys
 from collections import defaultdict
@@ -347,6 +348,22 @@ def same_result_event(row, match):
             and ' - ' in raw and norm_name(raw.rsplit(' - ',1)[1]) == expected)
 
 
+def grosvenor_void_before_first_set(score: str) -> bool:
+    """Only the verified no-completed-set case; later retirements stay held.
+
+    Grosvenor Sports rules C.28.5, checked 2026-11-04:
+    https://www.grosvenorcasinos.com/static/sportstermsandconditions-new
+    Most Aces is not irreversibly decided by a lead in an unfinished first set.
+    """
+    if score.strip() in {'W/O', 'WO'}:
+        return True
+    if not re.fullmatch(r'\d+-\d+(?:\(\d+\))?\s+(?:RET|ABD|ABN|DEF)\.?', score.strip()):
+        return False
+    a, b = map(int, re.match(r'(\d+)-(\d+)', score).groups())
+    # Fail closed for malformed scores and any potentially completed set.
+    return max(a, b) <= 6 and (max(a, b) < 6 or min(a, b) >= 5)
+
+
 def settle(ledger: list[dict[str, str]], index: dict[tuple[str, str], list[dict[str, str]]], *, direct_index=None) -> int:
     settled = 0
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -381,6 +398,12 @@ def settle(ledger: list[dict[str, str]], index: dict[tuple[str, str], list[dict[
         match = min(candidates, key=lambda item: item[0])[1]
         score = str(match.get("score") or "").upper()
         if row.get("bookmaker") == "Grosvenor" and (not score or any(token in score for token in ("RET", "W/O", "WO", "DEF", "ABD"))):
+            if grosvenor_void_before_first_set(score):
+                row.update(settlement_status='void', result='void', pnl='0.000',
+                           settled_at_utc=now,
+                           settlement_note='grosvenor_no_completed_set:C.28.5:' + score)
+                settled += 1
+                continue
             row["settlement_note"] = "grosvenor_unfinished_contract_review_required"
             continue
         if any(token in score for token in ("RET", "W/O", "WO", "DEF", "ABD")):
