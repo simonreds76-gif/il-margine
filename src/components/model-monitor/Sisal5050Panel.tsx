@@ -1,3 +1,5 @@
+import ModelProfitChart from "./ModelProfitChart";
+import { reportSelectionHistory } from "@/lib/model-profit-history";
 type Obj = Record<string, unknown>;
 const object = (v: unknown): Obj => v && typeof v === "object" && !Array.isArray(v) ? v as Obj : {};
 const num = (v: unknown, dp = 0, suffix = "") => typeof v === "number" && Number.isFinite(v) ? `${v.toFixed(dp)}${suffix}` : "Awaiting results";
@@ -25,6 +27,7 @@ function EventComparison({ value, page }: { value: unknown; page: number }) {
           <div><dt className="text-xs text-slate-400">Pending / void</dt><dd>{num(a.pending)} / {num(a.void)}</dd></div>
           <div><dt className="text-xs text-slate-400">Brier / log loss</dt><dd>{num(a.brier, 4)} / {num(a.log_loss, 4)}</dd></div>
         </dl>
+        <ModelProfitChart name={`Sisal ${title}`} history={reportSelectionHistory(selections, {settled: typeof a.settled === "number" ? a.settled : null, profit: typeof a.pnl_units === "number" ? a.pnl_units : null})} />
         <details className="mt-4 text-xs text-slate-300"><summary className="min-h-8 cursor-pointer font-semibold">Format, count bias &amp; uncertainty</summary>
           <p className="mt-2 leading-5">Paper ROI 95% interval: {interval(object(r.paper_roi_interval).interval_95, 1, "%")}. Lower Brier and log loss are better; negative count bias means underprediction.</p>
           {Object.entries(object(r.format_results)).map(([format, val]) => { const f = object(val); return <p className="mt-2" key={format}>Best of {format}: {num(f.settled)} settled · {num(f.roi_pct, 2, "%")} ROI · {num(f.pending)} pending.</p>; })}
@@ -71,6 +74,7 @@ export default function Sisal5050Panel({ value, page = 1 }: { value: unknown; pa
         <div><dt className="text-xs text-slate-400">Pending / void</dt><dd className="mt-2 tabular-nums">{num(main.pending)} / {num(main.void)}</dd></div>
         <div><dt className="text-xs text-slate-400">Overdue · more than 48h</dt><dd className="mt-2 tabular-nums">{num(main.overdue)}</dd></div>
       </dl>
+      <ModelProfitChart name="Sisal 50/50" history={reportSelectionHistory(selections, {settled: typeof main.settled === "number" ? main.settled : null, profit: typeof main.pnl_units === "number" ? main.pnl_units : null})} />
       <p className="mt-3 text-xs leading-5 text-slate-400">Paper ROI uncertainty · fixture bootstrap 95%: {interval(object(report.paper_roi_interval).interval_95, 1, "%")}. {num(main.retirement_settled)} bets settled by an already-determined retirement total.</p>
       <p className="mt-4 text-xs leading-5 text-slate-400">{num(report.quotes)} frozen paired markets · {num(report.completed_contracts)} completed player contracts · {num(report.independent_fixtures)} independent fixtures. Historical replay results are excluded.</p>
       <p className="mt-2 break-words text-xs leading-5 text-slate-400">Started {time(report.registered_at)} UK · Updated {time(report.generated_at)} UK. Capture: {String(health.state ?? "unavailable").replaceAll("_", " ").toLowerCase()}.</p>

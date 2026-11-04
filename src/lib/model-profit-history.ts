@@ -2,7 +2,7 @@ import { signalCsv } from "./admin-signal-format";
 import { pick, selectionCard, text, visibleRows, type SignalRow } from "./admin-monitor-display";
 
 export type ProfitDay = { date: string; profit: number; cumulative: number; settled: number };
-export type ProfitHistory = { days: ProfitDay[]; settled: number; profit: number; omitted: number; message?: string };
+export type ProfitHistory = { days: ProfitDay[]; settled: number; profit: number; omitted: number; message?: string; note?: string };
 const round = (value: number) => Math.round(value * 1e6) / 1e6;
 const day = (value: unknown) => {
   const date = text(value).slice(0, 10);
@@ -59,4 +59,31 @@ export function profitWindow(history: ProfitHistory, windowDays: number | null):
   let peak = opening, drawdown = 0;
   for (const d of days) { peak = Math.max(peak, d.cumulative); drawdown = Math.max(drawdown, peak - d.cumulative); }
   return { days, opening, change: round(last.cumulative - opening), drawdown: round(drawdown), from };
+}
+
+/** Validate compact transported curves against the exact displayed cohort. */
+export function compactHistory(value: unknown, expected: {settled: number | null; profit: number | null}): ProfitHistory {
+  const fail = (): ProfitHistory => ({days:[], settled:0, profit:0, omitted:0, message:"Chart unavailable: dated history does not yet reconcile with this report. Existing figures are unchanged."});
+  if (!value || typeof value !== "object") return fail();
+  const h = value as ProfitHistory;
+  if (!Array.isArray(h.days) || !Number.isFinite(h.profit) || h.message || h.omitted || expected.settled === null || expected.profit === null) return fail();
+  let total=0, count=0, previous="";
+  for (const d of h.days) {
+    if (!d || !day(d.date) || d.date<=previous || !Number.isFinite(d.profit) || !Number.isFinite(d.cumulative) || !Number.isInteger(d.settled) || d.settled<=0) return fail();
+    total+=d.profit; count+=d.settled; previous=d.date;
+    if (Math.abs(total-d.cumulative)>0.0001) return fail();
+  }
+  if (count!==expected.settled || count!==h.settled || Math.abs(total-expected.profit)>0.011 || Math.abs(total-h.profit)>0.0001) return fail();
+  return {...h, note: typeof h.note==="string" ? h.note : undefined};
+}
+
+/** Display adapter for saved research reports; never infer a selection or grade. */
+export function reportSelectionHistory(records: unknown, expected: {settled:number|null;profit:number|null}): ProfitHistory {
+  const rows=Array.isArray(records) ? records.filter((r):r is SignalRow=>!!r&&typeof r==="object"&&!Array.isArray(r)).map(r=>({...r,
+    signal_id:r.id ?? r.signal_id,
+    match_date:r.match_date ?? r.start ?? r.scheduled_start ?? r.kickoff,
+    pnl_units:r.pnl_units ?? r.profit,
+    status:text(r.status).toLowerCase(),
+  })) : records;
+  return reconciledHistory(rows,"report-selections",expected);
 }

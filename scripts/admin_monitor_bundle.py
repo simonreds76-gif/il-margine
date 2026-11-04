@@ -50,5 +50,12 @@ def build_admin_bundle(root: Path) -> dict:
         history_status = 'included' if updates else 'no_current_player_rows'
     except (OSError,ValueError,UnicodeError) as error:
         history_status = f'unavailable:{type(error).__name__}'
-    return {'admin_files':files,'admin_manifest':manifest,'admin_bundle_bytes':total,
+    from admin_profit_history import build_admin_profit_histories
+    histories = build_admin_profit_histories(root)
+    history_bytes = len(json.dumps(histories, ensure_ascii=False).encode('utf-8'))
+    if history_bytes > 128 * 1024 or total + history_bytes > 12 * 1024 * 1024:
+        histories = {}
+    else:
+        total += history_bytes
+    return {'admin_profit_histories': histories, 'admin_files':files,'admin_manifest':manifest,'admin_bundle_bytes':total,
             'admin_break_point_history_status':history_status}

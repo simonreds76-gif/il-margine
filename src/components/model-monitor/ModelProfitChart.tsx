@@ -36,7 +36,7 @@ export default function ModelProfitChart({ history, name }: { history: ProfitHis
       setSelected(nearest.date);
     }} onPointerLeave={() => setSelected(null)}>
       <title id={`${id}-title`}>{`${name}: cumulative profit ${signed(history.profit)}`}</title>
-      <desc id={`${id}-description`}>{`${history.settled} settled selections, by match date. Pending and void bets excluded. Use the date slider below to inspect daily results.`}</desc>
+      <desc id={`${id}-description`}>{`${history.settled} settled selections, by match date. ${history.note || "Pending and void bets excluded."} Use the date slider below to inspect daily results.`}</desc>
       <defs><clipPath id={`${id}-positive`}><rect x="0" y="0" width={W} height={Math.max(0, zero)} /></clipPath><clipPath id={`${id}-negative`}><rect x="0" y={zero} width={W} height={H - zero} /></clipPath></defs>
       <line x1={left} x2={right} y1={zero} y2={zero} stroke="#64748b" strokeDasharray="3 4" />
       <text x={right} y={Math.max(10, zero - 5)} textAnchor="end" fill="#94a3b8" fontSize="10">0u</text>
@@ -51,6 +51,6 @@ export default function ModelProfitChart({ history, name }: { history: ProfitHis
     <input type="range" min={0} max={points.length - 1} value={activeIndex} onChange={e => setSelected(points[Number(e.target.value)].date)} aria-label={`Inspect ${name} profit by match date`} aria-valuetext={`${active.date}, cumulative ${signed(active.cumulative)}, day ${signed(active.profit)}`} className="mt-1 h-7 w-full accent-emerald-400" />
     <p className="flex flex-wrap justify-between gap-x-3 gap-y-1 text-xs tabular-nums"><span className="text-slate-400">{dateLabel(active.date)} · {active.settled} settled</span><span className={active.cumulative < 0 ? "text-rose-300" : "text-emerald-300"}>{signed(active.cumulative)} <span className="text-slate-400">total</span></span></p>
     <p className="mt-2 text-xs text-slate-400">Period change <span className={range.change < 0 ? "text-rose-300" : "text-emerald-300"}>{signed(range.change)}</span><span className="mx-2">·</span>Daily drawdown {range.drawdown.toFixed(2)}u</p>
-    <p className="mt-2 text-[11px] leading-4 text-slate-500">By match date, through {points[points.length - 1].date}. {windowDays !== null ? `Last ${windowDays} calendar days ending on the latest result; opening balance retained. ` : ""}Same record as the figures above. No pending bets or historical replays added.</p>
+    <p className="mt-2 text-[11px] leading-4 text-slate-500">By match date, through {points[points.length - 1].date}. {windowDays !== null ? `Last ${windowDays} calendar days ending on the latest result; opening balance retained. ` : ""}{history.note || "Same record as the figures above. No pending bets or historical replays added."}</p>
   </section>;
 }
