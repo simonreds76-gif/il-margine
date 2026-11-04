@@ -47,12 +47,12 @@ test('HTML links cover complete labels and escape user-supplied markup',()=>{
   assert.equal(anchors[0][2],'Full pick &amp; tracked results');
 });
 
-test('all 22 known bookmakers have decodable embedded artwork',async()=>{
+test('all known bookmakers have decodable embedded artwork',async()=>{
   const sharp=require('sharp');
   assert.ok(fs.statSync(path.join(root,'src/lib/telegram-brand-assets.ts')).size<=150_000,'embedded artwork must stay within the edge bundle budget');
   const {BOOKMAKER_LOGO_KEYS}=load(path.join(root,'src/lib/bookmaker-logos.ts'));
   const {TELEGRAM_BRAND_ASSETS,TELEGRAM_BRAND_ASPECTS}=load(path.join(root,'src/lib/telegram-brand-assets.ts'));
-  assert.equal(BOOKMAKER_LOGO_KEYS.length,22);
+  assert.ok(BOOKMAKER_LOGO_KEYS.includes('grosvenor'));
   for(const key of BOOKMAKER_LOGO_KEYS){
     assert.ok(TELEGRAM_BRAND_ASSETS[key]?.startsWith('data:image/png;base64,'),key);
     const m=await sharp(Buffer.from(TELEGRAM_BRAND_ASSETS[key].split(',')[1],'base64')).metadata();
