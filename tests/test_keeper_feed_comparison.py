@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from football_identity import write, read
 from football_identity_research import lookup, SUPPLEMENT, REVIEWS
-from keeper_feed_comparison import compare, append_record, count, digest
+from keeper_feed_comparison import compare, append_record, count, digest, team_matches
 from keeper_feed_store import merge as merge_private, persist as persist_private, local as local_private, FIELD
 
 spec = importlib.util.spec_from_file_location('collector', ROOT / 'scripts/compare-keeper-feeds.py')
@@ -137,6 +137,39 @@ class KeeperComparisonTest(unittest.TestCase):
     def test_counts_reject_invalid_values(self):
         for v in (None, '', -1, 1.5, 'nan', True): self.assertIsNone(count(v))
         self.assertEqual(count('0'), 0)
+
+    def test_reviewed_club_bridges_match_ids_not_loose_names(self):
+        config = read(ROOT / 'config/keeper-feed-comparison.json')
+        # These clubs caused valid fixtures to be missed when provider names differed.
+        for native_id in ('8686', '8669', '9902', '10203', '9866', '9864', '10189', '10269', '9788'):
+            bridge = config['teams'][native_id]
+            ref = {'id': native_id, 'name': bridge['name']}
+            for provider in ('goal', 'espn'):
+                with self.subTest(native_id=native_id, provider=provider):
+                    self.assertTrue(team_matches(ref, provider, bridge[provider], config))
+                    self.assertFalse(team_matches(ref, provider, {'id': 'wrong-club', 'name': ref['name']}, config))
+        for provider in ('goal', 'espn'):
+            ids = [str(row[provider]['id']) for row in config['teams'].values() if provider in row]
+            self.assertEqual(len(ids), len(set(ids)), 'Provider identity belongs to multiple clubs')
+
+    def test_reviewed_club_mapping_still_rejects_wrong_kickoff_and_duplicates(self):
+        config = read(ROOT / 'config/keeper-feed-comparison.json')
+        ref = dict(self.ref, home={'id': '9902', 'name': 'Ipswich Town'},
+                   away={'id': '10203', 'name': 'Nottingham Forest'})
+        row = {'id': 'test-calendar', 'kickoffUtc': ref['kickoff'], 'leagueId': config['leagues']['47']['goal']}
+        for side in ('home', 'away'):
+            bridge = config['teams'][ref[side]['id']]['goal']
+            row.update({side+'TeamId': bridge['id'], side+'TeamName': bridge['name']})
+        client = collector.Client('', 0, 0)
+        with patch.object(client, 'get', return_value={'data': [row]}):
+            self.assertEqual(collector.find_goal(client, ref, config, '2026-11-01', '2026-11-02')['id'], row['id'])
+        with patch.object(client, 'get', return_value={'data': [row, copy.deepcopy(row)]}):
+            with self.assertRaisesRegex(ValueError, 'identity_unresolved'):
+                collector.find_goal(client, ref, config, '2026-11-01', '2026-11-02')
+        row['kickoffUtc'] = '2026-11-01T17:00:00Z'
+        with patch.object(client, 'get', return_value={'data': [row]}):
+            with self.assertRaisesRegex(ValueError, 'identity_unresolved'):
+                collector.find_goal(client, ref, config, '2026-11-01', '2026-11-02')
 
     def test_v4_registry_checks_global_collision_and_leaves_original_unchanged(self):
         spec = importlib.util.spec_from_file_location('reep_builder', ROOT / 'scripts/build-reep-research.py')
