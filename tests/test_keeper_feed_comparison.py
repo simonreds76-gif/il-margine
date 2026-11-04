@@ -141,7 +141,7 @@ class KeeperComparisonTest(unittest.TestCase):
     def test_reviewed_club_bridges_match_ids_not_loose_names(self):
         config = read(ROOT / 'config/keeper-feed-comparison.json')
         # These clubs caused valid fixtures to be missed when provider names differed.
-        for native_id in ('8686', '8669', '9902', '10203', '9866', '9864', '10189', '10269', '9788'):
+        for native_id in ('8686', '8669', '9902', '10203', '9866', '9864', '10189', '10269', '9788', '9905'):
             bridge = config['teams'][native_id]
             ref = {'id': native_id, 'name': bridge['name']}
             for provider in ('goal', 'espn'):
