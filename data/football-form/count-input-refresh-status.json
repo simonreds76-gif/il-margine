@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-11-03T16:28:19.838263+00:00",
+  "generated_at": "2026-11-04T16:22:13.770714+00:00",
   "network_refresh": true,
   "requests": 5,
   "recovered": 0,
   "unresolved": [],
   "leagues": {
     "epl": {
-      "error": "ConnectTimeout"
+      "error": "JSONDecodeError"
     },
     "serie-a": {
-      "error": "ConnectTimeout"
+      "error": "JSONDecodeError"
     },
     "la-liga": {
-      "error": "ConnectTimeout"
+      "error": "JSONDecodeError"
     },
     "bundesliga": {
-      "error": "ConnectTimeout"
+      "error": "JSONDecodeError"
     },
     "ligue-1": {
-      "error": "ConnectTimeout"
+      "error": "JSONDecodeError"
     }
   },
   "completed_missing_before": 0,

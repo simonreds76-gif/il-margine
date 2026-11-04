@@ -1,6 +1,6 @@
 # Corners CLV Monitor: `corners_v3`
 
-Generated: 2026-11-03T16:32:39Z
+Generated: 2026-11-04T16:23:59Z
 Picks input: `data/football-form/corners-v3-shadow-signals.csv`
 Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
@@ -8,9 +8,9 @@ Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
 - Picks: 209
 - Active published picks: 209
-- Settled: 182
-- Open/pending: 27
-- Settled PnL: -16.83u
+- Settled: 186
+- Open/pending: 23
+- Settled PnL: -16.40u
 - Picks with close: 164
 - True-close coverage (<=120m): 88/187 (47.1%)
 - Average true-close CLV: +1.20% (n=88)
@@ -24,32 +24,32 @@ Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Over | 44 | 42 | 2 | 15-27-0 | -9.43u | -22.45% | +0.71% (n=31) |
-| Under | 165 | 140 | 25 | 64-76-0 | -7.40u | -5.29% | +1.65% (n=131) |
+| Over | 44 | 44 | 0 | 15-29-0 | -11.43u | -25.97% | +0.71% (n=31) |
+| Under | 165 | 142 | 23 | 66-76-0 | -4.97u | -3.50% | +1.64% (n=132) |
 
 ## Active League Breakdown
 
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | bundesliga | 31 | 27 | 4 | 8-19-0 | -10.33u | -38.27% | +0.93% (n=23) |
-| epl | 34 | 26 | 8 | 10-16-0 | -5.54u | -21.30% | +1.15% (n=23) |
-| la-liga | 48 | 39 | 9 | 18-21-0 | -1.04u | -2.67% | +2.32% (n=34) |
+| epl | 34 | 27 | 7 | 11-16-0 | -4.27u | -15.81% | +1.10% (n=24) |
+| la-liga | 48 | 40 | 8 | 18-22-0 | -2.04u | -5.10% | +2.32% (n=34) |
 | ligue-1 | 49 | 48 | 1 | 25-23-0 | +3.36u | +7.00% | +2.10% (n=47) |
-| serie-a | 47 | 42 | 5 | 18-24-0 | -3.28u | -7.81% | +0.38% (n=35) |
+| serie-a | 47 | 44 | 3 | 19-25-0 | -3.12u | -7.10% | +0.38% (n=35) |
 
 ## Active Side x League Breakdown
 
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | Over / epl | 6 | 6 | 0 | 1-5-0 | -4.02u | -67.00% | -1.28% (n=3) |
-| Over / la-liga | 9 | 8 | 1 | 1-7-0 | -6.00u | -75.00% | +2.76% (n=6) |
+| Over / la-liga | 9 | 9 | 0 | 1-8-0 | -7.00u | -77.78% | +2.76% (n=6) |
 | Over / ligue-1 | 2 | 2 | 0 | 1-1-0 | -0.17u | -8.70% | +0.18% (n=2) |
-| Over / serie-a | 27 | 26 | 1 | 12-14-0 | +0.76u | +2.94% | +0.45% (n=20) |
+| Over / serie-a | 27 | 27 | 0 | 12-15-0 | -0.24u | -0.87% | +0.45% (n=20) |
 | Under / bundesliga | 31 | 27 | 4 | 8-19-0 | -10.33u | -38.27% | +0.93% (n=23) |
-| Under / epl | 28 | 20 | 8 | 9-11-0 | -1.52u | -7.59% | +1.51% (n=20) |
+| Under / epl | 28 | 21 | 7 | 10-11-0 | -0.25u | -1.18% | +1.44% (n=21) |
 | Under / la-liga | 39 | 31 | 8 | 17-14-0 | +4.96u | +16.00% | +2.22% (n=28) |
 | Under / ligue-1 | 47 | 46 | 1 | 24-22-0 | +3.54u | +7.68% | +2.19% (n=45) |
-| Under / serie-a | 20 | 16 | 4 | 6-10-0 | -4.05u | -25.29% | +0.30% (n=15) |
+| Under / serie-a | 20 | 17 | 3 | 7-10-0 | -2.89u | -16.98% | +0.30% (n=15) |
 
 ## Required Fields
 

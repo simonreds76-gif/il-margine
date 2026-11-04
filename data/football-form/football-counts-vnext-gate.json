@@ -1,21 +1,21 @@
 {
-  "generated_at": "2026-11-04T02:42:35Z",
+  "generated_at": "2026-11-04T16:24:06Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
     "market_gate": "BLOCKED_PENDING_2026_27_TRUE_CLOSE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 15,
+      "signals": 16,
       "settled": 15,
-      "pending": 0,
+      "pending": 1,
       "pnl_units": -7.501,
       "roi": -0.500067,
       "true_close_n": 4,
       "true_close_coverage": 0.266667,
       "mean_true_close_clv": 0.009208,
       "side_counts": {
-        "under": 15
+        "under": 16
       },
       "dominant_side_share": 1.0
     },
@@ -35,34 +35,22 @@
       "dominant_side_share": 0.928571
     },
     "latest_scan": {
-      "state": "EXPECTED_EMPTY_CAPTURE_WINDOW",
-      "explanation": "The successful Team Shots scan found no supported fixtures in its capture window. Stored corners rows are outside that window.",
-      "scored_rows": 0,
-      "scored_fixtures": 0,
-      "eligible_rows": 0,
-      "eligible_fixtures": 0,
-      "blocked_rows": 0,
-      "blocker_rows": {},
+      "state": "ELIGIBLE_CANDIDATES_PRESENT",
+      "explanation": "At least one candidate passed every locked shadow gate.",
+      "scored_rows": 4,
+      "scored_fixtures": 1,
+      "eligible_rows": 1,
+      "eligible_fixtures": 1,
+      "blocked_rows": 3,
+      "blocker_rows": {
+        "edge_below_3pct": 3
+      },
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": null,
-      "matchday_max": null,
+      "matchday_min": 11,
+      "matchday_max": 11,
       "next_unlock": null,
       "operational_alert_required": false,
       "operational_alert_code": null,
-      "capture_window_evidence": {
-        "capture_at": "2026-11-04T02:42:16Z",
-        "capture_window_end": "2026-11-05T02:42:16Z",
-        "capture_run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/41762432919",
-        "leagues_checked": [
-          "bundesliga",
-          "epl",
-          "la-liga",
-          "ligue-1",
-          "serie-a"
-        ],
-        "events_found": 0,
-        "peer_rows_outside_window": 506
-      },
       "rule_feasibility": {
         "affected_rows": 0,
         "rows_capable_of_minimum_edge": 0,
@@ -74,10 +62,10 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-04T02:42:24Z",
+      "generated_at": "2026-11-04T16:23:46Z",
       "status": "OK",
       "missing_history": [],
-      "scored_fixtures": 0
+      "scored_fixtures": 1
     }
   },
   "corners_v3": {
@@ -116,17 +104,18 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "NO_EDGE_AFTER_UNLOCK",
-      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 506,
-      "scored_fixtures": 34,
-      "eligible_rows": 0,
-      "eligible_fixtures": 0,
-      "blocked_rows": 506,
+      "state": "ELIGIBLE_CANDIDATES_PRESENT",
+      "explanation": "At least one candidate passed every locked shadow gate.",
+      "scored_rows": 602,
+      "scored_fixtures": 35,
+      "eligible_rows": 62,
+      "eligible_fixtures": 12,
+      "blocked_rows": 540,
       "blocker_rows": {
-        "edge_below_3pct": 413,
-        "price_not_fresh_10m": 506,
-        "price_older_than_3h": 506
+        "better_fresh_price_available": 78,
+        "edge_below_3pct": 512,
+        "price_not_fresh_10m": 58,
+        "price_older_than_3h": 58
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 9,
