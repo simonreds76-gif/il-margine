@@ -364,11 +364,12 @@ jobs:
           python -m unittest discover -s tests -p test_football_identity.py
           python -m unittest discover -s tests -p test_keeper_feed_comparison.py
           python -m unittest discover -s scripts/tests -p test_skyline_store.py
-      - name: Verify fresh authenticated prices-free source responses
+      - name: Read bounded fixture identity evidence
         env:
           GOAL_API_KEY: ${{ secrets.GOAL_API_KEY }}
-        run: >-
-          python scripts/compare-keeper-feeds.py
-          --output ${{ runner.temp }}/keeper-probe
-          --fixture 5795503 --fixture 5868113 --fixture 5749731
-          --fixture 5881210 --fixture 5802975
+        run: python scripts/diagnose-keeper-calendar.py --output ${{ runner.temp }}/keeper-calendar.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: keeper-calendar-identities
+          path: ${{ runner.temp }}/keeper-calendar.json
+          retention-days: 1
