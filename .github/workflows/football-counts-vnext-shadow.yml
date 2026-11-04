@@ -364,12 +364,32 @@ jobs:
           python -m unittest discover -s tests -p test_football_identity.py
           python -m unittest discover -s tests -p test_keeper_feed_comparison.py
           python -m unittest discover -s scripts/tests -p test_skyline_store.py
-      - name: Read bounded fixture identity evidence
+      - name: Restore private comparison for bounded recovery
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python scripts/keeper_feed_store.py restore
+      - name: Verify exact seven fixtures with fresh keeper statistics
         env:
           GOAL_API_KEY: ${{ secrets.GOAL_API_KEY }}
-        run: python scripts/diagnose-keeper-calendar.py --output ${{ runner.temp }}/keeper-calendar.json
-      - uses: actions/upload-artifact@v4
-        with:
-          name: keeper-calendar-identities
-          path: ${{ runner.temp }}/keeper-calendar.json
-          retention-days: 1
+        run: >-
+          python scripts/compare-keeper-feeds.py
+          --fixture 5749717 --fixture 5795488 --fixture 5795491
+          --fixture 5868101 --fixture 5881199 --fixture 5881202 --fixture 5881205
+      - name: Check recovered identities before private persistence
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('data/goalkeeper-saves/source-comparison')
+          state = json.loads((p/'state.json').read_text())
+          ids = ['5749717','5795488','5795491','5868101','5881199','5881202','5881205']
+          rows = {mid:state[mid]['status'] for mid in ids}
+          assert all(s in ('agreement','quarantined') for s in rows.values()), rows
+          print(json.dumps({'recovered':rows}))
+          PY
+      - name: Preserve recovered comparisons in existing private field
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python scripts/keeper_feed_store.py persist
