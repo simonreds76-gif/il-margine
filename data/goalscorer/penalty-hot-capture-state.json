@@ -34,7 +34,9 @@
     "5749733": "2026-11-03",
     "5749734": "2026-11-04",
     "5749736": "2026-11-04",
+    "5749737": "2026-11-04",
     "5749738": "2026-11-03",
+    "5749739": "2026-11-04",
     "5795475": "2026-10-26",
     "5795476": "2026-10-25",
     "5795477": "2026-10-26",
@@ -55,8 +57,15 @@
     "5795492": "2026-11-02",
     "5795493": "2026-11-02",
     "5795494": "2026-11-02",
+    "5795495": "2026-11-04",
+    "5795497": "2026-11-04",
     "5795498": "2026-11-03",
+    "5795499": "2026-11-04",
+    "5795500": "2026-11-04",
+    "5795501": "2026-11-04",
+    "5795502": "2026-11-04",
     "5795503": "2026-11-04",
+    "5795504": "2026-11-04",
     "5802955": "2026-10-27",
     "5802956": "2026-10-26",
     "5802958": "2026-10-25",
@@ -99,10 +108,13 @@
     "5868108": "2026-11-02",
     "5868109": "2026-11-03",
     "5868110": "2026-10-31",
+    "5868112": "2026-11-04",
     "5868113": "2026-11-04",
+    "5868114": "2026-11-04",
     "5868116": "2026-11-03",
     "5868117": "2026-11-04",
     "5868118": "2026-11-04",
+    "5868119": "2026-11-04",
     "5868120": "2026-11-03",
     "5881188": "2026-10-26",
     "5881189": "2026-10-25",
@@ -123,11 +135,15 @@
     "5881205": "2026-10-31",
     "5881206": "2026-11-04",
     "5881207": "2026-11-04",
+    "5881208": "2026-11-04",
     "5881209": "2026-11-04",
+    "5881210": "2026-11-04",
     "5881211": "2026-11-03",
-    "5881213": "2026-11-04"
+    "5881212": "2026-11-04",
+    "5881213": "2026-11-04",
+    "5881214": "2026-11-04"
   },
-  "updated_at": "2026-11-04T17:58:25.754385+00:00",
+  "updated_at": "2026-11-04T18:13:09.837084+00:00",
   "checked_this_run": 16,
   "errors": [],
   "fixtures": {
@@ -1147,17 +1163,15 @@
         "home": {
           "id": 8535,
           "score": 2,
-          "name": "Fiorentina",
-          "longName": "Fiorentina"
+          "name": "Fiorentina"
         },
         "away": {
           "id": 8524,
           "score": 2,
-          "name": "Atalanta",
-          "longName": "Atalanta"
+          "name": "Atalanta"
         },
         "status": {
-          "utcTime": "2026-10-29T19:45:00+00:00",
+          "utcTime": "2026-10-29T19:45:00.000Z",
           "halfs": {
             "firstHalfStarted": "29.10.2026 20:47:45",
             "secondHalfStarted": "29.10.2026 21:58:49"
@@ -1195,17 +1209,15 @@
         "home": {
           "id": 9891,
           "score": 5,
-          "name": "Frosinone",
-          "longName": "Frosinone"
+          "name": "Frosinone"
         },
         "away": {
           "id": 9888,
           "score": 1,
-          "name": "Lecce",
-          "longName": "Lecce"
+          "name": "Lecce"
         },
         "status": {
-          "utcTime": "2026-10-29T17:30:00+00:00",
+          "utcTime": "2026-10-29T17:30:00.000Z",
           "halfs": {
             "firstHalfStarted": "29.10.2026 18:34:11",
             "secondHalfStarted": "29.10.2026 19:39:36"
@@ -1861,7 +1873,7 @@
           "name": "Genoa"
         },
         "status": {
-          "utcTime": "2026-11-01T17:00:00.000Z",
+          "utcTime": "2026-11-01T17:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "01.11.2026 18:01:28",
             "secondHalfStarted": "01.11.2026 19:08:04"
@@ -1881,13 +1893,13 @@
         }
       },
       "date": "2026-11-01",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-01T11:43:43.467093+00:00",
       "pending_since": "2026-11-01T11:43:43.467093+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 2,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 3,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -1975,13 +1987,13 @@
         }
       },
       "date": "2026-10-31",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -3017,13 +3029,13 @@
         }
       },
       "date": "2026-10-31",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -3115,13 +3127,13 @@
         }
       },
       "date": "2026-10-31",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -3217,13 +3229,13 @@
         }
       },
       "date": "2026-10-31",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 4,
+      "reason": "penalties_verified",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 1,
       "next_attempt": ""
     },
@@ -3267,13 +3279,13 @@
         }
       },
       "date": "2026-10-31",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -3293,7 +3305,7 @@
           "name": "Arsenal"
         },
         "status": {
-          "utcTime": "2026-11-01T16:30:00.000Z",
+          "utcTime": "2026-11-01T16:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "01.11.2026 17:30:43",
             "secondHalfStarted": "01.11.2026 18:34:38"
@@ -3313,13 +3325,13 @@
         }
       },
       "date": "2026-11-01",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-01T11:43:43.467093+00:00",
       "pending_since": "2026-11-01T11:43:43.467093+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 2,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 3,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -3363,13 +3375,13 @@
         }
       },
       "date": "2026-10-31",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -3463,13 +3475,13 @@
         }
       },
       "date": "2026-10-31",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -5766,13 +5778,13 @@
         }
       },
       "date": "2026-10-31",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -5838,7 +5850,7 @@
           "name": "Valencia"
         },
         "status": {
-          "utcTime": "2026-11-01T17:30:00.000Z",
+          "utcTime": "2026-11-01T17:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "01.11.2026 18:33:19",
             "secondHalfStarted": "01.11.2026 19:35:26"
@@ -5858,13 +5870,13 @@
         }
       },
       "date": "2026-11-01",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-01T11:43:43.467093+00:00",
       "pending_since": "2026-11-01T11:43:43.467093+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 2,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 3,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -6096,13 +6108,13 @@
         }
       },
       "date": "2026-10-31",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -7141,13 +7153,13 @@
         }
       },
       "date": "2026-10-31",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 4,
+      "reason": "penalties_verified",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 1,
       "next_attempt": ""
     },
@@ -7218,7 +7230,7 @@
           "name": "Hamburger SV"
         },
         "status": {
-          "utcTime": "2026-11-01T16:30:00.000Z",
+          "utcTime": "2026-11-01T16:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "01.11.2026 17:30:33",
             "secondHalfStarted": "01.11.2026 18:35:44"
@@ -7238,13 +7250,13 @@
         }
       },
       "date": "2026-11-01",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-01T11:43:43.467093+00:00",
       "pending_since": "2026-11-01T11:43:43.467093+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 2,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 3,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -7337,13 +7349,13 @@
         }
       },
       "date": "2026-10-31",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 4,
+      "reason": "penalties_verified",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 1,
       "next_attempt": ""
     },
@@ -7435,13 +7447,13 @@
         }
       },
       "date": "2026-10-31",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-03T02:53:37.233529+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-03T02:53:37.233529+00:00",
+      "last_attempt": "2026-11-04T18:13:09.837084+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-04T18:13:09.837084+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     }
@@ -7645,7 +7657,7 @@
     },
     "20261029": {
       "ok": true,
-      "checked_at": "2026-11-03T02:37:18.580016+00:00",
+      "checked_at": "2026-11-04T18:13:09.837084+00:00",
       "expected": 2,
       "match_ids": [
         "5749722",
@@ -7735,14 +7747,14 @@
     },
     "20261103": {
       "ok": true,
-      "checked_at": "2026-11-04T17:58:25.754385+00:00",
+      "checked_at": "2026-11-04T18:13:09.837084+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
     },
     "20261104": {
       "ok": true,
-      "checked_at": "2026-11-04T17:58:25.754385+00:00",
+      "checked_at": "2026-11-04T18:13:09.837084+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -7750,9 +7762,9 @@
   },
   "coverage": {
     "expected": 151,
-    "verified": 126,
+    "verified": 142,
     "pending": 0,
-    "reverify": 25,
+    "reverify": 9,
     "deferred": 0,
     "overdue": 0,
     "stalled": 0,
