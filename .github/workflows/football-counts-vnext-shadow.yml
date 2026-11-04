@@ -1,374 +1,51 @@
-name: Football Counts vNext Shadow
-
+name: Recovered Incident Verification
 on:
-  schedule:
-    - cron: "15 8 * * *"
-    # Near-kickoff shadow capture. Detailed odds calls stay inside 90m and the
-    # process-wide request cap keeps the shared free plan within budget.
-    - cron: "45 9-22 * * *"
   workflow_dispatch:
-    inputs:
-      keeper_probe_only:
-        description: "Only test GOAL/ESPN keeper comparison; no models, commits or Telegram"
-        required: false
-        default: false
-        type: boolean
-      gk_only:
-        description: "Recover GK prices and monitor only (4 Odds API calls; no digest or full rebuild)"
-        required: false
-        default: false
-        type: boolean
-      rebuild_only:
-        description: "Rebuild and publish from saved evidence without capture, API calls or Telegram"
-        required: false
-        default: false
-        type: boolean
-      settlement_only:
-        description: "Skip capture/model refresh and settle due GK Saves signals only"
-        required: false
-        default: false
-        type: boolean
-
 permissions:
-  contents: write
-
-concurrency:
-  group: golden-with-speed-insights-branch-writes
-  cancel-in-progress: false
-
+  contents: read
 jobs:
-  shadow:
-    if: github.event.inputs.keeper_probe_only != 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Seasonal gate
-        id: season
-        shell: bash
-        run: |
-          if [[ "$(date -u +%F)" < "2026-08-01" && "${{ github.event_name }}" != "workflow_dispatch" ]]; then
-            echo "active=false" >> "$GITHUB_OUTPUT"
-            echo "Football vNext capture stays dormant until 2026-08-01."
-          else
-            echo "active=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - uses: actions/checkout@v5
-        if: steps.season.outputs.active == 'true'
-        with:
-          ref: golden-with-speed-insights
-          token: ${{ github.token }}
-          fetch-depth: 1
-
-      - uses: actions/setup-python@v6
-        if: steps.season.outputs.active == 'true'
-        with:
-          python-version: "3.11"
-
-      - name: Install Python dependency
-        if: steps.season.outputs.active == 'true'
-        run: pip install requests
-
-      - name: Recover goalkeeper capture only
-        if: steps.season.outputs.active == 'true' && github.event.inputs.gk_only == 'true'
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-        run: |
-          python scripts/goalkeeper-saves-capture.py --days-ahead 2 --max-events 30 --kickoff-within-minutes 1440 --capture-mode publication
-          python scripts/goalkeeper-saves-shadow.py
-          python scripts/team-shots-live-snapshot.py
-
-      - name: Refresh current-season count inputs
-        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *') && github.event.inputs.rebuild_only != 'true' && github.event.inputs.gk_only != 'true'
-        env:
-          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
-        shell: bash
-        run: |
-          python scripts/footballdata-download-historical.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2026 --overwrite || echo "::warning::Football-Data current-season refresh was unavailable."
-          python scripts/understat-download-shots.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2026 || echo "::warning::Understat current-season aggregate refresh was unavailable."
-          python scripts/understat-download-corner-features.py --seasons 2026 --limit 100 || echo "::warning::Understat corner-event refresh was unavailable."
-          # The builder combines the durable archive with current-season and
-          # Understat supplements. Individual lanes fail closed on missing
-          # registered inputs; generic offseason league staleness is reported.
-          python scripts/build-football-form-layer.py
-          python scripts/refresh-football-count-inputs.py --refresh --max-matches 30 --max-requests 75
-          if [ -n "${API_FOOTBALL_KEY:-}" ]; then
-            # Free access is date-limited. Accumulate recent results prospectively;
-            # historical backfills stay available as an explicit CLI operation.
-            python scripts/capture-api-football-counts.py --days-back 2 --max-requests 30 || echo "::warning::API-Football recent count capture reported a coverage error; existing archive retained."
-          else
-            echo "::warning::API_FOOTBALL_KEY is missing; API-Football count archive skipped."
-          fi
-          python scripts/api-football-source-agreement.py --allow-empty
-          python scripts/fouls-fotmob-definition-agreement.py --dates-per-league 1 --allow-empty
-          python scripts/fouls-definition-agreement.py --allow-empty
-
-      - name: Capture paired market prices
-        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && github.event.inputs.rebuild_only != 'true' && github.event.inputs.gk_only != 'true'
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-          ODDS_API_IO_KEY: ${{ secrets.ODDS_API_KEY }}
-          BETS_API_KEY: ${{ secrets.BETS_API_KEY }}
-          EVENT_NAME: ${{ github.event_name }}
-          SCHEDULE_EXPR: ${{ github.event.schedule }}
-        shell: bash
-        run: |
-          TEAM_ARGS=(--all-leagues --bookmakers "Bet365,Kambi")
-          CORNER_ARGS=()
-          GK_ARGS=(--bookmakers "Bet365,Kambi")
-          if [[ "$EVENT_NAME" == "schedule" && "$SCHEDULE_EXPR" != "15 8 * * *" ]]; then
-            TEAM_ARGS+=(--days-ahead 2 --kickoff-within-minutes 1440 --max-events-per-league 10 --max-odds-requests-per-league 1 --max-odds-api-http-requests 9)
-            CORNER_ARGS+=(--bucket-hours 1 --kickoff-within-minutes 90)
-            GK_ARGS+=(--days-ahead 2 --max-events 30 --kickoff-within-minutes 1440 --capture-mode close)
-            echo "Team Shots: next 24 hours with shared discovery and the same 9-request ceiling; GK also scans 24 hours; corners retain the 90-minute close window."
-          else
-            TEAM_ARGS+=(--days-ahead 7 --max-events-per-league 20 --max-odds-requests-per-league 2 --max-odds-api-http-requests 50 --market-audit-out data/football-form/football-count-market-inventory.csv)
-            CORNER_ARGS+=(--bucket-hours 6)
-            GK_ARGS+=(--days-ahead 2 --max-events 30 --kickoff-within-minutes 1440 --capture-mode publication)
-            echo "Daily discovery mode: team prices for seven days; GK prices for the next 24 hours."
-          fi
-          if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}${BETS_API_KEY:-}" ]; then
-            python scripts/team-shots-scrape-odds.py "${TEAM_ARGS[@]}"
-            # v4 reads the canonical archive, not dated inbox files. Archive
-            # every capture before scoring so fresh Bet365 prices are visible.
-            python scripts/team-shots-odds-archive.py
-            if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}" ]; then
-              # GK hard cap: one discovery plus three ten-event batches.
-              # Expected and confirmed starting GKs can qualify; first odds stay locked.
-              python scripts/goalkeeper-saves-capture.py "${GK_ARGS[@]}"
-              python scripts/goalkeeper-saves-shadow.py
-            else
-              echo "::warning::Odds-API key missing; GK Saves v1 capture skipped without affecting Team Shots."
-            fi
-            if [[ "$EVENT_NAME" != "schedule" || "$SCHEDULE_EXPR" == "15 8 * * *" ]]; then
-              python scripts/football-count-market-coverage.py
-            fi
-          else
-            echo "::warning::No team-shots odds key; Team Shots v4 cannot emit this scan."
-          fi
-          # Arcadia blocks GitHub-hosted runner IPs intermittently. Keep Team
-          # Shots collection alive and surface a warning; a local bounded
-          # capture supplies the locked Pinnacle corners lane.
-          python scripts/pinnacle-scrape-corners.py "${CORNER_ARGS[@]}" || echo "::warning::Hosted Pinnacle corners capture unavailable; local capture remains authoritative."
-
-      - name: Refresh pending vNext results
-        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *') && github.event.inputs.rebuild_only != 'true' && github.event.inputs.gk_only != 'true'
-        env:
-          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
-        shell: bash
-        run: |
-          # These permanent CLV ledgers are the settlement queue. Candidate
-          # boards are deliberately excluded because they are overwritten on
-          # every scan and contain non-qualifying rows.
-          python scripts/fetch-results-snapshot.py \
-            --pending-path data/football-form/team-shots-v4-shadow-clv.csv \
-            --pending-path data/football-form/corners-v3-shadow-clv.csv
-
-      - name: Score current vNext shadow board
-        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && github.event.inputs.gk_only != 'true'
-        shell: bash
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event.schedule }}" == "15 8 * * *" ]]; then
-            python scripts/run-football-vnext-shadow.py
-          else
-            # Re-score from the just-captured near-kickoff prices. Settlement
-            # and promotion gates remain on the daily full run.
-            python scripts/refresh-football-count-inputs.py
-            python scripts/publish-football-vnext-shadow.py
-            python scripts/team-shots-opponent-shadow.py
-            # Refresh reason-coded scan telemetry even when the heavier daily
-            # settlement stack is intentionally skipped.
-            python scripts/football-counts-vnext-gate.py
-            python scripts/refresh-football-count-evidence.py
-          fi
-          python scripts/team-shots-live-snapshot.py
-          python scripts/corners-live-snapshot.py
-
-      - name: Settle goalkeeper saves shadow evidence
-        if: steps.season.outputs.active == 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *') && github.event.inputs.rebuild_only != 'true' && github.event.inputs.gk_only != 'true'
-        env:
-          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
-        shell: bash
-        run: |
-          # FotMob's named-keeper shot map is the primary settlement source;
-          # API-Football's free plan does not expose the current season.
-          python scripts/goalkeeper-saves-settle.py --max-requests 10 --max-fotmob-requests 50
-          python scripts/goalkeeper-saves-shadow.py
-          python scripts/team-shots-live-snapshot.py
-
-      - name: Send daily football model digest
-        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && (github.event_name == 'workflow_dispatch' || github.event.schedule == '15 8 * * *') && github.event.inputs.rebuild_only != 'true' && github.event.inputs.gk_only != 'true'
-        continue-on-error: true
-        env:
-          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
-          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
-        run: python scripts/football-daily-signal-digest.py
-
-      - name: Claim new GK Telegram alerts
-        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && github.event.inputs.rebuild_only != 'true'
-        env:
-          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
-          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
-        run: python scripts/goalkeeper-saves-alerts.py --prepare
-
-      - name: Commit append-only evidence
-        if: steps.season.outputs.active == 'true'
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          if [[ "${{ github.event.inputs.gk_only }}" == "true" || "${{ github.event.inputs.settlement_only }}" == "true" ]]; then
-            git add data/team-shots/team-shots-live-snapshot.json
-            git add data/goalkeeper-saves/
-          elif [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event.schedule }}" == "15 8 * * *" ]]; then
-            git add \
-              data/football-form/ \
-              data/team-shots/inbox/ \
-              data/team-shots/understat/ \
-              data/team-shots/historical/ \
-              data/team-shots/team-shots-odds-history.csv \
-              data/team-shots/team-shots-live-snapshot.json \
-              data/team-shots/team-shots-scrape-last-run.json \
-              data/corners-ou/pinnacle-corners-odds.csv \
-              data/corners-ou/corners-live-snapshot.json \
-              data/corners-ou/corners-monitor-summary.json \
-              data/goalkeeper-saves/ \
-              data/results-snapshot/
-          else
-            # Near-kickoff runs publish current candidates/signals as well as
-            # the raw prices. Full settlement reports remain daily.
-            git add data/team-shots/inbox/ data/team-shots/team-shots-odds-history.csv data/corners-ou/pinnacle-corners-odds.csv
-            git add data/football-form/football-counts-vnext-candidates.csv
-            git add data/football-form/football-counts-vnext-gate.json
-            git add data/football-form/football-counts-vnext-gate.md
-            git add data/football-form/team-shots-v4-shadow-signals.csv
-            git add data/football-form/corners-v3-shadow-signals.csv
-            git add data/team-shots/team-shots-live-snapshot.json
-            git add data/team-shots/team-shots-scrape-last-run.json
-            git add data/corners-ou/corners-live-snapshot.json
-            git add data/corners-ou/corners-monitor-summary.json
-            git add data/goalkeeper-saves/
-          fi
-          # These controls come from the same bounded Bet365 payload as Team
-          git add -f data/football-form/team-shots-opponent-shadow.csv data/football-form/team-shots-opponent-candidates.csv data/football-form/team-shots-opponent-status.json
-          git add data/football-form/team-match-base.csv data/football-form/team-form-manifest.json
-          git add data/football-form/count-input-*.json
-          for evidence in data/football-form/team-shots-paired-reference.jsonl data/football-form/team-shots-paired-reference-status.json data/football-form/team-shots-paired-settlement-audit.json; do
-            if [[ -f "$evidence" ]]; then git add "$evidence"; fi
-          done
-          # Shots, so retaining them adds no API calls. Stage them on both full
-          # and near-kickoff runs. `-f` is required for the 1X2 CSV because the
-          # broad football-form CSV ignore rule predates this evidence file.
-          for evidence in \
-            data/football-form/football-1x2-odds-history.csv \
-            data/team-shots/match-shots-odds-history.csv \
-            data/corners-ou/bet365-corners-odds-history.csv; do
-            if [[ -f "$evidence" ]]; then
-              git add -f "$evidence"
-            fi
-          done
-          if git diff --cached --quiet; then
-            echo "No vNext signal or evidence changes."
-            exit 0
-          fi
-          git commit -m "chore: refresh football vnext shadow evidence"
-          # Preserve the exact committed evidence if publication fails.
-          git format-patch -1 --stdout > "$RUNNER_TEMP/football-counts-evidence.patch"
-          bash scripts/ci-safe-push.sh golden-with-speed-insights
-
-      - name: Notify newly committed GK signals
-        if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && github.event.inputs.rebuild_only != 'true'
-        env:
-          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
-          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
-        shell: bash
-        run: |
-          set +e
-          python scripts/goalkeeper-saves-alerts.py --send
-          alert_exit=$?
-          set -e
-          git add data/goalkeeper-saves/gk-saves-telegram-state.json
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: record GK Telegram delivery receipts"
-            bash scripts/ci-safe-push.sh golden-with-speed-insights
-          fi
-          exit "$alert_exit"
-
-      - name: Preserve evidence after failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: football-counts-recovery-${{ github.run_id }}
-          path: ${{ runner.temp }}/football-counts-evidence.patch
-          if-no-files-found: ignore
-          retention-days: 7
-
-  keeper-source-comparison:
-    # A data-quality shadow, independent of the price/model job succeeding.
-    # Reuse the morning schedule; never run on hourly odds captures.
-    needs: shadow
-    if: >-
-      always() && !cancelled() &&
-      (github.event.schedule == '15 8 * * *' || github.event_name == 'workflow_dispatch') &&
-      github.event.inputs.gk_only != 'true' &&
-      github.event.inputs.keeper_probe_only != 'true' &&
-      github.event.inputs.rebuild_only != 'true' &&
-      github.event.inputs.settlement_only != 'true'
+  verify:
     runs-on: ubuntu-latest
     timeout-minutes: 8
-    permissions:
-      contents: read
-    env:
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: golden-with-speed-insights
-          fetch-depth: 1
+          ref: 06a96ade3e003da4e022bf9e3cead6a31545ebe4
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
-      - run: pip install requests
-      - name: Restore existing private keeper comparison
-        id: restore
-        run: python scripts/keeper_feed_store.py restore
-      - name: Compare named keeper saves with GOAL and ESPN
-        id: compare
-        continue-on-error: true
-        env:
-          GOAL_API_KEY: ${{ secrets.GOAL_API_KEY }}
-        run: python scripts/compare-keeper-feeds.py
-      - name: Retain private comparison and coverage exceptions
-        if: always() && steps.restore.outcome == 'success'
-        run: python scripts/keeper_feed_store.py persist
-      - name: Report incomplete source checks
-        if: steps.compare.outcome == 'failure'
+      - run: python -m pip install requests psycopg2-binary
+      - name: Focused regression tests
         run: |
-          echo "::error::Keeper source comparison incomplete; saved status lists missing identities, sources or budget deferrals. Live models and settlements are unaffected."
-          exit 1
-
-  keeper-source-verification:
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.keeper_probe_only == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.11'
-      - run: pip install requests
-      - name: Test mapping, comparison and existing private storage contracts
-        run: |
-          python -m unittest discover -s tests -p test_football_identity.py
-          python -m unittest discover -s tests -p test_keeper_feed_comparison.py
-          python -m unittest discover -s scripts/tests -p test_skyline_store.py
-      - name: Verify fresh authenticated prices-free source responses
+          python -m unittest discover -s scripts/tests -p 'test_ops*py' -q
+          python -m unittest discover -s tests -p 'test_keeper_feed_comparison.py' -q
+      - name: Read-only verification of exact production incidents
         env:
-          GOAL_API_KEY: ${{ secrets.GOAL_API_KEY }}
-        run: >-
-          python scripts/compare-keeper-feeds.py
-          --output ${{ runner.temp }}/keeper-probe
-          --fixture 5795503 --fixture 5868113 --fixture 5749731
-          --fixture 5881210 --fixture 5802975
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          python - <<'PY'
+          import os,sys
+          from urllib.parse import urlencode
+          sys.path.insert(0,'scripts')
+          from ops_morning_failures import request_json
+          from ops_tennis_recovery import verified_props_recovery
+          base=os.environ['NEXT_PUBLIC_SUPABASE_URL'].rstrip('/')
+          key=os.environ['SUPABASE_SERVICE_ROLE_KEY']
+          headers={'apikey':key,'Authorization':'Bearer '+key}
+          query=urlencode({'run_id':'eq.0a76306b-750d-40a5-a723-75d8b7ba9573','select':'run_id,status,started_at,finished_at,error_type,details'})
+          rows=request_json('GET',base+'/rest/v1/run_status?'+query,headers)
+          assert len(rows)==1 and rows[0]['status']=='failed'
+          assert verified_props_recovery(rows[0],rows[0]['details'])
+          query=urlencode({'snapshot_key':'eq.skyline_paper_v1','select':'comparison:payload->keeper_source_comparison->archive->fixtures->"5881202"'})
+          rows=request_json('GET',base+'/rest/v1/goalscorer_live_snapshot?'+query,headers)
+          versions=rows[0]['comparison']
+          assert len(versions)>=2 and versions[0]['status']=='quarantined'
+          current=versions[-1]
+          assert current['status']=='reviewed_agreement'
+          keeper=next(x for x in current['keepers'] if x['player_id']=='248437')
+          assert set(keeper['saves'].values())=={6}
+          assert keeper['event_evidence']['event_saves']==5
+          assert keeper['published_count_review']['scope']=='source_comparison_only'
+          print('VERIFIED: original tennis failure retained with validated recovery; Mainz published saves 6, event discrepancy 5 retained. GET-only, no Telegram or model changes.')
+          PY
