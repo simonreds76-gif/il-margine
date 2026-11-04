@@ -44,7 +44,7 @@ def build_admin_bundle(root: Path) -> dict:
             entry = next(e for e in manifest if e['id'] == id)
             raw = content.encode('utf-8')
             entry.update(source_sha256=entry['sha256'], sha256=hashlib.sha256(raw).hexdigest(),
-                         size_bytes=len(raw), display_enrichment='tournament-break-points-v1')
+                         size_bytes=len(raw), display_enrichment='tournament-results-v2')
             files[id] = content
         total += growth
         history_status = 'included' if updates else 'no_current_player_rows'
