@@ -2,10 +2,312 @@
   "fixtures": [
     {
       "fotmob_match_id": 5802989,
+      "fotmob_page_url": "/matches/strasbourg-vs-toulouse/38l5ao#5802989",
+      "home_fotmob_team_id": 9941,
+      "away_fotmob_team_id": 9848,
       "match_date": "2026-11-06",
       "kickoff_utc": "2026-11-06T19:45:00Z",
       "home_team": "Toulouse",
       "away_team": "Strasbourg",
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-4-2",
+      "away_formation": "4-2-3-1",
+      "home_players": [
+        "Guillaume Restes",
+        "Ismaïl Diallo",
+        "Mark McKenzie",
+        "Rasmus Nicolaisen",
+        "Christ Tapé",
+        "Thomas Jørgensen",
+        "Cristian Cásseres",
+        "Niko Sigur",
+        "Sion Oppong",
+        "Jacen Russell-Rowe",
+        "Casper Tengstedt"
+      ],
+      "away_players": [
+        "Filip Jörgensen",
+        "Genesis Antwi",
+        "Jeyland Mitchell",
+        "Ismaël Doukouré",
+        "Oso",
+        "Pape Demba Diop",
+        "Samir El Mourabet",
+        "Gessime Yassine",
+        "Giovanni Reyna",
+        "Martial Godo",
+        "Conrad Harder"
+      ],
+      "home_starters": [
+        {
+          "name": "Guillaume Restes",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-4-2",
+          "position_id": 11,
+          "player_id": 1524210,
+          "shirt_number": "16"
+        },
+        {
+          "name": "Ismaïl Diallo",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 32,
+          "player_id": 1668299,
+          "shirt_number": "94"
+        },
+        {
+          "name": "Mark McKenzie",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 34,
+          "player_id": 924485,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Rasmus Nicolaisen",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 36,
+          "player_id": 656491,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Christ Tapé",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 38,
+          "player_id": 1666482,
+          "shirt_number": "12"
+        },
+        {
+          "name": "Thomas Jørgensen",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 72,
+          "player_id": 1481910,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Cristian Cásseres",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 74,
+          "player_id": 845943,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Niko Sigur",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 76,
+          "player_id": 1494508,
+          "shirt_number": "14"
+        },
+        {
+          "name": "Sion Oppong",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 78,
+          "player_id": 1717493,
+          "shirt_number": "11"
+        },
+        {
+          "name": "Jacen Russell-Rowe",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-4-2",
+          "position_id": 104,
+          "player_id": 1106866,
+          "shirt_number": "13"
+        },
+        {
+          "name": "Casper Tengstedt",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-4-2",
+          "position_id": 106,
+          "player_id": 1102240,
+          "shirt_number": "20"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Filip Jörgensen",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 1200984,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Genesis Antwi",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 1647186,
+          "shirt_number": "16"
+        },
+        {
+          "name": "Jeyland Mitchell",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 1340071,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Ismaël Doukouré",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 1178332,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Oso",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 1575945,
+          "shirt_number": "36"
+        },
+        {
+          "name": "Pape Demba Diop",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 1417802,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Samir El Mourabet",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1598170,
+          "shirt_number": "29"
+        },
+        {
+          "name": "Gessime Yassine",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 1603755,
+          "shirt_number": "80"
+        },
+        {
+          "name": "Giovanni Reyna",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 1071179,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Martial Godo",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 1302715,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Conrad Harder",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 1482294,
+          "shirt_number": "40"
+        }
+      ],
+      "home_subs": [],
+      "home_substitute_entries": [],
+      "away_subs": [],
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Aron Dønnum",
+        "Rafik Messali"
+      ],
+      "away_unavailable": [
+        "Fabio Baldé",
+        "Maxi Oyedele",
+        "Joaquín Panichelli"
+      ],
+      "observed_at": "2026-11-04T14:54:15.967195+00:00",
+      "changed_at": "2026-11-04T14:54:15.967195+00:00"
+    },
+    {
+      "fotmob_match_id": 5802983,
+      "match_date": "2026-11-07",
+      "kickoff_utc": "2026-11-07T18:00:00Z",
+      "home_team": "Auxerre",
+      "away_team": "Paris FC",
       "home_status": "Lineup Pending",
       "away_status": "Lineup Pending",
       "lineup_type": "pending",
@@ -15,8 +317,26 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-11-03T23:17:00.232771+00:00",
-      "changed_at": "2026-11-03T02:54:15.350909+00:00"
+      "observed_at": "2026-11-04T14:54:15.967195+00:00",
+      "changed_at": "2026-11-04T14:54:15.967195+00:00"
+    },
+    {
+      "fotmob_match_id": 5802987,
+      "match_date": "2026-11-07",
+      "kickoff_utc": "2026-11-07T20:05:00Z",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "Troyes",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-04T14:54:15.967195+00:00",
+      "changed_at": "2026-11-04T14:54:15.967195+00:00"
     }
   ]
 }
