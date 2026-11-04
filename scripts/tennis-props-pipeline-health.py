@@ -118,6 +118,8 @@ def build_health(
     now: datetime | None = None,
     baseline_directory: Path | None = None,
 ) -> dict[str, object]:
+    from tennis_props_identity_health import load_quarantine
+    quarantine = load_quarantine(ROOT)
     now_utc = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
     line_rows = read_csv(lines_path)
     comparison_rows = read_csv(comparison_path)
@@ -268,6 +270,7 @@ def build_health(
         if break_line_rows: break_state = "PIPELINE_UNHEALTHY"
     return {
         "player_history": current_history,
+        "fixture_quarantine": quarantine,
         "generated_at": now_utc.isoformat(timespec="seconds"),
         "as_of": as_of,
         "state": state,
@@ -325,6 +328,7 @@ def write_report(path: Path, payload: dict[str, object]) -> None:
         f"Generated: {payload['generated_at']}",
         f"As of: {payload['as_of']}",
         f"State: {payload['state']}",
+        f"Fixture input coverage: {payload.get('fixture_quarantine', {}).get('state', 'not recorded')} | held={len(payload.get('fixture_quarantine', {}).get('held_fixtures', []))} | review required={payload.get('fixture_quarantine', {}).get('review_required', False)}",
         f"Upcoming capture freshness: {payload['fresh_upcoming_line_rows']}/{payload['upcoming_line_rows']} rows; uncompared={payload['uncompared_upcoming_rows']}",
         f"Actionable now: shadow={payload['actionable_shadow_rows']} public={payload['actionable_public_rows']}",
         "",

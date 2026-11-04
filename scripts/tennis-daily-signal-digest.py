@@ -263,11 +263,15 @@ def fresh_prematch_prop(row: dict[str, str], now: datetime) -> bool:
 
 
 def props_signals(target_date: str, comparison_date: str | None = None, *, now: datetime | None = None) -> list[Signal]:
+    from tennis_props_identity_health import fixture_blocked, load_quarantine
+    quarantine = load_quarantine(ROOT)
     from tennis_paper_prices import best_total_rows, TOTALS
     now = now or datetime.now(UTC)
     path = PROPS / f"comparison-{comparison_date or target_date}.csv"
     signals: list[Signal] = []
     for row in best_total_rows(read_csv(path), now):
+        if fixture_blocked(row, quarantine):
+            continue
         event_date = row_event_date(row)
         if event_date != target_date:
             continue
@@ -345,6 +349,8 @@ def props_signals(target_date: str, comparison_date: str | None = None, *, now: 
 
 
 def most_aces_signals(target_date: str, *, now: datetime | None = None) -> list[Signal]:
+    from tennis_props_identity_health import fixture_blocked, load_quarantine
+    quarantine = load_quarantine(ROOT)
     from tennis_most_aces_current import alert_rows, COUNT_MODEL
     now=now or datetime.now(UTC)
     try:
@@ -353,6 +359,7 @@ def most_aces_signals(target_date: str, *, now: datetime | None = None) -> list[
         return []
     output=[]
     for row in alert_rows(report,now):
+        if fixture_blocked(row, quarantine):continue
         if row['date'] != target_date:continue
         side=row['recommended_side']; outcome={'P1':'player1','P2':'player2','DRAW':'draw'}[side]
         selected='Tie' if side=='DRAW' else row[outcome]
@@ -370,9 +377,12 @@ def most_aces_signals(target_date: str, *, now: datetime | None = None) -> list[
 
 
 def most_df_signals(target_date: str, *, now: datetime | None = None) -> list[Signal]:
+    from tennis_props_identity_health import fixture_blocked, load_quarantine
+    quarantine = load_quarantine(ROOT)
     from tennis_most_df_delivery import alert_rows
     output=[]
     for row in alert_rows(ROOT, now=now):
+        if fixture_blocked(row, quarantine):continue
         if row['date'] != target_date: continue
         s=row['selection']; side=s['outcome']
         selected=row['names'][0] if side==0 else row['names'][1] if side==2 else 'Tie'
