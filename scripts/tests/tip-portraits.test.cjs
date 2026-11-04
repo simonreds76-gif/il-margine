@@ -61,6 +61,25 @@ function harness({ fail = false, empty = false, noSquad = false, updateError = f
   return {load,pick,invalidations,paths,counts:()=>({fetches,queries})};
 }
 
+test('verified Botheim portrait survives unavailable opposing squads and cached tip URLs',async()=>{
+  const h=harness({fail:true});
+  Object.assign(h.pick,{id:1301,category:'ucl',event:'Viking vs Sabah',player:'Botheim'});
+  const artwork=h.load(path.join(root,'src/lib/tip-artwork.ts')).getTipArtwork;
+  const photo='https://images.fotmob.com/image_resources/playerimages/741561.png';
+  for(const player of ['Botheim','Erik Botheim']) for(const event of ['Viking vs Sabah','Sabah vs Viking FK']) {
+    const result=artwork({...h.pick,player,event});
+    assert.equal(result[0].name,'Erik Botheim');
+    assert.equal(result[0].src,photo);
+  }
+  const {GET}=h.load(path.join(root,'src/app/api/tip-portrait/[id]/route.ts'));
+  const response=await GET(new Request('https://example.test/api/tip-portrait/1301?v=8bcf8b9ed6e0&thumb=96'),{params:Promise.resolve({id:'1301'})});
+  assert.equal(response.status,307);
+  assert.equal(response.headers.get('location'),`/_next/image?url=${encodeURIComponent(photo)}&w=96&q=75`);
+  assert.deepEqual(h.counts(),{fetches:0,queries:1});
+  assert.notEqual(artwork({...h.pick,event:'Rennes vs Auxerre'})[0].src,photo,'club identity must remain scoped');
+  assert.notEqual(artwork({...h.pick,player:'Anders Botheim'})[0].src,photo,'another full name must not match');
+});
+
 test('current ATP Berrettini shorthand resolves to the verified Matteo portrait',()=>{
   const h=harness(); const artwork=h.load(path.join(root,'src/lib/tip-artwork.ts')).getTipArtwork;
   const pick={id:1255,market:'tennis',category:'atp',event:'Cobolli vs Berrettini',player:'Berrettini',match_date:'2026-10-29'};
