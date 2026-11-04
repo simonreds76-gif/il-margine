@@ -6,7 +6,7 @@ import BookmakerThumb from "@/components/BookmakerThumb";
 import { supabase, Bet, Bookmaker } from "@/lib/supabase";
 import { formatOdds } from "@/lib/format";
 import { stripTipSeoMarker } from "@/lib/tip-seo";
-import { refreshTime, tennisRefreshIsActive, tennisRefreshStatusMessage, type TennisRefreshCommand } from "@/lib/tennis-refresh-status";
+import { refreshTime, tennisRefreshIsActive, tennisRefreshStatusMessage, tennisRefreshStatusType, type TennisRefreshCommand } from "@/lib/tennis-refresh-status";
 
 const MonthlyBreakdown = dynamic(() => import("@/components/MonthlyBreakdown"), {
   ssr: false,
@@ -86,7 +86,7 @@ export default function AdminPanel() {
   const [settingsLoading, setSettingsLoading] = useState<string | null>(null);
   const [adminError, setAdminError] = useState<string | null>(null);
   const [tennisRefreshLoading, setTennisRefreshLoading] = useState(false);
-  const [tennisRefreshMessage, setTennisRefreshMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [tennisRefreshMessage, setTennisRefreshMessage] = useState<{ type: "success" | "error" | "info"; text: string } | null>(null);
   const [tennisRefreshRequestId, setTennisRefreshRequestId] = useState<string | null>(null);
   const [tennisRefreshCommand, setTennisRefreshCommand] = useState<TennisRefreshCommand | null>(null);
   const tennisRefreshGeneration = useRef(0);
@@ -470,7 +470,7 @@ export default function AdminPanel() {
         if (controller.signal.aborted || generation !== tennisRefreshGeneration.current || !data.command) return;
         const command = data.command as TennisRefreshCommand;
         setTennisRefreshCommand(command);
-        setTennisRefreshMessage({ type: command.state === "failed" ? "error" : "success", text: tennisRefreshStatusMessage(command) });
+        setTennisRefreshMessage({ type: tennisRefreshStatusType(command), text: tennisRefreshStatusMessage(command) });
         if (tennisRefreshIsActive(command) && command.request_id) {
           setTennisRefreshLoading(true);
           setTennisRefreshRequestId(command.request_id);
@@ -526,7 +526,7 @@ export default function AdminPanel() {
         }
         const command = data.command as TennisRefreshCommand;
         setTennisRefreshCommand(command);
-        setTennisRefreshMessage({ type: command.state === "failed" ? "error" : "success", text: tennisRefreshStatusMessage(command) });
+        setTennisRefreshMessage({ type: tennisRefreshStatusType(command), text: tennisRefreshStatusMessage(command) });
         if (!tennisRefreshIsActive(command)) {
           setTennisRefreshLoading(false);
           setTennisRefreshRequestId(null);
@@ -712,13 +712,16 @@ export default function AdminPanel() {
               </button>
             </div>
             {tennisRefreshMessage && (
-              <p role="status" className={`mt-2 text-sm ${tennisRefreshMessage.type === "success" ? "text-emerald-400" : "text-red-400"}`}>
+              <p role="status" className={`mt-2 text-sm ${tennisRefreshMessage.type === "success" ? "text-emerald-400" : tennisRefreshMessage.type === "info" ? "text-sky-200" : "text-red-400"}`}>
                 {tennisRefreshMessage.text}
               </p>
             )}
             {tennisRefreshCommand && (
               <div className="mt-3 rounded-lg border border-slate-800 bg-slate-950/60 p-3 text-xs text-slate-400">
-                <p className="mb-3">Request: {refreshTime(tennisRefreshCommand.requested_at)}</p>
+                <p className="mb-3">Request: {refreshTime(tennisRefreshCommand.requested_at)}{tennisRefreshCommand.state === "failed" ? " (failed)" : ""}</p>
+                {tennisRefreshCommand.monitor_upload_recovered_at && (
+                  <p className="mb-3 text-sky-200">Later Monitor upload: {refreshTime(tennisRefreshCommand.monitor_upload_recovered_at)}</p>
+                )}
                 <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                   {[
                     ["OnCourt database updated", tennisRefreshCommand.oncourt_database_updated_at],

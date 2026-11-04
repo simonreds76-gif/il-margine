@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { isAdminSession } from "@/lib/admin-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { isMonitorUploadFailure, reconcileMonitorUpload, type TennisRefreshCommand } from "@/lib/tennis-refresh-status";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -11,10 +12,7 @@ const COMMAND_KEY = "automation.tennis_fair_odds_request";
 const ACTIVE_COMMAND_STATES = new Set(["pending", "waiting", "dispatching", "started"]);
 const ACTIVE_COMMAND_MAX_AGE_MS = 3 * 60 * 60 * 1000;
 
-type RefreshCommand = {
-  request_id?: string;
-  requested_at?: string;
-  state?: string;
+type RefreshCommand = TennisRefreshCommand & {
   [key: string]: unknown;
 };
 
@@ -44,6 +42,26 @@ async function readCommand(): Promise<RefreshCommand | null> {
     .maybeSingle();
   if (readError) throw new Error(`Unable to read refresh queue: ${readError.message}`);
   return parseCommand(currentRow?.value);
+}
+
+async function withMonitorUploadRecovery(command: RefreshCommand | null): Promise<TennisRefreshCommand | null> {
+  if (!command) return null;
+  const unchanged = reconcileMonitorUpload(command, null);
+  if (!isMonitorUploadFailure(unchanged)) return unchanged;
+  try {
+    // A compact authenticated read, only for upload failures; no reports, queue
+    // writes, model runs or Telegram calls. Keep the original failed receipt.
+    const { data, error } = await getSupabaseAdmin()
+      .from("goalscorer_live_snapshot")
+      .select("updated_at,generated_at:payload->>generated_at,payload_hash:payload->>payload_hash,source:payload->>source,schema_version:payload->schema_version,file_count:payload->monitor_bundle->file_count")
+      .eq("snapshot_key", "tennis_evidence_v1")
+      .abortSignal(AbortSignal.timeout(8_000))
+      .maybeSingle();
+    return error ? unchanged : reconcileMonitorUpload(unchanged, data);
+  } catch {
+    // A failed metadata check must never mask the original upload failure.
+    return unchanged;
+  }
 }
 
 async function queueRefresh(req: Request) {
@@ -98,7 +116,7 @@ export async function GET(req: Request) {
     if (requestedId && command?.request_id !== requestedId) {
       return NextResponse.json({ error: "This refresh request is no longer the active queue record." }, { status: 404 });
     }
-    return NextResponse.json({ ok: true, command });
+    return NextResponse.json({ ok: true, command: await withMonitorUploadRecovery(command) });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to read fair-odds refresh status";
     return NextResponse.json({ error: message }, { status: 500 });
