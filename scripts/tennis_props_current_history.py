@@ -15,7 +15,7 @@ from pathlib import Path
 import shutil
 import tempfile
 
-VERSION = 'oncourt-current-history-20261030-v2'
+VERSION = 'oncourt-current-history-20261104-v3'
 ROOT = Path(__file__).resolve().parents[1]
 MAX_RESULT_AGE_DAYS = 14
 MAX_EXPORT_AGE_HOURS = 48
@@ -135,9 +135,13 @@ def prepare(root, as_of, output):
     validate_source_audit(audit,as_of)
     baseline=adapter.build(as_of,histories,True)
     if len(baseline)<100:raise ValueError('Incomplete current baseline')
-    from tennis_props_identity_health import verify_identity_buckets
-    identity_audit=verify_identity_buckets(root,baseline)
+    from tennis_props_identity_health import quarantine_identity_buckets, exclude_quarantined_activity
+    baseline,identity_audit=quarantine_identity_buckets(root,baseline)
     activities,excluded,activity_dates=activity(root,as_of,baseline,adapter)
+    activities=exclude_quarantined_activity(activities,identity_audit)
+    if identity_audit['quarantined_players']:
+        print('WARNING: isolated player identity conflicts; unaffected players continue: '
+              + ', '.join(q['name'] for q in identity_audit['quarantined_players']), flush=True)
     write(output/'player-props-baseline.csv',baseline)
     write(output/'player-props-activity.csv',activities)
     source_audit=json.loads((output/'source-audit.json').read_text(encoding='utf-8'))
@@ -149,6 +153,7 @@ def prepare(root, as_of, output):
     status=dict(state='CURRENT',version=VERSION,as_of=as_of.isoformat(),generated_at=now.isoformat(),
         feature_cutoff='Completed results strictly before '+as_of.isoformat(),
         baseline_rows=len(baseline),activity_rows=len(activities),sources=audit,
+        coverage='PARTIAL_QUARANTINE' if identity_audit['quarantined_players'] else 'COMPLETE',
         identity_audit=identity_audit,activity_latest_results=activity_dates,activity_exclusions=excluded,
         source_hashes=source_audit['hashes'],
         output_hashes={name:sha(output/name) for name in ('player-props-baseline.csv','player-props-activity.csv')},

@@ -10,7 +10,7 @@ import math
 import os
 import re
 from collections import defaultdict
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from tennis_event_integrity import clean_event_rows, event_phase
@@ -348,7 +348,7 @@ def canonical_tournament_name(value: object) -> str | None:
         return "Umag"
     if "estoril" in lower:
         return "Estoril"
-    if "kitzbuhel" in lower or "kitzbühel" in lower:
+    if "kitzbuhel" in lower or "kitzbÃ¼hel" in lower:
         return "Kitzbuhel"
     if "iasi" in lower:
         return "Iasi"
@@ -642,6 +642,7 @@ def oncourt_schedule_rows(
     include_completed: bool,
     board_date: str,
     days_ahead: int = 1,
+    quarantined: list[dict] | None = None,
 ) -> list[dict[str, str]]:
     tour_lower = tour_code.lower()
     surfaces = court_surfaces(ONCOURT_DIR / "courts.csv", combine_hard=True)
@@ -653,12 +654,25 @@ def oncourt_schedule_rows(
     for row in read_csv(ONCOURT_DIR / f"today_{tour_lower}.csv"):
         if not include_completed and str(row.get("result") or "").strip():
             continue
+        row_date = parse_date(row.get("date"))
+        if row_date and (row_date < board_dt or row_date > horizon_dt):
+            continue
+        def hold(reason):
+            if quarantined is not None:
+                quarantined.append(dict(row, tour=tour_code.upper(), quarantine_reason=reason,
+                    player1=player_names.get(str(row.get('player1_id') or ''), ''),
+                    player2=player_names.get(str(row.get('player2_id') or ''), '')))
         tour = tours.get(str(row.get("tour_id") or "").strip()) or {}
+        if not tour:
+            hold('MISSING_TOURNAMENT_IDENTITY')
         if not is_supported_main_tour(tour):
             continue
         surface = surfaces.get(str(tour.get("court_id") or ""), "N/A")
         if surface == "N/A":
-            raise ValueError("Unknown OnCourt court for supported event " + str(tour.get("id")))
+            if quarantined is None:
+                raise ValueError("Unknown OnCourt court for supported event " + str(tour.get("id")))
+            hold('UNKNOWN_EVENT_SURFACE')
+            continue
         row_date = parse_date(row.get("date"))
         if row_date:
             if row_date < board_dt or row_date > horizon_dt:
@@ -677,6 +691,7 @@ def oncourt_schedule_rows(
         p1 = player_names.get(str(row.get("player1_id") or "").strip(), "")
         p2 = player_names.get(str(row.get("player2_id") or "").strip(), "")
         if not p1 or not p2:
+            hold('MISSING_PLAYER_IDENTITY')
             continue
         if is_placeholder_player(p1) or is_placeholder_player(p2):
             continue
@@ -1401,11 +1416,22 @@ def main() -> None:
     aliases = load_aliases(Path(args.aliases))
     tournament_samples = load_tournament_samples(as_of)
 
-    schedules = oncourt_schedule_rows("ATP", args.include_completed, args.as_of, args.days_ahead)
-    schedules.extend(oncourt_schedule_rows("WTA", args.include_completed, args.as_of, args.days_ahead))
+    source_quarantine = []
+    schedules = oncourt_schedule_rows("ATP", args.include_completed, args.as_of, args.days_ahead, source_quarantine)
+    schedules.extend(oncourt_schedule_rows("WTA", args.include_completed, args.as_of, args.days_ahead, source_quarantine))
     oncourt_wta_count = sum(1 for row in schedules if row.get("source") == "oncourt_today_wta")
     if args.wta_schedule:
         schedules.extend(wta_schedule_rows(Path(args.wta_schedule)))
+    from tennis_props_identity_health import partition_schedules, publish_quarantine, remove_held_current_rows
+    schedules, quarantined = partition_schedules(schedules, history, args.as_of)
+    quarantined = source_quarantine + quarantined
+    if quarantined and Path(args.out).resolve() == DEFAULT_OUT.resolve():
+        receipt = publish_quarantine(ROOT, history, schedules, quarantined, args.as_of)
+        removed = remove_held_current_rows(ROOT, receipt)
+        if removed:
+            print('Invalidated held current forecasts: ' + json.dumps(removed))
+    if quarantined:
+        print(f'WARNING: {len(quarantined)} input-conflicted fixtures held; {len(schedules)} continue.')
     fair_odds_expected_games = load_fair_odds_expected_games(
         schedules,
         source=args.fair_odds_totals_source,
@@ -1571,6 +1597,9 @@ def main() -> None:
         "source",
     ]
     write_csv(Path(args.out), rows, fieldnames)
+    if not quarantined and Path(args.out).resolve() == DEFAULT_OUT.resolve():
+        # A hold clears only after its replacement board successfully exists.
+        publish_quarantine(ROOT, history, schedules, [], args.as_of)
     try:
         from tennis_count_diagnostics import capture_count_inputs
         diagnostic_status = capture_count_inputs(ROOT, count_diagnostics, history, [

@@ -84,6 +84,7 @@ class CurrentHistoryTests(unittest.TestCase):
                 H.write(source/f'players_{tour}.csv',players);H.write(source/f'tours_{tour}.csv',tours)
                 H.write(source/f'games_{tour}.csv',games)
                 H.write(source/f'stat_{tour}.csv',[dict(games[0],w_svpt='60',l_svpt='60')])
+            aliases=root/'data/tennis-props/player-name-aliases.csv';aliases.parent.mkdir(parents=True);aliases.write_text('tour,alias,player_name\n')
             with patch.dict(A.BOARD, {'is_supported_main_tour':lambda t:t.get('id')=='10'}):
                 rows, excluded, dates=H.activity(root,date(2026,10,7),[],A)
             player=next(r for r in rows if r['tour']=='ATP' and r['player_id']=='oc:1')

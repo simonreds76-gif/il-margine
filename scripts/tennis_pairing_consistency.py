@@ -33,7 +33,7 @@ def atomic(path, value):
     temp.replace(path)
 
 
-def native_epoch(root, database=DATABASE):
+def native_epoch(root, database=DATABASE, *, allow_fixture_quarantine=False):
     """An update must replace both tours' schedule and identity exports."""
     folder = root / 'data/oncourt'
     files = ['courts.csv'] + [f'{kind}_{tour}.csv' for tour in ('atp', 'wta')
@@ -55,6 +55,8 @@ def native_epoch(root, database=DATABASE):
                 continue
             tournament = tournaments.get(str(row['tour_id']))
             if tournament is None:
+                if allow_fixture_quarantine:
+                    continue
                 raise ValueError(f'native_tournament_identity_missing:{tour}:{row["tour_id"]}')
             # These models do not forecast ITF/Futures. Such source gaps must
             # not block valid ATP, Challenger and WTA current pairings.
@@ -63,6 +65,8 @@ def native_epoch(root, database=DATABASE):
             for field in ('player1_id', 'player2_id'):
                 pid = str(row[field] or '')
                 if pid.isdigit() and int(pid) > 0 and pid not in players:
+                    if allow_fixture_quarantine:
+                        continue
                     raise ValueError(f'native_player_identity_missing:{tour}:{pid}')
     return result
 
@@ -114,14 +118,14 @@ def verify_remote_schedule(root, get=None):
             'verified_at': datetime.now(timezone.utc).isoformat()}
 
 
-def expected_props(root, as_of, days_ahead=3):
+def expected_props(root, as_of, days_ahead=3, quarantined=None):
     """Use the current generator's exact scope/round rules; never broaden them."""
     sys.path.insert(0, str(root / 'scripts'))
     spec = importlib.util.spec_from_file_location('_pairing_board_scope', root / 'scripts/build-tennis-props-board.py')
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    schedules = module.oncourt_schedule_rows('ATP', False, as_of, days_ahead)
-    schedules += module.oncourt_schedule_rows('WTA', False, as_of, days_ahead)
+    schedules = module.oncourt_schedule_rows('ATP', False, as_of, days_ahead, quarantined)
+    schedules += module.oncourt_schedule_rows('WTA', False, as_of, days_ahead, quarantined)
     return schedules
 
 
@@ -130,8 +134,17 @@ def side_key(row, player, opponent):
 
 
 def board_state(root, as_of, *, expected=None, database=DATABASE, days_ahead=3):
-    epoch = native_epoch(root, database)
-    expected = expected_props(root, as_of, days_ahead) if expected is None else expected
+    epoch = native_epoch(root, database, allow_fixture_quarantine=True)
+    quarantined = []
+    expected = expected_props(root, as_of, days_ahead, quarantined) if expected is None else expected
+    history = None
+    if (root / 'data/tennis-props/player-history-status.json').exists():
+        from tennis_props_current_history import history_health
+        from tennis_props_identity_health import partition_schedules
+        history = history_health(root / 'data/tennis-props', as_of)
+        if history['state'] == 'CURRENT':
+            expected, identity_quarantine = partition_schedules(expected, history, as_of)
+            quarantined.extend(identity_quarantine)
     want = Counter(side_key(r, r[a], r[b]) for r in expected
                    for a, b in (('player1_id', 'player2_id'), ('player2_id', 'player1_id')))
     path = root / BOARD
@@ -140,9 +153,15 @@ def board_state(root, as_of, *, expected=None, database=DATABASE, days_ahead=3):
     missing, extra = list((want - got).elements()), list((got - want).elements())
     fresh = path.exists() and path.stat().st_mtime_ns >= max(v['mtime_ns'] for v in epoch.values())
     dated = all(r.get('generation_date') == as_of for r in rows)
-    return {'state': 'CURRENT' if fresh and dated and not missing and not extra else 'REBUILD_REQUIRED',
+    history_current = history is None or (history['state'] == 'CURRENT' and all(
+        r.get('history_version') == history['version'] and r.get('history_as_of') == as_of
+        and r.get('history_fingerprint') == history['output_hashes']['player-props-baseline.csv']
+        for r in rows))
+    return {'state': 'CURRENT' if fresh and dated and history_current and not missing and not extra else 'REBUILD_REQUIRED',
             'as_of': as_of, 'expected_fixtures': len(expected), 'expected_sides': sum(want.values()),
-            'actual_sides': len(rows), 'missing_sides': missing, 'unexpected_sides': extra,
+            'actual_sides': len(rows), 'quarantined_fixtures': quarantined,
+            'coverage': 'PARTIAL_QUARANTINE' if quarantined else 'COMPLETE',
+            'player_history_current': history_current, 'missing_sides': missing, 'unexpected_sides': extra,
             'board_after_exports': fresh, 'generation_date_current': dated, 'native_epoch': epoch,
             'board_sha256': sha(path) if path.exists() else None}
 
@@ -232,7 +251,7 @@ def main():
     elif args.check_board:
         result = board_state(args.root, args.as_of)
     else:
-        result = {'native_epoch': native_epoch(args.root)}
+        result = {'native_epoch': native_epoch(args.root, allow_fixture_quarantine=True)}
         if args.verify_sync:
             result['remote_schedule'] = verify_remote_schedule(args.root)
     print(json.dumps(result))
