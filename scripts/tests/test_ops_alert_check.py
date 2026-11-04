@@ -95,5 +95,36 @@ class PipelineAwareStuckTests(unittest.TestCase):
         )
 
 
+class CombinedCheckerTests(unittest.TestCase):
+    def check(self, morning, health=0, argv=None):
+        with mock.patch.object(MODULE, 'load_env_files'), mock.patch.object(MODULE, 'check_morning_failure', side_effect=morning if isinstance(morning, Exception) else None, return_value=morning) as check, mock.patch.object(MODULE, 'main', return_value=health) as main:
+            result = MODULE.run_checks(argv or [])
+            main.assert_called_once_with(argv or [])
+            return result, check
+
+    def test_delivered_or_acknowledged_incident_does_not_fail_checker(self):
+        self.assertEqual(self.check(True)[0], 0)
+        self.assertEqual(self.check(False)[0], 0)
+
+    def test_notification_check_failure_remains_red_and_other_checks_run(self):
+        self.assertEqual(self.check(RuntimeError('transport unavailable'))[0], 2)
+
+    def test_real_health_failures_are_never_suppressed(self):
+        for health in (1, 2):
+            self.assertEqual(self.check(True, health)[0], health)
+            self.assertEqual(self.check(False, health)[0], health)
+
+    def test_read_only_is_forwarded_to_morning_check(self):
+        result, check = self.check(True, argv=['--read-only'])
+        self.assertEqual(result, 0)
+        check.assert_called_once_with(read_only=True)
+
+    def test_read_only_health_check_never_sends(self):
+        with mock.patch.object(MODULE, 'load_env_files'), mock.patch.dict(MODULE.os.environ, {'DATABASE_URL':'test-db','OPS_ALERT_TELEGRAM_BOT_TOKEN':'test-token','OPS_ALERT_TELEGRAM_CHAT_ID':'test-chat','OPS_ALERT_WEBHOOK_URL':'https://example.test'}, clear=True), mock.patch.object(MODULE, 'fetch_rows_via_db', side_effect=[[{'pipeline':'test','age_seconds':99999}],[]]), mock.patch.object(MODULE, 'load_football_model_alerts', return_value=[]), mock.patch.object(MODULE, 'load_vercel_isr_policy_alerts', return_value=[]), mock.patch.object(MODULE, 'post_telegram') as telegram, mock.patch.object(MODULE, 'post_webhook') as webhook:
+            self.assertEqual(MODULE.main(['--read-only']), 1)
+            telegram.assert_not_called()
+            webhook.assert_not_called()
+
+
 if __name__ == "__main__":
     unittest.main()

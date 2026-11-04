@@ -22,6 +22,7 @@ VERCEL_ISR_POLICY_GUARD = ROOT / "scripts" / "audit-vercel-isr-policy.py"
 LONDON_TZ = ZoneInfo("Europe/London")
 sys.path.insert(0, str(ROOT / "scripts"))
 from football_capture_health import load_candidates, load_json, verified_empty_window
+from ops_morning_failures import check_morning_failure
 PINNACLE_PIPELINE = "pinnacle-capture-history"
 PINNACLE_SLOT_START = time(hour=8, minute=0)
 PINNACLE_SLOT_END = time(hour=23, minute=30)
@@ -403,6 +404,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=[],
         help="Pipeline name to ignore in the stuck-run alert check. May be repeated.",
     )
+    parser.add_argument("--read-only", action="store_true", help="Inspect current health without sending notifications or writing acknowledgements.")
     return parser
 
 
@@ -519,6 +521,10 @@ def main(argv: list[str] | None = None) -> int:
     message = render_message(stuck=stuck, silent=silent, model_alerts=model_alerts, model_warnings=model_warnings)
     print(message)
 
+    if args.read_only:
+        print("OPS_ALERT_READ_ONLY notifications and acknowledgements disabled")
+        return 1 if stuck or silent or model_alerts else 0
+
     bot_token = os.environ.get("OPS_ALERT_TELEGRAM_BOT_TOKEN", "").strip()
     chat_id = os.environ.get("OPS_ALERT_TELEGRAM_CHAT_ID", "").strip()
     if bot_token and chat_id:
@@ -541,15 +547,22 @@ def main(argv: list[str] | None = None) -> int:
     return 1 if stuck or silent or model_alerts else 0
 
 
-if __name__ == "__main__":
+def run_checks(argv: list[str] | None = None) -> int:
     # Parse first so --help never performs network operations.
-    build_parser().parse_args()
+    args = build_parser().parse_args(argv)
     load_env_files()
-    from ops_morning_failures import check_morning_failure
-    morning_exit = 0
+    morning_error = 0
     try:
-        morning_exit = 1 if check_morning_failure() else 0
+        incident = check_morning_failure(read_only=args.read_only)
+        if incident:
+            print("OPS_MORNING_CHECK_OK recorded incident retained; see notification state above")
     except RuntimeError as exc:
         print(f"OPS_MORNING_FAILURE_ERROR {exc}", file=sys.stderr)
-        morning_exit = 2
-    raise SystemExit(max(main(), morning_exit))
+        morning_error = 2
+    # A delivered/already acknowledged incident is not a transport/checker
+    # failure. Actual health issues and inability to check/send still fail.
+    return max(main(argv), morning_error)
+
+
+if __name__ == "__main__":
+    raise SystemExit(run_checks())

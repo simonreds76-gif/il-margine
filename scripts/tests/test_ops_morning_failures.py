@@ -43,6 +43,16 @@ class MorningFailureTests(unittest.TestCase):
         transport=Mock(return_value=[ROW])
         with self.assertRaises(RuntimeError): check_morning_failure({**ENV,'OPS_ALERT_TELEGRAM_BOT_TOKEN':''},transport)
         self.assertEqual(transport.call_count,1)
+    def test_read_only_unnotified_failure_never_sends_or_acknowledges(self):
+        transport=Mock(return_value=[ROW])
+        self.assertTrue(check_morning_failure(ENV,transport,read_only=True))
+        self.assertEqual(transport.call_count,1)
+
+    def test_failed_acknowledgement_is_still_a_checker_error(self):
+        transport=Mock(side_effect=[[ROW],{'ok':True},RuntimeError('ack failed')])
+        with self.assertRaises(RuntimeError): check_morning_failure(ENV,transport)
+        self.assertEqual(transport.call_count,3)
+
     def test_missing_morning_record_is_visible_error(self):
         with self.assertRaises(RuntimeError): check_morning_failure(ENV,Mock(return_value=[]))
 class VerifiedRecoveryTests(unittest.TestCase):
