@@ -705,6 +705,26 @@
         "espn_kickoff": "2026-10-24T13:30Z",
         "goal_packet_sha256": "e97a4289dcf375615d23c48a1afeff02a6cf93ba86b4e169daacc0b44ac99810"
       }
+    },
+    "9905": {
+      "name": "Mainz 05",
+      "goal": {
+        "id": "cmr79jabp03zprx06z98kg586",
+        "name": "Mainz"
+      },
+      "espn": {
+        "id": "2950",
+        "name": "Mainz"
+      },
+      "verified_fixture": "5881202",
+      "reviewed_at": "2026-11-04",
+      "evidence": {
+        "goal_fixture": "cmu74fmmbnubzqu07zqwaoey7",
+        "espn_fixture": "401884757",
+        "kickoff": "2026-10-24T13:30:00.000Z",
+        "calendar_sha256": "1ee1d44d0ef940aa361c409b2cc1d0b2c23b687b55e938efe60ccee249548780",
+        "observed_at": "2026-11-04T17:32:09.029563+00:00"
+      }
     }
   },
   "fixture_player_aliases": {
