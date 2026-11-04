@@ -9,7 +9,7 @@ const code = ts.transpileModule(fs.readFileSync(file, 'utf8'), {
 }).outputText;
 const compiled = { exports: {} };
 new Function('module', 'exports', code)(compiled, compiled.exports);
-const { tennisRefreshIsActive, tennisRefreshStatusMessage, refreshTime } = compiled.exports;
+const { tennisRefreshIsActive, tennisRefreshStatusMessage, tennisRefreshStatusType, reconcileMonitorUpload, refreshTime } = compiled.exports;
 
 test('restored waiting and running requests remain active; completed/failed never do', () => {
   for (const state of ['pending', 'waiting', 'dispatching', 'started']) assert.equal(tennisRefreshIsActive({ state }), true);
@@ -51,4 +51,56 @@ test('successful zero-new check does not imply Telegram delivery', () => {
   assert.match(message, /No new qualifying selections/);
   assert.match(message, /earlier alerts were not repeated/);
   assert.doesNotMatch(message, /relay queued|30 minutes/);
+});
+
+const failure = Object.freeze({
+  request_id: 'original-request', state: 'failed', error: 'Private Monitor upload failed.',
+  completed_at: '2026-11-03T21:21:24Z', telegram_status: 'relay_queued',
+});
+const snapshot = Object.freeze({
+  source: 'windows_local_tennis_pipeline', schema_version: 3, file_count: 34,
+  payload_hash: 'a'.repeat(64), generated_at: '2026-11-04T10:31:22Z', updated_at: '2026-11-04T10:31:22Z',
+});
+const now = Date.parse('2026-11-04T11:00:00Z');
+
+test('later hosted snapshot recovers upload display without rewriting failed request or claiming delivery', () => {
+  const result = reconcileMonitorUpload(failure, snapshot, now);
+  assert.equal(result.monitor_upload_recovered_at, snapshot.generated_at);
+  assert.equal(result.state, 'failed');
+  assert.equal(result.error, failure.error);
+  assert.equal(result.request_id, failure.request_id);
+  assert.equal(failure.monitor_upload_recovered_at, undefined);
+  assert.equal(tennisRefreshIsActive(result), false);
+  assert.equal(tennisRefreshStatusType(result), 'info');
+  assert.match(tennisRefreshStatusMessage(result), /upload recovered/);
+  assert.match(tennisRefreshStatusMessage(result), /not fresh prices or Telegram delivery/);
+});
+
+test('old, future, incomplete and invalid snapshot evidence never hides the failure', () => {
+  const invalidSnapshots = [null, {},
+    { ...snapshot, source: 'other' }, { ...snapshot, schema_version: 2 },
+    { ...snapshot, payload_hash: 'invalid' }, { ...snapshot, file_count: 0 },
+    { ...snapshot, generated_at: '2026-11-03T21:00:00Z', updated_at: '2026-11-03T21:00:00Z' },
+    { ...snapshot, generated_at: failure.completed_at, updated_at: failure.completed_at },
+    { ...snapshot, updated_at: '2026-11-04T10:30:00Z' },
+    { ...snapshot, generated_at: '2026-11-05T10:31:22Z', updated_at: '2026-11-05T10:31:22Z' },
+    { ...snapshot, generated_at: 'invalid' },
+  ];
+  for (const invalid of invalidSnapshots) {
+    const result = reconcileMonitorUpload(failure, invalid, now);
+    assert.deepEqual(result, failure);
+    assert.equal(tennisRefreshStatusType(result), 'error');
+    assert.equal(tennisRefreshStatusMessage(result), failure.error);
+  }
+});
+
+test('a new run or unrelated failure cannot inherit upload recovery', () => {
+  for (const changed of [
+    { state: 'started' }, { state: 'pending' }, { state: 'completed' },
+    { error: 'OnCourt extraction failed.' }, { completed_at: '' }, { request_id: '' },
+    { completed_at: '2026-11-04T10:45:00Z' },
+  ]) {
+    const result = reconcileMonitorUpload({ ...failure, ...changed, monitor_upload_recovered_at: snapshot.generated_at }, snapshot, now);
+    assert.equal(result.monitor_upload_recovered_at, undefined);
+  }
 });
