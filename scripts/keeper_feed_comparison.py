@@ -165,7 +165,7 @@ def compare(root, ref, goal_fixture, goal_stats, espn, config, observed_at):
     if not rows:
         raise ValueError('no_reference_keepers')
     status = 'agreement' if not flags and not any(r['flags'] for r in rows) else 'quarantined'
-    return {'schema_version': 1, 'match_id': ref['match_id'], 'kickoff': ref['kickoff'],
+    record = {'schema_version': 1, 'match_id': ref['match_id'], 'kickoff': ref['kickoff'],
             'league_id': ref['league_id'], 'home': ref['home'], 'away': ref['away'],
             'goal_fixture_id': goal_fixture['id'], 'espn_fixture_id': espn['header']['id'],
             'observed_at': observed_at, 'reference_observed_at': ref['observed_at'],
@@ -173,6 +173,49 @@ def compare(root, ref, goal_fixture, goal_stats, espn, config, observed_at):
                               'goal_statistics': digest(goal_stats), 'espn': digest(espn)},
             'result': score, 'status': status, 'flags': flags, 'keepers': rows,
             'purpose': 'source comparison; no model inputs or settlements changed'}
+    return apply_reviewed_counts(record, ref, config)
+
+
+def apply_reviewed_counts(record, ref, config):
+    """Separate a reviewed published total from an unresolved event discrepancy.
+
+    Only an exact, dated review may release the source-comparison quarantine.
+    Native history/event labels, model inputs and settlements are never edited.
+    A changed reference, identity or provider total invalidates the decision.
+    """
+    for keeper in record['keepers']:
+        if keeper['flags'] != ['reference_event_conflict']:
+            continue
+        originals = [x for x in ref['keepers'] if str(x['player_id']) == keeper['player_id']]
+        reviews = [x for x in config.get('reviewed_published_counts', [])
+                   if str(x['match_id']) == str(record['match_id']) and str(x['player_id']) == keeper['player_id']]
+        if len(originals) != 1 or len(reviews) != 1:
+            continue
+        original, review = originals[0], reviews[0]
+        try:
+            valid = (review['scope'] == 'source_comparison_only'
+                and instant(review['kickoff']) == instant(record['kickoff'])
+                and str(review['league_id']) == str(record['league_id'])
+                and str(review['team_id']) == str(ref[keeper['side']]['id'])
+                and review['reference_sha256'] == ref['source_sha256']
+                and str(review['goal_player_id']) == keeper['goal_player_id']
+                and str(review['espn_player_id']) == keeper['espn_player_id']
+                and original.get('started') is True and original.get('minutes') == 90
+                and original.get('event_saves') == review['event_saves']
+                and all(v == review['published_saves'] for v in keeper['saves'].values())
+                and len(set(review['source_urls'])) >= 2 and bool(review['reason'])
+                and instant(record['kickoff']) < instant(review['reviewed_at']) <= datetime.now(timezone.utc))
+        except (KeyError, ValueError, TypeError):
+            valid = False
+        if not valid:
+            continue
+        keeper['flags'] = []
+        keeper['event_evidence'] = {'status':'disagreement_retained', 'event_saves':original['event_saves'],
+                                   'published_saves':review['published_saves'], 'original_flag':'reference_event_conflict'}
+        keeper['published_count_review'] = dict(review)
+    if not record['flags'] and not any(x['flags'] for x in record['keepers']):
+        record['status'] = ('reviewed_agreement' if any(x.get('published_count_review') for x in record['keepers']) else 'agreement')
+    return record
 
 
 def append_record(archive, record):

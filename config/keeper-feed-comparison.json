@@ -753,5 +753,27 @@
     "5802979/1239590/goal": "2053407184",
     "5802976/1060604/goal": "1755278586"
   },
-  "mapping_evidence": "Frozen 20-match audit, 2026-11-03; exact league, kickoff, home/away and completed score; aliases reviewed per fixture only"
+  "mapping_evidence": "Frozen 20-match audit, 2026-11-03; exact league, kickoff, home/away and completed score; aliases reviewed per fixture only",
+  "reviewed_published_counts": [
+    {
+      "scope": "source_comparison_only",
+      "match_id": "5881202",
+      "kickoff": "2026-10-24T13:30:00.000Z",
+      "league_id": "54",
+      "player_id": "248437",
+      "team_id": "9905",
+      "goal_player_id": "562863892",
+      "espn_player_id": "156416",
+      "published_saves": 6,
+      "event_saves": 5,
+      "reference_sha256": "ed35939af34e0e51a4a2a30c420e4c52f38580a346e3b6f49d8457a841d315ac",
+      "reviewed_at": "2026-11-04T18:08:43.452684+00:00",
+      "source_urls": [
+        "https://www.fotmob.com/api/data/matchDetails?matchId=5881202",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884757",
+        "https://api.goal-api.com/v1/fixtures/cmu74fmmbnubzqu07zqwaoey7/statistics"
+      ],
+      "reason": "All three named-player published totals report six saves for the verified full-match Mainz goalkeeper. Fresh FotMob and ESPN event lists enumerate five saves. Accept six as the reviewed published count for source comparison only; the unexplained event discrepancy remains explicit. Do not infer a sixth event or change historical labels, model training inputs or bet settlements."
+    }
+  ]
 }

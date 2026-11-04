@@ -4,6 +4,7 @@ import os
 from datetime import datetime, timezone
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
+from ops_tennis_recovery import discover_props_recovery, verified_props_recovery
 
 
 def request_json(method, url, headers, payload=None):
@@ -89,6 +90,23 @@ def check_morning_failure(env=None, transport=request_json, *, read_only=False):
     details = dict(row.get('details') or {})
     if verified_atlas_recovery(row, details):
         print('OPS_MORNING_FAILURE resolved by verified production deployment; original failure retained')
+        return False
+    if verified_props_recovery(row, details):
+        print('OPS_MORNING_FAILURE resolved by verified later props comparison; original failure retained')
+        return False
+    recovery = discover_props_recovery(row, base, headers, transport)
+    if recovery:
+        if not read_only:
+            # Compare-and-swap: never clobber another acknowledgement/recovery.
+            query = urlencode({'run_id': 'eq.' + row['run_id'], 'status': 'eq.' + row['status'],
+                               'details': ('is.null' if row.get('details') is None else
+                                           'eq.' + json.dumps(row['details'], separators=(',', ':')))})
+            changed = transport('PATCH', f'{base}/rest/v1/run_status?{query}',
+                                {**headers, 'Prefer':'return=representation'},
+                                {'details': {**details, 'ops_failure_resolution': recovery}})
+            if not isinstance(changed, list) or len(changed) != 1:
+                raise RuntimeError('Recovery receipt changed concurrently; retry on next ops check')
+        print('OPS_MORNING_FAILURE verified later input/price recovery; no Telegram alert')
         return False
     if details.get('ops_failure_notified_at'):
         print('OPS_MORNING_FAILURE already notified')

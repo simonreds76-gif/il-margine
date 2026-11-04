@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from football_identity import write, read
 from football_identity_research import lookup, SUPPLEMENT, REVIEWS
-from keeper_feed_comparison import compare, append_record, count, digest, team_matches
+from keeper_feed_comparison import compare, append_record, count, digest, team_matches, apply_reviewed_counts
 from keeper_feed_store import merge as merge_private, persist as persist_private, local as local_private, FIELD
 
 spec = importlib.util.spec_from_file_location('collector', ROOT / 'scripts/compare-keeper-feeds.py')
@@ -83,6 +83,47 @@ class KeeperComparisonTest(unittest.TestCase):
         r = self.result()
         self.assertIn('home:goal_team_saves_missing_or_conflicting', r['flags'])
         self.assertIn('reference_event_conflict', r['keepers'][0]['flags'])
+
+    def reviewed_conflict(self):
+        p=self.ref['keepers'][0]
+        p.update(target_conflict=True, event_saves=2, started=True)
+        self.config['reviewed_published_counts']=[{
+            'scope':'source_comparison_only','match_id':'1','player_id':'10','team_id':'h','league_id':'47',
+            'kickoff':self.ref['kickoff'],'reference_sha256':'ref','goal_player_id':'g10','espn_player_id':'e10',
+            'published_saves':3,'event_saves':2,'source_urls':['https://one.example','https://two.example'],
+            'reviewed_at':'2026-11-03T12:00:00Z','reason':'Published totals corroborated; event discrepancy retained.'}]
+
+    def test_exact_review_retains_event_discrepancy_without_mutating_history(self):
+        self.reviewed_conflict(); before=copy.deepcopy(self.ref)
+        r=self.result()
+        self.assertEqual(r['status'],'reviewed_agreement')
+        self.assertEqual(r['keepers'][0]['event_evidence']['event_saves'],2)
+        self.assertEqual(r['keepers'][0]['event_evidence']['original_flag'],'reference_event_conflict')
+        self.assertEqual(self.ref,before)
+        archive={}; old=copy.deepcopy(r); old['status']='quarantined';old['keepers'][0]['flags']=['reference_event_conflict']
+        append_record(archive,old);append_record(archive,r)
+        self.assertEqual(len(archive['fixtures']['1']),2)
+
+    def test_review_must_match_exact_identity_counts_scope_and_source_revision(self):
+        self.reviewed_conflict(); original=copy.deepcopy(self.config['reviewed_published_counts'][0])
+        for field,value in [('match_id','2'),('player_id','20'),('team_id','wrong'),('league_id','wrong'),
+                            ('kickoff','2026-11-02T16:00:00Z'),('reference_sha256','changed'),
+                            ('goal_player_id','wrong'),('espn_player_id','wrong'),('published_saves',4),
+                            ('event_saves',1),('scope','model_training'),('source_urls',[]),
+                            ('reviewed_at','2099-01-01T00:00:00Z')]:
+            with self.subTest(field=field):
+                self.config['reviewed_published_counts']=[{**original,field:value}]
+                self.assertEqual(self.result()['status'],'quarantined')
+
+    def test_review_does_not_release_provider_disagreement_or_team_conflict(self):
+        self.reviewed_conflict();self.gs['data']['players']['home'][0]['saves']='4'
+        self.assertEqual(self.result()['status'],'quarantined')
+        self.gs['data']['players']['home'][0]['saves']='3'
+        self.gs['data']['match']['fullTime'][0]['away']='9'
+        self.assertEqual(self.result()['status'],'quarantined')
+        self.gs['data']['match']['fullTime'][0]['away']='2'
+        self.ref['keepers'][0]['minutes']=45
+        self.assertEqual(self.result()['status'],'quarantined')
 
     def test_substitute_keeper_is_not_assigned_to_starter(self):
         self.gs['data']['players']['home'].append({'fixtureId': 'G1', 'playerId': 'sub', 'playerName': 'Sub Keeper', 'playerPosition': 'Goalkeepers', 'minutesPlayed': '20', 'saves': '1'})

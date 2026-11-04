@@ -104,7 +104,7 @@ def report(archive, state, config, now, requests_used, receipts, considered):
     latest = [v[-1] for v in archive.get('fixtures', {}).values()]
     keepers = [r for f in latest for r in f['keepers']]
     paired = [r for r in keepers if all(v is not None for v in r['saves'].values())]
-    unresolved = {k: v for k, v in state.items() if v['status'] not in ('agreement', 'quarantined')}
+    unresolved = {k: v for k, v in state.items() if v['status'] not in ('agreement', 'reviewed_agreement', 'quarantined')}
     return {'schema_version': 1, 'generated_at': now, 'purpose': 'private data agreement, not betting performance',
             'models_unchanged': True, 'fixtures': len(latest), 'keepers': len(keepers),
             'fixture_status': dict(Counter(f['status'] for f in latest)),
@@ -112,9 +112,10 @@ def report(archive, state, config, now, requests_used, receipts, considered):
             'cohorts': dict(Counter(f['cohort'] for f in latest)),
             'paired_saves': len(paired), 'saves_all_three_equal': sum(len(set(r['saves'].values())) == 1 for r in paired),
             'quarantine_flags': dict(Counter(reason for f in latest for reason in f['flags'] + [r for k in f['keepers'] for r in k['flags']])),
+            'reviewed_event_discrepancies': sum(bool(k.get('published_count_review')) for k in keepers),
             'unresolved': unresolved, 'requests': dict(requests_used), 'request_receipts': receipts,
             'considered_this_run': considered, 'latest_fixture_kickoff': max((f['kickoff'] for f in latest), default=None),
-            'status': 'attention_required' if unresolved else ('quarantines_present' if any(f['status'] != 'agreement' for f in latest) else 'agreement'),
+            'status': 'attention_required' if unresolved else ('quarantines_present' if any(f['status'] == 'quarantined' for f in latest) else 'agreement'),
             'limitations': ['No independent ground truth established by source agreement.',
                             'GOAL minutes diagnostic only; ESPN shotsFaced rejected; claims/xG unavailable.',
                             'No forecasts, stakes, alerts, historical settlements or model inputs modified.']}
@@ -145,7 +146,7 @@ def run(root, config, replay=None, output=None, max_matches=None, fixture_ids=No
         ids = [mid for mid, r in refs.items() if str(r['league_id']) in config['leagues'] and cutoff <= instant(r['kickoff']) <= now - timedelta(hours=2)]
         # Unchecked fixtures first; successful old checks wait for a source revision.
         ids = [mid for mid in ids if state.get(mid, {}).get('reference_hash') != refs[mid]['source_sha256'] or
-               state.get(mid, {}).get('status') != 'agreement' or instant(refs[mid]['kickoff']) > now-timedelta(days=2)]
+               state.get(mid, {}).get('status') not in ('agreement', 'reviewed_agreement') or instant(refs[mid]['kickoff']) > now-timedelta(days=2)]
         ids.sort(key=lambda mid: (state.get(mid, {}).get('checked_at', ''), refs[mid]['kickoff']))
     if fixture_ids:
         ids = [str(mid) for mid in fixture_ids]

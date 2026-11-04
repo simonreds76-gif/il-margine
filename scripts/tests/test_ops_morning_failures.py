@@ -66,7 +66,7 @@ class VerifiedRecoveryTests(unittest.TestCase):
                'details': {'ops_failure_notified_at': 'already', 'ops_failure_resolution': receipt}}
         transport = Mock(return_value=[row])
         result = check_morning_failure(ENV, transport)
-        self.assertEqual(transport.call_count, 1)
+        self.assertEqual(transport.call_count, 2 if row['error_type'] == 'TennisPropsRefreshFailed' else 1)
         return result
     def test_verified_recovery_clears_alert_without_writing_or_sending(self):
         self.assertFalse(self.check(self.receipt()))
