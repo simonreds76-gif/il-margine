@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-04T17:31:32Z",
+  "generated_at": "2026-11-04T22:52:40Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -44,7 +44,8 @@
       "blocked_rows": 4,
       "blocker_rows": {
         "edge_below_3pct": 3,
-        "price_not_fresh_10m": 4
+        "price_not_fresh_10m": 4,
+        "price_older_than_3h": 4
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 11,
@@ -63,7 +64,7 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-04T17:31:22Z",
+      "generated_at": "2026-11-04T22:52:30Z",
       "status": "OK",
       "missing_history": [],
       "scored_fixtures": 1
@@ -115,7 +116,7 @@
       "blocker_rows": {
         "edge_below_3pct": 512,
         "price_not_fresh_10m": 602,
-        "price_older_than_3h": 58
+        "price_older_than_3h": 602
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 9,
