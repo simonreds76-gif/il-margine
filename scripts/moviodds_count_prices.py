@@ -15,7 +15,7 @@ _attempted = False
 
 def capture_and_merge(payload, targets, *, now=None, get=None, raw_path=RAW):
     global _board, _attempted
-    receipt = dict(source='moviodds_bet365',requests=0,errors=[],team_shots_quotes=0,corners_quotes=0)
+    receipt = dict(source='moviodds_bet365',source_site='com',requests=0,errors=[],team_shots_quotes=0,corners_quotes=0)
     if not targets or not source.enabled('soccer'):
         receipt['status']='NO_TARGETS' if not targets else 'DISABLED'
         return payload, receipt

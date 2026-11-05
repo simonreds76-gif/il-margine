@@ -74,11 +74,20 @@ class GoalkeeperRegions(unittest.TestCase):
         self.assertEqual(receipt['status'], 'SOURCE_FAILED')
         self.assertEqual(get.call_count, 1)
 
-    def test_other_collectors_keep_their_existing_region(self):
+    def test_every_shared_collector_explicitly_requests_com(self):
         for sport in ('soccer', 'tennis'):
-            get = Mock(return_value=self.response(self.raw['com.au']))
+            get = Mock(return_value=self.response(self.raw['com']))
             source.download(sport, get=get)
-            self.assertNotIn('site', get.call_args.kwargs['params'])
+            self.assertEqual(get.call_args.kwargs['params']['site'], 'com')
+            get = Mock(return_value=self.response(self.raw['com.au']))
+            with self.assertRaises(ValueError):
+                source.download(sport, get=get)
+
+    def test_count_market_group_filter_uses_same_verified_region(self):
+        get = Mock(return_value=self.response(self.raw['com']))
+        source.download('soccer', get=get, groups={'50532':(), '10235':()})
+        self.assertEqual(get.call_args.kwargs['params'],
+                         {'sport':'soccer','groups':'50532,10235','links':'1','site':'com'})
 
     def test_fixture_heartbeat_cannot_revive_missing_or_stale_gk_market(self):
         au = self.raw['com.au']

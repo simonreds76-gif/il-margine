@@ -57,7 +57,7 @@ def enabled(sport):
     return cfg.get('direct_moviodds', {}).get(sport, False)
 
 
-def download(sport, get=None, groups=None, *, site=None):
+def download(sport, get=None, groups=None, *, site='com'):
     # Requests transparently decompresses gzip; cap decompressed bytes too.
     # One request, no retry loop, no account key and no browser bypass.
     params = {'sport': sport, 'groups': ','.join(groups or GROUPS[sport]), 'links': '1'}
@@ -354,7 +354,7 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
     return output, dict(skipped)
 
 
-def capture(sport, *, targets=(), days_ahead=3, get=None, raw_path=None, force=False, site=None):
+def capture(sport, *, targets=(), days_ahead=3, get=None, raw_path=None, force=False, site='com'):
     receipt = {'source': 'moviodds_bet365', 'source_site': site or 'com.au',
                'status': 'DISABLED', 'requests': 0, 'market_count': 0, 'errors': []}
     if not force and not enabled(sport):
@@ -386,9 +386,9 @@ def capture(sport, *, targets=(), days_ahead=3, get=None, raw_path=None, force=F
 
 
 def merge_football(payload, targets, *, days_ahead=7, **kwargs):
-    # This is the GK collector's route. The default Australian board can omit
-    # player saves that are already priced on Bet365.com. Keep other callers'
-    # regional selections unchanged; do not combine regions or relax freshness.
+    # Pin the GK route as well as the shared default. The Australian board can
+    # omit markets already priced on Bet365.com; never mix regions or relax
+    # the market-specific freshness guard.
     events, receipt = capture('soccer', targets=targets, days_ahead=days_ahead, site='com', **kwargs)
     # Retain existing books. If another route supplies Bet365 for the same event,
     # retain that whole book instead of mixing timestamps/contracts or duplicating.
