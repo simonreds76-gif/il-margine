@@ -41,3 +41,7 @@
 }
 
 /* Shared research presentation. Data and selection behaviour are unchanged. */
+/* Long club names must not expand either column on narrow phones. */
+.aerial-teams{grid-template-columns:repeat(2,minmax(0,1fr))}
+.aerial-teams>div{min-width:0}
+.aerial-teams .aerial-team-name strong{min-width:0;overflow-wrap:anywhere}
