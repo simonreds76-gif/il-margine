@@ -433,6 +433,9 @@ function Post-Alert([string]$message) {
 }
 
 function Invoke-RuntimeWatchdog {
+    # No notifications here: classify interrupted runs before cloud orphan cleanup.
+    & python scripts/tennis_host_interruption.py | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) { Log "WARNING: restart reconciliation needs attention." }
     try {
         $runtimeRaw = & python scripts/tennis_runtime_health.py check --json
         $runtimeExit = $LASTEXITCODE

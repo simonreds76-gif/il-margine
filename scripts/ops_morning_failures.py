@@ -137,7 +137,9 @@ def failure_message(row):
     atlas = row.get('error_type') in ('ReturnAtlasRefreshFailed', 'ReturnAtlasAuthRequired')
     name = 'On-demand tennis refresh' if row.get('trigger_kind') == 'manual' else 'Tennis refresh'
     message = 'Tennis: Return Atlas publication failed.\n' if atlas else name + ' incomplete.\n'
-    if row.get('error_type') == 'ReturnAtlasAuthRequired':
+    if row.get('error_type') == 'HostRestartInterrupted':
+        message += 'Windows restarted while the refresh was running. The unfinished stages need recovery; this was not a model-calculation timeout.\n'
+    elif row.get('error_type') == 'ReturnAtlasAuthRequired':
         message += 'Vercel CLI sign-in is required on the publishing PC. Retry publication only; do not rerun pricing or betting alerts.\n'
     elif atlas:
         message += 'Return Atlas could not complete its validated update. Check the publisher status before retrying publication.\n'

@@ -11,6 +11,7 @@ class RuntimeHealthTests(unittest.TestCase):
  def setUp(self):
   self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.root=Path(self.tmp.name)
   self.now=datetime(2026,11,2,tzinfo=timezone.utc)
+  boot=patch('tennis_host_interruption.boot_time',return_value=None);boot.start();self.addCleanup(boot.stop)
  def begin(self,label='Current board',**kw):return M.begin(self.root,label,'board.py',10,now=self.now,**kw)
  def test_success_records_last_success_and_duration(self):
   t=self.begin();M.finish(self.root,t,0,now=self.now+timedelta(seconds=4))

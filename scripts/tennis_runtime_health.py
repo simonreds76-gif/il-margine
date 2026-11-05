@@ -102,6 +102,8 @@ def observed_run(cmd, *, root, label, timeout=None, **kwargs):
 
 def summary(root=ROOT, *, now=None, run_id=None):
     now = now or utc()
+    from tennis_host_interruption import boot_time, interrupted
+    boot = boot_time()
     steps, issues, near, research_issues, source_issues = [], [], [], [], []
     from tennis_step_scope import research_only, retired_source
     for path in sorted((root / REL).glob('*.json')):
@@ -112,13 +114,15 @@ def summary(root=ROOT, *, now=None, run_id=None):
             state = row['status']
             if state not in {'OK','FAILED','TIMED_OUT','RUNNING'}:
                 raise ValueError('Unknown receipt state')
-            if state == 'RUNNING' and now > stamp(row['deadline']) + timedelta(seconds=30):
+            if interrupted(row, boot, now):
+                state = 'HOST_RESTART_INTERRUPTED'
+            elif state == 'RUNNING' and now > stamp(row['deadline']) + timedelta(seconds=30):
                 state = 'DEADLINE_EXCEEDED'
             item = {k: row.get(k) for k in ('step_id','label','script','run_id','started_at','deadline',
                     'finished_at','duration_seconds','timeout_seconds','last_success_at')}
             item['status'] = state
             steps.append(item)
-            if state in {'FAILED','TIMED_OUT','DEADLINE_EXCEEDED'} or row.get('unresolved_failure'):
+            if state in {'FAILED','TIMED_OUT','DEADLINE_EXCEEDED','HOST_RESTART_INTERRUPTED'} or row.get('unresolved_failure'):
                 item = dict(item, issue=state if state != 'RUNNING' else 'RETRYING_AFTER_FAILURE')
                 (research_issues if research_only(item) else source_issues if retired_source(item) else issues).append(item)
             if row.get('near_budget'):

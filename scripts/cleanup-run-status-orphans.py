@@ -87,8 +87,9 @@ def build_hard_timeout_payload(row: dict[str, Any]) -> dict[str, Any]:
     cleaned_at = datetime.now(timezone.utc).isoformat()
     limit = hard_timeout_seconds(row)
     message = (
-        "Marked timeout by cleanup-run-status-orphans because the laptop run "
-        f"exceeded its scheduler limit plus safety buffer ({limit}s)."
+        "No completion receipt was received within the laptop run's "
+        f"scheduler limit plus safety buffer ({limit}s). The elapsed time does "
+        "not establish the cause; inspect local runtime and restart evidence."
     )
     return {
         "message": message,

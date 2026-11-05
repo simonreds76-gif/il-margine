@@ -162,7 +162,7 @@ $refreshStartedAt = (Get-Date).ToUniversalTime().ToString("o")
 $refreshId = [guid]::NewGuid().ToString()
 $refreshDate = [datetime]::UtcNow.ToString("yyyy-MM-dd")
 $env:TENNIS_REFRESH_STARTED_AT = $refreshStartedAt
-$env:TENNIS_RUNTIME_RUN_ID = [guid]::NewGuid().ToString()
+$env:TENNIS_RUNTIME_RUN_ID = $runStatus.RunId
 $runStatusFinal = "failed"
 $runStatusErrorRecord = $null
 $runStatusErrorType = $null
@@ -170,6 +170,9 @@ $runStatusErrorMessage = $null
 $privateSnapshotAttempted = $false
 
 try {
+    # Reconcile a previous boot before new attempts replace its step receipts.
+    & python scripts/tennis_host_interruption.py | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) { Log "WARNING: restart reconciliation needs attention; refresh continues." }
     $sourceDatabase = Get-Item -LiteralPath "C:\Program Files (x86)\OnCourt\OnCourt.mdb" -ErrorAction Stop
     $sourceDatabaseUpdatedAt = $sourceDatabase.LastWriteTimeUtc.ToString("o")
     Log "============================================"
