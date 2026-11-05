@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-05T16:51:46Z",
+  "generated_at": "2026-11-05T17:59:06.367116+00:00",
   "league": "ligue-1",
   "row_count": 4,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2992563005",
           "match_id": "5802975",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802975",
-          "observed_at": "2026-11-05T16:51:42+00:00",
+          "observed_at": "2026-11-05T17:59:09+00:00",
           "event_date": "2026-11-02",
           "season": "2026/27",
           "team": "Lorient",
@@ -117,7 +117,7 @@
           "source_event_id": "2991669859",
           "match_id": "5802980",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802980",
-          "observed_at": "2026-11-05T16:51:42+00:00",
+          "observed_at": "2026-11-05T17:59:08+00:00",
           "event_date": "2026-11-01",
           "season": "2026/27",
           "team": "Strasbourg",
@@ -372,5 +372,13 @@
       "20261105"
     ],
     "matches_checked": 9
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261102"
+    ],
+    "matches_checked": 1
   }
 }
