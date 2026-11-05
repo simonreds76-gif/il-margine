@@ -904,10 +904,17 @@ def main() -> None:
             print(f"WARNING: break-point evidence capture needs review: {type(exc).__name__}")
     if not args.dry_run:
         try:
-            from tennis_match_shape_collect import capture_shared as refresh_match_shape
-            refresh_match_shape(ROOT, receipt=direct_receipt or {})
+            if os.environ.get('GITHUB_ACTIONS') == 'true':
+                from tennis_match_shape_quotes import capture_quotes
+                health = capture_quotes(ROOT, direct_receipt or {})
+                print('Match Shape cloud quotes: ' + json.dumps(health, sort_keys=True))
+            else:
+                from tennis_match_shape_collect import capture_shared as refresh_match_shape
+                refresh_match_shape(ROOT, receipt=direct_receipt or {})
         except Exception as exc:
-            print(f"WARNING: Match Shape paper capture needs review: {type(exc).__name__}")
+            print(f"WARNING: Match Shape capture failed: {type(exc).__name__}; missing_module={getattr(exc, 'name', None)}")
+            if os.environ.get('GITHUB_ACTIONS') == 'true':
+                raise
     audited_event_ids: set[str] = set()
     for event in payload:
         try:

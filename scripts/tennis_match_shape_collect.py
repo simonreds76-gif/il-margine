@@ -14,31 +14,7 @@ from tennis_match_shape import RELATIVE, parse_receipt, refresh, digest, immutab
 from tennis_match_shape_prepare import prepare, readiness
 
 
-def collect(get=requests.get, max_events=4):
-    now=datetime.now(timezone.utc);began=time.monotonic()
-    receipt=dict(source=BASE,bookmaker='Grosvenor',captured_at=now.isoformat(),requests=0,events=[],errors=[],
-                 collector_sha256=sha256(Path(__file__).read_bytes()).hexdigest(),scope='ATP games paper fallback')
-    def fetch(path):
-        receipt['requests']+=1
-        response=get(f'{BASE}/{path}.json',params=PARAMS,timeout=8)
-        response.raise_for_status()
-        return response.json()
-    try:
-        catalogue=fetch('listView/tennis/all/all/all/matches')
-        events=[i['event'] for i in catalogue.get('events',[]) if eligible(i.get('event',{}),now)
-                and any(p.get('termKey')=='atp' for p in i['event'].get('path',[]))]
-        events=sorted({e['id']:e for e in events}.values(),key=lambda e:(e['start'],e['id']))
-        receipt['eligible_atp_events']=len(events)
-        for event in events[:min(4,max(0,max_events))]:
-            if time.monotonic()-began>35:receipt['errors'].append('wall_budget');break
-            try:
-                payload=fetch(f"betoffer/event/{event['id']}")
-                receipt['events'].append(dict(requested_id=event['id'],captured_at=datetime.now(timezone.utc).isoformat(),payload=payload))
-            except (requests.RequestException,ValueError,KeyError,TypeError) as exc:
-                receipt['errors'].append(f"{event['id']}:{type(exc).__name__}")
-    except (requests.RequestException,ValueError,KeyError,TypeError) as exc:
-        receipt['errors'].append(f'catalogue:{type(exc).__name__}')
-    return receipt
+from tennis_match_shape_quotes import collect
 
 
 def capture_shared(root,receipt):

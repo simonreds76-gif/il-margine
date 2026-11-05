@@ -115,6 +115,38 @@ def merge_history(local_path: Path, remote_content: bytes) -> int:
     return added
 
 
+def sync_match_shape_quotes(remote_ref, target_date, lookback_days):
+    """Import exact immutable cloud observations; never manufacture forecasts."""
+    from tennis_match_shape_quotes import RELATIVE, digest
+    prefix=str(RELATIVE/'cloud-quotes').replace('\\','/')
+    result=git_command(['ls-tree','-r','--name-only',remote_ref,'--',prefix])
+    if result.returncode:raise RuntimeError('match_shape_cloud_listing_failed')
+    days={(target_date-timedelta(days=n)).isoformat() for n in range(min(7,max(0,lookback_days))+1)}
+    paths=[p for p in result.stdout.decode().splitlines() if len(Path(p).parts)==6 and Path(p).parts[-2] in days and Path(p).suffix=='.json']
+    if len(paths)>128:raise RuntimeError('match_shape_cloud_quote_budget_exceeded')
+    added=0
+    for relative in sorted(paths):
+        raw=remote_blob(remote_ref,relative)
+        if not raw or len(raw)>8*1024*1024:raise ValueError('invalid_match_shape_cloud_packet_size')
+        packet=json.loads(raw)
+        if digest(packet)!=Path(relative).stem or not isinstance(packet.get('events'),list):raise ValueError('invalid_match_shape_cloud_packet_hash')
+        dest=ROOT/RELATIVE/'quote-evidence'/Path(relative).name
+        if dest.exists():
+            if json.loads(dest.read_text(encoding='utf-8'))!=packet:raise ValueError('immutable_match_shape_quote_conflict')
+            continue
+        dest.parent.mkdir(parents=True,exist_ok=True)
+        with dest.open('xb') as stream:stream.write(raw)
+        added+=1
+    status=remote_blob(remote_ref,str(RELATIVE/'cloud-capture-status.json').replace('\\','/'))
+    if status:
+        value=json.loads(status)
+        if value.get('forecasts_created')!=0 or value.get('settlements_created')!=0:raise ValueError('invalid_cloud_execution_scope')
+        old=ROOT/RELATIVE/'cloud-capture-status.json'
+        previous=json.loads(old.read_text()) if old.exists() else {}
+        if value.get('checked_at','')>previous.get('checked_at',''):write_bytes(old,status)
+    return {'imported_packets':added,'available_packets':len(paths)}
+
+
 def synchronize(
     as_of: str,
     *,
@@ -161,7 +193,9 @@ def synchronize(
             if added:
                 copied.append(relative)
 
+    shape_sync = sync_match_shape_quotes(remote_ref, target_date, lookback_days)
     return {
+        "match_shape": shape_sync,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "as_of": as_of,
         "remote_ref": remote_ref,

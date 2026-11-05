@@ -58,6 +58,9 @@ jobs:
       - name: Install Python deps
         run: pip install requests
 
+      - name: Verify lightweight Match Shape capture contract
+        run: python -m unittest scripts.tests.test_match_shape_cloud
+
       - name: Create .env.local
         run: |
           : > .env.local
@@ -136,6 +139,8 @@ jobs:
             data/tennis-props/inbox/betmgm-most-aces-history-*.csv
             data/tennis-props/inbox/betmgm-tennis-market-audit-*.csv
             data/tennis-props/inbox/bet365-price-shape-probe-*.json
+            data/tennis-ml-research/match-shape-v1/cloud-quotes/
+            data/tennis-ml-research/match-shape-v1/cloud-capture-status.json
           if-no-files-found: warn
 
       - name: Commit captured odds
@@ -151,6 +156,9 @@ jobs:
           git add -f "data/tennis-props/inbox/betmgm-most-aces-1x2-${TODAY}.csv" || true
           git add -f "data/tennis-props/inbox/betmgm-most-aces-history-${MONTH}.csv" || true
           git add -f "data/tennis-props/inbox/betmgm-tennis-market-audit-${TODAY}.csv" || true
+          for path in data/tennis-ml-research/match-shape-v1/cloud-quotes data/tennis-ml-research/match-shape-v1/cloud-capture-status.json; do
+            if [ -e "$path" ]; then git add -f "$path"; fi
+          done
           if git diff --cached --quiet; then
             echo "No tennis props odds changes to commit."
             exit 0
