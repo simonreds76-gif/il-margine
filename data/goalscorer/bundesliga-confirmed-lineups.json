@@ -310,7 +310,7 @@
         "Nicolas-Gerrit Kühn",
         "Tim Kleindienst"
       ],
-      "observed_at": "2026-11-05T18:00:46.130449+00:00",
+      "observed_at": "2026-11-05T23:38:14.266842+00:00",
       "changed_at": "2026-11-05T15:00:13.543524+00:00"
     },
     {
@@ -614,7 +614,7 @@
         "Noah Darvich",
         "Tom Zimmerschied"
       ],
-      "observed_at": "2026-11-05T18:00:46.130449+00:00",
+      "observed_at": "2026-11-05T23:38:14.266842+00:00",
       "changed_at": "2026-11-04T17:59:27.725311+00:00"
     },
     {
@@ -921,7 +921,7 @@
         "Serge Gnabry",
         "Luis Díaz"
       ],
-      "observed_at": "2026-11-05T18:00:46.130449+00:00",
+      "observed_at": "2026-11-05T23:38:14.266842+00:00",
       "changed_at": "2026-11-04T17:59:27.725311+00:00"
     },
     {
@@ -1226,7 +1226,7 @@
         "Mario Götze",
         "Jessic Ngankam"
       ],
-      "observed_at": "2026-11-05T18:00:46.130449+00:00",
+      "observed_at": "2026-11-05T23:38:14.266842+00:00",
       "changed_at": "2026-11-04T17:59:27.725311+00:00"
     },
     {
@@ -1534,7 +1534,7 @@
         "Tim Breithaupt",
         "Steve Mounié"
       ],
-      "observed_at": "2026-11-05T18:00:46.130449+00:00",
+      "observed_at": "2026-11-05T23:38:14.266842+00:00",
       "changed_at": "2026-11-04T17:59:27.725311+00:00"
     },
     {
@@ -1845,7 +1845,7 @@
         "Paul Erevbenagie",
         "Salim Musah"
       ],
-      "observed_at": "2026-11-05T18:00:46.130449+00:00",
+      "observed_at": "2026-11-05T23:38:14.266842+00:00",
       "changed_at": "2026-11-05T15:00:13.543524+00:00"
     },
     {
@@ -2155,7 +2155,7 @@
         "Nathan Tella",
         "Christian Kofane"
       ],
-      "observed_at": "2026-11-05T18:00:46.130449+00:00",
+      "observed_at": "2026-11-05T23:38:14.266842+00:00",
       "changed_at": "2026-11-05T18:00:46.130449+00:00"
     },
     {
@@ -2460,26 +2460,322 @@
         "Robert Skov",
         "Stanley N'Soki"
       ],
-      "observed_at": "2026-11-05T18:00:46.130449+00:00",
+      "observed_at": "2026-11-05T23:38:14.266842+00:00",
       "changed_at": "2026-11-05T18:00:46.130449+00:00"
     },
     {
       "fotmob_match_id": 5881219,
+      "fotmob_page_url": "/matches/hoffenheim-vs-schalke-04/2syjsa#5881219",
+      "home_fotmob_team_id": 8226,
+      "away_fotmob_team_id": 10189,
       "match_date": "2026-11-08",
       "kickoff_utc": "2026-11-08T18:30:00Z",
       "home_team": "Hoffenheim",
       "away_team": "Schalke 04",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-5-2",
+      "away_formation": "4-3-2-1",
+      "home_players": [
+        "Oliver Baumann",
+        "Ozan Kabak",
+        "Koki Machida",
+        "Mats Rots",
+        "Natnael Abraha",
+        "Andrej Kramarić",
+        "Leon Avdullahu",
+        "Wouter Burger",
+        "Adam Daghim",
+        "Adam Hložek",
+        "Fisnik Asllani"
+      ],
+      "away_players": [
+        "Loris Karius",
+        "Timo Becker",
+        "Nikola Katić",
+        "Hasan Kuruçay",
+        "Vitalie Becker",
+        "Satoshi Tanaka",
+        "Mertcan Ayhan",
+        "Adil Aouchiche",
+        "Chukwubuike Adamu",
+        "Kenan Karaman",
+        "Hee-Chan Hwang"
+      ],
+      "home_starters": [
+        {
+          "name": "Oliver Baumann",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-5-2",
+          "position_id": 11,
+          "player_id": 178778,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Ozan Kabak",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 33,
+          "player_id": 845990,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Koki Machida",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 35,
+          "player_id": 727817,
+          "shirt_number": "28"
+        },
+        {
+          "name": "Mats Rots",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 37,
+          "player_id": 1445416,
+          "shirt_number": "39"
+        },
+        {
+          "name": "Natnael Abraha",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 71,
+          "player_id": 1899713,
+          "shirt_number": "29"
+        },
+        {
+          "name": "Andrej Kramarić",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 73,
+          "player_id": 173461,
+          "shirt_number": "27"
+        },
+        {
+          "name": "Leon Avdullahu",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 75,
+          "player_id": 1478148,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Wouter Burger",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 77,
+          "player_id": 947884,
+          "shirt_number": "18"
+        },
+        {
+          "name": "Adam Daghim",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79,
+          "player_id": 1353000,
+          "shirt_number": "14"
+        },
+        {
+          "name": "Adam Hložek",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 104,
+          "player_id": 969870,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Fisnik Asllani",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 106,
+          "player_id": 1219540,
+          "shirt_number": "11"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Loris Karius",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-3-2-1",
+          "position_id": 11,
+          "player_id": 287894,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Timo Becker",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-2-1",
+          "position_id": 32,
+          "player_id": 785739,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Nikola Katić",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-2-1",
+          "position_id": 34,
+          "player_id": 725655,
+          "shirt_number": "25"
+        },
+        {
+          "name": "Hasan Kuruçay",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-2-1",
+          "position_id": 36,
+          "player_id": 794619,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Vitalie Becker",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-2-1",
+          "position_id": 38,
+          "player_id": 1659420,
+          "shirt_number": "33"
+        },
+        {
+          "name": "Satoshi Tanaka",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-2-1",
+          "position_id": 63,
+          "player_id": 1155066,
+          "shirt_number": "13"
+        },
+        {
+          "name": "Mertcan Ayhan",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-2-1",
+          "position_id": 65,
+          "player_id": 1755657,
+          "shirt_number": "43"
+        },
+        {
+          "name": "Adil Aouchiche",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-2-1",
+          "position_id": 67,
+          "player_id": 1047664,
+          "shirt_number": "24"
+        },
+        {
+          "name": "Chukwubuike Adamu",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-3-2-1",
+          "position_id": 84,
+          "player_id": 882163,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Kenan Karaman",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-3-2-1",
+          "position_id": 86,
+          "player_id": 469763,
+          "shirt_number": "19"
+        },
+        {
+          "name": "Hee-Chan Hwang",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-2-1",
+          "position_id": 115,
+          "player_id": 620026,
+          "shirt_number": "7"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-11-05T18:00:46.130449+00:00",
-      "changed_at": "2026-11-05T15:00:13.543524+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Max Moerstedt",
+        "Albian Hajdari",
+        "Robin Hranác",
+        "Valentin Gendrey",
+        "Vladimír Coufal",
+        "Bambasé Conté",
+        "Nathan De Cat",
+        "Patrick Wimmer"
+      ],
+      "away_unavailable": [
+        "Junior Dina Ebimbe",
+        "Luca Vozar",
+        "Robin Gosens",
+        "Soufian El-Faouzi",
+        "Moussa Sylla",
+        "Ayman Gülasi",
+        "Maximilian Wöber",
+        "Ron Schallenberg",
+        "Janik Bachmann"
+      ],
+      "observed_at": "2026-11-05T23:38:14.266842+00:00",
+      "changed_at": "2026-11-05T23:38:14.266842+00:00"
     }
   ]
 }
