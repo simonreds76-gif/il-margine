@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 from unittest.mock import Mock, patch
 import argparse
 import runpy
+import os
+import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import tennis_runtime_health as runtime
@@ -72,6 +74,37 @@ class ScopeTests(unittest.TestCase):
             self.assertEqual(fn(args), 0)
         self.assertTrue(any('tennis-props-scrape-bet365.py' in str(cmd) for cmd in called))
         self.assertFalse(any('tennis-props-scrape-bet365-direct.py' in str(cmd) for cmd in called))
+
+    def derived_refresh(self, failing):
+        module = runpy.run_path(str(Path(__file__).resolve().parents[1] / 'run-tennis-props-daily.py'))
+        fn = module['refresh_current_most_aces']; globals_ = fn.__globals__
+        outputs = {'tennis-props-v3-live.py':'aces-v3-projection-board.csv',
+                   'build-tennis-most-aces-board.py':'most-aces-1x2-board.csv',
+                   'tennis-most-aces-direct-live.py':'most-aces-direct-1x2-board.csv'}
+        shadow = self.root/'shadow'; shadow.mkdir()
+        calls = []
+        def fake_run(cmd, label, **kw):
+            script = Path(cmd[1]).name; calls.append(script)
+            if script in outputs:
+                target = shadow/outputs[script]; target.write_text('current')
+                os.utime(target, (time.time()+1, time.time()+1))
+            return int(script == failing)
+        with patch.dict(globals_, {'run':fake_run,'ROOT':self.root,'PROPS_DIR':self.root,
+                                   'most_aces_suspended':lambda:False,'verify_derived_board':Mock()}), \
+                patch('tennis_pairing_consistency.clear_empty_derived_scope',return_value=False):
+            result = fn('2026-11-05')
+        return result, calls
+
+    def test_direct_failure_does_not_invalidate_count_and_clears_stale_direct(self):
+        result, calls = self.derived_refresh('tennis-most-aces-direct-live.py')
+        self.assertTrue(result)
+        self.assertIn('tennis_most_aces_current.py', calls)
+        self.assertEqual((self.root/'shadow/most-aces-direct-1x2-board.csv').read_text(), '')
+
+    def test_count_failure_still_blocks_and_never_registers_stale_prices(self):
+        result, calls = self.derived_refresh('build-tennis-most-aces-board.py')
+        self.assertFalse(result)
+        self.assertNotIn('tennis_most_aces_current.py', calls)
 
 
 class AlertTests(unittest.TestCase):

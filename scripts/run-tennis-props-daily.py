@@ -204,7 +204,8 @@ def refresh_current_most_aces(as_of: str, *, register: bool = True) -> bool:
                 # Clear its current board so stale rows cannot be registered.
                 target.write_text('', encoding='utf-8')
                 print('WARNING: Direct research refresh failed; Count paper comparison continues.')
-                complete = False
+                # Direct's own report and runtime warning retain the blocker.
+                # It cannot invalidate an independently verified Count board.
                 continue
             (PROPS_DIR / 'shadow/most-aces-current.json').write_text(json.dumps({
                 'generated_at': datetime.now(timezone.utc).isoformat(), 'status': 'REFRESH_FAILED',
