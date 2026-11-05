@@ -3159,16 +3159,69 @@
       },
       "message_id": 746,
       "sent_at": "2026-11-01T09:46:08.143904+00:00"
+    },
+    "grosvenor|71945404|maduka okoye|3.5|over": {
+      "status": "claimed",
+      "run_token": "42124905378:1",
+      "claimed_at": "2026-11-05T22:52:10.173354+00:00",
+      "signal": {
+        "signal_id": "grosvenor|71945404|maduka okoye|3.5|over",
+        "created_at": "2026-11-05T22:51:35Z",
+        "event_id": "71945404",
+        "match_date": "2026-11-06",
+        "kickoff_at": "2026-11-06T19:45:00Z",
+        "league": "serie-a",
+        "home_team": "Venezia FC",
+        "away_team": "Udinese Calcio",
+        "team": "Udinese Calcio",
+        "opponent": "Venezia FC",
+        "venue": "away",
+        "goalkeeper": "Maduka Okoye",
+        "bookmaker": "Grosvenor",
+        "line": "3.5",
+        "side": "over",
+        "odds_decimal": "2.0500",
+        "model_mean": "3.9099",
+        "model_probability": "0.527967",
+        "push_probability": "0.000000",
+        "fair_odds": "1.894",
+        "edge": "0.082333",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-11-05T22:51:29+00:00",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "team_goalkeeper_away",
+        "identity_basis": "same_fixture_lineup_side",
+        "price_comparison": [
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 2.05,
+            "captured_at": "2026-11-05T22:51:29+00:00",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-11-05T22:52:10.173354+00:00"
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-11-05T17:38:56.855057+00:00",
-      "added": 0,
+      "checked_at": "2026-11-05T22:52:10.173354+00:00",
+      "added": 1,
       "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-11-05T17:38:56.855057+00:00",
+      "checked_at": "2026-11-05T22:52:10.173354+00:00",
       "added": 0,
       "suppressed": {}
     }

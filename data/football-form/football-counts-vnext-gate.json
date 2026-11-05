@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T17:38:47Z",
+  "generated_at": "2026-11-05T22:51:54Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -37,18 +37,19 @@
     "latest_scan": {
       "state": "NO_EDGE_AFTER_UNLOCK",
       "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 8,
-      "scored_fixtures": 2,
+      "scored_rows": 14,
+      "scored_fixtures": 3,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 8,
+      "blocked_rows": 14,
       "blocker_rows": {
-        "edge_below_3pct": 7,
+        "better_fresh_price_available": 2,
+        "edge_below_3pct": 13,
         "price_not_fresh_10m": 8,
-        "price_older_than_3h": 4
+        "price_older_than_3h": 8
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": 10,
+      "matchday_min": 9,
       "matchday_max": 11,
       "next_unlock": null,
       "operational_alert_required": false,
@@ -64,10 +65,10 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-05T17:38:36Z",
+      "generated_at": "2026-11-05T22:51:40Z",
       "status": "OK",
       "missing_history": [],
-      "scored_fixtures": 2
+      "scored_fixtures": 3
     }
   },
   "corners_v3": {
@@ -106,17 +107,18 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "NO_EDGE_AFTER_UNLOCK",
-      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 926,
+      "state": "ELIGIBLE_CANDIDATES_PRESENT",
+      "explanation": "At least one candidate passed every locked shadow gate.",
+      "scored_rows": 948,
       "scored_fixtures": 37,
-      "eligible_rows": 0,
-      "eligible_fixtures": 0,
-      "blocked_rows": 926,
+      "eligible_rows": 7,
+      "eligible_fixtures": 3,
+      "blocked_rows": 941,
       "blocker_rows": {
-        "edge_below_3pct": 802,
-        "price_not_fresh_10m": 926,
-        "price_older_than_3h": 68
+        "better_fresh_price_available": 54,
+        "edge_below_3pct": 823,
+        "price_not_fresh_10m": 810,
+        "price_older_than_3h": 810
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 9,
