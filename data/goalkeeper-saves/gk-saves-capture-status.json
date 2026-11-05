@@ -1,8 +1,8 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_save_markets": 1,
-      "named_player_lines": 11,
+      "events_with_save_markets": 5,
+      "named_player_lines": 53,
       "status": "NAMED_PLAYER_LINES",
       "unnamed_or_team_lines": 0
     },
@@ -20,7 +20,7 @@
     }
   },
   "capture_errors": [],
-  "capture_mode": "close",
+  "capture_mode": "publication",
   "direct_source": {
     "bookmaker": "Grosvenor",
     "deferred": [],
@@ -39,18 +39,18 @@
   },
   "discovery_retries": 0,
   "event_last_checked": {
-    "71945404": "2026-11-05T22:51:29Z",
-    "72036290": "2026-11-05T22:51:29Z",
-    "72221378": "2026-11-05T22:51:29Z",
-    "72478700": "2026-11-05T22:51:29Z",
-    "72513304": "2026-11-05T22:51:29Z"
+    "71945404": "2026-11-05T23:12:59Z",
+    "72036290": "2026-11-05T23:12:59Z",
+    "72221378": "2026-11-05T23:12:59Z",
+    "72478700": "2026-11-05T23:12:59Z",
+    "72513304": "2026-11-05T23:12:59Z"
   },
   "events_deferred_by_budget": 0,
   "events_selected": 5,
   "events_supported": 5,
   "events_with_lines": 5,
-  "generated_at": "2026-11-05T22:51:29Z",
-  "last_publication_at": "2026-11-05T16:32:03Z",
+  "generated_at": "2026-11-05T23:12:59Z",
+  "last_publication_at": "2026-11-05T23:12:59Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 1,
@@ -73,7 +73,7 @@
       "with_prices": 1
     }
   },
-  "market_inventory_rows_added": 150,
+  "market_inventory_rows_added": 158,
   "market_names_observed": [
     "Anytime Assist",
     "Anytime Goalscorer",
@@ -94,6 +94,7 @@
     "ML",
     "ML HT",
     "Player Fouls",
+    "Player Headed Shots on Target",
     "Player Saves",
     "Player Shots",
     "Player Shots on Target",
@@ -111,22 +112,76 @@
     "errors": [],
     "excluded": {
       "conflicting_quotes": 0,
-      "fixture_not_eligible": 557,
-      "stale_or_missing_market_poll": 7,
-      "unmatched_or_unsupported_fixture": 761
+      "fixture_not_eligible": 585,
+      "stale_or_missing_market_poll": 1,
+      "unmatched_or_unsupported_fixture": 812
     },
-    "market_count": 1,
-    "quote_count": 11,
-    "received_at": "2026-11-05T22:51:34.136835+00:00",
+    "goalkeeper_coverage_status": "COMPLETE",
+    "goalkeeper_fixture_coverage": [
+      {
+        "away": "Borussia Monchengladbach",
+        "event_id": "72513304",
+        "home": "Hamburger SV",
+        "market_polled_at": "2026-11-05T23:10:32.299290478Z",
+        "quote_count": 11,
+        "source_event_id": "202802337",
+        "source_site": "com",
+        "status": "CAPTURED"
+      },
+      {
+        "away": "Strasbourg Alsace",
+        "event_id": "72036290",
+        "home": "Toulouse FC",
+        "market_polled_at": "2026-11-05T23:10:31.736334242Z",
+        "quote_count": 11,
+        "source_event_id": "202802159",
+        "source_site": "com",
+        "status": "CAPTURED"
+      },
+      {
+        "away": "Udinese Calcio",
+        "event_id": "71945404",
+        "home": "Venezia FC",
+        "market_polled_at": "2026-11-05T23:10:32.611235559Z",
+        "quote_count": 10,
+        "source_event_id": "202802859",
+        "source_site": "com",
+        "status": "CAPTURED"
+      },
+      {
+        "away": "Coventry City",
+        "event_id": "72221378",
+        "home": "Everton FC",
+        "market_polled_at": "2026-11-05T23:10:32.22583408Z",
+        "quote_count": 11,
+        "source_event_id": "202801983",
+        "source_site": "com",
+        "status": "CAPTURED"
+      },
+      {
+        "away": "Deportivo Alaves",
+        "event_id": "72478700",
+        "home": "Sevilla FC",
+        "market_polled_at": "2026-11-05T23:10:32.670848239Z",
+        "quote_count": 10,
+        "source_event_id": "202803581",
+        "source_site": "com",
+        "status": "CAPTURED"
+      }
+    ],
+    "market_count": 9,
+    "quote_count": 321,
+    "received_at": "2026-11-05T23:13:05.815730+00:00",
     "requests": 1,
     "source": "moviodds_bet365",
+    "source_site": "com",
     "status": "OK"
   },
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 41,
-  "rows_observed": 41,
+  "rows_added": 83,
+  "rows_observed": 83,
   "selected_events": [
     {
       "away": "Borussia Monchengladbach",
