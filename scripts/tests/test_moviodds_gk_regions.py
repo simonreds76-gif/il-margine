@@ -41,6 +41,18 @@ class GoalkeeperRegions(unittest.TestCase):
         self.assertEqual(market['source_site'], 'com')
         self.assertIn('&site=com', market['source_url'])
 
+    def test_verified_alaves_alias_still_requires_exact_fixture(self):
+        raw = self.raw['alaves']
+        now = datetime.fromisoformat(raw['server_time'].replace('Z', '+00:00'))
+        target = dict(id=72478700, home='Sevilla FC', away='Deportivo Alaves',
+                      date='2026-11-06T20:00:00Z', league={'name':'Spain - LaLiga'})
+        events, _ = source.normalize(raw, 'soccer', now, targets=[target])
+        self.assertEqual(events[0]['id'], 72478700)
+        self.assertEqual(source.goalkeeper_coverage(raw, [target], events, now)[0]['status'], 'CAPTURED')
+        for changed in [dict(away='Alaves B'), dict(date='2026-11-06T20:01:00Z'),
+                        dict(home='Deportivo Alaves', away='Sevilla FC')]:
+            self.assertEqual(source.normalize(raw, 'soccer', now, targets=[{**target, **changed}])[0], [])
+
     def test_gk_route_pins_com_and_retains_grosvenor(self):
         other = [{**self.target, 'bookmakers':{'Grosvenor':[{'name':'Goalkeeper Saves Away'}]}}]
         get = Mock(return_value=self.response(self.raw['com']))

@@ -88,10 +88,16 @@ def download(sport, get=None, groups=None, *, site=None):
 
 def soccer_target_matches(match, target):
     from football_grosvenor import team_key, target_competition
+    # Verified on the 6 Nov Sevilla fixture. Source-specific identity alias;
+    # still require both oriented teams, exact competition and kickoff.
+    aliases = {'cd alaves': 'alaves'}
+    def club(value):
+        name = team_key(value)
+        return aliases.get(name, name)
     league = LEAGUES.get(match.get('league'))
     return bool(league and target_competition(target) == league
                 and utc(target.get('date') or target.get('startTime')) == utc(match.get('kickoff_utc'))
-                and all(target.get(s) and match.get(s) and team_key(target[s]) == team_key(match[s])
+                and all(target.get(s) and match.get(s) and club(target[s]) == club(match[s])
                         for s in ('home', 'away')))
 
 
