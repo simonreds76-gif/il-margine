@@ -578,7 +578,7 @@ def capture_market_prices(args: argparse.Namespace) -> int:
     else:
         print("\nWARNING: no local odds-api key; Bet365/BetMGM capture skipped.")
 
-    if os.name == "nt" and not args.skip_bet365_direct:
+    if os.name == "nt" and not args.skip_bet365_direct and getattr(args, "enable_bet365_browser", False):
         # The public connected browser works, but unattended browser access is
         # blocked. Consume only newly provided evidence; never retry the block.
         most_evidence = PROPS_DIR / 'inbox' / f'bet365-most-props-evidence-{args.as_of}.json'
@@ -657,6 +657,7 @@ def main() -> int:
     parser.add_argument("--refresh-sackmann-current-season", action="store_true", help="Refresh only the end-year season; preserve earlier training snapshots")
     parser.add_argument("--skip-odds", action="store_true", help="Do not scrape Bet365 lines even if a key is configured")
     parser.add_argument("--skip-betsbk", action="store_true", help="Skip the local public BetsBK US Open props fallback")
+    parser.add_argument("--enable-bet365-browser", action="store_true", help="Explicit manual opt-in for the legacy browser service-break source; automatic runs use the verified feeds.")
     parser.add_argument("--skip-bet365-direct", action="store_true", help="Skip the Windows-local direct Bet365 service-break fallback")
     parser.add_argument("--require-odds", action="store_true", help="Fail if the Bet365 odds scrape cannot run")
     parser.add_argument("--selections-only", action="store_true", help="Register current selections; leave historical settlements/reports to the scheduled run")

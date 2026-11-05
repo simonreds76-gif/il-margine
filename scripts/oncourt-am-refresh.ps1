@@ -476,6 +476,8 @@ try {
         $snapshotExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis-evidence-snapshot.py", "--supabase") -Label "private Monitor snapshot" -TimeoutSeconds 120
         if ($snapshotExit -ne 0) { throw "Private Monitor upload failed." }
         if ($propsRefreshFailed) {
+            $failedStage = if ($tennisPropsCaptureExit -ne 0) { "TennisPropsCaptureFailed" } elseif ($tennisPropsBoardExit -ne 0) { "TennisPropsBoardFailed" } else { "TennisPropsComparisonFailed" }
+            Set-RunStatusFailure $failedStage "Match pricing completed; the indicated props stage needs attention."
             throw "Manual match prices refreshed, but the props refresh needs attention; old props are not reported as fresh."
         }
         if ($digestExit -ne 0 -or $propsDigestExit -ne 0) { throw "New-selection Telegram check failed." }
@@ -598,7 +600,8 @@ try {
 catch {
     $runStatusErrorRecord = $_
     Write-TennisManualProgress $root $manualRequest "failed" $_.Exception.Message @{ state = "failed"; error = $_.Exception.Message; completed_at = [datetime]::UtcNow.ToString("o") }
-    Set-RunStatusFailure "UnhandledException" $_.Exception.Message
+    Log "Refresh incomplete: $($_.Exception.Message)"
+    if ([string]::IsNullOrWhiteSpace($runStatusErrorType)) { Set-RunStatusFailure "UnhandledException" $_.Exception.Message }
     throw
 }
 finally {
@@ -622,7 +625,7 @@ finally {
             & powershell.exe @runtimeWatchArgs
         }
         catch { Log "WARNING: runtime watchdog failed: $($_.Exception.Message)" }
-        Complete-RunStatus -Run $runStatus -Status $runStatusFinal -ErrorRecord $runStatusErrorRecord -ErrorType $runStatusErrorType -ErrorMessage $runStatusErrorMessage
+        Complete-RunStatus -Run $runStatus -Status $runStatusFinal -ErrorRecord $(if ($runStatusErrorType -eq "UnhandledException") { $runStatusErrorRecord } else { $null }) -ErrorType $runStatusErrorType -ErrorMessage $runStatusErrorMessage
     } finally {
         Exit-TaskLock $lockHandle
     }

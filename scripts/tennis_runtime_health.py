@@ -102,7 +102,8 @@ def observed_run(cmd, *, root, label, timeout=None, **kwargs):
 
 def summary(root=ROOT, *, now=None, run_id=None):
     now = now or utc()
-    steps, issues, near = [], [], []
+    steps, issues, near, research_issues, source_issues = [], [], [], [], []
+    from tennis_step_scope import research_only, retired_source
     for path in sorted((root / REL).glob('*.json')):
         try:
             row = read(path)
@@ -119,18 +120,22 @@ def summary(root=ROOT, *, now=None, run_id=None):
             steps.append(item)
             if state in {'FAILED','TIMED_OUT','DEADLINE_EXCEEDED'} or row.get('unresolved_failure'):
                 item = dict(item, issue=state if state != 'RUNNING' else 'RETRYING_AFTER_FAILURE')
-                issues.append(item)
+                (research_issues if research_only(item) else source_issues if retired_source(item) else issues).append(item)
             if row.get('near_budget'):
                 near.append(item)
         except (ValueError, OSError, KeyError, TypeError):
             issues.append(dict(step_id=path.stem, label='Unreadable tennis step receipt', issue='HEALTH_READ_FAILED'))
     return dict(schema_version=1, generated_at=now.isoformat(),
-                state='DEGRADED' if issues else 'RUNNING' if any(s['status']=='RUNNING' for s in steps)
+                state='DEGRADED' if issues or research_issues or source_issues else 'RUNNING' if any(s['status']=='RUNNING' for s in steps)
                 else 'OK' if steps else 'NOT_YET_OBSERVED',
-                step_count=len(steps), issues=issues, near_budget=near, steps=steps)
+                step_count=len(steps), issues=issues, research_issues=research_issues, source_issues=source_issues, near_budget=near, steps=steps)
 
 def overlay_feed_health(feed, runtime):
     result = dict(feed)
+    if runtime.get('source_issues'):
+        result['source_issues'] = runtime['source_issues']
+    if runtime.get('research_issues'):
+        result['research_issues'] = runtime['research_issues']
     if runtime['issues']:
         result.update(state='RUNTIME_STEP_FAILED', structural_error=True,
                       runtime_issues=runtime['issues'], underlying_feed_state=feed.get('state'))
@@ -155,6 +160,10 @@ def main():
     else:
         for issue in result['issues']:
             print(f"{issue['label']}: {issue['issue']}; last successful step {issue.get('last_success_at') or 'not yet observed'}")
+        for issue in result['research_issues']:
+            print(f"Research only: {issue['label']}: {issue['issue']}; price capture remains independent")
+        for issue in result['source_issues']:
+            print(f"Inactive source: {issue['label']}: {issue['issue']}; retained history, no automatic browser retry")
     return 1 if result['issues'] else 0
 
 if __name__=='__main__':

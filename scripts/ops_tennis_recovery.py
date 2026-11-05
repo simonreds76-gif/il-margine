@@ -36,9 +36,25 @@ def content(entry):
     return entry['content']
 
 
+def props_failure(row):
+    if row.get('error_type') in {'TennisPropsRefreshFailed', 'TennisPropsCaptureFailed',
+                                  'TennisPropsBoardFailed', 'TennisPropsComparisonFailed'}:
+        return True
+    # Legacy PowerShell hid the stage behind RuntimeException. Require a
+    # reviewed, exact-run diagnosis; never clear arbitrary generic failures.
+    diagnosis = (row.get('details') or {}).get('ops_failure_diagnosis', {})
+    return (row.get('error_type') == 'RuntimeException'
+            and row.get('trigger_kind') == 'manual'
+            and diagnosis.get('run_id') == row.get('run_id')
+            and diagnosis.get('scope') == 'sisal-evidence-capture-gate-only'
+            and diagnosis.get('reason') == 'event_comparison_frozen_policy_or_artifact_changed'
+            and sha(diagnosis.get('run_log_sha256'))
+            and sha(diagnosis.get('manual_status_sha256')))
+
+
 def verified_props_recovery(row, details):
     r = details.get('ops_failure_resolution')
-    if row.get('error_type') != 'TennisPropsRefreshFailed' or not isinstance(r, dict):
+    if not props_failure(row) or not isinstance(r, dict):
         return False
     try:
         h = r['health']
@@ -59,7 +75,7 @@ def verified_props_recovery(row, details):
 
 
 def discover_props_recovery(row, base, headers, transport):
-    if row.get('error_type') != 'TennisPropsRefreshFailed':
+    if not props_failure(row):
         return None
     fields = ('updated_at,source:payload->source,schema:payload->schema_version,'
               'generated_at:payload->generated_at,payload_hash:payload->payload_hash,'

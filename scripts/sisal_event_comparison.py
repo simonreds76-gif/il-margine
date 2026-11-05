@@ -59,10 +59,13 @@ def register(root, now):
         expected[SELF]=revision['current_hash']
     from sisal_observation_amendment import accepted_observation_amendment
     amendment=accepted_observation_amendment(p,T.sha(p/'registration.json'),expected,hashes,'event',now)
-    if reg['policy']!=POLICY or (expected!=hashes and not amendment):
+    from sisal_input_revision import accepted_input_revision
+    input_revision=accepted_input_revision(root,p,T.sha(p/'registration.json'),expected,hashes,now)
+    if reg['policy']!=POLICY or (expected!=hashes and not amendment and not input_revision):
         raise ValueError('event_comparison_frozen_policy_or_artifact_changed')
     return dict(reg,artifacts=hashes,source_revision=revision,observation_amendment_sha256=amendment,
-                effective_from=revision['effective_from'] if revision else reg['registered_at'])
+                input_revision_sha256=input_revision['sha256'] if input_revision else None,
+                effective_from=input_revision['effective_at'] if input_revision else revision['effective_from'] if revision else reg['registered_at'])
 
 def required_singles(games,names,tids,score):
     """Keep unknown identities as gaps; exclude only positively identified doubles."""
@@ -190,7 +193,7 @@ def _prepare(root,p,now,reg):
     if any(T.sha(root/n)!=h for n,h in manifest.items()):raise ValueError('event_sources_changed_during_read')
     observed=datetime.now(timezone.utc)
     for row in new:
-        row.update(first_observed_complete_at=observed.isoformat(),manifest=manifest,artifact_hashes=reg['artifacts'],observation_amendment_sha256=reg.get('observation_amendment_sha256'))
+        row.update(first_observed_complete_at=observed.isoformat(),manifest=manifest,artifact_hashes=reg['artifacts'],observation_amendment_sha256=reg.get('observation_amendment_sha256'),input_revision_sha256=reg.get('input_revision_sha256'))
         T.append(p/'evidence.jsonl',evidence,row)
     status=dict(state='READY',checked_at=observed.isoformat(),prepared_at=observed.isoformat(),editions=sorted(tids),missing_by_edition=dict(missing),missing_fixtures=[dict(edition=tid,fixture=list(k),reason=invalid.get(k,'missing_or_rejected_statistics')) for tid,keys in known.items() for k in sorted(keys-set(valid))],added=len(new),evidence_rows=len(evidence),manifest=manifest,clean_exclusions=excluded)
     status.update(excluded_doubles_by_edition=excluded_doubles,source_revision=reg.get('source_revision'),observation_amendment_sha256=reg.get('observation_amendment_sha256'))
@@ -213,7 +216,7 @@ def capture_pairs(root,records,now):
     corrections=runpy.run_path(str(root/'scripts/tennis_props_model.py'))['SLAM_COUNT_BIAS_CORRECTION'] if records else {}
     for r in records:
         if r['id'] in seen:continue
-        pair=dict(id=r['id'],base_hash=r['hash'],registered_at=now.isoformat(),state='UNAVAILABLE',source_revision=reg.get('source_revision'),observation_amendment_sha256=reg.get('observation_amendment_sha256'))
+        pair=dict(id=r['id'],base_hash=r['hash'],registered_at=now.isoformat(),state='UNAVAILABLE',source_revision=reg.get('source_revision'),observation_amendment_sha256=reg.get('observation_amendment_sha256'),input_revision_sha256=reg.get('input_revision_sha256'))
         try:
             cap=T.stamp(r['row']['capture_ts']);prepared=T.stamp(status.get('prepared_at'))
             if cap<T.stamp(reg['registered_at']):raise ValueError('price_precedes_comparison_registration')

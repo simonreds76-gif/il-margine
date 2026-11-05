@@ -77,7 +77,7 @@ def check_morning_failure(env=None, transport=request_json, *, read_only=False):
     if not base or not key:
         raise RuntimeError('Morning failure check needs Supabase REST credentials')
     headers = {'apikey': key, 'Authorization': f'Bearer {key}'}
-    query = urlencode({'pipeline': 'eq.oncourt-am-refresh', 'select': 'run_id,status,started_at,finished_at,error_type,details', 'order': 'started_at.desc', 'limit': '1'})
+    query = urlencode({'pipeline': 'eq.oncourt-am-refresh', 'select': 'run_id,status,started_at,finished_at,error_type,trigger_kind,details', 'order': 'started_at.desc', 'limit': '1'})
     rows = transport('GET', f'{base}/rest/v1/run_status?{query}', headers)
     if not isinstance(rows, list):
         raise RuntimeError('Morning failure check returned an invalid response')
@@ -120,14 +120,7 @@ def check_morning_failure(env=None, transport=request_json, *, read_only=False):
     if not token or not chat:
         raise RuntimeError('Morning failure alert cannot send: Telegram credentials missing')
     atlas = row.get('error_type') in ('ReturnAtlasRefreshFailed', 'ReturnAtlasAuthRequired')
-    message = 'Morning tennis: Return Atlas publication failed.\n' if atlas else 'Morning tennis refresh failed.\n'
-    if row.get('error_type') == 'ReturnAtlasAuthRequired':
-        message += 'Vercel CLI sign-in is required on the publishing PC. Retry publication only; do not rerun pricing or betting alerts.\n'
-    elif atlas:
-        message += 'Return Atlas could not complete its validated update. Check the publisher status before retrying publication.\n'
-    else:
-        message += 'The morning pipeline did not complete successfully; review its run log.\n'
-    message += f"Started: {row['started_at']}\nRun: {row['run_id']}\nThe failure needs review; this alert is sent once per failed run."
+    message = failure_message(row)
     response = transport('POST', f'https://api.telegram.org/bot{token}/sendMessage', {}, {'chat_id': chat, 'text': message, 'disable_web_page_preview': True})
     if not isinstance(response, dict) or response.get('ok') is not True:
         raise RuntimeError('Telegram did not confirm the morning failure alert; it will retry')
@@ -138,3 +131,22 @@ def check_morning_failure(env=None, transport=request_json, *, read_only=False):
     print('OPS_MORNING_FAILURE Telegram sent and acknowledged')
     report_incident(row, 'sent-and-acknowledged', env)
     return True
+
+
+def failure_message(row):
+    atlas = row.get('error_type') in ('ReturnAtlasRefreshFailed', 'ReturnAtlasAuthRequired')
+    name = 'On-demand tennis refresh' if row.get('trigger_kind') == 'manual' else 'Tennis refresh'
+    message = 'Tennis: Return Atlas publication failed.\n' if atlas else name + ' incomplete.\n'
+    if row.get('error_type') == 'ReturnAtlasAuthRequired':
+        message += 'Vercel CLI sign-in is required on the publishing PC. Retry publication only; do not rerun pricing or betting alerts.\n'
+    elif atlas:
+        message += 'Return Atlas could not complete its validated update. Check the publisher status before retrying publication.\n'
+    elif row.get('error_type') in ('TennisPropsCaptureFailed', 'TennisPropsBoardFailed', 'TennisPropsComparisonFailed'):
+        stage = {'TennisPropsCaptureFailed': 'bookmaker price capture',
+                 'TennisPropsBoardFailed': 'player props projection build',
+                 'TennisPropsComparisonFailed': 'props price comparison'}[row['error_type']]
+        message += f'Match pricing completed, but {stage} failed. Check that stage before using its props.\n'
+    else:
+        message += 'The refresh did not complete successfully; check the saved runtime steps for the failed stage.\n'
+    message += f"Started: {row['started_at']}\nRun: {row['run_id']}\nThe failure needs review; this alert is sent once per failed run."
+    return message
