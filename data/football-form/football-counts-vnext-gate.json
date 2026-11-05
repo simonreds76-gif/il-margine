@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-04T22:52:40Z",
+  "generated_at": "2026-11-05T16:32:47Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -37,18 +37,19 @@
     "latest_scan": {
       "state": "NO_EDGE_AFTER_UNLOCK",
       "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 4,
-      "scored_fixtures": 1,
+      "scored_rows": 10,
+      "scored_fixtures": 2,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 4,
+      "blocked_rows": 10,
       "blocker_rows": {
-        "edge_below_3pct": 3,
+        "better_fresh_price_available": 2,
+        "edge_below_3pct": 9,
         "price_not_fresh_10m": 4,
         "price_older_than_3h": 4
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
-      "matchday_min": 11,
+      "matchday_min": 10,
       "matchday_max": 11,
       "next_unlock": null,
       "operational_alert_required": false,
@@ -64,10 +65,10 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-04T22:52:30Z",
+      "generated_at": "2026-11-05T16:32:27Z",
       "status": "OK",
       "missing_history": [],
-      "scored_fixtures": 1
+      "scored_fixtures": 2
     }
   },
   "corners_v3": {
@@ -76,19 +77,19 @@
     "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 173,
+      "signals": 178,
       "settled": 150,
-      "pending": 23,
+      "pending": 28,
       "pnl_units": -13.899,
       "roi": -0.09266,
       "true_close_n": 73,
       "true_close_coverage": 0.486667,
       "mean_true_close_clv": 0.008838,
       "side_counts": {
-        "over": 36,
-        "under": 137
+        "over": 39,
+        "under": 139
       },
-      "dominant_side_share": 0.791908
+      "dominant_side_share": 0.780899
     },
     "warmup_tracking": {
       "signals": 36,
@@ -106,17 +107,18 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "NO_EDGE_AFTER_UNLOCK",
-      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 602,
-      "scored_fixtures": 35,
-      "eligible_rows": 0,
-      "eligible_fixtures": 0,
-      "blocked_rows": 602,
+      "state": "ELIGIBLE_CANDIDATES_PRESENT",
+      "explanation": "At least one candidate passed every locked shadow gate.",
+      "scored_rows": 926,
+      "scored_fixtures": 37,
+      "eligible_rows": 79,
+      "eligible_fixtures": 22,
+      "blocked_rows": 847,
       "blocker_rows": {
-        "edge_below_3pct": 512,
-        "price_not_fresh_10m": 602,
-        "price_older_than_3h": 602
+        "better_fresh_price_available": 334,
+        "edge_below_3pct": 802,
+        "price_not_fresh_10m": 68,
+        "price_older_than_3h": 68
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 9,
