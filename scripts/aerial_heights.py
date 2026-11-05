@@ -154,7 +154,7 @@ def secondary_record(html, old, url, digest, now):
     if raw and raw not in ('-', '0 cm') and (not match or not valid_height(value)):
         raise ValueError('Secondary height format invalid')
     result = dict(old)
-    if valid_height(value) and not held(old):
+    if valid_height(value) and not held(old) and old.get('source_kind') != 'reviewed_external':
         result.update(height_cm=value, source_url=canonical[0], source_sha256=digest,
                       observed_at=now.isoformat(), source_kind='mapped_secondary_profile', status='reported',
                       height_identity_check='mapped_opta_id+exact_dob+compatible_name')

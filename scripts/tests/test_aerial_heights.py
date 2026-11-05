@@ -53,6 +53,36 @@ class HeightRecoveryTests(unittest.TestCase):
         fetch.assert_not_called()
         self.assertEqual(report['gaps'][0]['status'], 'held')
 
+    def test_reviewed_height_survives_every_profile_and_roster_refresh(self):
+        old = {**self.old, 'height_cm':180, 'dob':'2002-06-22',
+               'source_kind':'reviewed_external', 'height_evidence_file':'review.json'}
+        preserved = ('height_cm','source_url','source_sha256','observed_at',
+                     'source_kind','height_evidence_file')
+        for value in (None, 0, 180, 193):
+            with self.subTest(source='roster', value=value):
+                row = merge_squad(old, {'id':123,'name':old['name'],'height':value},
+                                  '2','defenders','https://roster.example','new',NOW)
+                self.assertEqual(row['team_id'], '2')
+                self.assertEqual({k:row[k] for k in preserved}, {k:old[k] for k in preserved})
+        for value in (None, 180, 193):
+            with self.subTest(source='primary', value=value):
+                row, _ = profile_record(profile(height=value),'123',old,'u','new',NOW)
+                self.assertEqual({k:row[k] for k in preserved}, {k:old[k] for k in preserved})
+        url='https://sport.sky.it/calcio/atleti/elliot-stroud/608227'
+        html=('<link rel="canonical" href="'+url+'"/>'
+              '<script type="application/ld+json">[{"@type":"Person","name":"Elliot Stroud",'
+              '"birthDate":"2002-06-22","height":"193 cm"}]</script>')
+        row, reported, _ = secondary_record(html,old,url,'new',NOW)
+        self.assertEqual(reported,193)
+        self.assertEqual({k:row[k] for k in preserved}, {k:old[k] for k in preserved})
+        save(self.data/'heights.json.gz', {'123':row})
+        fetch, secondary = Mock(), Mock()
+        recover(self.root, {}, NOW, fetch, secondary_fetch=secondary)
+        fetch.assert_not_called()
+        secondary.assert_not_called()
+        saved=read(self.data/'heights.json.gz')['123']
+        self.assertEqual({k:saved[k] for k in preserved}, {k:old[k] for k in preserved})
+
     def test_profile_mismatch_and_invalid_height_rejected(self):
         for source in (profile('124'), profile(height=0), profile(height=True)):
             with self.assertRaises(ValueError):
