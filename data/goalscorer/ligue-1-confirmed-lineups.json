@@ -24,17 +24,17 @@
         "Cristian Cásseres",
         "Niko Sigur",
         "Sion Oppong",
-        "Jacen Russell-Rowe",
-        "Casper Tengstedt"
+        "Casper Tengstedt",
+        "Jacen Russell-Rowe"
       ],
       "away_players": [
         "Filip Jörgensen",
-        "Genesis Antwi",
-        "Jeyland Mitchell",
+        "Lucas Høgsberg",
         "Ismaël Doukouré",
+        "Karim Coulibaly",
         "Oso",
-        "Pape Demba Diop",
         "Samir El Mourabet",
+        "Dário Essugo",
         "Gessime Yassine",
         "Giovanni Reyna",
         "Martial Godo",
@@ -141,26 +141,26 @@
           "shirt_number": "11"
         },
         {
-          "name": "Jacen Russell-Rowe",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 104,
-          "player_id": 1106866,
-          "shirt_number": "13"
-        },
-        {
           "name": "Casper Tengstedt",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
           "formation": "4-4-2",
-          "position_id": 106,
+          "position_id": 104,
           "player_id": 1102240,
           "shirt_number": "20"
+        },
+        {
+          "name": "Jacen Russell-Rowe",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-4-2",
+          "position_id": 106,
+          "player_id": 1106866,
+          "shirt_number": "13"
         }
       ],
       "away_starters": [
@@ -176,26 +176,15 @@
           "shirt_number": "1"
         },
         {
-          "name": "Genesis Antwi",
+          "name": "Lucas Høgsberg",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-2-3-1",
           "position_id": 32,
-          "player_id": 1647186,
-          "shirt_number": "16"
-        },
-        {
-          "name": "Jeyland Mitchell",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 34,
-          "player_id": 1340071,
-          "shirt_number": "4"
+          "player_id": 1436942,
+          "shirt_number": "24"
         },
         {
           "name": "Ismaël Doukouré",
@@ -204,9 +193,20 @@
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-2-3-1",
-          "position_id": 36,
+          "position_id": 34,
           "player_id": 1178332,
           "shirt_number": "6"
+        },
+        {
+          "name": "Karim Coulibaly",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 1643851,
+          "shirt_number": "31"
         },
         {
           "name": "Oso",
@@ -220,26 +220,26 @@
           "shirt_number": "36"
         },
         {
-          "name": "Pape Demba Diop",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64,
-          "player_id": 1417802,
-          "shirt_number": "21"
-        },
-        {
           "name": "Samir El Mourabet",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
-          "position_id": 66,
+          "position_id": 64,
           "player_id": 1598170,
           "shirt_number": "29"
+        },
+        {
+          "name": "Dário Essugo",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1239595,
+          "shirt_number": "14"
         },
         {
           "name": "Gessime Yassine",
@@ -299,8 +299,8 @@
         "Maxi Oyedele",
         "Joaquín Panichelli"
       ],
-      "observed_at": "2026-11-04T23:38:50.587664+00:00",
-      "changed_at": "2026-11-04T14:54:15.967195+00:00"
+      "observed_at": "2026-11-05T15:00:36.213295+00:00",
+      "changed_at": "2026-11-05T15:00:36.213295+00:00"
     },
     {
       "fotmob_match_id": 5802983,
@@ -604,7 +604,7 @@
         "Jonathan Ikoné",
         "Luca Koleosho"
       ],
-      "observed_at": "2026-11-04T23:38:50.587664+00:00",
+      "observed_at": "2026-11-05T15:00:36.213295+00:00",
       "changed_at": "2026-11-04T23:38:50.587664+00:00"
     },
     {
@@ -906,8 +906,116 @@
       "away_unavailable": [
         "Anis Ouzenadji"
       ],
-      "observed_at": "2026-11-04T23:38:50.587664+00:00",
+      "observed_at": "2026-11-05T15:00:36.213295+00:00",
       "changed_at": "2026-11-04T23:38:50.587664+00:00"
+    },
+    {
+      "fotmob_match_id": 5802982,
+      "match_date": "2026-11-08",
+      "kickoff_utc": "2026-11-08T16:15:00Z",
+      "home_team": "Angers",
+      "away_team": "Nice",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-05T15:00:36.213295+00:00",
+      "changed_at": "2026-11-05T15:00:36.213295+00:00"
+    },
+    {
+      "fotmob_match_id": 5802984,
+      "match_date": "2026-11-08",
+      "kickoff_utc": "2026-11-08T16:15:00Z",
+      "home_team": "Brest",
+      "away_team": "Lyon",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-05T15:00:36.213295+00:00",
+      "changed_at": "2026-11-05T15:00:36.213295+00:00"
+    },
+    {
+      "fotmob_match_id": 5802985,
+      "match_date": "2026-11-08",
+      "kickoff_utc": "2026-11-08T16:15:00Z",
+      "home_team": "Le Havre",
+      "away_team": "Lorient",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-05T15:00:36.213295+00:00",
+      "changed_at": "2026-11-05T15:00:36.213295+00:00"
+    },
+    {
+      "fotmob_match_id": 5802986,
+      "match_date": "2026-11-08",
+      "kickoff_utc": "2026-11-08T16:15:00Z",
+      "home_team": "Le Mans",
+      "away_team": "Monaco",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-05T15:00:36.213295+00:00",
+      "changed_at": "2026-11-05T15:00:36.213295+00:00"
+    },
+    {
+      "fotmob_match_id": 5802990,
+      "match_date": "2026-11-08",
+      "kickoff_utc": "2026-11-08T19:45:00Z",
+      "home_team": "Lens",
+      "away_team": "Marseille",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-05T15:00:36.213295+00:00",
+      "changed_at": "2026-11-05T15:00:36.213295+00:00"
+    },
+    {
+      "fotmob_match_id": 5802988,
+      "match_date": "2026-11-08",
+      "kickoff_utc": "2026-11-08T14:00:00Z",
+      "home_team": "Rennes",
+      "away_team": "Lille",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-05T15:00:36.213295+00:00",
+      "changed_at": "2026-11-05T15:00:36.213295+00:00"
     }
   ]
 }
