@@ -57,10 +57,15 @@ def enabled(sport):
     return cfg.get('direct_moviodds', {}).get(sport, False)
 
 
-def download(sport, get=None, groups=None):
+def download(sport, get=None, groups=None, *, site=None):
     # Requests transparently decompresses gzip; cap decompressed bytes too.
     # One request, no retry loop, no account key and no browser bypass.
-    response = (get or requests.get)(URL, params={'sport': sport, 'groups': ','.join(groups or GROUPS[sport]), 'links': '1'},
+    params = {'sport': sport, 'groups': ','.join(groups or GROUPS[sport]), 'links': '1'}
+    if site is not None:
+        if site not in {'com', 'com.au'}:
+            raise ValueError('Unsupported Bet365 site')
+        params['site'] = site
+    response = (get or requests.get)(URL, params=params,
                                     headers={'Accept-Encoding': 'gzip', 'User-Agent': 'IlMargineResearch/1.0'},
                                     timeout=(5, 20), stream=True)
     try:
@@ -71,9 +76,57 @@ def download(sport, get=None, groups=None):
             body.extend(chunk)
             if len(body) > 8_000_000 or time.monotonic()-started > 25:
                 raise ValueError('MoviOdds response exceeded bounded capture')
-        return json.loads(body)
+        data = json.loads(body)
+        # The unqualified endpoint is the Australian board. Never silently
+        # accept it when a caller explicitly requests Bet365.com prices.
+        if site == 'com' and data.get('site') != 'com':
+            raise ValueError('Requested Bet365.com board was not confirmed')
+        return data
     finally:
         response.close()
+
+
+def soccer_target_matches(match, target):
+    from football_grosvenor import team_key, target_competition
+    # Verified on the 6 Nov Sevilla fixture. Source-specific identity alias;
+    # still require both oriented teams, exact competition and kickoff.
+    aliases = {'cd alaves': 'alaves'}
+    def club(value):
+        name = team_key(value)
+        return aliases.get(name, name)
+    league = LEAGUES.get(match.get('league'))
+    return bool(league and target_competition(target) == league
+                and utc(target.get('date') or target.get('startTime')) == utc(match.get('kickoff_utc'))
+                and all(target.get(s) and match.get(s) and club(target[s]) == club(match[s])
+                        for s in ('home', 'away')))
+
+
+def goalkeeper_coverage(data, targets, events, now):
+    """Per-fixture coverage, not a successful request mistaken for full coverage."""
+    rows = []
+    for target in targets:
+        matches = [m for m in data['matches'] if isinstance(m, dict) and soccer_target_matches(m, target)]
+        item = {'event_id': str(target['id']), 'home': target.get('home'), 'away': target.get('away'),
+                'source_site': data.get('site') or 'com.au', 'status': 'FIXTURE_NOT_FOUND', 'quote_count': 0}
+        if len(matches) > 1:
+            item['status'] = 'AMBIGUOUS_FIXTURE'
+        elif matches:
+            match = matches[0]
+            group = (match.get('group_status') or {}).get('177703') or {}
+            markets = [market for event in events if str(event['id']) == str(target['id'])
+                       for market in event['bookmakers']['Bet365'] if market['source_group_id'] == '177703']
+            item.update(source_event_id=str(match['id']), market_polled_at=group.get('polled_at'),
+                        quote_count=sum(len(m['odds']) for m in markets))
+            if markets:
+                item['status'] = 'CAPTURED'
+            elif not group:
+                item['status'] = 'NO_GK_MARKET_IN_FEED'
+            elif group.get('stale') or not fresh(group.get('polled_at'), now):
+                item['status'] = 'STALE_OR_MISSING_GK_POLL'
+            else:
+                item['status'] = 'NO_VERIFIED_GK_QUOTES'
+        rows.append(item)
+    return rows
 
 
 def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
@@ -94,11 +147,8 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
             skipped['fixture_not_eligible'] += 1
             continue
         if sport == 'soccer':
-            from football_grosvenor import team_key, target_competition
-            league = LEAGUES.get(m.get('league'))
-            matched = [t for t in targets if league and target_competition(t) == league
-                       and utc(t.get('date') or t.get('startTime')) == start
-                       and all(t.get(s) and m.get(s) and team_key(t[s]) == team_key(m[s]) for s in ('home', 'away'))]
+            from football_grosvenor import team_key
+            matched = [t for t in targets if soccer_target_matches(m, t)]
             if len(matched) != 1:
                 skipped['unmatched_or_unsupported_fixture'] += 1
                 continue
@@ -293,6 +343,10 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
                                 if sport == 'soccer' else 'bet365_named_full_match; retirement_void_unless_determined',
                                 'raw_group_status': status})
         if markets:
+            if data.get('site'):
+                for market in markets:
+                    market['source_site'] = data['site']
+                    market['source_url'] += '&site=' + data['site']
             link = (m.get('links') or {}).get('match', '')
             event['urls'] = {'Bet365': link if link.startswith('https://www.bet365.com/') else ''}
             event['bookmakers'] = {'Bet365': markets}
@@ -300,19 +354,25 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
     return output, dict(skipped)
 
 
-def capture(sport, *, targets=(), days_ahead=3, get=None, raw_path=None, force=False):
-    receipt = {'source': 'moviodds_bet365', 'status': 'DISABLED', 'requests': 0, 'market_count': 0, 'errors': []}
+def capture(sport, *, targets=(), days_ahead=3, get=None, raw_path=None, force=False, site=None):
+    receipt = {'source': 'moviodds_bet365', 'source_site': site or 'com.au',
+               'status': 'DISABLED', 'requests': 0, 'market_count': 0, 'errors': []}
     if not force and not enabled(sport):
         return [], receipt
     try:
         receipt['requests'] = 1
-        data = download(sport, get)
+        data = download(sport, get, site=site)
         now = datetime.now(timezone.utc)
         receipt['received_at'] = now.isoformat()
         events, skipped = normalize(data, sport, now, targets=targets, days_ahead=days_ahead)
         receipt.update(status='OK' if events else 'NO_VERIFIED_MARKETS', excluded=skipped,
                        market_count=sum(len(e['bookmakers']['Bet365']) for e in events),
                        quote_count=sum(len(m['odds']) for e in events for m in e['bookmakers']['Bet365']))
+        if sport == 'soccer':
+            coverage = goalkeeper_coverage(data, targets, events, now)
+            receipt['goalkeeper_fixture_coverage'] = coverage
+            receipt['goalkeeper_coverage_status'] = ('NO_TARGETS' if not coverage else
+                'COMPLETE' if all(r['status'] == 'CAPTURED' for r in coverage) else 'INCOMPLETE')
         if raw_path:
             raw_path = Path(raw_path)
             raw_path.parent.mkdir(parents=True, exist_ok=True)
@@ -326,7 +386,10 @@ def capture(sport, *, targets=(), days_ahead=3, get=None, raw_path=None, force=F
 
 
 def merge_football(payload, targets, *, days_ahead=7, **kwargs):
-    events, receipt = capture('soccer', targets=targets, days_ahead=days_ahead, **kwargs)
+    # This is the GK collector's route. The default Australian board can omit
+    # player saves that are already priced on Bet365.com. Keep other callers'
+    # regional selections unchanged; do not combine regions or relax freshness.
+    events, receipt = capture('soccer', targets=targets, days_ahead=days_ahead, site='com', **kwargs)
     # Retain existing books. If another route supplies Bet365 for the same event,
     # retain that whole book instead of mixing timestamps/contracts or duplicating.
     result = copy.deepcopy(payload)
