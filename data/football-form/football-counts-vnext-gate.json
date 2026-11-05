@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T16:32:47Z",
+  "generated_at": "2026-11-05T17:38:47Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -37,15 +37,14 @@
     "latest_scan": {
       "state": "NO_EDGE_AFTER_UNLOCK",
       "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 10,
+      "scored_rows": 8,
       "scored_fixtures": 2,
       "eligible_rows": 0,
       "eligible_fixtures": 0,
-      "blocked_rows": 10,
+      "blocked_rows": 8,
       "blocker_rows": {
-        "better_fresh_price_available": 2,
-        "edge_below_3pct": 9,
-        "price_not_fresh_10m": 4,
+        "edge_below_3pct": 7,
+        "price_not_fresh_10m": 8,
         "price_older_than_3h": 4
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
@@ -65,7 +64,7 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-05T16:32:27Z",
+      "generated_at": "2026-11-05T17:38:36Z",
       "status": "OK",
       "missing_history": [],
       "scored_fixtures": 2
@@ -107,17 +106,16 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "ELIGIBLE_CANDIDATES_PRESENT",
-      "explanation": "At least one candidate passed every locked shadow gate.",
+      "state": "NO_EDGE_AFTER_UNLOCK",
+      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
       "scored_rows": 926,
       "scored_fixtures": 37,
-      "eligible_rows": 79,
-      "eligible_fixtures": 22,
-      "blocked_rows": 847,
+      "eligible_rows": 0,
+      "eligible_fixtures": 0,
+      "blocked_rows": 926,
       "blocker_rows": {
-        "better_fresh_price_available": 334,
         "edge_below_3pct": 802,
-        "price_not_fresh_10m": 68,
+        "price_not_fresh_10m": 926,
         "price_older_than_3h": 68
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
