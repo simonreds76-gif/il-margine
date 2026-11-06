@@ -31,7 +31,7 @@ class ContractIncident(unittest.TestCase):
             league={'slug':source.LEAGUES[m['league']]}) for m in raw['matches']]
         events,excluded=source.normalize(raw,'soccer',self.now,targets=targets)
         self.assertFalse(events)
-        self.assertEqual(excluded[gate.REASON],2)
+        self.assertEqual(excluded[gate.REASON],sum(len(m['quotes']) for m in raw['matches']))
 
     def test_older_saved_board_cannot_bypass_hold(self):
         row={**self.row,'captured_at':'2026-11-05T23:00:00Z'}

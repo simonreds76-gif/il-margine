@@ -6,6 +6,7 @@ import tempfile
 import unittest
 from datetime import UTC, date, datetime
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -31,6 +32,12 @@ settle = load_script("goalkeeper_saves_settle", "goalkeeper-saves-settle.py")
 
 
 class GoalkeeperSavesLiveTests(unittest.TestCase):
+    def setUp(self):
+        # Synthetic legacy fixtures exercise forecasting, not provider proof.
+        # Real source integrity and proof propagation have dedicated tests.
+        hold=patch('goalkeeper_quote_integrity.MOVIODDS_GK_HOLD',False)
+        hold.start();self.addCleanup(hold.stop)
+
     def test_radu_verified_alias_matches_without_surname_only_matching(self):
         fixture = {"lineup_type": "predicted", "home_starters": [{"name": "Ionuț Radu", "role_group": "GK"}]}
         self.assertEqual(live.resolve_goalkeeper(fixture, "Andrei Radu"), ("home", "predicted_starter", "Ionuț Radu"))

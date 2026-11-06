@@ -201,7 +201,8 @@ def run(candidates, live_params, root, *, now=None):
             'registered_at':now.isoformat(),'goalkeeper':row['goalkeeper'],'home':row['home_team'],'away':row['away_team'],
             'league':row['league'],'lineup_status':row['lineup_status'],'features':features,'candidate_features':candidate_features,
             'history':coverage,'history_sha256':history_hash,'config_sha256':config_hash,'actual_stake':0,
-            'contract_scope':scope,'settlement_policy':policy,'identity_basis':row.get('identity_basis','')}
+            'contract_scope':scope,'settlement_policy':policy,'identity_basis':row.get('identity_basis',''),
+            'quote_verification':row.get('quote_verification','')}
         models={'current':(live_params,control_mu),'keeper_watch':(config['candidate_params'],candidate_mu)}
         forecast={**base,'models':{n:{'mean':mu,'probabilities':[price_side('over',x,2,mu,p['alpha'])['model_probability'] for x in LINES]}
                     for n,(p,mu) in models.items()}}
@@ -266,7 +267,7 @@ def run(candidates, live_params, root, *, now=None):
             'exceptions':'Replacement keepers, substitutions and disputed counts remain under review; no inferred voids.'},
         'selections':[{k:r[k] for k in ('model','match_id','player_id','team_id','event_id','kickoff_at','registered_at',
             'captured_at','home','away','goalkeeper','side','line','bookmaker','odds','fair_odds','edge','lineup_status',
-            'status','profit','actual','reason','overdue','contract_scope','settlement_policy','identity_basis') if k in r} for r in sorted(scored,key=lambda r:r['kickoff_at'],reverse=True)],
+            'status','profit','actual','reason','overdue','contract_scope','settlement_policy','identity_basis','quote_verification') if k in r} for r in sorted(scored,key=lambda r:r['kickoff_at'],reverse=True)],
         'coverage':'Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.'}
     write(folder/'report.json',report)
     return report

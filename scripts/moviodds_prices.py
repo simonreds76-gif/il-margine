@@ -19,7 +19,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
-from goalkeeper_quote_integrity import MOVIODDS_GK_HOLD, REASON as GK_HOLD_REASON
+from goalkeeper_quote_integrity import MOVIODDS_GK_HOLD, REASON as GK_HOLD_REASON, verified_quote
 
 ROOT = Path(__file__).resolve().parents[1]
 URL = 'https://moviodds.com/odds'
@@ -66,7 +66,14 @@ def download(sport, get=None, groups=None, *, site='com'):
         if site not in {'com', 'com.au'}:
             raise ValueError('Unsupported Bet365 site')
         params['site'] = site
-    response = (get or requests.get)(URL, params=params,
+    data = download_response(URL, params, get)
+    if site == 'com' and data.get('site') != 'com':
+        raise ValueError('Requested Bet365.com board was not confirmed')
+    return data
+
+
+def download_response(url, params, get=None):
+    response = (get or requests.get)(url, params=params,
                                     headers={'Accept-Encoding': 'gzip', 'User-Agent': 'IlMargineResearch/1.0'},
                                     timeout=(5, 20), stream=True)
     try:
@@ -80,7 +87,7 @@ def download(sport, get=None, groups=None, *, site='com'):
         data = json.loads(body)
         # The unqualified endpoint is the Australian board. Never silently
         # accept it when a caller explicitly requests Bet365.com prices.
-        if site == 'com' and data.get('site') != 'com':
+        if params.get('site') == 'com' and data.get('site') != 'com':
             raise ValueError('Requested Bet365.com board was not confirmed')
         return data
     finally:
@@ -182,9 +189,6 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
                          'date': m['kickoff_utc'], 'league': {'name': tour+' - '+tournament}}
         markets = []
         for gid, (original_name, name) in (groups or GROUPS[sport]).items():
-            if sport == 'soccer' and gid == '177703' and MOVIODDS_GK_HOLD:
-                skipped[GK_HOLD_REASON] += 1
-                continue
             status = (m.get('group_status') or {}).get(gid) or {}
             polled = status.get('polled_at')
             if (status.get('stale') or status.get('suspended') or status.get('removed')
@@ -270,6 +274,11 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
                     skipped['non_named_player_or_non_milestone'] += 1
                     continue
                 line = int(milestone[1])-.5
+                if sport == 'soccer' and gid == '177703' and MOVIODDS_GK_HOLD and not verified_quote({
+                        'event_id':event['id'],'player':player,'line':line,'side':'over',
+                        'odds_decimal':price,'captured_at':polled,'quote_verification':q.get('quote_verification')}):
+                    skipped[GK_HOLD_REASON] += 1
+                    continue
                 if sport == 'soccer' and (gid != '177727' or q.get('handicap') is not None):
                     try:
                         if float(q.get('handicap')) != line:
@@ -293,7 +302,8 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
                 k = (key(player), line)
                 if k in props and props[k]['over'] != price:
                     conflicts.add(k)
-                props[k] = {'label': player, 'hdp': line, 'over': price, 'raw_quote': q}
+                props[k] = {'label': player, 'hdp': line, 'over': price, 'raw_quote': q,
+                            **({'quote_verification':q['quote_verification']} if q.get('quote_verification') else {})}
             odds = [v for k, v in props.items() if k not in conflicts]
             skipped['conflicting_quotes'] += len(conflicts)
             if sport == 'tennis' and gid in {'130317', '130328'}:
@@ -358,7 +368,7 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
     return output, dict(skipped)
 
 
-def capture(sport, *, targets=(), days_ahead=3, get=None, raw_path=None, force=False, site='com'):
+def capture(sport, *, targets=(), days_ahead=3, get=None, raw_path=None, force=False, site='com', verify_goalkeepers=False):
     receipt = {'source': 'moviodds_bet365', 'source_site': site or 'com.au',
                'status': 'DISABLED', 'requests': 0, 'market_count': 0, 'errors': []}
     if not force and not enabled(sport):
@@ -366,6 +376,14 @@ def capture(sport, *, targets=(), days_ahead=3, get=None, raw_path=None, force=F
     try:
         receipt['requests'] = 1
         data = download(sport, get, site=site)
+        raw_data=data
+        verification=None
+        live_responses={}
+        if sport == 'soccer' and MOVIODDS_GK_HOLD and verify_goalkeepers:
+            from moviodds_gk_verification import verify_board
+            data,verification,live_responses=verify_board(data,targets,get=get,days_ahead=days_ahead)
+            receipt['requests'] += verification['requests']
+            receipt['goalkeeper_verification'] = verification
         now = datetime.now(timezone.utc)
         receipt['received_at'] = now.isoformat()
         events, skipped = normalize(data, sport, now, targets=targets, days_ahead=days_ahead)
@@ -374,7 +392,14 @@ def capture(sport, *, targets=(), days_ahead=3, get=None, raw_path=None, force=F
                        quote_count=sum(len(m['odds']) for e in events for m in e['bookmakers']['Bet365']))
         if sport == 'soccer':
             coverage = goalkeeper_coverage(data, targets, events, now)
-            if MOVIODDS_GK_HOLD:
+            verified_fixtures={r['event_id']:r for r in (verification or {}).get('fixtures',[])}
+            for item in coverage:
+                checked=verified_fixtures.get(str(item.get('event_id')))
+                if checked:
+                    item['verification_exclusions']=checked.get('excluded',{})
+                    if item.get('status')=='CAPTURED' and checked.get('excluded'):
+                        item['status']='PARTIALLY_VERIFIED'
+            if MOVIODDS_GK_HOLD and not (verification or {}).get('verified_quotes'):
                 for item in coverage:
                     item.update(status='SOURCE_CONTRACT_QUARANTINED', reason=GK_HOLD_REASON)
                 receipt['goalkeeper_source_hold'] = GK_HOLD_REASON
@@ -385,7 +410,8 @@ def capture(sport, *, targets=(), days_ahead=3, get=None, raw_path=None, force=F
             raw_path = Path(raw_path)
             raw_path.parent.mkdir(parents=True, exist_ok=True)
             temp = raw_path.with_suffix(raw_path.suffix+'.tmp')
-            temp.write_bytes(gzip.compress(json.dumps({'receipt': receipt, 'raw': data}).encode()))
+            temp.write_bytes(gzip.compress(json.dumps({'receipt': receipt, 'raw': raw_data,
+                **({'goalkeeper_live_responses':live_responses} if verification else {})}).encode()))
             temp.replace(raw_path)
         return events, receipt
     except (requests.RequestException, OSError, ValueError, TypeError, KeyError, AttributeError) as error:
@@ -397,7 +423,7 @@ def merge_football(payload, targets, *, days_ahead=7, **kwargs):
     # Pin the GK route as well as the shared default. The Australian board can
     # omit markets already priced on Bet365.com; never mix regions or relax
     # the market-specific freshness guard.
-    events, receipt = capture('soccer', targets=targets, days_ahead=days_ahead, site='com', **kwargs)
+    events, receipt = capture('soccer', targets=targets, days_ahead=days_ahead, site='com', verify_goalkeepers=True, **kwargs)
     # Retain existing books. If another route supplies Bet365 for the same event,
     # retain that whole book instead of mixing timestamps/contracts or duplicating.
     result = copy.deepcopy(payload)

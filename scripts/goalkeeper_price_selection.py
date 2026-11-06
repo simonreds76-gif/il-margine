@@ -70,6 +70,9 @@ def current_offers(rows, now):
         key = contract_key(row)
         captured, kickoff = stamp(row.get('captured_at')), stamp(row.get('kickoff_at'))
         odds = number(row.get('odds_decimal'))
+        if (str(row.get('bookmaker') or '').casefold()=='bet365' and captured
+                and now-captured>timedelta(minutes=10)):
+            continue
         if (not key or not captured or not kickoff or not kickoff > now
                 or not timedelta(0) <= now-captured <= timedelta(hours=6)
                 or captured != newest.get((key[0], str(row.get('bookmaker') or '').casefold()))

@@ -8,6 +8,12 @@ sys.path.insert(0,str(Path(__file__).parent))
 from test_goalkeeper_saves_live import capture, shadow, load_script
 alerts=load_script('gk_alerts','goalkeeper-saves-alerts.py')
 class NewGkTests(unittest.TestCase):
+ def setUp(self):
+  # Synthetic delivery tests; source proof is exercised by test_moviodds_gk_atomic.
+  hold=patch('goalkeeper_quote_integrity.MOVIODDS_GK_HOLD',False)
+  hold.start();self.addCleanup(hold.stop)
+  recorded=patch('goalkeeper_quote_integrity.recorded_quote_issue',return_value=None)
+  recorded.start();self.addCleanup(recorded.stop)
  def test_all_five_leagues_fit_in_three_batches(self):
   now=datetime(2026,9,19,10,tzinfo=timezone.utc)
   leagues=['England - Premier League','Italy - Serie A','Germany - Bundesliga','Spain - La Liga','France - Ligue 1']

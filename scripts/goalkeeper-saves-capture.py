@@ -37,7 +37,7 @@ FIELDS = [
     "captured_at", "match_date", "event_id", "kickoff_at", "capture_mode",
     "bookmaker", "competition", "league", "home_team", "away_team", "player",
     "line", "side", "odds_decimal", "under_odds_decimal", "home_price",
-    "draw_price", "away_price", "source",
+    "draw_price", "away_price", "source", "quote_verification",
 ]
 
 
@@ -245,8 +245,6 @@ def extract_rows(
         requested = {name.strip().casefold() for name in bookmaker_name.split(",") if name.strip()}
         for bookmaker, markets in (event.get("bookmakers") or {}).items():
             from goalkeeper_quote_integrity import current_quote_issue
-            if current_quote_issue({'bookmaker':bookmaker}):
-                continue
             if str(bookmaker).casefold() not in requested:
                 continue
             home_price, draw_price, away_price, three_way_source = event_three_way_prices(event, meta, str(bookmaker))
@@ -281,11 +279,14 @@ def extract_rows(
                             "draw_price": f"{draw_price:.4f}" if draw_price else "",
                             "away_price": f"{away_price:.4f}" if away_price else "",
                             "source": f"{market.get('source', 'odds_api_io')}:team_goalkeeper_{team_side}:{three_way_source}:offer={market.get('source_offer_id', '')}" if team_side else f"{market.get('source', 'odds_api_io')}:{three_way_source}",
+                            "quote_verification": prop.get("quote_verification", ""),
                         }
                     if has_over:
-                        rows.append({**base_row, "side": "over", "odds_decimal": f"{over:.4f}"})
+                        row={**base_row, "side": "over", "odds_decimal": f"{over:.4f}"}
+                        if not current_quote_issue(row): rows.append(row)
                     if has_under:
-                        rows.append({**base_row, "side": "under", "odds_decimal": f"{under:.4f}"})
+                        row={**base_row, "side": "under", "odds_decimal": f"{under:.4f}"}
+                        if not current_quote_issue(row): rows.append(row)
     return rows
 
 
@@ -318,14 +319,27 @@ def save_market_coverage(payload: list[dict[str, Any]], bookmakers: str) -> dict
 def append_rows(path: Path, rows: list[dict[str, Any]]) -> int:
     path.parent.mkdir(parents=True, exist_ok=True)
     existing: set[tuple[str, ...]] = set()
-    if path.exists():
+    fields=list(FIELDS)
+    if path.exists() and path.stat().st_size:
         with path.open(newline="", encoding="utf-8-sig") as handle:
-            for row in csv.DictReader(handle):
+            reader=csv.DictReader(handle)
+            old_fields=list(reader.fieldnames or [])
+            old_rows=list(reader)
+            for row in old_rows:
                 existing.add(tuple(str(row.get(key) or "") for key in ("captured_at", "event_id", "bookmaker", "player", "line", "side")))
+        fields=old_fields+[f for f in FIELDS if f not in old_fields]
+        if fields != old_fields:
+            # Append the new evidence column atomically. Keep every existing
+            # value and unknown column; never shift an old CSV row's fields.
+            temporary=path.with_suffix(path.suffix+'.schema.tmp')
+            with temporary.open('w',newline='',encoding='utf-8') as handle:
+                writer=csv.DictWriter(handle,fieldnames=fields,lineterminator='\n')
+                writer.writeheader();writer.writerows(old_rows)
+            temporary.replace(path)
     mode = "a" if path.exists() and path.stat().st_size else "w"
     added = 0
     with path.open(mode, newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=FIELDS, extrasaction="ignore", lineterminator="\n")
+        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore", lineterminator="\n")
         if mode == "w":
             writer.writeheader()
         for row in rows:

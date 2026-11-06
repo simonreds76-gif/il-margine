@@ -11,6 +11,11 @@ def load(name):
 shadow=load('goalkeeper-saves-shadow'); settle=load('goalkeeper-saves-settle'); alerts=load('club-penalty-review-alert')
 
 class KambiContracts(unittest.TestCase):
+    def setUp(self):
+        # These pre-incident synthetic contracts test identity and settlement.
+        hold=patch('goalkeeper_quote_integrity.MOVIODDS_GK_HOLD',False)
+        hold.start();self.addCleanup(hold.stop)
+
     def test_maps_only_same_fixture_and_side(self):
         common=dict(event_id='1',match_date='2026-10-25',home_team='Arsenal',away_team='Everton',league='epl',line='3.5',side='over',odds_decimal='2.0',captured_at='2026-10-24T12:00:00Z',kickoff_at='2026-10-25T14:00:00Z')
         offers=[dict(common,bookmaker='Bet365',player='David Raya'),dict(common,bookmaker='Kambi',player='Home goalkeeper',source='odds_api_io:team_goalkeeper_home:bookmaker_ml'),dict(common,bookmaker='Kambi',player='Away goalkeeper',source='odds_api_io:team_goalkeeper_away:bookmaker_ml')]
