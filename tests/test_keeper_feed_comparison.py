@@ -23,6 +23,31 @@ spec.loader.exec_module(collector)
 
 
 class KeeperComparisonTest(unittest.TestCase):
+    def test_all_fourteen_failed_calendars_resolve_with_verified_ids(self):
+        config = read(ROOT / 'config/keeper-feed-comparison.json')
+        cases = read(ROOT / 'tests/fixtures/keeper-calendar-identities-20261106.json')
+        for case in cases:
+            ref = case['reference']
+            events = [{'id':e['id'], 'competitions':[{'date':e['kickoff'],
+                       'competitors':[{'homeAway':s,'team':{'id':e[s]['id'],'displayName':e[s]['name']},'score':e[s]['score']} for s in ('home','away')]}]} for e in case['espn']]
+            client = collector.Client('',0,0)
+            def response(source, path, params=None):
+                if source == 'goal':return {'data':case['goal']}
+                if path.endswith('/scoreboard'):return {'events':events}
+                return {'header':next(e for e in events if e['id']==params['event'])}
+            with patch.object(client,'get',side_effect=response):
+                g=collector.find_goal(client,ref,config,'2026-10-24','2026-10-30')
+                e=collector.find_espn(client,ref,config)
+            self.assertTrue(all(team_matches(ref[s],'goal',{'id':g[s+'TeamId']},config) for s in ('home','away')))
+            self.assertEqual(collector.instant(g['kickoffUtc']),collector.instant(e['header']['competitions'][0]['date']))
+        changed=copy.deepcopy(next(c['reference'] for c in cases if c['reference']['match_id']=='5749716'))
+        changed['source_sha256']='new-source-revision'
+        with self.assertRaisesRegex(ValueError,'reviewed_fixture_time_changed'):
+            collector.expected_provider_kickoff(changed,config)
+        for provider in ('goal','espn'):
+            ids=[v[provider]['id'] for v in config['teams'].values() if provider in v]
+            self.assertEqual(len(ids),len(set(ids)))
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)

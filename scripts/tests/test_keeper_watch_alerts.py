@@ -16,12 +16,14 @@ spec.loader.exec_module(alerts)
 
 class KeeperWatchAlerts(unittest.TestCase):
     def setUp(self):
+        hold=patch('goalkeeper_quote_integrity.MOVIODDS_GK_HOLD', False)
+        hold.start();self.addCleanup(hold.stop)
         self.now = datetime.now(timezone.utc)
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.folder = Path(self.tmp.name)
         self.path = self.folder / 'report.json'
-        self.row = dict(model='keeper_watch', match_id='42', player_id='9', team_id='3',
+        self.row = dict(model='keeper_watch', match_id='42', event_id='42', player_id='9', team_id='3',
             captured_at=self.now.isoformat(), registered_at=self.now.isoformat(),
             kickoff_at=(self.now+timedelta(hours=2)).isoformat(), home='A & B', away='C',
             goalkeeper='Test Keeper', bookmaker='Bet365', side='over', line=3.5,
@@ -72,14 +74,40 @@ class KeeperWatchAlerts(unittest.TestCase):
             self.assertIn(expected,text)
         self.assertNotIn('GK saves | New tracked signal',text)
 
+    def test_compares_both_books_and_blocks_the_lower_or_changed_quote(self):
+        row=self.rows()[0]
+        offers=[{**row,'bookmaker':'Bet365','odds_decimal':2.2},
+                {**row,'bookmaker':'Grosvenor','odds_decimal':2.0}]
+        state={}
+        self.assertEqual(alerts.claim([row],state,'test:1',self.now,offers),1)
+        signal=state['signals'][row['signal_id']]['signal']
+        self.assertIn('Bet365 2.20 | Grosvenor 2.00', alerts.message(signal))
+        offers[1]['odds_decimal']=2.4
+        self.assertEqual(alerts.claim([row],{},'test:2',self.now,offers),0)
+        offers[0]['odds_decimal']=2.1
+        self.assertEqual(alerts.claim([row],{},'test:3',self.now,offers),0)
+        self.assertEqual(alerts.claim([row],{},'test:4',self.now,[]),0)
+
+    def test_registered_grosvenor_scope_can_alert_but_unknown_identity_cannot(self):
+        row={**self.rows()[0],'bookmaker':'Grosvenor','contract_scope':'team_goalkeeper_home',
+             'identity_basis':'same_fixture_lineup_side','settlement_policy':'grosvenor_full90_scope_agreement_v1'}
+        self.assertTrue(alerts.eligible(row,self.now))
+        self.assertFalse(alerts.eligible({**row,'identity_basis':''},self.now))
+        self.assertFalse(alerts.eligible({**row,'settlement_policy':'unverified'},self.now))
+
     def delivery(self, timeout=False):
         self.rows()
         ledger=self.folder/'signals.csv'
         ledger.write_text('signal_id,status\n',encoding='utf-8')
+        candidates=self.folder/'candidates.csv'
+        import csv
+        quote=self.rows()[0]
+        with candidates.open('w',newline='',encoding='utf-8') as f:
+            writer=csv.DictWriter(f,fieldnames=list(quote));writer.writeheader();writer.writerow(quote)
         state=self.folder/'state.json'
         env={'OPS_ALERT_TELEGRAM_BOT_TOKEN':'fake','OPS_ALERT_TELEGRAM_CHAT_ID':'fake',
              'GITHUB_RUN_ID':'test','GITHUB_RUN_ATTEMPT':'1'}
-        args=['alerts','--state',str(state),'--ledger',str(ledger),'--report',str(self.path)]
+        args=['alerts','--state',str(state),'--ledger',str(ledger),'--report',str(self.path),'--candidates',str(candidates)]
         response=Mock(ok=True,status_code=200)
         response.json.return_value={'ok':True,'result':{'message_id':77}}
         with patch.dict(os.environ,env), patch('builtins.print'), patch.object(alerts.requests,'post',return_value=response) as post:

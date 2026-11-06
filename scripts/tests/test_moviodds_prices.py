@@ -20,6 +20,8 @@ def load(name):
 
 class MoviOddsTests(unittest.TestCase):
     def setUp(self):
+        for target in ('moviodds_prices.MOVIODDS_GK_HOLD','goalkeeper_quote_integrity.MOVIODDS_GK_HOLD'):
+            hold=patch(target, False);hold.start();self.addCleanup(hold.stop)
         self.raw = json.loads((Path(__file__).parent/'fixtures/moviodds-prices.json').read_text())
         self.now = datetime(2026, 10, 28, 17, 56, 20, tzinfo=timezone.utc)
         self.target = {'id': 123, 'home': 'Genoa', 'away': 'Juventus',

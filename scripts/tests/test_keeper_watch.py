@@ -13,6 +13,8 @@ from football_identity import write, read
 
 class KeeperWatchTests(unittest.TestCase):
     def setUp(self):
+        hold=patch('goalkeeper_quote_integrity.MOVIODDS_GK_HOLD', False)
+        hold.start();self.addCleanup(hold.stop)
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.root=Path(self.tmp.name)
         self.now=datetime(2026,1,19,9,tzinfo=UTC)
         self.params={'alpha':.1,'beta':[0]*10,'centers':[0]*9,'scales':[1]*9,
@@ -64,6 +66,17 @@ class KeeperWatchTests(unittest.TestCase):
         old=copy.deepcopy(self.row);old['captured_at']='2026-01-18T23:00:00Z'
         self.assertEqual(self.run_watch([old])['forecast_keepers'],0)
         self.assertEqual(self.run_watch(now=self.now+timedelta(days=3))['forecast_keepers'],0)
+
+    def test_choose_best_current_price_before_near_even_line_ranking(self):
+        lower=copy.deepcopy(self.row)
+        higher={**copy.deepcopy(self.row),'odds_decimal':2.25}
+        result=self.run_watch([lower,higher])
+        self.assertEqual(len(result['selections']),2)
+        self.assertTrue(all(r['odds']==2.25 for r in result['selections']))
+        # Rechecking a better price must never rewrite a previously locked record.
+        higher['odds_decimal']=2.4
+        again=self.run_watch([higher])
+        self.assertTrue(all(r['odds']==2.25 for r in again['selections']))
 
     def test_identity_and_blockers_fail_closed(self):
         row=copy.deepcopy(self.row);row['_research_lineup']['home_starters'][0]['name']='Other Keeper'

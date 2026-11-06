@@ -45,16 +45,32 @@ def team_matches(ref, provider, foreign, config):
     return folded(ref['name']) in {folded(n) for n in names if n}
 
 
+def expected_provider_kickoff(ref, config):
+    review = config.get('reviewed_fixture_times', {}).get(str(ref['match_id']))
+    if not review:
+        return instant(ref['kickoff'])
+    # A reviewed scheduled/actual-start discrepancy is exact-fixture only.
+    if (review['reference_sha256'] != ref.get('source_sha256')
+            or instant(review['reference_kickoff']) != instant(ref['kickoff'])
+            or str(review['league_id']) != str(ref['league_id'])
+            or any(str(review[s+'_team_id']) != str(ref[s]['id']) for s in SIDES)):
+        raise ValueError('reviewed_fixture_time_changed')
+    return instant(review['provider_kickoff'])
+
+
 def fixture_ok(ref, goal, espn, config):
     comp, sides = espn_sides(espn)
     if goal.get('matchStatus') != 'FINISHED' or comp['status']['type'].get('completed') is not True:
         raise ValueError('unfinished_fixture')
-    expected = instant(ref['kickoff'])
+    expected = expected_provider_kickoff(ref, config)
     if instant(goal['kickoffUtc']) != expected or instant(comp['date']) != expected:
         raise ValueError('kickoff_mismatch')
     league = config['leagues'][str(ref['league_id'])]
     if str(goal['leagueId']) != league['goal']:
         raise ValueError('league_mismatch')
+    review = config.get('reviewed_fixture_times', {}).get(str(ref['match_id']))
+    if review and (str(goal['id']) != review['goal_fixture_id'] or str(espn['id']) != review['espn_fixture_id']):
+        raise ValueError('reviewed_fixture_identity_changed')
     score = {}
     for side in SIDES:
         if not team_matches(ref[side], 'goal', {'id': goal[side+'TeamId'], 'name': goal[side+'TeamName']}, config):
@@ -173,6 +189,8 @@ def compare(root, ref, goal_fixture, goal_stats, espn, config, observed_at):
                               'goal_statistics': digest(goal_stats), 'espn': digest(espn)},
             'result': score, 'status': status, 'flags': flags, 'keepers': rows,
             'purpose': 'source comparison; no model inputs or settlements changed'}
+    if str(ref['match_id']) in config.get('reviewed_fixture_times', {}):
+        record['fixture_time_review'] = dict(config['reviewed_fixture_times'][str(ref['match_id'])])
     return apply_reviewed_counts(record, ref, config)
 
 

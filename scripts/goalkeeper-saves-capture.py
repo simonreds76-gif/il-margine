@@ -244,6 +244,9 @@ def extract_rows(
         competition = event_league(meta) or event_league(event)
         requested = {name.strip().casefold() for name in bookmaker_name.split(",") if name.strip()}
         for bookmaker, markets in (event.get("bookmakers") or {}).items():
+            from goalkeeper_quote_integrity import current_quote_issue
+            if current_quote_issue({'bookmaker':bookmaker}):
+                continue
             if str(bookmaker).casefold() not in requested:
                 continue
             home_price, draw_price, away_price, three_way_source = event_three_way_prices(event, meta, str(bookmaker))

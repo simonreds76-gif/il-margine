@@ -364,11 +364,15 @@ jobs:
           python -m unittest discover -s tests -p test_football_identity.py
           python -m unittest discover -s tests -p test_keeper_feed_comparison.py
           python -m unittest discover -s scripts/tests -p test_skyline_store.py
+          python -m unittest discover -s scripts/tests -p test_goalkeeper_quote_integrity.py
+          python -m unittest discover -s scripts/tests -p test_goalkeeper_best_prices.py
+          python -m unittest discover -s scripts/tests -p 'test_keeper_watch*.py'
+          python -m unittest discover -s scripts/tests -p 'test_moviodds*.py'
       - name: Verify fresh authenticated prices-free source responses
         env:
           GOAL_API_KEY: ${{ secrets.GOAL_API_KEY }}
         run: >-
           python scripts/compare-keeper-feeds.py
           --output ${{ runner.temp }}/keeper-probe
-          --fixture 5795503 --fixture 5868113 --fixture 5749731
-          --fixture 5881210 --fixture 5802975
+          --fixture 5749714 --fixture 5749716 --fixture 5749719 --fixture 5749720 --fixture 5749729 --fixture 5795490 --fixture 5795492 --fixture 5795493 --fixture 5795494 --fixture 5802968 --fixture 5802972 --fixture 5802973 --fixture 5868103 --fixture 5868104
+          --fixture 5881210

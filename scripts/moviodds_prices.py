@@ -19,6 +19,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
+from goalkeeper_quote_integrity import MOVIODDS_GK_HOLD, REASON as GK_HOLD_REASON
 
 ROOT = Path(__file__).resolve().parents[1]
 URL = 'https://moviodds.com/odds'
@@ -181,6 +182,9 @@ def normalize(data, sport, now, *, targets=(), days_ahead=3, groups=None):
                          'date': m['kickoff_utc'], 'league': {'name': tour+' - '+tournament}}
         markets = []
         for gid, (original_name, name) in (groups or GROUPS[sport]).items():
+            if sport == 'soccer' and gid == '177703' and MOVIODDS_GK_HOLD:
+                skipped[GK_HOLD_REASON] += 1
+                continue
             status = (m.get('group_status') or {}).get(gid) or {}
             polled = status.get('polled_at')
             if (status.get('stale') or status.get('suspended') or status.get('removed')
@@ -370,6 +374,10 @@ def capture(sport, *, targets=(), days_ahead=3, get=None, raw_path=None, force=F
                        quote_count=sum(len(m['odds']) for e in events for m in e['bookmakers']['Bet365']))
         if sport == 'soccer':
             coverage = goalkeeper_coverage(data, targets, events, now)
+            if MOVIODDS_GK_HOLD:
+                for item in coverage:
+                    item.update(status='SOURCE_CONTRACT_QUARANTINED', reason=GK_HOLD_REASON)
+                receipt['goalkeeper_source_hold'] = GK_HOLD_REASON
             receipt['goalkeeper_fixture_coverage'] = coverage
             receipt['goalkeeper_coverage_status'] = ('NO_TARGETS' if not coverage else
                 'COMPLETE' if all(r['status'] == 'CAPTURED' for r in coverage) else 'INCOMPLETE')
