@@ -13,7 +13,7 @@ from typing import Any
 
 from football_team_names import football_form_team_key
 from goalkeeper_price_selection import best_offers, stamp as price_stamp
-from goalkeeper_quote_integrity import current_quote_issue, recorded_quote_issue, annotate_records
+from goalkeeper_quote_integrity import current_quote_issue, recorded_quote_issue, annotate_records, bind_resolved_keeper
 from goalkeeper_forecast_evidence import archive as archive_forecast_inputs, source_hashes
 from goalkeeper_saves_live import (
     ROOT,
@@ -316,7 +316,7 @@ def build_candidates(
                 "contract_scope": f"team_goalkeeper_{contract_side}" if contract_side else "named_player",
                 "identity_basis": identity_basis,
                 "bookmaker": price_row.get("bookmaker") or "Bet365",
-                "quote_verification": price_row.get("quote_verification", ""),
+                "quote_verification": bind_resolved_keeper(price_row,canonical_player),
                 "line": price_row.get("line", ""),
                 "side": str(price_row.get("side") or "over").casefold(),
                 "odds_decimal": price_row.get("odds_decimal", ""),
