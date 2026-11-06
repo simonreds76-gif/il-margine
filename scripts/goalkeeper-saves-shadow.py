@@ -54,7 +54,7 @@ CANDIDATE_FIELDS = [
     "team", "opponent", "venue", "goalkeeper", "bookmaker", "line", "side", "odds_decimal", "model_mean",
     "model_probability", "push_probability", "fair_odds", "edge", "lineup_status", "lineup_source", "data_issue_detail",
     "capture_mode", "captured_at", "candidate_status", "blockers", "strongest_for_fixture",
-    "selection_policy", "three_way_source", "contract_scope", "identity_basis",
+    "selection_policy", "three_way_source", "contract_scope", "identity_basis", "quote_verification",
 ]
 PROVISIONAL_FIELDS = CANDIDATE_FIELDS + ["research_only", "not_a_signal"]
 SIGNAL_FIELDS = [
@@ -63,7 +63,7 @@ SIGNAL_FIELDS = [
     "model_probability", "push_probability", "fair_odds", "edge", "stake_units", "lineup_status",
     "lineup_source", "capture_mode", "captured_at", "status", "result", "actual_saves", "pnl_units",
     "settled_at", "settlement_source", "close_odds", "clv", "selection_policy", "contract_scope", "identity_basis",
-    "integrity_status", "quarantine_reason",
+    "integrity_status", "quarantine_reason", "quote_verification",
 ]
 
 
@@ -316,6 +316,7 @@ def build_candidates(
                 "contract_scope": f"team_goalkeeper_{contract_side}" if contract_side else "named_player",
                 "identity_basis": identity_basis,
                 "bookmaker": price_row.get("bookmaker") or "Bet365",
+                "quote_verification": price_row.get("quote_verification", ""),
                 "line": price_row.get("line", ""),
                 "side": str(price_row.get("side") or "over").casefold(),
                 "odds_decimal": price_row.get("odds_decimal", ""),
