@@ -8,6 +8,10 @@ import styles from './ClubPenaltyLog.module.css';
 
 export default function ClubPenaltyLog({ clubUrl, club }: { clubUrl: string; club: string }) {
   const reports = recordedClubPenalties(penaltyNews.articles, clubUrl, penaltyNews.coverageStart);
+  if (!reports.length) return <p id="recorded-penalties" className={styles.empty}>
+    No {club} penalty report is filed since <time dateTime={penaltyNews.coverageStart}>{newsDate(penaltyNews.coverageStart)}</time>. This does not mean the club has taken no penalties this season.{' '}
+    <Link href="/penalty-news#reports" prefetch={false}>Browse Penalty News →</Link>
+  </p>;
   const takers = new Map<string, number>();
   for (const report of reports) takers.set(report.player, (takers.get(report.player) ?? 0) + 1);
   return <section id="recorded-penalties" className={styles.log} aria-labelledby="penalty-log-heading">
@@ -23,7 +27,7 @@ export default function ClubPenaltyLog({ clubUrl, club }: { clubUrl: string; clu
         <div><dt>Different takers</dt><dd>{takers.size}</dd></div>
       </dl>
       <p className={styles.takers}><strong>Takers in these reports:</strong> {[...takers].map(([name, count]) => `${name} (${count})`).join(' · ')}</p>
-      <ol className={styles.rows}>{reports.map(a => <li key={`${a.matchId}:${a.eventId}`}>
+      <ol className={styles.rows}>{reports.slice(0, 10).map(a => <li key={`${a.matchId}:${a.eventId}`}>
         <Link prefetch={false} href={`/penalty-news/${a.slug}`} className={styles.row}>
           <FixturePhoto src={a.portrait} size={48} className={styles.portrait} fallback={<span aria-hidden="true">{a.player.split(/\s+/).map(word => word[0]).slice(0, 2).join('')}</span>} />
           <div className={styles.detail}>
@@ -35,6 +39,7 @@ export default function ClubPenaltyLog({ clubUrl, club }: { clubUrl: string; clu
         </Link>
       </li>)}</ol>
       <p className={styles.footnote}>Each row is a reported incident; separately reported retakes remain separate. These results do not automatically change the hierarchy above.</p>
+      {reports.length > 10 && <p className={styles.footnote}>Showing the ten latest reports. Earlier reports remain in Penalty News.</p>}
     </> : <p className={styles.empty}>No {club} penalty reports are filed in this window. This does not mean the club has taken no penalties this season.</p>}
     <Link href="/penalty-news#reports" prefetch={false} className={styles.archive}>Browse all Penalty News <span aria-hidden="true">→</span></Link>
   </section>;

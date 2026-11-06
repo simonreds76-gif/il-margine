@@ -1,15 +1,16 @@
 import type { PenaltyArticle } from './penalty-news';
 import type { FixtureBoard } from '@/components/football-atlas/fixtures/types';
 
-// Preview cohort only. Final treatment/control assignment needs a fresh GSC baseline.
+// Original preview cohort, retained for regression checks. The shared layout now
+// covers all current clubs; the observational GSC baseline is not an A/B test.
 export const PENALTY_GROWTH_PAGES = [
   'epl/chelsea', 'epl/sunderland', 'ligue-1/paris-saint-germain',
   'serie-a/atalanta', 'serie-a/bologna', 'ligue-1/rennes', 'ligue-1/lorient',
   'la-liga/real-madrid', 'bundesliga/werder-bremen', 'bundesliga/sv-elversberg',
 ] as const;
 
-export function isPenaltyGrowthPage(league: string, slug: string) {
-  return PENALTY_GROWTH_PAGES.some(page => page === `${league}/${slug}`);
+export function isPenaltyGrowthPage(league: string, slug: string, archived = false) {
+  return !archived && Boolean(slug) && ['epl', 'serie-a', 'la-liga', 'bundesliga', 'ligue-1'].includes(league);
 }
 
 export function recordedClubPenalties(articles: PenaltyArticle[], clubUrl: string, coverageStart: string) {

@@ -20,10 +20,13 @@ const newsHelpers = load('src/lib/penalty-news.ts');
 const news = require('../../src/data/penalty-news.json');
 const board = require('../../src/data/atlas-fixtures.json');
 
-test('preview is confined to ten named club pages and leaves controls outside', () => {
+test('shared layout covers current clubs across the five leagues, not archives or other competitions', () => {
   assert.equal(new Set(helpers.PENALTY_GROWTH_PAGES).size, 10);
-  assert.equal(helpers.isPenaltyGrowthPage('epl', 'everton'), false);
+  assert.equal(helpers.isPenaltyGrowthPage('epl', 'everton'), true);
   assert.equal(helpers.isPenaltyGrowthPage('epl', 'chelsea'), true);
+  assert.equal(helpers.isPenaltyGrowthPage('epl', 'chelsea', true), false);
+  assert.equal(helpers.isPenaltyGrowthPage('championship', 'leeds'), false);
+  assert.equal(helpers.isPenaltyGrowthPage('serie-a', ''), false);
 });
 test('deduplicate events, retain different incidents and latest correction without mutating records', () => {
   const a = news.articles[0], corrected = { ...a, updatedAt: '2099-01-01', outcome: 'saved' };
@@ -57,6 +60,7 @@ test('all real pilot rows retain the exact report URLs, outcomes, timestamps and
   }
   const empty = renderToStaticMarkup(React.createElement(Component, { clubUrl: '/no-reports', club: 'Example' }));
   assert.ok(empty.includes('does not mean the club has taken no penalties'));
+  assert.ok(!empty.includes('<section') && !empty.includes('<dl'));
 });
 test('fixture joins require the exact existing league and crest and carry only compact public fields', () => {
   const f = board.fixtures.find(f => f.league === 'premier-league');
