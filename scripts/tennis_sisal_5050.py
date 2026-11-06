@@ -21,6 +21,13 @@ BOARD = Path('data/tennis-props/shadow/aces-v3-projection-board.csv')
 MODEL = Path('data/tennis-props/models/v3-atp-aces-live.txt')
 GENERATOR = Path('scripts/tennis-props-v3-live.py')
 ALPHA = 0.1800339589347608
+# Both producers retain the completed-results exclusive cutoff and baseline
+# schema. Input isolation in v3 changed the audit version, not this model.
+# The producer compatibility test must be updated when its contract changes.
+SUPPORTED_HISTORY_VERSIONS = frozenset({
+    'oncourt-current-history-20261007-v1',
+    'oncourt-current-history-20261104-v3',
+})
 CONFIG = dict(version='sisal-5050-v1', name='Sisal 50/50', bookmaker='Sisal IT',
               model_weight=0.5, alpha=ALPHA, min_ev=0.08, paper_stake=1, real_stake=0,
               min_lead_minutes=15, max_quote_age_hours=6, max_provider_age_hours=24,
@@ -188,7 +195,8 @@ def verified_history(root, board, cap, now):
     status=read_json(root/'data/tennis-props/player-history-status.json',{})
     return bool(day and day<=cap.date().isoformat() and p.exists()
                 and status.get('state')=='CURRENT' and status.get('as_of')==day
-                and status.get('version')==board.get('history_version')=='oncourt-current-history-20261007-v1'
+                and status.get('version')==board.get('history_version')
+                and status.get('version') in SUPPORTED_HISTORY_VERSIONS
                 and status.get('feature_cutoff')=='Completed results strictly before '+day
                 and stamp(status.get('generated_at')) and stamp(status['generated_at'])<=now
                 and status.get('output_hashes',{}).get(p.name)==board.get('history_fingerprint')==sha(p))
