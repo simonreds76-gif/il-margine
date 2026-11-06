@@ -29,11 +29,19 @@ export type ClubFixtureLink = {
   id: string; kickoff: string; home: string; away: string; homeCrest: string | null;
   awayCrest: string | null; href: string;
 };
-export function clubFixtureLinks(board: FixtureBoard, league: string, crest: string): ClubFixtureLink[] {
+type ClubLogoMap = { leagues?: Record<string, { teams?: Record<string, { logo_path?: string; fotmob_team_id?: number | string }> }> };
+export function clubFixtureLinks(board: FixtureBoard, league: string, crest: string, identities?: ClubLogoMap): ClubFixtureLink[] {
   if (!crest) return [];
   const fixtureLeague = league === 'epl' ? 'premier-league' : league;
-  // Shared exact crest path is an existing club identity; never guess by similar names.
-  return board.fixtures.filter(f => f.league === fixtureLeague && (f.home.crest === crest || f.away.crest === crest))
+  const ids = [...new Set(Object.values(identities?.leagues?.[league]?.teams ?? {})
+    .filter(row => row.logo_path === crest && row.fotmob_team_id)
+    .map(row => String(row.fotmob_team_id)))];
+  if (ids.length > 1) return []; // An ambiguous identity cannot produce a fixture link.
+  // Prefer the existing exact team ID: Atlas and penalty pages can use different crest files.
+  // Without an ID, only an identical crest in the same league is accepted; no fuzzy names.
+  return board.fixtures.filter(f => f.league === fixtureLeague && (ids.length
+    ? f.home.providerId === ids[0] || f.away.providerId === ids[0]
+    : f.home.crest === crest || f.away.crest === crest))
     .map(f => ({ id: f.id, kickoff: f.kickoff, home: f.home.name, away: f.away.name,
       homeCrest: f.home.crest, awayCrest: f.away.crest,
       href: `/football-atlas/fixtures?fixture=${encodeURIComponent(f.id)}&history=clubs#${encodeURIComponent(f.id)}` }));

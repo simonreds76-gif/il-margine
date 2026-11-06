@@ -9,6 +9,7 @@ import ClubPenaltyLog from "@/components/ClubPenaltyLog";
 import ClubPenaltyNextFixture from "@/components/ClubPenaltyNextFixture";
 import { isPenaltyGrowthPage, clubFixtureLinks, sameEvidenceText } from "@/lib/penalty-growth-pilot";
 import fixtureSnapshot from "@/data/atlas-fixtures.json";
+import clubLogos from "../../../../../data/goalscorer/team-logo-map.json";
 import { penaltyNews } from "@/lib/penalty-news-data";
 import { latestClubPenaltyReport, newsDate } from "@/lib/penalty-news";
 import { BASE_URL } from "@/lib/config";
@@ -367,7 +368,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
         </section>
 
         {growthPilot ? <>
-          <ClubPenaltyNextFixture fixtures={clubFixtureLinks(fixtureSnapshot, team.leagueKey, team.logoPath)} checkedAt={fixtureSnapshot.checkedAt} expiresAt={fixtureSnapshot.expiresAt} clubUrl={team.relativeUrl} renderedAt={renderedAt} />
+          <ClubPenaltyNextFixture fixtures={clubFixtureLinks(fixtureSnapshot, team.leagueKey, team.logoPath, clubLogos)} checkedAt={fixtureSnapshot.checkedAt} expiresAt={fixtureSnapshot.expiresAt} clubUrl={team.relativeUrl} renderedAt={renderedAt} />
           <ClubPenaltyLog clubUrl={team.relativeUrl} club={team.team} />
         </> : <ClubPenaltyReports clubUrl={team.relativeUrl} club={team.team} />}
 

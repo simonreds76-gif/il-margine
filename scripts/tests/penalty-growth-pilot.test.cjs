@@ -75,6 +75,14 @@ test('both clubs can take penalties in one match without leaking into the oppone
   assert.ok(elche.every(a => a.club === 'Elche'));
   assert.equal(rayo[0].player, 'Pathé Ciss');
 });
+test('existing team IDs bridge different Atlas and penalty crest paths without guessing names', () => {
+  const identities = require('../../data/goalscorer/team-logo-map.json');
+  const links = helpers.clubFixtureLinks(board, 'bundesliga', '/team-logos/bundesliga/sv-elversberg.png', identities);
+  assert.ok(links.some(f => f.id === 'fm-5881215' && f.away === 'Elversberg'));
+  assert.equal(helpers.clubFixtureLinks(board, 'epl', '/team-logos/bundesliga/sv-elversberg.png', identities).length, 0);
+  const ambiguous = { leagues: { bundesliga: { teams: { a: { logo_path: 'same', fotmob_team_id: 8232 }, b: { logo_path: 'same', fotmob_team_id: 99 } } } } };
+  assert.equal(helpers.clubFixtureLinks(board, 'bundesliga', 'same', ambiguous).length, 0);
+});
 test('next fixture disappears after kickoff, on stale evidence and on invalid/future observations', () => {
   const rows = [{ id: 'a', kickoff: '2026-11-07T15:00:00Z' }, { id: 'b', kickoff: '2026-11-08T15:00:00Z' }];
   const checked = '2026-11-06T00:00:00Z', expires = '2026-11-09T00:00:00Z';
