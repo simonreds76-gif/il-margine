@@ -121,6 +121,26 @@ class AtomicGk(unittest.TestCase):
         historical={**row,'quote_verification':'','captured_at':'2026-11-06T15:58:29Z'}
         self.assertIsNotNone(gate.recorded_quote_issue(historical))
 
+    def test_verified_name_survives_exact_fixture_lineup_resolution(self):
+        row=self.noll()
+        for source_name,canonical in [('Lukasz Skorupski','Łukasz Skorupski'),('Daniel Fernandes','Daniel Heuer Fernandes'),('Odisseas Vlachodimos','Odysseas Vlachodimos')]:
+            proof=json.loads(row['quote_verification']);proof['player']=source_name
+            source={**row,'player':source_name,'quote_verification':json.dumps(proof)}
+            bound=gate.bind_resolved_keeper(source,canonical)
+            candidate={**source,'goalkeeper':canonical,'quote_verification':bound};candidate.pop('player')
+            self.assertTrue(gate.verified_quote(candidate))
+            self.assertFalse(gate.verified_quote({**candidate,'goalkeeper':'Different keeper'}))
+            other={**candidate,'bookmaker':'Grosvenor','source':'grosvenor_direct','quote_verification':'','odds_decimal':'2.1'}
+            self.assertEqual(prices.best_offers([candidate,other],self.now),[candidate])
+            shadow=load('goalkeeper-saves-shadow')
+            fixture={'lineup_type':'predicted','home_starters':[{'name':canonical,'role_group':'GK'}],'away_starters':[]}
+            key=(source['match_date'],shadow.football_form_team_key(source['home_team']),shadow.football_form_team_key(source['away_team']))
+            with patch.object(shadow,'build_features',return_value=(tuple(range(9)),[])),patch.object(shadow,'predict_mean',return_value=4),patch.object(shadow,'price_side',return_value={'edge':.1,'model_probability':.55,'push_probability':0,'fair_odds':1.818}):
+                built=shadow.build_candidates([source],{}, {'alpha':.2},{key:fixture},self.now.isoformat())
+            self.assertEqual(len(built),1);self.assertTrue(gate.verified_quote(built[0]),source_name)
+        broken={**source,'line':'9.5'}
+        self.assertEqual(gate.bind_resolved_keeper(broken,canonical),broken['quote_verification'])
+
     def test_verified_bet365_competes_with_grosvenor_only_on_same_line(self):
         row=self.noll();other={**row,'bookmaker':'Grosvenor','source':'grosvenor_direct','odds_decimal':'2.1','quote_verification':'','captured_at':self.now.isoformat()}
         self.assertEqual(prices.best_offers([row,other],self.now),[row])

@@ -31,8 +31,10 @@ def verified_quote(row):
         if not isinstance(proof, dict) or proof.get('version') != VERIFICATION_VERSION or proof.get('site') != 'com':
             return False
         name = lambda v: ''.join(c for c in unicodedata.normalize('NFKD', str(v or '')).casefold() if c.isalnum())
+        bound_names={name(proof['player'])}
+        if proof.get('resolved_goalkeeper'):bound_names.add(name(proof['resolved_goalkeeper']))
         if (str(row.get('event_id')) != proof['event_id']
-                or name(row.get('player') or row.get('goalkeeper')) != name(proof['player'])
+                or name(row.get('player') or row.get('goalkeeper')) not in bound_names
                 or str(row.get('side')).casefold() != 'over'
                 or float(row['line']) != proof['line']
                 or not math.isclose(float(row.get('odds_decimal') or row.get('odds')), proof['odds_decimal'], abs_tol=.000051, rel_tol=0)
@@ -47,6 +49,19 @@ def verified_quote(row):
                     and math.isfinite(proof['odds_decimal']) and proof['odds_decimal']>1)
     except (ValueError, TypeError, KeyError, OverflowError):
         return False
+
+
+def bind_resolved_keeper(price_row, canonical_player):
+    """Retain the raw name and the existing exact-fixture resolver's result.
+
+    The source proof is checked BEFORE binding. No new fuzzy name matching is
+    introduced here; the caller has already resolved a unique lineup keeper.
+    """
+    raw=price_row.get('quote_verification','')
+    if not canonical_player or not verified_quote(price_row):return raw
+    proof=json.loads(raw) if isinstance(raw,str) else dict(raw)
+    proof['resolved_goalkeeper']=canonical_player
+    return json.dumps(proof,separators=(',',':'))
 
 
 def current_quote_issue(row):
