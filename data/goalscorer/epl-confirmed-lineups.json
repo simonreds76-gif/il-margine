@@ -9,20 +9,20 @@
       "kickoff_utc": "2026-11-06T20:00:00Z",
       "home_team": "Everton",
       "away_team": "Coventry City",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Jordan Pickford",
-        "Jake O'Brien",
+        "Merlin Röhl",
         "James Tarkowski",
         "Jarrad Branthwaite",
         "Vitaliy Mykolenko",
         "Harrison Armstrong",
         "James Garner",
-        "Merlin Röhl",
+        "Tyler Dibling",
         "Kiernan Dewsbury-Hall",
         "Tyrique George",
         "Thierno Barry"
@@ -53,15 +53,15 @@
           "shirt_number": "1"
         },
         {
-          "name": "Jake O'Brien",
+          "name": "Merlin Röhl",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "4-2-3-1",
           "position_id": 32,
-          "player_id": 1098607,
-          "shirt_number": "15"
+          "player_id": 1210384,
+          "shirt_number": "34"
         },
         {
           "name": "James Tarkowski",
@@ -119,15 +119,15 @@
           "shirt_number": "37"
         },
         {
-          "name": "Merlin Röhl",
+          "name": "Tyler Dibling",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 83,
-          "player_id": 1210384,
-          "shirt_number": "34"
+          "player_id": 1292833,
+          "shirt_number": "20"
         },
         {
           "name": "Kiernan Dewsbury-Hall",
@@ -286,10 +286,122 @@
           "shirt_number": "14"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Jake O'Brien",
+        "Hayden Hackney",
+        "Brennan Johnson",
+        "Michael Keane",
+        "Charly Alcaraz",
+        "Mark Travers",
+        "Ainsley Maitland-Niles",
+        "Christian Nørgaard",
+        "Braiden Graham"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Jake O'Brien",
+          "player_id": "1098607",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Hayden Hackney",
+          "player_id": "982394",
+          "role_group": "MID"
+        },
+        {
+          "name": "Brennan Johnson",
+          "player_id": "1076756",
+          "role_group": "FW"
+        },
+        {
+          "name": "Michael Keane",
+          "player_id": "290410",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Charly Alcaraz",
+          "player_id": "1128965",
+          "role_group": "MID"
+        },
+        {
+          "name": "Mark Travers",
+          "player_id": "731855",
+          "role_group": "GK"
+        },
+        {
+          "name": "Ainsley Maitland-Niles",
+          "player_id": "604089",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Christian Nørgaard",
+          "player_id": "266520",
+          "role_group": "MID"
+        },
+        {
+          "name": "Braiden Graham",
+          "player_id": "1589726",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Brandon Thomas-Asante",
+        "Matt Grimes",
+        "Gustavo Hamer",
+        "Loum Tchaouna",
+        "Sidiki Cherif",
+        "Daniel Bentley",
+        "Joel Latibeaudiere",
+        "Ellis Simms",
+        "Kaine Kesler-Hayden"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Brandon Thomas-Asante",
+          "player_id": "776184",
+          "role_group": "FW"
+        },
+        {
+          "name": "Matt Grimes",
+          "player_id": "478357",
+          "role_group": "MID"
+        },
+        {
+          "name": "Gustavo Hamer",
+          "player_id": "775355",
+          "role_group": "FW"
+        },
+        {
+          "name": "Loum Tchaouna",
+          "player_id": "1283034",
+          "role_group": "FW"
+        },
+        {
+          "name": "Sidiki Cherif",
+          "player_id": "1524069",
+          "role_group": "FW"
+        },
+        {
+          "name": "Daniel Bentley",
+          "player_id": "189103",
+          "role_group": "GK"
+        },
+        {
+          "name": "Joel Latibeaudiere",
+          "player_id": "863822",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Ellis Simms",
+          "player_id": "982284",
+          "role_group": "FW"
+        },
+        {
+          "name": "Kaine Kesler-Hayden",
+          "player_id": "1089686",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [],
       "away_unavailable": [
         "Frank Onyeka",
@@ -299,8 +411,8 @@
         "Josh Eccles",
         "Haji Wright"
       ],
-      "observed_at": "2026-11-06T17:28:49.056323+00:00",
-      "changed_at": "2026-11-05T14:59:29.645407+00:00"
+      "observed_at": "2026-11-06T23:05:31.560196+00:00",
+      "changed_at": "2026-11-06T23:05:31.560196+00:00"
     },
     {
       "fotmob_match_id": 5795505,
@@ -606,7 +718,7 @@
         "Matt Crooks",
         "Ilyas Ansah"
       ],
-      "observed_at": "2026-11-06T17:28:49.056323+00:00",
+      "observed_at": "2026-11-06T23:05:31.560196+00:00",
       "changed_at": "2026-11-06T17:28:49.056323+00:00"
     },
     {
@@ -910,7 +1022,7 @@
         "Jacob Ramsey",
         "Joelinton"
       ],
-      "observed_at": "2026-11-06T17:28:49.056323+00:00",
+      "observed_at": "2026-11-06T23:05:31.560196+00:00",
       "changed_at": "2026-11-06T17:28:49.056323+00:00"
     },
     {
@@ -1216,7 +1328,7 @@
         "Sávio",
         "Wilson Odobert"
       ],
-      "observed_at": "2026-11-06T17:28:49.056323+00:00",
+      "observed_at": "2026-11-06T23:05:31.560196+00:00",
       "changed_at": "2026-11-06T14:38:42.968092+00:00"
     },
     {
@@ -1516,7 +1628,7 @@
       "away_unavailable": [
         "Antoine Semenyo"
       ],
-      "observed_at": "2026-11-06T17:28:49.056323+00:00",
+      "observed_at": "2026-11-06T23:05:31.560196+00:00",
       "changed_at": "2026-11-06T17:28:49.056323+00:00"
     },
     {
@@ -1824,7 +1936,7 @@
         "Fábio Carvalho",
         "Joshua Dasilva"
       ],
-      "observed_at": "2026-11-06T17:28:49.056323+00:00",
+      "observed_at": "2026-11-06T23:05:31.560196+00:00",
       "changed_at": "2026-11-05T14:59:29.645407+00:00"
     },
     {
@@ -2130,7 +2242,7 @@
         "Ryan Gravenberch",
         "Hugo Ekitiké"
       ],
-      "observed_at": "2026-11-06T17:28:49.056323+00:00",
+      "observed_at": "2026-11-06T23:05:31.560196+00:00",
       "changed_at": "2026-11-05T14:59:29.645407+00:00"
     },
     {
@@ -2433,7 +2545,7 @@
         "Alex Scott",
         "Alex Tóth"
       ],
-      "observed_at": "2026-11-06T17:28:49.056323+00:00",
+      "observed_at": "2026-11-06T23:05:31.560196+00:00",
       "changed_at": "2026-11-05T14:59:29.645407+00:00"
     },
     {
@@ -2741,7 +2853,7 @@
         "Matty Cash",
         "Amadou Onana"
       ],
-      "observed_at": "2026-11-06T17:28:49.056323+00:00",
+      "observed_at": "2026-11-06T23:05:31.560196+00:00",
       "changed_at": "2026-11-06T17:28:49.056323+00:00"
     },
     {
@@ -3050,7 +3162,7 @@
         "Jamie Gittens",
         "João Pedro"
       ],
-      "observed_at": "2026-11-06T17:28:49.056323+00:00",
+      "observed_at": "2026-11-06T23:05:31.560196+00:00",
       "changed_at": "2026-11-05T14:59:29.645407+00:00"
     }
   ]

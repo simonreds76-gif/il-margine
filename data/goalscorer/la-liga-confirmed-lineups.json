@@ -9,23 +9,23 @@
       "kickoff_utc": "2026-11-06T20:00:00Z",
       "home_team": "Sevilla",
       "away_team": "Deportivo Alavés",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "4-4-2",
-      "away_formation": "5-3-2",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "4-2-3-1",
+      "away_formation": "3-5-2",
       "home_players": [
         "Odysseas Vlachodimos",
         "Juan Iglesias",
-        "Andrés Lopez",
+        "Arouna Sangante",
         "Kike Salas",
         "Gabriel Suazo",
-        "Chidera Ejuke",
-        "Lucien Agoumé",
         "Youssouf Fofana",
+        "Lucien Agoumé",
+        "Rubén Vargas",
+        "Isaac Romero",
         "Félix Correia",
-        "Lucas Stassin",
-        "Robbie Ure"
+        "Lucas Stassin"
       ],
       "away_players": [
         "Antonio Sivera",
@@ -33,10 +33,10 @@
         "Ville Koski",
         "Nicolás Valentini",
         "Ángel Pérez",
-        "Abderrahman Rebbach",
-        "Pablo Ibáñez",
+        "Ander Guevara",
         "Antonio Blanco",
-        "Denis Suárez",
+        "Pablo Ibáñez",
+        "Youssef Enríquez",
         "Toni Martínez",
         "Lucas Boyé"
       ],
@@ -47,7 +47,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 11,
           "player_id": 304355,
           "shirt_number": "1"
@@ -58,21 +58,21 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 32,
           "player_id": 1102289,
           "shirt_number": "2"
         },
         {
-          "name": "Andrés Lopez",
+          "name": "Arouna Sangante",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 34,
-          "player_id": 1334767,
-          "shirt_number": "5"
+          "player_id": 1244272,
+          "shirt_number": "12"
         },
         {
           "name": "Kike Salas",
@@ -80,7 +80,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 36,
           "player_id": 1327489,
           "shirt_number": "4"
@@ -91,76 +91,76 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 38,
           "player_id": 659490,
           "shirt_number": "17"
         },
         {
-          "name": "Chidera Ejuke",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 72,
-          "player_id": 837270,
-          "shirt_number": "21"
-        },
-        {
-          "name": "Lucien Agoumé",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 74,
-          "player_id": 971790,
-          "shirt_number": "6"
-        },
-        {
           "name": "Youssouf Fofana",
           "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 76,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
           "player_id": 954621,
           "shirt_number": "24"
         },
         {
-          "name": "Félix Correia",
+          "name": "Lucien Agoumé",
           "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 78,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 971790,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Rubén Vargas",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 860752,
+          "shirt_number": "11"
+        },
+        {
+          "name": "Isaac Romero",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 1130991,
+          "shirt_number": "16"
+        },
+        {
+          "name": "Félix Correia",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
           "player_id": 942358,
           "shirt_number": "20"
         },
         {
           "name": "Lucas Stassin",
-          "line_index": 2,
-          "line_size": 2,
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 104,
+          "formation": "4-2-3-1",
+          "position_id": 115,
           "player_id": 1398377,
           "shirt_number": "19"
-        },
-        {
-          "name": "Robbie Ure",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 106,
-          "player_id": 1399218,
-          "shirt_number": "9"
         }
       ],
       "away_starters": [
@@ -170,7 +170,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 11,
           "player_id": 530468,
           "shirt_number": "1"
@@ -178,10 +178,10 @@
         {
           "name": "Nahuel Tenaglia",
           "line_index": 0,
-          "line_size": 5,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 33,
           "player_id": 860314,
           "shirt_number": "14"
@@ -189,10 +189,10 @@
         {
           "name": "Ville Koski",
           "line_index": 0,
-          "line_size": 5,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 35,
           "player_id": 1056461,
           "shirt_number": "16"
@@ -200,68 +200,68 @@
         {
           "name": "Nicolás Valentini",
           "line_index": 0,
-          "line_size": 5,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 37,
           "player_id": 1249665,
           "shirt_number": "2"
         },
         {
           "name": "Ángel Pérez",
-          "line_index": 0,
+          "line_index": 1,
           "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 51,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 71,
           "player_id": 1563022,
           "shirt_number": "7"
         },
         {
-          "name": "Abderrahman Rebbach",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 59,
-          "player_id": 1200941,
-          "shirt_number": "21"
-        },
-        {
-          "name": "Pablo Ibáñez",
+          "name": "Ander Guevara",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 73,
-          "player_id": 1238154,
-          "shirt_number": "19"
+          "player_id": 873827,
+          "shirt_number": "6"
         },
         {
           "name": "Antonio Blanco",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 75,
           "player_id": 845998,
           "shirt_number": "8"
         },
         {
-          "name": "Denis Suárez",
+          "name": "Pablo Ibáñez",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 77,
-          "player_id": 282281,
-          "shirt_number": "4"
+          "player_id": 1238154,
+          "shirt_number": "19"
+        },
+        {
+          "name": "Youssef Enríquez",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79,
+          "player_id": 1403692,
+          "shirt_number": "3"
         },
         {
           "name": "Toni Martínez",
@@ -269,7 +269,7 @@
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 104,
           "player_id": 640123,
           "shirt_number": "11"
@@ -280,16 +280,164 @@
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 106,
           "player_id": 561164,
           "shirt_number": "15"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Chidera Ejuke",
+        "Andrés Lopez",
+        "Robbie Ure",
+        "Alfon González",
+        "Fran González",
+        "Fábio Cardoso",
+        "Iker Muñoz",
+        "José Ángel Carmona",
+        "Julio Díaz",
+        "Giorgi Kochorashvili",
+        "Jon Guridi",
+        "Nico Guillen"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Chidera Ejuke",
+          "player_id": "837270",
+          "role_group": "MID"
+        },
+        {
+          "name": "Andrés Lopez",
+          "player_id": "1334767",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Robbie Ure",
+          "player_id": "1399218",
+          "role_group": "FW"
+        },
+        {
+          "name": "Alfon González",
+          "player_id": "926643",
+          "role_group": "FW"
+        },
+        {
+          "name": "Fran González",
+          "player_id": "1484851",
+          "role_group": "GK"
+        },
+        {
+          "name": "Fábio Cardoso",
+          "player_id": "361751",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Iker Muñoz",
+          "player_id": "1413945",
+          "role_group": "DEF"
+        },
+        {
+          "name": "José Ángel Carmona",
+          "player_id": "1281461",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Julio Díaz",
+          "player_id": "1447089",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Giorgi Kochorashvili",
+          "player_id": "953958",
+          "role_group": "MID"
+        },
+        {
+          "name": "Jon Guridi",
+          "player_id": "678192",
+          "role_group": "MID"
+        },
+        {
+          "name": "Nico Guillen",
+          "player_id": "1783498",
+          "role_group": "MID"
+        }
+      ],
+      "away_subs": [
+        "Carlos Protesoni",
+        "Abderrahman Rebbach",
+        "Mariano Díaz",
+        "Jonny Otto",
+        "Aitor Mañas",
+        "Adrián Rodriguez",
+        "Hugo Novoa",
+        "Xanet Oláiz",
+        "Carles Aleñá",
+        "Denis Suárez",
+        "Selu Diallo",
+        "Miguel Rodríguez"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Carlos Protesoni",
+          "player_id": "799914",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Abderrahman Rebbach",
+          "player_id": "1200941",
+          "role_group": "MID"
+        },
+        {
+          "name": "Mariano Díaz",
+          "player_id": "518525",
+          "role_group": "FW"
+        },
+        {
+          "name": "Jonny Otto",
+          "player_id": "360918",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Aitor Mañas",
+          "player_id": "1553663",
+          "role_group": "FW"
+        },
+        {
+          "name": "Adrián Rodriguez",
+          "player_id": "1136937",
+          "role_group": "GK"
+        },
+        {
+          "name": "Hugo Novoa",
+          "player_id": "1175969",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Xanet Oláiz",
+          "player_id": "1721181",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Carles Aleñá",
+          "player_id": "637756",
+          "role_group": "MID"
+        },
+        {
+          "name": "Denis Suárez",
+          "player_id": "282281",
+          "role_group": "MID"
+        },
+        {
+          "name": "Selu Diallo",
+          "player_id": "1431307",
+          "role_group": "MID"
+        },
+        {
+          "name": "Miguel Rodríguez",
+          "player_id": "1184663",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
         "Marcão",
         "Manu Bueno",
@@ -299,8 +447,8 @@
         "Facundo Garcés",
         "Mikel Rodríguez"
       ],
-      "observed_at": "2026-11-06T17:29:11.276631+00:00",
-      "changed_at": "2026-11-05T14:59:52.647305+00:00"
+      "observed_at": "2026-11-06T23:05:57.172140+00:00",
+      "changed_at": "2026-11-06T23:05:57.172140+00:00"
     },
     {
       "fotmob_match_id": 5868124,
@@ -603,7 +751,7 @@
         "Bright Ede",
         "Zakaria Eddahchouri"
       ],
-      "observed_at": "2026-11-06T17:29:11.276631+00:00",
+      "observed_at": "2026-11-06T23:05:57.172140+00:00",
       "changed_at": "2026-11-06T14:39:11.827216+00:00"
     },
     {
@@ -907,7 +1055,7 @@
         "Álvaro Mantilla",
         "Andrés Martin"
       ],
-      "observed_at": "2026-11-06T17:29:11.276631+00:00",
+      "observed_at": "2026-11-06T23:05:57.172140+00:00",
       "changed_at": "2026-11-06T14:39:11.827216+00:00"
     },
     {
@@ -1214,7 +1362,7 @@
         "Gorka Guruzeta",
         "Maroan Sannadi"
       ],
-      "observed_at": "2026-11-06T17:29:11.276631+00:00",
+      "observed_at": "2026-11-06T23:05:57.172140+00:00",
       "changed_at": "2026-11-06T14:39:11.827216+00:00"
     },
     {
@@ -1521,7 +1669,7 @@
         "Rodrygo",
         "Vinícius Júnior"
       ],
-      "observed_at": "2026-11-06T17:29:11.276631+00:00",
+      "observed_at": "2026-11-06T23:05:57.172140+00:00",
       "changed_at": "2026-11-06T14:39:11.827216+00:00"
     },
     {
@@ -1824,7 +1972,7 @@
         "Rodri",
         "Roony Bardghji"
       ],
-      "observed_at": "2026-11-06T17:29:11.276631+00:00",
+      "observed_at": "2026-11-06T23:05:57.172140+00:00",
       "changed_at": "2026-11-06T17:29:11.276631+00:00"
     },
     {
@@ -2128,7 +2276,7 @@
         "Manuel Sánchez",
         "Enzo Bardeli"
       ],
-      "observed_at": "2026-11-06T17:29:11.276631+00:00",
+      "observed_at": "2026-11-06T23:05:57.172140+00:00",
       "changed_at": "2026-11-05T23:37:50.140292+00:00"
     },
     {
@@ -2433,7 +2581,7 @@
         "Facundo Bernal",
         "Juan Hernández"
       ],
-      "observed_at": "2026-11-06T17:29:11.276631+00:00",
+      "observed_at": "2026-11-06T23:05:57.172140+00:00",
       "changed_at": "2026-11-06T17:29:11.276631+00:00"
     },
     {
@@ -2738,7 +2886,7 @@
         "Óscar Valentín",
         "Álvaro Garcia"
       ],
-      "observed_at": "2026-11-06T17:29:11.276631+00:00",
+      "observed_at": "2026-11-06T23:05:57.172140+00:00",
       "changed_at": "2026-11-05T18:00:21.438326+00:00"
     },
     {
@@ -3042,7 +3190,7 @@
         "Christantus Uche",
         "Juanmi"
       ],
-      "observed_at": "2026-11-06T17:29:11.276631+00:00",
+      "observed_at": "2026-11-06T23:05:57.172140+00:00",
       "changed_at": "2026-11-05T23:37:50.140292+00:00"
     }
   ]
