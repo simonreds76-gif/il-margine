@@ -1,7 +1,40 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-06T06:55:32Z",
+  "generated_at": "2026-11-06T16:16:48Z",
   "league": "ligue-1",
-  "row_count": 0,
-  "rows": []
+  "row_count": 2,
+  "rows": [
+    {
+      "team": "Lorient",
+      "team_key": "lorient",
+      "player_name": "Aiyegun Tosin",
+      "player_key": "aiyegun tosin",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-11-02"
+    },
+    {
+      "team": "Strasbourg",
+      "team_key": "strasbourg",
+      "player_name": "Conrad Harder",
+      "player_key": "conrad harder",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-11-01"
+    }
+  ]
 }
