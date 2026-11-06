@@ -66,6 +66,15 @@ test('fixture joins require the exact existing league and crest and carry only c
   assert.equal(helpers.clubFixtureLinks(board, 'epl', '').length, 0);
   assert.ok(links.every(r => !('managers' in r) && !('outcomes' in r)));
 });
+test('both clubs can take penalties in one match without leaking into the opponent log', () => {
+  const match = news.articles.filter(a => a.matchId === '5868107');
+  const elche = helpers.recordedClubPenalties(match, '/penalty-takers/la-liga/elche', news.coverageStart);
+  const rayo = helpers.recordedClubPenalties(match, '/penalty-takers/la-liga/rayo-vallecano', news.coverageStart);
+  assert.equal(elche.length, 2);
+  assert.equal(rayo.length, 1);
+  assert.ok(elche.every(a => a.club === 'Elche'));
+  assert.equal(rayo[0].player, 'Pathé Ciss');
+});
 test('next fixture disappears after kickoff, on stale evidence and on invalid/future observations', () => {
   const rows = [{ id: 'a', kickoff: '2026-11-07T15:00:00Z' }, { id: 'b', kickoff: '2026-11-08T15:00:00Z' }];
   const checked = '2026-11-06T00:00:00Z', expires = '2026-11-09T00:00:00Z';

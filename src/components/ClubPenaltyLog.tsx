@@ -13,7 +13,7 @@ export default function ClubPenaltyLog({ clubUrl, club }: { clubUrl: string; clu
   return <section id="recorded-penalties" className={styles.log} aria-labelledby="penalty-log-heading">
     <header className={styles.heading}><ToolEmblem name="penalty" className={styles.emblem} /><div>
       <p className={styles.eyebrow}>The match evidence</p>
-      <h2 id="penalty-log-heading">Recorded penalties for {club}</h2>
+      <h2 id="penalty-log-heading">Penalty reports for {club}</h2>
       <p>Published reports since <time dateTime={penaltyNews.coverageStart}>{newsDate(penaltyNews.coverageStart)}</time>. This is not a complete season total.</p>
     </div></header>
     {reports.length ? <>
@@ -30,7 +30,6 @@ export default function ClubPenaltyLog({ clubUrl, club }: { clubUrl: string; clu
             <span className={styles.meta}><time dateTime={a.date}>{newsDate(a.date)}</time> · {a.leagueLabel}</span>
             <strong className={styles.player}>{a.player}</strong>
             <span className={styles.match}>{a.home} {a.homeScore}–{a.awayScore} {a.away}</span>
-            {/\bretak(?:e|en)\b/i.test(a.title) ? <span className={styles.meta}>Retake noted in report</span> : null}
           </div>
           <div className={styles.result}><span className={a.outcome === 'scored' ? styles.scored : styles.notScored}>{outcomeLabel[a.outcome] ?? 'See report'}</span><span>{a.minute}′</span><span className={styles.open}>Read report ↗</span></div>
         </Link>
