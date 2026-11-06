@@ -1,10 +1,12 @@
-"""Bounded local recovery when GitHub's scheduled Bet365 capture did not run.
+"""Bounded recovery when this refresh has no fresh upcoming props prices.
 
 Uses the existing authenticated CLI and workflow, never a local provider key.
 One fallback dispatch per UTC day, no duplicate active runs, no Telegram calls.
 """
+import argparse
 import csv
 import json
+import math
 import subprocess
 import sys
 import time
@@ -25,26 +27,33 @@ def timestamp(value):
         return None
 
 
-def fresh_rows(rows, now):
+def fresh_rows(rows, now, not_before=None):
     fresh = []
     for row in rows:
         captured = timestamp(row.get('capture_ts'))
         start = timestamp(row.get('match_start_utc'))
+        try:
+            odds = float(row.get('over_odds') or 0)
+        except (TypeError, ValueError):
+            continue
         if (captured and start and start > now
                 and -300 <= (now - captured).total_seconds() <= 6 * 3600
-                and row.get('over_odds') and row.get('player') and row.get('opponent')):
+                and (not_before is None or captured >= not_before)
+                and math.isfinite(odds) and odds > 1
+                and row.get('player') and row.get('opponent')):
             fresh.append(row)
     return fresh
 
 
-def local_fresh(now):
+def local_fresh(now, not_before=None):
     rows = []
     for offset in range(2):
         path = ROOT / f'data/tennis-props/inbox/bet365-lines-{(now-timedelta(days=offset)).date()}.csv'
         if path.exists():
             with path.open(encoding='utf-8-sig', newline='') as handle:
                 rows.extend(csv.DictReader(handle))
-    return len(fresh_rows(rows, now))
+    # The legacy filename contains all approved bookmakers, not just Bet365.
+    return len(fresh_rows(rows, now, not_before))
 
 
 def command(args, timeout=25):
@@ -76,27 +85,39 @@ def recovery_decision(now, recent, state):
     return 'dispatch'
 
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--check-only', action='store_true')
+    parser.add_argument('--not-before', help='Require quotes captured during this refresh')
+    args = parser.parse_args(argv)
+    not_before = timestamp(args.not_before) if args.not_before else None
+    if args.not_before and not_before is None:
+        raise ValueError('A timezone-aware refresh start is required')
     now = datetime.now(timezone.utc)
-    if '--check-only' in sys.argv:
-        count = local_fresh(now)
-        print(f'Fresh upcoming Bet365 rows: {count}; no dispatch or sync performed.')
+    # Check the local capture FIRST: a cloud cooldown/auth failure must not
+    # invalidate fresh prices or replace them with an older hosted snapshot.
+    count = local_fresh(now, not_before)
+    if args.check_only or count:
+        print(f'Fresh upcoming tennis props rows: {count}; no dispatch or sync performed. '
+              'Individual bookmaker coverage remains in the capture audit.')
         return 0 if count else 2
     sync(now)
-    if local_fresh(now):
-        print('Fresh hosted Bet365 prices already available; no fallback request.')
+    if local_fresh(now, not_before):
+        print('Fresh upcoming hosted props prices available; no fallback request.')
         return 0
     recent = runs()
     state = json.loads(STATE.read_text()) if STATE.exists() else {}
     decision = recovery_decision(now, recent, state)
-    print('Hosted Bet365 recovery: ' + decision, flush=True)
+    print('Hosted tennis props recovery: ' + decision, flush=True)
     if decision in ('already_attempted', 'recent_attempt'):
         return 2
     if decision == 'dispatch':
+        from odds_api_allocation import selected_bookmakers
+        bookmakers = selected_bookmakers(scope='tennis_props')
         STATE.parent.mkdir(parents=True, exist_ok=True)
         STATE.write_text(json.dumps({'attempt_day': str(now.date()), 'started_at': now.isoformat()}))
         command(['gh', 'workflow', 'run', WORKFLOW, '--repo', REPO, '--ref', 'main',
-                 '-f', 'days_ahead=3', '-f', 'max_events=128', '-f', 'bookmakers=Bet365',
+                 '-f', 'days_ahead=3', '-f', 'max_events=128', '-f', f'bookmakers={bookmakers}',
                  '-f', 'commit_results=true', '-f', 'probe_markets=false', '-f', 'price_shape_probe=false'])
     deadline = time.monotonic() + 180
     while time.monotonic() < deadline:
@@ -108,8 +129,8 @@ def main():
                created >= now - timedelta(minutes=30) and run.get('conclusion') == 'success'
                for run in current):
             sync(datetime.now(timezone.utc))
-            count = local_fresh(datetime.now(timezone.utc))
-            print(f'Hosted Bet365 recovery finished; fresh upcoming rows: {count}')
+            count = local_fresh(datetime.now(timezone.utc), not_before)
+            print(f'Hosted tennis props recovery finished; fresh upcoming rows: {count}')
             return 0 if count else 2
     print('Hosted capture not ready within the bounded wait; stale prices remain blocked.')
     return 2
