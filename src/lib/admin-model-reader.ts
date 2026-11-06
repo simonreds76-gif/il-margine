@@ -37,7 +37,8 @@ export async function readAdminModels() {
     gk.roi=typeof evidence.roi==="number" ? evidence.roi*100 : null;
     gk.pending=typeof evidence.pending==="number" ? evidence.pending : null;
     gk.date=typeof keeper.generated_at==="string" ? keeper.generated_at : gk.date;
-    gk.note="Canonical scheduled goalkeeper record. Quarantined duplicates and voids excluded from settled betting profit.";
+    const quoteReviews=typeof evidence.quote_quarantined==="number" ? evidence.quote_quarantined : 0;
+    gk.note=`Canonical scheduled goalkeeper record. ${quoteReviews>0?`${quoteReviews} captured quotes held for review. `:''}Disputed quotes, duplicates and voids excluded from settled betting profit.`;
   }
   const histories: Record<string, ProfitHistory> = {};
   for (const r of rows.filter(r=>["strict","volume_200","challenger","spread_v1","provisional_hard","provisional_expansion","astra"].includes(r.id))) {

@@ -11,7 +11,32 @@ function load(name) {
   return module.exports;
 }
 const { profitHistory, reconciledHistory, profitWindow, compactHistory, reportSelectionHistory } = load('model-profit-history');
+const { selectionCard, matchesOutcomeFilter, goalkeeperCaptureWarning } = load('admin-monitor-display');
 const row = (date, pnl, extra = {}) => ({ date, pnl, result: pnl < 0 ? 'loss' : 'win', settlement_status: 'settled', market: 'aces', ...extra });
+
+test('disputed GK quotes retain original lines and prices without an EV, profit or pending label', () => {
+  for (const status of ['pending', 'settled']) {
+    const original={date:'2026-11-07',goalkeeper:'Nahuel Noll',side:'over',line:2.5,odds:2.25,fair_odds:1.56,ev_pct:43.8,stake_units:.5,pnl_units:.625,result:'win',status,integrity_status:'quote_quarantined',quarantine_reason:'source_contract_disputed'};
+    const before=JSON.stringify(original), card=selectionCard(original,'gk-record');
+    assert.equal(card.outcome,'Quote review'); assert.equal(card.ev,null); assert.equal(card.profit,null);
+    assert.equal(card.odds,2.25); assert.match(card.selection,/Over 2.5/);
+    assert.equal(matchesOutcomeFilter(card.outcome,'pending'),false);
+    assert.equal(matchesOutcomeFilter(card.outcome,'settled'),false);
+    assert.equal(matchesOutcomeFilter(card.outcome,'excluded'),true);
+    assert.equal(profitHistory([original],'gk-record','saves').settled,0);
+    assert.equal(JSON.stringify(original),before);
+  }
+});
+
+test('source hold warning follows the capture status, including a clean non-Bet365 price board', () => {
+  assert.match(goalkeeperCaptureWarning(JSON.stringify({moviodds_source:{goalkeeper_source_hold:'incident'}})),/Bet365 saves prices are paused/);
+  for(const content of [null,'invalid','{}',JSON.stringify({moviodds_source:{goalkeeper_source_hold:null}})])assert.equal(goalkeeperCaptureWarning(content),undefined);
+});
+
+test('valid Grosvenor quotes preserve their fair odds, edge and pending status', () => {
+  const card=selectionCard({goalkeeper:'Away goalkeeper',side:'over',line:3.5,odds:2.05,fair_odds:1.89,ev_pct:8.2,status:'pending',bookmaker:'Grosvenor'},'gk-record');
+  assert.equal(card.outcome,'Pending');assert.equal(card.ev,8.2);assert.equal(card.quoteReview,false);
+});
 
 test('sorts match dates and groups same-day settlements without mutating ledger', () => {
   const rows = [row('2026-10-03', -1), row('2026-10-01', 2), row('2026-10-01', -.5)];
