@@ -219,7 +219,7 @@ try {
     }
 
     Write-TennisManualProgress $root $manualRequest "pricing" "OnCourt imported. Refreshing live inputs, prices and fair odds." @{ oncourt_database_updated_at = $sourceDatabaseUpdatedAt; oncourt_extracted_at = $oncourtExtractedAt }
-    $dailyOddsArguments = @("scripts\run-daily-odds.py", "--skip-strict-report")
+    $dailyOddsArguments = @("scripts\run-daily-odds.py", "--skip-strict-report", "--defer-context-research")
     if ($OnDemand) { $dailyOddsArguments += "--on-demand" }
     Log "=== Step 3/8: Pinnacle odds + fair odds ==="
     $step3Exit = Invoke-LoggedProcess -FilePath "python" -ArgumentList $dailyOddsArguments -Label "Pinnacle/fair-odds" -TimeoutSeconds $dailyOddsTimeoutSeconds
@@ -510,6 +510,28 @@ try {
 
     Exit-TaskLock $lockHandle
     $lockHandle = $null
+
+    # Historical context is not a prerequisite for current pricing. Keep the
+    # original receipt identities so real recovery clears the exact warning.
+    # Each writer gets the shared lock independently; Admin can run between them.
+    $contextResearchSteps = @(
+        @{ Arguments = @("scripts\refresh-tennis-context-research.py"); Label = "0/6 Player context history (research only; live inputs unchanged)" },
+        @{ Arguments = @("scripts\refresh-tennis-matchup-history.py", "--root", $root); Label = "0/6 Big-server and matchup histories (research only)" }
+    )
+    foreach ($researchStep in $contextResearchSteps) {
+        $researchLock = $null
+        try {
+            $researchLock = Enter-TennisPriorityLock -RootPath $root
+            $researchExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList $researchStep.Arguments -Label $researchStep.Label -TimeoutSeconds 420
+            if ($researchExit -ne 0) {
+                Log "WARNING: historical context research needs review (exit $researchExit); current prices and signals already refreshed."
+            }
+        } catch {
+            Log "WARNING: historical context research process error; current prices and signals already refreshed: $($_.Exception.Message)"
+        } finally {
+            Exit-TaskLock $researchLock
+        }
+    }
 
     # Isolated published Elo snapshots; no live rating writer or model calls.
     # Alerts were sent and the tennis priority lock released above.

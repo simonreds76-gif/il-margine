@@ -75,11 +75,32 @@ def run_cmd(
     return r.returncode
 
 
+def refresh_context_research() -> None:
+    # Context records refresh independently of live pricing. This collector only
+    # writes data/tennis-ml-research/context-records-v1; it never publishes tables.
+    run_cmd(
+        [sys.executable, str(ROOT / "scripts" / "refresh-tennis-context-research.py")],
+        label="0/6 Player context history (research only; live inputs unchanged)",
+        fatal=False,
+        timeout_seconds=420,
+    )
+
+    # Chronological style evidence stays isolated from all live pricing tables.
+    run_cmd(
+        [sys.executable, str(ROOT / "scripts" / "refresh-tennis-matchup-history.py"),
+         "--root", str(ROOT)],
+        label="0/6 Big-server and matchup histories (research only)",
+        fatal=False,
+        timeout_seconds=420,
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Daily odds pipeline: Pinnacle -> fair odds -> strict report + shadow profiles"
     )
     parser.add_argument("--on-demand", action="store_true", help="Fresh live inputs and prices; defer historical research reports")
+    parser.add_argument("--defer-context-research", action="store_true", help="The scheduled orchestrator refreshes historical context after operational prices and signals")
     parser.add_argument("--skip-strict-report", action="store_true", help="Skip strict policy report step")
     parser.add_argument(
         "--skip-recent-activity",
@@ -121,25 +142,6 @@ def main() -> int:
         label='Verify current native pairings before prices and forecasts',
         fatal=True, timeout_seconds=90,
     )
-
-    if not args.on_demand:
-        # Context records refresh independently of live pricing. This collector only
-        # writes data/tennis-ml-research/context-records-v1; it never publishes tables.
-        run_cmd(
-            [sys.executable, str(ROOT / "scripts" / "refresh-tennis-context-research.py")],
-            label="0/6 Player context history (research only; live inputs unchanged)",
-            fatal=False,
-            timeout_seconds=180,
-        )
-
-        # Chronological style evidence stays isolated from all live pricing tables.
-        run_cmd(
-            [sys.executable, str(ROOT / "scripts" / "refresh-tennis-matchup-history.py"),
-             "--root", str(ROOT)],
-            label="0/6 Big-server and matchup histories (research only)",
-            fatal=False,
-            timeout_seconds=420,
-        )
 
     # Required production inputs: a failed rebuild must not price with stale tables.
     run_cmd(
@@ -326,6 +328,11 @@ def main() -> int:
     else:
         print("\n=== 5/6 Strict report skipped (--skip-strict-report) ===")
         print("=== 6/6 Shadow appenders skipped (--skip-strict-report) ===")
+
+    # Standalone callers also deliver current prices and signal records first.
+    # The morning orchestrator owns these bounded jobs after its props stages.
+    if not args.on_demand and not args.defer_context_research:
+        refresh_context_research()
 
     print("\nDone. Pinnacle snapshot + daily_fair_odds updated.")
     if not args.skip_strict_report:
