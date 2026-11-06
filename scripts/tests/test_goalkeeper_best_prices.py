@@ -26,6 +26,11 @@ alerts = load('goalkeeper-saves-alerts')
 class BestPrices(unittest.TestCase):
     def setUp(self):
         self.now = datetime.now(timezone.utc)
+        # Test generic comparison independently of the active source incident.
+        hold = patch('goalkeeper_quote_integrity.MOVIODDS_GK_HOLD', False)
+        hold.start(); self.addCleanup(hold.stop)
+        incident=patch('goalkeeper_quote_integrity.recorded_quote_issue', return_value=None)
+        incident.start();self.addCleanup(incident.stop)
 
     def row(self, book='Bet365', odds=2.5, **changes):
         r = dict(event_id='72221342', goalkeeper='Caoimhin Kelleher', line='2.5', side='over',
@@ -139,7 +144,7 @@ class BestPrices(unittest.TestCase):
         current=self.row(); state={'signals':{current['signal_id']:{'status':'sent','signal':current}}}
         watch=dict(current, alert_model='keeper_watch_v1', signal_id='keeper_watch_v1:42',
                    selection_policy='keeper_watch_v1', paper_stake=.5, actual_stake=0)
-        self.assertEqual(alerts.claim([watch],state,'x:1',self.now,[]),1)
+        self.assertEqual(alerts.claim([watch],state,'x:1',self.now,[current]),1)
 
     def test_unnamed_team_signal_does_not_resend_when_keeper_is_identified(self):
         side=self.row('Kambi',2.23,goalkeeper='Away goalkeeper',identity_basis='bookmaker_team_side',lineup_status='team_contract_name_unconfirmed')

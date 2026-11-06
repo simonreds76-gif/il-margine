@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import requests
 from football_identity import read, write
-from keeper_feed_comparison import append_record, compare, digest, espn_sides, instant, team_matches
+from keeper_feed_comparison import append_record, compare, digest, espn_sides, instant, team_matches, expected_provider_kickoff
 
 DEST = Path('data/goalkeeper-saves/source-comparison')
 
@@ -77,7 +77,7 @@ def find_goal(client, ref, config, start, end):
             break
     else:
         raise ValueError('goal_calendar_truncated')
-    hits = [r for r in all_rows if instant(r['kickoffUtc']) == instant(ref['kickoff']) and
+    hits = [r for r in all_rows if instant(r['kickoffUtc']) == expected_provider_kickoff(ref, config) and
             all(team_matches(ref[s], 'goal', {'id': r[s+'TeamId'], 'name': r[s+'TeamName']}, config) for s in ('home', 'away'))]
     if len(hits) != 1:
         raise ValueError('goal_fixture_identity_unresolved')
@@ -90,7 +90,7 @@ def find_espn(client, ref, config):
     hits = []
     for event in calendar.get('events', []):
         comp, sides = espn_sides(event)
-        if instant(comp['date']) == instant(ref['kickoff']) and all(team_matches(ref[s], 'espn', sides[s]['team'], config) for s in ('home', 'away')):
+        if instant(comp['date']) == expected_provider_kickoff(ref, config) and all(team_matches(ref[s], 'espn', sides[s]['team'], config) for s in ('home', 'away')):
             hits.append(event)
     if len(hits) != 1:
         raise ValueError('espn_fixture_identity_unresolved')

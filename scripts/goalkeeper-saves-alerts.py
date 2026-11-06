@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import requests
 from goalkeeper_price_selection import alert_price_check, contract_key, number
+from goalkeeper_quote_integrity import current_quote_issue
 
 ROOT = Path(__file__).resolve().parents[1]
 FOLDER = ROOT / 'data/goalkeeper-saves'
@@ -56,6 +57,8 @@ def stamp(value):
         return None
 
 def eligible(row, now):
+    if current_quote_issue(row):
+        return False
     created, captured, kickoff = [stamp(row.get(k)) for k in ('created_at','captured_at','kickoff_at')]
     if not all((created,captured,kickoff)) or not (kickoff > now and timedelta(0) <= now-created <= timedelta(hours=6) and timedelta(0) <= now-captured <= timedelta(hours=6)):
         return False
@@ -66,7 +69,11 @@ def eligible(row, now):
             return (str(row.get('signal_id','')).startswith('keeper_watch_v1:')
                 and row.get('selection_policy') == 'keeper_watch_v1'
                 and row.get('paper_stake') == .5 and row.get('actual_stake') == 0
-                and str(row.get('bookmaker','')).casefold() == 'bet365'
+                and contract_key(row) is not None
+                and (str(row.get('bookmaker','')).casefold() == 'bet365'
+                     or (str(row.get('bookmaker','')).casefold() == 'grosvenor'
+                         and row.get('settlement_policy') == 'grosvenor_full90_scope_agreement_v1'
+                         and row.get('contract_scope') in ('team_goalkeeper_home','team_goalkeeper_away')))
                 and row.get('lineup_status') in ('predicted_starter','confirmed_starter')
                 and row.get('side') in ('over','under')
                 and all(math.isfinite(float(row[k])) for k in ('edge','odds_decimal','fair_odds','line'))
@@ -109,7 +116,7 @@ def claim(rows, state, token, now, offers=None):
             continue
         reason = 'fixture_already_notified_or_claimed' if prior_claim(row, entries) else None
         comparison = []
-        if not reason and row.get('alert_model') != 'keeper_watch_v1' and offers is not None:
+        if not reason and offers is not None:
             reason, comparison = alert_price_check(row, offers, now)
         if reason:
             rejected[reason] = rejected.get(reason, 0) + 1
@@ -125,6 +132,8 @@ def claim(rows, state, token, now, offers=None):
 
 def message(row):
     e = lambda k: html.escape(str(row.get(k) or ''))
+    comparison = row.get('price_comparison') or []
+    price_note = ('Latest captured comparison: ' + ' | '.join(f"{html.escape(str(q['bookmaker']))} {q['odds']:.2f}" for q in comparison) + '\n') if comparison else ''
     if row.get('alert_model') == 'keeper_watch_v1':
         scope = str(row.get('contract_scope') or '')
         note = ('Team goalkeeper contract; model uses the named predicted starter. Check the official XI.\n'
@@ -134,6 +143,7 @@ def message(row):
             f"<b>{e('home_team')} vs {e('away_team')}</b>\n"
             f"{e('goalkeeper')} | {e('side').title()} {e('line')} saves\n"
             f"{html.escape(str(row.get('bookmaker') or 'Bet365'))} recorded odds: <b>{float(row['odds_decimal']):.2f}</b>\n"
+            f"{price_note}"
             f"{note}"
             f"Keeper Watch fair odds: {float(row['fair_odds']):.2f} | Estimated EV: {float(row['edge'])*100:+.1f}%\n"
             f"Kickoff: {e('kickoff_at')}\nCaptured: {e('captured_at')}\n"
@@ -145,8 +155,6 @@ def message(row):
     team_contract = scope in {'team_goalkeeper_home', 'team_goalkeeper_away'}
     display_keeper = scope.removeprefix('team_goalkeeper_').title() + ' goalkeeper' if team_contract else e('goalkeeper')
     contract_note = 'Team goalkeeper market. Check the starting keeper and the price at your chosen bookmaker; no Bet365 price is implied.\n' if team_contract else ''
-    comparison = row.get('price_comparison') or []
-    price_note = ('Latest captured comparison: ' + ' | '.join(f"{html.escape(str(q['bookmaker']))} {q['odds']:.2f}" for q in comparison) + '\n') if comparison else ''
     return ('<b>GK saves | New tracked signal</b>\n\n'
         f"<b>{e('home_team')} vs {e('away_team')}</b>\n"
         f"{display_keeper} - {e('side').title()} {e('line')} saves\n"
@@ -174,7 +182,7 @@ def main():
         with a.ledger.open(encoding='utf-8-sig',newline='') as f: rows=list(csv.DictReader(f))
         now=datetime.now(timezone.utc)
         count=claim(rows,state,token,now,offers)
-        watch_count=claim(keeper_watch_rows(a.report,now),state,token,now)
+        watch_count=claim(keeper_watch_rows(a.report,now),state,token,now,offers)
         save();print(f'GK alert claims prepared: current {count}; Keeper Watch paper {watch_count}');return
     failed=0;sent=0
     for key, item in state['signals'].items():
@@ -182,7 +190,7 @@ def main():
         if not eligible(item['signal'],datetime.now(timezone.utc)):
             item['status']='expired_before_send';save();continue
         reason = 'fixture_already_notified_or_claimed' if prior_claim(item['signal'], state['signals'], key) else None
-        if not reason and item['signal'].get('alert_model') != 'keeper_watch_v1':
+        if not reason:
             reason, comparison = alert_price_check(item['signal'], offers, datetime.now(timezone.utc))
             if not reason:
                 item['signal'].update(price_comparison=comparison, price_checked_at=datetime.now(timezone.utc).isoformat())

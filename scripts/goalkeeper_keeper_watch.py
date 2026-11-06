@@ -10,6 +10,8 @@ from statistics import mean
 from football_identity import read, write, folded
 from goalkeeper_forecast_evidence import encode, timestamp
 from goalkeeper_saves_live import predict_mean, price_side
+from goalkeeper_price_selection import best_offers
+from goalkeeper_quote_integrity import current_quote_issue, recorded_quote_issue
 
 LEAGUES = {'47':'epl','87':'la-liga','55':'serie-a','54':'bundesliga','53':'ligue-1'}
 LABELS = {'Premier League':'epl','LaLiga':'la-liga','Serie A':'serie-a','Bundesliga':'bundesliga','Ligue 1':'ligue-1'}
@@ -156,7 +158,17 @@ def run(candidates, live_params, root, *, now=None):
     outcomes,history=targets(root,now); history_hash=digest({str(k):v for k,v in history.items()})
     boards=defaultdict(list); skips=Counter();new_forecasts=0
     if len(candidates)>5000:raise ValueError('Candidate budget exceeded')
+    # Older candidate packets omitted this comparison annotation. Recover it
+    # only from the same exact fixture/team/starter identity already required
+    # by the trial; never infer a name for an anonymous team-side market.
+    candidates = [{**row, 'identity_basis':'same_fixture_lineup_side'}
+                  if not row.get('identity_basis')
+                  and row.get('contract_scope') == 'team_goalkeeper_'+str(row.get('venue'))
+                  and identity(row) else row for row in candidates]
+    best_price_rows = {id(row) for row in best_offers(candidates, now)}
     for row in candidates:
+        if current_quote_issue(row):
+            skips['source_contract_quarantined']+=1;continue
         captured=timestamp(row.get('captured_at'));kickoff=timestamp(row.get('kickoff_at'))
         if not captured or not kickoff or not start<=captured<=now<kickoff or now-captured>timedelta(hours=6):
             skips['not_new_fresh_prematch']+=1;continue
@@ -189,14 +201,14 @@ def run(candidates, live_params, root, *, now=None):
             'registered_at':now.isoformat(),'goalkeeper':row['goalkeeper'],'home':row['home_team'],'away':row['away_team'],
             'league':row['league'],'lineup_status':row['lineup_status'],'features':features,'candidate_features':candidate_features,
             'history':coverage,'history_sha256':history_hash,'config_sha256':config_hash,'actual_stake':0,
-            'contract_scope':scope,'settlement_policy':policy}
+            'contract_scope':scope,'settlement_policy':policy,'identity_basis':row.get('identity_basis','')}
         models={'current':(live_params,control_mu),'keeper_watch':(config['candidate_params'],candidate_mu)}
         forecast={**base,'models':{n:{'mean':mu,'probabilities':[price_side('over',x,2,mu,p['alpha'])['model_probability'] for x in LINES]}
                     for n,(p,mu) in models.items()}}
         new_forecasts+=retain(folder/'forecasts',ids['match_id']+':'+ids['player_id'],forecast)
         for name,(params,mu) in models.items():
             value=price_side(row['side'],line,odds,mu,params['alpha'])
-            if 1.7<=odds<=3 and value['edge']>=.05:
+            if id(row) in best_price_rows and 1.7<=odds<=3 and value['edge']>=.05:
                 boards[(name,ids['match_id'])].append({**base,'model':name,'side':row['side'],'line':line,
                     'bookmaker':row['bookmaker'],'odds':odds,**value,'paper_stake':.5})
     new_selections=0
@@ -222,7 +234,8 @@ def run(candidates, live_params, root, *, now=None):
                 'log_loss':mean(-y*math.log(max(1e-12,p))-(1-y)*math.log(max(1e-12,1-p)) for p,y in zip(probabilities,labels))})
     scored=[]
     for row in selections:
-        result=outcome(row,outcomes,now)
+        issue=recorded_quote_issue(row)
+        result={'status':'review','reason':issue} if issue else outcome(row,outcomes,now)
         key=row['match_id']+':'+row['player_id'];prior=read(folder/'outcomes'/(sha256(key.encode()).hexdigest()+'.json'))
         if prior and result.get('actual') is not None and prior['actual']!=result['actual']:
             result={'status':'review','reason':'changed_verified_result_requires_review'}
@@ -253,7 +266,7 @@ def run(candidates, live_params, root, *, now=None):
             'exceptions':'Replacement keepers, substitutions and disputed counts remain under review; no inferred voids.'},
         'selections':[{k:r[k] for k in ('model','match_id','player_id','team_id','event_id','kickoff_at','registered_at',
             'captured_at','home','away','goalkeeper','side','line','bookmaker','odds','fair_odds','edge','lineup_status',
-            'status','profit','actual','reason','overdue','contract_scope','settlement_policy') if k in r} for r in sorted(scored,key=lambda r:r['kickoff_at'],reverse=True)],
+            'status','profit','actual','reason','overdue','contract_scope','settlement_policy','identity_basis') if k in r} for r in sorted(scored,key=lambda r:r['kickoff_at'],reverse=True)],
         'coverage':'Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.'}
     write(folder/'report.json',report)
     return report

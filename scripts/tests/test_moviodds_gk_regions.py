@@ -19,6 +19,8 @@ alerts = load('goalkeeper-saves-alerts')
 
 class GoalkeeperRegions(unittest.TestCase):
     def setUp(self):
+        for target in ('moviodds_prices.MOVIODDS_GK_HOLD','goalkeeper_quote_integrity.MOVIODDS_GK_HOLD'):
+            hold=patch(target, False);hold.start();self.addCleanup(hold.stop)
         self.raw = json.loads((Path(__file__).parent/'fixtures/moviodds-gk-regions.json').read_text())
         self.now = datetime(2026, 11, 5, 23, 6, 10, tzinfo=timezone.utc)
         self.target = {'id':71945404, 'home':'Venezia FC', 'away':'Udinese Calcio',

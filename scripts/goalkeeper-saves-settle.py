@@ -23,6 +23,7 @@ from verified_player_targets import archive_observed_targets, stat_values, count
 from football_team_names import football_form_team_key
 from goalkeeper_saves_live import ROOT, parse_float, person_match_score
 from football_fixture_resolutions import apply_reviewed_voids
+from goalkeeper_quote_integrity import recorded_quote_issue
 
 
 BASE_URL = "https://v3.football.api-sports.io"
@@ -544,7 +545,7 @@ def main() -> None:
     reviewed_voids = apply_reviewed_voids([r for r in signals if not str(r.get("contract_scope") or "").startswith("team_goalkeeper_")], ROOT, goalkeeper=True)
     if reviewed_voids:
         write_csv(args.signals, fields, signals)
-    pending = [row for row in signals if str(row.get("status") or "").lower() == "pending"]
+    pending = [row for row in signals if str(row.get("status") or "").lower() == "pending" and not recorded_quote_issue(row)]
     now_dt = datetime.now(UTC)
     deferred = [row for row in pending if not signal_is_due(row, now_dt)]
     pending = [row for row in pending if signal_is_due(row, now_dt)]

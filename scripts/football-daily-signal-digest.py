@@ -108,6 +108,9 @@ def goalkeeper_candidates(rows: list[dict[str, str]], target_day: str,
             tracked.setdefault(goalkeeper_contract(original), []).append(original)
     candidates: list[dict[str, object]] = []
     for row in rows:
+        from goalkeeper_quote_integrity import current_quote_issue
+        if current_quote_issue(row):
+            continue
         if row_day(row) != target_day:
             continue
         edge = number(row.get("edge"))

@@ -2,6 +2,7 @@
 from datetime import datetime, timedelta
 import math
 import unicodedata
+from goalkeeper_quote_integrity import current_quote_issue
 
 
 def stamp(value):
@@ -64,6 +65,8 @@ def current_offers(rows, now):
             fixture_newest[event] = max(fixture_newest.get(event, captured), captured)
     offers = []
     for row in rows:
+        if current_quote_issue(row):
+            continue
         key = contract_key(row)
         captured, kickoff = stamp(row.get('captured_at')), stamp(row.get('kickoff_at'))
         odds = number(row.get('odds_decimal'))

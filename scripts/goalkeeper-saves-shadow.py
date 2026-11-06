@@ -13,6 +13,7 @@ from typing import Any
 
 from football_team_names import football_form_team_key
 from goalkeeper_price_selection import best_offers, stamp as price_stamp
+from goalkeeper_quote_integrity import current_quote_issue, recorded_quote_issue, annotate_records
 from goalkeeper_forecast_evidence import archive as archive_forecast_inputs, source_hashes
 from goalkeeper_saves_live import (
     ROOT,
@@ -62,6 +63,7 @@ SIGNAL_FIELDS = [
     "model_probability", "push_probability", "fair_odds", "edge", "stake_units", "lineup_status",
     "lineup_source", "capture_mode", "captured_at", "status", "result", "actual_saves", "pnl_units",
     "settled_at", "settlement_source", "close_odds", "clv", "selection_policy", "contract_scope", "identity_basis",
+    "integrity_status", "quarantine_reason",
 ]
 
 
@@ -173,6 +175,8 @@ def board_has_current_rows(rows: list[dict[str, Any]], now: datetime) -> bool:
 def latest_price_rows(rows: list[dict[str, str]], now: datetime) -> list[dict[str, str]]:
     latest: dict[tuple[str, str, str, str, str], dict[str, str]] = {}
     for row in rows:
+        if current_quote_issue(row):
+            continue
         kickoff_text = str(row.get("kickoff_at") or "")
         try:
             kickoff = datetime.fromisoformat(kickoff_text.replace("Z", "+00:00"))
@@ -362,7 +366,7 @@ def mark_primary_selections(rows: list[dict[str, Any]]) -> None:
 
 
 def append_signals(path: Path, candidates: list[dict[str, Any]], generated_at: str) -> tuple[int, list[dict[str, str]]]:
-    existing = read_csv(path)
+    existing = annotate_records(read_csv(path))
     for row in existing:
         if not str(row.get("selection_policy") or "").strip():
             row["selection_policy"] = LEGACY_SELECTION_POLICY
@@ -370,6 +374,8 @@ def append_signals(path: Path, candidates: list[dict[str, Any]], generated_at: s
     tracked_fixtures = {str(row.get("event_id") or "") for row in existing if str(row.get("event_id") or "")}
     added = 0
     for row in candidates:
+        if current_quote_issue(row):
+            continue
         if row["candidate_status"] != "eligible_shadow" or row["strongest_for_fixture"] != "yes":
             continue
         fixture_book = (str(row.get("event_id") or ""), str(row.get("bookmaker") or "Bet365").casefold())
@@ -410,6 +416,8 @@ def report_payload(
     board_preserved: bool = False,
     provisional_count: int = 0,
 ) -> dict[str, Any]:
+    quarantined = [row for row in signals if recorded_quote_issue(row)]
+    signals = [row for row in signals if not recorded_quote_issue(row)]
     settled = [row for row in signals if str(row.get("status") or "").lower() in {"won", "lost", "push"}]
     voids = sum(str(row.get("status") or "").lower() == "void" for row in signals)
     pending = [row for row in signals if str(row.get("status") or "").lower() == "pending"]
@@ -453,6 +461,8 @@ def report_payload(
             "blocker_counts": dict(sorted(blocker_counts.items())),
         },
         "evidence": {
+            "quote_quarantined": len(quarantined),
+            "quote_quarantine_records": quarantined,
             "signals": len(signals),
             "pending": len(pending),
             "settled": len(settled),
@@ -512,7 +522,7 @@ def main() -> None:
         input_capture = {"status": "BLOCKED", "reason": type(exc).__name__, "saved": 0}
     evidence_folder.mkdir(parents=True, exist_ok=True)
     (evidence_folder / "status.json").write_text(json.dumps(input_capture, indent=2) + "\n", encoding="utf-8")
-    existing_candidates = apply_starter_tracking_policy(read_csv(args.candidates))
+    existing_candidates = apply_starter_tracking_policy([r for r in read_csv(args.candidates) if not current_quote_issue(r)])
     board_preserved = should_preserve_candidate_board(existing_candidates, candidates, now)
     effective_candidates = existing_candidates if board_preserved else candidates
     write_csv(args.candidates, effective_candidates, CANDIDATE_FIELDS)
