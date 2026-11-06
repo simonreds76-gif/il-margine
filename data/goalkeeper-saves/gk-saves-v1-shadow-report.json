@@ -2,19 +2,23 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 0,
-    "blocker_counts": {},
+    "blocked_lines": 8,
+    "blocker_counts": {
+      "goalkeeper_not_matched_to_lineup": 8,
+      "goalkeeper_team_unresolved": 8,
+      "missing_priced_edge": 8
+    },
     "candidate_board_preserved": false,
-    "eligible_lines": 1,
-    "priced_lines": 115,
+    "eligible_lines": 7,
+    "priced_lines": 319,
     "provisional_lines": 0,
-    "signals_added": 0,
-    "value_ladder_lines": 8
+    "signals_added": 1,
+    "value_ladder_lines": 42
   },
   "evidence": {
     "clv": 0.049783,
     "clv_matched": 34,
-    "pending": 4,
+    "pending": 5,
     "pnl_units": 12.167,
     "quote_quarantine_records": [
       {
@@ -150,32 +154,35 @@
       "independently_reviewed_named_keeper_count": 2,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 106,
+    "signals": 107,
     "true_close_coverage": 0.354167,
     "void": 6
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-11-06T16:56:18.969326+00:00",
+    "checked_at": "2026-11-06T17:34:20.563924+00:00",
     "counts": {
-      "offers_saved": 115
+      "offers_saved": 327
     },
-    "saved": 16,
+    "saved": 20,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-11-06T16:56:18Z",
+  "generated_at": "2026-11-06T17:34:19Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
-    "exclusions": {},
-    "forecast_fixtures": 154,
-    "forecast_keepers": 314,
-    "generated_at": "2026-11-06T16:56:19.193414+00:00",
-    "last_capture_at": "2026-11-06T15:59:23.125267+00:00",
+    "exclusions": {
+      "blocked_or_missing_inputs": 8,
+      "source_contract_quarantined": 11
+    },
+    "forecast_fixtures": 158,
+    "forecast_keepers": 322,
+    "generated_at": "2026-11-06T17:34:20.777766+00:00",
+    "last_capture_at": "2026-11-06T17:34:20.777766+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 0,
-    "new_selections": 0,
+    "new_forecasts": 8,
+    "new_selections": 1,
     "next_review_at": null,
     "paired_scores": {
       "current": {
@@ -193,12 +200,12 @@
       "current": {
         "losses": 16,
         "overdue": 4,
-        "pending": 2,
+        "pending": 3,
         "profit": -0.9359999999999996,
         "pushes": 0,
         "review": 7,
         "roi": -0.06685714285714282,
-        "selections": 41,
+        "selections": 42,
         "settled": 28,
         "stake": 14.0,
         "voids": 4,
@@ -254,12 +261,12 @@
         "current": {
           "losses": 1,
           "overdue": 2,
-          "pending": 2,
+          "pending": 3,
           "profit": 0.29500000000000004,
           "pushes": 0,
           "review": 2,
           "roi": 0.19666666666666668,
-          "selections": 7,
+          "selections": 8,
           "settled": 3,
           "stake": 1.5,
           "voids": 0,
@@ -283,6 +290,34 @@
     },
     "review_milestone": 100,
     "selections": [
+      {
+        "away": "Bologna FC",
+        "bookmaker": "Grosvenor",
+        "captured_at": "2026-11-06T17:33:53+00:00",
+        "contract_scope": "team_goalkeeper_away",
+        "edge": 0.05153296287270148,
+        "event_id": "71945398",
+        "fair_odds": 2.1397332080329514,
+        "goalkeeper": "\u0141ukasz Skorupski",
+        "home": "Parma Calcio",
+        "identity_basis": "same_fixture_lineup_side",
+        "kickoff_at": "2026-11-07T17:00:00+00:00",
+        "line": 2.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5749747",
+        "model": "current",
+        "odds": 2.25,
+        "overdue": false,
+        "player_id": "178732",
+        "profit": 0,
+        "quote_verification": "",
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-11-06T17:34:20.777766+00:00",
+        "settlement_policy": "grosvenor_full90_scope_agreement_v1",
+        "side": "over",
+        "status": "pending",
+        "team_id": "9857"
+      },
       {
         "away": "Eintracht Frankfurt",
         "bookmaker": "Bet365",
@@ -1501,7 +1536,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 32,
+      "awaiting_verified_keeper_result": 40,
       "incomplete_or_conflicting_full_match_count": 16,
       "keeper_identity_unresolved": 4,
       "team_keeper_participation_or_rules_review": 21,
