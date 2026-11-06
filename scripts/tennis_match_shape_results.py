@@ -41,6 +41,29 @@ def supplemental(root,records,clock):
     return found
 
 
+
+def resolve_quote(q,index):
+    """Resolve a missing native date from the exact, fresh bookmaker fixture.
+
+    Never change an existing date/opponent. The frozen identity/format checks
+    still run on the enriched copy; the native file is untouched.
+    """
+    from tennis_breakpoint_forward import map_quote, norm, same_venue
+    try:return map_quote(q,index)
+    except ValueError as exc:
+        if str(exc)!='UNMAPPED_EXACT_UPCOMING_FIXTURE':raise
+    names,aliases,tours,today,hashes=index
+    ids=[names.get(aliases.get(norm(q[k]),norm(q[k])),[]) for k in ('home','away')]
+    if not all(len(x)==1 for x in ids) or ids[0]==ids[1]:raise ValueError('UNMAPPED_PLAYER')
+    pair={ids[0][0],ids[1][0]}
+    candidates=[r for r in today if {int(r['player1_id']),int(r['player2_id'])}==pair and not r.get('result','').strip() and same_venue(q['group'],tours.get(int(r['tour_id']),{}).get('name',''))]
+    if len(candidates)!=1 or candidates[0].get('date'):raise ValueError('UNMAPPED_EXACT_UPCOMING_FIXTURE')
+    row=candidates[0];start=M.utc(q['scheduled_start']);seen=M.utc(q['captured_at'])
+    if not seen or not start or not seen<start or start-seen>timedelta(days=3):raise ValueError('UNVERIFIED_BOOKMAKER_SCHEDULE')
+    copy={**row,'date':start.date().isoformat()}
+    resolved=map_quote(q,(names,aliases,tours,[copy],hashes))
+    return {**resolved,'schedule_source':'exact_fresh_bookmaker_fixture','native_date_was_blank':True,'scheduled_start':q['scheduled_start']}
+
 def refresh_with_results(root,*args,**kwargs):
     clock=kwargs.get('clock') or (args[0] if args else None) or datetime.now(timezone.utc)
     folder=root/M.RELATIVE
@@ -57,5 +80,5 @@ def refresh_with_results(root,*args,**kwargs):
             # Integrity failures remain quarantined by original(), never overridden.
             return extra[record['fixture_key']]
         return result
-    with patch.object(M,'outcome',resolve):
+    with patch.object(M,'outcome',resolve), patch.object(M,'map_quote',resolve_quote):
         return M.refresh(root,*args,**kwargs)
