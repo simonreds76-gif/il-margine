@@ -5,6 +5,10 @@ import { notFound } from "next/navigation";
 import Footer from "@/components/Footer";
 import PageHomeLink from "@/components/PageHomeLink";
 import ClubPenaltyReports from "@/components/ClubPenaltyReports";
+import ClubPenaltyLog from "@/components/ClubPenaltyLog";
+import ClubPenaltyNextFixture from "@/components/ClubPenaltyNextFixture";
+import { isPenaltyGrowthPage, clubFixtureLinks, sameEvidenceText } from "@/lib/penalty-growth-pilot";
+import fixtureSnapshot from "@/data/atlas-fixtures.json";
 import { penaltyNews } from "@/lib/penalty-news-data";
 import { latestClubPenaltyReport, newsDate } from "@/lib/penalty-news";
 import { BASE_URL } from "@/lib/config";
@@ -193,6 +197,12 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
   const conditionSummary = buildClubPenaltyConditionSummary(team);
   const watchNote = buildClubPenaltyWatchNote(team);
   const latestEvidenceUpdate = team.evidenceUpdates[0];
+  const growthPilot = !team.isArchived && isPenaltyGrowthPage(team.leagueKey, team.slug);
+  // Timestamp this cached server render; the client refreshes only the clock, not the feed.
+  // eslint-disable-next-line react-hooks/purity -- async Server Component, serialized for stable hydration
+  const renderedAt = Date.now();
+  const duplicateEvidence = growthPilot && latestEvidenceUpdate
+    && sameEvidenceText(team.conditionNote, latestEvidenceUpdate.fullSummary);
   const hierarchyLabels = clubPenaltyRankLabels(team);
   const latestPenalty = latestClubPenaltyReport(penaltyNews.articles, team.relativeUrl);
   const hierarchyNote = buildClubPenaltyHierarchyNote(team);
@@ -294,7 +304,7 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
                     {isUnderReview ? "Order under review" : "Why this order stands"}
                   </div>
                   <p className="mt-2 text-sm leading-6 text-slate-200">{conditionSummary}</p>
-                  {team.conditionNote !== conditionSummary ? (
+                  {team.conditionNote !== conditionSummary && !duplicateEvidence ? (
                     <details className="mt-3 text-xs text-slate-400">
                       <summary className="cursor-pointer font-semibold text-slate-300 hover:text-white">Full evidence note</summary>
                       <p className="mt-2 leading-6 text-slate-300">{team.conditionNote}</p>
@@ -356,7 +366,10 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
           </div>
         </section>
 
-        <ClubPenaltyReports clubUrl={`/penalty-takers/${team.leagueKey}/${team.slug}`} club={team.team} />
+        {growthPilot ? <>
+          <ClubPenaltyNextFixture fixtures={clubFixtureLinks(fixtureSnapshot, team.leagueKey, team.logoPath)} checkedAt={fixtureSnapshot.checkedAt} expiresAt={fixtureSnapshot.expiresAt} clubUrl={team.relativeUrl} renderedAt={renderedAt} />
+          <ClubPenaltyLog clubUrl={team.relativeUrl} club={team.team} />
+        </> : <ClubPenaltyReports clubUrl={team.relativeUrl} club={team.team} />}
 
         <section className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="rounded-2xl border border-slate-800 bg-slate-900/65 p-5 sm:p-6">
