@@ -467,15 +467,9 @@ try {
     if ($bpEvidenceExit -ne 0) { Log "WARNING: break-point result evidence needs review" }
 } catch { Log "WARNING: break-point result evidence process error" }
 
-Log "=== Elo Rebuild: bounded ATP paper comparison (no alerts) ==="
-try {
-    $eloPaperExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\tennis_elo_shadow.py") -Label "Elo Rebuild paper comparison" -TimeoutSeconds 600
-    if ($eloPaperExit -ne 0) { Log "WARNING: Elo Rebuild paper capture failed/timed out (exit $eloPaperExit); live pricing unchanged" }
-} catch {
-    Log "WARNING: Elo Rebuild paper process error; existing snapshot still runs: $($_.Exception.Message)"
-} finally {
-    $lockHandle = Enter-TennisPriorityLock -RootPath $root
-}
+# Raw Elo retired by user on 2026-11-06. No new comparison/rebuild work.
+# The shared published-source capture is paused; nightly evidence settlement remains.
+$lockHandle = Enter-TennisPriorityLock -RootPath $root
 
 Log "=== Step 9b/10: Compact tennis evidence snapshot ==="
 $evidenceSnapshotExit = Invoke-LoggedProcessWithRetry -FilePath "python" -ArgumentList @("scripts\tennis-evidence-snapshot.py", "--supabase") -Label "tennis evidence snapshot" -TimeoutSeconds 120 -Attempts 1

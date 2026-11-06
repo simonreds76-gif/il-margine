@@ -21,5 +21,10 @@ def research_only(step):
     return (step.get('script'), step.get('label')) in RESEARCH_STEPS
 
 
+def retired_research(step):
+    # Exact retired capture only; settlement and all other research keep their guards.
+    return (step.get('script'), step.get('label')) == ('tennis_elo_shadow.py', 'Elo Rebuild paper comparison')
+
+
 def retired_source(step):
     return (step.get('script'), step.get('label')) in RETIRED_UNATTENDED_SOURCES

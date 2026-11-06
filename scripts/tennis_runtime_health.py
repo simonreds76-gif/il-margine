@@ -104,8 +104,8 @@ def summary(root=ROOT, *, now=None, run_id=None):
     now = now or utc()
     from tennis_host_interruption import boot_time, interrupted
     boot = boot_time()
-    steps, issues, near, research_issues, source_issues = [], [], [], [], []
-    from tennis_step_scope import research_only, retired_source
+    steps, issues, near, research_issues, source_issues, archived_steps = [], [], [], [], [], []
+    from tennis_step_scope import research_only, retired_source, retired_research
     for path in sorted((root / REL).glob('*.json')):
         try:
             row = read(path)
@@ -121,6 +121,9 @@ def summary(root=ROOT, *, now=None, run_id=None):
             item = {k: row.get(k) for k in ('step_id','label','script','run_id','started_at','deadline',
                     'finished_at','duration_seconds','timeout_seconds','last_success_at')}
             item['status'] = state
+            if retired_research(item) and state != 'RUNNING':
+                archived_steps.append(dict(item, lifecycle='RETIRED', retired_on='2026-11-06'))
+                continue
             steps.append(item)
             if state in {'FAILED','TIMED_OUT','DEADLINE_EXCEEDED','HOST_RESTART_INTERRUPTED'} or row.get('unresolved_failure'):
                 item = dict(item, issue=state if state != 'RUNNING' else 'RETRYING_AFTER_FAILURE')
@@ -132,7 +135,7 @@ def summary(root=ROOT, *, now=None, run_id=None):
     return dict(schema_version=1, generated_at=now.isoformat(),
                 state='DEGRADED' if issues or research_issues or source_issues else 'RUNNING' if any(s['status']=='RUNNING' for s in steps)
                 else 'OK' if steps else 'NOT_YET_OBSERVED',
-                step_count=len(steps), issues=issues, research_issues=research_issues, source_issues=source_issues, near_budget=near, steps=steps)
+                step_count=len(steps), issues=issues, research_issues=research_issues, source_issues=source_issues, near_budget=near, steps=steps, archived_steps=archived_steps)
 
 def overlay_feed_health(feed, runtime):
     result = dict(feed)

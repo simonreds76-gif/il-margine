@@ -48,11 +48,11 @@ class RecoveredHealthTests(unittest.TestCase):
         pairing._resolve_verified_board_recovery(self.root,self.proof)
         self.assertEqual(runtime.read(self.path),before)
 
-    def test_blocked_frozen_elo_remains_visible_as_research(self):
+    def test_retired_elo_remains_archived_without_hiding_active_failure(self):
         token=runtime.begin(self.root,'Elo Rebuild paper comparison','tennis_elo_shadow.py',600)
         runtime.finish(self.root,token,1)
         health=runtime.summary(self.root)
-        self.assertEqual([x['label'] for x in health['research_issues']],['Elo Rebuild paper comparison'])
+        self.assertEqual([x['label'] for x in health['archived_steps']],['Elo Rebuild paper comparison'])
         self.assertEqual([x['label'] for x in health['issues']],[self.label])
 
 

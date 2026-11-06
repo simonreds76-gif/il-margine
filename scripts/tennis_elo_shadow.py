@@ -24,6 +24,18 @@ DOWNSTREAM_FILES=('scripts/build-tennis-props-board.py','scripts/compute-handica
 MAX_EVIDENCE_BYTES=256*1024*1024
 MAX_DAILY_CAPTURES=1
 
+# User-authorized retirement. Retain frozen artifacts and exact-fixture settlement.
+# The independent published-source arm shared this collector and is paused,
+# not rejected or implicitly approved to bypass its dependency guards.
+RETIREMENT = {
+    'status': 'RETIRED', 'date': '2026-11-06',
+    'reason': 'User ended raw K22 research after negative validation and no demonstrated forward benefit.',
+    'new_captures': False, 'scheduled_rebuilds': False,
+    'existing_evidence': 'retained; existing nightly exact-fixture settlement only',
+    'published_source_capture': 'PAUSED_SHARED_COLLECTOR',
+    'published_source_reason': 'Separate experiment retained; shared capture stopped. Existing dependency review remains required before any independent restart.',
+}
+
 def load(path,default=None):
     return json.loads(path.read_text(encoding='utf-8-sig')) if path.exists() else ({} if default is None else default)
 def fixture(r):return ':'.join(str(r.get(k,'')) for k in ('tour_id','round_id'))+':'+':'.join(map(str,sorted([int(r['player1_id']),int(r['player2_id'])])))
@@ -135,6 +147,7 @@ def manual_pending(root):
     except (KeyError,ValueError,TypeError):return False
 
 def capture(root,output,candidate):
+    if RETIREMENT:return {'skipped':'retired_by_user'}
     from tennis_category_shadow import load_quotes,quote_for,selection,load_policy,utc
     now=datetime.now(timezone.utc);day=now.date().isoformat()
     if manual_pending(root):return {'skipped':'manual_refresh_has_priority'}
@@ -333,6 +346,15 @@ def report(output):
     result['record_limit']=100
     from tennis_published_elo_comparison import report as published_report
     result['published_source'] = published_report(output)
+    if RETIREMENT:
+        result.update(status='RETIRED', retirement=dict(RETIREMENT), new_forward_fixtures=0)
+        result['notes'] = ['Retired 6 November 2026; no new raw rebuilt-Elo forecasts or scheduled rebuilds. Existing evidence retained.'] + [n for n in result['notes'] if not n.startswith('300 settled')]
+        result['published_source'].update(status='PAUSED', capture_state=RETIREMENT['published_source_capture'],
+                                          capture_reason=RETIREMENT['published_source_reason'])
+    if RETIREMENT:
+        result['archived_prices'] = result['current_prices']
+        result['current_prices'] = []
+        if (output/'published-source').exists():atomic(output/'published-source/report.json', result['published_source'])
     atomic(output/'report.json',result)
     # Flat rows are consumable by the existing private Monitor record browser.
     rows=[]
@@ -356,6 +378,10 @@ def report(output):
 
 def weekly_text(r):
     if not r:return 'ELO REBUILD | evidence unavailable; live unchanged.'
+    if r.get('status') == 'RETIRED':
+        return ('ELO REBUILD | retired 6 November; no new captures. Evidence retained; '
+                f"{r.get('pending',0)} existing fixtures pending exact settlement. Live unchanged.\n"
+                'PUBLISHED ELO | separate comparison paused with shared collector; dependency review still required.')
     atp=r.get('cohorts',{}).get('ATP',{})
     current=atp.get('baseline',{})
     lines=['ELO REBUILD | ATP paper comparison; live unchanged',f"History through {r.get('history_through','unavailable')} | {current.get('captured_fixtures',0)} ATP pairs | {current.get('pending_fixtures',0)} pending fixtures."]
@@ -391,6 +417,8 @@ def main():
     a=p.parse_args();out=a.output or a.root/RELATIVE;out.mkdir(parents=True,exist_ok=True)
     try:
         with process_lock(out):
+            if RETIREMENT and not a.settle_only:
+                print(weekly_text(report(out)));return 0
             if not a.settle_only:
                 c,_=rebuild(a.root,out,datetime.now(timezone.utc).date().isoformat());status=capture(a.root,out,c)
                 if status.get('skipped') not in (None,'daily_capture_limit'):

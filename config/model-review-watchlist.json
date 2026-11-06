@@ -90,20 +90,22 @@
     {
       "id": "elo_rebuild_v1",
       "report_key": "tennis_elo_rebuild",
-      "scope": "Frozen K22 rebuilt Elo in full unchanged hybrid; ATP paired prospective diagnostic only, one capture/day after alerts, zero real stake. Challenger v1 rejected on 3410 retrospective reconstructed fixtures; initial observations retained, no new Challenger capture.",
+      "scope": "Raw K22 rebuilt Elo retired by user; no new forecasts or scheduled rebuilds. Frozen evidence retained; existing pending fixtures use the unchanged exact-fixture settler.",
       "forward_report": "data/tennis-elo-rebuild/report.json",
-      "review_milestones_settled_fixtures": [
-        300
-      ],
+      "review_milestones_settled_fixtures": [],
       "automatic_promotion": false,
-      "next_action": "Compare paired log loss/Brier against actual incumbent and same-time market; games/handicap/count diagnostics; ROI descriptive. At300 stop for manual review: negative or inconclusive ends v1. Check source health, capture freshness, exact settlements, excluded start times and code-hash drift. No extra Telegram alerts or refits.",
+      "next_action": "No further raw K22 testing or promotion. Preserve evidence and finish existing pending settlements only.",
       "published_source_arm": {
         "report_path": "published_source",
         "scope": "Published overall/surface ratings plus dependent opponent averages in unchanged full model; incumbent-all/current-paired/published-paired, ATP and Challenger separate. K22 Challenger stop unchanged. No live rating writes.",
         "review": "300 independent settled pairs and >=10 editions per tier; sparse Challenger coverage explicit. Paired log loss/Brier before ROI. No automatic promotion.",
         "roi": "Flat1u hypothetical available Strict gates primary; EV>=5% diagnostic separately; exact fresh Pinnacle quotes. H0 handicap gates and push refunds retained.",
-        "health": "Verify observed source date, all player/opponent ratings, current activity parity, immutable dependency hashes, exact results and quote coverage. Never backdate."
-      }
+        "health": "Verify observed source date, all player/opponent ratings, current activity parity, immutable dependency hashes, exact results and quote coverage. Never backdate.",
+        "status": "PAUSED_SHARED_COLLECTOR",
+        "next_action": "Independent published-source research retained, not rejected. Dependency review and a separately validated capture route are required before restart; do not bypass frozen guards."
+      },
+      "status": "RETIRED",
+      "retired_on": "2026-11-06"
     },
     {
       "id": "tennis_indoor_paper",
