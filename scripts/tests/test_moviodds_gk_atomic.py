@@ -102,7 +102,7 @@ class AtomicGk(unittest.TestCase):
         def read(url,params,get):return copy.deepcopy(self.raw['live'][params['fi']])
         with tempfile.TemporaryDirectory() as directory:
             path=Path(directory)/'raw.gz'
-            with patch.object(adapter,'download',return_value=self.raw['board']),patch.object(adapter,'download_response',side_effect=read),patch.object(adapter,'datetime') as clock,patch.object(verify,'datetime') as other_clock:
+            with patch.object(adapter,'download',return_value=self.raw['board']),patch.object(adapter,'download_response',side_effect=read),patch.object(adapter,'datetime',wraps=datetime) as clock,patch.object(verify,'datetime',wraps=datetime) as other_clock:
                 clock.now.return_value=self.now;other_clock.now.return_value=self.now
                 events,receipt=adapter.capture('soccer',targets=self.targets,force=True,verify_goalkeepers=True,raw_path=path)
             self.assertTrue(events);self.assertNotIn('goalkeeper_source_hold',receipt)
