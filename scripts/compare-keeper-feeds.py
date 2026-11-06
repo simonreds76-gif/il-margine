@@ -100,6 +100,31 @@ def find_espn(client, ref, config):
     return body
 
 
+def diagnose_identities(root, config, fixture_ids):
+    """Read-only, bounded calendar evidence; no private records or key output."""
+    if not fixture_ids or len(fixture_ids) > 20:
+        raise ValueError('diagnostics_require_1_to_20_fixture_ids')
+    history = read(root / 'data/aerial/keeper-history.json.gz')['fixtures']
+    client = Client(os.environ.get('GOAL_API_KEY', '').strip(), 10, 15)
+    refs = [history[str(mid)][-1] for mid in fixture_ids]
+    start = min(instant(r['kickoff']).date().isoformat() for r in refs)
+    end = max(instant(r['kickoff']).date().isoformat() for r in refs)
+    for ref in refs:
+        league = config['leagues'][str(ref['league_id'])]
+        date = instant(ref['kickoff']).date()
+        goal = client.get('goal', '/fixtures', {'from':start, 'to':end, 'leagueId':league['goal'], 'status':'FINISHED', 'limit':100, 'offset':0})
+        espn = client.get('espn', f'/{league["espn"]}/scoreboard', {'dates':date.strftime('%Y%m%d')})
+        g = [{k:r.get(k) for k in ('id','leagueId','kickoffUtc','homeTeamId','homeTeamName','awayTeamId','awayTeamName','homeTeamScore','awayTeamScore')}
+             for r in goal['data'] if instant(r['kickoffUtc']).date() == date]
+        e = []
+        for event in espn.get('events', []):
+            comp, sides = espn_sides(event)
+            e.append({'id':event['id'],'kickoff':comp['date'], **{s:{'id':sides[s]['team']['id'],'name':sides[s]['team']['displayName'],'score':sides[s].get('score')} for s in ('home','away')}})
+        print(json.dumps({'reference':{k:ref[k] for k in ('match_id','kickoff','league_id','home','away')},'goal':g,'espn':e}))
+    print(json.dumps({'diagnostic_requests':dict(client.used)}))
+    return 0
+
+
 def report(archive, state, config, now, requests_used, receipts, considered):
     latest = [v[-1] for v in archive.get('fixtures', {}).values()]
     keepers = [r for f in latest for r in f['keepers']]
@@ -199,5 +224,8 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path)
     parser.add_argument('--max-matches', type=int)
     parser.add_argument('--fixture', action='append', help='Bounded explicit validation cohort; no effect on the daily default')
+    parser.add_argument('--identity-diagnostics', action='store_true', help='Read-only calendar evidence for at most 20 explicit fixtures')
     args = parser.parse_args()
+    if args.identity_diagnostics:
+        raise SystemExit(diagnose_identities(args.root, read(args.root / 'config/keeper-feed-comparison.json'), args.fixture))
     raise SystemExit(run(args.root, read(args.root / 'config/keeper-feed-comparison.json'), args.replay, args.output, args.max_matches, args.fixture))
