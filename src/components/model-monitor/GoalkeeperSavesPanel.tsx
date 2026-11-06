@@ -24,6 +24,7 @@ export type GoalkeeperReport = {
     blocker_counts?: Record<string, number>;
   };
   evidence?: {
+    quote_quarantined?: number;
     signals?: number;
     settled?: number;
     pending?: number;
@@ -100,6 +101,7 @@ function KeeperWatch({ report }: { report?: KeeperWatchReport }) {
 }
 
 export type GoalkeeperCaptureStatus = {
+  moviodds_source?: { goalkeeper_source_hold?: string };
   status?: string;
   generated_at?: string;
   events?: number;
@@ -140,6 +142,7 @@ function units(value: number | null | undefined): string {
 }
 
 function resultFor(row: MonitorCsvRow): string {
+  if (row.quarantine_reason || row.integrity_status === "quote_quarantined") return "quote review";
   return cleanText(row.result || row.status || "pending").toLowerCase();
 }
 
@@ -237,7 +240,8 @@ export default function GoalkeeperSavesPanel({
 }) {
   const ledger = [...signals].sort((a, b) => String(b.kickoff_at || b.match_date).localeCompare(String(a.kickoff_at || a.match_date)));
   const settled = ledger.filter(isSettled);
-  const pending = ledger.filter((row) => !isSettled(row));
+  const pending = ledger.filter((row) => resultFor(row) === "pending");
+  const quoteReviews = ledger.filter((row) => resultFor(row) === "quote review").length;
   const won = settled.filter((row) => resultFor(row) === "won").length;
   const lost = settled.filter((row) => resultFor(row) === "lost").length;
   const pushed = settled.length - won - lost;
@@ -255,6 +259,9 @@ export default function GoalkeeperSavesPanel({
   return (
     <section className="overflow-hidden rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.98),rgba(8,12,20,0.98))] shadow-[0_18px_60px_rgba(0,0,0,0.22)]">
       <KeeperWatch report={report?.keeper_watch} />
+      {(quoteReviews > 0 || capture?.moviodds_source?.goalkeeper_source_hold) && <div role="status" className="border-b border-amber-400/20 bg-amber-400/5 px-4 py-4 text-sm leading-6 text-amber-100 sm:px-5">
+        <strong>Bet365 saves feed under review.</strong> Its captured thresholds and prices did not match the bookmaker. New selections from this feed are blocked; Grosvenor remains available. {quoteReviews} original selections are retained for audit and excluded from pending bets, settlement and ROI. Their displayed prices and edges are disputed, not recommendations.
+      </div>}
       <div className="border-b border-slate-800 px-4 py-4 sm:px-5">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div>
