@@ -1,13 +1,13 @@
 {
-  "fetched_at": "2026-11-05T16:32:17Z",
+  "fetched_at": "2026-11-06T15:59:29Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
       "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 8,
-      "api_football_requests_used": 2,
+      "api_football_requests_remaining_after_league": 7,
+      "api_football_requests_used": 3,
       "fetch_error": null,
       "fixtures": {
         "2026-08-28|bayern munich|stuttgart": {
@@ -1383,24 +1383,25 @@
       "football_data_latest": "2026-11-01",
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "lag_days": 4,
+      "lag_days": 5,
       "source": "football-data",
       "source_latest": "2026-11-01",
       "target_dates": [
         "2026-11-05",
         "2026-11-06",
         "2026-11-07",
-        "2026-11-08"
+        "2026-11-08",
+        "2026-11-09"
       ],
-      "target_fixture_count": 4,
-      "unresolved_fixture_count": 4
+      "target_fixture_count": 5,
+      "unresolved_fixture_count": 5
     },
     "epl": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 8,
-      "api_football_requests_remaining_after_league": 5,
+      "api_football_max_requests": 7,
+      "api_football_requests_remaining_after_league": 4,
       "api_football_requests_used": 3,
       "fetch_error": null,
       "fixtures": {
@@ -3119,7 +3120,7 @@
       "football_data_latest": "2026-11-02",
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "lag_days": 3,
+      "lag_days": 4,
       "source": "football-data",
       "source_latest": "2026-11-02",
       "target_dates": [
@@ -3136,8 +3137,8 @@
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 5,
-      "api_football_requests_remaining_after_league": 2,
+      "api_football_max_requests": 4,
+      "api_football_requests_remaining_after_league": 1,
       "api_football_requests_used": 3,
       "fetch_error": null,
       "fixtures": {
@@ -5217,7 +5218,7 @@
       "football_data_latest": "2026-11-02",
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "lag_days": 3,
+      "lag_days": 4,
       "source": "football-data",
       "source_latest": "2026-11-02",
       "target_dates": [
@@ -5235,7 +5236,7 @@
       "api_football_error": null,
       "api_football_latest": null,
       "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 2,
+      "api_football_requests_remaining_after_league": 1,
       "api_football_requests_used": 0,
       "fetch_error": null,
       "fixtures": {
@@ -6783,7 +6784,7 @@
       "football_data_latest": "2026-11-02",
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "lag_days": 3,
+      "lag_days": 4,
       "source": "football-data",
       "source_latest": "2026-11-02",
       "target_dates": [
@@ -6798,9 +6799,9 @@
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 2,
+      "api_football_max_requests": 1,
       "api_football_requests_remaining_after_league": 0,
-      "api_football_requests_used": 2,
+      "api_football_requests_used": 1,
       "fetch_error": null,
       "fixtures": {
         "2026-08-22|genoa|napoli": {
@@ -8708,18 +8709,19 @@
       "football_data_latest": "2026-11-02",
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "lag_days": 3,
+      "lag_days": 4,
       "source": "football-data",
       "source_latest": "2026-11-02",
       "target_dates": [
+        "2026-11-05",
         "2026-11-06",
         "2026-11-07",
         "2026-11-08",
         "2026-11-09"
       ],
-      "target_fixture_count": 3,
-      "unresolved_fixture_count": 3
+      "target_fixture_count": 7,
+      "unresolved_fixture_count": 7
     }
   },
-  "snapshot_date": "2026-11-05"
+  "snapshot_date": "2026-11-06"
 }
