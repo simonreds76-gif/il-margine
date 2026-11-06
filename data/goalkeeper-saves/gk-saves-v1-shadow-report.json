@@ -10,10 +10,10 @@
     },
     "candidate_board_preserved": false,
     "eligible_lines": 7,
-    "priced_lines": 324,
+    "priced_lines": 280,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 43
+    "value_ladder_lines": 35
   },
   "evidence": {
     "clv": 0.049783,
@@ -163,14 +163,14 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-11-06T17:40:16.402180+00:00",
+    "checked_at": "2026-11-06T22:25:00.574775+00:00",
     "counts": {
-      "offers_saved": 332
+      "offers_saved": 288
     },
-    "saved": 20,
+    "saved": 19,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-11-06T17:40:15Z",
+  "generated_at": "2026-11-06T22:24:59Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
@@ -178,12 +178,12 @@
     "exclusions": {
       "blocked_or_missing_inputs": 8
     },
-    "forecast_fixtures": 158,
-    "forecast_keepers": 322,
-    "generated_at": "2026-11-06T17:40:16.563251+00:00",
-    "last_capture_at": "2026-11-06T17:34:20.777766+00:00",
+    "forecast_fixtures": 162,
+    "forecast_keepers": 330,
+    "generated_at": "2026-11-06T22:25:00.689089+00:00",
+    "last_capture_at": "2026-11-06T22:25:00.689089+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 0,
+    "new_forecasts": 8,
     "new_selections": 0,
     "next_review_at": null,
     "paired_scores": {
@@ -1538,7 +1538,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 40,
+      "awaiting_verified_keeper_result": 48,
       "incomplete_or_conflicting_full_match_count": 16,
       "keeper_identity_unresolved": 4,
       "team_keeper_participation_or_rules_review": 21,
