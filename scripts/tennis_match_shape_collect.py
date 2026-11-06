@@ -10,11 +10,15 @@ from pathlib import Path
 import time
 import requests
 from tennis_grosvenor import BASE, PARAMS, eligible
-from tennis_match_shape import RELATIVE, parse_receipt, refresh, digest, immutable, read, atomic
+from tennis_match_shape import RELATIVE, parse_receipt, refresh as model_refresh, digest, immutable, read, atomic
 from tennis_match_shape_prepare import prepare, readiness
 
 
 from tennis_match_shape_quotes import collect
+from tennis_match_shape_results import refresh_with_results
+
+def refresh(root, *args, **kwargs):
+    return refresh_with_results(root, *args, **kwargs)
 
 
 def capture_shared(root,receipt):
