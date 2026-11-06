@@ -416,15 +416,16 @@ try {
 
     Write-TennisManualProgress $root $manualRequest "props" "Match prices and signals ready. Capturing fresh aces/double-fault prices and projections." @{ oncourt_database_updated_at = $sourceDatabaseUpdatedAt; oncourt_extracted_at = $oncourtExtractedAt; signal_generation_completed_at = $signalGeneratedAt; odds_not_before = $refreshStartedAt }
     Log "=== Step 8a/8: Capture tennis props prices ==="
-    # Recover a missed hosted schedule once per UTC day, after the core digest.
-    # The helper skips provider requests when fresh data or an active run exists.
-    $hostedCaptureExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\ensure-tennis-props-capture.py") -Label "hosted tennis props freshness recovery" -TimeoutSeconds 420
-    if ($hostedCaptureExit -ne 0) {
-        Log "WARNING: hosted tennis props recovery could not confirm fresh prices; comparison freshness checks remain enforced."
-    }
     $tennisPropsCaptureExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-tennis-props-daily.py", "--as-of", $refreshDate, "--capture-only") -Label "tennis props price capture" -TimeoutSeconds 540
     if ($tennisPropsCaptureExit -ne 0) {
         Log "WARNING: tennis props price capture failed/timed out (exit $tennisPropsCaptureExit), continuing..."
+    }
+    # Capture locally before recovery. Fresh quotes from this run bypass cloud
+    # sync/dispatch; an earlier same-day hosted cooldown is not a failed refresh.
+    # Failed capture steps still fail the final runtime check independently.
+    $hostedCaptureExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\ensure-tennis-props-capture.py", "--not-before", $refreshStartedAt) -Label "hosted tennis props freshness recovery" -TimeoutSeconds 420
+    if ($hostedCaptureExit -ne 0) {
+        Log "WARNING: tennis props recovery could not confirm fresh upcoming prices from this refresh; comparison freshness checks remain enforced."
     }
 
     Log "=== Step 8b/8: Optional tennis props projection board ==="
