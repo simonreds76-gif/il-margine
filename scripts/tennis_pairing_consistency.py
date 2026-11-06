@@ -166,6 +166,38 @@ def board_state(root, as_of, *, expected=None, database=DATABASE, days_ahead=3):
             'board_sha256': sha(path) if path.exists() else None}
 
 
+def _resolve_verified_board_recovery(root, verified):
+    """Close only the old repair warning after exact current-board validation.
+
+    A regular board build can repair an earlier conditional-rebuild failure.
+    Requiring current identities, inputs and artifact hash avoids rerunning that
+    expensive build solely to clear a differently named receipt.
+    """
+    from tennis_runtime_health import REL, read, begin, finish
+    label = 'Recover projections from current native pairings'
+    script = 'build-tennis-props-board.py'
+    identity = hashlib.sha256((script + '\n' + label).encode()).hexdigest()[:24]
+    path = root / REL / (identity + '.json')
+    previous = read(path)
+    if previous.get('status') not in {'FAILED', 'TIMED_OUT', 'DEADLINE_EXCEEDED', 'HOST_INTERRUPTED'}:
+        return
+    if not (verified.get('state') == 'CURRENT' and verified.get('board_sha256')
+            and verified.get('board_after_exports') and verified.get('generation_date_current')
+            and verified.get('player_history_current') and verified.get('native_epoch')
+            and not verified.get('missing_sides') and not verified.get('unexpected_sides')):
+        return
+    token = begin(root, label, script, 600)
+    finish(root, token, 0)
+    receipt = read(path)
+    receipt['recovered_failure'] = previous
+    receipt['recovery_verification'] = {
+        'method': 'validated_current_native_board', 'as_of': verified['as_of'],
+        'board_sha256': verified['board_sha256'], 'native_epoch': verified['native_epoch'],
+        'checked_at': verified['checked_at'], 'rebuild_executed': False,
+    }
+    atomic(path, receipt)
+
+
 def ensure_props_board(root, as_of, runner=None, *, days_ahead=3):
     """Repair a changed draw before any derived model consumes the old board."""
     status_path = root / STATUS
@@ -186,6 +218,8 @@ def ensure_props_board(root, as_of, runner=None, *, days_ahead=3):
             raise ValueError('projection_recovery_incomplete')
         after.update(rebuilt=rebuilt, checked_at=datetime.now(timezone.utc).isoformat())
         atomic(status_path, after)
+        if not rebuilt:
+            _resolve_verified_board_recovery(root, after)
         return after
     except Exception as exc:
         atomic(status_path, {'state': 'BLOCKED', 'as_of': as_of,

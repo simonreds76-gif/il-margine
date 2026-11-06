@@ -3,6 +3,8 @@
 # Default is operational/fail-closed. Do not classify by substring or fatal=False:
 # real price, projection and settlement failures must still fail their parent.
 RESEARCH_STEPS = {
+    # Frozen candidate guard failures stay visible without failing live delivery.
+    ('tennis_elo_shadow.py', 'Elo Rebuild paper comparison'),
     # Historical evidence collectors only. The separate live context rebuild,
     # current prices, projections and settlements remain operational/fail-closed.
     ('refresh-tennis-context-research.py', '0/6 Player context history (research only; live inputs unchanged)'),
