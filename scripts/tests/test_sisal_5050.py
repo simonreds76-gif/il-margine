@@ -1,4 +1,5 @@
 import copy
+import ast
 import csv
 import json
 import math
@@ -62,6 +63,42 @@ class TrackerTests(unittest.TestCase):
         status['generated_at']='2026-10-28T08:00:00+00:00';T.atomic(path,status)
         (path.parent/'player-props-baseline.csv').write_bytes(b'changed')
         self.assertFalse(T.verified_history(self.root,b,T.stamp(quote()['capture_ts']),NOW))
+    def test_current_history_producer_is_supported(self):
+        source = Path(T.__file__).with_name('tennis_props_current_history.py')
+        tree = ast.parse(source.read_text(encoding='utf-8'))
+        versions = [ast.literal_eval(node.value) for node in tree.body
+                    if isinstance(node, ast.Assign)
+                    and any(isinstance(target, ast.Name) and target.id == 'VERSION'
+                            for target in node.targets)]
+        self.assertEqual(len(versions), 1)
+        self.assertIn(versions[0], T.SUPPORTED_HISTORY_VERSIONS,
+                      'Review Sisal history compatibility when the producer changes')
+
+    def test_current_history_capture_preserves_probabilities_and_deduplication(self):
+        original, _ = self.capture([quote()])
+        (self.folder/'observations.jsonl').unlink()
+        b = board(); b['history_version'] = 'oncourt-current-history-20261104-v3'
+        write_csv(self.root/T.BOARD, [b])
+        path = self.root/'data/tennis-props/player-history-status.json'
+        status = T.read_json(path, {}); status['version'] = b['history_version']; T.atomic(path, status)
+        rows, health = self.capture([quote()])
+        self.assertEqual(health['added'], 1)
+        self.assertEqual(rows[0]['arms'], original[0]['arms'])
+        self.assertEqual(rows[0]['id'], original[0]['id'])
+        self.assertEqual(rows[0]['board']['history_version'], b['history_version'])
+        self.assertEqual(self.capture([quote()], rows)[1]['added'], 0)
+
+    def test_unknown_and_mismatched_history_versions_remain_blocked(self):
+        path = self.root/'data/tennis-props/player-history-status.json'
+        for producer, consumer in [('oncourt-current-history-20261104-v3', board()['history_version']),
+                                   ('unreviewed-v99', 'unreviewed-v99')]:
+            with self.subTest(producer=producer, consumer=consumer):
+                status = T.read_json(path, {}); status['version'] = producer; T.atomic(path, status)
+                b = board(); b['history_version'] = consumer; write_csv(self.root/T.BOARD, [b])
+                rows, health = self.capture([quote()])
+                self.assertEqual(rows, [])
+                self.assertEqual(health['reasons']['invalid_or_stale_history_cutoff'], 1)
+
     def test_nb_and_blend(self):
         from scipy.stats import nbinom
         for mean in (1,5,15,40):
