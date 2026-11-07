@@ -6,6 +6,7 @@ Machine configuration contains paths and public project IDs, never credentials.
 import argparse
 import csv
 import io
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -24,7 +25,7 @@ TEAM = 'team_UgA9caW5xCBxDyssrOuTQz7S'
 PROJECT = 'prj_OnvAAAzkpLa5N9uZI3Iy2mwEj6IL'
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-from matchup_refresh import prepare as prepare_matchup
+from matchup_refresh import prepare as prepare_matchup, load_snapshot, validate as validate_matchup
 from tennis_score_integrity import score_detail_enrichment
 
 
@@ -32,11 +33,37 @@ class PublicationAuthRequired(RuntimeError):
     pass
 
 
+def publication_auth_args(args, env):
+    """Use the CLI's own resolver, but never let an unattended call initiate login."""
+    if env.get('VERCEL_TOKEN'):
+        return args
+    executable = shutil.which(str(args[0])) or str(args[0])
+    module = Path(executable).resolve().parent / 'node_modules/vercel/node_modules/@vercel/cli-config/dist/cli-config.js'
+    node = shutil.which('node')
+    if not node or not module.is_file():
+        raise PublicationAuthRequired('Cannot verify saved Vercel CLI access without prompting. Check the publishing CLI installation.')
+    # The child prints only a path and boolean. No credential crosses stdout.
+    probe = "const c=require(process.argv[1]);const p=c.getGlobalPathConfig();let a={};try{a=c.readAuthConfigFile(p+'/auth.json')}catch{};process.stdout.write(JSON.stringify({path:p,configured:!!a.token}));"
+    result = subprocess.run([node, '-e', probe, str(module)], env=env,
+                            capture_output=True, text=True, timeout=15,
+                            creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+    try:
+        auth = json.loads(result.stdout) if result.returncode == 0 else {}
+    except (ValueError, TypeError):
+        auth = {}
+    if not auth.get('configured') or not auth.get('path'):
+        raise PublicationAuthRequired('Return Atlas publication has no saved Vercel CLI login. '
+                                      'Sign in deliberately on the publishing PC, then retry publication only; '
+                                      'forecasts and signals do not need rerunning.')
+    return [*args, '--global-config', auth['path']]
+
+
 def run(args, cwd=None, env=None, timeout=600):
     is_vercel = Path(str(args[0])).name.lower() in ('vercel', 'vercel.cmd', 'vercel.exe')
     if is_vercel:
         # Scheduled publication must never open an interactive device-login flow.
         env = {**(os.environ if env is None else env), 'CI': '1', 'VERCEL_TELEMETRY_DISABLED': '1'}
+        args = publication_auth_args(args, env)
     result = subprocess.run([str(a) for a in args], cwd=cwd, env=env, capture_output=True,
                             text=True, encoding='utf-8', errors='replace', timeout=timeout,
                             creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
@@ -186,6 +213,84 @@ def obsolete_versions(versions, new_version, prior_version, live):
     return [version for version in versions if version not in keep and re.fullmatch(r'\d{8}-[a-f0-9]{12}', version)]
 
 
+def validate_live_history(live, source):
+    """Compare against actual production too, not merely an older data branch."""
+    old_manifest = read_json(live / 'src/data/return-atlas-release.json')
+    new_manifest = read_json(source / 'src/data/return-atlas-release.json')
+    old = read_json(live / 'public' / old_manifest['indexUrl'].lstrip('/'))
+    new = read_json(source / 'public' / new_manifest['indexUrl'].lstrip('/'))
+    validate_transition(old, new, date.today().isoformat())
+    for player in old['players']:
+        validate_descriptions(
+            read_json(live / 'public' / old_manifest['detailsBase'].lstrip('/') / (player['id'] + '.json')),
+            read_json(source / 'public' / new_manifest['detailsBase'].lstrip('/') / (player['id'] + '.json')))
+    validate_matchup(load_snapshot(live, read_json(live / 'src/data/tennis-matchup-release.json')),
+                     load_snapshot(source, read_json(source / 'src/data/tennis-matchup-release.json')))
+
+
+def data_release_paths(source):
+    paths = []
+    for route, pointer in [('return-atlas', 'return-atlas-release.json'),
+                           ('tennis-matchup', 'tennis-matchup-release.json')]:
+        manifest = read_json(source / 'src/data' / pointer)
+        version = manifest['version']
+        if not re.fullmatch(r'\d{8}-[a-f0-9]{12}', version):
+            raise RuntimeError('Invalid archive version; publication stopped')
+        expected = f'/{route}/data/{version}/index.json'
+        if manifest['indexUrl'] != expected:
+            raise RuntimeError('Archive URL is outside its version directory')
+        paths += [Path('src/data') / pointer, Path('public') / route / 'data' / version]
+    return paths
+
+
+def validate_release_diff(base_sha, checkout, allowed):
+    names = run(['git', 'diff', '--name-only', base_sha, 'HEAD'], checkout).splitlines()
+    allowed = [p.as_posix() for p in allowed]
+    if any(not any(name == p or name.startswith(p + '/') for p in allowed) for name in names):
+        raise RuntimeError('Candidate includes unrelated changes; production preserved')
+    return names
+
+
+def stage_on_production(source, state, deployment):
+    meta = deployment.get('meta') or {}
+    sha = meta.get('githubCommitSha') or (deployment.get('gitSource') or {}).get('sha')
+    if not isinstance(sha, str) or not re.fullmatch('[a-f0-9]{40}', sha):
+        raise RuntimeError('Cannot establish the exact production commit')
+    paths = data_release_paths(source)
+    versions = [read_json(source / p)['version'] for p in paths if p.suffix == '.json']
+    identity = hashlib.sha256('|'.join(versions).encode()).hexdigest()[:12]
+    branch = f'codex/atlas-release-{sha[:12]}-{identity}'
+    destination = Path(state) / 'publication' / (sha[:12] + '-' + identity)
+    if not destination.exists():
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        run(['git', 'fetch', 'origin', sha], source, timeout=180)
+        run(['git', 'worktree', 'add', '--detach', destination, sha], source, timeout=180)
+    if run(['git', 'status', '--porcelain', '--untracked-files=no'], destination).strip():
+        raise RuntimeError('Data publication worktree needs recovery; preserving existing files')
+    validate_live_history(destination, source)
+    for relative in paths:
+        origin, target = source / relative, destination / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if origin.is_dir():
+            if target.exists():
+                existing = {p.relative_to(target): p.read_bytes() for p in target.rglob('*') if p.is_file()}
+                candidate = {p.relative_to(origin): p.read_bytes() for p in origin.rglob('*') if p.is_file()}
+                if existing != candidate:
+                    raise RuntimeError('Immutable archive version changed; publication stopped')
+            else:
+                shutil.copytree(origin, target)
+        else:
+            shutil.copy2(origin, target)
+    run(['git', 'add', '--', *paths], destination)
+    if run(['git', 'diff', '--cached', '--name-only'], destination).strip():
+        run(['git', 'commit', '-m', 'data: refresh validated tennis archives on current live site'], destination)
+    validate_release_diff(sha, destination, paths)
+    candidate_sha = run(['git', 'rev-parse', 'HEAD'], destination).strip()
+    # A non-force push refuses a concurrent or incompatible retry.
+    run(['git', 'push', 'origin', f'HEAD:refs/heads/{branch}'], destination, timeout=180)
+    return destination, branch, sha, candidate_sha
+
+
 def publish(checkout, version, status, save):
     # Authenticated curl requires an explicitly linked project even with --deployment.
     # Public IDs only; CLI credentials stay in the user's existing secure store.
@@ -195,14 +300,18 @@ def publish(checkout, version, status, save):
     if not vercel:
         raise RuntimeError('Vercel CLI unavailable')
     prior_alias = json.loads(run([vercel, 'api', f'/v4/aliases/ilmargine.bet?teamId={TEAM}', '--raw'], checkout))['deploymentId']
-    sha = run(['git', 'rev-parse', 'HEAD'], checkout).strip()
+    production = json.loads(run([vercel, 'api', f'/v13/deployments/{prior_alias}?teamId={TEAM}', '--raw'], checkout))
+    checkout, release_branch, production_sha, sha = stage_on_production(checkout, status['stateDirectory'], production)
+    (checkout / '.vercel').mkdir(exist_ok=True)
+    write_json(checkout / '.vercel/project.json', {'projectId': PROJECT, 'orgId': TEAM, 'projectName': 'il-margine'})
+    status.update(productionBaseSha=production_sha, releaseBranch=release_branch)
     if status.get('deploymentSha') == sha and status.get('deploymentId'):
         deployment_id = status['deploymentId']
     else:
         request_path = Path(status['stateDirectory']) / 'deployment-request.json'
         write_json(request_path, {'target': 'production', 'name': 'il-margine', 'project': PROJECT,
                                  'autoAssignCustomDomains': False,
-                                 'gitSource': {'type': 'github', 'repoId': '1148849644', 'ref': BRANCH, 'sha': sha}})
+                                 'gitSource': {'type': 'github', 'repoId': '1148849644', 'ref': release_branch, 'sha': sha}})
         response = json.loads(run([vercel, 'api', f'/v13/deployments?teamId={TEAM}', '-X', 'POST',
                                    '--input', request_path, '--raw'], checkout, timeout=120))
         deployment_id = response['id']
@@ -234,7 +343,7 @@ def publish(checkout, version, status, save):
     manifest = run([vercel, 'curl', matchup['indexUrl'], '--deployment', url, '--', '--fail', '--silent'], checkout, timeout=120)
     if matchup['version'] not in page or json.loads(manifest).get('totalMatches') != matchup['matches']:
         raise RuntimeError('Candidate Matchup Lab failed snapshot validation')
-    remote_sha = run(['git', 'ls-remote', 'origin', f'refs/heads/{BRANCH}'], checkout).split()[0]
+    remote_sha = run(['git', 'ls-remote', 'origin', f'refs/heads/{release_branch}'], checkout).split()[0]
     if remote_sha != sha:
         raise RuntimeError('Deployment branch advanced during build; refusing to promote older code')
     current_alias = json.loads(run([vercel, 'api', f'/v4/aliases/ilmargine.bet?teamId={TEAM}', '--raw'], checkout))['deploymentId']
