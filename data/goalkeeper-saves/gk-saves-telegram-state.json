@@ -3878,16 +3878,78 @@
       },
       "message_id": 805,
       "sent_at": "2026-11-07T15:56:37.689805+00:00"
+    },
+    "71945396|christos mandas|3.5|over": {
+      "status": "claimed",
+      "run_token": "42411303704:1",
+      "claimed_at": "2026-11-07T20:31:45.760261+00:00",
+      "signal": {
+        "signal_id": "71945396|christos mandas|3.5|over",
+        "created_at": "2026-11-07T20:31:08Z",
+        "event_id": "71945396",
+        "match_date": "2026-11-08",
+        "kickoff_at": "2026-11-08T11:30:00Z",
+        "league": "serie-a",
+        "home_team": "SSC Napoli",
+        "away_team": "Lazio Rome",
+        "team": "Lazio Rome",
+        "opponent": "SSC Napoli",
+        "venue": "away",
+        "goalkeeper": "Christos Mandas",
+        "bookmaker": "Bet365",
+        "line": "3.5",
+        "side": "over",
+        "odds_decimal": "2.0000",
+        "model_mean": "3.9574",
+        "model_probability": "0.536359",
+        "push_probability": "0.000000",
+        "fair_odds": "1.864",
+        "edge": "0.072718",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-11-07T20:25:02.064137+00:00",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "named_player",
+        "identity_basis": "bookmaker_named_player",
+        "integrity_status": "",
+        "quarantine_reason": "",
+        "quote_verification": "{\"version\":\"moviodds_gk_atomic_v1\",\"site\":\"com\",\"fixture_id\":\"202802887\",\"event_id\":\"71945396\",\"market_id\":\"177703\",\"sel_id\":\"383908160\",\"player\":\"Christos Mandas\",\"line\":3.5,\"odds_decimal\":2.0,\"board_polled_at\":\"2026-11-07T20:25:02.064137624Z\",\"live_polled_at\":\"2026-11-07T20:31:00.582582201Z\",\"verified_at\":\"2026-11-07T20:31:00.595765+00:00\",\"resolved_goalkeeper\":\"Christos Mandas\"}",
+        "price_comparison": [
+          {
+            "bookmaker": "Bet365",
+            "odds": 2.0,
+            "captured_at": "2026-11-07T20:25:02.064137+00:00",
+            "contract_scope": "named_player"
+          },
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 1.9,
+            "captured_at": "2026-11-07T20:30:43+00:00",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-11-07T20:31:45.760261+00:00"
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-11-07T15:56:27.883457+00:00",
+      "checked_at": "2026-11-07T20:31:45.760261+00:00",
       "added": 1,
       "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-11-07T15:56:27.883457+00:00",
+      "checked_at": "2026-11-07T20:31:45.760261+00:00",
       "added": 0,
       "suppressed": {}
     }

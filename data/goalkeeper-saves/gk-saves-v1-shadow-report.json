@@ -2,23 +2,23 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 25,
+    "blocked_lines": 15,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 25,
-      "goalkeeper_team_unresolved": 25,
-      "missing_priced_edge": 25
+      "goalkeeper_not_matched_to_lineup": 15,
+      "goalkeeper_team_unresolved": 15,
+      "missing_priced_edge": 15
     },
     "candidate_board_preserved": false,
-    "eligible_lines": 6,
-    "priced_lines": 502,
+    "eligible_lines": 4,
+    "priced_lines": 395,
     "provisional_lines": 0,
     "signals_added": 1,
-    "value_ladder_lines": 46
+    "value_ladder_lines": 33
   },
   "evidence": {
     "clv": 0.049783,
     "clv_matched": 34,
-    "pending": 9,
+    "pending": 10,
     "pnl_units": 11.667,
     "quote_quarantine_records": [
       {
@@ -157,32 +157,32 @@
       "independently_reviewed_named_keeper_count": 2,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 112,
+    "signals": 113,
     "true_close_coverage": 0.350515,
     "void": 6
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-11-07T15:55:56.849995+00:00",
+    "checked_at": "2026-11-07T20:31:09.418738+00:00",
     "counts": {
-      "not_fresh_prematch": 201,
-      "offers_saved": 326
+      "not_fresh_prematch": 2,
+      "offers_saved": 408
     },
-    "saved": 19,
+    "saved": 24,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-11-07T15:55:56Z",
+  "generated_at": "2026-11-07T20:31:08Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
-      "blocked_or_missing_inputs": 19,
-      "not_new_fresh_prematch": 201
+      "blocked_or_missing_inputs": 15,
+      "not_new_fresh_prematch": 2
     },
     "forecast_fixtures": 186,
     "forecast_keepers": 379,
-    "generated_at": "2026-11-07T15:55:56.947666+00:00",
+    "generated_at": "2026-11-07T20:31:09.578643+00:00",
     "last_capture_at": "2026-11-07T14:58:06.542908+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
@@ -204,12 +204,12 @@
       "current": {
         "losses": 17,
         "overdue": 4,
-        "pending": 7,
+        "pending": 8,
         "profit": -1.4359999999999997,
         "pushes": 0,
         "review": 7,
         "roi": -0.09903448275862067,
-        "selections": 47,
+        "selections": 48,
         "settled": 29,
         "stake": 14.5,
         "voids": 4,
@@ -235,12 +235,12 @@
         "current": {
           "losses": 15,
           "overdue": 2,
-          "pending": 4,
+          "pending": 5,
           "profit": -1.2309999999999997,
           "pushes": 0,
           "review": 5,
           "roi": -0.09847999999999997,
-          "selections": 38,
+          "selections": 39,
           "settled": 25,
           "stake": 12.5,
           "voids": 4,
@@ -377,6 +377,34 @@
         "side": "over",
         "status": "pending",
         "team_id": "8524"
+      },
+      {
+        "away": "Lazio Rome",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-11-07T20:25:02.064137+00:00",
+        "contract_scope": "named_player",
+        "edge": 0.0727175085659102,
+        "event_id": "71945396",
+        "fair_odds": 1.8644237499896419,
+        "goalkeeper": "Christos Mandas",
+        "home": "SSC Napoli",
+        "identity_basis": "bookmaker_named_player",
+        "kickoff_at": "2026-11-08T11:30:00+00:00",
+        "line": 3.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5749746",
+        "model": "current",
+        "odds": 2.0,
+        "overdue": false,
+        "player_id": "915156",
+        "profit": 0,
+        "quote_verification": "{\"version\":\"moviodds_gk_atomic_v1\",\"site\":\"com\",\"fixture_id\":\"202802887\",\"event_id\":\"71945396\",\"market_id\":\"177703\",\"sel_id\":\"383908160\",\"player\":\"Christos Mandas\",\"line\":3.5,\"odds_decimal\":2.0,\"board_polled_at\":\"2026-11-07T20:25:02.064137624Z\",\"live_polled_at\":\"2026-11-07T20:31:00.582582201Z\",\"verified_at\":\"2026-11-07T20:31:00.595765+00:00\",\"resolved_goalkeeper\":\"Christos Mandas\"}",
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-11-07T20:31:09.578643+00:00",
+        "settlement_policy": "bet365_named_nonstarter_void_v1",
+        "side": "over",
+        "status": "pending",
+        "team_id": "8543"
       },
       {
         "away": "Manchester City",
