@@ -6,26 +6,21 @@ spec=importlib.util.spec_from_file_location('refresh_safety',S/'refresh-return-a
 M=importlib.util.module_from_spec(spec);spec.loader.exec_module(M)
 
 class AuthTests(unittest.TestCase):
- def test_environment_token_is_not_put_in_args(self):
-  with patch.object(M.subprocess,'run') as call:
-   args=M.publication_auth_args(['vercel','api','/test'],{'VERCEL_TOKEN':'test-secret'})
-  call.assert_not_called();self.assertNotIn('test-secret',str(args))
+ def test_token_stays_in_child_environment_and_curl_args_stay_intact(self):
+  env={}
+  args=['vercel.cmd','curl','/return-atlas','--','--fail','--silent']
+  with patch.object(M,'prepare_environment',return_value={'VERCEL_TOKEN':'test-secret'}):
+   actual=M.publication_auth_args(args,env)
+  self.assertEqual(actual,args);self.assertEqual(env['VERCEL_TOKEN'],'test-secret')
+  self.assertNotIn('test-secret',str(actual));self.assertNotIn('--global-config',actual)
  def test_missing_auth_never_launches_vercel(self):
-  with patch.object(M.shutil,'which',return_value='node'),patch.object(M.Path,'is_file',return_value=True),patch.dict(M.os.environ,{},clear=True),patch.object(M.subprocess,'run',return_value=Mock(returncode=0,stdout='{"path":"config","configured":false}')) as run:
+  with patch.object(M,'prepare_environment',side_effect=M.PublicationAuthRequired('missing')),patch.object(M.subprocess,'run') as run:
    with self.assertRaises(M.PublicationAuthRequired):M.run(['vercel.cmd','api','/test'])
-  self.assertEqual(run.call_count,1);self.assertEqual(run.call_args.args[0][0],'node');self.assertNotIn('login',run.call_args.args[0])
- def test_existing_auth_uses_verified_default_without_extra_flags(self):
-  with patch.object(M.shutil,'which',return_value='node'),patch.object(M.Path,'is_file',return_value=True),patch.object(M.subprocess,'run',return_value=Mock(returncode=0,stdout='{"path":"known-store","configured":true}')):
-   args=M.publication_auth_args(['vercel.cmd','api','/test'],{})
-  self.assertEqual(args,['vercel.cmd','api','/test'])
- def test_auth_check_preserves_curl_passthrough(self):
-  with patch.object(M.shutil,'which',return_value='node'),patch.object(M.Path,'is_file',return_value=True),patch.object(M.subprocess,'run',return_value=Mock(returncode=0,stdout='{"path":"known-store","configured":true}')):
-   args=M.publication_auth_args(['vercel.cmd','curl','/return-atlas','--','--fail','--silent'],{})
-  self.assertEqual(args[args.index('--')+1:],['--fail','--silent'])
-  self.assertNotIn('--global-config',args)
- def test_unreadable_auth_metadata_fails_closed(self):
-  with patch.object(M.shutil,'which',return_value='node'),patch.object(M.Path,'is_file',return_value=True),patch.object(M.subprocess,'run',return_value=Mock(returncode=0,stdout='invalid')):
-   with self.assertRaises(M.PublicationAuthRequired):M.publication_auth_args(['vercel.cmd','api','/test'],{})
+  run.assert_not_called()
+ def test_cli_errors_cannot_echo_the_child_token(self):
+  with patch.object(M,'prepare_environment',return_value={'VERCEL_TOKEN':'test-secret'}),patch.object(M.subprocess,'run',return_value=Mock(returncode=1,stdout='',stderr='failed test-secret')):
+   with self.assertRaises(RuntimeError) as error:M.run(['vercel.cmd','api','/test'])
+  self.assertNotIn('test-secret',str(error.exception))
 
 class ProductionSafetyTests(unittest.TestCase):
  def test_ui_or_unrelated_content_cannot_enter_data_release(self):

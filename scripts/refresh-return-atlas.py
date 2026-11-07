@@ -29,34 +29,15 @@ from matchup_refresh import prepare as prepare_matchup, load_snapshot, validate 
 from tennis_score_integrity import score_detail_enrichment
 
 
-class PublicationAuthRequired(RuntimeError):
-    pass
+from vercel_publisher_auth import PublicationAuthRequired, prepare_environment
 
 
 def publication_auth_args(args, env):
-    """Use the CLI's own resolver, but never let an unattended call initiate login."""
-    if env.get('VERCEL_TOKEN'):
-        return args
-    executable = shutil.which(str(args[0])) or str(args[0])
-    module = Path(executable).resolve().parent / 'node_modules/vercel/node_modules/@vercel/cli-config/dist/cli-config.js'
-    node = shutil.which('node')
-    if not node or not module.is_file():
-        raise PublicationAuthRequired('Cannot verify saved Vercel CLI access without prompting. Check the publishing CLI installation.')
-    # The child prints only a path and boolean. No credential crosses stdout.
-    probe = "const c=require(process.argv[1]);const p=c.getGlobalPathConfig();let a={};try{a=c.readAuthConfigFile(p+'/auth.json')}catch{};process.stdout.write(JSON.stringify({path:p,configured:!!a.token}));"
-    result = subprocess.run([node, '-e', probe, str(module)], env=env,
-                            capture_output=True, text=True, timeout=15,
-                            creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
-    try:
-        auth = json.loads(result.stdout) if result.returncode == 0 else {}
-    except (ValueError, TypeError):
-        auth = {}
-    if not auth.get('configured') or not auth.get('path'):
-        raise PublicationAuthRequired('Return Atlas publication has no saved Vercel CLI login. '
-                                      'Sign in deliberately on the publishing PC, then retry publication only; '
-                                      'forecasts and signals do not need rerunning.')
-    # Use the verified default resolver with the same environment. Vercel curl
-    # forwards global-config to curl even when it precedes the command.
+    """Renew once under the credential lock; keep CLI arguments/quote passthrough intact."""
+    metadata = {}
+    env.update(prepare_environment(args[0], env, metadata=metadata))
+    if metadata.get('renewed'):
+        print('ATLAS_PUBLICATION_ACCESS_RENEWED ' + json.dumps(metadata), flush=True)
     return args
 
 
@@ -76,7 +57,10 @@ def run(args, cwd=None, env=None, timeout=600):
             raise PublicationAuthRequired('Return Atlas publication requires Vercel CLI sign-in. '
                                           'Run vercel login deliberately on this PC; forecasts and signals do not need rerunning.')
         # Never print environment variables, authenticated headers or CLI credentials.
-        raise RuntimeError(f'{Path(str(args[0])).name} failed ({result.returncode}): {result.stderr[-1800:]}')
+        detail = result.stderr[-1800:]
+        if is_vercel and env.get('VERCEL_TOKEN'):
+            detail = detail.replace(env['VERCEL_TOKEN'], '[redacted]')
+        raise RuntimeError(f'{Path(str(args[0])).name} failed ({result.returncode}): {detail}')
     return result.stdout
 
 
