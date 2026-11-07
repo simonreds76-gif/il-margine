@@ -1,6 +1,6 @@
 {
   "api_errors": [],
-  "deferred_not_due": 5,
+  "deferred_not_due": 6,
   "details": [
     {
       "detail": "",
@@ -17,21 +17,30 @@
       "match_date": "2026-10-31",
       "reason": "fotmob_matched_player_not_goalkeeper",
       "signal_id": "grosvenor|72513288|\u00f8rjan h\u00e5skjold nyland|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Maduka Okoye",
+      "match": "Venezia FC vs Udinese Calcio",
+      "match_date": "2026-11-06",
+      "reason": "settled_fotmob",
+      "signal_id": "grosvenor|71945404|maduka okoye|3.5|over"
     }
   ],
-  "fotmob_requests_used": 3,
-  "generated_at": "2026-11-06T16:00:07Z",
+  "fotmob_requests_used": 5,
+  "generated_at": "2026-11-07T14:59:02Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 2,
-  "pending_total": 7,
+  "pending_total": 8,
   "reason_counts": {
     "fotmob_matched_player_not_goalkeeper": 1,
-    "fotmob_save_totals_disagree": 1
+    "fotmob_save_totals_disagree": 1,
+    "settled_fotmob": 1
   },
   "requests_used": 0,
-  "settled": 0,
-  "status": "BLOCKED",
+  "settled": 1,
+  "status": "PARTIAL",
   "verified_player_targets": [
     {
       "match_id": 5881209,
@@ -43,6 +52,12 @@
       "match_id": 5881212,
       "status": "unchanged",
       "targets_sha256": "63f32fc272daefee41b3146c5f6a4fcb88fc5275e633c7644c7894c4ce384fc3"
+    },
+    {
+      "appearances": 30,
+      "match_id": 5749749,
+      "status": "saved",
+      "targets_sha256": "3f9f5821b882971ec1562ad794e90596dbe43beb095506cb1bf2023bbc119800"
     }
   ]
 }
