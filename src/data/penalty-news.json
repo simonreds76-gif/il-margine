@@ -1,11 +1,151 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-07T16:27:18.644708+00:00",
+  "generatedAt": "2026-11-07T20:30:22.914809+00:00",
   "coverageStart": "2026-10-17",
-  "checkedThrough": "2026-11-06",
-  "captureStatus": "partial",
-  "matchesChecked": 4,
+  "checkedThrough": "2026-11-07",
+  "captureStatus": "complete",
+  "matchesChecked": 16,
   "articles": [
+    {
+      "id": "fotmob:5749747:2994669955",
+      "slug": "2026-11-07-vincent-sierro-5749747-2994669955",
+      "matchId": "5749747",
+      "eventId": "2994669955",
+      "date": "2026-11-07",
+      "kickoff": "2026-11-07T17:00:00.000Z",
+      "league": "serie-a",
+      "leagueLabel": "Serie A",
+      "round": "11",
+      "player": "Vincent Sierro",
+      "playerId": 634310,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/634310.png",
+      "club": "Parma Calcio 1913",
+      "clubSlug": "parma-calcio-1913",
+      "clubUrl": "/penalty-takers/serie-a/parma-calcio-1913",
+      "crest": "/team-logos/serie-a/parma.png",
+      "opponent": "Bologna",
+      "home": "Parma",
+      "away": "Bologna",
+      "homeScore": 1,
+      "awayScore": 2,
+      "minute": "81",
+      "outcome": "scored",
+      "title": "Vincent Sierro scores from the spot against Bologna",
+      "sentences": [
+        "Vincent Sierro converted a penalty for Parma Calcio 1913 in minute 81 against Bologna.",
+        "The match finished Parma 1–2 Bologna."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Giovanni Fabbian",
+        "concededBy": "Martin Vitík",
+        "sentence": "Giovanni Fabbian won the penalty after a foul by Martin Vitík inside the area.",
+        "evidenceIds": [
+          "2994669361",
+          "2994668871"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 82,
+        "goals": 1,
+        "shots": 1,
+        "onTarget": 1,
+        "chances": 2
+      },
+      "keeper": "Łukasz Skorupski",
+      "moment": {
+        "before": [
+          0,
+          2
+        ],
+        "after": [
+          1,
+          2
+        ]
+      },
+      "paragraphs": [
+        "Vincent Sierro converted a penalty in the 81st minute of Parma Calcio 1913’s 1–2 defeat to Bologna.",
+        "Giovanni Fabbian won the penalty after a foul by Martin Vitík inside the area. The goal reduced the deficit at 1–2.",
+        "Vincent Sierro finished with 1 goal and 1 shot, including 1 on target, in 82 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/bologna-vs-parma/3bdewt#5749747",
+      "eventHash": "99f5ede5bb522fcfa441624350056de341be71d120c594c210aa11da06ef492d",
+      "sourceHash": "69dd4a2afb092a9d27b9587e02a288a2277899f533684bd4f5d3c62af1e21c7f",
+      "publishedAt": "2026-11-07T20:30:22.914809+00:00",
+      "updatedAt": "2026-11-07T20:30:22.914809+00:00"
+    },
+    {
+      "id": "fotmob:5749747:2994661045",
+      "slug": "2026-11-07-riccardo-orsolini-5749747-2994661045",
+      "matchId": "5749747",
+      "eventId": "2994661045",
+      "date": "2026-11-07",
+      "kickoff": "2026-11-07T17:00:00.000Z",
+      "league": "serie-a",
+      "leagueLabel": "Serie A",
+      "round": "11",
+      "player": "Riccardo Orsolini",
+      "playerId": 661761,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/661761.png",
+      "club": "Bologna",
+      "clubSlug": "bologna",
+      "clubUrl": "/penalty-takers/serie-a/bologna",
+      "crest": "/team-logos/serie-a/bologna.png",
+      "opponent": "Parma",
+      "home": "Parma",
+      "away": "Bologna",
+      "homeScore": 1,
+      "awayScore": 2,
+      "minute": "72",
+      "outcome": "scored",
+      "title": "Riccardo Orsolini scores from the spot against Parma",
+      "sentences": [
+        "Riccardo Orsolini converted a penalty for Bologna in minute 72 against Parma.",
+        "The match finished Parma 1–2 Bologna."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Nicolò Cambiaghi",
+        "concededBy": "El Bilal Touré",
+        "sentence": "Nicolò Cambiaghi won the penalty after a foul by El Bilal Touré inside the area.",
+        "evidenceIds": [
+          "2994660259",
+          "2994656539"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 45,
+        "goals": 1,
+        "shots": 2,
+        "onTarget": 1,
+        "chances": 0
+      },
+      "keeper": "Giovanni Daffara",
+      "moment": {
+        "before": [
+          0,
+          1
+        ],
+        "after": [
+          0,
+          2
+        ]
+      },
+      "paragraphs": [
+        "Riccardo Orsolini converted a penalty in the 72nd minute of Bologna’s 2–1 win over Parma.",
+        "Nicolò Cambiaghi won the penalty after a foul by El Bilal Touré inside the area. The goal extended the lead at 2–0.",
+        "Riccardo Orsolini finished with 1 goal and 2 shots, including 1 on target, in 45 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/bologna-vs-parma/3bdewt#5749747",
+      "eventHash": "fe2b22b0e90331074b56c629089674084c225d2a7cf3fbb2e1544b49f13f065d",
+      "sourceHash": "0b13978cd0a1480cdacb54d7aa7adb2c9c61dd1f3d9a157957b78a603cc4c31f",
+      "publishedAt": "2026-11-07T20:30:22.914809+00:00",
+      "updatedAt": "2026-11-07T20:30:22.914809+00:00"
+    },
     {
       "id": "fotmob:5881221:2994436617",
       "slug": "2026-11-07-marvin-pieringer-5881221-2994436617",
