@@ -110,20 +110,32 @@ export function pairedAceTotal(rows:SignalRow[]):number|null {
 }
 
 export function tournamentHistory(row:SignalRow) {
+ let current:unknown=row.tournament_count_history;
+ try { if(typeof current==='string')current=JSON.parse(current); } catch { current=null; }
+ const supplied=current&&typeof current==='object'&&!Array.isArray(current)?current as SignalRow:null;
+ const evidence=supplied?.version==='tournament-count-history-v1'&&
+  text(supplied.player_id)===text(row.player_id).replace(/^oc:/,'')&&text(supplied.tour_id)===text(row.tour_id)&&
+  text(supplied.before_date)===text(row.date).slice(0,10)&&(!text(row.tour)||text(supplied.tour)===text(row.tour).toUpperCase())?supplied:null;
  let parsed:unknown=row.tournament_round_log;
  try { if(typeof parsed==='string')parsed=JSON.parse(parsed); } catch { parsed=null; }
+ if(evidence)parsed=evidence.logs;
  const cutoff=text(row.date).slice(0,10);
  const logs=(Array.isArray(parsed)?parsed:[]).filter((r):r is SignalRow=>
-  Boolean(r&&typeof r==='object'&&!Array.isArray(r)&&text(r.opponent)&&/^\d{4}-\d{2}-\d{2}$/.test(text(r.date))&&(!cutoff||text(r.date)<=cutoff)))
-  .sort((a,b)=>text(a.date).localeCompare(text(b.date)));
+  Boolean(r&&typeof r==='object'&&!Array.isArray(r)&&text(r.opponent)&&/^\d{4}-\d{2}-\d{2}$/.test(text(r.date))&&(!cutoff||(evidence?text(r.date)<cutoff:text(r.date)<=cutoff))))
+  .sort((a,b)=>text(a.date).localeCompare(text(b.date)))
+  .map((r):SignalRow=>({...r,round:text(r.round)||({'1':'Q1','2':'Q2','3':'Q3','4':'R1','5':'R2','6':'R3','7':'R4','9':'QF','10':'SF','12':'F'} as Record<string,string>)[text(r.round_id)]||text(r.round_id)}));
  const count=(v:unknown)=>{const n=numeric(v);return n!==null&&Number.isInteger(n)&&n>=0?n:null;};
+ const partial=(r:SignalRow)=>r.status==='retired'||/\b(?:ret|abd|def)\b/i.test(text(r.result));
+ const completed=logs.filter(r=>!partial(r));
  const total=(field:string)=>{
-  const known=logs.map(r=>count(r[field])).filter((v):v is number=>v!==null);
+  const known=completed.map(r=>count(r[field])).filter((v):v is number=>v!==null);
   return {value:known.length?known.reduce((sum,v)=>sum+v,0):null,covered:known.length};
  };
- const expected=numeric(row.same_tournament_matches);
+ const expected=evidence?completed.length:numeric(row.same_tournament_matches);
  return {logs,aces:total('aces'),dfs:total('dfs'),expected,
-  incomplete:expected!==null&&expected>logs.length,available:Array.isArray(parsed)};
+  completed:completed.length,partial:logs.length-completed.length,
+  observedAt:evidence?numeric(evidence.source_observed_epoch):null,
+  incomplete:expected!==null&&expected>completed.length,available:Array.isArray(parsed)};
 }
 export function currentMostAcesModel(matches: SignalRow[], records: SignalRow[], lane: string): string {
   if (lane === 'count') return 'v3_aces_gaussian_copula_nb2_evidence_tiers_v3';

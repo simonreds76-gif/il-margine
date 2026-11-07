@@ -21,6 +21,12 @@ Other bookmakers (if used elsewhere):
 
 ## Logo Specifications
 
+`grosvenor.svg` is the official compact Grosvenor emblem displayed by
+https://www.grosvenorcasinos.com/sport, retrieved 2026-11-04 from
+https://media.umbraco.io/artemis-cms/sjmjo1wo/grosvenorcasinologo.svg.
+The transparent white artwork is preserved and displayed on dark backgrounds.
+Grosvenor Sport is a reporting addition, with no affiliate link.
+
 - **Format**: PNG or SVG (PNG with transparency preferred)
 - **Size**: **64×64 px or 128×128 px** (square). The bookmakers page displays logos at 32px; 64px gives a sharp 2× retina image, 128px gives 4× for extra sharpness.
 - **Filename**: Use the exact name expected (e.g. `midnite.png`, `betvictor.png`, `unibet.png`, `coral.png`, `ladbrokes.png`, `betmgm.png`). The component also tries `.svg`, `.jpeg`, `.jpg` if the first fails.

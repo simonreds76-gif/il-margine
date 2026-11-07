@@ -7,7 +7,7 @@ import PenaltyTakerPortrait from "./PenaltyTakerPortrait";
 import "@/app/research-mobile.css";
 
 type League = { key: string; label: string; logoPath: string; teams: {
-  name: string; url: string; logoPath: string; players: string[]; portraits?: (string | null)[];
+  name: string; url: string; logoPath: string; players: string[]; portraits?: (string | null)[]; rankLabels?: string[]; status?: string;
 }[] };
 
 const normalize = (value: string) => foldNameText(value).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -56,12 +56,12 @@ export default function PenaltyDirectory({ leagues, initialLeague = "all", board
           <img src={team.logoPath} alt="" width="36" height="36" loading="lazy" className="h-9 w-9 shrink-0 rounded-lg bg-white object-contain p-1" />
           <span className="min-w-0 flex-1">
             <span className="flex items-center justify-between gap-2 font-semibold text-slate-100"><span>{team.name}</span><span aria-hidden="true" className="text-emerald-300">↗</span></span>
-            <span className="mb-2 block text-[11px] text-slate-400">{team.league}</span>
+            <span className="mb-2 block text-[11px] text-slate-400">{team.league}{team.status && team.status !== "confirmed" ? ` · ${team.status === "unknown" ? "Order unconfirmed" : `${team.status} order`}` : ""}</span>
           </span></span>
             <span className="penalty-preview-order">
               {team.players.map((name, i) => <span key={`${i}-${name}`} className={`penalty-preview-player ${i === 0 ? "penalty-preview-primary" : ""}`}>
                 <PenaltyTakerPortrait name={name} src={team.portraits?.[i]} rank={i + 1} size={i === 0 ? "medium" : "small"} />
-                <span><small>{i === 0 ? "First choice" : i === 1 ? "Second choice" : "Third choice"}</small><strong>{name}</strong></span>
+                <span><small>{team.rankLabels?.[i] ?? `Listed ${i + 1}`}</small><strong>{name}</strong></span>
               </span>)}
             </span>
             <span className="mt-3 block text-xs font-semibold text-emerald-300">View order &amp; evidence <span aria-hidden="true">→</span></span>

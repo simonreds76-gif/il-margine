@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import Footer from "@/components/Footer";
 import PageHomeLink from "@/components/PageHomeLink";
 import ClubPenaltyReports from "@/components/ClubPenaltyReports";
+import { penaltyNews } from "@/lib/penalty-news-data";
+import { latestClubPenaltyReport, newsDate } from "@/lib/penalty-news";
 import { BASE_URL } from "@/lib/config";
 import {
   CLUB_PENALTY_SEASON,
@@ -16,6 +18,8 @@ import {
   buildClubPenaltyLead,
   buildClubPenaltyTitle,
   buildClubPenaltyWatchNote,
+  clubPenaltyOrderStatus,
+  clubPenaltyRankLabels,
   getClubPenaltyTeam,
   readClubPenaltyData,
   readAllClubPenaltyTeams,
@@ -189,10 +193,11 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
   const conditionSummary = buildClubPenaltyConditionSummary(team);
   const watchNote = buildClubPenaltyWatchNote(team);
   const latestEvidenceUpdate = team.evidenceUpdates[0];
-  const hierarchyLabels = ["Current primary", "Second choice", "Third choice"];
+  const hierarchyLabels = clubPenaltyRankLabels(team);
+  const latestPenalty = latestClubPenaltyReport(penaltyNews.articles, team.relativeUrl);
   const hierarchyNote = buildClubPenaltyHierarchyNote(team);
   const faqItems = buildClubPenaltyFaq(team);
-  const isUnderReview = ["unknown", "disputed", "conditional"].includes(team.hierarchyStatus);
+  const isUnderReview = clubPenaltyOrderStatus(team) !== "confirmed";
   const checkedLabel = team.checkedLabel || team.leagueCheckedLabel || "review pending";
   const evidenceFreshness = team.lastUpdatedLabel && team.lastUpdated !== team.checkedAt
     ? `Order unchanged since ${team.lastUpdatedLabel}`
@@ -304,9 +309,10 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
 
               {!team.isArchived ? (
                 <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-slate-800 pt-4 text-xs text-slate-400">
-                  <span className="font-semibold text-emerald-300">Checked {checkedLabel}</span>
+                  <span className="font-semibold text-emerald-300">Order reviewed {checkedLabel}</span>
                   <span className="hidden text-slate-600 sm:inline">/</span>
                   <span>{evidenceFreshness}</span>
+                  {latestPenalty ? <Link href={`/penalty-news/${latestPenalty.slug}`} prefetch={false} className="basis-full hover:text-slate-200">Latest recorded penalty: <time dateTime={latestPenalty.date}>{newsDate(latestPenalty.date)}</time> · {latestPenalty.player}</Link> : null}
                 </div>
               ) : null}
             </article>
@@ -355,9 +361,9 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
         <section className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="rounded-2xl border border-slate-800 bg-slate-900/65 p-5 sm:p-6">
             <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-emerald-400">Evidence file</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white">How we verified {team.team}&apos;s penalty order</h2>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white">Evidence behind {team.team}&apos;s penalty order</h2>
             <p className="mt-3 text-sm leading-6 text-slate-300">
-              Checked <strong className="font-semibold text-emerald-300">{checkedLabel}</strong>. {evidenceFreshness}.
+              Order reviewed <strong className="font-semibold text-emerald-300">{checkedLabel}</strong>. {evidenceFreshness}.
             </p>
             <div className="mt-5 space-y-4 text-sm leading-7 text-slate-300">
               {latestEvidenceUpdate ? (

@@ -23,6 +23,7 @@ const BOOKMAKER_LOGOS: Array<[RegExp, string]> = [
   [/betvictor/i, "/bookmakers/betvictor.png"],
   [/ladbrokes/i, "/bookmakers/ladbrokes.png"],
   [/coral/i, "/bookmakers/coral.jpeg"],
+  [/grosvenor/i, "/bookmakers/grosvenor.svg"],
   [/888/i, "/bookmakers/888sport.svg"],
   [/spreadex/i, "/bookmakers/spreadex.jpg"],
   [/virgin\s*bet/i, "/bookmakers/virginbet.png"],

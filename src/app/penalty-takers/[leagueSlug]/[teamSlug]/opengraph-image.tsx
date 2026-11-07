@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { BASE_URL } from "@/lib/config";
-import { getClubPenaltyTeam } from "@/lib/club-penalty-takers";
+import { getClubPenaltyTeam, clubPenaltyOrderStatus, clubPenaltyRankLabels } from "@/lib/club-penalty-takers";
 
 export const alt = "Club penalty taker hierarchy | Il Margine";
 export const size = { width: 1200, height: 630 };
@@ -12,6 +12,7 @@ export default async function Image({ params }: ImageProps) {
   const { leagueSlug, teamSlug } = await params;
   const team = await getClubPenaltyTeam(leagueSlug, teamSlug);
   if (!team) throw new Error("Club penalty taker not found");
+  const labels = clubPenaltyRankLabels(team);
 
   return new ImageResponse(
     (
@@ -46,9 +47,9 @@ export default async function Image({ params }: ImageProps) {
 
           <div style={{ marginTop: 48, display: "flex", alignItems: "stretch", gap: 16 }}>
             {[
-              ["First choice", team.primary],
-              ["Second choice", team.secondary],
-              ["Status", team.isArchived ? "Archived" : team.hierarchyStatus === "unknown" ? "Not verified" : team.hierarchyStatus],
+              [labels[0], team.primary],
+              [labels[1], team.secondary],
+              ["Status", team.isArchived ? "Archived" : clubPenaltyOrderStatus(team) === "unknown" ? "Not verified" : clubPenaltyOrderStatus(team)],
             ].map(([label, value], index) => (
               <div key={label} style={{ flex: 1, display: "flex", flexDirection: "column", padding: "18px 22px", borderRadius: 20, border: "1px solid rgba(148,163,184,.20)", background: "rgba(15,23,42,.65)" }}>
                 <span style={{ color: "#64748b", fontSize: 16, textTransform: "uppercase", letterSpacing: 2 }}>{label}</span>

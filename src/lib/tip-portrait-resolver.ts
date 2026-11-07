@@ -26,8 +26,10 @@ export function clubsForPick(pick: Pick): Club[] {
     const ids = new Set(candidates.map((club) => club.id));
     return ids.size === 1 ? candidates[0] : null;
   });
-  // Both squads are required: a surname might occur on either side.
-  return found.every((club): club is Club => club !== null) && found[0].id !== found[1].id ? found : [];
+  if (normal(sides[0]) === normal(sides[1]) || (found[0] && found[0].id === found[1]?.id)) return [];
+  // A missing opponent mapping must not erase a recognised club. Resolution
+  // with incomplete coverage requires a separate player-profile check below.
+  return found.filter((club): club is Club => club !== null);
 }
 
 // A recent match squad can identify a full name, but is not a complete club
@@ -79,24 +81,64 @@ export function parseSquad(html: string, teamId: number, now = Date.now()): Squa
   return players;
 }
 
-export function uniquePlayer(name: string, squads: SquadPlayer[][]): SquadPlayer | null {
-  if (squads.length !== 2 || squads.some((squad) => !squad.length)) return null;
+const aliases: Record<number, string[]> = { 1248662: ["adriel"], 886809: ["javi vasquez"] };
+
+function nameMatches(query: string, player: SquadPlayer): boolean {
+  const full = normal(player.name);
+  if (full === query || full.endsWith(` ${query}`) || aliases[player.id]?.includes(query)) return true;
+  // Explicit initials still identify a player; never use fuzzy spelling.
+  const parts = query.split(" "), names = full.split(" ");
+  return parts.length > 1 && parts[0].length === 1 && names[0].startsWith(parts[0])
+    && names.slice(1).join(" ") === parts.slice(1).join(" ");
+}
+
+function candidatePlayer(name: string, squads: SquadPlayer[][]): SquadPlayer | null {
   const query = normal(name);
   if (!query) return null;
   const players = squads.flat();
   const exact = players.filter((p) => normal(p.name) === query);
+  const matches = exact.length ? exact : players.filter((p) => nameMatches(query, p));
+  return new Set(matches.map((p) => p.id)).size === 1 && new Set(matches.map((p) => p.clubId)).size === 1 ? matches[0] : null;
+}
+
+export function uniquePlayer(name: string, squads: SquadPlayer[][]): SquadPlayer | null {
+  if (squads.length !== 2 || squads.some((squad) => !squad.length)) return null;
+  const query = normal(name);
+  const players = squads.flat();
+  const candidate = candidatePlayer(name, squads);
   // A missing season roster limits the evidence on either side. Only a unique
   // exact multi-part name is safe; do not infer absent namesakes from a lineup.
   if (players.some((p) => p.evidence === "recent-lineup")) {
-    return query.split(" ").length >= 2 && new Set(exact.map((p) => p.id)).size === 1 ? exact[0] : null;
+    return query.split(" ").length >= 2 && candidate && normal(candidate.name) === query ? candidate : null;
   }
   // Verified public short names/spelling variants; accepted only when the exact
   // player ID occurs in one of the fixture's two current squads.
-  const aliases: Record<number, string[]> = { 1248662: ["adriel"], 886809: ["javi vasquez"] };
-  const matches = exact.length ? exact : players.filter((p) => normal(p.name).endsWith(` ${query}`) || aliases[p.id]?.includes(query));
-  const ids = new Set(matches.map((p) => p.id));
-  return ids.size === 1 ? matches[0] : null;
+  return candidate;
 }
+
+export function parsePlayerIdentity(html: string, candidate: SquadPlayer): SquadPlayer | null {
+  const script = html.match(/<script\b[^>]*\bid=["']__NEXT_DATA__["'][^>]*>([\s\S]*?)<\/script>/i);
+  if (!script) throw new Error("Player source format unavailable");
+  const player = JSON.parse(script[1])?.props?.pageProps?.data;
+  // Corroborate the roster ID, full name and current club independently. A
+  // transferred player, namesake, coach or malformed response must not match.
+  if (player?.id !== candidate.id || typeof player?.name !== "string"
+    || normal(player.name) !== normal(candidate.name) || player?.isCoach !== false
+    || player?.primaryTeam?.teamId !== candidate.clubId) return null;
+  return candidate;
+}
+
+const verifyPlayerIdentity = unstable_cache(async (candidate: SquadPlayer) => {
+  if (!Number.isSafeInteger(candidate.id) || candidate.id <= 0
+    || !clubs.some((club) => club.id === candidate.clubId)) return null;
+  const slug = normal(candidate.name).replace(/ /g, "-");
+  const response = await fetch(`https://www.fotmob.com/players/${candidate.id}/${slug}`, {
+    cache: "no-store", signal: AbortSignal.timeout(4000),
+    headers: { Accept: "text/html", "Accept-Language": "en-GB,en;q=0.9" },
+  });
+  if (!response.ok) throw new Error(`Player source ${response.status}`);
+  return parsePlayerIdentity(await response.text(), candidate);
+}, ["tip-portrait-player-identity-v1"], { revalidate: 6 * 60 * 60 });
 
 // Cache the compact parsed squad, not the large page HTML. Team IDs must come
 // from the bundled registry; neither arbitrary URLs nor public name searches run.
@@ -108,13 +150,27 @@ const readSquad = unstable_cache(async (teamId: number) => {
   });
   if (!response.ok) throw new Error(`Squad source ${response.status}`);
   return parseSquad(await response.text(), teamId);
-}, ["tip-portrait-squad-v2-lineup"], { revalidate: 6 * 60 * 60 });
+}, ["tip-portrait-squad-v3-independent"], { revalidate: 6 * 60 * 60 });
 
 export async function resolveTipPortrait(pick: Pick): Promise<SquadPlayer | null> {
   const pair = clubsForPick(pick);
-  if (pair.length !== 2) return null;
-  const squads = await Promise.all(pair.map((club) => readSquad(club.id)));
-  return uniquePlayer(pick.player ?? "", squads);
+  if (!pair.length) return null;
+  const results = await Promise.allSettled(pair.map((club) => readSquad(club.id)));
+  const squads = results.map((result) => result.status === "fulfilled" ? result.value : []);
+  const name = pick.player ?? "";
+  const complete = uniquePlayer(name, squads);
+  if (complete) return complete;
+  const candidate = candidatePlayer(name, squads);
+  if (!candidate) {
+    if (!squads.some((squad) => squad.length) && results.some((result) => result.status === "rejected")) {
+      throw new Error("Portrait squads temporarily unavailable");
+    }
+    return null;
+  }
+  // A partial lineup is not enough for a bare surname. A complete roster can
+  // supply one unique candidate, then the profile verifies their exact identity.
+  if (candidate.evidence === "recent-lineup" && normal(name).split(" ").length < 2) return null;
+  return verifyPlayerIdentity(candidate);
 }
 
 /** Penalty editorial names are full names. Never guess from a shared surname. */

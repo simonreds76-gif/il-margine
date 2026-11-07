@@ -4,7 +4,7 @@ import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 
 const title = "Football Player Props Tips: Shots, Fouls & Cards";
 const description =
-  "Football player props tips for shots, fouls, tackles and cards. Explore picks informed by statistical models, recorded odds and performance by league.";
+  "Football player props tips for goalkeeper saves, shots, fouls, tackles and cards. Compare recorded odds, stakes and tracked results by market and league.";
 const url = `${BASE_URL}/player-props`;
 
 export const metadata: Metadata = {

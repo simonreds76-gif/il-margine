@@ -21,6 +21,26 @@ export function newsPagePath(page: number) {
 export function newsImageUrl(slug = "index") {
   return `https://ilmargine.bet/penalty-news/share/${slug}`;
 }
+// Short search/social titles are presentation, never rewritten incident records.
+export function newsSeoTitle(article: PenaltyArticle) {
+  const outcome: Record<string, string> = {
+    scored: `${article.player} scores ${article.club} penalty`,
+    missed: `${article.player} misses ${article.club} penalty`,
+    saved: `${article.player}'s ${article.club} penalty saved`,
+    woodwork: `${article.player}'s ${article.club} penalty hits woodwork`,
+  };
+  // distinctNewsTitle has already disambiguated repeated incidents. Retain it.
+  const suffix = article.title.match(/\((?:\d+(?:\+\d+)?′ penalty|report \d+)\)$/)?.[0];
+  const retake = /\bretaken|\bretake\b/i.test(article.title) ? " (retake)" : "";
+  const title = `${outcome[article.outcome] ?? `${article.player}: ${article.club} penalty report`}${suffix ? ` ${suffix}` : ""}${retake}`;
+  // Drop the brand before dropping a player's identity or the actual outcome.
+  return title.length + " | Il Margine".length <= 64 ? `${title} | Il Margine` : title;
+}
+
+export function latestClubPenaltyReport(articles: PenaltyArticle[], clubUrl: string) {
+  return articles.filter(a => a.clubUrl === clubUrl)
+    .sort((a, b) => b.kickoff.localeCompare(a.kickoff) || b.eventId.localeCompare(a.eventId, "en", { numeric: true }))[0];
+}
 // Presentation only: preserve the saved report, incident IDs and publication dates.
 export function distinctNewsTitle(article: PenaltyArticle, articles: PenaltyArticle[]) {
   const repeated = articles.filter(a => a.matchId === article.matchId && a.title === article.title);

@@ -32,13 +32,13 @@ function TournamentHistory({rows}:{rows:SignalRow[]}) {
     return <section key={`${text(row.player)}-${index}`} className="min-w-0 rounded-xl border border-slate-700/70 bg-slate-950/40 p-3" aria-label={`${text(row.player)} tournament history`}>
      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
       <h5 className="break-words text-sm font-semibold text-slate-100">{text(row.player)}</h5>
-      <p className="text-xs text-slate-400">{text(row.tournament)}{mode==='aces'?` · ${history.logs.length} recorded ${history.logs.length===1?'match':'matches'}`:''}</p>
+      <p className="text-xs text-slate-400">{text(row.tournament)}{mode==='aces'?` · ${history.logs.length} recorded ${history.logs.length===1?'appearance':'appearances'}`:''}</p>
      </div>
      {mode==='breaks'?<TournamentBreakPoints row={row}/>:history.logs.length>0?<>
       <dl className="my-3 grid grid-cols-2 gap-3 rounded-lg bg-slate-800/50 p-3">
        {(['aces','dfs'] as const).map(field=>{
-        const stat=history[field],complete=stat.covered===history.logs.length&&!history.incomplete;
-        return <div key={field}><dt className="text-xs text-slate-400">{field==='aces'?'Aces':'Double faults'}<span className="block">{complete?'recorded total':'recorded subtotal'}</span></dt><dd className="mt-1 text-xl font-semibold tabular-nums text-slate-100">{fmt(stat.value,0)}</dd>{!complete&&<p className="mt-1 text-xs text-amber-200">Stats in {stat.covered} of {Math.max(history.logs.length,history.expected||0)} recorded matches</p>}</div>;
+        const stat=history[field],complete=stat.covered===history.completed&&!history.incomplete;
+        return <div key={field}><dt className="text-xs text-slate-400">{field==='aces'?'Aces':'Double faults'}<span className="block">{complete?'completed-match total':'completed-match subtotal'}</span></dt><dd className="mt-1 text-xl font-semibold tabular-nums text-slate-100">{fmt(stat.value,0)}</dd>{!complete&&<p className="mt-1 text-xs text-amber-200">Stats in {stat.covered} of {Math.max(history.completed,history.expected||0)} completed matches</p>}</div>;
        })}
       </dl>
       <table className="w-full table-fixed text-xs">
@@ -46,7 +46,8 @@ function TournamentHistory({rows}:{rows:SignalRow[]}) {
        <thead><tr className="text-slate-400"><th scope="col" className="pb-2 text-left font-normal">Opponent / result</th><th scope="col" className="w-12 pb-2 text-right font-normal">Aces</th><th scope="col" className="w-12 pb-2 text-right font-normal"><abbr title="Double faults" className="no-underline">DFs</abbr></th></tr></thead>
        <tbody>{history.logs.map((log,i)=><tr key={`${text(log.date)}-${text(log.opponent)}-${i}`} className="border-t border-slate-700/60"><th scope="row" className="py-2 pr-2 text-left font-normal"><span className="block break-words text-slate-200">{text(log.opponent)}</span><span className="mt-1 block text-[11px] text-slate-400">{text(log.date)} · {text(log.draw_round||log.round)}<br/>{text(log.result)||'Score not supplied'}</span></th><td className="py-2 text-right align-top font-semibold tabular-nums text-slate-100">{numeric(log.aces)===null?'—':fmt(log.aces,0)}</td><td className="py-2 text-right align-top font-semibold tabular-nums text-slate-100">{numeric(log.dfs)===null?'—':fmt(log.dfs,0)}</td></tr>)}</tbody>
       </table>
-      <p className="mt-2 text-[11px] leading-relaxed text-slate-400">Saved OnCourt results through {text(history.logs.at(-1)?.date)}. Matches without statistics may be absent from this log.</p>
+      {history.partial>0&&<p className="mt-2 text-xs text-amber-200">{history.partial} interrupted {history.partial===1?'match':'matches'} shown in the round log, excluded from completed-match totals.</p>}
+      <p className="mt-2 text-[11px] leading-relaxed text-slate-400">Saved results through {text(history.logs.at(-1)?.date)}.{history.observedAt!==null?` Imported ${stamp(new Date(history.observedAt*1000).toISOString())} UK; refreshed independently of the forecast.`:' Matches without statistics may be absent from this log.'}</p>
      </>:<p className="mt-3 text-xs leading-relaxed text-amber-200">No completed match statistics supplied for this tournament edition. This does not mean zero aces or double faults.</p>}
      {mode==='aces'&&history.incomplete&&<p className="mt-2 text-xs text-amber-200">Some recorded tournament matches are missing from this round log.</p>}
     </section>;

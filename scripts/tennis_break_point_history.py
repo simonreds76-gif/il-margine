@@ -9,6 +9,7 @@ from pathlib import Path
 
 VERSION = "tournament-break-points-v1"
 FIELDS = ("bpof", "bpw", "bpfaced", "bpsaved")
+COUNT_FIELDS = ("ace", "df")
 
 
 def count(value):
@@ -76,7 +77,7 @@ def histories(root: Path, requested: list[tuple]):
                 k = key(row)
                 if k not in games:
                     continue
-                values = {f"{p}_{f}": row.get(f"{p}_{f}") for p in ("w", "l") for f in FIELDS}
+                values = {f"{p}_{f}": row.get(f"{p}_{f}") for p in ("w", "l") for f in (*FIELDS, *COUNT_FIELDS)}
                 if k in stats and stats[k] != values:
                     stat_conflicts.add(k)
                 stats[k] = values
@@ -94,9 +95,12 @@ def histories(root: Path, requested: list[tuple]):
                 prefix, other = ("w", "l") if player == k[1] else ("l", "w")
                 values = None if k in conflicts or k in stat_conflicts else valid_counts(stats.get(k, {}))
                 status = "retired" if re.search(r"RET|ABD|DEF", game["result"], re.I) else "completed"
+                recorded = stats.get(k, {}) if k not in conflicts and k not in stat_conflicts else {}
                 logs.append({"date": game["date"], "round_id": k[3], "opponent_id": game[f"{'loser' if prefix == 'w' else 'winner'}_id"],
                     "opponent": names.get(game[f"{'loser' if prefix == 'w' else 'winner'}_id"], "Name unavailable"),
                     "result": game["result"], "status": status, "stats_status": "verified" if values is not None else "unavailable",
+                    "aces": count(recorded.get(f"{prefix}_ace")),
+                    "dfs": count(recorded.get(f"{prefix}_df")),
                     "created": values[f"{prefix}_bpof"] if values is not None else None,
                     "converted": values[f"{prefix}_bpw"] if values is not None else None,
                     "faced": values[f"{prefix}_bpfaced"] if values is not None else None,
@@ -124,12 +128,22 @@ def enrich_files(root: Path, files: dict[str, str]) -> dict[str, str]:
         history = evidence.get(identity(row, tour))
         if history:
             row["break_point_history"] = json.dumps(history, ensure_ascii=False, separators=(",", ":"))
+            # Separate display evidence, never replace the forecast's historical
+            # feature log or model probabilities with later results.
+            row["tournament_count_history"] = json.dumps({
+                **{k: history[k] for k in ("tour", "tour_id", "player_id", "before_date", "source_observed_epoch")},
+                "version": "tournament-count-history-v1",
+                "logs": [{k: log[k] for k in ("date", "round_id", "opponent", "opponent_id", "result", "status", "aces", "dfs", "source_key", "issue")}
+                         for log in history["logs"]],
+            }, ensure_ascii=False, separators=(",", ":"))
     output = {}
     if board:
         out = io.StringIO(newline="")
         fields = list(board[0])
         if "break_point_history" not in fields:
             fields.append("break_point_history")
+        if "tournament_count_history" not in fields:
+            fields.append("tournament_count_history")
         writer = csv.DictWriter(out, fieldnames=fields)
         writer.writeheader()
         writer.writerows(board)

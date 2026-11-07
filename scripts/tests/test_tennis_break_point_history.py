@@ -23,6 +23,7 @@ class BreakPointHistoryTests(unittest.TestCase):
         folder = root/'data/oncourt'
         game = dict(winner_id='1', loser_id='2', tour_id='10', round_id='4', date='2026-10-29', result='7-5 6-4')
         stat = dict(winner_id='1', loser_id='2', tour_id='10', round_id='4',
+                    w_ace='17', l_ace='9', w_df='1', l_df='0',
                     w_bpof='6', w_bpw='1', w_bpfaced='4', w_bpsaved='2',
                     l_bpof='4', l_bpw='2', l_bpfaced='6', l_bpsaved='5')
         write(folder/'games_atp.csv',[game]); write(folder/'stat_atp.csv',[stat])
@@ -74,6 +75,9 @@ class BreakPointHistoryTests(unittest.TestCase):
             self.assertEqual(board.read_bytes(),original)
             other=json.loads(result['most-aces-current']);self.assertEqual(other['records'],report['records']);self.assertEqual(other['matches'][0]['p_player1'],.43)
             self.assertEqual(json.loads(new['break_point_history'])['logs'][0]['created'],6)
+            counts=json.loads(new['tournament_count_history'])
+            self.assertEqual((counts['logs'][0]['aces'],counts['logs'][0]['dfs']),(17,1))
+            self.assertEqual(counts['version'],'tournament-count-history-v1')
             (root/'config').mkdir();(root/'config/admin-monitor-catalog.json').write_text(json.dumps([{'id':'props-board','file':'data/board.csv'}]))
             bundle=build_admin_bundle(root)
             self.assertEqual(bundle['admin_break_point_history_status'],'included')
@@ -87,6 +91,17 @@ class BreakPointHistoryTests(unittest.TestCase):
             bundle=build_admin_bundle(root)
             self.assertEqual(bundle['admin_files']['props-board'],(root/'board.csv').read_bytes().decode())
             self.assertIn('unavailable:',bundle['admin_break_point_history_status'])
+
+    def test_ace_history_missing_conflicting_and_partial_counts_never_become_zero(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);folder,g,s=self.fixture(root)
+            write(folder/'games_atp.csv',[dict(g,result='6-2 1-0 ret.')])
+            write(folder/'stat_atp.csv',[dict(s,w_ace='',w_df='0')])
+            log=histories(root,[('ATP','10','1','2026-10-30')])[('ATP','10','1','2026-10-30')]['logs'][0]
+            self.assertIsNone(log['aces']);self.assertEqual(log['dfs'],0);self.assertEqual(log['status'],'retired')
+            write(folder/'stat_atp.csv',[s,dict(s,w_ace='18')])
+            log=histories(root,[('ATP','10','1','2026-10-30')])[('ATP','10','1','2026-10-30')]['logs'][0]
+            self.assertIsNone(log['aces']);self.assertEqual(log['issue'],'conflicting_stats')
 
 
 if __name__ == '__main__': unittest.main()
