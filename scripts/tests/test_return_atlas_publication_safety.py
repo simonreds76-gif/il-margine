@@ -17,7 +17,12 @@ class AuthTests(unittest.TestCase):
  def test_existing_auth_pins_resolved_directory(self):
   with patch.object(M.shutil,'which',return_value='node'),patch.object(M.Path,'is_file',return_value=True),patch.object(M.subprocess,'run',return_value=Mock(returncode=0,stdout='{"path":"known-store","configured":true}')):
    args=M.publication_auth_args(['vercel.cmd','api','/test'],{})
-  self.assertEqual(args[-2:],['--global-config','known-store'])
+  self.assertEqual(args[1:3],['--global-config','known-store'])
+ def test_auth_flag_precedes_curl_separator(self):
+  with patch.object(M.shutil,'which',return_value='node'),patch.object(M.Path,'is_file',return_value=True),patch.object(M.subprocess,'run',return_value=Mock(returncode=0,stdout='{"path":"known-store","configured":true}')):
+   args=M.publication_auth_args(['vercel.cmd','curl','/return-atlas','--','--fail','--silent'],{})
+  self.assertEqual(args[args.index('--')+1:],['--fail','--silent'])
+  self.assertLess(args.index('--global-config'),args.index('--'))
  def test_unreadable_auth_metadata_fails_closed(self):
   with patch.object(M.shutil,'which',return_value='node'),patch.object(M.Path,'is_file',return_value=True),patch.object(M.subprocess,'run',return_value=Mock(returncode=0,stdout='invalid')):
    with self.assertRaises(M.PublicationAuthRequired):M.publication_auth_args(['vercel.cmd','api','/test'],{})

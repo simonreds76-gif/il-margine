@@ -55,7 +55,7 @@ def publication_auth_args(args, env):
         raise PublicationAuthRequired('Return Atlas publication has no saved Vercel CLI login. '
                                       'Sign in deliberately on the publishing PC, then retry publication only; '
                                       'forecasts and signals do not need rerunning.')
-    return [*args, '--global-config', auth['path']]
+    return [args[0], '--global-config', auth['path'], *args[1:]]
 
 
 def run(args, cwd=None, env=None, timeout=600):
