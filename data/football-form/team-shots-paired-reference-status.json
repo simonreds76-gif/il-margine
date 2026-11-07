@@ -1,5 +1,5 @@
 {
-  "contracts": 525,
+  "contracts": 532,
   "settled_contracts": 465,
   "paired_contracts": 328,
   "paired_fixtures": 131,
@@ -18,7 +18,7 @@
         "pnl_units": -16.498099999999997,
         "roi": -0.1853719101123595,
         "stake_units": 89,
-        "pending": 22,
+        "pending": 24,
         "overdue": 0,
         "unavailable_contracts": 137,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
@@ -37,7 +37,7 @@
         "pnl_units": -4.533400000000001,
         "roi": -0.45334000000000013,
         "stake_units": 10,
-        "pending": 3,
+        "pending": 4,
         "overdue": 0,
         "unavailable_contracts": 137,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
@@ -56,7 +56,7 @@
         "pnl_units": -1.5593999999999983,
         "roi": -0.024365624999999974,
         "stake_units": 64,
-        "pending": 8,
+        "pending": 9,
         "overdue": 0,
         "unavailable_contracts": 19,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
@@ -75,7 +75,7 @@
         "pnl_units": 5.2613,
         "roi": 0.18790357142857145,
         "stake_units": 28,
-        "pending": 3,
+        "pending": 4,
         "overdue": 0,
         "unavailable_contracts": 19,
         "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
@@ -95,15 +95,15 @@
   "model_fingerprint": "90a4b82bdc0fb04546d62c53c32e12943250bd7637b31079423ee3023f487fd4",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 374,
-  "generated_at": "2026-11-07T14:58:56Z",
-  "new_contracts": 21,
+  "generated_at": "2026-11-07T15:56:21Z",
+  "new_contracts": 7,
   "scan_exclusions": {
-    "stale_price": 148,
+    "stale_price": 114,
     "outside_capture_window": 20
   },
-  "latest_archived_capture": "2026-11-07T14:57:38.754871+00:00",
+  "latest_archived_capture": "2026-11-07T15:55:20.875791+00:00",
   "latest_result_date": "2026-11-06",
-  "raw_upcoming_rows": 759,
+  "raw_upcoming_rows": 793,
   "status": "COLLECTING",
   "cohorts": {
     "paired-market-offset-20260930-v2": {
@@ -295,7 +295,7 @@
       "automatic_promotion": false
     },
     "paired-market-offset-20261028-identity-v4": {
-      "contracts": 151,
+      "contracts": 158,
       "settled_contracts": 91,
       "paired_contracts": 91,
       "paired_fixtures": 41,
@@ -314,7 +314,7 @@
             "pnl_units": -12.3121,
             "roi": -0.39716451612903225,
             "stake_units": 31,
-            "pending": 22,
+            "pending": 24,
             "overdue": 0,
             "unavailable_contracts": 0,
             "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
@@ -333,7 +333,7 @@
             "pnl_units": -2.5334000000000003,
             "roi": -0.31667500000000004,
             "stake_units": 8,
-            "pending": 3,
+            "pending": 4,
             "overdue": 0,
             "unavailable_contracts": 0,
             "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
@@ -352,7 +352,7 @@
             "pnl_units": 0.5606,
             "roi": 0.06228888888888889,
             "stake_units": 9,
-            "pending": 8,
+            "pending": 9,
             "overdue": 0,
             "unavailable_contracts": 0,
             "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
@@ -371,7 +371,7 @@
             "pnl_units": 2.7273,
             "roi": 0.5454600000000001,
             "stake_units": 5,
-            "pending": 3,
+            "pending": 4,
             "overdue": 0,
             "unavailable_contracts": 0,
             "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."

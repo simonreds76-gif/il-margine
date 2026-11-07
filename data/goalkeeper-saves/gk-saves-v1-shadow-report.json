@@ -2,24 +2,23 @@
   "candidate": "goalkeeper-saves-v1-nb2-predicted-or-confirmed-starter",
   "count_model": "PASS",
   "current": {
-    "blocked_lines": 38,
+    "blocked_lines": 25,
     "blocker_counts": {
-      "goalkeeper_not_matched_to_lineup": 23,
-      "goalkeeper_team_unresolved": 23,
-      "missing_priced_edge": 38,
-      "missing_three_way_market": 15
+      "goalkeeper_not_matched_to_lineup": 25,
+      "goalkeeper_team_unresolved": 25,
+      "missing_priced_edge": 25
     },
     "candidate_board_preserved": false,
     "eligible_lines": 6,
-    "priced_lines": 497,
+    "priced_lines": 502,
     "provisional_lines": 0,
-    "signals_added": 0,
-    "value_ladder_lines": 37
+    "signals_added": 1,
+    "value_ladder_lines": 46
   },
   "evidence": {
     "clv": 0.049783,
     "clv_matched": 34,
-    "pending": 8,
+    "pending": 9,
     "pnl_units": 11.667,
     "quote_quarantine_records": [
       {
@@ -158,36 +157,36 @@
       "independently_reviewed_named_keeper_count": 2,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 111,
+    "signals": 112,
     "true_close_coverage": 0.350515,
     "void": 6
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-11-07T14:59:04.582322+00:00",
+    "checked_at": "2026-11-07T15:55:56.849995+00:00",
     "counts": {
-      "already_saved": 21,
-      "not_fresh_prematch": 282
+      "not_fresh_prematch": 201,
+      "offers_saved": 326
     },
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "saved": 19,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-11-07T14:59:03Z",
+  "generated_at": "2026-11-07T15:55:56Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
-      "blocked_or_missing_inputs": 24,
-      "not_new_fresh_prematch": 282
+      "blocked_or_missing_inputs": 19,
+      "not_new_fresh_prematch": 201
     },
     "forecast_fixtures": 186,
     "forecast_keepers": 379,
-    "generated_at": "2026-11-07T14:59:04.656672+00:00",
+    "generated_at": "2026-11-07T15:55:56.947666+00:00",
     "last_capture_at": "2026-11-07T14:58:06.542908+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
-    "new_selections": 0,
+    "new_selections": 1,
     "next_review_at": null,
     "paired_scores": {
       "current": {
@@ -205,12 +204,12 @@
       "current": {
         "losses": 17,
         "overdue": 4,
-        "pending": 6,
+        "pending": 7,
         "profit": -1.4359999999999997,
         "pushes": 0,
         "review": 7,
         "roi": -0.09903448275862067,
-        "selections": 46,
+        "selections": 47,
         "settled": 29,
         "stake": 14.5,
         "voids": 4,
@@ -236,12 +235,12 @@
         "current": {
           "losses": 15,
           "overdue": 2,
-          "pending": 3,
+          "pending": 4,
           "profit": -1.2309999999999997,
           "pushes": 0,
           "review": 5,
           "roi": -0.09847999999999997,
-          "selections": 37,
+          "selections": 38,
           "settled": 25,
           "stake": 12.5,
           "voids": 4,
@@ -378,6 +377,34 @@
         "side": "over",
         "status": "pending",
         "team_id": "8524"
+      },
+      {
+        "away": "Manchester City",
+        "bookmaker": "Bet365",
+        "captured_at": "2026-11-07T15:46:40.981982+00:00",
+        "contract_scope": "named_player",
+        "edge": 0.0645763685707137,
+        "event_id": "72221388",
+        "fair_odds": 2.113516762560511,
+        "goalkeeper": "Gianluigi Donnarumma",
+        "home": "Nottingham Forest",
+        "identity_basis": "bookmaker_named_player",
+        "kickoff_at": "2026-11-07T17:30:00+00:00",
+        "line": 2.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5795513",
+        "model": "current",
+        "odds": 2.25,
+        "overdue": false,
+        "player_id": "618878",
+        "profit": 0,
+        "quote_verification": "{\"version\":\"moviodds_gk_atomic_v1\",\"site\":\"com\",\"fixture_id\":\"202802012\",\"event_id\":\"72221388\",\"market_id\":\"177703\",\"sel_id\":\"374087156\",\"player\":\"Gianluigi Donnarumma\",\"line\":2.5,\"odds_decimal\":2.25,\"board_polled_at\":\"2026-11-07T15:46:40.981982768Z\",\"live_polled_at\":\"2026-11-07T15:55:45.618767006Z\",\"verified_at\":\"2026-11-07T15:55:45.658183+00:00\",\"resolved_goalkeeper\":\"Gianluigi Donnarumma\"}",
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-11-07T15:55:56.947666+00:00",
+        "settlement_policy": "bet365_named_nonstarter_void_v1",
+        "side": "over",
+        "status": "pending",
+        "team_id": "8456"
       },
       {
         "away": "Bologna FC",

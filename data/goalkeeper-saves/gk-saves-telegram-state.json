@@ -3814,16 +3814,78 @@
       },
       "message_id": 798,
       "sent_at": "2026-11-07T02:22:58.518585+00:00"
+    },
+    "72221388|gianluigi donnarumma|2.5|over": {
+      "status": "claimed",
+      "run_token": "42388639359:1",
+      "claimed_at": "2026-11-07T15:56:27.883457+00:00",
+      "signal": {
+        "signal_id": "72221388|gianluigi donnarumma|2.5|over",
+        "created_at": "2026-11-07T15:55:56Z",
+        "event_id": "72221388",
+        "match_date": "2026-11-07",
+        "kickoff_at": "2026-11-07T17:30:00Z",
+        "league": "epl",
+        "home_team": "Nottingham Forest",
+        "away_team": "Manchester City",
+        "team": "Manchester City",
+        "opponent": "Nottingham Forest",
+        "venue": "away",
+        "goalkeeper": "Gianluigi Donnarumma",
+        "bookmaker": "Bet365",
+        "line": "2.5",
+        "side": "over",
+        "odds_decimal": "2.2500",
+        "model_mean": "2.6156",
+        "model_probability": "0.473145",
+        "push_probability": "0.000000",
+        "fair_odds": "2.114",
+        "edge": "0.064576",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-11-07T15:46:40.981982+00:00",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "named_player",
+        "identity_basis": "bookmaker_named_player",
+        "integrity_status": "",
+        "quarantine_reason": "",
+        "quote_verification": "{\"version\":\"moviodds_gk_atomic_v1\",\"site\":\"com\",\"fixture_id\":\"202802012\",\"event_id\":\"72221388\",\"market_id\":\"177703\",\"sel_id\":\"374087156\",\"player\":\"Gianluigi Donnarumma\",\"line\":2.5,\"odds_decimal\":2.25,\"board_polled_at\":\"2026-11-07T15:46:40.981982768Z\",\"live_polled_at\":\"2026-11-07T15:55:45.618767006Z\",\"verified_at\":\"2026-11-07T15:55:45.658183+00:00\",\"resolved_goalkeeper\":\"Gianluigi Donnarumma\"}",
+        "price_comparison": [
+          {
+            "bookmaker": "Bet365",
+            "odds": 2.25,
+            "captured_at": "2026-11-07T15:46:40.981982+00:00",
+            "contract_scope": "named_player"
+          },
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 1.86,
+            "captured_at": "2026-11-07T15:55:25+00:00",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-11-07T15:56:27.883457+00:00"
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-11-07T14:59:05.602046+00:00",
-      "added": 0,
+      "checked_at": "2026-11-07T15:56:27.883457+00:00",
+      "added": 1,
       "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-11-07T14:59:05.602046+00:00",
+      "checked_at": "2026-11-07T15:56:27.883457+00:00",
       "added": 0,
       "suppressed": {}
     }
