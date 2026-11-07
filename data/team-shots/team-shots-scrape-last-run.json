@@ -1,24 +1,23 @@
 {
   "capture_mode": "near_kickoff",
-  "control_odds_rows_added": 630,
-  "control_odds_rows_observed": 630,
+  "control_odds_rows_added": 670,
+  "control_odds_rows_observed": 670,
   "days_ahead": 2,
   "discovery_diagnostics": [
     {
       "bet365_count_source": {
-        "corners_quotes": 4,
+        "corners_quotes": 8,
         "errors": [],
         "excluded": {
           "conflicting_quotes": 0,
-          "fixture_not_eligible": 209,
-          "stale_or_missing_market_poll": 6,
-          "unmatched_or_unsupported_fixture": 1729
+          "fixture_not_eligible": 225,
+          "unmatched_or_unsupported_fixture": 1902
         },
         "requests": 1,
         "source": "moviodds_bet365",
         "source_site": "com",
         "status": "OK",
-        "team_shots_quotes": 0
+        "team_shots_quotes": 16
       },
       "direct_source": {
         "bookmaker": "Grosvenor",
@@ -28,7 +27,7 @@
           "current_quotes": 48,
           "mapped_quotes": 0,
           "paper_selections": 0,
-          "price_or_status_changes": 0,
+          "price_or_status_changes": 6,
           "rules": "unverified"
         },
         "matched": 4,
@@ -36,31 +35,30 @@
         "requests": 5,
         "rows": 342
       },
-      "from": "2026-11-06T22:24:32Z",
+      "from": "2026-11-07T02:21:25Z",
       "kickoff_within_minutes": 1440,
       "league": "epl",
       "league_events": 9,
-      "provider_events": 3400,
-      "rows_scraped": 24,
+      "provider_events": 3378,
+      "rows_scraped": 40,
       "selected_events": 4,
       "state": "PRICES_CAPTURED",
-      "to": "2026-11-08T22:24:32Z"
+      "to": "2026-11-09T02:21:25Z"
     },
     {
       "bet365_count_source": {
-        "corners_quotes": 2,
+        "corners_quotes": 8,
         "errors": [],
         "excluded": {
           "conflicting_quotes": 0,
-          "fixture_not_eligible": 209,
-          "stale_or_missing_market_poll": 7,
-          "unmatched_or_unsupported_fixture": 1729
+          "fixture_not_eligible": 225,
+          "unmatched_or_unsupported_fixture": 1902
         },
         "requests": 0,
         "source": "moviodds_bet365",
         "source_site": "com",
         "status": "OK",
-        "team_shots_quotes": 0
+        "team_shots_quotes": 16
       },
       "direct_source": {
         "bookmaker": "Grosvenor",
@@ -70,7 +68,7 @@
           "current_quotes": 130,
           "mapped_quotes": 0,
           "paper_selections": 0,
-          "price_or_status_changes": 9,
+          "price_or_status_changes": 0,
           "rules": "unverified"
         },
         "matched": 4,
@@ -78,123 +76,123 @@
         "requests": 5,
         "rows": 457
       },
-      "from": "2026-11-06T22:24:32Z",
+      "from": "2026-11-07T02:21:25Z",
       "kickoff_within_minutes": 1440,
       "league": "serie-a",
       "league_events": 9,
-      "provider_events": 3400,
-      "rows_scraped": 22,
+      "provider_events": 3378,
+      "rows_scraped": 38,
       "selected_events": 4,
       "state": "PRICES_CAPTURED",
-      "to": "2026-11-08T22:24:32Z"
+      "to": "2026-11-09T02:21:25Z"
     },
     {
       "bet365_count_source": {
-        "corners_quotes": 0,
-        "errors": [],
-        "excluded": {
-          "fixture_not_eligible": 209,
-          "stale_or_missing_market_poll": 8,
-          "unmatched_or_unsupported_fixture": 1729
-        },
-        "requests": 0,
-        "source": "moviodds_bet365",
-        "source_site": "com",
-        "status": "NO_FRESH_MARKETS",
-        "team_shots_quotes": 0
-      },
-      "direct_source": {
-        "bookmaker": "Grosvenor",
-        "deferred": [],
-        "errors": [],
-        "headed_goal_research": {
-          "current_quotes": 199,
-          "mapped_quotes": 0,
-          "paper_selections": 0,
-          "price_or_status_changes": 7,
-          "rules": "unverified"
-        },
-        "matched": 4,
-        "missing": [],
-        "requests": 5,
-        "rows": 446
-      },
-      "from": "2026-11-06T22:24:32Z",
-      "kickoff_within_minutes": 1440,
-      "league": "la-liga",
-      "league_events": 9,
-      "provider_events": 3400,
-      "rows_scraped": 22,
-      "selected_events": 4,
-      "state": "PRICES_CAPTURED",
-      "to": "2026-11-08T22:24:32Z"
-    },
-    {
-      "bet365_count_source": {
-        "corners_quotes": 4,
+        "corners_quotes": 8,
         "errors": [],
         "excluded": {
           "conflicting_quotes": 0,
-          "fixture_not_eligible": 209,
-          "stale_or_missing_market_poll": 8,
-          "unmatched_or_unsupported_fixture": 1728
+          "fixture_not_eligible": 225,
+          "stale_or_missing_market_poll": 1,
+          "unmatched_or_unsupported_fixture": 1902
         },
         "requests": 0,
         "source": "moviodds_bet365",
         "source_site": "com",
         "status": "OK",
-        "team_shots_quotes": 0
+        "team_shots_quotes": 12
       },
       "direct_source": {
         "bookmaker": "Grosvenor",
         "deferred": [],
         "errors": [],
         "headed_goal_research": {
-          "current_quotes": 274,
+          "current_quotes": 200,
           "mapped_quotes": 0,
           "paper_selections": 0,
-          "price_or_status_changes": 3,
+          "price_or_status_changes": 9,
+          "rules": "unverified"
+        },
+        "matched": 4,
+        "missing": [],
+        "requests": 5,
+        "rows": 445
+      },
+      "from": "2026-11-07T02:21:25Z",
+      "kickoff_within_minutes": 1440,
+      "league": "la-liga",
+      "league_events": 9,
+      "provider_events": 3378,
+      "rows_scraped": 34,
+      "selected_events": 4,
+      "state": "PRICES_CAPTURED",
+      "to": "2026-11-09T02:21:25Z"
+    },
+    {
+      "bet365_count_source": {
+        "corners_quotes": 10,
+        "errors": [],
+        "excluded": {
+          "conflicting_quotes": 0,
+          "fixture_not_eligible": 225,
+          "unmatched_or_unsupported_fixture": 1901
+        },
+        "requests": 0,
+        "source": "moviodds_bet365",
+        "source_site": "com",
+        "status": "OK",
+        "team_shots_quotes": 20
+      },
+      "direct_source": {
+        "bookmaker": "Grosvenor",
+        "deferred": [],
+        "errors": [],
+        "headed_goal_research": {
+          "current_quotes": 273,
+          "mapped_quotes": 0,
+          "paper_selections": 0,
+          "price_or_status_changes": 17,
           "rules": "unverified"
         },
         "matched": 5,
         "missing": [],
         "requests": 6,
-        "rows": 441
+        "rows": 442
       },
-      "from": "2026-11-06T22:24:32Z",
+      "from": "2026-11-07T02:21:25Z",
       "kickoff_within_minutes": 1440,
       "league": "bundesliga",
       "league_events": 8,
-      "provider_events": 3400,
-      "rows_scraped": 20,
+      "provider_events": 3378,
+      "rows_scraped": 41,
       "selected_events": 5,
       "state": "PRICES_CAPTURED",
-      "to": "2026-11-08T22:24:32Z"
+      "to": "2026-11-09T02:21:25Z"
     },
     {
       "bet365_count_source": {
-        "corners_quotes": 0,
+        "corners_quotes": 2,
         "errors": [],
         "excluded": {
-          "fixture_not_eligible": 209,
-          "stale_or_missing_market_poll": 2,
-          "unmatched_or_unsupported_fixture": 1732
+          "conflicting_quotes": 0,
+          "fixture_not_eligible": 225,
+          "unmatched_or_unsupported_fixture": 1905
         },
         "requests": 0,
         "source": "moviodds_bet365",
         "source_site": "com",
-        "status": "NO_FRESH_MARKETS",
-        "team_shots_quotes": 0
+        "status": "OK",
+        "team_shots_quotes": 4
       },
       "direct_source": {
         "bookmaker": "Grosvenor",
         "deferred": [],
         "errors": [],
         "headed_goal_research": {
-          "current_quotes": 295,
+          "current_quotes": 294,
           "mapped_quotes": 0,
           "paper_selections": 0,
-          "price_or_status_changes": 21,
+          "price_or_status_changes": 1,
           "rules": "unverified"
         },
         "matched": 2,
@@ -202,15 +200,15 @@
         "requests": 3,
         "rows": 149
       },
-      "from": "2026-11-06T22:24:32Z",
+      "from": "2026-11-07T02:21:25Z",
       "kickoff_within_minutes": 1440,
       "league": "ligue-1",
       "league_events": 8,
-      "provider_events": 3400,
-      "rows_scraped": 10,
+      "provider_events": 3378,
+      "rows_scraped": 14,
       "selected_events": 2,
       "state": "PRICES_CAPTURED",
-      "to": "2026-11-08T22:24:32Z"
+      "to": "2026-11-09T02:21:25Z"
     }
   ],
   "events_found": 19,
@@ -225,9 +223,9 @@
   "odds_api_http_request_limit": 9,
   "odds_api_http_requests": 6,
   "provider_errors": [],
-  "rows_scraped": 98,
-  "run_at": "2026-11-06T22:24:32Z",
-  "run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/42304282275",
+  "rows_scraped": 167,
+  "run_at": "2026-11-07T02:21:25Z",
+  "run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/42328806610",
   "sources_used": [
     "odds-api",
     "odds-api",
