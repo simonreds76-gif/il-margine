@@ -135,7 +135,27 @@ def summary(root=ROOT, *, now=None, run_id=None):
     return dict(schema_version=1, generated_at=now.isoformat(),
                 state='DEGRADED' if issues or research_issues or source_issues else 'RUNNING' if any(s['status']=='RUNNING' for s in steps)
                 else 'OK' if steps else 'NOT_YET_OBSERVED',
-                step_count=len(steps), issues=issues, research_issues=research_issues, source_issues=source_issues, near_budget=near, steps=steps, archived_steps=archived_steps)
+                step_count=len(steps), issues=issues, message=failure_message(issues),
+                publication_issues=[row for row in issues if publication_issue(row)], research_issues=research_issues, source_issues=source_issues, near_budget=near, steps=steps, archived_steps=archived_steps)
+
+def publication_issue(step):
+    return (step.get('script'), step.get('label')) == (
+        'refresh-return-atlas.py', 'Return Atlas automatic publication')
+
+
+def failure_message(issues):
+    if not issues:
+        return ''
+    only_publication = all(publication_issue(row) for row in issues)
+    title = ('Return Atlas publication incomplete.' if only_publication
+             else 'Tennis refresh incomplete.')
+    details = [f"{row.get('label', 'Unknown step')}: {row.get('issue', 'FAILED')}; "
+               f"last success {row.get('last_success_at') or 'not yet observed'}" for row in issues[:8]]
+    action = ('The public archive retains its last validated data. Retry publication only; '
+              'do not rerun prices or betting alerts.' if only_publication else
+              'Check the named stages before using their outputs. Existing records are unchanged.')
+    return '\n'.join([title, *details, action])
+
 
 def overlay_feed_health(feed, runtime):
     result = dict(feed)
@@ -143,9 +163,13 @@ def overlay_feed_health(feed, runtime):
         result['source_issues'] = runtime['source_issues']
     if runtime.get('research_issues'):
         result['research_issues'] = runtime['research_issues']
-    if runtime['issues']:
+    publication = [row for row in runtime['issues'] if publication_issue(row)]
+    operational = [row for row in runtime['issues'] if not publication_issue(row)]
+    if publication:
+        result['publication_issues'] = publication
+    if operational:
         result.update(state='RUNTIME_STEP_FAILED', structural_error=True,
-                      runtime_issues=runtime['issues'], underlying_feed_state=feed.get('state'))
+                      runtime_issues=operational, underlying_feed_state=feed.get('state'))
     return result
 
 def main():
@@ -165,8 +189,8 @@ def main():
     result=summary(a.root,run_id=a.run_id)
     if a.json:print(json.dumps(result))
     else:
-        for issue in result['issues']:
-            print(f"{issue['label']}: {issue['issue']}; last successful step {issue.get('last_success_at') or 'not yet observed'}")
+        if result['message']:
+            print(result['message'])
         for issue in result['research_issues']:
             print(f"Research only: {issue['label']}: {issue['issue']}; price capture remains independent")
         for issue in result['source_issues']:

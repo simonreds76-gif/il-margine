@@ -113,13 +113,13 @@ function Get-TaskRecoveryLogInfo([string]$taskName) {
         "IlMargine-Daily" {
             return @{
                 Path = "data\oncourt-daily.log"
-                Pattern = "Daily Pipeline finished at (?<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"
+                Pattern = "Daily Pipeline verified OK at (?<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"
             }
         }
         "IlMargine-Daily-AM" {
             return @{
                 Path = "data\oncourt-am-refresh.log"
-                Pattern = "AM Tennis Refresh finished at (?<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"
+                Pattern = "AM Tennis Refresh verified OK at (?<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"
             }
         }
         default {
@@ -459,7 +459,10 @@ function Invoke-RuntimeWatchdog {
         $last = if ($_.last_success_at) { $_.last_success_at } else { 'not yet observed' }
         "$($_.label): $($_.issue); last success $last"
     })
-    $message = "Tennis refresh incomplete.`n" + ($lines -join "`n") + "`nPrevious figures remain historical. Models and entry prices were not changed."
+    $message = if ($runtime.message) { [string]$runtime.message } else {
+        "Tennis refresh incomplete.`n" + ($lines -join "`n") + "`nCheck the named stages; previous records are unchanged."
+    }
+    $script:RuntimeFailureMessage = $message
     Log $message
     if (-not $NoNotify -and $key -ne $prior.alert_key) {
         if (Post-Alert $message) {
@@ -493,7 +496,7 @@ if ($activeRecoveryTasks.Count -gt 0) {
 
 if ($badLanes.Count -eq 0 -and $badTasks.Count -eq 0) {
     if ($runtimeWatchExit -ne 0) {
-        $message = "Tennis refresh has failed steps. See the runtime watchdog details above."
+        $message = $script:RuntimeFailureMessage
     } elseif ($suppressedBadLanes.Count -gt 0) {
         $taskList = ($activeRecoveryTasks | ForEach-Object { $_.name }) -join ", "
         $message = "Tennis health OK. Refresh in progress via $taskList."
