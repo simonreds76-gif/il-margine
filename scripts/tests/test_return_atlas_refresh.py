@@ -12,6 +12,10 @@ spec.loader.exec_module(refresh)
 
 
 class PublicationAccessTests(unittest.TestCase):
+    def setUp(self):
+        auth = patch.object(refresh, 'publication_auth_args', side_effect=lambda args, env: args)
+        auth.start(); self.addCleanup(auth.stop)
+
     def test_missing_auth_is_specific_and_noninteractive(self):
         result = Mock(returncode=1, stderr='No existing credentials found', stdout='')
         with patch.object(refresh.subprocess, 'run', return_value=result) as process:
