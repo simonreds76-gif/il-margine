@@ -14,15 +14,15 @@ class AuthTests(unittest.TestCase):
   with patch.object(M.shutil,'which',return_value='node'),patch.object(M.Path,'is_file',return_value=True),patch.dict(M.os.environ,{},clear=True),patch.object(M.subprocess,'run',return_value=Mock(returncode=0,stdout='{"path":"config","configured":false}')) as run:
    with self.assertRaises(M.PublicationAuthRequired):M.run(['vercel.cmd','api','/test'])
   self.assertEqual(run.call_count,1);self.assertEqual(run.call_args.args[0][0],'node');self.assertNotIn('login',run.call_args.args[0])
- def test_existing_auth_pins_resolved_directory(self):
+ def test_existing_auth_uses_verified_default_without_extra_flags(self):
   with patch.object(M.shutil,'which',return_value='node'),patch.object(M.Path,'is_file',return_value=True),patch.object(M.subprocess,'run',return_value=Mock(returncode=0,stdout='{"path":"known-store","configured":true}')):
    args=M.publication_auth_args(['vercel.cmd','api','/test'],{})
-  self.assertEqual(args[1:3],['--global-config','known-store'])
- def test_auth_flag_precedes_curl_separator(self):
+  self.assertEqual(args,['vercel.cmd','api','/test'])
+ def test_auth_check_preserves_curl_passthrough(self):
   with patch.object(M.shutil,'which',return_value='node'),patch.object(M.Path,'is_file',return_value=True),patch.object(M.subprocess,'run',return_value=Mock(returncode=0,stdout='{"path":"known-store","configured":true}')):
    args=M.publication_auth_args(['vercel.cmd','curl','/return-atlas','--','--fail','--silent'],{})
   self.assertEqual(args[args.index('--')+1:],['--fail','--silent'])
-  self.assertLess(args.index('--global-config'),args.index('--'))
+  self.assertNotIn('--global-config',args)
  def test_unreadable_auth_metadata_fails_closed(self):
   with patch.object(M.shutil,'which',return_value='node'),patch.object(M.Path,'is_file',return_value=True),patch.object(M.subprocess,'run',return_value=Mock(returncode=0,stdout='invalid')):
    with self.assertRaises(M.PublicationAuthRequired):M.publication_auth_args(['vercel.cmd','api','/test'],{})
