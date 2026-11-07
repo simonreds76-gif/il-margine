@@ -59,8 +59,8 @@ class DataReleaseIntegration(unittest.TestCase):
    git('add','.');git('commit','-m','diverged data branch')
    deployment={'meta':{'githubCommitSha':base}}
    with patch.object(M,'validate_live_history') as validate:
-    dest,branch,prior,commit=M.stage_on_production(source,root/'state',deployment)
-    again=M.stage_on_production(source,root/'state',deployment)
+    dest,branch,prior,commit=M.stage_on_production(source,root/'state',deployment,worktree_root=root/'worktrees')
+    again=M.stage_on_production(source,root/'state',deployment,worktree_root=root/'worktrees')
    self.assertEqual((dest/'homepage.txt').read_text(),'current live design')
    self.assertEqual(prior,base);self.assertEqual(again[-1],commit);self.assertEqual(validate.call_count,2)
    self.assertEqual(git('show',f'{commit}:homepage.txt'),'current live design')

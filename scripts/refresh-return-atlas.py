@@ -251,7 +251,7 @@ def validate_release_diff(base_sha, checkout, allowed):
     return names
 
 
-def stage_on_production(source, state, deployment):
+def stage_on_production(source, state, deployment, *, worktree_root=None):
     meta = deployment.get('meta') or {}
     sha = meta.get('githubCommitSha') or (deployment.get('gitSource') or {}).get('sha')
     if not isinstance(sha, str) or not re.fullmatch('[a-f0-9]{40}', sha):
@@ -260,7 +260,7 @@ def stage_on_production(source, state, deployment):
     versions = [read_json(source / p)['version'] for p in paths if p.suffix == '.json']
     identity = hashlib.sha256('|'.join(versions).encode()).hexdigest()[:12]
     branch = f'codex/atlas-release-{sha[:12]}-{identity}'
-    destination = Path(state) / 'publication' / (sha[:12] + '-' + identity)
+    destination = Path(worktree_root or 'D:/IlMargine/worktrees/return-atlas-publication') / (sha[:12] + '-' + identity)
     if not destination.exists():
         destination.parent.mkdir(parents=True, exist_ok=True)
         run(['git', 'fetch', 'origin', sha], source, timeout=180)
