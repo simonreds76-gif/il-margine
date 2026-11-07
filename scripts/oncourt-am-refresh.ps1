@@ -494,8 +494,15 @@ try {
                 $receipts += $receipt
             }
         }
-        & python scripts/tennis_runtime_health.py check --run-id $env:TENNIS_RUNTIME_RUN_ID | ForEach-Object { Log $_ }
-        if ($LASTEXITCODE -ne 0) { throw "A tennis step failed or timed out. The refresh is incomplete; see runtime health." }
+        $runtimeDetails = @(& python scripts/tennis_runtime_health.py check --run-id $env:TENNIS_RUNTIME_RUN_ID)
+        $runtimeExit = $LASTEXITCODE
+        $runtimeDetails | ForEach-Object { Log $_ }
+        if ($runtimeExit -ne 0) {
+            $runtimeMessage = $runtimeDetails -join "`n"
+            if ([string]::IsNullOrWhiteSpace($runtimeMessage)) { $runtimeMessage = "Tennis runtime health could not be read; refresh is unverified." }
+            Set-RunStatusFailure "TennisStepFailed" $runtimeMessage
+            throw $runtimeMessage
+        }
         $sent = ($receipts | Measure-Object -Property dispatched_count -Sum).Sum
         Write-TennisManualProgress $root $manualRequest "completed" "Fresh inputs, odds and signals are ready; historical reporting remains scheduled." @{
             state = "completed"; refresh_id = $refreshId; started_at = $refreshStartedAt;
@@ -621,6 +628,7 @@ try {
     if ([string]::IsNullOrWhiteSpace($runStatusErrorType)) {
         $runStatusFinal = "ok"
         $runStatusErrorMessage = $null
+        Log "AM Tennis Refresh verified OK at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
     }
 }
 catch {

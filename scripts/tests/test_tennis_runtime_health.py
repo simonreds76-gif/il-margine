@@ -70,4 +70,24 @@ class RuntimeHealthTests(unittest.TestCase):
   t=self.begin();M.finish(self.root,t,0,now=self.now+timedelta(seconds=9))
   s=M.summary(self.root);self.assertEqual(len(s['near_budget']),1);self.assertEqual(s['state'],'OK')
 
+ def test_publication_failure_does_not_relabel_fresh_price_feed(self):
+  t=M.begin(self.root,'Return Atlas automatic publication','refresh-return-atlas.py',10,now=self.now)
+  M.finish(self.root,t,1,now=self.now)
+  runtime=M.summary(self.root);out=M.overlay_feed_health({'state':'READY','matched_rows':87},runtime)
+  self.assertEqual(runtime['state'],'DEGRADED');self.assertEqual(len(runtime['issues']),1)
+  self.assertTrue(runtime['message'].startswith('Return Atlas publication incomplete.'))
+  self.assertEqual(out['state'],'READY');self.assertEqual(out['matched_rows'],87)
+  self.assertEqual(len(out['publication_issues']),1);self.assertNotIn('structural_error',out)
+ def test_mixed_failure_keeps_price_failure_and_both_stage_names(self):
+  t=M.begin(self.root,'Return Atlas automatic publication','refresh-return-atlas.py',10,now=self.now)
+  M.finish(self.root,t,1,now=self.now)
+  t=self.begin('Actual price collection');M.finish(self.root,t,124,now=self.now)
+  runtime=M.summary(self.root);out=M.overlay_feed_health({'state':'READY'},runtime)
+  self.assertTrue(runtime['message'].startswith('Tennis refresh incomplete.'))
+  self.assertIn('Actual price collection',runtime['message']);self.assertIn('Return Atlas',runtime['message'])
+  self.assertEqual(out['state'],'RUNTIME_STEP_FAILED');self.assertTrue(out['structural_error'])
+ def test_unknown_step_is_never_treated_as_publication(self):
+  self.assertFalse(M.publication_issue({'script':'other.py','label':'Return Atlas automatic publication'}))
+  self.assertFalse(M.publication_issue({'script':'refresh-return-atlas.py','label':'Current prices'}))
+
 if __name__=='__main__':unittest.main()

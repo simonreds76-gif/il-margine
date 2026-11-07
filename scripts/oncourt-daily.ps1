@@ -487,6 +487,7 @@ Log "============================================"
     if ([string]::IsNullOrWhiteSpace($runStatusErrorType)) {
         $runStatusFinal = "ok"
         $runStatusErrorMessage = $null
+        Log "Daily Pipeline verified OK at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
     }
 }
 catch {
