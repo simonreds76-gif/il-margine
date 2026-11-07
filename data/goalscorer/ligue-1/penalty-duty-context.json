@@ -1,131 +1,12 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-06T23:06:52Z",
+  "generated_at": "2026-11-07T13:35:21Z",
   "league": "ligue-1",
-  "row_count": 34,
+  "row_count": 32,
   "rows": [
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
-      "match_date": "2026-11-06",
-      "home_team": "Toulouse",
-      "away_team": "Strasbourg",
-      "team": "Toulouse",
-      "team_key": "toulouse",
-      "opponent": "Strasbourg",
-      "opponent_key": "strasbourg",
-      "is_home": 1,
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": [],
-      "team_lineup_status": "unknown",
-      "starter_names": [
-        "Guillaume Restes",
-        "Ismaïl Diallo",
-        "Mark McKenzie",
-        "Rasmus Nicolaisen",
-        "Christ Tapé",
-        "Thomas Jørgensen",
-        "Niko Sigur",
-        "Cristian Cásseres",
-        "Sion Oppong",
-        "Santiago Hidalgo",
-        "Casper Tengstedt"
-      ],
-      "bench_names": [
-        "Jacen Russell-Rowe",
-        "Ilyas Azizi",
-        "Alexis Vossah",
-        "Aymen Amaaouch",
-        "Mathys Niflore",
-        "Gaëtan Bakhouche",
-        "Seny Koumbassa",
-        "Niklas Schmidt",
-        "Julián Vignolo"
-      ],
-      "unavailable_names": [
-        "Aron Dønnum",
-        "Rafik Messali"
-      ],
-      "primary": "Casper Tengstedt",
-      "secondary": "Aron Dønnum",
-      "tertiary": "Cristian Cásseres Jr.",
-      "primary_lineup_status": "confirmed_starter",
-      "primary_match_name": "Casper Tengstedt",
-      "secondary_lineup_status": "not_in_squad",
-      "secondary_match_name": "Aron Dønnum",
-      "tertiary_lineup_status": "confirmed_starter",
-      "tertiary_match_name": "Cristian Cásseres",
-      "active_taker_pre_match": "Casper Tengstedt",
-      "active_slot_pre_match": "primary",
-      "penalty_transfer_pre_match": 0,
-      "inherited_from_pre_match": "",
-      "transfer_level_pre_match": ""
-    },
-    {
-      "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
-      "match_date": "2026-11-06",
-      "home_team": "Toulouse",
-      "away_team": "Strasbourg",
-      "team": "Strasbourg",
-      "team_key": "strasbourg",
-      "opponent": "Toulouse",
-      "opponent_key": "toulouse",
-      "is_home": 0,
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "fixture_corruption_score": 0.0,
-      "fixture_corruption_flags": [],
-      "team_lineup_status": "unknown",
-      "starter_names": [
-        "Filip Jörgensen",
-        "Lucas Høgsberg",
-        "Ismaël Doukouré",
-        "Karim Coulibaly",
-        "Oso",
-        "Dário Essugo",
-        "Samir El Mourabet",
-        "Giovanni Reyna",
-        "Gessime Yassine",
-        "Conrad Harder",
-        "Martial Godo"
-      ],
-      "bench_names": [
-        "Sebastian Nanasi",
-        "Jacobo Ortega",
-        "Samuel Amo-Ameyaw",
-        "Diogo Sousa",
-        "Pape Demba Diop",
-        "Miłosz Piekutowski",
-        "Genesis Antwi",
-        "Yoann Becker",
-        "Tyrese Noubissie"
-      ],
-      "unavailable_names": [
-        "Maxi Oyedele",
-        "Fabio Baldé",
-        "Joaquín Panichelli"
-      ],
-      "primary": "Joaquín Panichelli",
-      "secondary": "Sebastian Nanasi",
-      "tertiary": "Giovanni Reyna",
-      "primary_lineup_status": "not_in_squad",
-      "primary_match_name": "Joaquín Panichelli",
-      "secondary_lineup_status": "confirmed_bench",
-      "secondary_match_name": "Sebastian Nanasi",
-      "tertiary_lineup_status": "confirmed_starter",
-      "tertiary_match_name": "Giovanni Reyna",
-      "active_taker_pre_match": "Giovanni Reyna",
-      "active_slot_pre_match": "tertiary",
-      "penalty_transfer_pre_match": 1,
-      "inherited_from_pre_match": "Joaquín Panichelli",
-      "transfer_level_pre_match": "tertiary"
-    },
-    {
-      "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-07",
       "home_team": "AJ Auxerre",
       "away_team": "Paris FC",
@@ -154,7 +35,6 @@
       ],
       "bench_names": [],
       "unavailable_names": [
-        "Axel Tuanzebe",
         "Bryan Okoh",
         "Sékou Fofana",
         "Assane Dioussé",
@@ -177,7 +57,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-07",
       "home_team": "AJ Auxerre",
       "away_team": "Paris FC",
@@ -227,7 +107,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-07",
       "home_team": "Auxerre",
       "away_team": "Paris FC",
@@ -256,7 +136,6 @@
       ],
       "bench_names": [],
       "unavailable_names": [
-        "Axel Tuanzebe",
         "Bryan Okoh",
         "Sékou Fofana",
         "Assane Dioussé",
@@ -279,7 +158,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-07",
       "home_team": "Auxerre",
       "away_team": "Paris FC",
@@ -329,7 +208,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-07",
       "home_team": "Paris Saint-Germain",
       "away_team": "ESTAC Troyes",
@@ -381,7 +260,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-07",
       "home_team": "Paris Saint-Germain",
       "away_team": "ESTAC Troyes",
@@ -429,7 +308,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-07",
       "home_team": "Paris Saint-Germain",
       "away_team": "Troyes",
@@ -481,7 +360,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-07",
       "home_team": "Paris Saint-Germain",
       "away_team": "Troyes",
@@ -529,7 +408,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Angers",
       "away_team": "Nice",
@@ -558,8 +437,8 @@
       ],
       "bench_names": [],
       "unavailable_names": [
-        "Amine El Ouazzani",
-        "Bane Diatta"
+        "Bane Diatta",
+        "Amine El Ouazzani"
       ],
       "primary": "Amine El Ouazzani",
       "secondary": "Amine Sbaï",
@@ -578,7 +457,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Angers",
       "away_team": "Nice",
@@ -598,7 +477,7 @@
         "Youssouf Ndayishimiye",
         "Xavier Mandza",
         "Jonathan Clauss",
-        "Djibril Coulibaly",
+        "Axel Witsel",
         "Hicham Boudaoui",
         "Niels Nkounkou",
         "Sofiane Diop",
@@ -629,7 +508,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Angers SCO",
       "away_team": "OGC Nice",
@@ -658,8 +537,8 @@
       ],
       "bench_names": [],
       "unavailable_names": [
-        "Amine El Ouazzani",
-        "Bane Diatta"
+        "Bane Diatta",
+        "Amine El Ouazzani"
       ],
       "primary": "Amine El Ouazzani",
       "secondary": "Amine Sbaï",
@@ -678,7 +557,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Angers SCO",
       "away_team": "OGC Nice",
@@ -698,7 +577,7 @@
         "Youssouf Ndayishimiye",
         "Xavier Mandza",
         "Jonathan Clauss",
-        "Djibril Coulibaly",
+        "Axel Witsel",
         "Hicham Boudaoui",
         "Niels Nkounkou",
         "Sofiane Diop",
@@ -729,7 +608,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Brest",
       "away_team": "Lyon",
@@ -778,7 +657,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Brest",
       "away_team": "Lyon",
@@ -798,21 +677,21 @@
         "Felix Bacher",
         "Ruben Kluivert",
         "Abner",
-        "Mads Bidstrup",
+        "Noah Nartey",
         "Tanner Tessmann",
         "Corentin Tolisso",
         "Julien Duranville",
-        "Kaïl Boudache",
-        "Keito Nakamura"
+        "Khalis Merah",
+        "Kaïl Boudache"
       ],
       "bench_names": [],
       "unavailable_names": [
-        "Loïs Openda",
         "Moussa Niakhaté",
         "Steeve Kango",
         "Mohamed Ouédraogo",
         "Tyler Morton",
         "Ernest Nuamah",
+        "Loïs Openda",
         "Pavel Šulc"
       ],
       "primary": "Corentin Tolisso",
@@ -832,7 +711,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Le Havre",
       "away_team": "Lorient",
@@ -848,16 +727,16 @@
       "team_lineup_status": "unknown",
       "starter_names": [
         "Arnaud Bodart",
-        "Vincent Sasso",
+        "Djibril Ouziad",
         "Junior Mwanga",
         "Ahmed Touba",
-        "Djibril Ouziad",
+        "Enzo Koffi",
         "Simon Ebonog",
         "Amir Richardson",
-        "Lamine N'Diaye",
-        "Rayan Fofana",
+        "Daren Mosengo",
         "Sota Nakamura",
-        "Josh Maja"
+        "Josh Maja",
+        "Mbwana Samatta"
       ],
       "bench_names": [],
       "unavailable_names": [
@@ -871,21 +750,21 @@
       "primary": "Rayan Fofana",
       "secondary": "",
       "tertiary": "",
-      "primary_lineup_status": "expected_starter",
-      "primary_match_name": "Rayan Fofana",
+      "primary_lineup_status": "unknown",
+      "primary_match_name": "",
       "secondary_lineup_status": "",
       "secondary_match_name": "",
       "tertiary_lineup_status": "",
       "tertiary_match_name": "",
-      "active_taker_pre_match": "Rayan Fofana",
-      "active_slot_pre_match": "primary",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "penalty_transfer_pre_match": 0,
       "inherited_from_pre_match": "",
       "transfer_level_pre_match": ""
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Le Havre",
       "away_team": "Lorient",
@@ -910,7 +789,7 @@
         "Arsène Kouassi",
         "Jean-Victor Makengo",
         "Souleymane Faye",
-        "Ibrahima Baldé"
+        "Mamadou Koné"
       ],
       "bench_names": [],
       "unavailable_names": [
@@ -935,7 +814,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Le Havre AC",
       "away_team": "FC Lorient",
@@ -951,16 +830,16 @@
       "team_lineup_status": "unknown",
       "starter_names": [
         "Arnaud Bodart",
-        "Vincent Sasso",
+        "Djibril Ouziad",
         "Junior Mwanga",
         "Ahmed Touba",
-        "Djibril Ouziad",
+        "Enzo Koffi",
         "Simon Ebonog",
         "Amir Richardson",
-        "Lamine N'Diaye",
-        "Rayan Fofana",
+        "Daren Mosengo",
         "Sota Nakamura",
-        "Josh Maja"
+        "Josh Maja",
+        "Mbwana Samatta"
       ],
       "bench_names": [],
       "unavailable_names": [
@@ -974,21 +853,21 @@
       "primary": "Rayan Fofana",
       "secondary": "",
       "tertiary": "",
-      "primary_lineup_status": "expected_starter",
-      "primary_match_name": "Rayan Fofana",
+      "primary_lineup_status": "unknown",
+      "primary_match_name": "",
       "secondary_lineup_status": "",
       "secondary_match_name": "",
       "tertiary_lineup_status": "",
       "tertiary_match_name": "",
-      "active_taker_pre_match": "Rayan Fofana",
-      "active_slot_pre_match": "primary",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "penalty_transfer_pre_match": 0,
       "inherited_from_pre_match": "",
       "transfer_level_pre_match": ""
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Le Havre AC",
       "away_team": "FC Lorient",
@@ -1013,7 +892,7 @@
         "Arsène Kouassi",
         "Jean-Victor Makengo",
         "Souleymane Faye",
-        "Ibrahima Baldé"
+        "Mamadou Koné"
       ],
       "bench_names": [],
       "unavailable_names": [
@@ -1038,7 +917,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Le Mans",
       "away_team": "Monaco",
@@ -1067,11 +946,11 @@
       ],
       "bench_names": [],
       "unavailable_names": [
+        "Erwan Colas",
         "Théo Eyoum",
         "Adil Bourabaa",
         "Djibril Sidibé",
-        "Martin Rossignol",
-        "Erwan Colas"
+        "Martin Rossignol"
       ],
       "primary": "Louis Mafouta",
       "secondary": "Dame Gueye",
@@ -1090,7 +969,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Le Mans",
       "away_team": "Monaco",
@@ -1112,7 +991,7 @@
         "Flávio Nazinho",
         "Lamine Camara",
         "Denis Zakaria",
-        "Edan Diop",
+        "Mamadou Coulibaly",
         "Aleksandr Golovin",
         "Matthis Abline",
         "Paris Brunner"
@@ -1139,7 +1018,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Le Mans FC",
       "away_team": "AS Monaco",
@@ -1168,11 +1047,11 @@
       ],
       "bench_names": [],
       "unavailable_names": [
+        "Erwan Colas",
         "Théo Eyoum",
         "Adil Bourabaa",
         "Djibril Sidibé",
-        "Martin Rossignol",
-        "Erwan Colas"
+        "Martin Rossignol"
       ],
       "primary": "Louis Mafouta",
       "secondary": "Dame Gueye",
@@ -1191,7 +1070,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Le Mans FC",
       "away_team": "AS Monaco",
@@ -1213,7 +1092,7 @@
         "Flávio Nazinho",
         "Lamine Camara",
         "Denis Zakaria",
-        "Edan Diop",
+        "Mamadou Coulibaly",
         "Aleksandr Golovin",
         "Matthis Abline",
         "Paris Brunner"
@@ -1240,7 +1119,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Lens",
       "away_team": "Marseille",
@@ -1270,9 +1149,9 @@
       "bench_names": [],
       "unavailable_names": [
         "Franjo Ivanović",
-        "Ismaëlo Ganiou",
-        "Maik Nawrocki",
         "Jhoanner Chávez",
+        "Maik Nawrocki",
+        "Ismaëlo Ganiou",
         "Abdallah Sima",
         "Odsonne Édouard"
       ],
@@ -1293,7 +1172,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Lens",
       "away_team": "Marseille",
@@ -1314,16 +1193,16 @@
         "Nayef Aguerd",
         "Ulisses Garcia",
         "Pierre-Emile Højbjerg",
-        "Angel Gomes",
-        "Himad Abdelli",
         "Tochukwu Nnadi",
+        "Himad Abdelli",
         "Igor Paixão",
-        "Amine Gouiri"
+        "Amine Gouiri",
+        "Tadjidine Mmadi"
       ],
       "bench_names": [],
       "unavailable_names": [
-        "Derek Cornelius",
-        "Emerson"
+        "Emerson",
+        "Derek Cornelius"
       ],
       "primary": "Amine Gouiri",
       "secondary": "Himad Abdelli",
@@ -1342,7 +1221,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Racing Club De Lens",
       "away_team": "Olympique Marseille",
@@ -1372,9 +1251,9 @@
       "bench_names": [],
       "unavailable_names": [
         "Franjo Ivanović",
-        "Ismaëlo Ganiou",
-        "Maik Nawrocki",
         "Jhoanner Chávez",
+        "Maik Nawrocki",
+        "Ismaëlo Ganiou",
         "Abdallah Sima",
         "Odsonne Édouard"
       ],
@@ -1395,7 +1274,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Racing Club De Lens",
       "away_team": "Olympique Marseille",
@@ -1416,16 +1295,16 @@
         "Nayef Aguerd",
         "Ulisses Garcia",
         "Pierre-Emile Højbjerg",
-        "Angel Gomes",
-        "Himad Abdelli",
         "Tochukwu Nnadi",
+        "Himad Abdelli",
         "Igor Paixão",
-        "Amine Gouiri"
+        "Amine Gouiri",
+        "Tadjidine Mmadi"
       ],
       "bench_names": [],
       "unavailable_names": [
-        "Derek Cornelius",
-        "Emerson"
+        "Emerson",
+        "Derek Cornelius"
       ],
       "primary": "Amine Gouiri",
       "secondary": "Himad Abdelli",
@@ -1444,7 +1323,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Rennes",
       "away_team": "Lille",
@@ -1463,7 +1342,7 @@
         "Abdelhamid Aït Boudlal",
         "Charlie Cresswell",
         "Anthony Rouault",
-        "Przemysław Frankowski",
+        "Bryan Reynolds",
         "Sebastian Szymański",
         "Valentin Rongier",
         "Adrien Thomasson",
@@ -1492,7 +1371,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Rennes",
       "away_team": "Lille",
@@ -1508,8 +1387,8 @@
       "team_lineup_status": "unknown",
       "starter_names": [
         "Berke Özer",
-        "Maxima Goffi",
         "Nathan Ngoy",
+        "Tanguy Nianzou",
         "Alexsandro Ribeiro",
         "Romain Perraud",
         "Ngal Ayel Mukau",
@@ -1543,7 +1422,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Stade Brest 29",
       "away_team": "Olympique Lyon",
@@ -1592,7 +1471,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Stade Brest 29",
       "away_team": "Olympique Lyon",
@@ -1612,21 +1491,21 @@
         "Felix Bacher",
         "Ruben Kluivert",
         "Abner",
-        "Mads Bidstrup",
+        "Noah Nartey",
         "Tanner Tessmann",
         "Corentin Tolisso",
         "Julien Duranville",
-        "Kaïl Boudache",
-        "Keito Nakamura"
+        "Khalis Merah",
+        "Kaïl Boudache"
       ],
       "bench_names": [],
       "unavailable_names": [
-        "Loïs Openda",
         "Moussa Niakhaté",
         "Steeve Kango",
         "Mohamed Ouédraogo",
         "Tyler Morton",
         "Ernest Nuamah",
+        "Loïs Openda",
         "Pavel Šulc"
       ],
       "primary": "Corentin Tolisso",
@@ -1646,7 +1525,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Stade Rennais FC",
       "away_team": "Lille OSC",
@@ -1665,7 +1544,7 @@
         "Abdelhamid Aït Boudlal",
         "Charlie Cresswell",
         "Anthony Rouault",
-        "Przemysław Frankowski",
+        "Bryan Reynolds",
         "Sebastian Szymański",
         "Valentin Rongier",
         "Adrien Thomasson",
@@ -1694,7 +1573,7 @@
     },
     {
       "league": "ligue-1",
-      "compared_at": "2026-11-06T23:06:52Z",
+      "compared_at": "2026-11-07T13:35:21Z",
       "match_date": "2026-11-08",
       "home_team": "Stade Rennais FC",
       "away_team": "Lille OSC",
@@ -1710,8 +1589,8 @@
       "team_lineup_status": "unknown",
       "starter_names": [
         "Berke Özer",
-        "Maxima Goffi",
         "Nathan Ngoy",
+        "Tanguy Nianzou",
         "Alexsandro Ribeiro",
         "Romain Perraud",
         "Ngal Ayel Mukau",
