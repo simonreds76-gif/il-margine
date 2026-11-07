@@ -1,11 +1,81 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-06T22:24:39.139651+00:00",
+  "generatedAt": "2026-11-07T16:27:18.644708+00:00",
   "coverageStart": "2026-10-17",
   "checkedThrough": "2026-11-06",
-  "captureStatus": "complete",
-  "matchesChecked": 5,
+  "captureStatus": "partial",
+  "matchesChecked": 4,
   "articles": [
+    {
+      "id": "fotmob:5881221:2994436617",
+      "slug": "2026-11-07-marvin-pieringer-5881221-2994436617",
+      "matchId": "5881221",
+      "eventId": "2994436617",
+      "date": "2026-11-07",
+      "kickoff": "2026-11-07T14:30:00.000Z",
+      "league": "bundesliga",
+      "leagueLabel": "Bundesliga",
+      "round": "9",
+      "player": "Marvin Pieringer",
+      "playerId": 956913,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/956913.png",
+      "club": "SC Paderborn 07",
+      "clubSlug": "sc-paderborn-07",
+      "clubUrl": "/penalty-takers/bundesliga/sc-paderborn-07",
+      "crest": "/team-logos/bundesliga/sc-paderborn-07.png",
+      "opponent": "Eintracht Frankfurt",
+      "home": "Paderborn",
+      "away": "Eintracht Frankfurt",
+      "homeScore": 2,
+      "awayScore": 2,
+      "minute": "73",
+      "outcome": "scored",
+      "title": "Marvin Pieringer scores from the spot against Eintracht Frankfurt",
+      "sentences": [
+        "Marvin Pieringer converted a penalty for SC Paderborn 07 in minute 73 against Eintracht Frankfurt.",
+        "The match finished Paderborn 2–2 Eintracht Frankfurt."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Marvin Pieringer",
+        "concededBy": "Lilian Brassier",
+        "sentence": "Marvin Pieringer won the penalty after a foul by Lilian Brassier inside the area.",
+        "evidenceIds": [
+          "2994435385",
+          "2994435395"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 25,
+        "goals": 1,
+        "shots": 1,
+        "onTarget": 1,
+        "chances": 0
+      },
+      "keeper": "Noah Atubolu",
+      "moment": {
+        "before": [
+          1,
+          1
+        ],
+        "after": [
+          2,
+          1
+        ]
+      },
+      "paragraphs": [
+        "Marvin Pieringer converted a penalty in the 73rd minute of SC Paderborn 07’s 2–2 draw with Eintracht Frankfurt.",
+        "Marvin Pieringer won the penalty after a foul by Lilian Brassier inside the area. The goal put the team ahead at 2–1.",
+        "Marvin Pieringer finished with 1 goal and 1 shot, including 1 on target, in 25 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/paderborn-vs-eintracht-frankfurt/2rdkqr#5881221",
+      "eventHash": "f2a723084172573bfbdb40292d8eab9b196c0d87feec93c48d2d6b3db6744802",
+      "sourceHash": "5df079102700967d581f9f0d049807c5091cea847690873a6785d73a306d212d",
+      "publishedAt": "2026-11-07T16:27:18.644708+00:00",
+      "updatedAt": "2026-11-07T16:27:18.644708+00:00"
+    },
     {
       "id": "fotmob:5868128:2993851747",
       "slug": "2026-11-06-ruben-vargas-5868128-2993851747",
