@@ -29,13 +29,14 @@
     "5749727": "2026-11-04",
     "5749728": "2026-11-04",
     "5749729": "2026-11-05",
-    "5749730": "2026-11-05",
+    "5749730": "2026-11-07",
     "5749731": "2026-11-06",
     "5749732": "2026-11-06",
     "5749733": "2026-11-06",
     "5749734": "2026-11-06",
-    "5749735": "2026-11-05",
+    "5749735": "2026-11-07",
     "5749736": "2026-11-06",
+    "5749737": "2026-11-07",
     "5749738": "2026-11-06",
     "5749739": "2026-11-06",
     "5795475": "2026-10-26",
@@ -59,11 +60,12 @@
     "5795493": "2026-11-02",
     "5795494": "2026-11-02",
     "5795495": "2026-11-06",
-    "5795496": "2026-11-05",
+    "5795496": "2026-11-07",
     "5795497": "2026-11-06",
     "5795498": "2026-11-06",
     "5795499": "2026-11-06",
     "5795500": "2026-11-06",
+    "5795501": "2026-11-07",
     "5795502": "2026-11-06",
     "5795503": "2026-11-06",
     "5795504": "2026-11-06",
@@ -84,15 +86,15 @@
     "5802970": "2026-11-02",
     "5802971": "2026-11-02",
     "5802972": "2026-11-03",
-    "5802973": "2026-11-05",
+    "5802973": "2026-11-07",
     "5802974": "2026-11-06",
     "5802975": "2026-11-06",
     "5802976": "2026-11-06",
-    "5802977": "2026-11-05",
-    "5802978": "2026-11-05",
+    "5802977": "2026-11-07",
+    "5802978": "2026-11-07",
     "5802979": "2026-11-06",
     "5802980": "2026-11-06",
-    "5802981": "2026-11-05",
+    "5802981": "2026-11-07",
     "5868067": "2026-10-29",
     "5868091": "2026-10-25",
     "5868092": "2026-10-26",
@@ -113,10 +115,11 @@
     "5868108": "2026-11-02",
     "5868109": "2026-11-03",
     "5868110": "2026-10-31",
-    "5868111": "2026-11-05",
+    "5868111": "2026-11-07",
     "5868112": "2026-11-06",
     "5868113": "2026-11-06",
-    "5868115": "2026-11-05",
+    "5868114": "2026-11-07",
+    "5868115": "2026-11-07",
     "5868116": "2026-11-06",
     "5868117": "2026-11-06",
     "5868118": "2026-11-06",
@@ -141,7 +144,9 @@
     "5881205": "2026-10-31",
     "5881206": "2026-11-06",
     "5881207": "2026-11-06",
+    "5881208": "2026-11-07",
     "5881209": "2026-11-06",
+    "5881210": "2026-11-07",
     "5881211": "2026-11-06",
     "5881212": "2026-11-06",
     "5881213": "2026-11-06",
@@ -152,8 +157,8 @@
     "5802989": "2026-11-06",
     "5749749": "2026-11-06"
   },
-  "updated_at": "2026-11-06T23:04:34.212231+00:00",
-  "checked_this_run": 16,
+  "updated_at": "2026-11-07T02:19:46.514210+00:00",
+  "checked_this_run": 14,
   "errors": [],
   "fixtures": {
     "5749700": {
@@ -1551,7 +1556,7 @@
           "name": "Inter"
         },
         "status": {
-          "utcTime": "2026-10-31T19:45:00.000Z",
+          "utcTime": "2026-10-31T19:45:00+00:00",
           "halfs": {
             "firstHalfStarted": "31.10.2026 20:49:28",
             "secondHalfStarted": "31.10.2026 21:53:14"
@@ -1574,10 +1579,10 @@
       "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-05T23:49:35.550280+00:00",
-      "attempts": 5,
+      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
+      "attempts": 6,
       "reason": "verified_no_penalty",
-      "verified_at": "2026-11-05T23:49:35.550280+00:00",
+      "verified_at": "2026-11-07T02:19:46.514210+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -1690,7 +1695,7 @@
           "name": "Venezia"
         },
         "status": {
-          "utcTime": "2026-11-01T11:30:00+00:00",
+          "utcTime": "2026-11-01T11:30:00.000Z",
           "halfs": {
             "firstHalfStarted": "01.11.2026 12:32:18",
             "secondHalfStarted": "01.11.2026 13:35:47"
@@ -1736,7 +1741,7 @@
           "name": "Torino"
         },
         "status": {
-          "utcTime": "2026-11-01T14:00:00+00:00",
+          "utcTime": "2026-11-01T14:00:00.000Z",
           "halfs": {
             "firstHalfStarted": "01.11.2026 15:02:23",
             "secondHalfStarted": "01.11.2026 16:07:05"
@@ -1807,10 +1812,10 @@
       "state": "verified",
       "first_seen": "2026-11-01T11:43:43.467093+00:00",
       "pending_since": "2026-11-01T11:43:43.467093+00:00",
-      "last_attempt": "2026-11-05T23:49:35.550280+00:00",
-      "attempts": 4,
+      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
+      "attempts": 5,
       "reason": "verified_no_penalty",
-      "verified_at": "2026-11-05T23:49:35.550280+00:00",
+      "verified_at": "2026-11-07T02:19:46.514210+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -1831,7 +1836,7 @@
           "redCards": 1
         },
         "status": {
-          "utcTime": "2026-11-01T14:00:00+00:00",
+          "utcTime": "2026-11-01T14:00:00.000Z",
           "numberOfAwayRedCards": 1,
           "halfs": {
             "firstHalfStarted": "01.11.2026 15:01:42",
@@ -1878,7 +1883,7 @@
           "name": "Genoa"
         },
         "status": {
-          "utcTime": "2026-11-01T17:00:00.000Z",
+          "utcTime": "2026-11-01T17:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "01.11.2026 18:01:28",
             "secondHalfStarted": "01.11.2026 19:08:04"
@@ -1898,13 +1903,13 @@
         }
       },
       "date": "2026-11-01",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-01T11:43:43.467093+00:00",
       "pending_since": "2026-11-01T11:43:43.467093+00:00",
-      "last_attempt": "2026-11-05T18:15:16.010677+00:00",
-      "attempts": 4,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-05T18:15:16.010677+00:00",
+      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
+      "attempts": 5,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-07T02:19:46.514210+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -3057,7 +3062,7 @@
           "shortName": "Fulham"
         },
         "status": {
-          "utcTime": "2026-10-31T20:00:00.000Z",
+          "utcTime": "2026-10-31T20:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "31.10.2026 21:01:22",
             "secondHalfStarted": "31.10.2026 22:06:33"
@@ -3080,10 +3085,10 @@
       "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-05T23:49:35.550280+00:00",
-      "attempts": 5,
+      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
+      "attempts": 6,
       "reason": "penalties_verified",
-      "verified_at": "2026-11-05T23:49:35.550280+00:00",
+      "verified_at": "2026-11-07T02:19:46.514210+00:00",
       "penalty_count": 1,
       "next_attempt": ""
     },
@@ -3296,7 +3301,7 @@
           "name": "Arsenal"
         },
         "status": {
-          "utcTime": "2026-11-01T16:30:00.000Z",
+          "utcTime": "2026-11-01T16:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "01.11.2026 17:30:43",
             "secondHalfStarted": "01.11.2026 18:34:38"
@@ -3316,13 +3321,13 @@
         }
       },
       "date": "2026-11-01",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-01T11:43:43.467093+00:00",
       "pending_since": "2026-11-01T11:43:43.467093+00:00",
-      "last_attempt": "2026-11-05T18:15:16.010677+00:00",
-      "attempts": 4,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-05T18:15:16.010677+00:00",
+      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
+      "attempts": 5,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-07T02:19:46.514210+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -4309,7 +4314,7 @@
           "shortName": "PSG"
         },
         "status": {
-          "utcTime": "2026-10-30T18:00:00.000Z",
+          "utcTime": "2026-10-30T18:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "30.10.2026 19:00:36",
             "secondHalfStarted": "30.10.2026 20:04:29"
@@ -4332,10 +4337,10 @@
       "state": "verified",
       "first_seen": "2026-10-30T01:55:45.336047+00:00",
       "pending_since": "2026-10-30T01:55:45.336047+00:00",
-      "last_attempt": "2026-11-05T23:49:35.550280+00:00",
-      "attempts": 6,
+      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
+      "attempts": 7,
       "reason": "verified_no_penalty",
-      "verified_at": "2026-11-05T23:49:35.550280+00:00",
+      "verified_at": "2026-11-07T02:19:46.514210+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -4447,7 +4452,7 @@
           "name": "Angers"
         },
         "status": {
-          "utcTime": "2026-11-01T16:15:00+00:00",
+          "utcTime": "2026-11-01T16:15:00.000Z",
           "halfs": {
             "firstHalfStarted": "01.11.2026 17:15:14",
             "secondHalfStarted": "01.11.2026 18:18:10"
@@ -4516,10 +4521,10 @@
       "state": "verified",
       "first_seen": "2026-11-01T11:43:43.467093+00:00",
       "pending_since": "2026-11-01T11:43:43.467093+00:00",
-      "last_attempt": "2026-11-05T23:49:35.550280+00:00",
-      "attempts": 4,
+      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
+      "attempts": 5,
       "reason": "verified_no_penalty",
-      "verified_at": "2026-11-05T23:49:35.550280+00:00",
+      "verified_at": "2026-11-07T02:19:46.514210+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -4539,7 +4544,7 @@
           "name": "Rennes"
         },
         "status": {
-          "utcTime": "2026-10-30T18:00:00.000Z",
+          "utcTime": "2026-10-30T18:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "30.10.2026 19:00:16",
             "secondHalfStarted": "30.10.2026 20:04:53"
@@ -4562,10 +4567,10 @@
       "state": "verified",
       "first_seen": "2026-10-30T01:55:45.336047+00:00",
       "pending_since": "2026-10-30T01:55:45.336047+00:00",
-      "last_attempt": "2026-11-05T23:49:35.550280+00:00",
-      "attempts": 6,
+      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
+      "attempts": 7,
       "reason": "penalties_verified",
-      "verified_at": "2026-11-05T23:49:35.550280+00:00",
+      "verified_at": "2026-11-07T02:19:46.514210+00:00",
       "penalty_count": 3,
       "next_attempt": ""
     },
@@ -4585,7 +4590,7 @@
           "name": "Monaco"
         },
         "status": {
-          "utcTime": "2026-11-01T16:15:00+00:00",
+          "utcTime": "2026-11-01T16:15:00.000Z",
           "halfs": {
             "firstHalfStarted": "01.11.2026 17:15:11",
             "secondHalfStarted": "01.11.2026 18:19:20"
@@ -4632,7 +4637,7 @@
           "redCards": 1
         },
         "status": {
-          "utcTime": "2026-11-01T14:00:00+00:00",
+          "utcTime": "2026-11-01T14:00:00.000Z",
           "numberOfAwayRedCards": 1,
           "halfs": {
             "firstHalfStarted": "01.11.2026 15:00:54",
@@ -4679,7 +4684,7 @@
           "name": "Le Mans"
         },
         "status": {
-          "utcTime": "2026-10-31T19:45:00.000Z",
+          "utcTime": "2026-10-31T19:45:00+00:00",
           "halfs": {
             "firstHalfStarted": "31.10.2026 20:44:52",
             "secondHalfStarted": "31.10.2026 21:48:26"
@@ -4702,10 +4707,10 @@
       "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-05T23:49:35.550280+00:00",
-      "attempts": 5,
+      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
+      "attempts": 6,
       "reason": "verified_no_penalty",
-      "verified_at": "2026-11-05T23:49:35.550280+00:00",
+      "verified_at": "2026-11-07T02:19:46.514210+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -5718,10 +5723,10 @@
       "state": "verified",
       "first_seen": "2026-11-01T11:43:43.467093+00:00",
       "pending_since": "2026-11-01T11:43:43.467093+00:00",
-      "last_attempt": "2026-11-05T23:49:35.550280+00:00",
-      "attempts": 4,
+      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
+      "attempts": 5,
       "reason": "penalties_verified",
-      "verified_at": "2026-11-05T23:49:35.550280+00:00",
+      "verified_at": "2026-11-07T02:19:46.514210+00:00",
       "penalty_count": 1,
       "next_attempt": ""
     },
@@ -5833,7 +5838,7 @@
           "name": "Valencia"
         },
         "status": {
-          "utcTime": "2026-11-01T17:30:00.000Z",
+          "utcTime": "2026-11-01T17:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "01.11.2026 18:33:19",
             "secondHalfStarted": "01.11.2026 19:35:26"
@@ -5853,13 +5858,13 @@
         }
       },
       "date": "2026-11-01",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-01T11:43:43.467093+00:00",
       "pending_since": "2026-11-01T11:43:43.467093+00:00",
-      "last_attempt": "2026-11-05T18:15:16.010677+00:00",
-      "attempts": 4,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-05T18:15:16.010677+00:00",
+      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
+      "attempts": 5,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-07T02:19:46.514210+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -5879,7 +5884,7 @@
           "name": "Deportivo Alavés"
         },
         "status": {
-          "utcTime": "2026-10-31T20:00:00.000Z",
+          "utcTime": "2026-10-31T20:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "31.10.2026 21:02:58",
             "secondHalfStarted": "31.10.2026 22:10:45"
@@ -5902,10 +5907,10 @@
       "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-05T23:49:35.550280+00:00",
-      "attempts": 5,
+      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
+      "attempts": 6,
       "reason": "verified_no_penalty",
-      "verified_at": "2026-11-05T23:49:35.550280+00:00",
+      "verified_at": "2026-11-07T02:19:46.514210+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -5926,7 +5931,7 @@
           "redCards": 1
         },
         "status": {
-          "utcTime": "2026-11-01T13:00:00+00:00",
+          "utcTime": "2026-11-01T13:00:00.000Z",
           "numberOfAwayRedCards": 1,
           "halfs": {
             "firstHalfStarted": "01.11.2026 14:04:45",
@@ -6019,7 +6024,7 @@
           "name": "Real Madrid"
         },
         "status": {
-          "utcTime": "2026-11-01T15:15:00+00:00",
+          "utcTime": "2026-11-01T15:15:00.000Z",
           "halfs": {
             "firstHalfStarted": "01.11.2026 16:18:07",
             "secondHalfStarted": "01.11.2026 17:24:07"
@@ -7104,7 +7109,7 @@
           "shortName": "Dortmund"
         },
         "status": {
-          "utcTime": "2026-10-31T17:30:00.000Z",
+          "utcTime": "2026-10-31T17:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "31.10.2026 18:31:57",
             "secondHalfStarted": "31.10.2026 19:39:10"
@@ -7124,13 +7129,13 @@
         }
       },
       "date": "2026-10-31",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-10-31T01:34:15.712008+00:00",
       "pending_since": "2026-10-31T01:34:15.712008+00:00",
-      "last_attempt": "2026-11-05T18:15:16.010677+00:00",
-      "attempts": 5,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-05T18:15:16.010677+00:00",
+      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
+      "attempts": 6,
+      "reason": "penalties_verified",
+      "verified_at": "2026-11-07T02:19:46.514210+00:00",
       "penalty_count": 1,
       "next_attempt": ""
     },
@@ -7199,7 +7204,7 @@
           "name": "Hamburger SV"
         },
         "status": {
-          "utcTime": "2026-11-01T16:30:00.000Z",
+          "utcTime": "2026-11-01T16:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "01.11.2026 17:30:33",
             "secondHalfStarted": "01.11.2026 18:35:44"
@@ -7219,13 +7224,13 @@
         }
       },
       "date": "2026-11-01",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-01T11:43:43.467093+00:00",
       "pending_since": "2026-11-01T11:43:43.467093+00:00",
-      "last_attempt": "2026-11-05T18:15:16.010677+00:00",
-      "attempts": 4,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-05T18:15:16.010677+00:00",
+      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
+      "attempts": 5,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-07T02:19:46.514210+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -7344,7 +7349,7 @@
           "shortName": "Köln"
         },
         "status": {
-          "utcTime": "2026-11-01T14:30:00+00:00",
+          "utcTime": "2026-11-01T14:30:00.000Z",
           "halfs": {
             "firstHalfStarted": "01.11.2026 15:30:16",
             "secondHalfStarted": "01.11.2026 16:34:00"
@@ -7439,7 +7444,7 @@
           "shortName": "Coventry"
         },
         "status": {
-          "utcTime": "2026-11-06T20:00:00+00:00",
+          "utcTime": "2026-11-06T20:00:00.000Z",
           "halfs": {
             "firstHalfStarted": "06.11.2026 21:02:08",
             "secondHalfStarted": "06.11.2026 22:04:09"
@@ -7487,7 +7492,7 @@
           "shortName": "M'gladbach"
         },
         "status": {
-          "utcTime": "2026-11-06T19:30:00+00:00",
+          "utcTime": "2026-11-06T19:30:00.000Z",
           "numberOfAwayRedCards": 1,
           "halfs": {
             "firstHalfStarted": "06.11.2026 20:30:14",
@@ -7534,7 +7539,7 @@
           "name": "Deportivo Alavés"
         },
         "status": {
-          "utcTime": "2026-11-06T20:00:00+00:00",
+          "utcTime": "2026-11-06T20:00:00.000Z",
           "halfs": {
             "firstHalfStarted": "06.11.2026 21:01:58",
             "secondHalfStarted": "06.11.2026 22:08:18"
@@ -7580,7 +7585,7 @@
           "name": "Strasbourg"
         },
         "status": {
-          "utcTime": "2026-11-06T19:45:00+00:00",
+          "utcTime": "2026-11-06T19:45:00.000Z",
           "halfs": {
             "firstHalfStarted": "06.11.2026 20:46:09",
             "secondHalfStarted": "06.11.2026 21:50:15"
@@ -7626,7 +7631,7 @@
           "name": "Udinese"
         },
         "status": {
-          "utcTime": "2026-11-06T19:45:00+00:00",
+          "utcTime": "2026-11-06T19:45:00.000Z",
           "halfs": {
             "firstHalfStarted": "06.11.2026 20:47:58",
             "secondHalfStarted": "06.11.2026 21:48:35"
@@ -7655,6 +7660,612 @@
       "verified_at": "2026-11-06T23:04:34.212231+00:00",
       "penalty_count": 0,
       "next_attempt": ""
+    },
+    "5795511": {
+      "league": "epl",
+      "league_id": 47,
+      "match": {
+        "id": 5795511,
+        "home": {
+          "id": 8463,
+          "score": 0,
+          "name": "Leeds United",
+          "shortName": "Leeds"
+        },
+        "away": {
+          "id": 8586,
+          "score": 0,
+          "name": "Tottenham Hotspur",
+          "shortName": "Tottenham"
+        },
+        "status": {
+          "utcTime": "2026-11-07T12:30:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 13:30:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5795505": {
+      "league": "epl",
+      "league_id": 47,
+      "match": {
+        "id": 5795505,
+        "home": {
+          "id": 9825,
+          "score": 0,
+          "name": "Arsenal"
+        },
+        "away": {
+          "id": 8667,
+          "score": 0,
+          "name": "Hull City",
+          "shortName": "Hull"
+        },
+        "status": {
+          "utcTime": "2026-11-07T15:00:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 16:00:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5795509": {
+      "league": "epl",
+      "league_id": 47,
+      "match": {
+        "id": 5795509,
+        "home": {
+          "id": 9879,
+          "score": 0,
+          "name": "Fulham",
+          "shortName": "Fulham"
+        },
+        "away": {
+          "id": 10261,
+          "score": 0,
+          "name": "Newcastle United",
+          "shortName": "Newcastle"
+        },
+        "status": {
+          "utcTime": "2026-11-07T15:00:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 16:00:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5795513": {
+      "league": "epl",
+      "league_id": 47,
+      "match": {
+        "id": 5795513,
+        "home": {
+          "id": 10203,
+          "score": 0,
+          "name": "Nottingham Forest",
+          "shortName": "Nottm Forest"
+        },
+        "away": {
+          "id": 8456,
+          "score": 0,
+          "name": "Manchester City",
+          "shortName": "Man City"
+        },
+        "status": {
+          "utcTime": "2026-11-07T17:30:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 18:30:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5881215": {
+      "league": "bundesliga",
+      "league_id": 54,
+      "match": {
+        "id": 5881215,
+        "home": {
+          "id": 9789,
+          "score": 0,
+          "name": "Borussia Dortmund",
+          "shortName": "Dortmund"
+        },
+        "away": {
+          "id": 8232,
+          "score": 0,
+          "name": "Elversberg"
+        },
+        "status": {
+          "utcTime": "2026-11-07T14:30:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 15:30:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5881220": {
+      "league": "bundesliga",
+      "league_id": 54,
+      "match": {
+        "id": 5881220,
+        "home": {
+          "id": 9905,
+          "score": 0,
+          "name": "Mainz 05",
+          "shortName": "Mainz"
+        },
+        "away": {
+          "id": 9823,
+          "score": 0,
+          "name": "Bayern München",
+          "shortName": "Bayern München"
+        },
+        "status": {
+          "utcTime": "2026-11-07T14:30:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 15:30:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5881221": {
+      "league": "bundesliga",
+      "league_id": 54,
+      "match": {
+        "id": 5881221,
+        "home": {
+          "id": 8460,
+          "score": 0,
+          "name": "Paderborn",
+          "shortName": "Paderborn"
+        },
+        "away": {
+          "id": 9810,
+          "score": 0,
+          "name": "Eintracht Frankfurt",
+          "shortName": "Frankfurt"
+        },
+        "status": {
+          "utcTime": "2026-11-07T14:30:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 15:30:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5881222": {
+      "league": "bundesliga",
+      "league_id": 54,
+      "match": {
+        "id": 5881222,
+        "home": {
+          "id": 178475,
+          "score": 0,
+          "name": "RB Leipzig",
+          "shortName": "RB Leipzig"
+        },
+        "away": {
+          "id": 8406,
+          "score": 0,
+          "name": "Augsburg",
+          "shortName": "Augsburg"
+        },
+        "status": {
+          "utcTime": "2026-11-07T14:30:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 15:30:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5881223": {
+      "league": "bundesliga",
+      "league_id": 54,
+      "match": {
+        "id": 5881223,
+        "home": {
+          "id": 10269,
+          "score": 0,
+          "name": "VfB Stuttgart"
+        },
+        "away": {
+          "id": 8697,
+          "score": 0,
+          "name": "Werder Bremen",
+          "shortName": "Werder Bremen"
+        },
+        "status": {
+          "utcTime": "2026-11-07T17:30:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 18:30:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5868125": {
+      "league": "la-liga",
+      "league_id": 87,
+      "match": {
+        "id": 5868125,
+        "home": {
+          "id": 9864,
+          "score": 0,
+          "name": "Málaga"
+        },
+        "away": {
+          "id": 8696,
+          "score": 0,
+          "name": "Racing Santander"
+        },
+        "status": {
+          "utcTime": "2026-11-07T13:00:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 14:00:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5868124": {
+      "league": "la-liga",
+      "league_id": 87,
+      "match": {
+        "id": 5868124,
+        "home": {
+          "id": 8558,
+          "score": 0,
+          "name": "Espanyol"
+        },
+        "away": {
+          "id": 9783,
+          "score": 0,
+          "name": "Deportivo A Coruña"
+        },
+        "status": {
+          "utcTime": "2026-11-07T15:15:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 16:15:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5868126": {
+      "league": "la-liga",
+      "league_id": 87,
+      "match": {
+        "id": 5868126,
+        "home": {
+          "id": 8371,
+          "score": 0,
+          "name": "Osasuna"
+        },
+        "away": {
+          "id": 8315,
+          "score": 0,
+          "name": "Athletic Club"
+        },
+        "status": {
+          "utcTime": "2026-11-07T17:30:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 18:30:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5868129": {
+      "league": "la-liga",
+      "league_id": 87,
+      "match": {
+        "id": 5868129,
+        "home": {
+          "id": 10267,
+          "score": 0,
+          "name": "Valencia"
+        },
+        "away": {
+          "id": 8633,
+          "score": 0,
+          "name": "Real Madrid"
+        },
+        "status": {
+          "utcTime": "2026-11-07T20:00:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 21:00:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5802983": {
+      "league": "ligue-1",
+      "league_id": 53,
+      "match": {
+        "id": 5802983,
+        "home": {
+          "id": 8583,
+          "score": 0,
+          "name": "Auxerre"
+        },
+        "away": {
+          "id": 6379,
+          "score": 0,
+          "name": "Paris FC"
+        },
+        "status": {
+          "utcTime": "2026-11-07T18:00:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 19:00:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5802987": {
+      "league": "ligue-1",
+      "league_id": 53,
+      "match": {
+        "id": 5802987,
+        "home": {
+          "id": 9847,
+          "score": 0,
+          "name": "Paris Saint-Germain",
+          "shortName": "PSG"
+        },
+        "away": {
+          "id": 10242,
+          "score": 0,
+          "name": "Troyes"
+        },
+        "status": {
+          "utcTime": "2026-11-07T20:05:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 21:05:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5749741": {
+      "league": "serie-a",
+      "league_id": 55,
+      "match": {
+        "id": 5749741,
+        "home": {
+          "id": 8529,
+          "score": 0,
+          "name": "Cagliari"
+        },
+        "away": {
+          "id": 9891,
+          "score": 0,
+          "name": "Frosinone"
+        },
+        "status": {
+          "utcTime": "2026-11-07T14:00:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 15:00:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5749748": {
+      "league": "serie-a",
+      "league_id": 55,
+      "match": {
+        "id": 5749748,
+        "home": {
+          "id": 9804,
+          "score": 0,
+          "name": "Torino"
+        },
+        "away": {
+          "id": 9888,
+          "score": 0,
+          "name": "Lecce"
+        },
+        "status": {
+          "utcTime": "2026-11-07T14:00:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 15:00:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5749747": {
+      "league": "serie-a",
+      "league_id": 55,
+      "match": {
+        "id": 5749747,
+        "home": {
+          "id": 10167,
+          "score": 0,
+          "name": "Parma",
+          "shortName": "Parma"
+        },
+        "away": {
+          "id": 9857,
+          "score": 0,
+          "name": "Bologna"
+        },
+        "status": {
+          "utcTime": "2026-11-07T17:00:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 18:00:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
+    },
+    "5749740": {
+      "league": "serie-a",
+      "league_id": 55,
+      "match": {
+        "id": 5749740,
+        "home": {
+          "id": 8686,
+          "score": 0,
+          "name": "Roma"
+        },
+        "away": {
+          "id": 7943,
+          "score": 0,
+          "name": "Sassuolo"
+        },
+        "status": {
+          "utcTime": "2026-11-07T19:45:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "07.11.2026 20:45:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-07",
+      "state": "pending",
+      "first_seen": "2026-11-07T02:19:46.514210+00:00",
+      "pending_since": "2026-11-07T02:19:46.514210+00:00"
     }
   },
   "schema_version": 2,
@@ -7909,7 +8520,7 @@
     },
     "20261101": {
       "ok": true,
-      "checked_at": "2026-11-05T23:36:36.308899+00:00",
+      "checked_at": "2026-11-07T02:19:46.514210+00:00",
       "expected": 16,
       "match_ids": [
         "5749733",
@@ -7967,7 +8578,7 @@
     },
     "20261106": {
       "ok": true,
-      "checked_at": "2026-11-06T23:04:34.212231+00:00",
+      "checked_at": "2026-11-07T02:19:46.514210+00:00",
       "expected": 5,
       "match_ids": [
         "5749749",
@@ -7977,13 +8588,40 @@
         "5881218"
       ],
       "missing_known_ids": []
+    },
+    "20261107": {
+      "ok": true,
+      "checked_at": "2026-11-07T02:19:46.514210+00:00",
+      "expected": 19,
+      "match_ids": [
+        "5749740",
+        "5749741",
+        "5749747",
+        "5749748",
+        "5795505",
+        "5795509",
+        "5795511",
+        "5795513",
+        "5802983",
+        "5802987",
+        "5868124",
+        "5868125",
+        "5868126",
+        "5868129",
+        "5881215",
+        "5881220",
+        "5881221",
+        "5881222",
+        "5881223"
+      ],
+      "missing_known_ids": []
     }
   },
   "coverage": {
-    "expected": 156,
-    "verified": 151,
-    "pending": 0,
-    "reverify": 5,
+    "expected": 175,
+    "verified": 156,
+    "pending": 19,
+    "reverify": 0,
     "deferred": 0,
     "overdue": 0,
     "stalled": 0,
