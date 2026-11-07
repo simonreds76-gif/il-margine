@@ -2230,7 +2230,7 @@
       "followUpDue": "2026-11-07T18:27:18.644708+00:00"
     },
     "5881222": {
-      "status": "pending",
+      "status": "verified",
       "fixture": {
         "matchId": "5881222",
         "leagueId": 54,
@@ -2239,9 +2239,12 @@
         "kickoff": "2026-11-07T14:30:00.000Z",
         "score": "5 - 2"
       },
-      "attemptedAt": "2026-11-07T16:27:18.644708+00:00",
-      "finalDataPendingSince": "2026-11-07T16:27:18.644708+00:00",
-      "error": "Match detail is not final yet"
+      "attemptedAt": "2026-11-07T16:39:08.562718+00:00",
+      "verifiedAt": "2026-11-07T16:39:08.562718+00:00",
+      "firstVerifiedAt": "2026-11-07T16:39:08.562718+00:00",
+      "sourceObservedAt": "2026-11-07T16:39:08.562718+00:00",
+      "sourceHash": "558b55e94825aac061f5af6f5c220a730c04c7cf11400e1afe393ce12acb4357",
+      "followUpDue": "2026-11-07T18:39:08.562718+00:00"
     },
     "5749741": {
       "status": "verified",
@@ -2276,6 +2279,20 @@
       "sourceObservedAt": "2026-11-07T16:27:18.644708+00:00",
       "sourceHash": "0bdb9b1ff567d442815d1b6b7e5e9d8b0ef330ec6183a3821db43e01de7081bc",
       "followUpDue": "2026-11-07T18:27:18.644708+00:00"
+    },
+    "5881220": {
+      "status": "pending",
+      "fixture": {
+        "matchId": "5881220",
+        "leagueId": 54,
+        "homeId": "9905",
+        "awayId": "9823",
+        "kickoff": "2026-11-07T14:30:00.000Z",
+        "score": "1 - 2"
+      },
+      "attemptedAt": "2026-11-07T16:39:08.562718+00:00",
+      "finalDataPendingSince": "2026-11-07T16:39:08.562718+00:00",
+      "error": "Match detail is not final yet"
     }
   }
 }
