@@ -289,12 +289,12 @@
       "home_subs": [
         "Mikel Merino",
         "Viktor Gyökeres",
-        "Kepa Arrizabalaga",
-        "Ben White",
-        "Cristhian Mosquera",
         "Piero Hincapié",
         "Eberechi Eze",
         "Martín Zubimendi",
+        "Kepa Arrizabalaga",
+        "Ben White",
+        "Cristhian Mosquera",
         "Myles Lewis-Skelly"
       ],
       "home_substitute_entries": [
@@ -307,21 +307,6 @@
           "name": "Viktor Gyökeres",
           "player_id": "664500",
           "role_group": "FW"
-        },
-        {
-          "name": "Kepa Arrizabalaga",
-          "player_id": "317564",
-          "role_group": "GK"
-        },
-        {
-          "name": "Ben White",
-          "player_id": "776151",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Cristhian Mosquera",
-          "player_id": "1298907",
-          "role_group": "DEF"
         },
         {
           "name": "Piero Hincapié",
@@ -339,6 +324,21 @@
           "role_group": "MID"
         },
         {
+          "name": "Kepa Arrizabalaga",
+          "player_id": "317564",
+          "role_group": "GK"
+        },
+        {
+          "name": "Ben White",
+          "player_id": "776151",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Cristhian Mosquera",
+          "player_id": "1298907",
+          "role_group": "DEF"
+        },
+        {
           "name": "Myles Lewis-Skelly",
           "player_id": "1406436",
           "role_group": "MID"
@@ -347,10 +347,10 @@
       "away_subs": [
         "Joe Gelhardt",
         "Brooke Norton-Cuffy",
-        "Jack Butland",
         "Lucas Herrington",
         "Ryan Giles",
         "Christos Mouzakitis",
+        "Jack Butland",
         "Jens Hjertø-Dahl",
         "Robinio Vaz",
         "Sorba Thomas"
@@ -367,11 +367,6 @@
           "role_group": "MID"
         },
         {
-          "name": "Jack Butland",
-          "player_id": "288880",
-          "role_group": "GK"
-        },
-        {
           "name": "Lucas Herrington",
           "player_id": "1686118",
           "role_group": "DEF"
@@ -385,6 +380,11 @@
           "name": "Christos Mouzakitis",
           "player_id": "1574198",
           "role_group": "MID"
+        },
+        {
+          "name": "Jack Butland",
+          "player_id": "288880",
+          "role_group": "GK"
         },
         {
           "name": "Jens Hjertø-Dahl",
@@ -414,7 +414,7 @@
         "Matt Crooks",
         "Ilyas Ansah"
       ],
-      "observed_at": "2026-11-07T16:24:24.032152+00:00",
+      "observed_at": "2026-11-07T20:51:54.228382+00:00",
       "changed_at": "2026-11-07T16:24:24.032152+00:00"
     },
     {
@@ -705,13 +705,13 @@
       ],
       "home_subs": [
         "Rodrigo Muniz",
-        "Benjamin Lecomte",
-        "Joachim Andersen",
+        "César Palacios",
         "Kenny Tete",
         "Ryan Sessegnon",
+        "Benjamin Lecomte",
+        "Joachim Andersen",
         "Hugo Larsson",
         "Manuel Ángel",
-        "César Palacios",
         "Kevin"
       ],
       "home_substitute_entries": [
@@ -721,14 +721,9 @@
           "role_group": "FW"
         },
         {
-          "name": "Benjamin Lecomte",
-          "player_id": "210114",
-          "role_group": "GK"
-        },
-        {
-          "name": "Joachim Andersen",
-          "player_id": "503659",
-          "role_group": "DEF"
+          "name": "César Palacios",
+          "player_id": "1403691",
+          "role_group": "FW"
         },
         {
           "name": "Kenny Tete",
@@ -738,6 +733,16 @@
         {
           "name": "Ryan Sessegnon",
           "player_id": "773991",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Benjamin Lecomte",
+          "player_id": "210114",
+          "role_group": "GK"
+        },
+        {
+          "name": "Joachim Andersen",
+          "player_id": "503659",
           "role_group": "DEF"
         },
         {
@@ -751,11 +756,6 @@
           "role_group": "MID"
         },
         {
-          "name": "César Palacios",
-          "player_id": "1403691",
-          "role_group": "FW"
-        },
-        {
           "name": "Kevin",
           "player_id": "1318400",
           "role_group": "FW"
@@ -764,13 +764,13 @@
       "away_subs": [
         "Joseph Willock",
         "Lewis Miley",
-        "Nick Pope",
+        "Matias Fernandez-Pardo",
         "Fabian Schär",
+        "Anthony Elanga",
+        "Nick Pope",
         "Sven Botman",
         "Valentino Livramento",
-        "Anthony Elanga",
-        "Bazoumana Touré",
-        "Matias Fernandez-Pardo"
+        "Bazoumana Touré"
       ],
       "away_substitute_entries": [
         {
@@ -784,14 +784,24 @@
           "role_group": "MID"
         },
         {
-          "name": "Nick Pope",
-          "player_id": "280484",
-          "role_group": "GK"
+          "name": "Matias Fernandez-Pardo",
+          "player_id": "1444231",
+          "role_group": "FW"
         },
         {
           "name": "Fabian Schär",
           "player_id": "189982",
           "role_group": "DEF"
+        },
+        {
+          "name": "Anthony Elanga",
+          "player_id": "1050166",
+          "role_group": "FW"
+        },
+        {
+          "name": "Nick Pope",
+          "player_id": "280484",
+          "role_group": "GK"
         },
         {
           "name": "Sven Botman",
@@ -804,18 +814,8 @@
           "role_group": "DEF"
         },
         {
-          "name": "Anthony Elanga",
-          "player_id": "1050166",
-          "role_group": "FW"
-        },
-        {
           "name": "Bazoumana Touré",
           "player_id": "1624586",
-          "role_group": "FW"
-        },
-        {
-          "name": "Matias Fernandez-Pardo",
-          "player_id": "1444231",
           "role_group": "FW"
         }
       ],
@@ -827,7 +827,7 @@
         "Jacob Ramsey",
         "Joelinton"
       ],
-      "observed_at": "2026-11-07T16:24:24.032152+00:00",
+      "observed_at": "2026-11-07T20:51:54.228382+00:00",
       "changed_at": "2026-11-07T16:24:24.032152+00:00"
     },
     {
@@ -1243,7 +1243,7 @@
         "Sávio",
         "Wilson Odobert"
       ],
-      "observed_at": "2026-11-07T16:24:24.032152+00:00",
+      "observed_at": "2026-11-07T20:51:54.228382+00:00",
       "changed_at": "2026-11-07T13:34:20.119540+00:00"
     },
     {
@@ -1266,11 +1266,11 @@
         "Nikola Milenković",
         "Murillo",
         "Daniel Muñoz",
-        "Xaver Schlager",
         "Ryan Yates",
+        "Xaver Schlager",
         "Neco Williams",
-        "Morgan Gibbs-White",
         "James McAtee",
+        "Morgan Gibbs-White",
         "Liam Delap"
       ],
       "away_players": [
@@ -1279,8 +1279,8 @@
         "Rúben Dias",
         "Marc Guéhi",
         "Joško Gvardiol",
-        "Enzo Fernández",
         "Elliot Anderson",
+        "Enzo Fernández",
         "Iliman Ndiaye",
         "Rayan Cherki",
         "Jérémy Doku",
@@ -1343,26 +1343,26 @@
           "shirt_number": "27"
         },
         {
-          "name": "Xaver Schlager",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 64,
-          "player_id": 620027,
-          "shirt_number": "21"
-        },
-        {
           "name": "Ryan Yates",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
           "formation": "3-4-2-1",
-          "position_id": 66,
+          "position_id": 64,
           "player_id": 775614,
           "shirt_number": "22"
+        },
+        {
+          "name": "Xaver Schlager",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66,
+          "player_id": 620027,
+          "shirt_number": "21"
         },
         {
           "name": "Neco Williams",
@@ -1376,26 +1376,26 @@
           "shirt_number": "3"
         },
         {
-          "name": "Morgan Gibbs-White",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84,
-          "player_id": 789502,
-          "shirt_number": "10"
-        },
-        {
           "name": "James McAtee",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
           "role_group": "AM",
           "formation": "3-4-2-1",
-          "position_id": 86,
+          "position_id": 84,
           "player_id": 1107648,
           "shirt_number": "24"
+        },
+        {
+          "name": "Morgan Gibbs-White",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86,
+          "player_id": 789502,
+          "shirt_number": "10"
         },
         {
           "name": "Liam Delap",
@@ -1466,26 +1466,26 @@
           "shirt_number": "24"
         },
         {
-          "name": "Enzo Fernández",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64,
-          "player_id": 1137705,
-          "shirt_number": "17"
-        },
-        {
           "name": "Elliot Anderson",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
-          "position_id": 66,
+          "position_id": 64,
           "player_id": 1089691,
           "shirt_number": "5"
+        },
+        {
+          "name": "Enzo Fernández",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1137705,
+          "shirt_number": "17"
         },
         {
           "name": "Iliman Ndiaye",
@@ -1533,17 +1533,37 @@
         }
       ],
       "home_subs": [
+        "Luca Netz",
+        "Dan Ndoye",
+        "Ibrahim Sangaré",
+        "Igor Jesus",
         "John Victor",
         "Ousmane Diomande",
-        "Ibrahim Sangaré",
-        "Luca Netz",
         "Arnaud Kalimuendo-Muinga",
         "Callum Hudson-Odoi",
-        "Chris Wood",
-        "Dan Ndoye",
-        "Igor Jesus"
+        "Chris Wood"
       ],
       "home_substitute_entries": [
+        {
+          "name": "Luca Netz",
+          "player_id": "1155130",
+          "role_group": "MID"
+        },
+        {
+          "name": "Dan Ndoye",
+          "player_id": "1022649",
+          "role_group": "FW"
+        },
+        {
+          "name": "Ibrahim Sangaré",
+          "player_id": "795371",
+          "role_group": "MID"
+        },
+        {
+          "name": "Igor Jesus",
+          "player_id": "1082102",
+          "role_group": "FW"
+        },
         {
           "name": "John Victor",
           "player_id": "749834",
@@ -1553,16 +1573,6 @@
           "name": "Ousmane Diomande",
           "player_id": "1425182",
           "role_group": "DEF"
-        },
-        {
-          "name": "Ibrahim Sangaré",
-          "player_id": "795371",
-          "role_group": "MID"
-        },
-        {
-          "name": "Luca Netz",
-          "player_id": "1155130",
-          "role_group": "MID"
         },
         {
           "name": "Arnaud Kalimuendo-Muinga",
@@ -1578,35 +1588,20 @@
           "name": "Chris Wood",
           "player_id": "169719",
           "role_group": "FW"
-        },
-        {
-          "name": "Dan Ndoye",
-          "player_id": "1022649",
-          "role_group": "FW"
-        },
-        {
-          "name": "Igor Jesus",
-          "player_id": "1082102",
-          "role_group": "FW"
         }
       ],
       "away_subs": [
-        "Gerónimo Rulli",
         "Matheus Nunes",
         "Nico O'Reilly",
+        "Phil Foden",
+        "Gerónimo Rulli",
         "Rico Lewis",
         "Vitor Reis",
         "Ayyoub Bouaddi",
         "Mateo Kovačić",
-        "Phil Foden",
         "Allan"
       ],
       "away_substitute_entries": [
-        {
-          "name": "Gerónimo Rulli",
-          "player_id": "245555",
-          "role_group": "GK"
-        },
         {
           "name": "Matheus Nunes",
           "player_id": "955529",
@@ -1616,6 +1611,16 @@
           "name": "Nico O'Reilly",
           "player_id": "1300526",
           "role_group": "DEF"
+        },
+        {
+          "name": "Phil Foden",
+          "player_id": "815006",
+          "role_group": "MID"
+        },
+        {
+          "name": "Gerónimo Rulli",
+          "player_id": "245555",
+          "role_group": "GK"
         },
         {
           "name": "Rico Lewis",
@@ -1638,11 +1643,6 @@
           "role_group": "MID"
         },
         {
-          "name": "Phil Foden",
-          "player_id": "815006",
-          "role_group": "MID"
-        },
-        {
           "name": "Allan",
           "player_id": "1721789",
           "role_group": "FW"
@@ -1655,7 +1655,7 @@
       "away_unavailable": [
         "Antoine Semenyo"
       ],
-      "observed_at": "2026-11-07T16:24:24.032152+00:00",
+      "observed_at": "2026-11-07T20:51:54.228382+00:00",
       "changed_at": "2026-11-07T16:24:24.032152+00:00"
     },
     {
@@ -1963,7 +1963,7 @@
         "Antoni Milambo",
         "Fábio Carvalho"
       ],
-      "observed_at": "2026-11-07T16:24:24.032152+00:00",
+      "observed_at": "2026-11-07T20:51:54.228382+00:00",
       "changed_at": "2026-11-07T13:34:20.119540+00:00"
     },
     {
@@ -2269,7 +2269,7 @@
         "Jeremie Frimpong",
         "Hugo Ekitiké"
       ],
-      "observed_at": "2026-11-07T16:24:24.032152+00:00",
+      "observed_at": "2026-11-07T20:51:54.228382+00:00",
       "changed_at": "2026-11-07T13:34:20.119540+00:00"
     },
     {
@@ -2572,7 +2572,7 @@
         "Alex Scott",
         "Alex Tóth"
       ],
-      "observed_at": "2026-11-07T16:24:24.032152+00:00",
+      "observed_at": "2026-11-07T20:51:54.228382+00:00",
       "changed_at": "2026-11-07T13:34:20.119540+00:00"
     },
     {
@@ -2879,7 +2879,7 @@
         "Matty Cash",
         "Amadou Onana"
       ],
-      "observed_at": "2026-11-07T16:24:24.032152+00:00",
+      "observed_at": "2026-11-07T20:51:54.228382+00:00",
       "changed_at": "2026-11-07T16:24:24.032152+00:00"
     },
     {
@@ -3188,7 +3188,7 @@
         "Jamie Gittens",
         "João Pedro"
       ],
-      "observed_at": "2026-11-07T16:24:24.032152+00:00",
+      "observed_at": "2026-11-07T20:51:54.228382+00:00",
       "changed_at": "2026-11-07T13:34:20.119540+00:00"
     }
   ]
