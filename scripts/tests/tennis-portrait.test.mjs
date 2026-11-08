@@ -25,8 +25,8 @@ test('verified Kouame artwork reaches Matchday/home H2H despite an older archive
 });
 
 test('Challenger recovery is shared and does not borrow sibling portraits', () => {
-  assert.equal(portrait('Kosuke Ogura')?.src, '/players/tennis/kosuke-ogura.jpg');
-  assert.equal(portrait('Hikaru Shiraishi')?.src, '/players/tennis/hikaru-shiraishi.jpg');
+  assert.equal(portrait('Kosuke Ogura')?.src, '/players/tennis/kosuke-ogura.webp');
+  assert.equal(portrait('Hikaru Shiraishi')?.src, '/players/tennis/hikaru-shiraishi.webp');
   assert.equal(portrait('K. Ogura')?.name, 'Kosuke Ogura');
   assert.equal(portrait('Ewan Ogura'), null);
   assert.ok(portrait('Shunsuke Mitsui')?.src);

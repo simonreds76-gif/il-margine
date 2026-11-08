@@ -55,7 +55,7 @@ function Portrait({ player }: { player: FixturePlayer }) {
   return <span className={styles.portrait}>
     {player.portrait && failedSrc !== player.portrait
       ? <Image src={player.portrait} width={72} height={72} unoptimized alt="" loading="lazy"
-          style={crop?.scale ? { objectPosition: crop.position, transform: `scale(${crop.scale})`, transformOrigin: crop.position } : undefined}
+          style={crop?.scale ? { objectFit: 'cover', objectPosition: crop.position, transform: `scale(${crop.scale})`, transformOrigin: '50% 0%' } : undefined}
           onError={() => setFailedSrc(player.portrait)} />
       : <Icon name="person" />}
   </span>;
