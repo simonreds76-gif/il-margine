@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-07T15:09:22Z",
+  "generated_at": "2026-11-08T06:10:45Z",
   "league": "serie-a",
-  "row_count": 1,
+  "row_count": 2,
   "rows": [
     {
-      "team": "Como",
-      "team_key": "como",
-      "player_name": "Lucas Da Cunha",
-      "player_key": "lucas da cunha",
+      "team": "Bologna",
+      "team_key": "bologna",
+      "player_name": "Riccardo Orsolini",
+      "player_key": "riccardo orsolini",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
@@ -18,7 +18,23 @@
         "fotmob_live"
       ],
       "event_count": 1,
-      "last_event_date": "2026-11-01"
+      "last_event_date": "2026-11-07"
+    },
+    {
+      "team": "Parma",
+      "team_key": "parma",
+      "player_name": "Vincent Sierro",
+      "player_key": "vincent sierro",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-11-07"
     }
   ]
 }
