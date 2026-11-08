@@ -16,7 +16,8 @@ import unicodedata
 # Reviewed full-name variants; never infer surnames or initials. Official ATP
 # MW75 bio and RD48 profile identify these same Brazilian players.
 ALIASES = {'igor marcondes': ('29610', 'Igor Ribeiro Marcondes'),
-           'felipe meligeni rodrigues alves': ('36617', 'Felipe Meligeni Alves')}
+           'felipe meligeni rodrigues alves': ('36617', 'Felipe Meligeni Alves'),
+           'tai leonard sach': ('68624', 'Tai Sach')}
 
 
 def normal(value):

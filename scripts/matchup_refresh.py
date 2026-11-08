@@ -114,10 +114,13 @@ def prepare(checkout, candidate, atlas_release, as_of, historical_prices=(), sch
     audit_path = private / 'matchday-supplement-audit.json'
     prior_requests = read(audit_path).get('requests', []) if audit_path.exists() else []
     schedule_rows = read_csv(schedule) if schedule and schedule.exists() else []
+    from matchday_saved_schedule import latest_saved_schedule
+    remote_rows, remote_status = latest_saved_schedule(schedule.parent.parent) if schedule else ([], {'status': 'not_requested'})
+    schedule_rows += remote_rows
     supplement, supplement_audit = build_supplement(candidate / 'oncourt',
         schedule_rows, payload['players'], as_of,
         old.get('matchdaySupplement'), prior_requests)
-    supplement_audit.update(checkedAt=as_of, scheduleRows=len(schedule_rows),
+    supplement_audit.update(checkedAt=as_of, savedSchedule=remote_status, scheduleRows=len(schedule_rows),
         scheduleState='loaded' if schedule_rows else 'empty' if schedule and schedule.exists() else 'missing')
     if supplement['pairs']:
         payload['matchdaySupplement'] = supplement
