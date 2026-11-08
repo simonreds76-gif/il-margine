@@ -45,3 +45,6 @@
 @media(max-width:639px){.page .toolbar{padding:10px}.page .boardHeader h2{font-size:20px}.page .boardHeader{padding-bottom:14px}.tourFilters{gap:6px}.tourFilters button{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 4px;padding:8px;min-height:70px}.tourLogo{width:30px;height:28px}.tourFilters strong{font-size:11px;grid-row:2;grid-column:1/-1}.filterCount{grid-column:2;grid-row:1;font-size:11px}.tournamentHeading{flex-wrap:wrap;gap:4px 8px}.tournamentHeading small{display:block;margin-left:auto;font-size:9px}.tournaments{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#436659 #101a22;padding:1px 1px 8px;overscroll-behavior-inline:contain}.tournaments button{flex:0 0 auto;max-width:220px;min-width:120px}.tournaments button>span{overflow-wrap:anywhere}.readKey p{font-size:10px}.page .tabs{padding:10px 0}.coverageDetails summary{min-height:44px}.page .feed{align-items:flex-start}}
 
 .quoteBookmaker{display:flex;align-items:center;justify-content:center;width:76px;height:25px;overflow:hidden;flex-shrink:0;border-radius:5px;background:#0b1422}.quoteBookmaker img{display:block;width:104px;height:43px;max-width:none;flex-shrink:0;object-fit:contain}
+
+/* Keep both portraits level when a player name wraps on narrow screens. */
+.page .match{align-items:start}.page .versus{align-self:center}
