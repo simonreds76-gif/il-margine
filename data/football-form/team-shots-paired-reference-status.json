@@ -1,5 +1,5 @@
 {
-  "contracts": 568,
+  "contracts": 569,
   "settled_contracts": 499,
   "paired_contracts": 362,
   "paired_fixtures": 146,
@@ -95,14 +95,14 @@
   "model_fingerprint": "90a4b82bdc0fb04546d62c53c32e12943250bd7637b31079423ee3023f487fd4",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 374,
-  "generated_at": "2026-11-08T15:20:21Z",
-  "new_contracts": 5,
+  "generated_at": "2026-11-08T16:20:23Z",
+  "new_contracts": 1,
   "scan_exclusions": {
-    "stale_price": 148
+    "stale_price": 84
   },
-  "latest_archived_capture": "2026-11-08T15:18:45.479539+00:00",
+  "latest_archived_capture": "2026-11-08T16:19:48.772038+00:00",
   "latest_result_date": "2026-11-07",
-  "raw_upcoming_rows": 485,
+  "raw_upcoming_rows": 434,
   "status": "COLLECTING",
   "cohorts": {
     "paired-market-offset-20260930-v2": {
@@ -294,7 +294,7 @@
       "automatic_promotion": false
     },
     "paired-market-offset-20261028-identity-v4": {
-      "contracts": 194,
+      "contracts": 195,
       "settled_contracts": 125,
       "paired_contracts": 125,
       "paired_fixtures": 56,
