@@ -1,11 +1,262 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-08T16:41:34.998756+00:00",
+  "generatedAt": "2026-11-08T21:08:48.497455+00:00",
   "coverageStart": "2026-10-17",
   "checkedThrough": "2026-11-08",
   "captureStatus": "complete",
-  "matchesChecked": 8,
+  "matchesChecked": 16,
   "articles": [
+    {
+      "id": "fotmob:5881217:2995688005",
+      "slug": "2026-11-08-vincenzo-grifo-5881217-2995688005",
+      "matchId": "5881217",
+      "eventId": "2995688005",
+      "date": "2026-11-08",
+      "kickoff": "2026-11-08T16:30:00.000Z",
+      "league": "bundesliga",
+      "leagueLabel": "Bundesliga",
+      "round": "9",
+      "player": "Vincenzo Grifo",
+      "playerId": 400625,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/400625.png",
+      "club": "Freiburg",
+      "clubSlug": "freiburg",
+      "clubUrl": "/penalty-takers/bundesliga/freiburg",
+      "crest": "/team-logos/bundesliga/freiburg.png",
+      "opponent": "Union Berlin",
+      "home": "Freiburg",
+      "away": "Union Berlin",
+      "homeScore": 2,
+      "awayScore": 0,
+      "minute": "84",
+      "outcome": "saved",
+      "title": "Vincenzo Grifo has penalty saved against Union Berlin",
+      "sentences": [
+        "Vincenzo Grifo had a penalty saved for Freiburg in minute 84 against Union Berlin.",
+        "The match finished Freiburg 2–0 Union Berlin."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Keisuke Goto",
+        "concededBy": "András Schäfer",
+        "sentence": "Keisuke Goto won the penalty after a foul by András Schäfer inside the area.",
+        "evidenceIds": [
+          "2995685753",
+          "2995685743"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 22,
+        "goals": 0,
+        "shots": 3,
+        "onTarget": 2,
+        "chances": 0
+      },
+      "keeper": "Frederik Rønnow",
+      "moment": null,
+      "paragraphs": [
+        "Vincenzo Grifo had a penalty saved in the 84th minute of Freiburg’s 2–0 win over Union Berlin.",
+        "Keisuke Goto won the penalty after a foul by András Schäfer inside the area. Frederik Rønnow kept out the spot kick.",
+        "Vincenzo Grifo finished with 0 goals and 3 shots, including 2 on target, in 22 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/union-berlin-vs-freiburg/294gog#5881217",
+      "eventHash": "91088179669c01d5534849c1c93356657ef943faf5d45c152383f01f85df3445",
+      "sourceHash": "8a47987e3dc39b82db0308288dc8dfb69f9545c419ba0da690682c73fb42497a",
+      "publishedAt": "2026-11-08T21:08:48.497455+00:00",
+      "updatedAt": "2026-11-08T21:08:48.497455+00:00"
+    },
+    {
+      "id": "fotmob:5795512:2995644003",
+      "slug": "2026-11-08-john-mcginn-5795512-2995644003",
+      "matchId": "5795512",
+      "eventId": "2995644003",
+      "date": "2026-11-08",
+      "kickoff": "2026-11-08T16:30:00.000Z",
+      "league": "epl",
+      "leagueLabel": "Premier League",
+      "round": "10",
+      "player": "John McGinn",
+      "playerId": 356406,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/356406.png",
+      "club": "Aston Villa",
+      "clubSlug": "aston-villa",
+      "clubUrl": "/penalty-takers/epl/aston-villa",
+      "crest": "/team-logos/epl/aston-villa.png",
+      "opponent": "Manchester United",
+      "home": "Manchester United",
+      "away": "Aston Villa",
+      "homeScore": 4,
+      "awayScore": 4,
+      "minute": "48",
+      "outcome": "scored",
+      "title": "John McGinn scores from the spot against Manchester United",
+      "sentences": [
+        "John McGinn converted a penalty for Aston Villa in minute 48 against Manchester United.",
+        "The match finished Manchester United 4–4 Aston Villa."
+      ],
+      "cause": null,
+      "incident": null,
+      "stats": {
+        "minutes": 71,
+        "goals": 1,
+        "shots": 1,
+        "onTarget": 1,
+        "chances": 2
+      },
+      "keeper": "Senne Lammens",
+      "moment": {
+        "before": [
+          2,
+          2
+        ],
+        "after": [
+          2,
+          3
+        ]
+      },
+      "paragraphs": [
+        "John McGinn converted a penalty in the 48th minute of Aston Villa’s 4–4 draw with Manchester United.",
+        "The goal put the team ahead at 3–2.",
+        "John McGinn finished with 1 goal and 1 shot, including 1 on target, in 71 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/aston-villa-vs-manchester-united/3h9f6s#5795512",
+      "eventHash": "718edfa20a5f63d1a1c98691dad93ff00a70b3873884ea02d24d2aac5bc4c148",
+      "sourceHash": "34cbaed1e7a92df561eebb07a965999362fd569e59f64eb9bf254d758900e8dc",
+      "publishedAt": "2026-11-08T21:08:48.497455+00:00",
+      "updatedAt": "2026-11-08T21:08:48.497455+00:00"
+    },
+    {
+      "id": "fotmob:5795512:2995563263",
+      "slug": "2026-11-08-bruno-fernandes-5795512-2995563263",
+      "matchId": "5795512",
+      "eventId": "2995563263",
+      "date": "2026-11-08",
+      "kickoff": "2026-11-08T16:30:00.000Z",
+      "league": "epl",
+      "leagueLabel": "Premier League",
+      "round": "10",
+      "player": "Bruno Fernandes",
+      "playerId": 422685,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/422685.png",
+      "club": "Manchester United",
+      "clubSlug": "manchester-united",
+      "clubUrl": "/penalty-takers/epl/manchester-united",
+      "crest": "/team-logos/epl/manchester-united.png",
+      "opponent": "Aston Villa",
+      "home": "Manchester United",
+      "away": "Aston Villa",
+      "homeScore": 4,
+      "awayScore": 4,
+      "minute": "16",
+      "outcome": "scored",
+      "title": "Bruno Fernandes scores from the spot against Aston Villa",
+      "sentences": [
+        "Bruno Fernandes converted a penalty for Manchester United in minute 16 against Aston Villa.",
+        "The match finished Manchester United 4–4 Aston Villa."
+      ],
+      "cause": null,
+      "incident": null,
+      "stats": {
+        "minutes": 90,
+        "goals": 1,
+        "shots": 6,
+        "onTarget": 1,
+        "chances": 4
+      },
+      "keeper": "Zion Suzuki",
+      "moment": {
+        "before": [
+          0,
+          2
+        ],
+        "after": [
+          1,
+          2
+        ]
+      },
+      "paragraphs": [
+        "Bruno Fernandes converted a penalty in the 16th minute of Manchester United’s 4–4 draw with Aston Villa.",
+        "The goal reduced the deficit at 1–2.",
+        "Bruno Fernandes finished with 1 goal and 6 shots, including 1 on target, in 90 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/aston-villa-vs-manchester-united/3h9f6s#5795512",
+      "eventHash": "56e16c38e30ffb6e5b00718baebe83ac1a9e82a8540ad21ab56453692e3c8c42",
+      "sourceHash": "c5ddd931c5bb25509878c75d4b8f5992208113d2141823e589d902bd2dc751d0",
+      "publishedAt": "2026-11-08T21:08:48.497455+00:00",
+      "updatedAt": "2026-11-08T21:08:48.497455+00:00"
+    },
+    {
+      "id": "fotmob:5802984:2995679801",
+      "slug": "2026-11-08-ludovic-ajorque-5802984-2995679801",
+      "matchId": "5802984",
+      "eventId": "2995679801",
+      "date": "2026-11-08",
+      "kickoff": "2026-11-08T16:15:00.000Z",
+      "league": "ligue-1",
+      "leagueLabel": "Ligue 1",
+      "round": "10",
+      "player": "Ludovic Ajorque",
+      "playerId": 471153,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/471153.png",
+      "club": "Brest",
+      "clubSlug": "brest",
+      "clubUrl": "/penalty-takers/ligue-1/brest",
+      "crest": "/team-logos/ligue-1/brest.png",
+      "opponent": "Lyon",
+      "home": "Brest",
+      "away": "Lyon",
+      "homeScore": 2,
+      "awayScore": 0,
+      "minute": "90+4",
+      "outcome": "scored",
+      "title": "Ludovic Ajorque scores from the spot against Lyon",
+      "sentences": [
+        "Ludovic Ajorque converted a penalty for Brest in minute 90+4 against Lyon.",
+        "The match finished Brest 2–0 Lyon."
+      ],
+      "cause": "foul",
+      "incident": {
+        "type": "foul",
+        "wonBy": "Bradley Locko",
+        "concededBy": "Zachary Athekame",
+        "sentence": "Bradley Locko won the penalty after a foul by Zachary Athekame inside the area.",
+        "evidenceIds": [
+          "2995678245",
+          "2995678221"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 1,
+        "shots": 5,
+        "onTarget": 4,
+        "chances": 0
+      },
+      "keeper": "Dominik Greif",
+      "moment": {
+        "before": [
+          1,
+          0
+        ],
+        "after": [
+          2,
+          0
+        ]
+      },
+      "paragraphs": [
+        "Ludovic Ajorque converted a penalty in added time (90+4 minutes) of Brest’s 2–0 win over Lyon.",
+        "Bradley Locko won the penalty after a foul by Zachary Athekame inside the area. The goal extended the lead at 2–0.",
+        "Ludovic Ajorque finished with 1 goal and 5 shots, including 4 on target, in 90 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/brest-vs-lyon/2rd6lj#5802984",
+      "eventHash": "d6a15b988a74f5be00bcfd590270bf7965372e89a0cf48e5244ea8889bf83986",
+      "sourceHash": "46a9ad0e375fbcb9b6af6b940c1950fd1ac697585a347281e5a436ae90505cfe",
+      "publishedAt": "2026-11-08T21:08:48.497455+00:00",
+      "updatedAt": "2026-11-08T21:08:48.497455+00:00"
+    },
     {
       "id": "fotmob:5795507:2995479651",
       "slug": "2026-11-08-edward-nketiah-5795507-2995479651",
