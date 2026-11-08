@@ -325,7 +325,7 @@ def refresh(config, dry_run=False):
             schedule=source.parent / f'pinnacle-odds-{as_of}.csv')
         status.update(matchupVersion=matchup_new['version'], matchupMatches=matchup_new['matches'], matchupChanged=matchup_changed)
         h2h_audit = read_json(candidate / 'matchup-private/matchday-supplement-audit.json')
-        status['matchdayH2H'] = {k: h2h_audit.get(k) for k in ('pairs', 'matches', 'unresolved', 'postMatchChecks')}
+        status['matchdayH2H'] = {k: h2h_audit.get(k) for k in ('checkedAt', 'scheduleState', 'scheduleRows', 'pairs', 'matches', 'unresolved', 'postMatchChecks')}
         status.pop('error', None)
         status.pop('failedAt', None)
         status.update(checkedAt=datetime.now(timezone.utc).isoformat(), matches=new_manifest['matches'],

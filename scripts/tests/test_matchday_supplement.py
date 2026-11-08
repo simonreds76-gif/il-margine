@@ -47,4 +47,16 @@ class SupplementTests(unittest.TestCase):
   self.assertEqual(audit['postMatchChecks'][0]['status'],'overdue_result')
   self.assertEqual(new,old)
 
+ def test_next_day_updates_retained_pair_without_schedule_or_history_rewrite(self):
+  old,audit=self.run_build()
+  self.games.append({**self.games[0],'date':'2026-11-08','round_id':'5'})
+  self.run_build()  # write the updated source fixture
+  new,next_audit=build(self.root,[],[],'2026-11-09',old,audit['requests'])
+  pair=next(iter(new['pairs'].values()))
+  self.assertEqual(len(pair['matches']),2)
+  self.assertEqual(pair['matches'][0],next(iter(old['pairs'].values()))['matches'][0])
+  self.assertEqual(pair['checkedThrough'],'2026-11-09')
+  self.assertEqual(next_audit['requests'],audit['requests'])
+
 if __name__=='__main__':unittest.main()
+

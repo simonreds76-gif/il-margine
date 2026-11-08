@@ -96,11 +96,13 @@ def build(oncourt, schedule, base_players, as_of, old=None, prior_requests=()):
             audit['identities'][pid] = {k: people[pid].get(k) for k in ('name', 'birthdate', 'country')}
     targets = {tuple(sorted(p['nativeId'] for p in v['players'])): k for k, v in pairs.items()}
     found = defaultdict(dict)
+    games_by_pair = defaultdict(list)
     conflicts = set()
     for r in games:
         pair = tuple(sorted([r['winner_id'], r['loser_id']]))
         if pair not in targets:
             continue
+        games_by_pair[pair].append(r)
         t = tours.get(r['tour_id'], {})
         reason = None
         if not ('1990-01-01' <= r['date'] < as_of): reason = 'outside_date_window'
@@ -150,8 +152,7 @@ def build(oncourt, schedule, base_players, as_of, old=None, prior_requests=()):
     for request in audit['requests']:
         if request['date'] >= as_of or request['pair'] not in pairs: continue
         ids = {p['nativeId'] for p in pairs[request['pair']]['players']}
-        candidates = [g for g in games if {g['winner_id'],g['loser_id']} == ids
-                      and abs((date.fromisoformat(g['date'])-date.fromisoformat(request['date'])).days) <= 1
+        candidates = [g for g in games_by_pair[tuple(sorted(ids))] if abs((date.fromisoformat(g['date'])-date.fromisoformat(request['date'])).days) <= 1
                       and event_key(tours.get(g['tour_id'],{}).get('name','')) == event_key(request['event'])]
         state = 'confirmed' if len(candidates)==1 else 'ambiguous' if candidates else 'awaiting_result'
         if not candidates and (date.fromisoformat(as_of)-date.fromisoformat(request['date'])).days > 3: state = 'overdue_result'

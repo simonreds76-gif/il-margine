@@ -65,7 +65,7 @@ function FixtureCard({ fixture: f, now }: { fixture: TennisFixture; now: Date })
     <div className={styles.cardTop}><span className={styles.event}><span className={styles.tour}>{f.tour}</span>{f.event}{f.qualifying && <span>Qualifying</span>}</span><time dateTime={f.start}><Icon name="clock" />{format(f.start, { hour: '2-digit', minute: '2-digit' })}</time></div>
     <div className={styles.match}><div><Portrait player={f.players[0]} /><h3>{f.players[0].name}</h3></div><span className={styles.versus}>VS</span><div><Portrait player={f.players[1]} /><h3>{f.players[1].name}</h3></div></div>
     <div className={styles.quote}>
-      <div className={styles.quoteHeading}><span>UPCOMING MATCH ODDS</span><span>Pinnacle</span></div>
+      <div className={styles.quoteHeading}><span>UPCOMING MATCH ODDS</span><span className={styles.quoteBookmaker}><Image src="/bookmakers/pinnacle.png" alt="Pinnacle" width={104} height={43} unoptimized /></span></div>
       {quote ? <><dl>{f.players.map((p, i) => <div key={p.name}><dt>{surname(p.name)}</dt><dd>{price(quote.odds[i])}</dd></div>)}</dl><p>Recorded <time dateTime={quote.capturedAt}>{stamp(quote.capturedAt)}</time>. Prices may have moved.</p></>
         : <p>{f.quote ? 'Price too old to display. Waiting for a fresh capture.' : 'No paired price captured for this match yet.'}</p>}
     </div>
