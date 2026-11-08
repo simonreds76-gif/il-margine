@@ -220,7 +220,7 @@ Log "=== Step 9/12: Nightly-style settlement/performance refresh ==="
 # Do not retain an outer lock, which would prevent manual refresh priority.
 Exit-TaskLock $lockHandle
 $lockHandle = $null
-& powershell -ExecutionPolicy Bypass -NoProfile -File scripts\oncourt-settle-nightly.ps1 -CooperativeLock 2>&1 | ForEach-Object { Log $_ }
+& powershell -ExecutionPolicy Bypass -NoProfile -File scripts\oncourt-settle-nightly.ps1 -CooperativeLock -IncludeHistoricalClv 2>&1 | ForEach-Object { Log $_ }
 $settlementExit = $LASTEXITCODE
 $lockHandle = Enter-TennisPriorityLock -RootPath $root
 $global:LASTEXITCODE = $settlementExit
