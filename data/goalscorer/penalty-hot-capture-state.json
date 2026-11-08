@@ -90,6 +90,7 @@
     "5802974": "2026-11-07",
     "5802975": "2026-11-08",
     "5802976": "2026-11-07",
+    "5802977": "2026-11-08",
     "5802978": "2026-11-07",
     "5802979": "2026-11-07",
     "5802980": "2026-11-07",
@@ -114,6 +115,7 @@
     "5868108": "2026-11-02",
     "5868109": "2026-11-03",
     "5868110": "2026-10-31",
+    "5868111": "2026-11-08",
     "5868112": "2026-11-08",
     "5868113": "2026-11-08",
     "5868114": "2026-11-08",
@@ -154,6 +156,7 @@
     "5868128": "2026-11-08",
     "5802989": "2026-11-08",
     "5749749": "2026-11-08",
+    "5795511": "2026-11-08",
     "5795505": "2026-11-07",
     "5795509": "2026-11-07",
     "5795513": "2026-11-07",
@@ -162,6 +165,7 @@
     "5881221": "2026-11-07",
     "5881222": "2026-11-07",
     "5881223": "2026-11-07",
+    "5868125": "2026-11-08",
     "5868124": "2026-11-07",
     "5868126": "2026-11-07",
     "5868129": "2026-11-07",
@@ -174,8 +178,8 @@
     "5868123": "2026-11-08",
     "5749746": "2026-11-08"
   },
-  "updated_at": "2026-11-08T16:38:41.958573+00:00",
-  "checked_this_run": 16,
+  "updated_at": "2026-11-08T16:46:27.303115+00:00",
+  "checked_this_run": 4,
   "errors": [],
   "fixtures": {
     "5749700": {
@@ -4515,7 +4519,7 @@
           "name": "Toulouse"
         },
         "status": {
-          "utcTime": "2026-11-01T19:45:00.000Z",
+          "utcTime": "2026-11-01T19:45:00+00:00",
           "halfs": {
             "firstHalfStarted": "01.11.2026 20:46:28",
             "secondHalfStarted": "01.11.2026 21:50:13"
@@ -4535,13 +4539,13 @@
         }
       },
       "date": "2026-11-01",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-01T11:43:43.467093+00:00",
       "pending_since": "2026-11-01T11:43:43.467093+00:00",
-      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
-      "attempts": 5,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-07T02:19:46.514210+00:00",
+      "last_attempt": "2026-11-08T16:46:27.303115+00:00",
+      "attempts": 6,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-08T16:46:27.303115+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -5717,7 +5721,7 @@
           "name": "Real Sociedad"
         },
         "status": {
-          "utcTime": "2026-11-01T20:00:00.000Z",
+          "utcTime": "2026-11-01T20:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "01.11.2026 21:05:26",
             "secondHalfStarted": "01.11.2026 22:10:42"
@@ -5737,13 +5741,13 @@
         }
       },
       "date": "2026-11-01",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-01T11:43:43.467093+00:00",
       "pending_since": "2026-11-01T11:43:43.467093+00:00",
-      "last_attempt": "2026-11-07T02:19:46.514210+00:00",
-      "attempts": 5,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-07T02:19:46.514210+00:00",
+      "last_attempt": "2026-11-08T16:46:27.303115+00:00",
+      "attempts": 6,
+      "reason": "penalties_verified",
+      "verified_at": "2026-11-08T16:46:27.303115+00:00",
       "penalty_count": 1,
       "next_attempt": ""
     },
@@ -7696,7 +7700,7 @@
           "shortName": "Tottenham"
         },
         "status": {
-          "utcTime": "2026-11-07T12:30:00.000Z",
+          "utcTime": "2026-11-07T12:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "07.11.2026 13:30:39",
             "secondHalfStarted": "07.11.2026 14:37:16"
@@ -7716,13 +7720,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-07T16:23:38.449896+00:00",
-      "attempts": 1,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-07T16:23:38.449896+00:00",
+      "last_attempt": "2026-11-08T16:46:27.303115+00:00",
+      "attempts": 2,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-08T16:46:27.303115+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -8126,7 +8130,7 @@
           "name": "Racing Santander"
         },
         "status": {
-          "utcTime": "2026-11-07T13:00:00.000Z",
+          "utcTime": "2026-11-07T13:00:00+00:00",
           "numberOfHomeRedCards": 1,
           "halfs": {
             "firstHalfStarted": "07.11.2026 14:01:25",
@@ -8147,13 +8151,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-07T16:23:38.449896+00:00",
-      "attempts": 1,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-07T16:23:38.449896+00:00",
+      "last_attempt": "2026-11-08T16:46:27.303115+00:00",
+      "attempts": 2,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-08T16:46:27.303115+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -8770,9 +8774,9 @@
           "ongoing": true,
           "scoreStr": "0 - 2",
           "liveTime": {
-            "short": "7‎’‎",
+            "short": "15‎’‎",
             "shortKey": "",
-            "long": "6:42",
+            "long": "14:28",
             "longKey": "",
             "maxTime": 45,
             "basePeriod": 45,
@@ -8856,9 +8860,9 @@
           "ongoing": true,
           "scoreStr": "0 - 0",
           "liveTime": {
-            "short": "9‎’‎",
+            "short": "17‎’‎",
             "shortKey": "",
-            "long": "8:31",
+            "long": "16:17",
             "longKey": "",
             "maxTime": 45,
             "basePeriod": 45,
@@ -8920,7 +8924,7 @@
           "name": "Real Betis"
         },
         "status": {
-          "utcTime": "2026-11-08T13:00:00+00:00",
+          "utcTime": "2026-11-08T13:00:00.000Z",
           "halfs": {
             "firstHalfStarted": "08.11.2026 14:00:14",
             "secondHalfStarted": "08.11.2026 15:03:17"
@@ -8957,7 +8961,7 @@
         "id": 5868127,
         "home": {
           "id": 8560,
-          "score": 0,
+          "score": 1,
           "name": "Real Sociedad"
         },
         "away": {
@@ -8976,11 +8980,11 @@
           "started": true,
           "cancelled": false,
           "ongoing": true,
-          "scoreStr": "0 - 0",
+          "scoreStr": "1 - 0",
           "liveTime": {
-            "short": "63‎’‎",
+            "short": "70‎’‎",
             "shortKey": "",
-            "long": "62:01",
+            "long": "69:47",
             "longKey": "",
             "maxTime": 90,
             "basePeriod": 90,
@@ -9153,9 +9157,9 @@
           "ongoing": true,
           "scoreStr": "0 - 1",
           "liveTime": {
-            "short": "24‎’‎",
+            "short": "31‎’‎",
             "shortKey": "",
-            "long": "23:05",
+            "long": "30:51",
             "longKey": "",
             "maxTime": 45,
             "basePeriod": 45,
@@ -9195,9 +9199,9 @@
           "ongoing": true,
           "scoreStr": "1 - 0",
           "liveTime": {
-            "short": "24‎’‎",
+            "short": "32‎’‎",
             "shortKey": "",
-            "long": "23:21",
+            "long": "31:07",
             "longKey": "",
             "maxTime": 45,
             "basePeriod": 45,
@@ -9237,9 +9241,9 @@
           "ongoing": true,
           "scoreStr": "0 - 1",
           "liveTime": {
-            "short": "24‎’‎",
+            "short": "32‎’‎",
             "shortKey": "",
-            "long": "23:29",
+            "long": "31:15",
             "longKey": "",
             "maxTime": 45,
             "basePeriod": 45,
@@ -9279,9 +9283,9 @@
           "ongoing": true,
           "scoreStr": "0 - 0",
           "liveTime": {
-            "short": "24‎’‎",
+            "short": "32‎’‎",
             "shortKey": "",
-            "long": "23:29",
+            "long": "31:15",
             "longKey": "",
             "maxTime": 45,
             "basePeriod": 45,
@@ -9341,7 +9345,7 @@
           "name": "Lazio"
         },
         "status": {
-          "utcTime": "2026-11-08T11:30:00+00:00",
+          "utcTime": "2026-11-08T11:30:00.000Z",
           "halfs": {
             "firstHalfStarted": "08.11.2026 12:32:44",
             "secondHalfStarted": "08.11.2026 13:34:51"
@@ -9810,7 +9814,7 @@
     },
     "20261104": {
       "ok": true,
-      "checked_at": "2026-11-07T16:23:38.449896+00:00",
+      "checked_at": "2026-11-08T16:46:27.303115+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -9837,7 +9841,7 @@
     },
     "20261107": {
       "ok": true,
-      "checked_at": "2026-11-08T16:38:41.958573+00:00",
+      "checked_at": "2026-11-08T16:46:27.303115+00:00",
       "expected": 19,
       "match_ids": [
         "5749740",
@@ -9864,7 +9868,7 @@
     },
     "20261108": {
       "ok": true,
-      "checked_at": "2026-11-08T16:38:41.958573+00:00",
+      "checked_at": "2026-11-08T16:46:27.303115+00:00",
       "expected": 24,
       "match_ids": [
         "5749742",
@@ -9897,9 +9901,9 @@
   },
   "coverage": {
     "expected": 199,
-    "verified": 173,
+    "verified": 177,
     "pending": 22,
-    "reverify": 4,
+    "reverify": 0,
     "deferred": 0,
     "overdue": 0,
     "stalled": 0,
