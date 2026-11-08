@@ -1,6 +1,6 @@
 {
   "api_errors": [],
-  "deferred_not_due": 6,
+  "deferred_not_due": 4,
   "details": [
     {
       "detail": "",
@@ -20,26 +20,59 @@
     },
     {
       "detail": "",
-      "goalkeeper": "Maduka Okoye",
-      "match": "Venezia FC vs Udinese Calcio",
-      "match_date": "2026-11-06",
+      "goalkeeper": "Manuel Neuer",
+      "match": "FSV Mainz vs Bayern Munich",
+      "match_date": "2026-11-07",
+      "reason": "team_keeper_participation_or_rules_review",
+      "signal_id": "grosvenor|72513302|manuel neuer|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "\u0141ukasz Skorupski",
+      "match": "Parma Calcio vs Bologna FC",
+      "match_date": "2026-11-07",
       "reason": "settled_fotmob",
-      "signal_id": "grosvenor|71945404|maduka okoye|3.5|over"
+      "signal_id": "grosvenor|71945398|\u0142ukasz skorupski|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Nicolas Kristof",
+      "match": "Borussia Dortmund vs SV 07 Elversberg",
+      "match_date": "2026-11-07",
+      "reason": "settled_fotmob",
+      "signal_id": "72513292|nicolas kristof|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Gianluigi Donnarumma",
+      "match": "Nottingham Forest vs Manchester City",
+      "match_date": "2026-11-07",
+      "reason": "settled_fotmob",
+      "signal_id": "72221388|gianluigi donnarumma|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Christos Mandas",
+      "match": "SSC Napoli vs Lazio Rome",
+      "match_date": "2026-11-08",
+      "reason": "settled_fotmob",
+      "signal_id": "71945396|christos mandas|3.5|over"
     }
   ],
-  "fotmob_requests_used": 5,
-  "generated_at": "2026-11-07T14:59:02Z",
+  "fotmob_requests_used": 10,
+  "generated_at": "2026-11-08T15:20:27Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
-  "pending_due": 2,
-  "pending_total": 8,
+  "pending_due": 3,
+  "pending_total": 7,
   "reason_counts": {
     "fotmob_matched_player_not_goalkeeper": 1,
     "fotmob_save_totals_disagree": 1,
-    "settled_fotmob": 1
+    "settled_fotmob": 4,
+    "team_keeper_participation_or_rules_review": 1
   },
   "requests_used": 0,
-  "settled": 1,
+  "settled": 4,
   "status": "PARTIAL",
   "verified_player_targets": [
     {
@@ -54,10 +87,34 @@
       "targets_sha256": "63f32fc272daefee41b3146c5f6a4fcb88fc5275e633c7644c7894c4ce384fc3"
     },
     {
-      "appearances": 30,
-      "match_id": 5749749,
+      "appearances": 32,
+      "match_id": 5881220,
       "status": "saved",
-      "targets_sha256": "3f9f5821b882971ec1562ad794e90596dbe43beb095506cb1bf2023bbc119800"
+      "targets_sha256": "abaf9356bccd3fedf8636401ccfbfacc3715ad1b2ffdaf544cae19220d4dedb6"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5749747,
+      "status": "saved",
+      "targets_sha256": "77afa5c4b8980f88e57977f55f8aa6dbf6b3e1a56f2f4185c8480774ab5637dd"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5881215,
+      "status": "saved",
+      "targets_sha256": "827f6ce2572314c131f39f5dfabc1248032a3a225a7880422210bca13dafae22"
+    },
+    {
+      "appearances": 29,
+      "match_id": 5795513,
+      "status": "saved",
+      "targets_sha256": "f6cce78cfc88f4b86f21a886bdcb84cf8cd85d8433cd00d53ec06026ada6cbbb"
+    },
+    {
+      "appearances": 31,
+      "match_id": 5749746,
+      "status": "saved",
+      "targets_sha256": "4815460506cef715b867c6ab6a5c68ceb4b3c29a7215eaf635027e041d3b0467"
     }
   ]
 }
