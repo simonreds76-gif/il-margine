@@ -24,6 +24,7 @@ if (matches.size !== release.matches) throw Error('Incomplete Matchday history p
 if (results.size !== (index.additionalResults ?? 0)) throw Error('Incomplete H2H projection');
 const output = { version: index.version, through: index.through, asOf: index.asOf,
   players: index.players.map(p => ({ ...p, portrait: index.portraits?.[p.id]?.url ?? null })),
+  matchdaySupplement: index.matchdaySupplement ?? null,
   results: [...results.values()],
   matches: [...matches.values()].sort((a, b) => a[0].localeCompare(b[0])) };
 fs.writeFileSync(path.join(root, 'src/data/tennis-matchday-history.json'), JSON.stringify(output) + '\n');
