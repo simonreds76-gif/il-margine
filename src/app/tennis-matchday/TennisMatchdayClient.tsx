@@ -6,6 +6,7 @@ import { fixturesFor, matchdayQuote, type TennisBoard, type TennisFixture, type 
 import { atlasResearchHref } from '@/components/return-atlas/research-links.mjs';
 import styles from './matchday.module.css';
 import H2HRecord from '@/components/H2HRecord';
+import { resolveTennisPortrait } from '@/lib/tennis-portrait.mjs';
 
 const zone = 'Europe/London';
 const format = (date: string, options: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat('en-GB', { timeZone: zone, ...options }).format(new Date(date));
@@ -49,10 +50,15 @@ function Icon({ name }: { name: 'clock' | 'arrow' | 'person' | 'record' | 'searc
 }
 
 function Portrait({ player }: { player: FixturePlayer }) {
-  const [failed, setFailed] = useState(false);
-  return <span className={styles.portrait}>{player.portrait && !failed
-    ? <Image src={player.portrait} width={72} height={72} unoptimized alt="" loading="lazy" onError={() => setFailed(true)} />
-    : <Icon name="person" />}</span>;
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const crop = resolveTennisPortrait(player.name);
+  return <span className={styles.portrait}>
+    {player.portrait && failedSrc !== player.portrait
+      ? <Image src={player.portrait} width={72} height={72} unoptimized alt="" loading="lazy"
+          style={crop?.scale ? { objectPosition: crop.position, transform: `scale(${crop.scale})`, transformOrigin: crop.position } : undefined}
+          onError={() => setFailedSrc(player.portrait)} />
+      : <Icon name="person" />}
+  </span>;
 }
 
 function FixtureCard({ fixture: f, now }: { fixture: TennisFixture; now: Date }) {

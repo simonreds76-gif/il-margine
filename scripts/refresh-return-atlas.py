@@ -25,6 +25,7 @@ PROJECT = 'prj_OnvAAAzkpLa5N9uZI3Iy2mwEj6IL'
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from matchup_refresh import prepare as prepare_matchup
+from refresh_matchday_portraits import CATALOGUE, catalogue_is_live, release_fingerprint
 from tennis_score_integrity import score_detail_enrichment
 
 
@@ -234,6 +235,11 @@ def publish(checkout, version, status, save):
     manifest = run([vercel, 'curl', matchup['indexUrl'], '--deployment', url, '--', '--fail', '--silent'], checkout, timeout=120)
     if matchup['version'] not in page or json.loads(manifest).get('totalMatches') != matchup['matches']:
         raise RuntimeError('Candidate Matchup Lab failed snapshot validation')
+    if release_fingerprint(checkout):
+        portraits = run([vercel, 'curl', '/tennis-matchup/portraits.json', '--deployment', url,
+                        '--', '--fail', '--silent'], checkout, timeout=90)
+        if json.loads(portraits) != read_json(checkout / CATALOGUE):
+            raise RuntimeError('Candidate portraits failed catalogue validation')
     remote_sha = run(['git', 'ls-remote', 'origin', f'refs/heads/{BRANCH}'], checkout).split()[0]
     if remote_sha != sha:
         raise RuntimeError('Deployment branch advanced during build; refusing to promote older code')
@@ -245,6 +251,12 @@ def publish(checkout, version, status, save):
     status.update(status='verifying', deploymentUrl=url, expectedPublicVersions=expected)
     save()
     verification = wait_for_live_versions(expected)
+    for photo_attempt in range(7):
+        if catalogue_is_live(checkout, SITE, fetch):
+            break
+        if photo_attempt == 6:
+            raise RuntimeError('Public photo catalogue has not reached the tested release')
+        time.sleep(10)
     status['publicVerification'] = {**verification, 'verifiedAt': datetime.now(timezone.utc).isoformat()}
     status.update(status='published', publishedVersion=version, publishedAt=datetime.now(timezone.utc).isoformat(), deploymentUrl=url)
     save()
@@ -326,15 +338,23 @@ def refresh(config, dry_run=False):
         status.update(matchupVersion=matchup_new['version'], matchupMatches=matchup_new['matches'], matchupChanged=matchup_changed)
         h2h_audit = read_json(candidate / 'matchup-private/matchday-supplement-audit.json')
         status['matchdayH2H'] = {k: h2h_audit.get(k) for k in ('checkedAt', 'savedSchedule', 'scheduleState', 'scheduleRows', 'pairs', 'matches', 'unresolved', 'postMatchChecks')}
+        portrait_audit = read_json(candidate / 'matchup-private/matchday-portrait-audit.json')
+        portrait_changed = bool(portrait_audit.get('changed'))
+        status['matchdayPortraits'] = portrait_audit
         status.pop('error', None)
         status.pop('failedAt', None)
         status.update(checkedAt=datetime.now(timezone.utc).isoformat(), matches=new_manifest['matches'],
                       through=new_manifest['through'], newMatches=new_manifest['matches'] - old_manifest['matches'])
         if dry_run:
-            status.update(status='validated-dry-run', changed=changed or matchup_changed)
+            status.update(status='validated-dry-run', changed=changed or matchup_changed or portrait_changed)
             save()
             return status
         stage_paths = []
+        if portrait_changed:
+            portrait_path = Path(CATALOGUE)
+            (checkout / portrait_path).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(candidate / 'release' / portrait_path, checkout / portrait_path)
+            stage_paths.append(portrait_path)
         if matchup_changed:
             matchup_path = Path('public') / matchup_new['indexUrl'].lstrip('/').rsplit('/', 1)[0]
             matchup_pointer = Path('src/data/tennis-matchup-release.json')
@@ -368,7 +388,7 @@ def refresh(config, dry_run=False):
             run(['git', 'add', '--', *stage_paths], checkout)
             run(['git', 'commit', '-m', f'data: refresh tennis research through {new_manifest["through"]}'], checkout)
             run(['git', 'push', 'origin', f'HEAD:{BRANCH}'], checkout, timeout=180)
-        if live_version() != new_manifest['version'] or live_version('tennis-matchup') != matchup_new['version']:
+        if live_version() != new_manifest['version'] or live_version('tennis-matchup') != matchup_new['version'] or not catalogue_is_live(checkout, SITE, fetch):
             # Also recovers a previous successful commit whose push was interrupted.
             run(['git', 'push', 'origin', f'HEAD:{BRANCH}'], checkout, timeout=180)
             publish(checkout, new_manifest['version'], status, save)

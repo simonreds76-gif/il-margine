@@ -1,10 +1,19 @@
 import catalogue from '../data/tip-tennis-portraits.json' with { type: 'json' };
 
+import recovered from '../../public/tennis-matchup/portraits.json' with { type: 'json' };
+
 const words = value => String(value ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
 // Resolve identity before considering whether a picture exists. A missing photo
 // must never make us choose another player with the same surname.
-export function resolveTennisPortrait(name, rows = catalogue) {
+const merged = new Map(catalogue.map(row => [words(row.name), row]));
+for (const row of recovered) {
+  // An absent/null legacy photo must not mask a verified Challenger portrait.
+  // Never replace an existing verified portrait or expand surname matching.
+  const key = words(row.name);
+  if (!merged.get(key)?.src && row.src) merged.set(key, row);
+}
+export function resolveTennisPortrait(name, rows = [...merged.values()]) {
   const query = words(name);
   if (!query) return null;
   const exact = rows.filter(row => words(row.name) === query);

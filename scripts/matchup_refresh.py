@@ -126,6 +126,8 @@ def prepare(checkout, candidate, atlas_release, as_of, historical_prices=(), sch
         payload['matchdaySupplement'] = supplement
         payload_path.write_text(json.dumps(payload), encoding='utf-8')
     (private / 'matchday-supplement-audit.json').write_text(json.dumps(supplement_audit, indent=2), encoding='utf-8')
+    from refresh_matchday_portraits import prepare as prepare_portraits
+    prepare_portraits(checkout, candidate, schedule_rows, here.parent / 'config/tennis-portrait-overrides.json')
     new_release = packager.package(private / 'data.json', candidate / 'release')
     new = load_snapshot(candidate / 'release', new_release)
     changed = validate(old, new)
