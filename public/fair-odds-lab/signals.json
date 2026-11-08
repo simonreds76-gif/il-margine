@@ -1,9 +1,8 @@
 {
-  "generated_at": "2026-11-08T13:54:35.291763Z",
+  "generated_at": "2026-11-08T16:40:29.962435Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
-    "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
     "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
     "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
@@ -35,127 +34,23 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 22,
-  "signals_qualifying": 1,
+  "fixtures_evaluated": 7,
+  "signals_qualifying": 0,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 43,
+    "incomplete_prediction_roster": 8,
+    "lineup_not_public_quality": 1,
     "model_probability_below_floor": 2,
-    "model_market_gap_gt_10pp": 4
+    "model_market_gap_gt_10pp": 2
   },
   "extreme_gap_quarantine": {
-    "eligible_rows": 4,
+    "eligible_rows": 2,
     "added_by_league": {
-      "bundesliga": 3,
-      "epl": 1
+      "la-liga": 2
     },
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [
-    "serie-a"
-  ],
-  "featured_signal_id": "20261108-nikola-krstovic-9d41273871",
-  "signals": [
-    {
-      "id": "20261108-nikola-krstovic-9d41273871",
-      "match": {
-        "home_team": "AC Monza",
-        "away_team": "Atalanta BC",
-        "league": "serie-a",
-        "league_display": "Serie A",
-        "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "2026-11-08T14:00:00Z",
-        "kickoff_display": "Sun 08 Nov 14:00 UK",
-        "fotmob_match_id": "5749745",
-        "fotmob_page_url": "/matches/monza-vs-atalanta/1v8mb2#5749745",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Nikola Krstovic",
-        "team": "Atalanta",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/serie-a/atalanta.png",
-        "team_primary_color": "#1d4ed8",
-        "team_secondary_color": "#111827",
-        "team_shirt_pattern": "vertical-stripes"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 48.2,
-        "fair_odds": 2.08
-      },
-      "market_data": {
-        "best_odds": 2.45,
-        "best_book": "Grosvenor",
-        "implied_chance_pct": 40.8
-      },
-      "edge": {
-        "price_gap_pp": 7.3,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 99
-        },
-        "share_of_team_chances_pct": 39,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Positive",
-          "percentile": 69
-        },
-        "recent_team_form": {
-          "tier": "Positive",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-11-02",
-          "xg_for_avg": 2.59,
-          "xg_against_avg": 2.18,
-          "xgd_per90": 0.41,
-          "shots_for_avg": 15.6,
-          "shots_against_avg": 14.8,
-          "sot_for_avg": 7.0,
-          "sot_against_avg": 5.4,
-          "corners_for_avg": 5.6,
-          "corners_against_avg": 6.0
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 80
-        },
-        "opponent_recent_defence": {
-          "tier": "High",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-10-31",
-          "xg_for_avg": 1.14,
-          "xg_against_avg": 2.22,
-          "xgd_per90": -1.08,
-          "shots_for_avg": 10.6,
-          "shots_against_avg": 15.2,
-          "sot_for_avg": 4.8,
-          "sot_against_avg": 6.2,
-          "corners_for_avg": 3.2,
-          "corners_against_avg": 4.8
-        },
-        "fixture_boost_pct": 15,
-        "projected_minutes": 85,
-        "penalty_role": "Not on penalties",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Recent team form supports the attacking case",
-        "Opponent defensive profile is a positive matchup"
-      ],
-      "risk_flags": []
-    }
-  ]
+  "leagues_covered": [],
+  "featured_signal_id": null,
+  "signals": []
 }
