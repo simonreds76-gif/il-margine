@@ -35,4 +35,16 @@ class SupplementTests(unittest.TestCase):
   old,_=self.run_build();self.games.append({**self.games[0],'tour_id':'12','date':'2026-11-07'});self.tours.append({**self.tours[0],'id':'12'})
   new,a=self.run_build(old);self.assertEqual(a['matches'],2)
 
+ def test_completed_fixture_is_confirmed_by_native_pair_event_and_date(self):
+  old,_=self.run_build()
+  request={'pair':'player one|player two','date':'2026-11-01','event':'ATP Challenger Test - R1'}
+  _,audit=build(self.root,[],[],'2026-11-08',old,[request])
+  self.assertEqual(audit['postMatchChecks'][0]['status'],'confirmed')
+ def test_missing_result_is_reported_without_fabricating_or_removing_records(self):
+  old,_=self.run_build()
+  request={'pair':'player one|player two','date':'2026-11-04','event':'ATP Challenger Other - R1'}
+  new,audit=build(self.root,[],[],'2026-11-08',old,[request])
+  self.assertEqual(audit['postMatchChecks'][0]['status'],'overdue_result')
+  self.assertEqual(new,old)
+
 if __name__=='__main__':unittest.main()
