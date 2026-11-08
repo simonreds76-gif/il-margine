@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-08T06:10:44Z",
+  "generated_at": "2026-11-08T15:35:57Z",
   "league": "serie-a",
   "row_count": 2,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2994661045",
           "match_id": "5749747",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749747",
-          "observed_at": "2026-11-08T06:10:41+00:00",
+          "observed_at": "2026-11-08T15:35:50+00:00",
           "event_date": "2026-11-07",
           "season": "2026/27",
           "team": "Bologna",
@@ -117,7 +117,7 @@
           "source_event_id": "2994669955",
           "match_id": "5749747",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749747",
-          "observed_at": "2026-11-08T06:10:41+00:00",
+          "observed_at": "2026-11-08T15:35:50+00:00",
           "event_date": "2026-11-07",
           "season": "2026/27",
           "team": "Parma",
@@ -155,10 +155,14 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20261102",
+      "20261103",
+      "20261104",
+      "20261105",
       "20261106",
       "20261107",
       "20261108"
     ],
-    "matches_checked": 5
+    "matches_checked": 10
   }
 }
