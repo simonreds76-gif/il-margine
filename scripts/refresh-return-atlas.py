@@ -38,7 +38,22 @@ def publication_auth_args(args, env):
     env.update(prepare_environment(args[0], env, metadata=metadata))
     if metadata.get('renewed'):
         print('ATLAS_PUBLICATION_ACCESS_RENEWED ' + json.dumps(metadata), flush=True)
-    return args
+    # Linked project IDs do not populate currentTeam for CLI promotion when
+    # a saved OAuth token is supplied through the child environment. Pin the
+    # account explicitly on every CLI call, before any curl passthrough.
+    arguments = list(args)
+    option_end = arguments.index('--') if '--' in arguments else len(arguments)
+    scopes = []
+    for i, value in enumerate(arguments[1:option_end], 1):
+        if value in ('--scope', '-S'):
+            if i + 1 >= option_end:
+                raise RuntimeError('Missing Vercel publication scope')
+            scopes.append(str(arguments[i + 1]))
+        elif str(value).startswith('--scope='):
+            scopes.append(str(value).split('=', 1)[1])
+    if any(scope != TEAM for scope in scopes):
+        raise RuntimeError('Vercel publication scope mismatch; no command launched')
+    return arguments if scopes else [arguments[0], '--scope', TEAM, *arguments[1:]]
 
 
 def run(args, cwd=None, env=None, timeout=600):
@@ -277,6 +292,21 @@ def stage_on_production(source, state, deployment, *, worktree_root=None):
     return destination, branch, sha, candidate_sha
 
 
+def validate_deployment_identity(deployment, *, expected_sha=None, expected_id=None):
+    owners = [deployment.get('ownerId'), (deployment.get('team') or {}).get('id')]
+    owners = [owner for owner in owners if owner]
+    if not owners or any(owner != TEAM for owner in owners) or deployment.get('projectId') != PROJECT:
+        raise RuntimeError('Vercel deployment project/team mismatch; publication stopped')
+    if deployment.get('target') != 'production':
+        raise RuntimeError('Candidate is not built for production; publication stopped')
+    if expected_id and deployment.get('id') != expected_id:
+        raise RuntimeError('Vercel deployment ID mismatch; publication stopped')
+    if expected_sha:
+        sha = (deployment.get('meta') or {}).get('githubCommitSha') or (deployment.get('gitSource') or {}).get('sha')
+        if sha != expected_sha:
+            raise RuntimeError('Vercel deployment commit mismatch; publication stopped')
+
+
 def publish(checkout, version, status, save):
     # Authenticated curl requires an explicitly linked project even with --deployment.
     # Public IDs only; CLI credentials stay in the user's existing secure store.
@@ -287,6 +317,7 @@ def publish(checkout, version, status, save):
         raise RuntimeError('Vercel CLI unavailable')
     prior_alias = json.loads(run([vercel, 'api', f'/v4/aliases/ilmargine.bet?teamId={TEAM}', '--raw'], checkout))['deploymentId']
     production = json.loads(run([vercel, 'api', f'/v13/deployments/{prior_alias}?teamId={TEAM}', '--raw'], checkout))
+    validate_deployment_identity(production, expected_id=prior_alias)
     checkout, release_branch, production_sha, sha = stage_on_production(checkout, status['stateDirectory'], production)
     (checkout / '.vercel').mkdir(exist_ok=True)
     write_json(checkout / '.vercel/project.json', {'projectId': PROJECT, 'orgId': TEAM, 'projectName': 'il-margine'})
@@ -315,6 +346,7 @@ def publish(checkout, version, status, save):
         time.sleep(30)
     else:
         raise RuntimeError('Candidate build timed out; public alias unchanged')
+    validate_deployment_identity(deployment, expected_sha=sha, expected_id=deployment_id)
     url = 'https://' + deployment['url']
     page = run([vercel, 'curl', '/return-atlas', '--deployment', url, '--', '--fail', '--silent'], checkout, timeout=120)
     if version not in page or re.search(r'<meta[^>]+name="robots"[^>]+content="[^"]*noindex', page, re.I):
