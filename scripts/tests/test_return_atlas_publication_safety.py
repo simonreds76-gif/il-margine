@@ -11,7 +11,7 @@ class AuthTests(unittest.TestCase):
   args=['vercel.cmd','curl','/return-atlas','--','--fail','--silent']
   with patch.object(M,'prepare_environment',return_value={'VERCEL_TOKEN':'test-secret'}):
    actual=M.publication_auth_args(args,env)
-  self.assertEqual(actual,args);self.assertEqual(env['VERCEL_TOKEN'],'test-secret')
+  self.assertEqual(actual,[args[0],'--scope',M.TEAM,*args[1:]]);self.assertEqual(env['VERCEL_TOKEN'],'test-secret')
   self.assertNotIn('test-secret',str(actual));self.assertNotIn('--global-config',actual)
  def test_missing_auth_never_launches_vercel(self):
   with patch.object(M,'prepare_environment',side_effect=M.PublicationAuthRequired('missing')),patch.object(M.subprocess,'run') as run:
@@ -21,6 +21,40 @@ class AuthTests(unittest.TestCase):
   with patch.object(M,'prepare_environment',return_value={'VERCEL_TOKEN':'test-secret'}),patch.object(M.subprocess,'run',return_value=Mock(returncode=1,stdout='',stderr='failed test-secret')):
    with self.assertRaises(RuntimeError) as error:M.run(['vercel.cmd','api','/test'])
   self.assertNotIn('test-secret',str(error.exception))
+
+class ScopeTests(unittest.TestCase):
+ def test_api_curl_and_promotion_share_explicit_team_without_global_mutation(self):
+  for tail in [['api','/v9/projects/p?teamId='+M.TEAM,'--raw'],['curl','/return-atlas','--deployment','https://example.vercel.app','--','--fail','--silent'],['promote','dpl_candidate','--yes']]:
+   with self.subTest(command=tail[0]),patch.object(M,'prepare_environment',return_value={'VERCEL_TOKEN':'test-secret'}):
+    command=M.publication_auth_args(['vercel.cmd',*tail],{})
+   self.assertEqual(command,['vercel.cmd','--scope',M.TEAM,*tail])
+   self.assertNotIn('--global-config',command)
+ def test_existing_matching_scope_is_not_duplicated(self):
+  for option in [['--scope',M.TEAM],['--scope='+M.TEAM],['-S',M.TEAM]]:
+   args=['vercel.cmd',*option,'promote','dpl_candidate','--yes']
+   with patch.object(M,'prepare_environment',return_value={}):self.assertEqual(M.publication_auth_args(args,{}),args)
+ def test_conflicting_or_missing_scope_never_launches_cli(self):
+  for option in [['--scope','team_other'],['--scope=team_other'],['-S','team_other'],['--scope']]:
+   with self.subTest(option=option),patch.object(M,'prepare_environment',return_value={}),patch.object(M.subprocess,'run') as launch:
+    with self.assertRaisesRegex(RuntimeError,'scope'):M.run(['vercel.cmd','promote','dpl_candidate',*option])
+   launch.assert_not_called()
+ def test_curl_passthrough_does_not_override_cli_scope(self):
+  args=['vercel.cmd','curl','/return-atlas','--','--header','--scope=literal-header-value']
+  with patch.object(M,'prepare_environment',return_value={}):
+   self.assertEqual(M.publication_auth_args(args,{}),[args[0],'--scope',M.TEAM,*args[1:]])
+
+class DeploymentIdentityTests(unittest.TestCase):
+ def candidate(self):
+  return {'id':'dpl_candidate','ownerId':M.TEAM,'team':{'id':M.TEAM},'projectId':M.PROJECT,'target':'production','meta':{'githubCommitSha':'a'*40}}
+ def test_exact_candidate_is_accepted(self):
+  M.validate_deployment_identity(self.candidate(),expected_sha='a'*40,expected_id='dpl_candidate')
+ def test_other_project_team_preview_or_commit_are_rejected(self):
+  for field,value in [('projectId','other'),('ownerId','team_other'),('team',{'id':'team_other'}),('target','preview'),('meta',{'githubCommitSha':'b'*40}),('id','dpl_other')]:
+   data=self.candidate();data[field]=value
+   with self.subTest(field=field),self.assertRaises(RuntimeError):M.validate_deployment_identity(data,expected_sha='a'*40,expected_id='dpl_candidate')
+ def test_missing_owner_is_not_inferred_from_slug_or_url(self):
+  data=self.candidate();data.pop('ownerId');data.pop('team')
+  with self.assertRaisesRegex(RuntimeError,'project/team'):M.validate_deployment_identity(data)
 
 class ProductionSafetyTests(unittest.TestCase):
  def test_ui_or_unrelated_content_cannot_enter_data_release(self):
