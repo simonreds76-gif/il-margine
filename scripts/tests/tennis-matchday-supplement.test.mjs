@@ -41,3 +41,12 @@ test('reviewed Brazilian feed variants retain existing public IDs',()=>{
  const f=buildTennisMatchday([{...row,player1_name:'Igor Marcondes',player2_name:'Felipe Meligeni Rodrigues Alves'}],base,now).fixtures[0];
  assert.deepEqual(f.players.map(p=>p.id),['vbt-5490','vbt-16420']);assert.ok(f.href);assert.equal(f.resultsOnly,false);
 });
+
+test('reviewed Tai Leonard Sach name uses the same results-only identity',()=>{
+ const history={...h,matchdaySupplement:{pairs:{'tai sach|thomas fancutt':{
+   ...pair,players:[{name:'Tai Sach',nativeId:'68624'},{name:'Thomas Fancutt',nativeId:'30211'}]}}}};
+ const f=buildTennisMatchday([{...row,player1_name:'Thomas Fancutt',player2_name:'Tai Leonard Sach'}],history,now).fixtures[0];
+ assert.equal(f.meetings,1);assert.deepEqual(f.wins,[1,0]);assert.equal(f.players[1].name,'Tai Leonard Sach');
+ assert.deepEqual(f.roi,[null,null]);assert.equal(f.href,null);
+});
+

@@ -1,7 +1,7 @@
 import { resolveTennisPortrait } from './tennis-portrait.mjs';
 // Explicit feed variants of these archive identities; never fuzzy-match opponents.
 const aliases = { 'jaume munar': 'vbt-10698', 'pedro martinez': 'vbt-12525', 'taylor fritz': 'vbt-9023', 'yunchaokete bu': 'vbt-25003', 'igor marcondes': 'vbt-5490', 'felipe meligeni rodrigues alves': 'vbt-16420' };
-const normal = text => String(text ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const normal = text => String(text ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/^tai leonard sach$/, 'tai sach');
 const knownPlayer = name => name && !/\b(tba|tbd|winner|qualifier|bye)\b|[/&]/i.test(name);
 const day = (time, zone) => new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(time);
 
