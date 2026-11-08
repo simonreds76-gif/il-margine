@@ -46,6 +46,8 @@ def canonical(data):
 
 
 def validate(old, new):
+    from build_matchday_supplement import validate_supplement
+    validate_supplement(old.get('matchdaySupplement'), new.get('matchdaySupplement'))
     previous, candidate = canonical(old), canonical(new)
     old_extra=canonical({**old,'matches':old.get('results',[])})
     new_extra=canonical({**new,'matches':new.get('results',[])})
@@ -87,10 +89,10 @@ def validate(old, new):
             elif value is not None and after.get(field) != value:
                 raise ValueError(f'Existing Matchup record changed: {mid} ({field})')
     # A new check date alone does not justify another deployment.
-    return old.get('context') != new.get('context') or previous != candidate or old_extra != new_extra or any(old[k] != new[k] for k in ('players', 'portraits', 'countries'))
+    return old.get('matchdaySupplement') != new.get('matchdaySupplement') or old.get('context') != new.get('context') or previous != candidate or old_extra != new_extra or any(old[k] != new[k] for k in ('players', 'portraits', 'countries'))
 
 
-def prepare(checkout, candidate, atlas_release, as_of, historical_prices=()):
+def prepare(checkout, candidate, atlas_release, as_of, historical_prices=(), schedule=None):
     here = Path(__file__).resolve().parent
     def module(name, filename):
         spec = importlib.util.spec_from_file_location(name, here / filename)
@@ -106,6 +108,21 @@ def prepare(checkout, candidate, atlas_release, as_of, historical_prices=()):
     retained = canonical({**old,'matches':[r for r in old.get('results',[]) if r.get('o1') and r.get('o2')]})
     builder.build(atlas.parent, candidate / 'oncourt', private, as_of, data_only=True,
                   historical_prices=historical_prices, retained_prices=retained)
+    from build_matchday_supplement import build as build_supplement, read_csv
+    payload_path = private / 'data.json'
+    payload = read(payload_path)
+    audit_path = private / 'matchday-supplement-audit.json'
+    prior_requests = read(audit_path).get('requests', []) if audit_path.exists() else []
+    schedule_rows = read_csv(schedule) if schedule and schedule.exists() else []
+    supplement, supplement_audit = build_supplement(candidate / 'oncourt',
+        schedule_rows, payload['players'], as_of,
+        old.get('matchdaySupplement'), prior_requests)
+    supplement_audit.update(checkedAt=as_of, scheduleRows=len(schedule_rows),
+        scheduleState='loaded' if schedule_rows else 'empty' if schedule and schedule.exists() else 'missing')
+    if supplement['pairs']:
+        payload['matchdaySupplement'] = supplement
+        payload_path.write_text(json.dumps(payload), encoding='utf-8')
+    (private / 'matchday-supplement-audit.json').write_text(json.dumps(supplement_audit, indent=2), encoding='utf-8')
     new_release = packager.package(private / 'data.json', candidate / 'release')
     new = load_snapshot(candidate / 'release', new_release)
     changed = validate(old, new)

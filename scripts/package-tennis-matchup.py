@@ -40,6 +40,8 @@ def package(source, root=ROOT):
     content['matches'] = rows
     content['results'] = results
     content['context'] = data.get('context', {})
+    if data.get('matchdaySupplement'):
+        content['matchdaySupplement'] = data['matchdaySupplement']
     version = data['asOf'].replace('-', '') + '-' + hashlib.sha256(json.dumps(content, sort_keys=True).encode()).hexdigest()[:12]
     target = root / 'public/tennis-matchup/data' / version
     target.mkdir(parents=True, exist_ok=True)
@@ -57,6 +59,8 @@ def package(source, root=ROOT):
         write(target / f'{index}.json', {'version': version, 'player': index, 'matches': matches, 'results':result_shards[index], 'schedule':data.get('context',{}).get('players',{}).get(str(index),[])})
     manifest = {key: data[key] for key in ('asOf', 'through', 'countries', 'players', 'portraits')}
     manifest['context'] = {k:v for k,v in data.get('context',{}).items() if k != 'players'}
+    if data.get('matchdaySupplement'):
+        manifest['matchdaySupplement'] = data['matchdaySupplement']
     manifest.update(schema=2, version=version, totalMatches=len(rows))
     manifest.update(additionalResults=len(results), historyFrom=data.get('historyFrom','2021-01-01'))
     write(target / 'index.json', manifest)
