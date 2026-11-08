@@ -1,4 +1,7 @@
-param([switch]$CooperativeLock)
+param(
+    [switch]$CooperativeLock,
+    [switch]$IncludeHistoricalClv
+)
 
 # Il Margine - Nightly Tennis Settlement (runs daily after matches)
 # Settles strict + shadow lanes and refreshes performance summaries.
@@ -210,16 +213,22 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: extreme-gap hypothesis settlement failed (exit $LASTEXITCODE), continuing..."
 }
 
-Log "=== Post-step: Extreme-gap ML closing-line audit ==="
-Invoke-HistoryStep scripts\audit-strict-clv.py --signals data\backtest\tennis-model-market-gap-archive.csv --bet-type match --detail-csv data\backtest\tennis-model-market-gap-clv-ml.csv --summary-txt data\backtest\tennis-model-market-gap-clv-ml.txt --unmatched-csv data\backtest\tennis-model-market-gap-clv-ml-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: extreme-gap ML CLV audit failed (exit $LASTEXITCODE), continuing..."
-}
+# Full-history CLV scans run in the existing weekly job, not every night.
+# Daily settlements and the last published CLV evidence remain available.
+if ($IncludeHistoricalClv) {
+    Log "=== Post-step: Extreme-gap ML closing-line audit ==="
+    Invoke-HistoryStep scripts\audit-strict-clv.py --signals data\backtest\tennis-model-market-gap-archive.csv --bet-type match --detail-csv data\backtest\tennis-model-market-gap-clv-ml.csv --summary-txt data\backtest\tennis-model-market-gap-clv-ml.txt --unmatched-csv data\backtest\tennis-model-market-gap-clv-ml-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "WARNING: extreme-gap ML CLV audit failed (exit $LASTEXITCODE), continuing..."
+    }
 
-Log "=== Post-step: Extreme-gap spread closing-line audit ==="
-Invoke-HistoryStep scripts\audit-strict-clv.py --signals data\backtest\tennis-model-market-gap-archive.csv --bet-type spread --detail-csv data\backtest\tennis-model-market-gap-clv-spread.csv --summary-txt data\backtest\tennis-model-market-gap-clv-spread.txt --unmatched-csv data\backtest\tennis-model-market-gap-clv-spread-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: extreme-gap spread CLV audit failed (exit $LASTEXITCODE), continuing..."
+    Log "=== Post-step: Extreme-gap spread closing-line audit ==="
+    Invoke-HistoryStep scripts\audit-strict-clv.py --signals data\backtest\tennis-model-market-gap-archive.csv --bet-type spread --detail-csv data\backtest\tennis-model-market-gap-clv-spread.csv --summary-txt data\backtest\tennis-model-market-gap-clv-spread.txt --unmatched-csv data\backtest\tennis-model-market-gap-clv-spread-unmatched.csv 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "WARNING: extreme-gap spread CLV audit failed (exit $LASTEXITCODE), continuing..."
+    }
+} else {
+    Log "Historical closing-price audits deferred to existing weekly refresh; saved reports retained."
 }
 
 Log "=== Post-step: Extreme model/market gap report ==="
