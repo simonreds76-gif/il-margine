@@ -111,9 +111,11 @@ def prepare(checkout, candidate, atlas_release, as_of, historical_prices=(), sch
     from build_matchday_supplement import build as build_supplement, read_csv
     payload_path = private / 'data.json'
     payload = read(payload_path)
+    audit_path = private / 'matchday-supplement-audit.json'
+    prior_requests = read(audit_path).get('requests', []) if audit_path.exists() else []
     supplement, supplement_audit = build_supplement(candidate / 'oncourt',
         read_csv(schedule) if schedule and schedule.exists() else [], payload['players'], as_of,
-        old.get('matchdaySupplement'))
+        old.get('matchdaySupplement'), prior_requests)
     if supplement['pairs']:
         payload['matchdaySupplement'] = supplement
         payload_path.write_text(json.dumps(payload), encoding='utf-8')

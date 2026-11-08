@@ -30,7 +30,7 @@ def read_csv(path):
         return list(csv.DictReader(f))
 
 
-def build(oncourt, schedule, base_players, as_of, old=None):
+def build(oncourt, schedule, base_players, as_of, old=None, prior_requests=()):
     spec = importlib.util.spec_from_file_location('matchday_score_rules', Path(__file__).with_name('build-tennis-matchup.py'))
     rules = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(rules)
@@ -51,6 +51,7 @@ def build(oncourt, schedule, base_players, as_of, old=None):
     pairs = json.loads(json.dumps(old['pairs']))
     audit = {'method': 'unique_full_name_and_recent_activity_and_age', 'second_key_independently_verified': False,
              'unresolved': [], 'identities': {}, 'excluded': Counter()}
+    requests = {(r['pair'], r['date'], r['event']): r for r in prior_requests}
     for row in schedule:
         if row.get('league') not in ('ATP', 'Challenger'):
             continue
@@ -89,6 +90,8 @@ def build(oncourt, schedule, base_players, as_of, old=None):
             continue
         pairs.setdefault(pair_key, {'players': identities, 'matches': [], 'checkedThrough': as_of,
                                     'method': audit['method']})
+        request = {'pair': pair_key, 'date': row['match_date'], 'event': row.get('league_name', '')}
+        requests[(pair_key, request['date'], request['event'])] = request
         for pid in ids:
             audit['identities'][pid] = {k: people[pid].get(k) for k in ('name', 'birthdate', 'country')}
     targets = {tuple(sorted(p['nativeId'] for p in v['players'])): k for k, v in pairs.items()}
@@ -138,6 +141,22 @@ def build(oncourt, schedule, base_players, as_of, old=None):
         pair['matches'] = sorted(prior.values(), key=lambda m: (m['date'], m['id']))
         pair['checkedThrough'] = as_of
     result = {'schema': 1, 'asOf': as_of, 'pairs': dict(sorted(pairs.items()))}
+    def event_key(value):
+        value = re.sub(r'^ATP\s+(?:Challenger\s+)?', '', value, flags=re.I)
+        value = re.sub(r'\s+[-–—]\s+(?:Qualifiers?|Qualifying|R\d+|Q\d+|SF|F|Final|Semi Final|Quarter Final)$', '', value, flags=re.I)
+        return normal(re.sub(r'\s+Challenger$', '', value, flags=re.I))
+    audit['requests'] = sorted(requests.values(), key=lambda r: (r['date'], r['pair'], r['event']))
+    audit['postMatchChecks'] = []
+    for request in audit['requests']:
+        if request['date'] >= as_of or request['pair'] not in pairs: continue
+        ids = {p['nativeId'] for p in pairs[request['pair']]['players']}
+        candidates = [g for g in games if {g['winner_id'],g['loser_id']} == ids
+                      and abs((date.fromisoformat(g['date'])-date.fromisoformat(request['date'])).days) <= 1
+                      and event_key(tours.get(g['tour_id'],{}).get('name','')) == event_key(request['event'])]
+        state = 'confirmed' if len(candidates)==1 else 'ambiguous' if candidates else 'awaiting_result'
+        if not candidates and (date.fromisoformat(as_of)-date.fromisoformat(request['date'])).days > 3: state = 'overdue_result'
+        audit['postMatchChecks'].append({**request,'status':state,'candidateCount':len(candidates),
+            'includedCompletedResult':len(candidates)==1 and rules.completed(candidates[0]['result'])})
     def content_only(value):
         return {k: {f: x for f, x in p.items() if f != 'checkedThrough'} for k, p in value.get('pairs', {}).items()}
     if old.get('schema') == 1 and content_only(old) == content_only(result):
