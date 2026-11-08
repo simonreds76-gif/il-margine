@@ -40,7 +40,7 @@ def publication_auth_args(args, env):
         print('ATLAS_PUBLICATION_ACCESS_RENEWED ' + json.dumps(metadata), flush=True)
     # Linked project IDs do not populate currentTeam for CLI promotion when
     # a saved OAuth token is supplied through the child environment. Pin the
-    # account explicitly on every CLI call, before any curl passthrough.
+    # account explicitly for API/promotion calls. Curl has a CLI parser exception.
     arguments = list(args)
     option_end = arguments.index('--') if '--' in arguments else len(arguments)
     scopes = []
@@ -53,6 +53,14 @@ def publication_auth_args(args, env):
             scopes.append(str(value).split('=', 1)[1])
     if any(scope != TEAM for scope in scopes):
         raise RuntimeError('Vercel publication scope mismatch; no command launched')
+    if 'curl' in arguments[1:option_end]:
+        # Vercel 54.4.1 forwards global flags to the system curl executable.
+        # Bind its existing linked-project lookup through the documented env
+        # instead; candidate team/project identity is checked before this call.
+        if scopes:
+            raise RuntimeError('Use project environment for Vercel curl scope')
+        env.update(VERCEL_ORG_ID=TEAM, VERCEL_PROJECT_ID=PROJECT)
+        return arguments
     return arguments if scopes else [arguments[0], '--scope', TEAM, *arguments[1:]]
 
 

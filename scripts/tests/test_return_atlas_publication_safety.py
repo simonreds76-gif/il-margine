@@ -11,7 +11,8 @@ class AuthTests(unittest.TestCase):
   args=['vercel.cmd','curl','/return-atlas','--','--fail','--silent']
   with patch.object(M,'prepare_environment',return_value={'VERCEL_TOKEN':'test-secret'}):
    actual=M.publication_auth_args(args,env)
-  self.assertEqual(actual,[args[0],'--scope',M.TEAM,*args[1:]]);self.assertEqual(env['VERCEL_TOKEN'],'test-secret')
+  self.assertEqual(actual,args);self.assertEqual(env['VERCEL_TOKEN'],'test-secret')
+  self.assertEqual(env['VERCEL_ORG_ID'],M.TEAM);self.assertEqual(env['VERCEL_PROJECT_ID'],M.PROJECT)
   self.assertNotIn('test-secret',str(actual));self.assertNotIn('--global-config',actual)
  def test_missing_auth_never_launches_vercel(self):
   with patch.object(M,'prepare_environment',side_effect=M.PublicationAuthRequired('missing')),patch.object(M.subprocess,'run') as run:
@@ -24,11 +25,20 @@ class AuthTests(unittest.TestCase):
 
 class ScopeTests(unittest.TestCase):
  def test_api_curl_and_promotion_share_explicit_team_without_global_mutation(self):
-  for tail in [['api','/v9/projects/p?teamId='+M.TEAM,'--raw'],['curl','/return-atlas','--deployment','https://example.vercel.app','--','--fail','--silent'],['promote','dpl_candidate','--yes']]:
+  for tail in [['api','/v9/projects/p?teamId='+M.TEAM,'--raw'],['promote','dpl_candidate','--yes']]:
    with self.subTest(command=tail[0]),patch.object(M,'prepare_environment',return_value={'VERCEL_TOKEN':'test-secret'}):
     command=M.publication_auth_args(['vercel.cmd',*tail],{})
    self.assertEqual(command,['vercel.cmd','--scope',M.TEAM,*tail])
    self.assertNotIn('--global-config',command)
+ def test_curl_never_forwards_scope_and_overrides_wrong_link_environment(self):
+  args=['vercel.cmd','curl','/return-atlas','--deployment','https://example.vercel.app','--','--fail','--silent']
+  env={'VERCEL_ORG_ID':'wrong','VERCEL_PROJECT_ID':'wrong'}
+  with patch.object(M,'prepare_environment',return_value={}):
+   self.assertEqual(M.publication_auth_args(args,env),args)
+  self.assertEqual(env['VERCEL_ORG_ID'],M.TEAM);self.assertEqual(env['VERCEL_PROJECT_ID'],M.PROJECT)
+  with patch.object(M,'prepare_environment',return_value={}):
+   with self.assertRaisesRegex(RuntimeError,'curl scope'):
+    M.publication_auth_args(['vercel.cmd','curl','/return-atlas','--scope',M.TEAM],{})
  def test_existing_matching_scope_is_not_duplicated(self):
   for option in [['--scope',M.TEAM],['--scope='+M.TEAM],['-S',M.TEAM]]:
    args=['vercel.cmd',*option,'promote','dpl_candidate','--yes']
@@ -41,7 +51,7 @@ class ScopeTests(unittest.TestCase):
  def test_curl_passthrough_does_not_override_cli_scope(self):
   args=['vercel.cmd','curl','/return-atlas','--','--header','--scope=literal-header-value']
   with patch.object(M,'prepare_environment',return_value={}):
-   self.assertEqual(M.publication_auth_args(args,{}),[args[0],'--scope',M.TEAM,*args[1:]])
+   self.assertEqual(M.publication_auth_args(args,{}),args)
 
 class DeploymentIdentityTests(unittest.TestCase):
  def candidate(self):
