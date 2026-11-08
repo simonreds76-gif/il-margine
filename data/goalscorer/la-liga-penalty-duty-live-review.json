@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-08T15:36:05Z",
+  "generated_at": "2026-11-08T16:38:41.958573+00:00",
   "league": "la-liga",
   "row_count": 1,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2993851747",
           "match_id": "5868128",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868128",
-          "observed_at": "2026-11-08T15:36:02+00:00",
+          "observed_at": "2026-11-08T16:38:45+00:00",
           "event_date": "2026-11-06",
           "season": "2026/27",
           "team": "Sevilla",
@@ -85,5 +85,13 @@
       "20261108"
     ],
     "matches_checked": 8
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261101"
+    ],
+    "matches_checked": 1
   }
 }
