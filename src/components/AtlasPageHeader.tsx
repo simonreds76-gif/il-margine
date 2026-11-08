@@ -7,10 +7,11 @@ import "@/app/research-mobile.css";
 import ResearchToolNav from './ResearchToolNav';
 import { researchTools as editions } from './research-tools';
 
-export default function AtlasPageHeader({ edition, description, children }: {
+export default function AtlasPageHeader({ edition, description, children, showNavigation = true }: {
   edition: typeof editions[number]["id"];
   description: string;
   children?: ReactNode;
+  showNavigation?: boolean;
 }) {
   const current = editions.find(item => item.id === edition)!;
   return <header className={styles.header}>
@@ -25,7 +26,7 @@ export default function AtlasPageHeader({ edition, description, children }: {
         <p className={styles.edition}>{edition === "aerial" ? "Lineup research · beta" : edition === "matchup" ? "Tennis" : current.label}</p></div>
     </div>
     <p className={styles.description}>{description}</p>
-    <ResearchToolNav current={edition}/>
+    {showNavigation && <ResearchToolNav current={edition}/>}
     {children}
   </header>;
 }

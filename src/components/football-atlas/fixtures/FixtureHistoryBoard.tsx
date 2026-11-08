@@ -6,7 +6,7 @@ import FixtureBoard from './FixtureBoard';
 import type { FixtureBoard as Board } from './types';
 import release from '@/data/covered-leagues-release.json';
 
-export default function FixtureHistoryBoard({ board }: { board: Board }) {
+export default function FixtureHistoryBoard({ board, renderedAt }: { board: Board; renderedAt: number }) {
   const available = release.baseBoardVersion === board.version;
   const { covered, choose } = useArchiveScope(available);
   const [expanded, setExpanded] = useState<Board | null>(null);
@@ -31,7 +31,10 @@ export default function FixtureHistoryBoard({ board }: { board: Board }) {
     return () => controller.abort();
   }, [covered, attempt, board.fixtures]);
   const additions = available ? release.additionalClubMeetings : {};
-  return <><ArchiveHistoryScope covered={covered} choose={choose} available={available} />
-    {covered && !expanded ? <p role="status">{error ? <>The wider history could not load. <button onClick={() => setAttempt(attempt + 1)}>Retry</button> or select the original archive.</> : 'Loading the wider league history…'}</p> : <FixtureBoard key={covered ? release.version : board.version} board={covered ? expanded! : board} covered={covered} additions={additions} onExpand={() => choose(true)} />}
-  </>;
+  const showingCovered = covered && expanded !== null;
+  const controls = <details className="af-history-scope"><summary><span>History: <strong>{showingCovered ? 'top five + Championship' : 'top-five leagues'}</strong> · both venues</span><span className="af-scope-action">Coverage &amp; options</span></summary>
+    <ArchiveHistoryScope covered={covered} choose={choose} available={available} />
+    {covered && !expanded && <p className="af-history-status" role="status">{error ? <>The wider history could not load. <button onClick={() => setAttempt(attempt + 1)}>Retry</button>. The original archive is shown.</> : 'Loading Championship history. The original archive is shown until it is ready.'}</p>}
+  </details>;
+  return <FixtureBoard board={showingCovered ? expanded! : board} renderedAt={renderedAt} historyControls={controls} covered={showingCovered} additions={additions} onExpand={() => choose(true)} />;
 }

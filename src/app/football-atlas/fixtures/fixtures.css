@@ -134,3 +134,42 @@
 .atlas-fixtures .af-h2h-coverage > span { display: inline-block; }
 
 .af-coverage-expand{display:block;padding:7px 0;margin-bottom:5px;border:0;background:transparent;color:#a8e8ce;font:inherit;text-align:left;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+
+/* Matchday discovery: visible league choices; scope stays separate from fixture filters. */
+.af-league-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:18px 18px 10px}
+.af-league-heading strong{font-size:15px;letter-spacing:-.02em}.af-league-heading>span{font-size:11px;color:var(--af-muted)}
+.af-league-filters{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;padding:0 14px 14px}
+.af-league-filters button{display:flex;align-items:center;gap:9px;min-width:0;min-height:64px;padding:10px;border:1px solid #33444f;border-radius:10px;background:#0d171e;color:#c6d5de;text-align:left}
+.af-league-filters button:hover{border-color:#6d9e88;background:#182b2a}
+.af-league-filters button[aria-pressed=true]{background:#193b30;border-color:#89dfba;box-shadow:inset 0 -2px #89dfba;color:#c9ffe7}
+.af-league-logo{display:flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;background:#eef3f0;border-radius:8px;padding:4px}
+.af-league-logo img{width:26px;height:26px;object-fit:contain}.af-league-all{background:#2a4b40;color:#baf2d5}
+.af-league-name{min-width:0;font-size:12px;font-weight:650;line-height:1.3}
+.af-league-count{margin-left:auto;flex:none;font-size:12px;color:#9fb7c4;font-variant-numeric:tabular-nums}
+.af-league-filters button[aria-pressed=true] .af-league-count{color:#bff7dc}
+.af-league-filters button[aria-pressed=true] .af-league-count::before{content:'✓';display:inline-block;margin-right:4px;font-size:11px}
+.atlas-fixtures .af-date-tabs{border-top:1px solid var(--af-line);border-bottom:0}
+.atlas-fixtures .af-refine{border-top:1px solid var(--af-line)}
+.atlas-fixtures .af-filters{grid-template-columns:minmax(180px,1fr) minmax(0,1.5fr);align-items:start}
+.af-filter-help{font-size:11px;font-weight:400;color:var(--af-muted);line-height:1.6;margin:8px 0 0}
+.af-history-scope{border-top:1px solid var(--af-line);font-size:12px;color:#a8bac7}
+.af-history-scope>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:12px 16px;cursor:pointer;list-style:none;line-height:1.6}
+.af-history-scope>summary::-webkit-details-marker{display:none}.af-history-scope>summary strong{font-weight:500;color:#d7e3e9}
+.af-scope-action{color:var(--af-mint);font-size:11px;flex:none}.af-scope-action::after{content:' +';font-size:16px}.af-history-scope[open] .af-scope-action::after{content:' −'}
+.af-history-scope>section{margin:0 16px 16px}.af-history-status{margin:12px 16px;line-height:1.7}.af-history-status button{background:transparent;color:var(--af-mint);border:1px solid #55776b;border-radius:5px;padding:7px 12px}
+.af-read-key{display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;margin:17px 2px 0;color:#9fb4c3;font-size:12px;line-height:1.6}
+.af-read-key p{margin:0;display:flex;gap:8px;align-items:flex-start}.af-read-key svg{flex:none;margin-top:1px;color:#a0cbb7}.af-read-key strong{color:#d9e9e2;font-weight:600;margin-right:5px}
+.atlas-fixtures .af-h2h-scope{margin:0 0 9px;color:#b4c8d4;font-size:11px;line-height:1.5}
+.atlas-fixtures .af-h2h-record .af-return strong small{display:block;font-size:9px;font-weight:450;letter-spacing:0;color:inherit}
+.atlas-fixtures .af-card-orientation{font-size:11px;line-height:1.6}
+@media(max-width:1100px){.af-league-filters button{display:grid;grid-template-columns:34px 1fr;gap:7px}.af-league-name{grid-column:1/-1;grid-row:2}.af-league-count{grid-column:2;grid-row:1}}
+@media(max-width:640px){
+ .af-league-heading{padding:14px 12px 10px;gap:8px}.af-league-heading strong{font-size:14px}.af-league-heading>span{max-width:130px;text-align:right;font-size:10px;line-height:1.5}
+ .af-league-filters{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:0 10px 12px}
+ .af-league-filters button{padding:9px;min-height:76px}.af-league-name{font-size:11px}.af-league-logo{width:30px;height:30px}.af-league-logo img{width:24px;height:24px}
+ .atlas-fixtures .af-date-tabs button{min-height:44px}.atlas-fixtures .af-filters{grid-template-columns:1fr}
+ .af-history-scope>summary{align-items:flex-start;gap:8px;padding:11px 12px}.af-scope-action{max-width:85px;text-align:right;line-height:1.6}
+ .af-read-key{grid-template-columns:1fr;gap:7px;font-size:11px;margin-top:14px}.af-history-scope>section{margin-inline:12px}
+ .atlas-fixtures .af-h2h-scope{font-size:11px}.atlas-fixtures .af-h2h-record .af-return strong small{font-size:9px}
+ .af-refine>summary>span{max-width:42%;font-size:10px}
+}

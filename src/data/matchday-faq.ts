@@ -1,5 +1,9 @@
 export const matchdayFaqs = [
   {
+    question: "Does club H2H only count the home team’s home games?",
+    answer: "No. Club head to head includes meetings at both venues in the covered league archive. Each column follows the named team whether it played home or away. The home and away positions at the top of the card refer to the upcoming fixture only. Open Club meetings to see each historical match’s actual home and away teams. Manager history also includes both venues and follows each coach across different clubs.",
+  },
+  {
     question: 'Is this the complete head to head record?',
     answer: 'No. The archive covers Premier League, Serie A, La Liga, Bundesliga and Ligue 1 matches from 2012/13 onwards. The optional Include Championship view adds its regular-season club history only. Manager records remain top-five only. Domestic cups, playoffs, Europe and other lower divisions remain excluded. Club and manager counts refer to this covered history, not all-time meetings. Verified results without odds count as meetings but are excluded from ROI.',
   },
