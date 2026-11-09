@@ -15,6 +15,7 @@ export const monitorModels:MonitorModel[] = [
  {id:'astra',name:'Astra Volume',group:'research',note:'Frozen forward paper trial. Current corrected inputs are shown separately from earlier inputs.',views:[['context-forward-v1','Performance']]},
  {id:'aces4',name:'Aces v4 calibration',group:'research',note:'Calibration observations are not bets. Only rows explicitly flagged as v4 signals appear as selections.',views:[['v4-report','Progress'],['aces-v4','Flagged selections']]},
  {id:'mostaces',name:'Most aces',group:'research',note:'Paper research using captured bookmaker prices. The ledger identifies each source; a forecast alone is not a value selection.',views:[['most-aces-current','Fair odds & bookmakers'],['most-aces','Direct forecasts'],['most-aces-record','Research observations']]},
+ {id:'opponent',name:'Opponent Shots',group:'research',note:'Separate fixed forward paper model. Zero real stake; not a replacement for Team Shots v4.',views:[['team-shots-opponent-shadow.csv','Tracked selections']]},
  {id:'calibration',name:'Shots calibration',group:'research',note:'Comparison research, not the current Telegram selection model.',views:[['shots-calibration','Progress']]}
 ];
 const tennisModel=monitorModels.find(m=>m.id==='tennis')!;

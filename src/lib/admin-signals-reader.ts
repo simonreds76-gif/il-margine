@@ -2,6 +2,7 @@ import "server-only";
 import { isAdminSession } from "@/lib/admin-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { inspectTeamShotsLiveSource, readTeamShotsLiveFile } from "@/lib/team-shots-live-files";
+import { inspectCornersLiveSource, readCornersLiveFile } from "@/lib/corners-live-files";
 import { goalkeeperCaptureWarning } from "@/lib/admin-monitor-display";
 import catalog from "../../config/admin-monitor-catalog.json";
 export {catalog};
@@ -24,6 +25,18 @@ export async function readAdminSignalFile(id: string | null):Promise<SavedView> 
     const generated = source.source === "hosted" ? source.hostedGeneratedAt : source.localSnapshotGeneratedAt;
     return { generated_at: generated ?? modified ?? "", manifest: [{ id, available: true, modified_at: modified ?? undefined }],
       content, source: "Scheduled football snapshot", warning: goalkeeperCaptureWarning(capture) };
+  }
+  // Football records must follow their own scheduled collector, not the Windows tennis upload.
+  if (id && view && (view.file.startsWith("data/football-form/team-shots-") || cloudCorners.has(id))) {
+    const corners = id.startsWith("corners-");
+    const [content, source] = await Promise.all([
+      (corners ? readCornersLiveFile : readTeamShotsLiveFile)(view.file),
+      (corners ? inspectCornersLiveSource : inspectTeamShotsLiveSource)(view.file),
+    ]);
+    if (!content || source.source === "missing") throw new Error("Scheduled football record unavailable.");
+    const modified = source.source === "hosted" ? source.hostedFileMtime : source.localFileMtime;
+    const generated = source.source === "hosted" ? source.hostedGeneratedAt : source.localSnapshotGeneratedAt;
+    return {generated_at: generated ?? modified ?? "", manifest:[{id,available:true,modified_at:modified ?? undefined}],content,source:"Scheduled football snapshot"};
   }
   const read=async(key:string,selection:string)=>{
     try{return await getSupabaseAdmin().from("goalscorer_live_snapshot").select(selection).eq("snapshot_key",key).abortSignal(AbortSignal.timeout(10000)).single();}
