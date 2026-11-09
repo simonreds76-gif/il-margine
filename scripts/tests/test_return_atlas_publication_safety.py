@@ -97,25 +97,56 @@ class DataReleaseIntegration(unittest.TestCase):
      data=source/'public'/route/'data'/version;data.mkdir(parents=True,exist_ok=True);(data/'index.json').write_text('{}')
      release=source/'src/data'/pointer;release.parent.mkdir(parents=True,exist_ok=True)
      release.write_text(json.dumps({'version':version,'indexUrl':f'/{route}/data/{version}/index.json'}))
-   archive('20261106-aaaaaaaaaaaa');(source/'homepage.txt').write_text('current live design')
+   for day in ['01','02','03','04','05','06']:
+    archive(f'202611{day}-aaaaaaaaaaaa')
+   (source/'homepage.txt').write_text('current live design')
    git('add','.');git('commit','-m','live');base=git('rev-parse','HEAD');git('push','origin','HEAD:live')
    (source/'homepage.txt').write_text('outdated publisher design');archive('20261107-bbbbbbbbbbbb')
    portrait=source/M.CATALOGUE;portrait.parent.mkdir(parents=True,exist_ok=True);portrait.write_text('[{"name":"Known Player","src":"/portrait.jpg"}]')
    git('add','.');git('commit','-m','diverged data branch')
    deployment={'meta':{'githubCommitSha':base}}
-   with patch.object(M,'validate_live_history') as validate:
+   with patch.object(M,'validate_live_history') as validate,patch.object(M,'check_static_budget') as budget:
     dest,branch,prior,commit=M.stage_on_production(source,root/'state',deployment,worktree_root=root/'worktrees')
     again=M.stage_on_production(source,root/'state',deployment,worktree_root=root/'worktrees')
    self.assertEqual((dest/'homepage.txt').read_text(),'current live design')
    self.assertEqual(prior,base);self.assertEqual(again[-1],commit);self.assertEqual(validate.call_count,2)
+   self.assertEqual(budget.call_count,2)
+   for route in ['return-atlas','tennis-matchup']:
+    self.assertEqual(sorted(p.name for p in (dest/'public'/route/'data').iterdir()),
+     ['20261105-aaaaaaaaaaaa','20261106-aaaaaaaaaaaa','20261107-bbbbbbbbbbbb'])
+    # Release-only retention: source and original production Git records survive.
+    self.assertTrue((source/'public'/route/'data/20261101-aaaaaaaaaaaa/index.json').exists())
+    self.assertEqual(git('show',f'{base}:public/{route}/data/20261101-aaaaaaaaaaaa/index.json'),'{}')
    self.assertEqual(git('show',f'{commit}:homepage.txt'),'current live design')
    self.assertEqual((dest/M.CATALOGUE).read_bytes(),portrait.read_bytes())
    portrait.write_text('[{"name":"Known Player","src":"/new.jpg"}]')
-   with patch.object(M,'validate_live_history'):
+   with patch.object(M,'validate_live_history'),patch.object(M,'check_static_budget'):
     changed=M.stage_on_production(source,root/'state',deployment,worktree_root=root/'worktrees')
    self.assertNotEqual(changed[1],branch)
    self.assertEqual((changed[0]/M.CATALOGUE).read_bytes(),portrait.read_bytes())
    self.assertTrue((dest/'public/return-atlas/data/20261106-aaaaaaaaaaaa/index.json').exists())
    self.assertIn('20261107-bbbbbbbbbbbb',(dest/'src/data/return-atlas-release.json').read_text())
+
+class StaticBudgetTests(unittest.TestCase):
+ def test_preflight_forces_read_only_when_parent_is_vercel(self):
+  with tempfile.TemporaryDirectory() as temp:
+   root=Path(temp);(root/'scripts').mkdir();(root/'scripts/compress-matchup-output.mjs').write_text('// fixture')
+   with patch.dict(M.os.environ,{'VERCEL':'1'}),patch.object(M,'run',return_value='budget OK') as run:
+    M.check_static_budget(root)
+   self.assertEqual(run.call_args.kwargs['env']['VERCEL'],'0')
+ def test_preflight_failure_propagates_instead_of_allowing_cloud_build(self):
+  with tempfile.TemporaryDirectory() as temp:
+   root=Path(temp);(root/'scripts').mkdir();(root/'scripts/compress-matchup-output.mjs').write_text('// fixture')
+   with patch.object(M,'run',side_effect=RuntimeError('Static output exceeds budget')):
+    with self.assertRaisesRegex(RuntimeError,'exceeds budget'):M.check_static_budget(root)
+ def test_missing_current_archive_refuses_retention(self):
+  with tempfile.TemporaryDirectory() as temp:
+   root=Path(temp);(root/'public/return-atlas/data').mkdir(parents=True)
+   (root/'src/data').mkdir(parents=True)
+   (root/'src/data/return-atlas-release.json').write_text(json.dumps({'version':'20261109-aaaaaaaaaaaa'}))
+   with patch.object(M,'run') as run:
+    with self.assertRaisesRegex(RuntimeError,'archive missing'):
+     M.trim_release_archives(root,{'return-atlas':'20261108-aaaaaaaaaaaa'})
+   run.assert_not_called()
 
 if __name__=='__main__':unittest.main()

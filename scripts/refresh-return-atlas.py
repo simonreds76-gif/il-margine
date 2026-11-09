@@ -264,6 +264,45 @@ def validate_release_diff(base_sha, checkout, allowed):
     return names
 
 
+def trim_release_archives(checkout, production_versions, production_archives=None):
+    """Bound only the staged release; keep current/live snapshots and Git history."""
+    removed = []
+    for route, pointer in [('return-atlas', 'return-atlas-release.json'),
+                           ('tennis-matchup', 'tennis-matchup-release.json')]:
+        root = (checkout / 'public' / route / 'data').resolve()
+        if root != checkout.resolve() / 'public' / route / 'data':
+            raise RuntimeError('Archive retention root escaped the release checkout')
+        current = read_json(checkout / 'src/data' / pointer)['version']
+        prior = production_versions[route]
+        protected = {current, prior}
+        present = [p.name for p in root.iterdir() if p.is_dir()
+                   and re.fullmatch(r'\d{8}-[a-f0-9]{12}', p.name)]
+        if not protected.issubset(present):
+            raise RuntimeError('Current or production archive missing; retention stopped')
+        versions = set(present) | set((production_archives or {}).get(route, []))
+        for version in obsolete_versions(versions, current, prior, prior):
+            target = (root / version).resolve()
+            if target.parent != root:
+                raise RuntimeError('Archive retention target escaped its version directory')
+            relative = target.relative_to(checkout.resolve())
+            # These immutable copies remain recoverable in the production parent
+            # and old deployments. Never touch runtime/source data or Vercel builds.
+            if target.exists():
+                run(['git', 'rm', '-r', '--', relative], checkout)
+            removed.append(relative)
+    return removed
+
+
+def check_static_budget(checkout):
+    """Run the existing exact compression/size calculation before a cloud build."""
+    script = checkout / 'scripts/compress-matchup-output.mjs'
+    if not script.is_file():
+        raise RuntimeError('Static-output preflight unavailable; publication stopped')
+    env = dict(os.environ, VERCEL='0')  # read-only even on a CI host
+    result = run(['node', script], checkout, env=env, timeout=240)
+    print('ATLAS_STATIC_OUTPUT_PREFLIGHT ' + result.strip(), flush=True)
+
+
 def stage_on_production(source, state, deployment, *, worktree_root=None):
     meta = deployment.get('meta') or {}
     sha = meta.get('githubCommitSha') or (deployment.get('gitSource') or {}).get('sha')
@@ -273,7 +312,7 @@ def stage_on_production(source, state, deployment, *, worktree_root=None):
     versions = [read_json(source / p)['version'] for p in paths if p.as_posix().startswith('src/data/')]
     if release_fingerprint(source):
         versions.append(release_fingerprint(source))
-    identity = hashlib.sha256('|'.join(versions).encode()).hexdigest()[:12]
+    identity = hashlib.sha256(('retention-v1|' + '|'.join(versions)).encode()).hexdigest()[:12]
     branch = f'codex/atlas-release-{sha[:12]}-{identity}'
     destination = Path(worktree_root or 'D:/IlMargine/worktrees/return-atlas-publication') / (sha[:12] + '-' + identity)
     if not destination.exists():
@@ -283,6 +322,15 @@ def stage_on_production(source, state, deployment, *, worktree_root=None):
     if run(['git', 'status', '--porcelain', '--untracked-files=no'], destination).strip():
         raise RuntimeError('Data publication worktree needs recovery; preserving existing files')
     validate_live_history(destination, source)
+    production_versions, production_archives = {}, {}
+    for route, pointer in [('return-atlas', 'return-atlas-release.json'),
+                           ('tennis-matchup', 'tennis-matchup-release.json')]:
+        # Read the actual production parent, not the candidate pointer on retry.
+        production_versions[route] = json.loads(run(
+            ['git', 'show', f'{sha}:src/data/{pointer}'], destination))['version']
+        production_archives[route] = run(
+            ['git', 'ls-tree', '-d', '--name-only', f'{sha}:public/{route}/data'],
+            destination).splitlines()
     for relative in paths:
         origin, target = source / relative, destination / relative
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -296,10 +344,12 @@ def stage_on_production(source, state, deployment, *, worktree_root=None):
                 shutil.copytree(origin, target)
         else:
             shutil.copy2(origin, target)
+    removed = trim_release_archives(destination, production_versions, production_archives)
+    check_static_budget(destination)
     run(['git', 'add', '--', *paths], destination)
     if run(['git', 'diff', '--cached', '--name-only'], destination).strip():
         run(['git', 'commit', '-m', 'data: refresh validated tennis archives on current live site'], destination)
-    validate_release_diff(sha, destination, paths)
+    validate_release_diff(sha, destination, [*paths, *removed])
     candidate_sha = run(['git', 'rev-parse', 'HEAD'], destination).strip()
     # A non-force push refuses a concurrent or incompatible retry.
     run(['git', 'push', 'origin', f'HEAD:refs/heads/{branch}'], destination, timeout=180)
