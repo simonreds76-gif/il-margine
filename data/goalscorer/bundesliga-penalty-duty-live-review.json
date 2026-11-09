@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-09T06:44:54Z",
+  "generated_at": "2026-11-09T16:29:35Z",
   "league": "bundesliga",
   "row_count": 2,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2995688005",
           "match_id": "5881217",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881217",
-          "observed_at": "2026-11-09T06:44:51+00:00",
+          "observed_at": "2026-11-09T16:29:30+00:00",
           "event_date": "2026-11-08",
           "season": "2026/27",
           "team": "Freiburg",
@@ -117,7 +117,7 @@
           "source_event_id": "2994436617",
           "match_id": "5881221",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881221",
-          "observed_at": "2026-11-09T06:44:51+00:00",
+          "observed_at": "2026-11-09T16:29:30+00:00",
           "event_date": "2026-11-07",
           "season": "2026/27",
           "team": "Paderborn",
@@ -168,10 +168,16 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20261101",
+      "20261102",
+      "20261103",
+      "20261104",
+      "20261105",
+      "20261106",
       "20261107",
       "20261108",
       "20261109"
     ],
-    "matches_checked": 8
+    "matches_checked": 11
   }
 }
