@@ -1,9 +1,11 @@
+import ModelProfitChart from "./ModelProfitChart";
+import { compactHistory } from "@/lib/model-profit-history";
 import { validShotsComparison } from "@/lib/monitor-breakdowns";
 import { readTeamShotsLiveJson } from "@/lib/team-shots-live-files";
 import { monitorRequestTime } from "@/lib/monitor-request-time";
 
 type Selection = { settled: number; wins: number; losses: number; pnl_units: number; roi: number | null; pending: number; overdue: number; stake_units: number; unavailable_contracts: number };
-type Score = { brier: number | null; log_loss: number | null; market_brier: number | null; hypothetical_selections: Selection };
+type Score = { profit_history?: unknown; brier: number | null; log_loss: number | null; market_brier: number | null; hypothetical_selections: Selection };
 type Snapshot = { version: string; generated_at: string; status: string; contracts: number; paired_fixtures: number; latest_archived_capture: string | null; conflicting_results: number; models: Record<string, Score>; cohorts?: Record<string, {paired_fixtures: number; models: Record<string, Score>}> };
 const names = [["shots_market_offset_v1", "Calibrated Team Shots"], ["opponent", "Opponent Shots"], ["v4", "Team Shots v4"], ["ema20_v3", "EMA20 v3 reference"]] as const;
 const tone = (n: number | null | undefined) => n == null || n === 0 ? "text-slate-100" : n > 0 ? "text-emerald-300" : "text-rose-300";
@@ -15,7 +17,7 @@ export default async function ShotsCalibrationPanel() {
   const stale = !current || !Number.isFinite(Date.parse(current.generated_at)) || checkedAt - Date.parse(current.generated_at) > 36 * 3600000;
   return <section id="shots-comparison" className="min-w-0 rounded-2xl border border-emerald-900 bg-slate-900/70 p-5 sm:p-6" aria-labelledby="calibrated-shots-title">
     <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">Fixed forward comparison · Zero real stake</p>
-    <h2 id="calibrated-shots-title" className="mt-2 text-2xl font-semibold text-white">Calibrated Team Shots</h2>
+    <h2 id="calibrated-shots-title" className="mt-2 text-2xl font-semibold text-white">Team Shots · four-model comparison</h2>
     <p className="mt-3 max-w-4xl text-sm leading-6 text-slate-300">The frozen calibration is compared with three existing models using the same fresh prices. Only predictions saved before kickoff belong here. The earlier historical test is excluded. The totals retain all registered forward input versions; each version is separated below. This comparison is a different selection cohort from the standalone model cards above.</p>
     <p className={`mt-3 text-sm ${stale ? "text-amber-200" : "text-emerald-200"}`}>{!current ? "Current comparison snapshot unavailable." : `${current.status === "WAITING_FOR_FRESH_PAIRED_MARKETS" ? "Collector checked. Waiting for fresh paired markets." : "Collecting forward evidence."} ${stale ? "Snapshot needs refresh. " : ""}Last scan: ${current.generated_at}`}</p>
     {current && <><p className="mt-2 text-xs text-slate-400">{current.contracts} registered contracts · {current.paired_fixtures} independent settled fixtures with all models · Latest archived quote: {current.latest_archived_capture ?? "unavailable"}</p>
@@ -32,6 +34,7 @@ export default async function ShotsCalibrationPanel() {
             <div><dt className="text-slate-400">Pending / overdue</dt><dd>{number(picks?.pending)} / {number(picks?.overdue)}</dd></div>
             <div><dt className="text-slate-400">Unavailable forecasts</dt><dd>{number(picks?.unavailable_contracts)}</dd></div>
           </dl>
+          <ModelProfitChart name={`${name} · forward comparison`} history={compactHistory(score?.profit_history, { settled: picks?.settled ?? null, profit: picks?.pnl_units ?? null })} />
           <p className="mt-3 border-t border-slate-700 pt-3 text-xs leading-5 text-slate-400">Paired Brier: {number(score?.brier, 4)} · Market: {number(score?.market_brier, 4)}<br/>Log loss: {number(score?.log_loss, 4)}</p>
         </article>;
       })}</div>

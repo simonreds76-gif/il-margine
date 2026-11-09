@@ -48,7 +48,10 @@ export function footballForwardRows(content: string | null): SignalRow[] | null 
 /** Source summary and its dated curve are reconciled together, independently of the weekly digest. */
 export function footballModel(id: string, name: string, value: unknown, date: unknown, ledger: string | null, note: string) {
   const r = row(id, name, "Football research", "Forward paper", value, date, note, true);
-  const entries = footballForwardRows(ledger);
+  const reconciliation=obj(obj(value).reconciliation);
+  const excluded=new Set(Array.isArray(reconciliation.excluded_pick_ids) ? reconciliation.excluded_pick_ids.filter((v): v is string => typeof v === "string") : []);
+  const entries = footballForwardRows(ledger)?.filter(v=>!excluded.has(text(v.pick_id))) ?? null;
+  if (excluded.size) r.note += ` ${excluded.size} verified duplicate selection excluded from accounting; both original rows remain in the audit record. Lyon–Angers: the original Pinnacle selection remains pending settlement review; the later Bet365 entry is the duplicate.`;
   const history = reconciledHistory(entries, id, r);
   if (entries && !history.message) {
     const settled = entries.filter(v => !unresolved(v) && settledOutcomes.has(selectionCard(v, id).outcome));
