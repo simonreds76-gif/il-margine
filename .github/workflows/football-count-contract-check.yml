@@ -29,6 +29,7 @@ jobs:
       - name: Check identities, settlement, first prices and registered inference
         run: >-
           python -m unittest
+          scripts.tests.test_football_fixture_reschedules
           scripts.tests.test_count_identity_recovery
           scripts.tests.test_team_shots_paired_reference
           scripts.tests.test_football_count_evidence_isolation

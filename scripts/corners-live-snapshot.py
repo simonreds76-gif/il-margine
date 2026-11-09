@@ -28,6 +28,7 @@ SNAPSHOT_TABLE = "goalscorer_live_snapshot"
 PREDICTIONS_FILE = ROOT / "data" / "corners-ou" / "corners-ou-predictions.csv"
 RECENT_PREDICTION_LIMIT = 80
 SNAPSHOT_FILES = [
+    "config/football-count-reconciliations.json",
     "data/corners-ou/corners-ou-calibration.txt",
     "data/corners-ou/corners-calibration-params.json",
     "data/corners-ou/corners-ou-backtest-report.txt",
