@@ -6,6 +6,8 @@ function reader(auth=true,missing=false){
  const module={exports:{}};let cloudReads=0;
  const mocks={
   'server-only':{},
+  '@/lib/corners-live-files':{},
+  '@/lib/admin-monitor-display':{goalkeeperCaptureWarning:()=>undefined},
   '@/lib/admin-auth':{isAdminSession:async()=>auth},
   '@/lib/supabase-server':{getSupabaseAdmin:()=>{cloudReads++;throw Error('Wrong PC snapshot read');}},
   '../../config/admin-monitor-catalog.json':[{id:'gk-record',file:'data/goalkeeper-saves/gk-saves-v1-shadow-signals.csv'}],

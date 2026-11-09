@@ -15,6 +15,7 @@ export const monitorModels:MonitorModel[] = [
  {id:'astra',name:'Astra Volume',group:'research',note:'Frozen forward paper trial. Current corrected inputs are shown separately from earlier inputs.',views:[['context-forward-v1','Performance']]},
  {id:'aces4',name:'Aces v4 calibration',group:'research',note:'Calibration observations are not bets. Only rows explicitly flagged as v4 signals appear as selections.',views:[['v4-report','Progress'],['aces-v4','Flagged selections']]},
  {id:'mostaces',name:'Most aces',group:'research',note:'Paper research using captured bookmaker prices. The ledger identifies each source; a forecast alone is not a value selection.',views:[['most-aces-current','Fair odds & bookmakers'],['most-aces','Direct forecasts'],['most-aces-record','Research observations']]},
+ {id:'opponent',name:'Opponent Shots',group:'research',note:'Separate fixed forward paper model. Zero real stake; not a replacement for Team Shots v4.',views:[['team-shots-opponent-shadow.csv','Tracked selections']]},
  {id:'calibration',name:'Shots calibration',group:'research',note:'Comparison research, not the current Telegram selection model.',views:[['shots-calibration','Progress']]}
 ];
 const tennisModel=monitorModels.find(m=>m.id==='tennis')!;
@@ -27,6 +28,7 @@ export const text=(v:unknown)=>v===undefined||v===null||v===''?'':String(v);
 const truth=(v:unknown)=>['true','1','yes'].includes(String(v).toLowerCase());
 export function rowDate(r:SignalRow){return text(pick(r,['scheduled_start_utc','match_start_utc','kickoff_at','kickoff_utc','kickoff','match_date','scheduled_date','date']));}
 export function selectionOutcome(r:SignalRow){
+ if(r.integrity_status==='quote_quarantined')return 'Quote review';
  const result=text(pick(r,['bet_outcome','result'])).toLowerCase();
  if(['won','win','lost','loss','void','push','half_win','half_loss','half_won','half_lost'].includes(result))return ({won:'Won',win:'Won',lost:'Lost',loss:'Lost',void:'Void',push:'Push',half_win:'Half win',half_won:'Half win',half_loss:'Half loss',half_lost:'Half loss'} as Record<string,string>)[result];
  const status=text(pick(r,['settlement_status','status'])).toLowerCase();
@@ -42,7 +44,7 @@ export function selectionOutcome(r:SignalRow){
 export function matchesOutcomeFilter(outcome:string,filter:string){
  if(filter==='pending')return ['Pending','Not settled'].includes(outcome);
  if(filter==='settled')return ['Won','Lost','Void','Push','Half win','Half loss','Settled'].includes(outcome);
- if(filter==='excluded')return ['Excluded','Blocked'].includes(outcome);
+ if(filter==='excluded')return ['Excluded','Blocked','Quote review'].includes(outcome);
  return true;
 }
 export function selectionCard(r:SignalRow,view:string){
@@ -70,7 +72,8 @@ export function selectionCard(r:SignalRow,view:string){
  if(ev===null){const fraction=numeric(pick(r,['edge','ev']));if(fraction!==null)ev=fraction*100;}
  if(mostAces){const outcomeKey=selectedIndex?`player${selectedIndex}`:['DRAW','TIE','X'].includes(side)?'draw':null;odds=outcomeKey?numeric(pick(r,['selected_odds',`open_${outcomeKey}_odds`])):null;fair=outcomeKey?numeric(r[`fair_${outcomeKey}`]):null;ev=outcomeKey?numeric(r[`value_${outcomeKey}_pct`]):null;}
  const outcome=selectionOutcome(r);
- const excluded=Boolean(r.quarantine_reason||r.duplicate_of_signal_id||r.duplicate_of||['quarantined','duplicate','excluded'].includes(text(r.status).toLowerCase()));
+ const quoteReview=outcome==='Quote review';
+ const excluded=Boolean(quoteReview||r.quarantine_reason||r.duplicate_of_signal_id||r.duplicate_of||['quarantined','duplicate','excluded'].includes(text(r.status).toLowerCase()));
  const stake=numeric(pick(r,['stake_units','paper_stake','recommended_stake_units']));
  let profit=numeric(pick(r,['pnl_units','pnl'])),calculatedProfit=false;
  // Display arithmetic only for an explicit settled outcome, recorded stake and price.
@@ -78,7 +81,17 @@ export function selectionCard(r:SignalRow,view:string){
  if(profit===null&&!excluded&&stake!==null&&stake>=0&&odds!==null&&odds>1&&['Won','Lost','Void','Push'].includes(outcome)){
    profit=outcome==='Won'?stake*(odds-1):outcome==='Lost'?-stake:0;calculatedProfit=true;
  }
- return {selection:selection||text(r.match)||'Unnamed selection',opponent,fixture:paired?'':text(r.match)||[text(r.home_team),text(r.away_team)].filter(Boolean).join(' vs '),date:rowDate(r),odds,fair,ev,bookmaker:text(pick(r,['bookmaker','best_bookmaker']))||(paired&&selectedIndex&&!r.selected_odds&&numeric(r[`pin_odds${selectedIndex}`])!==null&&!spread?'Pinnacle':''),outcome:excluded?'Excluded':outcome,profit,stake,calculatedProfit,context:text(pick(r,['tournament','league','competition','series'])),version:text(pick(r,['model_version','history_version','cohort','signal_status'])),raw:r};
+ if(quoteReview){ev=null;profit=null;}
+ return {selection:selection||text(r.match)||'Unnamed selection',opponent,fixture:paired?'':text(r.match)||[text(r.home_team),text(r.away_team)].filter(Boolean).join(' vs '),date:rowDate(r),odds,fair,ev,bookmaker:text(pick(r,['bookmaker','best_bookmaker']))||(paired&&selectedIndex&&!r.selected_odds&&numeric(r[`pin_odds${selectedIndex}`])!==null&&!spread?'Pinnacle':''),outcome:quoteReview?'Quote review':excluded?'Excluded':outcome,quoteReview,profit,stake,calculatedProfit,context:text(pick(r,['tournament','league','competition','series'])),version:text(pick(r,['model_version','history_version','cohort','signal_status'])),raw:r};
+}
+
+export function goalkeeperCaptureWarning(content:string|null):string|undefined {
+ try {
+  const capture=JSON.parse(content||'{}');
+  if(capture?.moviodds_source?.goalkeeper_source_hold)
+   return 'Bet365 saves prices are paused: the feed paired prices with unverified save thresholds. Other captured bookmakers remain available. Disputed tracked entries are retained under Quote review and excluded from settlement and ROI.';
+ } catch { /* Missing capture diagnostics must not hide the saved ledger. */ }
+ return undefined;
 }
 export function forecastGroups(rows:SignalRow[]){
  const groups=new Map<string,{title:string;date:string;context:string;rows:SignalRow[]}>();
