@@ -28,6 +28,7 @@ SCRIPTS = ROOT / "scripts"
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
+from football_fixture_identity import archive_index
 from football_counts import prob_over  # noqa: E402
 from football_best_prices import best_candidates, fresh_pair, latest_corners, add_execution_quotes
 from football_market import blend_logit, proportional_devig, shading_aware_devig  # noqa: E402
@@ -105,22 +106,13 @@ def stamp_publications(existing: list[dict], fresh: list[dict], now: datetime) -
     """An old price newly matched to history is a new signal, not an old tip."""
     first_publications = {row.get("pick_id"): row.get("published_at_utc") for row in existing}
     for row in fresh:
-        row["price_captured_at_utc"] = row.get("published_at_utc", "")
+        row["price_captured_at_utc"] = row.get("price_captured_at_utc") or row.get("published_at_utc", "")
         row["published_at_utc"] = first_publications.get(row.get("pick_id")) or PUB.fmt_dt(now)
 
 
 def merge_shadow_ledger(existing: list[dict], fresh: list[dict]) -> list[dict]:
     """Freeze the first actual selection; later calibration only changes the board."""
-    def identity(row):
-        if all(row.get(k) for k in ('match_date','league','home_team','away_team')):
-            return (row['match_date'],row['league'],PUB.team_key(row['home_team']),PUB.team_key(row['away_team']))
-        return row.get('match_id')
-    fixtures = {identity(row) for row in existing}
-    output = list(existing)
-    for row in fresh:
-        if identity(row) not in fixtures:
-            output.append(row)
-            fixtures.add(identity(row))
+    output = archive_index(ROOT).first_only(existing, fresh)
     return sorted(output, key=lambda row: (row.get("kickoff_utc", ""), row.get("pick_id", "")))
 
 

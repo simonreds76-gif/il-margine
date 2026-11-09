@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from football_count_reconciliation import reconcile
 from football_market import blend_logit
 from football_capture_health import load_json, verified_empty_window
 
@@ -67,6 +68,7 @@ def truthy(value: Any) -> bool:
 
 
 def live_summary(rows: list[dict[str, str]], *, cohort: str = "authorized") -> dict[str, Any]:
+    rows, reconciliation = reconcile(rows, ROOT)
     def in_cohort(row: dict[str, str]) -> bool:
         is_warmup = str(row.get("signal_status") or "").strip().lower() == "warmup_tracking"
         return is_warmup if cohort == "warmup_tracking" else not is_warmup
@@ -90,6 +92,7 @@ def live_summary(rows: list[dict[str, str]], *, cohort: str = "authorized") -> d
         side_counts[side] = side_counts.get(side, 0) + 1
     dominant_side_share = max(side_counts.values(), default=0) / len(active) if active else 0.0
     return {
+        "reconciliation": reconciliation,
         "signals": len(active),
         "settled": len(settled),
         "pending": len(active) - len(settled),

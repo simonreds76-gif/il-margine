@@ -26,7 +26,7 @@ class FootballVnextGateTests(unittest.TestCase):
         workflow = (ROOT / ".github" / "workflows" / "football-counts-vnext-shadow.yml").read_text(encoding="utf-8")
         self.assertIn("settlement_only:", workflow)
         self.assertGreaterEqual(workflow.count("github.event.inputs.settlement_only != 'true'"), 4)
-        self.assertIn('if [[ "${{ github.event.inputs.settlement_only }}" == "true" ]]; then', workflow)
+        self.assertIn('if [[ "${{ github.event.inputs.gk_only }}" == "true" || "${{ github.event.inputs.settlement_only }}" == "true" ]]; then', workflow)
         self.assertIn("git add data/goalkeeper-saves/", workflow)
 
     def test_diagnostics_distinguish_expected_warmup_from_missing_feed(self) -> None:

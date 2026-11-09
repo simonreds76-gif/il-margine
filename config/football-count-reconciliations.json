@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-11-09T20:22:56.064167+00:00",
+  "scope": "paper_accounting_only_original_ledger_unchanged",
+  "cases": [
+    {
+      "id": "lyon-angers-72036262",
+      "model": "corners_v3",
+      "retained_pick_id": "corners_v3|2026-10-31|ligue-1|lyon|angers|9.5|under",
+      "duplicate_pick_id": "corners_v3|2026-11-01|ligue-1|lyon|angers|10.5|under",
+      "expected_duplicate": {
+        "bookmaker": "Bet365",
+        "line": "10.5",
+        "side": "under",
+        "book_odds": "1.8"
+      },
+      "canonical_event_id": "odds_api_io:72036262",
+      "original_kickoff": "2026-10-31T19:45:00Z",
+      "revised_kickoff": "2026-11-01T16:15:00Z",
+      "reason": "Same canonical provider event and ordered clubs; date-based identity admitted a second selection after the schedule changed.",
+      "first_selection_settlement": "REVIEW_REQUIRED",
+      "settlement_note": "Original Pinnacle quote remains pending. A changed feed time alone does not establish a bookmaker postponement or void; no win or void is invented.",
+      "evidence": [
+        {
+          "path": "data/corners-ou/bet365-corners-odds-history.csv",
+          "event_id": "72036262",
+          "old_capture": "2026-10-27T14:35:43Z",
+          "new_capture": "2026-10-31T19:32:53.980206+00:00"
+        },
+        {
+          "path": "data/results-snapshot/2026-11-09.json",
+          "fixture": "2026-11-01|lyon|angers",
+          "corners": 7
+        }
+      ],
+      "rule_reference": "https://www.pinnacle.com/en/future/betting-rules"
+    }
+  ]
+}

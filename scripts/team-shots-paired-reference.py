@@ -28,7 +28,7 @@ spec.loader.exec_module(O)
 V, PUB = O.V, O.PUB
 MODELS = ('ema20_v3', 'v4', 'opponent', 'shots_market_offset_v1')
 CALIBRATION_PATH = ROOT/'data/team-shots/shots-market-offset-v1.json'
-VERSION = 'paired-market-offset-20261028-identity-v4'
+VERSION = 'paired-market-offset-20261109-fixture-v5'
 
 class ModelFingerprintMismatch(ValueError):
     """Hold new forecasts without preventing independent settlement/reporting."""
@@ -45,7 +45,7 @@ def model_fingerprint():
         'scripts/backtest-football-form-layer.py','scripts/team_shots_opponent.py',
         'scripts/team-shots-opponent-shadow.py','scripts/football_counts.py','scripts/football_market.py',
         'scripts/football_team_names.py','scripts/settlement_utils.py','scripts/football_form_integrity.py',
-        'scripts/football_best_prices.py','data/team-shots/team-shots-v4-params.json',
+        'scripts/football_best_prices.py','scripts/football_fixture_identity.py','data/team-shots/team-shots-v4-params.json',
         'data/team-shots/team-shots-v4-lock.json','data/team-shots/team-shots-opponent-config.json',
         'data/team-shots/shots-market-offset-v1.json']
     values={name:hashlib.sha256((ROOT/name).read_text(encoding='utf8').encode()).hexdigest() for name in names}
@@ -196,13 +196,16 @@ def select_first_scan(records, existing):
     A no-bet decision is retained too. Later lines/prices cannot replace losses
     or turn an old no-bet into a selected winner.
     """
-    seen={fixture_key(r) for r in existing}
+    identity=V.archive_index(ROOT)
+    seen=set().union(*(identity.keys(r) for r in existing)) if existing else set()
     groups=defaultdict(list)
     for row in records:
         groups[fixture_key(row)].append(row)
         for forecast in row['models'].values(): forecast['selected_side']=None
     for fixture,rows in groups.items():
-        if fixture in seen: continue
+        keys=set().union(*(identity.keys(r) for r in rows))
+        if keys & seen: continue
+        seen.update(keys)
         for model in MODELS:
             choices=[]
             for row in rows:
@@ -264,14 +267,23 @@ def summarize(ledger, base, now):
                 absolute_error=abs(row['models'][model]['mean']-actual)))
         report[model]={metric:mean(mean(x[metric] for x in items) for items in buckets.values()) if buckets else None
             for metric in ('brier','log_loss','market_brier','mean_error','absolute_error')}
-        selected=[]
+        selected=[]; dated=defaultdict(lambda: dict(profit=0.,settled=0))
         resolved_ids={r['contract_id'] for r,_ in settled}
         pending=[r for r in ledger if r['models'][model].get('selected_side') and r['contract_id'] not in resolved_ids]
         for row,actual in settled:
             side=row['models'][model].get('selected_side')
             if side:
                 won=(actual>row['line']) if side=='over' else (actual<row['line'])
-                selected.append(row['odds'][side]-1 if won else -1)
+                profit=row['odds'][side]-1 if won else -1
+                selected.append(profit)
+                dated[row['match_date']]['profit']+=profit
+                dated[row['match_date']]['settled']+=1
+        cumulative=0.; days=[]
+        for day, values in sorted(dated.items()):
+            cumulative+=values['profit']
+            days.append(dict(date=day,profit=round(values['profit'],6),cumulative=round(cumulative,6),settled=values['settled']))
+        report[model]['profit_history']=dict(days=days,profit=round(cumulative,6),settled=len(selected),omitted=0,
+            note='All retained forward input versions. Match dates; flat 1u paper selections only.')
         report[model]['hypothetical_selections']=dict(settled=len(selected),
             wins=sum(x>0 for x in selected),losses=sum(x<0 for x in selected),
             pnl_units=sum(selected),roi=sum(selected)/len(selected) if selected else None,

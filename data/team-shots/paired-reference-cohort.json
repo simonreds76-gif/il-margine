@@ -1,11 +1,11 @@
 {
-  "version": "paired-market-offset-20261028-identity-v4",
-  "registered_at": "2026-10-28",
-  "model_fingerprint": "90a4b82bdc0fb04546d62c53c32e12943250bd7637b31079423ee3023f487fd4",
-  "previous_version": "paired-market-offset-20261019-club-alias-v3",
-  "previous_fingerprint": "d4723cba0af2b4604f3204e9d1d996542f206fc42313612b2a79117a64d4cce0",
-  "reason": "Shared exact club identities and the existing best-fresh-price execution policy. Pricing formula, frozen parameters and thresholds unchanged. Preserve all original contracts; do not recapture or select again for an existing fixture.",
+  "version": "paired-market-offset-20261109-fixture-v5",
+  "registered_at": "2026-11-09T20:22:56.064167+00:00",
+  "model_fingerprint": "a645d0ef31f390888d7e1eca504e14c1e34d0bacec46a497897b129a0e7fd41f",
+  "previous_version": "paired-market-offset-20261028-identity-v4",
+  "previous_fingerprint": "90a4b82bdc0fb04546d62c53c32e12943250bd7637b31079423ee3023f487fd4",
+  "reason": "Infrastructure-only: retain execution quote timestamp; freeze the first domestic league fixture across reschedules; add dated reporting curves. Pricing functions, weights, thresholds, real stakes and original records unchanged.",
   "real_stake_units": 0,
   "automatic_promotion": false,
-  "historical_contracts_preserved": 374
+  "historical_contracts_preserved": 569
 }
