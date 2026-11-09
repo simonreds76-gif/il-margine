@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-09T19:09:14Z",
+  "generated_at": "2026-11-09T20:41:03.077601+00:00",
   "league": "la-liga",
-  "row_count": 1,
+  "row_count": 2,
   "rows": [
     {
       "date": "2026-11-06",
@@ -44,7 +44,7 @@
           "source_event_id": "2993851747",
           "match_id": "5868128",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868128",
-          "observed_at": "2026-11-09T19:09:09+00:00",
+          "observed_at": "2026-11-09T20:41:11+00:00",
           "event_date": "2026-11-06",
           "season": "2026/27",
           "team": "Sevilla",
@@ -70,6 +70,79 @@
           "event_result": "missed"
         }
       ]
+    },
+    {
+      "date": "2026-11-01",
+      "league": "la-liga",
+      "review_source": "fotmob_live",
+      "match": "Athletic Club vs Real Sociedad",
+      "team": "Athletic Club",
+      "opponent": "Real Sociedad",
+      "actual_taker": "Alex Berenguer",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "45",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Oihan Sancet",
+      "secondary_pre_match": "Nico Williams",
+      "tertiary_pre_match": "Gorka Guruzeta",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Alex Berenguer took 1 penalty attempt and scored for Athletic Club vs Real Sociedad. Primary pre-match: Oihan Sancet (unknown). Secondary pre-match: Nico Williams (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/la-liga-penalty-takers.json",
+      "actual_taker_match_status": "Yes - started",
+      "primary_on_pitch_at_penalty": "No - bench, on 89'",
+      "secondary_on_pitch_at_penalty": "Yes - started, off 89'",
+      "tertiary_on_pitch_at_penalty": "No - absent from matchday squad",
+      "actual_taker_on_pitch_at_penalty": "Yes - started",
+      "event_evidence": [
+        {
+          "id": "fotmob|la-liga|5868111|2992011199",
+          "source_event_id": "2992011199",
+          "match_id": "5868111",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868111",
+          "observed_at": "2026-11-09T20:41:12+00:00",
+          "event_date": "2026-11-01",
+          "season": "2026/27",
+          "team": "Athletic Club",
+          "taker": "Alex Berenguer",
+          "primary": "Oihan Sancet",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Oihan Sancet",
+            "minute": 45,
+            "added_time": 2,
+            "method": "completed_lineup_timeline",
+            "player_id": 950545,
+            "bucket": "subs",
+            "substitutions": [
+              {
+                "type": "subin",
+                "time": 89,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 45,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Athletic Club vs Real Sociedad",
+          "event_result": "scored"
+        }
+      ]
     }
   ],
   "source_health": {
@@ -85,5 +158,13 @@
       "20261109"
     ],
     "matches_checked": 10
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261107"
+    ],
+    "matches_checked": 1
   }
 }
