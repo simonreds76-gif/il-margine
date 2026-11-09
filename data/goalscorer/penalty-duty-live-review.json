@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-09T16:29:21Z",
+  "generated_at": "2026-11-09T19:09:05Z",
   "league": "serie-a",
-  "row_count": 3,
+  "row_count": 2,
   "rows": [
     {
       "date": "2026-11-07",
@@ -44,7 +44,7 @@
           "source_event_id": "2994661045",
           "match_id": "5749747",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749747",
-          "observed_at": "2026-11-09T16:29:12+00:00",
+          "observed_at": "2026-11-09T19:08:57+00:00",
           "event_date": "2026-11-07",
           "season": "2026/27",
           "team": "Bologna",
@@ -108,7 +108,7 @@
       "context_source_path": "data/goalscorer/penalty-duty-context.json",
       "actual_taker_match_status": "Yes - started, off 82'",
       "primary_on_pitch_at_penalty": "Yes - bench, on 22'",
-      "secondary_on_pitch_at_penalty": "No - unavailable in match squad",
+      "secondary_on_pitch_at_penalty": "No - absent from matchday squad",
       "tertiary_on_pitch_at_penalty": "Yes - bench, on 46'",
       "actual_taker_on_pitch_at_penalty": "Yes - started, off 82'",
       "event_evidence": [
@@ -117,7 +117,7 @@
           "source_event_id": "2994669955",
           "match_id": "5749747",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749747",
-          "observed_at": "2026-11-09T16:29:12+00:00",
+          "observed_at": "2026-11-09T19:08:57+00:00",
           "event_date": "2026-11-07",
           "season": "2026/27",
           "team": "Parma",
@@ -149,87 +149,12 @@
           "event_result": "scored"
         }
       ]
-    },
-    {
-      "date": "2026-11-01",
-      "league": "serie-a",
-      "review_source": "fotmob_live",
-      "match": "Como vs Venezia",
-      "team": "Como",
-      "opponent": "Venezia",
-      "actual_taker": "Lucas Da Cunha",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "43",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Lucas Da Cunha",
-      "secondary_pre_match": "Nico Paz",
-      "tertiary_pre_match": "Tasos Douvikas",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Lucas Da Cunha took 1 penalty attempt and scored for Como vs Venezia. Primary pre-match: Lucas Da Cunha (unknown). Secondary pre-match: Nico Paz (unknown). No hierarchy change implied from this event.",
-      "context_generated_at": "2026-09-02",
-      "context_source_path": "data/goalscorer/serie-a-penalty-takers.json",
-      "actual_taker_match_status": "Yes - started, off 74'",
-      "primary_on_pitch_at_penalty": "Yes - started, off 74'",
-      "secondary_on_pitch_at_penalty": "Yes - started, off 73'",
-      "tertiary_on_pitch_at_penalty": "Yes - started",
-      "actual_taker_on_pitch_at_penalty": "Yes - started, off 74'",
-      "event_evidence": [
-        {
-          "id": "fotmob|serie-a|5749733|2991435545",
-          "source_event_id": "2991435545",
-          "match_id": "5749733",
-          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749733",
-          "observed_at": "2026-11-09T16:29:12+00:00",
-          "event_date": "2026-11-01",
-          "season": "2026/27",
-          "team": "Como",
-          "taker": "Lucas Da Cunha",
-          "primary": "Lucas Da Cunha",
-          "primary_on_pitch": true,
-          "on_pitch_proof": {
-            "player": "Lucas Da Cunha",
-            "minute": 43,
-            "added_time": 0,
-            "method": "completed_lineup_timeline",
-            "player_id": 1076647,
-            "bucket": "starters",
-            "substitutions": [
-              {
-                "type": "subout",
-                "time": 74,
-                "added_time": 0
-              }
-            ],
-            "events": [],
-            "reason": "on_pitch"
-          },
-          "minute": 43,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Como vs Venezia",
-          "event_result": "scored"
-        }
-      ]
     }
   ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261101",
-      "20261102",
       "20261103",
       "20261104",
       "20261105",
@@ -238,6 +163,6 @@
       "20261108",
       "20261109"
     ],
-    "matches_checked": 17
+    "matches_checked": 10
   }
 }

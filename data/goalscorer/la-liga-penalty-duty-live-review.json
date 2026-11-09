@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-09T16:29:30Z",
+  "generated_at": "2026-11-09T19:09:14Z",
   "league": "la-liga",
-  "row_count": 3,
+  "row_count": 1,
   "rows": [
     {
       "date": "2026-11-06",
@@ -44,7 +44,7 @@
           "source_event_id": "2993851747",
           "match_id": "5868128",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868128",
-          "observed_at": "2026-11-09T16:29:24+00:00",
+          "observed_at": "2026-11-09T19:09:09+00:00",
           "event_date": "2026-11-06",
           "season": "2026/27",
           "team": "Sevilla",
@@ -70,154 +70,12 @@
           "event_result": "missed"
         }
       ]
-    },
-    {
-      "date": "2026-11-01",
-      "league": "la-liga",
-      "review_source": "fotmob_live",
-      "match": "Racing Santander vs Real Madrid",
-      "team": "Real Madrid",
-      "opponent": "Racing Santander",
-      "actual_taker": "Kylian Mbappé",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "11",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Kylian Mbappé",
-      "secondary_pre_match": "Vinícius Júnior",
-      "tertiary_pre_match": "Jude Bellingham",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Kylian Mbappé took 1 penalty attempt and scored for Real Madrid vs Racing Santander. Primary pre-match: Kylian Mbappé (unknown). Secondary pre-match: Vinícius Júnior (unknown). No hierarchy change implied from this event.",
-      "context_generated_at": "2026-09-02",
-      "context_source_path": "data/goalscorer/la-liga-penalty-takers.json",
-      "actual_taker_match_status": "Yes - started",
-      "primary_on_pitch_at_penalty": "Yes - started",
-      "secondary_on_pitch_at_penalty": "No - unavailable in match squad",
-      "tertiary_on_pitch_at_penalty": "Yes - started",
-      "actual_taker_on_pitch_at_penalty": "Yes - started",
-      "event_evidence": [
-        {
-          "id": "fotmob|la-liga|5868118|2991679429",
-          "source_event_id": "2991679429",
-          "match_id": "5868118",
-          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868118",
-          "observed_at": "2026-11-09T16:29:24+00:00",
-          "event_date": "2026-11-01",
-          "season": "2026/27",
-          "team": "Real Madrid",
-          "taker": "Kylian Mbappé",
-          "primary": "Kylian Mbappé",
-          "primary_on_pitch": true,
-          "on_pitch_proof": {
-            "player": "Kylian Mbappé",
-            "minute": 11,
-            "added_time": 0,
-            "method": "completed_lineup_timeline",
-            "player_id": 701154,
-            "bucket": "starters",
-            "substitutions": [],
-            "events": [],
-            "reason": "on_pitch"
-          },
-          "minute": 11,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Racing Santander vs Real Madrid",
-          "event_result": "scored"
-        }
-      ]
-    },
-    {
-      "date": "2026-11-01",
-      "league": "la-liga",
-      "review_source": "fotmob_live",
-      "match": "Athletic Club vs Real Sociedad",
-      "team": "Athletic Club",
-      "opponent": "Real Sociedad",
-      "actual_taker": "Alex Berenguer",
-      "actual_role_pre_match": "none",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "45",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Oihan Sancet",
-      "secondary_pre_match": "Nico Williams",
-      "tertiary_pre_match": "Gorka Guruzeta",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "",
-      "review_type": "unranked_taker",
-      "review_priority": "high",
-      "editorial_note": "Alex Berenguer took 1 penalty attempt and scored for Athletic Club vs Real Sociedad. Primary pre-match: Oihan Sancet (unknown). Secondary pre-match: Nico Williams (unknown). Strong review flag: the taker was not in the tracked top three.",
-      "context_generated_at": "2026-09-02",
-      "context_source_path": "data/goalscorer/la-liga-penalty-takers.json",
-      "actual_taker_match_status": "Yes - started",
-      "primary_on_pitch_at_penalty": "No - bench, on 89'",
-      "secondary_on_pitch_at_penalty": "Yes - started, off 89'",
-      "tertiary_on_pitch_at_penalty": "No - absent from matchday squad",
-      "actual_taker_on_pitch_at_penalty": "Yes - started",
-      "event_evidence": [
-        {
-          "id": "fotmob|la-liga|5868111|2992011199",
-          "source_event_id": "2992011199",
-          "match_id": "5868111",
-          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868111",
-          "observed_at": "2026-11-09T16:29:24+00:00",
-          "event_date": "2026-11-01",
-          "season": "2026/27",
-          "team": "Athletic Club",
-          "taker": "Alex Berenguer",
-          "primary": "Oihan Sancet",
-          "primary_on_pitch": false,
-          "on_pitch_proof": {
-            "player": "Oihan Sancet",
-            "minute": 45,
-            "added_time": 2,
-            "method": "completed_lineup_timeline",
-            "player_id": 950545,
-            "bucket": "subs",
-            "substitutions": [
-              {
-                "type": "subin",
-                "time": 89,
-                "added_time": 0
-              }
-            ],
-            "events": [],
-            "reason": "not_on_pitch"
-          },
-          "minute": 45,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Athletic Club vs Real Sociedad",
-          "event_result": "scored"
-        }
-      ]
     }
   ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261101",
-      "20261102",
       "20261103",
       "20261104",
       "20261105",
@@ -226,6 +84,6 @@
       "20261108",
       "20261109"
     ],
-    "matches_checked": 15
+    "matches_checked": 10
   }
 }
