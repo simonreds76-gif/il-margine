@@ -1,6 +1,6 @@
 {
   "api_errors": [],
-  "deferred_not_due": 4,
+  "deferred_not_due": 0,
   "details": [
     {
       "detail": "",
@@ -28,51 +28,51 @@
     },
     {
       "detail": "",
-      "goalkeeper": "\u0141ukasz Skorupski",
-      "match": "Parma Calcio vs Bologna FC",
-      "match_date": "2026-11-07",
-      "reason": "settled_fotmob",
-      "signal_id": "grosvenor|71945398|\u0142ukasz skorupski|2.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Nicolas Kristof",
-      "match": "Borussia Dortmund vs SV 07 Elversberg",
-      "match_date": "2026-11-07",
-      "reason": "settled_fotmob",
-      "signal_id": "72513292|nicolas kristof|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Gianluigi Donnarumma",
-      "match": "Nottingham Forest vs Manchester City",
-      "match_date": "2026-11-07",
-      "reason": "settled_fotmob",
-      "signal_id": "72221388|gianluigi donnarumma|2.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Christos Mandas",
-      "match": "SSC Napoli vs Lazio Rome",
+      "goalkeeper": "Marco Carnesecchi",
+      "match": "AC Monza vs Atalanta BC",
       "match_date": "2026-11-08",
       "reason": "settled_fotmob",
-      "signal_id": "71945396|christos mandas|3.5|over"
+      "signal_id": "71945394|marco carnesecchi|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Mike Maignan",
+      "match": "Genoa CFC vs AC Milan",
+      "match_date": "2026-11-08",
+      "reason": "fotmob_save_totals_disagree",
+      "signal_id": "71945390|mike maignan|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Dominik Greif",
+      "match": "Stade Brest 29 vs Olympique Lyon",
+      "match_date": "2026-11-08",
+      "reason": "settled_fotmob",
+      "signal_id": "grosvenor|72036278|dominik greif|2.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Jeffrey De Lange",
+      "match": "Racing Club De Lens vs Olympique Marseille",
+      "match_date": "2026-11-08",
+      "reason": "settled_fotmob",
+      "signal_id": "grosvenor|72036284|jeffrey de lange|3.5|over"
     }
   ],
   "fotmob_requests_used": 10,
-  "generated_at": "2026-11-08T15:20:27Z",
+  "generated_at": "2026-11-09T18:53:23Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
-  "pending_due": 3,
-  "pending_total": 7,
+  "pending_due": 4,
+  "pending_total": 4,
   "reason_counts": {
     "fotmob_matched_player_not_goalkeeper": 1,
-    "fotmob_save_totals_disagree": 1,
-    "settled_fotmob": 4,
+    "fotmob_save_totals_disagree": 2,
+    "settled_fotmob": 3,
     "team_keeper_participation_or_rules_review": 1
   },
   "requests_used": 0,
-  "settled": 4,
+  "settled": 3,
   "status": "PARTIAL",
   "verified_player_targets": [
     {
@@ -89,32 +89,31 @@
     {
       "appearances": 32,
       "match_id": 5881220,
-      "status": "saved",
+      "status": "unchanged",
       "targets_sha256": "abaf9356bccd3fedf8636401ccfbfacc3715ad1b2ffdaf544cae19220d4dedb6"
     },
     {
-      "appearances": 32,
-      "match_id": 5749747,
+      "appearances": 30,
+      "match_id": 5749745,
       "status": "saved",
-      "targets_sha256": "77afa5c4b8980f88e57977f55f8aa6dbf6b3e1a56f2f4185c8480774ab5637dd"
+      "targets_sha256": "238ac2fce12293a6fb32a60d9947233c9a36b9452ddf4debdeea776839017649"
     },
     {
-      "appearances": 32,
-      "match_id": 5881215,
-      "status": "saved",
-      "targets_sha256": "827f6ce2572314c131f39f5dfabc1248032a3a225a7880422210bca13dafae22"
+      "match_id": 5749743,
+      "reason": "explicit player totals disagree with reconciled events",
+      "status": "rejected"
     },
     {
-      "appearances": 29,
-      "match_id": 5795513,
+      "appearances": 30,
+      "match_id": 5802984,
       "status": "saved",
-      "targets_sha256": "f6cce78cfc88f4b86f21a886bdcb84cf8cd85d8433cd00d53ec06026ada6cbbb"
+      "targets_sha256": "23cd5501eef36594ea6c8d6e6f5ba4897ca84b6950f357e0c6e8b46fc67af819"
     },
     {
-      "appearances": 31,
-      "match_id": 5749746,
+      "appearances": 30,
+      "match_id": 5802990,
       "status": "saved",
-      "targets_sha256": "4815460506cef715b867c6ab6a5c68ceb4b3c29a7215eaf635027e041d3b0467"
+      "targets_sha256": "71d222513d5deaa72accfb9707a7c9d08587e38d63fa60c51f17a75eb51bcb20"
     }
   ]
 }

@@ -7,19 +7,16 @@
       "competitions": [
         "England - Premier League",
         "Italy - Serie A",
-        "La Liga",
-        "Premier League",
-        "Serie A",
         "Spain - LaLiga"
       ],
       "events": 7,
-      "paired_price_events": 6,
+      "paired_price_events": 0,
       "pairing_unknown_events": 7,
       "raw_market_names": [
         "Bookings Totals"
       ],
-      "rows": 13,
-      "status": "PAIRED_PRICES_OBSERVED"
+      "rows": 7,
+      "status": "MARKET_NAME_ONLY"
     },
     "match_fouls_total": {
       "bookmakers": [],
@@ -48,9 +45,6 @@
       "competitions": [
         "England - Premier League",
         "Italy - Serie A",
-        "La Liga",
-        "Premier League",
-        "Serie A",
         "Spain - LaLiga"
       ],
       "events": 7,
@@ -59,7 +53,7 @@
       "raw_market_names": [
         "Player To Be Fouled"
       ],
-      "rows": 13,
+      "rows": 7,
       "status": "MARKET_NAME_ONLY"
     },
     "player_fouls_committed": {
@@ -69,9 +63,6 @@
       "competitions": [
         "England - Premier League",
         "Italy - Serie A",
-        "La Liga",
-        "Premier League",
-        "Serie A",
         "Spain - LaLiga"
       ],
       "events": 7,
@@ -80,7 +71,7 @@
       "raw_market_names": [
         "Player Fouls"
       ],
-      "rows": 13,
+      "rows": 7,
       "status": "MARKET_NAME_ONLY"
     },
     "team_cards_total": {
@@ -90,20 +81,17 @@
       "competitions": [
         "England - Premier League",
         "Italy - Serie A",
-        "La Liga",
-        "Premier League",
-        "Serie A",
         "Spain - LaLiga"
       ],
       "events": 7,
-      "paired_price_events": 6,
+      "paired_price_events": 0,
       "pairing_unknown_events": 7,
       "raw_market_names": [
         "Bookings Totals Away",
         "Bookings Totals Home"
       ],
-      "rows": 26,
-      "status": "PAIRED_PRICES_OBSERVED"
+      "rows": 14,
+      "status": "MARKET_NAME_ONLY"
     },
     "team_fouls_total": {
       "bookmakers": [],
@@ -116,7 +104,7 @@
       "status": "NOT_OBSERVED"
     }
   },
-  "generated_at": "2026-11-08T15:19:07Z",
+  "generated_at": "2026-11-09T18:52:32Z",
   "policy": {
     "definition_gate": "Bookmaker settlement definitions must be reconciled against the result source before ROI is scored.",
     "live_staking": "BLOCKED",

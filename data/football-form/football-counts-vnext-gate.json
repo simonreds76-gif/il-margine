@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-09T01:13:11Z",
+  "generated_at": "2026-11-09T18:53:18Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -7,13 +7,13 @@
     "live_routing": false,
     "prospective": {
       "signals": 29,
-      "settled": 21,
-      "pending": 8,
-      "pnl_units": -9.792,
-      "roi": -0.466286,
-      "true_close_n": 4,
-      "true_close_coverage": 0.190476,
-      "mean_true_close_clv": 0.009208,
+      "settled": 29,
+      "pending": 0,
+      "pnl_units": -13.939,
+      "roi": -0.480655,
+      "true_close_n": 7,
+      "true_close_coverage": 0.241379,
+      "mean_true_close_clv": 0.02219,
       "side_counts": {
         "under": 22,
         "over": 7
@@ -51,9 +51,9 @@
       "operational_alert_required": false,
       "operational_alert_code": null,
       "capture_window_evidence": {
-        "capture_at": "2026-11-09T01:12:53Z",
-        "capture_window_end": "2026-11-10T01:12:53Z",
-        "capture_run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/42544326216",
+        "capture_at": "2026-11-09T18:52:28Z",
+        "capture_window_end": "2026-11-16T18:52:28Z",
+        "capture_run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/42677633195",
         "leagues_checked": [
           "bundesliga",
           "epl",
@@ -75,7 +75,7 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-09T01:13:03Z",
+      "generated_at": "2026-11-09T18:53:08Z",
       "status": "OK",
       "missing_history": [],
       "scored_fixtures": 0
@@ -88,12 +88,12 @@
     "live_routing": false,
     "prospective": {
       "signals": 192,
-      "settled": 168,
-      "pending": 24,
-      "pnl_units": -9.646,
-      "roi": -0.057417,
+      "settled": 191,
+      "pending": 1,
+      "pnl_units": -7.719,
+      "roi": -0.040414,
       "true_close_n": 73,
-      "true_close_coverage": 0.434524,
+      "true_close_coverage": 0.382199,
       "mean_true_close_clv": 0.008838,
       "side_counts": {
         "over": 45,
