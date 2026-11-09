@@ -52,6 +52,15 @@ class FixtureRepairTests(unittest.TestCase):
    h=s['models'][m]['profit_history'];p=s['models'][m]['hypothetical_selections']
    self.assertEqual(h['settled'],p['settled']);self.assertEqual(h['profit'],p['pnl_units']);self.assertEqual([d['cumulative'] for d in h['days']],[1,0]);self.assertEqual(p['pending'],1)
   self.assertEqual(rows,before)
+ def test_clv_refresh_preserves_original_settlement_provenance(self):
+  for name in ['team-shots-v1-clv-monitor.py','corners-v0-clv-monitor.py']:
+   module=V.load_module('source_'+name,ROOT/'scripts'/name)
+   original=dict(pick_id='p',result='lost',pnl_units='-1',settled_at='2026-11-09T18:00:00Z',settlement_source='verified source | original evidence.json')
+   before=copy.deepcopy(original)
+   rebuilt=module.preserve_settlement(dict(pick_id='p',result='pending'),{'p':original})
+   self.assertEqual(rebuilt['settlement_source'],original['settlement_source'])
+   self.assertIn('settlement_source',module.OUTPUT_FIELDS)
+   self.assertEqual(original,before)
  def test_lyon_overlay_keeps_raw_rows_and_removes_only_verified_repeat(self):
   case=json.loads((ROOT/'config/football-count-reconciliations.json').read_text())['cases'][0]
   rows=[dict(pick_id=case['retained_pick_id'],result='pending'),dict(pick_id=case['duplicate_pick_id'],bookmaker='Bet365',line='10.5',side='under',book_price_at_publication='1.8',result='won',pnl_units='0.8')]

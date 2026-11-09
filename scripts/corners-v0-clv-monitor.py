@@ -77,13 +77,14 @@ OUTPUT_FIELDS = [
     "pnl_units",
     "actual_total_corners",
     "settled_at",
+    "settlement_source",
     "current_model_would_have_priced",
     "confidence_guard_applied",
     "blocked_reason",
 ]
 
 SETTLED_RESULTS = {"won", "lost", "push"}
-SETTLEMENT_FIELDS = ("result", "pnl_units", "actual_total_corners", "settled_at")
+SETTLEMENT_FIELDS = ("result", "pnl_units", "actual_total_corners", "settled_at", "settlement_source")
 
 
 def norm_team(text: str) -> str:
