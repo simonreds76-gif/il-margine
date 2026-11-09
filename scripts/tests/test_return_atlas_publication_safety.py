@@ -131,7 +131,8 @@ class StaticBudgetTests(unittest.TestCase):
  def test_preflight_forces_read_only_when_parent_is_vercel(self):
   with tempfile.TemporaryDirectory() as temp:
    root=Path(temp);(root/'scripts').mkdir();(root/'scripts/compress-matchup-output.mjs').write_text('// fixture')
-   with patch.dict(M.os.environ,{'VERCEL':'1'}),patch.object(M,'run',return_value='budget OK') as run:
+   report='[matchup-storage] '+json.dumps({'publicBytes':90_000_000,'maxPublicBytes':150_000_000})
+   with patch.dict(M.os.environ,{'VERCEL':'1'}),patch.object(M,'run',return_value=report) as run:
     M.check_static_budget(root)
    self.assertEqual(run.call_args.kwargs['env']['VERCEL'],'0')
  def test_preflight_failure_propagates_instead_of_allowing_cloud_build(self):
@@ -148,5 +149,11 @@ class StaticBudgetTests(unittest.TestCase):
     with self.assertRaisesRegex(RuntimeError,'archive missing'):
      M.trim_release_archives(root,{'return-atlas':'20261108-aaaaaaaaaaaa'})
    run.assert_not_called()
+ def test_generated_assets_get_headroom_without_raising_final_limit(self):
+  with tempfile.TemporaryDirectory() as temp:
+   root=Path(temp);(root/'scripts').mkdir();(root/'scripts/compress-matchup-output.mjs').write_text('// fixture')
+   report='[matchup-storage] '+json.dumps({'publicBytes':145_000_000,'maxPublicBytes':150_000_000})
+   with patch.object(M,'run',return_value=report):
+    with self.assertRaisesRegex(RuntimeError,'generated-asset reserve'):M.check_static_budget(root)
 
 if __name__=='__main__':unittest.main()

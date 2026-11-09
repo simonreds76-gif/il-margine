@@ -300,6 +300,16 @@ def check_static_budget(checkout):
         raise RuntimeError('Static-output preflight unavailable; publication stopped')
     env = dict(os.environ, VERCEL='0')  # read-only even on a CI host
     result = run(['node', script], checkout, env=env, timeout=240)
+    marker = '[matchup-storage] '
+    reports = [line[len(marker):] for line in result.splitlines() if line.startswith(marker)]
+    if len(reports) != 1:
+        raise RuntimeError('Static-output preflight report missing or ambiguous')
+    report = json.loads(reports[0])
+    # The cloud prebuild additionally generates small manager/crest thumbnails.
+    # Leave 10 MB for those assets; retain the unchanged final 150 MB build guard.
+    reserve = 10_000_000
+    if report['publicBytes'] + reserve > report['maxPublicBytes']:
+        raise RuntimeError('Static output plus generated-asset reserve exceeds budget')
     print('ATLAS_STATIC_OUTPUT_PREFLIGHT ' + result.strip(), flush=True)
 
 
@@ -321,6 +331,14 @@ def stage_on_production(source, state, deployment, *, worktree_root=None):
         run(['git', 'worktree', 'add', '--detach', destination, sha], source, timeout=180)
     if run(['git', 'status', '--porcelain', '--untracked-files=no'], destination).strip():
         raise RuntimeError('Data publication worktree needs recovery; preserving existing files')
+    # New worktrees inherit the publisher's sparse selection. The cloud checkout
+    # has ALL public assets, so a partial local tree understates its build size.
+    if run(['git', 'config', '--bool', '--default', 'false', '--get',
+            'core.sparseCheckout'], destination).strip() == 'true':
+        if run(['git', 'config', '--bool', '--default', 'false', '--get',
+                'extensions.worktreeConfig'], destination).strip() != 'true':
+            raise RuntimeError('Release sparse settings are not isolated; publication stopped')
+        run(['git', 'sparse-checkout', 'add', 'public'], destination)
     validate_live_history(destination, source)
     production_versions, production_archives = {}, {}
     for route, pointer in [('return-atlas', 'return-atlas-release.json'),
