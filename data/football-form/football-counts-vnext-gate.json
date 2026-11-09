@@ -1,11 +1,17 @@
 {
-  "generated_at": "2026-11-09T20:05:43Z",
+  "generated_at": "2026-11-09T20:31:05Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
     "market_gate": "BLOCKED_PENDING_2026_27_TRUE_CLOSE_SAMPLE",
     "live_routing": false,
     "prospective": {
+      "reconciliation": {
+        "excluded_pick_ids": [],
+        "excluded_duplicates": 0,
+        "cases": [],
+        "historical_records_unchanged": true
+      },
       "signals": 29,
       "settled": 29,
       "pending": 0,
@@ -21,6 +27,12 @@
       "dominant_side_share": 0.758621
     },
     "warmup_tracking": {
+      "reconciliation": {
+        "excluded_pick_ids": [],
+        "excluded_duplicates": 0,
+        "cases": [],
+        "historical_records_unchanged": true
+      },
       "signals": 14,
       "settled": 14,
       "pending": 0,
@@ -75,7 +87,7 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-09T20:05:37Z",
+      "generated_at": "2026-11-09T20:30:48Z",
       "status": "OK",
       "missing_history": [],
       "scored_fixtures": 0
@@ -87,21 +99,103 @@
     "market_gate": "BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE",
     "live_routing": false,
     "prospective": {
-      "signals": 192,
-      "settled": 191,
+      "reconciliation": {
+        "excluded_pick_ids": [
+          "corners_v3|2026-11-01|ligue-1|lyon|angers|10.5|under"
+        ],
+        "excluded_duplicates": 1,
+        "cases": [
+          {
+            "id": "lyon-angers-72036262",
+            "model": "corners_v3",
+            "retained_pick_id": "corners_v3|2026-10-31|ligue-1|lyon|angers|9.5|under",
+            "duplicate_pick_id": "corners_v3|2026-11-01|ligue-1|lyon|angers|10.5|under",
+            "expected_duplicate": {
+              "bookmaker": "Bet365",
+              "line": "10.5",
+              "side": "under",
+              "book_odds": "1.8"
+            },
+            "canonical_event_id": "odds_api_io:72036262",
+            "original_kickoff": "2026-10-31T19:45:00Z",
+            "revised_kickoff": "2026-11-01T16:15:00Z",
+            "reason": "Same canonical provider event and ordered clubs; date-based identity admitted a second selection after the schedule changed.",
+            "first_selection_settlement": "REVIEW_REQUIRED",
+            "settlement_note": "Original Pinnacle quote remains pending. A changed feed time alone does not establish a bookmaker postponement or void; no win or void is invented.",
+            "evidence": [
+              {
+                "path": "data/corners-ou/bet365-corners-odds-history.csv",
+                "event_id": "72036262",
+                "old_capture": "2026-10-27T14:35:43Z",
+                "new_capture": "2026-10-31T19:32:53.980206+00:00"
+              },
+              {
+                "path": "data/results-snapshot/2026-11-09.json",
+                "fixture": "2026-11-01|lyon|angers",
+                "corners": 7
+              }
+            ],
+            "rule_reference": "https://www.pinnacle.com/en/future/betting-rules"
+          }
+        ],
+        "historical_records_unchanged": true
+      },
+      "signals": 191,
+      "settled": 190,
       "pending": 1,
-      "pnl_units": -7.719,
-      "roi": -0.040414,
+      "pnl_units": -8.519,
+      "roi": -0.044837,
       "true_close_n": 73,
-      "true_close_coverage": 0.382199,
+      "true_close_coverage": 0.384211,
       "mean_true_close_clv": 0.008838,
       "side_counts": {
         "over": 45,
-        "under": 147
+        "under": 146
       },
-      "dominant_side_share": 0.765625
+      "dominant_side_share": 0.764398
     },
     "warmup_tracking": {
+      "reconciliation": {
+        "excluded_pick_ids": [
+          "corners_v3|2026-11-01|ligue-1|lyon|angers|10.5|under"
+        ],
+        "excluded_duplicates": 1,
+        "cases": [
+          {
+            "id": "lyon-angers-72036262",
+            "model": "corners_v3",
+            "retained_pick_id": "corners_v3|2026-10-31|ligue-1|lyon|angers|9.5|under",
+            "duplicate_pick_id": "corners_v3|2026-11-01|ligue-1|lyon|angers|10.5|under",
+            "expected_duplicate": {
+              "bookmaker": "Bet365",
+              "line": "10.5",
+              "side": "under",
+              "book_odds": "1.8"
+            },
+            "canonical_event_id": "odds_api_io:72036262",
+            "original_kickoff": "2026-10-31T19:45:00Z",
+            "revised_kickoff": "2026-11-01T16:15:00Z",
+            "reason": "Same canonical provider event and ordered clubs; date-based identity admitted a second selection after the schedule changed.",
+            "first_selection_settlement": "REVIEW_REQUIRED",
+            "settlement_note": "Original Pinnacle quote remains pending. A changed feed time alone does not establish a bookmaker postponement or void; no win or void is invented.",
+            "evidence": [
+              {
+                "path": "data/corners-ou/bet365-corners-odds-history.csv",
+                "event_id": "72036262",
+                "old_capture": "2026-10-27T14:35:43Z",
+                "new_capture": "2026-10-31T19:32:53.980206+00:00"
+              },
+              {
+                "path": "data/results-snapshot/2026-11-09.json",
+                "fixture": "2026-11-01|lyon|angers",
+                "corners": 7
+              }
+            ],
+            "rule_reference": "https://www.pinnacle.com/en/future/betting-rules"
+          }
+        ],
+        "historical_records_unchanged": true
+      },
       "signals": 36,
       "settled": 36,
       "pending": 0,
