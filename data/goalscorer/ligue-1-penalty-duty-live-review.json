@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-08T21:07:03.945750+00:00",
+  "generated_at": "2026-11-09T00:53:11.532323+00:00",
   "league": "ligue-1",
-  "row_count": 2,
+  "row_count": 3,
   "rows": [
     {
       "date": "2026-11-08",
@@ -143,6 +143,92 @@
           "event_result": "missed"
         }
       ]
+    },
+    {
+      "date": "2026-11-01",
+      "league": "ligue-1",
+      "review_source": "fotmob_live",
+      "match": "Strasbourg vs Auxerre",
+      "team": "Strasbourg",
+      "opponent": "Auxerre",
+      "actual_taker": "Conrad Harder",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "62",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Joaquín Panichelli",
+      "secondary_pre_match": "Sebastian Nanasi",
+      "tertiary_pre_match": "Giovanni Reyna",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Conrad Harder took 1 penalty attempt and scored for Strasbourg vs Auxerre. Primary pre-match: Joaquín Panichelli (unknown). Secondary pre-match: Sebastian Nanasi (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
+      "actual_taker_match_status": "Yes - started, off 78'",
+      "primary_on_pitch_at_penalty": "No - absent from matchday squad",
+      "secondary_on_pitch_at_penalty": "Yes - bench, on 59'",
+      "tertiary_on_pitch_at_penalty": "Yes - started, off 66'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 78'",
+      "event_evidence": [
+        {
+          "id": "fotmob|ligue-1|5802980|2991669859",
+          "source_event_id": "2991669859",
+          "match_id": "5802980",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802980",
+          "observed_at": "2026-11-09T00:53:16+00:00",
+          "event_date": "2026-11-01",
+          "season": "2026/27",
+          "team": "Strasbourg",
+          "taker": "Conrad Harder",
+          "primary": "Joaquín Panichelli",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Joaquín Panichelli",
+            "minute": 62,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "reason": "absent_from_matchday_squad",
+            "registered_player_id": null,
+            "squad_player_ids": [
+              "1200984",
+              "1436942",
+              "1178332",
+              "1643851",
+              "1575945",
+              "1239595",
+              "1598170",
+              "1603755",
+              "1071179",
+              "1302715",
+              "1482294",
+              "1156569",
+              "1340071",
+              "1701117",
+              "1417802",
+              "1677224",
+              "1283393",
+              "1647186",
+              "1315477",
+              "1418073"
+            ]
+          },
+          "minute": 62,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Strasbourg vs Auxerre",
+          "event_result": "scored"
+        }
+      ]
     }
   ],
   "source_health": {
@@ -163,7 +249,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261108"
+      "20261107"
     ],
     "matches_checked": 1
   }
