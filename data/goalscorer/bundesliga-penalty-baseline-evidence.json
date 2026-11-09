@@ -1,9 +1,25 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-08T15:36:32Z",
+  "generated_at": "2026-11-09T06:44:54Z",
   "league": "bundesliga",
-  "row_count": 1,
+  "row_count": 2,
   "rows": [
+    {
+      "team": "Freiburg",
+      "team_key": "freiburg",
+      "player_name": "Vincenzo Grifo",
+      "player_key": "vincenzo grifo",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-11-08"
+    },
     {
       "team": "Paderborn",
       "team_key": "paderborn",

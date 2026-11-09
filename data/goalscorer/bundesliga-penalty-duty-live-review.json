@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-09T01:11:28.949362+00:00",
+  "generated_at": "2026-11-09T06:44:54Z",
   "league": "bundesliga",
   "row_count": 2,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2995688005",
           "match_id": "5881217",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881217",
-          "observed_at": "2026-11-08T21:07:11+00:00",
+          "observed_at": "2026-11-09T06:44:51+00:00",
           "event_date": "2026-11-08",
           "season": "2026/27",
           "team": "Freiburg",
@@ -107,8 +107,8 @@
       "context_generated_at": "2026-09-19",
       "context_source_path": "data/goalscorer/bundesliga-penalty-takers.json",
       "actual_taker_match_status": "Yes - bench, on 65'",
-      "primary_on_pitch_at_penalty": "No - unavailable in match squad",
-      "secondary_on_pitch_at_penalty": "No - unavailable in match squad",
+      "primary_on_pitch_at_penalty": "No - absent from matchday squad",
+      "secondary_on_pitch_at_penalty": "No - absent from matchday squad",
       "tertiary_on_pitch_at_penalty": "No - started, off 65'",
       "actual_taker_on_pitch_at_penalty": "Yes - bench, on 65'",
       "event_evidence": [
@@ -117,7 +117,7 @@
           "source_event_id": "2994436617",
           "match_id": "5881221",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881221",
-          "observed_at": "2026-11-08T21:21:02+00:00",
+          "observed_at": "2026-11-09T06:44:51+00:00",
           "event_date": "2026-11-07",
           "season": "2026/27",
           "team": "Paderborn",
@@ -129,11 +129,30 @@
             "minute": 73,
             "added_time": 0,
             "method": "completed_lineup_timeline",
-            "player_id": 840947,
-            "bucket": "unavailable",
-            "substitutions": [],
-            "events": [],
-            "reason": "not_on_pitch"
+            "reason": "absent_from_matchday_squad",
+            "registered_player_id": null,
+            "squad_player_ids": [
+              "1257826",
+              "1520469",
+              "1415373",
+              "1515976",
+              "1426060",
+              "658444",
+              "1362492",
+              "1276453",
+              "784225",
+              "1688956",
+              "1321553",
+              "1580112",
+              "1701615",
+              "956913",
+              "1079892",
+              "706500",
+              "659046",
+              "767790",
+              "1520593",
+              "1367587"
+            ]
           },
           "minute": 73,
           "penalty_kind": "in_match",
@@ -149,22 +168,10 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261102",
-      "20261103",
-      "20261104",
-      "20261105",
-      "20261106",
       "20261107",
-      "20261108"
+      "20261108",
+      "20261109"
     ],
-    "matches_checked": 7
-  },
-  "hot_source_health": {
-    "complete": true,
-    "errors": [],
-    "dates_requested": [
-      "20261106"
-    ],
-    "matches_checked": 1
+    "matches_checked": 8
   }
 }
