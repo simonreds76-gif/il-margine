@@ -20,7 +20,7 @@
     }
   },
   "capture_errors": [],
-  "capture_mode": "close",
+  "capture_mode": "publication",
   "direct_source": {
     "bookmaker": "Grosvenor",
     "deferred": [],
@@ -43,8 +43,8 @@
   "events_selected": 0,
   "events_supported": 0,
   "events_with_lines": 0,
-  "generated_at": "2026-11-09T20:05:30Z",
-  "last_publication_at": "2026-11-09T18:52:29Z",
+  "generated_at": "2026-11-10T02:55:07Z",
+  "last_publication_at": "2026-11-10T02:55:07Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 0,
@@ -72,8 +72,8 @@
   "moviodds_source": {
     "errors": [],
     "excluded": {
-      "fixture_not_eligible": 584,
-      "unmatched_or_unsupported_fixture": 158
+      "fixture_not_eligible": 599,
+      "unmatched_or_unsupported_fixture": 169
     },
     "goalkeeper_coverage_status": "NO_TARGETS",
     "goalkeeper_fixture_coverage": [],
@@ -87,13 +87,13 @@
     },
     "market_count": 0,
     "quote_count": 0,
-    "received_at": "2026-11-09T20:05:32.681717+00:00",
+    "received_at": "2026-11-10T02:55:09.360478+00:00",
     "requests": 1,
     "source": "moviodds_bet365",
     "source_site": "com",
     "status": "NO_VERIFIED_MARKETS"
   },
-  "publication_recovery": false,
+  "publication_recovery": true,
   "request_budget": 4,
   "requests_used": 1,
   "rows_added": 0,
