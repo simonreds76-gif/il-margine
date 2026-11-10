@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from goalkeeper_keeper_watch import weekly_text as keeper_watch_weekly_text
 from tennis_match_shape_integrity import report_with_health
+from frozen_paper_common import read_report as frozen_paper_report
 
 import argparse
 import base64
@@ -1536,7 +1537,7 @@ def build_payload() -> dict[str, Any]:
     tennis_elo_rebuild = load_json(ROOT / "data/tennis-elo-rebuild/report.json")
     tennis_sisal_5050 = load_json(ROOT / "data/tennis-props/shadow/sisal-5050-v1/report.json")
     tennis_breakpoint_c = load_json(ROOT / "data/tennis-break-points/forward-c-v1/report.json")
-    tennis_match_shape = report_with_health(ROOT)
+    tennis_match_shape = {**report_with_health(ROOT), "exploratory": frozen_paper_report(ROOT, "data/tennis-ml-research/match-shape-v1/j1-exploratory-v1")}
     tennis_rate_trend = rate_trend_summary()
     tennis_full_refresh = full_refresh_summary()
     tennis_context_forward = load_json(ROOT / "data/tennis-ml-research/context-forward-v1/report.json")
@@ -1631,6 +1632,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_sisal_5050": tennis_sisal_5050,
         "tennis_breakpoint_c": tennis_breakpoint_c,
         "tennis_match_shape": tennis_match_shape,
+        "shots_strength_comparison": frozen_paper_report(ROOT, "data/football-form/shots-strength-v1"),
         "tennis_rate_trend": tennis_rate_trend,
         "tennis_full_refresh": tennis_full_refresh,
         "tennis_context_forward": tennis_context_forward,
@@ -1951,6 +1953,8 @@ def render_report(payload: dict[str, Any]) -> str:
     lines.extend(["", breakpoint_c_text(payload.get("tennis_breakpoint_c") or {})])
     from match_shape_reporting import weekly_text as match_shape_text
     lines.extend(["", match_shape_text(payload.get("tennis_match_shape") or {})])
+    from frozen_paper_common import weekly_text as frozen_paper_text
+    lines.extend(["", frozen_paper_text(payload.get("shots_strength_comparison") or {})])
     from most_df_reporting import weekly_text as most_df_text
     lines.extend(["", most_df_text(payload.get("tennis_most_df") or {})])
     lines.extend(["", rate_trend_text(payload)])
@@ -2173,6 +2177,8 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     lines.append(breakpoint_c_text(payload.get("tennis_breakpoint_c") or {}))
     from match_shape_reporting import weekly_text as match_shape_text
     lines.append(match_shape_text(payload.get("tennis_match_shape") or {}))
+    from frozen_paper_common import weekly_text as frozen_paper_text
+    lines.append(frozen_paper_text(payload.get("shots_strength_comparison") or {}))
     from most_df_reporting import weekly_text as most_df_text
     lines.append(most_df_text(payload.get("tennis_most_df") or {}))
     lines.append(rate_trend_text(payload))

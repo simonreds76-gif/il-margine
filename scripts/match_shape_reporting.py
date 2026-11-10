@@ -16,6 +16,9 @@ def weekly_text(report):
         lines.append('Match Shape health unreadable; last validated results retained. Review required.')
     elif health.get('state')=='REVIEW_REQUIRED':
         lines.append(f"Settlement review required: {health.get('conflicts',0)} evidence conflict(s); settled records retained.")
+    if report.get('exploratory'):
+        from frozen_paper_common import weekly_text as comparison_text
+        lines.extend(['',comparison_text(report['exploratory'])])
     return '\n'.join(lines)
 
 

@@ -18,7 +18,14 @@ from tennis_match_shape_quotes import collect
 from tennis_match_shape_results import refresh_with_results
 
 def refresh(root, *args, **kwargs):
-    return refresh_with_results(root, *args, **kwargs)
+    report=refresh_with_results(root, *args, **kwargs)
+    # Independent cohort: a missing J1 input cannot block existing Match Shape.
+    from tennis_match_shape_j1 import refresh as refresh_j1, RELATIVE as J1_PATH
+    try:
+        report['exploratory']=refresh_j1(root,*args,**kwargs)
+    except Exception as exc:
+        atomic(root/J1_PATH/'capture-status.json',dict(state='REFRESH_ERROR',reason=str(exc),checked_at=datetime.now(timezone.utc).isoformat()))
+    return report
 
 
 def capture_shared(root,receipt):

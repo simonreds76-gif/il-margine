@@ -1,0 +1,21 @@
+{
+  "version": "match-shape-j1-exploratory-v1",
+  "labels": {"current": "Current pricing reference copy", "MJ1": "Market-anchored J1", "MJ1_S": "Frozen J1 score correction"},
+  "primary_metric": "Paired log loss against the same-book market, equal fixture weighting; paper ROI is secondary",
+  "history_cutoff": "Strictly before the UTC quote-capture day, never match day; rates frozen at capture",
+  "scope": "ATP BO3, all surfaces including indoor and qualifying; exact same-time Grosvenor winner and games contracts",
+  "lambda": 0.07653680377710538,
+  "joint_window_days": 365,
+  "joint_prior_sd": 0.25,
+  "point_calibration": {"Lbar": 0.5289048082610042, "a": 0.014906348475449593, "gam": 0.8969939632712928, "lam": 0.8269288403396803},
+  "research_artifact_sha256": "ac2bfbdba616cbcf26cf0ae84b6a6346baf28d9ef45f9cd5d8d3a2c2696d0110",
+  "minimum_ev": 0.10,
+  "minimum_probability_edge": 0.05,
+  "paper_stake": 1,
+  "actual_stake": 0,
+  "alerts": false,
+  "automatic_promotion": false,
+  "selection": "First verified pre-match fixture batch, up to one selection per arm per market; main line else closest proportional no-vig 50%, deterministic line/offer-ID tie-break. Missing inputs and no-bets remain locked for that fixture",
+  "review": {"descriptive_fixtures": 100, "decision_fixtures": [400,800], "maximum_months": 12, "precision": "Report fixture-cluster paired log-loss 95% interval and paper ROI uncertainty. Manual review only; no profitability claim when interval includes zero or fewer than 100 independent fixtures.", "harm": "At a decision review, an entirely positive candidate-minus-reference log-loss interval requires manual stop review. No retuning, scope rescue, automatic promotion or extension to chase significance."},
+  "historical_status": "Original research INCONCLUSIVE; original A/B gates failed and remain unchanged. New prospective exploratory registration."
+}
