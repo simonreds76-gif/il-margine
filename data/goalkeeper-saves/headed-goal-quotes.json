@@ -14119,84 +14119,6 @@
       "payload_sha256": "22ab302980430f214cd503333f66ab34a5142c71e00c92fa4f4b92590605e780",
       "last_price_fingerprint": "2f08b94ca994b5fb5c95d990bd02d3804da7f3731e0e2e863893e92ef71f8324"
     },
-    "Grosvenor:1027911545:2711843431:4400257885": {
-      "key": "Grosvenor:1027911545:2711843431:4400257885",
-      "bookmaker": "Grosvenor",
-      "platform": "Kambi",
-      "event_id": "71945402",
-      "source_event_id": "1027911545",
-      "source_offer_id": "2711843431",
-      "source_outcome_id": "4400257885",
-      "source_participant_id": "1007964314",
-      "source_team_reference": 1000048748,
-      "home": "Torino FC",
-      "away": "US Lecce",
-      "kickoff": "2026-11-07T14:00:00Z",
-      "player": "Joël Monteiro",
-      "market": "1+ headed goal",
-      "settlement_rules": "unverified",
-      "status": "NOT_OBSERVED",
-      "odds": 16.0,
-      "source_updated_at": "2026-11-02T07:56:09Z",
-      "captured_at": "2026-11-03T16:31:46.886670+00:00",
-      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911545.json",
-      "raw_offer": {
-        "id": 2711843431,
-        "closed": "2026-11-07T14:00:00Z",
-        "criterion": {
-          "id": 1001159730,
-          "label": "To score from a header",
-          "englishLabel": "To score from a header",
-          "shortLabel": "Header",
-          "shortEnglishLabel": "Header",
-          "order": [
-            1
-          ],
-          "lifetime": "FULL_TIME"
-        },
-        "betOfferType": {
-          "id": 127,
-          "name": "Player Occurrence Line",
-          "englishName": "Player Occurrence Line"
-        },
-        "eventId": 1027911545,
-        "outcomes": [
-          {
-            "id": 4400257885,
-            "label": "Yes",
-            "englishLabel": "Yes",
-            "odds": 16000,
-            "line": 1000,
-            "participant": "Joël Monteiro",
-            "type": "OT_YES",
-            "betOfferId": 2711843431,
-            "changedDate": "2026-11-02T07:56:09Z",
-            "participantId": 1007964314,
-            "oddsFractional": "15/1",
-            "oddsAmerican": "1500",
-            "status": "OPEN",
-            "cashOutStatus": "DISABLED",
-            "eventParticipantId": 1000048748,
-            "displayOrder": 0
-          }
-        ],
-        "tags": [
-          "OFFERED_PREMATCH"
-        ],
-        "cashOutStatus": "ENABLED"
-      },
-      "rejection_reasons": [],
-      "mapping_status": "no_roster",
-      "player_id": null,
-      "team_id": null,
-      "lineup_status": "unknown",
-      "lineup_observed_at": null,
-      "first_seen_at": "2026-11-02T18:41:00.773535+00:00",
-      "last_seen_at": "2026-11-03T16:31:46.886670+00:00",
-      "last_checked_at": "2026-11-07T02:21:49+00:00",
-      "payload_sha256": "26f89734935d36d4748f409a316466811a45ffe21b3905f7e68b704b89477e3f",
-      "last_price_fingerprint": "761650fa16c8c13ef1b465d9e6f6eae8bc4b207a48fc45e504bd73293a026e5b"
-    },
     "Grosvenor:1027911545:2711843436:4400257895": {
       "key": "Grosvenor:1027911545:2711843436:4400257895",
       "bookmaker": "Grosvenor",
@@ -21528,84 +21450,6 @@
       "last_checked_at": "2026-11-07T14:57:42+00:00",
       "payload_sha256": "a8f349a32a63518c37e6b2d19757e0cd04b1f8dd6bea2ee9b07c960e9c36372c",
       "last_price_fingerprint": "7a962e7f7935fa825d4d23adbf20752a2a5775e60e112a07dcd5419cafc0c872"
-    },
-    "Grosvenor:1028209174:2711977090:4400570478": {
-      "key": "Grosvenor:1028209174:2711977090:4400570478",
-      "bookmaker": "Grosvenor",
-      "platform": "Kambi",
-      "event_id": "72478692",
-      "source_event_id": "1028209174",
-      "source_offer_id": "2711977090",
-      "source_outcome_id": "4400570478",
-      "source_participant_id": "1002178146",
-      "source_team_reference": 1000000164,
-      "home": "Espanyol Barcelona",
-      "away": "RC Deportivo de A Coruna",
-      "kickoff": "2026-11-07T15:15:00Z",
-      "player": "Kike García",
-      "market": "1+ headed goal",
-      "settlement_rules": "unverified",
-      "status": "NOT_OBSERVED",
-      "odds": 10.0,
-      "source_updated_at": "2026-11-02T13:26:19Z",
-      "captured_at": "2026-11-03T16:31:50.010477+00:00",
-      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209174.json",
-      "raw_offer": {
-        "id": 2711977090,
-        "closed": "2026-11-07T15:15:00Z",
-        "criterion": {
-          "id": 1001159730,
-          "label": "To score from a header",
-          "englishLabel": "To score from a header",
-          "shortLabel": "Header",
-          "shortEnglishLabel": "Header",
-          "order": [
-            1
-          ],
-          "lifetime": "FULL_TIME"
-        },
-        "betOfferType": {
-          "id": 127,
-          "name": "Player Occurrence Line",
-          "englishName": "Player Occurrence Line"
-        },
-        "eventId": 1028209174,
-        "outcomes": [
-          {
-            "id": 4400570478,
-            "label": "Yes",
-            "englishLabel": "Yes",
-            "odds": 10000,
-            "line": 1000,
-            "participant": "Kike García",
-            "type": "OT_YES",
-            "betOfferId": 2711977090,
-            "changedDate": "2026-11-02T13:26:19Z",
-            "participantId": 1002178146,
-            "oddsFractional": "9/1",
-            "oddsAmerican": "900",
-            "status": "OPEN",
-            "cashOutStatus": "DISABLED",
-            "eventParticipantId": 1000000164,
-            "displayOrder": 0
-          }
-        ],
-        "tags": [
-          "OFFERED_PREMATCH"
-        ],
-        "cashOutStatus": "ENABLED"
-      },
-      "rejection_reasons": [],
-      "mapping_status": "no_roster",
-      "player_id": null,
-      "team_id": null,
-      "lineup_status": "unknown",
-      "lineup_observed_at": null,
-      "first_seen_at": "2026-11-02T18:41:04.907829+00:00",
-      "last_seen_at": "2026-11-03T16:31:50.010477+00:00",
-      "last_checked_at": "2026-11-07T14:57:42+00:00",
-      "payload_sha256": "d69f2e861f1dcf023dd1f7ab4c0c1a8fbae801b2e078c42ce142437b39c11f68",
-      "last_price_fingerprint": "3bdc8f35f9dd73a3c47954673c644e727590afbe8bf1cd54a68dc5cbdc17f1ea"
     },
     "Grosvenor:1028209174:2711993983:4400567895": {
       "key": "Grosvenor:1028209174:2711993983:4400567895",
@@ -32916,84 +32760,6 @@
       "last_checked_at": "2026-11-08T16:19:51+00:00",
       "payload_sha256": "d3f1e4eec948b1c754b3dc9a714e9492b1e3559cbed6256645f558ee33641b39",
       "last_price_fingerprint": "abe393a0cb6bd1f5c8e87b53dd52f541a9b689d93b5aafa6c757560f47f21fde"
-    },
-    "Grosvenor:1028209200:2711977417:4400571192": {
-      "key": "Grosvenor:1028209200:2711977417:4400571192",
-      "bookmaker": "Grosvenor",
-      "platform": "Kambi",
-      "event_id": "72478686",
-      "source_event_id": "1028209200",
-      "source_offer_id": "2711977417",
-      "source_outcome_id": "4400571192",
-      "source_participant_id": "1008000684",
-      "source_team_reference": 1000000160,
-      "home": "Atletico Madrid",
-      "away": "FC Barcelona",
-      "kickoff": "2026-11-08T20:00:00Z",
-      "player": "Alejandro Balde",
-      "market": "1+ headed goal",
-      "settlement_rules": "unverified",
-      "status": "NOT_OBSERVED",
-      "odds": 16.0,
-      "source_updated_at": "2026-11-02T13:28:31Z",
-      "captured_at": "2026-11-03T16:31:50.010477+00:00",
-      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209200.json",
-      "raw_offer": {
-        "id": 2711977417,
-        "closed": "2026-11-08T20:00:00Z",
-        "criterion": {
-          "id": 1001159730,
-          "label": "To score from a header",
-          "englishLabel": "To score from a header",
-          "shortLabel": "Header",
-          "shortEnglishLabel": "Header",
-          "order": [
-            1
-          ],
-          "lifetime": "FULL_TIME"
-        },
-        "betOfferType": {
-          "id": 127,
-          "name": "Player Occurrence Line",
-          "englishName": "Player Occurrence Line"
-        },
-        "eventId": 1028209200,
-        "outcomes": [
-          {
-            "id": 4400571192,
-            "label": "Yes",
-            "englishLabel": "Yes",
-            "odds": 16000,
-            "line": 1000,
-            "participant": "Alejandro Balde",
-            "type": "OT_YES",
-            "betOfferId": 2711977417,
-            "changedDate": "2026-11-02T13:28:31Z",
-            "participantId": 1008000684,
-            "oddsFractional": "15/1",
-            "oddsAmerican": "1500",
-            "status": "OPEN",
-            "cashOutStatus": "DISABLED",
-            "eventParticipantId": 1000000160,
-            "displayOrder": 0
-          }
-        ],
-        "tags": [
-          "OFFERED_PREMATCH"
-        ],
-        "cashOutStatus": "ENABLED"
-      },
-      "rejection_reasons": [],
-      "mapping_status": "no_roster",
-      "player_id": null,
-      "team_id": null,
-      "lineup_status": "unknown",
-      "lineup_observed_at": null,
-      "first_seen_at": "2026-11-03T16:31:50.010477+00:00",
-      "last_seen_at": "2026-11-03T16:31:50.010477+00:00",
-      "last_checked_at": "2026-11-08T16:19:51+00:00",
-      "payload_sha256": "e8eefc15c326baa2cd0c3c40d30d10f626abb92b1f62e243f1672cc8c5d5dbe6",
-      "last_price_fingerprint": "761650fa16c8c13ef1b465d9e6f6eae8bc4b207a48fc45e504bd73293a026e5b"
     },
     "Grosvenor:1028209200:2711977420:4400571198": {
       "key": "Grosvenor:1028209200:2711977420:4400571198",
@@ -59284,6 +59050,6 @@
     }
   },
   "player_registry": {},
-  "generated_at": "2026-11-09T20:05:30+00:00",
+  "generated_at": "2026-11-10T17:17:31+00:00",
   "purpose": "Headed goal quotes only; NOT headed shot on target. Settlement rules unverified. No model, bets or alerts."
 }
