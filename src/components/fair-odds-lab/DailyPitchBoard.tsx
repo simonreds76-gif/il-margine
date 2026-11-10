@@ -11,11 +11,16 @@ import "./daily-pitch.css";
 import "./editorial-pitch.css";
 
 import { isDailyBoard, type BoardPlayer, type BoardFixture, type DailyBoard } from "./daily-board-data";
+// Reuse identical locale formatters across players, filters and clock ticks.
+const timeFormatter = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", hour: "2-digit", minute: "2-digit" });
+const dayFormatter = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/London", year: "numeric", month: "2-digit", day: "2-digit" });
+const matchDateFormatter = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" });
+const dateLabelFormatter = new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "Europe/London" });
 const finite = (n: unknown): n is number => typeof n === "number" && Number.isFinite(n);
 const decimal = (n: unknown) => finite(n) ? (n >= 100 ? n.toFixed(1) : n.toFixed(2)) : "—";
 const priceVerdict = (gap: number | null) => gap === null ? "Not compared" : gap > 0 ? "Better price" : gap < 0 ? "Below fair" : "Matches fair";
-const stamp = (s: string | null) => s && Number.isFinite(Date.parse(s)) ? new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", hour: "2-digit", minute: "2-digit" }).format(new Date(s)) : "Not available";
-const day = (n: number) => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/London", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(n));
+const stamp = (s: string | null) => s && Number.isFinite(Date.parse(s)) ? timeFormatter.format(new Date(s)) : "Not available";
+const day = (n: number) => dayFormatter.format(new Date(n));
 
 function openSection(id: string) {
   const element = document.getElementById(id);
@@ -67,7 +72,7 @@ function MatchPitch({ fixture: f, now, snapshot, view, selected, setSelected }: 
   const started = now >= Date.parse(f.kickoffUtc);
   return <details id={`match-${f.id}`} className="ip-match" aria-label={`${f.teams[0].name} versus ${f.teams[1].name}`}>
     <summary className="ip-match-summary">
-      <div className="ip-match-meta"><span>{f.competition} · {new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" }).format(new Date(f.kickoffUtc))} · {stamp(f.kickoffUtc)} UK</span><span className={`ip-status-chip ${f.lineupStatus === "confirmed" ? "positive" : "pending"}`}>{started ? "Pre-match snapshot" : f.lineupStatus === "confirmed" ? "Confirmed lineups" : f.lineupStatus === "pending" ? "Lineups pending" : "Expected lineups"}</span></div>
+      <div className="ip-match-meta"><span>{f.competition} · {matchDateFormatter.format(new Date(f.kickoffUtc))} · {stamp(f.kickoffUtc)} UK</span><span className={`ip-status-chip ${f.lineupStatus === "confirmed" ? "positive" : "pending"}`}>{started ? "Pre-match snapshot" : f.lineupStatus === "confirmed" ? "Confirmed lineups" : f.lineupStatus === "pending" ? "Lineups pending" : "Expected lineups"}</span></div>
       <div className="ip-fixture-preview">{f.teams.map((team, i) => {
         const outfield = team.players.filter(p => p.role !== "GK");
         return <div className="ip-preview-team" key={team.name}><ClubBadge name={team.name} path={team.logoPath} league={f.league} /><div><span className="ip-preview-side">{i === 0 ? "Home" : "Away"}{team.formation ? ` · ${team.formation}` : ""}</span><h3>{team.name}</h3><span className="ip-preview-coverage">Our fair odds <strong>{outfield.filter(p => p.modelProbability !== null).length}/{outfield.length}</strong> · Bet365 odds <strong>{outfield.filter(p => p.bookmakerOdds !== null).length}/{outfield.length}</strong></span></div></div>;
@@ -151,7 +156,7 @@ export function DailyPitchBoard({ initial, boardUrl, asOf, preview = false, high
   const groups = [...new Set(fixtures.map(f => f.league))].map(id => ({id, name: fixtures.find(f => f.league === id)!.competition, fixtures: fixtures.filter(f => f.league === id)}));
   const leagueName = leagues.find(([id]) => id === league)?.[1] ?? "All leagues";
   const nextFixture = board.fixtures.find(f => f.date > date && (league === "all" || f.league === league));
-  const dateLabel = (d: string) => d === today ? "Today" : d === day(now + 86400_000) ? "Tomorrow" : new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "Europe/London" }).format(new Date(d + "T12:00:00Z"));
+  const dateLabel = (d: string) => d === today ? "Today" : d === day(now + 86400_000) ? "Tomorrow" : dateLabelFormatter.format(new Date(d + "T12:00:00Z"));
   const old = !board.generatedAt || now - Date.parse(board.generatedAt) > 90 * 60_000;
   const upcoming = comparisons.filter(row => !row.c.started && row.p.role !== "GK");
   const missingOdds = upcoming.filter(row => row.p.bookmakerOdds === null).length;

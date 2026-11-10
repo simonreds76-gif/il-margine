@@ -40,13 +40,19 @@ export function emblemForHref(href: string): ToolEmblemName {
   return "guide";
 }
 
+const compactArtwork: Partial<Record<ToolEmblemName, string>> = {
+  aerial: "/images/tools/compact/aerial-v1.webp",
+  football: "/images/tools/compact/football-v1.webp",
+  tennis: "/images/tools/compact/tennis-v1.webp",
+};
+
 /** Decorative artwork: the adjacent live heading supplies the link's accessible name. */
-export default function ToolEmblem({ name, className = "" }: { name: ToolEmblemName; className?: string }) {
+export default function ToolEmblem({ name, className = "", compact = false }: { name: ToolEmblemName; className?: string; compact?: boolean }) {
   const id = `tool-${useId().replaceAll(":", "")}`;
   const mint = `url(#${id}-mint)`;
   const white = `url(#${id}-white)`;
   const ink = "#102b32";
-  const src = artwork[name];
+  const src = (compact ? compactArtwork[name] : undefined) ?? artwork[name];
   return <span className={`tool-emblem tool-emblem--${name} ${className}`} aria-hidden="true">
     {src ? <Image src={src} width={320} height={320} alt="" unoptimized /> : <svg viewBox="0 0 120 120" fill="none" focusable="false">
       <defs><linearGradient id={`${id}-mint`} x1="22" y1="10" x2="96" y2="110" gradientUnits="userSpaceOnUse"><stop stopColor="#c3ffe7" /><stop offset=".5" stopColor="#63d8af" /><stop offset="1" stopColor="#218466" /></linearGradient><linearGradient id={`${id}-white`} x1="20" y1="12" x2="105" y2="108" gradientUnits="userSpaceOnUse"><stop stopColor="#fff" /><stop offset="1" stopColor="#a7c3ce" /></linearGradient></defs>

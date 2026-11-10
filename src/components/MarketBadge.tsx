@@ -1,5 +1,3 @@
-"use client";
-
 import { getDisplayBetCategory } from "@/lib/bet-category";
 
 type MarketConfig = {

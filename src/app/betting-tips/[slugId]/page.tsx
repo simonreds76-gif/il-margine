@@ -10,6 +10,7 @@ import TipPageTracker from "@/components/TipPageTracker";
 import TipPortraits from "@/components/TipPortraits";
 import { getTipArtwork } from "@/lib/tip-artwork";
 import TipTeamCrest from "@/components/TipTeamCrest";
+import { smallTeamLogo } from "@/lib/small-team-logo";
 import ToolEmblem from "@/components/ToolEmblem";
 import { BASE_URL } from "@/lib/config";
 import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
@@ -239,12 +240,12 @@ export default async function BettingPreviewPage({ params }: PageProps) {
             {clubs ? (
               <h1 aria-label={fixture.seed.event} className="grid max-w-4xl grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 py-3 text-2xl font-black tracking-[-0.035em] text-white sm:gap-6 sm:text-4xl md:text-5xl">
                 <span className="flex min-w-0 flex-col items-center gap-4 text-center md:flex-row md:text-left">
-                  <TipTeamCrest team={clubs[1]} src={resolveTeamLogoPath(clubs[1], fixture.seed.category)} />
+                  <TipTeamCrest team={clubs[1]} src={smallTeamLogo(resolveTeamLogoPath(clubs[1], fixture.seed.category))} />
                   <span className="break-words">{clubs[1]}</span>
                 </span>
                 <span className="text-sm font-medium uppercase tracking-widest text-slate-500"> {clubs[2]} </span>
                 <span className="flex min-w-0 flex-col items-center gap-4 text-center md:flex-row md:text-left">
-                  <TipTeamCrest team={clubs[3]} src={resolveTeamLogoPath(clubs[3], fixture.seed.category)} />
+                  <TipTeamCrest team={clubs[3]} src={smallTeamLogo(resolveTeamLogoPath(clubs[3], fixture.seed.category))} />
                   <span className="break-words">{clubs[3]}</span>
                 </span>
               </h1>
@@ -259,7 +260,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
             <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-400">{copy.statusCopy}</p>
             {settled.length === fixture.bets.length && settled.length > 0 && <nav aria-label="Continue from this settled betting record" className="mt-5 flex flex-wrap gap-3">
               <Link href={`${hub.href}#picks`} prefetch={false} className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-emerald-300/25 bg-emerald-300/[0.07] px-4 py-2 text-sm font-semibold text-emerald-200 transition-colors hover:border-emerald-300/60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-300">
-                <ToolEmblem name={fixture.seed.market === "tennis" ? "tennis" : "football"} className="!m-0 !h-6 !w-6 shrink-0" />
+                <ToolEmblem compact name={fixture.seed.market === "tennis" ? "tennis" : "football"} className="!m-0 !h-6 !w-6 shrink-0" />
                 {fixture.seed.market === "tennis" ? "Latest tennis picks" : "Latest player props"}<span aria-hidden="true">→</span>
               </Link>
               <Link href="#result-heading" prefetch={false} className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-300 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-300">

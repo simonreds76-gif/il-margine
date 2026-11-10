@@ -12,7 +12,7 @@ export default function RelatedLinks({ title, description, links, label = "Relat
     {title && <h2>{title}</h2>}{description && <p>{description}</p>}
     <nav className={styles.cards} aria-label={label}>
       {links.map(link => <Link key={link.href} href={link.href} prefetch={false} className={styles.card}>
-        <ToolEmblem name={link.icon ?? emblemForHref(link.href)} className={styles.icon} />
+        <ToolEmblem compact={(link.icon ?? emblemForHref(link.href)) === "aerial"} name={link.icon ?? emblemForHref(link.href)} className={styles.icon} />
         <span className={styles.copy}><strong>{link.title}</strong><span>{link.description}</span></span>
         <svg className={styles.arrow} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </Link>)}
