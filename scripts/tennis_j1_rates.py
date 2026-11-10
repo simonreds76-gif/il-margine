@@ -108,7 +108,8 @@ def native_history(root,day):
         history.append(rr)
     history.sort(key=lambda x:(x[0],x[1],x[2],x[6],x[7]))
     if before!=signature(base):raise ValueError('native_inputs_changed_during_fit')
-    return history,dict(source_sha256=sha,source_metadata=before,stat_exclusions=rejected)
+    return history,dict(source_sha256=sha,source_metadata=before,stat_exclusions=rejected,
+        latest_result_date=max((r[0] for r in history),default=None),eligible_history_matches=len(history))
 
 class DailyRates:
     def __init__(self,root,folder,day,recipe_hash):

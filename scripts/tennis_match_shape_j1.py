@@ -143,8 +143,12 @@ def refresh(root,clock=None,receipt=None,settle_only=False):
         for r in records:
             if proposed[r['id']]['status']=='pending' and r['fixture_key'] in extra:proposed[r['id']]=extra[r['fixture_key']]
         outcomes=C.preserve_outcomes(folder,proposed,clock)
+        decisions=[C.read(p) for p in (folder/'decisions').glob('*.json')]
+        missing=Counter(reason for d in decisions for reason in d.get('missing',{}).values())
         result=dict(name='ATP J1 score correction',registered_at=reg['registered_at'],updated_at=clock.isoformat(),protocol=reg['protocol'],
             capture=C.read(folder/'capture-status.json'),actual_stake=0,historical_replay_included=False,
+            coverage=dict(first_batch_fixtures=len(decisions),missing_contracts=dict(missing),
+                common_row_rule='All compared arms must have a locked forecast; missing inputs are never imputed'),
             conflicts=len(list((folder/'conflicts').glob('*.json'))),**C.summary(records,outcomes,ARMS,clock))
         C.atomic(folder/'report.json',result)
         return result
