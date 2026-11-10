@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-10T07:25:49Z",
+  "generated_at": "2026-11-10T16:38:22Z",
   "league": "ligue-1",
   "row_count": 1,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2995679801",
           "match_id": "5802984",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802984",
-          "observed_at": "2026-11-10T07:25:47+00:00",
+          "observed_at": "2026-11-10T16:38:20+00:00",
           "event_date": "2026-11-08",
           "season": "2026/27",
           "team": "Brest",
@@ -76,10 +76,14 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20261104",
+      "20261105",
+      "20261106",
+      "20261107",
       "20261108",
       "20261109",
       "20261110"
     ],
-    "matches_checked": 6
+    "matches_checked": 9
   }
 }

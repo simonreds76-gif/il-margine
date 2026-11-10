@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-10T07:25:47Z",
+  "generated_at": "2026-11-10T16:38:38Z",
   "league": "bundesliga",
-  "row_count": 1,
+  "row_count": 2,
   "rows": [
     {
       "team": "Freiburg",
@@ -19,6 +19,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-11-08"
+    },
+    {
+      "team": "Paderborn",
+      "team_key": "paderborn",
+      "player_name": "Marvin Pieringer",
+      "player_key": "marvin pieringer",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-11-07"
     }
   ]
 }
