@@ -127,16 +127,25 @@ def match_fixture(p, league, calendar, aliases, old):
     home = canonical(league, [p.get('participant1Name'), p.get('participant1ShortName')], aliases, old['teams'])
     away = canonical(league, [p.get('participant2Name'), p.get('participant2ShortName')], aliases, old['teams'])
     scheduled = legacy.dt(p['startTime'])
+    actual = legacy.dt(p['trueStartTime']) if p.get('trueStartTime') else scheduled
+    if abs(actual - scheduled) > timedelta(minutes=15):
+        raise ValueError(f'Delayed/rescheduled fixture needs timing review: {p["fixtureId"]}')
+    # Results calendars may record the delayed start rather than the original
+    # schedule. Require the provider's actual-start evidence and keep the same
+    # bounded delay guard; never move the price cutoff forward with the delay.
+    def timing_matches(f):
+        kickoff = legacy.dt(f['kickoff'])
+        return (abs(kickoff - scheduled) <= timedelta(minutes=5)
+                or (bool(p.get('trueStartTime'))
+                    and abs(kickoff - scheduled) <= timedelta(minutes=15)
+                    and abs(kickoff - actual) <= timedelta(minutes=5)))
     candidates = [f for f in calendar if f['league'] == league and f['home'] == home and f['away'] == away
-                  and abs(legacy.dt(f['kickoff']) - scheduled) <= timedelta(minutes=5)]
+                  and timing_matches(f)]
     if len(candidates) != 1:
         raise ValueError(f'Calendar identity/kickoff mismatch: {p["fixtureId"]} {home} / {away}')
     f = candidates[0]
     if f['status'] != -1 or not f['score'] or not all(type(n) is int and 0 <= n <= 30 for n in f['score']):
         raise ValueError(f'Unconfirmed regulation-time result: {p["fixtureId"]}')
-    actual = legacy.dt(p['trueStartTime']) if p.get('trueStartTime') else scheduled
-    if abs(actual - scheduled) > timedelta(minutes=15):
-        raise ValueError(f'Delayed/rescheduled fixture needs timing review: {p["fixtureId"]}')
     return f, min(scheduled, actual, legacy.dt(f['kickoff']))
 
 
@@ -286,6 +295,8 @@ def collect(old, manifest, state, now, api):
             additions.append((f, selected['odds'], p['fixtureId'], selected['code']))
             counts[league]['new'] += 1
             provenance.append({'fixtureId': p['fixtureId'], 'resultId': f['id'], 'home': f['home'], 'away': f['away'],
+                               'scheduledKickoff': p['startTime'], 'actualKickoff': p.get('trueStartTime'),
+                               'calendarKickoff': f['kickoff'],
                                'score': f['score'], 'cutoff': cutoff.isoformat(), 'prices': selected['prices'],
                                'responseSha256': response_hash, 'basis': selected['basis'],
                                'bookmaker': selected['bookmaker'], 'fallbackReasons': selected['rejected']})

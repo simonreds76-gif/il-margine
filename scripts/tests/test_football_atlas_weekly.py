@@ -141,6 +141,33 @@ class WeeklyAtlasTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'conflicting'):
             w.canonical('x',['Arsenal','Chelsea'],{},['Arsenal','Chelsea'])
 
+    def test_verified_short_delay_matches_calendar_but_preserves_original_cutoff(self):
+        scheduled=datetime(2026,11,7,14,tzinfo=timezone.utc)
+        f=dict(id='2993863',league='serie-a',home='Torino',away='Lecce',
+               kickoff='2026-11-07T14:15:00Z',status=-1,score=[1,1],season='2026-2027')
+        p=dict(fixtureId='id1000002371945402',tournamentId=23,sportId=10,
+               participant1Name='Torino',participant2Name='Lecce',
+               startTime='2026-11-07T14:00:00.000Z',trueStartTime='2026-11-07T14:13:25.722Z')
+        old={'teams':['Torino','Lecce']}
+        matched,cutoff=w.match_fixture(p,'serie-a',[f],{},old)
+        self.assertEqual(matched,f)
+        self.assertEqual(cutoff,scheduled)
+        h={oid:{'players':{'0':[
+            dict(createdAt='2026-11-07T13:59:00Z',price=price,active=True),
+            dict(createdAt='2026-11-07T14:05:00Z',price=99,active=True)]}}
+           for oid,price in zip(('101','102','103'),(2.5,3.2,3.1))}
+        self.assertEqual(w.prices_at_cutoff(h,cutoff)[0],[2.5,3.2,3.1])
+        for bad in ({**p,'trueStartTime':None},
+                    {**p,'trueStartTime':'2026-11-07T14:04:00Z'}):
+            with self.assertRaisesRegex(ValueError,'mismatch'):
+                w.match_fixture(bad,'serie-a',[f],{},old)
+        with self.assertRaisesRegex(ValueError,'timing review'):
+            w.match_fixture({**p,'trueStartTime':'2026-11-07T14:16:00Z'},'serie-a',[f],{},old)
+        with self.assertRaisesRegex(ValueError,'mismatch'):
+            w.match_fixture(p,'serie-a',[{**f,'kickoff':'2026-11-07T14:16:00Z'}],{},old)
+        with self.assertRaisesRegex(ValueError,'mismatch'):
+            w.match_fixture(p,'serie-a',[f,{**f,'id':'ambiguous','kickoff':p['startTime']}],{},old)
+
     def test_merge_keeps_existing_rows_and_tags_last_pre_match(self):
         old=dict(teams=['Arsenal','Chelsea'],leagues=['premier-league'],seasons=['2026-2027'],fixtures=[['old','2026-09-15',0,0,0,1,1,0,2.5,3.2,3.1,1]])
         prior=copy.deepcopy(old)

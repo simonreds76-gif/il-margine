@@ -12,6 +12,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install requests==2.32.5
+      - run: python -m unittest discover -s scripts/tests -p test_football_atlas_weekly.py
       - name: Inspect exact fixture evidence
         env:
           ODDSPAPI_API_KEY: ${{ secrets.ODDSPAPI_API_KEY }}
@@ -31,4 +32,10 @@ jobs:
           names={r[0]:r[1] for r in data['TeamInfo']}
           matches=[r for r in w.legacy.walk(data['ScheduleList']) if 'torino' in names[r[4]].lower() and 'lecce' in names[r[5]].lower()]
           print('Calendar evidence (UTC+8 source):',json.dumps(matches))
+          fixtures=[dict(id=str(r[0]),league='serie-a',home='Torino',away='Lecce',status=r[2],score=[int(n) for n in r[6].split('-')],kickoff=(datetime.fromisoformat(r[3])-timedelta(hours=8)).replace(tzinfo=timezone.utc).isoformat()) for r in matches]
+          aliases=w.legacy.read(w.ROOT/'scripts/config/football-atlas-clubs.json')
+          for p in targets:
+              matched,cutoff=w.match_fixture(p,'serie-a',fixtures,aliases,{'teams':['Torino','Lecce']})
+              assert cutoff==w.legacy.dt(p['startTime'])
+              print('Verified exact match:',matched['id'],'conservative cutoff:',cutoff.isoformat())
           PY
