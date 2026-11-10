@@ -1,41 +1,114 @@
-name: Atlas Calendar Verification
-on: workflow_dispatch
+name: Football Atlas Weekly Pinnacle
+
+on:
+  schedule:
+    # Tuesday after Monday's league fixtures; UTC (09:35 BST / 08:35 GMT).
+    - cron: "35 8 * * 2"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Validate downloads without committing or publishing"
+        type: boolean
+        default: true
+
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: football-atlas-weekly-cloud
+  cancel-in-progress: false
+
 jobs:
-  verify:
+  refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: codex/fair-odds-daily-pitch-20260908
+          fetch-depth: 0
+
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      - run: python -m pip install requests==2.32.5
-      - run: python -m unittest discover -s scripts/tests -p test_football_atlas_weekly.py
-      - name: Inspect exact fixture evidence
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install job tools
+        run: |
+          python -m pip install --disable-pip-version-check requests==2.32.5
+          npm install --global vercel@54.4.1
+
+      - name: Restore private history cache
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/football-atlas-state
+          key: football-atlas-papi-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: football-atlas-papi-v1-
+
+      - name: Check collector and archive invariants
+        run: |
+          python -m unittest discover -s scripts/tests -p test_football_atlas_weekly.py
+          python -m unittest discover -s scripts/tests -p 'test_manager*.py'
+          node --experimental-strip-types --test scripts/tests/football-atlas.test.mjs
+
+      - name: Download, reconcile and update Atlas
         env:
           ODDSPAPI_API_KEY: ${{ secrets.ODDSPAPI_API_KEY }}
+          VERCEL_TOKEN: ${{ secrets.FOOTBALL_ATLAS_VERCEL_TOKEN }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ "$DRY_RUN" = "true" ]; then
+            python scripts/football_atlas_weekly.py --dry-run --state-directory "$RUNNER_TEMP/football-atlas-state"
+          else
+            python scripts/football_atlas_weekly.py --publish --state-directory "$RUNNER_TEMP/football-atlas-state"
+          fi
+
+      - name: Save private history cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/football-atlas-state
+          key: football-atlas-papi-v1-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Retain validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: football-atlas-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/football-atlas-state/publish-status.json
+            ${{ runner.temp }}/football-atlas-state/collection.json
+            ${{ runner.temp }}/football-atlas-state/managers/refresh-report.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Telegram failure alert
+        if: failure()
+        env:
+          OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           python - <<'PY'
-          import os,sys,json
-          from datetime import datetime,timedelta,timezone
-          sys.path.insert(0,'scripts')
-          import football_atlas_weekly as w
-          now=datetime.now(timezone.utc)
-          api=w.OddsPapi(os.environ['ODDSPAPI_API_KEY'])
-          rows=api.get('fixtures',tournamentId=23,**{'from':(now-timedelta(days=14)).isoformat(),'to':now.isoformat()})
-          targets=[p for p in rows if p.get('fixtureId')=='id1000002371945402']
-          print('Provider evidence:',json.dumps(targets))
-          lid=w.legacy.LEAGUES['serie-a'][1]
-          data=w.fetch_json(f'https://football.goaloo.com/jsData/matchResult/json/2026-2027/s{lid}_en.json')
-          names={r[0]:r[1] for r in data['TeamInfo']}
-          matches=[r for r in w.legacy.walk(data['ScheduleList']) if 'torino' in names[r[4]].lower() and 'lecce' in names[r[5]].lower()]
-          print('Calendar evidence (UTC+8 source):',json.dumps(matches))
-          fixtures=[dict(id=str(r[0]),league='serie-a',home='Torino',away='Lecce',status=r[2],score=[int(n) for n in r[6].split('-')],kickoff=(datetime.fromisoformat(r[3])-timedelta(hours=8)).replace(tzinfo=timezone.utc).isoformat()) for r in matches]
-          aliases=w.legacy.read(w.ROOT/'scripts/config/football-atlas-clubs.json')
-          for p in targets:
-              matched,cutoff=w.match_fixture(p,'serie-a',fixtures,aliases,{'teams':['Torino','Lecce']})
-              assert cutoff==w.legacy.dt(p['startTime'])
-              print('Verified exact match:',matched['id'],'conservative cutoff:',cutoff.isoformat())
+          import json, os, pathlib, urllib.request
+          path = pathlib.Path(os.environ['RUNNER_TEMP']) / 'football-atlas-state/publish-status.json'
+          data = json.loads(path.read_text()) if path.exists() else {}
+          error = data.get('error', 'Cloud job failed before completing validation. Check the workflow log.')
+          text = 'Football / Manager Return Atlas weekly update failed.\n' + error[:1800] + '\nCheck publication status before retrying.\n' + os.environ['RUN_URL']
+          token, chat = os.environ.get('OPS_ALERT_TELEGRAM_BOT_TOKEN'), os.environ.get('OPS_ALERT_TELEGRAM_CHAT_ID')
+          if not token or not chat:
+              raise SystemExit('Telegram alert credentials missing')
+          try:
+              req = urllib.request.Request('https://api.telegram.org/bot' + token + '/sendMessage',
+                    data=json.dumps({'chat_id': chat, 'text': text}).encode(), headers={'Content-Type':'application/json'})
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  if not json.load(response).get('ok'): raise ValueError()
+          except Exception:
+              raise SystemExit('Telegram delivery failed; credential details withheld') from None
           PY
