@@ -9,6 +9,7 @@ rule has fired. It must not fail just because no research picks exist yet.
 from __future__ import annotations
 
 from goalkeeper_keeper_watch import weekly_text as keeper_watch_weekly_text
+from tennis_match_shape_integrity import report_with_health
 
 import argparse
 import base64
@@ -1535,7 +1536,7 @@ def build_payload() -> dict[str, Any]:
     tennis_elo_rebuild = load_json(ROOT / "data/tennis-elo-rebuild/report.json")
     tennis_sisal_5050 = load_json(ROOT / "data/tennis-props/shadow/sisal-5050-v1/report.json")
     tennis_breakpoint_c = load_json(ROOT / "data/tennis-break-points/forward-c-v1/report.json")
-    tennis_match_shape = load_json(ROOT / "data/tennis-ml-research/match-shape-v1/report.json")
+    tennis_match_shape = report_with_health(ROOT)
     tennis_rate_trend = rate_trend_summary()
     tennis_full_refresh = full_refresh_summary()
     tennis_context_forward = load_json(ROOT / "data/tennis-ml-research/context-forward-v1/report.json")

@@ -9,6 +9,7 @@ from hashlib import sha256
 from pathlib import Path
 from unittest.mock import patch
 import tennis_match_shape as M
+import tennis_match_shape_integrity as I
 
 
 def supplemental(root,records,clock):
@@ -100,21 +101,48 @@ def resolve_quote(q,index):
             'venue_identity_source':'verified_season_calendar' if key else 'exact_venue_phrase',
             'venue_event_key':key,'bookmaker_group':q['group'],'native_tournament_name':tournament['name']}
 
-def refresh_with_results(root,*args,**kwargs):
-    clock=kwargs.get('clock') or (args[0] if args else None) or datetime.now(timezone.utc)
+def refresh_with_results(root,clock=None,receipt=None,settle_only=False):
+    clock=clock or datetime.now(timezone.utc)
     folder=root/M.RELATIVE
-    records=[M.read(p) for p in (folder/'captures').glob('*.json')]
-    extra=supplemental(root,records,clock)
-    if extra:
-        evidence=dict(observed_at=clock.isoformat(),records=extra)
-        path=folder/'result-evidence'/(M.digest(extra)+'.json')
-        if not path.exists():M.immutable(path,evidence)
-    original=M.outcome
-    def resolve(record,games,at,reg_hash):
-        result=original(record,games,at,reg_hash)
-        if result['status']=='pending' and record['fixture_key'] in extra:
-            # Integrity failures remain quarantined by original(), never overridden.
-            return extra[record['fixture_key']]
-        return result
-    with patch.object(M,'outcome',resolve), patch.object(M,'map_quote',resolve_quote):
-        return M.refresh(root,*args,**kwargs)
+    if not (folder/'registration.json').exists():return {}
+    # Own the existing lock once; M.refresh would attempt to acquire it again.
+    with M.locked(folder):
+        try:
+            manifest_hash,manifest=I.verify(root,clock)
+            records=[M.read(p) for p in sorted((folder/'captures').glob('*.json'))]
+            old_ids={r['id'] for r in records}
+            # Validate retained material before capturing or changing any outcome.
+            I.evidence(folder,records,clock,M.complete_score)
+            I.unresolved_conflicts(folder,clock)
+            I.record_cohorts(folder,records,manifest_hash,manifest,clock)
+            I.retain(folder,supplemental(root,records,clock),clock)
+            retained=I.evidence(folder,records,clock,M.complete_score)
+        except (ValueError,OSError,KeyError,TypeError,RuntimeError) as exc:
+            health=dict(state='BLOCKED',checked_at=clock.isoformat(),reason=str(exc),captured=0,
+                        operational_guard='manual_review_required')
+            M.atomic(folder/'capture-status.json',health)
+            M.atomic(folder/'operational/status.json',health)
+            # Keep last validated report/outcomes byte-for-byte on a guard failure.
+            return {**M.read(folder/'report.json'),'capture':health}
+        previous=M.read(folder/'outcomes.json');original=M.outcome;notices=[]
+        def resolve(record,games,at,reg_hash):
+            result,conflicts=I.resolve(record,original(record,games,at,reg_hash),
+                                       previous.get(record['id'],{}),retained.get(record['fixture_key'],[]))
+            notices.extend(dict(capture_id=record['id'],fixture_key=record['fixture_key'],**x) for x in conflicts)
+            return result
+        with patch.object(M,'outcome',resolve),patch.object(M,'map_quote',resolve_quote):
+            if not settle_only:
+                try:health=M.capture(root,clock,receipt)
+                except Exception as exc:health=dict(state='BLOCKED',checked_at=clock.isoformat(),reason=str(exc),captured=0)
+                M.atomic(folder/'capture-status.json',health)
+            records=[M.read(p) for p in sorted((folder/'captures').glob('*.json'))]
+            I.record_cohorts(folder,records,manifest_hash,manifest,clock,{r['id'] for r in records}-old_ids)
+            report=M.summarize(root,clock)
+        for notice in notices:
+            path=folder/'operational/conflicts'/(I.digest(notice)+'.json')
+            if not path.exists():I.immutable(path,dict(first_observed_at=clock.isoformat(),**notice))
+        conflicts=I.unresolved_conflicts(folder,clock)
+        M.atomic(folder/'operational/status.json',dict(state='REVIEW_REQUIRED' if conflicts else 'VERIFIED',
+                 checked_at=clock.isoformat(),manifest_sha256=manifest_hash,retained_fixtures=len(retained),
+                 retained_evidence_packets=sum(len(rows) for rows in retained.values()),conflicts=len(conflicts)))
+        return report
