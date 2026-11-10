@@ -44,6 +44,14 @@ def main():
         'settlement_source':'exact_fixture_base_and_verified_snapshots',
         'snapshot_settlement_contracts':len(audit)}
     status['interpretation']+=' Identity repairs registered 28 October 2026; inspect cohort breakdown for consistent-input comparisons.'
+    from team_shots_strength_paper import refresh as refresh_strength, RELATIVE as STRENGTH_PATH
+    from frozen_paper_common import atomic
+    try:
+        status['strength_comparison']=refresh_strength(ROOT,now,settle_only=args.settlement_only)
+    except Exception as exc:
+        health=dict(state='REFRESH_ERROR',reason=str(exc),checked_at=now.isoformat())
+        atomic(ROOT/STRENGTH_PATH/'capture-status.json',health)
+        status['strength_comparison']={**previous.get('strength_comparison',{}),'capture':health}
     if capture_error:status.update(status='CAPTURE_BLOCKED_MODEL_CHANGE',new_contracts=0)
     for out,data in [(target,status),(form/'team-shots-paired-settlement-audit.json',dict(generated_at=P.PUB.fmt_dt(now),results=audit))]:
         temp=out.with_suffix('.tmp');temp.write_text(json.dumps(data,indent=2)+'\n',encoding='utf8');temp.replace(out)

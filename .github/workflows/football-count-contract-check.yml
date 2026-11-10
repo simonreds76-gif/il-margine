@@ -8,6 +8,13 @@ on:
       - 'scripts/*team*shots*.py'
       - 'scripts/settlement*.py'
       - 'scripts/refresh-football-count-evidence.py'
+      - 'scripts/tennis_match_shape_j1.py'
+      - 'scripts/tennis_j1_rates.py'
+      - 'scripts/tennis_match_winner_quotes.py'
+      - 'scripts/frozen_paper_common.py'
+      - 'scripts/tests/test_frozen_paper_comparisons.py'
+      - 'config/*paper*.json'
+      - 'config/tennis-match-shape-j1-protocol.json'
       - 'scripts/tests/test_count_identity_recovery.py'
       - 'data/team-shots/*params.json'
       - 'data/team-shots/*lock.json'
@@ -25,7 +32,12 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
-      - run: pip install requests
+      - run: pip install requests numpy scipy
+      - name: Verify frozen paper capture and settlement isolation
+        run: |
+          mkdir -p outputs
+          python -m unittest discover -s scripts/tests -p test_frozen_paper_comparisons.py
+          python -m unittest discover -s scripts/tests -p 'test_match_shape*.py'
       - name: Check identities, settlement, first prices and registered inference
         run: >-
           python -m unittest

@@ -104,6 +104,14 @@ def capture_quotes(root, receipt, *, clock=None, collector=collect):
         key=(q['event_id'],q['captured_at'])
         events[key]=q['raw_event']
         offers.setdefault(key,[]).append(q['raw_offer'])
+    # The J1 paper comparison needs the exact winner pair from this response.
+    # Retaining it makes no extra request and does not change the old game quotes.
+    from tennis_match_winner_quotes import winner_offer
+    for item in receipt.get('events',[]):
+        key=(str(item.get('requested_id')),utc(item.get('captured_at')).isoformat() if utc(item.get('captured_at')) else '')
+        if key in events:
+            winner=winner_offer(item,events[key])
+            if winner:offers[key].append(winner)
     packet=dict(source=BASE,bookmaker='Grosvenor',captured_at=clock.isoformat(),
         events=[dict(requested_id=eid,captured_at=stamp,payload=dict(events=[events[(eid,stamp)]],betOffers=rows))
                 for (eid,stamp),rows in sorted(offers.items())])
