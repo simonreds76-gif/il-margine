@@ -42,11 +42,34 @@ def supplemental(root,records,clock):
 
 
 
-def resolve_quote(q,index):
-    """Resolve a missing native date from the exact, fresh bookmaker fixture.
+def calendar_venue(group,tournament):
+    """Same verified season/event, despite sponsor and Open-name differences.
 
-    Never change an existing date/opponent. The frozen identity/format checks
-    still run on the enriched copy; the native file is untouched.
+    Use the category resolver already used by live inputs; do not introduce a
+    fuzzy city join or broaden the paper protocol's competition scope.
+    """
+    from tennis_tournament_category import resolve_category, CALENDARS, normalized, contains
+    date=tournament.get('date','')
+    a=resolve_category(group,date,rank=tournament.get('rank'),round_id=4)
+    b=resolve_category(tournament.get('name',''),date,rank=tournament.get('rank'),round_id=4)
+    key=a.get('event_key')
+    if not key or key!=b.get('event_key') or a['official_category']!=b['official_category']:
+        return None
+    # The shared resolver permits multiple aliases within a tier. A join must
+    # additionally refuse a label naming two distinct calendar events.
+    aliases=[x for values in CALENDARS.get(a.get('season'),{}).values() for x in values]
+    for label in (group,tournament.get('name','')):
+        hits={x for x in aliases if contains(normalized(label),x)}
+        if hits!={key}:return None
+    return key
+
+
+def resolve_quote(q,index):
+    """Resolve exact fresh fixtures without changing native files or formulas.
+
+    Calendar event identity permits sponsor-name variants. A missing native
+    date may use the verified bookmaker day; an existing date is never changed.
+    The frozen player, edition, round, format and scope checks still run.
     """
     from tennis_breakpoint_forward import map_quote, norm, same_venue
     try:return map_quote(q,index)
@@ -56,13 +79,26 @@ def resolve_quote(q,index):
     ids=[names.get(aliases.get(norm(q[k]),norm(q[k])),[]) for k in ('home','away')]
     if not all(len(x)==1 for x in ids) or ids[0]==ids[1]:raise ValueError('UNMAPPED_PLAYER')
     pair={ids[0][0],ids[1][0]}
-    candidates=[r for r in today if {int(r['player1_id']),int(r['player2_id'])}==pair and not r.get('result','').strip() and same_venue(q['group'],tours.get(int(r['tour_id']),{}).get('name',''))]
-    if len(candidates)!=1 or candidates[0].get('date'):raise ValueError('UNMAPPED_EXACT_UPCOMING_FIXTURE')
-    row=candidates[0];start=M.utc(q['scheduled_start']);seen=M.utc(q['captured_at'])
+    start=M.utc(q['scheduled_start']);seen=M.utc(q['captured_at'])
     if not seen or not start or not seen<start or start-seen>timedelta(days=3):raise ValueError('UNVERIFIED_BOOKMAKER_SCHEDULE')
+    candidates=[]
+    for row in today:
+        if {int(row['player1_id']),int(row['player2_id'])}!=pair or row.get('result','').strip():continue
+        if row.get('date') and row['date']!=start.date().isoformat():continue
+        tournament=tours.get(int(row['tour_id']),{})
+        key=calendar_venue(q['group'],tournament)
+        if same_venue(q['group'],tournament.get('name','')) or key:
+            candidates.append((row,tournament,key))
+    if len(candidates)!=1:raise ValueError('UNMAPPED_EXACT_UPCOMING_FIXTURE')
+    row,tournament,key=candidates[0]
     copy={**row,'date':start.date().isoformat()}
-    resolved=map_quote(q,(names,aliases,tours,[copy],hashes))
-    return {**resolved,'schedule_source':'exact_fresh_bookmaker_fixture','native_date_was_blank':True,'scheduled_start':q['scheduled_start']}
+    # Only the mapper's local view is normalised; the raw quote remains intact.
+    local_quote={**q,'group':tournament['name']} if key else q
+    resolved=map_quote(local_quote,(names,aliases,tours,[copy],hashes))
+    return {**resolved,'schedule_source':'native_schedule' if row.get('date') else 'exact_fresh_bookmaker_fixture',
+            'native_date_was_blank':not bool(row.get('date')),'scheduled_start':q['scheduled_start'],
+            'venue_identity_source':'verified_season_calendar' if key else 'exact_venue_phrase',
+            'venue_event_key':key,'bookmaker_group':q['group'],'native_tournament_name':tournament['name']}
 
 def refresh_with_results(root,*args,**kwargs):
     clock=kwargs.get('clock') or (args[0] if args else None) or datetime.now(timezone.utc)
