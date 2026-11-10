@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-12",
+  "updated_at": "2026-11-10",
   "review_cadence": "Saturday weekly review after the Tuesday research report; deeper review on first Saturday of each month",
   "automatic_promotion": false,
   "families": [
@@ -225,6 +225,44 @@
       "report_key": "tennis_hardcourt_scout",
       "scope": "Frozen Challenger outdoor Hard baseline plus Fable correction in the same first-capture packets/report. Both 1u paper, zero real stake. Same locked prices/exact outcomes. Paired Brier/log loss and probability bins, separate ROI/W-L/stakes/pending/void/overdue. New comparison starts at registration; no historical enrolment. Missing history falls back to baseline; source/code failures unavailable. Review at 50/100 paired fixtures alongside existing Scout milestones. No new tracker/schedule/alerts; no auto-promotion.",
       "comparison_report": "tennis_hardcourt_scout.fable_comparison"
+    },
+    {
+      "id": "match_shape_j1_exploratory_v1",
+      "label": "ATP J1 score correction",
+      "family": "match_shape",
+      "report_key": "tennis_match_shape.exploratory",
+      "status": "FORWARD_PAPER_ONLY",
+      "actual_stake": 0,
+      "automatic_promotion": false,
+      "alerts": false,
+      "forward_report": "data/tennis-ml-research/match-shape-v1/j1-exploratory-v1/report.json",
+      "scope": "New paired current reference/MJ1/MJ1-S; ATP BO3 totals and handicaps, all surfaces and qualifying. First fixture batch; same-time full-match winner and games prices; strictly prior quote-day history. Original Match Shape records remain separate.",
+      "review_milestones_settled_fixtures": [
+        100,
+        400,
+        800
+      ],
+      "maximum_months": 12,
+      "next_action": "Inspect fresh capture/missing-input coverage, exact-fixture settlement and overdue results. Compare identical-row fixture-weighted paired log loss against same-book market first, Brier and separate 1u ROI second. Include fixture and tournament-edition uncertainty. Historical A/B gate failed; no historical rows counted forward. Manual review only; no refitting or promotion."
+    },
+    {
+      "id": "shots_strength_exploratory_v1",
+      "label": "Opponent Shots + frozen strength",
+      "family": "football_counts",
+      "report_key": "shots_strength_comparison",
+      "status": "FORWARD_PAPER_ONLY",
+      "actual_stake": 0,
+      "automatic_promotion": false,
+      "alerts": false,
+      "forward_report": "data/football-form/shots-strength-v1/report.json",
+      "scope": "New paired Opponent/Opponent+Strength cohort inside existing shots comparison. First-batch same-book exact event and contract; complete 1X2 at/before both shots quotes and at most three hours old. Original four models retained.",
+      "review_milestones_settled_fixtures": [
+        100,
+        400,
+        800
+      ],
+      "maximum_months": 12,
+      "next_action": "Compare paired log loss against same-book market first, Brier and separate 1u ROI second; report missing as-of strength, no-bets, pending/overdue/excluded and fixture uncertainty. Leakage-safe historical test did not establish improvement. No retrospective rescue, refit, promotion or new alerts."
     }
   ],
   "review_checks": [
