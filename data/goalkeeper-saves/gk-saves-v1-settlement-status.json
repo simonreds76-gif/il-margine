@@ -28,39 +28,15 @@
     },
     {
       "detail": "",
-      "goalkeeper": "Marco Carnesecchi",
-      "match": "AC Monza vs Atalanta BC",
-      "match_date": "2026-11-08",
-      "reason": "settled_fotmob",
-      "signal_id": "71945394|marco carnesecchi|3.5|over"
-    },
-    {
-      "detail": "",
       "goalkeeper": "Mike Maignan",
       "match": "Genoa CFC vs AC Milan",
       "match_date": "2026-11-08",
       "reason": "fotmob_save_totals_disagree",
       "signal_id": "71945390|mike maignan|2.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Dominik Greif",
-      "match": "Stade Brest 29 vs Olympique Lyon",
-      "match_date": "2026-11-08",
-      "reason": "settled_fotmob",
-      "signal_id": "grosvenor|72036278|dominik greif|2.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Jeffrey De Lange",
-      "match": "Racing Club De Lens vs Olympique Marseille",
-      "match_date": "2026-11-08",
-      "reason": "settled_fotmob",
-      "signal_id": "grosvenor|72036284|jeffrey de lange|3.5|over"
     }
   ],
-  "fotmob_requests_used": 10,
-  "generated_at": "2026-11-09T18:53:23Z",
+  "fotmob_requests_used": 7,
+  "generated_at": "2026-11-10T16:29:35Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 4,
@@ -68,12 +44,11 @@
   "reason_counts": {
     "fotmob_matched_player_not_goalkeeper": 1,
     "fotmob_save_totals_disagree": 2,
-    "settled_fotmob": 3,
     "team_keeper_participation_or_rules_review": 1
   },
   "requests_used": 0,
-  "settled": 3,
-  "status": "PARTIAL",
+  "settled": 0,
+  "status": "BLOCKED",
   "verified_player_targets": [
     {
       "match_id": 5881209,
@@ -93,27 +68,9 @@
       "targets_sha256": "abaf9356bccd3fedf8636401ccfbfacc3715ad1b2ffdaf544cae19220d4dedb6"
     },
     {
-      "appearances": 30,
-      "match_id": 5749745,
-      "status": "saved",
-      "targets_sha256": "238ac2fce12293a6fb32a60d9947233c9a36b9452ddf4debdeea776839017649"
-    },
-    {
       "match_id": 5749743,
       "reason": "explicit player totals disagree with reconciled events",
       "status": "rejected"
-    },
-    {
-      "appearances": 30,
-      "match_id": 5802984,
-      "status": "saved",
-      "targets_sha256": "23cd5501eef36594ea6c8d6e6f5ba4897ca84b6950f357e0c6e8b46fc67af819"
-    },
-    {
-      "appearances": 30,
-      "match_id": 5802990,
-      "status": "saved",
-      "targets_sha256": "71d222513d5deaa72accfb9707a7c9d08587e38d63fa60c51f17a75eb51bcb20"
     }
   ]
 }

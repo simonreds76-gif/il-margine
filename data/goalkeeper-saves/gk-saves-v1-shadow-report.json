@@ -159,12 +159,12 @@
   },
   "forecast_input_capture": {
     "actual_stake": 0,
-    "checked_at": "2026-11-10T02:55:10.331390+00:00",
+    "checked_at": "2026-11-10T16:29:39.556872+00:00",
     "counts": {},
     "saved": 0,
     "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-11-10T02:55:09Z",
+  "generated_at": "2026-11-10T16:29:38Z",
   "keeper_watch": {
     "actual_stake": 0,
     "auto_promote": false,
@@ -172,7 +172,7 @@
     "exclusions": {},
     "forecast_fixtures": 186,
     "forecast_keepers": 379,
-    "generated_at": "2026-11-10T02:55:10.380551+00:00",
+    "generated_at": "2026-11-10T16:29:39.576525+00:00",
     "last_capture_at": "2026-11-07T14:58:06.542908+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
@@ -180,20 +180,20 @@
     "next_review_at": null,
     "paired_scores": {
       "current": {
-        "brier": 0.18831777570595415,
-        "log_loss": 0.5561678469565913
+        "brier": 0.18810522054508122,
+        "log_loss": 0.5556152709100579
       },
       "keeper_watch": {
-        "brier": 0.19047591111498663,
-        "log_loss": 0.5665243128613378
+        "brier": 0.19036921658163192,
+        "log_loss": 0.5661153262195642
       }
     },
-    "paired_settled_fixtures": 160,
+    "paired_settled_fixtures": 161,
     "paper_stake": 0.5,
     "records": {
       "current": {
         "losses": 19,
-        "overdue": 8,
+        "overdue": 9,
         "pending": 0,
         "profit": 0.18815000000000015,
         "pushes": 0,
@@ -224,7 +224,7 @@
       "Bet365": {
         "current": {
           "losses": 16,
-          "overdue": 5,
+          "overdue": 6,
           "pending": 0,
           "profit": -0.0018499999999999073,
           "pushes": 0,
@@ -357,7 +357,7 @@
         "match_id": "5749743",
         "model": "current",
         "odds": 2.0,
-        "overdue": false,
+        "overdue": true,
         "player_id": "466439",
         "profit": 0,
         "quote_verification": "{\"version\":\"moviodds_gk_atomic_v1\",\"site\":\"com\",\"fixture_id\":\"202802889\",\"event_id\":\"71945390\",\"market_id\":\"177703\",\"sel_id\":\"384037764\",\"player\":\"Mike Maignan\",\"line\":2.5,\"odds_decimal\":2.0,\"board_polled_at\":\"2026-11-07T02:19:41.805805605Z\",\"live_polled_at\":\"2026-11-07T02:22:11.07175201Z\",\"verified_at\":\"2026-11-07T02:22:11.124331+00:00\",\"resolved_goalkeeper\":\"Mike Maignan\"}",
@@ -1726,10 +1726,9 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 4,
-      "incomplete_or_conflicting_full_match_count": 23,
+      "incomplete_or_conflicting_full_match_count": 24,
       "keeper_identity_unresolved": 4,
-      "team_keeper_participation_or_rules_review": 32,
+      "team_keeper_participation_or_rules_review": 33,
       "verified_different_starting_keeper": 14
     },
     "source_extension": {
