@@ -457,7 +457,7 @@
   "model_fingerprint": "a645d0ef31f390888d7e1eca504e14c1e34d0bacec46a497897b129a0e7fd41f",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 569,
-  "generated_at": "2026-11-10T17:17:52Z",
+  "generated_at": "2026-11-10T17:35:13Z",
   "new_contracts": 0,
   "scan_exclusions": {},
   "latest_archived_capture": "2026-11-08T16:19:48.772038+00:00",
@@ -1177,5 +1177,206 @@
   "capture_status": "ACTIVE",
   "capture_error": null,
   "settlement_source": "exact_fixture_base_and_verified_snapshots",
-  "snapshot_settlement_contracts": 569
+  "snapshot_settlement_contracts": 569,
+  "strength_comparison": {
+    "name": "Team Shots strength correction",
+    "registered_at": "2026-11-10T17:20:47.882372+00:00",
+    "updated_at": "2026-11-10T17:35:13.811477+00:00",
+    "protocol": {
+      "actual_stake": 0,
+      "alerts": false,
+      "alpha": 0.049424235357082104,
+      "automatic_promotion": false,
+      "gamma": 0.030614396980069406,
+      "historical_status": "Leakage-safe historical test did not establish improvement. Exploratory future test only; no historical rows counted as forward evidence.",
+      "labels": {
+        "opponent": "Opponent, paired cohort",
+        "opponent_strength": "Opponent + frozen strength"
+      },
+      "market_logit_weight": 0.4450140339736927,
+      "minimum_ev": 0.03,
+      "paper_stake": 1,
+      "primary_metric": "Paired log loss against the same-book market, equal fixture weighting; paper ROI is secondary",
+      "review": {
+        "decision_fixtures": [
+          400,
+          800
+        ],
+        "descriptive_fixtures": 100,
+        "harm": "Manual stop review if candidate-minus-Opponent log-loss interval is wholly positive at a decision milestone. No automatic promotion or retuning.",
+        "maximum_months": 12,
+        "precision": "Fixture-weighted paired Brier/log loss and independent-fixture paper ROI uncertainty; inconclusive while intervals include zero."
+      },
+      "scope": "Same first-scan Bet365 team-shots contracts and Opponent forecasts; complete exact-fixture 1X2 observed at/before both shots quotes and before kickoff, at most 3 hours old",
+      "selection": "First registration batch per canonical fixture; retain no-bets and missing-input decisions; one best-EV selection per arm per fixture; preserve all non-edge blockers",
+      "version": "shots-strength-exploratory-v1"
+    },
+    "actual_stake": 0,
+    "historical_replay_included": false,
+    "capture": {
+      "captured": 0,
+      "checked_at": "2026-11-10T17:35:13.811477+00:00",
+      "counts": {},
+      "state": "NO_NEW_ELIGIBLE_CONTRACTS"
+    },
+    "conflicts": 0,
+    "contracts": 0,
+    "fixtures": 0,
+    "settled_fixtures": 0,
+    "arms": {
+      "opponent": {
+        "all": {
+          "settled": 0,
+          "wins": 0,
+          "losses": 0,
+          "pushes": 0,
+          "stake": 0,
+          "profit": 0.0,
+          "roi_pct": null,
+          "pending": 0,
+          "excluded": 0,
+          "quarantined": 0,
+          "overdue": 0,
+          "calibration": {
+            "brier": null,
+            "log_loss": null,
+            "market_brier": null,
+            "market_log_loss": null,
+            "mean_probability": null,
+            "observed_rate": null,
+            "n": 0,
+            "contracts": 0,
+            "weighting": "equal fixture, then equal contract",
+            "paired_minus_market": {
+              "n": 0,
+              "mean": null,
+              "ci95": null
+            }
+          },
+          "roi_ci95_pct": null,
+          "fixture_profit_interval": {
+            "n": 0,
+            "mean": null,
+            "ci95": null
+          }
+        },
+        "team_shots": {
+          "settled": 0,
+          "wins": 0,
+          "losses": 0,
+          "pushes": 0,
+          "stake": 0,
+          "profit": 0.0,
+          "roi_pct": null,
+          "pending": 0,
+          "excluded": 0,
+          "quarantined": 0,
+          "overdue": 0,
+          "calibration": {
+            "brier": null,
+            "log_loss": null,
+            "market_brier": null,
+            "market_log_loss": null,
+            "mean_probability": null,
+            "observed_rate": null,
+            "n": 0,
+            "contracts": 0,
+            "weighting": "equal fixture, then equal contract",
+            "paired_minus_market": {
+              "n": 0,
+              "mean": null,
+              "ci95": null
+            }
+          },
+          "roi_ci95_pct": null,
+          "fixture_profit_interval": {
+            "n": 0,
+            "mean": null,
+            "ci95": null
+          }
+        }
+      },
+      "opponent_strength": {
+        "all": {
+          "settled": 0,
+          "wins": 0,
+          "losses": 0,
+          "pushes": 0,
+          "stake": 0,
+          "profit": 0.0,
+          "roi_pct": null,
+          "pending": 0,
+          "excluded": 0,
+          "quarantined": 0,
+          "overdue": 0,
+          "calibration": {
+            "brier": null,
+            "log_loss": null,
+            "market_brier": null,
+            "market_log_loss": null,
+            "mean_probability": null,
+            "observed_rate": null,
+            "n": 0,
+            "contracts": 0,
+            "weighting": "equal fixture, then equal contract",
+            "paired_minus_market": {
+              "n": 0,
+              "mean": null,
+              "ci95": null
+            }
+          },
+          "roi_ci95_pct": null,
+          "fixture_profit_interval": {
+            "n": 0,
+            "mean": null,
+            "ci95": null
+          }
+        },
+        "team_shots": {
+          "settled": 0,
+          "wins": 0,
+          "losses": 0,
+          "pushes": 0,
+          "stake": 0,
+          "profit": 0.0,
+          "roi_pct": null,
+          "pending": 0,
+          "excluded": 0,
+          "quarantined": 0,
+          "overdue": 0,
+          "calibration": {
+            "brier": null,
+            "log_loss": null,
+            "market_brier": null,
+            "market_log_loss": null,
+            "mean_probability": null,
+            "observed_rate": null,
+            "n": 0,
+            "contracts": 0,
+            "weighting": "equal fixture, then equal contract",
+            "paired_minus_market": {
+              "n": 0,
+              "mean": null,
+              "ci95": null
+            }
+          },
+          "roi_ci95_pct": null,
+          "fixture_profit_interval": {
+            "n": 0,
+            "mean": null,
+            "ci95": null
+          }
+        }
+      }
+    },
+    "paired_log_loss_differences": {
+      "opponent_strength_minus_opponent": {
+        "n": 0,
+        "mean": null,
+        "ci95": null
+      }
+    },
+    "uncertainty": "Descriptive 95% normal intervals across independent fixtures; small samples are inconclusive.",
+    "records": []
+  }
 }
