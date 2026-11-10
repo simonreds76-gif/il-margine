@@ -263,6 +263,10 @@ jobs:
               git add -f "$paired_evidence"
             fi
           done
+          # Frozen strength comparison shares these polls, without new alerts.
+          if [[ -d data/football-form/shots-strength-v1 ]]; then
+            git add -f data/football-form/shots-strength-v1/
+          fi
           # Shots, so retaining them adds no API calls. Stage them on both full
           # and near-kickoff runs. `-f` is required for the 1X2 CSV because the
           # broad football-form CSV ignore rule predates this evidence file.
