@@ -200,8 +200,8 @@
     "5749744": "2026-11-10",
     "5749742": "2026-11-10"
   },
-  "updated_at": "2026-11-10T17:46:26.857783+00:00",
-  "checked_this_run": 13,
+  "updated_at": "2026-11-10T18:12:33.609755+00:00",
+  "checked_this_run": 0,
   "errors": [],
   "fixtures": {
     "5749700": {
@@ -1646,7 +1646,7 @@
           "shortName": "Parma"
         },
         "status": {
-          "utcTime": "2026-11-02T19:45:00+00:00",
+          "utcTime": "2026-11-02T19:45:00.000Z",
           "halfs": {
             "firstHalfStarted": "02.11.2026 20:45:53",
             "secondHalfStarted": "02.11.2026 21:49:02"
@@ -1972,7 +1972,7 @@
           "name": "Fiorentina"
         },
         "status": {
-          "utcTime": "2026-11-02T17:30:00+00:00",
+          "utcTime": "2026-11-02T17:30:00.000Z",
           "halfs": {
             "firstHalfStarted": "02.11.2026 18:31:08",
             "secondHalfStarted": "02.11.2026 19:34:00"
@@ -3440,7 +3440,7 @@
           "name": "Everton"
         },
         "status": {
-          "utcTime": "2026-11-02T20:00:00+00:00",
+          "utcTime": "2026-11-02T20:00:00.000Z",
           "numberOfHomeRedCards": 1,
           "halfs": {
             "firstHalfStarted": "02.11.2026 21:00:31",
@@ -4449,7 +4449,7 @@
           "name": "Brest"
         },
         "status": {
-          "utcTime": "2026-11-02T19:45:00+00:00",
+          "utcTime": "2026-11-02T19:45:00.000Z",
           "halfs": {
             "firstHalfStarted": "02.11.2026 20:45:13",
             "secondHalfStarted": "02.11.2026 21:46:40"
@@ -5835,7 +5835,7 @@
           "name": "Osasuna"
         },
         "status": {
-          "utcTime": "2026-11-02T20:00:00+00:00",
+          "utcTime": "2026-11-02T20:00:00.000Z",
           "halfs": {
             "firstHalfStarted": "02.11.2026 21:02:59",
             "secondHalfStarted": "02.11.2026 22:06:15"
@@ -9996,7 +9996,7 @@
     },
     "20261102": {
       "ok": true,
-      "checked_at": "2026-11-09T00:53:11.532323+00:00",
+      "checked_at": "2026-11-10T18:12:33.609755+00:00",
       "expected": 5,
       "match_ids": [
         "5749731",
@@ -10102,14 +10102,14 @@
     },
     "20261109": {
       "ok": true,
-      "checked_at": "2026-11-10T17:46:26.857783+00:00",
+      "checked_at": "2026-11-10T18:12:33.609755+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
     },
     "20261110": {
       "ok": true,
-      "checked_at": "2026-11-10T17:46:26.857783+00:00",
+      "checked_at": "2026-11-10T18:12:33.609755+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
