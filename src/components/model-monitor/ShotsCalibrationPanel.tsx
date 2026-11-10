@@ -1,4 +1,5 @@
 import ModelProfitChart from "./ModelProfitChart";
+import FrozenPaperComparison from "./FrozenPaperComparison";
 import { compactHistory } from "@/lib/model-profit-history";
 import { validShotsComparison } from "@/lib/monitor-breakdowns";
 import { readTeamShotsLiveJson } from "@/lib/team-shots-live-files";
@@ -6,7 +7,7 @@ import { monitorRequestTime } from "@/lib/monitor-request-time";
 
 type Selection = { settled: number; wins: number; losses: number; pnl_units: number; roi: number | null; pending: number; overdue: number; stake_units: number; unavailable_contracts: number };
 type Score = { profit_history?: unknown; brier: number | null; log_loss: number | null; market_brier: number | null; hypothetical_selections: Selection };
-type Snapshot = { version: string; generated_at: string; status: string; contracts: number; paired_fixtures: number; latest_archived_capture: string | null; conflicting_results: number; models: Record<string, Score>; cohorts?: Record<string, {paired_fixtures: number; models: Record<string, Score>}> };
+type Snapshot = { strength_comparison?: unknown; version: string; generated_at: string; status: string; contracts: number; paired_fixtures: number; latest_archived_capture: string | null; conflicting_results: number; models: Record<string, Score>; cohorts?: Record<string, {paired_fixtures: number; models: Record<string, Score>}> };
 const names = [["shots_market_offset_v1", "Calibrated Team Shots"], ["opponent", "Opponent Shots"], ["v4", "Team Shots v4"], ["ema20_v3", "EMA20 v3 reference"]] as const;
 const tone = (n: number | null | undefined) => n == null || n === 0 ? "text-slate-100" : n > 0 ? "text-emerald-300" : "text-rose-300";
 const number = (v: number | null | undefined, digits = 0, suffix = "") => typeof v === "number" && Number.isFinite(v) ? `${v.toFixed(digits)}${suffix}` : "Awaiting evidence";
@@ -41,5 +42,6 @@ export default async function ShotsCalibrationPanel() {
       {current.cohorts && <details className="mt-5 border-t border-slate-700 pt-4"><summary className="cursor-pointer text-sm text-emerald-200">Input versions · calibrated model</summary><p className="mt-2 text-xs text-slate-400">Earlier records are retained. The newest version alone can perform differently from the combined record.</p><div className="mt-3 grid gap-3 sm:grid-cols-3">{Object.entries(current.cohorts).map(([version, cohort]) => {const p=cohort.models.shots_market_offset_v1?.hypothetical_selections;return <article key={version} className="min-w-0 rounded-xl border border-slate-700 p-3"><h3 className="break-words text-xs font-semibold text-slate-200">{version === current.version ? "Current inputs · " : "Earlier inputs · "}{version.match(/(\d{8})/)?.[1]}</h3><p className={`mt-2 text-sm ${tone(p?.roi)}`}>{number(p?.roi == null ? null : p.roi*100,2,"%")} ROI · {number(p?.pnl_units,2,"u")}</p><p className="mt-1 text-xs text-slate-400">{number(p?.settled)} settled selections · {cohort.paired_fixtures} paired fixtures</p></article>;})}</div></details>}
       </>}
     <p className="mt-4 text-xs leading-5 text-slate-400">Lower Brier and log loss mean more accurate probabilities. Each fixture counts once in these scores; selections can differ between models. A hypothetical unit is one equal test stake. Review at 50 and 150 settled fixtures. Closing-price comparison and StatsHub capture are not connected. No automatic promotion.</p>
+    <FrozenPaperComparison report={current?.strength_comparison} id="shots-strength" />
   </section>;
 }
