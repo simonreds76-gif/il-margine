@@ -189,5 +189,19 @@ class IntegrityTests(unittest.TestCase):
   with patch.object(R,'supplemental',side_effect=RuntimeError('native_results_changed_during_reconciliation')),patch.object(M,'summarize') as settle:
    result=R.refresh_with_results(self.root,clock=NOW,settle_only=True)
    self.assertEqual(result['capture']['state'],'BLOCKED');settle.assert_not_called()
+ def test_corrupt_health_isolated_from_shared_reporters(self):
+  from match_shape_reporting import weekly_text
+  metric=dict(roi_pct=None,calibration={'n':0},wins=0,losses=0,pushes=0,profit=0,stake=0,pending=0,overdue=0,excluded=0,quarantined=0)
+  report=dict(fixtures=1,contracts=2,settled_fixtures=0,capture={'state':'CAPTURED'},arms={a:{m:metric for m in ('total_games','game_handicap')} for a in ('current','T1')})
+  M.atomic(self.folder/'report.json',report);before=(self.folder/'report.json').read_bytes()
+  for filename in ('capture-status.json','operational/status.json'):
+   for bad in ('{','[]','null'):
+    path=self.folder/filename;path.parent.mkdir(parents=True,exist_ok=True);path.write_text(bad)
+    overlay=I.report_with_health(self.root)
+    self.assertEqual(overlay['capture']['state'],'UNREADABLE')
+    self.assertIn('health unreadable',weekly_text(overlay))
+    self.assertEqual(before,(self.folder/'report.json').read_bytes())
+   path.unlink()
+  self.assertIn('unverified registration',weekly_text({**report,'operational':{'state':'BLOCKED','reason':None}}))
 
 if __name__=='__main__':unittest.main()

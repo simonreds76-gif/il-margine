@@ -13,6 +13,7 @@ RELATIVE = Path('data/tennis-ml-research/match-shape-v1')
 DEPENDENCIES = (
     'scripts/tennis_match_shape_results.py', 'scripts/tennis_match_shape_integrity.py',
     'scripts/tennis_match_shape_collect.py', 'scripts/tennis_match_shape_prepare.py',
+    'scripts/tennis_match_shape_quotes.py',
     'scripts/tennis_tournament_category.py', 'scripts/tennis_grosvenor.py',
     'scripts/tennis_indoor_paper.py', 'scripts/tennis_hardcourt_scout.py',
     'scripts/tennis_breakpoint_evidence.py', 'scripts/ace_compass_integrity.py',
@@ -60,11 +61,21 @@ def fingerprints(root):
 def report_with_health(root):
     """Read-only reporting overlay; never rewrite the last validated results."""
     folder=root/RELATIVE;path=folder/'report.json'
-    report=json.loads(path.read_bytes()) if path.exists() else {}
+    try:report=json.loads(path.read_bytes()) if path.exists() else {}
+    except (OSError,ValueError):return {}
+    if not isinstance(report,dict):return {}
     if not report:return report
+    def health_file(path,fallback):
+        try:
+            value=read(path) if path.exists() else fallback
+            if isinstance(value,dict):return value
+        except (OSError,ValueError):pass
+        return dict(state='UNREADABLE',reason='Match Shape health file unreadable')
     capture=folder/'capture-status.json';status=folder/'operational/status.json'
-    health=read(status) if status.exists() else {}
-    return {**report,'capture':read(capture) if capture.exists() else report.get('capture',{}),
+    health=health_file(status,{})
+    capture_health=health_file(capture,report.get('capture',{}))
+    if health.get('state')=='UNREADABLE':capture_health=health
+    return {**report,'capture':capture_health,
             'operational':health}
 
 
