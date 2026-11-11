@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-11T16:37:04Z",
+  "generated_at": "2026-11-11T17:52:21.328855+00:00",
   "league": "bundesliga",
   "row_count": 2,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2995688005",
           "match_id": "5881217",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881217",
-          "observed_at": "2026-11-11T16:37:01+00:00",
+          "observed_at": "2026-11-11T17:52:32+00:00",
           "event_date": "2026-11-08",
           "season": "2026/27",
           "team": "Freiburg",
@@ -177,5 +177,13 @@
       "20261111"
     ],
     "matches_checked": 9
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261108"
+    ],
+    "matches_checked": 1
   }
 }
