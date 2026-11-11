@@ -290,7 +290,7 @@ class PublicationLiveTree(unittest.TestCase):
                 if len(args)>1 and args[1]=='scripts/build-penalty-news.py':return ''
                 if args[:2]==('vercel','api'):
                     if '/aliases/' in args[2]:return '{"deploymentId":"live"}'
-                    return '{"id":"live","url":"live.vercel.app","meta":{"githubCommitSha":"different-live-sha"}}'
+                    return '{"id":"live","url":"live.vercel.app","meta":{"githubCommitSha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}'
                 if args[:2]==('vercel','curl'):return '<main data-news-version="same">current articles</main>'
                 raise AssertionError('Unexpected command '+str(args))
             def api_read(path):
@@ -603,3 +603,11 @@ class PostMatchCapture(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class ProductionCommitMetadata(unittest.TestCase):
+    def test_git_and_cli(self):
+        for key in ('gitCommitSha', 'githubCommitSha'):
+            self.assertEqual(publisher.production_commit({'meta':{key:'a'*40}}),'a'*40)
+    def test_conflict_or_unverified(self):
+        for meta in ({}, {'gitCommitSha':'main'}, {'gitCommitSha':'b'*40,'githubCommitSha':'a'*40}):
+            with self.assertRaises(RuntimeError):publisher.production_commit({'meta':meta})
