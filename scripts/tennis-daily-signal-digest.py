@@ -657,58 +657,11 @@ def github_token() -> str:
 
 
 def dispatch(messages: list[str], *, repository: str, workflow: str, ref: str) -> None:
+    from tennis_digest_relay import confirmed_dispatch
     encoded = base64.b64encode(json.dumps(messages, ensure_ascii=False).encode("utf-8")).decode("ascii")
-    try:
-        result = subprocess.run(
-            [
-                "gh",
-                "workflow",
-                "run",
-                workflow,
-                "--repo",
-                repository,
-                "--ref",
-                ref,
-                "--json",
-            ],
-            input=json.dumps({"payload_b64": encoded}),
-            capture_output=True,
-            text=True,
-            timeout=20,
-            check=False,
-        )
-        if result.returncode == 0:
-            print("GitHub Telegram relay dispatched via gh CLI.")
-            return
-        gh_error = (result.stderr or result.stdout).strip()[:300]
-        raise RuntimeError(f"GitHub relay dispatch failed; not retrying an ambiguous delivery: {gh_error}")
-    except FileNotFoundError:
-        print("gh unavailable; using HTTP relay.", file=sys.stderr)
-    except subprocess.TimeoutExpired as exc:
-        raise RuntimeError("Relay acknowledgement timed out; automatic resend blocked to prevent duplicates") from exc
-
-    token = github_token()
-    payload = json.dumps({"ref": ref, "inputs": {"payload_b64": encoded}}).encode("utf-8")
-    request = urllib.request.Request(
-        f"https://api.github.com/repos/{repository}/actions/workflows/{workflow}/dispatches",
-        data=payload,
-        headers={
-            "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json",
-            "User-Agent": "il-margine-tennis-digest",
-            "X-GitHub-Api-Version": "2022-11-28",
-        },
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=15) as response:
-            response.read()
-    except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")[:500]
-        raise RuntimeError(f"GitHub Telegram relay dispatch failed: HTTP {exc.code} {detail}") from exc
-    except (urllib.error.URLError, TimeoutError) as exc:
-        raise RuntimeError(f"GitHub Telegram relay dispatch failed: {exc}") from exc
+    receipt = confirmed_dispatch(messages, root=ROOT, repository=repository,
+                                 workflow=workflow, ref=ref, encoded=encoded)
+    print(f"Telegram delivery verified by GitHub run {receipt['run_id']}.")
 
 
 def digest_main() -> int:
@@ -824,7 +777,17 @@ def digest_main() -> int:
         return 0
     checked_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     if state.get("pending_signal_ids"):
-        raise RuntimeError("Previous relay acknowledgement is unresolved; verify its run before clearing pending IDs. Automatic resend blocked.")
+        from tennis_digest_relay import confirm, save
+        delivery_hash = state.get("pending_delivery_hash")
+        receipt_path = ROOT / "data/backtest/tennis-telegram-outbox" / (str(delivery_hash) + ".json")
+        receipt = load_state(receipt_path)
+        if not receipt or not confirm(receipt, args.repository, args.workflow):
+            raise RuntimeError("Previous Telegram delivery is unresolved; no automatic duplicate dispatch.")
+        save(receipt_path, receipt)
+        state["signal_ids"] = sorted(set(state.get("signal_ids", []) + state.pop("pending_signal_ids")))
+        state.pop("pending_delivery_hash", None)
+        state.pop("pending_since", None)
+        atomic_json(state_path, state)
     dispatch_signals = signals if args.force else new_signals_since_state(signals, state, args.date)
     next_state = {**state, "date": args.date, "digest_hash": digest_hash,
                   "signal_ids": retained_signal_ids(state, args.date, []),
@@ -842,21 +805,21 @@ def digest_main() -> int:
     # Persist the attempt before sending. If acknowledgement is lost, fail
     # visibly and require reconciliation rather than automatically double-send.
     atomic_json(state_path, {**next_state, "pending_signal_ids": [signal_id(s) for s in dispatch_signals],
-                            "pending_since": checked_at})
+                            "pending_since": checked_at, "pending_delivery_hash": hashlib.sha256(json.dumps(dispatch_messages, ensure_ascii=False).encode()).hexdigest()})
     dispatch(dispatch_messages, repository=args.repository, workflow=args.workflow, ref=args.ref)
     dispatched_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     atomic_json(state_path, {**next_state, "signal_ids": retained_signal_ids(state, args.date, dispatch_signals),
                             "dispatched_at": dispatched_at, "last_dispatched_count": len(dispatch_signals)})
     if args.receipt:
         atomic_json(args.receipt, {"checked_at": checked_at, "dispatched_at": dispatched_at,
-                                  "dispatched_count": len(dispatch_signals), "status": "relay_queued"})
+                                  "dispatched_count": len(dispatch_signals), "status": "delivered"})
     try:
         retain_dispatch(dispatch_signals, ROOT, dispatch_messages)
     except (OSError, ValueError) as exc:
         print(f"ERROR: relay accepted but alert record could not be saved: {exc}", file=sys.stderr)
         return 1
     print(
-        f"Telegram relay dispatched: {len(dispatch_signals)} new unique signals "
+        f"Telegram delivery verified: {len(dispatch_signals)} new unique signals "
         f"in {len(dispatch_messages)} message(s)"
     )
     return 0

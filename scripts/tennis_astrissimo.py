@@ -286,12 +286,12 @@ def alerts(root,sender,*,print_only=False,include_daily=True,now=None):
         for b in report['selections']:
             quote_time=utc(b.get('quote_captured_at'))
             if b['fixture_key'] in sent or b['status']!='pending' or not utc(b['kickoff'])>now or not quote_time or not timedelta(0)<=now-quote_time<=timedelta(hours=2):continue
-            text=f"ASTRISSIMO v1 | PAPER SELECTION\n{b['player']} to beat {b['opponent']}\n{b['tournament']} | {b['kickoff']}\nPinnacle {b['odds']:.3f} | model {100*b['probability']:.1f}% | fair {1/b['probability']:.3f}\nPrice recorded {b['quote_captured_at']}\nEstimated edge {b['ev_pct']:.1f}% | 1u paper, zero real stake\n\nFull forward record:\n{record_text(report)}\nATP main draw only. Challenger excluded.\nMonitor on your PC: http://localhost:3000/model-monitor/tennis#astrissimo"
+            text=f"ASTRISSIMO v1 | PAPER SELECTION\n{b['player']} to beat {b['opponent']}\n{b['tournament']} | {b['kickoff']}\nPinnacle {b['odds']:.3f} | model {100*b['probability']:.1f}% | fair {1/b['probability']:.3f}\nPrice recorded {b['quote_captured_at']}\nEstimated edge {b['ev_pct']:.1f}% | 1u paper, zero real stake\n\nFull forward record:\n{record_text(report)}\nATP main draw only. Challenger excluded.\nAdmin: https://ilmargine.bet/admin — open Model signals and results > Tennis > Astrissimo"
             candidates.append((b['fixture_key'],text))
         from zoneinfo import ZoneInfo
         day=now.astimezone(ZoneInfo('Europe/London')).date().isoformat()
         if include_daily and state.get('daily_date')!=day:
-            text=f"ASTRISSIMO v1 | DAILY PAPER TRACKER\n{record_text(report)}\n{report['registered']} forecasts captured before play; {report['settled_fixtures']} matches settled.\nCapture: {report['capture'].get('state','NOT_RUN')}\nATP main draw only, across surfaces. Challenger excluded. Fixed model; no automatic calibration or real stakes.\nHistorical backtest is separate from this new record.\nReview at 50 and 100 settled matches.\nMonitor on your PC: http://localhost:3000/model-monitor/tennis#astrissimo"
+            text=f"ASTRISSIMO v1 | DAILY PAPER TRACKER\n{record_text(report)}\n{report['registered']} forecasts captured before play; {report['settled_fixtures']} matches settled.\nCapture: {report['capture'].get('state','NOT_RUN')}\nATP main draw only, across surfaces. Challenger excluded. Fixed model; no automatic calibration or real stakes.\nHistorical backtest is separate from this new record.\nReview at 50 and 100 settled matches.\nAdmin: https://ilmargine.bet/admin — open Model signals and results > Tennis > Astrissimo"
             candidates.append(('daily:'+day,text))
         for milestone in report['review_milestones_reached']:
             key='milestone:'+str(milestone)

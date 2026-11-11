@@ -98,7 +98,10 @@ def capture(root,rows,now=None,forecast_generated_at=None):
     with locked(folder):
         reg=read(folder/'registration.json'); effective=utc(reg.get('registered_at'))
         if not effective or not stamp or not effective<=stamp<=now or stamp.date()!=now.date() or now-stamp>timedelta(hours=2): raise ValueError('fresh post-registration forecast required')
-        if reg['rules']!=RULES or reg['model_hashes']!=hashes(root): raise ValueError('registered implementation changed; review required')
+        from tennis_paper_quote_guard import accepted as accepted_quote_repair
+        current_hashes=hashes(root)
+        repair=accepted_quote_repair(root,folder,sha256((folder/'registration.json').read_bytes()).hexdigest(),current_hashes,now)
+        if reg['rules']!=RULES or (reg['model_hashes']!=current_hashes and not repair): raise ValueError('registered implementation changed; review required')
         if reg['model_environment']!=environment(root): raise ValueError('registered model settings changed')
         available,price_hashes=quotes(root,now); reasons=Counter(); decisions=[]
         scope=[r for r in rows if r.get('surface')=='I.hard' and r.get('official_category')=='Masters 1000']
