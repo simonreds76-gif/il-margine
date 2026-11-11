@@ -48,6 +48,10 @@ def audit(root, output):
             quotes_by_date[day]=quotes
         available=[q for q in quotes_by_date[day] if utc(q['captured_at'])<=stamp<utc(q['kickoff_iso'])
                    and stamp-utc(q['captured_at'])<=timedelta(hours=2) and utc(q['kickoff_iso'])-stamp<=timedelta(days=7)]
+        rounds_by_pair=defaultdict(set)
+        for r in packet['rows']:
+            pair=(str(r['tour_id']),*sorted([str(r['player1_id']),str(r['player2_id'])]))
+            rounds_by_pair[pair].add(str(r['round_id']))
         for row in packet['rows']:
             if row.get('surface')!='I.hard' or row.get('official_category') not in ('ATP250','ATP500','Masters 1000'):continue
             k=key(row);opportunities.add(k)
@@ -58,7 +62,9 @@ def audit(root, output):
             # Historical price gaps are counted explicitly without consulting
             # today's quote diagnostics or substituting a later snapshot.
             if not available:unpriced.add(k);continue
-            q,reason=match_quote(root,row,available,require_current_fixture=False)
+            pair=(str(row['tour_id']),*sorted([str(row['player1_id']),str(row['player2_id'])]))
+            identity_row=dict(row,_ambiguous_round_in_snapshot=len(rounds_by_pair[pair])>1)
+            q,reason=match_quote(root,identity_row,available,require_current_fixture=False)
             if not q:unpriced.add(k);continue
             p=float(row['p1_win_prob'])
             if not math.isfinite(p) or not 0<p<1:exclusions['invalid_probability']+=1;continue

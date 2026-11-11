@@ -80,6 +80,11 @@ def edition_valid(root, row, quote, require_current_fixture=True):
     match = re.search(r'\b(R1|R32|R16|QF|SF|Final|Q1|Q2|Q3)\b',quote.get('league_name',''),re.I)
     rounds = {'r1':'4','r32':'4','r16':'5','qf':'9','sf':'10','final':'12','q1':'1','q2':'2','q3':'3'}
     if match and rounds[match.group().lower()] != str(row['round_id']): return False
+    if not match:
+        if row.get('_ambiguous_round_in_snapshot'): return False
+        if require_current_fixture and any(f['tour_id']==key[0] and f['round_id']!=key[1]
+                and frozenset([f['player1_id'],f['player2_id']])==key[2] and not f.get('result','').strip() for f in fixtures):
+            return False
     # Another edition containing the same pair and round in this time window
     # cannot be selected merely by stripping the local edition number.
     for f in fixtures:

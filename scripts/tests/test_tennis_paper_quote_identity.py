@@ -41,6 +41,11 @@ class Tests(unittest.TestCase):
         with (self.root/'data/oncourt/tours_atp.csv').open('a') as f:f.write('22199,Brisbane 4 Challenger,2026-11-16\n')
         with (self.root/'data/oncourt/today_atp.csv').open('a') as f:f.write('22199,5,11,12,,\n')
         self.assertIsNone(match_quote(self.root,self.row,[self.quote])[0])
+    def test_generic_qualifying_quote_cannot_join_two_rounds(self):
+        self.row['round_id']=1
+        self.quote['league_name']='ATP Challenger Brisbane - Qualifying'
+        (self.root/'data/oncourt/today_atp.csv').write_text('tour_id,round_id,player1_id,player2_id,result,live\n22197,1,11,12,,\n22197,3,11,12,,\n')
+        self.assertIsNone(match_quote(self.root,self.row,[self.quote])[0])
 
 
 if __name__=='__main__':unittest.main()
