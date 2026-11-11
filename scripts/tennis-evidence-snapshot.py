@@ -110,6 +110,11 @@ def stable_hash_value(value: Any) -> Any:
 
 
 def build_snapshot() -> dict[str, Any]:
+    from tennis_indoor_expansion import refresh as refresh_indoor_expansion
+    try:
+        refresh_indoor_expansion(ROOT)
+    except Exception as exc:
+        print("Indoor expansion report unavailable:", type(exc).__name__)
     from tennis_indoor_paper import refresh as refresh_indoor
     try:
         refresh_indoor(ROOT)
@@ -136,6 +141,7 @@ def build_snapshot() -> dict[str, Any]:
         "tennis_monitor_integrity": build_integrity(ROOT),
         "tennis_props_v3": module.tennis_props_v3_snapshot(),
         "tennis_ace_compass": module.load_json(ROOT / "data/tennis-props/shadow/ace-compass-v1/report.json"),
+        "tennis_indoor_expansion": module.load_json(ROOT / "data/tennis-ml-research/indoor-expansion-v1/report.json"),
         "tennis_indoor_paper": module.load_json(ROOT / "data/tennis-ml-research/indoor-scout-v1/report.json"),
         "tennis_elo_rebuild": module.load_json(ROOT / "data/tennis-elo-rebuild/report.json"),
         "tennis_sisal_5050": module.load_json(ROOT / "data/tennis-props/shadow/sisal-5050-v1/report.json"),

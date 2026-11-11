@@ -1533,6 +1533,7 @@ def build_payload() -> dict[str, Any]:
     tennis_model_evidence = tennis_model_evidence_summary()
     tennis_props_v3 = tennis_props_v3_snapshot()
     tennis_ace_compass = load_json(ROOT / "data/tennis-props/shadow/ace-compass-v1/report.json")
+    tennis_indoor_expansion = load_json(ROOT / "data/tennis-ml-research/indoor-expansion-v1/report.json")
     tennis_indoor_paper = load_json(ROOT / "data/tennis-ml-research/indoor-scout-v1/report.json")
     tennis_elo_rebuild = load_json(ROOT / "data/tennis-elo-rebuild/report.json")
     tennis_sisal_5050 = load_json(ROOT / "data/tennis-props/shadow/sisal-5050-v1/report.json")
@@ -1566,6 +1567,7 @@ def build_payload() -> dict[str, Any]:
                 tennis_model_evidence[key] = snapshot_model_evidence[key]
         tennis_input_health = snapshot_sections.get("tennis_input_health") or tennis_input_health
         tennis_ace_compass = snapshot_sections.get("tennis_ace_compass") or tennis_ace_compass
+        tennis_indoor_expansion = snapshot_sections.get("tennis_indoor_expansion") or tennis_indoor_expansion
         tennis_indoor_paper = snapshot_sections.get("tennis_indoor_paper") or tennis_indoor_paper
         tennis_elo_rebuild = snapshot_sections.get("tennis_elo_rebuild") or tennis_elo_rebuild
         tennis_sisal_5050 = snapshot_sections.get("tennis_sisal_5050") or tennis_sisal_5050
@@ -1628,6 +1630,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_props_v3": tennis_props_v3,
         "tennis_ace_compass": tennis_ace_compass,
         "tennis_indoor_paper": tennis_indoor_paper,
+        "tennis_indoor_expansion": tennis_indoor_expansion,
         "tennis_elo_rebuild": tennis_elo_rebuild,
         "tennis_sisal_5050": tennis_sisal_5050,
         "tennis_breakpoint_c": tennis_breakpoint_c,
@@ -1948,6 +1951,8 @@ def render_report(payload: dict[str, Any]) -> str:
     from tennis_breakpoint_reporting import weekly_text as breakpoint_c_text
     from tennis_indoor_paper import weekly_text as indoor_text
     lines.extend(["", indoor_text(payload.get("tennis_indoor_paper") or {})])
+    from tennis_indoor_expansion import weekly_text as expansion_text
+    lines.append(expansion_text(payload.get("tennis_indoor_expansion") or {}))
     lines.extend(["", elo_rebuild_text(payload.get("tennis_elo_rebuild") or {})])
     lines.extend(["", sisal_5050_text(payload.get("tennis_sisal_5050") or {})])
     lines.extend(["", breakpoint_c_text(payload.get("tennis_breakpoint_c") or {})])
@@ -2172,6 +2177,8 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     from tennis_breakpoint_reporting import weekly_text as breakpoint_c_text
     from tennis_indoor_paper import weekly_text as indoor_text
     lines.append(indoor_text(payload.get("tennis_indoor_paper") or {}))
+    from tennis_indoor_expansion import weekly_text as expansion_text
+    lines.append(expansion_text(payload.get("tennis_indoor_expansion") or {}))
     lines.append(elo_rebuild_text(payload.get("tennis_elo_rebuild") or {}))
     lines.append(sisal_5050_text(payload.get("tennis_sisal_5050") or {}))
     lines.append(breakpoint_c_text(payload.get("tennis_breakpoint_c") or {}))

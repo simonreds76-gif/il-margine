@@ -22,6 +22,12 @@ def capture_components(root: Path, rows: list[dict], captured_at: datetime | Non
         observe(root, rows, now=now, forecast_generated_at=now.isoformat())
     except Exception as exc:
         print("Indoor Scout observer unavailable:", type(exc).__name__)
+    # Separately registered scope; never changes live routing or alerts.
+    try:
+        from tennis_indoor_expansion import observe as observe_indoor_expansion
+        observe_indoor_expansion(root, rows, now=now, forecast_generated_at=now.isoformat())
+    except Exception as exc:
+        print('Indoor expansion observer unavailable:', type(exc).__name__)
     # Only caller-supplied forecast fields are serialized; never environment/secrets.
     body = json.dumps(rows, sort_keys=True, separators=(',', ':'), allow_nan=False)
     digest = hashlib.sha256(body.encode()).hexdigest()
