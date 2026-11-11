@@ -1,0 +1,33 @@
+{
+  "experiment": "indoor-expansion-forward-v1",
+  "registered_at": "2026-11-11T11:27:34.520109+00:00",
+  "hypothesis": "Existing indoor Masters-only restriction suppresses ATP250/500 coverage. Test the same frozen probabilities and numerical selection gates on broader verified indoor BO3 ATP singles, including qualifying, without a new pricing formula.",
+  "baseline": "Existing Masters-only policy abstains on added ATP250/500 fixtures; original Masters forward ledger remains untouched.",
+  "candidate": "Existing live probability and identical core numerical gates on indoor ATP250/500 including qualifying.",
+  "period": "Only genuine pre-match captures made after this registration; earlier replay never imported.",
+  "training": "none; no refit or threshold search",
+  "primary_metric": "paired binary Brier score versus same-book proportional no-vig market across eligible added fixtures",
+  "secondary": [
+    "paired log loss",
+    "selection W/L/push/void/stake/P&L/ROI",
+    "reliability bins fixed 0.1",
+    "net P&L per common opportunity vs baseline abstention",
+    "independent fixture and edition counts"
+  ],
+  "selection": "Same frozen Indoor Scout numerical gates; 1u flat paper, zero actual stake; earliest fresh valid quote/forecast per exact fixture.",
+  "price_policy": "exact pair/edition/round, saved Pinnacle quote at or before forecast, <=2h old, forecast and quote before scheduled kickoff; earliest eligible forecast per fixture; no later best-price substitution",
+  "settlement": "exact tournament ID, round, winner/loser IDs; completed BO3, retirements/walkovers/default/abandonments void; ambiguity excluded explicitly",
+  "data_gates": "checksum-valid components, category-corrected input contract, preserve model-version cohorts; raw original forecasts/ledgers unchanged",
+  "uncertainty": "edition-cluster bootstrap only with >=10 editions and >=100 settled fixtures; otherwise descriptive and INCONCLUSIVE. Promotion additionally needs paired Brier improvement CI below zero, no adverse log-loss evidence, positive ROI lower confidence bound on adequate independent prospective evidence.",
+  "forward": "post-registration captures separate from retrospective analysis; no new alerts or schedule; no promotion",
+  "compute_budget": "one chronological pass over saved packets/quotes; no historical engine rerun",
+  "actual_stake": 0,
+  "alerts": false,
+  "automatic_promotion": false,
+  "historical_status": "Earlier 16 October to 11 November replay exploratory only; not included in forward ROI.",
+  "review_milestones": [
+    50,
+    100
+  ],
+  "operations": "Existing daily/admin forecast observer and nightly settlement; compact snapshot and existing weekly review only."
+}

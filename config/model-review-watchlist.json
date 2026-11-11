@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-10",
+  "updated_at": "2026-11-11",
   "review_cadence": "Saturday weekly review after the Tuesday research report; deeper review on first Saturday of each month",
   "automatic_promotion": false,
   "families": [
@@ -128,6 +128,11 @@
       "id": "match_shape",
       "report_key": "tennis_match_shape",
       "scope": "Frozen ATP BO3 total-games/handicap comparison; current pricing, raw C, C0 and T1. Same fresh contracts. All surfaces/qualifying. 1u paper, zero real stake, no alerts. Check ROI, W/L/push/exclusions/pending/overdue, paired calibration and length bias. Review 50/100 independent settled fixtures; no automatic promotion."
+    },
+    {
+      "id": "tennis_indoor_expansion",
+      "report_key": "tennis_indoor_expansion",
+      "scope": "Indoor Scout ATP250/500 including qualifying. Prospective only from 11 November 2026; Masters and replay separate. Same fixed gates; 1u paper, zero real stake. Paired Brier/log loss vs margin-adjusted market, W/L, stake, P/L, ROI, pending/overdue, category/qualifying mix, capture health and 50/100 settled-fixture manual reviews; no alerts or automatic promotion."
     }
   ],
   "candidates": [
