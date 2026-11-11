@@ -132,7 +132,10 @@ def quotes(root, now):
     return rows,sources
 
 
-def match_quote(row, available):
+def match_quote(row, available, root=None):
+    if root is not None:
+        from tennis_paper_quote_identity import match_quote as verified_quote
+        return verified_quote(root, row, available)
     names=[normal(row.get('player1')),normal(row.get('player2'))];tour=tokens(row.get('event_key') or row.get('tour_name'))
     if not all(names) or not tour:return None,'missing_identity'
     matches=[q for q in available if {normal(q['player1_name']),normal(q['player2_name'])}==set(names) and tour<=tokens(q['league_name'])]
@@ -167,6 +170,9 @@ def capture(root,rows,now=None,as_of=None,forecast_generated_at=None):
         from tennis_observation_amendments import accepted_observation_amendment
         current_hashes=hashes(root)
         observation_amendment=accepted_observation_amendment(folder, sha256((folder/'registration.json').read_bytes()).hexdigest(), reg['model_hashes'], current_hashes, 'model', now)
+        from tennis_paper_quote_guard import accepted as accepted_quote_repair
+        quote_repair=accepted_quote_repair(root,folder,sha256((folder/'registration.json').read_bytes()).hexdigest(),current_hashes,now)
+        if quote_repair: observation_amendment=quote_repair
         if (reg['model_hashes']!=current_hashes and not observation_amendment) or reg['model_environment']!=environment(root):raise ValueError('frozen model code or environment changed')
         if reg['rules']!=RULES:raise ValueError('frozen rules changed')
         if str(as_of)!=now.date().isoformat():raise ValueError('forecast must be freshly generated today')
@@ -189,7 +195,7 @@ def capture(root,rows,now=None,as_of=None,forecast_generated_at=None):
             if path.exists():reasons['already_recorded']+=1;continue
             p=float(row['p1_win_prob'])
             if not math.isfinite(p) or not 0<p<1:raise ValueError('invalid probability')
-            q,reason=match_quote(row,available)
+            q,reason=match_quote(row,available,root=root)
             if not q:reasons[reason]+=1;continue
             selection=select(p,q,row)
             pending.append((path,dict(version=VERSION,fixture_key=key,registered_at=now.isoformat(),

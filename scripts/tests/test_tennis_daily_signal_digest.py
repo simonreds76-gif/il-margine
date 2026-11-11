@@ -18,6 +18,11 @@ SPEC.loader.exec_module(MODULE)
 
 
 class TennisDailySignalDigestTests(unittest.TestCase):
+    def setUp(self):
+        guard = patch("tennis_digest_relay.gh", side_effect=RuntimeError("Network disabled in unit tests"))
+        guard.start()
+        self.addCleanup(guard.stop)
+
     def test_props_quote_is_rechecked_when_sending(self):
         now = datetime(2026, 10, 7, 12, tzinfo=UTC)
         row = {"capture_ts": "2026-10-07T06:00:00Z", "match_start_utc": "2026-10-07T17:00:00Z"}
@@ -387,10 +392,11 @@ class TennisDailySignalDigestTests(unittest.TestCase):
     def test_digest_dispatch_defaults_to_golden(self) -> None:
         self.assertEqual(MODULE.DEFAULT_REF, "golden-with-speed-insights")
 
-    def test_dispatch_prefers_bounded_gh_cli(self) -> None:
-        source = SCRIPT.read_text(encoding="utf-8")
-        self.assertIn('"gh",\n                "workflow",\n                "run"', source)
-        self.assertIn("timeout=20", source)
+    def test_dispatch_requires_confirmed_delivery(self) -> None:
+        with patch("tennis_digest_relay.confirmed_dispatch", return_value={"run_id": 123}) as confirmed:
+            MODULE.dispatch(["summary"], repository="owner/repo", workflow="digest.yml", ref="test")
+            self.assertEqual(confirmed.call_args.args[0], ["summary"])
+            self.assertEqual(confirmed.call_args.kwargs["root"], MODULE.ROOT)
 
 
 if __name__ == "__main__":

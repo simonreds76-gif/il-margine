@@ -1,4 +1,5 @@
 name: Tennis Daily Signal Digest
+run-name: tennis-delivery-${{ inputs.delivery_id || github.run_id }}
 
 on:
   workflow_dispatch:
@@ -8,8 +9,20 @@ on:
         required: true
         type: string
 
+      delivery_id:
+        description: Durable local outbox identifier
+        required: false
+        type: string
+
+      verification_only:
+        description: Run delivery and identity tests without Telegram
+        required: false
+        type: boolean
+        default: false
+
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: tennis-daily-signal-digest
@@ -24,37 +37,32 @@ jobs:
       OPS_ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
       OPS_ALERT_TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
     steps:
-      - name: Send private tennis digest
-        shell: python
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/tennis_telegram_delivery.py
+            scripts/tennis_digest_relay.py
+            scripts/tennis_paper_quote_identity.py
+            scripts/tennis_price_identity.py
+            scripts/tests/test_tennis_delivery_receipts.py
+            scripts/tests/test_tennis_paper_quote_identity.py
+          sparse-checkout-cone-mode: false
+      - name: Verify delivery and quote identity without sending
+        if: inputs.verification_only
         run: |
-          import base64
-          import json
-          import os
-          import urllib.request
-
-          token = os.environ.get("OPS_ALERT_TELEGRAM_BOT_TOKEN", "").strip()
-          chat_id = os.environ.get("OPS_ALERT_TELEGRAM_CHAT_ID", "").strip()
-          if not token or not chat_id:
-              raise SystemExit("Missing OPS alert Telegram credentials")
-
-          raw = base64.b64decode(os.environ["DIGEST_PAYLOAD_B64"], validate=True)
-          messages = json.loads(raw.decode("utf-8"))
-          if not isinstance(messages, list) or not messages:
-              raise SystemExit("Digest payload must be a non-empty message list")
-
-          for message in messages:
-              if not isinstance(message, str) or not message.strip() or len(message) > 4096:
-                  raise SystemExit("Invalid Telegram message in digest payload")
-              payload = json.dumps({
-                  "chat_id": chat_id,
-                  "text": message,
-                  "disable_web_page_preview": True,
-              }).encode("utf-8")
-              request = urllib.request.Request(
-                  f"https://api.telegram.org/bot{token}/sendMessage",
-                  data=payload,
-                  headers={"Content-Type": "application/json"},
-                  method="POST",
-              )
-              with urllib.request.urlopen(request, timeout=20) as response:
-                  response.read()
+          python -B -m unittest discover -s scripts/tests -p test_tennis_delivery_receipts.py
+          python -B -m unittest discover -s scripts/tests -p test_tennis_paper_quote_identity.py
+      - name: Send private tennis digest with delivery receipts
+        if: ${{ !inputs.verification_only }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/tennis_telegram_delivery.py
+      - name: Preserve per-message delivery acknowledgement
+        if: ${{ always() && !inputs.verification_only }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: tennis-delivery-${{ github.run_id }}-${{ github.run_attempt }}
+          path: telegram-delivery-receipt.json
+          retention-days: 14
+          if-no-files-found: warn
