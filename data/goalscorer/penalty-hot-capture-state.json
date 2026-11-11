@@ -152,11 +152,25 @@
     "5881213": "2026-11-09",
     "5881214": "2026-11-08",
     "5795508": "2026-11-10",
+    "5881218": "2026-11-11",
     "5868128": "2026-11-10",
     "5802989": "2026-11-10",
     "5749749": "2026-11-10",
     "5795511": "2026-11-10",
+    "5795505": "2026-11-11",
+    "5795509": "2026-11-11",
+    "5795513": "2026-11-11",
+    "5881215": "2026-11-11",
+    "5881220": "2026-11-11",
+    "5881221": "2026-11-11",
+    "5881222": "2026-11-11",
+    "5881223": "2026-11-11",
     "5868125": "2026-11-10",
+    "5868124": "2026-11-11",
+    "5868126": "2026-11-11",
+    "5749741": "2026-11-11",
+    "5749748": "2026-11-11",
+    "5749747": "2026-11-11",
     "5795506": "2026-11-11",
     "5795507": "2026-11-11",
     "5795510": "2026-11-11",
@@ -166,6 +180,8 @@
     "5881217": "2026-11-11",
     "5868123": "2026-11-10",
     "5868127": "2026-11-11",
+    "5868122": "2026-11-11",
+    "5868130": "2026-11-11",
     "5802988": "2026-11-11",
     "5802982": "2026-11-11",
     "5802984": "2026-11-11",
@@ -176,7 +192,7 @@
     "5749745": "2026-11-11",
     "5749744": "2026-11-11"
   },
-  "updated_at": "2026-11-11T17:52:21.328855+00:00",
+  "updated_at": "2026-11-11T18:01:32.512257+00:00",
   "checked_this_run": 16,
   "errors": [],
   "fixtures": {
@@ -7511,7 +7527,7 @@
           "shortName": "M'gladbach"
         },
         "status": {
-          "utcTime": "2026-11-06T19:30:00.000Z",
+          "utcTime": "2026-11-06T19:30:00+00:00",
           "numberOfAwayRedCards": 1,
           "halfs": {
             "firstHalfStarted": "06.11.2026 20:30:14",
@@ -7532,13 +7548,13 @@
         }
       },
       "date": "2026-11-06",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-06T17:28:10.335603+00:00",
       "pending_since": "2026-11-06T17:28:10.335603+00:00",
-      "last_attempt": "2026-11-10T17:46:26.857783+00:00",
-      "attempts": 4,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T17:46:26.857783+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 5,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -7745,7 +7761,7 @@
           "shortName": "Hull"
         },
         "status": {
-          "utcTime": "2026-11-07T15:00:00.000Z",
+          "utcTime": "2026-11-07T15:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "07.11.2026 16:01:45",
             "secondHalfStarted": "07.11.2026 17:05:27"
@@ -7765,13 +7781,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -7793,7 +7809,7 @@
           "shortName": "Newcastle"
         },
         "status": {
-          "utcTime": "2026-11-07T15:00:00.000Z",
+          "utcTime": "2026-11-07T15:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "07.11.2026 16:02:21",
             "secondHalfStarted": "07.11.2026 17:04:05"
@@ -7813,13 +7829,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -7841,7 +7857,7 @@
           "shortName": "Man City"
         },
         "status": {
-          "utcTime": "2026-11-07T17:30:00.000Z",
+          "utcTime": "2026-11-07T17:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "07.11.2026 18:32:37",
             "secondHalfStarted": "07.11.2026 19:35:32"
@@ -7861,13 +7877,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -7888,7 +7904,7 @@
           "name": "Elversberg"
         },
         "status": {
-          "utcTime": "2026-11-07T14:30:00.000Z",
+          "utcTime": "2026-11-07T14:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "07.11.2026 15:30:16",
             "secondHalfStarted": "07.11.2026 16:35:35"
@@ -7908,13 +7924,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -7936,7 +7952,7 @@
           "shortName": "Bayern München"
         },
         "status": {
-          "utcTime": "2026-11-07T14:30:00.000Z",
+          "utcTime": "2026-11-07T14:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "07.11.2026 15:30:21",
             "secondHalfStarted": "07.11.2026 16:38:19"
@@ -7956,13 +7972,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -7985,7 +8001,7 @@
           "shortName": "Frankfurt"
         },
         "status": {
-          "utcTime": "2026-11-07T14:30:00.000Z",
+          "utcTime": "2026-11-07T14:30:00+00:00",
           "numberOfAwayRedCards": 1,
           "halfs": {
             "firstHalfStarted": "07.11.2026 15:30:15",
@@ -8006,13 +8022,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 4,
+      "reason": "penalties_verified",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 1,
       "next_attempt": ""
     },
@@ -8034,7 +8050,7 @@
           "shortName": "Augsburg"
         },
         "status": {
-          "utcTime": "2026-11-07T14:30:00.000Z",
+          "utcTime": "2026-11-07T14:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "07.11.2026 15:30:19",
             "secondHalfStarted": "07.11.2026 16:35:34"
@@ -8054,13 +8070,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -8081,7 +8097,7 @@
           "shortName": "Werder Bremen"
         },
         "status": {
-          "utcTime": "2026-11-07T17:30:00.000Z",
+          "utcTime": "2026-11-07T17:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "07.11.2026 18:30:31",
             "secondHalfStarted": "07.11.2026 19:34:14"
@@ -8101,13 +8117,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -8175,7 +8191,7 @@
           "name": "Deportivo A Coruña"
         },
         "status": {
-          "utcTime": "2026-11-07T15:15:00.000Z",
+          "utcTime": "2026-11-07T15:15:00+00:00",
           "halfs": {
             "firstHalfStarted": "07.11.2026 16:17:28",
             "secondHalfStarted": "07.11.2026 17:21:15"
@@ -8195,13 +8211,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -8221,7 +8237,7 @@
           "name": "Athletic Club"
         },
         "status": {
-          "utcTime": "2026-11-07T17:30:00.000Z",
+          "utcTime": "2026-11-07T17:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "07.11.2026 18:30:47",
             "secondHalfStarted": "07.11.2026 19:35:32"
@@ -8241,13 +8257,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -8408,7 +8424,7 @@
           "name": "Frosinone"
         },
         "status": {
-          "utcTime": "2026-11-07T14:00:00.000Z",
+          "utcTime": "2026-11-07T14:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "07.11.2026 15:02:20",
             "secondHalfStarted": "07.11.2026 16:05:02"
@@ -8428,13 +8444,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -8454,7 +8470,7 @@
           "name": "Lecce"
         },
         "status": {
-          "utcTime": "2026-11-07T14:00:00.000Z",
+          "utcTime": "2026-11-07T14:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "07.11.2026 15:17:04",
             "secondHalfStarted": "07.11.2026 16:22:35"
@@ -8474,13 +8490,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -8502,7 +8518,7 @@
           "name": "Bologna"
         },
         "status": {
-          "utcTime": "2026-11-07T17:00:00.000Z",
+          "utcTime": "2026-11-07T17:00:00+00:00",
           "numberOfHomeRedCards": 1,
           "halfs": {
             "firstHalfStarted": "07.11.2026 18:01:45",
@@ -8523,13 +8539,13 @@
         }
       },
       "date": "2026-11-07",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-07T02:19:46.514210+00:00",
       "pending_since": "2026-11-07T02:19:46.514210+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 4,
+      "reason": "penalties_verified",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 2,
       "next_attempt": ""
     },
@@ -9067,7 +9083,7 @@
           "name": "Levante"
         },
         "status": {
-          "utcTime": "2026-11-08T17:30:00.000Z",
+          "utcTime": "2026-11-08T17:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "08.11.2026 18:34:35",
             "secondHalfStarted": "08.11.2026 19:39:29"
@@ -9087,13 +9103,13 @@
         }
       },
       "date": "2026-11-08",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-08T00:32:26.308790+00:00",
       "pending_since": "2026-11-08T00:32:26.308790+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 2,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 3,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -9113,7 +9129,7 @@
           "name": "Getafe"
         },
         "status": {
-          "utcTime": "2026-11-08T17:30:00.000Z",
+          "utcTime": "2026-11-08T17:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "08.11.2026 18:31:26",
             "secondHalfStarted": "08.11.2026 19:34:16"
@@ -9133,13 +9149,13 @@
         }
       },
       "date": "2026-11-08",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-08T00:32:26.308790+00:00",
       "pending_since": "2026-11-08T00:32:26.308790+00:00",
-      "last_attempt": "2026-11-10T03:47:11.397744+00:00",
-      "attempts": 2,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-10T03:47:11.397744+00:00",
+      "last_attempt": "2026-11-11T18:01:32.512257+00:00",
+      "attempts": 3,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-11T18:01:32.512257+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -9992,7 +10008,7 @@
     },
     "20261104": {
       "ok": true,
-      "checked_at": "2026-11-10T03:31:27.780769+00:00",
+      "checked_at": "2026-11-11T18:01:32.512257+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -10085,14 +10101,14 @@
     },
     "20261110": {
       "ok": true,
-      "checked_at": "2026-11-11T17:52:21.328855+00:00",
+      "checked_at": "2026-11-11T18:01:32.512257+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
     },
     "20261111": {
       "ok": true,
-      "checked_at": "2026-11-11T17:52:21.328855+00:00",
+      "checked_at": "2026-11-11T18:01:32.512257+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -10100,9 +10116,9 @@
   },
   "coverage": {
     "expected": 199,
-    "verified": 175,
+    "verified": 191,
     "pending": 0,
-    "reverify": 24,
+    "reverify": 8,
     "deferred": 0,
     "overdue": 0,
     "stalled": 0,
