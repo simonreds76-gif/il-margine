@@ -40,6 +40,8 @@ export function modelRows(sections: unknown, football: unknown): ModelRow[] {
   }
   const indoor = obj(s.tennis_indoor_paper);
   rows.push(row("tennis_indoor_paper", "Indoor Scout", "Tennis research", "Forward paper", indoor, indoor.generated_at, "Indoor Masters including qualifying. Core Strict gates; injury/handicap vetoes not simulated. 1u paper, zero real stake; no historical replay included."));
+  const expansion = obj(s.tennis_indoor_expansion);
+  rows.push(row("tennis_indoor_expansion", "Indoor Scout ATP250/500", "Tennis research", "Forward paper", expansion, expansion.generated_at, "Indoor ATP250/500 including qualifying. Same core gates, separate from Masters. 1u paper, zero real stake and no alerts. Historical replay excluded."));
   const props = obj(s.tennis_props_shadow_decision);
   rows.push(row("props", "Aces & double faults", "Tennis props", "Canonical paper ledger", props, props.generated_at,
     "Full retained signal record, including earlier input versions. Multiple lines from one match can be correlated."));

@@ -390,5 +390,26 @@
     "group": "Football models",
     "file": "data/football-form/team-shots-opponent-shadow.csv",
     "kind": "ledger"
+  },
+  {
+    "id": "tennis-indoor-expansion-report",
+    "label": "Indoor Scout ATP250/500 - ROI and results",
+    "group": "Tennis match markets",
+    "file": "data/tennis-ml-research/indoor-expansion-v1/report.json",
+    "kind": "report"
+  },
+  {
+    "id": "tennis-indoor-expansion-forecasts",
+    "label": "Indoor Scout ATP250/500 - all forecasts and rejections",
+    "group": "Tennis match markets",
+    "file": "data/tennis-ml-research/indoor-expansion-v1/forecasts.csv",
+    "kind": "board"
+  },
+  {
+    "id": "tennis-indoor-expansion-selections",
+    "label": "Indoor Scout ATP250/500 - paper selections",
+    "group": "Tennis match markets",
+    "file": "data/tennis-ml-research/indoor-expansion-v1/selections.csv",
+    "kind": "ledger"
   }
 ]

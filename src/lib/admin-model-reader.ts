@@ -69,7 +69,7 @@ export async function readAdminModels() {
     const breakdown = propsBreakdowns(tennis?.props_ledger, props);
     rows.push(...breakdown.rows); Object.assign(histories, breakdown.histories);
   }
-  for (const r of rows.filter(r => ["tennis_hardcourt_scout", "tennis_astrissimo", "tennis_indoor_paper"].includes(r.id))) {
+  for (const r of rows.filter(r => ["tennis_hardcourt_scout", "tennis_astrissimo", "tennis_indoor_paper", "tennis_indoor_expansion"].includes(r.id))) {
     histories[r.id] = reconciledHistory(obj(obj(tennis?.sections)[r.id]).selections, r.id, r);
   }
   return { rows, histories, selections: savedSelections(tennis?.sections), sisal5050: obj(tennis?.sections).tennis_sisal_5050, breakpointC: obj(tennis?.sections).tennis_breakpoint_c, matchShape: obj(tennis?.sections).tennis_match_shape,
