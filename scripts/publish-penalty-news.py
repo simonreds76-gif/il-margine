@@ -244,6 +244,17 @@ def publication_candidate(live_sha, source_sha, state):
     return sha, ref
 
 
+
+def production_commit(deployment):
+    """CLI deployments use gitCommitSha; Git integrations use githubCommitSha."""
+    meta = deployment.get('meta') or {}
+    candidates = [meta.get(key) for key in ('githubCommitSha', 'gitCommitSha') if meta.get(key)]
+    if not candidates or any(not isinstance(sha, str) or not re.fullmatch(r'[0-9a-f]{40}', sha) for sha in candidates):
+        raise RuntimeError('Cannot verify current production ancestry')
+    if len(set(candidates)) != 1:
+        raise RuntimeError('Conflicting production commit metadata')
+    return candidates[0]
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--state', type=Path, required=True)
@@ -316,9 +327,7 @@ def main():
 
     alias = api('/v4/aliases/ilmargine.bet')['deploymentId']
     live = api('/v13/deployments/' + alias)
-    live_sha = live.get('meta', {}).get('githubCommitSha')
-    if not live_sha:
-        raise RuntimeError('Cannot verify current production ancestry')
+    live_sha = production_commit(live)
     data = json.loads(run('git', 'show', source_sha + ':' + DATA))
     version = data['generatedAt']
     # The collector changes this revision only when the published packet changes.
