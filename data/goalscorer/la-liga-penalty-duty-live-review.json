@@ -1,97 +1,17 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-12T00:36:58.988488+00:00",
+  "generated_at": "2026-11-12T07:19:37Z",
   "league": "la-liga",
-  "row_count": 1,
-  "rows": [
-    {
-      "date": "2026-11-06",
-      "league": "la-liga",
-      "review_source": "fotmob_live",
-      "match": "Sevilla vs Deportivo Alavés",
-      "team": "Sevilla",
-      "opponent": "Deportivo Alavés",
-      "actual_taker": "Rubén Vargas",
-      "actual_role_pre_match": "none",
-      "penalties_attempted": 1,
-      "penalties_scored": 0,
-      "distinct_takers_in_match": 1,
-      "minute": "32",
-      "event_type": "AttemptSaved",
-      "event_result": "missed",
-      "primary_pre_match": "Jon Guridi",
-      "secondary_pre_match": "Peque Fernández",
-      "tertiary_pre_match": "Isaac Romero",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "",
-      "review_type": "unranked_taker",
-      "review_priority": "high",
-      "editorial_note": "Rubén Vargas took 1 penalty attempt and missed for Sevilla vs Deportivo Alavés. Primary pre-match: Jon Guridi (unknown). Secondary pre-match: Peque Fernández (unknown). Strong review flag: the taker was not in the tracked top three.",
-      "context_generated_at": "2026-09-02",
-      "context_source_path": "data/goalscorer/la-liga-penalty-takers.json",
-      "actual_taker_match_status": "Yes - started, off 59'",
-      "primary_on_pitch_at_penalty": "No - bench",
-      "secondary_on_pitch_at_penalty": "No - absent from matchday squad",
-      "tertiary_on_pitch_at_penalty": "Yes - started, off 74'",
-      "actual_taker_on_pitch_at_penalty": "Yes - started, off 59'",
-      "event_evidence": [
-        {
-          "id": "fotmob|la-liga|5868128|2993851747",
-          "source_event_id": "2993851747",
-          "match_id": "5868128",
-          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868128",
-          "observed_at": "2026-11-12T00:37:05+00:00",
-          "event_date": "2026-11-06",
-          "season": "2026/27",
-          "team": "Sevilla",
-          "taker": "Rubén Vargas",
-          "primary": "Jon Guridi",
-          "primary_on_pitch": false,
-          "on_pitch_proof": {
-            "player": "Jon Guridi",
-            "minute": 32,
-            "added_time": 0,
-            "method": "completed_lineup_timeline",
-            "player_id": 678192,
-            "bucket": "subs",
-            "substitutions": [],
-            "events": [],
-            "reason": "not_on_pitch"
-          },
-          "minute": 32,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Sevilla vs Deportivo Alavés",
-          "event_result": "missed"
-        }
-      ]
-    }
-  ],
+  "row_count": 0,
+  "rows": [],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261105",
-      "20261106",
-      "20261107",
-      "20261108",
-      "20261109",
       "20261110",
-      "20261111"
+      "20261111",
+      "20261112"
     ],
-    "matches_checked": 10
-  },
-  "hot_source_health": {
-    "complete": true,
-    "errors": [],
-    "dates_requested": [
-      "20261108"
-    ],
-    "matches_checked": 1
+    "matches_checked": 0
   }
 }
