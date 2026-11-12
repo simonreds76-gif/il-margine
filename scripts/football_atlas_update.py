@@ -410,6 +410,8 @@ def publish(config, helper, version, path, status):
     (checkout / '.vercel').mkdir(exist_ok=True)
     write(checkout / '.vercel/project.json', {'projectId': helper.PROJECT, 'orgId': helper.TEAM, 'projectName': 'il-margine'})
     def api(route, body=None):
+        if getattr(helper, 'project_scoped_api', None):
+            return helper.project_scoped_api(route, body)
         args = [vercel, 'api', route + ('&' if '?' in route else '?') + 'teamId=' + helper.TEAM, '--raw']
         if body is not None:
             request = state / 'deploy-request.json'

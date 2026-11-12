@@ -354,6 +354,23 @@ def publish(state, manifest, report):
         except RuntimeError as exc:
             raise RuntimeError(str(exc).replace(token, '[redacted]')) from None
     helper.run = authenticated_run
+    def project_scoped_api(route, body=None):
+        # A project token legitimately has no personal /user identity. The CLI
+        # --scope resolver asks for one before forwarding a valid API request.
+        # Keep the existing exact team/project scope and avoid that user lookup.
+        if not route.startswith('/') or route.startswith('//') or '://' in route:
+            raise ValueError('Unexpected Vercel API route')
+        try:
+            response = requests.request('GET' if body is None else 'POST',
+                'https://api.vercel.com' + route, params={'teamId': helper.TEAM},
+                headers={'Authorization': 'Bearer ' + token}, json=body,
+                timeout=60, allow_redirects=False)
+        except requests.RequestException:
+            raise RuntimeError('Project-scoped Vercel request failed; credential details withheld') from None
+        if not 200 <= response.status_code < 300:
+            raise RuntimeError(f'Project-scoped Vercel request HTTP {response.status_code}; live release retained')
+        return response.json() if response.content else {}
+    helper.project_scoped_api = project_scoped_api
     try:
         headers = {'Authorization': 'Bearer ' + token}
         alias_response = requests.get('https://api.vercel.com/v4/aliases/ilmargine.bet',
