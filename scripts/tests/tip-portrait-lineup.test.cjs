@@ -13,6 +13,7 @@ function harness() {
   const modules = new Map(), cached = new Map();
   const load = file => {
     if (!path.extname(file)) file += '.ts';
+    if (file.endsWith('.json')) return JSON.parse(fs.readFileSync(file, 'utf8'));
     if (modules.has(file)) return modules.get(file).exports;
     const module = {exports:{}}; modules.set(file,module);
     const code = ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;

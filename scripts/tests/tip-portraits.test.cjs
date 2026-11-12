@@ -362,3 +362,58 @@ test('failed or unauthorised settlements do not invalidate pages or images', asy
 
 require('./tip-portrait-lineup.test.cjs');
 
+
+test('national-team tips resolve both real players under Other football without player overrides',async()=>{
+  const data=require('./fixtures/tip-portrait-national.json');
+  const responses={};
+  for(const [id,team] of Object.entries(data.teams)) responses[`https://www.fotmob.com/teams/${id}/overview`]={fallback:{['team-'+id]:team}};
+  const h=harness({responses});
+  const r=h.load(path.join(root,'src/lib/tip-portrait-resolver.ts'));
+  for(const event of ['Turkey vs Belgium','Türkiye vs Belgium','Belgium vs Turkiye']) {
+    for(const [player,id] of [['Tielemans',465960],['Youri Tielemans',465960],['Y. Tielemans',465960],['Aydin',1092015],['Aydın',1092015],['O. Aydin',1092015],['Oğuz Aydın',1092015]]) {
+      Object.assign(h.pick,{market:'props',category:'other',event,player});
+      assert.equal((await r.resolveTipPortrait(h.pick)).id,id);
+    }
+  }
+  const {GET}=h.load(path.join(root,'src/app/api/tip-portrait/[id]/route.ts'));
+  for(const [player,id,bet] of [['Tielemans',465960,1327],['Aydin',1092015,1326]]) {
+    Object.assign(h.pick,{id:bet,market:'props',category:'other',event:'Turkey vs Belgium',player});
+    const response=await GET(new Request(`https://example.test/api/tip-portrait/${bet}?thumb=96`),{params:Promise.resolve({id:String(bet)})});
+    assert.equal(response.status,307);
+    assert.equal(response.headers.get('location'),`/_next/image?url=${encodeURIComponent(`https://images.fotmob.com/image_resources/playerimages/${id}.png`)}&w=96&q=75`);
+  }
+  assert.equal(h.counts().fetches,2,'bounded cached squads, not repeated per-player lookups');
+  assert.equal(r.clubsForPick({...h.pick,event:'Scotland vs Germany'}).length,2,'not just a two-country fix');
+  assert.equal(r.clubsForPick({...h.pick,event:'Turkey U21 vs Belgium Women'}).length,0,'never borrow senior male identities');
+});
+
+test('national namesakes remain ambiguous and wrong full names do not match',async()=>{
+  const data=structuredClone(require('./fixtures/tip-portrait-national.json'));
+  data.teams['6595'].squad.squad.find(g=>g.title==='attackers').members.push({id:999991,name:'Other Aydın'});
+  const responses={};
+  for(const [id,team] of Object.entries(data.teams)) responses[`https://www.fotmob.com/teams/${id}/overview`]={fallback:{['team-'+id]:team}};
+  const h=harness({responses}),r=h.load(path.join(root,'src/lib/tip-portrait-resolver.ts'));
+  const pick={...h.pick,category:'other',event:'Turkey vs Belgium'};
+  assert.equal(await r.resolveTipPortrait({...pick,player:'Aydin'}),null);
+  assert.equal(await r.resolveTipPortrait({...pick,player:'Somebody Tielemans'}),null);
+  assert.equal((await r.resolveTipPortrait({...pick,player:'Oğuz Aydın'})).id,1092015);
+});
+
+test('missing opponent national roster uses exact active senior national affiliation, not employer club',async()=>{
+  const data=require('./fixtures/tip-portrait-national.json');
+  const playerUrl='https://www.fotmob.com/players/1092015/oguz-aydin';
+  const base={
+    'https://www.fotmob.com/teams/6595/overview':{fallback:{'team-6595':data.teams['6595']}},
+    'https://www.fotmob.com/teams/8263/overview':new Error('temporarily unavailable'),
+  };
+  const h=harness({responses:{...base,[playerUrl]:{data:data.profiles['1092015']}}});
+  Object.assign(h.pick,{category:'other',event:'Turkey vs Belgium',player:'Aydin'});
+  assert.equal((await h.load(path.join(root,'src/lib/tip-portrait-resolver.ts')).resolveTipPortrait(h.pick)).id,1092015);
+  for(const change of [{teamId:8263},{participantId:2},{active:false},{endDate:'2026-01-01'},{teamGender:'female'},{hasUncertainData:true}]) {
+    const profile=structuredClone(data.profiles['1092015']);
+    Object.assign(profile.careerHistory.careerItems['national team'].teamEntries[0],change);
+    const x=harness({responses:{...base,[playerUrl]:{data:profile}}});
+    assert.equal(await x.load(path.join(root,'src/lib/tip-portrait-resolver.ts')).resolveTipPortrait(h.pick),null);
+  }
+});
+
