@@ -362,13 +362,16 @@ def publish(state, manifest, report):
         live_response = requests.get('https://api.vercel.com/v13/deployments/' + alias_response.json()['deploymentId'],
                                      params={'teamId': helper.TEAM}, headers=headers, timeout=30)
         live_response.raise_for_status()
-        live_sha = live_response.json().get('meta', {}).get('githubCommitSha')
-        if not live_sha:
-            raise ValueError('Cannot establish live release ancestry')
-        run(['git', 'merge-base', '--is-ancestor', live_sha, 'HEAD'], ROOT)
+        live = live_response.json()
+        helper.validate_deployment_identity(live, expected_id=alias_response.json()['deploymentId'])
+        from atlas_production_release import stage_football
+        release_root, release_branch, live_sha, release_sha = stage_football(ROOT, state, live, run)
+        helper.check_static_budget(release_root)
+        report.update(productionBaseSha=live_sha, releaseBranch=release_branch, releaseSha=release_sha)
     except requests.RequestException:
         raise RuntimeError('Cannot validate current Vercel release (credential details withheld)') from None
-    config = {'checkout': str(ROOT), 'stateDirectory': str(state)}
+    config = {'checkout': str(release_root), 'stateDirectory': str(state),
+              'releaseBranch': release_branch, 'expectedProductionId': alias_response.json()['deploymentId']}
     legacy.publish(config, helper, manifest['version'], Path('public') / manifest['indexUrl'].lstrip('/'), report)
 
 
