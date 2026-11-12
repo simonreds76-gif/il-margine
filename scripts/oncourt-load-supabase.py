@@ -492,7 +492,7 @@ def main():
         sys.exit(2)
 
     key_type = "service_role"
-    mode = "QUICK (players/tours/today only)" if QUICK else "RECENT (last 365d games/stat)" if RECENT else "FULL"
+    mode = "QUICK (players/tours/today + verified recent history)" if QUICK else "RECENT (last 365d games/stat)" if RECENT else "FULL"
     if SKIP_PLAYERS:
         mode += " + SKIP_PLAYERS"
     elif CURRENT_PLAYERS_ONLY:
@@ -551,6 +551,11 @@ def main():
             "country": r.get("country", ""),
         },
     )
+
+    # Quick daily/admin refreshes must transfer completed results before pricing.
+    if QUICK:
+        from oncourt_recent_history_sync import sync_recent_history
+        sync_recent_history(DATA_DIR, SUPABASE_URL, _headers())
 
     # 4. Games (skip in --quick mode)
     if QUICK:

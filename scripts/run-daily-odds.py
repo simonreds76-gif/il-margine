@@ -186,7 +186,7 @@ def main() -> int:
     )
 
     run_cmd(
-        [sys.executable, str(ROOT / "scripts" / "oncourt-compute-fair-odds.py"), "--skip-handicap-values", "--category-shadow"],
+        [sys.executable, str(ROOT / "scripts" / "run-fair-odds-refresh.py"), "--skip-handicap-values", "--category-shadow"],
         label="3/6 Fair odds pipeline",
         fatal=True,
         timeout_seconds=step_timeout,
