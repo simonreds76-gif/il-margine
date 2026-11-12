@@ -1,5 +1,7 @@
 "use client";
 
+import { settledRecordCount } from "@/lib/settled-record-count";
+
 import { useState, useEffect, useCallback, useRef } from "react";
 import { unchangedPublicRows } from "@/lib/unchanged-public-rows";
 import Image from "next/image";
@@ -168,7 +170,7 @@ export default function TennisTips({
       const avgOdds = totalBets > 0 ? (baselineOddsWeight + liveOddsWeight) / totalBets : 0;
 
       return {
-        total_bets: totalBets,
+        total_bets: BASELINE_STATS.tennis.total_bets + settledRecordCount({ wins: liveWins, losses: liveLosses }),
         total_stake: totalStake,
         total_profit: totalProfit,
         roi: calculateROI(totalProfit, totalStake || 1),
@@ -192,7 +194,7 @@ export default function TennisTips({
       const liveLosses = catStats.losses || 0;
       const liveStake = Number(catStats.total_stake) || liveBets;
       return {
-        total_bets: liveBets,
+        total_bets: settledRecordCount(catStats),
         total_stake: liveStake,
         total_profit: liveProfit,
         roi: liveStake > 0 ? calculateROI(liveProfit, liveStake) : 0,
@@ -221,7 +223,7 @@ export default function TennisTips({
     const avgOdds = totalBets > 0 ? (baselineOddsWeight + liveOddsWeight) / totalBets : (categoryBaseline.avg_odds || 0);
 
     return {
-      total_bets: totalBets,
+      total_bets: categoryBaseline.total_bets + settledRecordCount(catStats),
       total_stake: totalStake,
       total_profit: totalProfit,
       roi: calculateROI(totalProfit, totalStake || 1),

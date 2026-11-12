@@ -11,8 +11,9 @@ function load(path, dependencies={}) {
  return m.exports;
 }
 const baseline=load('src/lib/baseline.ts');
-const {summarizeCalculatorRecord}=load('src/lib/calculator/record.ts',{'@/lib/baseline':baseline});
-const {buildCombinedStats}=load('src/lib/homepage-record.ts',{'./baseline':baseline});
+const counts=load('src/lib/settled-record-count.ts');
+const {summarizeCalculatorRecord}=load('src/lib/calculator/record.ts',{'@/lib/baseline':baseline,'@/lib/settled-record-count':counts});
+const {buildCombinedStats}=load('src/lib/homepage-record.ts',{'./baseline':baseline,'./settled-record-count':counts});
 
 test('pending and void picks never inflate settled count; homepage and calculator agree',()=>{
  const rows=[

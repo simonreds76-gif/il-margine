@@ -1,3 +1,4 @@
+import { settledRecordCount } from "./settled-record-count";
 import type { MarketStats } from "./supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "./baseline";
 
@@ -22,7 +23,7 @@ export function buildCombinedStats(liveStats: MarketStats[]) {
   const propsProfit = BASELINE_STATS.props.total_profit + propsLiveProfit;
   const propsStake = BASELINE_STATS.props.total_stake + propsLiveStake;
   const propsCombined: CombinedMarketStats = {
-    total_bets: BASELINE_STATS.props.total_bets + propsLiveWins + propsLiveLosses,
+    total_bets: BASELINE_STATS.props.total_bets + settledRecordCount(propsLive),
     roi: calculateROI(propsProfit, propsStake || 1),
     win_rate: calculateWinRate(BASELINE_STATS.props.wins + propsLiveWins, BASELINE_STATS.props.losses + propsLiveLosses),
     avg_odds: propsLive?.avg_odds && propsLiveBets > 0 ? Number(propsLive.avg_odds) : BASELINE_STATS.props.avg_odds,
@@ -37,7 +38,7 @@ export function buildCombinedStats(liveStats: MarketStats[]) {
   const tennisProfit = BASELINE_STATS.tennis.total_profit + tennisLiveProfit;
   const tennisStake = BASELINE_STATS.tennis.total_stake + tennisLiveStake;
   const tennisCombined: CombinedMarketStats = {
-    total_bets: BASELINE_STATS.tennis.total_bets + tennisLiveWins + tennisLiveLosses,
+    total_bets: BASELINE_STATS.tennis.total_bets + settledRecordCount(tennisLive),
     roi: calculateROI(tennisProfit, tennisStake || 1),
     win_rate: calculateWinRate(BASELINE_STATS.tennis.wins + tennisLiveWins, BASELINE_STATS.tennis.losses + tennisLiveLosses),
     avg_odds: tennisLive?.avg_odds && tennisLiveBets > 0 ? Number(tennisLive.avg_odds) : BASELINE_STATS.tennis.avg_odds,
@@ -53,7 +54,7 @@ export function buildCombinedStats(liveStats: MarketStats[]) {
   const overallStake = BASELINE_STATS.overall.total_stake + overallLiveStake;
   const totalOddsWeight = propsCombined.avg_odds * (BASELINE_STATS.props.total_bets + propsLiveBets) + tennisCombined.avg_odds * (BASELINE_STATS.tennis.total_bets + tennisLiveBets);
   const overallCombined: CombinedMarketStats = {
-    total_bets: BASELINE_STATS.overall.total_bets + overallLiveWins + overallLiveLosses,
+    total_bets: BASELINE_STATS.overall.total_bets + settledRecordCount(propsLive) + settledRecordCount(tennisLive),
     roi: calculateROI(overallProfit, overallStake || 1),
     win_rate: calculateWinRate(BASELINE_STATS.overall.wins + overallLiveWins, BASELINE_STATS.overall.losses + overallLiveLosses),
     avg_odds: totalOddsWeight > 0 ? totalOddsWeight / (BASELINE_STATS.overall.total_bets + overallLiveBets) : BASELINE_STATS.overall.avg_odds,

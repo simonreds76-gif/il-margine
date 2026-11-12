@@ -1,3 +1,4 @@
+import { settledRecordCount } from "@/lib/settled-record-count";
 import { BASELINE_STATS, calculateROI } from "@/lib/baseline";
 import type { RecordSummary } from "@/components/calculator/ReturnsLab";
 
@@ -16,7 +17,7 @@ export function summarizeCalculatorRecord(rows: RecordRow[] | null): RecordSumma
   return {
     // The aggregates' total_bets includes pending/void entries. Match the public
     // settled-record definition used on the homepage: wins plus losses only.
-    totalBets: BASELINE_STATS.overall.total_bets + sum("wins") + sum("losses"),
+    totalBets: BASELINE_STATS.overall.total_bets + included.reduce((total, row) => total + settledRecordCount(row), 0),
     wins: BASELINE_STATS.overall.wins + sum("wins"),
     losses: BASELINE_STATS.overall.losses + sum("losses"),
     totalProfit, totalStake, roi: calculateROI(totalProfit, totalStake),
