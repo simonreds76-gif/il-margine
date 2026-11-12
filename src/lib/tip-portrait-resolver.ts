@@ -2,10 +2,12 @@ import "server-only";
 import { unstable_cache } from "next/cache";
 import manifest from "../../data/goalscorer/team-logo-map.json";
 import europe from "../../data/team-logos/europe.json";
+import national from "../../data/team-logos/national-identities.json";
 import { foldNameText } from "./player-name-matching";
 import { resolveTeamLogoPath } from "./team-logos";
 
 type Club = { id: number; names: string[]; logo: string };
+const nationalTeamIds = new Set(national.teams.map((team) => team.id));
 export type SquadPlayer = { id: number; name: string; clubId: number; evidence?: "recent-lineup" };
 type Pick = { market: string; category: string; event: string; player: string | null };
 const normal = (s: string) => foldNameText(s).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -14,6 +16,7 @@ const clubs: Club[] = [
     id: team.fotmob_team_id, names: [name, team.fotmob_name, team.fotmob_short_name], logo: team.logo_path,
   }))),
   ...europe.teams.map((team) => ({ id: team.fotmob_team_id, names: [team.name, ...team.aliases], logo: team.logo_path })),
+  ...national.teams.map((team) => ({ id: team.id, names: [team.name, ...team.aliases], logo: "" })),
 ];
 
 export function clubsForPick(pick: Pick): Club[] {
@@ -123,9 +126,17 @@ export function parsePlayerIdentity(html: string, candidate: SquadPlayer): Squad
   // Corroborate the roster ID, full name and current club independently. A
   // transferred player, namesake, coach or malformed response must not match.
   if (player?.id !== candidate.id || typeof player?.name !== "string"
-    || normal(player.name) !== normal(candidate.name) || player?.isCoach !== false
-    || player?.primaryTeam?.teamId !== candidate.clubId) return null;
-  return candidate;
+    || normal(player.name) !== normal(candidate.name) || player?.isCoach !== false) return null;
+  if (nationalTeamIds.has(candidate.clubId)) {
+    // The primary team is the employer, not the international side. Only an
+    // active senior national career entry can corroborate a partial roster.
+    const entries = player?.careerHistory?.careerItems?.["national team"]?.teamEntries;
+    return Array.isArray(entries) && entries.some((row: any) =>
+      row.participantId === candidate.id && row.teamId === candidate.clubId
+      && row.teamGender === "male" && row.active === true && row.endDate == null
+      && row.hasUncertainData === false) ? candidate : null;
+  }
+  return player?.primaryTeam?.teamId === candidate.clubId ? candidate : null;
 }
 
 const verifyPlayerIdentity = unstable_cache(async (candidate: SquadPlayer) => {
@@ -138,7 +149,7 @@ const verifyPlayerIdentity = unstable_cache(async (candidate: SquadPlayer) => {
   });
   if (!response.ok) throw new Error(`Player source ${response.status}`);
   return parsePlayerIdentity(await response.text(), candidate);
-}, ["tip-portrait-player-identity-v1"], { revalidate: 6 * 60 * 60 });
+}, ["tip-portrait-player-identity-v2-national"], { revalidate: 6 * 60 * 60 });
 
 // Cache the compact parsed squad, not the large page HTML. Team IDs must come
 // from the bundled registry; neither arbitrary URLs nor public name searches run.
@@ -150,7 +161,7 @@ const readSquad = unstable_cache(async (teamId: number) => {
   });
   if (!response.ok) throw new Error(`Squad source ${response.status}`);
   return parseSquad(await response.text(), teamId);
-}, ["tip-portrait-squad-v3-independent"], { revalidate: 6 * 60 * 60 });
+}, ["tip-portrait-squad-v4-national"], { revalidate: 6 * 60 * 60 });
 
 export async function resolveTipPortrait(pick: Pick): Promise<SquadPlayer | null> {
   const pair = clubsForPick(pick);
