@@ -33,9 +33,19 @@ def refresh(state, offline=False):
         report_path=state/'refresh-report.json'
         report=json.loads(report_path.read_text(encoding='utf-8')) if report_path.exists() else {}
         failures=report.get('failures') or []
+        pending=report.get('pending') or []
+        # Missing manager-source coverage is a hold, never a substitute for
+        # verified assignments. Score/identity conflicts remain hard failures.
+        coverage_only=bool(pending) and all(
+            row.get('reason') == 'No unique exact fixture match'
+            or (row.get('reason','').startswith('Manager needs identity review: ')
+                and len(row.get('coaches',[])) == 2)
+            for row in pending)
+        fully_accounted=(len({r.get('id') for r in pending}) == len(pending)
+            and report.get('candidates') == report.get('added',0) + len(pending))
         if (not report_path.exists() or report_path.stat().st_mtime_ns == prior_stamp
                 or not failures or not all(str(f).startswith('Manager verification incomplete:') for f in failures)
-                or not report.get('pending') or report.get('atlasVersion') != json.loads((ROOT/'src/data/football-atlas-release.json').read_text())['version']
+                or not coverage_only or not fully_accounted or report.get('atlasVersion') != json.loads((ROOT/'src/data/football-atlas-release.json').read_text())['version']
                 or json.loads(manifest_path.read_text(encoding='utf-8')) != before
                 or [p.read_bytes() for p in activity_paths] != activity_before):
             raise
