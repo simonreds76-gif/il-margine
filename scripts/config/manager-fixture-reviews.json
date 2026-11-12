@@ -189,5 +189,221 @@
       "interim": "Sergio Garcia interim announced 2026-10-28 13:14:42, before Sarabia announcement at 18:30:12. Exact contractual clock-time boundary not established.",
       "appointed": "Sarabia appointed 2026-10-28; match-specific report confirms responsible head coach on 2026-10-30."
     }
+  },
+  "papi-id1000002371945354": {
+    "providerMatchId": "5749725",
+    "date": "2026-10-28",
+    "league": "serie-a",
+    "home": "Monza",
+    "away": "Napoli",
+    "hg": 1,
+    "ag": 4,
+    "coaches": [
+      {
+        "id": "41757",
+        "name": "Ivan Jurić"
+      },
+      {
+        "id": "129745",
+        "name": "Massimiliano Allegri"
+      }
+    ],
+    "source": "https://www.fotmob.com/matches/monza-vs-napoli/27vdst#5749725",
+    "checkedAt": "2026-11-12T21:31:30.728644+00:00",
+    "payloadSha256": "bb8ae4ce00dd9911810b184c392cd31deda42f55136a6200ee9b12f33dc5d71a",
+    "observedCoaches": [
+      {
+        "id": "41757",
+        "name": "Ivan Jurić"
+      },
+      {
+        "id": "1327559",
+        "name": "Marco Landucci"
+      }
+    ],
+    "touchlineStandIns": [
+      {
+        "side": "away",
+        "id": "1327559",
+        "name": "Marco Landucci",
+        "reason": "Official match report explicitly identifies Landucci on the bench in place of Allegri."
+      }
+    ],
+    "evidence": [
+      "https://sscnapoli.it/news/match-report-monza-napoli-1-4"
+    ],
+    "reviewedAt": "2026-11-12T22:27:14.580485+00:00",
+    "reason": "Napoli official exact-match report identifies Allegri as responsible head coach and Landucci as his touchline stand-in. Juric is independently listed for Monza. No global assistant alias."
+  },
+  "papi-id1000002371945374": {
+    "providerMatchId": "5749735",
+    "date": "2026-11-01",
+    "league": "serie-a",
+    "home": "Juventus",
+    "away": "Napoli",
+    "hg": 2,
+    "ag": 0,
+    "coaches": [
+      {
+        "id": "78584",
+        "name": "Luciano Spalletti"
+      },
+      {
+        "id": "129745",
+        "name": "Massimiliano Allegri"
+      }
+    ],
+    "source": "https://www.fotmob.com/matches/napoli-vs-juventus/388ur9#5749735",
+    "checkedAt": "2026-11-12T21:31:33.162485+00:00",
+    "payloadSha256": "61e6d35212efe33e3caeaa4f587ba064c479f31ea1f7b3f15d59a71312271b67",
+    "observedCoaches": [
+      {
+        "id": "78584",
+        "name": "Luciano Spalletti"
+      },
+      {
+        "id": "1327559",
+        "name": "Marco Landucci"
+      }
+    ],
+    "touchlineStandIns": [
+      {
+        "side": "away",
+        "id": "1327559",
+        "name": "Marco Landucci",
+        "reason": "Official match report explicitly identifies Landucci on the bench in place of Allegri."
+      }
+    ],
+    "evidence": [
+      "https://sscnapoli.it/news/match-report-juventus-napoli",
+      "https://www.legaseriea.it/serie-a/news/juventus-napoli-2026-2027-2-0-cronaca-risultato-gol"
+    ],
+    "reviewedAt": "2026-11-12T22:27:14.580485+00:00",
+    "reason": "Napoli official exact-match report identifies Allegri as responsible head coach and Landucci on the touchline. Spalletti is confirmed by the league match report. No global assistant alias."
+  },
+  "papi-id1000002371945398": {
+    "providerMatchId": "5749747",
+    "date": "2026-11-07",
+    "league": "serie-a",
+    "home": "Parma",
+    "away": "Bologna",
+    "hg": 1,
+    "ag": 2,
+    "coaches": [
+      {
+        "id": "30881",
+        "name": "Alberto Gilardino"
+      },
+      {
+        "id": "41413",
+        "name": "Raffaele Palladino"
+      }
+    ],
+    "source": "https://www.fotmob.com/matches/bologna-vs-parma/3bdewt#5749747",
+    "checkedAt": "2026-11-12T21:31:59.959591+00:00",
+    "payloadSha256": "f2ae34b0a9ad3699e4aea75ba508f2df2f7d173ed8609a6c17cd7f58ddd62f26",
+    "observedCoaches": [
+      {
+        "id": "41961",
+        "name": "Gaetano Caridi"
+      },
+      {
+        "id": "41413",
+        "name": "Raffaele Palladino"
+      }
+    ],
+    "evidence": [
+      "https://www.parmacalcio1913.com/news/serie-a-enilive-parma-bologna-1-2/",
+      "https://www.fotmob.com/players/30881/alberto-gilardino",
+      "https://www.bolognafc.it/parma-bologna-1-2/"
+    ],
+    "reviewedAt": "2026-11-12T22:27:14.580485+00:00",
+    "reason": "Official Parma exact-match report explicitly names Alberto Gilardino and Raffaele Palladino and includes Gilardino post-match comments. This overrides the conflicting provider label Caridi for this fixture only. The reason for the provider discrepancy is unverified; no suspension or stand-in is inferred."
+  },
+  "papi-id1000003472036278": {
+    "providerMatchId": "5802984",
+    "date": "2026-11-08",
+    "league": "ligue-1",
+    "home": "Brest",
+    "away": "Lyon",
+    "hg": 2,
+    "ag": 0,
+    "coaches": [
+      {
+        "id": "46250",
+        "name": "Julien Lachuer"
+      },
+      {
+        "id": "1330232",
+        "name": "Jorge Maciel"
+      }
+    ],
+    "source": "https://www.fotmob.com/matches/brest-vs-lyon/2rd6lj#5802984",
+    "checkedAt": "2026-11-12T21:32:43.006211+00:00",
+    "payloadSha256": "66c95621f33c7061b8a5600efbc36476f0345578e8b95bc962b88be5a6fd88a6",
+    "observedCoaches": [
+      {
+        "id": "46250",
+        "name": "Julien Lachuer"
+      },
+      {
+        "id": "1330232",
+        "name": "Jorge Maciel"
+      }
+    ],
+    "evidence": [
+      "https://www.lyonfoot.com/article/14744/brest-ol-les-surprises-de-jorge-maciel-sans-nuamah-ni-abner-au-coup-d-envoi",
+      "https://www.footmercato.net/live/2181368918257329472-brest-vs-lyon",
+      "https://www.olympique-et-lyonnais.com/lol-officialise-le-depart-de-paulo-fonseca,411861.html"
+    ],
+    "reviewedAt": "2026-11-12T22:27:14.580485+00:00",
+    "reason": "Exact-match lineup reporting identifies Julien Lachuer and Jorge Maciel. Contemporary reporting confirms Maciel was interim head coach following Fonseca departure, not suspension cover. Use a separate identity; no old Fonseca records change.",
+    "roleBoundaryNotes": {
+      "fixture": "Interim responsibility verified for 8 November 2026; broader tenure is not inferred from this match.",
+      "boundary": "2 November handover reported by AFP/local press; formal departure announcement reported 4 November. No exact contractual clock time claimed."
+    }
+  },
+  "papi-id1000003472036280": {
+    "providerMatchId": "5802985",
+    "date": "2026-11-08",
+    "league": "ligue-1",
+    "home": "Le Havre",
+    "away": "Lorient",
+    "hg": 0,
+    "ag": 2,
+    "coaches": [
+      {
+        "id": "1264477",
+        "name": "Jaïr Karam"
+      },
+      {
+        "id": "41334",
+        "name": "Alexandre Dujeux"
+      }
+    ],
+    "source": "https://www.fotmob.com/matches/lorient-vs-le-havre/2t6haw#5802985",
+    "checkedAt": "2026-11-12T21:32:44.832218+00:00",
+    "payloadSha256": "ea588ede37e5526ecdaecc6e1358d1f3a9187b85b948b652509a54b77969b537",
+    "observedCoaches": [
+      {
+        "id": "1264477",
+        "name": "Jaïr Karam"
+      },
+      {
+        "id": "41334",
+        "name": "Alexandre Dujeux"
+      }
+    ],
+    "evidence": [
+      "https://hac.football/fr/posts/hac-fc-lorient-0-2-infernale-spirale",
+      "https://hac.football/fr/posts/communique-de-presse-31-10-26"
+    ],
+    "reviewedAt": "2026-11-12T22:27:14.580485+00:00",
+    "reason": "Official exact-match technical sheet names Jair Karam and Alexandre Dujeux. HAC appointment announcement makes Karam interim effective 2 November 2026 while Digard was suspended from duties. Use a separate identity; no old Digard records change.",
+    "roleBoundaryNotes": {
+      "interimFrom": "2026-11-02",
+      "throughVerifiedFixture": "2026-11-08",
+      "boundary": "Official 31 October announcement is effective 2 November. Digard suspended from duties, not claimed retired or contractually dismissed."
+    }
   }
 }
