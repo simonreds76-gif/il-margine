@@ -16,6 +16,14 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--settlement-only',action='store_true')
     args=parser.parse_args()
+    # Independent archive: no change to guarded inference or selected ledgers.
+    # Run before the shots lane so an unrelated capture failure cannot lose it.
+    from corners_candidate_evidence import refresh as refresh_corners
+    try:
+        corners_status=refresh_corners(ROOT,settle_only=args.settlement_only)
+        print('Corners opportunity archive: '+json.dumps(corners_status,sort_keys=True))
+    except Exception as exc:
+        print('::warning::Corners opportunity archive incomplete; see corners-candidate-evidence-v1/capture-status.json: '+str(exc))
     capture_error=None
     if not args.settlement_only:
         sys.argv=[sys.argv[0]]

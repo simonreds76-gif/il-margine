@@ -8,6 +8,9 @@ on:
       - 'scripts/*team*shots*.py'
       - 'scripts/settlement*.py'
       - 'scripts/refresh-football-count-evidence.py'
+      - 'scripts/corners_candidate_evidence.py'
+      - 'scripts/tests/test_corners_candidate_evidence.py'
+      - 'config/corners-evidence-rules.json'
       - 'scripts/tennis_match_shape_j1.py'
       - 'scripts/tennis_j1_rates.py'
       - 'scripts/tennis_match_winner_quotes.py'
@@ -49,3 +52,11 @@ jobs:
           scripts.tests.test_football_count_pending_queue
           scripts.tests.test_football_best_prices
           scripts.tests.test_team_shots_opponent_shadow
+          scripts.tests.test_corners_candidate_evidence
+      - name: Verify corners sidecar against current saved inputs without changing ledgers
+        run: |
+          mkdir -p "$RUNNER_TEMP/corners-board"
+          python scripts/publish-football-vnext-shadow.py --team-output "$RUNNER_TEMP/corners-board/team.csv" --corners-output "$RUNNER_TEMP/corners-board/corners.csv" --candidates-output "$RUNNER_TEMP/corners-board/football-counts-vnext-candidates.csv"
+          python scripts/corners_candidate_evidence.py --publisher-output-dir "$RUNNER_TEMP/corners-board" --output "$RUNNER_TEMP/corners-evidence"
+          python scripts/corners_candidate_evidence.py --publisher-output-dir "$RUNNER_TEMP/corners-board" --output "$RUNNER_TEMP/corners-evidence"
+          git diff --exit-code -- data/football-form/corners-v3-shadow-signals.csv data/football-form/corners-v3-shadow-clv.csv data/corners-ou/corners-v3-params.json data/corners-ou/corners-v3-lock.json

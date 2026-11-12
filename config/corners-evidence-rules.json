@@ -1,0 +1,20 @@
+{
+  "reviewed_at": "2026-11-12",
+  "scope": "Full match total corners, regulation 90 minutes plus stoppage; half-lines. Other scopes and integer/quarter lines retained but excluded from this forecast cohort.",
+  "bookmakers": {
+    "Bet365": {
+      "url": "https://help.bet365.com/s/en/sportsrules/soccer/corner-markets",
+      "retrieved_date": "2026-11-12",
+      "summary": "Count corners taken, not merely awarded. Retakes count once. Full-match total covers regulation time. Abandonment before 90 minutes voids undetermined bets; already determined bets may stand.",
+      "automatic_result_scope": "Completed regulation matches only; abandonment requires separate evidence review."
+    },
+    "Pinnacle": {
+      "url": "https://www.pinnacle.com/en/future/betting-rules",
+      "retrieved_date": "2026-11-12",
+      "summary": "Corners awarded but not taken do not count. Full-match period follows soccer completion rules; early endings and abandonment have specific exceptions.",
+      "automatic_result_scope": "Completed regulation matches only; early endings/abandonment require separate evidence review."
+    }
+  },
+  "price_semantics": "Existing adapters identify full-match corner totals upstream. Archive retains the raw normalized rows and reports metadata fields not preserved by those adapters. Recorded prices are not certified executable.",
+  "evaluation": "A future correction must be registered before analysis; archive installation does not authorize a correction, selection-rule change or historical backfill."
+}

@@ -194,6 +194,13 @@ def load_pending_rows(paths: list[str]) -> list[dict]:
             if fixture and stamp(fixture["observed_at"]) >= kickoff + timedelta(hours=3) and all(count(fixture.get(s + "_shots")) is not None for s in ("home", "away")):
                 continue
             unique.setdefault("paired|" + row["contract_id"], dict(row, result="pending", pick_id="paired|" + row["contract_id"]))
+    if any(p.parent.resolve() == family.resolve() and p.name in COUNT_LEDGER_NAMES + COUNT_SIGNAL_NAMES for p in resolved):
+        from corners_candidate_evidence import pending_result_fixtures
+        try:
+            for row in pending_result_fixtures(ROOT, datetime.now(UTC)):
+                unique.setdefault(row['pick_id'], row)
+        except Exception as exc:
+            print('::warning::Corners opportunity result queue needs review: '+str(exc))
     return list(unique.values())
 
 
