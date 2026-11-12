@@ -149,6 +149,12 @@ def quote_groups(raw, V, cutoff):
         previous = grouped[key].get(side)
         if previous is None or captured > V.PUB.parse_dt(previous['captured_at']):
             grouped[key][side] = item
+        elif captured == V.PUB.parse_dt(previous['captured_at']):
+            # Same contract/time with conflicting prices or market identities
+            # cannot be resolved by whichever CSV row happened to come first.
+            fields = ('odds_decimal','market','market_id','selection_id','event_id','source_event_id')
+            if any(str(previous['raw'].get(f,'')) != str(row.get(f,'')) for f in fields):
+                previous.setdefault('ambiguous_same_capture', []).append(row)
     return grouped, dict(dropped)
 
 
@@ -157,6 +163,8 @@ def price_reasons(pair, cutoff):
     if set(pair) != {'over', 'under'}:
         reasons.append('incomplete_same_book_pair')
     for quote in pair.values():
+        if quote.get('ambiguous_same_capture'):
+            reasons.append('ambiguous_same_book_market_snapshot')
         age = (cutoff - datetime.fromisoformat(quote['captured_at'])).total_seconds()
         if not 0 <= age <= 600:
             reasons.append('quote_not_fresh_10m')

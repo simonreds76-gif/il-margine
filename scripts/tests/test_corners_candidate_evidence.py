@@ -182,5 +182,18 @@ class EvidenceTests(unittest.TestCase):
         self.assertEqual(sum(r['research_eligible'] for r in records),1)
         self.assertTrue(any('invalid_decimal_price' in r['exclusion_reasons'] for r in records))
 
+    def test_conflicting_same_time_markets_are_retained_and_quarantined(self):
+        q=self.quotes+[dict(self.quotes[0],odds_decimal=3.25,market='MATCH_CORNERS_ALT')]
+        self.board(q);E.collect(self.root,NOW,self.output)
+        record=self.observations()[0]
+        self.assertFalse(record['research_eligible'])
+        self.assertIn('ambiguous_same_book_market_snapshot',record['exclusion_reasons'])
+        self.assertEqual(len(record['pair']['over']['ambiguous_same_capture']),1)
+
+    def test_cups_and_split_leagues_never_get_home_leg_identity(self):
+        for league in ['scotland','fa-cup','championship','bundesliga-playoffs']:
+            self.assertIsNone(E.stable_fixture(dict(match_date='2026-11-12',league=league,
+                home_team='Arsenal',away_team='Chelsea')))
+
 
 if __name__=='__main__':unittest.main()
