@@ -45,3 +45,4 @@
 .aerial-teams{grid-template-columns:repeat(2,minmax(0,1fr))}
 .aerial-teams>div{min-width:0}
 .aerial-teams .aerial-team-name strong{min-width:0;overflow-wrap:anywhere}
+.aerial-retry{padding:.6rem 1rem;margin-top:.5rem;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;font:inherit;cursor:pointer;min-height:44px}.aerial-retry:disabled{opacity:.6;cursor:wait}.aerial-retry:focus-visible{outline:2px solid currentColor;outline-offset:3px}

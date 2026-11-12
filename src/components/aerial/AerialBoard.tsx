@@ -84,13 +84,29 @@ function Match({f,board,now}:{f:Fixture;board:Board;now:number}) {
 }
 export default function AerialBoard({url,example=false}:{url:string;example?:boolean}) {
  const [board,setBoard]=useState<Board|null>(null);const [error,setError]=useState(false);const [id,setId]=useState('');const [now,setNow]=useState(0);
- useEffect(()=>{let active=true;const controller=new AbortController();
-  const load=async()=>{try {const r=await fetch(url,{signal:controller.signal});if(!r.ok)throw new Error();const b:unknown=await r.json();if(!isBoard(b))throw new Error();if(active){setBoard(b);setError(false);setId(old=>old||new URLSearchParams(location.search).get('match')||'');}}catch(e){if(active&&!(e instanceof Error&&e.name==='AbortError'))setError(true);}};
-  void load();setNow(Date.now());const clock=setInterval(()=>setNow(Date.now()),30_000);const poll=setInterval(()=>{if(!document.hidden)void load();},300_000);return()=>{active=false;controller.abort();clearInterval(clock);clearInterval(poll);};
- },[url]);
+ const [retry,setRetry]=useState(0);const [loading,setLoading]=useState(true);
+ useEffect(()=>{let active=true;let controller:AbortController|null=null;let inFlight=false;
+  const load=async()=>{
+   if(inFlight)return;inFlight=true;setLoading(true);
+   const request=new AbortController();controller=request;
+   const timeout=setTimeout(()=>request.abort(),10_000);
+   try {
+    const r=await fetch(url,{signal:request.signal});if(!r.ok)throw new Error();
+    const b:unknown=await r.json();if(!isBoard(b))throw new Error();
+    if(active){setBoard(b);setError(false);setId(old=>old||new URLSearchParams(location.search).get('match')||'');}
+   }catch {if(active)setError(true);}
+   finally{clearTimeout(timeout);inFlight=false;if(active)setLoading(false);}
+  };
+  void load();setNow(Date.now());const clock=setInterval(()=>setNow(Date.now()),30_000);const poll=setInterval(()=>{if(!document.hidden)void load();},300_000);
+  return()=>{active=false;controller?.abort();clearInterval(clock);clearInterval(poll);};
+ },[url,retry]);
  const clock=example&&board?Date.parse(board.generated_at):now;
  const fixtures=board?.fixtures.filter(f=>Date.parse(f.kickoff)>clock)||[];
  const selected=fixtures.find(f=>f.id===id)||fixtures[0];
- return <div className="aerial-board" aria-live="polite">{example&&<p className="aerial-warning">Historical verification example. This is not a current fixture or a saved prediction.</p>}{error&&<p className="aerial-warning" role="status">The latest update could not be loaded.{board?' The last loaded time remains visible below.':' Please try again shortly.'}</p>}{!board&&!error&&<p className="aerial-empty" role="status">Loading upcoming fixtures…</p>}{board&&<>{clock-Date.parse(board.calendar_observed_at)>36*3600_000&&<p className="aerial-warning">The fixture schedule needs a fresh check. Comparisons are paused.</p>}<div className="aerial-fixture-control"><label>Explore a match<select value={selected?.id||''} disabled={!fixtures.length} onChange={e=>setId(e.target.value)}>{fixtures.map(f=><option key={f.id} value={f.id}>{f.teams[0].name} v {f.teams[1].name} · {date(f.kickoff)}</option>)}{!fixtures.length&&<option>No upcoming fixtures</option>}</select></label><p>Updated {date(board.generated_at)}<br/>Match statistics through {shortDate(board.history_through)}</p></div>{now&&selected?<Match key={selected.id} f={selected} board={board} now={clock}/>:!fixtures.length?<div className="aerial-empty"><h2>No fixtures in the next eight days.</h2><p>This tool covers the Premier League, Serie A, La Liga, Bundesliga and Ligue 1. Cups and international matches are outside its coverage.</p></div>:null}</>}
+ const scheduleCurrent=!!board&&clock-Date.parse(board.calendar_observed_at)>=-300_000&&clock-Date.parse(board.calendar_observed_at)<=36*3600_000;
+ return <div className="aerial-board" aria-live="polite">{example&&<p className="aerial-warning">Historical verification example. This is not a current fixture or a saved prediction.</p>}
+ {error&&<div className="aerial-warning" role="status"><p>The latest update could not be loaded.{board?' The last loaded snapshot is shown with its original dates.':' Fixture availability could not be checked.'}</p><button type="button" className="aerial-retry" disabled={loading} onClick={()=>setRetry(n=>n+1)}>{loading?'Checking…':'Try again'}</button></div>}
+ {!board&&!error&&<p className="aerial-empty" role="status">Loading upcoming fixtures…</p>}
+ {board&&<>{!scheduleCurrent&&<p className="aerial-warning">The fixture schedule needs a fresh check. Comparisons are paused.</p>}<div className="aerial-fixture-control"><label>Explore a match<select value={selected?.id||''} disabled={!fixtures.length} onChange={e=>setId(e.target.value)}>{fixtures.map(f=><option key={f.id} value={f.id}>{f.teams[0].name} v {f.teams[1].name} · {date(f.kickoff)}</option>)}{!fixtures.length&&<option>{scheduleCurrent?'No covered fixtures in this window':'Schedule awaiting refresh'}</option>}</select></label><p>Updated {date(board.generated_at)}<br/>Schedule checked {date(board.calendar_observed_at)}<br/>Match statistics through {shortDate(board.history_through)}</p></div>{now&&selected?<Match key={selected.id} f={selected} board={board} now={clock}/>:!fixtures.length?<div className="aerial-empty"><h2>{!scheduleCurrent?'Waiting for a fresh fixture schedule.':error?'No fixtures in the last loaded snapshot.':'No covered league fixtures in the next eight days.'}</h2><p>{scheduleCurrent&&!error?'There are no matches to compare in this schedule window. Comparisons will appear when covered fixtures enter the window.':'The current fixture list could not be confirmed. This does not mean there are no matches.'}</p><p>Premier League, Serie A, La Liga, Bundesliga and Ligue 1 only. Cups and international matches are not included.</p></div>:null}</>}
  </div>;
 }
