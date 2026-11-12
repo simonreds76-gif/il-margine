@@ -12,6 +12,24 @@ function load(path, dependencies={}) {
 }
 const baseline=load('src/lib/baseline.ts');
 const {summarizeCalculatorRecord}=load('src/lib/calculator/record.ts',{'@/lib/baseline':baseline});
+const {buildCombinedStats}=load('src/lib/homepage-record.ts',{'./baseline':baseline});
+
+test('pending and void picks never inflate settled count; homepage and calculator agree',()=>{
+ const rows=[
+  {market:'tennis',total_bets:437,wins:206,losses:231,total_profit:-2.34,total_stake:312.25},
+  {market:'props',total_bets:808,wins:392,losses:413,total_profit:72.13,total_stake:519.45},
+ ];
+ const before=summarizeCalculatorRecord(rows);
+ const home=buildCombinedStats(rows).overall;
+ assert.equal(before.totalBets,2469);
+ assert.equal(before.totalBets,home.total_bets);
+ assert.equal(before.totalProfit,home.total_profit);
+ assert.equal(before.roi,home.roi);
+ const after=summarizeCalculatorRecord(rows.map(r=>({...r,total_bets:r.total_bets+10})));
+ assert.deepEqual(after,before);
+ // A real settlement increments the count once, while a void does not.
+ assert.equal(summarizeCalculatorRecord([{...rows[0],wins:207},rows[1]]).totalBets,2470);
+});
 test('current record uses stake-weighted returns and excludes other markets',()=>{
  const b=baseline.BASELINE_STATS.overall;
  const r=summarizeCalculatorRecord([

@@ -14,7 +14,9 @@ export function summarizeCalculatorRecord(rows: RecordRow[] | null): RecordSumma
     total + Number(row.total_stake ?? row.total_bets), 0);
   const totalProfit = BASELINE_STATS.overall.total_profit + sum("total_profit");
   return {
-    totalBets: BASELINE_STATS.overall.total_bets + sum("total_bets"),
+    // The aggregates' total_bets includes pending/void entries. Match the public
+    // settled-record definition used on the homepage: wins plus losses only.
+    totalBets: BASELINE_STATS.overall.total_bets + sum("wins") + sum("losses"),
     wins: BASELINE_STATS.overall.wins + sum("wins"),
     losses: BASELINE_STATS.overall.losses + sum("losses"),
     totalProfit, totalStake, roi: calculateROI(totalProfit, totalStake),
