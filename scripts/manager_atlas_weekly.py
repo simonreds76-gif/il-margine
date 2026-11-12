@@ -4,10 +4,37 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+from datetime import datetime, timezone
 
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('manager_package',ROOT/'scripts/package-manager-release.py')
 package=importlib.util.module_from_spec(spec);spec.loader.exec_module(package)
+
+def refresh_or_retain(state, offline=False):
+    """A failed manager stage must not prevent an independent club/calendar run.
+
+    Keep failure explicit and retain the last validated manifest; never label a
+    failed collector as a successful update or publish its partial candidate.
+    """
+    manifest_path=ROOT/'src/data/manager-atlas-release.json'
+    before_bytes=manifest_path.read_bytes()
+    before=json.loads(before_bytes)
+    # If the fallback itself is invalid, do not claim a usable old archive.
+    package.validate(package.unpack(json.loads((ROOT/'public'/before['indexUrl'].lstrip('/')).read_text(encoding='utf-8'))))
+    try:
+        result=refresh(state,offline=offline)
+        result.setdefault('publicationState','verified_partial' if result['pending'] else 'verified')
+        return result
+    except Exception as exc:
+        if manifest_path.read_bytes()!=before_bytes:
+            manifest_path.write_bytes(before_bytes)
+        report={'changed':False,'manifest':before,'previous':before['indexUrl'],'paths':[],
+                'added':0,'pending':[],'publicationState':'retained_manager_failure',
+                'error':type(exc).__name__,'checkedAt':datetime.now(timezone.utc).isoformat()}
+        p=Path(state)/'managers';p.mkdir(parents=True,exist_ok=True)
+        (p/'publication-status.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
+        print('::warning::Manager refresh failed ('+type(exc).__name__+'); previous verified manager archive retained. Independent club/calendar refresh continues.',flush=True)
+        return report
 
 def refresh(state, offline=False):
     # Monthly editorial decisions are authoritative. A weekly history append
@@ -21,42 +48,34 @@ def refresh(state, offline=False):
     data=package.unpack(json.loads((ROOT/'public'/before['indexUrl'].lstrip('/')).read_text(encoding='utf-8')))
     state=Path(state)/'managers';state.mkdir(parents=True,exist_ok=True)
     archive=state/'candidate.json';archive.write_text(json.dumps(data,ensure_ascii=False),encoding='utf-8')
-    command=[sys.executable,str(ROOT/'scripts/refresh-manager-atlas.py'),'--archive',str(archive),'--state',str(state),'--strict','--quarantine-unknown-managers']
+    command=[sys.executable,str(ROOT/'scripts/refresh-manager-atlas.py'),'--archive',str(archive),'--state',str(state),'--strict','--quarantine-unresolved-fixtures']
     if offline:command.append('--offline')
     prior_report=state/'refresh-report.json'
     prior_stamp=prior_report.stat().st_mtime_ns if prior_report.exists() else None
-    try:
-        subprocess.run(command,cwd=ROOT,check=True,timeout=900)
-    except subprocess.CalledProcessError:
-        # Unverified new coaching assignments hold only the manager archive.
-        # They must not prevent the independently validated club/schedule update.
-        report_path=state/'refresh-report.json'
-        report=json.loads(report_path.read_text(encoding='utf-8')) if report_path.exists() else {}
-        failures=report.get('failures') or []
-        pending=report.get('pending') or []
-        # Missing manager-source coverage is a hold, never a substitute for
-        # verified assignments. Score/identity conflicts remain hard failures.
-        coverage_only=bool(pending) and all(
-            row.get('reason') == 'No unique exact fixture match'
-            or (row.get('reason','').startswith('Manager needs identity review: ')
-                and len(row.get('coaches',[])) == 2)
-            for row in pending)
-        fully_accounted=(len({r.get('id') for r in pending}) == len(pending)
-            and report.get('candidates') == report.get('added',0) + len(pending))
-        if (not report_path.exists() or report_path.stat().st_mtime_ns == prior_stamp
-                or not failures or not all(str(f).startswith('Manager verification incomplete:') for f in failures)
-                or not coverage_only or not fully_accounted or report.get('atlasVersion') != json.loads((ROOT/'src/data/football-atlas-release.json').read_text())['version']
-                or json.loads(manifest_path.read_text(encoding='utf-8')) != before
-                or [p.read_bytes() for p in activity_paths] != activity_before):
-            raise
-        return {'changed':False,'manifest':before,'previous':before['indexUrl'],'paths':[],
-                'added':0,'pending':report['pending'],'publicationState':'retained_pending_verified_assignments'}
+    subprocess.run(command,cwd=ROOT,check=True,timeout=900)
+    report=json.loads(prior_report.read_text(encoding='utf-8'))
+    if (prior_report.stat().st_mtime_ns==prior_stamp or report.get('failures')
+            or not report.get('fullyAccounted')
+            or report.get('atlasVersion')!=json.loads((ROOT/'src/data/football-atlas-release.json').read_text())['version']
+            or json.loads(manifest_path.read_text(encoding='utf-8'))!=before):
+        raise ValueError('Manager refresh receipt invalid or stale; retain previous release')
     candidate=json.loads(archive.read_text(encoding='utf-8'))
     # Existing manager assignments and prices cannot silently change on refresh.
     old={f['id']:f for f in data['fixtures']};new={f['id']:f for f in candidate['fixtures']}
+    new_ids=set(new)-set(old);verified=report.get('verifiedIds',[])
+    pending_ids=[r['id'] for r in report.get('pending',[])]
+    candidate_ids=report.get('candidateIds',[])
+    if (len(new)!=len(candidate['fixtures']) or len(set(verified))!=len(verified)
+            or len(set(pending_ids))!=len(pending_ids) or len(set(candidate_ids))!=len(candidate_ids)
+            or new_ids!=set(verified) or new_ids&set(pending_ids)
+            or new_ids|set(pending_ids)!=set(candidate_ids)
+            or report.get('candidates')!=len(candidate_ids) or report.get('added')!=len(new_ids)):
+        raise ValueError('Manager additions do not match exact receipt partition')
     if any(new.get(fid)!=row for fid,row in old.items()):raise ValueError('Existing manager fixture changed')
     if [p.read_bytes() for p in activity_paths]!=activity_before:
         raise ValueError('Weekly refresh changed reviewed manager activity; retain previous release')
+    if not new_ids:
+        return {'changed':False,'manifest':before,'previous':before['indexUrl'],'paths':[],
+                'added':0,'pending':report['pending'],'publicationState':'retained_no_verified_additions'}
     after,path=package.package(candidate)
-    report=json.loads((state/'refresh-report.json').read_text(encoding='utf-8'))
     return {'changed':before['version']!=after['version'],'manifest':after,'previous':before['indexUrl'],'paths':[path.as_posix(),'src/data/manager-atlas-release.json'],'added':report['added'],'pending':report['pending']}
