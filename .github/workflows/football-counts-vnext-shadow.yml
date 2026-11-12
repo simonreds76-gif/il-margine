@@ -267,6 +267,10 @@ jobs:
           if [[ -d data/football-form/shots-strength-v1 ]]; then
             git add -f data/football-form/shots-strength-v1/
           fi
+          # Preserve all corners opportunities, including no-bets, on these same polls.
+          if [[ -d data/football-form/corners-candidate-evidence-v1 ]]; then
+            git add -f data/football-form/corners-candidate-evidence-v1/
+          fi
           # Shots, so retaining them adds no API calls. Stage them on both full
           # and near-kickoff runs. `-f` is required for the 1X2 CSV because the
           # broad football-form CSV ignore rule predates this evidence file.
