@@ -32,6 +32,7 @@ from tennis_score_integrity import score_detail_enrichment
 
 
 from vercel_publisher_auth import PublicationAuthRequired, prepare_environment
+from atlas_production_release import production_commit
 
 
 def publication_auth_args(args, env):
@@ -314,10 +315,7 @@ def check_static_budget(checkout):
 
 
 def stage_on_production(source, state, deployment, *, worktree_root=None):
-    meta = deployment.get('meta') or {}
-    sha = meta.get('githubCommitSha') or (deployment.get('gitSource') or {}).get('sha')
-    if not isinstance(sha, str) or not re.fullmatch('[a-f0-9]{40}', sha):
-        raise RuntimeError('Cannot establish the exact production commit')
+    sha = production_commit(deployment)
     paths = data_release_paths(source)
     versions = [read_json(source / p)['version'] for p in paths if p.as_posix().startswith('src/data/')]
     if release_fingerprint(source):
@@ -384,7 +382,7 @@ def validate_deployment_identity(deployment, *, expected_sha=None, expected_id=N
     if expected_id and deployment.get('id') != expected_id:
         raise RuntimeError('Vercel deployment ID mismatch; publication stopped')
     if expected_sha:
-        sha = (deployment.get('meta') or {}).get('githubCommitSha') or (deployment.get('gitSource') or {}).get('sha')
+        sha = production_commit(deployment)
         if sha != expected_sha:
             raise RuntimeError('Vercel deployment commit mismatch; publication stopped')
 

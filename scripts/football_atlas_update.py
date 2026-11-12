@@ -418,6 +418,9 @@ def publish(config, helper, version, path, status):
         response = run(args, checkout, timeout=120)
         return json.loads(response) if response.strip() else {}
     before = api('/v4/aliases/ilmargine.bet')['deploymentId']
+    if config.get('expectedProductionId', before) != before:
+        raise RuntimeError('Production advanced before build; restage on current production')
+    release_branch = config.get('releaseBranch', helper.BRANCH)
     sha = run(['git', 'rev-parse', 'HEAD'], checkout).strip()
     prior_path = state / 'deployment-state.json'
     prior = read(prior_path) if prior_path.exists() else {}
@@ -427,7 +430,7 @@ def publish(config, helper, version, path, status):
             raise RuntimeError('Previous candidate build failed; review before creating another deployment')
     else:
         deployment = api('/v13/deployments', {'target': 'production', 'name': 'il-margine', 'project': helper.PROJECT,
-                          'autoAssignCustomDomains': False, 'gitSource': {'type': 'github', 'repoId': '1148849644', 'ref': helper.BRANCH, 'sha': sha}})
+                          'autoAssignCustomDomains': False, 'gitSource': {'type': 'github', 'repoId': '1148849644', 'ref': release_branch, 'sha': sha}})
         write(prior_path, {'sha': sha, 'id': deployment['id']})
     status.update(deploymentId=deployment['id'], status='building')
     write(state / 'publish-status.json', status)
@@ -481,7 +484,7 @@ def publish(config, helper, version, path, status):
         for route in extension_routes:
             if json.loads(candidate_get(route)) != read(checkout / 'public' / route.lstrip('/')):
                 raise ValueError('Candidate Championship history differs from validated data')
-    if api('/v4/aliases/ilmargine.bet')['deploymentId'] != before or run(['git', 'ls-remote', 'origin', 'refs/heads/' + helper.BRANCH], checkout).split()[0] != sha:
+    if api('/v4/aliases/ilmargine.bet')['deploymentId'] != before or run(['git', 'ls-remote', 'origin', 'refs/heads/' + release_branch], checkout).split()[0] != sha:
         raise RuntimeError('Another release advanced; refusing to replace newer production')
     # Same promotion endpoint used by the CLI, without its personal-user lookup.
     api(f'/v10/projects/{helper.PROJECT}/promote/{deployment["id"]}', {})
