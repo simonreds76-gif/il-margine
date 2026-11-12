@@ -20,6 +20,20 @@
 .page .header .help > summary { min-height: 44px; padding: 12px 0; font-size: 13px; font-weight: 500; line-height: 1.6; color: #c3d4dc; cursor: pointer; }
 .page .help p { max-width: 850px; font-size: 14px; line-height: 1.7; color: #aebfc9; margin: 8px 0 16px; }
 .page .help a { color: #8ce5bd; }
+.page .header.matchdayHeader { margin-bottom: 12px; }
+.page .matchdayHeader .breadcrumb { margin-bottom: 4px; }
+.page .matchdayHeader .identity { min-height: 54px; gap: 14px; }
+.page .matchdayHeader .identity .mark { width: 54px; height: 54px; }
+.page .matchdayHeader .title { font-size: 34px; }
+.page .matchdayHeader .edition { margin-top: 5px; font-size: 10px; }
+.page .matchdayHeader .description { font-size: 14px; line-height: 1.5; margin: 9px 0; }
+@media (max-width: 639px) {
+  .page .matchdayHeader .identity { min-height: 44px; gap: 10px; }
+  .page .matchdayHeader .identity .mark { width: 44px; height: 44px; }
+  .page .matchdayHeader .title { font-size: 28px; }
+  .page .matchdayHeader .edition { font-size: 9px; letter-spacing: .12em; }
+  .page .matchdayHeader .description { font-size: 13px; margin: 8px 0; }
+}
 @media (max-width: 639px) {
   :global(.public-site) main.page { padding-top: 12px; padding-bottom: 44px; }
   .page .header { margin-bottom: 16px; }

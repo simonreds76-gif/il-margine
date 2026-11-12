@@ -26,7 +26,7 @@ export default function FixturesPage() {
   const credits = Object.entries(portraitCredits).filter(([id]) => used.has(id));
   return <><main className={`atlas-fixtures ${frame.page}`}>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: matchdayFaqs.map(({ question, answer }) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) }) }} />
-    <AtlasPageHeader edition="matchday" showNavigation={false} description="Find your next fixture. Compare the clubs’ home-and-away record and the managers’ past meetings." />
+    <AtlasPageHeader edition="matchday" showNavigation={false} description="Choose a league. Compare clubs and managers across their previous meetings, home and away." />
     <FixtureHistoryBoard board={snapshot as Board} renderedAt={renderedAt} />
     <ResearchToolNav current="matchday" />
     <section className="af-guide af-faq" aria-labelledby="matchday-faq-title"><p className="af-eyebrow">USING MATCHDAY</p><h2 id="matchday-faq-title">Read the records.</h2>{matchdayFaqs.map(({ question, answer }) => <details key={question}><summary>{question}</summary><p>{answer}</p></details>)}</section>

@@ -173,3 +173,11 @@
  .atlas-fixtures .af-h2h-scope{font-size:11px}.atlas-fixtures .af-h2h-record .af-return strong small{font-size:9px}
  .af-refine>summary>span{max-width:42%;font-size:10px}
 }
+
+/* Keep scope and freshness beside the filters, with the first fixture nearer. */
+.af-freshness{font-size:11px;line-height:1.6;color:var(--af-muted);margin:8px 2px 0}.af-freshness strong{color:#cadbd5;font-weight:500}
+.atlas-fixtures .af-read-key{margin-top:10px;gap:6px 18px}
+.atlas-fixtures .af-board-status{padding-top:10px;padding-bottom:10px}
+.atlas-fixtures .af-league-filters button{min-height:54px}
+.atlas-fixtures .af-history-scope>summary{min-height:44px;padding-block:8px}
+@media(max-width:640px){.atlas-fixtures .af-league-filters button{min-height:64px}.af-freshness{font-size:10px}}

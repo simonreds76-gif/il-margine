@@ -33,7 +33,7 @@ const faqs = [
 export default async function TennisMatchdayPage() {
   const board = await getTennisMatchday();
   return <><main className={`${frame.page} ${styles.page}`}>
-    <AtlasPageHeader edition="tennis-matchday" showNavigation={false} description="Find the next match by tournament. Compare the players’ past meetings across all surfaces, then explore their wider records." />
+    <AtlasPageHeader edition="tennis-matchday" showNavigation={false} description="Choose a tournament. Compare previous meetings across all surfaces and explore both players." />
     <TennisMatchdayClient board={board} renderedAt={new Date().toISOString()} />
     <ResearchToolNav current="tennis-matchday" />
     <section className={styles.guide} aria-labelledby="tennis-matchday-guide"><p className={styles.eyebrow}>THE NEXT MATCH, WITH CONTEXT</p><h2 id="tennis-matchday-guide">From the fixture to the full picture.</h2>

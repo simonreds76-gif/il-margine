@@ -48,3 +48,10 @@
 
 /* Keep both portraits level when a player name wraps on narrow screens. */
 .page .match{align-items:start}.page .versus{align-self:center}
+
+/* Compact the browsing controls without changing cards or filter behaviour. */
+.page .boardHeader{padding:2px 0 9px}.page .boardHeader h2{font-size:18px}.page .summary>strong{font-size:25px}
+.page .readKey{margin:8px 0 10px}.page .feed{margin:10px 0 6px}.feed strong{color:#cadbd5;font-weight:500}
+.page .tourFilters button{min-height:48px}.page .tournamentSection{padding:8px 0}
+@media(min-width:1001px){.page .toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 16px}.page .tabs{padding:0;border:0;align-self:center}.tournamentSection,.searchDetails{grid-column:1/-1}}
+@media(max-width:639px){.page .tourFilters button{display:flex;flex-wrap:wrap;min-height:52px;gap:6px}.page .tourFilters strong{font-size:10px}.page .tourLogo{width:23px;height:25px}.page .tourLogo img{width:23px;height:23px}.page .filterCount{font-size:10px}.page .boardHeader{padding-bottom:8px}.page .tabs{padding:7px 0}.page .day{margin-top:14px}}
