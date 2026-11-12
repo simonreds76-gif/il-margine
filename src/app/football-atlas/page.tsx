@@ -20,8 +20,9 @@ export const metadata: Metadata = {
   ...studioMetadata("football-atlas"),
 };
 export default function FootballAtlasPage() {
+    const heldMatches = (release as typeof release & { historyHolds?: { held?: number } }).historyHolds?.held ?? 0;
     return <div className="min-h-screen bg-[#0f1117] text-slate-100"><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebApplication', '@id': `${url}#application`, name: 'Return Atlas Football', url, description, applicationCategory: 'SportsApplication', operatingSystem: 'Web', isAccessibleForFree: true, publisher: { '@type': 'Organization', name: 'Il Margine', url: 'https://ilmargine.bet' } }) }} /><main className={`football-atlas ${frame.page}`}><AtlasPageHeader edition="football" description="Compare club, draw and opponent returns at recorded odds. Explore past league matches by season, venue and price.">
- <details className={frame.help}><summary>How it works &amp; coverage</summary><p>League matches only. Pinnacle prices with labelled, reviewed fallbacks. One unit per bet. Archive checked {release.checkedAt.slice(0, 10)}. Latest priced match {release.through}.</p><FootballAtlasGuide /></details>
+ <details className={frame.help}><summary>How it works &amp; coverage</summary><p>League matches only. Pinnacle prices with labelled, reviewed fallbacks. One unit per bet. Archive checked {release.checkedAt.slice(0, 10)}. Latest priced match {release.through}.</p>{heldMatches > 0 && <p role="status">{heldMatches} club match{heldMatches === 1 ? ' is' : 'es are'} still under review. Verified matches are available; the latest match date does not mean every earlier match is included.</p>}<FootballAtlasGuide /></details>
  </AtlasPageHeader>
 
     <FootballAtlasClient indexUrl={release.indexUrl}/>
