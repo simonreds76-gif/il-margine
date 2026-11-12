@@ -37,8 +37,8 @@ class MonthlyPreservationTests(unittest.TestCase):
         write(root/'public/football-test.json',{'teams':['Villarreal','Espanyol'],'leagues':['la-liga'],
             'seasons':['2026-2027'],'fixtures':[['test-only-new-atlas-id','2026-10-30',0,0,0,1,0,1,None,None,None,None]]})
         state=root/'state/managers'
-        write(state/'dates/2026-10-30.json',[{'league':'la-liga','matches':[{'id':5868120,
-            'home':{'name':'Villarreal'},'away':{'name':'Espanyol'},'status':{'finished':True}}]}])
+        write(state/'dates-v2/2026-10-30.json',{'schemaVersion':2,'date':'2026-10-30','leagues':[{'league':'la-liga','matches':[{'id':5868120,
+            'home':{'name':'Villarreal'},'away':{'name':'Espanyol'},'status':{'finished':True}}]}]})
         review=read(ROOT/'scripts/config/manager-fixture-reviews.json')['fotmob:5868120']
         raw={**review,'coaches':review['observedCoaches']}
         write(state/'matches/5868120.json',raw)
@@ -72,16 +72,18 @@ class MonthlyPreservationTests(unittest.TestCase):
             self.assertEqual(again['added'],0);self.assertFalse(again['changed'])
             self.assertEqual([p.read_bytes() for p in status_paths],statuses)
 
-    def test_conflicting_exact_match_score_stops_append(self):
+    def test_conflicting_exact_match_score_is_held_without_changing_archive(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);self.fixture_tree(root)
             path=root/'scripts/config/manager-fixture-reviews.json';reviews=read(path)
             reviews['fotmob:5868120']['ag']=2;write(path,reviews)
             before=(root/'src/data/manager-atlas-release.json').read_bytes()
-            with self.assertRaises(subprocess.CalledProcessError):self.run_offline(root)
+            result=self.run_offline(root)
+            self.assertFalse(result['changed']);self.assertEqual(result['added'],0)
             self.assertEqual((root/'src/data/manager-atlas-release.json').read_bytes(),before)
             report=read(root/'state/managers/refresh-report.json')
-            self.assertTrue(report['failures']);self.assertEqual(report['added'],0)
+            self.assertEqual(report['failures'],[]);self.assertEqual(report['added'],0)
+            self.assertEqual(report['pending'][0]['code'],'fixture_conflict')
 
     def test_stale_public_activity_blocks_before_history_writer(self):
         with tempfile.TemporaryDirectory() as directory:

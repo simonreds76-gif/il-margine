@@ -17,10 +17,9 @@ class Tests(unittest.TestCase):
     (p/'state/managers/refresh-report.json').write_text(json.dumps({'failures':failures,'atlasVersion':version,'candidates':1,'added':0,'pending':[{'id':'unknown','reason':reason}] if pending else []}))
     raise subprocess.CalledProcessError(1,'manager')
    with patch.object(m,'ROOT',p),patch.object(m.package,'unpack',return_value={'fixtures':[]}),patch.object(m.package,'package') as publish,patch.object(m.subprocess,'run',side_effect=fail):
-    if failures==['Manager verification incomplete: 1 eligible fixtures require review'] and version=='new_clubs' and pending and reason=='No unique exact fixture match':
-     r=m.refresh(p/'state');self.assertFalse(r['changed']);self.assertEqual(r['manifest']['version'],'old');self.assertEqual(len(r['pending']),1)
-    else:
-     with self.assertRaises(subprocess.CalledProcessError):m.refresh(p/'state')
+    # Partial success now exits zero with a fully partitioned receipt. A failed
+    # process must never be relabelled as a successful partial publication.
+    with self.assertRaises(subprocess.CalledProcessError):m.refresh(p/'state')
     publish.assert_not_called()
  def test_pending_manager_keeps_previous_archive(self):self.exercise(['Manager verification incomplete: 1 eligible fixtures require review'])
  def test_score_conflict_remains_failure(self):self.exercise(['Manager verification incomplete: 1 eligible fixtures require review'],reason='Match date/teams/score conflict')

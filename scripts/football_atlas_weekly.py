@@ -524,8 +524,8 @@ def main():
             # Validate managers against the current candidate prices without committing.
             import manager_atlas_weekly
             write_release(manifest,new,datetime.now(UTC))
-            manager_result=manager_atlas_weekly.refresh(state)
-            report['managers']={'added':manager_result['added'],'version':manager_result['manifest']['version'],'pending':manager_result.get('pending',[])}
+            manager_result=manager_atlas_weekly.refresh_or_retain(state)
+            report['managers']={'added':manager_result['added'],'version':manager_result['manifest']['version'],'pending':manager_result.get('pending',[]),'publicationState':manager_result.get('publicationState'),'error':manager_result.get('error')}
             import atlas_fixture_board
             report['fixtureBoard'] = atlas_fixture_board.refresh(state)['report']
             report['status'] = 'dry-run-passed'
@@ -557,8 +557,8 @@ def main():
                 changed_paths.update({path.as_posix(),MANIFEST.as_posix(),*removed})
             # One validated transaction and deployment for club and manager archives.
             import manager_atlas_weekly
-            managers=manager_atlas_weekly.refresh(state)
-            report['managers']={'added':managers['added'],'version':managers['manifest']['version'],'pending':managers.get('pending',[])}
+            managers=manager_atlas_weekly.refresh_or_retain(state)
+            report['managers']={'added':managers['added'],'version':managers['manifest']['version'],'pending':managers.get('pending',[]),'publicationState':managers.get('publicationState'),'error':managers.get('error')}
             manager_live_html=helper.fetch('https://ilmargine.bet/manager-atlas').decode()
             if managers['changed']:
                 changed_paths.update(managers['paths'])
