@@ -56,7 +56,13 @@ HOLD_CODES={'fixture_not_unique','unfinished','source_unavailable','invalid_evid
 def cache_usable(path,offline=False):
     # Pending evidence can arrive late. A cached absence or coach payload must
     # not freeze a fixture forever. Offline verification never downloads.
-    return path.exists() and (offline or 0<=time.time()-path.stat().st_mtime<86400)
+    if not path.exists():return False
+    if offline:return True
+    try:
+        stamp=datetime.fromisoformat(json.loads(path.read_text(encoding='utf-8'))['checkedAt'])
+        if stamp.tzinfo is None:return False
+        return 0<=time.time()-stamp.timestamp()<86400
+    except (ValueError,KeyError,TypeError):return False
 
 def fixture_quarantine_complete(candidates,added,pending):
     wanted=[r[0] for r in candidates];valid=[r['id'] for r in added];held=[r['id'] for r in pending]
@@ -69,7 +75,7 @@ def fixture_quarantine_complete(candidates,added,pending):
 def save_pending_queue(path,pending,verified,checked_at):
     try:
         previous=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'fixtures':{}}
-        if not isinstance(previous.get('fixtures'),dict):raise ValueError('Invalid pending queue')
+        if not isinstance(previous.get('fixtures'),dict) or any(not isinstance(v,dict) for v in previous['fixtures'].values()):raise ValueError('Invalid pending queue')
     except (ValueError,TypeError,AttributeError):
         # Retain the broken bytes as evidence, then reconstruct from the last
         # receipt if available. A corrupt cache must not require manual deletion.

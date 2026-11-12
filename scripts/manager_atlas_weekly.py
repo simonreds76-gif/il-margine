@@ -24,14 +24,24 @@ def refresh_or_retain(state, offline=False):
     try:
         result=refresh(state,offline=offline)
         result.setdefault('publicationState','verified_partial' if result['pending'] else 'verified')
+        result['checkedAt']=datetime.now(timezone.utc).isoformat()
+        p=Path(state)/'managers';p.mkdir(parents=True,exist_ok=True)
+        (p/'publication-status.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
         return result
     except Exception as exc:
         if manifest_path.read_bytes()!=before_bytes:
             manifest_path.write_bytes(before_bytes)
         report={'changed':False,'manifest':before,'previous':before['indexUrl'],'paths':[],
                 'added':0,'pending':[],'publicationState':'retained_manager_failure',
-                'error':type(exc).__name__,'checkedAt':datetime.now(timezone.utc).isoformat()}
+                'error':type(exc).__name__,'errorDetail':str(exc)[:500],
+                'checkedAt':datetime.now(timezone.utc).isoformat()}
         p=Path(state)/'managers';p.mkdir(parents=True,exist_ok=True)
+        try:
+            queue=json.loads((p/'pending-fixtures.json').read_text(encoding='utf-8'))
+            report['pending']=[r for r in queue['fixtures'].values() if r.get('state')=='pending']
+            report['pendingCountKnown']=True
+        except (OSError,ValueError,KeyError,TypeError,AttributeError):
+            report['pendingCountKnown']=False
         (p/'publication-status.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
         print('::warning::Manager refresh failed ('+type(exc).__name__+'); previous verified manager archive retained. Independent club/calendar refresh continues.',flush=True)
         return report

@@ -3,6 +3,7 @@ import copy
 from pathlib import Path
 import tempfile
 import unittest
+from datetime import datetime,timezone
 from unittest.mock import patch
 import test_manager_monthly_preservation as monthly
 from test_manager_monthly_preservation import collector, read, write
@@ -21,8 +22,11 @@ class ProviderCompetitionTests(unittest.TestCase):
             self.assertEqual(len(list(root.glob('pending-fixtures-invalid-*'))),1)
     def test_pending_cache_expires_but_offline_uses_saved_evidence(self):
         with tempfile.TemporaryDirectory() as directory:
-            p=Path(directory)/'cache.json';p.write_text('{}')
-            stamp=p.stat().st_mtime
+            p=Path(directory)/'cache.json'
+            stamp=datetime(2026,11,1,tzinfo=timezone.utc).timestamp()
+            write(p,{'checkedAt':'2026-11-01T00:00:00+00:00'})
+            with patch.object(collector.time,'time',return_value=stamp+30):
+                self.assertTrue(collector.cache_usable(p))
             with patch.object(collector.time,'time',return_value=stamp+86401):
                 self.assertFalse(collector.cache_usable(p))
                 self.assertTrue(collector.cache_usable(p,True))
