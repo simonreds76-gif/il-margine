@@ -1,9 +1,83 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-12T17:05:17Z",
+  "generated_at": "2026-11-12T18:14:29.037768+00:00",
   "league": "bundesliga",
-  "row_count": 0,
-  "rows": [],
+  "row_count": 1,
+  "rows": [
+    {
+      "date": "2026-11-08",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "match": "Freiburg vs Union Berlin",
+      "team": "Freiburg",
+      "opponent": "Union Berlin",
+      "actual_taker": "Vincenzo Grifo",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 0,
+      "distinct_takers_in_match": 1,
+      "minute": "84",
+      "event_type": "AttemptSaved",
+      "event_result": "missed",
+      "primary_pre_match": "Vincenzo Grifo",
+      "secondary_pre_match": "Igor Matanović",
+      "tertiary_pre_match": "Lucas Höler",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Vincenzo Grifo took 1 penalty attempt and missed for Freiburg vs Union Berlin. Primary pre-match: Vincenzo Grifo (unknown). Secondary pre-match: Igor Matanović (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/bundesliga-penalty-takers.json",
+      "actual_taker_match_status": "Yes - bench, on 68'",
+      "primary_on_pitch_at_penalty": "Yes - bench, on 68'",
+      "secondary_on_pitch_at_penalty": "No - started, off 68'",
+      "tertiary_on_pitch_at_penalty": "No - bench, on 85'",
+      "actual_taker_on_pitch_at_penalty": "Yes - bench, on 68'",
+      "event_evidence": [
+        {
+          "id": "fotmob|bundesliga|5881217|2995688005",
+          "source_event_id": "2995688005",
+          "match_id": "5881217",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881217",
+          "observed_at": "2026-11-12T18:14:34+00:00",
+          "event_date": "2026-11-08",
+          "season": "2026/27",
+          "team": "Freiburg",
+          "taker": "Vincenzo Grifo",
+          "primary": "Vincenzo Grifo",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Vincenzo Grifo",
+            "minute": 84,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 400625,
+            "bucket": "subs",
+            "substitutions": [
+              {
+                "type": "subin",
+                "time": 68,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 84,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Freiburg vs Union Berlin",
+          "event_result": "missed"
+        }
+      ]
+    }
+  ],
   "source_health": {
     "complete": true,
     "errors": [],
@@ -17,5 +91,13 @@
       "20261112"
     ],
     "matches_checked": 0
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261108"
+    ],
+    "matches_checked": 1
   }
 }

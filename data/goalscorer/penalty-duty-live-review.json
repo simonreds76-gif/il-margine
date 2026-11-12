@@ -1,82 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-12T17:05:06Z",
+  "generated_at": "2026-11-12T18:14:29.037768+00:00",
   "league": "serie-a",
   "row_count": 2,
   "rows": [
-    {
-      "date": "2026-11-07",
-      "league": "serie-a",
-      "review_source": "fotmob_live",
-      "match": "Parma vs Bologna",
-      "team": "Bologna",
-      "opponent": "Parma",
-      "actual_taker": "Riccardo Orsolini",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "72",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Riccardo Orsolini",
-      "secondary_pre_match": "Federico Bernardeschi",
-      "tertiary_pre_match": "Artem Dovbyk",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Riccardo Orsolini took 1 penalty attempt and scored for Bologna vs Parma. Primary pre-match: Riccardo Orsolini (unknown). Secondary pre-match: Federico Bernardeschi (unknown). No hierarchy change implied from this event.",
-      "context_generated_at": "2026-10-25T14:53:23.684Z",
-      "context_source_path": "admin_penalty_state:editorial",
-      "actual_taker_match_status": "Yes - bench, on 46'",
-      "primary_on_pitch_at_penalty": "Yes - bench, on 46'",
-      "secondary_on_pitch_at_penalty": "Yes - started",
-      "tertiary_on_pitch_at_penalty": "No - bench",
-      "actual_taker_on_pitch_at_penalty": "Yes - bench, on 46'",
-      "event_evidence": [
-        {
-          "id": "fotmob|serie-a|5749747|2994661045",
-          "source_event_id": "2994661045",
-          "match_id": "5749747",
-          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749747",
-          "observed_at": "2026-11-12T17:05:00+00:00",
-          "event_date": "2026-11-07",
-          "season": "2026/27",
-          "team": "Bologna",
-          "taker": "Riccardo Orsolini",
-          "primary": "Riccardo Orsolini",
-          "primary_on_pitch": true,
-          "on_pitch_proof": {
-            "player": "Riccardo Orsolini",
-            "minute": 72,
-            "added_time": 0,
-            "method": "completed_lineup_timeline",
-            "player_id": 661761,
-            "bucket": "subs",
-            "substitutions": [
-              {
-                "type": "subin",
-                "time": 46,
-                "added_time": 0
-              }
-            ],
-            "events": [],
-            "reason": "on_pitch"
-          },
-          "minute": 72,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Parma vs Bologna",
-          "event_result": "scored"
-        }
-      ]
-    },
     {
       "date": "2026-11-07",
       "league": "serie-a",
@@ -149,6 +76,79 @@
           "event_result": "scored"
         }
       ]
+    },
+    {
+      "date": "2026-11-07",
+      "league": "serie-a",
+      "review_source": "fotmob_live",
+      "match": "Parma vs Bologna",
+      "team": "Bologna",
+      "opponent": "Parma",
+      "actual_taker": "Riccardo Orsolini",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "72",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Riccardo Orsolini",
+      "secondary_pre_match": "Federico Bernardeschi",
+      "tertiary_pre_match": "Artem Dovbyk",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Riccardo Orsolini took 1 penalty attempt and scored for Bologna vs Parma. Primary pre-match: Riccardo Orsolini (unknown). Secondary pre-match: Federico Bernardeschi (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-10-25T14:53:23.684Z",
+      "context_source_path": "admin_penalty_state:editorial",
+      "actual_taker_match_status": "Yes - bench, on 46'",
+      "primary_on_pitch_at_penalty": "Yes - bench, on 46'",
+      "secondary_on_pitch_at_penalty": "Yes - started",
+      "tertiary_on_pitch_at_penalty": "No - bench",
+      "actual_taker_on_pitch_at_penalty": "Yes - bench, on 46'",
+      "event_evidence": [
+        {
+          "id": "fotmob|serie-a|5749747|2994661045",
+          "source_event_id": "2994661045",
+          "match_id": "5749747",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749747",
+          "observed_at": "2026-11-12T17:05:00+00:00",
+          "event_date": "2026-11-07",
+          "season": "2026/27",
+          "team": "Bologna",
+          "taker": "Riccardo Orsolini",
+          "primary": "Riccardo Orsolini",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Riccardo Orsolini",
+            "minute": 72,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 661761,
+            "bucket": "subs",
+            "substitutions": [
+              {
+                "type": "subin",
+                "time": 46,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 72,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Parma vs Bologna",
+          "event_result": "scored"
+        }
+      ]
     }
   ],
   "source_health": {
@@ -164,5 +164,13 @@
       "20261112"
     ],
     "matches_checked": 10
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261108"
+    ],
+    "matches_checked": 1
   }
 }
