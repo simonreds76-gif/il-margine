@@ -36,6 +36,7 @@ SNAPSHOT_FILES = [
     "data/football-form/team-shots-opponent-status.json",
     "data/football-form/team-shots-paired-reference-status.json",
     "data/football-form/count-input-refresh-status.json",
+    "data/football-form/count-input-integrity-status.json",
     "data/football-form/count-input-application-status.json",
 
     "data/team-shots/team-shots-calibration.txt",

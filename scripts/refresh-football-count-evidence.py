@@ -52,6 +52,14 @@ def main():
         'settlement_source':'exact_fixture_base_and_verified_snapshots',
         'snapshot_settlement_contracts':len(audit)}
     status['interpretation']+=' Identity repairs registered 28 October 2026; inspect cohort breakdown for consistent-input comparisons.'
+    import football_shots_inputs as INPUTS
+    health_path=form/'count-input-integrity-status.json'
+    health=json.loads(health_path.read_text(encoding='utf8')) if health_path.exists() else {}
+    status['input_integrity']=health
+    if health.get('blocked_leagues') and not capture_error and not args.settlement_only:
+        status['capture_status']='INPUT_COVERAGE_INCOMPLETE'
+    status['interpretation']+=' '+INPUTS.describe(health)
+
     from team_shots_strength_paper import refresh as refresh_strength, RELATIVE as STRENGTH_PATH
     from frozen_paper_common import atomic
     try:

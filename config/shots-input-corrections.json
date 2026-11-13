@@ -1,0 +1,17 @@
+{
+  "policy": "shots-input-integrity-20261113-v1",
+  "scope": "New forecast inputs only. Source CSVs, issued forecasts, prices and settlements are unchanged.",
+  "corrections": [{
+    "id": "fiorentina-atalanta-total-not-off-target-20261029",
+    "date": "2026-10-29", "league": "serie-a", "home_team": "Fiorentina", "away_team": "Atalanta",
+    "effective_from": "2026-11-13T12:30:00Z",
+    "before": [14, 2], "after": [26, 10],
+    "evidence_observed_at": "2026-11-13T00:48:58.164347Z",
+    "evidence": ["https://www.skysports.com/football/fiorentina-vs-atalanta/stats/556326", "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874969"],
+    "reason": "Stored totals equal off-target; verified total = on-target + off-target + blocked. Provider independence not assumed."
+  }],
+  "excluded_inputs": [
+    {"date":"2017-04-16","league":"ligue-1","home_team":"Bastia","away_team":"Lyon","reason":"awarded_match_missing_counts_not_zero"},
+    {"date":"2024-12-14","league":"bundesliga","home_team":"Union Berlin","away_team":"Bochum","reason":"awarded_match_missing_counts_not_zero"}
+  ]
+}

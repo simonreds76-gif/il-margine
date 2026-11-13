@@ -109,9 +109,11 @@ class History:
             queue.append(r)
 
 
-def read_base(path):
-    with path.open(encoding='utf-8-sig', newline='') as f:
-        rows = list(csv.DictReader(f))
+def read_base(path, rows=None):
+    if rows is None:
+        with path.open(encoding='utf-8-sig', newline='') as f:
+            rows = list(csv.DictReader(f))
+    rows=[dict(r) for r in rows]
     seen = {}
     clean = []
     for r in rows:

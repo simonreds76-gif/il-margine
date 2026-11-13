@@ -373,6 +373,15 @@ def main() -> int:
     identity_health=ROOT/'data/football-form/count-input-identity-health.json'
     if identity_health.exists():
         payload['team_shots_v4']['input_health']=load_json(identity_health)
+    integrity=ROOT/'data/football-form/count-input-integrity-status.json'
+    if integrity.exists():
+        import football_shots_inputs as INPUTS
+        health=load_json(integrity)
+        payload['team_shots_v4']['input_integrity']=health
+        scan=payload['team_shots_v4']['latest_scan']
+        scan['explanation']=str(scan.get('explanation',''))+' '+INPUTS.describe(health)
+        if health.get('blocked_leagues'):
+            scan['state']='INPUT_COVERAGE_INCOMPLETE'
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.json.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")

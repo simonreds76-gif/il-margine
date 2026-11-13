@@ -28,7 +28,7 @@ spec.loader.exec_module(O)
 V, PUB = O.V, O.PUB
 MODELS = ('ema20_v3', 'v4', 'opponent', 'shots_market_offset_v1')
 CALIBRATION_PATH = ROOT/'data/team-shots/shots-market-offset-v1.json'
-VERSION = 'paired-market-offset-20261109-fixture-v5'
+VERSION = 'paired-market-offset-20261113-input-v6'
 
 class ModelFingerprintMismatch(ValueError):
     """Hold new forecasts without preventing independent settlement/reporting."""
@@ -39,7 +39,7 @@ def digest(path):
 def model_fingerprint():
     # Normalize checkout line endings so Windows and Linux agree. Changing
     # weights, helpers or selection code requires a new registered experiment.
-    names=['scripts/team-shots-paired-reference.py','scripts/team_shots_ema20_reference.py',
+    names=['scripts/football_shots_inputs.py','config/shots-input-corrections.json','scripts/team-shots-paired-reference.py','scripts/team_shots_ema20_reference.py',
         'scripts/team_shots_ema20_features.py','scripts/publish-football-vnext-shadow.py',
         'scripts/publish-football-research-picks.py','scripts/build-football-form-layer.py',
         'scripts/backtest-football-form-layer.py','scripts/team_shots_opponent.py',
@@ -102,6 +102,8 @@ def old_form(by_team, league, team, venue):
     form = {'venue':venue, 'market_team_win_prob':'', 'market_opp_win_prob':''}
     form.update(FEATURES.summarize_window(history,10))
     form.update(FEATURES.summarize_ema_window(history))
+    if any(r.get("_shots_input_policy") for r in history):
+        form.update(PUB.SHOTS_INPUTS.quality_fields(history))
     return form
 
 def old_forecast(pair, base, by_team, alpha_cache):
@@ -310,7 +312,8 @@ def main():
     base_path=data('data/football-form/team-match-base.csv')
     if not base_path.exists() or not odds_path.exists():
         raise SystemExit('Missing archive input; existing paired evidence retained')
-    raw=PUB.load_csv(odds_path); base=PUB.load_csv(base_path)
+    raw,odds_hash=PUB.SHOTS_INPUTS.read_csv_bound(odds_path)
+    base,input_status,settlement_base=PUB.SHOTS_INPUTS.load(args.data_root,now,base_path,write_status=True)
     registered=[r for r in raw if r.get('bookmaker','').lower()=='bet365' and r.get('market')=='TEAM_SHOTS']
     fresh,rejected=O.fresh_prices(registered,config,now)
     latest=PUB.latest_team_shots_odds(fresh,now)
@@ -335,19 +338,26 @@ def main():
     # A cohort change must not recapture an existing contract at a later price.
     seen={contract(dict(r,kickoff=PUB.parse_dt(r['kickoff_utc']))) for r in historical}
     pairs=[p for p in pairs if contract(p['over']) not in seen]
-    opponent_base=O.read_base(base_path) if pairs else []
+    for league in input_status['blocked_leagues']:
+        rejected['input_freshness_'+league]+=sum(p['over']['league_slug']==league for p in pairs)
+    pairs=[p for p in pairs if p['over']['league_slug'] not in input_status['blocked_leagues']]
+    opponent_base=O.read_base(None,rows=base) if pairs else []
     match_path=data('data/football-form/football-1x2-odds-history.csv')
-    records=score(pairs,raw,base,opponent_base,config,params,lock,PUB.load_csv(match_path),now) if pairs else []
+    match_rows,match_hash=PUB.SHOTS_INPUTS.read_csv_bound(match_path) if match_path.exists() else ([],None)
+    records=score(pairs,raw,base,opponent_base,config,params,lock,match_rows,now) if pairs else []
     select_first_scan(records,historical)
     hashes={str(p.relative_to(ROOT)):digest(p) for p in [Path(__file__),ROOT/'scripts/team_shots_ema20_reference.py',ROOT/'scripts/team_shots_ema20_features.py',V.TEAM_PARAMS,V.TEAM_LOCK,O.CONFIG,ROOT/'scripts/publish-football-vnext-shadow.py',ROOT/'scripts/team_shots_opponent.py']}
     hashes['calibration_sha256']=digest(CALIBRATION_PATH)
-    hashes.update(base_sha256=digest(base_path),odds_sha256=digest(odds_path),match_odds_sha256=digest(match_path))
+    hashes.update(base_sha256=input_status['base_sha256'],odds_sha256=odds_hash,match_odds_sha256=match_hash,input_amendment_sha256=input_status['amendment_sha256'])
     for record in records:
         record['source_hashes']=hashes
         record['model_fingerprint']=fingerprint
+        record['input_policy']=PUB.SHOTS_INPUTS.POLICY
+        record['input_integrity']=input_status
     ledger,added=append_new(ledger_path,records)
     ledger=current_cohort(ledger)
-    status=summarize(ledger,base,now)
+    status=summarize(ledger,settlement_base,now)
+    status["input_integrity"]=input_status
     status.update(version=VERSION,model_fingerprint=fingerprint,calibration_sha256=digest(CALIBRATION_PATH),
         preserved_prior_cohort_contracts=len(historical)-len(existing),
         generated_at=PUB.fmt_dt(now),new_contracts=added,scan_exclusions=dict(rejected),

@@ -1,11 +1,10 @@
 {
-  "version": "paired-market-offset-20261109-fixture-v5",
-  "registered_at": "2026-11-09T20:22:56.064167+00:00",
-  "model_fingerprint": "a645d0ef31f390888d7e1eca504e14c1e34d0bacec46a497897b129a0e7fd41f",
-  "previous_version": "paired-market-offset-20261028-identity-v4",
-  "previous_fingerprint": "90a4b82bdc0fb04546d62c53c32e12943250bd7637b31079423ee3023f487fd4",
-  "reason": "Infrastructure-only: retain execution quote timestamp; freeze the first domestic league fixture across reschedules; add dated reporting curves. Pricing functions, weights, thresholds, real stakes and original records unchanged.",
+  "version": "paired-market-offset-20261113-input-v6",
+  "registered_at": "2026-11-13T12:43:57.820648+00:00",
+  "model_fingerprint": "8a9e127c08fe290866cefe778c4f775aa370e0c13242c60d49b1ab9549bd923c",
+  "previous_version": "paired-market-offset-20261109-fixture-v5",
+  "previous_fingerprint": "a645d0ef31f390888d7e1eca504e14c1e34d0bacec46a497897b129a0e7fd41f",
+  "reason": "Prospective input-only amendment: verified total-shots correction, paired-observed xG denominator, missing-count quarantine, independently verified completed-fixture freshness, byte-bound source hashes. Frozen numerical functions, weights, thresholds and existing records unchanged.",
   "real_stake_units": 0,
-  "automatic_promotion": false,
-  "historical_contracts_preserved": 569
+  "automatic_promotion": false
 }
