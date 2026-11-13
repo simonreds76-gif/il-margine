@@ -6,7 +6,7 @@ const ts = require('typescript');
 function load(file, dependencies = {}) {
   const exports = {};
   const code = ts.transpileModule(fs.readFileSync(file, 'utf8'), {compilerOptions: {module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2021}}).outputText;
-  vm.runInNewContext(code, {exports, require: id => {if (id in dependencies) return dependencies[id]; throw new Error(id);}, AbortSignal, Date, Error});
+  vm.runInNewContext(code, {exports, require: id => {if (id in dependencies) return dependencies[id]; if(id==='@/lib/corners-live-files')return {readCornersLiveFile:async()=>null}; if(id==='@/lib/team-shots-live-files')return {readTeamShotsLiveFile:async()=>null}; if(id==='@/lib/model-profit-history')return {compactHistory:()=>({}),reconciledHistory:()=>({})}; if(id==='@/lib/monitor-breakdowns')return {propsBreakdowns:()=>({rows:[],histories:{}}),footballModel:(id,name)=>({row:{id,name},history:{}})}; throw new Error(id);}, AbortSignal, Date, Error});
   return exports;
 }
 const summary = load('src/lib/admin-model-summary.ts');
@@ -49,6 +49,6 @@ test('one failed source does not hide the other source', async () => {
   const reader = load('src/lib/admin-model-reader.ts', {'server-only': {}, '@/lib/admin-auth': {isAdminSession: async () => true}, '@/lib/admin-model-summary': summary,
     '@/lib/supabase-server': {getSupabaseAdmin: () => ({from: () => ({select: () => ({eq: (_, key) => ({abortSignal: () => ({maybeSingle: async () => key === 'tennis_evidence_v1' ? {error: {message: 'unavailable'}} : {data: {report: {content: JSON.stringify({generated_at: '2026-10-14', goalkeeper_saves_v1: {settled: 60, roi: .5}})}}}})})})})})}});
   const result = await reader.readAdminModels();
-  assert.equal(result.sources[0].available, false); assert.equal(result.sources[1].available, true);
+  assert.equal(result.sources[0].available, false); assert.equal(result.sources[2].available, true);
   assert.equal(result.rows.find(r => r.id === 'gk').roi, 50);
 });

@@ -126,7 +126,7 @@ def build_snapshot() -> dict[str, Any]:
         "tennis_props_shadow_decision": module.tennis_props_shadow_decision(),
     }
     stable = {
-        **build_admin_bundle(ROOT),
+        **build_admin_bundle(ROOT, sections),
         "schema_version": SCHEMA_VERSION,
         "source": "windows_local_tennis_pipeline",
         "source_files": source_metadata(module),

@@ -4,7 +4,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-def build_admin_bundle(root: Path) -> dict:
+def build_admin_bundle(root: Path, sections=None) -> dict:
     catalog = json.loads((root / 'config/admin-monitor-catalog.json').read_text(encoding='utf-8-sig'))
     files, manifest = {}, []
     total = 0
@@ -57,5 +57,14 @@ def build_admin_bundle(root: Path) -> dict:
         histories = {}
     else:
         total += history_bytes
-    return {'admin_profit_histories': histories, 'admin_files':files,'admin_manifest':manifest,'admin_bundle_bytes':total,
+    from admin_active_models import build_active_models
+    try:
+        active = build_active_models(root, sections or {})
+        active_bytes = len(json.dumps(active, ensure_ascii=False).encode('utf-8'))
+        if active_bytes > 256 * 1024 or total + active_bytes > 12 * 1024 * 1024:
+            raise ValueError('active model display exceeds limit')
+        total += active_bytes
+    except (OSError, ValueError, KeyError, TypeError, ImportError) as error:
+        active = {'state': 'DISPLAY_UNAVAILABLE', 'error_type': type(error).__name__}
+    return {'admin_active_models': active, 'admin_profit_histories': histories, 'admin_files':files,'admin_manifest':manifest,'admin_bundle_bytes':total,
             'admin_break_point_history_status':history_status}

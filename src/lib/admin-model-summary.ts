@@ -8,6 +8,8 @@ export type ModelRow = {
   date: string | null; settled: number | null; pending: number | null;
   wins: number | null; losses: number | null; stake: number | null;
   profit: number | null; roi: number | null; status: string | null;
+  calibration?: Record<string, unknown>; capture_at?: string | null; overdue?: number | null;
+  fixtures?: number | null; link?: string | null;
 };
 export function row(id: string, name: string, group: string, cohort: string, raw: unknown, date: unknown, note = "", ratio = false): ModelRow {
   const r = obj(raw), record = obj(r.record);

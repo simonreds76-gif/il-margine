@@ -17,8 +17,8 @@ export async function readAdminModels() {
       return error ? null : obj(data);
     } catch { return null; }
   };
-  const [tennis, football, gkLedger, gkReport, shotsLedger, countsRaw, cornersLedger, opponentRaw, opponentLedger] = await Promise.all([
-    read("tennis_evidence_v1", 'generated_at:payload->>generated_at,sections:payload->sections,props_ledger:payload->admin_files->>"props-record",histories:payload->admin_profit_histories'),
+  const [tennis, football, gkLedger, gkReport, shotsLedger, countsRaw, cornersLedger, opponentRaw, opponentLedger, cornersRaw] = await Promise.all([
+    read("tennis_evidence_v1", 'generated_at:payload->>generated_at,sections:payload->sections,props_ledger:payload->admin_files->>"props-record",histories:payload->admin_profit_histories,active:payload->admin_active_models'),
     read("corners_state", 'generated_at:payload->>generated_at,report:payload->files->"data/football-form/weekly-research-report.json",corners_ledger:payload->files->"data/football-form/corners-v3-shadow-clv.csv"'),
     readTeamShotsLiveFile("data/goalkeeper-saves/gk-saves-v1-shadow-signals.csv").catch(() => null),
     readTeamShotsLiveFile("data/goalkeeper-saves/gk-saves-v1-shadow-report.json").catch(() => null),
@@ -27,6 +27,7 @@ export async function readAdminModels() {
     readCornersLiveFile("data/football-form/corners-v3-shadow-clv.csv").catch(() => null),
     readTeamShotsLiveFile("data/football-form/team-shots-opponent-status.json").catch(() => null),
     readTeamShotsLiveFile("data/football-form/team-shots-opponent-shadow.csv").catch(() => null),
+    readCornersLiveFile("data/football-form/football-counts-vnext-gate.json").catch(() => null),
   ]);
   let report: unknown = null;
   try {
@@ -36,7 +37,7 @@ export async function readAdminModels() {
   let keeper: Record<string, unknown> = {};
   try { keeper = obj(JSON.parse(gkReport || "{}")); } catch { /* Keep existing summary on an unavailable source. */ }
   const parse = (raw: string | null) => { try { return obj(JSON.parse(raw || "{}")); } catch { return {}; } };
-  const counts = parse(countsRaw), opponent = parse(opponentRaw);
+  const counts = parse(countsRaw), opponent = parse(opponentRaw), corners = parse(cornersRaw);
   const rows = modelRows(tennis?.sections, report).filter(r => !r.id.startsWith("props-"));
   const gk = rows.find(r=>r.id==="gk"), evidence=obj(keeper.evidence);
   if (gk && typeof evidence.settled==="number" && typeof evidence.pnl_units==="number") {
@@ -54,7 +55,7 @@ export async function readAdminModels() {
   if (gk) histories.gk = reconciledHistory(gkLedger, "gk", gk);
   for (const [id, name, raw, generated, ledger, note] of [
     ["team_shots_v4", "Team Shots v4", obj(counts.team_shots_v4).prospective, counts.generated_at, shotsLedger, "Current Team Shots selection model; still collecting. Forward paper only, warm-up results excluded."],
-    ["corners_v3", "Corners v3", obj(counts.corners_v3).prospective, counts.generated_at, cornersLedger, "Current corners paper model. Warm-up results excluded. No approved replacement; v4 G0 failed its saved research evaluation."],
+    ["corners_v3", "Corners v3", obj(corners.corners_v3).prospective, corners.generated_at, cornersLedger, "Current corners paper model. Warm-up results excluded. No approved replacement; v4 G0 failed its saved research evaluation."],
     ["team_shots_opponent", "Opponent Shots", opponent.prospective, opponent.generated_at, opponentLedger, "Separate fixed Team Shots paper model; still collecting. Not discontinued and not a replacement for v4. Zero real stake."],
   ] as const) {
     const previous = rows.findIndex(r => r.id === id);
@@ -72,7 +73,25 @@ export async function readAdminModels() {
   for (const r of rows.filter(r => ["tennis_hardcourt_scout", "tennis_astrissimo", "tennis_indoor_paper", "tennis_indoor_expansion"].includes(r.id))) {
     histories[r.id] = reconciledHistory(obj(obj(tennis?.sections)[r.id]).selections, r.id, r);
   }
-  return { rows, histories, selections: savedSelections(tennis?.sections), sisal5050: obj(tennis?.sections).tennis_sisal_5050, breakpointC: obj(tennis?.sections).tennis_breakpoint_c, matchShape: obj(tennis?.sections).tennis_match_shape,
+  const active = obj(tennis?.active);
+  for (const raw of Array.isArray(active.rows) ? active.rows : []) {
+    const r = obj(raw);
+    if (typeof r.id !== "string" || typeof r.name !== "string" || rows.some(x=>x.id===r.id)) continue;
+    const normalized = {...r, group: typeof r.group === "string" ? r.group : "Tennis research"} as unknown as import("./admin-model-summary").ModelRow;
+    rows.push(normalized);
+    const h = obj(r.history);
+    histories[r.id] = typeof h.message === "string" ? {days:[],settled:0,profit:0,omitted:0,message:h.message} : compactHistory(h, normalized);
+  }
+  // Probability diagnostics remain specific to each registered cohort.
+  const sections=obj(tennis?.sections);
+  for(const r of rows) {
+    const source=obj(sections[r.id]);
+    if(!r.calibration) r.calibration=obj(obj(source.paired_scores).model ?? obj(source.paired_accuracy).model ?? obj(source.paired_accuracy).baseline);
+    if(typeof source.overdue === "number")r.overdue=source.overdue;
+    if(typeof source.settled_fixtures === "number")r.fixtures=source.settled_fixtures;
+    if(typeof obj(source.capture).checked_at === "string")r.capture_at=String(obj(source.capture).checked_at);
+  }
+  return { rows, histories, activeAvailable:Array.isArray(active.rows), activeWarnings:[...(Array.isArray(active.errors)?active.errors.map(e=>String(obj(e).family)):[]), ...(Array.isArray(active.unrepresented_running)?active.unrepresented_running.map(String):[])], selections: savedSelections(tennis?.sections), sisal5050: obj(tennis?.sections).tennis_sisal_5050, breakpointC: obj(tennis?.sections).tennis_breakpoint_c, matchShape: obj(tennis?.sections).tennis_match_shape,
     sources: [{name: "Tennis snapshot", date: tennis?.generated_at, available: !!tennis?.sections},
       {name: "Football capture", date: counts.generated_at, available: !!countsRaw},
       {name: "Weekly football review", date: obj(report).generated_at, available: !!report}], checkedAt: Date.now() };

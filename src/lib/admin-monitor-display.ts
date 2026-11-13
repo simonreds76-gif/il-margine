@@ -1,6 +1,7 @@
 export type SignalRow = Record<string, unknown>;
 export type MonitorModel = {id:string;name:string;group:'current'|'research';note:string;views:Array<[string,string]>};
 export const monitorModels:MonitorModel[] = [
+ {id:'mostdf',name:'Most double faults',group:'research',note:'Frozen independent DF benchmark; recorded paper selections only.',views:[['most-df-current','Results & coverage']]},
  {id:'indoor-expansion',name:'Indoor Scout ATP250/500',group:'research',note:'Indoor ATP250/500 including qualifying. Forward paper from 11 November 2026; same core gates, separate from Masters and historical replay. Zero real stake, no alerts.',views:[['tennis-indoor-expansion-report','ROI & results'],['tennis-indoor-expansion-forecasts','All forecasts & rejections']]},
  {id:'indoor',name:'Indoor Scout',group:'research',note:'Indoor Masters, including qualifying. Prospective 1u paper record; zero real stake. Core Strict gates only; injury and handicap overlays are not simulated. No betting alerts.',views:[['tennis-indoor-report','ROI & results'],['tennis-indoor-forecasts','All forecasts & rejections']]},
 
