@@ -40,6 +40,8 @@ jobs:
         run: |
           mkdir -p outputs
           python -m unittest discover -s scripts/tests -p test_frozen_paper_comparisons.py
+          python -m unittest discover -s scripts/tests -p test_shots_input_integrity.py
+          python -m unittest discover -s scripts/tests -p test_football_counts_vnext_gate.py
           python -m unittest discover -s scripts/tests -p 'test_match_shape*.py'
       - name: Check identities, settlement, first prices and registered inference
         run: >-
