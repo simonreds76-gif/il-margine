@@ -14,6 +14,7 @@ import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from lab_highlight_portraits import enrich
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -139,6 +140,7 @@ def main() -> int:
     input_dir = Path(args.input_dir)
     output = Path(args.output)
     highlights = read_highlights(input_dir)[: max(args.max_highlights, 0)]
+    highlights, portrait_coverage = enrich(highlights, input_dir)
 
     payload = {
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -156,6 +158,7 @@ def main() -> int:
     print(f"Input dir:   {input_dir}")
     print(f"Output:      {output}")
     print(f"Highlights:  {len(highlights)}")
+    print('Portrait coverage: ' + json.dumps(portrait_coverage))
     print("\nDone.\n")
     return 0
 
