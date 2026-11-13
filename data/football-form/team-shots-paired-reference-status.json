@@ -445,7 +445,7 @@
     }
   },
   "real_stake_units": 0,
-  "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion. Identity repairs registered 28 October 2026; inspect cohort breakdown for consistent-input comparisons. INVESTIGATE DATA: 2 retained contracts have a verified count discrepancy. Historical figures remain as recorded pending a separate settlement amendment; they are not promotion evidence. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-13T17:23:16.295168+00:00. Completed-fixture coverage checked at 2026-11-13T16:36:11.995787+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 196). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
+  "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion. Identity repairs registered 28 October 2026; inspect cohort breakdown for consistent-input comparisons. INVESTIGATE DATA: 2 retained contracts have a verified count discrepancy. Historical figures remain as recorded pending a separate settlement amendment; they are not promotion evidence. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-13T22:52:44.807816+00:00. Completed-fixture coverage checked at 2026-11-13T16:36:11.995787+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 196). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
   "statshub_status": "NOT_CONNECTED",
   "clv_status": "NOT_YET_MEASURED",
   "review_milestones_fixtures": [
@@ -455,7 +455,7 @@
   "automatic_promotion": false,
   "input_integrity": {
     "policy": "shots-input-integrity-20261113-v1",
-    "generated_at": "2026-11-13T17:23:16.295168+00:00",
+    "generated_at": "2026-11-13T22:52:44.807816+00:00",
     "base_sha256": "bb889250e79628dc9b9bae65dd255cb6a6a096802d3292b6c1a960b9e8cabd03",
     "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
     "source_rows": 44178,
@@ -516,7 +516,7 @@
   "model_fingerprint": "de9c6c8250e8ac5456d72bcf3075020c734fe7b67e63dd37ea9a0c0fcea8e446",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 569,
-  "generated_at": "2026-11-13T17:23:18Z",
+  "generated_at": "2026-11-13T22:52:46Z",
   "new_contracts": 0,
   "scan_exclusions": {},
   "latest_archived_capture": "2026-11-08T16:19:48.772038+00:00",
@@ -2114,7 +2114,7 @@
   "strength_comparison": {
     "name": "Team Shots strength correction",
     "registered_at": "2026-11-10T17:20:47.882372+00:00",
-    "updated_at": "2026-11-13T17:23:18.495988+00:00",
+    "updated_at": "2026-11-13T22:52:46.832290+00:00",
     "protocol": {
       "actual_stake": 0,
       "alerts": false,
@@ -2148,7 +2148,7 @@
     "historical_replay_included": false,
     "capture": {
       "captured": 0,
-      "checked_at": "2026-11-13T17:23:18.495988+00:00",
+      "checked_at": "2026-11-13T22:52:46.832290+00:00",
       "counts": {},
       "state": "NO_NEW_ELIGIBLE_CONTRACTS"
     },
