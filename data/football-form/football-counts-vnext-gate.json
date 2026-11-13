@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-13T16:51:57Z",
+  "generated_at": "2026-11-13T17:23:11Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -87,6 +87,8 @@
         "dominant_side_share": 0.0
       }
     },
+    "input_review_deadline": "2026-11-30T23:59:59Z",
+    "after_deadline_rows_excluded_from_promotion": 0,
     "promotion_evidence": {
       "reconciliation": {
         "excluded_pick_ids": [],
@@ -128,8 +130,8 @@
       "dominant_side_share": 0.928571
     },
     "latest_scan": {
-      "state": "NO_SCORED_CANDIDATES",
-      "explanation": "No paired current market rows reached model scoring. Check capture coverage and fixture joins. Input cohorts kept separate. Before 30 October 2026: 9 settled, 30 October 2026 to input repair: 20 settled, Prospective repaired inputs: 0 settled. Promotion review uses repaired inputs only; original records remain intact. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-13T16:51:41.685576+00:00. Completed-fixture coverage checked at 2026-11-13T16:36:11.995787+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 196). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
+      "state": "EXPECTED_EMPTY_CAPTURE_WINDOW",
+      "explanation": "The successful Team Shots scan found no supported fixtures in its capture window. Stored corners rows are outside that window. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-13T17:23:06.016742+00:00. Completed-fixture coverage checked at 2026-11-13T16:36:11.995787+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 196). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
       "scored_rows": 0,
       "scored_fixtures": 0,
       "eligible_rows": 0,
@@ -142,6 +144,20 @@
       "next_unlock": null,
       "operational_alert_required": false,
       "operational_alert_code": null,
+      "capture_window_evidence": {
+        "capture_at": "2026-11-13T17:22:53Z",
+        "capture_window_end": "2026-11-14T17:22:53Z",
+        "capture_run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/43472185326",
+        "leagues_checked": [
+          "bundesliga",
+          "epl",
+          "la-liga",
+          "ligue-1",
+          "serie-a"
+        ],
+        "events_found": 0,
+        "peer_rows_outside_window": 0
+      },
       "rule_feasibility": {
         "affected_rows": 0,
         "rows_capable_of_minimum_edge": 0,
@@ -153,14 +169,14 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-13T16:51:33Z",
+      "generated_at": "2026-11-13T17:23:02Z",
       "status": "OK",
       "missing_history": [],
       "scored_fixtures": 0
     },
     "input_integrity": {
       "policy": "shots-input-integrity-20261113-v1",
-      "generated_at": "2026-11-13T16:51:41.685576+00:00",
+      "generated_at": "2026-11-13T17:23:06.016742+00:00",
       "base_sha256": "bb889250e79628dc9b9bae65dd255cb6a6a096802d3292b6c1a960b9e8cabd03",
       "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
       "source_rows": 44178,
