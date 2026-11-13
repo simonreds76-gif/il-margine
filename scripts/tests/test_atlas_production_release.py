@@ -27,6 +27,17 @@ def fixture(root,version,rows):
  write(root,f'public/football-atlas/covered/evidence-{version}.json',{})
 
 class HistoryTests(unittest.TestCase):
+ def test_hold_metadata_is_staged_but_private_hold_ledger_is_not(self):
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);fixture(root,'same',[[1,2]])
+   manifest=root/'src/data/football-atlas-release.json'
+   value=json.loads(manifest.read_text());value['historyHolds']={'held':1,'matches':[{'league':'serie-a','date':'2026-11-01','home':'A','away':'B','state':'held'}]}
+   manifest.write_text(json.dumps(value))
+   write(root,'state/club-history-holds.json',{'holds':[{'code':'private'}]})
+   paths=football_paths(root)
+   self.assertIn(Path('src/data/football-atlas-release.json'),paths)
+   self.assertNotIn(Path('state/club-history-holds.json'),paths)
+   self.assertEqual(json.loads(manifest.read_text())['historyHolds']['held'],1)
  def test_regression_or_reordered_identities_are_rejected(self):
   with tempfile.TemporaryDirectory() as td:
    a=Path(td)/'a'; b=Path(td)/'b';fixture(a,'old',[[1,2]]);fixture(b,'new',[[1,2],[3,4]])
