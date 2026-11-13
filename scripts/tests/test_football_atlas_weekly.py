@@ -43,7 +43,8 @@ class WeeklyAtlasTests(unittest.TestCase):
         with patch.object(w.requests, 'get', return_value=Response()):
             self.assertEqual(w.fetch_json('https://calendar.example'), {'TeamInfo': []})
 
-    def test_collection_rejects_partial_fixture_feed(self):
+    def test_partial_fixture_feed_holds_the_fixture_instead_of_failing_the_run(self):
+        # F13: was test_collection_rejects_partial_fixture_feed. One missing fixture is held, not fatal.
         f = dict(id='g1',league='premier-league',home='Arsenal',away='Chelsea',kickoff=NOW.isoformat(),status=-1,score=[2,1],season='2026-2027')
         old=dict(teams=['Arsenal','Chelsea'],leagues=list(w.TOURNAMENTS),seasons=['2026-2027'],fixtures=[])
         class EmptyAPI:
@@ -51,8 +52,12 @@ class WeeklyAtlasTests(unittest.TestCase):
             def quota(self): return 200
             def get(self, *args, **kwargs): return []
         with tempfile.TemporaryDirectory() as directory, patch.object(w.legacy, 'calendar', return_value=[f]):
-            with self.assertRaisesRegex(ValueError, 'Incomplete fixture reconciliation'):
-                w.collect(old, {'through':'2026-09-20'}, Path(directory), NOW+timedelta(days=1), EmptyAPI())
+            new, report = w.collect(old, {'through':'2026-09-20'}, Path(directory), NOW+timedelta(days=1), EmptyAPI())
+            self.assertEqual(new, old)
+            self.assertEqual(report['newMatches'], 0)
+            self.assertEqual([(h['id'], h['code']) for h in report['holds']['open']],
+                             [('fx:premier-league|Arsenal|Chelsea|2026-09-22', 'provider-missing')])
+            self.assertEqual(report['publicHolds']['held'], 1)
 
     def test_collection_adds_validated_match_then_is_idempotent(self):
         f = dict(id='g1',league='premier-league',home='Arsenal',away='Chelsea',kickoff=NOW.isoformat(),status=-1,score=[2,1],season='2026-2027')

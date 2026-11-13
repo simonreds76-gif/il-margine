@@ -258,6 +258,12 @@ def refresh(state, *, offline=False, now=None, days=21):
                'managerThrough': manager_release['through'], 'footballVersion': football_release['version'],
                'managerVersion': manager_release['version'], 'windowEnd': (now + timedelta(days=days)).date().isoformat(),
                'fixtures': cards}
+    held = football_release.get('historyHolds') or {}
+    if held.get('held'):
+        # Only present while club-history matches are held, so an ordinary week is byte-identical.
+        payload['footballHeld'] = held['held']
+        if held.get('completeThrough'):
+            payload['footballCompleteThrough'] = held['completeThrough']
     version = hashlib.sha256(encoded([payload, evidence])).hexdigest()[:12]
     evidence_path = Path('public/football-atlas/fixtures') / f'evidence-{version}.json'
     payload.update(version=version, evidenceUrl='/' + evidence_path.relative_to('public').as_posix())

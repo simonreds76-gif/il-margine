@@ -4,6 +4,7 @@ OddsPapi supplies historical 1X2 state; Goaloo independently supplies finished
 league results. Existing published prices/results are immutable. No PC capture.
 """
 import argparse
+from collections import Counter
 import copy
 from datetime import datetime, timedelta, timezone
 import gzip
@@ -19,6 +20,7 @@ import time
 
 import requests
 import football_atlas_update as legacy
+import football_atlas_holds as holds
 
 ROOT = Path(__file__).resolve().parents[1]
 UTC = timezone.utc
@@ -106,7 +108,7 @@ def canonical(league, names, aliases, teams):
                for n in names if n}
     matches.discard(None)
     if len(matches) != 1:
-        raise ValueError(f'Unreviewed or conflicting {league} club name: {names}')
+        raise holds.Hold('club-name-unreviewed', f'Unreviewed or conflicting {league} club name: {names}')
     return matches.pop()
 
 
@@ -123,13 +125,13 @@ def stored_keys(index):
 
 def match_fixture(p, league, calendar, aliases, old):
     if p.get('tournamentId') != TOURNAMENTS[league] or p.get('sportId') != 10:
-        raise ValueError('Unexpected sport/tournament in fixture response')
+        raise holds.Hold('provider-row-out-of-scope', 'Unexpected sport/tournament in fixture response')
     home = canonical(league, [p.get('participant1Name'), p.get('participant1ShortName')], aliases, old['teams'])
     away = canonical(league, [p.get('participant2Name'), p.get('participant2ShortName')], aliases, old['teams'])
     scheduled = legacy.dt(p['startTime'])
     actual = legacy.dt(p['trueStartTime']) if p.get('trueStartTime') else scheduled
     if abs(actual - scheduled) > timedelta(minutes=15):
-        raise ValueError(f'Delayed/rescheduled fixture needs timing review: {p["fixtureId"]}')
+        raise holds.Hold('kickoff-timing-review', f'Delayed/rescheduled fixture needs timing review: {p["fixtureId"]}')
     # Results calendars may record the delayed start rather than the original
     # schedule. Require the provider's actual-start evidence and keep the same
     # bounded delay guard; never move the price cutoff forward with the delay.
@@ -142,10 +144,10 @@ def match_fixture(p, league, calendar, aliases, old):
     candidates = [f for f in calendar if f['league'] == league and f['home'] == home and f['away'] == away
                   and timing_matches(f)]
     if len(candidates) != 1:
-        raise ValueError(f'Calendar identity/kickoff mismatch: {p["fixtureId"]} {home} / {away}')
+        raise holds.Hold('calendar-mismatch', f'Calendar identity/kickoff mismatch: {p["fixtureId"]} {home} / {away}')
     f = candidates[0]
     if f['status'] != -1 or not f['score'] or not all(type(n) is int and 0 <= n <= 30 for n in f['score']):
-        raise ValueError(f'Unconfirmed regulation-time result: {p["fixtureId"]}')
+        raise holds.Hold('result-unconfirmed', f'Unconfirmed regulation-time result: {p["fixtureId"]}')
     return f, min(scheduled, actual, legacy.dt(f['kickoff']))
 
 
@@ -185,7 +187,8 @@ def select_market(histories, cutoff):
         basis, code = PRICE_BASES[bookmaker]
         return {'bookmaker': bookmaker, 'basis': basis, 'code': code,
                 'odds': odds, 'prices': detail, 'rejected': rejected}
-    raise ValueError('No validated pre-match market: ' + '; '.join(f'{b}: {r}' for b, r in rejected.items()))
+    raise holds.Hold('price-not-validated',
+                     'No validated pre-match market: ' + '; '.join(f'{b}: {r}' for b, r in rejected.items()))
 
 
 def historical_market(api, fixture, cutoff, history_dir, now):
@@ -203,7 +206,7 @@ def historical_market(api, fixture, cutoff, history_dir, now):
                 raise
     raw = api.get('historical-odds', fixtureId=fixture['fixtureId'], bookmakers=','.join(BOOKMAKERS))
     if raw.get('fixtureId') != fixture['fixtureId']:
-        raise ValueError('Historical odds fixture mismatch')
+        raise holds.Hold('price-history-mismatch', 'Historical odds fixture mismatch')
     histories = {book: raw.get('bookmakers', {}).get(book, {}).get('markets', {}).get('101', {}).get('outcomes', {})
                  for book in BOOKMAKERS}
     saved = {'signature': signature, 'fixtureId': fixture['fixtureId'], 'market': 101,
@@ -241,6 +244,13 @@ def merge_archive(old, additions):
 
 
 def collect(old, manifest, state, now, api):
+    """Collect one week. A problem with one fixture is a hold, not a failure.
+
+    Still fatal, exactly as before: an unusable results calendar, a duplicate
+    identity in the stored archive, quota unavailable at the start, missing
+    credentials, more than 180 additions, and any addition that would replace
+    or duplicate a stored row. New and fatal: no league feed available at all.
+    """
     aliases = legacy.read(ROOT / 'scripts/config/football-atlas-clubs.json')
     config = {'stateDirectory': str(state), 'aliases': str(ROOT / 'scripts/config/football-atlas-clubs.json')}
     # Calendar parser validates the season, all club names and completion status.
@@ -254,44 +264,123 @@ def collect(old, manifest, state, now, api):
                 time.sleep(2 ** attempt)
     fixtures = legacy.calendar(config, now, force=True, fetcher=calendar_fetch)
     end = now - timedelta(hours=6)
-    start = max(FORWARD_START - timedelta(days=7), min(now - timedelta(days=14), legacy.dt(manifest['through'] + 'T00:00:00Z')))
-    if end - start > timedelta(days=35):
+    base = max(FORWARD_START - timedelta(days=7), min(now - timedelta(days=14), legacy.dt(manifest['through'] + 'T00:00:00Z')))
+    if end - base > timedelta(days=35):
         raise ValueError('Archive is over 35 days behind; review catch-up before spending quota')
-    expected = {fixture_key(f): f for f in fixtures if start <= legacy.dt(f['kickoff']) < end and f['status'] == -1}
     keys = stored_keys(old)
+    ledger = holds.Ledger.load(state, manifest.get('historyHolds'), keys, now)
+    # The window follows the oldest hold inside 35 days. Older holds are aged,
+    # kept for review, and never widen the window or trip the stop above.
+    start = ledger.window_start(base, end, now)
+    expected = {fixture_key(f): f for f in fixtures if start <= legacy.dt(f['kickoff']) < end and f['status'] == -1}
+    run = holds.Run(expected, keys, TOURNAMENTS, start, end,
+                    secrets=(getattr(api, 'key', None), os.environ.get('ODDSPAPI_API_KEY')))
     for key, f in expected.items():
         if key in keys and keys[key][6:8] != f['score']:
-            raise ValueError(f'Published score correction requires review: {key}')
+            # A public number may be wrong. Report it first; never rewrite the stored row.
+            run.review(key, f, 'published-score-conflict',
+                       f'Published score {keys[key][6:8]} differs from the results calendar {f["score"]}; stored row left unchanged')
     additions, seen, provenance, counts = [], set(), [], {}
     remaining = api.quota()
+    meter = holds.Meter(api, remaining)
     history_dir = state / 'history'
     history_dir.mkdir(exist_ok=True)
     for league, tid in TOURNAMENTS.items():
-        rows = api.get('fixtures', tournamentId=tid, **{'from': start.isoformat(), 'to': end.isoformat()})
-        if not isinstance(rows, list) or len(rows) > 200:
-            raise ValueError(f'Invalid fixture response for {league}')
-        legacy.write(state / f'fixtures-{tid}.json', rows)
         counts[league] = {'completed': 0, 'new': 0}
-        ids = set()
+        if meter.out_of_quota():
+            run.feed(league, 'not-requested', 'quota-deferred', 'Request allowance exhausted before this league feed was requested')
+            continue
+        try:
+            rows = meter.get('fixtures', tournamentId=tid, **{'from': start.isoformat(), 'to': end.isoformat()})
+        except RuntimeError as exc:
+            run.feed(league, 'unavailable', 'quota-deferred' if meter.exhausted else 'league-source-unavailable',
+                     f'League fixture feed request failed: {exc}')
+            continue
+        if (not isinstance(rows, list) or len(rows) > 200
+                or not all(isinstance(p, dict) and isinstance(p.get('fixtureId'), str) and p['fixtureId'] for p in rows)):
+            run.feed(league, 'invalid', 'league-source-unavailable', f'Invalid fixture response for {league}')
+            continue
+        legacy.write(state / f'fixtures-{tid}.json', rows)
+        run.feed(league, 'ok', rows=len(rows))
+        repeated = {pid: n for pid, n in Counter(p['fixtureId'] for p in rows).items() if n > 1}
+        for pid, n in repeated.items():
+            run.hold_row(league, next(p for p in rows if p['fixtureId'] == pid), 'provider-duplicate',
+                         f'Provider returned fixture ID {pid} {n} times', count=n)
+        matched = []
         for p in rows:
-            if p['fixtureId'] in ids:
-                raise ValueError('Duplicate provider fixture')
-            ids.add(p['fixtureId'])
-            if p.get('statusId') != 2:
+            pid = p['fixtureId']
+            if pid in repeated:
                 continue
-            f, cutoff = match_fixture(p, league, fixtures, aliases, old)
+            if p.get('statusId') != 2:
+                run.row(league, 'notCompleted', pid)
+                continue
+            try:
+                f, cutoff = match_fixture(p, league, fixtures, aliases, old)
+            except holds.Hold as exc:
+                run.hold_row(league, p, exc.code, str(exc))
+                continue
+            except (ValueError, KeyError, TypeError, AttributeError) as exc:
+                run.hold_row(league, p, 'provider-row-malformed', f'{type(exc).__name__}: {exc}')
+                continue
             if not start <= legacy.dt(f['kickoff']) < end:
-                raise ValueError('Fixture outside requested window')
-            key = fixture_key(f)
-            if key in seen:
-                raise ValueError('Provider returned duplicate match identities')
+                run.hold_row(league, p, 'provider-row-outside-window', 'Fixture outside requested window')
+                continue
+            matched.append((p, f, cutoff, fixture_key(f)))
+        shared = {key: [p['fixtureId'] for p, _, _, k in matched if k == key]
+                  for key, n in Counter(k for *_, k in matched).items() if n > 1}
+        for key, pids in shared.items():
+            # Two provider rows for one fixture: hold both, never choose.
+            seen.add(key)
+            if key in keys:
+                run.anomalies.append({'league': league, 'issue': 'Duplicate provider rows for an already published fixture',
+                                      'providerFixtureIds': sorted(pids)})
+            else:
+                run.hold_fixture(key, expected.get(key), 'provider-duplicate',
+                                 'Provider returned duplicate match identities: ' + ', '.join(sorted(pids)), pids)
+            for pid in pids:
+                run.row(league, 'published' if key in keys else 'held', pid)
+        for p, f, cutoff, key in matched:
+            pid = p['fixtureId']
+            if key in shared:
+                continue
             seen.add(key)
             counts[league]['completed'] += 1
-            if key in keys or cutoff < FORWARD_START:
+            if key in keys:
+                run.row(league, 'published', pid)
                 continue
-            if not re.fullmatch(r'id\d+', p['fixtureId']):
-                raise ValueError('Unexpected fixture ID format')
-            selected, response_hash = historical_market(api, p, cutoff, history_dir, now)
+            if key not in expected:
+                run.hold_row(league, p, 'provider-unexpected', 'Provider fixture is not in the expected calendar set')
+                continue
+            if cutoff < FORWARD_START:
+                run.skipped.add(key)
+                run.row(league, 'beforeForwardStart', pid)
+                continue
+            signature = [p.get('startTime'), p.get('trueStartTime'), p.get('updatedAt')]
+            verdict = None  # (code, reason, carried) when this fixture is held
+            if not re.fullmatch(r'id\d+', pid):
+                verdict = ('provider-id-format', 'Unexpected fixture ID format', None)
+            elif any(n not in old['teams'] for n in (f['home'], f['away'])):
+                verdict = ('club-new-needs-review', 'New club requires name/crest review', None)
+            else:
+                prior = ledger.terminal(key, pid, signature)
+                if prior:
+                    # Historical prices do not change. Do not spend a request on the same answer.
+                    verdict = (prior['code'], prior['reason'], 'terminal')
+                else:
+                    try:
+                        selected, response_hash = historical_market(meter.price_gate(), p, cutoff, history_dir, now)
+                    except holds.Hold as exc:
+                        verdict = (exc.code, str(exc), None)
+                    except RuntimeError as exc:
+                        verdict = ('quota-deferred' if meter.exhausted else 'price-source-unavailable', str(exc), None)
+                    except (ValueError, KeyError, TypeError, AttributeError, OSError, EOFError) as exc:
+                        verdict = ('price-response-malformed', f'{type(exc).__name__}: {exc}', None)
+            if verdict:
+                run.hold_fixture(key, f, verdict[0], verdict[1], [pid], signature, carried=verdict[2])
+                run.row(league, 'held', pid)
+                continue
+            run.row(league, 'added', pid)
+            run.add(key, pid)
             additions.append((f, selected['odds'], p['fixtureId'], selected['code']))
             counts[league]['new'] += 1
             provenance.append({'fixtureId': p['fixtureId'], 'resultId': f['id'], 'home': f['home'], 'away': f['away'],
@@ -301,30 +390,64 @@ def collect(old, manifest, state, now, api):
                                'responseSha256': response_hash, 'basis': selected['basis'],
                                'bookmaker': selected['bookmaker'], 'fallbackReasons': selected['rejected']})
         print(f'{league}: {counts[league]}', flush=True)
-    # A provider can stop listing an older fixture already validated and stored.
-    # Only unpublished missing results block ingestion; existing scores were
-    # cross-checked above and their prices remain immutable.
-    missing = set(expected) - seen
-    unresolved = missing - set(keys)
-    unexpected = seen - set(expected)
-    reconciliation = {'checkedAt': now.isoformat(), 'status': 'failed' if unresolved or unexpected else 'validated',
-                      'missing': [{'fixture': expected[k], 'alreadyPublished': k in keys} for k in sorted(missing)],
-                      'unexpected': [list(k) for k in sorted(unexpected)]}
-    legacy.write(state / 'reconciliation.json', reconciliation)
-    if unresolved or unexpected:
-        legacy.write(state / 'collection.json', reconciliation)
-        detail = '; '.join(f'{k[3]} {k[1]} v {k[2]}' for k in sorted(unresolved))
-        raise ValueError(f'Incomplete fixture reconciliation: {len(unresolved)} missing, {len(unexpected)} unexpected. {detail}')
+    if not any(feed['feed'] == 'ok' for feed in run.feeds.values()):
+        # Not a fixture problem: the source gave nothing. Ledger and archive stay as they were.
+        failure = {'checkedAt': now.isoformat(), 'status': 'failed', 'leagues': run.feeds}
+        legacy.write(state / 'collection.json', failure)
+        raise ValueError('No league fixture feed was available; nothing collected and holds left unchanged')
+    waiting = {key[0] for key in expected if key not in keys and not ledger.known(key)}
+    if not seen and len(waiting) >= 2:
+        # Rows may have arrived, but not one matched the calendar in any league while
+        # two or more leagues have new results waiting. That is a source or calendar
+        # failure, not a fixture problem: stay loud, change nothing. Fixtures already
+        # held from an earlier run never trigger this.
+        failure = {'checkedAt': now.isoformat(), 'status': 'failed', 'leagues': run.feeds,
+                   'leaguesWaiting': sorted(waiting)}
+        legacy.write(state / 'collection.json', failure)
+        raise ValueError(f'No provider fixture matched the results calendar in any league ({len(waiting)} leagues waiting); '
+                         'nothing collected and holds left unchanged')
+    # A provider can stop listing an older fixture already validated and stored;
+    # that never blocks. An unpublished fixture the provider did not return is
+    # held for that fixture only, and everything else proceeds.
+    run.settle_unseen(ledger)
+    accounting = run.accounting()
+    # Integrity checks on the additions are unchanged and still fatal.
     new = merge_archive(old, additions)
-    report = {'checkedAt': now.isoformat(), 'windowFrom': start.isoformat(), 'windowTo': end.isoformat(),
+    ledger.apply(run, now)
+    ledger.save(now)
+    for league in TOURNAMENTS:
+        counts[league]['held'] = sum(key[0] == league for key in run.fixture_holds)
+    missing = set(expected) - seen
+    held_keys = sorted(run.fixture_holds, key=lambda k: (k[3], k))
+    reconciliation = {'checkedAt': now.isoformat(), 'status': 'held' if run.fixture_holds or run.row_holds else 'validated',
+                      'missing': [{'fixture': expected[k], 'alreadyPublished': k in keys} for k in sorted(missing)],
+                      'unexpected': [],
+                      'held': [{'fixture': list(k), 'code': run.fixture_holds[k]['code']} for k in held_keys]}
+    legacy.write(state / 'reconciliation.json', reconciliation)
+    public = ledger.public()
+    report = {'reviewItems': [{'fixture': list(k), **{n: h[n] for n in ('code', 'reason', 'calendarId')}}
+                              for k, h in sorted(run.reviews.items(), key=lambda item: (item[0][3], item[0]))],
+              'checkedAt': now.isoformat(), 'windowFrom': start.isoformat(), 'windowTo': end.isoformat(),
               'newMatches': len(additions), 'leagues': counts, 'quotaBefore': remaining,
               'calls': api.calls, 'status': 'validated', 'provenance': provenance,
-              'priceSources': {book: sum(p['bookmaker'] == book for p in provenance) for book in BOOKMAKERS}}
+              'priceSources': {book: sum(p['bookmaker'] == book for p in provenance) for book in BOOKMAKERS},
+              'holdStatus': ledger.status(), 'windowBase': base.isoformat(), 'windowFollowsHold': start < base,
+              'holds': ledger.report(run), 'accounting': accounting,
+              'quota': {'before': remaining, 'requestsThisRun': meter.spent(), 'exhausted': meter.exhausted,
+                        'deferred': sum(h['code'] == 'quota-deferred' for h in run.fixture_holds.values())},
+              'publicHolds': public,
+              'publicHoldsChanged': not holds.same_public(manifest.get('historyHolds'), public)}
     legacy.write(state / 'collection.json', report)
     return new, report
 
 
-def write_release(old_manifest, index, now):
+def write_release(old_manifest, index, now, holds_public=None):
+    """holds_public=None keeps the manifest exactly as before this change.
+
+    A dict (possibly empty) states the current public held list: empty removes
+    any earlier hold metadata, non-empty replaces it. The archive bytes and
+    version never depend on it.
+    """
     payload = json.dumps(index, ensure_ascii=False, separators=(',', ':')).encode()
     version = hashlib.sha256(payload).hexdigest()[:12]
     path = ROOT / 'public/football-atlas' / f'index-{version}.json'
@@ -337,6 +460,11 @@ def write_release(old_manifest, index, now):
                                           'priced': sum(r[2] == li and r[3] == si for r in priced)}
                                   for si, season in enumerate(index['seasons'])}
                           for li, league in enumerate(index['leagues'])}
+    if holds_public is not None:
+        release.pop('historyHolds', None)
+        if holds_public.get('held') or holds_public.get('review'):
+            # Clubs, dates and counts only. Never a provider name, ID or reason.
+            release['historyHolds'] = holds.with_complete_through(holds_public, release['through'])
     legacy.write(ROOT / MANIFEST, release)
     return release, path.relative_to(ROOT)
 
@@ -523,7 +651,7 @@ def main():
         if not args.publish:
             # Validate managers against the current candidate prices without committing.
             import manager_atlas_weekly
-            write_release(manifest,new,datetime.now(UTC))
+            write_release(manifest,new,datetime.now(UTC),holds_public=report.get('publicHolds') or {})
             manager_result=manager_atlas_weekly.refresh_or_retain(state)
             report['managers']={'added':manager_result['added'],'version':manager_result['manifest']['version'],'pending':manager_result.get('pending',[]),'publicationState':manager_result.get('publicationState'),'error':manager_result.get('error')}
             import atlas_fixture_board
@@ -537,9 +665,10 @@ def main():
             base = run(['git', 'rev-parse', 'HEAD'], ROOT).strip()
             live_html = helper.fetch('https://ilmargine.bet/football-atlas').decode()
             changed_paths=set()
-            if report['newMatches']:
+            # A changed held list must reach the public manifest even in a week with no additions.
+            if report['newMatches'] or report.get('publicHoldsChanged'):
                 previous = manifest['indexUrl']
-                manifest, path = write_release(manifest, new, datetime.now(UTC))
+                manifest, path = write_release(manifest, new, datetime.now(UTC), holds_public=report.get('publicHolds') or {})
                 run(['node', '--experimental-strip-types', '--test', 'scripts/tests/football-atlas.test.mjs'], ROOT)
                 live_paths = set(re.findall(r'/football-atlas/index-[a-f0-9]{12}\.json', live_html))
                 if not live_paths:
