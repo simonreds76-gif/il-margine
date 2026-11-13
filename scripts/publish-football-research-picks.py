@@ -178,6 +178,8 @@ def load_module(name: str, path: Path):
     return module
 
 
+import football_shots_inputs as SHOTS_INPUTS
+
 FORM_BUILD = load_module("football_form_build", SCRIPTS / "build-football-form-layer.py")
 BACKTEST = load_module("football_form_backtest", SCRIPTS / "backtest-football-form-layer.py")
 
@@ -408,6 +410,8 @@ def live_form_row(
         out.update(FORM_BUILD.summarize_window(history, window))
         out.update(FORM_BUILD.relative_window_fields(out, window))
     out.update(FORM_BUILD.summarize_ema_window(history))
+    if any(r.get("_shots_input_policy") for r in history):
+        out.update(SHOTS_INPUTS.quality_fields(history))
     return out
 
 
@@ -810,6 +814,8 @@ def main() -> None:
     ensure_team_base(args.team_base)
     base_rows = load_csv(args.team_base)
     by_team, by_league = build_base_indexes(base_rows)
+    # This published legacy lane retains its existing input/calculation path.
+    # The repaired EMA20 comparison is separately versioned in the paper ledger.
     team_picks = publish_team_shots(args, by_team, by_league, base_rows, now)
     corners_picks = publish_corners(args, by_team, by_league, now)
     team_picks = merge_published_ledger(load_csv(args.team_output), team_picks)

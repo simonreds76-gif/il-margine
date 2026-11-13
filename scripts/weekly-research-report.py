@@ -11,6 +11,7 @@ from __future__ import annotations
 from goalkeeper_keeper_watch import weekly_text as keeper_watch_weekly_text
 from tennis_match_shape_integrity import report_with_health
 from frozen_paper_common import read_report as frozen_paper_report
+from football_shots_inputs import cohort_performance_text
 
 import argparse
 import base64
@@ -1485,6 +1486,13 @@ def model_watchlist_text(payload: dict[str, Any], *, tennis_only: bool = False) 
             forward_roi = evidence.get("roi")
             roi_text = f"{forward_roi:+.1%}" if forward_roi is not None else "-"
             lines.append(f"Opponent Shots [SHADOW]: forward {evidence.get('wins', 0)}W/{evidence.get('losses', 0)}L, ROI {roi_text}, pending {evidence.get('pending', 0)} | {status.get('review_status', 'UNAVAILABLE')} | scan {status.get('generated_at', 'missing')}")
+            if status.get('input_cohorts'):
+                parts=[]
+                for key,label in [('before_xg_gap','pre-30 Oct'),('xg_gap_before_repair','xG gap'),('repaired_inputs','repaired')]:
+                    e=status['input_cohorts'].get(key,{})
+                    roi=e.get('roi');r=f'{roi:+.1%}' if roi is not None else 'awaiting results'
+                    parts.append(f"{label}: {e.get('settled',0)} settled, ROI {r}")
+                lines.append('Input cohorts | '+'; '.join(parts)+'. Review uses repaired inputs only.')
             continue
         if candidate.get("id") == "shots_market_offset_v1":
             status = candidate.get("forward_evidence") or {}
@@ -1493,6 +1501,13 @@ def model_watchlist_text(payload: dict[str, Any], *, tennis_only: bool = False) 
             roi = evidence.get("roi")
             roi_text = f"{roi:+.1%}" if roi is not None else "awaiting evidence"
             lines.append(f"Calibrated Shots [ZERO-STAKE, retained prospective cohorts]: hypothetical ROI {roi_text}, settled {evidence.get('settled', 0)}, pending {evidence.get('pending', 0)} | {current.get('status', 'SNAPSHOT_UNAVAILABLE')} | {current.get('paired_fixtures', 0)} paired fixtures | version {current.get('version', 'unknown')}")
+            if current.get('input_cohorts'):
+                parts=[]
+                for key,label in [('before_xg_gap','pre-30 Oct'),('xg_gap_before_repair','xG gap'),('repaired_inputs','repaired')]:
+                    e=current['input_cohorts'].get(key,{}).get('models',{}).get('shots_market_offset_v1',{}).get('hypothetical_selections',{})
+                    roi=e.get('roi');r=f'{roi:+.1%}' if roi is not None else 'awaiting results'
+                    parts.append(f"{label}: {e.get('settled',0)} settled, ROI {r}")
+                lines.append('Input cohorts | '+'; '.join(parts)+'. Review uses repaired inputs only.')
             continue
         if candidate.get("id") == "astrissimo_v1" or "astrissimo" in candidate.get("id", ""):
             record = payload.get("tennis_astrissimo") or {}
@@ -1729,6 +1744,7 @@ def render_report(payload: dict[str, Any]) -> str:
         "",
         f"- Team Shots v4: count {team_v4.get('count_gate', 'NOT_RUN')}; prospective {team_v4.get('prospective_status', 'BLOCKED')}; promotion {team_v4.get('promotion_gate', 'BLOCKED')}.",
         f"- Team Shots v4 evidence: {team_v4_live.get('signals', 0)} signals, {team_v4_live.get('settled', 0)} settled, {number(team_v4_live.get('pnl_units')):+.2f}u, ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'}, true-close CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'}.",
+        '- Team Shots v4 input cohorts: '+cohort_performance_text(team_v4.get('input_cohorts',{})),
         f"- Team Shots v4 warm-up tracking (not bets): {team_v4_warmup.get('signals', 0)} signals, {team_v4_warmup.get('settled', 0)} settled / {team_v4_warmup.get('pending', 0)} pending, {number(team_v4_warmup.get('pnl_units')):+.2f}u, ROI {pct(number(team_v4_warmup.get('roi')) * 100) if team_v4_warmup.get('roi') is not None else '-'}.",
         f"- Team Shots v4 latest scan: {team_v4_scan.get('state', 'NOT_RUN')}; {team_v4_scan.get('scored_rows', 0)} rows / {team_v4_scan.get('scored_fixtures', 0)} fixtures scored; {team_v4_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)} fixtures passed edge but were warm-up blocked; blockers {team_v4_scan.get('blocker_rows') or '-'}.",
         f"- Corners v3: count {corners_v3.get('count_gate', 'NOT_RUN')}; prospective {corners_v3.get('prospective_status', 'BLOCKED')}; promotion {corners_v3.get('promotion_gate', 'BLOCKED')}.",
@@ -2119,6 +2135,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         "",
         "EVIDENCE DETAIL",
         f"Team Shots v4 [CURRENT TELEGRAM MODEL]: {team_v4.get('prospective_status', 'BLOCKED')} | {team_v4_live.get('settled', 0)} settled | {number(team_v4_live.get('pnl_units')):+.2f}u | ROI {pct(number(team_v4_live.get('roi')) * 100) if team_v4_live.get('roi') is not None else '-'} | CLV {pct(number(team_v4_live.get('mean_true_close_clv')) * 100) if team_v4_live.get('mean_true_close_clv') is not None else '-'} | promotion {team_v4.get('promotion_gate', 'BLOCKED')}",
+        'v4 input cohorts: '+cohort_performance_text(team_v4.get('input_cohorts',{})),
         f"Team Shots v4 warm-up [TRACK ONLY]: {team_v4_warmup.get('settled', 0)}/{team_v4_warmup.get('signals', 0)} settled | {number(team_v4_warmup.get('pnl_units')):+.2f}u | ROI {pct(number(team_v4_warmup.get('roi')) * 100) if team_v4_warmup.get('roi') is not None else '-'} | pending {team_v4_warmup.get('pending', 0)}",
         f"Team Shots scan: {team_v4_scan.get('state', 'NOT_RUN')} | scored {team_v4_scan.get('scored_rows', 0)} rows/{team_v4_scan.get('scored_fixtures', 0)} fixtures | edge-pass warmup blocks {team_v4_scan.get('edge_pass_but_warmup_blocked_fixtures', 0)}",
         f"Corners v3: {corners_v3.get('prospective_status', 'BLOCKED')} | {corners_v3_live.get('settled', 0)} settled | {number(corners_v3_live.get('pnl_units')):+.2f}u | ROI {pct(number(corners_v3_live.get('roi')) * 100) if corners_v3_live.get('roi') is not None else '-'} | CLV {pct(number(corners_v3_live.get('mean_true_close_clv')) * 100) if corners_v3_live.get('mean_true_close_clv') is not None else '-'} | promotion {corners_v3.get('promotion_gate', 'BLOCKED')}",

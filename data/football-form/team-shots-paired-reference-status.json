@@ -137,8 +137,8 @@
         "settled": 122,
         "wins": 55,
         "losses": 67,
-        "pnl_units": -20.055699999999995,
-        "roi": -0.16439098360655732,
+        "pnl_units": -20.055699999999998,
+        "roi": -0.16439098360655735,
         "stake_units": 122,
         "pending": 0,
         "overdue": 0,
@@ -218,7 +218,7 @@
         "settled": 15,
         "wins": 4,
         "losses": 11,
-        "pnl_units": -7.700100000000001,
+        "pnl_units": -7.7001,
         "roi": -0.51334,
         "stake_units": 15,
         "pending": 0,
@@ -329,8 +329,8 @@
         "settled": 79,
         "wins": 39,
         "losses": 40,
-        "pnl_units": -7.3322,
-        "roi": -0.09281265822784811,
+        "pnl_units": -7.332199999999999,
+        "roi": -0.0928126582278481,
         "stake_units": 79,
         "pending": 0,
         "overdue": 0,
@@ -434,8 +434,8 @@
         "settled": 34,
         "wins": 19,
         "losses": 15,
-        "pnl_units": 1.0946000000000002,
-        "roi": 0.03219411764705883,
+        "pnl_units": 1.0946000000000005,
+        "roi": 0.03219411764705884,
         "stake_units": 34,
         "pending": 0,
         "overdue": 0,
@@ -445,7 +445,7 @@
     }
   },
   "real_stake_units": 0,
-  "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion. Identity repairs registered 28 October 2026; inspect cohort breakdown for consistent-input comparisons.",
+  "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion. Identity repairs registered 28 October 2026; inspect cohort breakdown for consistent-input comparisons. INVESTIGATE DATA: 2 retained contracts have a verified count discrepancy. Historical figures remain as recorded pending a separate settlement amendment; they are not promotion evidence. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-13T16:52:11.981291+00:00. Completed-fixture coverage checked at 2026-11-13T16:36:11.995787+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 196). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
   "statshub_status": "NOT_CONNECTED",
   "clv_status": "NOT_YET_MEASURED",
   "review_milestones_fixtures": [
@@ -453,11 +453,70 @@
     150
   ],
   "automatic_promotion": false,
-  "version": "paired-market-offset-20261109-fixture-v5",
-  "model_fingerprint": "a645d0ef31f390888d7e1eca504e14c1e34d0bacec46a497897b129a0e7fd41f",
-  "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
+  "input_integrity": {
+    "policy": "shots-input-integrity-20261113-v1",
+    "generated_at": "2026-11-13T16:52:11.981291+00:00",
+    "base_sha256": "bb889250e79628dc9b9bae65dd255cb6a6a096802d3292b6c1a960b9e8cabd03",
+    "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
+    "source_rows": 44178,
+    "prediction_rows": 44172,
+    "latest_result_date": "2026-11-08",
+    "recent_missing_xg_team_rows": 196,
+    "applied_corrections": [
+      {
+        "fixture": [
+          "2026-10-29",
+          "serie-a",
+          "fiorentina",
+          "atalanta"
+        ],
+        "id": "fiorentina-atalanta-total-not-off-target-20261029",
+        "source_already_correct": false
+      }
+    ],
+    "quarantined_fixtures": [
+      {
+        "fixture": [
+          "2017-04-16",
+          "ligue-1",
+          "bastia",
+          "lyon"
+        ],
+        "reason": "awarded_match_missing_counts_not_zero"
+      },
+      {
+        "fixture": [
+          "2021-08-15",
+          "epl",
+          "newcastle",
+          "west ham"
+        ],
+        "reason": "on_target_exceeds_total"
+      },
+      {
+        "fixture": [
+          "2024-12-14",
+          "bundesliga",
+          "union berlin",
+          "bochum"
+        ],
+        "reason": "awarded_match_missing_counts_not_zero"
+      }
+    ],
+    "check_observed_at": "2026-11-13T16:36:11.995787+00:00",
+    "blocked_leagues": {},
+    "missing_completed": [],
+    "historical_records_changed": false,
+    "formulas_changed": false,
+    "paper_input_transform_changed": true,
+    "minimum_paired_xg_r10": 5,
+    "status": "READY_WITH_PARTIAL_XG"
+  },
+  "version": "paired-market-offset-20261113-input-v6",
+  "model_fingerprint": "de9c6c8250e8ac5456d72bcf3075020c734fe7b67e63dd37ea9a0c0fcea8e446",
+  "calibration_sha256": "4dd7f85fa5e9dc7d3bcc56c495bafba4f87bd54bfaebf37688c2ca16587fe0ea",
   "preserved_prior_cohort_contracts": 569,
-  "generated_at": "2026-11-13T16:31:14Z",
+  "generated_at": "2026-11-13T16:52:17Z",
   "new_contracts": 0,
   "scan_exclusions": {},
   "latest_archived_capture": "2026-11-08T16:19:48.772038+00:00",
@@ -526,8 +585,8 @@
             "settled": 35,
             "wins": 18,
             "losses": 17,
-            "pnl_units": -1.7570000000000003,
-            "roi": -0.05020000000000001,
+            "pnl_units": -1.7569999999999995,
+            "roi": -0.05019999999999999,
             "stake_units": 35,
             "pending": 0,
             "overdue": 0,
@@ -615,8 +674,8 @@
             "settled": 37,
             "wins": 22,
             "losses": 15,
-            "pnl_units": 3.160000000000001,
-            "roi": 0.08540540540540544,
+            "pnl_units": 3.1600000000000006,
+            "roi": 0.08540540540540542,
             "stake_units": 37,
             "pending": 0,
             "overdue": 0,
@@ -1032,8 +1091,8 @@
             "settled": 13,
             "wins": 4,
             "losses": 9,
-            "pnl_units": -5.700100000000001,
-            "roi": -0.43846923076923083,
+            "pnl_units": -5.7001,
+            "roi": -0.4384692307692308,
             "stake_units": 13,
             "pending": 0,
             "overdue": 0,
@@ -1095,8 +1154,8 @@
             "settled": 24,
             "wins": 10,
             "losses": 14,
-            "pnl_units": -5.212200000000001,
-            "roi": -0.21717500000000003,
+            "pnl_units": -5.2122,
+            "roi": -0.217175,
             "stake_units": 24,
             "pending": 0,
             "overdue": 0,
@@ -1171,6 +1230,128 @@
         150
       ],
       "automatic_promotion": false
+    },
+    "paired-market-offset-20261113-input-v6": {
+      "contracts": 0,
+      "settled_contracts": 0,
+      "paired_contracts": 0,
+      "paired_fixtures": 0,
+      "conflicting_results": 0,
+      "models": {
+        "ema20_v3": {
+          "brier": null,
+          "log_loss": null,
+          "market_brier": null,
+          "mean_error": null,
+          "absolute_error": null,
+          "profit_history": {
+            "days": [],
+            "profit": 0.0,
+            "settled": 0,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi": null,
+            "stake_units": 0,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 0,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        },
+        "v4": {
+          "brier": null,
+          "log_loss": null,
+          "market_brier": null,
+          "mean_error": null,
+          "absolute_error": null,
+          "profit_history": {
+            "days": [],
+            "profit": 0.0,
+            "settled": 0,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi": null,
+            "stake_units": 0,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 0,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        },
+        "opponent": {
+          "brier": null,
+          "log_loss": null,
+          "market_brier": null,
+          "mean_error": null,
+          "absolute_error": null,
+          "profit_history": {
+            "days": [],
+            "profit": 0.0,
+            "settled": 0,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi": null,
+            "stake_units": 0,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 0,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        },
+        "shots_market_offset_v1": {
+          "brier": null,
+          "log_loss": null,
+          "market_brier": null,
+          "mean_error": null,
+          "absolute_error": null,
+          "profit_history": {
+            "days": [],
+            "profit": 0.0,
+            "settled": 0,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi": null,
+            "stake_units": 0,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 0,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        }
+      },
+      "real_stake_units": 0,
+      "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion.",
+      "statshub_status": "NOT_CONNECTED",
+      "clv_status": "NOT_YET_MEASURED",
+      "review_milestones_fixtures": [
+        50,
+        150
+      ],
+      "automatic_promotion": false
     }
   },
   "record_scope": "All retained prospective cohorts; original predictions and prices unchanged.",
@@ -1178,10 +1359,762 @@
   "capture_error": null,
   "settlement_source": "exact_fixture_base_and_verified_snapshots",
   "snapshot_settlement_contracts": 569,
+  "input_cohorts": {
+    "before_xg_gap": {
+      "contracts": 380,
+      "settled_contracts": 380,
+      "paired_contracts": 243,
+      "paired_fixtures": 93,
+      "conflicting_results": 0,
+      "models": {
+        "ema20_v3": {
+          "brier": 0.25885903028634016,
+          "log_loss": 0.7122366373092442,
+          "market_brier": 0.24936083034458026,
+          "mean_error": -0.05210747277374479,
+          "absolute_error": 4.061724349949821,
+          "profit_history": {
+            "days": [
+              {
+                "date": "2026-10-09",
+                "profit": -2.0,
+                "cumulative": -2.0,
+                "settled": 2
+              },
+              {
+                "date": "2026-10-10",
+                "profit": 0.087,
+                "cumulative": -1.913,
+                "settled": 9
+              },
+              {
+                "date": "2026-10-11",
+                "profit": 1.433,
+                "cumulative": -0.48,
+                "settled": 8
+              },
+              {
+                "date": "2026-10-12",
+                "profit": 1.454,
+                "cumulative": 0.974,
+                "settled": 2
+              },
+              {
+                "date": "2026-10-17",
+                "profit": -4.349,
+                "cumulative": -3.375,
+                "settled": 10
+              },
+              {
+                "date": "2026-10-18",
+                "profit": 1.618,
+                "cumulative": -1.757,
+                "settled": 4
+              },
+              {
+                "date": "2026-10-19",
+                "profit": 1.0,
+                "cumulative": -0.757,
+                "settled": 1
+              },
+              {
+                "date": "2026-10-23",
+                "profit": 0.909,
+                "cumulative": 0.152,
+                "settled": 1
+              },
+              {
+                "date": "2026-10-24",
+                "profit": -4.273,
+                "cumulative": -4.121,
+                "settled": 8
+              },
+              {
+                "date": "2026-10-25",
+                "profit": 1.935,
+                "cumulative": -2.186,
+                "settled": 11
+              },
+              {
+                "date": "2026-10-26",
+                "profit": -2.0,
+                "cumulative": -4.186,
+                "settled": 2
+              },
+              {
+                "date": "2026-10-29",
+                "profit": -1.0,
+                "cumulative": -5.186,
+                "settled": 1
+              },
+              {
+                "date": "2026-10-30",
+                "profit": 0.9091,
+                "cumulative": -4.2769,
+                "settled": 1
+              }
+            ],
+            "profit": -4.2769,
+            "settled": 60,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 60,
+            "wins": 30,
+            "losses": 30,
+            "pnl_units": -4.2768999999999995,
+            "roi": -0.07128166666666666,
+            "stake_units": 60,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 137,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        },
+        "v4": {
+          "brier": 0.25037044286222043,
+          "log_loss": 0.6939094935016497,
+          "market_brier": 0.24936083034458026,
+          "mean_error": 0.0593927508960574,
+          "absolute_error": 4.020997623655914,
+          "profit_history": {
+            "days": [
+              {
+                "date": "2026-10-24",
+                "profit": -1.0,
+                "cumulative": -1.0,
+                "settled": 1
+              },
+              {
+                "date": "2026-10-25",
+                "profit": -1.0,
+                "cumulative": -2.0,
+                "settled": 1
+              },
+              {
+                "date": "2026-10-29",
+                "profit": -1.0,
+                "cumulative": -3.0,
+                "settled": 1
+              },
+              {
+                "date": "2026-10-30",
+                "profit": 0.8333,
+                "cumulative": -2.1667,
+                "settled": 1
+              }
+            ],
+            "profit": -2.1667,
+            "settled": 4,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 4,
+            "wins": 1,
+            "losses": 3,
+            "pnl_units": -2.1667,
+            "roi": -0.541675,
+            "stake_units": 4,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 137,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        },
+        "opponent": {
+          "brier": 0.24802772790064695,
+          "log_loss": 0.6890255538393619,
+          "market_brier": 0.24936083034458026,
+          "mean_error": -0.1050583440860215,
+          "absolute_error": 3.939731471326165,
+          "profit_history": {
+            "days": [
+              {
+                "date": "2026-10-09",
+                "profit": 0.8,
+                "cumulative": 0.8,
+                "settled": 1
+              },
+              {
+                "date": "2026-10-10",
+                "profit": -0.128,
+                "cumulative": 0.672,
+                "settled": 11
+              },
+              {
+                "date": "2026-10-11",
+                "profit": 1.16,
+                "cumulative": 1.832,
+                "settled": 8
+              },
+              {
+                "date": "2026-10-16",
+                "profit": 1.56,
+                "cumulative": 3.392,
+                "settled": 2
+              },
+              {
+                "date": "2026-10-17",
+                "profit": -2.501,
+                "cumulative": 0.891,
+                "settled": 8
+              },
+              {
+                "date": "2026-10-18",
+                "profit": 2.269,
+                "cumulative": 3.16,
+                "settled": 7
+              },
+              {
+                "date": "2026-10-24",
+                "profit": -3.44,
+                "cumulative": -0.28,
+                "settled": 7
+              },
+              {
+                "date": "2026-10-25",
+                "profit": -1.84,
+                "cumulative": -2.12,
+                "settled": 11
+              },
+              {
+                "date": "2026-10-30",
+                "profit": 0.9091,
+                "cumulative": -1.2109,
+                "settled": 1
+              }
+            ],
+            "profit": -1.2109,
+            "settled": 56,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 56,
+            "wins": 30,
+            "losses": 26,
+            "pnl_units": -1.2108999999999992,
+            "roi": -0.02162321428571427,
+            "stake_units": 56,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 19,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        },
+        "shots_market_offset_v1": {
+          "brier": 0.24790636297732035,
+          "log_loss": 0.6888785832073542,
+          "market_brier": 0.24936083034458026,
+          "mean_error": -0.1050583440860215,
+          "absolute_error": 3.939731471326165,
+          "profit_history": {
+            "days": [
+              {
+                "date": "2026-10-09",
+                "profit": 0.8,
+                "cumulative": 0.8,
+                "settled": 1
+              },
+              {
+                "date": "2026-10-10",
+                "profit": 0.545,
+                "cumulative": 1.345,
+                "settled": 5
+              },
+              {
+                "date": "2026-10-11",
+                "profit": -1.273,
+                "cumulative": 0.072,
+                "settled": 3
+              },
+              {
+                "date": "2026-10-16",
+                "profit": 1.56,
+                "cumulative": 1.632,
+                "settled": 2
+              },
+              {
+                "date": "2026-10-17",
+                "profit": -1.091,
+                "cumulative": 0.541,
+                "settled": 3
+              },
+              {
+                "date": "2026-10-18",
+                "profit": 0.833,
+                "cumulative": 1.374,
+                "settled": 1
+              },
+              {
+                "date": "2026-10-24",
+                "profit": -0.273,
+                "cumulative": 1.101,
+                "settled": 2
+              },
+              {
+                "date": "2026-10-25",
+                "profit": 1.433,
+                "cumulative": 2.534,
+                "settled": 6
+              },
+              {
+                "date": "2026-10-30",
+                "profit": 0.9091,
+                "cumulative": 3.4431,
+                "settled": 1
+              }
+            ],
+            "profit": 3.4431,
+            "settled": 24,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 24,
+            "wins": 15,
+            "losses": 9,
+            "pnl_units": 3.4431000000000003,
+            "roi": 0.14346250000000002,
+            "stake_units": 24,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 19,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        }
+      },
+      "real_stake_units": 0,
+      "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion.",
+      "statshub_status": "NOT_CONNECTED",
+      "clv_status": "NOT_YET_MEASURED",
+      "review_milestones_fixtures": [
+        50,
+        150
+      ],
+      "automatic_promotion": false,
+      "label": "Before 30 October 2026"
+    },
+    "xg_gap_before_repair": {
+      "contracts": 189,
+      "settled_contracts": 189,
+      "paired_contracts": 189,
+      "paired_fixtures": 82,
+      "conflicting_results": 0,
+      "models": {
+        "ema20_v3": {
+          "brier": 0.2726449372021885,
+          "log_loss": 0.7419121175453808,
+          "market_brier": 0.2510749302817001,
+          "mean_error": -0.03291292933688972,
+          "absolute_error": 4.099499425387195,
+          "profit_history": {
+            "days": [
+              {
+                "date": "2026-10-30",
+                "profit": -1.1667,
+                "cumulative": -1.1667,
+                "settled": 3
+              },
+              {
+                "date": "2026-10-31",
+                "profit": -2.5636,
+                "cumulative": -3.7303,
+                "settled": 10
+              },
+              {
+                "date": "2026-11-01",
+                "profit": -5.2909,
+                "cumulative": -9.0212,
+                "settled": 11
+              },
+              {
+                "date": "2026-11-02",
+                "profit": -2.0,
+                "cumulative": -11.0212,
+                "settled": 2
+              },
+              {
+                "date": "2026-11-06",
+                "profit": -1.2,
+                "cumulative": -12.2212,
+                "settled": 3
+              },
+              {
+                "date": "2026-11-07",
+                "profit": -2.0212,
+                "cumulative": -14.2424,
+                "settled": 15
+              },
+              {
+                "date": "2026-11-08",
+                "profit": -1.5364,
+                "cumulative": -15.7788,
+                "settled": 18
+              }
+            ],
+            "profit": -15.7788,
+            "settled": 62,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 62,
+            "wins": 25,
+            "losses": 37,
+            "pnl_units": -15.7788,
+            "roi": -0.2544967741935484,
+            "stake_units": 62,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 0,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        },
+        "v4": {
+          "brier": 0.25448927579270225,
+          "log_loss": 0.7022015534068915,
+          "market_brier": 0.2510749302817001,
+          "mean_error": -0.032912914634146306,
+          "absolute_error": 4.099499459349594,
+          "profit_history": {
+            "days": [
+              {
+                "date": "2026-10-30",
+                "profit": -1.0,
+                "cumulative": -1.0,
+                "settled": 1
+              },
+              {
+                "date": "2026-10-31",
+                "profit": -2.0,
+                "cumulative": -3.0,
+                "settled": 2
+              },
+              {
+                "date": "2026-11-01",
+                "profit": -0.1667,
+                "cumulative": -3.1667,
+                "settled": 2
+              },
+              {
+                "date": "2026-11-06",
+                "profit": 0.8,
+                "cumulative": -2.3667,
+                "settled": 1
+              },
+              {
+                "date": "2026-11-07",
+                "profit": -2.0,
+                "cumulative": -4.3667,
+                "settled": 2
+              },
+              {
+                "date": "2026-11-08",
+                "profit": -1.1667,
+                "cumulative": -5.5334,
+                "settled": 3
+              }
+            ],
+            "profit": -5.5334,
+            "settled": 11,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 11,
+            "wins": 3,
+            "losses": 8,
+            "pnl_units": -5.5334,
+            "roi": -0.5030363636363636,
+            "stake_units": 11,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 0,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        },
+        "opponent": {
+          "brier": 0.25499671447446953,
+          "log_loss": 0.7032665877852958,
+          "market_brier": 0.2510749302817001,
+          "mean_error": -0.07118503252032518,
+          "absolute_error": 3.8905463455284552,
+          "profit_history": {
+            "days": [
+              {
+                "date": "2026-10-30",
+                "profit": -1.0,
+                "cumulative": -1.0,
+                "settled": 1
+              },
+              {
+                "date": "2026-10-31",
+                "profit": 0.9091,
+                "cumulative": -0.0909,
+                "settled": 3
+              },
+              {
+                "date": "2026-11-01",
+                "profit": -1.0909,
+                "cumulative": -1.1818,
+                "settled": 3
+              },
+              {
+                "date": "2026-11-02",
+                "profit": 0.8333,
+                "cumulative": -0.3485,
+                "settled": 1
+              },
+              {
+                "date": "2026-11-07",
+                "profit": -5.0,
+                "cumulative": -5.3485,
+                "settled": 5
+              },
+              {
+                "date": "2026-11-08",
+                "profit": -0.7728,
+                "cumulative": -6.1213,
+                "settled": 10
+              }
+            ],
+            "profit": -6.1213,
+            "settled": 23,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 23,
+            "wins": 9,
+            "losses": 14,
+            "pnl_units": -6.1213,
+            "roi": -0.26614347826086954,
+            "stake_units": 23,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 0,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        },
+        "shots_market_offset_v1": {
+          "brier": 0.2534664517634652,
+          "log_loss": 0.700144459872174,
+          "market_brier": 0.2510749302817001,
+          "mean_error": -0.07118503252032518,
+          "absolute_error": 3.8905463455284552,
+          "profit_history": {
+            "days": [
+              {
+                "date": "2026-10-31",
+                "profit": 1.9091,
+                "cumulative": 1.9091,
+                "settled": 2
+              },
+              {
+                "date": "2026-11-01",
+                "profit": -0.0909,
+                "cumulative": 1.8182,
+                "settled": 2
+              },
+              {
+                "date": "2026-11-07",
+                "profit": -2.0,
+                "cumulative": -0.1818,
+                "settled": 2
+              },
+              {
+                "date": "2026-11-08",
+                "profit": -2.1667,
+                "cumulative": -2.3485,
+                "settled": 4
+              }
+            ],
+            "profit": -2.3485,
+            "settled": 10,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 10,
+            "wins": 4,
+            "losses": 6,
+            "pnl_units": -2.3485,
+            "roi": -0.23485,
+            "stake_units": 10,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 0,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        }
+      },
+      "real_stake_units": 0,
+      "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion.",
+      "statshub_status": "NOT_CONNECTED",
+      "clv_status": "NOT_YET_MEASURED",
+      "review_milestones_fixtures": [
+        50,
+        150
+      ],
+      "automatic_promotion": false,
+      "label": "30 October 2026 to input repair"
+    },
+    "repaired_inputs": {
+      "contracts": 0,
+      "settled_contracts": 0,
+      "paired_contracts": 0,
+      "paired_fixtures": 0,
+      "conflicting_results": 0,
+      "models": {
+        "ema20_v3": {
+          "brier": null,
+          "log_loss": null,
+          "market_brier": null,
+          "mean_error": null,
+          "absolute_error": null,
+          "profit_history": {
+            "days": [],
+            "profit": 0.0,
+            "settled": 0,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi": null,
+            "stake_units": 0,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 0,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        },
+        "v4": {
+          "brier": null,
+          "log_loss": null,
+          "market_brier": null,
+          "mean_error": null,
+          "absolute_error": null,
+          "profit_history": {
+            "days": [],
+            "profit": 0.0,
+            "settled": 0,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi": null,
+            "stake_units": 0,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 0,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        },
+        "opponent": {
+          "brier": null,
+          "log_loss": null,
+          "market_brier": null,
+          "mean_error": null,
+          "absolute_error": null,
+          "profit_history": {
+            "days": [],
+            "profit": 0.0,
+            "settled": 0,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi": null,
+            "stake_units": 0,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 0,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        },
+        "shots_market_offset_v1": {
+          "brier": null,
+          "log_loss": null,
+          "market_brier": null,
+          "mean_error": null,
+          "absolute_error": null,
+          "profit_history": {
+            "days": [],
+            "profit": 0.0,
+            "settled": 0,
+            "omitted": 0,
+            "note": "All retained forward input versions. Match dates; flat 1u paper selections only."
+          },
+          "hypothetical_selections": {
+            "settled": 0,
+            "wins": 0,
+            "losses": 0,
+            "pnl_units": 0,
+            "roi": null,
+            "stake_units": 0,
+            "pending": 0,
+            "overdue": 0,
+            "unavailable_contracts": 0,
+            "note": "Selection cohorts can differ; compare forecast scores on the paired cohort above."
+          }
+        }
+      },
+      "real_stake_units": 0,
+      "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion.",
+      "statshub_status": "NOT_CONNECTED",
+      "clv_status": "NOT_YET_MEASURED",
+      "review_milestones_fixtures": [
+        50,
+        150
+      ],
+      "automatic_promotion": false,
+      "label": "Prospective repaired inputs"
+    }
+  },
+  "promotion_evidence_scope": "repaired_inputs_only; retained earlier cohorts are descriptive",
+  "settlement_exceptions": [
+    {
+      "fixture": "2026-10-29|serie-a|fiorentina|atalanta",
+      "contract_ids": [
+        "2026-10-29T19:45:00+00:00|serie-a|fiorentina|atalanta|fiorentina|15.5|bet365",
+        "2026-10-29T19:45:00+00:00|serie-a|fiorentina|atalanta|atalanta|13.5|bet365"
+      ],
+      "recorded_counts": [
+        14.0,
+        2.0
+      ],
+      "verified_counts": [
+        26,
+        10
+      ],
+      "evidence": [
+        "https://www.skysports.com/football/fiorentina-vs-atalanta/stats/556326",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874969"
+      ],
+      "status": "INVESTIGATE_DATA",
+      "historical_records_changed": false
+    }
+  ],
+  "settlement_exception_check": "VERIFIED",
   "strength_comparison": {
     "name": "Team Shots strength correction",
     "registered_at": "2026-11-10T17:20:47.882372+00:00",
-    "updated_at": "2026-11-13T16:31:14.283171+00:00",
+    "updated_at": "2026-11-13T16:52:17.260394+00:00",
     "protocol": {
       "actual_stake": 0,
       "alerts": false,
@@ -1215,7 +2148,7 @@
     "historical_replay_included": false,
     "capture": {
       "captured": 0,
-      "checked_at": "2026-11-13T16:31:14.283171+00:00",
+      "checked_at": "2026-11-13T16:52:17.260394+00:00",
       "counts": {},
       "state": "NO_NEW_ELIGIBLE_CONTRACTS"
     },

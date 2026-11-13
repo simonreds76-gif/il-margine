@@ -18,6 +18,8 @@ import requests
 import fotmob_match_stats as F
 from football_team_names import football_form_team_key as key
 from football_count_results import count, stamp
+import football_shots_inputs as INTEGRITY
+import football_shots_completed as COMPLETED
 
 ROOT=Path(__file__).resolve().parents[1]
 FORM=ROOT/'data/football-form'
@@ -91,7 +93,7 @@ def merge_supplements(base, supplements):
     return output,added
 
 def atomic_json(path,data):
-    temp=path.with_suffix('.tmp');temp.write_text(json.dumps(data,indent=2)+'\n',encoding='utf8');temp.replace(path)
+    INTEGRITY.atomic_json(path,data)
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
@@ -115,6 +117,28 @@ def main():
             request_count+=1
             r=requests.get(url,params=params,headers={**F.HEADERS,'X-Requested-With':'XMLHttpRequest'},timeout=30)
             r.raise_for_status();return r
+        completed_path=FORM/'count-input-completed-check.json'
+        previous=json.loads(completed_path.read_text(encoding='utf8')) if completed_path.exists() else {}
+        completed_check=COMPLETED.check(get,now,previous)
+        atomic_json(completed_path,completed_check)
+        # Discovery no longer requires the optional xG provider to be online.
+        # Recover only wholly absent fixtures; corrections to existing rows use
+        # the dated prospective input amendment, never a settlement overwrite.
+        expected=[r for v in completed_check['leagues'].values() if v.get('status')=='VERIFIED' for r in v.get('completed',[])]
+        for fixture in sorted(expected,key=lambda r:(r['date'],r['league'])):
+            fid=fixture_id(fixture['date'],fixture['league'],fixture['home_team'],fixture['away_team'])
+            if fid in known or report['recovered']>=args.max_matches:continue
+            try:
+                url=COMPLETED.BASE+COMPLETED.SLUGS[fixture['league']]+'/summary'
+                response=get(url,{'event':fixture['event_id']})
+                recovered=COMPLETED.recovery_rows(response.json(),fixture,now,
+                    known_teams={(r['league'],key(r['team'])) for r in base})
+                if recovered is None:raise ValueError('unverified_espn_counts')
+                import hashlib
+                supplement[fid]=dict(rows=recovered,observed_at=now.isoformat(),source_url=response.url,source_sha256=hashlib.sha256(response.content).hexdigest())
+                known.add(fid);report['recovered']+=1
+            except (requests.RequestException,ValueError,RuntimeError) as exc:
+                report['unresolved'].append(dict(fixture=fid,reason=type(exc).__name__+': '+str(exc)[:120]))
         season=now.year if now.month>=8 else now.year-1
         jobs=[]
         for league,slug in LEAGUES.items():
@@ -129,7 +153,7 @@ def main():
                 report['leagues'][league]={'error':type(e).__name__}
         # Oldest missing matches first, so a daily cap cannot leave permanent holes.
         jobs.sort(key=lambda x:(x[1]['datetime'],x[0],x[2]));boards={}
-        for league,fixture,fid in jobs[:max(0,args.max_matches)]:
+        for league,fixture,fid in jobs[:max(0,args.max_matches-report["recovered"])]:
             try:
                 day=fixture['datetime'][:10]
                 if day not in boards:boards[day]=get(F.MATCHES_URL,{'date':day.replace('-',''),'timezone':'UTC','ccode3':'GBR'}).json()
@@ -148,7 +172,7 @@ def main():
                 report['recovered']+=1
             except (requests.RequestException,ValueError,KeyError,RuntimeError) as e:
                 report['unresolved'].append({'fixture':fid,'reason':str(e) if isinstance(e,(ValueError,RuntimeError)) else type(e).__name__})
-        report.update(requests=request_count,completed_missing_before=len(jobs),remaining=len(jobs)-report['recovered'])
+        report.update(requests=request_count,completed_missing_before=len(jobs),remaining=max(0,len(jobs)-report['recovered']))
         atomic_json(supplement_path,supplement)
     merged,added=merge_supplements(base,supplement)
     manifest_path=FORM/'team-form-manifest.json'
@@ -169,6 +193,8 @@ def main():
     # Keep refresh coverage distinct from merely reapplying the saved supplement.
     if args.refresh:atomic_json(FORM/'count-input-refresh-status.json',report)
     atomic_json(FORM/'count-input-application-status.json',report)
+    _,integrity,_=INTEGRITY.load(ROOT,now,write_status=True)
+    report['input_integrity']=integrity['status']
     print(json.dumps(report,indent=2))
 
 if __name__=='__main__':main()

@@ -1,0 +1,19 @@
+{
+  "policy": "shots-input-integrity-20261113-v1",
+  "original_registration_sha256": "e843066fc40cabbf7d1920ce19dda1a4c06e6ce34ef387e0fbfa40fac38cc0a6",
+  "unchanged_protocol_sha256": "f4de36d22ad35038cafe97a889e25cd6d87f001879073ae0f24dfafa79f2240c",
+  "paired_model_fingerprint": "de9c6c8250e8ac5456d72bcf3075020c734fe7b67e63dd37ea9a0c0fcea8e446",
+  "fingerprints": {
+    "config/team-shots-strength-paper.json": "5742735749f2198586d832144f43844beb77040b695e78d1a9ab97db3e910bfb",
+    "scripts/team_shots_strength_paper.py": "e47da8477c246f58b6e00e4f1f47a734d792317d637eb2a320d9f19508d9787f",
+    "scripts/frozen_paper_common.py": "b7f4c12ddb70d595759d0c1db8ccf7ffe1e7684a004551d5d7c82df20faed4ca",
+    "scripts/football_counts.py": "3e02d17b88d1389cb194ec76fc7c2e1854b42ba1a4349a74a17614d6c0e45996",
+    "scripts/football_market.py": "27f16c806d526869436ac8da9c51a4ea050a576a53cdcfb143c92012deea2075",
+    "scripts/football_fixture_identity.py": "699cd5ca44a3c4c25167d512423e4d1230a8e1cf1efe3609d11be6e3d3a524f4",
+    "scripts/football_team_names.py": "f3d22961f2333dd960d1b8b9abad0e108bac325a9b6ad8f3246e94ba9d2f4d6c",
+    "scripts/football_count_results.py": "141ab8726684fa2a1ced518c12647f5daef41e5b9f1abb5874177399496df830",
+    "data/team-shots/team-shots-opponent-config.json": "8b790119a9b0419452b13190487a8aa88d2288ecd857d41362afa66042db0d12"
+  },
+  "reason": "Reviewed input cohort only; retain original registration/captures/outcomes and all weights.",
+  "review_amended_at": "2026-11-13T16:48:13.603362+00:00"
+}

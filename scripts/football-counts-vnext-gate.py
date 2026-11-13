@@ -14,6 +14,7 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from football_count_reconciliation import reconcile
 from football_market import blend_logit
+from football_shots_inputs import cohort_performance_text
 from football_capture_health import load_json, verified_empty_window
 
 
@@ -197,11 +198,22 @@ def build_payload(
     team_live_rows = team_live_rows or []
     corners_live_rows = corners_live_rows or []
     team_live = live_summary(team_live_rows)
+    import football_shots_inputs as INPUTS
+    grouped=INPUTS.cohort_groups(team_live_rows)
+    team_input_cohorts={name:live_summary(rows) for name,rows in grouped.items()}
+    amendment=load_json(ROOT/INPUTS.CONFIG).get('paper_quality_policy',{}).get('v4_window_amendment',{})
+    review_end=INPUTS.utc(amendment.get('review_by'))
+    window_rows=[]
+    for row in grouped['repaired_inputs']:
+        observed=next((INPUTS.utc(row.get(field)) for field in ('registered_at_utc','published_at_utc','published_at','captured_at_utc','captured_at') if isinstance(row.get(field),str) and INPUTS.utc(row.get(field))),None)
+        if review_end and observed and observed<=review_end:window_rows.append(row)
+    gate_live=live_summary(window_rows)
     corners_live = live_summary(corners_live_rows)
     team_warmup = live_summary(team_live_rows, cohort="warmup_tracking")
     corners_warmup = live_summary(corners_live_rows, cohort="warmup_tracking")
     candidates = candidate_rows or []
     team_scan = candidate_diagnostics(candidates, "team_shots_v4")
+    team_scan['explanation']+=' '+INPUTS.cohort_note(team_input_cohorts)
     corners_scan = candidate_diagnostics(candidates, "corners_v3")
     reconcile_cross_model_alert(team_scan, corners_scan)
     reconcile_cross_model_alert(corners_scan, team_scan)
@@ -215,13 +227,13 @@ def build_payload(
             operational_alert_code=None,
             capture_window_evidence=empty_window,
         )
-    team_close_coverage = team_live["true_close_coverage"]
-    team_mean_clv = team_live["mean_true_close_clv"]
-    team_roi = team_live["roi"]
+    team_close_coverage = gate_live["true_close_coverage"]
+    team_mean_clv = gate_live["mean_true_close_clv"]
+    team_roi = gate_live["roi"]
     corners_close_coverage = corners_live["true_close_coverage"]
     corners_mean_clv = corners_live["mean_true_close_clv"]
     team_promotable = (
-        team_live["settled"] >= 150
+        gate_live["settled"] >= 150
         and team_close_coverage is not None
         and team_close_coverage >= 0.70
         and team_mean_clv is not None
@@ -245,6 +257,11 @@ def build_payload(
             "market_gate": "BLOCKED_PENDING_2026_27_TRUE_CLOSE_SAMPLE",
             "live_routing": False,
             "prospective": team_live,
+            "input_cohorts": team_input_cohorts,
+            "input_review_deadline": amendment.get('review_by'),
+            "after_deadline_rows_excluded_from_promotion": len(grouped['repaired_inputs'])-len(window_rows),
+            "promotion_evidence": gate_live,
+            "promotion_evidence_scope": "repaired_inputs_only; v4 lock window restarts after the prospective input repair",
             "warmup_tracking": team_warmup,
             "latest_scan": team_scan,
             "promotion_gate": "PASS" if team_promotable else "BLOCKED",
@@ -277,6 +294,7 @@ def render(payload: dict[str, Any]) -> str:
             f"- Prospective status: **{team['prospective_status']}**",
             f"- Market gate: **{team['market_gate']}**",
             f"- Promotion gate: **{team['promotion_gate']}**",
+            "- " + cohort_performance_text(team.get('input_cohorts',{})),
             f"- Prospective signals: {team['prospective']['signals']} ({team['prospective']['settled']} settled / {team['prospective']['pending']} pending)",
             f"- Warm-up tracking: {team['warmup_tracking']['signals']} ({team['warmup_tracking']['settled']} settled / {team['warmup_tracking']['pending']} pending), {team['warmup_tracking']['pnl_units']:+.2f}u, ROI {team['warmup_tracking']['roi']:+.1%}" if team['warmup_tracking']['roi'] is not None else f"- Warm-up tracking: {team['warmup_tracking']['signals']} ({team['warmup_tracking']['settled']} settled / {team['warmup_tracking']['pending']} pending), ROI -",
             f"- Latest scan: **{team['latest_scan']['state']}**; {team['latest_scan']['scored_rows']} rows / {team['latest_scan']['scored_fixtures']} fixtures scored; {team['latest_scan']['edge_pass_but_warmup_blocked_fixtures']} fixtures passed edge but were held only by the warm-up lock.",
@@ -373,6 +391,15 @@ def main() -> int:
     identity_health=ROOT/'data/football-form/count-input-identity-health.json'
     if identity_health.exists():
         payload['team_shots_v4']['input_health']=load_json(identity_health)
+    integrity=ROOT/'data/football-form/count-input-integrity-status.json'
+    if integrity.exists():
+        import football_shots_inputs as INPUTS
+        health=load_json(integrity)
+        payload['team_shots_v4']['input_integrity']=health
+        scan=payload['team_shots_v4']['latest_scan']
+        scan['explanation']=str(scan.get('explanation',''))+' '+INPUTS.describe(health)
+        if health.get('blocked_leagues'):
+            scan['state']='INPUT_COVERAGE_INCOMPLETE'
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.json.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")

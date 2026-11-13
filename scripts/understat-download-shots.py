@@ -67,6 +67,13 @@ OUTPUT_COLUMNS = [
 ]
 
 
+def _observed_count(val):
+    try:
+        n=float(val)
+        return int(n) if math.isfinite(n) and n>=0 and n.is_integer() else ''
+    except (ValueError,TypeError):return ''
+
+
 def _safe_float(val: Any, default: float = 0.0) -> float:
     try:
         return float(val)
@@ -261,10 +268,8 @@ def load_footballdata_season(
             if not home or not away:
                 continue
 
-            hs = _safe_float(row.get("HS"))
-            as_ = _safe_float(row.get("AS"))
-            if hs == 0 and as_ == 0:
-                continue
+            hs = _observed_count(row.get("HS"))
+            as_ = _observed_count(row.get("AS"))
 
             rows.append({
                 "date": parsed_date,
@@ -272,10 +277,10 @@ def load_footballdata_season(
                 "season": f"{season_start}-{end_year}",
                 "home_team": home,
                 "away_team": away,
-                "home_shots": int(hs),
-                "away_shots": int(as_),
-                "home_sot": int(_safe_float(row.get("HST"))),
-                "away_sot": int(_safe_float(row.get("AST"))),
+                "home_shots": hs,
+                "away_shots": as_,
+                "home_sot": _observed_count(row.get("HST")),
+                "away_sot": _observed_count(row.get("AST")),
                 "home_goals": int(_safe_float(row.get("FTHG"))),
                 "away_goals": int(_safe_float(row.get("FTAG"))),
                 "home_corners": int(_safe_float(row.get("HC"))),

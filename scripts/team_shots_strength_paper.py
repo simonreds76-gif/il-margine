@@ -181,7 +181,7 @@ def refresh(root,clock=None,settle_only=False):
     if not (folder/'registration.json').exists():return {}
     with locked(folder):
         try:
-            reg=C.verify(root,folder,FILES);P=paired(root)
+            reg=verified_registration(root,folder);P=paired(root)
             if P.model_fingerprint()!=reg['paired_model_fingerprint']:raise ValueError('paired_model_changed')
         except (ValueError,OSError) as exc:
             C.atomic(folder/'capture-status.json',dict(state='BLOCKED_MODEL_CHANGE',reason=str(exc),checked_at=clock.isoformat()))
@@ -202,10 +202,26 @@ def report(root):
     folder=root/RELATIVE;r=C.read(folder/'report.json')
     return {**r,'capture':C.read(folder/'capture-status.json')} if r else {}
 
+def verified_registration(root,folder):
+    """A reviewed input-only amendment retains the original frozen registration.
+
+    Never accept arbitrary changed code. Exact old registration, exact amended
+    code hashes and exact new upstream fingerprint must all match.
+    """
+    reg=C.read(folder/'registration.json')
+    amendment=C.read(root/'config/shots-strength-input-amendment.json')
+    if amendment and C.digest(reg)==amendment.get('original_registration_sha256'):
+        if C.hashes(root,FILES)!=amendment.get('fingerprints'):
+            raise ValueError('reviewed input amendment code mismatch')
+        if C.digest(reg['protocol'])!=amendment.get('unchanged_protocol_sha256'):
+            raise ValueError('frozen strength protocol changed')
+        return {**reg,'paired_model_fingerprint':amendment['paired_model_fingerprint'],'input_revision':amendment['policy']}
+    return C.verify(root,folder,FILES)
+
 def register(root,clock=None):
     clock=clock or datetime.now(timezone.utc);folder=root/RELATIVE
     with locked(folder):
-        if (folder/'registration.json').exists():return C.verify(root,folder,FILES)
+        if (folder/'registration.json').exists():return verified_registration(root,folder)
         P=paired(root);fingerprint=P.model_fingerprint();P.check_registration(fingerprint)
         cfg=C.read(root/PROTOCOL)
         assert cfg['actual_stake']==0 and not cfg['alerts'] and not cfg['automatic_promotion']

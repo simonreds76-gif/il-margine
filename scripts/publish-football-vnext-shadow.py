@@ -447,7 +447,7 @@ def score_team_shots(
             )
             candidates.append(row)
             row["market_strength_captured_at_utc"] = PUB.fmt_dt(strength[0]) if strength else ""
-            row["model_input_version"] = "v4-1x2-asof-20260912"
+            row["model_input_version"] = "v4-1x2-asof-20260912" + ("|"+PUB.SHOTS_INPUTS.POLICY if team_form.get("shots_input_policy") else "")
             if not blocked:
                 accepted.append(row)
     add_execution_quotes(candidates,latest,now,min_edge,PUB)
@@ -681,9 +681,11 @@ def main() -> int:
     PUB.ensure_team_base(args.team_base)
     base_rows = PUB.load_csv(args.team_base)
     by_team, by_league = PUB.build_base_indexes(base_rows)
+    shots_base, input_status, _ = PUB.SHOTS_INPUTS.load_for_capture(ROOT, now, args.team_base, write_status=True)
+    shots_teams,shots_leagues=PUB.build_base_indexes(PUB.SHOTS_INPUTS.permitted(shots_base,input_status))
     input_gaps=[]
     team_signals, team_candidates = score_team_shots(
-        by_team=by_team, by_league=by_league, odds_rows=PUB.load_csv(args.team_odds),
+        by_team=shots_teams, by_league=shots_leagues, odds_rows=PUB.load_csv(args.team_odds),
         params=load_json(args.team_params), lock=load_json(args.team_lock), now=now,
         match_odds_rows=PUB.load_csv(args.match_odds),
         input_gaps=input_gaps,

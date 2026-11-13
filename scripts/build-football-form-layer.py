@@ -16,8 +16,11 @@ from __future__ import annotations
 
 import argparse
 import csv
+import math
 import json
 import subprocess
+import tempfile
+import os
 import sys
 from collections import defaultdict, deque
 from dataclasses import dataclass
@@ -265,6 +268,14 @@ class Match:
     xg_source: str = ""
 
 
+def optional_count(value):
+    try:
+        n=float(value)
+        return int(n) if math.isfinite(n) and n>=0 and n.is_integer() else None
+    except (TypeError, ValueError):
+        return None
+
+
 def load_match_base(path: Path) -> dict[tuple[str, str, str, str], Match]:
     matches: dict[tuple[str, str, str, str], Match] = {}
     with path.open("r", encoding="utf-8", errors="replace", newline="") as handle:
@@ -286,10 +297,10 @@ def load_match_base(path: Path) -> dict[tuple[str, str, str, str], Match]:
                 away_team=away,
                 home_goals=parse_int(row.get("FTHG") or row.get("home_goals")),
                 away_goals=parse_int(row.get("FTAG") or row.get("away_goals")),
-                home_shots=parse_int(row.get("HS") or row.get("home_shots")),
-                away_shots=parse_int(row.get("AS") or row.get("away_shots")),
-                home_sot=parse_int(row.get("HST") or row.get("home_sot")),
-                away_sot=parse_int(row.get("AST") or row.get("away_sot")),
+                home_shots=optional_count(row.get("HS") if row.get("HS") not in (None, "") else row.get("home_shots")),
+                away_shots=optional_count(row.get("AS") if row.get("AS") not in (None, "") else row.get("away_shots")),
+                home_sot=optional_count(row.get("HST") if row.get("HST") not in (None, "") else row.get("home_sot")),
+                away_sot=optional_count(row.get("AST") if row.get("AST") not in (None, "") else row.get("away_sot")),
                 home_corners=parse_int(row.get("HC") or row.get("home_corners")),
                 away_corners=parse_int(row.get("AC") or row.get("away_corners")),
                 b365h=parse_float(row.get("B365H")),
@@ -683,10 +694,19 @@ def build_rolling_rows(team_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def write_csv(path: Path, rows: list[dict[str, Any]], fields: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
-        writer.writeheader()
-        writer.writerows(rows)
+    # Readers see the last complete snapshot or the complete replacement, never
+    # a half-written CSV. Validation/quarantine remains fixture-specific.
+    temp = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", newline="", dir=path.parent, suffix=".tmp", delete=False) as handle:
+            temp = Path(handle.name)
+            writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
+            writer.writeheader()
+            writer.writerows(rows)
+        os.replace(temp, path)
+    finally:
+        if temp is not None and temp.exists():
+            temp.unlink()
 
 
 def rel(path: Path) -> str:
