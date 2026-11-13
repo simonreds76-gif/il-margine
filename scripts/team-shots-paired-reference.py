@@ -39,7 +39,7 @@ def digest(path):
 def model_fingerprint():
     # Normalize checkout line endings so Windows and Linux agree. Changing
     # weights, helpers or selection code requires a new registered experiment.
-    names=['scripts/football_shots_inputs.py','config/shots-input-corrections.json','scripts/team-shots-paired-reference.py','scripts/team_shots_ema20_reference.py',
+    names=['scripts/football_shots_inputs.py','scripts/football_shots_completed.py','config/shots-input-corrections.json','scripts/team-shots-paired-reference.py','scripts/team_shots_ema20_reference.py',
         'scripts/team_shots_ema20_features.py','scripts/publish-football-vnext-shadow.py',
         'scripts/publish-football-research-picks.py','scripts/build-football-form-layer.py',
         'scripts/backtest-football-form-layer.py','scripts/team_shots_opponent.py',
@@ -241,6 +241,9 @@ def summarize(ledger, base, now):
     # Recompute results separately; forecasts and original offered odds never change.
     results={}
     for r in base:
+        # Supplemental ESPN counts are forecast-input evidence only. Existing
+        # settlement sources and separately verified result overlays are kept.
+        if r.get('match_source')=='espn_verified_fulltime':continue
         key=(r.get('date'),r.get('league'),O.key(r.get('home_team','')),O.key(r.get('away_team','')),O.key(r.get('team','')))
         actual=PUB.pf(r.get('shots_for'))
         if actual is not None and math.isfinite(actual) and actual>=0:
@@ -313,7 +316,7 @@ def main():
     if not base_path.exists() or not odds_path.exists():
         raise SystemExit('Missing archive input; existing paired evidence retained')
     raw,odds_hash=PUB.SHOTS_INPUTS.read_csv_bound(odds_path)
-    base,input_status,settlement_base=PUB.SHOTS_INPUTS.load(args.data_root,now,base_path,write_status=True)
+    base,input_status,settlement_base=PUB.SHOTS_INPUTS.load_for_capture(ROOT,now,base_path,write_status=True,data_root=args.data_root)
     registered=[r for r in raw if r.get('bookmaker','').lower()=='bet365' and r.get('market')=='TEAM_SHOTS']
     fresh,rejected=O.fresh_prices(registered,config,now)
     latest=PUB.latest_team_shots_odds(fresh,now)

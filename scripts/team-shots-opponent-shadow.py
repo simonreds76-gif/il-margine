@@ -139,6 +139,14 @@ def closing_values(rows):
             values.append(value)
     return values
 
+def cohort_summary(rows):
+    done=[r for r in rows if SETTLE.is_settled(r)]
+    voids=sum(r.get('result')=='void' for r in rows)
+    pnl=sum(float(r.get('pnl_units') or 0) for r in done)
+    return dict(signals=len(rows),settled=len(done),void=voids,pending=len(rows)-len(done)-voids,
+        wins=sum(r.get('result')=='won' for r in done),losses=sum(r.get('result')=='lost' for r in done),
+        pnl_units=pnl,roi=pnl/len(done) if done else None)
+
 
 def main():
     config = json.loads(CONFIG.read_text(encoding='utf8'))
@@ -147,7 +155,7 @@ def main():
     fresh,rejected = fresh_prices(odds,config,now)
     latest = PUB.latest_team_shots_odds(fresh,now)
     pairs = V.paired_rows(latest,PAIR_FIELDS)
-    inputs, input_status, _ = PUB.SHOTS_INPUTS.load(ROOT, now, write_status=True)
+    inputs, input_status, _ = PUB.SHOTS_INPUTS.load_for_capture(ROOT, now, write_status=True)
     inputs=PUB.SHOTS_INPUTS.permitted(inputs,input_status)
     pairs=[p for p in pairs if p["over"]["league_slug"] not in input_status["blocked_leagues"]]
     base = read_base(None, rows=inputs) if pairs else []
@@ -168,7 +176,15 @@ def main():
     payload['prospective'].update(void=voids,pending=len(ledger)-len(done)-voids)
     age_days = (now-PUB.parse_dt(config['activated_at'])).days
     payload['prospective'].update(wins=sum(r['result']=='won' for r in done),losses=sum(r['result']=='lost' for r in done),true_close_count=len(closes),mean_clv=sum(closes)/len(closes) if closes else None)
-    payload['review_status'] = 'MANUAL_REVIEW_DUE' if len(done)>=150 and age_days>=56 else 'COLLECTING_FIXED_POLICY'
+    grouped=PUB.SHOTS_INPUTS.cohort_groups(ledger)
+    payload['input_cohorts']={name:cohort_summary(rows) for name,rows in grouped.items()}
+    fresh_done=payload['input_cohorts']['repaired_inputs']['settled']
+    captures=[PUB.parse_dt(r.get('published_at_utc') or r.get('published_at') or r.get('captured_at')) for r in grouped['repaired_inputs']]
+    captures=[dt for dt in captures if dt]
+    repaired_age=(now-min(captures)).days if captures else 0
+    payload['review_status'] = 'MANUAL_REVIEW_DUE' if fresh_done>=150 and repaired_age>=56 else 'COLLECTING_FIXED_POLICY'
+    payload['promotion_evidence_scope']='repaired_inputs_only; earlier records retained separately'
+    payload['latest_scan']['explanation']+=' '+PUB.SHOTS_INPUTS.cohort_note(payload['input_cohorts'])
     payload['age_days'] = age_days
     payload['input_integrity'] = input_status
     STATUS.write_text(json.dumps(payload,indent=2,default=str)+'\n',encoding='utf8')

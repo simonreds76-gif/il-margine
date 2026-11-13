@@ -93,7 +93,7 @@ def merge_supplements(base, supplements):
     return output,added
 
 def atomic_json(path,data):
-    temp=path.with_suffix('.tmp');temp.write_text(json.dumps(data,indent=2)+'\n',encoding='utf8');temp.replace(path)
+    INTEGRITY.atomic_json(path,data)
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
@@ -131,7 +131,8 @@ def main():
             try:
                 url=COMPLETED.BASE+COMPLETED.SLUGS[fixture['league']]+'/summary'
                 response=get(url,{'event':fixture['event_id']})
-                recovered=COMPLETED.recovery_rows(response.json(),fixture,now)
+                recovered=COMPLETED.recovery_rows(response.json(),fixture,now,
+                    known_teams={(r['league'],key(r['team'])) for r in base})
                 if recovered is None:raise ValueError('unverified_espn_counts')
                 import hashlib
                 supplement[fid]=dict(rows=recovered,observed_at=now.isoformat(),source_url=response.url,source_sha256=hashlib.sha256(response.content).hexdigest())

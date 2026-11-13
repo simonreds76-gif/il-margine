@@ -4,6 +4,21 @@ from football_shots_inputs import identity, key, number, utc
 SLUGS={'epl':'eng.1','serie-a':'ita.1','la-liga':'esp.1','bundesliga':'ger.1','ligue-1':'fra.1'}
 BASE='https://site.api.espn.com/apis/site/v2/sports/soccer/'
 
+def event_status(event):
+    competitions=event.get('competitions',[])
+    return (competitions[0].get('status',event.get('status',{})) if len(competitions)==1 else event.get('status',{})).get('type',{})
+
+def day_complete(events,now):
+    # Terminal does not mean usable yet: do not freeze a day while the final
+    # match is still inside the conservative three-hour observation cutoff.
+    for event in events:
+        status=event_status(event)
+        if status.get('name') in ('STATUS_CANCELED','STATUS_POSTPONED'):continue
+        comps=event.get('competitions',[])
+        kickoff=utc(comps[0].get('date',event.get('date'))) if len(comps)==1 else None
+        if status.get('completed') is not True or kickoff is None or kickoff>now-timedelta(hours=3):return False
+    return True
+
 def canonical_team(team,league):
     # ESPN's displayName "Deportivo" is ambiguous outside this exact provider ID.
     # ID 90, Spanish league: Deportivo La Coruna. Keep the source IDs in receipts.
@@ -56,9 +71,10 @@ def check(get,now,previous=None):
                 else:
                     r=get(url,{'dates':day,'limit':1000});daily=r.json()
                     events=daily.get('events',[])
-                    if not events:raise ValueError('calendar_day_has_no_events')
-                    terminal=all(e.get('status',{}).get('type',{}).get('completed') is True or e.get('status',{}).get('type',{}).get('name') in ('STATUS_CANCELED','STATUS_POSTPONED') for e in events)
-                    saved[day]=dict(observed_at=now.isoformat(),url=r.url,sha256=hashlib.sha256(r.content).hexdigest(),complete_day=terminal,completed=completed(daily,league,now,start))
+                    parsed=completed(daily,league,now,start)
+                    # A valid dated empty envelope is coverage evidence, but
+                    # never cache it permanently: rescheduling may change it.
+                    saved[day]=dict(observed_at=now.isoformat(),url=r.url,sha256=hashlib.sha256(r.content).hexdigest(),complete_day=bool(events) and day_complete(events,now),empty_calendar_day=not events,completed=parsed)
                 rows.extend(saved[day]['completed'])
             # Keep unresolved older expectations; a sliding window must not erase holes.
             older=(previous or {}).get('leagues',{}).get(league,{}).get('completed',[])
@@ -71,8 +87,11 @@ def check(get,now,previous=None):
             out['leagues'][league]={**(previous or {}).get('leagues',{}).get(league,{}),'status':'UNVERIFIED','reason':type(exc).__name__+': '+str(exc)[:160]}
     return out
 
-def recovery_rows(payload, fixture, observed):
+def recovery_rows(payload, fixture, observed, known_teams=None):
     """Only exact full-time identity, score and explicit totalShots fields."""
+    # A provider's unknown display name cannot create a second history for a
+    # known club. Resolve both names against this league's existing identity set.
+    if known_teams is None or any((fixture['league'],key(fixture[side+'_team'])) not in known_teams for side in ('home','away')):return None
     competitions=payload.get('header',{}).get('competitions',[])
     if len(competitions)!=1:return None
     c=competitions[0];status=c.get('status',{}).get('type',{})

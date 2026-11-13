@@ -2,7 +2,7 @@
   "policy": "shots-input-integrity-20261113-v1",
   "original_registration_sha256": "e843066fc40cabbf7d1920ce19dda1a4c06e6ce34ef387e0fbfa40fac38cc0a6",
   "unchanged_protocol_sha256": "f4de36d22ad35038cafe97a889e25cd6d87f001879073ae0f24dfafa79f2240c",
-  "paired_model_fingerprint": "8a9e127c08fe290866cefe778c4f775aa370e0c13242c60d49b1ab9549bd923c",
+  "paired_model_fingerprint": "de9c6c8250e8ac5456d72bcf3075020c734fe7b67e63dd37ea9a0c0fcea8e446",
   "fingerprints": {
     "config/team-shots-strength-paper.json": "5742735749f2198586d832144f43844beb77040b695e78d1a9ab97db3e910bfb",
     "scripts/team_shots_strength_paper.py": "e47da8477c246f58b6e00e4f1f47a734d792317d637eb2a320d9f19508d9787f",
@@ -14,5 +14,6 @@
     "scripts/football_count_results.py": "141ab8726684fa2a1ced518c12647f5daef41e5b9f1abb5874177399496df830",
     "data/team-shots/team-shots-opponent-config.json": "8b790119a9b0419452b13190487a8aa88d2288ecd857d41362afa66042db0d12"
   },
-  "reason": "Reviewed input cohort only; retain original registration/captures/outcomes and all weights."
+  "reason": "Reviewed input cohort only; retain original registration/captures/outcomes and all weights.",
+  "review_amended_at": "2026-11-13T16:48:13.603362+00:00"
 }

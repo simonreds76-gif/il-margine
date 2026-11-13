@@ -1,6 +1,25 @@
 {
   "policy": "shots-input-integrity-20261113-v1",
   "scope": "New forecast inputs only. Source CSVs, issued forecasts, prices and settlements are unchanged.",
+  "paper_quality_policy": {
+    "registered_at": "2026-11-13T16:30:00Z",
+    "minimum_paired_xg_r10": 5,
+    "below_floor": "existing_neutral_quality_branch",
+    "reason": "Fable's structural sample floor, registered before it binds; no outcome fitting. All 96 active teams had 6-8 pairs in the latest observed window.",
+    "review_window": "Repaired-input rows only; pre-30-October and outage-affected rows remain separately reported.",
+    "v4_window_amendment": {
+      "first_eligible_capture": "2026-11-13T16:30:00Z",
+      "review_by": "2026-11-30T23:59:59Z",
+      "original_window_end_unchanged": true,
+      "minimum_settled_selections": 150,
+      "true_close_coverage": 0.7,
+      "mean_true_close_clv": 0.005,
+      "roi": "positive_secondary_gate",
+      "if_insufficient": "INCONCLUSIVE; no automatic extension or promotion",
+      "original_lock": "data/team-shots/team-shots-v4-lock.json; unchanged"
+    },
+    "published_legacy_lane": "unchanged"
+  },
   "corrections": [{
     "id": "fiorentina-atalanta-total-not-off-target-20261029",
     "date": "2026-10-29", "league": "serie-a", "home_team": "Fiorentina", "away_team": "Atalanta",

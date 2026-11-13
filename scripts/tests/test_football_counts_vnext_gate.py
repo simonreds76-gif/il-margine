@@ -16,6 +16,26 @@ SPEC.loader.exec_module(GATE)
 
 
 class FootballCountsVnextGateTests(unittest.TestCase):
+    def test_pre_repair_results_cannot_pass_new_input_promotion_gate(self):
+        import football_shots_inputs as INPUTS
+        rows=[dict(pick_id=str(i),match_id=str(i),side='under',result='won',pnl_units='1',true_close='true',published_to_close_clv='.02',published_at_utc='2026-10-29T12:00:00Z') for i in range(150)]
+        payload=GATE.build_payload([], '', [], '', rows, [])['team_shots_v4']
+        self.assertEqual(payload['prospective']['settled'],150)
+        self.assertEqual(payload['promotion_evidence']['settled'],0)
+        self.assertEqual(payload['promotion_gate'],'BLOCKED')
+        for row in rows:row['model_input_version']='v4|'+INPUTS.POLICY
+        payload=GATE.build_payload([], '', [], '', rows, [])['team_shots_v4']
+        self.assertEqual(payload['promotion_evidence']['settled'],0)
+        self.assertEqual(payload['promotion_gate'],'BLOCKED')
+        for row in rows:row['published_at_utc']='2026-11-14T12:00:00Z'
+        payload=GATE.build_payload([], '', [], '', rows, [])['team_shots_v4']
+        self.assertEqual(payload['promotion_evidence']['settled'],150)
+        self.assertEqual(payload['promotion_gate'],'PASS')
+        rows[0]['published_at_utc']='2026-10-29T12:00:00Z'
+        payload=GATE.build_payload([], '', [], '', rows, [])['team_shots_v4']
+        self.assertEqual(payload['promotion_evidence']['settled'],149)
+        self.assertEqual(payload['promotion_gate'],'BLOCKED')
+
     def test_conflicting_early_rules_are_reported_without_changing_selection(self):
         payload={'team_shots_v4':{'latest_scan':{'eligible_rows':0,'state':'NO_EDGE_AFTER_UNLOCK'}}}
         rows=[{'model':'team_shots_v4','matchday':'5','market_fair_probability':'0.544123','book_odds':'1.8'}]

@@ -814,10 +814,9 @@ def main() -> None:
     ensure_team_base(args.team_base)
     base_rows = load_csv(args.team_base)
     by_team, by_league = build_base_indexes(base_rows)
-    shots_base, input_status, _ = SHOTS_INPUTS.load(ROOT, now, args.team_base, write_status=True)
-    shots_base=SHOTS_INPUTS.permitted(shots_base,input_status)
-    shots_teams,shots_leagues=build_base_indexes(shots_base)
-    team_picks = publish_team_shots(args, shots_teams, shots_leagues, shots_base, now)
+    # This published legacy lane retains its existing input/calculation path.
+    # The repaired EMA20 comparison is separately versioned in the paper ledger.
+    team_picks = publish_team_shots(args, by_team, by_league, base_rows, now)
     corners_picks = publish_corners(args, by_team, by_league, now)
     team_picks = merge_published_ledger(load_csv(args.team_output), team_picks)
     corners_picks = merge_published_ledger(load_csv(args.corners_output), corners_picks)

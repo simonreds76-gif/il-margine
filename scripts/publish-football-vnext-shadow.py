@@ -681,7 +681,7 @@ def main() -> int:
     PUB.ensure_team_base(args.team_base)
     base_rows = PUB.load_csv(args.team_base)
     by_team, by_league = PUB.build_base_indexes(base_rows)
-    shots_base, input_status, _ = PUB.SHOTS_INPUTS.load(ROOT, now, args.team_base, write_status=True)
+    shots_base, input_status, _ = PUB.SHOTS_INPUTS.load_for_capture(ROOT, now, args.team_base, write_status=True)
     shots_teams,shots_leagues=PUB.build_base_indexes(PUB.SHOTS_INPUTS.permitted(shots_base,input_status))
     input_gaps=[]
     team_signals, team_candidates = score_team_shots(

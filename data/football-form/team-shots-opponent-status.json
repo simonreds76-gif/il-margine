@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-12T22:52:22Z",
+  "generated_at": "2026-11-13T16:51:41Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -10,8 +10,8 @@
     "signals": 125,
     "settled": 124,
     "pending": 0,
-    "pnl_units": -18.78999999999999,
-    "roi": -0.15153225806451603,
+    "pnl_units": -18.79,
+    "roi": -0.15153225806451612,
     "void": 1,
     "wins": 56,
     "losses": 68,
@@ -21,7 +21,7 @@
   "latest_scan": {
     "scored_rows": 0,
     "scored_fixtures": 0,
-    "explanation": "0 fresh paired contracts; 0 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. "
+    "explanation": "0 fresh paired contracts; 0 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0.  Input cohorts kept separate. Before 30 October 2026: 98 settled, 30 October 2026 to input repair: 26 settled, Prospective repaired inputs: 0 settled. Promotion review uses repaired inputs only; original records remain intact."
   },
   "settled_this_run": 0,
   "result_source": {
@@ -102,6 +102,98 @@
     }
   },
   "review_policy": "Review after 150 settled fixtures and at least 8 weeks; require positive ROI, at least 70% true closing coverage, positive mean CLV and calibration review. Manual promotion only.",
+  "input_cohorts": {
+    "before_xg_gap": {
+      "signals": 99,
+      "settled": 98,
+      "void": 1,
+      "pending": 0,
+      "wins": 45,
+      "losses": 53,
+      "pnl_units": -13.376,
+      "roi": -0.13648979591836735
+    },
+    "xg_gap_before_repair": {
+      "signals": 26,
+      "settled": 26,
+      "void": 0,
+      "pending": 0,
+      "wins": 11,
+      "losses": 15,
+      "pnl_units": -5.414,
+      "roi": -0.20823076923076922
+    },
+    "repaired_inputs": {
+      "signals": 0,
+      "settled": 0,
+      "void": 0,
+      "pending": 0,
+      "wins": 0,
+      "losses": 0,
+      "pnl_units": 0,
+      "roi": null
+    }
+  },
   "review_status": "COLLECTING_FIXED_POLICY",
-  "age_days": 61
+  "promotion_evidence_scope": "repaired_inputs_only; earlier records retained separately",
+  "age_days": 61,
+  "input_integrity": {
+    "policy": "shots-input-integrity-20261113-v1",
+    "generated_at": "2026-11-13T16:51:41.685576+00:00",
+    "base_sha256": "bb889250e79628dc9b9bae65dd255cb6a6a096802d3292b6c1a960b9e8cabd03",
+    "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
+    "source_rows": 44178,
+    "prediction_rows": 44172,
+    "latest_result_date": "2026-11-08",
+    "recent_missing_xg_team_rows": 196,
+    "applied_corrections": [
+      {
+        "fixture": [
+          "2026-10-29",
+          "serie-a",
+          "fiorentina",
+          "atalanta"
+        ],
+        "id": "fiorentina-atalanta-total-not-off-target-20261029",
+        "source_already_correct": false
+      }
+    ],
+    "quarantined_fixtures": [
+      {
+        "fixture": [
+          "2017-04-16",
+          "ligue-1",
+          "bastia",
+          "lyon"
+        ],
+        "reason": "awarded_match_missing_counts_not_zero"
+      },
+      {
+        "fixture": [
+          "2021-08-15",
+          "epl",
+          "newcastle",
+          "west ham"
+        ],
+        "reason": "on_target_exceeds_total"
+      },
+      {
+        "fixture": [
+          "2024-12-14",
+          "bundesliga",
+          "union berlin",
+          "bochum"
+        ],
+        "reason": "awarded_match_missing_counts_not_zero"
+      }
+    ],
+    "check_observed_at": "2026-11-13T16:36:11.995787+00:00",
+    "blocked_leagues": {},
+    "missing_completed": [],
+    "historical_records_changed": false,
+    "formulas_changed": false,
+    "paper_input_transform_changed": true,
+    "minimum_paired_xg_r10": 5,
+    "status": "READY_WITH_PARTIAL_XG"
+  }
 }

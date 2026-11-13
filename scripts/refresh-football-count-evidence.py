@@ -43,7 +43,7 @@ def main():
     target=form/'team-shots-paired-reference-status.json'
     previous=json.loads(target.read_text(encoding='utf8')) if target.exists() else {}
     cohorts={version:P.summarize([r for r in ledger if r.get('version')==version],results,now)
-             for version in sorted({r.get('version','unversioned') for r in ledger})}
+             for version in sorted({r.get('version','unversioned') for r in ledger}|{P.VERSION})}
     status={**previous,**P.summarize(ledger,results,now), 'generated_at':P.PUB.fmt_dt(now),
         'version':P.VERSION,'cohorts':cohorts,'record_scope':'All retained prospective cohorts; original predictions and prices unchanged.',
         'capture_status':'BLOCKED_MODEL_CHANGE' if capture_error else 'SETTLEMENT_ONLY' if args.settlement_only else 'ACTIVE',
@@ -56,6 +56,20 @@ def main():
     health_path=form/'count-input-integrity-status.json'
     health=json.loads(health_path.read_text(encoding='utf8')) if health_path.exists() else {}
     status['input_integrity']=health
+    status['input_cohorts']={name:{**P.summarize(rows,results,now),'label':INPUTS.COHORT_LABELS[name]}
+                            for name,rows in INPUTS.cohort_groups(ledger).items()}
+    status['promotion_evidence_scope']='repaired_inputs_only; retained earlier cohorts are descriptive'
+    try:
+        amendments=json.loads((ROOT/INPUTS.CONFIG).read_text(encoding='utf8'))
+        status['settlement_exceptions']=INPUTS.settlement_exceptions(ledger,base,amendments)
+        status['settlement_exception_check']='VERIFIED'
+    except (OSError,ValueError,TypeError,KeyError):
+        status['settlement_exceptions']=previous.get('settlement_exceptions',[])
+        status['settlement_exception_check']='UNAVAILABLE'
+        status['interpretation']+=' Settlement exception check unavailable; previous warnings retained.'
+    if status['settlement_exceptions']:
+        count=sum(len(x['contract_ids']) for x in status['settlement_exceptions'])
+        status['interpretation']+=f' INVESTIGATE DATA: {count} retained contracts have a verified count discrepancy. Historical figures remain as recorded pending a separate settlement amendment; they are not promotion evidence.'
     if health.get('blocked_leagues') and not capture_error and not args.settlement_only:
         status['capture_status']='INPUT_COVERAGE_INCOMPLETE'
     status['interpretation']+=' '+INPUTS.describe(health)
@@ -70,7 +84,7 @@ def main():
         status['strength_comparison']={**previous.get('strength_comparison',{}),'capture':health}
     if capture_error:status.update(status='CAPTURE_BLOCKED_MODEL_CHANGE',new_contracts=0)
     for out,data in [(target,status),(form/'team-shots-paired-settlement-audit.json',dict(generated_at=P.PUB.fmt_dt(now),results=audit))]:
-        temp=out.with_suffix('.tmp');temp.write_text(json.dumps(data,indent=2)+'\n',encoding='utf8');temp.replace(out)
+        INPUTS.atomic_json(out,data)
     print(f"Paired evidence: {status['settled_contracts']} settled contracts, {status['paired_fixtures']} complete paired fixtures")
 
 if __name__=='__main__':main()

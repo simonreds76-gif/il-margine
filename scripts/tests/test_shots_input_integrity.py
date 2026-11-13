@@ -36,11 +36,14 @@ class Integrity(unittest.TestCase):
         self.assertEqual(h['applied_corrections'],[]);self.assertEqual(out,[])
 
     def test_missing_xg_denominator_and_true_zero(self):
-        rows=[dict(xg_for='1',shots_for='10',xg_against='0',shots_against='8'),dict(xg_for='',shots_for='30',xg_against='',shots_against='20')]
+        valid=dict(xg_for='1',shots_for='10',xg_against='0',shots_against='8')
+        missing=dict(xg_for='',shots_for='30',xg_against='',shots_against='20')
+        rows=[valid]*5+[missing]
         f=I.quality_fields(rows)
         self.assertEqual(f['r10_xg_per_shot_for'],'0.1');self.assertEqual(f['r10_xg_per_shot_against'],'0')
-        self.assertEqual(f['r10_xg_shots_paired_for'],1)
-        self.assertEqual(I.quality_fields([rows[1]])['r10_xg_per_shot_for'],'')
+        self.assertEqual(f['r10_xg_shots_paired_for'],5)
+        self.assertEqual(I.quality_fields([missing])['r10_xg_per_shot_for'],'')
+        self.assertEqual(I.quality_fields([valid]*4+[missing])['r10_xg_per_shot_for'],'')
 
     def test_fully_observed_summaries_have_exact_parity(self):
         rows=[dict(xg_for=str(i*.2),xg_against=str(i*.1),shots_for=str(i+3),shots_against=str(i+4)) for i in range(1,26)]
@@ -114,5 +117,106 @@ class Integrity(unittest.TestCase):
             path=Path(d)/'ledger.jsonl';old=dict(contract_id='x',version='old',probability=.4)
             P.append_new(path,[old]);before=path.read_bytes()
             P.append_new(path,[old]);self.assertEqual(path.read_bytes(),before)
+
+    def test_quarantine_does_not_block_present_fixture_league(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);(root/'config').mkdir();form=root/'data/football-form';form.mkdir(parents=True)
+            rows=fixture();rows[0]['shots_for']='25';rows[1]['shots_against']='25'
+            B.write_csv(form/'team-match-base.csv',rows,list(rows[0]))
+            (root/I.CONFIG).write_text((ROOT/I.CONFIG).read_text())
+            check=dict(observed_at=NOW.isoformat(),leagues={k:dict(status='VERIFIED',completed=rows[:1] if k=='serie-a' else []) for k in I.LEAGUES})
+            (form/'count-input-completed-check.json').write_text(json.dumps(check))
+            view,status,raw=I.load(root,NOW)
+            self.assertEqual(view,[]);self.assertEqual(status['blocked_leagues'],{})
+            self.assertEqual(status['quarantined_fixtures'][0]['reason'],'correction_source_conflict')
+            cfg=json.loads((root/I.CONFIG).read_text());cfg['excluded_inputs'].append(dict(rows[0],reason='reviewed_exclusion'))
+            (root/I.CONFIG).write_text(json.dumps(cfg))
+            self.assertEqual(I.load(root,NOW)[1]['blocked_leagues'],{})
+
+    def test_data_root_cannot_replace_code_amendment(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);code=root/'code';data=root/'data';(code/'config').mkdir(parents=True);(data/'config').mkdir(parents=True)
+            form=data/'data/football-form';form.mkdir(parents=True)
+            B.write_csv(form/'team-match-base.csv',fixture(),list(fixture()[0]))
+            (code/I.CONFIG).write_text((ROOT/I.CONFIG).read_text())
+            (data/I.CONFIG).write_text('{"corrections":[]}')
+            view,status,_=I.load(code,NOW,data_root=data,write_status=True)
+            self.assertEqual([r['shots_for'] for r in view],['26','10'])
+            self.assertTrue((form/'count-input-integrity-status.json').exists())
+            self.assertFalse((code/'data/football-form/count-input-integrity-status.json').exists())
+
+    def test_bad_amendment_holds_capture_but_preserves_raw_for_reporting(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);form=root/'data/football-form';form.mkdir(parents=True)
+            B.write_csv(form/'team-match-base.csv',fixture(),list(fixture()[0]))
+            view,status,raw=I.load_for_capture(root,NOW)
+            self.assertEqual(view,[]);self.assertEqual(len(raw),2);self.assertEqual(len(status['blocked_leagues']),5)
+
+    def test_atomic_writer_cleans_own_temp_only(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);other=root/'status.json.other.tmp';other.write_text('other writer')
+            with patch.object(Path,'replace',side_effect=OSError('failed')):
+                with self.assertRaises(OSError):I.atomic_json(root/'status.json',{'ok':True})
+            self.assertEqual(list(root.iterdir()),[other])
+
+    def test_input_cohorts_use_issued_marker_and_capture_not_result(self):
+        rows=[dict(registered_at_utc='2026-10-29T12:00:00Z'),dict(registered_at_utc='2026-11-08T12:00:00Z'),dict(input_policy=I.POLICY,registered_at_utc='2026-11-14T12:00:00Z'),{}]
+        before=copy.deepcopy(rows);groups=I.cohort_groups(rows)
+        self.assertEqual([len(groups[k]) for k in I.COHORTS],[1,2,1]);self.assertEqual(rows,before)
+
+    def test_espn_input_rows_are_not_settlement_evidence(self):
+        from test_team_shots_paired_reference import record
+        row=record();base=[dict(date=row['match_date'],league=row['league'],home_team=row['home_team'],away_team=row['away_team'],team=row['team'],shots_for=12,match_source='espn_verified_fulltime')]
+        self.assertEqual(P.summarize([row],base,NOW)['settled_contracts'],0)
+        base[0]['match_source']='football-data'
+        self.assertEqual(P.summarize([row],base,NOW)['settled_contracts'],1)
+
+    def test_terminal_recent_fixture_does_not_freeze_day(self):
+        event=dict(status={'type':{'name':'STATUS_FULL_TIME','completed':True}},competitions=[dict(date=(NOW-timedelta(hours=2)).isoformat())])
+        self.assertFalse(E.day_complete([event],NOW))
+        self.assertTrue(E.day_complete([event],NOW+timedelta(hours=2)))
+        nested=copy.deepcopy(event);nested['competitions'][0]['status']=nested.pop('status')
+        self.assertTrue(E.day_complete([nested],NOW+timedelta(hours=2)))
+
+    def test_verified_empty_day_is_not_permanently_cached(self):
+        class Response:
+            url='https://site.api.espn.com/test';content=b'fixture'
+            def __init__(self,data):self.data=data
+            def json(self):return self.data
+        calls=[]
+        def get(url,params=None):
+            slug=next(s for s in E.SLUGS.values() if '/'+s+'/' in url)
+            calls.append((slug,params))
+            return Response(dict(leagues=[dict(slug=slug,calendarType='day',calendar=['2026-11-08T00:00:00Z'])],events=[]))
+        check=E.check(get,NOW)
+        self.assertTrue(all(v['status']=='VERIFIED' for v in check['leagues'].values()))
+        self.assertTrue(all(v['days']['20261108']['complete_day'] is False for v in check['leagues'].values()))
+        calls.clear();E.check(get,NOW,check);self.assertEqual(len(calls),10)
+
+    def test_budget_failure_retains_prior_expected_matches(self):
+        previous=dict(leagues={'serie-a':dict(status='VERIFIED',completed=fixture()[:1])})
+        def get(*args,**kwargs):raise RuntimeError('request_budget_exhausted')
+        checked=E.check(get,NOW,previous)
+        self.assertEqual(checked['leagues']['serie-a']['completed'],fixture()[:1])
+        self.assertEqual(checked['leagues']['serie-a']['status'],'UNVERIFIED')
+
+    def test_unknown_recovery_identity_is_not_new_team_history(self):
+        fixture=dict(league='epl',home_team='Unmapped Club',away_team='Chelsea')
+        self.assertIsNone(E.recovery_rows({},fixture,NOW,{('epl',I.key('Arsenal')),('epl',I.key('Chelsea'))}))
+
+    def test_importer_preserves_missing_shots_and_true_zero(self):
+        U=module('integrity_importer','understat-download-shots.py')
+        self.assertEqual(U._observed_count(''), '');self.assertEqual(U._observed_count('nan'),'')
+        self.assertEqual(U._observed_count('0'),0)
+
+    def test_settlement_exception_is_reported_without_rewriting(self):
+        rows=fixture();before=copy.deepcopy(rows)
+        ledger=[dict(contract_id='fiorentina-15.5',match_date='2026-10-29',league='serie-a',home_team='ACF Fiorentina',away_team='Atalanta BC')]
+        cfg=json.loads((ROOT/I.CONFIG).read_text())
+        exceptions=I.settlement_exceptions(ledger,rows,cfg)
+        self.assertEqual(len(exceptions),1);self.assertEqual(exceptions[0]['verified_counts'],(26,10))
+        self.assertEqual(rows,before)
+        rows[0]['shots_for']=26;rows[0]['shots_against']=10
+        self.assertEqual(I.settlement_exceptions(ledger,rows,cfg),[])
 
 if __name__=='__main__':unittest.main()
