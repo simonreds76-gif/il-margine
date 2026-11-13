@@ -137,8 +137,8 @@
         "settled": 122,
         "wins": 55,
         "losses": 67,
-        "pnl_units": -20.055699999999995,
-        "roi": -0.16439098360655732,
+        "pnl_units": -20.055699999999998,
+        "roi": -0.16439098360655735,
         "stake_units": 122,
         "pending": 0,
         "overdue": 0,
@@ -218,7 +218,7 @@
         "settled": 15,
         "wins": 4,
         "losses": 11,
-        "pnl_units": -7.700100000000001,
+        "pnl_units": -7.7001,
         "roi": -0.51334,
         "stake_units": 15,
         "pending": 0,
@@ -329,8 +329,8 @@
         "settled": 79,
         "wins": 39,
         "losses": 40,
-        "pnl_units": -7.3322,
-        "roi": -0.09281265822784811,
+        "pnl_units": -7.332199999999999,
+        "roi": -0.0928126582278481,
         "stake_units": 79,
         "pending": 0,
         "overdue": 0,
@@ -434,8 +434,8 @@
         "settled": 34,
         "wins": 19,
         "losses": 15,
-        "pnl_units": 1.0946000000000002,
-        "roi": 0.03219411764705883,
+        "pnl_units": 1.0946000000000005,
+        "roi": 0.03219411764705884,
         "stake_units": 34,
         "pending": 0,
         "overdue": 0,
@@ -445,7 +445,7 @@
     }
   },
   "real_stake_units": 0,
-  "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion. Identity repairs registered 28 October 2026; inspect cohort breakdown for consistent-input comparisons.",
+  "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion. Identity repairs registered 28 October 2026; inspect cohort breakdown for consistent-input comparisons. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-13T13:03:30.180844+00:00. Completed-fixture coverage verified; a break without new results is not stale. Missing xG uses observed pairs only (recent missing team rows: 196). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
   "statshub_status": "NOT_CONNECTED",
   "clv_status": "NOT_YET_MEASURED",
   "review_milestones_fixtures": [
@@ -453,11 +453,68 @@
     150
   ],
   "automatic_promotion": false,
-  "version": "paired-market-offset-20261109-fixture-v5",
-  "model_fingerprint": "a645d0ef31f390888d7e1eca504e14c1e34d0bacec46a497897b129a0e7fd41f",
-  "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
+  "input_integrity": {
+    "policy": "shots-input-integrity-20261113-v1",
+    "generated_at": "2026-11-13T13:03:30.180844+00:00",
+    "base_sha256": "bb889250e79628dc9b9bae65dd255cb6a6a096802d3292b6c1a960b9e8cabd03",
+    "amendment_sha256": "b6f051b71086cd6870d6f33c380d50d83794286e00a183d545bade1913cb10c6",
+    "source_rows": 44178,
+    "prediction_rows": 44172,
+    "latest_result_date": "2026-11-08",
+    "recent_missing_xg_team_rows": 196,
+    "applied_corrections": [
+      {
+        "fixture": [
+          "2026-10-29",
+          "serie-a",
+          "fiorentina",
+          "atalanta"
+        ],
+        "id": "fiorentina-atalanta-total-not-off-target-20261029",
+        "source_already_correct": false
+      }
+    ],
+    "quarantined_fixtures": [
+      {
+        "fixture": [
+          "2017-04-16",
+          "ligue-1",
+          "bastia",
+          "lyon"
+        ],
+        "reason": "awarded_match_missing_counts_not_zero"
+      },
+      {
+        "fixture": [
+          "2021-08-15",
+          "epl",
+          "newcastle",
+          "west ham"
+        ],
+        "reason": "on_target_exceeds_total"
+      },
+      {
+        "fixture": [
+          "2024-12-14",
+          "bundesliga",
+          "union berlin",
+          "bochum"
+        ],
+        "reason": "awarded_match_missing_counts_not_zero"
+      }
+    ],
+    "check_observed_at": "2026-11-13T12:39:35.566191+00:00",
+    "blocked_leagues": {},
+    "missing_completed": [],
+    "historical_records_changed": false,
+    "formulas_changed": false,
+    "status": "READY_WITH_PARTIAL_XG"
+  },
+  "version": "paired-market-offset-20261113-input-v6",
+  "model_fingerprint": "8a9e127c08fe290866cefe778c4f775aa370e0c13242c60d49b1ab9549bd923c",
+  "calibration_sha256": "4dd7f85fa5e9dc7d3bcc56c495bafba4f87bd54bfaebf37688c2ca16587fe0ea",
   "preserved_prior_cohort_contracts": 569,
-  "generated_at": "2026-11-12T22:52:41Z",
+  "generated_at": "2026-11-13T13:03:35Z",
   "new_contracts": 0,
   "scan_exclusions": {},
   "latest_archived_capture": "2026-11-08T16:19:48.772038+00:00",
@@ -526,8 +583,8 @@
             "settled": 35,
             "wins": 18,
             "losses": 17,
-            "pnl_units": -1.7570000000000003,
-            "roi": -0.05020000000000001,
+            "pnl_units": -1.7569999999999995,
+            "roi": -0.05019999999999999,
             "stake_units": 35,
             "pending": 0,
             "overdue": 0,
@@ -615,8 +672,8 @@
             "settled": 37,
             "wins": 22,
             "losses": 15,
-            "pnl_units": 3.160000000000001,
-            "roi": 0.08540540540540544,
+            "pnl_units": 3.1600000000000006,
+            "roi": 0.08540540540540542,
             "stake_units": 37,
             "pending": 0,
             "overdue": 0,
@@ -1032,8 +1089,8 @@
             "settled": 13,
             "wins": 4,
             "losses": 9,
-            "pnl_units": -5.700100000000001,
-            "roi": -0.43846923076923083,
+            "pnl_units": -5.7001,
+            "roi": -0.4384692307692308,
             "stake_units": 13,
             "pending": 0,
             "overdue": 0,
@@ -1095,8 +1152,8 @@
             "settled": 24,
             "wins": 10,
             "losses": 14,
-            "pnl_units": -5.212200000000001,
-            "roi": -0.21717500000000003,
+            "pnl_units": -5.2122,
+            "roi": -0.217175,
             "stake_units": 24,
             "pending": 0,
             "overdue": 0,
@@ -1181,7 +1238,7 @@
   "strength_comparison": {
     "name": "Team Shots strength correction",
     "registered_at": "2026-11-10T17:20:47.882372+00:00",
-    "updated_at": "2026-11-12T22:52:41.127557+00:00",
+    "updated_at": "2026-11-13T13:03:35.932247+00:00",
     "protocol": {
       "actual_stake": 0,
       "alerts": false,
@@ -1215,7 +1272,7 @@
     "historical_replay_included": false,
     "capture": {
       "captured": 0,
-      "checked_at": "2026-11-12T22:52:41.127557+00:00",
+      "checked_at": "2026-11-13T13:03:35.932247+00:00",
       "counts": {},
       "state": "NO_NEW_ELIGIBLE_CONTRACTS"
     },

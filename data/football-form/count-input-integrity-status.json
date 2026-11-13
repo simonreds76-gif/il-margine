@@ -1,0 +1,57 @@
+{
+  "policy": "shots-input-integrity-20261113-v1",
+  "generated_at": "2026-11-13T13:03:30.180844+00:00",
+  "base_sha256": "bb889250e79628dc9b9bae65dd255cb6a6a096802d3292b6c1a960b9e8cabd03",
+  "amendment_sha256": "b6f051b71086cd6870d6f33c380d50d83794286e00a183d545bade1913cb10c6",
+  "source_rows": 44178,
+  "prediction_rows": 44172,
+  "latest_result_date": "2026-11-08",
+  "recent_missing_xg_team_rows": 196,
+  "applied_corrections": [
+    {
+      "fixture": [
+        "2026-10-29",
+        "serie-a",
+        "fiorentina",
+        "atalanta"
+      ],
+      "id": "fiorentina-atalanta-total-not-off-target-20261029",
+      "source_already_correct": false
+    }
+  ],
+  "quarantined_fixtures": [
+    {
+      "fixture": [
+        "2017-04-16",
+        "ligue-1",
+        "bastia",
+        "lyon"
+      ],
+      "reason": "awarded_match_missing_counts_not_zero"
+    },
+    {
+      "fixture": [
+        "2021-08-15",
+        "epl",
+        "newcastle",
+        "west ham"
+      ],
+      "reason": "on_target_exceeds_total"
+    },
+    {
+      "fixture": [
+        "2024-12-14",
+        "bundesliga",
+        "union berlin",
+        "bochum"
+      ],
+      "reason": "awarded_match_missing_counts_not_zero"
+    }
+  ],
+  "check_observed_at": "2026-11-13T12:39:35.566191+00:00",
+  "blocked_leagues": {},
+  "missing_completed": [],
+  "historical_records_changed": false,
+  "formulas_changed": false,
+  "status": "READY_WITH_PARTIAL_XG"
+}
