@@ -35,6 +35,11 @@ class FootballCountsVnextGateTests(unittest.TestCase):
         payload=GATE.build_payload([], '', [], '', rows, [])['team_shots_v4']
         self.assertEqual(payload['promotion_evidence']['settled'],149)
         self.assertEqual(payload['promotion_gate'],'BLOCKED')
+        for row in rows:row['published_at_utc']='2026-12-01T12:00:00Z'
+        payload=GATE.build_payload([], '', [], '', rows, [])['team_shots_v4']
+        self.assertEqual(payload['promotion_evidence']['settled'],0)
+        self.assertEqual(payload['after_deadline_rows_excluded_from_promotion'],150)
+        self.assertEqual(payload['promotion_gate'],'BLOCKED')
 
     def test_conflicting_early_rules_are_reported_without_changing_selection(self):
         payload={'team_shots_v4':{'latest_scan':{'eligible_rows':0,'state':'NO_EDGE_AFTER_UNLOCK'}}}

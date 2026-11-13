@@ -199,8 +199,15 @@ def build_payload(
     corners_live_rows = corners_live_rows or []
     team_live = live_summary(team_live_rows)
     import football_shots_inputs as INPUTS
-    team_input_cohorts={name:live_summary(rows) for name,rows in INPUTS.cohort_groups(team_live_rows).items()}
-    gate_live=team_input_cohorts['repaired_inputs']
+    grouped=INPUTS.cohort_groups(team_live_rows)
+    team_input_cohorts={name:live_summary(rows) for name,rows in grouped.items()}
+    amendment=load_json(ROOT/INPUTS.CONFIG).get('paper_quality_policy',{}).get('v4_window_amendment',{})
+    review_end=INPUTS.utc(amendment.get('review_by'))
+    window_rows=[]
+    for row in grouped['repaired_inputs']:
+        observed=next((INPUTS.utc(row.get(field)) for field in ('registered_at_utc','published_at_utc','published_at','captured_at_utc','captured_at') if isinstance(row.get(field),str) and INPUTS.utc(row.get(field))),None)
+        if review_end and observed and observed<=review_end:window_rows.append(row)
+    gate_live=live_summary(window_rows)
     corners_live = live_summary(corners_live_rows)
     team_warmup = live_summary(team_live_rows, cohort="warmup_tracking")
     corners_warmup = live_summary(corners_live_rows, cohort="warmup_tracking")
@@ -251,6 +258,8 @@ def build_payload(
             "live_routing": False,
             "prospective": team_live,
             "input_cohorts": team_input_cohorts,
+            "input_review_deadline": amendment.get('review_by'),
+            "after_deadline_rows_excluded_from_promotion": len(grouped['repaired_inputs'])-len(window_rows),
             "promotion_evidence": gate_live,
             "promotion_evidence_scope": "repaired_inputs_only; v4 lock window restarts after the prospective input repair",
             "warmup_tracking": team_warmup,
