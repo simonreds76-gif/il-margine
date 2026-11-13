@@ -104,6 +104,11 @@ if [[ -f data/goalscorer/goalscorer-match-status.json ]]; then
   git add -f -- data/goalscorer/goalscorer-match-status.json
 fi
 
+# Keep successful identities and bounded failure cooldowns between existing polls.
+if [[ -f data/goalscorer/lab-highlight-portrait-evidence.json ]]; then
+  git add -f -- data/goalscorer/lab-highlight-portrait-evidence.json
+fi
+
 if ((${#artifacts[@]} > 0)); then
   git add -f -- "${artifacts[@]}" 2>/dev/null || true
 fi
