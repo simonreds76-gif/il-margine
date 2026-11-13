@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-13T23:29:52.975130+00:00",
+  "generated_at": "2026-11-13T23:50:37.173107+00:00",
   "league": "bundesliga",
-  "row_count": 1,
+  "row_count": 2,
   "rows": [
     {
       "date": "2026-11-08",
@@ -76,6 +76,92 @@
           "event_result": "missed"
         }
       ]
+    },
+    {
+      "date": "2026-11-07",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "match": "Paderborn vs Eintracht Frankfurt",
+      "team": "Paderborn",
+      "opponent": "Eintracht Frankfurt",
+      "actual_taker": "Marvin Pieringer",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "73",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Sebastian Klaas",
+      "secondary_pre_match": "Sven Michel",
+      "tertiary_pre_match": "Raphael Obermair",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Marvin Pieringer took 1 penalty attempt and scored for Paderborn vs Eintracht Frankfurt. Primary pre-match: Sebastian Klaas (unknown). Secondary pre-match: Sven Michel (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-09-19",
+      "context_source_path": "data/goalscorer/bundesliga-penalty-takers.json",
+      "actual_taker_match_status": "Yes - bench, on 65'",
+      "primary_on_pitch_at_penalty": "No - absent from matchday squad",
+      "secondary_on_pitch_at_penalty": "No - absent from matchday squad",
+      "tertiary_on_pitch_at_penalty": "No - started, off 65'",
+      "actual_taker_on_pitch_at_penalty": "Yes - bench, on 65'",
+      "event_evidence": [
+        {
+          "id": "fotmob|bundesliga|5881221|2994436617",
+          "source_event_id": "2994436617",
+          "match_id": "5881221",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881221",
+          "observed_at": "2026-11-13T23:50:41+00:00",
+          "event_date": "2026-11-07",
+          "season": "2026/27",
+          "team": "Paderborn",
+          "taker": "Marvin Pieringer",
+          "primary": "Sebastian Klaas",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Sebastian Klaas",
+            "minute": 73,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "reason": "absent_from_matchday_squad",
+            "registered_player_id": null,
+            "squad_player_ids": [
+              "1257826",
+              "1520469",
+              "1415373",
+              "1515976",
+              "1426060",
+              "658444",
+              "1362492",
+              "1276453",
+              "784225",
+              "1688956",
+              "1321553",
+              "1580112",
+              "1701615",
+              "956913",
+              "1079892",
+              "706500",
+              "659046",
+              "1520593",
+              "767790",
+              "1367587"
+            ]
+          },
+          "minute": 73,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Paderborn vs Eintracht Frankfurt",
+          "event_result": "scored"
+        }
+      ]
     }
   ],
   "source_health": {
@@ -96,7 +182,7 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261108"
+      "20261107"
     ],
     "matches_checked": 1
   }
