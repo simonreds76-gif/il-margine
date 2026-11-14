@@ -76,8 +76,8 @@ def identity(match, root):
     tour = str(a.get('tour_id') or '')
     if not tour or str(b.get('tour_id')) != tour or not all(ids) or len(set(ids)) != 2:
         raise ValueError('edition_identity_missing')
-    players={p['id']:norm(p.get('name')) for p in rows(root/'data/oncourt/players_atp.csv')}
-    if any(players.get(pid)!=name for pid,name in zip(ids,names)): raise ValueError('player_id_name_conflict')
+    players={p['id']:p.get('name') for p in rows(root/'data/oncourt/players_atp.csv')}
+    if any(norm(players.get(pid))!=name for pid,name in zip(ids,names)): raise ValueError('player_id_name_conflict')
     fixtures = [f for f in rows(root/'data/oncourt/today_atp.csv') if f.get('tour_id') == tour
                 and {f.get('player1_id'), f.get('player2_id')} == set(ids)]
     fixtures = [f for f in fixtures if not f.get('result', '').strip() and f.get('live', '').strip() in ('', '0')]
@@ -178,6 +178,8 @@ def capture(root, report, now=None):
             for match in report.get('matches',[]):
                 if match.get('model') not in MODELS: continue
                 try:
+                    if not any(p.get('candidate') for p in match.get('prices',[])):
+                        rejected['no_current_price_candidates']+=1;continue
                     ident=identity(match,root)
                     key=digest([VERSION,match['model'],ident['tour_id'],ident['round_id'],sorted(ident['player_ids'])])
                     if key in known: rejected['already_recorded']+=1; continue
