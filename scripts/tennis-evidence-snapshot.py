@@ -155,6 +155,7 @@ def build_snapshot() -> dict[str, Any]:
         "tennis_most_aces_forecast": module.load_json(module.TENNIS_MOST_ACES_FORECAST_JSON),
         "tennis_most_aces_prices": module.most_aces_price_summary(),
         "tennis_most_aces_reference": module.load_json(ROOT / "data/tennis-props/shadow/most-aces-fixed-reference-v1/report.json"),
+        "tennis_most_aces_single": module.load_json(ROOT / "data/tennis-props/shadow/most-aces-single-book-v1/report.json"),
         "tennis_most_df": module.load_json(ROOT / "data/tennis-props/shadow/most-df-v1/report.json"),
         "tennis_props_market_benchmark": module.tennis_props_market_benchmark(),
         "tennis_props_shadow_decision": module.tennis_props_shadow_decision(),

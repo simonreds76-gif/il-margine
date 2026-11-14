@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "enabled_at": "2026-11-14T15:02:13.737568+00:00",
+  "authorization": "Simone, 14 November 2026: install single-book paper tracking including no-bets, ROI/results in Monitor and weekly; separate paired comparison, prevent double counting, no new alerts, live unchanged.",
+  "contract": {
+    "version": "most-aces-single-book-v1",
+    "minimum_complete_books": 1,
+    "maximum_quality_books": 1,
+    "gap_pp": 20,
+    "min_ev_pct": 8,
+    "max_overround": 1.2,
+    "quote_age_seconds": 1800,
+    "forecast_age_seconds": 21600,
+    "paper_stake_units": 1,
+    "real_stake_units": 0,
+    "alerts": false,
+    "models": [
+      "v3_aces_gaussian_copula_nb2_evidence_tiers_v3",
+      "most_aces_direct_1x2_v1_oncourt_20261029"
+    ],
+    "selection": "current_gate_on_only_quality_book_else_no_bet",
+    "paired_ledger_unchanged": true
+  },
+  "hypothesis": "Retain otherwise valid opportunities when only one complete fresh bookmaker vector is available; descriptive current-gate evidence, not evidence of a gate improvement.",
+  "population": "Existing Count (primary) and Direct (secondary) ATP Most Aces forecasts. At least one source-valid complete current three-way vector after all configured source checks, but fewer than two quality-valid books (overround <=1.2). If exactly one quality-valid book exists, use that book and retain excluded high-margin vectors. If none exists, retain the highest-EV vector as a no-bet. EV/confidence/own-gap failures remain no-bets. No new single-book record after the same model/edition/round/player pair was already captured in paired.",
+  "timing": "First prospective observation after enabled_at; no historical backfill. Original forecast <=6h, provider quote <=30min, observation before exact kickoff. Native IDs/edition/round, player orientation and receipt artifact hashes required; no date substitution.",
+  "reference": "Selected book no-vig probabilities for descriptive calibration only, not consensus. Gates coincide when exactly one complete book exists. No gate contrast is claimed for single-book or limited-coverage rows; keep paired denominators unchanged.",
+  "selection": "Existing current-gate thresholds on the only quality-valid book: EV >=8%, overround <=1.2, own-book max gap <=20pp and unchanged confidence/non-price exclusions. Raw odds and unchanged p. Without any quality-valid book, highest-EV vector is recorded as a no-bet with OVERROUND_GT_20. 1u paper only if selected, zero real stake.",
+  "outcomes": "Existing exact OnCourt edition/round/participant join and bookmaker retirement/void rules. Original observations immutable; outcomes separate. All no-bets settled for calibration; no-bets and voids excluded from settled stake/ROI.",
+  "overlap": "First single-book row immutable if a later >=2-book paired decision appears. Later paired capture uses its own then-current prices and time. Derived overlap by model/edition/round/player IDs; separate denominators and charts, aggregate_eligible=false. Never sum with paired or existing source-row records as a portfolio.",
+  "evaluation": "Prospective only, no fit/development/test search. Three-class summed Brier and natural log loss on all exactly settled observations, selected subset separately; current-gate W/L, settled 1u stake, P/L, ROI, pending/overdue and daily drawdown. No comparison-improvement or profitability claim.",
+  "uncertainty": "Descriptive only; review at 50/100 independent fixtures per model, not summed across models. Cluster by tournament edition; no conventional cluster interval with fewer10 editions. Adequacy requires precision review; no automatic promotion.",
+  "reporting": "Two cards within existing Most Aces family, profit histories and calibration; labelled single-book and non-additive to >=2-book paired or source-row views. Existing snapshot and weekly workflow only; no new alerts or schedules."
+}

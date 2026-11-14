@@ -148,6 +148,11 @@ def main():
         safe_capture(ROOT, report)
     except Exception as exc:
         print('Most Aces fixed-reference comparison unavailable: '+type(exc).__name__)
+    try:
+        from tennis_most_aces_single import safe_capture as capture_single
+        capture_single(ROOT, report)
+    except Exception as exc:
+        print('Most Aces single-book evidence unavailable: '+type(exc).__name__)
     print(f'Most Aces current: {len(boards)} model rows; {sum(len(m["prices"]) for m in report["matches"])} current comparisons; {added} new observations')
     return 0
 

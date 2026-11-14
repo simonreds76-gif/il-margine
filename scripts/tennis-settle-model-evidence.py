@@ -108,6 +108,16 @@ def run(code_root, data_root, source, recheck=False):
         from tennis_most_aces_reference import pending as reference_pending
         lookup.extend(reference_pending(data_root))
     except Exception as exc: reference_error('pending',exc)
+    def single_error(phase,exc):
+        try:
+            from tennis_most_aces_single import failure
+            failure(data_root,phase,exc)
+        except Exception:
+            print('Most Aces single-book '+phase+' unavailable: '+type(exc).__name__)
+    try:
+        from tennis_most_aces_single import pending as single_pending
+        lookup.extend(single_pending(data_root))
+    except Exception as exc: single_error('pending',exc)
     started = time.monotonic()
     print(f'Settlement lookup: {len(lookup)} unresolved/recheck rows; {len(signals)} retained rows', flush=True)
     idx=M['load_oncourt_index'](source,lookup)
@@ -221,6 +231,11 @@ def run(code_root, data_root, source, recheck=False):
         counts['most_aces_fixed_reference']=settle_reference(data_root,idx,M,priced_shadow,now)
     except Exception as exc: reference_error('settlement',exc)
     checkpoint('most_aces_fixed_reference')
+    try:
+        from tennis_most_aces_single import settle as settle_single
+        counts['most_aces_single_book']=settle_single(data_root,idx,M,priced_shadow,now)
+    except Exception as exc: single_error('settlement',exc)
+    checkpoint('most_aces_single_book')
     # Settling paired experiments never changes their append-only predictions.
     P['SETTLE']['load_oncourt_index']=lambda *a,**kw:idx
     FULL=load('tennis-props-full-refresh-shadow.py') if 'full-refresh-v1' in paired else None
