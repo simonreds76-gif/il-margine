@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-11-13T15:18:03+00:00`
+Fetched at UTC: `2026-11-14T14:04:08+00:00`
 
 ## Decision
 
@@ -32,7 +32,7 @@ Overall: **PASS_SOURCE_LAYER**
 - Players with set-piece role fields: `150`
 - Registered season: `2026/27`
 - Exact 20-team roster match: `YES`
-- Snapshot valid until UTC: `2026-11-20T15:18:03+00:00`
+- Snapshot valid until UTC: `2026-11-21T14:04:08+00:00`
 
 ## SetPieceTakers
 
