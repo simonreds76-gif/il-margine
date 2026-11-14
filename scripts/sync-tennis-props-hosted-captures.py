@@ -147,6 +147,49 @@ def sync_match_shape_quotes(remote_ref, target_date, lookback_days):
     return {'imported_packets':added,'available_packets':len(paths)}
 
 
+def sync_bookmaker_checks(remote_ref, target_date, lookback_days):
+    """Import each hash-bound price packet as a unit; empty polls stay empty."""
+    from hashlib import sha256
+    from tennis_bookmaker_check import stamp, atomic
+    protected=set(); copied=[]; errors=[]
+    for offset in range(max(0,lookback_days)+1):
+        day=(target_date-timedelta(days=offset)).isoformat()
+        relative=f'data/tennis-props/inbox/bookmaker-check-{day}.json'
+        dest=ROOT/relative
+        names={f'bet365-lines-{day}.csv',f'betmgm-most-aces-1x2-{day}.csv',f'most-df-1x2-{day}.csv'}
+        local={}
+        try:
+            if dest.exists():local=json.loads(dest.read_text(encoding='utf8'))
+            if local:protected.update(str(Path('data/tennis-props/inbox')/n).replace('\\','/') for n in names)
+            raw=remote_blob(remote_ref,relative)
+            if not raw:continue
+            packet=json.loads(raw);artifacts=packet.get('artifacts',{})
+            if set(artifacts)!={'props','most_aces','most_df'} or {e['name'] for e in artifacts.values()}!=names:
+                raise ValueError('invalid_packet_artifacts')
+            newer,older=stamp(packet.get('generated_at')),stamp(local.get('generated_at'))
+            if not newer:raise ValueError('invalid_packet_time')
+            if older and newer<=older:continue
+            blobs={}
+            for e in artifacts.values():
+                name=e['name'];content=remote_blob(remote_ref,f'data/tennis-props/inbox/{name}')
+                if content is None or sha256(content).hexdigest()!=e['sha256']:raise ValueError('price_packet_hash_mismatch')
+                path=ROOT/'data/tennis-props/inbox'/name
+                if path.exists():
+                    _,rows=csv_rows(path.read_bytes());times=[stamp(r.get('capture_ts')) for r in rows]
+                    if any(v and v>newer for v in times):raise ValueError('local_quotes_newer_than_packet')
+                blobs[path]=content
+            # The old receipt cannot validate partially replaced files; install
+            # the new receipt last, after every bound snapshot has been checked.
+            for path,content in blobs.items():
+                path.parent.mkdir(parents=True,exist_ok=True)
+                temp=path.with_suffix('.sync.tmp');temp.write_bytes(content);temp.replace(path)
+                protected.add(str(path.relative_to(ROOT)).replace('\\','/'))
+            atomic(dest,packet);copied.append(relative)
+        except (OSError,ValueError,TypeError,KeyError) as exc:
+            errors.append({'day':day,'error_type':type(exc).__name__})
+    return {'copied_receipts':copied,'errors':errors},protected
+
+
 def synchronize(
     as_of: str,
     *,
@@ -157,6 +200,7 @@ def synchronize(
     copied: list[str] = []
     missing: list[str] = []
     history_added = 0
+    bookmaker_sync, protected_packets = sync_bookmaker_checks(remote_ref,target_date,lookback_days)
 
     for offset in range(max(0, lookback_days) + 1):
         day = (target_date - timedelta(days=offset)).isoformat()
@@ -168,6 +212,7 @@ def synchronize(
             "betmgm-tennis-market-audit",
         ):
             relative = f"data/tennis-props/inbox/{stem}-{day}.csv"
+            if relative in protected_packets:continue
             content = remote_blob(remote_ref, relative)
             if content is None:
                 missing.append(relative)
@@ -195,6 +240,7 @@ def synchronize(
 
     shape_sync = sync_match_shape_quotes(remote_ref, target_date, lookback_days)
     return {
+        "bookmaker_checks": bookmaker_sync,
         "match_shape": shape_sync,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "as_of": as_of,

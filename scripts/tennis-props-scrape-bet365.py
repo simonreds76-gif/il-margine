@@ -867,11 +867,15 @@ def main() -> None:
     direct, direct_receipt = (capture_grosvenor(days_ahead=args.days_ahead, max_events=args.max_events)
                               if json.loads((ROOT / "config/odds-api-bookmaker-allocation.json").read_text(encoding="utf-8-sig")).get("direct_tennis_grosvenor", True) else ([], {}))
     now = datetime.now(timezone.utc)
+    api_receipt = {"status": "MISSING_KEY" if not api_key else "OK", "errors": []}
     try:
         events, payload = capture_api(api_key, args) if api_key else ([], [])
-    except RuntimeError as exc:
-        print(f"PRICE_SOURCE_FAILED: {exc}; independent Grosvenor capture retained")
+    except (RuntimeError, requests.RequestException, ValueError, TypeError, KeyError) as exc:
+        # Exceptions can contain request URLs; retain only their type, never a key.
+        api_receipt.update(status="SOURCE_FAILED", errors=[type(exc).__name__])
+        print(f"PRICE_SOURCE_FAILED: {type(exc).__name__}; independent sources retained")
         events, payload = [], []
+    api_receipt["captured_at"] = datetime.now(timezone.utc).isoformat()
     payload.extend(direct)
     from moviodds_prices import capture as capture_moviodds
     moviodds, moviodds_receipt = capture_moviodds("tennis", targets=events, days_ahead=args.days_ahead)
@@ -888,7 +892,7 @@ def main() -> None:
         raw_out.parent.mkdir(parents=True, exist_ok=True)
         with gzip.open(raw_out, "wt", encoding="utf-8") as handle:
             json.dump({"captured_at": captured_at, "source": f"{BASE_URL}/odds/multi",
-                       "bookmakers": args.bookmakers, "events": payload, "grosvenor_receipt": direct_receipt, "moviodds_receipt": moviodds_receipt}, handle)
+                       "bookmakers": args.bookmakers, "events": payload, "api_receipt": api_receipt, "grosvenor_receipt": direct_receipt, "moviodds_receipt": moviodds_receipt}, handle)
         # Reuse saved raw offers for BP research; no extra requests or betting signals.
         try:
             from tennis_breakpoint_evidence import ingest
@@ -1015,13 +1019,21 @@ def main() -> None:
         "odds_count": str(moviodds_receipt.get("quote_count", 0)),
         "sample_labels": json.dumps(moviodds_receipt)})
     write_rows(audit_out, audit_rows, AUDIT_FIELDS)
+    # An empty current poll must replace yesterday's/earlier prices, not revive them.
+    write_rows(out, rows, OUTPUT_FIELDS)
     if rows:
-        write_rows(out, rows, OUTPUT_FIELDS)
         print(f"Saved lines: {out}")
         history_added = append_history_rows(history_out, rows)
         print(f"Price history: added {history_added}, file={history_out}")
     else:
-        print("PRICE_COVERAGE_UNAVAILABLE: no supported tennis props from selected books; this is not a no-value result. Existing lines retained.")
+        print("PRICE_COVERAGE_UNAVAILABLE: no supported tennis props from selected books; this is not a no-value result. Current snapshot cleared; historical evidence retained.")
+    from tennis_bookmaker_check import save_receipt
+    allocation = json.loads((ROOT / "config/odds-api-bookmaker-allocation.json").read_text(encoding="utf-8-sig"))
+    sources = {book.strip(): api_receipt for book in args.bookmakers.split(",") if book.strip()}
+    sources.update({"Grosvenor": direct_receipt, "Bet365": moviodds_receipt})
+    save_receipt(out.parent / f"bookmaker-check-{args.date}.json", allocation, sources,
+        {"props": out, "most_aces": out.parent / f"betmgm-most-aces-1x2-{args.date}.csv",
+         "most_df": out.parent / f"most-df-1x2-{args.date}.csv"}, captured_at)
     print(f"Saved audit: {audit_out}")
     # The installed Sisal comparison must see fresh quotes even if a later
     # projection build times out, or the caller requested capture-only mode.

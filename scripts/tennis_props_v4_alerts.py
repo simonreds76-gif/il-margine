@@ -141,6 +141,11 @@ def prepare(root: Path, now: datetime, previous: dict) -> tuple[list[tuple[str, 
         if key in sent:
             excluded['ALREADY_DISPATCHED'] += 1
             continue
+        from tennis_bookmaker_check import v4_price_check
+        price_problem, compared, coverage_note = v4_price_check(row, root, now)
+        if price_problem:
+            excluded['BOOKMAKER_' + price_problem.upper()] += 1
+            continue
         line, probability, push = (float(row[key]) for key in ('line', 'p_over_v4', 'p_push_v4'))
         selection = f"{int(line+.5)}+ aces" if line % 1 == .5 else f"Over {line:g} aces (exactly {line:g} returns the stake)"
         start = timestamp(row['match_start_utc']).astimezone(UK)
@@ -152,6 +157,8 @@ def prepare(root: Path, now: datetime, previous: dict) -> tuple[list[tuple[str, 
             f"{clean(row['player'])}: {selection} @ {float(row['selected_odds']):g} ({clean(row['bookmaker'])})",
             f"Model probability {probability:.1%} | fair odds {(1-push)/probability:.2f} | estimated EV {float(row['edge_v4_pct']):+.1f}%",
             f"Odds captured {capture:%d %b %H:%M UTC}. Recheck the available price.",
+            'Compared current quotes: '+', '.join(f"{q['bookmaker']} {q['odds']:.2f}" for q in compared),
+            ('Partial comparison: '+coverage_note) if coverage_note else 'All configured sources checked.',
             f"Player history verified {row['history_as_of']}.",
             '', record,
             'Recorded at 1u paper stake. Research only; no real stake assigned.',

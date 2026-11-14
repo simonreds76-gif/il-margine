@@ -392,7 +392,9 @@ def most_df_signals(target_date: str, *, now: datetime | None = None) -> list[Si
             selection=f"{selected} most double faults @ {fmt_odds(s['odds'])} {s['bookmaker']} | fair {fmt_odds(s['fair_odds'])} | estimated EV {s['ev_pct']:+.1f}% | 1u paper, zero real stake",
             edge_pct=s['ev_pct'], key=(row['date'],row['fixture'],'most_df_1x2'),
             scheduled_start_utc=row['start'],captured_at=s['captured_at'],
-            performance_source={'market':'most_df','model_id':'most-df-independent-nb-v1'}))
+            performance_source={**s['source'], 'market':'most_df','model_id':'most-df-independent-nb-v1',
+                'recommended_side':('P1','DRAW','P2')[side], 'player1':row['names'][0], 'player2':row['names'][1],
+                'selected_odds':s['odds'], 'bookmaker':s['bookmaker']}))
     return output
 
 
@@ -752,6 +754,10 @@ def digest_main() -> int:
         return 0
 
     signals, empty_lanes = collect_upcoming_signals(args.date, args.days_ahead)
+    from tennis_bookmaker_check import preflight
+    signals, price_check = preflight(signals, ROOT, args.date)
+    if price_check['held']:
+        print(f"Bookmaker preflight: {price_check['held']} props alerts held; see tennis-bookmaker-preflight.json")
     if args.most_aces_only:
         signals = [s for s in signals if 'MOST ACES PAPER' in s.labels]
         empty_lanes = []
