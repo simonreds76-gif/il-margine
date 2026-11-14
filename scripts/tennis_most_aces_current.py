@@ -61,8 +61,11 @@ def alert_rows(report, now):
     for fixture, (_, row) in chosen.items():
         if row.get('bet_eligible') != 'yes':continue
         outcome={'P1':'player1','P2':'player2','DRAW':'draw'}[row['recommended_side']]
-        prices=[dict(bookmaker=q['bookmaker'], odds=q.get(f'open_{outcome}_odds',q['selected_odds']), captured_at=q['price_captured_at'])
-                for q in compared[fixture]]
+        selected_name=None if outcome=='draw' else shadow.norm_name(row[outcome])
+        prices=[]
+        for q in compared[fixture]:
+            field='draw' if selected_name is None else ('player1' if shadow.norm_name(q['player1'])==selected_name else 'player2')
+            prices.append(dict(bookmaker=q['bookmaker'],odds=q.get(f'open_{field}_odds',q['selected_odds']),captured_at=q['price_captured_at']))
         selected.append(dict(row, compared_prices=prices))
     return selected
 
@@ -105,7 +108,7 @@ def compare(boards, captures, ledger, now, shadow, projections=()):
             if shadow.norm_name(capture['player1']) != shadow.norm_name(board['player1']):
                 for a,b in [('player1','player2'),('player1_odds','player2_odds')]:
                     oriented[a],oriented[b] = capture[b],capture[a]
-            candidate = shadow.registration_row(board, oriented)
+            candidate = shadow.registration_row(shadow.orient_board(board, capture), capture)
             matched.add((capture['bookmaker'],capture.get('event_id'),capture['capture_ts']))
             prices.append(dict(bookmaker=capture['bookmaker'], player1_odds=oriented['player1_odds'],
                 draw_odds=oriented['draw_odds'], player2_odds=oriented['player2_odds'],

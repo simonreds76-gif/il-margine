@@ -16,6 +16,11 @@ SPEC.loader.exec_module(MODULE)
 
 
 class MostAcesCaptureTests(unittest.TestCase):
+    def test_sisal_three_way_is_full_match_only(self):
+        self.assertTrue(MODULE.is_most_aces_market('Most Aces 3-Way'))
+        self.assertFalse(MODULE.is_most_aces_market('Most Aces 3-Way 1st Set'))
+        self.assertFalse(MODULE.is_most_aces_market('Most Double Faults 3-Way'))
+
     def test_paused_bookmaker_makes_no_api_calls_or_file_changes(self) -> None:
         with patch('sys.argv', ['tennis-most-aces-capture.py']), patch.object(MODULE, 'load_common') as common:
             self.assertEqual(MODULE.main(), 0)
