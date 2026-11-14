@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import math
 import re
 import importlib.util
@@ -120,9 +121,9 @@ def registration_row(board: dict[str, str], capture: dict[str, str]) -> dict[str
     if capture.get('market') not in (None, '', 'most_aces'):
         return None
     book = str(capture.get('bookmaker','')).casefold()
-    if book not in {'grosvenor','bet365','betmgm'}:
+    if book not in {'grosvenor','bet365','betmgm','sisal it'}:
         return None
-    if book in {'grosvenor','bet365'}:
+    if book in {'grosvenor','bet365','sisal it'}:
         now = datetime.now(timezone.utc)
         stamp, start = parse_datetime(capture.get('capture_ts')), parse_datetime(capture.get('match_start_utc'))
         generated = parse_datetime(board.get('generated_at_utc'))
@@ -132,6 +133,19 @@ def registration_row(board: dict[str, str], capture: dict[str, str]) -> dict[str
                 or board.get('date') != capture.get('date')
                 or norm_name(board.get('tournament')) != norm_name(capture.get('tournament'))):
             return None
+    if book == 'sisal it':
+        try:
+            import hashlib
+            raw=capture['raw_market_json']
+            market=json.loads(raw)
+            if hashlib.sha256(raw.encode()).hexdigest()!=capture['evidence_sha256']:return None
+            if norm_name(market.get('name')) not in {'most aces','most aces 1x2','most aces 3 way'}:return None
+            offers=market.get('odds',[])
+            if len(offers)!=1 or set(offers[0])!={'home','draw','away'}:return None
+            if any(abs(float(offers[0][a])-float(capture[b]))>0.000051
+                   for a,b in [('home','player1_odds'),('draw','draw_odds'),('away','player2_odds')]):return None
+            if not capture.get('source_url') or not str(capture.get('event_id','')).isdigit():return None
+        except (KeyError,ValueError,TypeError):return None
     if str(capture.get('bookmaker','')).casefold() == 'bet365':
         now = datetime.now(timezone.utc)
         stamp, start = parse_datetime(capture.get('capture_ts')), parse_datetime(capture.get('match_start_utc'))
@@ -207,7 +221,7 @@ def registration_row(board: dict[str, str], capture: dict[str, str]) -> dict[str
     eligible = not reasons
     row = {
         "registered_at_utc": (datetime.now(timezone.utc).isoformat(timespec="seconds")
-                              if str(capture.get("bookmaker", "")).casefold() in {"grosvenor", "bet365"} else capture.get("capture_ts", "")),
+                              if str(capture.get("bookmaker", "")).casefold() in {"grosvenor", "bet365", "sisal it"} else capture.get("capture_ts", "")),
         "price_captured_at": capture.get("capture_ts", ""),
         "forecast_generated_at": board.get("generated_at_utc", ""),
         "source_url": capture.get("source_url", ""),
@@ -405,6 +419,9 @@ def settle(ledger: list[dict[str, str]], index: dict[tuple[str, str], list[dict[
                 settled += 1
                 continue
             row["settlement_note"] = "grosvenor_unfinished_contract_review_required"
+            continue
+        if row.get("bookmaker") == "Sisal IT" and (not score or any(token in score for token in ("RET", "W/O", "WO", "DEF", "ABD"))):
+            row["settlement_note"] = "sisal_unfinished_three_way_contract_review_required"
             continue
         if any(token in score for token in ("RET", "W/O", "WO", "DEF", "ABD")):
             row.update({

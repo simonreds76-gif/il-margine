@@ -94,6 +94,26 @@ class PriceTests(unittest.TestCase):
     def test_most_aces_best_book_and_no_lower_price_gate_evasion(self):
         self.assertEqual(C.alert_rows(self.report(),NOW)[0]['bookmaker'],'Grosvenor')
         self.assertEqual(C.alert_rows(self.report(False),NOW),[])
+    def test_reversed_source_keeps_raw_contract_and_compares_same_player(self):
+        import json,hashlib
+        now=datetime.now(timezone.utc);shadow=C.load_shadow()
+        b=dict(date=now.date().isoformat(),tour='ATP',tournament='Stockholm',player1='Taylor Fritz',
+               player2='Thiago Agustin Tirante',p_player1='0.38',p_draw='0.06',p_player2='0.56',
+               player1_confidence='MED',player2_confidence='MED',quote_status='READY',model=C.COUNT_MODEL,
+               generated_at_utc=now.isoformat())
+        raw=json.dumps(dict(name='Most Aces 3-Way',odds=[dict(home='2.25',draw='16',away='1.65')]))
+        q=dict(date=b['date'],tour='ATP',tournament='Stockholm',player1=b['player2'],player2=b['player1'],
+               event_id='123',bookmaker='Sisal IT',player1_odds='2.25',draw_odds='16',player2_odds='1.65',
+               capture_ts=now.isoformat(),match_start_utc=(now+timedelta(hours=2)).isoformat(),
+               raw_market_json=raw,evidence_sha256=hashlib.sha256(raw.encode()).hexdigest(),source_url='https://www.sisal.it/event/123')
+        other=dict(q,event_id='kambi:456',bookmaker='Grosvenor',player1=b['player1'],player2=b['player2'],
+                   player1_odds='1.82',draw_odds='10',player2_odds='2.28')
+        report=C.compare([b],[q,other],[],now,shadow)
+        self.assertIsNotNone(report['matches'][0]['prices'][0]['candidate'])
+        row=C.alert_rows(report,now)[0]
+        self.assertEqual(row['bookmaker'],'Grosvenor')
+        self.assertEqual({x['bookmaker']:float(x['odds']) for x in row['compared_prices']}, {'Sisal IT':2.25,'Grosvenor':2.28})
+
     def test_sisal_uses_same_verified_full_name_alias(self):
         self.assertEqual(S.player_name('Taylor Harry Fritz'),S.player_name('Taylor Fritz'))
         self.assertNotEqual(S.player_name('Fritz'),S.player_name('Taylor Fritz'))

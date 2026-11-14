@@ -81,6 +81,21 @@ class MostAcesShadowTests(unittest.TestCase):
             "match_start_utc": "2026-07-29T17:00:00Z",
         }
 
+    def test_sisal_three_way_validates_source_prices_and_rejects_stale_or_tampered(self):
+        import json, hashlib
+        from datetime import datetime,timezone,timedelta
+        now=datetime.now(timezone.utc)
+        board=dict(self.board(),date=now.date().isoformat(),generated_at_utc=now.isoformat())
+        raw=json.dumps(dict(name='Most Aces 3-Way',odds=[dict(home='1.8',draw='8',away='4.5')]))
+        cap=dict(self.capture(),bookmaker='Sisal IT',tournament='Washington',date=now.date().isoformat(),
+                 capture_ts=now.isoformat(),match_start_utc=(now+timedelta(hours=2)).isoformat(),
+                 raw_market_json=raw,evidence_sha256=hashlib.sha256(raw.encode()).hexdigest(),source_url='https://www.sisal.it/event/123')
+        self.assertIsNotNone(MODULE.registration_row(board,cap))
+        self.assertIsNone(MODULE.registration_row(board,dict(cap,player2_odds='8.0')))
+        self.assertIsNone(MODULE.registration_row(board,dict(cap,evidence_sha256='wrong')))
+        self.assertIsNone(MODULE.registration_row(board,dict(cap,capture_ts=(now-timedelta(hours=1)).isoformat())))
+        self.assertIsNone(MODULE.registration_row(board,dict(cap,raw_market_json=raw.replace('Most Aces','First Set Most Aces'))))
+
     def test_registration_devigs_and_selects_best_value(self):
         row = MODULE.registration_row(self.board(), self.capture())
         self.assertIsNotNone(row)

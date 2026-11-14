@@ -60,7 +60,7 @@ def decimal(value: object) -> float | None:
 
 def is_most_aces_market(name: object) -> bool:
     text = norm_name(name)
-    return text in {"most aces", "most aces 1x2", "player to serve most aces", "to serve most aces", "highest aces", "ace match betting"}
+    return text in {"most aces", "most aces 1x2", "most aces 3 way", "player to serve most aces", "to serve most aces", "highest aces", "ace match betting"}
 
 
 
