@@ -165,10 +165,45 @@ def decide(match, ident, raw_quotes, sources, now):
                 fixed_reference=dict(selected=not ranked['reasons'] and gap<=20, gap_pp=gap),
                 non_gap_reasons=ranked['reasons'])
 
+def bind_edition_aliases(match, ident, raw_quotes, root, now, shadow=None):
+    """Paper-only label bridge, verified against the exact native edition.
+
+    Dates, probabilities, prices and raw files stay unchanged. Undated forecasts
+    are not rescheduled here. Original provider labels remain in binding evidence.
+    """
+    from tennis_tournament_identity import same_edition_label
+    native=dict(match,tour_id=ident['tour_id'],player_id=ident['player_ids'][0],opponent_id=ident['player_ids'][1])
+    adapted=copy.deepcopy(match); adapted_raw=[]; bindings=[]
+    for raw in raw_quotes:
+        if (raw.get('date')!=match.get('date') or raw.get('tour')!=match.get('tour')
+            or {norm(raw.get('player1')),norm(raw.get('player2'))}!=set(ident['player_names'])
+            or norm(raw.get('tournament'))==norm(match.get('tournament'))):
+            adapted_raw.append(raw);continue
+        if not same_edition_label(raw,native,root):
+            adapted_raw.append(raw);continue
+        quote=dict(raw,tournament=match['tournament']);adapted_raw.append(quote)
+        if shadow is None:
+            from tennis_most_aces_current import load_shadow
+            shadow=load_shadow()
+        candidate=shadow.registration_row(shadow.orient_board(match,quote),quote)
+        if candidate:
+            # One observation time for this already-collected snapshot. The
+            # provider's price_captured_at is retained and must be <= now;
+            # registration must not depend on how long label matching takes.
+            candidate['registered_at_utc']=now.isoformat()
+            binding=dict(provider_tournament=raw['tournament'],forecast_tournament=match['tournament'],
+                         tour_id=ident['tour_id'],round_id=ident['round_id'],player_ids=ident['player_ids'],
+                         raw_quote_sha256=digest(raw),date_unchanged=True,probabilities_unchanged=True)
+            candidate['fixture_label_binding']=binding
+            adapted.setdefault('prices',[]).append(dict(candidate=candidate));bindings.append(binding)
+    adapted['paper_label_bindings']=bindings
+    return adapted,adapted_raw
+
+
 def capture(root, report, now=None):
     root=Path(root); now=now or datetime.now(timezone.utc); folder=root/REL
     with locked(folder):
-        spec=registration(root); old=ledger(folder); known={r['id'] for r in old}; rejected=Counter(); added=[]
+        spec=registration(root); old=ledger(folder); known={r['id'] for r in old}; rejected=Counter(); added=[]; alias_bound=0
         receipt, problem=check_receipt(root,now.date().isoformat(),now=now)
         if now < stamp(spec['enabled_at']): problem='before_registration'
         generated=stamp(report.get('generated_at'))
@@ -178,12 +213,17 @@ def capture(root, report, now=None):
             for match in report.get('matches',[]):
                 if match.get('model') not in MODELS: continue
                 try:
-                    if not any(p.get('candidate') for p in match.get('prices',[])):
+                    potential=[q for q in raw if q.get('date')==match.get('date') and q.get('tour')==match.get('tour')
+                               and {norm(q.get('player1')),norm(q.get('player2'))}=={norm(match.get('player1')),norm(match.get('player2'))}]
+                    if not any(p.get('candidate') for p in match.get('prices',[])) and not potential:
                         rejected['no_current_price_candidates']+=1;continue
                     ident=identity(match,root)
                     key=digest([VERSION,match['model'],ident['tour_id'],ident['round_id'],sorted(ident['player_ids'])])
                     if key in known: rejected['already_recorded']+=1; continue
-                    d=decide(match,ident,raw,receipt['sources'],now)
+                    bound,bound_raw=bind_edition_aliases(match,ident,raw,root,now)
+                    alias_bound+=len(bound['paper_label_bindings'])
+                    d=decide(bound,ident,bound_raw,receipt['sources'],now)
+                    d['paper_label_bindings']=bound['paper_label_bindings']
                     d.update(id=key,version=VERSION,captured_at=now.isoformat(),registration_sha256=digest(spec),
                              code_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                              source_receipt=receipt,forecast_generated_at=match.get('generated_at_utc'))
@@ -195,7 +235,7 @@ def capture(root, report, now=None):
                 for d in added: f.write(json.dumps(d,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n')
                 f.flush(); os.fsync(f.fileno())
         health=dict(checked_at=now.isoformat(),status='BLOCKED' if problem else 'CAPTURED' if added else 'CHECKED_NO_NEW_COMPARISONS',
-                    reason=problem,added=len(added),excluded=dict(rejected),sources=(receipt or {}).get('sources',{}))
+                    reason=problem,added=len(added),excluded=dict(rejected),native_edition_alias_candidates=alias_bound,sources=(receipt or {}).get('sources',{}))
         atomic(folder/'capture-status.json',health)
         return summarize(root,now=now)
 

@@ -182,4 +182,57 @@ class Tests(unittest.TestCase):
             self.assertEqual(result['actual_date'],'2026-11-15');self.assertEqual(result['outcome'],'P2')
             self.assertEqual(M.ledger(root/M.REL)[0]['date'],'2026-11-14')
 
+    def test_verified_edition_alias_keeps_probabilities_prices_and_originals(self):
+        from tennis_most_aces_current import load_shadow
+        shadow=load_shadow()
+        class Clock(datetime):
+            @classmethod
+            def now(cls,tz=None):return NOW
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);self.prepare(root)
+            csvwrite(root/'data/oncourt/tours_atp.csv',[dict(id='99',name='Nitto ATP Finals - Turin',date='2026-11-08')])
+            match=dict(self.m,tournament='Turin',prices=[],quote_status='READY',player1_confidence='MED',player2_confidence='MED')
+            quotes=[dict(q,tournament='Finals',source_url='https://example.com/fixture',evidence_sha256='test') for q in self.q[:2]]
+            originals=copy.deepcopy((match,quotes))
+            with patch.object(shadow,'datetime',Clock):bound,raw=M.bind_edition_aliases(match,self.ident,quotes,root,NOW,shadow)
+            self.assertEqual((match,quotes),originals);self.assertEqual(len(bound['prices']),2)
+            decision=M.decide(bound,self.ident,raw,self.sources,NOW)
+            self.assertEqual(decision['p'],[float(self.m[k]) for k in ['p_player1','p_draw','p_player2']])
+            self.assertEqual(float(decision['execution']['selected_odds']),2.55)
+            self.assertEqual(bound['paper_label_bindings'][0]['provider_tournament'],'Finals')
+            with self.assertRaisesRegex(ValueError,'fewer_than_two'):
+                M.decide(dict(bound,prices=bound['prices'][:1]),self.ident,raw,self.sources,NOW)
+            for change in [dict(tournament='Finals 2025'),dict(date='2026-11-15'),dict(player1='Other Player')]:
+                with self.subTest(change=change),patch.object(shadow,'datetime',Clock):
+                    result,_=M.bind_edition_aliases(match,self.ident,[dict(q,**change) for q in quotes],root,NOW,shadow)
+                    self.assertEqual(result['paper_label_bindings'],[])
+            csvwrite(root/'data/oncourt/tours_atp.csv',[dict(id='99',name='Turin Challenger',date='2026-11-08')])
+            with patch.object(shadow,'datetime',Clock):result,_=M.bind_edition_aliases(match,self.ident,quotes,root,NOW,shadow)
+            self.assertEqual(result['paper_label_bindings'],[])
+
+    def test_alias_capture_uses_snapshot_time_not_registration_wall_clock(self):
+        # Do not patch the real registration clock. It differs from NOW and
+        # must not make a fresh snapshot disappear after the next second.
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);report,receipt=self.prepare(root)
+            observed=datetime.now(timezone.utc)-timedelta(seconds=2)
+            M.atomic(root/'config/most-aces-fixed-reference-v1.json',dict(contract=M.CONTRACT,enabled_at=(observed-timedelta(minutes=1)).isoformat()))
+            report['generated_at']=observed.isoformat()
+            csvwrite(root/'data/oncourt/tours_atp.csv',[dict(id='99',name='Nitto ATP Finals - Turin',date=observed.date().isoformat())])
+            self.m.update(tournament='Turin',prices=[],quote_status='READY',player1_confidence='MED',player2_confidence='MED',
+                          date=(observed+timedelta(minutes=10)).date().isoformat(),generated_at_utc=(observed-timedelta(minutes=5)).isoformat())
+            quotes=[dict(q,tournament='Finals',source_url='https://example.com/fixture',evidence_sha256='test',
+                         date=self.m['date'],capture_ts=(observed-timedelta(seconds=10)).isoformat(),
+                         match_start_utc=(observed+timedelta(minutes=10)).isoformat()) for q in self.q[:2]]
+            csvwrite(root/'data/tennis-props/inbox/quotes.csv',quotes)
+            with patch.object(M,'check_receipt',return_value=(receipt,None)):
+                result=M.capture(root,report,observed)
+            self.assertEqual(result['capture']['added'],1)
+            decision=M.ledger(root/M.REL)[0]
+            self.assertEqual(decision['captured_at'],observed.isoformat())
+            self.assertTrue(all(q['observed_at']==observed.isoformat() for q in decision['quotes']))
+            self.assertTrue(all(q['quote_at']==quotes[0]['capture_ts'] for q in decision['quotes']))
+            self.assertEqual(float(decision['execution']['selected_odds']),2.55)
+            self.assertEqual(len(decision['paper_label_bindings']),2)
+
 if __name__=='__main__':unittest.main()
