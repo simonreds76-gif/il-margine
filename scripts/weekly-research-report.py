@@ -1565,6 +1565,7 @@ def build_payload() -> dict[str, Any]:
     tennis_most_aces_forecast = load_json(TENNIS_MOST_ACES_FORECAST_JSON)
     tennis_most_aces_prices = most_aces_price_summary()
     tennis_most_aces_reference = load_json(ROOT / "data/tennis-props/shadow/most-aces-fixed-reference-v1/report.json")
+    tennis_most_aces_single = load_json(ROOT / "data/tennis-props/shadow/most-aces-single-book-v1/report.json")
     tennis_most_df = load_json(ROOT / "data/tennis-props/shadow/most-df-v1/report.json")
     tennis_props_benchmark = tennis_props_market_benchmark()
     tennis_props_shadow = tennis_props_shadow_decision()
@@ -1600,6 +1601,7 @@ def build_payload() -> dict[str, Any]:
         tennis_most_aces_forecast = snapshot_sections.get("tennis_most_aces_forecast") or tennis_most_aces_forecast
         tennis_most_aces_prices = snapshot_sections.get("tennis_most_aces_prices") or tennis_most_aces_prices
         tennis_most_aces_reference = snapshot_sections.get("tennis_most_aces_reference") or tennis_most_aces_reference
+        tennis_most_aces_single = snapshot_sections.get("tennis_most_aces_single") or tennis_most_aces_single
         tennis_most_df = snapshot_sections.get("tennis_most_df") or tennis_most_df
         tennis_props_benchmark = snapshot_sections.get("tennis_props_market_benchmark") or tennis_props_benchmark
         tennis_props_shadow = snapshot_sections.get("tennis_props_shadow_decision") or tennis_props_shadow
@@ -1665,6 +1667,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_most_aces_forecast": tennis_most_aces_forecast,
         "tennis_most_aces_prices": tennis_most_aces_prices,
         "tennis_most_aces_reference": tennis_most_aces_reference,
+        "tennis_most_aces_single": tennis_most_aces_single,
         "tennis_most_df": tennis_most_df,
         "tennis_props_market_benchmark": tennis_props_benchmark,
         "tennis_props_shadow_decision": tennis_props_shadow,
@@ -1984,6 +1987,11 @@ def render_report(payload: dict[str, Any]) -> str:
         lines.append(most_aces_reference_text(payload.get("tennis_most_aces_reference") or {}))
     except Exception as exc:
         lines.append("Most Aces fixed-reference section unavailable: "+type(exc).__name__)
+    try:
+        from tennis_most_aces_single import weekly_text as most_aces_single_text
+        lines.append(most_aces_single_text(payload.get("tennis_most_aces_single") or {}))
+    except Exception as exc:
+        lines.append("Most Aces single-book section unavailable: "+type(exc).__name__)
     from most_df_reporting import weekly_text as most_df_text
     lines.extend(["", most_df_text(payload.get("tennis_most_df") or {})])
     lines.extend(["", rate_trend_text(payload)])
@@ -2216,6 +2224,11 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
         lines.append(most_aces_reference_text(payload.get("tennis_most_aces_reference") or {}))
     except Exception as exc:
         lines.append("Most Aces fixed-reference section unavailable: "+type(exc).__name__)
+    try:
+        from tennis_most_aces_single import weekly_text as most_aces_single_text
+        lines.append(most_aces_single_text(payload.get("tennis_most_aces_single") or {}))
+    except Exception as exc:
+        lines.append("Most Aces single-book section unavailable: "+type(exc).__name__)
     from most_df_reporting import weekly_text as most_df_text
     lines.append(most_df_text(payload.get("tennis_most_df") or {}))
     lines.append(rate_trend_text(payload))

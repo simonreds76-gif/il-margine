@@ -39,6 +39,18 @@
           ],
           "automatic_promotion": false
         }
+      ],
+      "single_source_cohorts": [
+        {
+          "id": "most_aces_single_book_v1",
+          "report_key": "tennis_most_aces_single",
+          "scope": "Prospective single-book current-gate evidence inside Most Aces Count and Direct; includes no-bets. ROI, calibration, P/L graphs and outcomes separate from paired consensus and source-row records; overlap derived, never summed. Zero real stake, no alerts.",
+          "milestones": [
+            50,
+            100
+          ],
+          "automatic_promotion": false
+        }
       ]
     },
     {

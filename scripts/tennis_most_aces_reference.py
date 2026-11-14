@@ -89,7 +89,7 @@ def identity(match, root):
     return dict(player_names=names, player_ids=ids, tour_id=tour,
                 round_id=fixtures[0]['round_id'], edition_date=edition_day.isoformat())
 
-def decide(match, ident, raw_quotes, sources, now):
+def validated_candidates(match, ident, raw_quotes, sources, now):
     """Complete matching source snapshots only; reference frozen once per decision."""
     names = ident['player_names']
     p = [float(match[k]) for k in ('p_player1', 'p_draw', 'p_player2')]
@@ -153,6 +153,10 @@ def decide(match, ident, raw_quotes, sources, now):
                                quote_at=q.isoformat(), observed_at=obs.isoformat()))
     if len(starts) > 1: raise ValueError('conflicting_current_kickoff')
     if len({q['book'] for q in candidates}) != len(candidates): raise ValueError('duplicate_book_candidates')
+    return p,candidates,starts
+
+def decide(match, ident, raw_quotes, sources, now):
+    p,candidates,starts=validated_candidates(match,ident,raw_quotes,sources,now)
     valid = [q for q in candidates if q['overround'] <= 1.2]
     if len(valid) < 2: raise ValueError('fewer_than_two_valid_books')
     ranked = min(candidates, key=lambda q:(-q['ev'],q['observed_at'],q['quote_at'],q['book']))
@@ -264,10 +268,15 @@ def safe_capture(root, report):
 
 def settle(root, result_index, counts, shadow, now=None):
     """Use the existing bounded result index, pinning edition AND round; no repricing."""
-    root=Path(root); folder=root/REL; now=now or datetime.now(timezone.utc)
+    root=Path(root)
+    return settle_cohort(root,root/REL,result_index,counts,shadow,registration,summarize,now)
+
+def settle_cohort(root,folder,result_index,counts,shadow,ensure_registration,summarizer,now=None):
+    """Shared exact-result join; each cohort owns its immutable inputs/outcomes."""
+    now=now or datetime.now(timezone.utc)
     if not (folder/'registration.json').exists(): return 0
     with locked(folder):
-        registration(root); observations=ledger(folder); outcomes=read(folder/'outcomes.json',{}); added=0; held=Counter()
+        ensure_registration(root); observations=ledger(folder); outcomes=read(folder/'outcomes.json',{}); added=0; held=Counter()
         for d in observations:
             if d['id'] in outcomes: continue
             row=copy.deepcopy(d['execution']); ident=d['identity']
@@ -294,7 +303,7 @@ def settle(root, result_index, counts, shadow, now=None):
             added+=1
         atomic(folder/'outcomes.json',outcomes)
         atomic(folder/'settlement-status.json',dict(checked_at=now.isoformat(),newly_settled=added,held=dict(held)))
-        summarize(root,now=now)
+        summarizer(root,now=now)
         return added
 
 def summarize(root, now=None):
@@ -366,7 +375,7 @@ def monitor_rows(report):
             diagnostics=f" Difference per paired fixture {fmt(data['paired_pnl_difference_per_opportunity'])}u. {data['changed_settled']} changed decisions across {data['editions']} editions; descriptive only until at least 30 changed / 10 editions and precision review. Reference Brier/log loss {fmt(market['brier'])}/{fmt(market['log_loss'])}; selected-only model Brier/log loss {fmt(stats['selected_brier'])}/{fmt(stats['selected_log_loss'])}. {data['pending_fixtures']} fixtures await results, {data['overdue_fixtures']} overdue. Capture: {report.get('capture',{}).get('status','not run')}; {coverage}."
             output.append(dict(id='most-aces-reference-'+data['label'].lower()+'-'+arm,
                 name='Most Aces '+data['label']+(' (primary)' if data['label']=='Count' else ' (secondary)')+' · '+('current gate (paired)' if arm=='baseline' else 'fixed-reference gate'),
-                group='Tennis props',cohort='Forward paper · gate comparison',date=report['generated_at'],
+                group='Tennis props',cohort='Forward paper · >=2-book gate comparison',aggregate_eligible=False,date=report['generated_at'],
                 note=report['note']+f" Paired P/L difference {data['paired_pnl_difference']:+.2f}u; added {data['added']}, removed {data['removed']} settled selections."+diagnostics,
                 settled=stats['settled'],pending=stats['pending'],wins=stats['wins'],losses=stats['losses'],
                 stake=stats['stake_units'],profit=stats['pnl_units'],roi=stats['roi_pct'],overdue=stats['overdue'],
@@ -379,7 +388,7 @@ def monitor_rows(report):
     return output
 
 def weekly_text(report):
-    lines=['Most Aces fixed-reference comparison | forward paper, no extra alerts']
+    lines=['Most Aces fixed-reference comparison | >=2-book forward paper, no extra alerts']
     for d in report.get('models',{}).values():
         for arm,s in d['arms'].items():
             roi='n/a' if s['roi_pct'] is None else f"{s['roi_pct']:+.2f}%"
