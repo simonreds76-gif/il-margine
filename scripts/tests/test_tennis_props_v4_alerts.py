@@ -60,6 +60,20 @@ class V4SelectionTests(unittest.TestCase):
             writer.writerows(rows)
         self.write(A.REPORT, dict(generated_at=self.now.isoformat(), rows_registered=len(rows),
                                  rows_settled=sum(r.get('settlement_status') == 'settled' for r in rows)))
+        # The real delivery path now needs a completed, exact-price source check.
+        from tennis_bookmaker_check import save_receipt
+        config={'market_bookmakers':{'tennis_props':['Bet365']},'direct_tennis_grosvenor':False}
+        self.write('config/odds-api-bookmaker-allocation.json',config)
+        inbox=self.root/'data/tennis-props/inbox';inbox.mkdir(parents=True,exist_ok=True)
+        files={kind:inbox/(kind+'.csv') for kind in ('props','most_aces','most_df')}
+        cols=['date','tour','tournament','player','opponent','market','bookmaker','line','over_odds','capture_ts','match_start_utc']
+        for kind,path in files.items():
+            with path.open('w',newline='',encoding='utf8') as f:
+                w=csv.DictWriter(f,fieldnames=cols);w.writeheader()
+                if kind=='props':
+                    w.writerows({**{k:r.get(k,'') for k in cols},'over_odds':r['selected_odds']} for r in rows)
+        save_receipt(inbox/f'bookmaker-check-{self.today}.json',config,{'Bet365':{'status':'OK'}},files,self.now.isoformat())
+
 
     def run_alerts(self, **kwargs):
         return A.selection_alerts(self.root, self.today, self.sender, now=self.now, **kwargs)

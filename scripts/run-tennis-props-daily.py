@@ -557,27 +557,25 @@ def capture_market_prices(args: argparse.Namespace) -> int:
         "Freeze completed tournament evidence before Sisal quotes (paper only)",
         fatal=False, timeout_seconds=120)
     source_exits: list[int] = []
-    if has_odds_key():
-        source_exits.append(
-            run(
-                [
-                    sys.executable,
-                    str(ROOT / "scripts" / "tennis-props-scrape-bet365.py"),
-                    "--date", args.as_of,
-                    "--days-ahead", str(args.days_ahead),
-                    "--max-events", str(args.max_events),
-                    "--bookmakers", "Sisal IT,Kambi",
-                ],
-                "Capture Sisal/Kambi and Grosvenor stat bets before projections",
-                fatal=False,
-                timeout_seconds=180,
-            )
+    # Independent feeds must run even when the Odds-API credential is absent.
+    source_exits.append(
+        run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "tennis-props-scrape-bet365.py"),
+                "--date", args.as_of,
+                "--days-ahead", str(args.days_ahead),
+                "--max-events", str(args.max_events),
+                "--bookmakers", "Sisal IT,Kambi",
+            ],
+            "Capture Sisal/Kambi and Grosvenor stat bets before projections",
+            fatal=False,
+            timeout_seconds=180,
         )
-        # The shared collector already saves complete Most Aces markets from
-        # selected books and Grosvenor. Do not overwrite those with a removed
-        # BetMGM account request or spend another provider request budget.
-    else:
-        print("\nWARNING: no local odds-api key; Bet365/BetMGM capture skipped.")
+    )
+    # The shared collector already saves complete Most Aces markets from
+    # selected books and Grosvenor. Do not overwrite those with a removed
+    # BetMGM account request or spend another provider request budget.
 
     if os.name == "nt" and not args.skip_bet365_direct and getattr(args, "enable_bet365_browser", False):
         # The public connected browser works, but unattended browser access is
