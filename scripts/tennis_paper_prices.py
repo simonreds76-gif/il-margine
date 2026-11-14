@@ -2,13 +2,14 @@
 from datetime import datetime, timedelta, timezone
 import math
 from player_name_matching import fold_name_text
+from tennis_price_identity import canonical_price_name
 
 TOTALS = {'match_aces', 'match_double_faults'}
 MAX_AGE = timedelta(minutes=30)
 
 
 def norm(value):
-    return ' '.join(fold_name_text(str(value or '')).lower().split())
+    return canonical_price_name(' '.join(fold_name_text(str(value or '')).lower().split()))
 
 
 def stamp(value):
@@ -26,7 +27,7 @@ def fixture(row):
             *pair, start.isoformat() if start else '', row.get('market') or 'most_aces')
 
 
-def latest_snapshot_rows(rows, now=None):
+def latest_snapshot_rows(rows, now=None, *, max_age=MAX_AGE):
     """Newest source poll only. Never resurrect a removed line from an older poll."""
     now = now or datetime.now(timezone.utc)
     latest = {}
@@ -38,7 +39,7 @@ def latest_snapshot_rows(rows, now=None):
     result = []
     for row in rows:
         captured, start = stamp(row.get('capture_ts')), stamp(row.get('match_start_utc'))
-        if not captured or not start or not captured <= now < start or now-captured > MAX_AGE:
+        if not captured or not start or not captured <= now < start or now-captured > max_age:
             continue
         if captured == latest.get((fixture(row), norm(row.get('bookmaker')))):
             result.append(row)
@@ -68,3 +69,27 @@ def best_total_rows(rows, now=None):
         if key not in chosen or rank > chosen[key][0]:
             chosen[key] = (rank, row)
     return other + [value[1] for value in chosen.values()]
+
+
+def best_prop_rows(rows, now=None):
+    """Fresh eligible exact contracts; preserve each source's complete market."""
+    chosen = {}
+    # Preserve existing six-hour individual-prop and 30-minute match-total windows.
+    fresh = latest_snapshot_rows([r for r in rows if r.get('market') not in TOTALS], now, max_age=timedelta(hours=6))
+    fresh += latest_snapshot_rows([r for r in rows if r.get('market') in TOTALS], now)
+    for row in fresh:
+        side = row.get('recommended_side') if row.get('bettable') == 'true' else row.get('shadow_side')
+        if side not in {'OVER', 'UNDER'} or not (row.get('bettable') == 'true' or row.get('trackable_shadow') == 'true'):
+            continue
+        try:
+            line, price = float(row['line']), float(row[side.lower()+'_odds'])
+        except (ValueError, TypeError, KeyError):
+            continue
+        if not math.isfinite(line) or not math.isfinite(price) or price <= 1:
+            continue
+        subject = 'match' if row.get('market') in TOTALS else norm(row.get('player'))
+        key = (*fixture(row), subject, line, side)
+        rank = (price, stamp(row['capture_ts']), norm(row.get('bookmaker')))
+        if key not in chosen or rank > chosen[key][0]:
+            chosen[key] = (rank, row)
+    return [value[1] for value in chosen.values()]

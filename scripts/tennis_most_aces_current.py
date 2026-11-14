@@ -41,19 +41,30 @@ def alert_rows(report, now):
     if not generated or not 0 <= (now-generated).total_seconds() <= 1800:
         return []
     chosen={}
+    compared={}
     for match in report.get('matches',[]):
         if match.get('model') != COUNT_MODEL:continue
         for price in match.get('prices',[]):
             row=price.get('candidate')
-            if not row or row.get('bet_eligible') != 'yes':continue
+            if not row:continue
             start,stamp=shadow.parse_datetime(row.get('match_start_utc')),shadow.parse_datetime(row.get('price_captured_at'))
             if not stamp or not start or not stamp <= now < start or (now-stamp).total_seconds()>1800:continue
             pair=shadow.pair_key(row['player1'],row['player2'])
             fixture=(row['date'],shadow.norm_name(row['tournament']),*pair)
             outcome={'P1':'player1','P2':'player2','DRAW':'draw'}[row['recommended_side']]
+            compared.setdefault(fixture, []).append(row)
             ev=float(row[f'value_{outcome}_pct'])
             if fixture not in chosen or ev > chosen[fixture][0]:chosen[fixture]=(ev,row)
-    return [item[1] for item in chosen.values()]
+    # Never advertise a lower price merely because the best quote fails a
+    # frozen gate. Keep every compared source in the current report.
+    selected=[]
+    for fixture, (_, row) in chosen.items():
+        if row.get('bet_eligible') != 'yes':continue
+        outcome={'P1':'player1','P2':'player2','DRAW':'draw'}[row['recommended_side']]
+        prices=[dict(bookmaker=q['bookmaker'], odds=q.get(f'open_{outcome}_odds',q['selected_odds']), captured_at=q['price_captured_at'])
+                for q in compared[fixture]]
+        selected.append(dict(row, compared_prices=prices))
+    return selected
 
 def tournament_players(board, projections, shadow):
     """Attach the existing edition log only by the exact fixture and player pair."""
@@ -77,6 +88,8 @@ def tournament_players(board, projections, shadow):
 def compare(boards, captures, ledger, now, shadow, projections=()):
     captures = latest_snapshot_rows(captures, now)
     matches = []
+    coverage={book:dict(captured=sum(r.get("bookmaker")==book for r in captures), matched=0) for book in {r.get("bookmaker", "unknown") for r in captures}}
+    matched=set()
     for board in boards:
         prices = []
         for capture in captures:
@@ -93,13 +106,17 @@ def compare(boards, captures, ledger, now, shadow, projections=()):
                 for a,b in [('player1','player2'),('player1_odds','player2_odds')]:
                     oriented[a],oriented[b] = capture[b],capture[a]
             candidate = shadow.registration_row(board, oriented)
+            matched.add((capture['bookmaker'],capture.get('event_id'),capture['capture_ts']))
             prices.append(dict(bookmaker=capture['bookmaker'], player1_odds=oriented['player1_odds'],
                 draw_odds=oriented['draw_odds'], player2_odds=oriented['player2_odds'],
                 captured_at=capture['capture_ts'], start=capture['match_start_utc'],
                 candidate=candidate))
         matches.append({**board,'prices':prices,
                         'tournament_players':tournament_players(board, projections, shadow)})
-    return dict(generated_at=now.isoformat(), matches=matches,
+    for book in coverage:
+        coverage[book]['matched']=sum(key[0]==book for key in matched)
+        coverage[book]['unmatched']=coverage[book]['captured']-coverage[book]['matched']
+    return dict(generated_at=now.isoformat(), matches=matches, source_coverage=coverage,
                 records=[record(ledger,m) for m in sorted({r.get('model','') for r in ledger if r.get('model')})],
                 note='Paper research. Versions and bookmaker observations are separate; no profitability claim.')
 

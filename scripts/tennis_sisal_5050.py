@@ -14,6 +14,7 @@ from collections import Counter, defaultdict
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
+from tennis_bookmaker_identity import player_name
 
 ROOT = Path(__file__).resolve().parents[1]
 REL = Path('data/tennis-props/shadow/sisal-5050-v1')
@@ -215,9 +216,10 @@ def capture(root, folder, rows, quotes_path, now, reg, clock=None):
         if reason:
             reasons[reason] += 1; continue
         matches = [b for b in board if b.get('date') == q.get('date') and b.get('tour') == 'ATP'
-                   and all(norm(b.get(k)) == norm(q.get(k)) for k in ('player', 'opponent', 'tournament'))]
+                   and all(player_name(b.get(k)) == player_name(q.get(k)) for k in ('player', 'opponent'))
+                   and norm(b.get('tournament')) == norm(q.get('tournament'))]
         if len(matches) != 1:
-            reasons['ambiguous_board_match'] += 1; continue
+            reasons['ambiguous_board_match' if matches else 'missing_board_match'] += 1; continue
         b = matches[0]; t = tours.get(b.get('tour_id'), {})
         if t.get('rank') not in ('2', '3', '4') or 'challenger' in t.get('name', '').lower() or b.get('surface') not in ('Hard', 'Clay'):
             reasons['unsupported_tournament_or_surface'] += 1; continue
