@@ -1,33 +1,12 @@
 {
-  "observed_at": "2026-11-13T16:36:11.995787+00:00",
-  "window_start": "2026-10-23T00:00:00+00:00",
+  "observed_at": "2026-11-14T15:08:44.932975+00:00",
+  "window_start": "2026-10-24T00:00:00+00:00",
   "leagues": {
     "epl": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard",
-      "sha256": "d2da46b0c80c3093ba42fffbf10194fba06a83dcbb48fee0ebcab2453dcb624a",
+      "sha256": "dd997fa27c2acb5d8c8a3d0bd61b3eac9b97be517cc9866633c3d26e0bbffedf",
       "days": {
-        "20261023": {
-          "observed_at": "2026-11-13T16:36:11.995787+00:00",
-          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261023&limit=1000",
-          "sha256": "a6d9b5a76300faa6315f472e5d5b90b35af566f092d1c8495e9b57273de1153f",
-          "complete_day": true,
-          "empty_calendar_day": false,
-          "completed": [
-            {
-              "date": "2026-10-23",
-              "league": "epl",
-              "event_id": "401879253",
-              "kickoff": "2026-10-23T19:00:00+00:00",
-              "home_team": "Ipswich Town",
-              "home_goals": 1,
-              "home_id": "373",
-              "away_team": "Nottingham Forest",
-              "away_goals": 1,
-              "away_id": "393"
-            }
-          ]
-        },
         "20261024": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
           "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261024&limit=1000",
@@ -815,29 +794,8 @@
     "serie-a": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard",
-      "sha256": "4194c4b74b393535c3a9acda066748fcf3d7d587bb116c40787cd3164cf73574",
+      "sha256": "da73180790fb1d889502278d16ef1775ec6901ad1d15bdd4642e83a4df6aeed0",
       "days": {
-        "20261023": {
-          "observed_at": "2026-11-13T16:36:11.995787+00:00",
-          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20261023&limit=1000",
-          "sha256": "05980d62f05ed21bb956725e6453c20ee516e82de0e511f9a4384ac87c8e4799",
-          "complete_day": true,
-          "empty_calendar_day": false,
-          "completed": [
-            {
-              "date": "2026-10-23",
-              "league": "serie-a",
-              "event_id": "401874957",
-              "kickoff": "2026-10-23T18:45:00+00:00",
-              "home_team": "Torino",
-              "home_goals": 3,
-              "home_id": "239",
-              "away_team": "Monza",
-              "away_goals": 2,
-              "away_id": "4007"
-            }
-          ]
-        },
         "20261024": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
           "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20261024&limit=1000",
@@ -1892,29 +1850,8 @@
     "la-liga": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard",
-      "sha256": "fd85657add09cceb121aafd53a453560188054a3289773b23c10da41485b5a2f",
+      "sha256": "5f4ef709a4c670a8f9e3ae45ebc759fd113767bc575bc0b5523dde22384f4375",
       "days": {
-        "20261023": {
-          "observed_at": "2026-11-13T16:36:11.995787+00:00",
-          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard?dates=20261023&limit=1000",
-          "sha256": "bc7712204f7a4532b1b6a40b07f71219cbfa3201e87984cc1c9c680aff489c12",
-          "complete_day": true,
-          "empty_calendar_day": false,
-          "completed": [
-            {
-              "date": "2026-10-23",
-              "league": "la-liga",
-              "event_id": "401882836",
-              "kickoff": "2026-10-23T19:00:00+00:00",
-              "home_team": "Alav\u00e9s",
-              "home_goals": 1,
-              "home_id": "96",
-              "away_team": "M\u00e1laga",
-              "away_goals": 1,
-              "away_id": "99"
-            }
-          ]
-        },
         "20261024": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
           "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard?dates=20261024&limit=1000",
@@ -2720,29 +2657,8 @@
     "bundesliga": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard",
-      "sha256": "2b31c8d8fd603e56c7c6b7e3a08a59de46a4997d5f8e5bc07c67e3ee85dcd4b4",
+      "sha256": "e9f77264e4ecb7d1472885d08fcef2fa9d5542b6949106b5c8cdad94ec3af62b",
       "days": {
-        "20261023": {
-          "observed_at": "2026-11-13T16:36:11.995787+00:00",
-          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard?dates=20261023&limit=1000",
-          "sha256": "2dc92f090d2dd55bffdc33525316cf4948d49bcf0380abcd4f2b81bd7333ba52",
-          "complete_day": true,
-          "empty_calendar_day": false,
-          "completed": [
-            {
-              "date": "2026-10-23",
-              "league": "bundesliga",
-              "event_id": "401884761",
-              "kickoff": "2026-10-23T18:30:00+00:00",
-              "home_team": "VfB Stuttgart",
-              "home_goals": 2,
-              "home_id": "134",
-              "away_team": "Borussia M\u00f6nchengladbach",
-              "away_goals": 3,
-              "away_id": "268"
-            }
-          ]
-        },
         "20261024": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
           "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard?dates=20261024&limit=1000",
@@ -3458,29 +3374,8 @@
     "ligue-1": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard",
-      "sha256": "df25d20bd9eddd6e8d754ec6b429e3a768fe930593891603a2410f5e41afedfd",
+      "sha256": "d02596e53c69d35cc8004091dd8b9dd199e346ce191e80af5e94b0145e8cf728",
       "days": {
-        "20261023": {
-          "observed_at": "2026-11-13T16:36:11.995787+00:00",
-          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard?dates=20261023&limit=1000",
-          "sha256": "ecac2485d61e73b6f81b348f766d68db6dadd127b5d1e76bc939af003380b013",
-          "complete_day": true,
-          "empty_calendar_day": false,
-          "completed": [
-            {
-              "date": "2026-10-23",
-              "league": "ligue-1",
-              "event_id": "401876428",
-              "kickoff": "2026-10-23T18:45:00+00:00",
-              "home_team": "Brest",
-              "home_goals": 1,
-              "home_id": "6997",
-              "away_team": "Nice",
-              "away_goals": 2,
-              "away_id": "2502"
-            }
-          ]
-        },
         "20261024": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
           "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard?dates=20261024&limit=1000",
