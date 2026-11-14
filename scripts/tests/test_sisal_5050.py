@@ -50,6 +50,17 @@ class TrackerTests(unittest.TestCase):
         rows=[] if rows is None else rows;write_csv(self.path,qs)
         h=T.capture(self.root,self.folder,rows,self.path,NOW,self.reg,clock=lambda:NOW)
         return rows,h
+    def test_verified_fritz_alias_captures_and_still_deduplicates(self):
+        b=board();b.update(player='Taylor Harry Fritz',opponent='Thiago Agustin Tirante')
+        write_csv(self.root/T.BOARD,[b])
+        q=quote();q.update(player='Taylor Fritz',opponent='Thiago Agustin Tirante')
+        rows,health=self.capture([q]);self.assertEqual(health['added'],1)
+        original=copy.deepcopy(rows)
+        rows,again=self.capture([q],rows);self.assertEqual(again['added'],0)
+        self.assertEqual(rows,original)
+        q['player']='Fritz';_,missing=self.capture([q])
+        self.assertEqual(missing['reasons'].get('missing_board_match'),1)
+
     def test_same_day_exclusive_cutoff_allowed_only_with_verified_history(self):
         b=board();b['history_as_of']='2026-10-28';write_csv(self.root/T.BOARD,[b])
         path=self.root/'data/tennis-props/player-history-status.json';status=T.read_json(path,{})

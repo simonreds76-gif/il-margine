@@ -369,7 +369,9 @@ def tournament_from_event(event: dict[str, Any]) -> str:
             return tournament
     main_tour_match = re.match(r"^(?:ATP|WTA)\s*-\s*([^,]+)", league, flags=re.I)
     if main_tour_match:
-        return main_tour_match.group(1).strip()
+        from tennis_bookmaker_identity import event_tournament
+        label = main_tour_match.group(1).strip()
+        return event_tournament(ROOT, event, label, tour_from_event(event))
     return league or "Tennis"
 
 

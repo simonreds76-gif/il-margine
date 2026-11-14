@@ -265,11 +265,11 @@ def fresh_prematch_prop(row: dict[str, str], now: datetime) -> bool:
 def props_signals(target_date: str, comparison_date: str | None = None, *, now: datetime | None = None) -> list[Signal]:
     from tennis_props_identity_health import fixture_blocked, load_quarantine
     quarantine = load_quarantine(ROOT)
-    from tennis_paper_prices import best_total_rows, TOTALS
+    from tennis_paper_prices import best_prop_rows, TOTALS
     now = now or datetime.now(UTC)
     path = PROPS / f"comparison-{comparison_date or target_date}.csv"
     signals: list[Signal] = []
-    for row in best_total_rows(read_csv(path), now):
+    for row in best_prop_rows(read_csv(path), now):
         if fixture_blocked(row, quarantine):
             continue
         event_date = row_event_date(row)
@@ -365,9 +365,10 @@ def most_aces_signals(target_date: str, *, now: datetime | None = None) -> list[
         selected='Tie' if side=='DRAW' else row[outcome]
         pair=tuple(sorted((norm(row['player1']),norm(row['player2']))))
         source=dict(row,market='most_aces',model_id=COUNT_MODEL)
+        compared=' | compared: '+', '.join(f"{q['bookmaker']} {q['odds']}" for q in row.get('compared_prices',[])) if row.get('compared_prices') else ''
         output.append(Signal(section='MOST ACES 1X2 · PAPER ONLY',priority=46,labels=['MOST ACES PAPER'],
             match=f"{row['player1']} vs {row['player2']}",
-            selection=f"{selected} most aces @ {row['selected_odds']} {row['bookmaker']} | fair {row[f'fair_{outcome}']} | estimated EV {row[f'value_{outcome}_pct']}% | zero real stake",
+            selection=f"{selected} most aces @ {row['selected_odds']} {row['bookmaker']} | fair {row[f'fair_{outcome}']} | estimated EV {row[f'value_{outcome}_pct']}% | zero real stake{compared}",
             edge_pct=float(row[f'value_{outcome}_pct']),
             key=(row['date'],*pair,norm(selected),'most_aces_1x2',norm(row['tournament'])),
             scheduled_start_utc=row['match_start_utc'],captured_at=row['price_captured_at'],
