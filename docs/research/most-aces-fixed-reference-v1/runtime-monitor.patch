@@ -1,0 +1,20 @@
+--- a/scripts/admin_active_models.py
++++ b/scripts/admin_active_models.py
+@@ -168,8 +168,16 @@
+         blinded=add('first-return','First-return · keep/remove',{},first,
+             f"Collecting {first.get('fixtures','unknown')} fixtures. Arm results remain blinded until the registered review ({first.get('descriptive_at','not supplied')}); no interim P/L comparison.",cohort='Active · blinded comparison')
+         blinded['history']={'message':'Results intentionally blinded under the frozen protocol; capture and settlement progress remain visible.'}
++    def fixed_reference():
++        try:
++            from tennis_most_aces_reference import monitor_rows
++            report=sections.get('tennis_most_aces_reference') or read(root/'data/tennis-props/shadow/most-aces-fixed-reference-v1/report.json',{})
++            output.extend(monitor_rows(report))
++        except Exception as exc:
++            errors.append({'family':'fixed_reference','error_type':type(exc).__name__})
++
+     errors = []
+-    for family in [selection_lanes, compass, most_df, scout, rate_trend, most_aces, count_variants, first_return]:
++    for family in [selection_lanes, compass, most_df, scout, rate_trend, most_aces, fixed_reference, count_variants, first_return]:
+         try: family()
+         except (OSError, ValueError, KeyError, TypeError, ImportError, AttributeError) as error:
+             errors.append({'family':family.__name__,'error_type':type(error).__name__})

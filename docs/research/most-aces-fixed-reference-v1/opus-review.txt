@@ -1,0 +1,59 @@
+# REVIEW-final: most-aces-fixed-reference-v1
+
+**Verdict: READY.** I found no blockers. The follow-ups below are optional and don't need to wait for install.
+
+This was a read-only review. I didn't run any tests (you report 19 passing). I didn't use the network or UI, and I didn't write anything.
+
+**What I read:**
+- `tennis_most_aces_reference.py` and `test_most_aces_reference.py`
+- `tennis_most_aces_current.py` (whole file)
+- `tennis-settle-model-evidence.py` lines 60–229
+- `tennis-props-settle-shadow.py` lines 480–614 (`load_oncourt_index`)
+- `tennis-most-aces-shadow.py` lines 1–489 (`registration_row`, `settle`)
+- `tennis_bookmaker_check.py`
+- `admin_active_models.py` lines 150–189
+- `weekly-research-report.py` lines 3930–4010 and 4400–4456
+
+## Earlier findings, now closed
+- **R1, isolation: closed.**
+  - In the settlement script, the import and call sit inside `try/except Exception` for both the pending step (lines 107–110) and the settlement step (lines 219–222). `reference_error` is itself guarded.
+  - `tennis_most_aces_current.py` (lines 146–150) and `safe_capture` both catch `Exception`, and a failing `failure()` is handled too.
+  - The weekly render (3958–3962) and the Telegram text (4401–4405) fall back to an "unavailable" line.
+  - The admin `fixed_reference()` catches `Exception` and logs it to `errors`.
+- **R2, settlement date: closed.** `load_oncourt_index` sets `tourney_date` from `game.date`, at line 548 for appearances and line 594 for results. The exact-result rows carry `_tour_id`, `round_id`, `w_ace`/`l_ace` and `_settlement_source='oncourt'`, and the new settle code requires that source. Results are keyed by `(tour, game_date.year, pair)`, which matches the lookup key in `settle()`.
+- **R3, upstream fields: closed.**
+  - `compare()` adds `tournament_players` with `player`, `player_id` and `tour_id` (lines 72–89 and 118). It builds a fresh `registration_row` on every call.
+  - For Grosvenor, Bet365 and Sisal, `registered_at_utc` is the current time; for BetMGM it is `capture_ts`. Both satisfy quote ≤ observation ≤ now.
+  - The model probabilities are board strings that `orient_board` swaps, and `decide()` reverses them to match. That is consistent.
+  - The existing `settle` only changes the row list passed to it. It returns outcome P1, DRAW or P2, and a 1u P/L. Grosvenor voids only when no set was completed; Sisal and other unfinished results are held.
+  - Your settle code recomputes P/L from the raw `selected_odds`, so raw price precision is kept.
+  - `check_receipt` enforces the expected source set, a 30-minute freshness limit for each source, SHA-256 checks on the artifacts, all three artifacts present, and that every source has finished.
+  - `now` is set at line 74, and `checkpoint` accepts any name.
+- **R4, reporting: closed.** The report now has:
+  - the P/L difference per paired fixture (None when nothing is settled)
+  - changed decisions and editions, with a line saying results are descriptive only until 30 changed decisions across 10 editions
+  - Count (primary) / Direct (secondary) labels
+  - full-cohort calibration for the model and the reference, separate from selected-only scores
+  - ten reliability bins, marked descriptive
+  - pending and overdue fixture counts
+  - bookmaker coverage
+
+## Contract checklist: all acceptable
+- **Leakage:** forecast at most 6h old, quote at most 30 min old, quote ≤ observation ≤ now < start, report at most 120s old, and nothing before `enabled_at`. An older quote can't be reused once a book has a newer one.
+- **Exact market and best price:** execution uses the receipt-bound raw 1X2 vector, with player order handled. Conflicting prices or kickoffs block the fixture. The bet takes the best-value outcome across fresh books.
+- **Common reference:** the median of the books' margin-free probabilities, from at least 2 books with overround ≤ 1.2, frozen at capture. Both arms bet the same book and side, so P/L can only differ where the decision changed.
+- **No-bets** are recorded in the paired cohort.
+- **Dedup:** one record per model, edition, round and player-ID pair, so reschedules can't add a second bet. The ledger is append-only and written under a lock.
+- **Settlement:** shared index, matched on edition, round and both names, with exactly one result required. Unclear results are held, never counted as losses. Settlement runs on copies, and each outcome is written once with hashes.
+- **Null ROI** until the first settled bet (tested).
+- **No new alerts or schedules.** Replay is excluded from the forward ledger, and earlier research results appear only as `seen_evidence`.
+
+## Follow-ups (optional)
+1. **Suspension gate.** `main()` skips new ledger registration when `shadow.most_aces_suspended()` is true (line 139), but it still runs `safe_capture`. The weekly Telegram text hides the other Most Aces lines while suspended (4416–4422), but not the new one. In practice the 6h forecast-age and 30-min quote limits make captures during a suspension unlikely. For a consistent lifecycle, skip `safe_capture` while suspended (recording status `SUSPENDED`) and apply the same check to the weekly line.
+2. **Book coverage on first live run.** `compare()` only reads the `betmgm-` and `bet365-most-aces-1x2-{day}.csv` files (lines 135–136). A book only qualifies if its rows are also in the receipt's single `most_aces` artifact, with the same `capture_ts`. This fails safely, but check the first `capture-status.json` for `fewer_than_two_valid_books` to confirm Grosvenor and Sisal rows actually reach the lane.
+3. **Exact `tour` match.** `decide()` compares raw `tour` exactly, while `validate_signal` normalises it first. If the inbox ever uses lowercase `atp`, every quote drops out silently, so compare with `norm()`.
+4. **Calibration field in Monitor.** `monitor_rows` now puts `convention` (a string) and `reliability` (a list) inside `calibration`. If the dynamic renderer expects only scalars, the admin guard will log an error rather than crash. Check the first render.
+5. **Packet record.** `integration.diff` still shows the old, unguarded hooks. Regenerate it from the patched files so the handoff record matches what is installed.
+
+## Notes
+Two cases are held rather than settled: a capture date (UTC) later than the OnCourt local match date, and the year boundary in the result key. They will show as held or overdue and never become losses, which is acceptable as you described. No forward observations exist yet, so there are no results to interpret.

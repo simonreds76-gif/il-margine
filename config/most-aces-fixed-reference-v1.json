@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "enabled_at": "2026-11-14T13:43:55.494609+00:00",
+  "authorization": "Simone, 14 November 2026: add fixed-reference comparison to existing paper monitoring, Monitor and weekly review; no alerts or live changes.",
+  "contract": {
+    "version": "most-aces-fixed-reference-v1",
+    "gap_pp": 20,
+    "min_ev_pct": 8,
+    "max_overround": 1.2,
+    "quote_age_seconds": 1800,
+    "forecast_age_seconds": 21600,
+    "minimum_books": 2,
+    "paper_stake_units": 1,
+    "real_stake_units": 0,
+    "alerts": false,
+    "models": [
+      "v3_aces_gaussian_copula_nb2_evidence_tiers_v3",
+      "most_aces_direct_1x2_v1_oncourt_20261029"
+    ]
+  },
+  "population": "Existing active Most Aces Count (primary) and Direct current-input (secondary) forecasts, unchanged eligibility. One first complete paired pre-match decision per OnCourt tournament edition/round/player IDs; date changes cannot create another bet. No past replay backfill.",
+  "input_policy": "Known first observations and quote timestamps <= now; current hash-bound receipt for all configured bookmakers; complete exact-market vectors; verified current OnCourt player IDs/edition/round; common exact kickoff. Existing confidence exclusions retained. No-bets retained on the same paired cohort.",
+  "reference": "Median per outcome of complete same-book no-vig vectors, renormalized; at least two distinct quality-valid books. Reference fixed at capture for all execution books. Best fresh same-contract price; existing maximum EV outcome rule unchanged.",
+  "outcomes": "Use existing exact result index, pin tournament ID, round ID and both full names. Original decision immutable; actual result date and hash saved separately. Existing bookmaker retirement/void rules; ambiguous results held, never losses.",
+  "primary_metric": "Count paired P/L difference per independently settled common opportunity; 0 for no-bets. Meaningful difference 0.02u per opportunity. Full-cohort probability scores identical by construction; reference calibration and selected-subset scores descriptive.",
+  "uncertainty": "Review 50 and100 independently settled fixtures. At least30 changed settled decisions across10 editions before any economic conclusion; this is a minimum feasibility condition, not proof of adequate precision. Cluster by edition; suppress CI with fewer10 editions. No automatic promotion.",
+  "seen_evidence": "All through14 November exploratory replay excluded from forward ledger; exact-start research Count5settled common fixtures, zero changed bets. Direct4common settled, one added loss.",
+  "baseline": "Current best-EV-then-own-book20pp gate, unchanged model p and non-gap rules; paired replay is distinct from issued alert or source-row ledger.",
+  "reporting": "Existing private Monitor, profit graphs and scheduled weekly report only. Zero new notifications/schedules/deployments."
+}

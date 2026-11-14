@@ -27,7 +27,19 @@
     {
       "id": "tennis_props",
       "report_key": "tennis_props_v3",
-      "scope": "Props v3/v4, venue ace and most-aces experiments"
+      "scope": "Props v3/v4, venue ace and most-aces experiments",
+      "paired_comparisons": [
+        {
+          "id": "most_aces_fixed_reference_v1",
+          "report_key": "tennis_most_aces_reference",
+          "scope": "Frozen forward gate comparison inside Most Aces; Count primary, Direct descriptive; best fresh price across checked configured books; first exact fixture only, no-bets retained; 1u paper and zero real stake; no extra alerts. Both arms, P/L curves, ROI and paired/selected calibration in existing Monitor and weekly report.",
+          "milestones": [
+            50,
+            100
+          ],
+          "automatic_promotion": false
+        }
+      ]
     },
     {
       "id": "tennis_breaks",

@@ -143,6 +143,11 @@ def main():
     report=compare(boards,captures,ledger,datetime.now(timezone.utc),shadow,projections)
     args.out.parent.mkdir(parents=True,exist_ok=True)
     temporary=args.out.with_suffix('.tmp');temporary.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');temporary.replace(args.out)
+    try:
+        from tennis_most_aces_reference import safe_capture
+        safe_capture(ROOT, report)
+    except Exception as exc:
+        print('Most Aces fixed-reference comparison unavailable: '+type(exc).__name__)
     print(f'Most Aces current: {len(boards)} model rows; {sum(len(m["prices"]) for m in report["matches"])} current comparisons; {added} new observations')
     return 0
 
