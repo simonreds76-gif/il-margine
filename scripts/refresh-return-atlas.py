@@ -35,7 +35,7 @@ from vercel_publisher_auth import PublicationAuthRequired, prepare_environment
 from atlas_production_release import production_commit
 from tournament_returns_refresh import (DATA as TOURNAMENT_RETURNS, prepare as prepare_tournament_returns,
     expected_version as tournament_returns_version, page_version as tournament_returns_page_version,
-    is_live as tournament_returns_is_live)
+    is_live as tournament_returns_is_live, validate as validate_tournament_returns)
 
 
 def publication_auth_args(args, env):
@@ -232,6 +232,8 @@ def obsolete_versions(versions, new_version, prior_version, live):
 
 def validate_live_history(live, source):
     """Compare against actual production too, not merely an older data branch."""
+    if (live / TOURNAMENT_RETURNS).exists():
+        validate_tournament_returns(read_json(live / TOURNAMENT_RETURNS), read_json(source / TOURNAMENT_RETURNS))
     old_manifest = read_json(live / 'src/data/return-atlas-release.json')
     new_manifest = read_json(source / 'src/data/return-atlas-release.json')
     old = read_json(live / 'public' / old_manifest['indexUrl'].lstrip('/'))
@@ -665,6 +667,9 @@ def refresh(config, dry_run=False):
             publish(checkout, new_manifest['version'], status, save)
         else:
             status.update(status='unchanged', publishedVersion=new_manifest['version'])
+            save()
+        if tournament_returns_version(checkout):
+            status['tournamentReturnsPublished'] = {'version': tournament_returns_version(checkout), 'verifiedAt': datetime.now(timezone.utc).isoformat()}
             save()
         return status
     except Exception as exc:
