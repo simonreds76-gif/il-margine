@@ -6,14 +6,22 @@ const words = value => String(value ?? '').normalize('NFD').replace(/\p{M}/gu, '
 
 // Resolve identity before considering whether a picture exists. A missing photo
 // must never make us choose another player with the same surname.
-const merged = new Map(catalogue.map(row => [words(row.name), row]));
+import placeholders from '../data/tennis-portrait-placeholders.json' with { type: 'json' };
+const blockedUrls = new Set(placeholders.urls);
+const blockedHashes = new Set(placeholders.sha256);
+export function safeTennisPortraitSource(src, sha256) {
+  return src && !blockedUrls.has(String(src).split(/[?#]/)[0]) && !blockedHashes.has(sha256) ? src : null;
+}
+const sanitise = row => ({ ...row, src: safeTennisPortraitSource(row.src, row.sha256) });
+const merged = new Map(catalogue.map(row => [words(row.name), sanitise(row)]));
 for (const row of recovered) {
   // An absent/null legacy photo must not mask a verified Challenger portrait.
   // Never replace an existing verified portrait or expand surname matching.
   const key = words(row.name);
-  if (!merged.get(key)?.src && row.src) merged.set(key, row);
+  if (!merged.has(key) || (!merged.get(key)?.src && row.src)) merged.set(key, sanitise(row));
 }
 export function resolveTennisPortrait(name, rows = [...merged.values()]) {
+  rows = rows.map(sanitise);
   const query = words(name);
   if (!query) return null;
   const exact = rows.filter(row => words(row.name) === query);

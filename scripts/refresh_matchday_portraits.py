@@ -13,13 +13,19 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone, timedelta
 from urllib.parse import quote, urlparse
 import requests
+from pathlib import Path
 
 ATP = 'https://www.atptour.com'
 ALIASES = {
     'tai leonard sach': 'tai sach',
     'felipe meligeni rodrigues alves': 'felipe meligeni alves',
 }
-PLACEHOLDERS = {'f4b6ac97747d85f58b048ac7785915ce91271feac602928cb6dad25d92017130'}
+_PLACEHOLDER_POLICY = json.loads((Path(__file__).resolve().parents[1] / 'src/data/tennis-portrait-placeholders.json').read_text(encoding='utf-8'))
+PLACEHOLDERS = set(_PLACEHOLDER_POLICY['sha256'])
+PLACEHOLDER_URLS = set(_PLACEHOLDER_POLICY['urls'])
+
+def usable_portrait(row):
+    return bool(row.get('src')) and row.get('sha256') not in PLACEHOLDERS and row['src'].split('?')[0].split('#')[0] not in PLACEHOLDER_URLS
 
 def normal(value):
     value = ''.join(c for c in unicodedata.normalize('NFD', str(value or '')) if not unicodedata.combining(c))
@@ -68,15 +74,20 @@ def recover(name, placeholders, fetch=get):
 def refresh(schedule, catalogue, previous, cache_path, overrides=(), max_players=8, fetch=get):
     now = datetime.now(timezone.utc)
     names = sorted({str(row.get(k, '')).strip() for row in schedule for k in ('player1_name','player2_name') if row.get(k)})
-    known = {normal(row['name']): row for row in catalogue if row.get('src')}
-    result = dict(previous or {})
+    rejected = [row['name'] for row in [*catalogue, *(previous or {}).values(), *overrides] if row.get('src') and not usable_portrait(row)]
+    known = {normal(row['name']): row for row in catalogue if usable_portrait(row)}
+    result = {key: dict(row) for key, row in (previous or {}).items() if usable_portrait(row)}
     for row in overrides:
-        result[normal(row['name'])] = dict(row)
+        if usable_portrait(row):
+            result[normal(row['name'])] = dict(row)
     for name in names:
         alias = ALIASES.get(normal(name))
         if alias in known and normal(name) not in result:
             result[normal(name)] = {**known[alias], 'name': name, 'canonicalName': known[alias]['name']}
     cache = json.loads(cache_path.read_text(encoding='utf-8')) if cache_path.exists() else {}
+    for name in rejected:
+        key = normal(name)
+        cache[key] = {**cache.get(key, {}), 'status': 'placeholder_rejected'}
     eligible = []
     for name in names:
         key = normal(name)
@@ -113,7 +124,7 @@ def refresh(schedule, catalogue, previous, cache_path, overrides=(), max_players
     missing = [{'name': name, 'status': cache.get(normal(name), {}).get('status', 'queued')}
                for name in names if normal(name) not in known and normal(name) not in result]
     audit = {'checkedAt': now.isoformat(), 'players': len(names), 'covered': len(names)-len(missing),
-             'missing': missing, 'attempted': len(selected), 'queued': len(eligible)-len(selected),
+             'rejectedPlaceholders': sorted(set(rejected)), 'missing': missing, 'attempted': len(selected), 'queued': len(eligible)-len(selected),
              'seconds': round(time.monotonic()-started, 2), 'observations': observations}
     return result, audit
 
@@ -134,7 +145,7 @@ def prepare(checkout, candidate, schedule, overrides_path, *, max_players=8, fet
         rows = sorted(result.values(), key=lambda row: normal(row['name']))
     except Exception as exc:
         # Photo discovery must never stop the independent archive refresh.
-        rows = prior
+        rows = [row for row in prior if usable_portrait(row)]
         audit = {'checkedAt': datetime.now(timezone.utc).isoformat(),
                  'status': 'last_good_retained', 'reason': type(exc).__name__}
     audit['changed'] = sorted(prior, key=lambda row: normal(row['name'])) != rows
