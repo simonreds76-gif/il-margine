@@ -184,20 +184,20 @@ export default function TournamentReturns({ summary, defaultOpen = false }: { su
 
       {summary.notes.length > 0 && <ul className={s.notes}>{summary.notes.map(note => <li key={note}>{note}</li>)}</ul>}
       <p className={s.foot}>
-        What happened at earlier editions, not a forecast and not a reason to back either player today. The favourite is the player with the shorter of the two recorded Pinnacle prices in that match; the underdog has the longer. Figures are in units (u) at a flat 1u per match; ROI is profit divided by stake. Coverage is of the completed matches recorded in our archive, not proof of the full official draw. Recorded prices are not guaranteed to be the final price before play, and were not necessarily available to you.
+        The current year is shown separately from the earlier-edition comparison. What happened at earlier editions is not a forecast and not a reason to back either player today. The favourite is the player with the shorter of the two recorded Pinnacle prices in that match; the underdog has the longer. Figures are in units (u) at a flat 1u per match; ROI is profit divided by stake. Coverage is of the completed matches recorded in our archive, not proof of the full official draw. Recorded prices are not guaranteed to be the final price before play, and were not necessarily available to you.
         {isDay(summary.coverageUpdatedAt) && ` Archive checked ${day(summary.coverageUpdatedAt)}.`}
       </p>
     </div>
   </details>;
 }
 
-/** Preview aid only: look at an out-of-season tournament without adding anything to the match list. */
+/** Selected historical examples, separate from the current fixture list. */
 export function TournamentReturnsPicker({ summaries }: { summaries: TournamentReturnsSummary[] }) {
   const [index, setIndex] = useState(0);
   if (!summaries.length) return null;
   const chosen = summaries[Math.min(index, summaries.length - 1)];
-  return <section className={s.picker} aria-label="Preview tournament history" id="tournament-history-preview">
-    <label>Preview: tournament history<select value={index} onChange={e => setIndex(Number(e.target.value))}>
+  return <section className={s.picker} aria-label="Explore tournament history" id="tournament-history">
+    <label>Explore tournament history<select value={index} onChange={e => setIndex(Number(e.target.value))}>
       {summaries.map((item, i) => <option key={`${item.name}:${i}`} value={i}>{item.name}</option>)}</select></label>
     <div className={s.pickerFrame}><TournamentReturns key={index} summary={chosen} defaultOpen /></div>
   </section>;

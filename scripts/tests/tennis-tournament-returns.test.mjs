@@ -84,3 +84,11 @@ test('finished current-year Queen’s and Paris show completed, without altering
  }
  assert.equal(editionCompletionLabel(undefined),'Completion unverified');
 });
+
+test('all 58 stored 2026 editions have completion evidence, without counting walkovers as priced matches',()=>{
+ const editions=data.families.flatMap(f=>f.editions).filter(e=>e.year===2026);
+ assert.equal(editions.length,58);assert.ok(editions.every(e=>e.completion.state==='completed'));
+ const dubai=editions.find(e=>e.id==='21315');
+ assert.equal(dubai.completion.completedAt,'2026-02-28');
+ assert.equal(dubai.completion.evidence.disposition,'walkover');
+});

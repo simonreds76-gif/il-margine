@@ -20,4 +20,17 @@ class EditionCompletionTest(unittest.TestCase):
   self.assertEqual(m.edition_completion([],2)['state'],'unverified')
   self.assertEqual(m.edition_completion([dict(row,result='6-4 2-0')],2)['state'],'unverified')
   self.assertEqual(m.edition_completion([row,row],2)['state'],'unverified')
+class TerminalFinalTest(unittest.TestCase):
+ def test_retired_final_finishes_event_but_never_enters_roi(self):
+  row=dict(date='2026-10-06',tour_id='b',round_id='12',winner_id='a',loser_id='b',result='7-6(3) 0-1 ret.')
+  self.assertEqual(m.edition_completion([row],2)['state'],'completed')
+  self.assertFalse(m.complete(row['result'],2))
+  self.assertEqual(m.edition_completion([dict(row,result='6-4 2-0 suspended')],2)['state'],'unverified')
+ def test_official_evidence_is_exact_edition_metadata_only(self):
+  edition=dict(id='d',year=2026,event='Dubai',surface='outdoor-hard',completion={'state':'unverified','completedAt':None})
+  evidence=[dict(tourId='d',year=2026,event='Dubai',surface='outdoor-hard',completedAt='2026-02-28')]
+  self.assertEqual(m.official_completion(evidence,edition,[],'2026-11-15')['state'],'completed')
+  self.assertEqual(m.official_completion(evidence,dict(edition,year=2027),[],'2027-11-15')['state'],'unverified')
+  self.assertEqual(m.official_completion(evidence,edition,[],'2026-02-27')['state'],'unverified')
+  self.assertEqual(m.official_completion(evidence,edition,[{}],'2026-11-15')['state'],'unverified')
 if __name__=='__main__':unittest.main()

@@ -21,9 +21,19 @@ def edition_completion(finals, needed):
  # establish completion; ambiguous or unfinished final records stay unverified.
  if len(finals)==1:
   r=finals[0]
-  if complete(r['result'],needed):
+  terminal = re.fullmatch(r'(?:\d+-\d+(?:\(\d+\))?\s+)+ret\.?|w/o|walkover',r['result'].strip(),re.I)
+  if complete(r['result'],needed) or terminal:
    return {'state':'completed','completedAt':r['date'],'evidence':{'tourId':r['tour_id'],'roundId':r['round_id'],'winnerId':r['winner_id'],'loserId':r['loser_id'],'score':r['result']}}
  return {'state':'unverified','completedAt':None}
+
+def official_completion(evidence, edition, finals, asof):
+ # An official title-award notice may establish completion when a walkover
+ # final has no source match row. Never insert it into the match/ROI ledger.
+ if finals or edition['completion']['state']=='completed':return edition['completion']
+ matches=[e for e in evidence if e['tourId']==edition['id'] and e['year']==edition['year'] and e['event']==edition['event'] and e['surface']==edition['surface'] and e['completedAt']<=asof[:10]]
+ if len(matches)!=1:return edition['completion']
+ e=matches[0]
+ return {'state':'completed','completedAt':e['completedAt'],'evidence':e}
 
 def profit(rows):
  eligible=[r for r in rows if r['o1']!=r['o2']]
@@ -71,6 +81,7 @@ def main():
  published={r[0]:(r[1],public['players'][r[2]]['id'],public['players'][r[3]]['id'],r[4],r[5],r[6]) for r in public['matches']}
  assert len(published)==len(data['matches']) and len(published)>0
  for m in data['matches']:assert published[m['id']]==(m['date'],m['p1'],m['p2'],m['o1'],m['o2'],0 if m['winner']==m['p1'] else 1),m['id']
+ completion_evidence=json.loads((W/'src/data/tennis-tournament-completion-evidence.json').read_text(encoding='utf-8'))['editions']
  asof=rel['checkedAt']; year=int(asof[:4]);surfaces={'1':'outdoor-hard','2':'clay','3':'indoor-hard','5':'grass'}
  tours={r['id']:r for r in read(C/'oncourt/tours_atp.csv') if r['date']>='2020-12-15' and r['rank'] in ['2','3','4'] and not re.search(r'united cup|atp cup|davis|laver|next.?gen|olympic|exhibition|juniors',r['name'],re.I)}
  all_players={r['id']:r['name'] for r in read(C/'oncourt/players_atp.csv')}
@@ -114,6 +125,7 @@ def main():
   if t['date'][5:]>='12-25' or edition['throughDate'][:4]!=str(yr):
    edition['seasonReviewRequired']=True
   edition['completion']=edition_completion(finals[tid],3 if t['rank']=='4' else 2)
+  edition['completion']=official_completion(completion_evidence,edition,finals[tid],asof)
   edition['_rows']=relevant
   fam['editions'].append(edition)
  for fam in families.values():
