@@ -74,6 +74,7 @@
   .table { font-size: 12.5px; }
   .table th, .table td { padding: 8px 4px; }
   .table th:first-child { width: 22%; }
+  .table th > small:first-of-type:not(.rowNote) { display: block; margin-left: 0; overflow-wrap: normal; }
   .picker select { font-size: 16px; }
 }
 @media (max-width: 359px) {
