@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { reconciles } from '@/lib/tennis-tournament-returns.mjs';
 import s from './tournament-returns.module.css';
 
@@ -54,7 +54,7 @@ export type TournamentReturnsSummary =
 // ---------- formatting ----------
 
 const BAND_MINIMUM = 30;
-const units = (n: number) => `${n < 0 ? '−' : n > 0 ? '+' : ''}${Math.abs(n).toFixed(2)}u`;
+const units = (n: number) => { const rounded = Math.round((Math.abs(n) + Number.EPSILON) * 100) / 100; return `${rounded ? n < 0 ? '−' : '+' : ''}${rounded.toFixed(2)}u`; };
 const percent = (n: number | null) => n === null || !Number.isFinite(n) ? '—' : `${n < 0 ? '−' : n > 0 ? '+' : ''}${Math.abs(n).toFixed(1)}%`;
 const isDay = (d: unknown): d is string => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}/.test(d);
 const day = (d: string) => new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(`${d.slice(0, 10)}T12:00:00Z`));
@@ -80,20 +80,21 @@ function Tile({ label, hint, side }: { label: string; hint: string; side: SideRe
     <span className={s.tileLabel}>{label}<small>{hint}</small></span>
     {has ? <>
       <strong className={side!.profit > 0 ? s.pos : undefined}>{units(side!.profit)}</strong>
-      <span className={s.tileSub}>{percent(side!.roi)} ROI · {side!.wins}–{side!.losses} · {side!.stake}u staked</span>
+      <span className={s.tileSub}>{percent(side!.roi)} ROI · {side!.wins} won · {side!.losses} lost · {side!.stake}u staked</span>
     </> : <strong className={s.none}>—<span className="sr-only">Not available</span></strong>}
   </div>;
 }
 
-function editionNote(row: EditionRow, pooled: boolean) {
-  const base = pooled ? null
-    : row.status === 'eligible' ? 'Not in this window'
-    : row.status === 'current' ? `Recorded to date${isDay(row.throughDate) ? ` (${day(row.throughDate)})` : ''} · shown apart`
-    : row.status === 'opening-basis' ? 'Opening prices · never pooled with later prices'
-    : row.status === 'low-coverage' ? 'Under 80% of matches priced · not pooled'
-    : row.status === 'other-regime' ? 'Different venue or surface · not pooled'
-    : 'No recorded matches';
-  return [base, row.excludedReason].filter(Boolean).join(' · ') || null;
+function editionNote(row: EditionRow, pooled: boolean, snapshotYear: number) {
+  if (pooled) return null;
+  const toDate = row.year === snapshotYear;
+  const reason = row.status === 'opening-basis' ? 'Opening prices'
+    : row.status === 'low-coverage' ? (row.excludedReason || 'Under 80% of matches priced')
+    : row.status === 'other-regime' ? (row.excludedReason?.split(',')[0] || 'Different venue or surface')
+    : row.status === 'no-data' ? (row.excludedReason || 'No recorded matches')
+    : row.status === 'eligible' ? 'Not in this window' : null;
+  const date = toDate && isDay(row.throughDate) ? `Recorded to ${day(row.throughDate)}` : null;
+  return [date, reason, row.status !== 'eligible' ? 'not pooled' : null].filter(Boolean).join(' · ');
 }
 
 // ---------- component ----------
@@ -154,23 +155,23 @@ export default function TournamentReturns({ summary, defaultOpen = false }: { su
 
       <table className={s.table}>
         <caption>By edition. Profit (u) and ROI; compare the variation between years. Matches exclude equal-price pairs.</caption>
-        <thead><tr><th scope="col">Edition</th><th scope="col">Matches</th><th scope="col">Favourites</th><th scope="col">Underdogs</th></tr></thead>
+        <thead><tr><th scope="col">Edition</th><th scope="col">Matches</th><th scope="col"><span className={s.full}>Favourites</span><span className={s.short} aria-hidden="true">Favs</span></th><th scope="col"><span className={s.full}>Underdogs</span><span className={s.short} aria-hidden="true">Dogs</span></th></tr></thead>
         <tbody>{summary.editions.map(row => {
           const inPool = pooled.has(row.editionId);
-          const note = editionNote(row, inPool);
+          const note = editionNote(row, inPool, summary.snapshotYear);
           const rowOk = reconciles(row.counts, row.favourite, row.underdog);
-          return <tr key={row.editionId} data-pooled={inPool}>
-            <th scope="row">{row.year}{row.status === 'current' && <small>to date</small>}{note && <small className={s.rowNote}>{note}</small>}</th>
+          return <Fragment key={row.editionId}><tr data-pooled={inPool}>
+            <th scope="row">{row.year}{row.year === summary.snapshotYear && <small>to date</small>}{note && <span className="sr-only">. {note}</span>}</th>
             <td>{row.counts.bettable}<small>{row.counts.paired}/{row.counts.completed} priced</small></td>
             {rowOk ? <><td><Figure side={row.favourite} /></td><td><Figure side={row.underdog} /></td></>
               : <td colSpan={2}><small>Totals do not reconcile; withheld</small></td>}
-          </tr>;
+          </tr>{note && <tr className={s.noteRow} aria-hidden="true"><td colSpan={4}>{note}</td></tr>}</Fragment>;
         })}</tbody>
       </table>
 
       {ok && !!win.bands?.length && <table className={s.table}>
         <caption>By the favourite’s price. Each match sits in one row. Returns appear only from {BAND_MINIMUM} matches.</caption>
-        <thead><tr><th scope="col">Favourite’s price</th><th scope="col">Matches</th><th scope="col">Favourites</th><th scope="col">Underdogs</th></tr></thead>
+        <thead><tr><th scope="col">Favourite’s price</th><th scope="col">Matches</th><th scope="col"><span className={s.full}>Favourites</span><span className={s.short} aria-hidden="true">Favs</span></th><th scope="col"><span className={s.full}>Underdogs</span><span className={s.short} aria-hidden="true">Dogs</span></th></tr></thead>
         <tbody>{win.bands.map(band => <tr key={band.label} data-pooled="true">
           <th scope="row">{band.label}</th><td>{band.fixtures}</td>
           {band.fixtures >= BAND_MINIMUM ? <><td><Figure side={band.favourite} /></td><td><Figure side={band.underdog} /></td></>

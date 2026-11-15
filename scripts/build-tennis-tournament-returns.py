@@ -99,6 +99,9 @@ def main():
   relevant=[prices[k] for k in keys if k in prices]
   counts=profit(relevant);n=len(keys)
   edition={'id':tid,'year':yr,'event':ev,'fromDate':min(games[k]['date'] for k in keys),'throughDate':max(games[k]['date'] for k in keys),'completed':n,'noPrice':n-len(relevant),'coveragePct':100*len(relevant)/n, 'excluded':dict(excluded[tid]),'surface':surf,**counts}
+  # Hold ambiguous year-boundary source editions; never guess a season with a date shift.
+  if t['date'][5:]>='12-25' or edition['throughDate'][:4]!=str(yr):
+   edition['seasonReviewRequired']=True
   edition['_rows']=relevant
   fam['editions'].append(edition)
  for fam in families.values():
@@ -108,8 +111,10 @@ def main():
    e['status']='current' if e['year']==year else 'included';e['excludedReason']=None
    if e['coveragePct']<80:e.update(status='excluded',excludedReason='Paired-price coverage below 80%')
    if counts[e['year']]>1:e.update(status='excluded',excludedReason='Multiple editions in the same year; identity requires review')
-   if e['year']==2021:e.update(status='opening',excludedReason='Opening odds, shown separately')
+   if e['year']==2021 or any('opening' in label.lower() for label in e['priceMix']):e.update(status='opening',excludedReason='Opening odds, shown separately')
    if fam['familyId'] in BREAKS and e['year']<BREAKS[fam['familyId']]['year']:e.update(status='previous-venue',excludedReason='Earlier venue, shown separately')
+   if e.get('seasonReviewRequired'):e.update(status='review',excludedReason='Year-boundary edition needs verified season and completion')
+   if e['excluded'].get('unresolvedIdentity'):e.update(status='review',excludedReason='Unresolved identities prevent verified coverage')
   if fam['familyId'] in BREAKS:fam['notes'].append(BREAKS[fam['familyId']]['note']);fam['venueEvidence']=BREAKS[fam['familyId']]['source']
   fam['notes'].append('Ball choice and court pace are not verified across editions.')
   fam['windows']={}
@@ -117,6 +122,7 @@ def main():
   current=[e for e in fam['editions'] if e['year']==year]
   for window in (3,5):
    chosen=old[-window:];included=[e for e in chosen if e['status']=='included'];rows=[r for e in included for r in e['_rows']]
+   assert not any('opening' in r['priceBasis'].lower() for r in rows), 'Opening price in pooled history'
    pool=profit(rows);pool['completed']=sum(e['completed'] for e in included);pool['noPrice']=sum(e['noPrice'] for e in included);pool['coveragePct']=100*pool['paired']/pool['completed'] if pool['completed'] else None
    pool['excluded']=dict(sum((collections.Counter(e['excluded']) for e in included),collections.Counter()))
    bands=[]
@@ -135,4 +141,3 @@ if __name__=='__main__':
  p=argparse.ArgumentParser(description='Build a descriptive tournament ROI snapshot from a verified accepted archive; no model changes.')
  p.add_argument('--candidate',required=True);p.add_argument('--site-root',required=True);p.add_argument('--audit-dir',required=True)
  a=p.parse_args();C=Path(a.candidate);W=Path(a.site_root);O=Path(a.audit_dir);O.mkdir(parents=True,exist_ok=True);main()
-

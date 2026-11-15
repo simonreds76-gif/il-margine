@@ -29,6 +29,8 @@ function windowView(x) {
     bands:x.bands.map((b,i)=>({label:['Under 1.30','1.30 to under 1.60','1.60 and longer'][i],min:b.lower,max:i===2?null:b.upper,fixtures:b.bettable,...sidePair(b)}))};
 }
 export function summaryForFamily(data, family) {
+  if (family.editions.some(e=>e.excluded?.unresolvedIdentity) || Object.values(family.windows).some(w=>Object.keys(w.pool.priceMix).some(k=>/opening/i.test(k))))
+    return {availability:'unavailable',name:family.name,reason:'Price basis or unresolved identities prevent verified coverage.'};
   const three=windowView(family.windows['3']),candidate=windowView(family.windows['5']);
   const five=JSON.stringify(three.editionIds)===JSON.stringify(candidate.editionIds)?null:candidate;
   const editions=family.editions.map(e=>({editionId:e.id,year:e.year,fromDate:e.fromDate,throughDate:e.throughDate,

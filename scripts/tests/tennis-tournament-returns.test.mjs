@@ -65,3 +65,12 @@ test('client payload contains bounded summaries, no raw fixture ledgers',()=>{
  assert.ok(JSON.stringify(p).length<20000);assert.equal(p.examples[0].availability,'available');
  assert.equal(JSON.stringify(p).includes('winner_id'),false);
 });
+
+test('opening odds or unresolved identity in a later edition cannot silently reach the UI',()=>{
+ for(const mode of ['opening','identity']){
+  const f=structuredClone(family('queens'));
+  if(mode==='opening')f.windows['3'].pool.priceMix['Pinnacle opening']=1;
+  else f.editions[0].excluded.unresolvedIdentity=1;
+  assert.equal(summaryForFamily(data,f).availability,'unavailable');
+ }
+});
