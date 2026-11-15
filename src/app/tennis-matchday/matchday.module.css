@@ -3,6 +3,7 @@
    the coloured dot marks court type. They never share an element. */
 
 .shell {
+  --odds-width:72px; --set-width:28px;
   --ink: #eef3f6; --ink2: #b7c6d0; --ink3: #8497a4;
   --line: #22313b; --soft: #18242d; --panel: #111a22; --lift: #15212a;
   --mint: #8ce5bd; --mintbg: #173328; --warn: #e0bb78;
@@ -86,14 +87,31 @@
 .when time { font-size: 14px; font-weight: 600; }
 .when small { font-size: 11px; color: var(--ink3); }
 .players { grid-area: players; display: flex; flex-direction: column; gap: 7px; min-width: 0; }
-.line { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.name { min-width: 0; font-size: 14.5px; font-weight: 550; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.form { display: inline-flex; gap: 3px; flex: none; }
+.line { display:grid; grid-template-columns:minmax(0,1fr) 47px var(--odds-width); align-items:baseline; gap:10px; min-width:0; }
+.name { min-width:0; font-size:14.5px; font-weight:550; white-space:normal; overflow-wrap:anywhere; text-align:left; }
+.form { display:inline-flex; gap:3px; width:47px; justify-self:end; align-self:center; }
 .form i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid #5a6d79; }
 .form i[data-w=true] { background: var(--mint); border-color: var(--mint); }
-.price { display: inline-flex; justify-content: flex-end; flex: none; min-width: 60px; margin-left: auto; font-size: 14.5px; font-weight: 600; }
-.price > span:last-child { min-width: 3ch; text-align: left; }
-.price[data-none=true] { color: var(--ink3); font-weight: 400; }
+.price { display:grid; grid-template-columns:minmax(0,1fr) 3ch; width:var(--odds-width); min-width:0; font-size:14.5px; font-weight:600; font-variant-numeric:tabular-nums; }
+.priceWhole { text-align:right; }
+.priceFraction { text-align:left; }
+.price[data-none=true] { display:block; text-align:center; color:var(--ink3); font-weight:400; }
+.rowColumns { display:grid; grid-template-columns:64px minmax(0,1fr) 76px 20px; grid-template-areas:"when players h2h chev"; align-items:end; gap:14px; padding:8px 16px; border-bottom:1px solid var(--soft); color:var(--ink3); font-size:11px; }
+.columnWhen { grid-area:when; }
+.playerColumns { grid-area:players; display:grid; grid-template-columns:minmax(0,1fr) var(--odds-width); align-items:end; }
+.columnH2H { grid-area:h2h; text-align:right; }
+.oddsColumnTitle { display:flex; flex-direction:column; align-items:center; gap:2px; color:var(--ink2); font-weight:600; }
+.bookieMark { position:relative; overflow:hidden; width:64px; height:19px; }
+.bookieMark img { position:absolute; left:50%; top:50%; width:132px; height:55px; max-width:none; transform:translate(-50%,-50%); }
+.resultGroup > summary { list-style:none; cursor:pointer; }
+.resultGroup > summary::-webkit-details-marker { display:none; }
+.resultGroup:not([open]) > summary { border-bottom:0; }
+.groupChevron { color:var(--ink3); width:16px; flex:none; }
+.groupChevron svg { width:16px; height:16px; }
+.resultGroup[open] .groupChevron svg { transform:rotate(180deg); }
+.resultColumns { display:grid; grid-template-columns:96px minmax(0,1fr) calc(var(--set-count,3) * var(--set-width)); padding:8px 16px; align-items:end; color:var(--ink3); font-size:11px; border-bottom:1px solid var(--soft); }
+.scoreHeading { text-align:center; }
+.setLabels { display:grid; grid-template-columns:repeat(var(--set-count,3),var(--set-width)); margin-top:2px; }
 .eventLine { display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: var(--ink3); min-width: 0; }
 .eventLine .flag, .eventLine .flagEmpty { width: 18px; height: 12px; }
 .h2h { grid-area: h2h; text-align: right; font-size: 11px; color: var(--ink3); }
@@ -146,22 +164,28 @@
 
 /* ---------- results ---------- */
 .resultList { list-style: none; margin: 0; padding: 0; }
-.resultRow { position: relative; display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 13px 16px; }
+.resultRow { --player-col:2; --score-col:3; --winner-row:1; --loser-row:2; position:relative; display:grid; grid-template-columns:96px minmax(0,1fr) repeat(var(--set-count,3),var(--set-width)); align-items:baseline; gap:7px 0; padding:13px 16px; }
 .resultRow + .resultRow { border-top: 1px solid var(--soft); }
 /* Results do not use the named areas of upcoming rows. */
-.resultRow > .when { grid-area: auto; }
+.resultRow > .when { grid-column:1; grid-row:1 / span 2; align-self:center; padding-right:10px; }
 .resultRow .when small { font-size: 12px; color: var(--ink2); white-space: nowrap; }
 .tag { font-size: 10.5px; color: var(--warn); white-space: nowrap; }
-.pair { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.pair { display:contents; }
+.pair > span { grid-column:var(--player-col); padding-right:10px; }
+.pair > span:first-child { grid-row:var(--winner-row); }
+.pair > span:last-child { grid-row:var(--loser-row); }
 .pair > span { display: flex; align-items: center; gap: 7px; min-width: 0; font-size: 14.5px; color: var(--ink3); }
-.pair > span > b { min-width: 0; font-weight: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pair > span > b { min-width: 0; font-weight:inherit; white-space:normal; overflow-wrap:anywhere; }
 .pair .won { color: var(--ink); font-weight: 600; }
 .pair .won svg { width: 14px; height: 14px; color: var(--mint); flex: none; }
-.sets { display: grid; grid-auto-flow: column; grid-template-rows: auto auto; gap: 7px 0; }
+.sets { display:contents; }
+.sets > span { grid-column:calc(var(--score-col) + var(--set-index)); }
+.setWinner { grid-row:var(--winner-row); }
+.setLoser { grid-row:var(--loser-row); }
 .sets > span { min-width: 26px; text-align: center; font-size: 14.5px; color: var(--ink3); }
 .sets > span[data-won=true] { color: var(--ink); font-weight: 600; }
 .sets sup { margin-left: 1px; font-size: 9px; font-weight: 400; color: var(--ink3); }
-.rawScore { font-size: 13.5px; color: var(--ink2); white-space: nowrap; }
+.rawScore { grid-column:var(--score-col) / -1; grid-row:var(--winner-row) / span 2; align-self:center; font-size:13px; color:var(--ink2); text-align:right; overflow-wrap:anywhere; }
 
 /* ---------- empty, about, faq ---------- */
 .empty { margin: 16px 0 0; padding: 36px 20px; border: 1px dashed #33454f; border-radius: 12px; text-align: center; }
@@ -211,19 +235,26 @@
   .group { margin-top: 10px; border-radius: 10px; }
   .groupHead { padding: 11px 12px; gap: 10px; }
   /* H2H drops under the two player lines, and only takes space when it exists. */
+  .rowColumns { grid-template-columns:58px minmax(0,1fr) 16px; grid-template-areas:"when players chev"; gap:8px; padding:8px 12px; }
+  .columnH2H { display:none; }
+  .shell { --odds-width:64px; --set-width:24px; }
+  .line { grid-template-columns:minmax(0,1fr) var(--odds-width); gap:8px; }
+  .form { display:none; }
   .rowBtn { grid-template-columns: 58px minmax(0, 1fr) 16px; grid-template-areas: "when players chev" "when h2h chev"; gap: 0 8px; padding: 13px 12px; }
   .when small { font-size: 10.5px; white-space: nowrap; }
   .h2h { text-align: left; }
   .h2h:not(:empty) { padding-top: 6px; }
   .h2h strong { display: inline; margin-right: 4px; font-size: 11.5px; }
   .name { font-size: 14px; }
-  .price { min-width: 54px; font-size: 14px; }
+  .price { min-width:0; font-size:14px; }
   .panel { padding: 2px 12px 16px; }
   .panelGrid { grid-template-columns: minmax(0, 1fr); gap: 22px; }
   /* Results: the round becomes a small label above the pair, said once per run,
      so the names get the full width. */
-  .resultRow { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; padding: 12px; }
-  .resultRow > .when { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+  .resultRow { --player-col:1; --score-col:2; --winner-row:2; --loser-row:3; grid-template-columns:minmax(0,1fr) repeat(var(--set-count,3),var(--set-width)); gap:6px 0; padding:12px; }
+  .resultColumns { grid-template-columns:minmax(0,1fr) calc(var(--set-count,3) * var(--set-width)); padding:8px 12px; }
+  .resultRoundHeader { display:none; }
+  .resultRow > .when { grid-row:1; grid-column:1 / -1; flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
   .resultRow .when small { font-size: 11px; color: var(--ink3); }
   .resultRow[data-repeat=true] > .when small { display: none; }
   .resultRow[data-bare=true] > .when { display: none; }
@@ -234,7 +265,8 @@
 /* Narrow phones: full names wrap instead of being cut. */
 @media (max-width: 359px) {
   .form { display: none; }
-  .rowBtn { grid-template-columns: 52px minmax(0, 1fr) 14px; }
+  .rowBtn, .rowColumns { grid-template-columns:52px minmax(0,1fr) 14px; }
+  .shell { --odds-width:58px; --set-width:22px; }
   .when small { font-size: 10px; }
   .line { align-items: flex-start; }
   .name, .pair > span > b { white-space: normal; overflow: visible; overflow-wrap: anywhere; }

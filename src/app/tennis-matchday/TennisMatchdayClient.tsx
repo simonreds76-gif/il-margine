@@ -32,14 +32,24 @@ function recentForm(player: FixturePlayer) {
 
 function FormDots({ player }: { player: FixturePlayer }) {
   const form = recentForm(player);
-  if (!form.length) return null;
   return <span className={styles.form} aria-hidden="true" title="Latest recorded results, newest first">{form.map(m => <i key={m.id} data-w={m.winner} />)}</span>;
 }
 
 function DecimalPrice({ value }: { value: number | undefined }) {
-  if (value === undefined) return <span className={styles.price} data-none="true"><span aria-hidden="true">—</span><span className="sr-only">Price unavailable</span></span>;
+  if (value === undefined) return <span className={styles.price} data-none="true" aria-label="Pinnacle match-winner odds unavailable"><span aria-hidden="true">—</span><span className="sr-only">Price unavailable</span></span>;
   const [whole, fraction = '00'] = price(value).split('.');
-  return <span className={styles.price}><span>{whole}.</span><span>{fraction.padEnd(2, '0')}</span></span>;
+  return <span className={styles.price} aria-label={`Pinnacle match-winner decimal odds ${price(value)}`}><span className={styles.priceWhole}>{whole}.</span><span className={styles.priceFraction}>{fraction.padEnd(2, '0')}</span></span>;
+}
+
+function OddsColumns() {
+  return <div className={styles.rowColumns} aria-label="Pinnacle match-winner odds, decimal format">
+    <span className={styles.columnWhen}>UK time</span>
+    <span className={styles.playerColumns}><span>Player</span><span className={styles.oddsColumnTitle}>
+      <span className={styles.bookieMark}><Image src="/bookmakers/pinnacle.png" alt="Pinnacle" width={132} height={55} unoptimized /></span>
+      <span>Odds <span className="sr-only">in decimal format</span></span>
+    </span></span>
+    <span className={styles.columnH2H}>H2H</span><span aria-hidden="true" />
+  </div>;
 }
 
 function Portrait({ player }: { player: FixturePlayer }) {
@@ -186,7 +196,7 @@ export default function TennisMatchdayClient({ board, renderedAt }: { board: Ten
 
   const stale = board.stale || !board.capturedAt || now.getTime() - Date.parse(board.capturedAt) > 86400000;
   const upcoming = stale ? [] : fixturesFor(board.fixtures, 'upcoming', 'all', '', now);
-  const filter = displayDay(state.filter, upcoming, now);
+  const filter = displayDay(state.filter, upcoming.filter(f => tour === 'all' || f.tour === tour), now);
   const dated = fixturesFor(upcoming, filter, 'all', search, now).filter(f => qualifying || !isQualifying(f));
   const candidates = dated.filter(f => tour === 'all' || f.tour === tour);
   // Keep event choices across date/search changes; an empty filter never silently switches the event.
@@ -198,8 +208,8 @@ export default function TennisMatchdayClient({ board, renderedAt }: { board: Ten
   for (const f of candidates) { const item = options.get(tournamentOf(f).key); if (item) item.count++; }
   const selectedEvent = options.get(tournament);
   const shown = candidates.filter(f => tournament === 'all' || tournamentOf(f).key === tournament);
-  const reset = (widen = false) => update({ ...defaults, view: 'upcoming', filter: widen ? 'upcoming' : state.filter });
-  const filtered = tour !== 'all' || tournament !== 'all' || !!search || !qualifying;
+  const reset = (widen = false) => update({ ...defaults, tour: widen ? 'all' : defaults.tour, view: 'upcoming', filter: widen ? 'upcoming' : state.filter });
+  const filtered = tour !== 'ATP' || tournament !== 'all' || !!search || !qualifying;
 
   const days = new Map<string, Map<string, { event: ReturnType<typeof tournamentOf> | null; country: Country; fixtures: TennisFixture[] }>>();
   for (const fixture of shown) {
@@ -223,7 +233,7 @@ export default function TennisMatchdayClient({ board, renderedAt }: { board: Ten
       {searchBox}
     </div>
     <TournamentRail label="Filter by tournament" items={[...options.values()]} selected={tournament} total={candidates.length} onSelect={key => update({ tournament: key })} />
-    <OptionsBar tally={`${shown.length} ${shown.length === 1 ? 'match' : 'matches'}`} active={Number(tour !== 'all') + Number(!qualifying) + Number(order === 'time')}>
+    <OptionsBar tally={`${tour === 'all' ? 'All tours' : tour} · ${shown.length} ${shown.length === 1 ? 'match' : 'matches'}`} active={Number(tour !== 'ATP') + Number(!qualifying) + Number(order === 'time')}>
       <span className={styles.optGroup} role="group" aria-label="Tour">{[['all', 'All'], ['ATP', 'ATP'], ['Challenger', 'Challenger']].map(([value, label]) =>
         <button key={value} type="button" className={styles.opt} aria-pressed={tour === value} onClick={() => update({ tour: value, tournament: 'all' })}>{label}</button>)}</span>
       <label className={styles.check}><input type="checkbox" checked={qualifying} onChange={e => update({ qualifying: e.target.checked })} />Qualifying</label>
@@ -235,7 +245,7 @@ export default function TennisMatchdayClient({ board, renderedAt }: { board: Ten
     {/* One line. The bookmaker is named in words; the source time is always shown. */}
     <p className={styles.status}>
       {board.capturedAt
-        ? <span><b>Pinnacle</b> <time dateTime={board.capturedAt}>{stamp(board.capturedAt)}</time> · {priced
+        ? <span><b>Pinnacle match-winner odds · decimal</b> <time dateTime={board.capturedAt}>{stamp(board.capturedAt)}</time> · {priced
             ? `${priced} of ${shown.length} priced`
             : <span className={styles.warn}>{captureAge >= 7200000 ? 'prices withheld, capture over two hours old' : 'no fresh paired prices in this view'}</span>}</span>
         : <span>Schedule unavailable</span>}
@@ -253,6 +263,7 @@ export default function TennisMatchdayClient({ board, renderedAt }: { board: Ten
               <span className={styles.groupCount}>{group.fixtures.length}<span className="sr-only"> matches</span></span>
             </header>
           : <header className={styles.groupHead}><div><h3>All tournaments</h3><p className={styles.groupMeta}>In start order</p></div><span className={styles.groupCount}>{group.fixtures.length}</span></header>}
+        <OddsColumns />
         {group.fixtures.map(f => <FixtureRow fixture={f} now={now} showEvent={order === 'time'} key={f.id} />)}
       </section>)}
     </div>) : <div className={styles.empty}>

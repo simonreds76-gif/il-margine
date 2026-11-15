@@ -30,3 +30,9 @@ test('default landing advances when today is empty but an explicit date stays se
 });
 
 test('Results filters persist without mutating upcoming date',()=>{const s={...readBrowseState(''),view:'results',resultDay:'all',tour:'Challenger'};assert.deepEqual(readBrowseState(browseQuery(s)),s)});
+
+test('ATP defaults preserve explicit All and Challenger URLs',()=>{
+ assert.equal(readBrowseState('').tour,'ATP');
+ for(const tour of ['ATP','all','Challenger']) assert.equal(readBrowseState(browseQuery({...readBrowseState(''),tour})).tour,tour);
+ assert.equal(new URLSearchParams(browseQuery({...readBrowseState(''),tour:'all'})).get('tour'),'all');
+});
