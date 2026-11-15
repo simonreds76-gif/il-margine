@@ -12,4 +12,12 @@ class ReturnsTest(unittest.TestCase):
  def test_no_bets_not_zero_return(self):self.assertIsNone(m.profit([])['favourite']['roi'])
  def test_only_completed_results(self):
   self.assertTrue(m.complete('7-6(5) 6-4',2));self.assertFalse(m.complete('6-2 2-1 ret.',2));self.assertFalse(m.complete('w/o',2));self.assertFalse(m.complete('6-4 6-4',3))
+class EditionCompletionTest(unittest.TestCase):
+ def test_completed_final_not_year_controls_status(self):
+  row=dict(date='2026-06-21',tour_id='q',round_id='12',winner_id='a',loser_id='b',result='6-4 6-4')
+  self.assertEqual(m.edition_completion([row],2)['state'],'completed')
+  self.assertEqual(m.edition_completion([row],2)['completedAt'],'2026-06-21')
+  self.assertEqual(m.edition_completion([],2)['state'],'unverified')
+  self.assertEqual(m.edition_completion([dict(row,result='6-4 2-0')],2)['state'],'unverified')
+  self.assertEqual(m.edition_completion([row,row],2)['state'],'unverified')
 if __name__=='__main__':unittest.main()

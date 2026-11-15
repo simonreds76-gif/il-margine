@@ -5,3 +5,5 @@ export function reconciles(c:ReturnCounts,f:SideReturn|null,u:SideReturn|null):b
 export function summaryForFamily(data:unknown,family:unknown):TournamentReturnsSummary;
 export function familyForFixture(data:unknown,fixture:TennisFixture):unknown;
 export function projectTournamentReturns(data:unknown,fixtures:TennisFixture[]):ReturnProjection;
+
+export function editionCompletionLabel(completion:{state:string;completedAt:string|null}|undefined):string;

@@ -16,6 +16,15 @@ def complete(score,needed):
   if max(wins)>=needed or not ((hi==6 and lo<=4) or (hi==7 and lo in [5,6]) or (hi>7 and hi-lo==2)):return False
   wins[a<b]+=1
  return wins[0]==needed and wins[1]<needed
+def edition_completion(finals, needed):
+ # Round 12 is the verified source's singles final. A year/date alone cannot
+ # establish completion; ambiguous or unfinished final records stay unverified.
+ if len(finals)==1:
+  r=finals[0]
+  if complete(r['result'],needed):
+   return {'state':'completed','completedAt':r['date'],'evidence':{'tourId':r['tour_id'],'roundId':r['round_id'],'winnerId':r['winner_id'],'loserId':r['loser_id'],'score':r['result']}}
+ return {'state':'unverified','completedAt':None}
+
 def profit(rows):
  eligible=[r for r in rows if r['o1']!=r['o2']]
  def side(fav):
@@ -67,12 +76,14 @@ def main():
  all_players={r['id']:r['name'] for r in read(C/'oncourt/players_atp.csv')}
  players={i:n for i,n in all_players.items() if '/' not in n}
  canonical={p['id']:p['name'] for p in data['players']}
+ finals=collections.defaultdict(list)
  games={};lookup=collections.defaultdict(list);bad=collections.Counter();excluded=collections.defaultdict(collections.Counter)
  for r in read(C/'oncourt/games_atp.csv'):
   if not ('2021-01-01'<=r['date']<asof) or r['tour_id'] not in tours or int(r['round_id'])<4:continue
   t=tours[r['tour_id']]
   if any('/' in all_players.get(r[k],'') for k in ['winner_id','loser_id']):excluded[r['tour_id']]['doubles']+=1;continue
   if r['winner_id'] not in players or r['loser_id'] not in players:excluded[r['tour_id']]['unresolvedIdentity']+=1;continue
+  if r['round_id']=='12':finals[r['tour_id']].append(r)
   if not complete(r['result'],3 if t['rank']=='4' else 2):excluded[r['tour_id']]['incompleteOrRetired']+=1;continue
   key=(r['date'],r['tour_id'],r['round_id'],r['winner_id'],r['loser_id'])
   if key in games:raise ValueError('Duplicate source fixture')
@@ -102,6 +113,7 @@ def main():
   # Hold ambiguous year-boundary source editions; never guess a season with a date shift.
   if t['date'][5:]>='12-25' or edition['throughDate'][:4]!=str(yr):
    edition['seasonReviewRequired']=True
+  edition['completion']=edition_completion(finals[tid],3 if t['rank']=='4' else 2)
   edition['_rows']=relevant
   fam['editions'].append(edition)
  for fam in families.values():

@@ -1,6 +1,6 @@
 'use client';
 import { Fragment, useState } from 'react';
-import { reconciles } from '@/lib/tennis-tournament-returns.mjs';
+import { reconciles, editionCompletionLabel } from '@/lib/tennis-tournament-returns.mjs';
 import s from './tournament-returns.module.css';
 
 /* Descriptive tournament history: what a flat 1u on every favourite, or every
@@ -24,6 +24,7 @@ export type EditionStatus = 'eligible' | 'current' | 'opening-basis' | 'low-cove
 
 export type EditionRow = {
   editionId: string; year: number; fromDate: string | null; throughDate: string | null;
+  completion: {state: 'completed' | 'unverified'; completedAt: string | null};
   status: EditionStatus; excludedReason?: string | null;
   counts: ReturnCounts; priceMix: PriceMixItem[];
   favourite: SideReturn | null; underdog: SideReturn | null;
@@ -87,13 +88,15 @@ function Tile({ label, hint, side }: { label: string; hint: string; side: SideRe
 
 function editionNote(row: EditionRow, pooled: boolean, snapshotYear: number) {
   if (pooled) return null;
-  const toDate = row.year === snapshotYear;
+  const currentYear = row.year === snapshotYear;
   const reason = row.status === 'opening-basis' ? 'Opening prices'
     : row.status === 'low-coverage' ? (row.excludedReason || 'Under 80% of matches priced')
     : row.status === 'other-regime' ? (row.excludedReason?.split(',')[0] || 'Different venue or surface')
     : row.status === 'no-data' ? (row.excludedReason || 'No recorded matches')
     : row.status === 'eligible' ? 'Not in this window' : null;
-  const date = toDate && isDay(row.throughDate) ? `Recorded to ${day(row.throughDate)}` : null;
+  const date = !currentYear ? null : row.completion.state === 'completed' && isDay(row.completion.completedAt)
+    ? `Completed ${day(row.completion.completedAt)}`
+    : `Completion unverified${isDay(row.throughDate) ? `; matches recorded through ${day(row.throughDate)}` : ''}`;
   return [date, reason, row.status !== 'eligible' ? 'not pooled' : null].filter(Boolean).join(' · ');
 }
 
@@ -161,7 +164,7 @@ export default function TournamentReturns({ summary, defaultOpen = false }: { su
           const note = editionNote(row, inPool, summary.snapshotYear);
           const rowOk = reconciles(row.counts, row.favourite, row.underdog);
           return <Fragment key={row.editionId}><tr data-pooled={inPool}>
-            <th scope="row">{row.year}{row.year === summary.snapshotYear && <small>to date</small>}{note && <span className="sr-only">. {note}</span>}</th>
+            <th scope="row">{row.year}{row.year === summary.snapshotYear && <small>{editionCompletionLabel(row.completion)}</small>}{note && <span className="sr-only">. {note}</span>}</th>
             <td>{row.counts.bettable}<small>{row.counts.paired}/{row.counts.completed} priced</small></td>
             {rowOk ? <><td><Figure side={row.favourite} /></td><td><Figure side={row.underdog} /></td></>
               : <td colSpan={2}><small>Totals do not reconcile; withheld</small></td>}

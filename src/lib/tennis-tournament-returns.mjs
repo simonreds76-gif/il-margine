@@ -28,13 +28,16 @@ function windowView(x) {
     counts:counts(x.pool),priceMix:mix(x.pool),...sidePair(x.pool),
     bands:x.bands.map((b,i)=>({label:['Under 1.30','1.30 to under 1.60','1.60 and longer'][i],min:b.lower,max:i===2?null:b.upper,fixtures:b.bettable,...sidePair(b)}))};
 }
+export function editionCompletionLabel(completion) {
+  return completion?.state==='completed' ? 'Completed' : 'Completion unverified';
+}
 export function summaryForFamily(data, family) {
   if (family.editions.some(e=>e.excluded?.unresolvedIdentity) || Object.values(family.windows).some(w=>Object.keys(w.pool.priceMix).some(k=>/opening/i.test(k))))
     return {availability:'unavailable',name:family.name,reason:'Price basis or unresolved identities prevent verified coverage.'};
   const three=windowView(family.windows['3']),candidate=windowView(family.windows['5']);
   const five=JSON.stringify(three.editionIds)===JSON.stringify(candidate.editionIds)?null:candidate;
   const editions=family.editions.map(e=>({editionId:e.id,year:e.year,fromDate:e.fromDate,throughDate:e.throughDate,
-    status:status[e.status] || 'no-data',excludedReason:e.excludedReason,counts:counts(e),priceMix:mix(e),...sidePair(e)})).reverse();
+    completion:{state:e.completion?.state || 'unverified',completedAt:e.completion?.completedAt || null},status:status[e.status] || 'no-data',excludedReason:e.excludedReason,counts:counts(e),priceMix:mix(e),...sidePair(e)})).reverse();
   if ([three,...(five?[five]:[]),...editions].some(x=>!reconciles(x.counts,x.favourite,x.underdog) || x.priceMix.reduce((n,m)=>n+m.count,0)!==x.counts.paired))
     return {availability:'unavailable',name:family.name,reason:'Historical counts or prices failed reconciliation; figures are withheld.'};
   return {availability:'available',family:family.id,name:family.name,tour:family.tour,surface:family.surface,city:family.city,

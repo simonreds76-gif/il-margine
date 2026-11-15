@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import data from '../../src/data/tennis-tournament-returns.json' with {type:'json'};
-import {reconciles,summaryForFamily,familyForFixture,projectTournamentReturns} from '../../src/lib/tennis-tournament-returns.mjs';
+import {editionCompletionLabel,reconciles,summaryForFamily,familyForFixture,projectTournamentReturns} from '../../src/lib/tennis-tournament-returns.mjs';
 const family=id=>data.families.find(f=>f.familyId===id);
 const summary=id=>summaryForFamily(data,family(id));
 test('all accepted rows reconcile, without adding prices to uncovered results',()=>{
@@ -73,4 +73,14 @@ test('opening odds or unresolved identity in a later edition cannot silently rea
   else f.editions[0].excluded.unresolvedIdentity=1;
   assert.equal(summaryForFamily(data,f).availability,'unavailable');
  }
+});
+
+test('finished current-year Queen’s and Paris show completed, without altering the pooled windows',()=>{
+ for(const [id,date] of [['queens','2026-06-21'],['paris-masters','2026-11-08']]){
+  const s=summary(id);const row=s.editions.find(e=>e.year===2026);
+  assert.equal(row.completion.state,'completed');assert.equal(row.completion.completedAt,date);
+  assert.equal(editionCompletionLabel(row.completion),'Completed');
+  assert.equal(s.windows.three.years.includes(2026),false);
+ }
+ assert.equal(editionCompletionLabel(undefined),'Completion unverified');
 });
