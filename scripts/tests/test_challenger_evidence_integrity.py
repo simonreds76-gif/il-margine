@@ -217,5 +217,38 @@ class ChallengerMlScorerTests(unittest.TestCase):
         self.assertEqual(row["clv_eligible"], "1")
 
 
+
+class ChallengerSurfaceContractTests(unittest.TestCase):
+    @staticmethod
+    def reason(surface, **changes):
+        fields = dict(coverage_tag="HIGH", confidence="high", surface=surface,
+                      value_pct=12.0, model_ml_excluded=False, pin_ml_excluded=False,
+                      model_market_gap_excluded=False, atp500_short_favorite_ml_excluded=False)
+        fields.update(changes)
+        return policy.challenger_skip_reason(**fields)
+
+    def test_native_indoor_and_legacy_label_have_identical_eligibility(self):
+        for surface in ("I.hard", "Indoor", "Hard", "Clay", "Grass"):
+            with self.subTest(surface=surface):
+                self.assertIsNone(self.reason(surface))
+
+    def test_indoor_alias_does_not_bypass_existing_numerical_or_input_gates(self):
+        cases = [({"coverage_tag": "THIN"}, "coverage_thin"),
+                 ({"confidence": "medium"}, "confidence_low"),
+                 ({"model_market_gap_excluded": True}, "model_market_gap"),
+                 ({"model_ml_excluded": True}, "model_ml_excluded"),
+                 ({"pin_ml_excluded": True}, "pin_ml_excluded"),
+                 ({"value_pct": 9.0}, "edge_below_floor"),
+                 ({"value_pct": 16.0}, "edge_above_cap")]
+        for changes, expected in cases:
+            with self.subTest(changes=changes):
+                self.assertEqual(self.reason("I.hard", **changes), expected)
+                self.assertEqual(self.reason("Indoor", **changes), expected)
+
+    def test_unknown_and_unsupported_surfaces_remain_blocked(self):
+        for surface in ("", "N/A", "Carpet", "unverified"):
+            with self.subTest(surface=surface):
+                self.assertEqual(self.reason(surface), "surface_blocked")
+
 if __name__ == "__main__":
     unittest.main()
