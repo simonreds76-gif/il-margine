@@ -1,4 +1,6 @@
 'use client';
+import TournamentReturns, { TournamentReturnsPicker } from './TournamentReturns';
+import type { ReturnProjection } from '@/lib/tennis-tournament-returns.mjs';
 import { useEffect, useId, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -159,7 +161,7 @@ function FixtureRow({ fixture: f, now, showEvent }: { fixture: TennisFixture; no
 }
 
 const defaults = readBrowseState('');
-export default function TennisMatchdayClient({ board, renderedAt }: { board: TennisBoard; renderedAt: string }) {
+export default function TennisMatchdayClient({ board, renderedAt, tournamentHistory }: { board: TennisBoard; renderedAt: string; tournamentHistory: ReturnProjection }) {
   const [state, setState] = useState<BrowseState>(defaults);
   const [now, setNow] = useState(() => new Date(renderedAt));
   const [searchOpen, setSearchOpen] = useState(false);
@@ -265,6 +267,7 @@ export default function TennisMatchdayClient({ board, renderedAt }: { board: Ten
               <span className={styles.groupCount}>{group.fixtures.length}<span className="sr-only"> matches</span></span>
             </header>
           : <header className={styles.groupHead}><div><h3>All tournaments</h3><p className={styles.groupMeta}>In start order</p></div><span className={styles.groupCount}>{group.fixtures.length}</span></header>}
+        {group.event?.tour === 'ATP' && group.fixtures.some(f => !isQualifying(f)) && <TournamentReturns summary={tournamentHistory.byTournament[group.event.key] || { availability: 'unavailable', name: group.event.displayName, reason: 'No audited price history is linked to this tournament edition and surface yet.' }} />}
         <OddsColumns />
         {group.fixtures.map(f => <FixtureRow fixture={f} now={now} showEvent={order === 'time'} key={f.id} />)}
       </section>)}
@@ -274,7 +277,9 @@ export default function TennisMatchdayClient({ board, renderedAt }: { board: Ten
       {!stale && <button type="button" onClick={() => reset(true)}>Show all captured fixtures</button>}
     </div>}
 
+    <TournamentReturnsPicker summaries={tournamentHistory.examples} />
     <details className={styles.about}><summary>About this board</summary>
+      <p>Tournament returns cover ATP main draws with audited paired Pinnacle prices. Challenger and qualifying returns are unavailable until comparable price coverage is verified. This preview uses a dated archive snapshot, separate from today’s captured odds.</p>
       <p>Men’s ATP and Challenger singles, including qualifying when captured. No WTA or doubles. Times are UK time and provisional. Prices are paired Pinnacle quotes and may have moved; they expire after two hours, and schedules after 24 hours. A dash means no fresh paired price. Started matches leave the list automatically.</p>
       <p>Dots show each player’s latest recorded results from the last year, newest first; a filled dot is a win. H2H counts completed meetings on all surfaces. The flag is the country where the tournament is played. The coloured dot is the verified court type, not its speed; unverified editions stay neutral.</p>
       <p>{isDay(board.resultsThrough) ? `Results archive through ${dayLabel(board.resultsThrough, 'numeric')}${board.resultsUpdatedAt ? `, refreshed ${stamp(board.resultsUpdatedAt)}` : ''}. ` : ''}{isDay(board.historyThrough) ? `H2H through ${dayLabel(board.historyThrough, 'numeric')}. ` : ''}Retirements, unfinished matches, exhibitions and juniors are excluded from H2H. Coverage can be incomplete. <a href="#tennis-matchday-faq">Full explanation</a></p>

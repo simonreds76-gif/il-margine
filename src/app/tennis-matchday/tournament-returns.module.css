@@ -1,0 +1,85 @@
+/* Tournament history strip. Sits between a tournament header and its match
+   rows; closed it is one quiet line. Uses the Matchday palette, with fallbacks
+   so it also works outside the Matchday shell. Mint means positive only;
+   negative figures stay neutral with a minus sign. */
+
+.root { border-bottom: 1px solid var(--line, #22313b); color: var(--ink, #eef3f6); font-variant-numeric: tabular-nums; }
+.bar { position: relative; display: flex; align-items: center; flex-wrap: wrap; gap: 2px 8px; min-height: 44px; padding: 8px 16px; list-style: none; font-size: 12.5px; cursor: pointer; }
+.bar::-webkit-details-marker { display: none; }
+.bar:hover { background: var(--lift, #15212a); }
+.bar:focus-visible { outline: 2px solid var(--mint, #8ce5bd); outline-offset: -2px; }
+.mark { width: 15px; height: 15px; flex: none; color: var(--ink3, #8497a4); }
+.barTitle { font-weight: 600; color: var(--ink2, #b7c6d0); }
+.barMeta { color: var(--ink3, #8497a4); }
+.chev { width: 16px; height: 16px; margin-left: auto; flex: none; color: var(--ink3, #8497a4); }
+.root[open] > .bar .chev { transform: rotate(180deg); }
+.root[open] > .bar .barTitle { color: var(--mint, #8ce5bd); }
+
+.body { padding: 14px 16px 16px; background: #0e161d; border-top: 1px solid var(--soft, #18242d); }
+.head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 14px; }
+.head h4 { flex: 1 1 240px; margin: 0; font-size: 14.5px; font-weight: 650; line-height: 1.35; }
+.switch { display: inline-flex; padding: 3px; border: 1px solid var(--line, #22313b); border-radius: 9px; background: var(--panel, #111a22); }
+.switch button { min-height: 36px; padding: 0 12px; border-radius: 6px; font-size: 12.5px; color: var(--ink2, #b7c6d0); cursor: pointer; }
+.switch button[aria-pressed=true] { background: var(--mintbg, #173328); color: #dbf8ea; }
+.switch button:focus-visible, .picker select:focus-visible { outline: 2px solid var(--mint, #8ce5bd); outline-offset: 2px; }
+.scope { margin: 8px 0 12px; font-size: 12px; line-height: 1.55; color: var(--ink3, #8497a4); }
+.scope b { font-weight: 600; color: var(--ink2, #b7c6d0); }
+.tag { display: inline-block; margin-left: 8px; padding: 0 6px; border: 1px solid #6d6035; border-radius: 4px; font-size: 10.5px; line-height: 1.6; color: var(--warn, #e0bb78); white-space: nowrap; }
+
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.tile { min-width: 0; padding: 11px 12px; border: 1px solid var(--line, #22313b); border-radius: 10px; background: var(--panel, #111a22); }
+.tileLabel { display: block; font-size: 12.5px; font-weight: 600; color: var(--ink2, #b7c6d0); }
+.tileLabel small { display: block; margin-top: 1px; font-size: 11px; font-weight: 400; color: var(--ink3, #8497a4); }
+.tile strong { display: block; margin: 6px 0 2px; font-size: 22px; font-weight: 700; letter-spacing: -.02em; color: var(--ink, #eef3f6); }
+.tileSub { display: block; font-size: 11.5px; line-height: 1.45; color: var(--ink3, #8497a4); }
+.pos { color: #99e5ba; }
+.tile strong.pos { color: #99e5ba; }
+.none { color: var(--ink3, #8497a4); font-weight: 400; }
+.counts { margin: 10px 0 0; font-size: 12px; line-height: 1.6; color: var(--ink3, #8497a4); }
+.counts b { font-weight: 600; color: var(--ink2, #b7c6d0); }
+.withheld, .note { margin: 0; font-size: 12.5px; line-height: 1.6; color: var(--warn, #e0bb78); }
+.note { color: var(--ink2, #b7c6d0); }
+
+.table { width: 100%; margin: 16px 0 0; border-collapse: collapse; table-layout: fixed; font-size: 13px; }
+.table caption { caption-side: top; padding: 0 0 6px; text-align: left; font-size: 11.5px; line-height: 1.5; color: var(--ink3, #8497a4); }
+.table th, .table td { padding: 8px 6px; border-top: 1px solid var(--soft, #18242d); text-align: right; vertical-align: top; font-weight: 500; overflow-wrap: anywhere; }
+.table thead th { border-top: 0; padding-top: 0; font-size: 10.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink3, #8497a4); }
+.table th:first-child { width: 34%; padding-left: 0; text-align: left; }
+.table td:last-child, .table th:last-child { padding-right: 0; }
+.table tbody th { font-weight: 600; color: var(--ink, #eef3f6); }
+.table small { display: block; margin-top: 2px; font-size: 11px; font-weight: 400; line-height: 1.4; color: var(--ink3, #8497a4); }
+.table th > small:first-of-type:not(.rowNote) { display: inline; margin-left: 6px; }
+.rowNote { color: var(--warn, #e0bb78); }
+/* Editions outside the pool are present but visibly apart. */
+.table tr[data-pooled=false] td, .table tr[data-pooled=false] tbody th { color: var(--ink3, #8497a4); }
+.table tr[data-pooled=false] th { color: var(--ink2, #b7c6d0); border-top-style: dashed; }
+.table tr[data-pooled=false] td { border-top-style: dashed; }
+.table tr[data-pooled=false] .pos { color: var(--ink2, #b7c6d0); }
+
+.notes { margin: 14px 0 0; padding: 0 0 0 16px; font-size: 12px; line-height: 1.6; color: var(--ink2, #b7c6d0); }
+.foot { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--soft, #18242d); font-size: 11.5px; line-height: 1.6; color: var(--ink3, #8497a4); }
+
+.picker { margin: 22px 0 0; }
+.picker label { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; font-size: 13px; font-weight: 600; color: var(--ink2, #b7c6d0); }
+.picker select { min-height: 40px; max-width: 100%; padding: 0 10px; border: 1px solid var(--line, #22313b); border-radius: 8px; background: var(--panel, #111a22); font-size: 14px; color: var(--ink, #eef3f6); }
+.pickerFrame { margin-top: 10px; border: 1px solid var(--line, #22313b); border-radius: 12px; background: var(--panel, #111a22); overflow: hidden; }
+.pickerFrame .root { border-bottom: 0; }
+
+@media (max-width: 639px) {
+  .bar { padding: 8px 12px; }
+  .body { padding: 12px 12px 14px; }
+  .switch button { min-height: 40px; }
+  .tile { padding: 10px; }
+  .tile strong { font-size: 19px; }
+  .table { font-size: 12.5px; }
+  .table th, .table td { padding: 8px 4px; }
+  .table th:first-child { width: 32%; }
+  .picker select { font-size: 16px; }
+}
+@media (max-width: 359px) {
+  .tiles { grid-template-columns: minmax(0, 1fr); }
+  .table thead th { font-size: 9.5px; letter-spacing: 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .chev { transition: transform .15s; }
+}

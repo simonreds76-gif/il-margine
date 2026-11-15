@@ -8,6 +8,8 @@ import frame from '@/components/ResearchPage.module.css';
 import { getTennisMatchday } from '@/lib/tennis-matchday-data';
 import TennisMatchdayClient from './TennisMatchdayClient';
 import styles from './matchday.module.css';
+import tournamentReturns from '@/data/tennis-tournament-returns.json';
+import { projectTournamentReturns } from '@/lib/tennis-tournament-returns.mjs';
 
 // The existing capture is read through a shared hourly cache.
 export const revalidate = 3600;
@@ -48,7 +50,7 @@ export default async function TennisMatchdayPage() {
         </div>
         <p className={styles.lede}>Today’s matches and the latest results, by tournament. Open a match for recent form and head-to-head.</p>
       </header>
-      <TennisMatchdayClient board={board} renderedAt={new Date().toISOString()} />
+      <TennisMatchdayClient board={board} tournamentHistory={projectTournamentReturns(tournamentReturns, board.fixtures)} renderedAt={new Date().toISOString()} />
       <section className={styles.faq} aria-labelledby="tennis-matchday-faq">
         <h2 id="tennis-matchday-faq">Tennis Matchday explained</h2>
         {faqs.map(([question, answer]) => <details key={question}><summary>{question}</summary><p>{answer}</p></details>)}
