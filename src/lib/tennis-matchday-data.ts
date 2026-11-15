@@ -1,12 +1,24 @@
 import 'server-only';
 import history from '@/data/tennis-matchday-history.json';
 import context from '@/data/tennis-matchday-context.json';
-const matchHistory = { ...history, matchdaySupplement: context.supplement, matchdayRecent: context.recent, resultsUpdatedAt: context.sourceUpdatedAt };
+import { chooseContext } from './tennis-matchday-context.mjs';
 import { buildTennisMatchday } from './tennis-matchday.mjs';
 
 // Two small cached database reads reuse the existing capture, never a bookmaker API.
 // Only schedule fields and the paired public match prices are projected.
 export async function getTennisMatchday() {
+  // Static data published with the existing daily archive release. Preview and
+  // production share this hourly cache, without extra odds or model workloads.
+  let remote: unknown = null;
+  try {
+    const response = await fetch('https://ilmargine.bet/tennis-matchday/context.json', { next: { revalidate: 3600 }, signal: AbortSignal.timeout(8000) });
+    if (response.ok) remote = await response.json();
+  } catch { /* Retain the dated, validated bundled snapshot. */ }
+  const latest = chooseContext(remote, context);
+  const matchHistory = { ...history, matchdaySupplement: latest?.supplement, matchdayRecent: latest?.recent,
+    matchdayPairs: latest?.pairHistory, resultsUpdatedAt: latest?.sourceUpdatedAt,
+    matchdayResults: latest?.results, contextVersion: latest?.version };
+
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const read = async (params: Record<string, string>) => {

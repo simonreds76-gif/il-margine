@@ -15,14 +15,14 @@ export const surfaceNames = { 'outdoor-hard':'Outdoor hard', 'indoor-hard':'Indo
 export const isQualifying = f => f.qualifying || /\b(?:qualifiers?|qualifying|qualifications?)\b/i.test(f.event);
 export function readBrowseState(search) {
   const p = new URLSearchParams(search);
-  return { filter:['today','tomorrow','upcoming'].includes(p.get('day')) ? p.get('day') : 'auto',
+  return { view:p.get('view')==='results'?'results':'upcoming', resultDay:p.get('result-day') || 'latest', filter:['today','tomorrow','upcoming'].includes(p.get('day')) ? p.get('day') : 'auto',
     tour:['ATP','Challenger'].includes(p.get('tour')) ? p.get('tour') : 'all',
     tournament:p.get('tournament') || 'all', search:p.get('q') || '', qualifying:p.get('qualifying') !== 'off',
     order:p.get('order') === 'time' ? 'time' : 'tournament' };
 }
 export function browseQuery(state, search='') {
   const p = new URLSearchParams(search);
-  for (const [key,value,defaultValue] of [['day',state.filter,'auto'],['tour',state.tour,'all'],['tournament',state.tournament,'all'],['q',state.search,''],['qualifying',state.qualifying?'on':'off','on'],['order',state.order,'tournament']]) {
+  for (const [key,value,defaultValue] of [['view',state.view || 'upcoming','upcoming'],['result-day',state.resultDay || 'latest','latest'],['day',state.filter,'auto'],['tour',state.tour,'all'],['tournament',state.tournament,'all'],['q',state.search,''],['qualifying',state.qualifying?'on':'off','on'],['order',state.order,'tournament']]) {
     if(value===defaultValue) p.delete(key); else p.set(key,value);
   }
   return p.toString();

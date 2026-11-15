@@ -15,7 +15,7 @@ test('surface needs the exact tour, label and edition window',()=>{
  assert.equal(tournamentOf({...fixture,tour:'Challenger',event:'Montevideo - Qualifiers'}).surface,'clay');
 });
 test('view state round-trips through URLs; unrelated parameters survive',()=>{
- const s={filter:'tomorrow',tour:'Challenger',tournament:'["Challenger","Metz","metz-2026-11-16"]',search:'Jean & Paul',qualifying:false,order:'time'};
+ const s={view:'upcoming',resultDay:'latest',filter:'tomorrow',tour:'Challenger',tournament:'["Challenger","Metz","metz-2026-11-16"]',search:'Jean & Paul',qualifying:false,order:'time'};
  assert.deepEqual(readBrowseState(browseQuery(s,'campaign=one')),s);
  assert.equal(new URLSearchParams(browseQuery(s,'campaign=one')).get('campaign'),'one');
  assert.equal(readBrowseState('?day=bogus&tour=WTA&qualifying=anything').filter,'auto');
@@ -28,3 +28,5 @@ test('default landing advances when today is empty but an explicit date stays se
  assert.equal(displayDay('today',fixtures,now),'today');
  assert.equal(tournamentOf({...fixture,start:'2026-11-23T00:30:00Z'}).surface,'indoor-hard');
 });
+
+test('Results filters persist without mutating upcoming date',()=>{const s={...readBrowseState(''),view:'results',resultDay:'all',tour:'Challenger'};assert.deepEqual(readBrowseState(browseQuery(s)),s)});

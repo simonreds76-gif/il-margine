@@ -6,6 +6,7 @@ import { fixturesFor, matchdayQuote, type TennisBoard, type TennisFixture, type 
 import { atlasResearchHref } from '@/components/return-atlas/research-links.mjs';
 import styles from './matchday.module.css';
 import { tournamentOf, isQualifying, surfaceNames, readBrowseState, browseQuery, displayDay, type BrowseState } from '@/lib/tennis-matchday-browse.mjs';
+import MatchdayResults from './MatchdayResults';
 import H2HRecord from '@/components/H2HRecord';
 import { resolveTennisPortrait } from '@/lib/tennis-portrait.mjs';
 
@@ -71,7 +72,7 @@ function RecentResults({ player }: { player: FixturePlayer }) {
     {!recent ? <p className={styles.resultEmpty}>Results not linked for this player yet. The other player’s record is independent.</p> : !recent.matches.length ? <p className={styles.resultEmpty}>No results found in the last three years of our archive.</p> : <>
       <ol className={styles.recentList}>{recent.matches.slice(0, more ? 10 : 5).map(m => <li key={m.id}>
         <span className={styles.resultBadge} data-outcome={m.status === 'walkover' ? 'walkover' : m.winner ? 'win' : 'loss'}>{m.status === 'walkover' ? 'W/O' : m.winner ? 'W' : 'L'}</span>
-        <div className={styles.resultBody}><div className={styles.resultOpponent}><strong>{m.opponent}</strong><span>{m.status === 'walkover' ? 'Not played' : m.score}</span></div><p><time dateTime={m.date}>{dayLabel(m.date)}</time><span>{m.event} · {m.round}</span></p><p><span data-surface={m.surface} className={styles.resultSurface}>{surfaceNames[m.surface as keyof typeof surfaceNames] || m.surface}</span><span>{m.competition}{m.status === 'retired' ? ' · Retirement' : ''}</span></p></div>
+        <div className={styles.resultBody}><div className={styles.resultOpponent}><strong>{m.opponent}</strong><span>{m.status === 'walkover' ? 'Not played' : m.score}</span></div><p><time dateTime={m.date}>{dayLabel(m.date)}</time><span>{m.event} · {m.round}</span></p><p><span data-surface={m.surface} className={styles.resultSurface}>{surfaceNames[m.surface as keyof typeof surfaceNames] || m.surface}</span><span>{m.competition}{m.verification ? ' · Retained result under review' : ''}{m.status === 'retired' ? ' · Retirement' : ''}</span></p></div>
       </li>)}</ol>
       {recent.matches.length > 5 && <button className={styles.moreResults} type="button" onClick={() => setMore(!more)}>{more ? 'Show five' : `Show ${Math.min(recent.matches.length, 10)} results`}</button>}
     </>}
@@ -81,7 +82,7 @@ function RecentResults({ player }: { player: FixturePlayer }) {
 function FixtureCard({ fixture: f, now }: { fixture: TennisFixture; now: Date }) {
   const quote = matchdayQuote(f, now);
   const through = f.players.map(p => p.recent?.through).filter(Boolean).sort()[0];
-  const staleResults = through && Date.parse(`${through}T00:00:00Z`) < Date.parse(`${now.toISOString().slice(0,10)}T00:00:00Z`) - 86400000;
+  const staleResults = false; // Source update age is shown once above the board; a quiet results day is not a failed refresh.
   return <article className={styles.card} aria-label={`${f.players[0].name} versus ${f.players[1].name}`}>
     <div className={styles.match}><div><Portrait player={f.players[0]} /><h4>{f.players[0].name}</h4></div><span className={styles.versus}>VS</span><div><Portrait player={f.players[1]} /><h4>{f.players[1].name}</h4></div></div>
     <div className={styles.recentHeading}><h4>Recent results</h4><p className={staleResults ? styles.oldResults : ''}>{through ? `Archive through ${format(`${through}T12:00:00Z`, { day: 'numeric', month: 'short', year: 'numeric' })}${staleResults ? ' · Update overdue' : ''}` : 'Results coverage unavailable'}</p></div>
@@ -166,7 +167,10 @@ export default function TennisMatchdayClient({ board, renderedAt }: { board: Ten
     groups.get(key)!.fixtures.push(fixture);
   }
   const priced = shown.filter(f => matchdayQuote(f, now)).length;
-  return <section className={`${styles.board} ${styles.compactBoard}`} aria-labelledby="upcoming-tennis">
+  return <section className={`${styles.board} ${styles.compactBoard}`} aria-label="Tennis Matchday browser">
+    <div className={`${styles.tabs} ${styles.viewTabs}`} role="group" aria-label="Browse tennis"><button type="button" aria-pressed={state.view==='upcoming'} onClick={()=>update({view:'upcoming',tournament:'all'})}>Upcoming</button><button type="button" aria-pressed={state.view==='results'} onClick={()=>update({view:'results',tournament:'all'})}>Results</button></div>
+    {state.view==='results' ? <MatchdayResults board={board} state={state} update={update} now={now}/> : <>
+
     <div className={styles.boardHeader}><h2 id="upcoming-tennis">Find your next match</h2><span className={styles.matchCount}>{shown.length} {shown.length === 1 ? 'match' : 'matches'}</span></div>
     <div className={styles.browseToolbar}>
       <div className={styles.browseTop}>
@@ -184,7 +188,7 @@ export default function TennisMatchdayClient({ board, renderedAt }: { board: Ten
     </div>
     <div className={styles.listMeta}><p><strong>UK time</strong> · Provisional starts</p><div role="group" aria-label="Group fixtures"><button type="button" aria-pressed={order === 'tournament'} onClick={() => update({ order: 'tournament' })}>By tournament</button><button type="button" aria-pressed={order === 'time'} onClick={() => update({ order: 'time' })}>By time</button></div></div>
     <div className={styles.priceMeta}><Image src="/bookmakers/pinnacle.png" alt="Pinnacle" width={72} height={30} unoptimized /><p>{board.capturedAt ? <>Captured <time dateTime={board.capturedAt}>{stamp(board.capturedAt)}</time> · {priced} of {shown.length} matches with fresh paired prices.</> : 'Schedule unavailable.'} {priced ? 'Prices may have moved.' : board.capturedAt && now.getTime() - Date.parse(board.capturedAt) >= 7200000 ? 'Prices withheld: last capture over two hours old.' : 'No fresh paired prices available in this view.'} <span>— = no fresh paired price.</span></p></div>
-    {board.resultsThrough && <p className={`${styles.resultFreshness} ${Date.parse(`${board.resultsThrough}T00:00:00Z`) < Date.parse(`${now.toISOString().slice(0,10)}T00:00:00Z`) - 86400000 ? styles.oldResults : ''}`}>Results archive through <strong>{format(`${board.resultsThrough}T12:00:00Z`, { day: 'numeric', month: 'short', year: 'numeric' })}</strong>. {board.resultsUpdatedAt ? `Refreshed ${stamp(board.resultsUpdatedAt)}.` : ''} Results by date, not live scores.</p>}
+    {board.resultsThrough && <p className={`${styles.resultFreshness} ${(!board.resultsUpdatedAt || now.getTime()-Date.parse(board.resultsUpdatedAt)>36*3600000) ? styles.oldResults : ''}`}>Results archive through <strong>{format(`${board.resultsThrough}T12:00:00Z`, { day: 'numeric', month: 'short', year: 'numeric' })}</strong>. {board.resultsUpdatedAt ? `Refreshed ${stamp(board.resultsUpdatedAt)}.` : ''} Results by date, not live scores.</p>}
     <p className={styles.listKey}>Form: <strong>five latest recorded results, newest first</strong> · all surfaces · * retirement. H2H counts completed meetings. Open a match for each player’s recent results, previous meetings and deeper research.</p>
     {(tour !== 'all' || tournament !== 'all' || search || !qualifying) && <div className={styles.activeFilters}><span>{selectedEvent?.displayName || (tournament !== 'all' ? 'Selected tournament' : tour === 'all' ? 'All tours' : tour)}{search ? ` · “${search}”` : ''}{!qualifying ? ' · Main draw only' : ''}</span><button type="button" onClick={() => reset()}>Clear filters</button></div>}
     <p className="sr-only" aria-live="polite">{shown.length} upcoming {shown.length === 1 ? 'match' : 'matches'} shown</p>
@@ -194,5 +198,6 @@ export default function TennisMatchdayClient({ board, renderedAt }: { board: Ten
       {group.fixtures.map(f => <FixtureRow fixture={f} now={now} showEvent={order === 'time'} key={f.id} />)}
     </section>) : <div className={styles.empty}><h3>{stale ? 'Waiting for a fresh schedule' : 'No upcoming matches in this view'}</h3><p>{stale ? 'The schedule is unavailable or more than 24 hours old. Player research remains available below.' : `${selectedEvent ? `${selectedEvent.label}: ` : ''}try another date or clear the filters. We show captured fixtures, not a complete tennis calendar.`}</p>{!stale && <button type="button" onClick={() => reset(true)}>Show all captured fixtures</button>}</div>}
     <details className={styles.coverageDetails}><summary>Coverage &amp; update times <span aria-hidden="true">+</span></summary><p>Men’s ATP and Challenger singles, including qualifying when captured. No WTA or doubles. Paired quotes expire after two hours; schedules after 24 hours. Started matches leave the list automatically. Surface colours describe the verified edition’s court type, not its speed. Unverified editions stay neutral.</p><p>H2H through {format(`${board.historyThrough}T12:00:00Z`, { day: 'numeric', month: 'short', year: 'numeric' })}. Available completed competitive singles across ATP, Challenger, ITF, qualifying and team events. Retirements, unfinished matches, exhibitions and juniors are excluded. Coverage can be incomplete. <a href="#tennis-matchday-faq">Full explanation</a></p></details>
+    </>}
   </section>;
 }

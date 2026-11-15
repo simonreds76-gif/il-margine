@@ -1,5 +1,5 @@
 import type { TennisFixture } from './tennis-matchday.mjs';
-export type BrowseState = { filter: string; tour: string; tournament: string; search: string; qualifying: boolean; order: string };
+export type BrowseState = { view: string; resultDay: string; filter: string; tour: string; tournament: string; search: string; qualifying: boolean; order: string };
 export type Tournament = { key:string; label:string; displayName:string; tour:string; round:string; surface:string };
 export function tournamentOf(f:TennisFixture):Tournament;
 export function isQualifying(f:TennisFixture):boolean;

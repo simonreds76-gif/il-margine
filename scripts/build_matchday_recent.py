@@ -45,8 +45,10 @@ def build_recent(source, names, as_of):
             excluded['unclassified_result']+=1
             for pid in wanted.intersection(ids):omitted[pid].append(row['date'])
             continue
-        mid=hashlib.sha256('|'.join(row[k] for k in ('winner_id','loser_id','tour_id','round_id')).encode()).hexdigest()[:20]
-        rd=int(row['round_id'])
+        mid=hashlib.sha256('|'.join(sorted([row['winner_id'],row['loser_id']])+[row['tour_id'],row['round_id']]).encode()).hexdigest()[:20]
+        try: rd=int(row['round_id'])
+        except (ValueError,TypeError):
+            excluded['invalid_round']+=1;continue
         # Use only the established qualifying distinction: native main-draw
         # round codes vary with draw size, so do not invent R32/R64 labels.
         rnd='Qualifying' if rd<4 else {9:'Quarter-final',10:'Semi-final',12:'Final'}.get(rd,'Main draw')

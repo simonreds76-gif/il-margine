@@ -64,19 +64,26 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
       && identityKey(extra.players[1 - extraSide].name) === identityKey(players[1].name)
       && typeof extra.checkedThrough === 'string' && extra.checkedThrough <= now.toISOString().slice(0, 10);
     const extraCutoff = extraValid ? [now.toISOString().slice(0,10), new Date(start).toISOString().slice(0,10), extra.checkedThrough].sort()[0] : cutoff;
-    const meetings = resultOnly ? (extraValid ? extra.matches.filter(m => m.date < extraCutoff)
+    let meetings = resultOnly ? (extraValid ? extra.matches.filter(m => m.date < extraCutoff)
       .map(m => ({ ...m, winner: extraSide === 0 ? m.winner : 1 - m.winner, odds: [null, null] })) : null) : [...history.matches,...(history.results ?? [])]
       .filter(m => m[0] < cutoff && ((m[1] === a && m[2] === b) || (m[1] === b && m[2] === a)))
       .map(m => ({ date: m[0], winner: (m[3] === 0 ? m[1] : m[2]) === a ? 0 : 1,
         odds: m[1] === a ? [m[4], m[5]] : [m[5], m[4]], surface: m[6], score: m[7], event: m[8], competition: m[9] ?? null, priceBasis: m[10] ?? null }))
       .sort((x, y) => x.date.localeCompare(y.date) || String(x.event).localeCompare(String(y.event)));
     if (resultOnly && meetings) meetings.sort((x, y) => x.date.localeCompare(y.date) || String(x.event).localeCompare(String(y.event)));
+    const currentPair = history.matchdayPairs?.[players.map(p=>identityKey(p.name)).sort().join('|')];
+    const currentSide = currentPair?.names.indexOf(identityKey(players[0].name));
+    const currentValid = currentPair && currentSide >= 0 && currentPair.names[1-currentSide] === identityKey(players[1].name)
+      && currentPair.checkedThrough <= now.toISOString().slice(0,10);
+    if (currentValid) meetings = currentPair.matches.filter(m=>m.date < [now.toISOString().slice(0,10),new Date(start).toISOString().slice(0,10),currentPair.checkedThrough].sort()[0])
+      .map(m=>({...m,winner:currentSide===0?m.winner:1-m.winner,odds:currentSide===0?m.odds:[...m.odds].reverse()}))
+      .sort((a,b)=>a.date.localeCompare(b.date)||String(a.event).localeCompare(String(b.event)));
     const wins = meetings ? [meetings.filter(m => m.winner === 0).length, meetings.filter(m => m.winner === 1).length] : null;
     const priced = meetings?.filter(m => m.odds.every(p => Number.isFinite(p) && p > 1)) ?? [];
     const profit = [0, 1].map(side => priced.reduce((sum, m) => sum + (m.winner === side ? m.odds[side] - 1 : -1), 0));
     const fixture = { id: `${row.league}:${pairKey}`, start: new Date(start).toISOString(), tour: row.league,
       event: row.league_name.replace(/^ATP\s+Challenger\s+|^ATP\s+/i, ''), qualifying: /qualifying|qualification|\bqual\b/i.test(row.league_name),
-      resultsOnly: Boolean(resultOnly && extraValid), coverageThrough: extraValid ? extra.checkedThrough : history.asOf,
+      resultsOnly: Boolean(resultOnly && extraValid), coverageThrough: currentValid ? currentPair.checkedThrough : extraValid ? extra.checkedThrough : history.asOf,
       h2hStatus: meetings ? (meetings.length ? 'meetings' : 'none') : players.every(p => p.recent) ? 'unchecked' : 'unlinked',
       players, wins, meetings: meetings?.length ?? null, priced: priced.length,
       roi: profit.map(p => priced.length ? Math.round(1000 * p / priced.length) / 10 : null),
@@ -86,7 +93,7 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
       href: a !== undefined && b !== undefined ? matchdayHref(players[0].id, players[1].id) : null, ambiguous: false };
     pairs.set(pairKey, fixture); fixtures.push(fixture);
   }
-  return { capturedAt, resultsThrough: history.matchdayRecent?.through ?? null, resultsUpdatedAt: history.resultsUpdatedAt ?? null, historyThrough: history.through, historyVersion: history.version, stale, excluded,
+  return { capturedAt, results: history.matchdayResults ?? null, contextVersion: history.contextVersion ?? null, resultsThrough: history.matchdayRecent?.through ?? null, resultsUpdatedAt: history.resultsUpdatedAt ?? null, historyThrough: history.through, historyVersion: history.version, stale, excluded,
     fixtures: stale ? [] : fixtures.filter(f => !f.ambiguous).sort((a, b) => a.start.localeCompare(b.start) || a.event.localeCompare(b.event)) };
 }
 
