@@ -1,7 +1,11 @@
 import { resolveTennisPortrait } from './tennis-portrait.mjs';
 // Explicit feed variants of these archive identities; never fuzzy-match opponents.
 const aliases = { 'jaume munar': 'vbt-10698', 'pedro martinez': 'vbt-12525', 'taylor fritz': 'vbt-9023', 'yunchaokete bu': 'vbt-25003', 'igor marcondes': 'vbt-5490', 'felipe meligeni rodrigues alves': 'vbt-16420' };
-const normal = text => String(text ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/^tai leonard sach$/, 'tai sach').replace(/^abdullah shelbayh$/, 'abedallah shelbayh').replace(/^jason kubler$/, 'jason murray kubler');
+const normal = text => String(text ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const identityAliases = { 'tai leonard sach': 'tai sach', 'abdullah shelbayh': 'abedallah shelbayh', 'jason kubler': 'jason murray kubler' };
+const identityKey = text => identityAliases[normal(text)] ?? normal(text);
+const searchNames = name => [normal(name), ...Object.entries(identityAliases).filter(([, canonical]) => canonical === identityKey(name)).map(([alias]) => alias)].join(' ');
+
 const knownPlayer = name => name && !/\b(tba|tbd|winner|qualifier|bye)\b|[/&]/i.test(name);
 const day = (time, zone) => new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(time);
 
@@ -21,9 +25,9 @@ export function matchdayHref(a, b) {
 
 export function buildTennisMatchday(rows, history, now = new Date()) {
   const names = new Map(), ids = new Map(history.players.map((p, i) => [p.id, i]));
-  history.players.forEach((p, i) => names.set(normal(p.name), [...(names.get(normal(p.name)) ?? []), i]));
+  history.players.forEach((p, i) => names.set(identityKey(p.name), [...(names.get(identityKey(p.name)) ?? []), i]));
   const resolve = name => {
-    const key = normal(name), direct = names.get(key);
+    const key = identityKey(name), direct = names.get(key);
     if (direct?.length === 1) return direct[0];
     return Object.hasOwn(aliases, key) ? ids.get(aliases[key]) : undefined;
   };
@@ -36,10 +40,10 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
     const start = Date.parse(row.kickoff_iso);
     if (!['ATP', 'Challenger'].includes(row.league) || !knownPlayer(row.player1_name) || !knownPlayer(row.player2_name)
       || /doubles|women|\bwta\b/i.test(row.league_name) || !Number.isFinite(start)
-      || normal(row.player1_name) === normal(row.player2_name) || (capturedAt && start <= Date.parse(capturedAt))) { excluded.invalid++; continue; }
+      || identityKey(row.player1_name) === identityKey(row.player2_name) || (capturedAt && start <= Date.parse(capturedAt))) { excluded.invalid++; continue; }
     if (start <= now.getTime()) { excluded.started++; continue; }
     if (start > now.getTime() + 72 * 3600000) continue;
-    const pairKey = [normal(row.player1_name), normal(row.player2_name)].sort().join('|');
+    const pairKey = [identityKey(row.player1_name), identityKey(row.player2_name)].sort().join('|');
     if (pairs.has(pairKey)) { pairs.get(pairKey).ambiguous = true; excluded.duplicate++; continue; }
     const a = resolve(row.player1_name), b = resolve(row.player2_name);
     const players = [a, b].map((i, side) => i === undefined ? { id: null, name: side ? row.player2_name : row.player1_name, portrait: null }
@@ -48,16 +52,16 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
       const feedName = side ? row.player2_name : row.player1_name;
       player.portrait = resolveTennisPortrait(player.name)?.src ?? resolveTennisPortrait(feedName)?.src ?? player.portrait;
       const recent = history.matchdayRecent;
-      const key = normal(player.name), profile = recent?.players?.[recent?.aliases?.[key] ?? key];
+      const key = identityKey(player.name), profile = recent?.players?.[recent?.aliases?.[key] ?? key];
       const limit = [now.toISOString().slice(0,10), new Date(start).toISOString().slice(0,10), recent?.asOf ?? '0000-00-00'].sort()[0];
       player.recent = profile ? { through: recent.through, matches: profile.matches.filter(m => m.date < limit), name: profile.name, omitted: profile.omitted ?? 0 } : null;
     }
     const cutoff = [now.toISOString().slice(0, 10), new Date(start).toISOString().slice(0, 10), history.asOf].sort()[0];
     const resultOnly = a === undefined || b === undefined;
-    const extra = resultOnly ? history.matchdaySupplement?.pairs?.[players.map(p => normal(p.name)).sort().join('|')] : null;
-    const extraSide = extra?.players?.findIndex(p => normal(p.name) === normal(players[0].name));
+    const extra = resultOnly ? history.matchdaySupplement?.pairs?.[players.map(p => identityKey(p.name)).sort().join('|')] : null;
+    const extraSide = extra?.players?.findIndex(p => identityKey(p.name) === identityKey(players[0].name));
     const extraValid = extra && !extra.quarantined && extra.players.length === 2 && extraSide >= 0
-      && normal(extra.players[1 - extraSide].name) === normal(players[1].name)
+      && identityKey(extra.players[1 - extraSide].name) === identityKey(players[1].name)
       && typeof extra.checkedThrough === 'string' && extra.checkedThrough <= now.toISOString().slice(0, 10);
     const extraCutoff = extraValid ? [now.toISOString().slice(0,10), new Date(start).toISOString().slice(0,10), extra.checkedThrough].sort()[0] : cutoff;
     const meetings = resultOnly ? (extraValid ? extra.matches.filter(m => m.date < extraCutoff)
@@ -92,5 +96,5 @@ export function fixturesFor(fixtures, filter, tour, search, now, zone = 'Europe/
   const tomorrow = new Date(Date.parse(`${today}T12:00:00Z`) + 24 * 3600000).toISOString().slice(0, 10);
   return fixtures.filter(f => Date.parse(f.start) > now.getTime() && (tour === 'all' || f.tour === tour)
     && (filter === 'upcoming' || day(new Date(f.start), zone) === (filter === 'today' ? today : tomorrow))
-    && `${normal(f.event)} ${f.players.map(p => normal(p.name)).join(' ')}`.includes(normal(search)));
+    && `${normal(f.event)} ${f.players.map(p => searchNames(p.name)).join(' ')}`.includes(normal(search)));
 }
