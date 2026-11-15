@@ -22,19 +22,18 @@ const tours = [{ value: 'all', label: 'All singles', logo: null }, { value: 'ATP
 
 function MeetingHistory({ fixture: f }: { fixture: TennisFixture }) {
   return <details className={styles.meetings}>
-    <summary><span>All {f.history.length} {f.history.length === 1 ? 'meeting' : 'meetings'} & odds</span><Icon name="arrow" /></summary>
-    <p className={styles.historyKey}>Recorded odds for each match. Profit or loss assumes a fixed 1u stake on each player separately. Scores show the winner first.</p>
+    <summary><span>Previous {f.history.length === 1 ? 'meeting' : `${f.history.length} meetings`}</span><Icon name="arrow" /></summary>
+    <p className={styles.historyKey}>Scores show the winner first. Recorded match odds are shown where available; these are historical prices.</p>
     <ol className={styles.historyList}>{f.history.map(m => {
-      const priced = m.odds.every(p => p !== null && Number.isFinite(p) && p > 1);
       return <li className={styles.historyMatch} key={`${m.date}:${m.event}`}>
         <div className={styles.historyHeading}><time dateTime={m.date}>{format(`${m.date}T12:00:00Z`, { day: 'numeric', month: 'short', year: 'numeric' })}</time><span>{m.surface.replace('-', ' ')}</span></div>
         <p className={styles.historyEvent}>{m.event}{m.competition ? ` · ${m.competition}` : ''}</p>
         <p className={styles.historyResult}><strong>{surname(f.players[m.winner].name)} won</strong><span>{m.score || 'Score unavailable'}</span></p>
-        <dl className={styles.historyPrices}>{f.players.map((p, i) => <div key={p.name}><dt>{surname(p.name)} odds</dt><dd><strong>{price(m.odds[i])}</strong><span>{priced ? units(m.winner === i ? (m.odds[i] as number) - 1 : -1) : 'Excluded from ROI'}</span></dd></div>)}</dl>
+        {m.odds.some(p => p !== null) && <dl className={styles.historyPrices}>{f.players.map((p, i) => <div key={p.name}><dt>{surname(p.name)} odds</dt><dd><strong>{price(m.odds[i])}</strong></dd></div>)}</dl>}
         {m.priceBasis && <p className={styles.historyKey}>{m.priceBasis}</p>}
       </li>;
     })}</ol>
-    <div className={styles.historyTotal}><p>{f.priced} priced {f.priced === 1 ? 'meeting' : 'meetings'} · {f.priced}u staked on each player</p><dl>{f.players.map((p, i) => <div key={p.name}><dt>{surname(p.name)}</dt><dd>{f.priced ? units(f.profit[i]) : 'Not available'}<small>{percent(f.roi[i])} ROI</small></dd></div>)}</dl></div>
+
   </details>;
 }
 
@@ -56,37 +55,49 @@ function Portrait({ player }: { player: FixturePlayer }) {
   </span>;
 }
 
+function FormStrip({ player, compact = false }: { player: FixturePlayer; compact?: boolean }) {
+  const form = player.recent?.matches.filter(m => m.status !== 'walkover' && Date.parse(`${player.recent?.through}T00:00:00Z`) - Date.parse(`${m.date}T00:00:00Z`) <= 366 * 86400000).slice(0, 5) ?? [];
+  if (!form.length) return null;
+  return <span className={styles.formStrip} aria-hidden={compact || undefined} aria-label={`${player.name}: recent results, newest first`}>{form.map(m => <span key={m.id} data-outcome={m.winner ? 'win' : 'loss'} title={`${m.date}: ${m.winner ? 'beat' : 'lost to'} ${m.opponent}, ${m.score}`}><span aria-hidden="true">{m.winner ? 'W' : 'L'}{m.status === 'retired' ? '*' : ''}</span><span className="sr-only">{m.winner ? 'Win' : 'Loss'} against {m.opponent}, {m.date}{m.status === 'retired' ? ', retirement' : ''}. </span></span>)}</span>;
+}
+
+function RecentResults({ player }: { player: FixturePlayer }) {
+  const [more, setMore] = useState(false);
+  const recent = player.recent;
+  const dayLabel = (day: string) => format(`${day}T12:00:00Z`, { day: 'numeric', month: 'short', year: '2-digit' });
+  return <section className={styles.recentPlayer} aria-label={`${player.name} recent results`}>
+    <header><h5>{player.name}</h5><FormStrip player={player} /></header>{recent?.matches[0] && Date.parse(`${recent.through}T00:00:00Z`) - Date.parse(`${recent.matches[0].date}T00:00:00Z`) > 365 * 86400000 && <p className={styles.resultEmpty}>Last recorded appearance: {dayLabel(recent.matches[0].date)}. This is older history.</p>}
+    {!!recent?.omitted && <p className={styles.resultEmpty}>{recent.omitted} {recent.omitted === 1 ? 'result with an unrecognised score omitted' : 'results with unrecognised scores omitted'} from this date window.</p>}
+    {!recent ? <p className={styles.resultEmpty}>Results not linked for this player yet. The other player’s record is independent.</p> : !recent.matches.length ? <p className={styles.resultEmpty}>No results found in the last three years of our archive.</p> : <>
+      <ol className={styles.recentList}>{recent.matches.slice(0, more ? 10 : 5).map(m => <li key={m.id}>
+        <span className={styles.resultBadge} data-outcome={m.status === 'walkover' ? 'walkover' : m.winner ? 'win' : 'loss'}>{m.status === 'walkover' ? 'W/O' : m.winner ? 'W' : 'L'}</span>
+        <div className={styles.resultBody}><div className={styles.resultOpponent}><strong>{m.opponent}</strong><span>{m.status === 'walkover' ? 'Not played' : m.score}</span></div><p><time dateTime={m.date}>{dayLabel(m.date)}</time><span>{m.event} · {m.round}</span></p><p><span data-surface={m.surface} className={styles.resultSurface}>{surfaceNames[m.surface as keyof typeof surfaceNames] || m.surface}</span><span>{m.competition}{m.status === 'retired' ? ' · Retirement' : ''}</span></p></div>
+      </li>)}</ol>
+      {recent.matches.length > 5 && <button className={styles.moreResults} type="button" onClick={() => setMore(!more)}>{more ? 'Show five' : `Show ${Math.min(recent.matches.length, 10)} results`}</button>}
+    </>}
+  </section>;
+}
+
 function FixtureCard({ fixture: f, now }: { fixture: TennisFixture; now: Date }) {
-  const limited = f.meetings !== null && f.meetings > 0 && f.meetings < 10;
   const quote = matchdayQuote(f, now);
-  const bothPositive = f.roi.every(p => p !== null && p > 0);
-  const oneWin = bothPositive && f.priced === f.meetings ? f.players.findIndex((_, i) => f.wins?.[i] === 1) : -1;
-  const winningPrice = oneWin >= 0 ? f.history.find(m => m.winner === oneWin)?.odds[oneWin] : null;
+  const through = f.players.map(p => p.recent?.through).filter(Boolean).sort()[0];
+  const staleResults = through && Date.parse(`${through}T00:00:00Z`) < Date.parse(`${now.toISOString().slice(0,10)}T00:00:00Z`) - 86400000;
   return <article className={styles.card} aria-label={`${f.players[0].name} versus ${f.players[1].name}`}>
-    <div className={styles.cardTop}><span className={styles.event}><span className={styles.tour}>{f.tour}</span>{f.event}{f.qualifying && <span>Qualifying</span>}</span><time dateTime={f.start}><Icon name="clock" />{format(f.start, { hour: '2-digit', minute: '2-digit' })}</time></div>
     <div className={styles.match}><div><Portrait player={f.players[0]} /><h4>{f.players[0].name}</h4></div><span className={styles.versus}>VS</span><div><Portrait player={f.players[1]} /><h4>{f.players[1].name}</h4></div></div>
-    <div className={styles.quote}>
-      <div className={styles.quoteHeading}><span>UPCOMING MATCH ODDS</span><span className={styles.quoteBookmaker}><Image src="/bookmakers/pinnacle.png" alt="Pinnacle" width={104} height={43} unoptimized /></span></div>
-      {quote ? <><dl>{f.players.map((p, i) => <div key={p.name}><dt>{surname(p.name)}</dt><dd>{price(quote.odds[i])}</dd></div>)}</dl><p>Recorded <time dateTime={quote.capturedAt}>{stamp(quote.capturedAt)}</time>. Prices may have moved.</p></>
-        : <p>{f.quote ? 'Price too old to display. Waiting for a fresh capture.' : 'No paired price captured for this match yet.'}</p>}
-    </div>
-    <div className={styles.record}>
-      <div className={styles.recordLabel}><span>PLAYER H2H</span><small>{f.meetings === null ? 'Player coverage missing' : f.meetings === 0 ? 'No recorded meetings' : 'All surfaces'}</small></div>
-      {f.resultsOnly && <p className={styles.h2hScope}>Results only · no priced player profile. Archive checked {format(`${f.coverageThrough}T12:00:00Z`, { day: 'numeric', month: 'short' })}.</p>}
-      {f.meetings !== null && f.meetings > 0 && <p className={styles.h2hScope}>Completed meetings across recorded tournaments</p>}
-      {f.wins && f.meetings ? <><H2HRecord compact results={f.wins} meetings={f.meetings} names={f.players.map(p => p.name)} />
-        <div className={styles.returns}><span><Icon name="record" />Past H2H ROI<small>Odds for {f.priced} of {f.meetings} {f.meetings === 1 ? 'meeting' : 'meetings'}</small></span>{f.roi.map((value, i) => <strong key={i} className={value !== null && value > 0 ? styles.positive : styles.neutral}>{percent(value)}<small>{surname(f.players[i].name)}</small></strong>)}</div>
-        {f.priced < f.meetings && <p className={styles.explanation}><strong>Odds missing for {f.meetings - f.priced} {f.meetings - f.priced === 1 ? 'meeting' : 'meetings'}.</strong> {f.priced ? `ROI uses only the ${f.priced} with recorded odds.` : 'ROI is unavailable.'} The H2H score includes every recorded meeting.</p>}
-        <p className={styles.roiKey}>1u on each player separately at recorded odds. Past returns, not a forecast.</p>
-        {bothPositive && <p className={styles.explanation}>{oneWin >= 0 && winningPrice ? `${surname(f.players[oneWin].name)}’s win at ${price(winningPrice)} covered ${f.priced - 1} losing ${f.priced - 1 === 1 ? 'bet' : 'bets'}.` : 'A win at long odds can cover several losses.'} Both historical returns can be positive.</p>}
-        {limited && <p className={styles.sample}>Only {f.meetings} {f.meetings === 1 ? 'meeting' : 'meetings'}. One result can change the ROI sharply.</p>}</> : <p className={styles.noHistory}>{f.meetings === null ? 'We do not yet have a profile for both players in this pairing. Explore other players in Matchup Lab.' : f.resultsOnly ? 'No completed meetings found for these players in our available competitive archive.' : 'No completed meetings found in our available competitive archive. You can still compare the players’ wider profiles.'}</p>}
-    </div>
-    {f.history.length > 0 && <MeetingHistory fixture={f} />}
-    <div className={styles.actions}>{f.href ? <Link href={f.href} prefetch={false}><Image src="/tennis-matchup/court-v1.webp" alt="" width={27} height={27} unoptimized /><span>Explore this H2H</span><Icon name="arrow" /></Link> : <Link href="/tennis-matchup" prefetch={false}><span>Search Matchup Lab</span><Icon name="arrow" /></Link>}
-      {f.players.every(p => p.id) && <Link href={atlasResearchHref(f.players[0].id, f.players[1].id)} prefetch={false} title="Open both players’ records against all opponents"><Icon name="record" /><span>Player returns</span></Link>}
-    </div>
+    <div className={styles.recentHeading}><h4>Recent results</h4><p className={staleResults ? styles.oldResults : ''}>{through ? `Archive through ${format(`${through}T12:00:00Z`, { day: 'numeric', month: 'short', year: 'numeric' })}${staleResults ? ' · Update overdue' : ''}` : 'Results coverage unavailable'}</p></div>
+    <p className={styles.recentKey}>By date, newest first · all surfaces · qualifying included. Scores shown winner first. W/O is not played; * marks a retirement.</p>
+    <div className={styles.recentGrid}>{f.players.map(p => <RecentResults key={p.name} player={p} />)}</div>
+    <section className={styles.h2hBlock} aria-label="Head-to-head">
+      <div className={styles.recordLabel}><h4>Head-to-head</h4><small>All recorded surfaces</small></div>
+      {f.wins && f.meetings ? <><H2HRecord compact results={f.wins} meetings={f.meetings} names={f.players.map(p => p.name)} /><p className={styles.h2hScope}>{f.meetings} completed {f.meetings === 1 ? 'meeting' : 'meetings'}. Retirements and walkovers excluded.</p></> : <p className={styles.h2hScope}>{f.meetings === 0 ? `No completed meetings found in our archive. Checked ${format(`${f.coverageThrough}T12:00:00Z`, { day: 'numeric', month: 'short' })}.` : f.h2hStatus === 'unchecked' ? 'H2H not checked yet. Both players’ recent results are available above.' : 'H2H awaits a verified player link. Available recent results are shown above.'}</p>}
+      {f.history.length > 0 && <MeetingHistory fixture={f} />}
+    </section>
+    <div className={styles.actions}>{f.href && <Link href={f.href} prefetch={false}><Image src="/tennis-matchup/court-v1.webp" alt="" width={27} height={27} unoptimized /><span>Explore this H2H</span><Icon name="arrow" /></Link>}{f.players.every(p => p.id) && <Link href={atlasResearchHref(f.players[0].id, f.players[1].id)} prefetch={false}><Icon name="record" /><span>Player returns</span></Link>}</div>
+    {f.priced >= 5 && <details className={styles.pastReturns}><summary>Hypothetical past returns · {f.priced} priced meetings</summary><p>What a 1u bet on each player would have returned in these meetings. Two separate strategies, not a forecast.</p><dl>{f.players.map((p,i) => <div key={p.name}><dt>{p.name}</dt><dd><strong>{units(f.profit[i])}</strong><span>{percent(f.roi[i])} ROI · {f.priced}u staked</span></dd></div>)}</dl><p>Recorded odds for {f.priced} of {f.meetings} meetings. Missing prices are excluded.</p></details>}
+    <p className={styles.cardQuote}>{quote ? `Pinnacle prices captured ${stamp(quote.capturedAt)}. They may have moved.` : 'No fresh paired prices available for this fixture.'}</p>
   </article>;
 }
+
 
 function CourtMark({ surface }: { surface: string }) {
   return <svg className={styles.courtMark} data-surface={surface} viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden="true"><rect x="5" y="8" width="18" height="16" rx="1" strokeDasharray={surface === 'unknown' ? '2 2' : undefined} /><path d="M8 8v16m12-16v16M5 16h18m-9-8v16" />{surface === 'indoor-hard' && <path d="m3 6 11-4 11 4" />}</svg>;
@@ -105,11 +116,11 @@ function FixtureRow({ fixture: f, now, showEvent }: { fixture: TennisFixture; no
   return <div className={styles.fixtureRow} data-fixture={f.id}>
     <button className={styles.rowToggle} type="button" aria-expanded={open} aria-controls={detailId} onClick={() => setOpen(!open)}>
       <span className={styles.rowTime}><time dateTime={f.start}>{format(f.start, { hour: '2-digit', minute: '2-digit' })}</time>{!showEvent && <small>{event.round || (isQualifying(f) ? 'Qualifying' : '')}</small>}</span>
-      {f.players.map((p, i) => <span key={i} className={styles.rowPlayer}><span className={styles.rowName}>{p.name}</span><DecimalPrice value={quote?.odds[i]} /></span>)}
+      {f.players.map((p, i) => <span key={i} className={styles.rowPlayer}><span className={styles.rowPlayerText}><span className={styles.rowName}>{p.name}</span><FormStrip player={p} compact /></span><DecimalPrice value={quote?.odds[i]} /></span>)}
       {showEvent && <span className={styles.rowEvent} data-surface={event.surface}><CourtMark surface={event.surface} />{event.displayName}{event.round ? ` · ${event.round}` : ''}<span className="sr-only"> · {surfaceNames[event.surface]}</span></span>}
-      <span className={`${styles.rowH2h} ${!f.meetings ? styles.noCompactH2h : ''}`}>{f.meetings !== null && f.meetings > 0 ? <><strong>{f.wins?.[0]}–{f.wins?.[1]}</strong><small>{f.meetings} {f.meetings === 1 ? 'meeting' : 'meetings'}</small></> : <small>{f.meetings === 0 ? 'No meetings found' : 'History unavailable'}</small>}</span>
+      <span className={`${styles.rowH2h} ${!f.meetings ? styles.noCompactH2h : ''}`}>{f.meetings !== null && f.meetings > 0 ? <><strong>{f.wins?.[0]}–{f.wins?.[1]}</strong><small>{f.meetings} {f.meetings === 1 ? 'meeting' : 'meetings'}</small></> : <span aria-hidden="true">—</span>}</span>
       <span className={styles.rowArrow} aria-hidden="true">{open ? '−' : '+'}</span>
-      <span className="sr-only">{open ? 'Close' : 'Open'} H2H and match details. {quote ? `Pinnacle prices captured ${stamp(quote.capturedAt)}` : 'Paired prices unavailable or expired.'}</span>
+      <span className="sr-only">{open ? 'Close' : 'Open'} recent results and H2H. {quote ? `Pinnacle prices captured ${stamp(quote.capturedAt)}` : 'Paired prices unavailable or expired.'}</span>
     </button>
     <div id={detailId} hidden={!open} className={styles.expandedMatch}>{open && <FixtureCard fixture={f} now={now} />}</div>
   </div>;
@@ -173,7 +184,8 @@ export default function TennisMatchdayClient({ board, renderedAt }: { board: Ten
     </div>
     <div className={styles.listMeta}><p><strong>UK time</strong> · Provisional starts</p><div role="group" aria-label="Group fixtures"><button type="button" aria-pressed={order === 'tournament'} onClick={() => update({ order: 'tournament' })}>By tournament</button><button type="button" aria-pressed={order === 'time'} onClick={() => update({ order: 'time' })}>By time</button></div></div>
     <div className={styles.priceMeta}><Image src="/bookmakers/pinnacle.png" alt="Pinnacle" width={72} height={30} unoptimized /><p>{board.capturedAt ? <>Captured <time dateTime={board.capturedAt}>{stamp(board.capturedAt)}</time> · {priced} of {shown.length} matches with fresh paired prices.</> : 'Schedule unavailable.'} {priced ? 'Prices may have moved.' : board.capturedAt && now.getTime() - Date.parse(board.capturedAt) >= 7200000 ? 'Prices withheld: last capture over two hours old.' : 'No fresh paired prices available in this view.'} <span>— = no fresh paired price.</span></p></div>
-    <p className={styles.listKey}>H2H includes recorded meetings on <strong>all surfaces</strong>. Open a match for results, returns and player profiles.</p>
+    {board.resultsThrough && <p className={`${styles.resultFreshness} ${Date.parse(`${board.resultsThrough}T00:00:00Z`) < Date.parse(`${now.toISOString().slice(0,10)}T00:00:00Z`) - 86400000 ? styles.oldResults : ''}`}>Results archive through <strong>{format(`${board.resultsThrough}T12:00:00Z`, { day: 'numeric', month: 'short', year: 'numeric' })}</strong>. {board.resultsUpdatedAt ? `Refreshed ${stamp(board.resultsUpdatedAt)}.` : ''} Results by date, not live scores.</p>}
+    <p className={styles.listKey}>Form: <strong>five latest recorded results, newest first</strong> · all surfaces · * retirement. H2H counts completed meetings. Open a match for each player’s recent results, previous meetings and deeper research.</p>
     {(tour !== 'all' || tournament !== 'all' || search || !qualifying) && <div className={styles.activeFilters}><span>{selectedEvent?.displayName || (tournament !== 'all' ? 'Selected tournament' : tour === 'all' ? 'All tours' : tour)}{search ? ` · “${search}”` : ''}{!qualifying ? ' · Main draw only' : ''}</span><button type="button" onClick={() => reset()}>Clear filters</button></div>}
     <p className="sr-only" aria-live="polite">{shown.length} upcoming {shown.length === 1 ? 'match' : 'matches'} shown</p>
     {shown.length ? [...groups].map(([key, group]) => <section className={styles.fixtureGroup} key={key} aria-label={`${group.event?.label || 'Matches'} ${group.label}`}>

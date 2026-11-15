@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {buildTennisMatchday,fixturesFor} from '../../src/lib/tennis-matchday.mjs';
+const now=new Date('2026-11-15T12:00:00Z');
+const row={captured_at:'2026-11-15T11:00:00Z',league:'Challenger',league_name:'Test - Qualifiers',player1_name:'Player One',player2_name:'Player Two',kickoff_iso:'2026-11-16T12:00:00Z'};
+const match={id:'r',date:'2026-11-14',opponent:'Third Player',winner:true,status:'completed',score:'6-3 6-4'};
+const h={players:[],matches:[],asOf:'2026-11-13',through:'2026-11-12',version:'old',matchdayRecent:{asOf:'2026-11-15',through:'2026-11-14',players:{'player one':{name:'Player One',matches:[match,{...match,id:'today',date:'2026-11-15'}]}}}};
+test('one unresolved player never hides the linked side; no H2H zero is invented',()=>{const f=buildTennisMatchday([row],h,now).fixtures[0];assert.equal(f.players[0].recent.matches.length,1);assert.equal(f.players[1].recent,null);assert.equal(f.meetings,null)});
+test('newer results-only supplement is independent of priced archive cutoff',()=>{const history={...h,matchdaySupplement:{pairs:{'player one|player two':{players:[{name:'Player One'},{name:'Player Two'}],checkedThrough:'2026-11-15',matches:[{...match,winner:0,odds:[null,null]}]}}}};const f=buildTennisMatchday([row],history,now).fixtures[0];assert.equal(f.meetings,1);assert.equal(f.priced,0);assert.equal(f.roi[0],null)});
+test('reviewed full-name variants remain searchable in either form',()=>{const board=buildTennisMatchday([{...row,player1_name:'Jason Kubler'}],{...h,players:[{id:'p',name:'Jason Murray Kubler'}]},now);assert.equal(fixturesFor(board.fixtures,'upcoming','all','Jason Kubler',now).length,1);assert.equal(fixturesFor(board.fixtures,'upcoming','all','Jason Murray Kubler',now).length,1)});

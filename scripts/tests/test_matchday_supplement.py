@@ -58,5 +58,19 @@ class SupplementTests(unittest.TestCase):
   self.assertEqual(pair['checkedThrough'],'2026-11-09')
   self.assertEqual(next_audit['requests'],audit['requests'])
 
-if __name__=='__main__':unittest.main()
 
+ def test_exact_native_draw_can_confirm_returning_player(self):
+  self.games[0]['date']='2024-01-01';self.schedule[0]['league_name']='Test - Qualifiers'
+  with (self.root/'today_atp.csv').open('w',newline='',encoding='utf-8') as f:
+   w=csv.DictWriter(f,fieldnames=['tour_id','date','player1_id','player2_id']);w.writeheader();w.writerow(dict(tour_id='10',date='2026-11-09',player1_id='1',player2_id='2'))
+  r,a=self.run_build();self.assertEqual(a['pairs'],1);self.assertTrue(a['identities']['1']['nativeDrawConfirmed'])
+  self.schedule[0]['match_date']='2026-11-10';r,a=self.run_build();self.assertEqual(a['pairs'],0)
+
+ def test_recent_results_are_independent_and_hold_out_same_day(self):
+  from build_matchday_recent import build_recent
+  self.games += [{**self.games[0],'round_id':'5','date':'2026-11-08'}, {**self.games[0],'round_id':'6','date':'2026-11-03','result':'6-3 1-0 ret.'}, {**self.games[0],'round_id':'7','date':'2026-11-02','result':'unknown'}]
+  self.run_build()
+  recent,a=build_recent(self.root,['Player One','Unknown Person'],'2026-11-08')
+  rows=recent['players']['player one']['matches'];self.assertEqual(len(rows),2);self.assertEqual(rows[0]['status'],'retired');self.assertEqual(recent['through'],'2026-11-03');self.assertEqual(a['unlinked'],['Unknown Person']);self.assertEqual(recent['players']['player one']['omitted'],1);self.assertFalse(rows[0]['id'].startswith('oc-'))
+
+if __name__=='__main__':unittest.main()

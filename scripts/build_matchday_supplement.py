@@ -17,7 +17,9 @@ import unicodedata
 # MW75 bio and RD48 profile identify these same Brazilian players.
 ALIASES = {'igor marcondes': ('29610', 'Igor Ribeiro Marcondes'),
            'felipe meligeni rodrigues alves': ('36617', 'Felipe Meligeni Alves'),
-           'tai leonard sach': ('68624', 'Tai Sach')}
+           'tai leonard sach': ('68624', 'Tai Sach'),
+           'abdullah shelbayh': ('76009', 'Abedallah Shelbayh'),
+           'jason kubler': ('14745', 'Jason Murray Kubler')}
 
 
 def normal(value):
@@ -44,6 +46,20 @@ def build(oncourt, schedule, base_players, as_of, old=None, prior_requests=()):
     base_names = {normal(p['name']) for p in base_players}
     tours = {r['id']: r for r in read_csv(oncourt / 'tours_atp.csv')}
     games = read_csv(oncourt / 'games_atp.csv')
+    def event_identity(value):
+        value = re.sub(r'^ATP\s+(?:Challenger\s+)?', '', value, flags=re.I)
+        value = re.sub(r'\s+[-–—]\s+(?:Qualifiers?|Qualifying|R\d+|Q\d+|SF|F|Final|Semi Final|Quarter Final)$', '', value, flags=re.I)
+        return normal(re.sub(r'\s+Challenger$', '', value, flags=re.I))
+    # Exact native draw IDs/date/event can verify a returning player's identity
+    # even when there is no completed match in the last 366 days.
+    native_draw = Counter()
+    if (oncourt / 'today_atp.csv').exists():
+        for draw in read_csv(oncourt / 'today_atp.csv'):
+            t = tours.get(draw.get('tour_id'), {})
+            ids = (draw.get('player1_id'), draw.get('player2_id'))
+            if all(pid in people for pid in ids) and len(set(ids)) == 2 and t.get('rank') in ('0','1','2','3','4'):
+                native_draw[(tuple(sorted(ids)), draw.get('date'), event_identity(t.get('name','')))] += 1
+
     recent = set()
     since = date.fromordinal(date.fromisoformat(as_of).toordinal()-366).isoformat()
     for r in games:
@@ -79,7 +95,8 @@ def build(oncourt, schedule, base_players, as_of, old=None, prior_requests=()):
             ages = [(date.fromisoformat(row['match_date'])-date.fromisoformat(people[pid]['birthdate'][:10])).days/365.2425 for pid in ids]
         except (ValueError, KeyError):
             ages = []
-        if len(ages) != 2 or any(not 15 <= age <= 45 for age in ages) or any(pid not in recent for pid in ids):
+        native_verified = native_draw[(tuple(sorted(ids)), row.get('match_date'), event_identity(row.get('league_name','')))] == 1
+        if len(ages) != 2 or any(not 15 <= age <= 45 for age in ages) or (any(pid not in recent for pid in ids) and not native_verified):
             audit['unresolved'].append({'players': raw, 'reason': 'age_or_recent_activity_unconfirmed'})
             continue
         pair_key = '|'.join(sorted(keys))
@@ -94,7 +111,7 @@ def build(oncourt, schedule, base_players, as_of, old=None, prior_requests=()):
         request = {'pair': pair_key, 'date': row['match_date'], 'event': row.get('league_name', '')}
         requests[(pair_key, request['date'], request['event'])] = request
         for pid in ids:
-            audit['identities'][pid] = {k: people[pid].get(k) for k in ('name', 'birthdate', 'country')}
+            audit['identities'][pid] = {**{k: people[pid].get(k) for k in ('name', 'birthdate', 'country')}, 'nativeDrawConfirmed': native_verified}
     targets = {tuple(sorted(p['nativeId'] for p in v['players'])): k for k, v in pairs.items()}
     found = defaultdict(dict)
     games_by_pair = defaultdict(list)
@@ -146,7 +163,7 @@ def build(oncourt, schedule, base_players, as_of, old=None, prior_requests=()):
     result = {'schema': 1, 'asOf': as_of, 'pairs': dict(sorted(pairs.items()))}
     def event_key(value):
         value = re.sub(r'^ATP\s+(?:Challenger\s+)?', '', value, flags=re.I)
-        value = re.sub(r'\s+[-–—]\s+(?:Qualifiers?|Qualifying|R\d+|Q\d+|SF|F|Final|Semi Final|Quarter Final)$', '', value, flags=re.I)
+        value = re.sub(r'\s+[-â€“â€”]\s+(?:Qualifiers?|Qualifying|R\d+|Q\d+|SF|F|Final|Semi Final|Quarter Final)$', '', value, flags=re.I)
         return normal(re.sub(r'\s+Challenger$', '', value, flags=re.I))
     audit['requests'] = sorted(requests.values(), key=lambda r: (r['date'], r['pair'], r['event']))
     audit['postMatchChecks'] = []
