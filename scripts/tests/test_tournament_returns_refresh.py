@@ -81,6 +81,13 @@ class RefreshTests(unittest.TestCase):
         report,new=self.refresh()
         self.assertFalse(report['changed']);self.assertEqual(old,new)
 
+    def test_windows_checkout_line_endings_do_not_create_empty_commit(self):
+        old=self.baseline();p=self.checkout/m.DATA
+        p.write_bytes(p.read_bytes().replace(b'\n',b'\r\n'))
+        report,new=self.refresh()
+        self.assertFalse(report['changed']);self.assertEqual(new,old)
+        self.assertEqual(p.read_bytes(),(self.candidate/'release'/m.DATA).read_bytes())
+
     def test_result_or_source_hash_failure_retains_only_previous_snapshot(self):
         old=self.baseline()
         with (self.candidate/'oncourt/games_atp.csv').open('a') as f:f.write('corrupt')

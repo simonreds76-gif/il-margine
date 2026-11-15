@@ -114,13 +114,21 @@ def prepare(checkout, candidate, *, builder=None):
         new = (builder or rebuild)(candidate, candidate / 'release', audit_dir)
         validate(old, new)
         if old and content(old) == content(new) and old['asOf'][:4] == new['asOf'][:4]:
-            new = old
+            new = dict(old)
         # Version is embedded into the rendered page so publication checks the
         # actual UI, rather than assuming a green build means fresh figures.
         new['version'] = version({k: v for k, v in new.items() if k != 'version'})
-        write(target, new)
+        changed = old != new
+        if not changed:
+            # Git may check JSON out as CRLF on Windows. Preserve the original
+            # bytes when the parsed snapshot is identical; do not create a
+            # phantom stage/empty commit from newline conversion alone.
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(prior, target)
+        else:
+            write(target, new)
         report = {'status': 'validated', 'checkedAt': checked, 'version': new['version'],
-                  'changed': not prior.exists() or prior.read_bytes() != target.read_bytes(),
+                  'changed': changed,
                   'archiveVersion': new['archiveVersion'], 'sourceUpdatedAt': new['coverageUpdatedAt'],
                   'through': new['through'], 'families': len(new['families']),
                   'paired': sum(e['paired'] for f in new['families'] for e in f['editions']),
