@@ -171,7 +171,7 @@ export default function TournamentReturns({ summary, defaultOpen = false }: { su
 
       {ok && !!win.bands?.length && <table className={s.table}>
         <caption>By the favourite’s price. Each match sits in one row. Returns appear only from {BAND_MINIMUM} matches.</caption>
-        <thead><tr><th scope="col">Favourite’s price</th><th scope="col">Matches</th><th scope="col"><span className={s.full}>Favourites</span><span className={s.short} aria-hidden="true">Favs</span></th><th scope="col"><span className={s.full}>Underdogs</span><span className={s.short} aria-hidden="true">Dogs</span></th></tr></thead>
+        <thead><tr><th scope="col"><span className={s.full}>Favourite’s price</span><span className={s.short} aria-hidden="true">Fav price</span></th><th scope="col">Matches</th><th scope="col"><span className={s.full}>Favourites</span><span className={s.short} aria-hidden="true">Favs</span></th><th scope="col"><span className={s.full}>Underdogs</span><span className={s.short} aria-hidden="true">Dogs</span></th></tr></thead>
         <tbody>{win.bands.map(band => <tr key={band.label} data-pooled="true">
           <th scope="row">{band.label}</th><td>{band.fixtures}</td>
           {band.fixtures >= BAND_MINIMUM ? <><td><Figure side={band.favourite} /></td><td><Figure side={band.underdog} /></td></>
