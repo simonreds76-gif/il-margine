@@ -127,7 +127,8 @@ SPREAD_V1_CLAY_FAV_MAX_EDGE_PCT = env_float("SPREAD_V1_CLAY_FAV_MAX_EDGE_PCT", 1
 CHALLENGER_ML_ENABLE = env_bool(os.environ.get("CHALLENGER_ML_ENABLE"), False)
 CHALLENGER_ML_MIN_EDGE_PCT = env_float("CHALLENGER_ML_MIN_EDGE_PCT", 10.0)
 CHALLENGER_ML_MAX_EDGE_PCT = env_float("CHALLENGER_ML_MAX_EDGE_PCT", 15.0)
-CHALLENGER_ML_ALLOWED_SURFACES = {"Hard", "Clay", "Grass", "Indoor"}
+# Native OnCourt forecasts use I.hard; retain Indoor for older input exports.
+CHALLENGER_ML_ALLOWED_SURFACES = {"Hard", "Clay", "Grass", "I.hard", "Indoor"}
 CHALLENGER_ML_ALLOWED_CONFIDENCE = {"high"}
 CHALLENGER_ML_REQUIRE_COVERAGE_TAG = "HIGH"
 CLAY_BO3_MIN_EDGE_PCT = env_float("CLAY_BO3_MIN_EDGE_PCT", 5.0)
