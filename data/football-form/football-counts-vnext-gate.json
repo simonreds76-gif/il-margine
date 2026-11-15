@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-15T16:35:23Z",
+  "generated_at": "2026-11-15T21:16:51Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -131,7 +131,7 @@
     },
     "latest_scan": {
       "state": "EXPECTED_EMPTY_CAPTURE_WINDOW",
-      "explanation": "The successful Team Shots scan found no supported fixtures in its capture window. Stored corners rows are outside that window. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-15T16:35:14.349814+00:00. Completed-fixture coverage checked at 2026-11-15T15:42:21.175677+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 196). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
+      "explanation": "The successful Team Shots scan found no supported fixtures in its capture window. Stored corners rows are outside that window. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-15T21:16:44.687810+00:00. Completed-fixture coverage checked at 2026-11-15T15:42:21.175677+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 196). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
       "scored_rows": 0,
       "scored_fixtures": 0,
       "eligible_rows": 0,
@@ -145,9 +145,9 @@
       "operational_alert_required": false,
       "operational_alert_code": null,
       "capture_window_evidence": {
-        "capture_at": "2026-11-15T16:34:56Z",
-        "capture_window_end": "2026-11-16T16:34:56Z",
-        "capture_run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/43736250404",
+        "capture_at": "2026-11-15T21:16:30Z",
+        "capture_window_end": "2026-11-16T21:16:30Z",
+        "capture_run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/43762737585",
         "leagues_checked": [
           "bundesliga",
           "epl",
@@ -169,14 +169,14 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-15T16:35:06Z",
+      "generated_at": "2026-11-15T21:16:38Z",
       "status": "OK",
       "missing_history": [],
       "scored_fixtures": 0
     },
     "input_integrity": {
       "policy": "shots-input-integrity-20261113-v1",
-      "generated_at": "2026-11-15T16:35:14.349814+00:00",
+      "generated_at": "2026-11-15T21:16:44.687810+00:00",
       "base_sha256": "06045cbb32574292278d106a7cb51f8426c0924a1266f9b771183f72ed11547b",
       "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
       "source_rows": 44178,
@@ -362,7 +362,7 @@
       "blocker_rows": {
         "edge_below_3pct": 332,
         "price_not_fresh_10m": 400,
-        "price_older_than_3h": 14
+        "price_older_than_3h": 400
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 10,
