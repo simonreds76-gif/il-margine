@@ -1,10 +1,11 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { fixturesFor, matchdayQuote, type TennisBoard, type TennisFixture, type FixturePlayer } from '@/lib/tennis-matchday.mjs';
 import { atlasResearchHref } from '@/components/return-atlas/research-links.mjs';
 import styles from './matchday.module.css';
+import { tournamentOf, isQualifying, surfaceNames, readBrowseState, browseQuery, displayDay, type BrowseState } from '@/lib/tennis-matchday-browse.mjs';
 import H2HRecord from '@/components/H2HRecord';
 import { resolveTennisPortrait } from '@/lib/tennis-portrait.mjs';
 
@@ -16,13 +17,7 @@ const surname = (name: string) => name.split(' ').slice(-1).join(' ');
 const price = (n: number | null) => n !== null && Number.isFinite(n) && n > 1 ? n.toFixed(3).replace(/0$/, '') : 'Unavailable';
 const units = (n: number) => `${n < 0 ? '−' : '+'}${Math.abs(n).toFixed(2)}u`;
 
-// Presentation groups only: retain the exact captured name and tour; remove
-// recognised round suffixes, never fuzzy-match cities or numbered editions.
-function tournamentOf(f: TennisFixture) {
-  const label = f.event.replace(/\s+[-–—]\s+(?:R(?:1|2|3|4|8|16|32|64|128)|Q[1-3F]|SF|F|Finals?|Semi[- ]?finals?|Quarter[- ]?finals?|Qualifiers?|Qualifying(?:\s+[RQ][1-3])?|Qualifications?)$/i, '').trim() || f.event;
-  return { key: JSON.stringify([f.tour, label]), label, tour: f.tour };
-}
-const isQualifying = (f: TennisFixture) => f.qualifying || /\b(?:qualifiers?|qualifying|qualifications?)\b/i.test(f.event);
+
 const tours = [{ value: 'all', label: 'All singles', logo: null }, { value: 'ATP', label: 'ATP', logo: '/icons/markets/atp-logo.png' }, { value: 'Challenger', label: 'Challenger', logo: '/icons/markets/challenger-tour.png' }];
 
 function MeetingHistory({ fixture: f }: { fixture: TennisFixture }) {
@@ -69,7 +64,7 @@ function FixtureCard({ fixture: f, now }: { fixture: TennisFixture; now: Date })
   const winningPrice = oneWin >= 0 ? f.history.find(m => m.winner === oneWin)?.odds[oneWin] : null;
   return <article className={styles.card} aria-label={`${f.players[0].name} versus ${f.players[1].name}`}>
     <div className={styles.cardTop}><span className={styles.event}><span className={styles.tour}>{f.tour}</span>{f.event}{f.qualifying && <span>Qualifying</span>}</span><time dateTime={f.start}><Icon name="clock" />{format(f.start, { hour: '2-digit', minute: '2-digit' })}</time></div>
-    <div className={styles.match}><div><Portrait player={f.players[0]} /><h3>{f.players[0].name}</h3></div><span className={styles.versus}>VS</span><div><Portrait player={f.players[1]} /><h3>{f.players[1].name}</h3></div></div>
+    <div className={styles.match}><div><Portrait player={f.players[0]} /><h4>{f.players[0].name}</h4></div><span className={styles.versus}>VS</span><div><Portrait player={f.players[1]} /><h4>{f.players[1].name}</h4></div></div>
     <div className={styles.quote}>
       <div className={styles.quoteHeading}><span>UPCOMING MATCH ODDS</span><span className={styles.quoteBookmaker}><Image src="/bookmakers/pinnacle.png" alt="Pinnacle" width={104} height={43} unoptimized /></span></div>
       {quote ? <><dl>{f.players.map((p, i) => <div key={p.name}><dt>{surname(p.name)}</dt><dd>{price(quote.odds[i])}</dd></div>)}</dl><p>Recorded <time dateTime={quote.capturedAt}>{stamp(quote.capturedAt)}</time>. Prices may have moved.</p></>
@@ -93,59 +88,99 @@ function FixtureCard({ fixture: f, now }: { fixture: TennisFixture; now: Date })
   </article>;
 }
 
+function CourtMark({ surface }: { surface: string }) {
+  return <svg className={styles.courtMark} data-surface={surface} viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden="true"><rect x="5" y="8" width="18" height="16" rx="1" strokeDasharray={surface === 'unknown' ? '2 2' : undefined} /><path d="M8 8v16m12-16v16M5 16h18m-9-8v16" />{surface === 'indoor-hard' && <path d="m3 6 11-4 11 4" />}</svg>;
+}
+
+function DecimalPrice({ value }: { value: number | undefined }) {
+  if (value === undefined) return <span className={styles.compactPrice}><span aria-hidden="true">—</span><span className="sr-only">Price unavailable</span></span>;
+  const [whole, fraction = '00'] = price(value).split('.');
+  return <span className={styles.compactPrice}><span>{whole}.</span><span>{fraction.padEnd(2, '0')}</span></span>;
+}
+
+function FixtureRow({ fixture: f, now, showEvent }: { fixture: TennisFixture; now: Date; showEvent: boolean }) {
+  const [open, setOpen] = useState(false);
+  const detailId = useId();
+  const quote = matchdayQuote(f, now), event = tournamentOf(f);
+  return <div className={styles.fixtureRow} data-fixture={f.id}>
+    <button className={styles.rowToggle} type="button" aria-expanded={open} aria-controls={detailId} onClick={() => setOpen(!open)}>
+      <span className={styles.rowTime}><time dateTime={f.start}>{format(f.start, { hour: '2-digit', minute: '2-digit' })}</time>{!showEvent && <small>{event.round || (isQualifying(f) ? 'Qualifying' : '')}</small>}</span>
+      {f.players.map((p, i) => <span key={i} className={styles.rowPlayer}><span className={styles.rowName}>{p.name}</span><DecimalPrice value={quote?.odds[i]} /></span>)}
+      {showEvent && <span className={styles.rowEvent} data-surface={event.surface}><CourtMark surface={event.surface} />{event.displayName}{event.round ? ` · ${event.round}` : ''}<span className="sr-only"> · {surfaceNames[event.surface]}</span></span>}
+      <span className={`${styles.rowH2h} ${!f.meetings ? styles.noCompactH2h : ''}`}>{f.meetings !== null && f.meetings > 0 ? <><strong>{f.wins?.[0]}–{f.wins?.[1]}</strong><small>{f.meetings} {f.meetings === 1 ? 'meeting' : 'meetings'}</small></> : <small>{f.meetings === 0 ? 'No meetings found' : 'History unavailable'}</small>}</span>
+      <span className={styles.rowArrow} aria-hidden="true">{open ? '−' : '+'}</span>
+      <span className="sr-only">{open ? 'Close' : 'Open'} H2H and match details. {quote ? `Pinnacle prices captured ${stamp(quote.capturedAt)}` : 'Paired prices unavailable or expired.'}</span>
+    </button>
+    <div id={detailId} hidden={!open} className={styles.expandedMatch}>{open && <FixtureCard fixture={f} now={now} />}</div>
+  </div>;
+}
+
+const defaults = readBrowseState('');
 export default function TennisMatchdayClient({ board, renderedAt }: { board: TennisBoard; renderedAt: string }) {
-  const [filter, setFilter] = useState('upcoming'), [tour, setTour] = useState('all'), [search, setSearch] = useState('');
-  const [tournament, setTournament] = useState('all');
-  const tournamentStrip = useRef<HTMLDivElement>(null);
-  useEffect(() => { if (tournament === 'all') tournamentStrip.current?.scrollTo({ left: 0 }); }, [filter, tour, search, tournament]);
+  const [state, setState] = useState<BrowseState>(defaults);
   const [now, setNow] = useState(() => new Date(renderedAt));
+  useEffect(() => {
+    const sync = () => setState(readBrowseState(window.location.search));
+    sync(); window.addEventListener('popstate', sync);
+    return () => window.removeEventListener('popstate', sync);
+  }, []);
   useEffect(() => { const tick = () => setNow(new Date()); tick(); const id = setInterval(tick, 60000); return () => clearInterval(id); }, []);
+  const update = (patch: Partial<BrowseState>) => {
+    const next = { ...state, ...patch };
+    const query = browseQuery(next, window.location.search);
+    setState(next);
+    try { window.history.replaceState(window.history.state, '', `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`); } catch { /* Keep controls usable if a browser throttles URL writes. */ }
+  };
+  const { tour, tournament, search, qualifying, order } = state;
   const stale = board.stale || !board.capturedAt || now.getTime() - Date.parse(board.capturedAt) > 86400000;
-  const dated = stale ? [] : fixturesFor(board.fixtures, filter, 'all', search, now);
+  const upcoming = stale ? [] : fixturesFor(board.fixtures, 'upcoming', 'all', '', now);
+  const filter = displayDay(state.filter, upcoming, now);
+  const dated = fixturesFor(upcoming, filter, 'all', search, now).filter(f => qualifying || !isQualifying(f));
   const candidates = dated.filter(f => tour === 'all' || f.tour === tour);
-  const options = new Map<string, { key: string; label: string; tour: string; count: number; qualifying: number }>();
-  for (const f of candidates) {
-    const event = tournamentOf(f), item = options.get(event.key) ?? { ...event, count: 0, qualifying: 0 };
-    item.count++; item.qualifying += Number(isQualifying(f)); options.set(event.key, item);
-  }
-  // Keep a selected tournament visible even if its final fixture has just started.
-  for (const f of stale ? [] : board.fixtures.filter(f => (tour === 'all' || f.tour === tour) && tournamentOf(f).key === tournament)) {
+  const options = new Map<string, ReturnType<typeof tournamentOf> & { count: number }>();
+  // Keep event choices across date/search changes; an empty filter never silently switches the event.
+  for (const f of upcoming.filter(f => tour === 'all' || f.tour === tour)) {
     const event = tournamentOf(f);
-    if (!options.has(event.key)) options.set(event.key, { ...event, count: 0, qualifying: 0 });
+    if (!options.has(event.key)) options.set(event.key, { ...event, count: 0 });
   }
+  for (const f of candidates) { const item = options.get(tournamentOf(f).key); if (item) item.count++; }
   const selectedEvent = options.get(tournament);
   const shown = candidates.filter(f => tournament === 'all' || tournamentOf(f).key === tournament);
-  const reset = () => { setFilter('upcoming'); setTour('all'); setTournament('all'); setSearch(''); };
-  const groups = new Map<string, TennisFixture[]>();
+  const reset = (widen = false) => update({ ...defaults, filter: widen ? 'upcoming' : filter });
+  const groups = new Map<string, { label: string; event: ReturnType<typeof tournamentOf> | null; fixtures: TennisFixture[] }>();
   for (const fixture of shown) {
     const date = format(fixture.start, { weekday: 'long', day: 'numeric', month: 'long' });
-    groups.set(date, [...(groups.get(date) ?? []), fixture]);
+    const event = tournamentOf(fixture), key = `${date}:${order === 'time' ? 'time' : event.key}`;
+    if (!groups.has(key)) groups.set(key, { label: date, event: order === 'time' ? null : event, fixtures: [] });
+    groups.get(key)!.fixtures.push(fixture);
   }
-  return <section className={styles.board} aria-labelledby="upcoming-tennis">
-    <div className={styles.boardHeader}><div><h2 id="upcoming-tennis">Upcoming fixtures</h2></div><div className={styles.summary}><strong>{shown.length}</strong><span>{shown.length === 1 ? 'match' : 'matches'}<small>{shown.filter(f => (f.meetings ?? 0) > 0).length} with H2H</small></span></div></div>
-    <div className={styles.toolbar}>
-      <div className={styles.tourFilters} role="group" aria-label="Filter upcoming matches by tour">{tours.map(({ value, label, logo }) => {
-        const count = dated.filter(f => value === 'all' || f.tour === value).length;
-        return <button key={value} type="button" aria-pressed={tour === value} onClick={() => { setTour(value); setTournament('all'); }}>
-          <span className={styles.tourLogo}>{logo ? <Image src={logo} alt="" width={30} height={30} unoptimized /> : <Image src="/tennis-matchday/mark.svg" alt="" width={30} height={30} unoptimized />}</span><strong>{label}</strong><span className={styles.filterCount}>{count}<span className="sr-only"> {count === 1 ? 'match' : 'matches'} in selected dates</span></span>
-        </button>;
-      })}</div>
-      <div className={styles.tabs} role="group" aria-label="Match date">{[['upcoming', 'Next 3 days'], ['today', 'Today'], ['tomorrow', 'Tomorrow']].map(([value, label]) => <button key={value} type="button" aria-pressed={filter === value} onClick={() => { setFilter(value); setTournament('all'); }}>{label}<span>{stale ? 0 : fixturesFor(board.fixtures, value, tour, search, now).length}</span></button>)}</div>
-      <div className={styles.tournamentSection}>
-        <div className={styles.tournamentHeading}><strong>Tournament</strong><span>All rounds · qualifying included</span><small>Swipe to browse →</small></div>
-        <div ref={tournamentStrip} className={styles.tournaments} role="group" aria-label="Filter upcoming matches by tournament" tabIndex={0}>
-          <button type="button" aria-pressed={tournament === 'all'} onClick={() => setTournament('all')}><span>All tournaments</span><b>{candidates.length}</b></button>
-          {[...options.values()].map(event => <button key={event.key} type="button" aria-pressed={tournament === event.key} onClick={() => setTournament(event.key)}><span>{event.label}<small>{event.tour}{event.qualifying > 0 ? ` · ${event.qualifying} qualifying` : ''}</small></span><b>{event.count}</b></button>)}
-        </div>
+  const priced = shown.filter(f => matchdayQuote(f, now)).length;
+  return <section className={`${styles.board} ${styles.compactBoard}`} aria-labelledby="upcoming-tennis">
+    <div className={styles.boardHeader}><h2 id="upcoming-tennis">Find your next match</h2><span className={styles.matchCount}>{shown.length} {shown.length === 1 ? 'match' : 'matches'}</span></div>
+    <div className={styles.browseToolbar}>
+      <div className={styles.browseTop}>
+        <div className={styles.tabs} role="group" aria-label="Match date">{[['today', 'Today'], ['tomorrow', 'Tomorrow'], ['upcoming', 'Next 3 days']].map(([value, label]) => <button key={value} type="button" aria-pressed={filter === value} onClick={() => update({ filter: value })}>{label}<span>{fixturesFor(upcoming, value, tour, search, now).filter(f => qualifying || !isQualifying(f)).length}</span></button>)}</div>
+        <label className={styles.browseSearch}><Icon name="search" /><span className="sr-only">Search player or tournament</span><input type="search" placeholder="Player or tournament" value={search} onChange={e => update({ search: e.target.value })} /></label>
       </div>
-      <details className={styles.searchDetails}><summary><Icon name="search" /><span>Search player or tournament{search && <small> · {search}</small>}</span><b aria-hidden="true">+</b></summary><label className={styles.search}><span className="sr-only">Player or tournament</span><span className={styles.searchInput}><Icon name="search" /><input type="search" placeholder="Search the fixtures" value={search} onChange={e => { setSearch(e.target.value); setTournament('all'); }} /></span></label></details>
+      <div className={styles.browseControls}>
+        <div className={styles.miniTours} role="group" aria-label="Filter upcoming matches by tour">{tours.map(({ value, label, logo }) => <button key={value} type="button" aria-pressed={tour === value} onClick={() => update({ tour: value, tournament: 'all' })}>{logo && <Image src={logo} alt="" width={23} height={23} unoptimized />}<span>{label}</span><small>{dated.filter(f => value === 'all' || f.tour === value).length}</small></button>)}</div>
+        <label className={styles.qualifyingToggle}><input type="checkbox" checked={qualifying} onChange={e => update({ qualifying: e.target.checked })} /> Include qualifying</label>
+      </div>
+      <div className={styles.eventStrip} role="group" aria-label="Filter upcoming matches by tournament">
+        <button type="button" aria-pressed={tournament === 'all'} onClick={() => update({ tournament: 'all' })}><span>All tournaments<small>All surfaces</small></span><b>{candidates.length}</b></button>
+        {[...options.values()].map(event => <button key={event.key} type="button" data-surface={event.surface} aria-pressed={tournament === event.key} onClick={() => update({ tournament: event.key })}><CourtMark surface={event.surface} /><span>{event.displayName}<small>{surfaceNames[event.surface]}</small></span><b>{event.count}<span className="sr-only"> matches</span></b></button>)}
+      </div>
     </div>
-    <p className={styles.feed}><Icon name="clock" /><span>Men’s singles · UK time. {board.capturedAt ? <>Captured <time dateTime={board.capturedAt}>{stamp(board.capturedAt)}</time>.</> : 'Schedule unavailable.'} Times may change. H2H through <strong>{format(`${board.historyThrough}T12:00:00Z`, { day: 'numeric', month: 'short', year: 'numeric' })}</strong>.</span></p>
-
-    <div className={styles.readKey}><Icon name="record" /><p><strong>H2H covers all surfaces and recorded tournaments.</strong> These filters choose upcoming matches only; they do not narrow the past meetings.</p></div>
-    {(tour !== 'all' || tournament !== 'all' || search) && <div className={styles.activeFilters} role="status"><span>Showing: {tour === 'all' ? 'All tours' : tour}{selectedEvent ? ` · ${selectedEvent.label}` : ''}{search ? ` · “${search}”` : ''}</span><button type="button" onClick={reset}>Clear filters</button></div>}
+    <div className={styles.listMeta}><p><strong>UK time</strong> · Provisional starts</p><div role="group" aria-label="Group fixtures"><button type="button" aria-pressed={order === 'tournament'} onClick={() => update({ order: 'tournament' })}>By tournament</button><button type="button" aria-pressed={order === 'time'} onClick={() => update({ order: 'time' })}>By time</button></div></div>
+    <div className={styles.priceMeta}><Image src="/bookmakers/pinnacle.png" alt="Pinnacle" width={72} height={30} unoptimized /><p>{board.capturedAt ? <>Captured <time dateTime={board.capturedAt}>{stamp(board.capturedAt)}</time> · {priced} of {shown.length} matches with fresh paired prices.</> : 'Schedule unavailable.'} {priced ? 'Prices may have moved.' : board.capturedAt && now.getTime() - Date.parse(board.capturedAt) >= 7200000 ? 'Prices withheld: last capture over two hours old.' : 'No fresh paired prices available in this view.'} <span>— = no fresh paired price.</span></p></div>
+    <p className={styles.listKey}>H2H includes recorded meetings on <strong>all surfaces</strong>. Open a match for results, returns and player profiles.</p>
+    {(tour !== 'all' || tournament !== 'all' || search || !qualifying) && <div className={styles.activeFilters}><span>{selectedEvent?.displayName || (tournament !== 'all' ? 'Selected tournament' : tour === 'all' ? 'All tours' : tour)}{search ? ` · “${search}”` : ''}{!qualifying ? ' · Main draw only' : ''}</span><button type="button" onClick={() => reset()}>Clear filters</button></div>}
     <p className="sr-only" aria-live="polite">{shown.length} upcoming {shown.length === 1 ? 'match' : 'matches'} shown</p>
-    {shown.length ? [...groups].map(([date, fixtures]) => <section className={styles.day} key={date} aria-label={date}><h3>{date}<span>{fixtures.length} {fixtures.length === 1 ? 'match' : 'matches'}</span></h3><div className={styles.grid}>{fixtures.map(fixture => <FixtureCard fixture={fixture} now={now} key={fixture.id} />)}</div></section>) : <div className={styles.empty}><Image src="/tennis-matchday/mark.svg" alt="" width={56} height={56} unoptimized /><h3>{stale ? 'Waiting for a fresh schedule' : 'No upcoming matches in this view'}</h3><p>{stale ? 'The feed is unavailable or its capture is more than 24 hours old. Player research is still available below.' : 'Try another date, tour or tournament, or clear your search. This board shows the fixtures captured by our feed, so an empty list does not mean no tennis is being played.'}</p>{!stale && <button onClick={reset}>Show all captured fixtures</button>}</div>}
-    <details className={styles.coverageDetails}><summary>Coverage &amp; update times <span aria-hidden="true">+</span></summary><p>Upcoming fixtures: captured ATP and Challenger singles, including qualifying; no WTA or doubles. Quotes over two hours old are hidden, and a schedule over 24 hours old is withheld. This is not a complete tennis calendar.</p><p>H2H: available completed competitive singles through {format(`${board.historyThrough}T12:00:00Z`, { day: 'numeric', month: 'short', year: 'numeric' })}, including older ATP, Challenger, ITF, qualifying and team results. Retirements, unfinished matches, exhibitions and juniors are excluded. Older and lower-level coverage can be incomplete. <a href="#tennis-matchday-faq">Full explanation</a></p></details>
+    {shown.length ? [...groups].map(([key, group]) => <section className={styles.fixtureGroup} key={key} aria-label={`${group.event?.label || 'Matches'} ${group.label}`}>
+      <header className={styles.groupHeading} data-surface={group.event?.surface || 'unknown'}>{group.event && <CourtMark surface={group.event.surface} />}<div><h3>{group.event?.displayName || group.label}</h3><p>{group.event ? `${group.event.tour} · ${surfaceNames[group.event.surface]} · ${group.label}` : 'All tournaments · chronological order'}</p></div><span>{group.fixtures.length}</span></header>
+      <div className={styles.columnHead} aria-hidden="true"><span>START / ROUND</span><span>PLAYER 1 <b>ODDS</b></span><span>PLAYER 2 <b>ODDS</b></span><span>H2H</span><span /></div>
+      {group.fixtures.map(f => <FixtureRow fixture={f} now={now} showEvent={order === 'time'} key={f.id} />)}
+    </section>) : <div className={styles.empty}><h3>{stale ? 'Waiting for a fresh schedule' : 'No upcoming matches in this view'}</h3><p>{stale ? 'The schedule is unavailable or more than 24 hours old. Player research remains available below.' : `${selectedEvent ? `${selectedEvent.label}: ` : ''}try another date or clear the filters. We show captured fixtures, not a complete tennis calendar.`}</p>{!stale && <button type="button" onClick={() => reset(true)}>Show all captured fixtures</button>}</div>}
+    <details className={styles.coverageDetails}><summary>Coverage &amp; update times <span aria-hidden="true">+</span></summary><p>Men’s ATP and Challenger singles, including qualifying when captured. No WTA or doubles. Paired quotes expire after two hours; schedules after 24 hours. Started matches leave the list automatically. Surface colours describe the verified edition’s court type, not its speed. Unverified editions stay neutral.</p><p>H2H through {format(`${board.historyThrough}T12:00:00Z`, { day: 'numeric', month: 'short', year: 'numeric' })}. Available completed competitive singles across ATP, Challenger, ITF, qualifying and team events. Retirements, unfinished matches, exhibitions and juniors are excluded. Coverage can be incomplete. <a href="#tennis-matchday-faq">Full explanation</a></p></details>
   </section>;
 }
