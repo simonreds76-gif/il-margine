@@ -1,4 +1,4 @@
-import { resolveTennisPortrait } from './tennis-portrait.mjs';
+import { resolveTennisPortrait, safeTennisPortraitSource } from './tennis-portrait.mjs';
 // Explicit feed variants of these archive identities; never fuzzy-match opponents.
 const aliases = { 'jaume munar': 'vbt-10698', 'pedro martinez': 'vbt-12525', 'taylor fritz': 'vbt-9023', 'yunchaokete bu': 'vbt-25003', 'igor marcondes': 'vbt-5490', 'felipe meligeni rodrigues alves': 'vbt-16420' };
 const normal = text => String(text ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
@@ -50,7 +50,7 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
       : { id: history.players[i].id, name: history.players[i].name, portrait: history.players[i].portrait });
     for (const [side, player] of players.entries()) {
       const feedName = side ? row.player2_name : row.player1_name;
-      player.portrait = resolveTennisPortrait(player.name)?.src ?? resolveTennisPortrait(feedName)?.src ?? player.portrait;
+      player.portrait = resolveTennisPortrait(player.name)?.src ?? resolveTennisPortrait(feedName)?.src ?? safeTennisPortraitSource(player.portrait);
       const recent = history.matchdayRecent;
       const key = identityKey(player.name), profile = recent?.players?.[recent?.aliases?.[key] ?? key];
       const limit = [now.toISOString().slice(0,10), new Date(start).toISOString().slice(0,10), recent?.asOf ?? '0000-00-00'].sort()[0];

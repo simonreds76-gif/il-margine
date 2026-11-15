@@ -7,7 +7,7 @@ import { atlasResearchHref } from '@/components/return-atlas/research-links.mjs'
 import { tournamentOf, isQualifying, readBrowseState, browseQuery, displayDay, type BrowseState } from '@/lib/tennis-matchday-browse.mjs';
 import { countryForTournament } from '@/lib/tennis-tournament-country.mjs';
 import H2HRecord from '@/components/H2HRecord';
-import { resolveTennisPortrait } from '@/lib/tennis-portrait.mjs';
+import { resolveTennisPortrait, safeTennisPortraitSource } from '@/lib/tennis-portrait.mjs';
 import MatchdayResults from './MatchdayResults';
 import { Flag, Surface, TournamentRail, OptionsBar, Icon, surfaceLabel, type Country, type RailItem } from './parts';
 import styles from './matchday.module.css';
@@ -37,8 +37,9 @@ function FormDots({ player }: { player: FixturePlayer }) {
 
 function DecimalPrice({ value }: { value: number | undefined }) {
   if (value === undefined) return <span className={styles.price} data-none="true" aria-label="Pinnacle match-winner odds unavailable"><span aria-hidden="true">—</span><span className="sr-only">Price unavailable</span></span>;
-  const [whole, fraction = '00'] = price(value).split('.');
-  return <span className={styles.price} aria-label={`Pinnacle match-winner decimal odds ${price(value)}`}><span className={styles.priceWhole}>{whole}.</span><span className={styles.priceFraction}>{fraction.padEnd(2, '0')}</span></span>;
+  // Keep the quoted precision while giving every row the same numeric width.
+  const [whole, fraction] = value.toFixed(3).split('.');
+  return <span className={styles.price} aria-label={`Pinnacle match-winner decimal odds ${price(value)}`}><span className={styles.priceWhole}>{whole}.</span><span className={styles.priceFraction}>{fraction}</span></span>;
 }
 
 function OddsColumns() {
@@ -55,11 +56,12 @@ function OddsColumns() {
 function Portrait({ player }: { player: FixturePlayer }) {
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
   const crop = resolveTennisPortrait(player.name);
+  const src = safeTennisPortraitSource(player.portrait);
   return <span className={styles.portrait}>
-    {player.portrait && failedSrc !== player.portrait
-      ? <Image src={player.portrait} width={72} height={72} unoptimized alt="" loading="lazy"
+    {src && failedSrc !== src
+      ? <Image src={src} width={72} height={72} unoptimized alt="" loading="lazy"
           style={crop?.scale ? { objectFit: 'cover', objectPosition: crop.position, transform: `scale(${crop.scale})`, transformOrigin: '50% 0%' } : undefined}
-          onError={() => setFailedSrc(player.portrait)} />
+          onError={() => setFailedSrc(src)} />
       : <Icon name="person" />}
   </span>;
 }

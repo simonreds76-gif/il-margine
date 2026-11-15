@@ -69,4 +69,31 @@ class PortraitTests(unittest.TestCase):
             self.assertTrue(catalogue_is_live(checkout,'https://example.invalid',lambda *a,**k:json.dumps(prior).encode()))
             self.assertFalse(catalogue_is_live(checkout,'https://example.invalid',lambda *a,**k:b'[]'))
 
+
+    def test_known_logo_is_rejected_and_purged_even_from_preserved_entries(self):
+        from refresh_matchday_portraits import usable_portrait
+        bad={'name':'Dominik Palan','src':'https://images.wimbledon.com/wide_nobg/atpp0e9.png','sha256':'1f1a169ee98669500897b22007a401f10101af764f7a583a2d62d4fe825ed914'}
+        self.assertFalse(usable_portrait(bad))
+        self.assertFalse(usable_portrait({**bad,'src':'https://other.invalid/cached.png'}))
+        self.assertFalse(usable_portrait({**bad,'sha256':None,'src':bad['src']+'?cache=2'}))
+        good={'name':'Known Player','src':'/known.jpg'}
+        with tempfile.TemporaryDirectory() as tmp:
+            cache=Path(tmp)/'cache.json'
+            photos,a=refresh([{'player1_name':'Dominik Palan','player2_name':'Known Player'}],[bad],{'dominik palan':bad,'known player':good},cache,[bad],max_players=0)
+            self.assertNotIn('dominik palan',photos)
+            self.assertEqual(photos['known player'],good)
+            self.assertEqual(a['rejectedPlaceholders'],['Dominik Palan'])
+            self.assertEqual(a['missing'],[{'name':'Dominik Palan','status':'placeholder_rejected'}])
+            self.assertEqual(bad['src'],'https://images.wimbledon.com/wide_nobg/atpp0e9.png')
+
+    def test_wimbledon_logo_is_not_recovered_as_a_person(self):
+        import hashlib
+        logo=b'\x89PNG\r\n\x1a\n'+b'x'*9000
+        def fetch(url):
+            if 'byname' in url:return json.dumps([{'FirstName':'Dominik','LastName':'Palan','PlayerId':'P0E9','PlayerHeadshotUrl':'https://www.atptour.com/-/media/alias/player-headshot/P0E9'}]).encode(),'application/json'
+            return (logo if 'wimbledon' in url else b'\x89PNG\r\n\x1a\n'+b'x'*4700),'image/png'
+        row,status=recover('Dominik Palan',PLACEHOLDERS | {hashlib.sha256(logo).hexdigest()},fetch)
+        self.assertIsNone(row)
+        self.assertEqual(status['status'],'official_photo_unavailable')
+
 if __name__=='__main__':unittest.main()
