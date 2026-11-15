@@ -252,6 +252,8 @@ def data_release_paths(source):
         if manifest['indexUrl'] != expected:
             raise RuntimeError('Archive URL is outside its version directory')
         paths += [Path('src/data') / pointer, Path('public') / route / 'data' / version]
+    if (source / 'public/tennis-matchday/context.json').exists():
+        paths.append(Path('public/tennis-matchday/context.json'))
     if (source / CATALOGUE).exists():
         paths.append(Path(CATALOGUE))
     return paths
@@ -318,6 +320,8 @@ def stage_on_production(source, state, deployment, *, worktree_root=None):
     sha = production_commit(deployment)
     paths = data_release_paths(source)
     versions = [read_json(source / p)['version'] for p in paths if p.as_posix().startswith('src/data/')]
+    context_path=source/'public/tennis-matchday/context.json'
+    if context_path.exists(): versions.append(hashlib.sha256(context_path.read_bytes()).hexdigest())
     if release_fingerprint(source):
         versions.append(release_fingerprint(source))
     identity = hashlib.sha256(('retention-v1|' + '|'.join(versions)).encode()).hexdigest()[:12]
@@ -387,6 +391,13 @@ def validate_deployment_identity(deployment, *, expected_sha=None, expected_id=N
             raise RuntimeError('Vercel deployment commit mismatch; publication stopped')
 
 
+def context_is_live(checkout):
+    path=checkout/'public/tennis-matchday/context.json'
+    if not path.exists():return True
+    try:return json.loads(fetch(SITE+'/tennis-matchday/context.json'))==read_json(path)
+    except Exception:return False
+
+
 def publish(checkout, version, status, save):
     # Authenticated curl requires an explicitly linked project even with --deployment.
     # Public IDs only; CLI credentials stay in the user's existing secure store.
@@ -446,6 +457,11 @@ def publish(checkout, version, status, save):
                         '--', '--fail', '--silent'], checkout, timeout=90)
         if json.loads(portraits) != read_json(checkout / CATALOGUE):
             raise RuntimeError('Candidate portraits failed catalogue validation')
+    context_path=checkout/'public/tennis-matchday/context.json'
+    if context_path.exists():
+        context_response=run([vercel,'curl','/tennis-matchday/context.json','--deployment',url,'--','--fail','--silent'],checkout,timeout=120)
+        if json.loads(context_response)!=read_json(context_path):
+            raise RuntimeError('Candidate Matchday context differs from validated snapshot')
     remote_sha = run(['git', 'ls-remote', 'origin', f'refs/heads/{release_branch}'], checkout).split()[0]
     if remote_sha != sha:
         raise RuntimeError('Deployment branch advanced during build; refusing to promote older code')
@@ -463,6 +479,16 @@ def publish(checkout, version, status, save):
         if photo_attempt == 6:
             raise RuntimeError('Public photo catalogue has not reached the tested release')
         time.sleep(10)
+    if context_path.exists():
+        expected_context=read_json(context_path)
+        for attempt in range(7):
+            try: live_context=json.loads(fetch(SITE+'/tennis-matchday/context.json'))
+            except Exception: live_context=None
+            if live_context==expected_context: break
+            if attempt==6:raise RuntimeError('Public Matchday context has not reached the tested release')
+            time.sleep(10)
+        status['matchdayContextPublished']={'version':expected_context['version'],'sourceUpdatedAt':expected_context['sourceUpdatedAt'],
+            'resultsThrough':expected_context['results']['through'],'verifiedAt':datetime.now(timezone.utc).isoformat()}
     status['publicVerification'] = {**verification, 'verifiedAt': datetime.now(timezone.utc).isoformat()}
     status.update(status='published', publishedVersion=version, publishedAt=datetime.now(timezone.utc).isoformat(), deploymentUrl=url)
     save()
@@ -488,7 +514,7 @@ def refresh(config, dry_run=False):
         if run(['git', 'status', '--porcelain', '--untracked-files=no'], checkout).strip():
             raise RuntimeError('Isolated publication checkout has uncommitted changes; preserving it for review')
         run(['git', 'pull', '--ff-only', 'origin', BRANCH], checkout, timeout=180)
-        run(['git', 'sparse-checkout', 'add', 'public/tennis-matchup', 'config'], checkout)
+        run(['git', 'sparse-checkout', 'add', 'public/tennis-matchup', 'public/tennis-matchday', 'config'], checkout)
         as_of = date.today().isoformat()
         current_year = date.today().year
         cache = state / 'source-cache'
@@ -515,6 +541,15 @@ def refresh(config, dry_run=False):
             shutil.copy2(p, candidate / 'oncourt' / p.name)
         if fingerprints != [(p.stat().st_size, p.stat().st_mtime_ns) for p in files]:
             raise RuntimeError('OnCourt files changed while being copied; retry after refresh completes')
+        # Additional context inputs are optional for the independent archives.
+        # Remove only stale copies in this dedicated candidate directory when
+        # absent; context validation will retain the last public view.
+        for name in ('today_atp.csv','extraction-status.json'):
+            extra=source/name; copied=candidate/'oncourt'/name
+            if copied.exists():copied.unlink()
+            if extra.exists():
+                try:shutil.copy2(extra,copied)
+                except OSError:pass
         env = dict(os.environ, RETURN_ATLAS_CONFIG=config['_path'], RETURN_ATLAS_CANDIDATE=str(candidate),
                    RETURN_ATLAS_AS_OF=as_of, RETURN_ATLAS_OUTPUT_ROOT=str(candidate / 'release'))
         run([sys.executable, HERE / 'return_atlas_history.py'], env=env, timeout=600)
@@ -547,15 +582,24 @@ def refresh(config, dry_run=False):
         portrait_audit = read_json(candidate / 'matchup-private/matchday-portrait-audit.json')
         portrait_changed = bool(portrait_audit.get('changed'))
         status['matchdayPortraits'] = portrait_audit
+        context_relative=Path('public/tennis-matchday/context.json')
+        context_candidate=candidate/'release'/context_relative
+        context_changed=context_candidate.exists() and (not (checkout/context_relative).exists() or (checkout/context_relative).read_bytes()!=context_candidate.read_bytes())
+        status['matchdayContext']=read_json(candidate/'matchup-private/matchday-context-audit.json')
         status.pop('error', None)
+        status.pop('errorType', None)
         status.pop('failedAt', None)
         status.update(checkedAt=datetime.now(timezone.utc).isoformat(), matches=new_manifest['matches'],
                       through=new_manifest['through'], newMatches=new_manifest['matches'] - old_manifest['matches'])
         if dry_run:
-            status.update(status='validated-dry-run', changed=changed or matchup_changed or portrait_changed)
+            status.update(status='validated-dry-run', changed=changed or matchup_changed or portrait_changed or context_changed)
             save()
             return status
         stage_paths = []
+        if context_changed:
+            (checkout/context_relative).parent.mkdir(parents=True,exist_ok=True)
+            shutil.copy2(context_candidate,checkout/context_relative)
+            stage_paths.append(context_relative)
         if portrait_changed:
             portrait_path = Path(CATALOGUE)
             (checkout / portrait_path).parent.mkdir(parents=True, exist_ok=True)
@@ -594,7 +638,7 @@ def refresh(config, dry_run=False):
             run(['git', 'add', '--', *stage_paths], checkout)
             run(['git', 'commit', '-m', f'data: refresh tennis research through {new_manifest["through"]}'], checkout)
             run(['git', 'push', 'origin', f'HEAD:{BRANCH}'], checkout, timeout=180)
-        if live_version() != new_manifest['version'] or live_version('tennis-matchup') != matchup_new['version'] or not catalogue_is_live(checkout, SITE, fetch):
+        if live_version() != new_manifest['version'] or live_version('tennis-matchup') != matchup_new['version'] or not catalogue_is_live(checkout, SITE, fetch) or not context_is_live(checkout):
             # Also recovers a previous successful commit whose push was interrupted.
             run(['git', 'push', 'origin', f'HEAD:{BRANCH}'], checkout, timeout=180)
             publish(checkout, new_manifest['version'], status, save)

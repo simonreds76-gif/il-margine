@@ -92,6 +92,34 @@ def validate(old, new):
     return old.get('matchdaySupplement') != new.get('matchdaySupplement') or old.get('context') != new.get('context') or previous != candidate or old_extra != new_extra or any(old[k] != new[k] for k in ('players', 'portraits', 'countries'))
 
 
+def prepare_context(checkout, candidate, payload, schedule_rows, as_of):
+    private=candidate/'matchup-private'
+    private.mkdir(parents=True,exist_ok=True)
+    # Same immutable source copy and dated archive as H2H; this static object
+    # serves both the preview and the eventual production Results view.
+    from build_matchday_context import generate
+    context_path=candidate/'release/public/tennis-matchday/context.json'
+    previous_path=checkout/'public/tennis-matchday/context.json'
+    previous=None
+    try:
+        previous=read(previous_path) if previous_path.exists() else None
+        context,context_audit=generate(candidate/'oncourt',payload,schedule_rows,as_of,previous)
+        context_path.parent.mkdir(parents=True,exist_ok=True)
+        context_path.write_text(json.dumps(context,separators=(',',':'))+'\n',encoding='utf-8')
+        context_audit['status']='validated'
+    except Exception as error:
+        # This additive view never blocks the independently validated archives.
+        # A stale candidate from a prior failed attempt cannot be reused silently.
+        import shutil
+        if previous_path.exists():
+            context_path.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copy2(previous_path,context_path)
+        elif context_path.exists(): context_path.unlink()
+        context_audit={'status':'retained_previous' if previous else 'unavailable','errorType':type(error).__name__,
+                       'reason':str(error),'checkedAt':as_of}
+    (private/'matchday-context-audit.json').write_text(json.dumps(context_audit,indent=2),encoding='utf-8')
+
+
 def prepare(checkout, candidate, atlas_release, as_of, historical_prices=(), schedule=None):
     here = Path(__file__).resolve().parent
     def module(name, filename):
@@ -126,6 +154,7 @@ def prepare(checkout, candidate, atlas_release, as_of, historical_prices=(), sch
         payload['matchdaySupplement'] = supplement
         payload_path.write_text(json.dumps(payload), encoding='utf-8')
     (private / 'matchday-supplement-audit.json').write_text(json.dumps(supplement_audit, indent=2), encoding='utf-8')
+    prepare_context(checkout,candidate,payload,schedule_rows,as_of)
     from refresh_matchday_portraits import prepare as prepare_portraits
     prepare_portraits(checkout, candidate, schedule_rows, here.parent / 'config/tennis-portrait-overrides.json')
     new_release = packager.package(private / 'data.json', candidate / 'release')

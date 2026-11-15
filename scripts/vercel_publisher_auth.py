@@ -32,24 +32,49 @@ class PublicationAuthUnavailable(RuntimeError):
     pass
 
 
+# Cache only the resolved location, never credentials. Every command still
+# rereads the store under the renewal mutex. CLI upgrades/environment changes
+# invalidate this process-local cache; a new scheduled run starts empty.
+_STORE_LOCATIONS = {}
+
+
 def cli_store(executable, env):
     executable = shutil.which(str(executable)) or str(executable)
     module = Path(executable).resolve().parent / 'node_modules/vercel/node_modules/@vercel/cli-config/dist/cli-config.js'
     node = shutil.which('node')
     if not node or not module.is_file():
         raise PublicationAuthUnavailable('Cannot resolve the installed Vercel credential store; no login started.')
-    # Only the path crosses stdout, never an auth object or token.
+    stamp = module.stat()
+    keys = ('APPDATA','LOCALAPPDATA','USERPROFILE','HOME','XDG_DATA_HOME','XDG_CONFIG_HOME','VERCEL_CONFIG_DIR')
+    identity = (str(module), node, stamp.st_mtime_ns, stamp.st_size, tuple((k,env.get(k)) for k in keys))
+    if identity in _STORE_LOCATIONS:
+        return _STORE_LOCATIONS[identity]
     probe = "const c=require(process.argv[1]);process.stdout.write(JSON.stringify(c.getAuthConfigFilePath(c.getGlobalPathConfig())));"
-    try:
-        result = subprocess.run([node, '-e', probe, str(module)], env=env,
-            capture_output=True, text=True, timeout=10,
-            creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
-        path = Path(json.loads(result.stdout))
-        if result.returncode or not path.is_absolute() or path.name != 'auth.json':
-            raise ValueError()
-    except Exception:
-        raise PublicationAuthUnavailable('Cannot resolve the saved Vercel login; credentials were not changed.') from None
-    return path, node, module
+    reason = 'unavailable'
+    for attempt in range(2):
+        try:
+            result = subprocess.run([node, '-e', probe, str(module)], env=env,
+                capture_output=True, text=True, timeout=20,
+                creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+            if result.returncode:
+                reason = f'path helper exited {result.returncode}'
+            else:
+                raw = json.loads(result.stdout)
+                if not isinstance(raw, str): raise ValueError()
+                path = Path(raw)
+                if not path.is_absolute() or path.name != 'auth.json': raise ValueError()
+                value = (path, node, module)
+                _STORE_LOCATIONS[identity] = value
+                return value
+        except subprocess.TimeoutExpired:
+            reason = 'path helper timed out'
+        except (ValueError, TypeError):
+            reason = 'path helper returned an invalid location'
+        except OSError:
+            reason = 'path helper could not start'
+        if attempt == 0: time.sleep(1)
+    # Do not expose stdout/stderr/environment or misdiagnose this as invalid auth.
+    raise PublicationAuthUnavailable(f'Vercel credential location unavailable ({reason}; two attempts). Credentials unchanged; retry publication only.')
 
 
 @contextmanager

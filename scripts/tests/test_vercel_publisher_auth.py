@@ -145,4 +145,30 @@ class MutexTests(unittest.TestCase):
             self.assertEqual(child.returncode,0,err.decode());self.assertTrue(marker.exists())
 
 
+
+class LocationTests(unittest.TestCase):
+    def setUp(self): A._STORE_LOCATIONS.clear()
+    def probe(self, outcomes):
+        stack=contextlib.ExitStack();self.addCleanup(stack.close)
+        stack.enter_context(patch.object(A.shutil,'which',side_effect=lambda x: str(Path('C:/fake/vercel.cmd')) if 'vercel' in x else 'node'))
+        stack.enter_context(patch.object(A.Path,'is_file',return_value=True))
+        stack.enter_context(patch.object(A.Path,'stat',return_value=Mock(st_mtime_ns=1,st_size=2)))
+        stack.enter_context(patch.object(A.time,'sleep'))
+        return stack.enter_context(patch.object(A.subprocess,'run',side_effect=outcomes))
+    def good(self):return Mock(returncode=0,stdout=json.dumps(str(Path('C:/fake/auth.json'))))
+    def test_transient_lookup_retry_then_non_secret_cache(self):
+        call=self.probe([subprocess.TimeoutExpired('node',20),self.good()])
+        first=A.cli_store('vercel.cmd',{});self.assertEqual(first,A.cli_store('vercel.cmd',{}));self.assertEqual(call.call_count,2)
+        self.assertNotIn('token',str(A._STORE_LOCATIONS))
+    def test_environment_change_invalidates_location(self):
+        call=self.probe([self.good(),self.good()]);A.cli_store('vercel.cmd',{'APPDATA':'a'});A.cli_store('vercel.cmd',{'APPDATA':'b'});self.assertEqual(call.call_count,2)
+    def test_invalid_location_fails_bounded_without_echo(self):
+        call=self.probe([Mock(returncode=0,stdout='secret-output')]*2)
+        with self.assertRaises(A.PublicationAuthUnavailable) as e:A.cli_store('vercel.cmd',{})
+        self.assertIn('invalid location',str(e.exception));self.assertNotIn('secret-output',str(e.exception));self.assertEqual(call.call_count,2)
+        self.assertFalse(A._STORE_LOCATIONS)
+    def test_process_exit_is_distinct_from_revoked_credential(self):
+        self.probe([Mock(returncode=7,stdout='',stderr='secret')]*2)
+        with self.assertRaisesRegex(A.PublicationAuthUnavailable,'exited 7'):A.cli_store('vercel.cmd',{})
+
 if __name__=='__main__':unittest.main()
