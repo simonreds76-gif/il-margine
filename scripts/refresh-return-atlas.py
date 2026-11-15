@@ -33,6 +33,9 @@ from tennis_score_integrity import score_detail_enrichment
 
 from vercel_publisher_auth import PublicationAuthRequired, prepare_environment
 from atlas_production_release import production_commit
+from tournament_returns_refresh import (DATA as TOURNAMENT_RETURNS, prepare as prepare_tournament_returns,
+    expected_version as tournament_returns_version, page_version as tournament_returns_page_version,
+    is_live as tournament_returns_is_live)
 
 
 def publication_auth_args(args, env):
@@ -182,6 +185,8 @@ def source_csv(data, year):
 
 
 def live_version(route='return-atlas', *, timeout=60):
+    if route == 'tournament-returns':
+        return tournament_returns_page_version(fetch(SITE + '/tennis-matchday', timeout=timeout).decode('utf-8'))
     html = fetch(SITE + '/' + route, timeout=timeout).decode('utf-8')
     match = re.search(r'/' + re.escape(route) + r'/data/(\d{8}-[a-f0-9]{12})/index.json', html)
     if not match:
@@ -256,6 +261,9 @@ def data_release_paths(source):
         paths.append(Path('public/tennis-matchday/context.json'))
     if (source / CATALOGUE).exists():
         paths.append(Path(CATALOGUE))
+    if (source / TOURNAMENT_RETURNS).exists():
+        tournament_returns_version(source)
+        paths.append(TOURNAMENT_RETURNS)
     return paths
 
 
@@ -462,6 +470,11 @@ def publish(checkout, version, status, save):
         context_response=run([vercel,'curl','/tennis-matchday/context.json','--deployment',url,'--','--fail','--silent'],checkout,timeout=120)
         if json.loads(context_response)!=read_json(context_path):
             raise RuntimeError('Candidate Matchday context differs from validated snapshot')
+    returns_version = tournament_returns_version(checkout)
+    if returns_version:
+        returns_page = run([vercel, 'curl', '/tennis-matchday', '--deployment', url, '--', '--fail', '--silent'], checkout, timeout=120)
+        if tournament_returns_page_version(returns_page) != returns_version:
+            raise RuntimeError('Candidate tournament returns differ from validated snapshot')
     remote_sha = run(['git', 'ls-remote', 'origin', f'refs/heads/{release_branch}'], checkout).split()[0]
     if remote_sha != sha:
         raise RuntimeError('Deployment branch advanced during build; refusing to promote older code')
@@ -470,6 +483,8 @@ def publish(checkout, version, status, save):
         raise RuntimeError('Production changed during build; refusing to replace a newer release')
     run([vercel, 'promote', url, '--yes'], checkout, timeout=180)
     expected = {'return-atlas': version, 'tennis-matchup': matchup['version']}
+    if returns_version:
+        expected['tournament-returns'] = returns_version
     status.update(status='verifying', deploymentUrl=url, expectedPublicVersions=expected)
     save()
     verification = wait_for_live_versions(expected)
@@ -586,16 +601,22 @@ def refresh(config, dry_run=False):
         context_candidate=candidate/'release'/context_relative
         context_changed=context_candidate.exists() and (not (checkout/context_relative).exists() or (checkout/context_relative).read_bytes()!=context_candidate.read_bytes())
         status['matchdayContext']=read_json(candidate/'matchup-private/matchday-context-audit.json')
+        returns_report = prepare_tournament_returns(checkout, candidate)
+        status['tournamentReturns'] = returns_report
+        returns_changed = returns_report['changed']
         status.pop('error', None)
         status.pop('errorType', None)
         status.pop('failedAt', None)
         status.update(checkedAt=datetime.now(timezone.utc).isoformat(), matches=new_manifest['matches'],
                       through=new_manifest['through'], newMatches=new_manifest['matches'] - old_manifest['matches'])
         if dry_run:
-            status.update(status='validated-dry-run', changed=changed or matchup_changed or portrait_changed or context_changed)
+            status.update(status='validated-dry-run', changed=changed or matchup_changed or portrait_changed or context_changed or returns_changed)
             save()
             return status
         stage_paths = []
+        if returns_changed:
+            shutil.copy2(candidate / 'release' / TOURNAMENT_RETURNS, checkout / TOURNAMENT_RETURNS)
+            stage_paths.append(TOURNAMENT_RETURNS)
         if context_changed:
             (checkout/context_relative).parent.mkdir(parents=True,exist_ok=True)
             shutil.copy2(context_candidate,checkout/context_relative)
@@ -638,7 +659,7 @@ def refresh(config, dry_run=False):
             run(['git', 'add', '--', *stage_paths], checkout)
             run(['git', 'commit', '-m', f'data: refresh tennis research through {new_manifest["through"]}'], checkout)
             run(['git', 'push', 'origin', f'HEAD:{BRANCH}'], checkout, timeout=180)
-        if live_version() != new_manifest['version'] or live_version('tennis-matchup') != matchup_new['version'] or not catalogue_is_live(checkout, SITE, fetch) or not context_is_live(checkout):
+        if live_version() != new_manifest['version'] or live_version('tennis-matchup') != matchup_new['version'] or not catalogue_is_live(checkout, SITE, fetch) or not context_is_live(checkout) or not tournament_returns_is_live(checkout, SITE, fetch):
             # Also recovers a previous successful commit whose push was interrupted.
             run(['git', 'push', 'origin', f'HEAD:{BRANCH}'], checkout, timeout=180)
             publish(checkout, new_manifest['version'], status, save)
