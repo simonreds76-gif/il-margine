@@ -14,6 +14,7 @@ import "./matchup.css";
 import "./comparison.css";
 import "./context.css";
 import "@/components/TennisResearchContext.css";
+import "@/components/TennisConditions.css";
 
 export const dynamic="force-static";
 const title="Tennis Matchup Lab: H2H, Aces & Player Statistics";

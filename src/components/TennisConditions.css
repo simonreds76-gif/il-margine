@@ -1,0 +1,55 @@
+.tennis-conditions{min-width:0;color:#dbe8e8;background:#101e26;border:1px solid #30444d;border-radius:14px;margin:20px 0;overflow:hidden;text-align:left}
+.tennis-conditions *{box-sizing:border-box}
+.tennis-conditions .tc-heading{display:flex;align-items:center;gap:12px;padding:16px 18px;min-height:56px;list-style:none;color:#e8f2f1}
+.tennis-conditions .tc-heading::-webkit-details-marker{display:none}
+.tennis-conditions .tc-heading strong{font-size:16px;font-weight:600;display:block;line-height:1.4}
+.tennis-conditions .tc-heading small{display:block;font-size:12px;font-weight:400;color:#b0c3cd;line-height:1.5;margin-top:2px}
+.tennis-conditions .tc-icon{display:grid;place-items:center;flex:none;width:40px;height:40px;border:1px solid #3a5358;border-radius:11px;background:#172b31}
+.tennis-conditions .tc-icon svg{display:block;width:32px;height:32px}
+.tennis-conditions .tc-body{padding:0 18px 15px}
+.tennis-conditions .tc-body h4{font-size:15px;margin:3px 0 15px;color:#e8f2f1;font-weight:600}
+.tennis-conditions .tc-context{margin:0 0 14px!important;color:#a9bdc8!important}
+.tennis-conditions p{font-size:12px;line-height:1.6;color:#bfced5;margin:8px 0}
+.tennis-conditions .tc-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tennis-conditions .tc-metric{min-width:0;padding:15px;background:#152731;border:1px solid #344c55;border-radius:10px}
+.tennis-conditions .tc-kind{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#a6e3cd;font-weight:700}
+.tennis-conditions [data-kind=estimated] .tc-kind{color:#b6cdec}
+.tennis-conditions .tc-metric>strong{display:block;font-size:30px;line-height:1.25;letter-spacing:-.02em;font-weight:600;font-variant-numeric:tabular-nums;margin:8px 0 3px;color:#edf6f3;overflow-wrap:anywhere}
+.tennis-conditions .tc-metric>strong small{display:inline-block;font-size:12px;margin-left:7px;font-weight:400;letter-spacing:0;color:#bfd0d7}
+.tennis-conditions .tc-period{font-size:11px;color:#c4d1d8;display:block}
+.tennis-conditions .tc-scale{font-size:11px;color:#a9bfcc;margin:10px 0 15px}
+.tennis-conditions .tc-facts{margin:0;font-size:12px}
+.tennis-conditions .tc-facts>div{display:grid;grid-template-columns:70px minmax(0,1fr);gap:12px;padding:9px 0;border-top:1px solid #30444d}
+.tennis-conditions dt{color:#a8bec9}
+.tennis-conditions dd{margin:0;text-align:left;overflow-wrap:anywhere}
+.tennis-conditions .tc-changes{list-style:none;padding:0;margin:10px 0}
+.tennis-conditions .tc-changes li{font-size:12px;line-height:1.6;padding:9px 11px;border-radius:8px;background:#293128;color:#d8dec4}
+.tennis-conditions .tc-changes li+li{margin-top:7px}
+.tennis-conditions .tc-changes span{display:block;font-size:10px;letter-spacing:.03em;font-weight:600;color:#d7dea9}
+.tennis-conditions .tc-muted{font-size:11px;color:#a5bac7}
+.tennis-conditions .tc-evidence{border-top:1px solid #30444d;margin-top:14px}
+.tennis-conditions summary{cursor:pointer}
+.tennis-conditions .tc-evidence>summary{padding:12px 0;min-height:44px;font-size:12px;font-weight:600;color:#d6e5e9}
+.tennis-conditions .tc-history>div{display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;padding:10px 0;border-top:1px solid #283b44;font-size:12px}
+.tennis-conditions .tc-history b{color:#d5e4e8;font-variant-numeric:tabular-nums}
+.tennis-conditions .tc-history strong{font-size:12px;font-weight:500}
+.tennis-conditions .tc-history span,.tennis-conditions .tc-history em{display:block;font-size:11px;line-height:1.6;color:#acbfca;margin-top:2px;font-style:normal}
+.tennis-conditions .tc-history em{color:#d7dea9}
+.tennis-conditions .tc-sources{display:flex;flex-wrap:wrap;gap:0 16px}
+.tennis-conditions a{font-size:12px;min-height:44px;display:inline-flex;align-items:center;color:#a6e3cd;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.tennis-conditions summary:focus-visible,.tennis-conditions a:focus-visible{outline:2px solid #9de9c6;outline-offset:3px;border-radius:3px}
+.tennis-conditions.tc-compact{margin:0;border:0;border-top:1px solid #2c4149;border-bottom:1px solid #2c4149;border-radius:0;background:#111f27}
+.tennis-conditions.tc-compact .tc-heading{padding:10px 16px;min-height:58px}
+.tennis-conditions.tc-compact .tc-heading strong{font-size:12px}
+.tennis-conditions.tc-compact .tc-heading small{font-size:11px}
+.tennis-conditions.tc-compact .tc-icon{width:32px;height:32px;border-radius:9px}
+.tennis-conditions.tc-compact .tc-icon svg{width:26px;height:26px}
+.tennis-conditions .tc-chevron{margin-left:auto;color:#a8bec9;transition:transform .15s}
+.tennis-conditions[open]>.tc-heading .tc-chevron{transform:rotate(180deg)}
+@media(max-width:520px){.tennis-conditions .tc-metrics{grid-template-columns:1fr}.tennis-conditions .tc-heading{padding:14px}.tennis-conditions .tc-body{padding:0 14px 14px}.tennis-conditions .tc-metric{padding:12px}.tennis-conditions .tc-metric>strong{font-size:28px}.tennis-conditions .tc-heading strong{font-size:15px}}
+
+.tennis-conditions .tc-heading h3{font-size:16px;font-weight:600;line-height:1.4;margin:0;color:#e8f2f1}
+.tennis-conditions .tc-kind,.tennis-conditions .tc-period,.tennis-conditions .tc-muted,.tennis-conditions .tc-scale,.tennis-conditions .tc-history span,.tennis-conditions .tc-history em,.tennis-conditions .tc-changes span{font-size:12px}
+.tennis-conditions .tc-before-change{color:#d7dea9;font-size:12px}
+.tc-empty{margin:0;padding:10px 16px;font-size:12px;line-height:1.5;color:#9fb5c2;border-top:1px solid #2c4149;background:#111f27}
+@media(prefers-reduced-motion:reduce){.tennis-conditions .tc-chevron{transition:none}}

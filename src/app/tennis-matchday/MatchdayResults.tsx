@@ -1,3 +1,4 @@
+import TennisConditions from '@/components/TennisConditions';
 import type { CSSProperties, ReactNode } from 'react';
 import type { TennisBoard, CompletedResult } from '@/lib/tennis-matchday.mjs';
 import type { BrowseState } from '@/lib/tennis-matchday-browse.mjs';
@@ -96,6 +97,7 @@ export default function MatchdayResults({ board, state, update, now, viewSwitch,
             <span className={styles.groupCount}>{rows.length}<span className="sr-only"> results</span></span>
           <span className={styles.groupChevron}><Icon name="chevron" /></span>
           </summary>
+          <TennisConditions event={first.event} tour={first.tour} date={first.date} />
           <div className={styles.resultColumns}><span className={styles.resultRoundHeader}>Round</span><span>Players</span>
             <span className={styles.scoreHeading}><span>Set scores</span><span className={styles.setLabels}>{Array.from({length: columns}, (_, i) => <span key={i}>{i+1}</span>)}</span></span>
           </div>

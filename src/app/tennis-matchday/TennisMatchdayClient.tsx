@@ -1,4 +1,5 @@
 'use client';
+import TennisConditions from '@/components/TennisConditions';
 import TournamentReturns, { TournamentReturnsPicker } from './TournamentReturns';
 import type { ReturnProjection } from '@/lib/tennis-tournament-returns.mjs';
 import { useEffect, useId, useState } from 'react';
@@ -107,11 +108,12 @@ function Meetings({ fixture: f }: { fixture: TennisFixture }) {
   </>;
 }
 
-function MatchPanel({ fixture: f, now }: { fixture: TennisFixture; now: Date }) {
+function MatchPanel({ fixture: f, now, showConditions = false }: { fixture: TennisFixture; now: Date; showConditions?: boolean }) {
   const quote = matchdayQuote(f, now);
   const through = f.players.map(p => p.recent?.through).filter(isDay).sort()[0];
   return <article aria-label={`${f.players[0].name} versus ${f.players[1].name}`}>
     <div className={styles.panelGrid}>{f.players.map(p => <RecentColumn key={p.name} player={p} />)}</div>
+    {showConditions && <TennisConditions event={tournamentOf(f).label} tour={f.tour} date={f.start} />}
     <section className={styles.block} aria-label="Head-to-head">
       <div className={styles.blockHead}><h4>Head-to-head</h4><small>All recorded surfaces</small></div>
       {f.wins && f.meetings
@@ -156,7 +158,7 @@ function FixtureRow({ fixture: f, now, showEvent }: { fixture: TennisFixture; no
       <span className={styles.chev}><Icon name="chevron" /></span>
       <span className="sr-only">{formText} {open ? 'Close' : 'Open'} recent results and head-to-head.</span>
     </button>
-    <div id={detailId} hidden={!open} className={styles.panel}>{open && <MatchPanel fixture={f} now={now} />}</div>
+    <div id={detailId} hidden={!open} className={styles.panel}>{open && <MatchPanel fixture={f} now={now} showConditions={showEvent} />}</div>
   </div>;
 }
 
@@ -268,6 +270,7 @@ export default function TennisMatchdayClient({ board, renderedAt, tournamentHist
             </header>
           : <header className={styles.groupHead}><div><h3>All tournaments</h3><p className={styles.groupMeta}>In start order</p></div><span className={styles.groupCount}>{group.fixtures.length}</span></header>}
         {group.event?.tour === 'ATP' && group.fixtures.some(f => !isQualifying(f)) && <TournamentReturns summary={tournamentHistory.byTournament[group.event.key] || { availability: 'unavailable', name: group.event.displayName, reason: 'No audited price history is linked to this tournament edition and surface yet.' }} />}
+        {group.event && <TennisConditions event={group.event.label} tour={group.event.tour} date={group.fixtures[0].start} />}
         <OddsColumns />
         {group.fixtures.map(f => <FixtureRow fixture={f} now={now} showEvent={order === 'time'} key={f.id} />)}
       </section>)}

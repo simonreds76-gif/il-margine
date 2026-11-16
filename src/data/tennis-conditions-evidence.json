@@ -1,0 +1,268 @@
+{
+  "schema": 1,
+  "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+  "usage": "Display-only evidence; not connected to pricing or model eligibility.",
+  "families": [
+    {
+      "key": "paris",
+      "name": "Paris Masters",
+      "tour": "ATP",
+      "surface": "indoor-hard",
+      "aliases": [
+        "Paris",
+        "Paris Masters",
+        "Rolex Paris Masters",
+        "Rolex Paris Masters - Paris"
+      ],
+      "editions": [
+        {
+          "year": 2026,
+          "venue": {
+            "name": "Plenitude Arena, La Défense",
+            "source": {
+              "url": "https://www.rolexparismasters.com/en/practical-information",
+              "label": "2026 official venue",
+              "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+              "publishedAt": null
+            }
+          },
+          "ball": {
+            "name": "Dunlop",
+            "source": {
+              "url": "https://dunlopsports.com/en-gb/dunlop-love-the-game/dunlop-strengthens-position-as-the-no-1-ball-on-tour-with-atp-indoor-hard-court-swing-partnership",
+              "label": "Ball announcement",
+              "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+              "publishedAt": "2026-09-12"
+            }
+          },
+          "changes": [
+            {
+              "kind": "ball",
+              "label": "New Dunlop ball partnership in 2026",
+              "source": {
+                "url": "https://dunlopsports.com/en-gb/dunlop-love-the-game/dunlop-strengthens-position-as-the-no-1-ball-on-tour-with-atp-indoor-hard-court-swing-partnership",
+                "label": "Ball announcement",
+                "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+                "publishedAt": "2026-09-12"
+              }
+            }
+          ],
+          "estimate": null,
+          "measurement": {
+            "value": 50,
+            "year": 2026,
+            "unit": "CPI",
+            "court": "Not stated on chart",
+            "measuredAt": null,
+            "firstSeenAt": "2026-11-16T13:38:00Z",
+            "sample": null,
+            "source": {
+              "url": "https://courtspeed.com/sources/ec5ab76b736d.webp",
+              "label": "2026 broadcast chart",
+              "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+              "publishedAt": null
+            }
+          }
+        },
+        {
+          "year": 2025,
+          "venue": {
+            "name": "Paris La Défense Arena",
+            "source": {
+              "url": "https://www.atptour.com/en/news/paris-venue-announcement-press-release-january-2024",
+              "label": "Venue announcement",
+              "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+              "publishedAt": null
+            }
+          },
+          "ball": null,
+          "changes": [
+            {
+              "kind": "venue",
+              "label": "Moved from Bercy to La Défense in 2025",
+              "source": {
+                "url": "https://www.atptour.com/en/news/paris-venue-announcement-press-release-january-2024",
+                "label": "Venue announcement",
+                "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+                "publishedAt": null
+              }
+            }
+          ],
+          "estimate": {
+            "value": 0.99,
+            "year": 2025,
+            "matches": null,
+            "servicePoints": null,
+            "basis": "Server- and returner-adjusted ace rate",
+            "source": {
+              "url": "https://www.tennisabstract.com/cgi-bin/surface-speed.cgi?year=2025",
+              "label": "2025 estimate & method",
+              "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+              "publishedAt": null
+            },
+            "originalSnapshotAt": "2026-06-24T13:34:00Z",
+            "methodUrl": "https://www.tennisabstract.com/blog/2013/11/19/the-speed-of-every-2013-surface/"
+          },
+          "measurement": {
+            "value": 35.1,
+            "year": 2025,
+            "unit": "CPI",
+            "court": "Court Central",
+            "measuredAt": null,
+            "firstSeenAt": "2026-11-16T13:38:00Z",
+            "sample": null,
+            "source": {
+              "url": "https://courtspeed.com/sources/e0e1de515382.webp",
+              "label": "2025 broadcast chart",
+              "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+              "publishedAt": null
+            }
+          }
+        },
+        {
+          "year": 2024,
+          "venue": {
+            "name": "Accor Arena, Bercy",
+            "source": {
+              "url": "https://www.atptour.com/en/news/paris-venue-announcement-press-release-january-2024",
+              "label": "Venue announcement",
+              "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+              "publishedAt": null
+            }
+          },
+          "ball": null,
+          "changes": [],
+          "estimate": {
+            "value": 1.24,
+            "year": 2024,
+            "matches": null,
+            "servicePoints": null,
+            "basis": "Server- and returner-adjusted ace rate",
+            "source": {
+              "url": "https://www.tennisabstract.com/cgi-bin/surface-speed.cgi?year=2024",
+              "label": "2024 estimate & method",
+              "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+              "publishedAt": null
+            },
+            "originalSnapshotAt": "2026-06-24T13:34:00Z",
+            "methodUrl": "https://www.tennisabstract.com/blog/2013/11/19/the-speed-of-every-2013-surface/"
+          },
+          "measurement": {
+            "value": 46.6,
+            "year": 2024,
+            "unit": "CPI",
+            "court": "Court Central",
+            "measuredAt": null,
+            "firstSeenAt": "2026-11-16T13:38:00Z",
+            "sample": null,
+            "source": {
+              "url": "https://courtspeed.com/sources/e0e1de515382.webp",
+              "label": "2024 broadcast chart",
+              "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+              "publishedAt": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "key": "finals",
+      "name": "ATP Finals",
+      "tour": "ATP",
+      "surface": "indoor-hard",
+      "aliases": [
+        "Finals",
+        "Tour Finals",
+        "ATP Finals",
+        "Nitto ATP Finals",
+        "Turin",
+        "Nitto ATP Finals - Turin",
+        "ATP Finals - Turin",
+        "Nitto ATP Finals - Torino"
+      ],
+      "editions": [
+        {
+          "year": 2026,
+          "venue": {
+            "name": "Inalpi Arena, Turin",
+            "source": {
+              "url": "https://www.nittoatpfinals.com/en/venue/about-the-venue",
+              "label": "Official venue",
+              "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+              "publishedAt": null
+            }
+          },
+          "ball": {
+            "name": "Dunlop",
+            "source": {
+              "url": "https://dunlopsports.com/en-gb/dunlop-love-the-game/dunlop-strengthens-position-as-the-no-1-ball-on-tour-with-atp-indoor-hard-court-swing-partnership",
+              "label": "Ball announcement",
+              "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+              "publishedAt": "2026-09-12"
+            }
+          },
+          "measurement": null,
+          "estimate": null,
+          "changes": []
+        },
+        {
+          "year": 2025,
+          "venue": {
+            "name": "Inalpi Arena, Turin",
+            "source": {
+              "url": "https://www.nittoatpfinals.com/en/heritage/history",
+              "label": "Venue history",
+              "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+              "publishedAt": null
+            }
+          },
+          "ball": null,
+          "measurement": null,
+          "estimate": {
+            "value": 1.4,
+            "year": 2025,
+            "matches": null,
+            "servicePoints": null,
+            "basis": "Server- and returner-adjusted ace rate",
+            "source": {
+              "url": "https://www.tennisabstract.com/cgi-bin/surface-speed.cgi?year=2025",
+              "label": "2025 estimate & method",
+              "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+              "publishedAt": null
+            },
+            "originalSnapshotAt": "2026-06-24T13:34:00Z",
+            "methodUrl": "https://www.tennisabstract.com/blog/2013/11/19/the-speed-of-every-2013-surface/"
+          },
+          "changes": []
+        },
+        {
+          "year": 2021,
+          "venue": {
+            "name": "Turin",
+            "source": {
+              "url": "https://www.nittoatpfinals.com/en/heritage/history",
+              "label": "Venue history",
+              "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+              "publishedAt": null
+            }
+          },
+          "ball": null,
+          "measurement": null,
+          "estimate": null,
+          "changes": [
+            {
+              "kind": "venue",
+              "label": "Moved from London to Turin in 2021",
+              "source": {
+                "url": "https://www.nittoatpfinals.com/en/heritage/history",
+                "label": "Venue history",
+                "checkedAt": "2026-11-16T13:58:34.644835+00:00",
+                "publishedAt": null
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
