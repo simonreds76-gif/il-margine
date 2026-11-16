@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-16T02:22:26Z",
+  "updated_at": "2026-11-16T20:24:04Z",
   "reason": "cycle",
   "last_clv_run_at": "2026-10-24T14:00:04Z",
   "leagues": {
@@ -26,15 +26,15 @@
       "next_kickoff_utc": ""
     },
     "la-liga": {
-      "last_successful_run_at": "2026-11-08T16:39:26Z",
-      "last_price_run_at": "2026-11-08T16:39:26Z",
+      "last_successful_run_at": "2026-11-16T20:24:04Z",
+      "last_price_run_at": "2026-11-16T20:24:04Z",
       "last_detail_run_at": "2026-11-01T11:44:59Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip la-liga: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "board",
+      "last_decision": "ran",
+      "last_message": "Ran la-liga in board tier (cadence 55m, fixtures 1).",
+      "next_kickoff_utc": "2026-11-20T20:00:00Z"
     },
     "bundesliga": {
       "last_successful_run_at": "2026-11-08T16:39:36Z",
