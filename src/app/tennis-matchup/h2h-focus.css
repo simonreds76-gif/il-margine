@@ -1,0 +1,183 @@
+/* PREVIEW ONLY (Fable, 16 Nov 2026). Tennis H2H first pass: picker, players and record,
+   historical return, section links. Loaded last from page.tsx.
+   Every selector starts with ".public-site main.matchup-lab" so it outranks the older
+   ".public-site .matchup-lab" rules whatever the bundle order. New pieces use "mx-" names
+   that no older rule targets. Nothing here animates. */
+
+.public-site main.matchup-lab { --mx-sticky-top: 72px; } /* height of the sticky site header; one place to correct it */
+
+/* ---------- 1. Picker: players, record, compare, filters ---------- */
+.public-site main.matchup-lab .controls { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 12px 16px; padding: 16px; }
+.public-site main.matchup-lab .controls > .player-pickers { grid-column: 1/-1; display: grid; grid-template-columns: minmax(0,1fr) 44px minmax(0,1fr); gap: 10px; align-items: end; }
+.public-site main.matchup-lab .controls > .player-pickers label { gap: 6px; min-width: 0; font-size: 12px; font-weight: 600; color: var(--muted); }
+.public-site main.matchup-lab .controls .mx-pick-label { display: flex; align-items: center; gap: 7px; }
+.public-site main.matchup-lab .controls .mx-pick-label i { width: 7px; height: 7px; border-radius: 50%; background: var(--player-colour); flex: none; }
+.public-site main.matchup-lab .controls > .player-pickers input { min-height: 48px; padding: 11px 14px; font-size: 16px; font-weight: 650; border-radius: 10px; border-left: 3px solid var(--player-colour); }
+.public-site main.matchup-lab .controls #swap { grid-column: auto; grid-row: auto; align-self: end; width: 44px; height: 44px; min-height: 44px; margin: 0 0 2px; padding: 0; border-radius: 50%; font-size: 20px; line-height: 1; }
+
+.public-site main.matchup-lab .controls > .record-modes { grid-column: 1; justify-self: start; display: block; min-width: 0; margin: 0; padding: 0; border: 0; }
+.public-site main.matchup-lab .controls .mx-segments { display: grid; grid-template-columns: repeat(2,minmax(150px,1fr)); gap: 3px; padding: 3px; border: 1px solid #3a505e; border-radius: 12px; background: #0e171e; }
+.public-site main.matchup-lab .controls .mx-segments label { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 1px; flex: none; min-height: 44px; padding: 5px 14px; border: 1px solid transparent; border-radius: 9px; background: none; font-size: 13px; font-weight: 650; line-height: 1.3; color: var(--ink); cursor: pointer; }
+.public-site main.matchup-lab .controls .mx-segments label:has(input:checked) { border-color: var(--mint); background: #19332e; }
+.public-site main.matchup-lab .controls .mx-segments label:has(input:focus-visible) { outline: 3px solid var(--mint); outline-offset: 2px; }
+.public-site main.matchup-lab .controls .mx-segments input { position: absolute; width: 1px; height: 1px; min-height: 0; margin: 0; padding: 0; border: 0; opacity: 0; }
+.public-site main.matchup-lab .controls .mx-segments small { font-size: 11px; font-weight: 400; line-height: 1.35; color: var(--muted); }
+.public-site main.matchup-lab .controls .mx-segments label:has(input:checked) small { color: #bfe9d8; }
+
+.public-site main.matchup-lab .controls > .mx-actions { grid-column: 2; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.public-site main.matchup-lab .controls .mx-actions .compare { display: inline-flex; align-items: center; justify-content: center; gap: 10px; grid-column: auto; justify-self: auto; align-self: auto; width: auto; min-height: 48px; margin: 0; padding: 12px 22px; border: 0; border-radius: 10px; background: var(--mint); color: #09241b; font-size: 14px; font-weight: 800; }
+.public-site main.matchup-lab .controls .mx-actions .compare span { margin-left: 0; }
+.public-site main.matchup-lab .controls .mx-actions .example-button { min-height: 48px; margin: 0; border-radius: 10px; }
+
+.public-site main.matchup-lab .controls > .comparison-filters { grid-column: 1/-1; margin: 0; border: 1px solid var(--line); border-radius: 10px; background: #0f1920; }
+.public-site main.matchup-lab .controls > .comparison-filters > summary { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; min-height: 44px; padding: 8px 14px; font-size: 13px; line-height: 1.5; color: var(--ink); list-style: none; }
+.public-site main.matchup-lab .controls > .comparison-filters > summary::-webkit-details-marker { display: none; }
+.public-site main.matchup-lab .controls > .comparison-filters > summary small { display: inline; margin: 0; font-size: 12px; font-weight: 400; color: var(--muted); }
+.public-site main.matchup-lab .controls > .comparison-filters > summary::after { content: ""; flex: none; width: 8px; height: 8px; margin: 0 4px 3px auto; border-right: 2px solid var(--mint); border-bottom: 2px solid var(--mint); transform: rotate(45deg); }
+.public-site main.matchup-lab .controls > .comparison-filters[open] > summary::after { margin-bottom: -3px; transform: rotate(225deg); }
+.public-site main.matchup-lab .controls > .comparison-filters .filters { margin: 0; padding: 4px 14px 14px; }
+.public-site main.matchup-lab .controls > #form-error { grid-column: 1/-1; margin: 0; }
+
+.public-site main.matchup-lab .selection { margin: 14px 0 10px; padding: 0; font-size: 12px; line-height: 1.6; color: var(--muted); }
+
+/* ---------- 2. Players, record and historical return ---------- */
+.public-site main.matchup-lab .mx-duel { border: 1px solid #30414b; border-radius: 16px; background: linear-gradient(180deg,#14212a,#111a21); overflow: hidden; }
+.public-site main.matchup-lab .mx-duel-top { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: center; gap: 16px 24px; padding: 22px 24px; }
+.public-site main.matchup-lab .mx-player { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.public-site main.matchup-lab .mx-player.side-1 { flex-direction: row-reverse; text-align: right; }
+.public-site main.matchup-lab .mx-portrait { position: relative; flex: none; display: grid; place-items: center; width: 88px; height: 88px; border-radius: 50%; overflow: hidden; background: #223541; box-shadow: 0 0 0 2px #121c24, 0 0 0 4px var(--player-colour); color: var(--muted); font-size: 22px; font-weight: 650; }
+.public-site main.matchup-lab .mx-portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.public-site main.matchup-lab .mx-player-text { min-width: 0; }
+.public-site main.matchup-lab .mx-player h2 { margin: 0; font-size: 24px; font-weight: 700; line-height: 1.15; letter-spacing: -.02em; overflow-wrap: anywhere; }
+.public-site main.matchup-lab .mx-country { margin: 6px 0 0; font-size: 11px; font-weight: 700; letter-spacing: .14em; color: var(--player-colour); }
+.public-site main.matchup-lab .mx-own-record { display: flex; flex-direction: column; gap: 3px; margin: 10px 0 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.public-site main.matchup-lab .mx-own-record strong { font-size: 26px; line-height: 1.2; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.public-site main.matchup-lab .mx-own-record strong small { font-size: 12px; font-weight: 500; color: var(--muted); }
+.public-site main.matchup-lab .mx-own-record strong span { font-weight: 400; color: #52697a; }
+
+.public-site main.matchup-lab .mx-score { text-align: center; }
+.public-site main.matchup-lab .mx-tally { display: flex; justify-content: center; align-items: baseline; gap: 12px; margin: 0; font-size: 54px; font-weight: 750; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; color: var(--ink); }
+.public-site main.matchup-lab .mx-tally b { font-weight: inherit; color: var(--player-colour); }
+.public-site main.matchup-lab .mx-tally i { font-style: normal; font-weight: 400; color: #52697a; }
+.public-site main.matchup-lab .mx-versus .mx-tally { font-size: 20px; font-weight: 600; letter-spacing: .06em; color: var(--muted); }
+.public-site main.matchup-lab .mx-sample-line { margin: 10px 0 0; font-size: 12px; line-height: 1.6; color: var(--muted); }
+.public-site main.matchup-lab .mx-sample-line > * { display: block; }
+.public-site main.matchup-lab .mx-mode { font-size: 10px; font-weight: 750; letter-spacing: .18em; text-transform: uppercase; color: var(--ink); }
+.public-site main.matchup-lab .mx-sample { font-style: normal; font-weight: 600; color: #d5bc8e; }
+
+.public-site main.matchup-lab .mx-returns { padding: 18px 24px 8px; border-top: 1px solid #2b3c46; background: #0f1920; }
+.public-site main.matchup-lab .mx-returns-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin: 0 0 14px; }
+.public-site main.matchup-lab .mx-returns-head h3 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 12px; font-weight: 750; letter-spacing: .14em; text-transform: uppercase; color: var(--mint); }
+.public-site main.matchup-lab .mx-returns-head h3 svg { width: 24px; height: 24px; flex: none; }
+.public-site main.matchup-lab .mx-returns-head p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.public-site main.matchup-lab .mx-returns-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px; }
+.public-site main.matchup-lab .mx-return { min-width: 0; padding: 14px 16px 6px; border: 1px solid #2b3c46; border-top: 3px solid var(--player-colour); border-radius: 10px; background: #131f27; }
+.public-site main.matchup-lab .mx-roi { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; margin: 8px 0 0; }
+.public-site main.matchup-lab .mx-roi strong { font-size: 36px; font-weight: 750; line-height: 1.1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.public-site main.matchup-lab .mx-roi span { font-size: 11px; font-weight: 700; letter-spacing: .14em; color: var(--muted); }
+.public-site main.matchup-lab .mx-roi.positive strong { color: var(--mint); }
+.public-site main.matchup-lab .mx-roi.negative strong { color: var(--coral); }
+.public-site main.matchup-lab .mx-roi.neutral strong { color: var(--muted); }
+.public-site main.matchup-lab .mx-return-line { margin: 6px 0 0; font-size: 13px; line-height: 1.5; color: var(--ink); }
+.public-site main.matchup-lab .mx-return-line b { font-weight: 650; font-variant-numeric: tabular-nums; }
+.public-site main.matchup-lab .mx-return-cover { margin: 2px 0 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.public-site main.matchup-lab .mx-atlas-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 4px; font-size: 13px; color: var(--mint); text-decoration: none; }
+.public-site main.matchup-lab .mx-atlas-link svg { width: 22px; height: 22px; flex: none; }
+.public-site main.matchup-lab .mx-atlas-link:hover > span { text-decoration: underline; }
+.public-site main.matchup-lab .mx-returns-note { margin: 12px 0 0; font-size: 12px; line-height: 1.6; color: var(--muted); }
+.public-site main.matchup-lab .mx-returns-explainer { margin-top: 8px; border-top: 1px solid #22323c; }
+.public-site main.matchup-lab .mx-returns-explainer > summary { min-height: 44px; padding: 12px 0; font-size: 13px; font-weight: 600; line-height: 1.5; color: var(--mint); }
+.public-site main.matchup-lab .mx-returns-explainer p { max-width: 760px; margin: 0 0 10px; font-size: 13px; line-height: 1.7; color: var(--muted); }
+.public-site main.matchup-lab .mx-returns-explainer strong { color: var(--ink); }
+
+/* ---------- 3. Section links: one row that stays under the site header ---------- */
+.public-site main.matchup-lab #results .comparison-nav { position: sticky; top: var(--mx-sticky-top); z-index: 5; display: flex; flex-wrap: nowrap; gap: 6px; min-width: 0; margin: 12px 0 0; padding: 8px 0; overflow-x: auto; background: #0f1117; border-bottom: 1px solid var(--line); scrollbar-width: none; }
+.public-site main.matchup-lab #results .comparison-nav::-webkit-scrollbar { display: none; }
+.public-site main.matchup-lab #results .comparison-nav a { flex: none; min-height: 44px; padding: 8px 14px 8px 10px; border-radius: 999px; font-size: 13px; white-space: nowrap; }
+.public-site main.matchup-lab #results .comparison-nav svg { width: 22px; height: 22px; }
+.public-site main.matchup-lab #results a:focus-visible { outline: 2px solid var(--mint); outline-offset: 3px; }
+.public-site main.matchup-lab #results .comparison-nav a:focus-visible { outline-offset: -3px; }
+.public-site main.matchup-lab #results .section[id] { scroll-margin-top: calc(var(--mx-sticky-top) + 80px); }
+
+/* ---------- 4. Sections: one heading each, lists that say Show and Hide ---------- */
+.public-site main.matchup-lab #results :is(#comparison-matches,#comparison-odds,#comparison-profile,#comparison-courts) { margin-top: 28px; padding-top: 24px; }
+.public-site main.matchup-lab #results #comparison-matches { border-top: 0; padding-top: 0; }
+.public-site main.matchup-lab #results .section-heading { gap: 12px; }
+.public-site main.matchup-lab #results .section-heading .section-icon { width: 32px; height: 32px; }
+.public-site main.matchup-lab #results .section-heading h2 { font-size: 21px; line-height: 1.3; }
+.public-site main.matchup-lab #results .mx-note { margin: 16px 0 0; font-size: 12px; line-height: 1.7; }
+.public-site main.matchup-lab #results .histories details > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; list-style: none; }
+.public-site main.matchup-lab #results .histories details > summary::-webkit-details-marker { display: none; }
+.public-site main.matchup-lab #results .mx-toggle { display: inline-flex; align-items: center; gap: 9px; flex: none; font-size: 12px; font-weight: 600; color: var(--mint); }
+.public-site main.matchup-lab #results .mx-toggle::after { content: ""; width: 7px; height: 7px; margin-bottom: 3px; border-right: 2px solid var(--mint); border-bottom: 2px solid var(--mint); transform: rotate(45deg); }
+.public-site main.matchup-lab #results .histories details[open] > summary .mx-toggle::after { margin-bottom: -3px; transform: rotate(225deg); }
+.public-site main.matchup-lab #results .histories details[open] > summary .when-closed { display: none; }
+.public-site main.matchup-lab #results .histories details[open] > summary .when-open { display: inline; }
+
+/* The archive-coverage note now sits beside the other coverage note in the quick guide. */
+.public-site main.matchup-lab .method details + details { margin-top: 10px; }
+.public-site main.matchup-lab .method .mx-coverage p { margin: 0 0 12px; max-width: none; }
+
+/* ---------- Tablet ---------- */
+@media (max-width: 899px) {
+  .public-site main.matchup-lab .mx-duel-top { gap: 14px 16px; padding: 18px; }
+  .public-site main.matchup-lab .mx-portrait { width: 72px; height: 72px; font-size: 19px; }
+  .public-site main.matchup-lab .mx-player { gap: 12px; }
+  .public-site main.matchup-lab .mx-player h2 { font-size: 20px; }
+  .public-site main.matchup-lab .mx-tally { font-size: 46px; }
+  .public-site main.matchup-lab .mx-returns { padding: 16px 18px 8px; }
+}
+@media (max-width: 760px) {
+  .public-site main.matchup-lab .controls { grid-template-columns: minmax(0,1fr); }
+  .public-site main.matchup-lab .controls > .record-modes { justify-self: stretch; }
+  .public-site main.matchup-lab .controls .mx-segments { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .public-site main.matchup-lab .controls > .mx-actions { grid-column: 1; }
+  .public-site main.matchup-lab .controls .mx-actions .compare { flex: 1 1 180px; }
+  .public-site main.matchup-lab .controls .mx-actions .example-button { flex: 1 1 160px; }
+}
+
+/* ---------- Phone ---------- */
+@media (max-width: 639px) {
+  .public-site main.matchup-lab .controls { gap: 10px; padding: 12px; }
+  .public-site main.matchup-lab .controls > .player-pickers { grid-template-columns: minmax(0,1fr) 44px; gap: 8px 10px; }
+  .public-site main.matchup-lab .controls > .player-pickers label.side-0 { grid-column: 1; grid-row: 1; }
+  .public-site main.matchup-lab .controls > .player-pickers label.side-1 { grid-column: 1; grid-row: 2; }
+  .public-site main.matchup-lab .controls #swap { grid-column: 2; grid-row: 1/3; align-self: center; margin: 0; }
+  .public-site main.matchup-lab .controls .mx-segments label { padding: 5px 9px; }
+  .public-site main.matchup-lab .selection { margin: 12px 0 8px; }
+
+  .public-site main.matchup-lab .mx-duel { border-radius: 14px; }
+  .public-site main.matchup-lab .mx-duel-top { grid-template-areas: "a score b" "meta meta meta"; align-items: start; gap: 10px 8px; padding: 16px 12px 14px; }
+  .public-site main.matchup-lab .mx-player.side-0 { grid-area: a; }
+  .public-site main.matchup-lab .mx-player.side-1 { grid-area: b; }
+  .public-site main.matchup-lab .mx-player,
+  .public-site main.matchup-lab .mx-player.side-1 { flex-direction: column; gap: 10px; text-align: center; }
+  .public-site main.matchup-lab .mx-portrait { width: 64px; height: 64px; font-size: 17px; }
+  .public-site main.matchup-lab .mx-player h2 { font-size: 16px; line-height: 1.25; letter-spacing: -.01em; }
+  .public-site main.matchup-lab .mx-country { margin-top: 4px; font-size: 10px; }
+  .public-site main.matchup-lab .mx-own-record { margin-top: 8px; font-size: 11px; }
+  .public-site main.matchup-lab .mx-own-record strong { font-size: 19px; white-space: normal; }
+  .public-site main.matchup-lab .mx-score { display: contents; }
+  .public-site main.matchup-lab .mx-tally { grid-area: score; margin-top: 15px; gap: 6px; font-size: 36px; }
+  .public-site main.matchup-lab .mx-versus .mx-tally { margin-top: 24px; font-size: 15px; }
+  .public-site main.matchup-lab .mx-sample-line { grid-area: meta; display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 2px 12px; margin: 0; padding-top: 10px; border-top: 1px solid #22323c; text-align: center; }
+
+  .public-site main.matchup-lab .mx-returns { padding: 14px 12px 6px; }
+  .public-site main.matchup-lab .mx-returns-head { margin-bottom: 12px; }
+  .public-site main.matchup-lab .mx-returns-grid { gap: 8px; }
+  .public-site main.matchup-lab .mx-return { padding: 12px 10px 4px; }
+  .public-site main.matchup-lab .mx-roi strong { font-size: 26px; }
+  .public-site main.matchup-lab .mx-return-line { font-size: 12px; }
+  .public-site main.matchup-lab .mx-atlas-link { font-size: 12px; gap: 6px; }
+
+  .public-site main.matchup-lab #results .comparison-nav { margin-top: 8px; padding: 6px 0; }
+  .public-site main.matchup-lab #results .comparison-nav a { padding: 8px 12px 8px 8px; font-size: 12px; }
+  .public-site main.matchup-lab #results .comparison-nav svg { width: 20px; height: 20px; }
+  .public-site main.matchup-lab #results .section-heading h2 { font-size: 19px; }
+}
+@media (max-width: 359px) {
+  .public-site main.matchup-lab .mx-returns-grid { grid-template-columns: minmax(0,1fr); }
+  .public-site main.matchup-lab .mx-player h2 { font-size: 15px; }
+  .public-site main.matchup-lab .mx-tally { font-size: 32px; }
+  .public-site main.matchup-lab .controls > .comparison-filters .filters { grid-template-columns: minmax(0,1fr); }
+}

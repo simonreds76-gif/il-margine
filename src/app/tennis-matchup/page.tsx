@@ -1,8 +1,11 @@
 import { studioMetadata } from "@/lib/share-studio-metadata";
 import RelatedLinks from "@/components/RelatedLinks";
 import TennisMatchdayPromo from "@/components/TennisMatchdayPromo";
-import AtlasPageHeader from "@/components/AtlasPageHeader";
+import ResearchToolNav from "@/components/ResearchToolNav";
+import { researchTools } from "@/components/research-tools";
 import frame from "@/components/ResearchPage.module.css";
+import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import MatchdayPromo from "@/components/MatchdayPromo";
@@ -10,10 +13,14 @@ import { BASE_URL } from "@/lib/config";
 import { MATCHUP_FAQS } from "@/lib/tennis-matchup-faq";
 import release from "@/data/tennis-matchup-release.json";
 import MatchupClient from "./MatchupClient";
+// PREVIEW ONLY (Fable, 16 Nov 2026). The shared AtlasPageHeader is no longer used here,
+// so the shared mobile rules it used to pull in are imported explicitly.
+import "@/app/research-mobile.css";
 import "./matchup.css";
 import "./comparison.css";
 import "./context.css";
 import "@/components/TennisResearchContext.css";
+import "./h2h-focus.css";
 
 export const dynamic="force-static";
 const title="Tennis Matchup Lab: H2H, Aces & Player Statistics";
@@ -21,6 +28,7 @@ const description="Compare ATP tennis players by surface and location. Explore h
 export const metadata: Metadata={title,description,alternates:{canonical:`${BASE_URL}/tennis-matchup`},robots:{index:true,follow:true},
   ...studioMetadata("tennis-matchup"),};
 const readable=(date:string)=>new Intl.DateTimeFormat("en-GB",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}).format(new Date(`${date}T12:00:00Z`));
+const tool=researchTools.find(item=>item.id==="matchup")!;
 
 export default function TennisMatchupPage(){
   const schema=[{"@context":"https://schema.org","@type":"WebApplication",name:"Tennis Matchup Lab",url:`${BASE_URL}/tennis-matchup`,description,applicationCategory:"SportsApplication",operatingSystem:"Any",isAccessibleForFree:true},
@@ -28,13 +36,26 @@ export default function TennisMatchupPage(){
     {"@context":"https://schema.org","@type":"BreadcrumbList",itemListElement:[{ "@type":"ListItem",position:1,name:"Home",item:BASE_URL},{"@type":"ListItem",position:2,name:"Betting tools",item:`${BASE_URL}/tools`},{"@type":"ListItem",position:3,name:"Tennis Matchup Lab",item:`${BASE_URL}/tennis-matchup`}]}];
   return <><main className={`matchup-lab ${frame.page}`}>
     <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(schema).replace(/</g,"\\u003c")}}/>
-    <AtlasPageHeader edition="matchup" description="Compare ATP players through past meetings, serve and return stats, aces and double faults. Filter by surface or location.">
+    {/* Compact head: the same shared frame classes as the Tennis Matchday head. */}
+    <header className={`${frame.header} ${frame.matchdayHeader}`}>
+      <nav className={frame.breadcrumb} aria-label="Breadcrumb">
+        <Link href="/" prefetch={false}>Home</Link><span aria-hidden="true">/</span>
+        <Link href="/tools" prefetch={false}>Research tools</Link><span aria-hidden="true">/</span>
+        <span aria-current="page">{tool.label}</span>
+      </nav>
+      <div className={frame.identity}>
+        <Image className={frame.mark} src={tool.image} alt="" width={72} height={72} priority unoptimized />
+        <div><h1 className={frame.title}>Matchup <span>Lab</span><span className="sr-only">: Tennis H2H &amp; player statistics</span></h1>
+          <p className={frame.edition}>Tennis</p></div>
+      </div>
+      <p className={frame.description}>Pick two ATP players to see their record, historical returns and serve statistics. <Link href="/tennis-matchday" prefetch={false}>Or start from today’s matches</Link>.</p>
       <details className={frame.help}><summary>How it works &amp; coverage</summary><p>Start with two players. Compare their profiles against all opponents, or switch to their meetings against each other. Open a match to inspect the numbers behind it.</p><p>Snapshot {readable(release.checkedAt)}. Latest result {readable(release.through)}. {release.matches.toLocaleString("en-GB")} priced ATP profile matches from 2021 onward. H2H also includes earlier competitive meetings, with coverage shown for each pairing. <a href="#faq">Read the FAQs ↓</a></p></details>
-    </AtlasPageHeader>
-    <TennisMatchdayPromo />
+    </header>
     <MatchupClient indexUrl={release.indexUrl}/>
+    <TennisMatchdayPromo />
     <MatchdayPromo compact />
     <noscript><p>Enable JavaScript to select players and compare their records. The guide, coverage details and FAQs below are available without it.</p></noscript>
+    <ResearchToolNav current="matchup"/>
     <section className="matchup-faq" id="faq" aria-labelledby="matchup-faq-title"><p className="eyebrow">GET MORE FROM THE NUMBERS</p><h2 id="matchup-faq-title">Tennis Matchup Lab FAQs</h2><p>What the tool shows, how to use the filters, and where the evidence ends.</p>{MATCHUP_FAQS.map(({question,answer})=><details key={question}><summary>{question}</summary><p>{answer}</p></details>)}</section>
     <RelatedLinks id="explore-tennis" title="Keep the price and the record in view." description="Explore the player profile, compare historical returns and check the rules behind your bet." label="Related tennis research" links={[
       {href:"/return-atlas",title:"Tennis Return Atlas",description:"Player returns by season, surface and odds.",icon:"tennis"},

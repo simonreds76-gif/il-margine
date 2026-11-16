@@ -6,6 +6,31 @@ const number=value=>value.toLocaleString('en-GB');
 const pct=value=>value===null?'Unavailable':`${value.toFixed(1)}%`;
 const signed=value=>value===null?'—':`${value>0?'+':''}${value.toFixed(1)}`;
 const chip=(player,slot)=>`<span class="player-chip side-${slot}"><i aria-hidden="true"></i>${esc(player.name)}</span>`;
+// Round once for display; a rounded zero shows as 0.0, never -0.0.
+const fixed=(value,digits)=>{const v=Number(value.toFixed(digits))||0;return {tone:v>0?'positive':v<0?'negative':'neutral',text:`${v>0?'+':''}${v.toFixed(digits)}`};};
+
+// PREVIEW ONLY (Fable, 16 Nov 2026). New display block, kept in one place so it is easy to check or replace.
+// It reads the rows rowsFor() already returns and the counts summary() already gives:
+//   bets = summaries[i].priced (both prices recorded), won = summaries[i].actual.
+// The only figure worked out here is the flat one-unit total: recorded price minus the stake for a win,
+// minus the stake for a loss, over exactly those priced rows. ROI is that total divided by the bets.
+// core.mjs is untouched. Check these figures against the house return rules before any sign-off.
+export function historicalReturns(players,rows,summaries,h2h,links) {
+  const unit=h2h?['meeting','meetings']:['match','matches'];
+  const cells=players.map((player,i)=>{
+    const s=summaries[i];
+    const coverage=`${number(s.priced)} of ${number(s.n)} ${s.n===1?unit[0]:unit[1]} had recorded odds`;
+    const link=`<a class="mx-atlas-link" href="${esc(links[i])}" aria-label="View ${esc(player.name)} betting returns in Return Atlas">${symbol('odds')}<span>Betting returns in Return Atlas <span aria-hidden="true">↗</span></span></a>`;
+    if(!s.priced)return `<div class="mx-return side-${i}">${chip(player,i)}<p class="mx-roi neutral"><strong>—</strong><span>ROI</span></p><p class="mx-return-line">${s.n?`No return shown. ${coverage[0].toUpperCase()+coverage.slice(1)}.`:`No ${unit[1]} in this selection.`}</p>${link}</div>`;
+    const total=rows[i].reduce((sum,row)=>row.probability===null?sum:sum+(row.won?row.odds-1:-1),0);
+    const roi=fixed(100*total/s.priced,1),profit=fixed(total,2);
+    return `<div class="mx-return side-${i}">${chip(player,i)}<p class="mx-roi ${roi.tone}"><strong>${roi.text}%</strong><span>ROI</span></p><p class="mx-return-line"><b>${profit.text} units</b> from ${number(s.priced)} one-unit ${s.priced===1?'bet':'bets'} · ${number(s.actual)} won</p><p class="mx-return-cover">${coverage}</p>${link}</div>`;
+  }).join('');
+  return `<div class="mx-returns"><div class="mx-returns-head"><h3>${symbol('odds')}<span>Historical return</span></h3><p>What one unit on each player to win would have returned in ${h2h?'their meetings with recorded pre-match odds':'each player’s matches with recorded pre-match odds, against all opponents'}.</p></div>
+    <div class="mx-returns-grid">${cells}</div>
+    <p class="mx-returns-note">${summaries.some(s=>s.priced<30)?'Small sample. One result can move these figures substantially. ':''}Past results at the prices recorded before each match. Not a forecast, and not current odds.</p>
+    <details class="mx-returns-explainer"><summary>How is the return worked out?</summary><p>Every ${unit[0]} with recorded odds for both players counts as one bet of one unit on the player to win. A win adds the recorded price minus the stake. A loss costs the stake. ROI is the total divided by the number of bets.</p><p><strong>Example:</strong> wins at 1.80 and 2.10 and one loss give +0.80 +1.10 -1.00 = +0.90 units from 3 bets, an ROI of +30.0%.</p><p>${unit[1][0].toUpperCase()+unit[1].slice(1)} without odds count in the record but not in the return. Each price is listed with its match under Matches.</p></details></div>`;
+}
 
 export function compactOddsComparison(players,summaries) {
   const definitions=[
