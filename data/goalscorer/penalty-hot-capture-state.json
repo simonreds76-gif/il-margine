@@ -185,6 +185,8 @@
     "5881219": "2026-11-15",
     "5868123": "2026-11-15",
     "5868127": "2026-11-16",
+    "5868122": "2026-11-16",
+    "5868130": "2026-11-16",
     "5868121": "2026-11-15",
     "5802988": "2026-11-16",
     "5802982": "2026-11-16",
@@ -198,8 +200,8 @@
     "5749744": "2026-11-16",
     "5749742": "2026-11-15"
   },
-  "updated_at": "2026-11-16T01:59:05.712684+00:00",
-  "checked_this_run": 16,
+  "updated_at": "2026-11-16T02:22:21.350301+00:00",
+  "checked_this_run": 2,
   "errors": [],
   "fixtures": {
     "5749700": {
@@ -9089,7 +9091,7 @@
           "name": "Levante"
         },
         "status": {
-          "utcTime": "2026-11-08T17:30:00.000Z",
+          "utcTime": "2026-11-08T17:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "08.11.2026 18:34:35",
             "secondHalfStarted": "08.11.2026 19:39:29"
@@ -9109,13 +9111,13 @@
         }
       },
       "date": "2026-11-08",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-08T00:32:26.308790+00:00",
       "pending_since": "2026-11-08T00:32:26.308790+00:00",
-      "last_attempt": "2026-11-15T01:51:03.900785+00:00",
-      "attempts": 6,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-15T01:51:03.900785+00:00",
+      "last_attempt": "2026-11-16T02:22:21.350301+00:00",
+      "attempts": 7,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-16T02:22:21.350301+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -9135,7 +9137,7 @@
           "name": "Getafe"
         },
         "status": {
-          "utcTime": "2026-11-08T17:30:00.000Z",
+          "utcTime": "2026-11-08T17:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "08.11.2026 18:31:26",
             "secondHalfStarted": "08.11.2026 19:34:16"
@@ -9155,13 +9157,13 @@
         }
       },
       "date": "2026-11-08",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-08T00:32:26.308790+00:00",
       "pending_since": "2026-11-08T00:32:26.308790+00:00",
-      "last_attempt": "2026-11-15T01:51:03.900785+00:00",
-      "attempts": 6,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-15T01:51:03.900785+00:00",
+      "last_attempt": "2026-11-16T02:22:21.350301+00:00",
+      "attempts": 7,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-16T02:22:21.350301+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -10100,7 +10102,7 @@
     },
     "20261109": {
       "ok": true,
-      "checked_at": "2026-11-15T01:19:31.247962+00:00",
+      "checked_at": "2026-11-16T02:22:21.350301+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -10142,14 +10144,14 @@
     },
     "20261115": {
       "ok": true,
-      "checked_at": "2026-11-16T01:59:05.712684+00:00",
+      "checked_at": "2026-11-16T02:22:21.350301+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
     },
     "20261116": {
       "ok": true,
-      "checked_at": "2026-11-16T01:59:05.712684+00:00",
+      "checked_at": "2026-11-16T02:22:21.350301+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -10157,9 +10159,9 @@
   },
   "coverage": {
     "expected": 199,
-    "verified": 197,
+    "verified": 199,
     "pending": 0,
-    "reverify": 2,
+    "reverify": 0,
     "deferred": 0,
     "overdue": 0,
     "stalled": 0,
