@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { decodeAtlas } from "./decode.mjs";
 import { mountAtlas } from "./atlas-ui.mjs";
+// Route-scoped presentation layer for the Atlas consistency pass. The live return-atlas.css is untouched.
+import "@/app/return-atlas/return-atlas-consistency.css";
 
 type Props = { indexUrl: string; detailsBase: string; version: string; checkedAt: string };
 

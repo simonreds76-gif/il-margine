@@ -81,12 +81,15 @@ function render(){
  const activeOnly=$('activity').value==='active',today=new Date().toISOString().slice(0,10);
  const candidates=data.managers.filter(m=>!activeOnly||isVerifiedActive(m.id,activity,today));
  const ranking=candidates.map(m=>({...m,...summary(rows(m.id,f,opponent?.id||'all'))})).filter(m=>m.bets>=rankingMinimum()).sort((a,b)=>b[$('sort').value]-a[$('sort').value]||b.bets-a.bets);
- $('rankings').innerHTML=ranking.slice(0,rankShown).map((m,i)=>`<tr${m.id===manager?.id?' class="selected-row"':''}><td><button data-manager="${escape(m.id)}"><span class="rank-number">${String(i+1).padStart(2,'0')}</span>${avatar(m,true)}<span>${escape(m.name)}</span>${icon('arrow')}</button></td><td>${m.bets}${m.bets<10?'<small class="sample-label">Very small sample</small>':m.bets<30?'<small class="sample-label">Small sample</small>':''}</td><td><span class="result-wins">${m.results.W}</span> / ${m.results.D} / ${m.results.L}<small>Priced matches</small></td><td class="${color(m.profit)}">${units(m.profit)}</td><td class="${color(m.roi)} roi-cell">${pct(m.roi)}</td><td>${m.drawdown.toFixed(2)}u</td></tr>`).join('');
+ // Cell order follows rankingHead below: Manager, ROI, Profit, Bets, Team W / D / L, Drawdown. Same expressions as before, reordered only.
+ $('rankings').innerHTML=ranking.slice(0,rankShown).map((m,i)=>`<tr${m.id===manager?.id?' class="selected-row"':''}><td><button data-manager="${escape(m.id)}"><span class="rank-number">${String(i+1).padStart(2,'0')}</span>${avatar(m,true)}<span>${escape(m.name)}</span>${icon('arrow')}</button></td><td class="${color(m.roi)} roi-cell">${pct(m.roi)}</td><td class="${color(m.profit)}">${units(m.profit)}</td><td>${m.bets}${m.bets<10?'<small class="sample-label">Very small sample</small>':m.bets<30?'<small class="sample-label">Small sample</small>':''}</td><td><span class="result-wins">${m.results.W}</span> / ${m.results.D} / ${m.results.L}<small>Priced matches</small></td><td>${m.drawdown.toFixed(2)}u</td></tr>`).join('');
  $('more-rankings').hidden=rankShown>=ranking.length;
  $('rank-count').textContent=`Showing ${Math.min(rankShown,ranking.length)} of ${ranking.length} qualifying managers. ${opponent?'H2H includes pairings from one recorded meeting. A few meetings cannot establish a reliable edge.':'Includes every manager with at least one matching fixture. Small samples are labelled, not hidden.'} Search any manager above to inspect their record.`;
  const reviewsDue=candidates.filter(m=>activeReviewDue(m.id,activity,today)).length;
  $('activity-note').textContent=activeOnly?(activity?`Showing ${candidates.length} managers active at their last check.${reviewsDue?' Some roles are due for review; their records remain available.':''} Choose Full historical archive for all managers.`:'Manager status could not load. Choose Full historical archive to see the records.'):'Showing current and past managers.';
 }
+// Ranking column order, owned here together with the row template in render() so header and cells cannot drift apart.
+const rankingHead='<th>Manager</th><th>ROI</th><th>Profit</th><th>Bets</th><th>Team W / D / L</th><th>Drawdown</th>';
 async function init(){
  root.addEventListener('error',event=>{
   const image=event.target;
@@ -96,6 +99,7 @@ async function init(){
  },{capture:true,signal});
  root.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon));
  if($('brand-mark'))$('brand-mark').innerHTML=brandMark();
+ const rankingHeadRow=$('ranking-table')?.querySelector('thead tr');if(rankingHeadRow)rankingHeadRow.innerHTML=rankingHead;
  const response=await fetch(indexUrl,{signal});if(!response.ok)throw Error('Archive unavailable');const packed=await response.json();if(signal.aborted)return;if(packed.format!=='manager-atlas-v1')throw Error('Unknown archive format');data={...packed,fixtures:packed.rows.map(row=>Object.fromEntries(packed.columns.map((k,i)=>[k,row[i]])))};data.names=Object.fromEntries(data.managers.map(m=>[m.id,m.name]));
  try{const r=await fetch('/manager-atlas/portraits.json',{signal});if(r.ok)portraits={...await r.json(),...reviewedPortraits};}catch{/* Keep reviewed portraits and the explicit unavailable icon. */}
  try{const r=await fetch('/manager-atlas/activity.json',{signal});if(r.ok)activity=await r.json();}catch{/* Unknown status stays out of the active ranking. */}

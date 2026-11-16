@@ -1,0 +1,125 @@
+/*
+ * Atlas consistency pass — Tennis Return Atlas (player returns). Fable, 16 Nov 2026. PREVIEW.
+ * Route-scoped layer: every selector starts at .return-atlas. Loaded by ReturnAtlasClient.tsx.
+ * CSS only. atlas-ui.mjs, return-atlas.css and profit-chart.css are not edited, so every ID,
+ * data attribute, handler, default filter and calculation is exactly as live.
+ * The .public-site prefix keeps these rules ahead of the existing sheets whatever the bundle order.
+ */
+
+/* ── 1. Compact Atlas head: the metrics of the live Matchday head ─────────────────────────── */
+.public-site main.return-atlas > header[class] { margin-bottom: 16px; }
+.public-site main.return-atlas > header > nav[aria-label="Breadcrumb"] { margin-bottom: 4px; }
+.public-site main.return-atlas > header > div:first-of-type[class] { min-height: 54px; gap: 14px; }
+.public-site main.return-atlas > header > div:first-of-type > img[class] { width: 54px; height: 54px; }
+.public-site main.return-atlas > header h1[class] { font-size: 34px; }
+.public-site main.return-atlas > header h1[class] + p[class] { margin-top: 5px; font-size: 10px; }
+.public-site main.return-atlas > header > div:first-of-type + p[class] { font-size: 14px; line-height: 1.5; margin: 9px 0; }
+@media (max-width: 639px) {
+  .public-site main.return-atlas > header[class] { margin-bottom: 12px; }
+  .public-site main.return-atlas > header > div:first-of-type[class] { min-height: 44px; gap: 10px; }
+  .public-site main.return-atlas > header > div:first-of-type > img[class] { width: 44px; height: 44px; }
+  .public-site main.return-atlas > header h1[class] { font-size: 28px; }
+  .public-site main.return-atlas > header h1[class] + p[class] { letter-spacing: .1em; }
+  .public-site main.return-atlas > header > div:first-of-type + p[class] { font-size: 13px; margin: 8px 0; }
+}
+
+/* ── 2. Section heading: one line at every width ─────────────────────────────────────────── */
+.public-site .return-atlas .workspace > .section-heading { margin-bottom: 14px; align-items: baseline; }
+.public-site .return-atlas .workspace > .section-heading p { max-width: none; white-space: nowrap; text-align: right; }
+
+/* ── 3. One ledger card: status line, what the numbers describe, then the table ───────────── */
+.public-site .return-atlas .workspace > .filter-tail {
+  min-height: 52px; margin-top: 12px; padding: 4px 8px 4px 16px;
+  border: 1px solid var(--line); border-bottom: 0; border-radius: 12px 12px 0 0; background: #111b24;
+}
+.public-site .return-atlas .workspace > .selection-caption {
+  margin: 0; padding: 10px 16px 12px;
+  border: 1px solid var(--line); border-bottom: 0; background: #111b24;
+  font-size: 12px; line-height: 1.65;
+}
+.public-site .return-atlas .workspace > .table-wrap { border-top: 1px solid var(--line); border-radius: 0 0 12px 12px; }
+
+/* ── 4. Leaderboard rows: tighter on desktop, 44px targets everywhere ─────────────────────── */
+@media (min-width: 541px) {
+  .public-site .return-atlas .workspace > .table-wrap td { padding-top: 10px; padding-bottom: 10px; }
+  .public-site .return-atlas .workspace > .table-wrap th { padding-top: 8px; padding-bottom: 8px; }
+}
+.public-site .return-atlas .workspace .row-open { width: 44px; height: 44px; }
+.public-site .return-atlas .workspace .name-button { min-height: 44px; }
+
+/* Legibility floor for labels that carry meaning. */
+.public-site .return-atlas .sample-note { font-size: 11px; }
+.public-site .return-atlas .workspace .player-country { font-size: 11px; }
+
+/* ── 5. Phone: each player is a card row with ROI, profit, bets and bet W–L all visible ──── */
+@media (max-width: 540px) {
+  .public-site .return-atlas .workspace > .section-heading p { font-size: 12px; }
+  .public-site .return-atlas .workspace > .filter-tail { padding: 4px 6px 4px 14px; }
+  .public-site .return-atlas .workspace > .selection-caption { padding: 10px 14px 12px; }
+
+  .public-site .return-atlas .workspace > .table-wrap { overflow: visible; }
+  .public-site .return-atlas .workspace > .table-wrap table,
+  .public-site .return-atlas .workspace > .table-wrap thead,
+  .public-site .return-atlas .workspace > .table-wrap tbody { display: block; width: 100%; min-width: 0; }
+
+  /* The header row becomes the sort control. Same buttons, same handlers. */
+  .public-site .return-atlas .workspace > .table-wrap thead tr {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+    padding: 10px 12px; border-bottom: 1px solid var(--line); background: #10181e;
+  }
+  .public-site .return-atlas .workspace > .table-wrap thead tr::before {
+    content: "Sort players by"; flex: 0 0 100%; font-size: 11px; line-height: 1.4; color: #94a3b8;
+  }
+  .public-site .return-atlas .workspace > .table-wrap thead th {
+    display: block; width: auto; max-width: none; padding: 0; border: 0; background: none; text-align: left;
+  }
+  .public-site .return-atlas .workspace > .table-wrap thead th:nth-child(n+5) { display: none; }
+  .public-site .return-atlas .workspace > .table-wrap thead th button {
+    max-width: none; min-height: 44px; padding: 8px 12px;
+    border: 1px solid var(--line); border-radius: 10px; background: #111b24; color: #cbd5e1;
+    font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none; white-space: nowrap;
+  }
+
+  .public-site .return-atlas .workspace > .table-wrap tbody tr {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 8px;
+    padding: 12px; border-bottom: 1px solid #243038;
+  }
+  .public-site .return-atlas .workspace > .table-wrap tbody tr:last-child { border-bottom: 0; }
+  .public-site .return-atlas .workspace > .table-wrap tbody td {
+    display: block; position: static; width: auto; min-width: 0; padding: 0; border: 0;
+    background: none; text-align: left; white-space: normal;
+  }
+  .public-site .return-atlas .workspace > .table-wrap tbody td:nth-child(1) { grid-column: 1 / 3; grid-row: 1; }
+  .public-site .return-atlas .workspace > .table-wrap tbody td:nth-child(2) { grid-column: 3; grid-row: 1; align-self: center; text-align: right; font-size: 20px; }
+  .public-site .return-atlas .workspace > .table-wrap tbody td:nth-child(3) { grid-column: 1; grid-row: 2; font-size: 14px; }
+  .public-site .return-atlas .workspace > .table-wrap tbody td:nth-child(4) { grid-column: 2; grid-row: 2; font-size: 14px; }
+  .public-site .return-atlas .workspace > .table-wrap tbody td:nth-child(5) { grid-column: 3; grid-row: 2; font-size: 14px; text-align: right; }
+  /* Median odds, sparkline and the arrow column stay as they are on the live phone layout. */
+  .public-site .return-atlas .workspace > .table-wrap tbody td:nth-child(n+6) { display: none; }
+
+  .public-site .return-atlas .workspace > .table-wrap tbody td:nth-child(n+2):nth-child(-n+5)::before {
+    display: block; margin-bottom: 3px; font-family: inherit; font-size: 11px; font-weight: 400;
+    line-height: 1.4; letter-spacing: 0; color: #94a3b8;
+  }
+  .public-site .return-atlas .workspace > .table-wrap tbody td:nth-child(2)::before { content: "ROI"; }
+  .public-site .return-atlas .workspace > .table-wrap tbody td:nth-child(3)::before { content: "Profit"; }
+  .public-site .return-atlas .workspace > .table-wrap tbody td:nth-child(4)::before { content: "Bets"; }
+  .public-site .return-atlas .workspace > .table-wrap tbody td:nth-child(5)::before { content: "Bet W\2013L"; }
+
+  .public-site .return-atlas .workspace > .table-wrap tbody td.empty { grid-column: 1 / -1; padding: 28px 12px; text-align: center; }
+  .public-site .return-atlas .workspace > .table-wrap tbody td.empty::before { content: none; }
+
+  .public-site .return-atlas .workspace .player-name { max-width: none; font-size: 14px; }
+
+  /* Player record: stat labels were 8px. */
+  .public-site .return-atlas .detail-stat > span:first-child { font-size: 11px; letter-spacing: .06em; }
+}
+
+
+/*
+ * ── 6. Finish: sort label sits above its chips, not at the far right (Fable, 16 Nov 2026, PREVIEW) ──
+ * APPEND to the end of src/app/return-atlas/return-atlas-consistency.css. Change nothing else.
+ */
+@media (max-width: 540px) {
+  .public-site .return-atlas .workspace > .table-wrap thead tr::before { text-align: left; }
+}

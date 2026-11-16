@@ -1,0 +1,168 @@
+/*
+ * Atlas consistency pass — Manager Return Atlas. Fable, 16 Nov 2026. PREVIEW.
+ * Route-scoped layer: every selector starts at .manager-atlas. Imported by manager-atlas/page.tsx
+ * directly after manager.css, which is not edited.
+ * The .public-site prefix keeps these rules ahead of manager.css, research-mobile.css and
+ * ResearchPage.module.css whatever the bundle order.
+ */
+
+/* ── 1. Compact Atlas head: the metrics of the live Matchday head ─────────────────────────── */
+.public-site main.manager-atlas > header[class] { margin-bottom: 16px; }
+.public-site main.manager-atlas > header > nav[aria-label="Breadcrumb"] { margin-bottom: 4px; }
+.public-site main.manager-atlas > header > div:first-of-type[class] { min-height: 54px; gap: 14px; }
+.public-site main.manager-atlas > header > div:first-of-type > img[class] { width: 54px; height: 54px; }
+.public-site main.manager-atlas > header h1[class] { font-size: 34px; }
+.public-site main.manager-atlas > header h1[class] + p[class] { margin-top: 5px; font-size: 10px; }
+.public-site main.manager-atlas > header > div:first-of-type + p[class] { font-size: 14px; line-height: 1.5; margin: 9px 0; }
+@media (max-width: 639px) {
+  .public-site main.manager-atlas > header[class] { margin-bottom: 12px; }
+  .public-site main.manager-atlas > header > div:first-of-type[class] { min-height: 44px; gap: 10px; }
+  .public-site main.manager-atlas > header > div:first-of-type > img[class] { width: 44px; height: 44px; }
+  .public-site main.manager-atlas > header h1[class] { font-size: 28px; }
+  .public-site main.manager-atlas > header h1[class] + p[class] { letter-spacing: .1em; }
+  .public-site main.manager-atlas > header > div:first-of-type + p[class] { font-size: 13px; margin: 8px 0; }
+}
+
+/* ── 2. Rankings: ROI leads, as it does in the record block and on the club and player pages ─ */
+@media (min-width: 601px) {
+  .public-site .manager-atlas #ranking-table td { padding-top: 10px; padding-bottom: 10px; }
+  .public-site .manager-atlas #ranking-table .roi-cell { font-size: 17px; letter-spacing: -.02em; }
+  .public-site .manager-atlas #ranking-table th:first-child { width: 34%; }
+}
+.public-site .manager-atlas #rankings button { min-height: 44px; }
+
+/*
+ * Phone cards. manager.css places and labels these cells by position, written for the old order
+ * (Manager, Bets, W/D/L, Profit, ROI, Drawdown). The order is now Manager, ROI, Profit, Bets,
+ * Team W/D/L, Drawdown, so every position is restated here. Nothing is hidden.
+ */
+@media (max-width: 600px) {
+  .public-site .manager-atlas #ranking-table td:nth-child(2) {
+    grid-column: 3; grid-row: 1; align-self: center; text-align: right; font-size: 18px; font-weight: 700;
+  }
+  .public-site .manager-atlas #ranking-table td:nth-child(3) {
+    grid-column: 1; grid-row: 2; align-self: auto; text-align: left; font-size: 13px;
+  }
+  .public-site .manager-atlas #ranking-table td:nth-child(4) {
+    grid-column: 2; grid-row: 2; align-self: auto; text-align: left; font-size: 13px; font-weight: 400;
+  }
+  .public-site .manager-atlas #ranking-table td:nth-child(5) {
+    grid-column: 3; grid-row: 2; align-self: auto; text-align: right; font-size: 13px; font-weight: 400;
+  }
+  .public-site .manager-atlas #ranking-table td:nth-child(2)::before { content: 'ROI'; display: block; }
+  .public-site .manager-atlas #ranking-table td:nth-child(3)::before { content: 'Profit'; display: block; }
+  .public-site .manager-atlas #ranking-table td:nth-child(4)::before { content: 'Bets'; display: block; }
+  .public-site .manager-atlas #ranking-table td:nth-child(5)::before { content: 'Team W / D / L'; display: block; }
+  .public-site .manager-atlas #ranking-table tr { padding: 12px; gap: 10px 6px; }
+}
+
+/* ── 3. Selection panel on phones: the two actions sit on one line instead of two tall boxes ─ */
+@media (max-width: 639px) {
+  .public-site .manager-atlas .controls .filter-actions { flex-wrap: nowrap; align-items: stretch; gap: 8px; }
+  .public-site .manager-atlas .controls .filter-actions #example {
+    flex: 1 1 0; min-width: 0; justify-content: flex-start; padding: 8px 10px;
+    line-height: 1.3; text-align: left; white-space: normal;
+  }
+  .public-site .manager-atlas .controls .filter-actions #reset { flex: 0 0 auto; width: auto; padding-inline: 14px; white-space: nowrap; }
+}
+
+
+/*
+ * ── 4. Family finish: surfaces, corners, lines and type (Fable, 16 Nov 2026, PREVIEW) ─────────
+ * APPEND to the end of src/app/manager-atlas/manager-consistency.css. Change nothing else.
+ * Colour, radius, border and typeface only. No layout, markup, ID, handler or data change.
+ * Values are the ones club and tennis already use: slate surfaces #0a141d / #111b24 / #122029,
+ * lines #24333f / #364b59 / var(--line), radius 10–14px, and the page's inherited font stack.
+ */
+
+/* Type: one typeface. Headings and figures stop switching to Segoe UI / Georgia. */
+.public-site main.manager-atlas :is(h2, h3, h4),
+.public-site .manager-atlas .stat > strong,
+.public-site .manager-atlas .roi-cell,
+.public-site .manager-atlas .rank-number,
+.public-site .manager-atlas .versus,
+.public-site .manager-atlas .ledger-coaches em,
+.public-site .manager-atlas .chart text { font-family: inherit; }
+.public-site main.manager-atlas h2 { font-weight: 750; letter-spacing: -.035em; }
+.public-site main.manager-atlas h3 { font-weight: 700; letter-spacing: -.02em; }
+.public-site .manager-atlas .eyebrow { font-weight: 750; letter-spacing: .14em; }
+.public-site .manager-atlas .stat > strong { font-weight: 700; letter-spacing: -.025em; }
+.public-site .manager-atlas .market-stat > strong { font-weight: 650; }
+.public-site .manager-atlas .price-tile strong { font-weight: 650; }
+.public-site .manager-atlas .actual-expected b { font-weight: 600; }
+.public-site .manager-atlas .stat > span { color: #b1c6d4; }
+.public-site .manager-atlas label { color: #b9c7d7; }
+.public-site .manager-atlas label .atlas-icon { color: #8fa9b8; }
+.public-site .manager-atlas .rank-number { color: #91aab9; }
+.public-site .manager-atlas .versus,
+.public-site .manager-atlas .ledger-coaches em { color: #91aab9; }
+
+/* Fields and standalone buttons. */
+.public-site .manager-atlas :is(input:not([type=range]), select) {
+  border-color: #364b59; border-radius: 10px; background: #0a141d;
+}
+.public-site .manager-atlas input::placeholder { color: #8ea3b3; }
+.public-site .manager-atlas .controls > label:nth-of-type(-n+2) input { border-color: #4a6474; background: #0a141d; }
+.public-site .manager-atlas :is(#example, #reset, #more, #more-rankings, #swap) { border-radius: 10px; }
+.public-site .manager-atlas :is(#example, #more, #more-rankings, #swap) { border-color: #38624f; }
+.public-site .manager-atlas :is(#more, #more-rankings, #swap) { background: #142d25; color: #c4f6df; }
+.public-site .manager-atlas :is(#example, #more, #more-rankings, #swap):hover { border-color: #67d6ad; background: #18332e; color: #e7fff4; }
+.public-site .manager-atlas #reset { border-color: #364b59; color: #b9c7d7; }
+.public-site .manager-atlas #reset:hover { border-color: #67d6ad; color: #f1f5f9; }
+
+/* Bet-side and chart-view switches: same selected treatment as the club page (fill plus underline). */
+.public-site .manager-atlas .sides { border-radius: 12px; background: #0a141d; }
+.public-site .manager-atlas .sides button { border-radius: 8px; }
+.public-site .manager-atlas .sides button[aria-pressed=true] {
+  border-color: #62d2a8; background: #1b4135; color: #e7fff4; box-shadow: inset 0 -2px #63dcb0;
+}
+.public-site .manager-atlas .chart-tabs { border-radius: 10px; background: #0a141d; }
+.public-site .manager-atlas .chart-tabs button { border-radius: 7px; }
+.public-site .manager-atlas .chart-tabs button[aria-pressed=true] { background: #1b4135; color: #e7fff4; box-shadow: inset 0 -2px #63dcb0; }
+
+/* Portrait frames. The photos themselves are untouched. */
+.public-site .manager-atlas .avatar { border-color: #364b59; border-radius: 10px; background: #17242d; color: #b9c7d7; }
+.public-site .manager-atlas .avatar.compact { border-color: #364b59; border-radius: 8px; }
+.public-site .manager-atlas .ledger-coaches .avatar.compact { border-radius: 5px; }
+
+/* Tables: one framed, rounded card like the club and player leaderboards. */
+.public-site .manager-atlas .scroll {
+  border: 1px solid var(--line); border-radius: 12px; background: #101922; scrollbar-color: #3a4f5c #101922;
+}
+.public-site .manager-atlas th { background: #12212b; color: #9cb8c9; }
+.public-site .manager-atlas th,
+.public-site .manager-atlas td { border-bottom-color: #24333f; }
+.public-site .manager-atlas tbody tr:hover { background: #14232b; }
+.public-site .manager-atlas #rankings .selected-row { background: #1b4135; }
+.public-site .manager-atlas .score-pill { border-color: #364b59; border-radius: 6px; background: #17242d; }
+.public-site .manager-atlas .ranking-controls select { background: #0a141d; }
+.public-site .manager-atlas .heading:has(.ranking-controls) { border-top-color: var(--line); }
+
+/* Record block: the same return block as the club breakdown. */
+.public-site .manager-atlas .stats {
+  overflow: hidden; border-top: 1px solid var(--line); border-radius: 12px; background: #122029;
+}
+
+/* Chart panel: the club chart's frame. The plot, its data and its handlers are untouched. */
+.public-site .manager-atlas .chart { border-color: #2c4642; background: linear-gradient(130deg, #10231f, #0b151f 65%); }
+.public-site .manager-atlas .chart text { fill: #a9c1cd; }
+.public-site .manager-atlas #chart path[stroke="#263d33"] { stroke: #2d414a; }
+.public-site .manager-atlas #chart path[stroke="#6c8779"] { stroke: #90a8b1; }
+.public-site .manager-atlas .chart-readout { border-color: #30474f; border-radius: 10px; background: #111f28; }
+
+/* Comparison and context blocks. */
+.public-site .manager-atlas .strategy-grid { overflow: hidden; border-radius: 12px; }
+.public-site .manager-atlas .strategy-grid .stat { background: #122029; }
+.public-site .manager-atlas .strategy-grid .selected-strategy { background: #1b4135; }
+.public-site .manager-atlas .market-grid .market-stat {
+  border-color: #335047; border-radius: 14px; background: linear-gradient(125deg, #122b25, #111922 70%);
+}
+.public-site .manager-atlas .actual-expected { border-color: var(--line); }
+.public-site .manager-atlas .market-example { border-radius: 14px; background: #111b24; }
+.public-site .manager-atlas .price-tile { border-color: var(--line); border-radius: 10px; background: #0a141d; }
+.public-site .manager-atlas .probability-track { border-radius: 2px; background: #24333f; }
+.public-site .manager-atlas .expectation-steps b { border-color: #38624f; }
+.public-site .manager-atlas .unit-guide { background: #111f28; }
+.public-site .manager-atlas #record > details { border-radius: 12px; background: #111b24; }
+.public-site .manager-atlas .spells li { border-left-color: #57d196; border-radius: 0 8px 8px 0; background: #122029; }
+.public-site .manager-atlas .guide { border-top-color: var(--line); }

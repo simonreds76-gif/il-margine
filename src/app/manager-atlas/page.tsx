@@ -10,6 +10,8 @@ import { MANAGER_ATLAS_FAQS } from "@/lib/manager-atlas-faq";
 import { managerShell } from "./shell";
 import ManagerClient from "./ManagerClient";
 import "./manager.css";
+// Route-scoped presentation layer for the Atlas consistency pass. The live manager.css is untouched.
+import "./manager-consistency.css";
 
 export const dynamic = "force-static";
 export const revalidate = false;
@@ -33,6 +35,9 @@ function prepareManagerShell(source: string) {
   html = html.replace('<div class="filter-actions">', '</div></details><div class="filter-actions">');
   html = html.replace('<div class="unit-guide">', '<details class="manager-unit-help"><summary>Read ROI and units</summary><div class="unit-guide">').replace('<p id="status"', '</details><p id="status"');
   html = html.replace('<button id="swap">Swap managers ⇄</button>', '<button id="swap" aria-label="Swap managers" title="Swap managers">⇄</button>');
+  // Ranking columns lead with ROI, like the record block above them. runtime/panel.mjs sets the same header
+  // and owns the matching cell order, so this only keeps the server-rendered header from re-ordering on load.
+  html = html.replace('<th>Manager</th><th>Bets</th><th>Team W / D / L</th><th>Profit</th><th>ROI</th><th>Drawdown</th>', '<th>Manager</th><th>ROI</th><th>Profit</th><th>Bets</th><th>Team W / D / L</th><th>Drawdown</th>');
   return html;
 }
 

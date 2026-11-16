@@ -1,0 +1,154 @@
+/*
+ * Atlas consistency pass — Football Return Atlas (club returns). Fable, 16 Nov 2026. PREVIEW.
+ * Route-scoped layer: every selector starts at .football-atlas. Loaded by FootballAtlasClient.tsx.
+ * The live football-atlas.css is not edited. The .public-site prefix keeps these rules ahead of
+ * football-atlas.css, research-mobile.css and ResearchPage.module.css whatever the bundle order.
+ */
+
+/* ── 1. Compact Atlas head: the metrics of the live Matchday head ─────────────────────────── */
+.public-site main.football-atlas > header[class] { margin-bottom: 16px; }
+.public-site main.football-atlas > header > nav[aria-label="Breadcrumb"] { margin-bottom: 4px; }
+.public-site main.football-atlas > header > div:first-of-type[class] { min-height: 54px; gap: 14px; }
+.public-site main.football-atlas > header > div:first-of-type > img[class] { width: 54px; height: 54px; }
+.public-site main.football-atlas > header h1[class] { font-size: 34px; }
+.public-site main.football-atlas > header h1[class] + p[class] { margin-top: 5px; font-size: 10px; }
+.public-site main.football-atlas > header > div:first-of-type + p[class] { font-size: 14px; line-height: 1.5; margin: 9px 0; }
+@media (max-width: 639px) {
+  .public-site main.football-atlas > header[class] { margin-bottom: 12px; }
+  .public-site main.football-atlas > header > div:first-of-type[class] { min-height: 44px; gap: 10px; }
+  .public-site main.football-atlas > header > div:first-of-type > img[class] { width: 44px; height: 44px; }
+  .public-site main.football-atlas > header h1[class] { font-size: 28px; }
+  .public-site main.football-atlas > header h1[class] + p[class] { letter-spacing: .1em; }
+  .public-site main.football-atlas > header > div:first-of-type + p[class] { font-size: 13px; margin: 8px 0; }
+}
+
+/* ── 2. Leaderboard rows ─────────────────────────────────────────────────────────────────── */
+.public-site .football-atlas .fa-ranking th:first-child { width: 31%; }
+.public-site .football-atlas .fa-ranking th:nth-child(2),
+.public-site .football-atlas .fa-ranking th:nth-child(3) { width: 13%; }
+.public-site .football-atlas .fa-ranking th:nth-child(4) { width: 10%; }
+.public-site .football-atlas .fa-ranking th:nth-child(5) { width: 33%; }
+@media (min-width: 801px) {
+  .public-site .football-atlas .fa-ranking td { padding-top: 8px; padding-bottom: 8px; }
+}
+
+.public-site .football-atlas .fa-rank-record-line { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px 14px; }
+.public-site .football-atlas .fa-rank-wl strong { font-size: 14px; font-weight: 600; white-space: nowrap; }
+
+/* Disclosure control: a real button, 44px tall, state shown by wording and glyph as well as colour. */
+.public-site .football-atlas .fa-ranking .fa-breakdown-toggle {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: auto; min-height: 44px; padding: 8px 14px;
+  border: 1px solid #38624f; border-radius: 10px; background: #142d25; color: #c4f6df;
+  font-size: 12px; font-weight: 650; line-height: 1.3; white-space: nowrap;
+}
+.public-site .football-atlas .fa-ranking .fa-breakdown-toggle:hover { border-color: #67d6ad; background: #18332e; }
+.public-site .football-atlas .fa-ranking .fa-breakdown-toggle[aria-expanded="true"] {
+  border-color: #62d2a8; background: #1b4135; color: #e7fff4; box-shadow: inset 0 -2px #63dcb0;
+}
+.public-site .football-atlas .fa-breakdown-toggle > span[aria-hidden] { font-size: 14px; line-height: 1; }
+
+/* ── 3. Full-width expansion row ─────────────────────────────────────────────────────────── */
+.public-site .football-atlas .fa-ranking tr.fa-row-open { background: #14232b; }
+.public-site .football-atlas .fa-ranking tr.fa-row-open > td:first-child,
+.public-site .football-atlas .fa-ranking tr.fa-expansion > td { box-shadow: inset 3px 0 #57d196; }
+.public-site .football-atlas .fa-ranking tr.fa-expansion,
+.public-site .football-atlas .fa-ranking tr.fa-expansion:hover { background: #0f1a22; }
+.public-site .football-atlas .fa-ranking tr.fa-expansion > td {
+  padding: 4px 18px 20px; border-top: 0; text-align: left; white-space: normal; overflow-wrap: normal;
+}
+
+.football-atlas .fa-breakdown { min-width: 0; }
+.football-atlas .fa-breakdown-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px 20px; padding-top: 14px; border-top: 1px dashed #324850; }
+.football-atlas .fa-breakdown-head > div { min-width: 0; }
+.public-site .football-atlas .fa-breakdown-head h3 { font-size: 18px; line-height: 1.3; margin-top: 2px; overflow-wrap: anywhere; }
+.public-site .football-atlas .fa-breakdown-scope { margin-top: 4px; font-size: 12px; line-height: 1.6; color: #abc0ce; }
+
+/* Buttons inside the expansion: undo the borderless full-width table-button reset. */
+.public-site .football-atlas .fa-expansion .fa-breakdown-ledger,
+.public-site .football-atlas .fa-expansion .fa-breakdown-close {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: none;
+  width: auto; min-height: 44px; padding: 10px 16px;
+  border: 1px solid #38624f; border-radius: 10px; background: #142d25; color: #c4f6df;
+  font-size: 13px; font-weight: 650; line-height: 1.3; white-space: nowrap;
+}
+.public-site .football-atlas .fa-expansion .fa-breakdown-ledger { border-color: #62d2a8; background: #1b4135; color: #e7fff4; }
+.public-site .football-atlas .fa-expansion .fa-chart-toolbar button {
+  width: auto; min-height: 44px; padding: 9px 12px;
+  border: 1px solid #3c555c; border-radius: 8px; background: #14252c; color: #cbe4dc;
+}
+.public-site .football-atlas .fa-expansion button:hover { border-color: #67d6ad; background: #18332e; }
+
+/* Return block: ROI, net profit, sample, record, coverage — always in this order. */
+.public-site .football-atlas .fa-breakdown-stats {
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px;
+  margin: 14px 0 16px; padding: 0; overflow: hidden;
+  border: 1px solid var(--fa-line); border-radius: 12px; background: var(--fa-line);
+}
+.public-site .football-atlas .fa-breakdown-stats > div { min-width: 0; padding: 12px 14px; background: #122029; }
+.public-site .football-atlas .fa-breakdown-stats dt { font-size: 11px; font-weight: 500; line-height: 1.4; color: #b1c6d4; }
+.public-site .football-atlas .fa-breakdown-stats dd { margin: 4px 0 0; }
+.public-site .football-atlas .fa-breakdown-stats dd strong {
+  display: block; font-size: 20px; font-weight: 700; line-height: 1.3; letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.public-site .football-atlas .fa-breakdown-stats dd small { display: block; margin-top: 3px; font-size: 11px; line-height: 1.45; color: #a5bdca; }
+
+/* The unchanged FootballProfitChart, restored to its own type sizes inside a table cell. */
+.public-site .football-atlas .fa-expansion .fa-chart-value small { font-size: 11px; color: #acc3cf; }
+.public-site .football-atlas .fa-expansion .fa-underwater-heading small { font-size: 11px; color: #a2b7c4; }
+
+.football-atlas .fa-breakdown-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; margin-top: 14px; }
+.public-site .football-atlas .fa-breakdown-foot p { font-size: 12px; line-height: 1.6; color: #abc0ce; }
+
+@media (max-width: 1000px) {
+  .public-site .football-atlas .fa-breakdown-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .public-site .football-atlas .fa-breakdown-stats > div:nth-child(4) { grid-column: span 1; }
+  .public-site .football-atlas .fa-breakdown-stats > div:nth-child(5) { grid-column: span 2; }
+}
+
+/* ── 4. Phone and small tablet: the ranking is already a list of cards at this width ───────── */
+@media (max-width: 800px) {
+  .public-site .football-atlas .fa-ranking .fa-rank-record { padding-top: 8px; }
+  .public-site .football-atlas .fa-rank-record-line { justify-content: space-between; flex-wrap: nowrap; }
+  .public-site .football-atlas .fa-rank-wl strong { font-size: 16px; }
+
+  /* The open card and its expansion read as one card. */
+  .public-site .football-atlas .fa-ranking tr.fa-row-open {
+    margin-bottom: 0; border-color: #4d8f77; border-bottom-color: transparent; border-radius: 14px 14px 0 0;
+  }
+  .public-site .football-atlas .fa-ranking tr.fa-row-open > td:first-child,
+  .public-site .football-atlas .fa-ranking tr.fa-expansion > td { box-shadow: none; }
+  .public-site .football-atlas .fa-ranking tr.fa-expansion {
+    display: block; margin: 0 0 12px; padding: 0;
+    border: 1px solid #4d8f77; border-top: 0; border-radius: 0 0 14px 14px; background: #0f1a22;
+  }
+  .public-site .football-atlas .fa-ranking tr.fa-expansion > td { display: block; padding: 0 14px 16px; }
+
+  .football-atlas .fa-breakdown-head { flex-direction: column; align-items: stretch; }
+  .public-site .football-atlas .fa-expansion .fa-breakdown-ledger { width: 100%; }
+  .public-site .football-atlas .fa-breakdown-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .public-site .football-atlas .fa-breakdown-stats > div:nth-child(5) { grid-column: 1 / -1; }
+  .public-site .football-atlas .fa-breakdown-stats > div { padding: 10px 12px; }
+  .public-site .football-atlas .fa-breakdown-stats dd strong { font-size: 19px; }
+
+  /* One frame, not a card inside a card: the chart keeps every element, only its outer box goes. */
+  .public-site .football-atlas .fa-expansion .fa-profit-chart { padding: 4px 0 0; border: 0; border-radius: 0; background: none; }
+
+  .football-atlas .fa-breakdown-foot { flex-direction: column; align-items: stretch; }
+  .public-site .football-atlas .fa-expansion .fa-breakdown-close { width: 100%; }
+}
+@media (max-width: 360px) {
+  .public-site .football-atlas .fa-ranking .fa-breakdown-toggle { padding: 8px 10px; }
+  .public-site .football-atlas .fa-ranking tr.fa-expansion > td { padding: 0 12px 14px; }
+  .public-site .football-atlas .fa-breakdown-stats dd strong { font-size: 17px; }
+}
+
+/* Review fix:a clipped figure reads as a different number. Size the W / D / L figure to fit, and never clip: wrap instead. */
+.public-site .football-atlas .fa-breakdown-stats > div:nth-child(n+4) dd strong { white-space: normal; }
+@media (max-width: 400px) {
+  .public-site .football-atlas .fa-breakdown-stats > div:nth-child(4) dd strong { font-size: 17px; }
+}
+@media (max-width: 360px) {
+  .public-site .football-atlas .fa-breakdown-stats > div:nth-child(4) dd strong { font-size: 15px; letter-spacing: -.03em; }
+}
