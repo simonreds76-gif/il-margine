@@ -1,0 +1,148 @@
+/*
+ * Return Atlas edition navigation. Fable, 16 Nov 2026. PREVIEW.
+ * Used only by AtlasEditionNav, which AtlasPageHeader renders on the club, manager and tennis Atlas pages.
+ * Every rule starts at .public-site .shell so the three pages' older element rules (for a, button, p, ul)
+ * cannot restyle it, whatever the bundle order. Colours are the ones ResearchToolNav already uses.
+ */
+
+:global(.public-site) .shell { min-width: 0; margin: 10px 0 0; }
+:global(.public-site) .shell .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; min-width: 0; }
+
+/* ── Edition switcher ─────────────────────────────────────────────────────────────────────── */
+:global(.public-site) .shell .editions {
+  display: flex; min-width: 0; overflow: hidden;
+  border: 1px solid #2b3c46; border-radius: 11px; background: #121c24;
+}
+:global(.public-site) .shell .editions a {
+  position: relative; display: flex; align-items: center; justify-content: center; gap: 7px;
+  min-width: 0; min-height: 44px; padding: 0 16px;
+  border-left: 1px solid #2b3c46;
+  color: #d9e5eb; font-size: 13px; font-weight: 650; line-height: 1.2;
+  text-decoration: none; white-space: nowrap;
+}
+:global(.public-site) .shell .editions a:first-child { border-left: 0; }
+:global(.public-site) .shell .editions a:hover { background: #18262f; }
+/* Current edition: fill, underline and heavier weight, so it does not rest on colour alone. */
+:global(.public-site) .shell .editions a[aria-current="page"] {
+  background: linear-gradient(120deg, #1b352d, #142621); color: #b2f5d8; font-weight: 750;
+  box-shadow: inset 0 -2px #8ce5bd;
+}
+:global(.public-site) .shell .editions a:focus-visible { outline: 2px solid #8ce5bd; outline-offset: -3px; }
+:global(.public-site) .shell .editionIcon { display: none; flex: none; width: 18px; height: 18px; color: #9cb7b1; }
+:global(.public-site) .shell .editions a[aria-current="page"] .editionIcon { color: #b2f5d8; }
+
+/* ── Matching Matchday link and the All tools button ──────────────────────────────────────── */
+/* Wrapping is a safety net only: at 320px both controls are sized to share one line. */
+:global(.public-site) .shell .aside {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; margin-left: auto;
+}
+:global(.public-site) .shell .matchday {
+  display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 0 6px;
+  border-radius: 8px; color: #d9e5eb; font-size: 13px; font-weight: 650; line-height: 1.2;
+  text-decoration: none; white-space: nowrap;
+}
+:global(.public-site) .shell .matchday:hover { color: #b2f5d8; text-decoration: underline; text-underline-offset: 4px; }
+:global(.public-site) .shell .matchday:focus-visible { outline: 2px solid #8ce5bd; outline-offset: 2px; }
+:global(.public-site) .shell .matchdayIcon { flex: none; width: 18px; height: 18px; color: #9cb7b1; }
+:global(.public-site) .shell .arrow { color: #8ce5bd; }
+
+:global(.public-site) .shell .toggle {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px; flex: none;
+  width: auto; max-width: none; min-height: 44px; margin: 0; padding: 0 12px;
+  border: 1px solid #2b3c46; border-radius: 11px; background: #121c24; box-shadow: none;
+  color: #d9e5eb; font: inherit; font-size: 13px; font-weight: 650; line-height: 1.2;
+  text-align: center; white-space: nowrap; cursor: pointer; appearance: none;
+}
+:global(.public-site) .shell .toggle:hover { border-color: #8ce5bd; background: #18262f; color: #f1f5f9; }
+:global(.public-site) .shell .toggle[aria-expanded="true"] {
+  border-color: #609780; background: linear-gradient(120deg, #1b352d, #142621); color: #b2f5d8;
+  box-shadow: inset 0 -2px #8ce5bd;
+}
+:global(.public-site) .shell .toggle:focus-visible { outline: 2px solid #8ce5bd; outline-offset: 2px; }
+:global(.public-site) .shell .chevron { flex: none; }
+:global(.public-site) .shell .toggle[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+
+/* ── All tools panel: in the page flow, so it cannot be clipped or cover anything ─────────── */
+:global(.public-site) .shell .panel {
+  margin-top: 8px; padding: 14px;
+  border: 1px solid #2b3c46; border-radius: 14px; background: #121c24;
+}
+:global(.public-site) .shell .panel[hidden] { display: none; }
+:global(.public-site) .shell .groups { display: grid; gap: 14px; min-width: 0; }
+:global(.public-site) .shell .group { min-width: 0; }
+:global(.public-site) .shell .groupTitle {
+  margin: 0 0 8px; color: #a4b5c3; font-size: 11px; font-weight: 650; line-height: 1.4;
+  letter-spacing: .12em; text-transform: uppercase;
+}
+:global(.public-site) .shell .group ul {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 6px;
+  margin: 0; padding: 0; list-style: none;
+}
+:global(.public-site) .shell .group li { min-width: 0; margin: 0; padding: 0; }
+:global(.public-site) .shell .panel a {
+  display: flex; align-items: center; gap: 10px; height: 100%; min-height: 52px; padding: 8px 10px;
+  border: 1px solid #2b3c46; border-radius: 11px; background: #0f1820;
+  color: #d9e5eb; text-decoration: none;
+}
+:global(.public-site) .shell .panel a > span { min-width: 0; }
+:global(.public-site) .shell .panel a strong { display: block; font-size: 13px; font-weight: 650; line-height: 1.35; }
+:global(.public-site) .shell .panel a small { display: block; margin-top: 2px; color: #a4b5c3; font-size: 11px; line-height: 1.4; }
+:global(.public-site) .shell .toolIcon { flex: none; width: 24px; height: 24px; color: #9cb7b1; }
+:global(.public-site) .shell .panel a:hover { border-color: #8ce5bd; }
+:global(.public-site) .shell .panel a[aria-current="page"] {
+  border-color: #609780; background: linear-gradient(120deg, #1b352d, #142621);
+  box-shadow: inset 0 -2px #8ce5bd;
+}
+:global(.public-site) .shell .panel a[aria-current="page"] strong { color: #b2f5d8; font-weight: 750; }
+:global(.public-site) .shell .panel a[aria-current="page"] .toolIcon { color: #b2f5d8; }
+:global(.public-site) .shell .panel a:focus-visible { outline: 2px solid #8ce5bd; outline-offset: 2px; }
+
+/*
+ * The page description now follows this navigation instead of the title block, so the compact size the
+ * three route layers gave it is restated here. This is the only rule that reaches outside the component.
+ */
+:global(.public-site) main .shell + p[class] { margin: 10px 0 9px; font-size: 14px; line-height: 1.5; }
+
+/* ── Phone: two lines, nothing scrolls sideways ───────────────────────────────────────────── */
+@media (max-width: 639px) {
+  :global(.public-site) .shell { margin-top: 8px; }
+  :global(.public-site) .shell .editions { flex: 1 0 100%; }
+  :global(.public-site) .shell .editions a { flex: 1 1 0; padding: 0 6px; }
+  /* "Tennis players" shows as "Tennis"; the full name stays available to assistive technology. */
+  :global(.public-site) .shell .extra {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+  }
+  :global(.public-site) .shell .aside { flex: 1 0 100%; justify-content: space-between; margin-left: 0; }
+  :global(.public-site) .shell .matchday { padding-left: 2px; }
+  :global(.public-site) main .shell + p[class] { margin: 8px 0; font-size: 13px; }
+}
+@media (max-width: 519px) {
+  :global(.public-site) .shell .panel { padding: 12px; }
+  :global(.public-site) .shell .group ul { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 359px) {
+  :global(.public-site) .shell .matchdayIcon { display: none; }
+  :global(.public-site) .shell .toggle { padding: 0 10px; }
+}
+
+/* ── Wider screens ────────────────────────────────────────────────────────────────────────── */
+@media (min-width: 640px) {
+  /* Aligns the switcher with the title text: 54px mark plus the 14px gap set by the route layers. */
+  :global(.public-site) .shell .row { margin-left: 68px; }
+}
+@media (min-width: 900px) {
+  :global(.public-site) .shell .editionIcon { display: block; }
+  :global(.public-site) .shell .groups { grid-template-columns: 4fr 3fr; gap: 20px; }
+}
+
+/* ── Motion: state feedback only, and none at all when the visitor asks for less ──────────── */
+@media (prefers-reduced-motion: no-preference) {
+  :global(.public-site) .shell .editions a,
+  :global(.public-site) .shell .matchday,
+  :global(.public-site) .shell .toggle,
+  :global(.public-site) .shell .panel a { transition: background-color .15s, border-color .15s, color .15s; }
+  :global(.public-site) .shell .chevron { transition: transform .15s; }
+  :global(.public-site) .shell .panel { animation: reveal .14s ease-out; }
+}
+@keyframes reveal { from { opacity: 0; transform: translateY(-4px); } }
