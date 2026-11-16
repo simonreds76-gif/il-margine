@@ -1,81 +1,12 @@
 {
-  "observed_at": "2026-11-15T15:42:21.175677+00:00",
-  "window_start": "2026-10-25T00:00:00+00:00",
+  "observed_at": "2026-11-16T18:37:52.391244+00:00",
+  "window_start": "2026-10-26T00:00:00+00:00",
   "leagues": {
     "epl": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard",
-      "sha256": "9d2856e02029290e03ba47dab2c9f36707a4a8aca2e73dd7ca10bf86ad5e5090",
+      "sha256": "63146e26b96ad7d1cf6fe679cfd9e38213e5404bbb82e7fe55336e004a24067c",
       "days": {
-        "20261025": {
-          "observed_at": "2026-11-13T16:36:11.995787+00:00",
-          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261025&limit=1000",
-          "sha256": "5f00c041dbc8f62c7e63e7e56842737de56017f342dc75181fbae6187d18f8f3",
-          "complete_day": true,
-          "empty_calendar_day": false,
-          "completed": [
-            {
-              "date": "2026-10-25",
-              "league": "epl",
-              "event_id": "401879254",
-              "kickoff": "2026-10-25T14:00:00+00:00",
-              "home_team": "Crystal Palace",
-              "home_goals": 0,
-              "home_id": "384",
-              "away_team": "Newcastle United",
-              "away_goals": 2,
-              "away_id": "361"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "epl",
-              "event_id": "401878766",
-              "kickoff": "2026-10-25T14:00:00+00:00",
-              "home_team": "Hull City",
-              "home_goals": 1,
-              "home_id": "306",
-              "away_team": "Brentford",
-              "away_goals": 1,
-              "away_id": "337"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "epl",
-              "event_id": "401878765",
-              "kickoff": "2026-10-25T14:00:00+00:00",
-              "home_team": "Liverpool",
-              "home_goals": 2,
-              "home_id": "364",
-              "away_team": "Brighton & Hove Albion",
-              "away_goals": 0,
-              "away_id": "331"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "epl",
-              "event_id": "401879252",
-              "kickoff": "2026-10-25T14:00:00+00:00",
-              "home_team": "Manchester United",
-              "home_goals": 0,
-              "home_id": "360",
-              "away_team": "AFC Bournemouth",
-              "away_goals": 3,
-              "away_id": "349"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "epl",
-              "event_id": "401878764",
-              "kickoff": "2026-10-25T16:30:00+00:00",
-              "home_team": "Sunderland",
-              "home_goals": 0,
-              "home_id": "366",
-              "away_team": "Leeds United",
-              "away_goals": 0,
-              "away_id": "357"
-            }
-          ]
-        },
         "20261031": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
           "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261031&limit=1000",
@@ -737,77 +668,8 @@
     "serie-a": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard",
-      "sha256": "cdd459b8f73027fcd90af65fdca7ec739289f0166ccc923ed63c1a0f722ab1f9",
+      "sha256": "fda5b4ab7f77b595156e4861c30f6b05f816534a45df40a4b7a55996eb99ce98",
       "days": {
-        "20261025": {
-          "observed_at": "2026-11-13T16:36:11.995787+00:00",
-          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20261025&limit=1000",
-          "sha256": "35a1c1d51ddb0951834596f6135b2d00c947c7e595960b6e932a48c3bb401c88",
-          "complete_day": true,
-          "empty_calendar_day": false,
-          "completed": [
-            {
-              "date": "2026-10-25",
-              "league": "serie-a",
-              "event_id": "401875036",
-              "kickoff": "2026-10-25T11:30:00+00:00",
-              "home_team": "Internazionale",
-              "home_goals": 2,
-              "home_id": "110",
-              "away_team": "Fiorentina",
-              "away_goals": 1,
-              "away_id": "109"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "serie-a",
-              "event_id": "401874972",
-              "kickoff": "2026-10-25T14:00:00+00:00",
-              "home_team": "Atalanta",
-              "home_goals": 4,
-              "home_id": "105",
-              "away_team": "Frosinone",
-              "away_goals": 4,
-              "away_id": "4057"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "serie-a",
-              "event_id": "401874952",
-              "kickoff": "2026-10-25T14:00:00+00:00",
-              "home_team": "Genoa",
-              "home_goals": 1,
-              "home_id": "3263",
-              "away_team": "Venezia",
-              "away_goals": 0,
-              "away_id": "17530"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "serie-a",
-              "event_id": "401874772",
-              "kickoff": "2026-10-25T17:00:00+00:00",
-              "home_team": "Lecce",
-              "home_goals": 0,
-              "home_id": "113",
-              "away_team": "Juventus",
-              "away_goals": 2,
-              "away_id": "111"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "serie-a",
-              "event_id": "401874779",
-              "kickoff": "2026-10-25T19:45:00+00:00",
-              "home_team": "Udinese",
-              "home_goals": 0,
-              "home_id": "118",
-              "away_team": "AC Milan",
-              "away_goals": 2,
-              "away_id": "103"
-            }
-          ]
-        },
         "20261027": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
           "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20261027&limit=1000",
@@ -1736,65 +1598,8 @@
     "la-liga": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard",
-      "sha256": "5f4ef709a4c670a8f9e3ae45ebc759fd113767bc575bc0b5523dde22384f4375",
+      "sha256": "b865b53edfafb3b9c13ecf73436cdd9d51916cfbb11cec407def90eacb60c92b",
       "days": {
-        "20261025": {
-          "observed_at": "2026-11-13T16:36:11.995787+00:00",
-          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard?dates=20261025&limit=1000",
-          "sha256": "b120b7d9069bf1156e78893297d8f7f0a0b7fcd861265479c323736b26167c66",
-          "complete_day": true,
-          "empty_calendar_day": false,
-          "completed": [
-            {
-              "date": "2026-10-25",
-              "league": "la-liga",
-              "event_id": "401882835",
-              "kickoff": "2026-10-25T13:00:00+00:00",
-              "home_team": "Athletic Club",
-              "home_goals": 4,
-              "home_id": "93",
-              "away_team": "Getafe",
-              "away_goals": 0,
-              "away_id": "2922"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "la-liga",
-              "event_id": "401882833",
-              "kickoff": "2026-10-25T15:15:00+00:00",
-              "home_team": "Celta Vigo",
-              "home_goals": 0,
-              "home_id": "85",
-              "away_team": "Real Betis",
-              "away_goals": 0,
-              "away_id": "244"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "la-liga",
-              "event_id": "401882829",
-              "kickoff": "2026-10-25T17:30:00+00:00",
-              "home_team": "Real Sociedad",
-              "home_goals": 2,
-              "home_id": "89",
-              "away_team": "Levante",
-              "away_goals": 1,
-              "away_id": "1538"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "la-liga",
-              "event_id": "401882832",
-              "kickoff": "2026-10-25T20:00:00+00:00",
-              "home_team": "Barcelona",
-              "home_goals": 1,
-              "home_id": "83",
-              "away_team": "Real Madrid",
-              "away_goals": 2,
-              "away_id": "86"
-            }
-          ]
-        },
         "20261026": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
           "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard?dates=20261026&limit=1000",
@@ -2486,41 +2291,8 @@
     "bundesliga": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard",
-      "sha256": "1d8b84de9f0dd0c5a75898f679a7ec99d7e273fd0b50936f9f46754bfa8959be",
+      "sha256": "60c70471492b58915ca90e96cba34f5486f1a9b8fb07097b98f75fa3390155ec",
       "days": {
-        "20261025": {
-          "observed_at": "2026-11-13T16:36:11.995787+00:00",
-          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard?dates=20261025&limit=1000",
-          "sha256": "ffdbf0e251a9a004f3203269a96dc16209be0e97864aeccdb84cdb0f3ecab30a",
-          "complete_day": true,
-          "empty_calendar_day": false,
-          "completed": [
-            {
-              "date": "2026-10-25",
-              "league": "bundesliga",
-              "event_id": "401884760",
-              "kickoff": "2026-10-25T14:30:00+00:00",
-              "home_team": "TSG Hoffenheim",
-              "home_goals": 3,
-              "home_id": "7911",
-              "away_team": "Bayer Leverkusen",
-              "away_goals": 0,
-              "away_id": "131"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "bundesliga",
-              "event_id": "401884759",
-              "kickoff": "2026-10-25T16:30:00+00:00",
-              "home_team": "SC Freiburg",
-              "home_goals": 1,
-              "home_id": "126",
-              "away_team": "Bayern Munich",
-              "away_goals": 3,
-              "away_id": "132"
-            }
-          ]
-        },
         "20261030": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
           "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard?dates=20261030&limit=1000",
@@ -3122,89 +2894,8 @@
     "ligue-1": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard",
-      "sha256": "d02596e53c69d35cc8004091dd8b9dd199e346ce191e80af5e94b0145e8cf728",
+      "sha256": "c8c0072f594a4f5712daf2c255db870ea98f0d746619f042caf7288367afad68",
       "days": {
-        "20261025": {
-          "observed_at": "2026-11-13T16:36:11.995787+00:00",
-          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard?dates=20261025&limit=1000",
-          "sha256": "e16042784c1f920bf825ee96eba9ad66431d7aa20aae85b8507d1b780bc851f1",
-          "complete_day": true,
-          "empty_calendar_day": false,
-          "completed": [
-            {
-              "date": "2026-10-25",
-              "league": "ligue-1",
-              "event_id": "401876425",
-              "kickoff": "2026-10-25T14:00:00+00:00",
-              "home_team": "AS Monaco",
-              "home_goals": 1,
-              "home_id": "174",
-              "away_team": "Lille",
-              "away_goals": 1,
-              "away_id": "166"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "ligue-1",
-              "event_id": "401876429",
-              "kickoff": "2026-10-25T16:15:00+00:00",
-              "home_team": "AJ Auxerre",
-              "home_goals": 1,
-              "home_id": "172",
-              "away_team": "Le Mans",
-              "away_goals": 1,
-              "away_id": "2697"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "ligue-1",
-              "event_id": "401876430",
-              "kickoff": "2026-10-25T16:15:00+00:00",
-              "home_team": "Angers",
-              "home_goals": 0,
-              "home_id": "7868",
-              "away_team": "Lorient",
-              "away_goals": 0,
-              "away_id": "273"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "ligue-1",
-              "event_id": "401876426",
-              "kickoff": "2026-10-25T16:15:00+00:00",
-              "home_team": "Marseille",
-              "home_goals": 4,
-              "home_id": "176",
-              "away_team": "Le Havre AC",
-              "away_goals": 3,
-              "away_id": "3236"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "ligue-1",
-              "event_id": "401876424",
-              "kickoff": "2026-10-25T16:15:00+00:00",
-              "home_team": "Stade Rennais",
-              "home_goals": 3,
-              "home_id": "169",
-              "away_team": "Strasbourg",
-              "away_goals": 0,
-              "away_id": "180"
-            },
-            {
-              "date": "2026-10-25",
-              "league": "ligue-1",
-              "event_id": "401876423",
-              "kickoff": "2026-10-25T16:15:00+00:00",
-              "home_team": "Toulouse",
-              "home_goals": 0,
-              "home_id": "179",
-              "away_team": "Troyes",
-              "away_goals": 0,
-              "away_id": "170"
-            }
-          ]
-        },
         "20261026": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
           "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard?dates=20261026&limit=1000",
