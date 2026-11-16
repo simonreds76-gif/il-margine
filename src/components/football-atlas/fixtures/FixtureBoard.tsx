@@ -7,14 +7,16 @@ import FixturePhoto from '@/components/FixturePhoto';
 import { priceBasisLabel } from '../football-core';
 import Link from 'next/link';
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
-import type { Club, EvidencePayload, FixtureBoard as Board, FixtureCard, FixtureEvidence, RecordSummary } from './types';
+import type { Club, EvidencePayload, EvidenceRow, FixtureBoard as Board, FixtureCard, RecordSummary, FixtureEvidence } from './types';
 import { bothPositiveOutcomes, matchesHistoryFilter, type HistoryFilter, type OutcomeFilter } from './history-filter';
 
-/* Football Matchday browser. Same browsing language as Tennis Matchday:
-   filters in thin lines, then one aligned row per fixture, opened in place.
-   Presentation only: every calculation, filter, expiry rule, deep link and
-   evidence request below is the existing one. Historical prices appear only
-   inside an opened fixture and are never shown as current odds. */
+/* Football Matchday browser. The past return is the product, so it is on the
+   surface twice: three-way ROI for clubs and for managers in every row, and
+   the full ROI, profit and result count at the top of an opened fixture.
+   The meetings behind each record are two separate lists that open and close
+   on their own. Presentation only: every calculation, filter, expiry rule,
+   deep link and evidence request below is the existing one. Recorded prices
+   are historical and are never shown as current odds. */
 
 const leagues: Record<string, string> = { 'premier-league': 'Premier League', 'serie-a': 'Serie A', 'la-liga': 'La Liga', bundesliga: 'Bundesliga', 'ligue-1': 'Ligue 1', championship: 'Championship' };
 const leagueLogo = (key: string) => `/league-logos/${key === 'premier-league' ? 'epl' : key}.png`;
@@ -30,6 +32,7 @@ const timeFormatter = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Londo
 const timeText = (value: string) => timeFormatter.format(new Date(value));
 const offsetDay = (value: string, days: number) => new Date(Date.parse(`${value}T12:00:00Z`) + days * 86400000).toISOString().slice(0, 10);
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+const roiText = (roi: number | null) => roi === null ? '—' : `${number(roi)}%`;
 
 function Icon({ name }: { name: 'calendar' | 'manager' | 'club' | 'link' | 'arrow' | 'search' | 'clock' | 'chevron' | 'filter' }) {
   if (name === 'manager' || name === 'club' || name === 'calendar') return <ResearchIcon name={name === 'manager' ? 'managers' : name === 'club' ? 'football' : 'matchday'} width={18} height={18}/>;
@@ -41,7 +44,7 @@ function Photo({ src, manager = false }: { src: string | null; manager?: boolean
   return <FixturePhoto src={src} className={manager ? 'fm-face' : 'fm-crest'} size={48} fallback={<Icon name={manager ? 'manager' : 'club'} />} />;
 }
 
-// Crest, club and manager names, then the manager's portrait. Same order on every row.
+// Crest, club and manager names, and the manager's portrait. Same order on every row.
 function Team({ club, side }: { club: Club; side: 'home' | 'away' }) {
   return <span className={`fm-team fm-${side}`}>
     <Photo src={club.crest} />
@@ -53,72 +56,122 @@ function Team({ club, side }: { club: Club; side: 'home' | 'away' }) {
   </span>;
 }
 
-// Row summary: wins, draws, wins and the number of meetings. No returns here.
-function Tally({ label, record, unavailable, names }: { label: string; record: RecordSummary; unavailable: boolean; names: string[] }) {
+/* Row summary of one record: all three past returns, never only the best one,
+   with the number of priced meetings they come from. Results (wins, draws,
+   wins) are a separate, labelled figure so they cannot be read as returns. */
+function Brief({ label, record, unavailable, stale, names, manager = false }: { label: string; record: RecordSummary; unavailable: boolean; stale: boolean; names: string[]; manager?: boolean }) {
   const meetings = record.meetings ?? record.count, results = record.results;
-  if (unavailable) return <span className="fm-tally fm-tally-none"><em>{label}</em><small>Identity pending</small></span>;
-  if (!meetings) return <span className="fm-tally fm-tally-none"><em>{label}</em><small>No meetings</small></span>;
-  return <span className="fm-tally">
-    <em>{label}</em>
-    {results && results.length === 3 && <>
-      <span className="fm-wdl" aria-hidden="true"><b>{results[0]}</b><i>–</i><b>{results[1]}</b><i>–</i><b>{results[2]}</b></span>
-      <span className="fm-balance" aria-hidden="true">{results.map((n, i) => n > 0 && <i key={i} data-side={i} style={{ flexGrow: n }} />)}</span>
-      <span className="sr-only">{label} head to head: {names[0]} {plural(results[0], 'win')}, {plural(results[1], 'draw')}, {names[1]} {plural(results[2], 'win')}. </span>
-    </>}
-    <small>{plural(meetings, 'meeting')}</small>
+  if (unavailable) return <span className="fm-brief fm-brief-none"><span className="fm-brief-head"><em>{manager ? 'Manager ROI' : 'Club ROI'}</em></span><small>Identity pending</small></span>;
+  if (!meetings) return <span className="fm-brief fm-brief-none"><span className="fm-brief-head"><em>{manager ? 'Manager ROI' : 'Club ROI'}</em></span><small>No meetings</small></span>;
+  const priced = record.count > 0, short = priced && record.count < 3;
+  const heads = manager ? ['Home mgr', 'Draw', 'Away mgr'] : ['Home', 'Draw', 'Away'];
+  const spoken = manager ? [`${names[0]}’s team`, 'the draw', `${names[1]}’s team`] : [names[0], 'the draw', names[1]];
+  return <span className="fm-brief">
+    <span className="fm-brief-head">
+      <em>{manager ? 'Manager ROI' : 'Club ROI'}</em>
+      <small data-short={short}>{priced ? `${record.count} priced` : 'No prices'}{short ? ' · short' : ''}</small>
+      {results && results.length === 3 && <small className="fm-wdw" aria-hidden="true">W–D–W {results.join('–')}</small>}
+    </span>
+    <span className="fm-roi3" aria-hidden="true">{record.outcomes.slice(0, 3).map((outcome, i) => <span key={i} data-positive={priced && outcome.positive && !stale}><i>{heads[i]}</i><b>{priced ? roiText(outcome.roi) : '—'}</b></span>)}</span>
+    <span className="sr-only">
+      {label} past returns{priced ? ` from ${plural(record.count, 'priced meeting')}: ${record.outcomes.slice(0, 3).map((outcome, i) => `1 unit on ${spoken[i]} ${roiText(outcome.roi)}`).join(', ')}.` : ': no recorded prices.'}
+      {results && results.length === 3 ? ` Results in ${plural(meetings, 'meeting')}: ${names[0]} ${plural(results[0], 'win')}, ${plural(results[1], 'draw')}, ${names[1]} ${plural(results[2], 'win')}. ` : ' '}
+    </span>
   </span>;
 }
 
-// Returns stay one step further in: closed until asked for, with the priced count in the label.
-function Returns({ kind, record, stale, paired, names }: { kind: 'Managers' | 'Clubs'; record: RecordSummary; stale: boolean; paired: number[]; names: string[] }) {
-  const label = (i: number) => i === 1 ? 'The draw' : kind === 'Clubs' ? names[i === 0 ? 0 : 1] : `${names[i === 0 ? 0 : 1]}’s team`;
-  return <details className="fm-returns">
-    <summary><span>Past returns</span><small>{plural(record.count, 'priced meeting')}</small><Icon name="chevron" /></summary>
-    <table>
-      <thead><tr><th scope="col">1u on</th><th scope="col">Won</th><th scope="col">Profit</th><th scope="col">ROI</th></tr></thead>
-      <tbody>{record.outcomes.map((outcome, i) => <tr key={i} data-positive={outcome.positive && !stale}>
-        <th scope="row">{label(i)}{paired.includes(i) && <small>Both positive</small>}</th>
-        <td>{outcome.wins} of {record.count}</td>
-        <td>{number(outcome.profit, 2)}u</td>
-        <td>{outcome.roi === null ? '—' : `${number(outcome.roi)}%`}</td>
-      </tr>)}</tbody>
-    </table>
-    <p>1u on the named side or the draw in every meeting with odds, at the price recorded before that match. Past prices, not current odds, and not a prediction.{record.count < 3 ? ' With so few priced meetings, one result decides the figure.' : ''}</p>
-  </details>;
-}
-
+// Opened fixture: result count and past return side by side for each outcome, nothing hidden.
 function RecordBlock({ kind, record, unavailable, stale, paired, names, covered }: { kind: 'Managers' | 'Clubs'; record: RecordSummary; unavailable: boolean; stale: boolean; paired: number[]; names: string[]; covered: boolean }) {
   const meetings = record.meetings ?? record.count;
+  const returns = record.outcomes.map((outcome, i) => <span className="fm-return" data-positive={outcome.positive && !stale && !unavailable} data-short={record.count < 3} key={i}>
+    <strong>{unavailable || outcome.roi === null ? '—' : `${number(outcome.roi)}%`}<small> past ROI</small></strong>
+    <span>{unavailable ? 'Not matched' : !record.count ? 'No prices' : `${number(outcome.profit, 2)}u`}</span>
+    {paired.includes(i) && <span className="fm-return-both">Both positive</span>}
+  </span>);
   return <section className="fm-record" aria-label={`${kind} head to head`}>
     <div className="fm-record-head"><Icon name={kind === 'Managers' ? 'manager' : 'club'} /><h3>{kind === 'Managers' ? 'Manager' : 'Club'} head to head</h3>
       {!unavailable && record.count > 0 && record.count < 6 && <small>{record.count < 3 ? 'Short history' : 'Few meetings'}</small>}
     </div>
     <p className="fm-record-scope">{kind === 'Clubs' ? 'These two clubs · home & away, both venues' : 'These two managers · across clubs, home & away'}</p>
-    <H2HRecord compact showCoverage={false} coverageLabel={covered && kind === 'Clubs' ? 'covered leagues only' : 'top-five leagues only'} results={unavailable ? null : record.results ?? null} meetings={unavailable ? null : meetings} names={names} />
+    <H2HRecord compact showCoverage={false} coverageLabel={covered && kind === 'Clubs' ? 'covered leagues only' : 'top-five leagues only'} results={unavailable ? null : record.results ?? null} meetings={unavailable ? null : meetings} names={names} details={returns} />
     <p className="fm-record-coverage">
       {!unavailable && meetings > 0 && <strong>{plural(meetings, 'meeting')} · {record.count} with odds{record.firstDate && record.lastDate && <> · {record.firstDate.slice(0, 4)}{record.firstDate.slice(0, 4) === record.lastDate.slice(0, 4) ? '' : ` to ${record.lastDate.slice(0, 4)}`}</>}</strong>}
       <span>{covered ? (kind === 'Managers' ? 'Top-five leagues only · since 2012/13' : 'Top five + Championship · since 2012/13') : 'Top-five leagues only · since 2012/13'}</span>
     </p>
-    {!unavailable && meetings > 0 && (record.count > 0
-      ? <Returns kind={kind} record={record} stale={stale} paired={paired} names={names} />
-      : <p className="fm-note">No prices recorded for these meetings. The results still count; returns are not available.</p>)}
   </section>;
+}
+
+/* One optional evidence list. Club meetings and manager meetings are separate
+   lists: each opens and closes on its own, and both can be open at once. */
+function Meetings({ kind, fixture: f, rows, loading, error, retry, unavailable, open, onToggle }: {
+  kind: 'clubs' | 'managers'; fixture: FixtureCard; rows: EvidenceRow[] | null; loading: boolean; error: string; retry: () => void; unavailable: boolean; open: boolean; onToggle: (open: boolean) => void;
+}) {
+  const [mode, setMode] = useState<'returns' | 'results'>('returns');
+  const [outcome, setOutcome] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const summary = f[kind], selected = summary.outcomes[outcome];
+  const labels = [f.home.name, 'The draw', f.away.name];
+  const sides = kind === 'clubs' ? [f.home.name, f.away.name] : [f.home.manager?.name ?? 'the home manager', f.away.manager?.name ?? 'the away manager'];
+  const noun = kind === 'managers' ? 'manager meetings' : 'club meetings';
+  return <details className="fm-meetings" open={open} onToggle={e => onToggle(e.currentTarget.open)}>
+    <summary><Icon name={kind === 'managers' ? 'manager' : 'club'} /><span><span className="fm-show">Show</span><span className="fm-hide">Hide</span> {noun}</span><small>{summary.meetings ?? summary.count}</small><span className="fm-chev"><Icon name="chevron" /></span></summary>
+    <div className="fm-meetings-body">
+      <p className="fm-orientation">{kind === 'managers' ? `The ${f.home.name} column follows ${f.home.manager?.name ?? 'the home manager'} across clubs and venues. The ${f.away.name} column follows ${f.away.manager?.name ?? 'the away manager'}.` : `The ${f.home.name} column follows ${f.home.name} in every meeting, including when they played away.`} The list shows each match’s actual home and away teams.</p>
+      <div className="fm-meetings-bar">
+        <div className="fm-seg" role="group" aria-label={`Detail shown for ${noun}`}>
+          <button type="button" aria-pressed={mode === 'returns'} onClick={() => setMode('returns')}>Prices &amp; returns</button>
+          <button type="button" aria-pressed={mode === 'results'} onClick={() => setMode('results')}>Results only</button>
+        </div>
+        {mode === 'returns' && <label className="fm-select">1u on<select value={outcome} onChange={e => setOutcome(Number(e.target.value))}>{labels.map((label, i) => <option key={i} value={i}>{label}{i !== 1 && kind === 'managers' ? ' manager’s team' : ''}</option>)}</select></label>}
+      </div>
+
+      {mode === 'returns' && summary.count > 0 && <>
+        <p className="fm-detail-profit">{labels[outcome]}{outcome !== 1 && kind === 'managers' ? ' manager’s team' : ''}: <strong>{number(selected.roi ?? 0)}% ROI · {number(selected.profit, 2)}u</strong> from {summary.count} priced meetings.</p>
+        <div className="fm-stats"><div><span>Result frequency</span><strong>{summary.results?.[outcome] ?? selected.wins} of {summary.meetings ?? summary.count}</strong></div><div><span>Expected by the odds</span><strong>{selected.expectedWins.toFixed(1)} of {summary.count}</strong></div><div><span>Without biggest win</span><strong>{selected.withoutBest === null ? 'No winning bet' : `${number(selected.withoutBest, 2)}u`}</strong></div></div>
+        <p className="fm-small">{dateText(summary.firstDate!)} {summary.firstDate!.slice(0, 4)} to {dateText(summary.lastDate!)} {summary.lastDate!.slice(0, 4)}. The odds-based figure adds the chances implied by each match’s prices after removing the margin. These are prices recorded before past matches, not current odds.</p>
+      </>}
+
+      {loading && <p className="fm-note" role="status">Loading the match history…</p>}
+      {error && <p className="fm-note" role="alert">{error} <button type="button" onClick={retry}>Retry</button></p>}
+      {rows && (rows.length ? <>
+        <p className="fm-ledger-key" aria-hidden="true"><span><i data-side="0" />{sides[0]} won</span><span><i data-side="1" />Draw</span><span><i data-side="2" />{sides[1]} won</span></p>
+        {mode === 'returns' && <div className="fm-ledger-heading" aria-hidden="true"><span>Meeting</span><span>Price</span><span>Return</span></div>}
+        <ol className="fm-ledger" data-mode={mode}>{rows.slice(0, limit).map(r => {
+          // Read from the recorded score: which of today's two sides won that meeting.
+          const won = r.score[0] === r.score[1] ? 1 : (r.score[0] > r.score[1]) === r.firstWasHome ? 0 : 2;
+          return <li key={r.id}>
+            <i className="fm-dot" data-side={won} aria-hidden="true" />
+            <div>
+              <small>{dateText(r.date)} {r.date.slice(0, 4)} · {r.league === 'championship' ? 'Championship' : leagues[r.league]}</small>
+              <strong><span data-won={r.score[0] > r.score[1]}>{r.home}</span> <b>{r.score[0]} : {r.score[1]}</b> <span data-won={r.score[1] > r.score[0]}>{r.away}</span></strong>
+              <span className="sr-only">{won === 1 ? 'Draw.' : `${sides[won === 0 ? 0 : 1]} won.`} </span>
+              {mode === 'returns' && <small>{outcome === 1 ? 'Back draw' : `Back ${outcome === 0 ? (r.firstWasHome ? r.home : r.away) : (r.firstWasHome ? r.away : r.home)}`} · {!r.odds ? 'No recorded odds' : priceBasisLabel(r.basis)}</small>}
+            </div>
+            {mode === 'returns' && <>
+              <span>{r.odds ? r.odds[outcome].toFixed(2) : 'Unavailable'}</span>
+              <span className={(r.profits?.[outcome] ?? 0) > 0 ? 'fm-mint' : ''}>{r.profits ? `${number(r.profits[outcome], 2)}u` : 'Excluded from ROI'}</span>
+            </>}
+          </li>;
+        })}</ol>
+        {rows.length > limit && <button type="button" className="fm-more" onClick={() => setLimit(limit + 20)}>Show more {noun}</button>}
+      </> : <p className="fm-note">{kind === 'managers' && unavailable ? 'We are checking the manager identity before calculating this record. Club history is available separately.' : 'No verified meetings in the covered league archive.'}</p>)}
+    </div>
+  </details>;
 }
 
 function MatchRow({ fixture: f, stale, load, initialKind, covered, additional, onExpand }: { fixture: FixtureCard; stale: boolean; load: () => Promise<EvidencePayload>; initialKind?: 'managers' | 'clubs'; covered: boolean; additional: number; onExpand: () => void }) {
   const [evidence, setEvidence] = useState<FixtureEvidence | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [kind, setKind] = useState<'managers' | 'clubs'>(initialKind ?? 'clubs');
-  const [mode, setMode] = useState<'results' | 'returns'>('results');
-  const [outcome, setOutcome] = useState(0);
-  const [limit, setLimit] = useState(10);
+  // Open states live here, set once from the deep link. After that only the visitor changes them,
+  // so a list they close stays closed through every later re-render.
+  const [open, setOpen] = useState(Boolean(initialKind));
+  const [clubsOpen, setClubsOpen] = useState(initialKind === 'clubs');
+  const [managersOpen, setManagersOpen] = useState(initialKind === 'managers');
   const unavailable = !f.home.manager?.id || !f.away.manager?.id;
   const paired = bothPositiveOutcomes(f, stale);
-  const summary = f[kind], selected = summary.outcomes[outcome];
-  const labels = [f.home.name, 'The draw', f.away.name];
+  const clubNames = [f.home.name, f.away.name];
   const managerNames = [f.home.manager?.name ?? 'Manager unconfirmed', f.away.manager?.name ?? 'Manager unconfirmed'];
-  const sides = kind === 'clubs' ? [f.home.name, f.away.name] : [f.home.manager?.name ?? 'the home manager', f.away.manager?.name ?? 'the away manager'];
   async function openEvidence() {
     if (evidence || loading) return;
     setLoading(true); setError('');
@@ -126,8 +179,10 @@ function MatchRow({ fixture: f, stale, load, initialKind, covered, additional, o
     catch { setError('The match list could not load. Please try again.'); }
     finally { setLoading(false); }
   }
+  // The shared evidence file is requested only when a meetings list is opened.
+  const toggleList = (set: (value: boolean) => void) => (next: boolean) => { set(next); if (next) void openEvidence(); };
   return <article className="fm-row" style={{ scrollMarginTop: 100 }} id={f.id} aria-label={`${f.home.name} versus ${f.away.name}`}>
-    <details open={initialKind ? true : undefined} onToggle={e => { if (e.currentTarget.open) void openEvidence(); }}>
+    <details open={open} onToggle={e => setOpen(e.currentTarget.open)}>
       <summary>
         <span className="fm-rowgrid">
           <span className="fm-when">
@@ -136,18 +191,19 @@ function MatchRow({ fixture: f, stale, load, initialKind, covered, additional, o
           </span>
           <Team club={f.home} side="home" />
           <Team club={f.away} side="away" />
-          <Tally label="Clubs" record={f.clubs} unavailable={false} names={[f.home.name, f.away.name]} />
-          <Tally label="Managers" record={f.managers} unavailable={unavailable} names={managerNames} />
+          <Brief label="Clubs" record={f.clubs} unavailable={false} stale={stale} names={clubNames} />
+          <Brief label="Managers" record={f.managers} unavailable={unavailable} stale={stale} names={managerNames} manager />
           <span className="fm-chev"><Icon name="chevron" /></span>
-          <span className="sr-only">Open or close club and manager head to head.</span>
+          <span className="sr-only">Open or close the full club and manager returns.</span>
         </span>
       </summary>
 
       <div className="fm-panel">
         <div className="fm-records">
-          <RecordBlock covered={covered && additional > 0} kind="Clubs" record={f.clubs} unavailable={false} stale={stale} paired={paired} names={[f.home.name, f.away.name]} />
+          <RecordBlock covered={covered && additional > 0} kind="Clubs" record={f.clubs} unavailable={false} stale={stale} paired={paired} names={clubNames} />
           <RecordBlock covered={covered} kind="Managers" record={f.managers} unavailable={unavailable} stale={stale} paired={paired} names={managerNames} />
         </div>
+        <p className="fm-method">Past ROI: 1u on the named side or the draw in every meeting with odds, at the price recorded before that match. Past prices, not current odds, and not a prediction. <a href="#fixture-guide">How to read it ↗</a></p>
         <p className="fm-context">
           <span><Icon name="link" />{unavailable ? 'Manager comparison pending' : f.shared ? `${f.shared} priced meeting${f.shared === 1 ? '' : 's'} in both records` : 'No shared meetings'}</span>
           {paired.length > 0 && <span className="fm-aligned">Both positive: {paired.map(i => [`${f.home.name} win`, 'draw', `${f.away.name} win`][i]).join(', ')}</span>}
@@ -155,50 +211,10 @@ function MatchRow({ fixture: f, stale, load, initialKind, covered, additional, o
           {!covered && additional > 0 && <button type="button" className="fm-expand" onClick={onExpand}>+{additional} Championship meetings · Include them ↗</button>}
         </p>
 
-        <section className="fm-meetings" aria-label="Previous meetings">
-          <div className="fm-meetings-bar">
-            <div className="fm-seg" role="group" aria-label="History type">{(['clubs', 'managers'] as const).map(k => <button type="button" key={k} aria-pressed={kind === k} onClick={() => { setKind(k); setLimit(10); }}>{k === 'managers' ? 'Manager meetings' : 'Club meetings'} <small>{f[k].meetings ?? f[k].count}</small></button>)}</div>
-            <div className="fm-seg" role="group" aria-label="Detail shown">
-              <button type="button" aria-pressed={mode === 'results'} onClick={() => setMode('results')}>Results</button>
-              <button type="button" aria-pressed={mode === 'returns'} onClick={() => setMode('returns')}>Prices &amp; returns</button>
-            </div>
-          </div>
-          <p className="fm-orientation">{kind === 'managers' ? `The ${f.home.name} column follows ${f.home.manager?.name ?? 'the home manager'} across clubs and venues. The ${f.away.name} column follows ${f.away.manager?.name ?? 'the away manager'}.` : `The ${f.home.name} column follows ${f.home.name} in every meeting, including when they played away.`} The list shows each match’s actual home and away teams.</p>
-
-          {mode === 'returns' && <>
-            <label className="fm-select">Selection shown<select value={outcome} onChange={e => setOutcome(Number(e.target.value))}>{labels.map((label, i) => <option key={i} value={i}>{label}{i !== 1 && kind === 'managers' ? ' manager’s team' : ''}</option>)}</select></label>
-            {summary.count > 0 && <>
-              <p className="fm-detail-profit">{labels[outcome]}: <strong>{number(selected.roi ?? 0)}% ROI · {number(selected.profit, 2)}u</strong> from {summary.count} priced meetings.</p>
-              <div className="fm-stats"><div><span>Result frequency</span><strong>{summary.results?.[outcome] ?? selected.wins} of {summary.meetings ?? summary.count}</strong></div><div><span>Expected by the odds</span><strong>{selected.expectedWins.toFixed(1)} of {summary.count}</strong></div><div><span>Without biggest win</span><strong>{selected.withoutBest === null ? 'No winning bet' : `${number(selected.withoutBest, 2)}u`}</strong></div></div>
-              <p className="fm-small">{dateText(summary.firstDate!)} {summary.firstDate!.slice(0, 4)} to {dateText(summary.lastDate!)} {summary.lastDate!.slice(0, 4)}. The odds-based figure adds the chances implied by each match’s prices after removing the margin. These are prices recorded before past matches, not current odds.</p>
-            </>}
-          </>}
-
-          {loading && <p className="fm-note" role="status">Loading the match history…</p>}
-          {error && <p className="fm-note" role="alert">{error} <button type="button" onClick={() => void openEvidence()}>Retry</button></p>}
-          {evidence && (evidence[kind].length ? <>
-            <p className="fm-ledger-key" aria-hidden="true"><span><i data-side="0" />{sides[0]} won</span><span><i data-side="1" />Draw</span><span><i data-side="2" />{sides[1]} won</span></p>
-            {mode === 'returns' && <div className="fm-ledger-heading" aria-hidden="true"><span>Meeting</span><span>Price</span><span>Return</span></div>}
-            <ol className="fm-ledger" data-mode={mode}>{evidence[kind].slice(0, limit).map(r => {
-              // Read from the recorded score: which of today's two sides won that meeting.
-              const won = r.score[0] === r.score[1] ? 1 : (r.score[0] > r.score[1]) === r.firstWasHome ? 0 : 2;
-              return <li key={r.id}>
-                <i className="fm-dot" data-side={won} aria-hidden="true" />
-                <div>
-                  <small>{dateText(r.date)} {r.date.slice(0, 4)} · {r.league === 'championship' ? 'Championship' : leagues[r.league]}</small>
-                  <strong><span data-won={r.score[0] > r.score[1]}>{r.home}</span> <b>{r.score[0]} : {r.score[1]}</b> <span data-won={r.score[1] > r.score[0]}>{r.away}</span></strong>
-                  <span className="sr-only">{won === 1 ? 'Draw.' : `${sides[won === 0 ? 0 : 1]} won.`} </span>
-                  {mode === 'returns' && <small>{outcome === 1 ? 'Back draw' : `Back ${outcome === 0 ? (r.firstWasHome ? r.home : r.away) : (r.firstWasHome ? r.away : r.home)}`} · {!r.odds ? 'No recorded odds' : priceBasisLabel(r.basis)}</small>}
-                </div>
-                {mode === 'returns' && <>
-                  <span>{r.odds ? r.odds[outcome].toFixed(2) : 'Unavailable'}</span>
-                  <span className={(r.profits?.[outcome] ?? 0) > 0 ? 'fm-mint' : ''}>{r.profits ? `${number(r.profits[outcome], 2)}u` : 'Excluded from ROI'}</span>
-                </>}
-              </li>;
-            })}</ol>
-            {evidence[kind].length > limit && <button type="button" className="fm-more" onClick={() => setLimit(limit + 20)}>Show more meetings</button>}
-          </> : <p className="fm-note">{kind === 'managers' && unavailable ? 'We are checking the manager identity before calculating this record. Club history is available separately.' : 'No verified meetings in the covered league archive.'}</p>)}
-        </section>
+        <div className="fm-evidence">
+          <Meetings kind="clubs" fixture={f} rows={evidence ? evidence.clubs : null} loading={loading} error={error} retry={() => void openEvidence()} unavailable={unavailable} open={clubsOpen} onToggle={toggleList(setClubsOpen)} />
+          <Meetings kind="managers" fixture={f} rows={evidence ? evidence.managers : null} loading={loading} error={error} retry={() => void openEvidence()} unavailable={unavailable} open={managersOpen} onToggle={toggleList(setManagersOpen)} />
+        </div>
 
         <div className="fm-links"><Link href="/manager-atlas" prefetch={false}>Explore Manager Atlas ↗</Link><Link href={covered ? '/football-atlas?scope=covered' : '/football-atlas'} prefetch={false}>Explore club returns ↗</Link></div>
       </div>
@@ -279,7 +295,7 @@ export default function FixtureBoard({ board, renderedAt, historyControls, cover
       <div className="fm-options" data-open={filtersOpen}>
         <button type="button" className="fm-filter-toggle" aria-expanded={filtersOpen} onClick={() => setFiltersOpen(!filtersOpen)}><Icon name="filter" />Filters{history !== 'all' ? ' · 1' : ''}</button>
         <div className="fm-optionset">
-          <div className="fm-past" role="group" aria-label="Past return"><span>Past return</span>{([['all', 'All fixtures'], ['any', 'Positive in either'], ['both', 'Positive in both']] as const).map(([value, label]) => <button type="button" className="fm-opt" key={value} aria-pressed={history === value} disabled={stale && value !== 'all'} onClick={() => { setHistory(value); setLimit(16); }}>{label}</button>)}</div>
+          <div className="fm-past" role="group" aria-label="Past ROI"><span>Past ROI</span>{([['all', 'All fixtures'], ['any', 'Positive in either'], ['both', 'Positive in both']] as const).map(([value, label]) => <button type="button" className="fm-opt" key={value} aria-pressed={history === value} disabled={stale && value !== 'all'} onClick={() => { setHistory(value); setLimit(16); }}>{label}</button>)}</div>
           {history !== 'all' && <label className="fm-select">Upcoming match outcome<select value={outcomeFilter} disabled={stale} onChange={e => { setOutcomeFilter(e.target.value as OutcomeFilter); setLimit(16); }}><option value="all">Any outcome</option><option value="home">Home team to win</option><option value="draw">Draw</option><option value="away">Away team to win</option></select></label>}
           {narrowed && <button type="button" className="fm-clear" onClick={reset}>Clear filters</button>}
           {historyControls}
@@ -295,22 +311,22 @@ export default function FixtureBoard({ board, renderedAt, historyControls, cover
       <span>Fixtures checked {dateText(board.checkedAt)} at {clockText(board.checkedAt)}</span>
       <span>UK time · home side first</span>
     </p>
-    <p className="fm-scope-key">H2H: home side’s wins · draws · away side’s wins, at both venues. Manager records span clubs.</p>
+    <p className="fm-scope-key"><b>Past ROI</b>: 1u on today’s home side, the draw or the away side in every earlier meeting with odds, at both venues. Manager ROI follows each manager across clubs. Past prices, not current odds.</p>
     {stale && <p className="fm-warning" role="status"><Icon name="clock" />Schedule snapshot needs refreshing. Kickoffs and appointments may have changed; historical highlights are paused.</p>}
 
     {!visible.length ? <div className="fm-empty"><Icon name="calendar" /><h2>{upcoming.length ? 'No fixtures in this view' : 'The next fixtures are being prepared'}</h2><p>{upcoming.length ? history === 'both' ? `No fixture has both histories positive ${outcomeFilter === 'all' ? 'on the same outcome' : `on ${outcomeFilter === 'draw' ? 'the draw' : `${outcomeFilter} win`}`} in this view. Try another outcome or date window, or show all fixtures.` : `The next covered fixture is on ${dateText(first)}. Try another date window or clear your filters.` : 'The published schedule has no remaining fixtures. Previous meetings remain available in Return Atlas.'}</p><button type="button" onClick={reset}>Show next fixtures <Icon name="arrow" /></button></div>
       : [...groups].map(([date, fixtures]) => <section className="fm-day" key={date}>
         <h2><span>{new Intl.DateTimeFormat('en-GB', { weekday: 'long', timeZone: 'UTC' }).format(new Date(`${date}T12:00:00Z`))}</span>{dateText(date)}<small>{fixtures.length} shown</small></h2>
         <div className="fm-group">
-          <div className="fm-colhead" aria-hidden="true"><span>Kick-off</span><span className="fm-col-home">Home<span className="fm-col-then">, then away</span></span><span className="fm-col-away">Away</span><span>Club H2H<small>wins · draws · wins</small></span><span>Manager H2H<small>wins · draws · wins</small></span><span /></div>
+          <div className="fm-colhead" aria-hidden="true"><span>Kick-off</span><span className="fm-col-home">Home<span className="fm-col-then">, then away</span></span><span className="fm-col-away">Away</span><span>Club past ROI<small>these two clubs · both venues</small></span><span>Manager past ROI<small>these two managers · across clubs</small></span><span /></div>
           {fixtures.map(f => <MatchRow key={`${board.version}-${f.id}-${focus?.kind ?? 'default'}`} fixture={f} stale={stale} load={load} covered={covered} additional={additions[f.id] ?? 0} onExpand={onExpand} initialKind={focus?.id === f.id ? focus.kind : undefined} />)}
         </div>
       </section>)}
     {visible.length > limit && <button type="button" className="fm-load-more" onClick={() => setLimit(limit + 16)}>Show next {Math.min(16, visible.length - limit)} fixtures <span>{visible.length - limit} remaining</span></button>}
 
     <details className="fm-about"><summary>About this board</summary>
-      <p><strong>Club H2H</strong> follows these two teams, home and away, whoever was in charge. <strong>Manager H2H</strong> follows these two coaches across clubs and venues. In each row the first number is wins for today’s home side (or its manager), then draws, then wins for the away side, at any venue. Open a fixture for the meetings behind the numbers.</p>
-      <p>Returns use a fixed 1u stake at recorded prematch prices. Pinnacle is the primary benchmark; reviewed bet365 fallbacks are labelled in the match list. Team columns follow the named club or its manager across all historical venues. Results without odds remain in the meeting list and are excluded from ROI. Past returns are not a prediction, and no current match odds are shown on this board. <a href="#fixture-guide">How to read the board ↗</a></p>
+      <p><strong>Club past ROI</strong> follows these two teams, home and away, whoever was in charge. <strong>Manager past ROI</strong> follows these two coaches across clubs and venues, not their current clubs’ history. Each row shows all three returns: 1u on today’s home side (or the home manager’s team), on the draw, and on the away side, with the number of priced meetings behind them. “W–D–W” is the separate result count: wins, draws, wins. Open a fixture for profit in units, coverage and the meetings themselves.</p>
+      <p>Returns use a fixed 1u stake at recorded prematch prices. Pinnacle is the primary benchmark; reviewed bet365 fallbacks are labelled in the match list. Team columns follow the named club or its manager across all historical venues. Results without odds remain in the meeting list and are excluded from ROI. A green figure marks a positive past ROI from at least three priced meetings. Past returns are not a prediction, and no current match odds are shown on this board. <a href="#fixture-guide">How to read the board ↗</a></p>
     </details>
   </section>;
 }
