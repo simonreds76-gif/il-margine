@@ -128,7 +128,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
     <section aria-labelledby="todays-edge-heading" className={`${styles.edge}${picks.length === 0 ? ` ${styles.quiet}` : ""}`}>
       <header className={styles.heading}>
         <div>
-          <p className={styles.eyebrow}>Published selections</p>
+          <p className={styles.eyebrow}>Free betting tips · football and tennis</p>
           <h2 id="todays-edge-heading">Today&apos;s Edge</h2>
           {picks.length > 0 && <span className={styles.active}><span aria-hidden="true" />{picks.length} active {picks.length === 1 ? "pick" : "picks"}</span>}
         </div>
@@ -189,8 +189,8 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
           </div>
         ) : (
           <div className={styles.empty}>
-            <p>{picks.length === 0 || filter === "all" ? "No active selections right now" : `No active ${filter === "props" ? "football" : "tennis"} picks`}</p>
-            <span>New picks appear here when published. Explore the latest results below.</span>
+            <p>{picks.length === 0 || filter === "all" ? "No active tips right now" : `No active ${filter === "props" ? "football" : "tennis"} picks`}</p>
+            <span>New football and tennis tips appear here as soon as they are published. The latest results are below.</span>
           </div>
         )}
       </div>

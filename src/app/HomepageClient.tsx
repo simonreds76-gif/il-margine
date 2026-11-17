@@ -152,9 +152,9 @@ export default function HomepageClient({
         <div className="home-lead-grid hf-container">
           <div className="home-intro">
             <p className="hf-eyebrow">Il Margine · Football &amp; tennis</p>
-            <h1>Data driven betting.<br /><span>Tools for sharper decisions.</span></h1>
-            <p className="home-intro-copy">Football and tennis models, published selections and free research tools. Compare player statistics, explore club and manager head to head records, and see how past bets performed at the recorded odds.</p>
-            <nav className="home-routes" aria-label="Start here">
+            <h1>Free football and tennis betting tips.<br /><span>Data driven, with a public record.</span></h1>
+            <p className="home-intro-copy">We publish free betting tips on football player props and tennis, each with its recorded odds, bookmaker and stake. Every result, wins and losses, stays in the public record. Alongside them are free research tools: head to head records, club, manager and player returns, and penalty takers.</p>
+            <nav className="home-routes" aria-label="Start here"><Link prefetch={false} href="/player-props#picks" className="home-route-tips"><ToolEmblem name="football" /><span><strong>Football betting tips</strong><small>Player props · current tips and results</small></span></Link><Link prefetch={false} href="/tennis-tips#picks" className="home-route-tips"><ToolEmblem name="tennis" /><span><strong>Tennis betting tips</strong><small>ATP, Challenger, Grand Slams · tips and results</small></span></Link>
               <a href="#home-football"><ToolEmblem name="matchday" /><span><strong>Football matches</strong><small>Club and manager head to head</small></span></a>
               <a href="#home-tennis"><ToolEmblem name="tennis-matchday" /><span><strong>Tennis matches</strong><small>Player head to head</small></span></a>
               <a href="#record"><ToolEmblem name="record" /><span><strong>Public record</strong><small>{formatSigned(displayStats.overall.roi, 1)}% ROI · {displayStats.overall.total_bets.toLocaleString('en-GB')} settled bets{recordStatus === "unavailable" ? " · may exclude recent results" : recordStatus === "historical" ? " · earlier results only" : ""}</small></span></a>

@@ -1,19 +1,24 @@
 /*
- * Today's Edge. Fable, 17 Nov 2026. PREVIEW.
- * Same picks, order, filters and links. Slate surfaces and 12–16px corners in the family of the research
- * pages. When there are no active picks the card stays small so today's matches follow straight away.
+ * Today's Edge: free betting tips on the homepage. Fable, 17 Nov 2026. PREVIEW.
+ * Same picks, order, filters, links and events. Each tip reads like a slip: the match as context, the tip
+ * itself as the headline, then recorded odds, stake and bookmaker in one labelled strip.
+ * Nothing has a fixed height: zero, one or three tips each take the room they need.
  */
 .edge {
   min-width: 0; max-width: 100%; padding: 18px;
   border: 1px solid #335047; border-radius: 16px; background: linear-gradient(125deg, #122b25, #111922 70%); color: #f2f6f7;
 }
-/* No active picks: a plain status card, not a headline. */
+/* No active tips: a plain status card, not a headline. */
 .quiet { border-color: #2b3c46; background: #121c24; }
 .heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
-.eyebrow { margin-bottom: 4px; color: #88dfba; font-size: 11px; font-weight: 750; letter-spacing: .14em; text-transform: uppercase; }
-.heading h2 { font-size: 22px; font-weight: 750; line-height: 1.2; letter-spacing: -.035em; }
-.active { display: flex; align-items: center; gap: 6px; margin-top: 6px; color: #c8d4dc; font-size: 12px; }
-.active > span { width: 6px; height: 6px; border-radius: 50%; background: #6fddaf; }
+.heading > div:first-child { min-width: 0; }
+.eyebrow { margin-bottom: 4px; color: #88dfba; font-size: 11px; font-weight: 750; line-height: 1.4; letter-spacing: .14em; text-transform: uppercase; }
+.heading h2 { font-size: 24px; font-weight: 750; line-height: 1.2; letter-spacing: -.035em; }
+.active {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 3px 10px;
+  border: 1px solid #62d2a8; border-radius: 30px; background: #1b4135; color: #e7fff4; font-size: 12px; font-weight: 650;
+}
+.active > span { width: 6px; height: 6px; border-radius: 50%; background: #8ce5bd; }
 .profit { flex-shrink: 0; padding-left: 14px; border-left: 1px solid #2b3c46; text-align: right; }
 .profit > span, .profit > small { display: block; color: #a4b5c3; font-size: 11px; }
 .profit > strong { display: block; margin: 2px 0; color: #8ce5bd; font-size: 20px; font-weight: 750; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
@@ -43,17 +48,20 @@
 .open { color: #8ce5bd; font-size: 17px; }
 .identityRow { display: flex; align-items: center; gap: 12px; min-width: 0; margin-top: 9px; }
 .pickText { flex: 1; min-width: 0; }
-.pick h3 { font-size: 16px; font-weight: 700; line-height: 1.35; letter-spacing: -.02em; overflow-wrap: anywhere; }
-.selection { margin-top: 2px; color: #c3d4dc; font-size: 14px; line-height: 1.45; overflow-wrap: anywhere; }
+/* The match is the context; the tip is the headline. */
+.pick h3 { color: #c8d4dc; font-size: 13px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+.selection { margin-top: 2px; color: #f2f6f7; font-size: 17px; font-weight: 750; line-height: 1.3; letter-spacing: -.02em; overflow-wrap: anywhere; }
 
-/* Odds, stake and bookmaker each carry a label; the figures share a baseline. */
-.priceRow { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: end; gap: 16px; margin-top: 10px; }
-.priceRow small { display: block; margin-bottom: 2px; color: #a4b5c3; font-size: 11px; }
-.priceRow strong { font-size: 22px; font-weight: 750; line-height: 1.2; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
-.stake { padding-left: 16px; border-left: 1px solid #2b3c46; }
-.stake strong { color: #b2f5d8; font-size: 17px; font-weight: 650; }
+/* Recorded odds, stake and bookmaker: three labelled cells with hairlines between. */
+.priceRow {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr); gap: 1px; margin-top: 10px; overflow: hidden;
+  border: 1px solid #24333f; border-radius: 10px; background: #24333f;
+}
+.priceRow > div { min-width: 0; padding: 8px 10px; background: #0f1820; }
+.priceRow small { display: block; margin-bottom: 2px; color: #a4b5c3; font-size: 11px; line-height: 1.35; }
+.priceRow strong { font-size: 20px; font-weight: 750; line-height: 1.2; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.stake strong { color: #b2f5d8; }
 .stake strong span { margin-left: 1px; font-size: 12px; }
-.bookmaker { justify-self: end; min-width: 0; text-align: right; }
 .bookmaker small { margin-bottom: 4px; }
 .pickFooter {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 5px 10px;
@@ -82,13 +90,12 @@
 
 @media (max-width: 420px) {
   .edge { padding: 14px; }
-  .heading h2 { font-size: 21px; }
+  .heading h2 { font-size: 22px; }
   .pick { padding: 12px 12px 8px; }
   .identityRow { gap: 10px; }
-  .pick h3 { font-size: 15px; }
-  .selection { font-size: 13px; }
-  .priceRow { gap: 12px; }
-  .stake { padding-left: 12px; }
+  .selection { font-size: 16px; }
+  .priceRow > div { padding: 8px; }
+  .priceRow strong { font-size: 18px; }
   .filters button { grid-template-columns: 20px auto; column-gap: 5px; padding-inline: 5px; }
   .filterIcon { width: 20px; height: 20px; }
   .filters button > span { font-size: 12px; }

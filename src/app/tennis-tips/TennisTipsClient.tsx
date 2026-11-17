@@ -19,6 +19,7 @@ import PublicBetsTable from "@/components/PublicBetsTable";
 import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/components/ProfitProgressionPanel";
 import ResultBadge from "@/components/ResultBadge";
 import Footer from "@/components/Footer";
+import "@/app/tips-pages.css";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import SampleSizeBadge from "@/components/SampleSizeBadge";
 import PublicRecordMetricGrid from "@/components/PublicRecordMetricGrid";
@@ -259,10 +260,11 @@ export default function TennisTips({
   const archiveStats = getArchiveStatsForCategory(activeCategory);
 
   return (
-    <div className="min-h-screen bg-[#0f1117] text-slate-100">
+    <div className="tips-page tips-tennis min-h-screen bg-[#0f1117] text-slate-100">
       {/* Navigation is now in GlobalNav component in layout.tsx */}
 
       {/* Hero */}
+      <main id="main-content">
       <TipsHubIntro sport="tennis" />
 
       <section id="competition-filter" aria-label="Choose a tour or tournament" className="pt-5 pb-6 border-b border-slate-800/50">
@@ -325,7 +327,7 @@ export default function TennisTips({
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <span className="text-xs font-mono text-emerald-400 mb-2 block">ACTIVE SELECTIONS</span>
+              <span className="tips-eyebrow">Free betting tips</span>
               <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Current Picks</h2>
             </div>
           </div>
@@ -392,7 +394,7 @@ export default function TennisTips({
             </div>
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
-              <p className="text-slate-500">No active selections at the moment</p>
+              <p className="text-slate-500">No active tips at the moment</p>
             </div>
           )}
           <p className="mt-5 text-sm text-slate-500">
@@ -434,7 +436,7 @@ export default function TennisTips({
       <section id="recent-results" className="py-12 md:py-16 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
-            <span className="text-xs font-mono text-emerald-400 mb-2 block">RESULTS</span>
+            <span className="tips-eyebrow">Results</span>
             <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Recent Selections</h2>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-500">
               Recent selections from the latest 50 settled tennis picks, filtered by your chosen competition.
@@ -549,6 +551,7 @@ export default function TennisTips({
       </section>
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8"><TennisMatchdayPromo /></div>
+      </main>
       <Footer />
     </div>
   );
