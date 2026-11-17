@@ -6,6 +6,7 @@ import "@/app/research-mobile.css";
 
 import ResearchToolNav from './ResearchToolNav';
 import AtlasEditionNav from './AtlasEditionNav';
+import AirControlNav from './AirControlNav';
 import { researchTools as editions } from './research-tools';
 
 export default function AtlasPageHeader({ edition, description, children, showNavigation = true }: {
@@ -19,6 +20,9 @@ export default function AtlasPageHeader({ edition, description, children, showNa
   // The three Return Atlas editions take the edition switcher under the title. Every other page, and any
   // page that passes showNavigation={false}, renders exactly as before.
   const atlasEdition = showNavigation && (edition === 'football' || edition === 'managers' || edition === 'tennis') ? edition : null;
+  // Air Control takes its own compact navigation inside the title row. It keeps its edition line and is not
+  // treated as a Return Atlas edition. The Atlas branch above is unchanged.
+  const aerialNav = showNavigation && edition === 'aerial';
   return <header className={`${styles.header}${matchday ? ` ${styles.matchdayHeader}` : ''}`}>
     <nav className={styles.breadcrumb} aria-label="Breadcrumb">
       <Link href="/" prefetch={false}>Home</Link><span aria-hidden="true">/</span>
@@ -29,10 +33,11 @@ export default function AtlasPageHeader({ edition, description, children, showNa
       <Image className={styles.mark} src={current.image} alt="" width={72} height={72} priority unoptimized />
       <div><h1 className={styles.title}>{matchday ? <>{edition === 'matchday' ? 'Football' : 'Tennis'} <span>Matchday</span></> : edition === "aerial" ? <>Air <span>Control</span></> : edition === "matchup" ? <>Matchup <span>Lab</span></> : <>Return <span>Atlas</span></>}{!matchday && <span className="sr-only">{edition === "aerial" ? ": Lineup height, headers and delivery" : edition === "matchup" ? ": Tennis H2H & player statistics" : `: ${current.label}`}</span>}</h1>
         {!atlasEdition && <p className={styles.edition}>{matchday ? 'Return Atlas · previous meetings' : edition === "aerial" ? "Lineup research · beta" : edition === "matchup" ? "Tennis" : current.label}</p>}</div>
+      {aerialNav && <AirControlNav/>}
     </div>
     {atlasEdition && <AtlasEditionNav current={atlasEdition}/>}
     <p className={styles.description}>{description}</p>
-    {showNavigation && !atlasEdition && <ResearchToolNav current={edition}/>}
+    {showNavigation && !atlasEdition && !aerialNav && <ResearchToolNav current={edition}/>}
     {children}
   </header>;
 }

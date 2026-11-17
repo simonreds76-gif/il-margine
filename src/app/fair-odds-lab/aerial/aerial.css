@@ -1,50 +1,404 @@
-.aerial-page{--aerial-ink:#f1f6f4;--aerial-muted:#9eb2bf;--aerial-line:#2a3d47;--aerial-mint:#8ee1c1;color:var(--aerial-ink);max-width:1200px;margin:auto;padding:32px 28px 70px}.aerial-page *{box-sizing:border-box}.aerial-page p{color:var(--aerial-muted);line-height:1.65}.aerial-page a{color:var(--aerial-mint)}.aerial-page select{display:block;background:#0b141a;color:var(--aerial-ink);border:1px solid #526570;border-radius:9px;padding:12px;min-height:46px;width:100%;font:inherit;font-size:14px}.aerial-page :focus-visible{outline:2px solid var(--aerial-mint);outline-offset:4px}.aerial-breadcrumb{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;margin-bottom:36px}.aerial-hero{display:flex;align-items:center;justify-content:space-between;gap:28px;margin:20px 0 44px}.aerial-hero h1{font-size:clamp(42px,6vw,76px);font-weight:750;letter-spacing:-.05em;line-height:1.06;margin:16px 0 22px}.aerial-hero h1 em{color:var(--aerial-mint);font-style:normal}.aerial-hero p:not(.aerial-kicker){font-size:18px;max-width:740px}.aerial-hero>img{width:170px;height:170px;object-fit:contain;flex-shrink:0}.aerial-hero nav{display:flex;gap:20px;flex-wrap:wrap;margin-top:25px;font-size:14px;font-weight:650}.aerial-kicker{font-size:11px!important;letter-spacing:.14em;color:var(--aerial-mint)!important;font-weight:750}.aerial-fixture-control{display:grid;grid-template-columns:minmax(0,1.5fr) 1fr;gap:30px;align-items:end;background:#111d24;border:1px solid var(--aerial-line);padding:22px;border-radius:15px;margin-bottom:22px}.aerial-fixture-control label,.aerial-history-control label{font-size:12px;font-weight:650;display:grid;gap:10px}.aerial-fixture-control p{font-size:12px;margin:0}.aerial-match{background:linear-gradient(125deg,#193a30,#10202a);border:1px solid #3a6856;border-radius:20px;padding:26px}.aerial-status{display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:12px;color:#b5c4cc;flex-wrap:wrap}.aerial-badge{border:1px solid #699f89;border-radius:30px;padding:6px 12px;color:#b4f3d6;background:#1a4436}.aerial-teams{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:26px}.aerial-teams .aerial-team-name{font-size:24px;margin-top:10px}.aerial-teams p{font-size:13px;margin:8px 0}.aerial-team-name{display:flex;align-items:center;gap:12px;font-size:16px;min-width:0}.aerial-team-name img{object-fit:contain;flex-shrink:0}.aerial-note{font-size:12px!important;line-height:1.6;margin:18px 0 0}.aerial-empty{padding:46px 28px;text-align:center;border:1px dashed #3e535e;border-radius:16px;margin:24px 0 40px;background:#101920}.aerial-empty>svg{width:44px;height:44px;color:var(--aerial-mint);margin:0 auto 20px}.aerial-empty h2{font-size:22px;max-width:600px;margin:0 auto 12px}.aerial-empty p{max-width:690px;margin:12px auto}.aerial-warning{border:1px solid #917538;background:#322c1d;color:#f2dca7!important;border-radius:10px;padding:16px;font-size:14px}.aerial-section-heading{display:flex;gap:14px;align-items:flex-start;margin:38px 0 18px;scroll-margin-top:110px}.aerial-section-heading h2,.aerial-verdict h2,.aerial-faq h2{font-size:25px;font-weight:700;margin:0 0 7px;letter-spacing:-.03em}.aerial-section-heading p{font-size:14px;margin:0}.aerial-icon{width:46px;height:46px;flex-shrink:0;border:1px solid #39584f;background:#173229;color:var(--aerial-mint);border-radius:12px;padding:10px}.aerial-icon svg{width:100%;height:100%}.aerial-panel{border:1px solid var(--aerial-line);background:#111c24;border-radius:16px;padding:22px;margin-bottom:18px;min-width:0}.aerial-height-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.aerial-height-number{font-size:42px;font-weight:720;color:var(--aerial-mint);letter-spacing:-.03em;margin:24px 0 3px}.aerial-height-number small{font-size:14px;font-weight:400;margin-left:8px;color:var(--aerial-muted);letter-spacing:0}.aerial-side-1 .aerial-height-number{color:#a6cbf2}.aerial-height-grid>.aerial-panel>p{font-size:12px;margin-top:0}.aerial-height-plot{height:74px;position:relative;border-bottom:1px solid #4c6468;background:repeating-linear-gradient(90deg,transparent,transparent calc(25% - 1px),#283c45 25%);margin:25px 10px 0}.aerial-height-plot>span{position:absolute;transform:translateX(-50%);padding:3px;cursor:help}.aerial-height-plot i{display:block;border-radius:50%;background:var(--aerial-mint);width:10px;height:10px;border:1px solid #daf9ec}.aerial-side-1 .aerial-height-plot i{background:#a6cbf2}.aerial-height-plot em{display:none;position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:160px;max-width:55vw;background:#060f14;border:1px solid #526970;padding:10px;border-radius:8px;font-size:12px;font-style:normal;color:white;z-index:5}.aerial-height-plot>span:hover em,.aerial-height-plot>span:focus-visible em{display:block}.aerial-axis{display:flex;justify-content:space-between;color:var(--aerial-muted);font-size:10px;padding:7px 0}.aerial-height-extras{display:flex;justify-content:space-between;gap:15px;border-top:1px solid var(--aerial-line);padding-top:20px;margin-top:18px;font-size:12px;color:var(--aerial-muted)}.aerial-height-extras strong{display:block;font-size:20px;color:var(--aerial-ink);margin-top:6px}.aerial-history-control{display:flex;align-items:center;gap:28px;background:#10211e;border:1px solid #355747;border-radius:12px;padding:20px}.aerial-history-control label{min-width:220px}.aerial-history-control p{font-size:13px}.aerial-table-controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}.aerial-table-controls>.aerial-team-name{margin-right:auto}.aerial-table-controls label{font-size:10px;color:var(--aerial-muted)}.aerial-table-controls select{margin-top:5px;max-width:205px;font-size:12px}.aerial-table-head,.aerial-player summary{display:grid;grid-template-columns:minmax(220px,2.1fr) .9fr 1.2fr 1.1fr .9fr;gap:14px;align-items:center}.aerial-table-head{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--aerial-muted);padding-bottom:12px}.aerial-player{border-top:1px solid var(--aerial-line)}.aerial-player summary{list-style:none;cursor:pointer;padding:17px 0;min-height:82px;font-size:14px}.aerial-player summary::-webkit-details-marker{display:none}.aerial-person{display:flex;align-items:center;gap:12px;min-width:0}.aerial-person strong{font-size:14px;font-weight:650}.aerial-person small{display:block;color:var(--aerial-muted);font-size:10px;line-height:1.55;margin-top:4px}.aerial-photo{width:44px;height:48px;object-fit:contain;object-position:bottom;flex-shrink:0;border-radius:8px;background:linear-gradient(0deg,#27473d,transparent)}.aerial-avatar{display:grid;place-items:center;padding:9px;color:#8daba1}.aerial-player summary>span>small{display:none}.aerial-player em{display:block;font-size:10px;font-style:normal;color:var(--aerial-muted);margin-top:5px}.aerial-player-detail{background:#0a141a;padding:18px;border-radius:10px;margin-bottom:12px}.aerial-player-detail>p{font-size:12px}.aerial-scroll{overflow-x:auto}.aerial-scroll table{border-collapse:collapse;min-width:460px;width:100%;font-size:12px}.aerial-scroll th,.aerial-scroll td{padding:12px 10px;text-align:left;border-bottom:1px solid #22323c}.aerial-scroll th{color:var(--aerial-muted);font-size:10px;font-weight:500}.aerial-scroll td strong{display:block;font-weight:500;margin-top:5px}.aerial-compare-pickers{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}.aerial-compare-pickers .aerial-person{margin-top:16px}.aerial-compare-pickers select{min-width:0}.aerial-compare-row{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;text-align:center;border-top:1px solid var(--aerial-line);padding:15px 0;gap:10px;font-size:14px}.aerial-compare-row>span{font-size:12px;color:var(--aerial-muted)}.aerial-compare-row strong:first-child{color:var(--aerial-mint)}.aerial-compare-row strong:last-child{color:#a6cbf2}.aerial-delivery{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:24px}.aerial-delivery div{display:flex;flex-direction:column;gap:6px}.aerial-delivery svg{width:24px;height:24px;color:var(--aerial-mint)}.aerial-delivery strong{font-size:32px}.aerial-delivery span,.aerial-delivery small{font-size:12px;color:var(--aerial-muted)}.aerial-verdict{padding:28px;border:1px solid #467b63;background:linear-gradient(130deg,#183d2f,#121f26);border-radius:16px;margin:24px 0 40px}.aerial-verdict h2{margin-top:12px}.aerial-verdict p{color:#c9d9d5;font-size:15px}.aerial-faq{margin-top:50px}.aerial-faq details{border-bottom:1px solid var(--aerial-line);padding:20px 0}.aerial-faq summary,.aerial-method summary{cursor:pointer;font-size:16px;font-weight:600;min-height:28px}.aerial-faq p,.aerial-method p{font-size:14px;max-width:850px}.aerial-method{padding:22px;background:#111a20;border:1px solid var(--aerial-line);border-radius:14px;margin-top:28px}.aerial-related{display:flex;flex-wrap:wrap;gap:24px;margin-top:32px;font-size:14px}
-@media(max-width:760px){.aerial-page{padding:24px 18px 55px}.aerial-hero{gap:12px;margin-top:12px;position:relative}.aerial-hero>img{width:78px;height:78px;position:absolute;right:0;top:12px}.aerial-hero h1{font-size:42px;padding-right:80px;max-width:360px}.aerial-hero .aerial-kicker{font-size:9px!important;max-width:230px}.aerial-hero p:not(.aerial-kicker){font-size:16px}.aerial-hero nav{gap:17px;font-size:13px}.aerial-fixture-control{grid-template-columns:1fr;gap:14px;padding:17px}.aerial-fixture-control select{font-size:12px}.aerial-match{padding:20px}.aerial-teams{gap:16px}.aerial-teams .aerial-team-name{font-size:17px;align-items:flex-start;gap:8px}.aerial-team-name img{width:26px;height:26px}.aerial-section-heading h2{font-size:22px}.aerial-section-heading p{font-size:13px}.aerial-height-grid{grid-template-columns:1fr}.aerial-height-number{font-size:38px}.aerial-history-control{display:block}.aerial-table-head{display:none}.aerial-player summary{grid-template-columns:1fr 1fr;padding:18px 0;gap:14px 22px}.aerial-player summary>.aerial-person{grid-column:1/-1}.aerial-player summary>span>small{display:block;font-size:10px;color:var(--aerial-muted);margin-bottom:5px}.aerial-person strong{font-size:15px}.aerial-person small{font-size:11px}.aerial-player em{font-size:11px}.aerial-table-controls{gap:12px}.aerial-table-controls>.aerial-team-name{width:100%;margin-bottom:4px}.aerial-table-controls label{flex:1;min-width:0}.aerial-table-controls select{width:100%;max-width:none}.aerial-panel{padding:18px}.aerial-compare-pickers{gap:14px}.aerial-compare-pickers .aerial-team-name{font-size:13px}.aerial-compare-pickers .aerial-person{display:block}.aerial-compare-pickers .aerial-photo{margin-bottom:8px}.aerial-compare-pickers select{font-size:11px;padding:10px 7px}.aerial-compare-row{font-size:12px;grid-template-columns:1fr 1.1fr 1fr}.aerial-compare-row>span{font-size:11px}.aerial-verdict{padding:22px}.aerial-breadcrumb{font-size:11px;gap:8px;margin-bottom:24px}.aerial-faq summary{font-size:15px;line-height:1.5}.aerial-empty{padding:30px 20px}.aerial-empty h2{font-size:20px}}
+/*
+ * Air Control presentation. Fable, 17 Nov 2026. PREVIEW.
+ * Rewritten as one organised sheet in the same family as the Return Atlas pages: slate surfaces, hairline
+ * rules, 10–14px corners, mint accent, the page's inherited font. Styles only; no figure is produced here.
+ * Team colours: mint = home, blue = away. Position and the HOME / AWAY labels carry the same meaning.
+ */
 
-.aerial-limited{display:inline-block;margin:4px 0 0 6px;border:1px solid #807043;border-radius:4px;padding:2px 5px;color:#efd59b;background:#302b1e;font-size:10px;font-weight:600}.aerial-comparison-note{font-size:13px!important;background:#1c3035;border-left:3px solid #83baa9;padding:12px 14px;color:#cfdfdc!important}
+/* ── 0. Tokens and base ───────────────────────────────────────────────────────────────────── */
+.aerial-page {
+  --aerial-ink: #f1f6f4; --aerial-muted: #a4b5c3; --aerial-line: #2b3c46; --aerial-rule: #24333f;
+  --aerial-mint: #8ce5bd; --aerial-home: #8ee1c1; --aerial-away: #a6cbf2;
+  --aerial-surface: #121c24; --aerial-cell: #122029; --aerial-inset: #0a141d;
+  color: var(--aerial-ink); max-width: 1200px; margin: auto; padding: 32px 28px 70px;
+}
+.aerial-page * { box-sizing: border-box; }
+.aerial-page p { color: var(--aerial-muted); line-height: 1.6; }
+.aerial-page a { color: var(--aerial-mint); }
+.aerial-page select {
+  display: block; width: 100%; min-height: 46px; padding: 10px 12px;
+  border: 1px solid #364b59; border-radius: 10px; background: var(--aerial-inset); color: var(--aerial-ink);
+  font: inherit; font-size: 14px;
+}
+.aerial-page :focus-visible { outline: 2px solid var(--aerial-mint); outline-offset: 3px; }
+.aerial-kicker { font-size: 11px !important; font-weight: 750; letter-spacing: .14em; color: #88dfba !important; }
+.aerial-note { margin: 12px 0 0; font-size: 12px !important; line-height: 1.6; }
 
-.aerial-jumps{display:flex;gap:20px;flex-wrap:wrap;margin-top:25px;font-size:14px;font-weight:650}
+/* ── 1. Compact head: the metrics of the Atlas and Matchday heads ─────────────────────────── */
+.public-site main.aerial-page > header[class] { margin-bottom: 16px; }
+.public-site main.aerial-page > header > nav[aria-label="Breadcrumb"] { margin-bottom: 4px; }
+/* The title block wraps so the compact navigation can sit beside the title, or under it on a phone. */
+.public-site main.aerial-page > header > div:first-of-type[class] { flex-wrap: wrap; min-height: 54px; gap: 8px 14px; }
+.public-site main.aerial-page > header > div:first-of-type > img[class] { width: 54px; height: 54px; }
+.public-site main.aerial-page > header h1[class] { font-size: 34px; }
+.public-site main.aerial-page > header h1[class] + p[class] { margin-top: 5px; font-size: 10px; }
+.public-site main.aerial-page > header > div:first-of-type + p[class] { margin: 9px 0 0; font-size: 14px; line-height: 1.5; }
 
-.aerial-beta{display:inline-block;border:1px solid #658778;border-radius:5px;padding:3px 6px;margin-left:8px;font-size:9px;letter-spacing:.08em;vertical-align:middle}.aerial-scroll-hint{display:none}@media(max-width:760px){.aerial-scroll-hint{display:block;font-size:11px!important;color:#c6ded6!important}}
+/* ── 2. Board: notices, fixture selector, freshness ───────────────────────────────────────── */
+.aerial-warning {
+  display: block; margin: 0 0 12px; padding: 12px 14px;
+  border: 1px solid #917538; border-radius: 12px; background: #322c1d; color: #f2dca7 !important; font-size: 14px;
+}
+.aerial-warning p { margin: 0; color: inherit; }
+.aerial-retry {
+  min-height: 44px; margin-top: 8px; padding: 8px 16px;
+  border: 1px solid currentColor; border-radius: 10px; background: transparent; color: inherit;
+  font: inherit; font-weight: 650; cursor: pointer;
+}
+.aerial-retry:disabled { opacity: .6; cursor: wait; }
+.aerial-retry:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 
-.aerial-next{margin-top:48px;padding-top:30px;border-top:1px solid var(--aerial-line)}
-.aerial-next h2{font-size:28px;letter-spacing:-.035em;font-weight:700;margin:8px 0 22px}
-.aerial-next .aerial-related{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0}
-.aerial-page .aerial-tool-card{display:flex;flex-direction:column;min-width:0;padding:22px;border:1px solid #39554f;border-radius:18px;background:radial-gradient(ellipse at 0 0,#245c4633,transparent 75%),#111e25;text-decoration:none;color:var(--aerial-ink);box-shadow:inset 0 1px #bdebdc09;transition:border-color .15s,background .15s}
-.aerial-tool-heading{display:flex;align-items:center;gap:14px;min-height:64px}
-.aerial-tool-heading strong{font-size:19px;line-height:1.2;letter-spacing:-.02em}
-.aerial-tool-heading .aerial-tool-art{display:inline-flex;width:60px;height:60px;flex-shrink:0;object-fit:contain}
-.aerial-tool-description{display:block;font-size:13px;line-height:1.65;color:#b5c7cd;margin:16px 0 22px}
-.aerial-tool-action{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding:10px 10px 10px 16px;min-height:48px;border-radius:11px;border:1px solid #618d7d;background:#19372f;color:#c2f5dc;font-size:13px;font-weight:700}
-.aerial-tool-arrow{display:grid;place-items:center;flex-shrink:0;width:30px;height:30px;border-radius:8px;background:#a5e8c8;color:#153a2e}
-.aerial-page .aerial-tool-card:hover,.aerial-page .aerial-tool-card:focus-visible{border-color:#9cdbbf;background-color:#172c2b}
-.aerial-tool-card:hover .aerial-tool-action,.aerial-tool-card:focus-visible .aerial-tool-action{background:#244d3d;border-color:#a5e8c8}
-@media(max-width:850px){.aerial-next .aerial-related{grid-template-columns:1fr}.aerial-page .aerial-tool-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;padding:20px}.aerial-tool-heading{grid-column:1}.aerial-tool-description{grid-column:1;margin:0 0 0 74px;max-width:420px}.aerial-tool-action{grid-column:2;grid-row:1 / 3;align-self:center;min-width:170px;margin:0}}
-@media(max-width:500px){.aerial-page .aerial-tool-card{display:flex;padding:20px;gap:0}.aerial-tool-heading strong{font-size:20px}.aerial-tool-description{margin:12px 0 20px}.aerial-tool-action{align-self:stretch;min-width:0}.aerial-next h2{font-size:26px}}
-.aerial-page .aerial-fixture-control,.aerial-page .aerial-match,.aerial-page .aerial-panel { border-radius: 16px; border-color: #2b3c46; background: #121c24; }
-.aerial-page .aerial-fixture-control { padding: 16px; margin-top: 0; }
-.aerial-page .aerial-jumps { display: flex; gap: 8px; }
-.aerial-page .aerial-jumps a { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 9px 16px; border: 1px solid #365246; border-radius: 10px; background: #182b25; color: #b2ebcf; text-decoration: none; }
-.aerial-page .aerial-jumps svg { width: 25px; height: 25px; }
-.aerial-page .aerial-section-heading { align-items: center; gap: 14px; }
-.aerial-page .aerial-icon { display: grid; place-items: center; width: 50px; height: 50px; flex: 0 0 50px; border-radius: 13px; border: 1px solid #3e6452; background: linear-gradient(135deg,#213c30,#14251f); color: #a5e7ce; }
-.aerial-page .aerial-icon svg { width: 32px; height: 32px; }
-.aerial-page .aerial-section-heading h2 { font-size: clamp(21px,2.3vw,29px); letter-spacing: -.035em; }
-.aerial-page .aerial-height-plot { background: repeating-linear-gradient(90deg,transparent 0,transparent calc(25% - 1px),#30433c55 calc(25% - 1px),#30433c55 25%); border-block: 1px solid #2d4138; }
-.aerial-page .aerial-photo { border-radius: 10px; }
-@media(max-width:639px) {
-  .aerial-page .aerial-jumps { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; }
-  .aerial-page .aerial-jumps a { gap: 6px; padding: 9px 6px; font-size: 12px; }
-  .aerial-page .aerial-jumps svg { width: 23px; height: 23px; flex-shrink: 0; }
-  .aerial-page .aerial-section-heading { gap: 11px; }
-  .aerial-page .aerial-fixture-control select { font-size: 16px; }
+.aerial-fixture-control {
+  display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 6px 28px; align-items: end;
+  margin: 0 0 12px; padding: 14px 16px;
+  border: 1px solid var(--aerial-line); border-radius: 14px; background: var(--aerial-surface);
+}
+.aerial-fixture-control label { display: grid; gap: 8px; grid-column: 1; font-size: 12px; font-weight: 650; color: #c8d4dc; }
+.aerial-fixture-control select { font-size: 15px; font-weight: 600; }
+.aerial-fixture-count { grid-column: 1; margin: 0; font-size: 12px; }
+.aerial-freshness { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin: 0; font-size: 12px; line-height: 1.7; }
+.aerial-freshness span { display: block; }
+
+/* ── 3. Selected fixture and its lineup state ─────────────────────────────────────────────── */
+.aerial-match {
+  margin: 0 0 12px; padding: 16px 18px;
+  border: 1px solid var(--aerial-line); border-radius: 14px; background: var(--aerial-surface);
+}
+.aerial-match-confirmed, .aerial-match-expected { border-color: #335047; background: linear-gradient(125deg, #122b25, #111922 70%); }
+.aerial-match-stale { border-color: #6f5d32; }
+.aerial-status { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; font-size: 13px; color: #b5c4cc; }
+.aerial-state {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 4px 12px;
+  border: 1px solid #364b59; border-radius: 30px; background: #17242d; color: #d9e5eb;
+  font-size: 12px; font-weight: 650; line-height: 1.3;
+}
+.aerial-state-icon { flex: none; }
+.aerial-state-confirmed { border-color: #62d2a8; background: #1b4135; color: #e7fff4; }
+.aerial-state-expected { border-style: dashed; border-color: #62d2a8; background: transparent; color: #b2f5d8; }
+.aerial-state-stale { border-color: #917538; background: #322c1d; color: #f2dca7; }
+.aerial-teams { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 14px; }
+.aerial-teams > div { min-width: 0; }
+.aerial-teams .aerial-team-name { margin-top: 6px; font-size: 20px; }
+.aerial-teams p { margin: 6px 0 0; font-size: 13px; }
+.aerial-team-name { display: flex; align-items: center; gap: 10px; min-width: 0; font-size: 16px; }
+.aerial-team-name img { flex-shrink: 0; object-fit: contain; }
+.aerial-team-name strong { min-width: 0; overflow-wrap: anywhere; }
+
+/* ── 4. No comparison yet: waiting (slate) is not the same as stale (amber) ───────────────── */
+.aerial-empty {
+  display: flex; align-items: flex-start; gap: 16px; margin: 0 0 28px; padding: 18px;
+  border: 1px solid var(--aerial-line); border-radius: 14px; background: #101920; text-align: left;
+}
+.aerial-empty > div { min-width: 0; }
+.aerial-empty-icon {
+  display: grid; place-items: center; flex: none; width: 44px; height: 44px;
+  border: 1px solid #364b59; border-radius: 12px; background: #17242d; color: var(--aerial-mint);
+}
+.aerial-empty-icon svg { width: 26px; height: 26px; }
+.aerial-empty h2 { margin: 0 0 6px; font-size: 19px; font-weight: 700; line-height: 1.3; letter-spacing: -.02em; }
+.aerial-empty p { max-width: 760px; margin: 6px 0 0; font-size: 14px; }
+.aerial-empty-stale { border-color: #6f5d32; background: #221f17; }
+.aerial-empty-stale .aerial-empty-icon { border-color: #917538; background: #322c1d; color: #f2dca7; }
+.aerial-loading { display: block; padding: 28px 18px; border-style: dashed; text-align: center; font-size: 14px; }
+.aerial-page .aerial-upcoming-label { margin-top: 14px; font-size: 12px; font-weight: 650; color: #c8d4dc; }
+.aerial-upcoming { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; }
+.aerial-upcoming li {
+  display: inline-flex; align-items: center; gap: 7px; min-height: 32px; padding: 4px 10px;
+  border: 1px dashed #364b59; border-radius: 9px; color: #b9c7d7; font-size: 12px; font-weight: 600;
+}
+.aerial-upcoming svg { width: 18px; height: 18px; color: #9cb7b1; }
+
+/* ── 5. On-this-page switcher ─────────────────────────────────────────────────────────────── */
+.aerial-jumps {
+  display: flex; width: fit-content; max-width: 100%; margin: 0; overflow: hidden;
+  border: 1px solid var(--aerial-line); border-radius: 11px; background: var(--aerial-surface);
+}
+.aerial-page .aerial-jumps a {
+  display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 16px;
+  border-left: 1px solid var(--aerial-line); color: #d9e5eb; font-size: 13px; font-weight: 650; text-decoration: none;
+}
+.aerial-page .aerial-jumps a:first-child { border-left: 0; }
+.aerial-page .aerial-jumps a:hover { background: #18262f; }
+.aerial-page .aerial-jumps a:focus-visible { outline-offset: -3px; }
+.aerial-jumps svg { flex: none; width: 20px; height: 20px; color: #9cb7b1; }
+
+/* ── 6. Section headings ──────────────────────────────────────────────────────────────────── */
+.aerial-section-heading { display: flex; align-items: center; gap: 12px; margin: 30px 0 14px; scroll-margin-top: 110px; }
+.aerial-icon {
+  display: grid; place-items: center; flex: 0 0 42px; width: 42px; height: 42px;
+  border: 1px solid #335047; border-radius: 12px; background: linear-gradient(135deg, #1b352d, #142621); color: #b2f5d8;
+}
+.aerial-icon svg { width: 26px; height: 26px; }
+.aerial-section-heading h2 { margin: 0 0 4px; font-size: 24px; font-weight: 750; line-height: 1.2; letter-spacing: -.035em; }
+.aerial-section-heading p { margin: 0; font-size: 14px; line-height: 1.5; }
+
+/* ── 7. Panels and the height comparison ──────────────────────────────────────────────────── */
+.aerial-panel {
+  min-width: 0; margin-bottom: 12px; padding: 18px;
+  border: 1px solid var(--aerial-line); border-radius: 14px; background: var(--aerial-surface);
+}
+.aerial-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.aerial-height-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
+.aerial-height-grid > .aerial-panel { margin-bottom: 0; }
+.aerial-height-number {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; margin: 14px 0 8px;
+  color: var(--aerial-home); font-size: 40px; font-weight: 750; line-height: 1.1; letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+}
+.aerial-side-1 .aerial-height-number { color: var(--aerial-away); }
+.aerial-height-number small { color: var(--aerial-muted); font-size: 13px; font-weight: 400; letter-spacing: 0; }
+
+/* Coverage: ten slots, filled for a reported height and hollow for a missing one, beside the count in words. */
+.aerial-coverage { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.aerial-coverage p { margin: 0; font-size: 12px; }
+.aerial-coverage-meter { display: inline-flex; gap: 3px; }
+.aerial-coverage-meter i { width: 9px; height: 9px; border: 1px solid #526570; border-radius: 2px; }
+.aerial-coverage-meter .aerial-known { border-color: var(--aerial-home); background: var(--aerial-home); }
+.aerial-side-1 .aerial-coverage-meter .aerial-known { border-color: var(--aerial-away); background: var(--aerial-away); }
+.aerial-page .aerial-coverage-partial p { color: #f2dca7; font-weight: 600; }
+.aerial-page .aerial-missing {
+  margin: 12px 0 0; padding: 10px 12px; border-left: 3px solid #917538; border-radius: 0 8px 8px 0;
+  background: #322c1d; color: #f2dca7;
 }
 
-/* Shared research presentation. Data and selection behaviour are unchanged. */
-/* Long club names must not expand either column on narrow phones. */
-.aerial-teams{grid-template-columns:repeat(2,minmax(0,1fr))}
-.aerial-teams>div{min-width:0}
-.aerial-teams .aerial-team-name strong{min-width:0;overflow-wrap:anywhere}
-.aerial-retry{padding:.6rem 1rem;margin-top:.5rem;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;font:inherit;cursor:pointer;min-height:44px}.aerial-retry:disabled{opacity:.6;cursor:wait}.aerial-retry:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.aerial-height-chart { margin-top: 18px; }
+.aerial-height-plot { position: relative; height: 74px; margin: 0 10px; border-block: 1px solid #2d414a; }
+.aerial-height-plot > b { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px solid var(--aerial-rule); }
+.aerial-height-plot > .aerial-threshold { border-left: 1px dashed #8fa9b8; }
+.aerial-height-plot > span { position: absolute; padding: 3px; border-radius: 50%; transform: translateX(-50%); cursor: help; }
+.aerial-height-plot i { display: block; width: 10px; height: 10px; border: 1px solid #daf9ec; border-radius: 50%; background: var(--aerial-home); }
+.aerial-side-1 .aerial-height-plot i { background: var(--aerial-away); }
+.aerial-height-plot em {
+  display: none; position: absolute; bottom: 20px; left: 50%; z-index: 5; width: 160px; max-width: 55vw; padding: 8px 10px;
+  border: 1px solid #526970; border-radius: 8px; background: #060f14; color: #fff;
+  font-size: 12px; font-style: normal; line-height: 1.4; transform: translateX(-50%);
+}
+/* :focus as well as :focus-visible, so a tap on a phone shows the name too. */
+.aerial-height-plot > span:hover em, .aerial-height-plot > span:focus em, .aerial-height-plot > span:focus-visible em { display: block; }
+.aerial-axis { position: relative; height: 18px; margin: 6px 10px 0; color: var(--aerial-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.aerial-axis span { position: absolute; transform: translateX(-50%); }
+.aerial-page .aerial-plot-caption { margin: 4px 0 0; font-size: 11px; }
 
-.aerial-warning p{color:inherit}
+.aerial-height-list { margin-top: 10px; border-top: 1px solid var(--aerial-line); }
+.aerial-height-list summary { padding: 12px 0; color: #c3d4dc; font-size: 13px; font-weight: 600; line-height: 20px; cursor: pointer; }
+.aerial-height-list ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 18px; margin: 0 0 6px; padding: 0; list-style: none; }
+.aerial-height-list li { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-top: 1px solid var(--aerial-rule); font-size: 13px; }
+.aerial-height-list li span { min-width: 0; overflow-wrap: anywhere; }
+.aerial-height-list li strong { flex: none; font-weight: 650; font-variant-numeric: tabular-nums; }
+
+/* Figure cells: label above value, hairline between, never clipped. Shared by height and delivery. */
+.aerial-height-extras, .aerial-delivery {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin-top: 14px; overflow: hidden;
+  border: 1px solid var(--aerial-line); border-radius: 12px; background: var(--aerial-line);
+}
+.aerial-height-extras > span { display: block; min-width: 0; padding: 12px 14px; background: var(--aerial-cell); color: #b1c6d4; font-size: 12px; line-height: 1.4; }
+.aerial-height-extras strong {
+  display: block; margin-top: 4px; color: var(--aerial-ink); font-size: 20px; font-weight: 700; line-height: 1.3;
+  letter-spacing: -.02em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere;
+}
+
+/* ── 8. History window ────────────────────────────────────────────────────────────────────── */
+.aerial-history-control {
+  display: grid; grid-template-columns: minmax(200px, 260px) minmax(0, 1fr); gap: 4px 20px; align-items: center;
+  margin: 0 0 12px; padding: 12px 16px; border: 1px solid #335047; border-radius: 12px; background: #10211e;
+}
+.aerial-history-control label { display: grid; gap: 8px; grid-row: 1 / span 2; font-size: 12px; font-weight: 650; color: #c8d4dc; }
+.aerial-history-control p { margin: 0; font-size: 13px; }
+.aerial-page .aerial-history-scope { color: #c9d9d5; font-size: 12px; }
+.aerial-page .aerial-window-note { margin: 0 0 12px; font-size: 13px; }
+.aerial-window-note strong { color: var(--aerial-ink); font-weight: 650; }
+
+/* ── 9. Two-player comparison ─────────────────────────────────────────────────────────────── */
+.aerial-compare-pickers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-bottom: 16px; }
+.aerial-compare-pickers label { display: block; min-width: 0; }
+.aerial-compare-pickers .aerial-person { margin-top: 12px; }
+.aerial-compare-pickers select { min-width: 0; }
+.aerial-compare-rows { overflow: hidden; border: 1px solid var(--aerial-line); border-radius: 12px; background: var(--aerial-cell); }
+.aerial-compare-row {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr) minmax(0, 1fr); align-items: center; gap: 10px;
+  padding: 12px 14px; border-top: 1px solid var(--aerial-rule); text-align: center; font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+.aerial-compare-row:first-child { border-top: 0; }
+.aerial-compare-row > span { color: var(--aerial-muted); font-size: 12px; }
+.aerial-compare-row strong { min-width: 0; font-weight: 700; overflow-wrap: anywhere; }
+.aerial-compare-row strong:first-child { color: var(--aerial-home); }
+.aerial-compare-row strong:last-child { color: var(--aerial-away); }
+.aerial-page .aerial-comparison-note {
+  margin: 14px 0 0; padding: 10px 14px; border-left: 3px solid #57d196; border-radius: 0 8px 8px 0;
+  background: var(--aerial-cell); color: #cfdfdc; font-size: 13px;
+}
+
+/* ── 10. Player lists ─────────────────────────────────────────────────────────────────────── */
+.aerial-table-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin-bottom: 14px; }
+.aerial-table-controls > .aerial-team-name { align-self: center; margin-right: auto; }
+.aerial-table-controls label { color: #c8d4dc; font-size: 12px; font-weight: 650; }
+.aerial-table-controls select { min-width: 190px; margin-top: 6px; }
+.aerial-table-head, .aerial-player summary {
+  display: grid; grid-template-columns: minmax(200px, 2.1fr) .8fr 1.2fr 1.1fr .8fr 132px; gap: 12px; align-items: center;
+}
+.aerial-table-head { padding: 0 8px 10px; color: #9cb8c9; font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; }
+.aerial-table-head span:last-child { text-align: right; }
+.aerial-player { border-top: 1px solid var(--aerial-rule); }
+.aerial-player summary {
+  min-height: 68px; margin: 0; padding: 10px 8px; border-radius: 8px; list-style: none; cursor: pointer;
+  font-size: 14px; font-variant-numeric: tabular-nums;
+}
+.aerial-player summary::-webkit-details-marker { display: none; }
+.aerial-player summary:hover { background: #14232b; }
+.aerial-player summary > span { min-width: 0; }
+.aerial-player summary > span > small { display: none; }
+.aerial-player em { display: block; margin-top: 3px; color: var(--aerial-muted); font-size: 11px; font-style: normal; }
+.aerial-person { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.aerial-person > span { min-width: 0; }
+.aerial-person strong { font-size: 14px; font-weight: 650; overflow-wrap: anywhere; }
+.aerial-person small { display: block; margin-top: 3px; color: var(--aerial-muted); font-size: 11px; line-height: 1.5; }
+.aerial-photo {
+  flex-shrink: 0; width: 44px; height: 48px; border-radius: 10px;
+  background: linear-gradient(0deg, #22383f, transparent); object-fit: contain; object-position: bottom;
+}
+.aerial-avatar { display: grid; place-items: center; padding: 9px; color: #8fa9b8; }
+.aerial-limited {
+  display: inline-block; margin-left: 6px; padding: 1px 6px; border: 1px solid #807043; border-radius: 4px;
+  background: #302b1e; color: #efd59b; font-size: 11px; font-weight: 600;
+}
+/* The whole row is the control; this only shows what a press will do. */
+.aerial-row-toggle {
+  display: inline-flex; align-items: center; justify-content: center; justify-self: end; gap: 6px;
+  min-height: 36px; padding: 0 10px; border: 1px solid #38624f; border-radius: 10px; background: #142d25;
+  color: #c4f6df; font-size: 12px; font-weight: 650; white-space: nowrap;
+}
+.aerial-row-toggle svg { flex: none; }
+.aerial-row-toggle-close { display: none; }
+.aerial-player[open] .aerial-row-toggle { border-color: #62d2a8; background: #1b4135; color: #e7fff4; }
+.aerial-player[open] .aerial-row-toggle-open { display: none; }
+.aerial-player[open] .aerial-row-toggle-close { display: inline; }
+.aerial-player[open] .aerial-row-toggle svg { transform: rotate(180deg); }
+
+.aerial-player-detail { margin: 0 0 12px; padding: 14px; border: 1px solid var(--aerial-rule); border-radius: 10px; background: var(--aerial-inset); }
+.aerial-player-detail > p { margin: 0 0 8px; font-size: 12px; }
+.aerial-scroll { overflow-x: auto; }
+.aerial-scroll table { width: 100%; min-width: 460px; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+.aerial-scroll th, .aerial-scroll td { padding: 10px; border-bottom: 1px solid #22323c; text-align: left; }
+.aerial-scroll th { color: #9cb8c9; font-size: 11px; font-weight: 600; }
+.aerial-scroll td strong { display: block; margin-top: 3px; font-weight: 500; }
+.aerial-scroll tbody tr:last-child td { border-bottom: 0; }
+
+/* ── 11. Delivery ─────────────────────────────────────────────────────────────────────────── */
+.aerial-delivery > div { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding: 12px 14px; background: var(--aerial-cell); }
+.aerial-delivery span { order: -1; color: #b1c6d4; font-size: 12px; line-height: 1.4; }
+.aerial-delivery strong { font-size: 28px; font-weight: 750; line-height: 1.15; letter-spacing: -.03em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.aerial-delivery small { color: var(--aerial-muted); font-size: 12px; }
+
+/* A figure that is not available reads as a statement, not as a number. */
+.aerial-page .aerial-na { color: var(--aerial-muted); font-size: 16px; font-weight: 600; line-height: 1.4; letter-spacing: 0; }
+
+/* ── 12. Overall read ─────────────────────────────────────────────────────────────────────── */
+.aerial-verdict {
+  margin: 0 0 36px; padding: 18px; border: 1px solid #335047; border-radius: 14px;
+  background: linear-gradient(125deg, #122b25, #111922 70%);
+}
+.aerial-verdict-pending { border-color: var(--aerial-line); border-left: 3px solid #8fa9b8; background: var(--aerial-surface); }
+.aerial-verdict h2 { margin: 8px 0 6px; font-size: 20px; font-weight: 750; letter-spacing: -.03em; }
+.aerial-verdict p { max-width: 900px; margin: 0; color: #c9d9d5; font-size: 15px; }
+
+/* ── 13. Questions and method: one list of hairline rows ──────────────────────────────────── */
+.aerial-faq { margin-top: 40px; }
+.aerial-faq h2 { margin: 6px 0 12px; font-size: 24px; font-weight: 750; letter-spacing: -.035em; }
+.aerial-faq details, .aerial-method { border-top: 1px solid var(--aerial-line); }
+.aerial-method { margin: 0; border-bottom: 1px solid var(--aerial-line); }
+.aerial-faq summary, .aerial-method summary { padding: 12px 0; font-size: 15px; font-weight: 650; line-height: 20px; cursor: pointer; }
+.aerial-faq details p, .aerial-method p { max-width: 850px; margin: 0 0 14px; font-size: 14px; }
+
+/* ── 14. Small tablets ────────────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .aerial-table-head, .aerial-player summary { grid-template-columns: minmax(170px, 2fr) .8fr 1.2fr 1.1fr .8fr 44px; }
+  .aerial-table-head span:last-child { visibility: hidden; }
+  .aerial-row-toggle { padding: 0; width: 36px; }
+  .aerial-row-toggle-open, .aerial-player[open] .aerial-row-toggle-close {
+    position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+}
+
+/* ── 15. Phones ───────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  .aerial-page { padding: 24px 18px 55px; }
+  .aerial-fixture-control { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 14px; }
+  .aerial-freshness { grid-column: 1; grid-row: auto; }
+  .aerial-match { padding: 14px; }
+  .aerial-teams { gap: 12px; }
+  .aerial-teams .aerial-team-name { align-items: flex-start; gap: 8px; font-size: 17px; }
+  .aerial-team-name img { width: 26px; height: 26px; }
+  .aerial-empty { gap: 12px; padding: 14px; }
+  .aerial-empty h2 { font-size: 18px; }
+  .aerial-section-heading { margin-top: 26px; }
+  .aerial-section-heading h2 { font-size: 20px; }
+  .aerial-section-heading p { font-size: 13px; }
+  .aerial-panel { padding: 14px; }
+  .aerial-height-grid { grid-template-columns: minmax(0, 1fr); }
+  .aerial-height-number { font-size: 36px; }
+  .aerial-history-control { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 14px; }
+  .aerial-history-control label { grid-row: auto; }
+  .aerial-compare-pickers { gap: 12px; }
+  .aerial-compare-pickers .aerial-team-name { font-size: 14px; }
+  .aerial-compare-pickers .aerial-person { display: block; }
+  .aerial-compare-pickers .aerial-photo { margin-bottom: 8px; }
+  .aerial-compare-row { padding: 12px 8px; gap: 6px; font-size: 14px; }
+  .aerial-table-controls > .aerial-team-name { width: 100%; }
+  .aerial-table-controls label { flex: 1; min-width: 0; }
+  .aerial-table-controls select { min-width: 0; }
+
+  /* Each player becomes a card: name, then the four labelled figures, then the open control. Nothing is dropped. */
+  .aerial-table-head { display: none; }
+  .aerial-player summary { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 18px; padding: 14px 0; }
+  .aerial-player summary:hover { background: none; }
+  .aerial-player summary > .aerial-person { grid-column: 1 / -1; }
+  .aerial-player summary > span > small { display: block; margin-bottom: 3px; color: var(--aerial-muted); font-size: 11px; }
+  .aerial-person strong { font-size: 15px; }
+  .aerial-row-toggle { grid-column: 1 / -1; justify-self: stretch; width: auto; min-height: 44px; padding: 0 12px; }
+  .aerial-row-toggle-open, .aerial-player[open] .aerial-row-toggle-close {
+    position: static; width: auto; height: auto; margin: 0; overflow: visible; clip-path: none;
+  }
+  .aerial-player-detail { padding: 12px; }
+  .aerial-verdict { padding: 14px; }
+  .aerial-faq h2 { font-size: 20px; }
+}
+@media (max-width: 639px) {
+  .public-site main.aerial-page > header[class] { margin-bottom: 12px; }
+  .public-site main.aerial-page > header > div:first-of-type[class] { min-height: 44px; gap: 8px 10px; }
+  .public-site main.aerial-page > header > div:first-of-type > img[class] { width: 44px; height: 44px; }
+  .public-site main.aerial-page > header h1[class] { font-size: 28px; }
+  .public-site main.aerial-page > header h1[class] + p[class] { letter-spacing: .1em; }
+  .public-site main.aerial-page > header > div:first-of-type + p[class] { margin: 8px 0 0; font-size: 13px; }
+  /* 16px stops phones zooming the page when a list is opened. */
+  .aerial-page select { font-size: 16px; }
+  .aerial-jumps { width: 100%; }
+  .aerial-page .aerial-jumps a { flex: 1 1 0; min-width: 0; padding: 0 6px; }
+}
+@media (max-width: 600px) {
+  /* Earlier matches: one block per match with labelled figures, so there is no sideways scrolling. */
+  .aerial-scroll table, .aerial-scroll tbody { display: block; min-width: 0; }
+  .aerial-scroll thead { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .aerial-scroll tr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 8px; padding: 10px 0; border-bottom: 1px solid #22323c; }
+  .aerial-scroll tbody tr:last-child { border-bottom: 0; }
+  .aerial-scroll td { display: block; min-width: 0; padding: 0; border: 0; }
+  .aerial-scroll td:first-child { grid-column: 1 / -1; }
+  .aerial-scroll td:nth-child(n+2)::before { display: block; margin-bottom: 2px; color: var(--aerial-muted); font-size: 11px; line-height: 1.35; }
+  .aerial-scroll td:nth-child(2)::before { content: "Minutes"; }
+  .aerial-scroll td:nth-child(3)::before { content: "Duels won / attempted"; }
+  .aerial-scroll td:nth-child(4)::before { content: "Headed shots"; }
+}
+@media (max-width: 420px) {
+  .aerial-height-number { font-size: 32px; }
+  .aerial-height-list ol { grid-template-columns: minmax(0, 1fr); }
+  .aerial-height-extras strong { font-size: 18px; }
+  .aerial-delivery strong { font-size: 24px; }
+  .aerial-compare-row { font-size: 13px; }
+  .aerial-compare-pickers select { padding: 10px 8px; }
+}
+
+/* ── 16. Motion ───────────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .aerial-row-toggle svg { transition: transform .15s; }
+  .aerial-player summary, .aerial-page .aerial-jumps a { transition: background-color .15s; }
+}

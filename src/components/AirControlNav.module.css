@@ -1,0 +1,102 @@
+/*
+ * Air Control compact navigation. Fable, 17 Nov 2026. PREVIEW.
+ * Used only by AirControlNav, which AtlasPageHeader renders inside the title row on the Air Control page.
+ * Values match AtlasEditionNav.module.css so the link, button and panel look the same on every page that has
+ * them. That file is not imported or changed. Every rule starts at .public-site .shell so the page's own
+ * element rules (for a, button, p) cannot restyle it.
+ */
+
+/* No box of its own: its children are laid out by the header's title row. */
+:global(.public-site) .shell { display: contents; }
+
+/* ── Matching Matchday link and the All tools button ──────────────────────────────────────── */
+:global(.public-site) .shell .aside {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; margin-left: auto;
+}
+:global(.public-site) .shell .matchday {
+  display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 0 6px;
+  border-radius: 8px; color: #d9e5eb; font-size: 13px; font-weight: 650; line-height: 1.2;
+  text-decoration: none; white-space: nowrap;
+}
+:global(.public-site) .shell .matchday:hover { color: #b2f5d8; text-decoration: underline; text-underline-offset: 4px; }
+:global(.public-site) .shell .matchday:focus-visible { outline: 2px solid #8ce5bd; outline-offset: 2px; }
+:global(.public-site) .shell .matchdayIcon { flex: none; width: 18px; height: 18px; color: #9cb7b1; }
+:global(.public-site) .shell .arrow { color: #8ce5bd; }
+
+:global(.public-site) .shell .toggle {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px; flex: none;
+  width: auto; max-width: none; min-height: 44px; margin: 0; padding: 0 12px;
+  border: 1px solid #2b3c46; border-radius: 11px; background: #121c24; box-shadow: none;
+  color: #d9e5eb; font: inherit; font-size: 13px; font-weight: 650; line-height: 1.2;
+  text-align: center; white-space: nowrap; cursor: pointer; appearance: none;
+}
+:global(.public-site) .shell .toggle:hover { border-color: #8ce5bd; background: #18262f; color: #f1f5f9; }
+:global(.public-site) .shell .toggle[aria-expanded="true"] {
+  border-color: #609780; background: linear-gradient(120deg, #1b352d, #142621); color: #b2f5d8;
+  box-shadow: inset 0 -2px #8ce5bd;
+}
+:global(.public-site) .shell .toggle:focus-visible { outline: 2px solid #8ce5bd; outline-offset: 2px; }
+:global(.public-site) .shell .chevron { flex: none; }
+:global(.public-site) .shell .toggle[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+
+/* ── All tools panel: a full-width line of the title row, in the page flow ────────────────── */
+:global(.public-site) .shell .panel {
+  flex: 0 0 100%; min-width: 0; padding: 14px;
+  border: 1px solid #2b3c46; border-radius: 14px; background: #121c24;
+}
+:global(.public-site) .shell .panel[hidden] { display: none; }
+:global(.public-site) .shell .groups { display: grid; gap: 14px; min-width: 0; }
+:global(.public-site) .shell .group { min-width: 0; }
+:global(.public-site) .shell .groupTitle {
+  margin: 0 0 8px; color: #a4b5c3; font-size: 11px; font-weight: 650; line-height: 1.4;
+  letter-spacing: .12em; text-transform: uppercase;
+}
+:global(.public-site) .shell .group ul {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 6px;
+  margin: 0; padding: 0; list-style: none;
+}
+:global(.public-site) .shell .group li { min-width: 0; margin: 0; padding: 0; }
+:global(.public-site) .shell .panel a {
+  display: flex; align-items: center; gap: 10px; height: 100%; min-height: 52px; padding: 8px 10px;
+  border: 1px solid #2b3c46; border-radius: 11px; background: #0f1820;
+  color: #d9e5eb; text-decoration: none;
+}
+:global(.public-site) .shell .panel a > span { min-width: 0; }
+:global(.public-site) .shell .panel a strong { display: block; font-size: 13px; font-weight: 650; line-height: 1.35; }
+:global(.public-site) .shell .panel a small { display: block; margin-top: 2px; color: #a4b5c3; font-size: 11px; line-height: 1.4; }
+:global(.public-site) .shell .toolIcon { flex: none; width: 24px; height: 24px; color: #9cb7b1; }
+:global(.public-site) .shell .panel a:hover { border-color: #8ce5bd; }
+:global(.public-site) .shell .panel a[aria-current="page"] {
+  border-color: #609780; background: linear-gradient(120deg, #1b352d, #142621);
+  box-shadow: inset 0 -2px #8ce5bd;
+}
+:global(.public-site) .shell .panel a[aria-current="page"] strong { color: #b2f5d8; font-weight: 750; }
+:global(.public-site) .shell .panel a[aria-current="page"] .toolIcon { color: #b2f5d8; }
+:global(.public-site) .shell .panel a:focus-visible { outline: 2px solid #8ce5bd; outline-offset: 2px; }
+
+/* ── Phone: one line under the title, link left and button right ──────────────────────────── */
+@media (max-width: 639px) {
+  :global(.public-site) .shell .aside { flex: 1 0 100%; justify-content: space-between; margin-left: 0; }
+  :global(.public-site) .shell .matchday { padding-left: 2px; }
+}
+@media (max-width: 519px) {
+  :global(.public-site) .shell .panel { padding: 12px; }
+  :global(.public-site) .shell .group ul { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 359px) {
+  :global(.public-site) .shell .matchdayIcon { display: none; }
+  :global(.public-site) .shell .toggle { padding: 0 10px; }
+}
+@media (min-width: 900px) {
+  :global(.public-site) .shell .groups { grid-template-columns: 4fr 3fr; gap: 20px; }
+}
+
+/* ── Motion: state feedback only, and none at all when the visitor asks for less ──────────── */
+@media (prefers-reduced-motion: no-preference) {
+  :global(.public-site) .shell .matchday,
+  :global(.public-site) .shell .toggle,
+  :global(.public-site) .shell .panel a { transition: background-color .15s, border-color .15s, color .15s; }
+  :global(.public-site) .shell .chevron { transition: transform .15s; }
+  :global(.public-site) .shell .panel { animation: reveal .14s ease-out; }
+}
+@keyframes reveal { from { opacity: 0; transform: translateY(-4px); } }
