@@ -15,7 +15,8 @@ const cache=compile(fs.readFileSync(path.join(root,'src/lib/bounded-async-cache.
 test('tip preview PNGs have an explicit shared cache and missing tips avoid rendering',async()=>{
  let fixture=null, renders=0;
  const format=compile(fs.readFileSync(path.join(root,'src/lib/format.ts'),'utf8'));
- const share=compile(fs.readFileSync(path.join(root,'src/lib/tip-share.ts'),'utf8'),{'./format':format});
+ const copy=compile(fs.readFileSync(path.join(root,'src/lib/tip-page-copy.ts'),'utf8'),{});
+ const share=compile(fs.readFileSync(path.join(root,'src/lib/tip-share.ts'),'utf8'),{'./format':format,'./tip-page-copy':copy});
  const renderer=compile(fs.readFileSync(path.join(root,'src/lib/tip-share-image.tsx'),'utf8'),{
   'server-only':{}, './config':{BASE_URL:'https://ilmargine.bet'},
   'next/og':{ImageResponse:class extends Response {constructor(_jsx,options){super('png',options);renders++;}}},
