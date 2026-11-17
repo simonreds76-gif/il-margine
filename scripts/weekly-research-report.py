@@ -1560,6 +1560,9 @@ def build_payload() -> dict[str, Any]:
     tennis_full_refresh = full_refresh_summary()
     tennis_context_forward = load_json(ROOT / "data/tennis-ml-research/context-forward-v1/report.json")
     tennis_hardcourt_scout = load_json(ROOT / "data/tennis-ml-research/hardcourt-scout-v1/report.json")
+    if (ROOT / "data/tennis-ml-research/hardcourt-scout-v1/verified-nonplayed.json").is_file():
+        from tennis_nonplay_reconcile import load_report, SCOUT
+        tennis_hardcourt_scout = load_report(ROOT, SCOUT)
     tennis_astrissimo = load_json(ROOT / "data/tennis-ml-research/astrissimo-v1/report.json")
     tennis_props_v4 = load_json(TENNIS_PROPS_V4_JSON)
     tennis_breaks_v1 = load_json(TENNIS_BREAKS_V1_GATE)
@@ -1569,6 +1572,9 @@ def build_payload() -> dict[str, Any]:
     tennis_most_aces_reference = load_json(ROOT / "data/tennis-props/shadow/most-aces-fixed-reference-v1/report.json")
     tennis_most_aces_single = load_json(ROOT / "data/tennis-props/shadow/most-aces-single-book-v1/report.json")
     tennis_most_df = load_json(ROOT / "data/tennis-props/shadow/most-df-v1/report.json")
+    if (ROOT / "data/tennis-props/shadow/most-df-v1/verified-nonplayed.json").is_file():
+        from tennis_nonplay_reconcile import load_report, DF
+        tennis_most_df = load_report(ROOT, DF)
     tennis_props_benchmark = tennis_props_market_benchmark()
     tennis_props_shadow = tennis_props_shadow_decision()
     goalscorer_research = goalscorer_research_summary()

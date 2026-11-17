@@ -242,7 +242,7 @@ Log "=== Elo Rebuild: settle exact-fixture paper evidence ==="
 Invoke-HistoryStep scripts\tennis_elo_shadow.py --settle-only 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) { Log "WARNING: Elo Rebuild settlement needs review; continuing existing pipeline" }
 
-Invoke-HistoryStep scripts\tennis_breakpoint_evidence.py 2>&1 | ForEach-Object { Log $_ }
+Invoke-HistoryStep scripts\tennis_breakpoint_results.py 2>&1 | ForEach-Object { Log $_ }
 Invoke-HistoryStep scripts\tennis_breakpoint_forward.py --settle-only 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) { Log "WARNING: break-point result evidence needs review; no signals changed" }
 
