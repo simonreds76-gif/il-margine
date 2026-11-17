@@ -8,6 +8,7 @@ import Link from "next/link";
 import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
 import { type MarketStats } from "@/lib/supabase";
 import Footer from "@/components/Footer";
+import "./track-record.css";
 import PageHeading from "@/components/PageHeading";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 
@@ -229,20 +230,20 @@ export default function TrackRecordClient({ initialStats, initialMonthly }: {
       ? "Earlier recorded results shown while the latest figures are unavailable."
       : "Showing the last available settled record; a refresh is temporarily unavailable.";
 
-  return <div className="min-h-screen bg-[#0f1117] text-slate-100">
+  return <div className="record-page min-h-screen bg-[#0f1117] text-slate-100">
     <FaqSchema />
-    <main>
+    <main id="main-content">
       <div className="site-container">
         <PageHeading icon="record" eyebrow="The public record" title="Track record">
-          <p>Explore football and tennis returns, compare results by month and review individual selections.</p>
+          <p>Explore football and tennis returns, compare results by month and review the individual betting tips.</p>
         </PageHeading>
-        <p role="status" className="mb-4 text-sm text-slate-400">{statsNote}</p>
-        <div className="grid gap-3 sm:grid-cols-3">{[
+        <p role="status" className={`record-status record-status-${statsStatus}`}>{statsNote}</p>
+        <div className="record-headline">{[
           ["Overall ROI", formatSignedPercent(displayStats.overall.roi)],
           ["Profit / loss", `${displayStats.overall.total_profit > 0 ? "+" : ""}${displayStats.overall.total_profit.toFixed(2)}u`],
-          ["Settled bets", formatBetCount(displayStats.overall.total_bets)],
-        ].map(([label,value]) => <div key={label} className="site-card"><div className="flex items-center justify-between gap-3"><p className="site-eyebrow">{label}</p><EditorialIcon name={label === "Overall ROI" ? "analysis" : label === "Settled bets" ? "guide" : "bankroll"} className="h-5 w-5" /></div><p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight">{value}</p></div>)}</div>
-        <p className="mt-4 max-w-3xl text-xs text-slate-400">Tracking since October 2024. ROI measures profit as a percentage of total stake. Past performance does not predict future returns.</p>
+          ["Recorded bets", formatBetCount(displayStats.overall.total_bets)],
+        ].map(([label,value]) => <div key={label} className="site-card"><div className="flex items-center justify-between gap-3"><p className="site-eyebrow">{label}</p><EditorialIcon name={label === "Overall ROI" ? "analysis" : label === "Recorded bets" ? "guide" : "bankroll"} className="h-5 w-5" /></div><p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight">{value}</p></div>)}</div>
+        <p className="mt-4 max-w-3xl text-xs text-slate-400">Tracking since October 2024. Recorded-bet totals include tips still awaiting a result. Profit and ROI use settled results and stakes. ROI measures profit as a percentage of total stake. Past performance does not predict future returns.</p>
         <details id="record-method" className="record-method mt-4 max-w-3xl scroll-mt-24"><summary className="cursor-pointer py-2 text-sm font-medium text-emerald-200">How the record is calculated</summary><p className="mt-2 text-sm leading-6 text-slate-400">Totals combine earlier period summaries with the individual results listed on the site. Some figures in the earlier summaries, including competition splits and win counts, are estimates; earlier stake totals assume one unit per bet. Profit charts carry the earlier profit forward as a starting total. Chart movements and monthly tables use the individual results available to inspect.</p></details>
         <section className="site-section" aria-labelledby="market-records">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3"><h2 id="market-records" className="text-2xl font-semibold">Explore the records</h2><span className="text-xs text-slate-400">{trackingRange}</span></div>
@@ -254,9 +255,9 @@ export default function TrackRecordClient({ initialStats, initialMonthly }: {
             <dl className="my-5 grid grid-cols-3 gap-3">{[
               ["ROI", formatSignedPercent(displayStats[key].roi)],
               ["P/L", `${displayStats[key].total_profit > 0 ? "+" : ""}${displayStats[key].total_profit.toFixed(2)}u`],
-              ["Bets", formatBetCount(displayStats[key].total_bets)],
+              ["Recorded bets", formatBetCount(displayStats[key].total_bets)],
             ].map(([label,value]) => <div key={label}><dt className="text-xs text-slate-400">{label}</dt><dd className="mt-1 text-xl font-semibold tabular-nums">{value}</dd></div>)}</dl>
-            <SportCta sport={key === "props" ? "football" : "tennis"} href={href} label="Selections & results" />
+            <SportCta sport={key === "props" ? "football" : "tennis"} href={href} label="Tips and results" />
           </article>)}</div>
         </section>
       </div>

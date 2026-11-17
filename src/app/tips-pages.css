@@ -1,0 +1,98 @@
+/*
+ * Football and tennis tips pages. Fable, 17 Nov 2026. PREVIEW.
+ * Imported by PlayerPropsClient and TennisTipsClient only. Every rule is scoped to .tips-page, the root
+ * element those two clients now carry, so no other page is affected.
+ * Family: slate surfaces, hairline rules, 10–14px corners, mint accent, one inherited typeface with tabular
+ * figures. Styles only: no figure, filter, order or link is produced or changed here.
+ * Several shared components on these pages are read-only, so their parts are reached by structure
+ * (section ids, data-testid hooks and existing class tokens). A rule that misses simply does nothing.
+ */
+.tips-page {
+  --tp-line: #2b3c46; --tp-rule: #24333f; --tp-surface: #121c24; --tp-cell: #122029;
+  --tp-inset: #0a141d; --tp-mint: #8ce5bd; --tp-muted: #a4b5c3;
+}
+
+/* ── 0. Type, contrast and focus across the page ──────────────────────────────────────────── */
+/* One typeface. Figures keep equal widths so columns still line up. */
+.tips-page main .font-mono { font-family: inherit; font-variant-numeric: tabular-nums; }
+/* Legibility floor for the smallest labels. */
+.tips-page main :is([class*="text-[9px]"], [class*="text-[10px]"]) { font-size: 11px; }
+/* Notes were too dim to read comfortably on the dark background. */
+.tips-page main .text-slate-500 { color: #9fb0bd; }
+.tips-page main .text-slate-600 { color: #93a5b3; }
+.tips-page main :is(a, button, summary, select):focus-visible { outline: 2px solid var(--tp-mint); outline-offset: 3px; }
+
+/* ── 1. Section rhythm and headings ───────────────────────────────────────────────────────── */
+.tips-page main > section[id] { padding-top: 26px; padding-bottom: 30px; border-color: #263139; scroll-margin-top: 96px; }
+.tips-page main > section h2 { font-size: 26px; font-weight: 750; line-height: 1.2; letter-spacing: -.035em; }
+.tips-page .tips-eyebrow { display: block; margin-bottom: 6px; color: #88dfba; font-size: 11px; font-weight: 750; line-height: 1.4; letter-spacing: .14em; text-transform: uppercase; }
+.tips-page .tips-head-note { color: var(--tp-muted); font-size: 12px; line-height: 1.5; text-align: right; }
+.tips-page #picks > div > div:first-child { flex-wrap: wrap; gap: 6px 20px; margin-bottom: 10px; }
+
+/* ── 2. League / tournament filter: compact, so the tips are not pushed down the page ────── */
+.tips-page #competition-filter { padding-top: 14px; padding-bottom: 18px; }
+.public-site .tips-page .competition-card-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+.public-site .tips-page .competition-card {
+  flex-direction: row; align-items: center; gap: 10px; min-height: 64px; padding: 8px 10px;
+  border-color: var(--tp-line); border-radius: 12px; background: var(--tp-surface);
+}
+.public-site .tips-page .competition-card:hover { border-color: var(--tp-mint); }
+/* Selected: fill, underline and brighter name, not colour alone. aria-pressed carries it for assistive technology. */
+.public-site .tips-page .competition-card[aria-pressed=true] {
+  border-color: #609780; background: linear-gradient(120deg, #1b352d, #142621); box-shadow: inset 0 -2px var(--tp-mint);
+}
+.public-site .tips-page .competition-card > span { flex: none; width: 38px; height: 38px; transform: none; }
+.tips-page .competition-card > div { display: flex; flex-wrap: wrap; align-items: center; gap: 1px 8px; min-width: 0; }
+.tips-page .competition-card > div > span:first-child { flex: 0 0 100%; font-size: 13px; font-weight: 650; overflow-wrap: anywhere; }
+.tips-page .competition-card[aria-pressed=true] > div > span:first-child { font-weight: 750; }
+.tips-page .competition-card > div > * { margin-top: 0; }
+
+/* ── 3. Current tips and recent results ───────────────────────────────────────────────────── */
+/* Empty and loading states: a plain statement, left aligned, not a large hollow box. */
+.tips-page main [class~="p-8"][class~="text-center"] {
+  padding: 16px 18px; border-color: var(--tp-line); border-radius: 14px; background: #101920; text-align: left;
+}
+.tips-page main [class~="p-8"][class~="text-center"] > p:first-child { color: #d9e5eb; font-size: 15px; font-weight: 650; }
+.tips-page main [class~="p-8"][class~="text-center"] > p + p { margin-top: 4px; color: var(--tp-muted); font-size: 13px; }
+
+/* Football: one card per match, tips inside. */
+.tips-page [data-testid="player-props-match-group"] { border-color: var(--tp-line); border-radius: 14px; background: var(--tp-surface); }
+.tips-page [data-testid="player-props-match-group"] > button { min-height: 60px; }
+.tips-page [data-testid="player-props-match-group"] > div { border-color: var(--tp-rule); }
+.tips-page [data-testid="player-props-match-group"] article > :is(a, div) { border-color: var(--tp-rule); border-radius: 12px; background: var(--tp-cell); }
+.tips-page [data-testid="player-props-match-group"] article > a:hover { border-color: var(--tp-mint); background: #14232b; }
+.tips-page [data-testid="player-props-match-group"] a[aria-label^="Match tips"] { display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; }
+.tips-page [data-testid="older-match-links"] { border-color: var(--tp-line); border-radius: 12px; background: var(--tp-surface); }
+.tips-page [data-testid="older-match-links"] summary { min-height: 28px; }
+
+/* Tennis: the table on wide screens, cards on phones. */
+.tips-page :is(#picks, #recent-results) [class~="overflow-hidden"][class~="rounded-lg"] { border-color: var(--tp-line); border-radius: 14px; background: var(--tp-surface); }
+.tips-page main .divide-slate-600 > :not([hidden]) ~ :not([hidden]) { border-color: var(--tp-rule); }
+.tips-page.tips-tennis :is(#picks, #recent-results) button { min-height: 44px; padding-inline: 14px; }
+
+/* ── 4. Record for the chosen league or tournament ────────────────────────────────────────── */
+.tips-page #competition-record > div > [class~="rounded-2xl"][class~="overflow-hidden"] { border-color: var(--tp-line); border-radius: 14px; background: var(--tp-surface); }
+.tips-page #competition-record > div > [class~="rounded-2xl"][class~="overflow-hidden"] > div:first-child,
+.tips-page #competition-record > div > [class~="rounded-2xl"][class~="overflow-hidden"] > p { border-color: var(--tp-rule); }
+.tips-page #competition-record > div > [class~="rounded-2xl"][class~="overflow-hidden"] > dl > div { border-color: var(--tp-rule); background: var(--tp-cell); }
+.tips-page #competition-record > div > [class~="rounded-2xl"][class~="overflow-hidden"] dt { color: #b1c6d4; font-size: 12px; letter-spacing: 0; text-transform: none; }
+.tips-page #competition-record > div > [class~="rounded-2xl"][class~="overflow-hidden"] dd { margin-top: 4px; font-size: 20px; font-weight: 700; letter-spacing: -.02em; overflow-wrap: anywhere; }
+
+/* ── 5. How to read a tip ─────────────────────────────────────────────────────────────────── */
+.tips-page #how-to-use [class~="rounded-xl"] { border-color: var(--tp-line); border-radius: 14px; background: var(--tp-surface); }
+.tips-page #how-to-use a:not(.site-button) { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* ── 6. Narrower screens ──────────────────────────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  .tips-page main > section[id] { padding-top: 20px; padding-bottom: 24px; }
+  .tips-page main > section h2 { font-size: 22px; }
+  .tips-page .tips-head-note { text-align: left; }
+}
+@media (max-width: 639px) {
+  /* The phone picker lists the full comparison one league per row once it is opened. */
+  .public-site .tips-page .competition-card-grid { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .tips-page #competition-record > div > [class~="rounded-2xl"][class~="overflow-hidden"] dd { font-size: 18px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tips-page .competition-card { transition: border-color .15s, background-color .15s; }
+}

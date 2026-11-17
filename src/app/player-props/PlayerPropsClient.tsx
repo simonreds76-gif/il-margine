@@ -19,6 +19,7 @@ import PropPerformancePanel from "@/components/PropPerformancePanel";
 import PublicRecordMetricGrid from "@/components/PublicRecordMetricGrid";
 
 import Footer from "@/components/Footer";
+import "@/app/tips-pages.css";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import { getDisplayBetCategory, normalizeBetCategory } from "@/lib/bet-category";
 
@@ -276,12 +277,13 @@ export default function PlayerProps({
   const archiveStats = getArchiveStatsForLeague(activeLeague);
 
   return (
-    <div className="min-h-screen bg-[#0f1117] text-slate-100">
+    <div className="tips-page tips-football min-h-screen bg-[#0f1117] text-slate-100">
       {/* Nav */}
             {/* Navigation is now in GlobalNav component in layout.tsx */}
 
 
       {/* Hero */}
+      <main id="main-content">
       <TipsHubIntro sport="football" />
 
       <section id="competition-filter" aria-label="Choose a league" className="pt-5 pb-6 border-b border-slate-800/50">
@@ -344,10 +346,10 @@ export default function PlayerProps({
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <span className="text-xs font-mono text-emerald-400 mb-2 block">ACTIVE SELECTIONS</span>
+              <span className="tips-eyebrow">Free betting tips</span>
               <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Current Picks</h2>
             </div>
-            <span className="text-xs text-slate-500 hidden sm:block">Recorded odds shown with each pick</span>
+            <span className="tips-head-note">Recorded odds, bookmaker and stake shown with each tip</span>
           </div>
           <p className="text-slate-500 text-xs mb-6">Stakes shown in units · 1u = your standard stake.</p>
 
@@ -359,8 +361,8 @@ export default function PlayerProps({
             <PlayerPropsMatchGroups bets={filteredPending} mode="pending" />
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
-              <p className="text-slate-500">No active selections at the moment</p>
-              <p className="text-xs text-slate-600 mt-2">Check back soon for new selections</p>
+              <p className="text-slate-500">No active tips at the moment</p>
+              <p className="text-xs text-slate-600 mt-2">New football tips appear here as soon as they are published.</p>
             </div>
           )}
 
@@ -403,7 +405,7 @@ export default function PlayerProps({
       <section id="recent-results" className="py-12 md:py-16 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
-            <span className="text-xs font-mono text-emerald-400 mb-2 block">RESULTS</span>
+            <span className="tips-eyebrow">Results</span>
             <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Recent Selections</h2>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-500">
               The latest settled selections for your chosen league. Older results remain included in the totals above.
@@ -456,6 +458,7 @@ export default function PlayerProps({
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );

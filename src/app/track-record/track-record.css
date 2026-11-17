@@ -1,0 +1,75 @@
+/*
+ * Track record. Fable, 17 Nov 2026. PREVIEW.
+ * Imported by TrackRecordClient only. Every rule is scoped to .record-page, the root element that client now
+ * carries. Styles only: every figure, the status wording and the method disclosure are produced in the client.
+ * The monthly breakdown is a shared component and is left as it is.
+ * The .public-site prefix lets these rules outrank the site's shared card and disclosure styles on this page.
+ */
+.record-page {
+  --rp-line: #2b3c46; --rp-rule: #24333f; --rp-surface: #121c24; --rp-cell: #122029; --rp-mint: #8ce5bd; --rp-muted: #a4b5c3;
+}
+.record-page main :is(a, button, summary):focus-visible { outline: 2px solid var(--rp-mint); outline-offset: 3px; }
+
+/* ── 1. Compact head, as on the research pages ────────────────────────────────────────────── */
+.public-site .record-page main header nav[aria-label="Breadcrumb"] { margin-bottom: 4px; }
+.public-site .record-page main header > div:first-of-type { min-height: 54px; gap: 14px; }
+.public-site .record-page main header .tool-emblem { flex: 0 0 54px; width: 54px; height: 54px; }
+.public-site .record-page main header h1 { margin: 0; font-size: 34px; line-height: 1.12; }
+.public-site .record-page main header h1 + p { margin-top: 5px; font-size: 11px; }
+.public-site .record-page main header > div:nth-of-type(2) { min-height: 0; margin: 10px 0 14px; }
+.public-site .record-page main header > div:nth-of-type(2) p { max-width: 780px; margin: 0; font-size: 14px; line-height: 1.55; }
+
+/* ── 2. Status: a round mark when current, a square amber mark and amber text when it is not ─ */
+.public-site .record-page .record-status { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; color: #c3d4dc; font-size: 13px; line-height: 1.5; }
+.record-page .record-status::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--rp-mint); }
+.public-site .record-page :is(.record-status-fallback, .record-status-stale) { color: #f2dca7; font-weight: 600; }
+.record-page :is(.record-status-fallback, .record-status-stale)::before { border-radius: 1px; background: #f2dca7; }
+
+/* ── 3. Headline: one block, three labelled figures ───────────────────────────────────────── */
+.record-page .record-headline {
+  display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 1px; overflow: hidden;
+  border: 1px solid var(--rp-line); border-radius: 14px; background: var(--rp-line);
+}
+.public-site .record-page .record-headline > .site-card { min-width: 0; padding: 14px 18px; border: 0; border-radius: 0; background: var(--rp-cell); }
+.public-site .record-page .record-headline .site-eyebrow { margin: 0; color: #b1c6d4; font-size: 12px; font-weight: 500; letter-spacing: 0; text-transform: none; }
+.record-page .record-headline > .site-card svg { color: #8fa9b8; }
+.record-page .record-headline > .site-card > p { margin-top: 4px; font-size: 28px; font-weight: 750; line-height: 1.15; letter-spacing: -.03em; overflow-wrap: anywhere; }
+.record-page .record-headline > .site-card:first-child > p { font-size: 40px; letter-spacing: -.045em; }
+
+/* How the record is calculated: visible, bordered, directly under the figures it qualifies. */
+.public-site .record-page .record-method { max-width: none; margin-top: 12px; padding: 0 16px; border: 1px solid var(--rp-line); border-radius: 12px; background: var(--rp-surface); }
+.public-site .record-page .record-method > summary { display: flex; align-items: center; min-height: 48px; padding: 0; color: #d9e5eb; font-size: 14px; font-weight: 650; }
+.public-site .record-page .record-method > p { max-width: 860px; margin: 0 0 14px; color: #c3d4dc; font-size: 14px; line-height: 1.65; }
+
+/* ── 4. Records by sport ──────────────────────────────────────────────────────────────────── */
+.record-page main h2 { font-size: 26px; font-weight: 750; line-height: 1.2; letter-spacing: -.035em; }
+.public-site .record-page article.site-card { padding: 16px 18px; border-color: var(--rp-line); border-radius: 14px; background: var(--rp-surface); }
+.record-page article.site-card h3 { font-size: 17px; font-weight: 700; }
+.record-page article.site-card dl { gap: 1px; margin: 12px 0 14px; overflow: hidden; border: 1px solid var(--rp-line); border-radius: 12px; background: var(--rp-line); }
+.record-page article.site-card dl > div { min-width: 0; padding: 10px 12px; background: var(--rp-cell); }
+/* Render fix. Three cells left too little room below 1024px and the unit dropped onto a line of its own. ROI takes a full row; P/L and bets share the next. */
+@media (max-width: 1023px) {
+  .record-page article.site-card dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .record-page article.site-card dl > div:first-child { grid-column: 1 / -1; }
+}
+.record-page article.site-card dt { color: #b1c6d4; font-size: 12px; }
+.record-page article.site-card dd { margin-top: 2px; font-size: 20px; font-weight: 700; letter-spacing: -.02em; overflow-wrap: anywhere; }
+
+/* ── 5. Questions ─────────────────────────────────────────────────────────────────────────── */
+.public-site .record-page .site-disclosure { border-color: var(--rp-line); border-radius: 12px; background: var(--rp-surface); }
+.public-site .record-page .site-disclosure summary { min-height: 52px; }
+
+/* ── 6. Phones ────────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 639px) {
+  .public-site .record-page main header > div:first-of-type { min-height: 44px; gap: 10px; }
+  .public-site .record-page main header .tool-emblem { flex-basis: 44px; width: 44px; height: 44px; }
+  .public-site .record-page main header h1 { font-size: 28px; }
+  .public-site .record-page main header > div:nth-of-type(2) p { font-size: 13px; }
+  .record-page .record-headline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .record-page .record-headline > .site-card:first-child { grid-column: 1 / -1; }
+  .public-site .record-page .record-headline > .site-card { padding: 12px 14px; }
+  .record-page .record-headline > .site-card > p { font-size: 22px; }
+  .record-page .record-headline > .site-card:first-child > p { font-size: 36px; }
+  .record-page main h2 { font-size: 22px; }
+  .record-page article.site-card dd { font-size: 18px; }
+}
