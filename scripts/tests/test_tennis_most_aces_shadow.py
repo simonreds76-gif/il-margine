@@ -166,6 +166,19 @@ class MostAcesShadowTests(unittest.TestCase):
         self.assertEqual(row["bet_eligible"], "no")
         self.assertIn("LOW_COUNT_CONFIDENCE", row["eligibility_reason"])
 
+    def test_closing_quote_survives_empty_or_partial_history(self):
+        row = MODULE.registration_row(self.board(), self.capture())
+        closing = self.capture("2026-07-29T16:00:00Z")
+        closing["player1_odds"] = "1.70"
+        MODULE.update_closes([row], [closing])
+        original = row.copy()
+        for history in ([], [self.capture()], [self.capture("2026-07-29T15:55:00Z")]):
+            MODULE.update_closes([row], history)
+            self.assertEqual(row, original)
+        row["closing_ts_utc"] = row["registered_at_utc"]
+        MODULE.update_closes([row], [])
+        self.assertEqual(row["closing_ts_utc"], "")
+
     def test_later_prestart_capture_updates_close(self):
         row = MODULE.registration_row(self.board(), self.capture())
         self.assertIsNotNone(row)

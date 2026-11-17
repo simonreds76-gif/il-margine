@@ -306,6 +306,14 @@ def update_closes(ledger: list[dict[str, str]], history: list[dict[str, str]]) -
             captured = parse_datetime(capture.get("capture_ts"))
             if captured and registration < captured <= start:
                 candidates.append((captured, capture))
+        # Poll history can rotate or be temporarily unavailable. A complete,
+        # later pre-start close already recorded on this exact observation wins.
+        prior = parse_datetime(row.get("closing_ts_utc"))
+        if prior and registration < prior <= start and all(
+            (number(row.get(field)) or 0) > 1
+            for field in ("closing_player1_odds", "closing_draw_odds", "closing_player2_odds")
+        ) and all(captured < prior for captured, _ in candidates):
+            continue
         if not candidates:
             row["closing_player1_odds"] = ""
             row["closing_draw_odds"] = ""
