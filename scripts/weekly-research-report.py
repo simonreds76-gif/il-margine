@@ -1660,6 +1660,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_rate_trend": tennis_rate_trend,
         "tennis_full_refresh": tennis_full_refresh,
         "tennis_context_forward": tennis_context_forward,
+        "challenger_qualifying_source_summary": str((snapshot_sections or {}).get("challenger_qualifying_source", {}).get("weekly_summary") or "") if isinstance(snapshot_sections, dict) and snapshot_freshness["status"] in {"FRESH", "STALE"} else "",
         "tennis_hardcourt_scout": tennis_hardcourt_scout,
         "tennis_astrissimo": tennis_astrissimo,
         "model_review_watchlist": model_watchlist_summary(),
@@ -1985,6 +1986,8 @@ def render_report(payload: dict[str, Any]) -> str:
     lines.extend(["", match_shape_text(payload.get("tennis_match_shape") or {})])
     from frozen_paper_common import weekly_text as frozen_paper_text
     lines.extend(["", frozen_paper_text(payload.get("shots_strength_comparison") or {})])
+    if payload.get("challenger_qualifying_source_summary"):
+        lines.append(payload["challenger_qualifying_source_summary"])
     try:
         from tennis_most_aces_reference import weekly_text as most_aces_reference_text
         lines.append(most_aces_reference_text(payload.get("tennis_most_aces_reference") or {}))
@@ -2223,6 +2226,8 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     lines.append(match_shape_text(payload.get("tennis_match_shape") or {}))
     from frozen_paper_common import weekly_text as frozen_paper_text
     lines.append(frozen_paper_text(payload.get("shots_strength_comparison") or {}))
+    if payload.get("challenger_qualifying_source_summary"):
+        lines.append(payload["challenger_qualifying_source_summary"])
     try:
         from tennis_most_aces_reference import weekly_text as most_aces_reference_text
         lines.append(most_aces_reference_text(payload.get("tennis_most_aces_reference") or {}))
