@@ -6,6 +6,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone, date
 from pathlib import Path
 import ace_compass_engine as E
+from tennis_paper_walkover import consistent_walkover, csv_rows, result_rows
 
 ROOT=Path(__file__).resolve().parents[1]
 REL=Path('data/tennis-props/shadow/ace-compass-v1')
@@ -63,11 +64,24 @@ def verified_implementation(folder, registration, implementation):
     if registration['implementation'] == implementation:return registration
     amendment = readj(folder/'recorder-amendment-20261030.json', {})
     old = registration['implementation']
+    previous = amendment.get('after', {})
     if (amendment.get('reason') != 'exact_native_round_identity'
-            or amendment.get('before') != old or amendment.get('after') != implementation
+            or amendment.get('before') != old or set(previous) != set(old) or set(implementation) != set(old)
             or amendment.get('config_hash') != digest(CONFIG)
-            or any(old[n] != implementation[n] for n in old if n != 'tennis_ace_compass.py')):
+            or any(old[n] != previous[n] or old[n] != implementation[n]
+                   for n in old if n != 'tennis_ace_compass.py')):
         raise ValueError('frozen_implementation_changed')
+    if previous != implementation:
+        amendment_path = folder/'walkover-settlement-amendment-20261117.json'
+        fix = readj(amendment_path, {})
+        helpers = ('oncourt_nonplayed.py', 'tennis_paper_walkover.py')
+        if (fix.get('reason') != 'verified_native_walkover_settlement'
+                or fix.get('before') != previous or fix.get('after') != implementation
+                or fix.get('config_hash') != digest(CONFIG)
+                or fix.get('registration_sha256') != sha(folder/'registration.json')
+                or fix.get('prior_amendment_sha256') != sha(folder/'recorder-amendment-20261030.json')
+                or fix.get('helpers') != {n:sha(Path(__file__).with_name(n)) for n in helpers}):
+            raise ValueError('unregistered_settlement_implementation')
     return dict(registration, implementation=implementation)
 
 def native_round(board, today):
@@ -165,9 +179,9 @@ def settle(root,rows,outcomes,now):
     pending=[r for r in rows if r['id'] not in outcomes and stamp(r['row']['match_start_utc'])<now]
     if not pending:return
     tids={r['native']['tid'] for r in pending};games=defaultdict(list);stats=defaultdict(list)
-    for g in E.read(root/'data/oncourt/games_atp.csv'):
+    for g in result_rows(root/'data/oncourt'):
         if g['tour_id'] in tids:games[(g['tour_id'],g['round_id'],tuple(sorted([g['winner_id'],g['loser_id']])))].append(g)
-    for s in E.read(root/'data/oncourt/stat_atp.csv'):
+    for s in csv_rows(root/'data/oncourt/stat_atp.csv'):
         if s['tour_id'] in tids:stats[E.key(s)].append(s)
     for r in pending:
         n=r['native'];c=games.get((n['tid'],n['round'],tuple(sorted([n['pid'],n['opp']]))),[])
@@ -176,7 +190,15 @@ def settle(root,rows,outcomes,now):
         g=next(iter(unique.values()))
         if not r['registered_at'][:10]<=g['date']<=now.date().isoformat():continue
         text=g.get('result','').upper()
-        if any(v in text for v in ('RET','W/O','DEF','ABN')):out=dict(status='void',actual=None)
+        if g.get('status') == 'walkover':
+            wid, lid, tid, rid = E.key(g)
+            has_stats = bool(stats.get((wid,lid,tid,rid)) or stats.get((lid,wid,tid,rid)))
+            if not consistent_walkover(g, stamp(r['row']['match_start_utc']),
+                                       stamp(r['registered_at']), now, has_stats):
+                continue
+            out = dict(status='void', actual=None, reason='verified_native_walkover',
+                       source_file='nonplayed-results_atp.csv', source_result=g)
+        elif any(v in text for v in ('RET','W/O','DEF','ABN')):out=dict(status='void',actual=None)
         else:
             ss={digest(s):s for s in stats.get(E.key(g),[])}
             if len(ss)!=1:continue

@@ -286,7 +286,7 @@ def count(value):
 
 def outcome(game, stat, record):
     text = game.get('result', '').upper()
-    if any(s in text for s in ('W/O', 'WO')):
+    if game.get('status') == 'walkover' or any(s in text for s in ('W/O', 'WO')):
         return dict(status='void', completed=False, actual=None, actual_points=None, reason='walkover')
     p = 'w' if game['winner_id'] == record['native']['pid'] else 'l'
     actual = count(stat.get(p+'_ace')) if stat else None
@@ -319,8 +319,10 @@ def settle(root, rows, outcomes, now):
     tids = {r['native']['tid'] for r in pending}; games, stats = defaultdict(dict), defaultdict(dict)
     def key(r):
         return (r['tour_id'], r['round_id'], tuple(sorted([r['winner_id'],r['loser_id']])))
-    for filename, target in [('games_atp.csv', games), ('stat_atp.csv', stats)]:
-        for r in read_csv(root/'data/oncourt'/filename):
+    from tennis_paper_walkover import consistent_walkover, csv_rows, result_rows
+    directory = root/'data/oncourt'
+    for source, target in ((result_rows(directory), games), (csv_rows(directory/'stat_atp.csv'), stats)):
+        for r in source:
             if r['tour_id'] in tids:
                 target[key(r)][digest(r)] = r
     reasons = Counter()
@@ -332,6 +334,10 @@ def settle(root, rows, outcomes, now):
         g = gs[0]
         if not r['registered_at'][:10] <= g['date'] <= now.date().isoformat():
             reasons['ambiguous_result_timing']+=1; continue
+        if g.get('status') == 'walkover' and not consistent_walkover(
+                g, stamp(r['row']['match_start_utc']), stamp(r['registered_at']), now, bool(ss)):
+            reasons['conflicting_walkover_evidence'] += 1
+            continue
         s = ss[0] if ss else None
         if s and (s['winner_id'],s['loser_id']) != (g['winner_id'],g['loser_id']):
             reasons['stat_orientation_conflict']+=1; continue
