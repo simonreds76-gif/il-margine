@@ -26,6 +26,7 @@ import SampleSizeBadge from "@/components/SampleSizeBadge";
 import PublicRecordMetricGrid from "@/components/PublicRecordMetricGrid";
 import { normalizeBetCategory } from "@/lib/bet-category";
 import { formatMatchDate } from "@/lib/format";
+import { tipSelectionLabel } from "@/lib/tip-page-copy";
 import { publicTipPath } from "@/lib/tip-seo";
 
 type TennisTipsClientProps = {
@@ -367,8 +368,7 @@ export default function TennisTips({
                         </div>
                         <div className="tip-card-event"><TipPortraits portraits={pick.artwork} size="compact" /><span className="min-w-0 break-words">{pick.event}</span></div>
                         <div className="tip-card-selection">
-                          {pick.player && <span>{pick.player} · </span>}
-                          {pick.selection}
+                          {tipSelectionLabel(pick)}
                         </div>
                       </div>
                     </div>
@@ -467,8 +467,7 @@ export default function TennisTips({
                         </div>
                         <div className="tip-card-event"><span className="min-w-0 break-words">{result.event}</span></div>
                         <div className="tip-card-selection">
-                          {result.player && <span>{result.player} · </span>}
-                          {result.selection}
+                          {tipSelectionLabel(result)}
                         </div>
                       </div>
                       <ResultBadge status={result.status} size="sm" className="ml-3" />

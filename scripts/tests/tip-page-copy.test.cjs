@@ -28,7 +28,7 @@ test('tennis expands shorthand and long descriptions stay bounded', () => {
   const tennis = { ...bet, market: 'tennis', category: 'usopen', event: 'Sinner vs Alcaraz', selection: 'ML', player: 'Sinner' };
   const copy = buildTipPageCopy(tennis, [tennis], '13 September 2026');
   assert.match(copy.introduction, /US Open/);
-  assert.match(copy.introduction, /Sinner - Match winner/);
+  assert.match(copy.introduction, /Sinner Match winner/);
   assert.ok(buildTipPageCopy({ ...bet, event: 'Very long team name '.repeat(20) }, [bet], '12 September 2026').metaDescription.length <= 170);
 });
 test('break-even math is not presented as predicted probability; invalid prices are omitted', () => {
@@ -37,6 +37,13 @@ test('break-even math is not presented as predicted probability; invalid prices 
   assert.match(priceContext(2), /not our predicted chance/);
   for (const value of [0, 1, -3, NaN, Infinity]) assert.equal(priceContext(value), null);
 });
+test('tennis selections retain the signed line', () => {
+  const label = (player, selection) => mod.exports.tipSelectionLabel({ market: 'tennis', player, selection });
+  assert.equal(label('Martinez', '-3.5 Games'), 'Martinez -3.5 Games');
+  assert.equal(label('Donald', '+3.5 Games'), 'Donald +3.5 Games');
+  assert.equal(label(null, 'Over 22.5 Games'), 'Over 22.5 Games');
+});
+
 test('structured data cannot be terminated by a name containing script markup', () => {
   const input = { name: '</script><script>alert(1)</script>' };
   const serialized = serializeTipSchema(input);

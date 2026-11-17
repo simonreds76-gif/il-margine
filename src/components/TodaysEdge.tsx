@@ -8,6 +8,7 @@ import styles from "./TodaysEdge.module.css";
 import TrackedLink from "@/components/TrackedLink";
 import type { Bet, Bookmaker } from "@/lib/supabase";
 import { formatOdds, formatStake } from "@/lib/format";
+import { tipSelectionLabel } from "@/lib/tip-page-copy";
 import { publicTipPath } from "@/lib/tip-seo";
 import { track } from "@/lib/analytics";
 import TipPortraits from "@/components/TipPortraits";
@@ -175,7 +176,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
                   <TipPortraits portraits={pick.artwork} />
                   <div className={styles.pickText}>
                     <h3>{pick.event}</h3>
-                    <p className={styles.selection}>{pick.player ? `${pick.player.trim()} · ` : ""}{pick.selection}</p>
+                    <p className={styles.selection}>{pick.market === "tennis" ? tipSelectionLabel(pick) : <>{pick.player ? `${pick.player.trim()} · ` : ""}{pick.selection}</>}</p>
                   </div>
                 </div>
                 <div className={styles.priceRow}>

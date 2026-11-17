@@ -1,3 +1,4 @@
+import { tipSelectionLabel } from "./tip-page-copy";
 import { formatOdds, formatStake } from "./format";
 
 export type ShareTip = {
@@ -5,6 +6,7 @@ export type ShareTip = {
   player: string | null; selection: string; odds: number; stake: number; match_date: string;
 };
 export function shareSelection(bet: ShareTip): string {
+  if (bet.market === "tennis") return tipSelectionLabel(bet);
   const selection = bet.selection.trim().toUpperCase() === "ML" ? "Match winner" : bet.selection.trim();
   return bet.player ? `${bet.player} · ${selection}` : selection;
 }

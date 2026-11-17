@@ -4,8 +4,9 @@ type CopyBet = {
   player: string | null; selection: string; odds: number; status: string;
 };
 
-export function tipSelectionLabel(bet: Pick<CopyBet, "player" | "selection">): string {
+export function tipSelectionLabel(bet: Pick<CopyBet, "player" | "selection" | "market">): string {
   const selection = bet.selection.trim().toUpperCase() === "ML" ? "Match winner" : bet.selection.trim();
+  if (bet.market === "tennis") return [bet.player?.trim(), selection].filter(Boolean).join(" ");
   return bet.player ? `${bet.player} - ${selection}` : selection;
 }
 

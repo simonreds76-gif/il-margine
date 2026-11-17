@@ -32,10 +32,10 @@ export function resolveTennisPortrait(name, rows = [...merged.values()]) {
   if (parts.length < 2) return null;
   const queries = [parts];
   // Editors and feeds also use surname-first notation: Tsitsipas S.,
-  // Cerundolo F. and Cerundolo J.M. Preserve both orientations safely.
+  // Cerundolo J.M. and Donald Matthew. Require a unique identity across orders.
   for (let split = 1; split < parts.length; split++) {
     const tail = parts.slice(split);
-    if (tail.every(token => token.length === 1) || (tail.length === 1 && tail[0].length <= 3)) queries.push([...tail, ...parts.slice(0, split)]);
+    queries.push([...tail, ...parts.slice(0, split)]);
   }
   const candidates = rows.filter(row => queries.some(parts => {
     const full = words(row.name).split(' ');

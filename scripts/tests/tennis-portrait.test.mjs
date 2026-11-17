@@ -35,12 +35,23 @@ test('Challenger recovery is shared and does not borrow sibling portraits', () =
 
 test('known logos cannot return through recovered or old history artwork', () => {
   const bad = 'https://images.wimbledon.com/wide_nobg/atpp0e9.png';
-  assert.equal(portrait('Dominik Palan')?.src, null);
-  assert.equal(portrait('D. Palan')?.name, 'Dominik Palan');
+  const legacy = [{ name: 'Dominik Palan', src: bad }];
+  assert.equal(portrait('Dominik Palan', legacy)?.src, null);
+  assert.equal(portrait('D. Palan', legacy)?.name, 'Dominik Palan');
+  assert.notEqual(portrait('Dominik Palan')?.src, bad);
   assert.equal(portrait('Other Person', [{ name:'Other Person',src:bad }])?.src, null);
   const history={players:[{id:'palan',name:'Dominik Palan',portrait:bad},{id:'zhu',name:'Evan Zhu',portrait:null}],matches:[],asOf:'2026-11-15',through:'2026-11-14'};
   const fixture={captured_at:'2026-11-15T10:00:00Z',kickoff_iso:'2026-11-15T22:00:00Z',league:'Challenger',league_name:'Challenger Sydney',player1_name:'Dominik Palan',player2_name:'Evan Zhu'};
   const f=buildTennisMatchday([fixture],history,new Date('2026-11-15T11:00:00Z')).fixtures[0];
   assert.equal(f.players[0].portrait,null);
   assert.equal(history.players[0].portrait,bad, 'Historical source remains unchanged');
+});
+
+test('surname-first full names resolve when the player identity is unique', () => {
+  for (const name of ['Donald Matthew', 'Donald Matthew William', 'Matthew Donald', 'Donald M.']) {
+    assert.equal(portrait(name)?.src, '/players/tennis/matthew-william-donald.webp');
+  }
+  assert.equal(portrait('Donald Ewan'), null);
+  const ambiguous = [{ name: 'Matthew William Donald', src: 'one' }, { name: 'Matthew James Donald', src: null }];
+  assert.equal(portrait('Donald Matthew', ambiguous), null);
 });
