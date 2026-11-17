@@ -1,7 +1,23 @@
 {
-  "reviewed_at": "2026-11-12",
+  "reviewed_at": "2026-11-17",
   "scope": "Full match total corners, regulation 90 minutes plus stoppage; half-lines. Other scopes and integer/quarter lines retained but excluded from this forecast cohort.",
   "bookmakers": {
+    "Grosvenor": {
+      "url": "https://www.grosvenorcasinos.com/static/sportstermsandconditions-new",
+      "retrieved_date": "2026-11-17",
+      "effective_from_utc": "2026-11-17T19:47:04+00:00",
+      "summary": "B.1 and B.5: regulation including stoppage time; the corner must be taken. Undetermined abandoned totals require separate review.",
+      "automatic_result_scope": "Completed standard regulation matches only."
+    },
+    "Paddy Power": {
+      "url": "https://helpcenter.paddypower.com/app/answers/detail/a_id/10138/",
+      "exception_url": "https://helpcenter.paddypower.com/app/answers/detail/more-ways-to-win/",
+      "retrieved_date": "2026-11-17",
+      "effective_from_utc": "2026-11-17T19:47:04+00:00",
+      "summary": "Standard full-match totals use corners taken in regulation. Paddy also advertises a televised-match final-whistle exception for awarded, untaken corners. Abandoned special spreads have a separate determined-outcome rule.",
+      "settlement_policy": "verified_bookmaker_total",
+      "automatic_result_scope": "Capture both prices. Require a fixture-specific verified bookmaker count before grading completed matches; the ordinary match count alone cannot establish whether the televised exception applied."
+    },
     "Bet365": {
       "url": "https://help.bet365.com/s/en/sportsrules/soccer/corner-markets",
       "retrieved_date": "2026-11-12",
