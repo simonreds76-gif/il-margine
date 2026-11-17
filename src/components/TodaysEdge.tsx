@@ -125,7 +125,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
   };
 
   return (
-    <section aria-labelledby="todays-edge-heading" className={styles.edge}>
+    <section aria-labelledby="todays-edge-heading" className={`${styles.edge}${picks.length === 0 ? ` ${styles.quiet}` : ""}`}>
       <header className={styles.heading}>
         <div>
           <p className={styles.eyebrow}>Published selections</p>
@@ -181,7 +181,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
                 <div className={styles.priceRow}>
                   <div><small>Recorded odds</small><strong>{formatOdds(pick.odds)}</strong></div>
                   <div className={styles.stake}><small>Stake</small><strong>{formatStake(pick.stake)}<span>u</span></strong></div>
-                  <div className={styles.bookmaker}><BookmakerLogo bookmaker={pick.bookmaker} size="sm" noLink /></div>
+                  <div className={styles.bookmaker}><small>Bookmaker</small><BookmakerLogo bookmaker={pick.bookmaker} size="sm" noLink /></div>
                 </div>
                 <div className={styles.pickFooter}><time dateTime={pick.posted_at}>{publishedTime(pick.posted_at)}</time><span>View tip →</span></div>
               </TrackedLink>

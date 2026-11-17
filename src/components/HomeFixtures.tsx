@@ -11,11 +11,18 @@ import { homeLeagueLogos, tennisCompetition } from '@/lib/home-competition';
 import { londonDay, upcomingHomeFixtures, type HomeFixture, type HomeHistory, type HomeFixturesData } from '@/lib/home-fixtures';
 import './home-fixtures.css';
 
+// Presentation only: where each sport's research continues. Every destination already exists in the site navigation.
+const deeper: Record<'football' | 'tennis', [string, string][]> = {
+  football: [['/football-atlas', 'Club returns'], ['/manager-atlas', 'Manager returns'], ['/fair-odds-lab/aerial', 'Air Control'], ['/penalty-takers', 'Penalty takers']],
+  tennis: [['/return-atlas', 'Player returns'], ['/tennis-matchup', 'Matchup Lab']],
+};
+
 function Portrait({ src, person = false }: { src: string | null; person?: boolean }) {
   return <FixturePhoto src={src} className={`hf-portrait ${person ? 'hf-person' : ''}`} size={48} fallback={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d={person ? 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 22v-4c0-6 16-6 16 0v4' : 'M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z'} /></svg>} />;
 }
+// The shared record component in its existing compact form. Counts, wording and coverage text all come from it.
 function Record({ history, names, football = false }: { history: HomeHistory; names: string[]; football?: boolean }) {
-  return <H2HRecord results={history.results} meetings={history.meetings} names={names} coverageLabel={football ? 'top-five leagues only' : undefined} />;
+  return <H2HRecord compact results={history.results} meetings={history.meetings} names={names} coverageLabel={football ? 'top-five leagues only' : undefined} />;
 }
 function Fixture({ fixture: f, tennis, now }: { fixture: HomeFixture; tennis: boolean; now: number }) {
   const date = new Date(f.start);
@@ -23,16 +30,16 @@ function Fixture({ fixture: f, tennis, now }: { fixture: HomeFixture; tennis: bo
   const time = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit' }).format(date);
   const competition = tennis ? tennisCompetition(f.competition) : { label: f.competition, country: null };
   const logo = tennis ? '/icons/markets/atp-logo-small-v1.webp' : homeLeagueLogos[f.competition];
-  return <article className={`hf-card ${tennis ? "hf-tennis" : ""}`}>
-    <div className="hf-meta"><span className="hf-competition">
+  return <article className={`hx-card ${tennis ? 'hx-tennis' : 'hx-football'}`}>
+    <div className="hx-meta"><span className="hx-competition">
       {logo && <Image className={`hf-competition-logo ${tennis ? 'hf-atp-logo' : ''}`} src={logo} width={tennis ? 42 : 28} height={28} alt={tennis ? 'ATP' : ''} unoptimized />}
       <span className="hf-competition-name">{competition.label}</span>
       {competition.country && <Image className="hf-venue-flag" src={`/flags/${competition.country.code}.png`} width={20} height={14} alt={competition.country.name} title={`Played in ${competition.country.name}`} unoptimized />}
     </span><time dateTime={f.start}>{day} · {time}</time></div>
-    <div className="hf-opponents">{f.sides.map((s, i) => <div className="hf-side" key={`${f.id}-${i}`}><Portrait key={s.image} src={s.image} person={tennis} /><h4>{s.name}</h4></div>)}<span className="hf-versus" aria-hidden="true">vs</span></div>
-    <div className="hf-history"><span className="hf-kicker">{tennis ? 'Player' : 'Club'} head to head</span><Record football={!tennis} history={f.history} names={f.sides.map(s => s.name)} /></div>
-    {f.managers && <div className="hf-managers"><span className="hf-kicker">Manager head to head</span><div className="hf-manager-names">{f.managers.sides.map((s, i) => <span key={i}><Portrait key={s.image} src={s.image} person /><span>{s.name}</span></span>)}</div><Record football history={f.managers.history} names={f.managers.sides.map(s => s.name)} /></div>}
-    <div className="hf-actions"><Link prefetch={false} href={f.href ?? '/tennis-matchday'} aria-label={`${tennis ? 'Compare' : 'Club history for'} ${f.sides.map(s => s.name).join(' and ')}`}><ToolEmblem name={tennis ? 'matchup' : 'football'} />{tennis ? f.href ? 'Compare players' : 'View tennis fixtures' : 'Club history'}<span aria-hidden="true">↗</span></Link>{f.managers && <Link prefetch={false} href={f.managers.href} aria-label={`Manager history for ${f.sides.map(s => s.name).join(' and ')}`}><ToolEmblem name="managers" />Manager history<span aria-hidden="true">↗</span></Link>}</div>
+    <div className="hx-sides">{f.sides.map((s, i) => <div className="hx-side" key={`${f.id}-${i}`}><Portrait key={s.image} src={s.image} person={tennis} /><h4>{s.name}</h4></div>)}<span className="hx-versus" aria-hidden="true">vs</span></div>
+    <div className="hx-record"><span className="hx-kicker">{tennis ? 'Player' : 'Club'} head to head</span><Record football={!tennis} history={f.history} names={f.sides.map(s => s.name)} /></div>
+    {f.managers && <div className="hx-record hx-managers"><span className="hx-kicker">Manager head to head</span><div className="hx-manager-names">{f.managers.sides.map((s, i) => <span key={i}><Portrait key={s.image} src={s.image} person /><span>{s.name}</span></span>)}</div><Record football history={f.managers.history} names={f.managers.sides.map(s => s.name)} /></div>}
+    <div className="hx-actions"><Link prefetch={false} href={f.href ?? '/tennis-matchday'} aria-label={`${tennis ? 'Compare' : 'Club history for'} ${f.sides.map(s => s.name).join(' and ')}`}><ToolEmblem name={tennis ? 'matchup' : 'football'} />{tennis ? f.href ? 'Compare players' : 'View tennis fixtures' : 'Club history'}<span aria-hidden="true">↗</span></Link>{f.managers && <Link prefetch={false} href={f.managers.href} aria-label={`Manager history for ${f.sides.map(s => s.name).join(' and ')}`}><ToolEmblem name="managers" />Manager history<span aria-hidden="true">↗</span></Link>}</div>
   </article>;
 }
 export default function HomeFixtures() {
@@ -46,22 +53,24 @@ export default function HomeFixtures() {
     fetch('/api/home-fixtures', { signal: controller.signal }).then(r => { if (!r.ok) throw new Error('Unavailable'); return r.json(); }).then(setData).catch(e => { if (e.name !== 'AbortError') setFailed(true); });
     return () => { controller.abort(); clearTimeout(initial); clearInterval(clock); };
   }, []);
-  return <section className="hf-section" id="matchups" aria-labelledby="hf-title"><div className="hf-container">
-    <div className="hf-heading"><div><p className="hf-eyebrow">Your next match starts here</p><h2 id="hf-title">Who has the history?</h2><p>Open a matchup to explore previous meetings, player profiles and historical betting returns.</p></div><Link prefetch={false} href="/tools">All tools <span aria-hidden="true">↗</span></Link></div>
+  return <section className="hf-section hx-section" id="matchups" aria-labelledby="hf-title"><div className="hf-container">
+    <div className="home-head"><div><p className="hf-eyebrow">Your next match starts here</p><h2 id="hf-title">Who has the history?</h2><p>Open a matchup to explore previous meetings, player profiles and historical betting returns.</p></div><Link prefetch={false} href="/tools">All tools <span aria-hidden="true">↗</span></Link></div>
+    <p className="hx-scope">Records cover meetings in our archive, across all venues. Open the matchup for dates, price coverage and returns.</p>
     <nav className="hf-jump" aria-label="Choose a sport"><a href="#home-football">Football ↓</a><a href="#home-tennis">Tennis ↓</a></nav>
-    <div className="hf-sports">{(['football', 'tennis'] as const).map(sport => {
+    <div className="hx-sports">{(['football', 'tennis'] as const).map(sport => {
       const feed = data?.[sport];
       const fixtures = feed && now ? upcomingHomeFixtures(sport === 'tennis' ? { ...feed, fixtures: feed.fixtures.filter(f => f.tour === 'ATP') } : feed, now) : [];
       const loading = !failed && (!data || !now);
       const stale = feed?.expiresAt && now && Date.parse(feed.expiresAt) <= now;
       const title = fixtures.length && now && londonDay(fixtures[0].start) === londonDay(now) ? `Today's ${sport}` : sport === 'football' ? 'Next league fixtures' : 'Next tennis matches';
       const href = sport === 'football' ? '/football-atlas/fixtures' : '/tennis-matchday';
-      return <div className="hf-sport" id={`home-${sport}`} key={sport}><div className="hf-sport-heading"><ToolEmblem name={sport === 'football' ? 'matchday' : 'tennis-matchday'} /><div><h3>{title}</h3><span>{sport === 'football' ? 'Five major domestic leagues' : 'ATP player meetings'}</span></div><Link prefetch={false} href={href} aria-label={`All ${sport} fixtures`}>View all ↗</Link></div>
+      return <div className="hx-sport" id={`home-${sport}`} key={sport}><div className="hx-sport-head"><ToolEmblem name={sport === 'football' ? 'matchday' : 'tennis-matchday'} /><div><h3>{title}</h3><span>{sport === 'football' ? 'Five major domestic leagues' : 'ATP player meetings'}</span></div><Link prefetch={false} href={href} aria-label={`All ${sport} fixtures`}>View all ↗</Link></div>
 
-        <div className="hf-cards" aria-busy={loading}>{loading ? <><div className="hf-empty hf-skeleton" role="status">Loading upcoming fixtures…</div><div className="hf-empty hf-skeleton" aria-hidden="true" /></> : fixtures.length ? fixtures.map(f => <Fixture key={f.id} fixture={f} tennis={sport === 'tennis'} now={now!} />) : <div className="hf-empty"><ToolEmblem name={sport} /><h4>{failed || stale || !feed?.checkedAt ? 'The schedule needs a refresh' : 'No upcoming matches in this snapshot'}</h4><p>Previous meetings are still available in Return Atlas.</p><Link prefetch={false} href={sport === 'football' ? '/football-atlas' : '/return-atlas'}>Explore historical returns ↗</Link></div>}</div>
-        {sport === 'football' && <p className="hf-coverage">League history since 2012/13. {FOOTBALL_ARCHIVE_DETAIL} These are not all-time H2H records.</p>}
-        {feed?.checkedAt && <p className="hf-freshness">Updated {new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(feed.checkedAt))} · UK times</p>}
+        <div className="hx-cards" aria-busy={loading}>{loading ? <><div className="hx-empty hx-skeleton" role="status">Loading upcoming fixtures…</div><div className="hx-empty hx-skeleton" aria-hidden="true" /></> : fixtures.length ? fixtures.map(f => <Fixture key={f.id} fixture={f} tennis={sport === 'tennis'} now={now!} />) : <div className="hx-empty"><ToolEmblem name={sport} /><h4>{failed || stale || !feed?.checkedAt ? 'The schedule needs a refresh' : 'No upcoming matches in this snapshot'}</h4><p>Previous meetings are still available in Return Atlas.</p><Link prefetch={false} href={sport === 'football' ? '/football-atlas' : '/return-atlas'}>Explore historical returns ↗</Link></div>}</div>
+        <nav className="hx-more" aria-label={`More ${sport} research`}><span>Go deeper</span>{deeper[sport].map(([to, label]) => <Link prefetch={false} href={to} key={to}>{label}</Link>)}</nav>
+        {sport === 'football' && <p className="hx-note">League history since 2012/13. {FOOTBALL_ARCHIVE_DETAIL} These are not all-time H2H records.</p>}
+        {feed?.checkedAt && <p className="hx-note">Updated {new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(feed.checkedAt))} · UK times</p>}
       </div>;
-    })}</div><p className="hf-coverage">Records cover meetings in our archive, across all venues. Open the matchup for dates, price coverage and returns.</p>
+    })}</div>
   </div></section>;
 }

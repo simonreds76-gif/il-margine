@@ -12,7 +12,7 @@ import ResultBadge from "@/components/ResultBadge";
 import TodaysEdge from "@/components/TodaysEdge";
 import ToolEmblem, { emblemForHref } from "@/components/ToolEmblem";
 import "./home-discovery.css";
-import HomePerformanceRecord from "@/components/HomePerformanceRecord";
+import HomePerformanceRecord, { formatSigned } from "@/components/HomePerformanceRecord";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import type { MonthRow } from "@/components/MonthlyBreakdown";
@@ -31,6 +31,36 @@ type HomepageClientProps = {
   initialPendingBets?: HomepageBet[];
   initialLast7?: { total: number; count: number } | null;
 };
+
+// Presentation only: the research desk, grouped by what a visitor is looking for. Every destination already
+// exists in the site navigation or footer. The six tools listed before keep their titles and descriptions.
+const toolGroups: { title: string; links: [string, string, string][] }[] = [
+  { title: "Football", links: [
+    ["/football-atlas/fixtures", "Football Matchday", "Upcoming fixtures with club and manager head to head."],
+    ["/football-atlas", "Football Return Atlas", "Club returns by season, venue and price."],
+    ["/manager-atlas", "Manager Return Atlas", "Follow managers across clubs and meetings."],
+    ["/fair-odds-lab/aerial", "Air Control", "Lineup height, headers and delivery."],
+    ["/fair-odds-lab", "Fair Odds Lab", "Compare goalscorer prices and lineups."],
+    ["/penalty-takers", "Club penalty takers", "First choices, backups and recent penalty history."],
+    ["/penalty-news", "Penalty News", "News on penalty takers."],
+  ] },
+  { title: "Tennis", links: [
+    ["/tennis-matchday", "Tennis Matchday", "Daily fixtures and player head to head."],
+    ["/tennis-matchup", "Tennis Matchup Lab", "Serve, return and head to head profiles."],
+    ["/return-atlas", "Tennis Return Atlas", "Player returns at the recorded match odds."],
+  ] },
+  { title: "Tips and record", links: [
+    ["/player-props", "Football player props", "Published football selections and results."],
+    ["/tennis-tips", "Tennis tips", "Published tennis selections and results."],
+    ["/track-record", "Track record", "The full public record of our selections."],
+  ] },
+  { title: "Prices and guides", links: [
+    ["/bookmakers", "Mind the Margin", "Bookmaker margins compared."],
+    ["/calculator", "Betting calculators", "Returns, margin and staking calculators."],
+    ["/resources", "Betting guides", "Guides to betting markets and rules."],
+    ["/the-edge", "Our methodology", "How we build and record selections."],
+  ] },
+];
 
 export default function HomepageClient({
   initialMonthly,
@@ -115,23 +145,31 @@ export default function HomepageClient({
 
   const displayStats = combinedStats ?? getBaselineDisplayStats();
   return (
-    <div className="min-h-screen bg-[#0f1117] text-slate-100">
+    <div className="home-page min-h-screen bg-[#0f1117] text-slate-100">
       <main id="main-content">
 
-      <section className="home-hero border-b border-slate-800/70 py-7 sm:py-10">
-        <div className="home-lead hf-container">
-          <div className="home-lead-intro">
+      <section className="home-lead-band">
+        <div className="home-lead-grid hf-container">
+          <div className="home-intro">
             <p className="hf-eyebrow">Il Margine · Football &amp; tennis</p>
             <h1>Data driven betting.<br /><span>Tools for sharper decisions.</span></h1>
-            <p className="home-lead-copy">Football and tennis models, published selections and free research tools. Compare player statistics, explore club and manager head to head records, and see how past bets performed at the recorded odds.</p>
+            <p className="home-intro-copy">Football and tennis models, published selections and free research tools. Compare player statistics, explore club and manager head to head records, and see how past bets performed at the recorded odds.</p>
+            <nav className="home-routes" aria-label="Start here">
+              <a href="#home-football"><ToolEmblem name="matchday" /><span><strong>Football matches</strong><small>Club and manager head to head</small></span></a>
+              <a href="#home-tennis"><ToolEmblem name="tennis-matchday" /><span><strong>Tennis matches</strong><small>Player head to head</small></span></a>
+              <a href="#record"><ToolEmblem name="record" /><span><strong>Public record</strong><small>{formatSigned(displayStats.overall.roi, 1)}% ROI · {displayStats.overall.total_bets.toLocaleString('en-GB')} settled bets{recordStatus === "unavailable" ? " · may exclude recent results" : recordStatus === "historical" ? " · earlier results only" : ""}</small></span></a>
+              <a href="#tools"><ToolEmblem name="tools" /><span><strong>All tools</strong><small>Returns, penalties, prices, guides</small></span></a>
+            </nav>
           </div>
           <div className="home-lead-picks"><TodaysEdge picks={pendingBets} lastSettled={recentBets[0] ?? null} last7Profit={last7DaysProfit} /></div>
-          <div className="home-lead-record">
-            <HomePerformanceRecord stats={displayStats} status={recordStatus} />
-          </div>
         </div>
       </section>
       <HomeFixtures />
+      <section className="home-record-band" id="record">
+        <div className="hf-container">
+          <HomePerformanceRecord stats={displayStats} status={recordStatus} />
+        </div>
+      </section>
       <MonthlyBreakdownSection scope="combined" initialPayload={initialMonthly} bySport={initialMonthlyBySport} cards />
       {recentBets.length > 0 ? (
         <section className="border-b border-slate-800/30 bg-[#0b0e13] py-9 md:py-12">
@@ -206,17 +244,9 @@ export default function HomepageClient({
       ) : null}
 
 
-      <section className="site-section" id="tools">
-        <div className="hf-container"><div className="hf-heading"><div><p className="hf-eyebrow">Go deeper</p><h2>Your research desk.</h2><p>Choose the question. Open the tool.</p></div><Link prefetch={false} href="/tools">All tools ↗</Link></div>
-          <div className="home-compact-directory">{[
-            ["/football-atlas", "Football Return Atlas", "Club returns by season, venue and price."],
-            ["/manager-atlas", "Manager Return Atlas", "Follow managers across clubs and meetings."],
-            ["/return-atlas", "Tennis Return Atlas", "Player returns at the recorded match odds."],
-            ["/tennis-matchup", "Tennis Matchup Lab", "Serve, return and head to head profiles."],
-            ["/fair-odds-lab", "Fair Odds Lab", "Compare goalscorer prices and lineups."],
-            ["/penalty-takers", "Club penalty takers", "First choices, backups and recent penalty history."],
-          ].map(([href,title,copy]) => <Link prefetch={false} href={href} key={href}><ToolEmblem name={emblemForHref(href)} /><div><h3>{title}</h3><p>{copy}</p></div><span aria-hidden="true">↗</span></Link>)}</div>
-          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-400"><Link href="/resources" className="inline-flex min-h-11 items-center">Betting guides ↗</Link><Link href="/the-edge" className="inline-flex min-h-11 items-center">Our methodology ↗</Link></div>
+      <section className="home-tools" id="tools">
+        <div className="hf-container"><div className="home-head"><div><p className="hf-eyebrow">Go deeper</p><h2>Your research desk.</h2><p>Choose the question. Open the tool.</p></div><Link prefetch={false} href="/tools">All tools ↗</Link></div>
+          <div className="home-tool-groups">{toolGroups.map(group => <div className="home-tool-group" key={group.title}><h3>{group.title}</h3><ul>{group.links.map(([href, title, copy]) => <li key={href}><Link prefetch={false} href={href}><ToolEmblem name={emblemForHref(href)} /><span><strong>{title}</strong><small>{copy}</small></span><span className="home-tool-arrow" aria-hidden="true">↗</span></Link></li>)}</ul></div>)}</div>
         </div>
       </section>
       </main>

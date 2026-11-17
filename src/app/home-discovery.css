@@ -1,3 +1,4 @@
+/* ── Existing rules, kept as they were ────────────────────────────────────────────────────── */
 .public-site .home-market-art {
   position: relative;
   display: flex;
@@ -50,4 +51,187 @@
 @media (max-width: 420px) {
   .public-site .home-approach-card { grid-template-columns: 60px minmax(0, 1fr); gap: 12px; padding: 20px 16px; }
   .public-site .home-approach-art .tool-emblem { width: 60px; height: 60px; }
+}
+
+/*
+ * ── Homepage presentation. Fable, 17 Nov 2026. PREVIEW. ────────────────────────────────────
+ * Everything below is scoped to .home-page, the root element of HomepageClient, so nothing reaches another
+ * page. Rules that are not tied to a new class are further limited to the page's own sections, so the shared
+ * footer is untouched. home-fixtures.css is shared with the monthly record and is not edited: the fixture
+ * cards use new hx- classes defined here, and keep the few shared hf- classes they still need.
+ * Family: slate surfaces, hairline rules, 10–14px corners, mint accent, the page's inherited font.
+ * Side colours (mint first, blue second) identify opponents only; names and position say the same thing.
+ */
+.home-page {
+  --home-line: #2b3c46; --home-rule: #24333f; --home-surface: #121c24; --home-cell: #122029;
+  --home-inset: #0a141d; --home-mint: #8ce5bd; --home-muted: #a4b5c3;
+}
+.home-page :is(.home-lead-band, .hx-section, .home-tools) :is(a, button):focus-visible { outline: 2px solid var(--home-mint); outline-offset: 3px; }
+.home-page :is(.home-lead-band, .hx-section, .home-tools) .tool-emblem :is(svg, img) { width: 100%; height: 100%; }
+
+/* ── 1. Lead: who we are, where to start, and today's published selections ────────────────── */
+.home-page .home-lead-band { padding: 28px 0 32px; border-bottom: 1px solid #263139; background: radial-gradient(ellipse at 0 0, #14272080, transparent 60%), #0f1117; }
+.home-page .home-lead-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 24px 40px; align-items: start; }
+.home-page .home-intro, .home-page .home-lead-picks { min-width: 0; }
+/*
+ * Render fix. The shared home-fixtures.css still carries the old hero's placement for .home-lead-picks
+ * (grid-column: 2; grid-row: 1 / 3). On a one-column phone grid that forced a second, implicit column and
+ * laid the picks over the intro. Both items now take their place from document order at every width:
+ * intro then picks, side by side on a wide screen and stacked on a phone.
+ */
+.home-page .home-lead-grid > .home-intro,
+.home-page .home-lead-grid > .home-lead-picks { grid-column: auto; grid-row: auto; }
+.home-page .home-intro h1 { font-size: 36px; font-weight: 700; line-height: 1.12; letter-spacing: -.045em; }
+.home-page .home-intro h1 > span { color: #85e3ba; }
+.home-page .home-intro-copy { max-width: 470px; margin-top: 12px; color: #b6c5d0; font-size: 15px; line-height: 1.65; }
+.home-page .home-routes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; max-width: 520px; margin-top: 18px; }
+.home-page .home-routes a {
+  display: flex; align-items: center; gap: 10px; min-width: 0; min-height: 56px; padding: 8px 12px;
+  border: 1px solid var(--home-line); border-radius: 12px; background: var(--home-surface); color: #d9e5eb; text-decoration: none;
+}
+.home-page .home-routes a:hover { border-color: var(--home-mint); background: #18262f; }
+.home-page .home-routes a > span:last-child { min-width: 0; }
+.home-page .home-routes .tool-emblem { flex: 0 0 30px; width: 30px; height: 30px; margin: 0; }
+.home-page .home-routes strong { display: block; font-size: 13px; font-weight: 650; line-height: 1.3; }
+.home-page .home-routes small { display: block; margin-top: 2px; color: var(--home-muted); font-size: 11px; line-height: 1.4; font-variant-numeric: tabular-nums; }
+
+/* ── 2. Shared section heading ────────────────────────────────────────────────────────────── */
+.home-page .home-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 20px; margin-bottom: 12px; }
+.home-page .home-head > div { min-width: 0; }
+.home-page .home-head h2 { font-size: 26px; font-weight: 750; line-height: 1.2; letter-spacing: -.035em; }
+.home-page .home-head p:not(.hf-eyebrow) { max-width: 620px; margin-top: 6px; color: #a6b4c3; font-size: 14px; line-height: 1.55; }
+.home-page .home-head > a { display: inline-flex; align-items: center; gap: 6px; flex: none; min-height: 44px; color: #b2f5d8; font-size: 13px; font-weight: 650; }
+.home-page .home-head > a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+/* ── 3. Matches ───────────────────────────────────────────────────────────────────────────── */
+.home-page .hx-section { padding: 32px 0 36px; }
+.home-page .hx-scope {
+  margin: 0 0 16px; padding: 8px 12px; border-left: 3px solid #57d196; border-radius: 0 8px 8px 0;
+  background: var(--home-cell); color: #c3d4dc; font-size: 12px; line-height: 1.55;
+}
+.home-page .hx-sports { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+.home-page .hx-sport { min-width: 0; scroll-margin-top: 100px; }
+.home-page .hx-sport-head { display: flex; align-items: center; gap: 10px; min-height: 48px; margin-bottom: 10px; }
+.home-page .hx-sport-head > .tool-emblem { flex: 0 0 34px; width: 34px; height: 34px; }
+.home-page .hx-sport-head > div { min-width: 0; }
+.home-page .hx-sport-head h3 { font-size: 17px; font-weight: 700; line-height: 1.25; }
+.home-page .hx-sport-head > div > span { color: var(--home-muted); font-size: 12px; }
+.home-page .hx-sport-head > a {
+  display: inline-flex; align-items: center; flex: none; min-height: 44px; margin-left: auto; padding: 0 12px;
+  border: 1px solid var(--home-line); border-radius: 10px; color: #b2f5d8; font-size: 12px; font-weight: 650; white-space: nowrap;
+}
+.home-page .hx-sport-head > a:hover { border-color: var(--home-mint); }
+
+.home-page .hx-cards { display: grid; gap: 10px; }
+.home-page .hx-card { min-width: 0; overflow: hidden; border: 1px solid var(--home-line); border-radius: 14px; background: var(--home-surface); }
+.home-page .hx-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; padding: 10px 14px; border-bottom: 1px solid var(--home-rule); }
+.home-page .hx-competition { display: flex; align-items: center; gap: 8px; min-width: 0; color: #d9e5ec; font-size: 12px; }
+/* When it is played is the first thing a visitor looks for. */
+.home-page .hx-meta time { margin-left: auto; color: #e7fff4; font-size: 13px; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.home-page .hx-sides { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 10px; padding: 12px 14px; }
+.home-page .hx-side { display: flex; align-items: center; gap: 10px; min-width: 0; grid-row: 1; }
+.home-page .hx-side:nth-child(1) { grid-column: 1; }
+.home-page .hx-side:nth-child(2) { grid-column: 3; flex-direction: row-reverse; text-align: right; }
+.home-page .hx-side h4 { min-width: 0; font-size: 15px; font-weight: 700; line-height: 1.3; overflow-wrap: anywhere; }
+.home-page .hx-versus { grid-column: 2; grid-row: 1; color: #8fa9b8; font-size: 11px; }
+.home-page .hx-sides .hf-portrait { flex: 0 0 42px; width: 42px; height: 42px; }
+.home-page .hx-side:nth-child(1) .hf-portrait, .home-page .hx-manager-names > span:first-child .hf-portrait { border-color: #a5e7ce70; }
+.home-page .hx-side:nth-child(2) .hf-portrait, .home-page .hx-manager-names > span:last-child .hf-portrait { border-color: #a9cdf570; }
+
+.home-page .hx-record { padding: 10px 14px 12px; border-top: 1px solid var(--home-rule); }
+.home-page .hx-kicker { display: block; color: #9cb8c9; font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; }
+/* The shared record's compact form uses 9–10px labels. On the homepage they are raised to 11px. */
+.home-page .hx-record dl dt, .home-page .hx-record dl dt span + span { font-size: 11px; }
+.home-page .hx-manager-names { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; }
+.home-page .hx-manager-names > span { display: flex; align-items: center; gap: 8px; min-width: 0; max-width: 48%; color: #c3d4dc; font-size: 13px; text-align: left; }
+.home-page .hx-manager-names > span:last-child { flex-direction: row-reverse; text-align: right; }
+.home-page .hx-manager-names > span > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+.home-page .hx-manager-names .hf-portrait { flex: 0 0 32px; width: 32px; height: 32px; }
+.home-page .hx-manager-names .hf-portrait svg { width: 17px; height: 17px; }
+
+.home-page .hx-actions { display: flex; border-top: 1px solid var(--home-rule); background: var(--home-inset); }
+.home-page .hx-actions > a { display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; min-width: 0; min-height: 48px; padding: 6px 10px; color: #b2f5d8; font-size: 13px; font-weight: 650; }
+.home-page .hx-actions > a + a { border-left: 1px solid var(--home-rule); }
+.home-page .hx-actions > a:hover { background: #18262f; }
+.home-page .hx-section .hx-actions > a:focus-visible { outline-offset: -3px; }
+.home-page .hx-actions .tool-emblem { flex: 0 0 22px; width: 22px; height: 22px; }
+
+.home-page .hx-empty {
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 8px; min-height: 120px; padding: 18px;
+  border: 1px dashed #3a4b53; border-radius: 14px; color: var(--home-muted); font-size: 13px;
+}
+.home-page .hx-empty > .tool-emblem { width: 36px; height: 36px; }
+.home-page .hx-empty h4 { color: #d9e7e8; font-size: 16px; font-weight: 650; }
+.home-page .hx-empty a { display: inline-flex; align-items: center; min-height: 44px; color: #b2f5d8; font-weight: 650; }
+.home-page .hx-skeleton { min-height: 200px; }
+
+.home-page .hx-more { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+.home-page .hx-more > span { margin-right: 4px; color: var(--home-muted); font-size: 12px; }
+.home-page .hx-more a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px;
+  border: 1px solid var(--home-line); border-radius: 10px; background: var(--home-surface); color: #d9e5eb; font-size: 12px; font-weight: 650;
+}
+.home-page .hx-more a:hover { border-color: var(--home-mint); }
+.home-page .hx-note { margin-top: 10px; color: #9fb0bd; font-size: 12px; line-height: 1.6; }
+
+/* ── 4. Public record: the headline card sits directly above the monthly detail ───────────── */
+.home-page .home-record-band { padding: 32px 0 0; scroll-margin-top: 90px; }
+
+/* ── 5. Research desk ─────────────────────────────────────────────────────────────────────── */
+.home-page .home-tools { padding: 36px 0 44px; scroll-margin-top: 90px; }
+.home-page .home-tool-groups { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; align-items: start; }
+.home-page .home-tool-group { min-width: 0; }
+.home-page .home-tool-group h3 { margin-bottom: 8px; color: var(--home-muted); font-size: 11px; font-weight: 650; letter-spacing: .12em; text-transform: uppercase; }
+.home-page .home-tool-group ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.home-page .home-tool-group li { min-width: 0; }
+.home-page .home-tool-group a {
+  display: flex; align-items: center; gap: 10px; height: 100%; min-height: 56px; padding: 8px 10px;
+  border: 1px solid var(--home-line); border-radius: 12px; background: var(--home-surface); color: #d9e5eb; text-decoration: none;
+}
+.home-page .home-tool-group a:hover { border-color: var(--home-mint); background: #18262f; }
+.home-page .home-tool-group a > span:nth-child(2) { flex: 1; min-width: 0; }
+.home-page .home-tool-group .tool-emblem { flex: 0 0 30px; width: 30px; height: 30px; margin: 0; }
+.home-page .home-tool-group strong { display: block; font-size: 13px; font-weight: 650; line-height: 1.3; }
+.home-page .home-tool-group small { display: block; margin-top: 2px; color: var(--home-muted); font-size: 11px; line-height: 1.4; }
+.home-page .home-tool-arrow { flex: none; color: var(--home-mint); }
+
+/* ── 6. Narrower screens ──────────────────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .home-page .home-tool-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .home-page .home-lead-band { padding: 18px 0 22px; }
+  .home-page .home-lead-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .home-page .home-intro h1 { font-size: 28px; }
+  .home-page .home-intro-copy { margin-top: 8px; font-size: 14px; line-height: 1.55; }
+  .home-page .home-routes { max-width: none; margin-top: 14px; }
+  .home-page .home-head h2 { font-size: 22px; }
+  .home-page .home-head p:not(.hf-eyebrow) { font-size: 13px; }
+  .home-page .hx-section { padding: 24px 0 28px; }
+  /* As on production, the matches heading drops its "All tools" link on a phone; the research desk keeps its own. */
+  .home-page .hx-section .home-head > a { display: none; }
+  .home-page .hx-sports { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .home-page .home-record-band { padding-top: 24px; }
+  .home-page .home-tools { padding: 28px 0 36px; }
+  .home-page .home-tool-groups { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  /* Two tools per row: the whole desk stays within a couple of screens. */
+  .home-page .home-tool-group ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-page .home-tool-group a { align-items: flex-start; }
+  .home-page .home-tool-arrow { display: none; }
+}
+@media (max-width: 400px) {
+  .home-page .hx-meta, .home-page .hx-sides, .home-page .hx-record { padding-inline: 12px; }
+  .home-page .hx-sides { gap: 6px; }
+  .home-page .hx-sides .hf-portrait { flex-basis: 36px; width: 36px; height: 36px; }
+  .home-page .hx-side { gap: 8px; }
+  .home-page .hx-side h4 { font-size: 14px; }
+  .home-page .hx-actions > a { font-size: 12px; }
+}
+@media (max-width: 359px) {
+  .home-page .home-routes { grid-template-columns: minmax(0, 1fr); }
+  .home-page .home-tool-group ul { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .home-page :is(.home-routes a, .home-tool-group a, .hx-actions > a, .hx-more a, .hx-sport-head > a) { transition: border-color .15s, background-color .15s; }
 }

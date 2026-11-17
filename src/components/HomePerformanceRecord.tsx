@@ -12,7 +12,9 @@ const scopes = [
   { key: 'props', label: 'Football', icon: 'football' },
   { key: 'tennis', label: 'Tennis', icon: 'tennis' },
 ] as const;
-const signed = (value: number, digits: number) => `${value > 0 ? '+' : value < 0 ? '−' : ''}${Math.abs(value).toFixed(digits)}`;
+// Exported so the homepage's opening record link prints the same figure with the same sign rules.
+export const formatSigned = (value: number, digits: number) => `${value > 0 ? '+' : value < 0 ? '−' : ''}${Math.abs(value).toFixed(digits)}`;
+const signed = formatSigned;
 const tone = (value: number) => value > 0 ? 'hpr-positive' : value < 0 ? 'hpr-negative' : '';
 
 export default function HomePerformanceRecord({ stats, status }: {
@@ -27,14 +29,16 @@ export default function HomePerformanceRecord({ stats, status }: {
   const zero = position(0);
 
   return <section className="hpr-card" aria-labelledby="hpr-title">
-    <div className="hpr-heading"><h2 id="hpr-title">Public performance record</h2><Link href="/track-record" prefetch={false} aria-label="Open the full performance record">↗</Link></div>
-    <div className="hpr-switch" role="group" aria-label="Headline record sport">
-      {scopes.map(item => <button key={item.key} type="button" aria-pressed={scope === item.key} onClick={() => setScope(item.key)}><PerformanceFilterIcon name={item.icon} />{item.label}</button>)}
-    </div>
-    <div className="hpr-readout" aria-live="polite" aria-atomic="true">
-      <p className="hpr-scope">{scopes.find(item => item.key === scope)?.label} <span>ROI</span></p>
-      <p className={`hpr-roi ${tone(active.roi)}`}>{signed(active.roi, 1)}<span>%</span></p>
-      <dl className="hpr-stats"><div><dt>Profit</dt><dd className={tone(active.total_profit)}>{signed(active.total_profit, 2)}<small>u</small></dd></div><div><dt>Settled bets</dt><dd>{active.total_bets.toLocaleString('en-GB')}</dd></div></dl>
+    <div className="hpr-heading"><h2 id="hpr-title">Public performance record</h2><Link href="/track-record" prefetch={false}>Full record <span aria-hidden="true">↗</span></Link></div>
+    <div className="hpr-main">
+      <div className="hpr-switch" role="group" aria-label="Headline record sport">
+        {scopes.map(item => <button key={item.key} type="button" aria-pressed={scope === item.key} onClick={() => setScope(item.key)}><PerformanceFilterIcon name={item.icon} />{item.label}</button>)}
+      </div>
+      <div className="hpr-readout" aria-live="polite" aria-atomic="true">
+        <p className="hpr-scope">{scopes.find(item => item.key === scope)?.label} <span>ROI</span></p>
+        <p className={`hpr-roi ${tone(active.roi)}`}>{signed(active.roi, 1)}<span>%</span></p>
+        <dl className="hpr-stats"><div><dt>Profit</dt><dd className={tone(active.total_profit)}>{signed(active.total_profit, 2)}<small>u</small></dd></div><div><dt>Settled bets</dt><dd>{active.total_bets.toLocaleString('en-GB')}</dd></div></dl>
+      </div>
     </div>
     <div className="hpr-comparison">
       <p>Compare the sports <span>ROI</span></p>
@@ -46,8 +50,10 @@ export default function HomePerformanceRecord({ stats, status }: {
       })}
       <span className="hpr-scale">Bars start at 0% and use the same scale.</span>
     </div>
-    <a className="hpr-explore" href="#monthly"><span>Explore the monthly record<small>Choose a month. Inspect the results.</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M4 19h16M6 15v-4m6 4V5m6 10V8" /></svg></a>
-    <p className="hpr-basis">ROI is profit divided by stakes. Includes earlier aggregate results. <Link prefetch={false} href="/track-record#record-method">Record methodology ↗</Link></p>
-    <p className="hpr-note">{status === 'unavailable' ? 'Latest refresh unavailable. These figures may exclude recent results.' : status === 'historical' ? 'Earlier results only. The latest results are unavailable.' : 'Past performance is not a forecast.'}</p>
+    <div className="hpr-aside">
+      <a className="hpr-explore" href="#monthly"><span>Explore the monthly record<small>Choose a month. Inspect the results.</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M4 19h16M6 15v-4m6 4V5m6 10V8" /></svg></a>
+      <p className="hpr-basis">ROI is profit divided by stakes. Includes earlier aggregate results. <Link prefetch={false} href="/track-record#record-method">Record methodology ↗</Link></p>
+      <p className="hpr-note">{status === 'unavailable' ? 'Latest refresh unavailable. These figures may exclude recent results.' : status === 'historical' ? 'Earlier results only. The latest results are unavailable.' : 'Past performance is not a forecast.'}</p>
+    </div>
   </section>;
 }
