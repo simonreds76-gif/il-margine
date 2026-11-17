@@ -1,6 +1,6 @@
 "use client";
 
-import SportIcon from "@/components/SportIcon";
+import PerformanceFilterIcon from "@/components/PerformanceFilterIcon";
 import MarketBadge from "@/components/MarketBadge";
 import { useEffect, useMemo, useState } from "react";
 import BookmakerLogo from "@/components/BookmakerLogo";
@@ -148,7 +148,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
           <button key={id} type="button" aria-pressed={filter === id}
             aria-label={`${label}, ${counts[id]} active ${counts[id] === 1 ? "pick" : "picks"}`}
             onClick={() => setActiveFilter(id)}>
-            <SportIcon sport={id === "props" ? "football" : id === "tennis" ? "tennis" : "all"} className={styles.filterIcon} />
+            <PerformanceFilterIcon name={id === "props" ? "football" : id === "tennis" ? "tennis" : "all"} className={styles.filterIcon} />
             <span>{label}</span>
             <small>{counts[id]}</small>
           </button>
