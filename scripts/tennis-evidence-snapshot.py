@@ -146,6 +146,7 @@ def build_snapshot() -> dict[str, Any]:
         "tennis_indoor_paper": module.load_json(ROOT / "data/tennis-ml-research/indoor-scout-v1/report.json"),
         "tennis_elo_rebuild": module.load_json(ROOT / "data/tennis-elo-rebuild/report.json"),
         "tennis_sisal_5050": module.load_json(ROOT / "data/tennis-props/shadow/sisal-5050-v1/report.json"),
+        "tennis_breakpoint_quote_evidence": module.load_json(ROOT / "data/tennis-break-points/evidence-v1/report.json"),
         "tennis_breakpoint_c": module.load_json(ROOT / "data/tennis-break-points/forward-c-v1/report.json"),
         "tennis_match_shape": {**report_with_health(ROOT), "exploratory": frozen_paper_report(ROOT, "data/tennis-ml-research/match-shape-v1/j1-exploratory-v1")},
         "tennis_rate_trend": module.rate_trend_summary(),
