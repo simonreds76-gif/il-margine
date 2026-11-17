@@ -1,0 +1,14 @@
+{
+  "registered_at": "2026-11-17T19:06:34.921787+00:00",
+  "protocol": "Keeper matchup shrinkage, 17 November 2026",
+  "capture": "Forward from installation. Earliest validated pre-match packet with two identified starting keepers, named 90-minute Over half-lines, quote age <=10 minutes. First decision including a pass stays locked per native fixture across reschedules.",
+  "formula": "(issued mean + frozen league/venue mean)/2; same NB2 alpha and odds gates as control",
+  "price": "Best eligible quote on identical contracts. Source verification and incumbent mean, probability, selection, and no-bet parity required.",
+  "outcomes": "Both verified 90-minute starters, exact kickoff, team/player IDs and agreement between save totals and events. Conflicts held.",
+  "primary": "Paired Brier on four or more saves for both goalkeepers; require a .005 reduction, non-worse log loss and positive incremental profit per common fixture. Assess intervals by independent matchweek. Require Brier-delta 95% upper bound below zero and half-width <=.01 before a promotion discussion.",
+  "economic": "0.5u hypothetical per qualified fixture per arm. No-bets scored for calibration only. Review ROI, P/L and settled stake per arm separately.",
+  "historical_replay_included": false,
+  "actual_stake": 0,
+  "alerts": false,
+  "parameter_hash": "74a1630cb8e82b0e847df1a912101a7a2b9af6b36db7e08618e324d3efd7b189"
+}
