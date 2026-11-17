@@ -66,7 +66,7 @@ export default function TennisTips({
   const categoryConfig = [
     { id: "all", name: "All Tennis", color: "emerald", logoPath: "/icons/markets/tennis.svg", logoClassName: naturalLogoFilter },
     { id: "atp", name: "ATP Tour", color: "blue", logoPath: "/icons/markets/atp-logo-small-v1.webp", logoClassName: naturalLogoFilter },
-    { id: "challenger", name: "Challenger", color: "amber", logoPath: "/icons/markets/challenger-tour.png", logoClassName: naturalLogoFilter },
+    { id: "challenger", name: "Challenger", color: "amber", logoPath: "/icons/markets/challenger-tour.png", logoClassName: "tcc-logo-light" },
     { id: "ausopen", name: "Australian Open", color: "cyan", logoPath: "/icons/markets/slams/australian-open.png", logoClassName: naturalLogoFilter },
     { id: "rolandgarros", name: "Roland Garros", color: "rose", logoPath: "/icons/markets/slams/roland-garros.png", logoClassName: naturalLogoFilter },
     { id: "wimbledon", name: "Wimbledon", color: "green", logoPath: "/icons/markets/slams/wimbledon.png", logoClassName: naturalLogoFilter },
@@ -84,8 +84,8 @@ export default function TennisTips({
     green: { border: "border-green-500/50", text: "text-green-400", bg: "bg-green-500/10", bar: "from-green-500 to-green-400" },
     indigo: { border: "border-indigo-500/50", text: "text-indigo-400", bg: "bg-indigo-500/10", bar: "from-indigo-500 to-indigo-400" },
   };
-  const logoMarkClassName = "flex h-10 w-10 shrink-0 items-center justify-center overflow-visible";
-  const logoImageClassName = "h-full w-full object-contain";
+  const logoMarkClassName = "tcc-logo";
+  const logoImageClassName = "tcc-logo-img";
 
   const refreshInFlight = useRef(false);
   const lastRefreshStarted = useRef(0);
@@ -272,7 +272,7 @@ export default function TennisTips({
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <TipsCompetitionToolbar sport="tennis" />
           <TipsCompetitionPicker options={categoryConfig} value={activeCategory} onChange={setActiveCategory} stats={currentStats} label="Tour or tournament">
-          <div className="competition-card-grid">
+          <div className="tcc-grid">
             {categoryConfig.map((cat) => {
               const catStats = getStatsForCategory(cat.id);
               const isActive = activeCategory === cat.id;
@@ -283,13 +283,13 @@ export default function TennisTips({
                   aria-pressed={isActive}
                   aria-controls="picks competition-record recent-results"
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`competition-card flex min-w-0 items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all ${
+                  className={`tcc-card ${
                     isActive
                       ? `bg-slate-900/80 ${colorClasses[cat.color].border} text-slate-100`
                       : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
                   }`}
                 >
-                  <span className={`${logoMarkClassName} ${isActive ? "scale-105" : ""}`}>
+                  <span className={logoMarkClassName}>
                     <Image
                       src={cat.logoPath}
                       alt=""
@@ -298,21 +298,21 @@ export default function TennisTips({
                       className={`${logoImageClassName} ${cat.logoClassName}`}
                     />
                   </span>
-                  <div className="min-w-0">
-                    <span className="block text-sm font-medium leading-snug">{cat.name}</span>
-                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                  <div className="tcc-body">
+                    <span className="tcc-name">{cat.name}</span>
+                    <div className="tcc-stats">
                       {catStats.total_bets > 0 ? (
                         <>
-                          <span>{catStats.total_bets} bets</span>
-                          <span className={`${catStats.total_bets < 50 ? "text-slate-400/70" : roiToneClass(catStats.roi)} font-mono`}>
+                          <span className="tcc-count">{catStats.total_bets} bets</span>
+                          <span className={`${catStats.total_bets < 50 ? "text-slate-400/70" : roiToneClass(catStats.roi)} tcc-roi`}>
                             {catStats.roi > 0 ? "+" : ""}{catStats.roi.toFixed(1)}% ROI
                           </span>
                         </>
                       ) : (
-                        <span className="text-slate-500">0 bets</span>
+                        <span className="tcc-count">0 bets</span>
                       )}
                     </div>
-                    <SampleSizeBadge settled={catStats.total_bets} compact className="mt-1.5" />
+                    <SampleSizeBadge settled={catStats.total_bets} compact className="tcc-badge" />
                   </div>
                 </button>
               );

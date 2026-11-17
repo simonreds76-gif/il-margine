@@ -32,9 +32,9 @@ type PlayerPropsClientProps = {
 };
 
 const darkLogoFilter =
-  "[filter:brightness(0)_invert(1)_drop-shadow(0_0_5px_rgba(255,255,255,0.58))_drop-shadow(0_0_12px_rgba(87,209,150,0.2))]";
+  "[filter:brightness(0)_invert(0.92)]";
 const lowContrastLogoFilter =
-  "[filter:brightness(1.9)_saturate(1.45)_contrast(1.15)_drop-shadow(0_0_5px_rgba(255,255,255,0.5))_drop-shadow(0_0_12px_rgba(87,209,150,0.18))]";
+  "tcc-logo-light";
 const naturalLogoFilter = "";
 
 function roiToneClass(roi: number): string {
@@ -83,8 +83,8 @@ export default function PlayerProps({
     cyan: { border: "border-cyan-500/50", text: "text-cyan-400", bg: "bg-cyan-500/10", bar: "from-cyan-500 to-cyan-400" },
     slate: { border: "border-slate-600/70", text: "text-slate-300", bg: "bg-slate-700/20", bar: "from-slate-600 to-slate-500" },
   };
-  const logoMarkClassName = "flex h-10 w-10 shrink-0 items-center justify-center overflow-visible";
-  const logoImageClassName = "h-full w-full object-contain";
+  const logoMarkClassName = "tcc-logo";
+  const logoImageClassName = "tcc-logo-img";
 
   const refreshInFlight = useRef(false);
   const lastRefreshStarted = useRef(0);
@@ -291,7 +291,7 @@ export default function PlayerProps({
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <TipsCompetitionToolbar sport="football" />
           <TipsCompetitionPicker options={leagueConfig} value={activeLeague} onChange={setActiveLeague} stats={currentStats} label="League">
-          <div className="competition-card-grid">
+          <div className="tcc-grid">
             {leagueConfig.map((league) => {
               const leagueStats = getStatsForLeague(league.id);
               const isActive = activeLeague === league.id;
@@ -302,13 +302,13 @@ export default function PlayerProps({
                   aria-pressed={isActive}
                   aria-controls="picks competition-record recent-results"
                   onClick={() => setActiveLeague(league.id)}
-                  className={`competition-card flex min-w-0 items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all ${
+                  className={`tcc-card ${
                     isActive
                       ? `bg-slate-900/80 ${colorClasses[league.color].border} text-slate-100`
                       : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
                   }`}
                 >
-                  <span className={`${logoMarkClassName} ${isActive ? "scale-105" : ""}`}>
+                  <span className={logoMarkClassName}>
                     <Image
                       src={league.logoPath}
                       alt=""
@@ -317,21 +317,21 @@ export default function PlayerProps({
                       className={`${logoImageClassName} ${league.logoClassName}`}
                     />
                   </span>
-                  <div className="min-w-0">
-                    <span className="block text-sm font-medium leading-snug">{league.name}</span>
-                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                  <div className="tcc-body">
+                    <span className="tcc-name">{league.name}</span>
+                    <div className="tcc-stats">
                       {leagueStats.total_bets > 0 ? (
                         <>
-                          <span>{leagueStats.total_bets} bets</span>
-                          <span className={`${leagueStats.total_bets < 50 ? "text-slate-400/70" : roiToneClass(leagueStats.roi)} font-mono`}>
+                          <span className="tcc-count">{leagueStats.total_bets} bets</span>
+                          <span className={`${leagueStats.total_bets < 50 ? "text-slate-400/70" : roiToneClass(leagueStats.roi)} tcc-roi`}>
                             {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}% ROI
                           </span>
                         </>
                       ) : (
-                        <span className="text-slate-500">0 bets</span>
+                        <span className="tcc-count">0 bets</span>
                       )}
                     </div>
-                    <SampleSizeBadge settled={leagueStats.total_bets} compact className="mt-1.5" />
+                    <SampleSizeBadge settled={leagueStats.total_bets} compact className="tcc-badge" />
                   </div>
                 </button>
               );

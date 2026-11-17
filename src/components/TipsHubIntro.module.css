@@ -62,6 +62,12 @@
   .sectionLinks a { flex: 1 1 0; min-width: 0; padding: 0 4px; }
   .details { grid-template-columns: minmax(0, 1fr); }
 }
+/* Render fault at 320px: three equal thirds were narrower than "Current picks" plus its arrow, so the labels ran into each other.
+ * Below 360px each link takes the width its label needs and the decorative arrows (aria-hidden) are dropped. Labels, links and 44px height unchanged. */
+@media (max-width: 359px) {
+  .sectionLinks a { flex: 1 1 auto; padding: 0 6px; }
+  .sectionLinks a span { display: none; }
+}
 @media (prefers-reduced-motion: no-preference) {
   .atlasLink, .sectionLinks a { transition: border-color .15s, background-color .15s; }
 }

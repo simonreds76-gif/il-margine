@@ -6,6 +6,8 @@
  * figures. Styles only: no figure, filter, order or link is produced or changed here.
  * Several shared components on these pages are read-only, so their parts are reached by structure
  * (section ids, data-testid hooks and existing class tokens). A rule that misses simply does nothing.
+ * The league / tour filter cards are NOT styled here any more: they have their own classes and stylesheet
+ * (src/components/tips-competition-cards.css). Section 2 below only sets the spacing of their section.
  */
 .tips-page {
   --tp-line: #2b3c46; --tp-rule: #24333f; --tp-surface: #121c24; --tp-cell: #122029;
@@ -29,23 +31,8 @@
 .tips-page .tips-head-note { color: var(--tp-muted); font-size: 12px; line-height: 1.5; text-align: right; }
 .tips-page #picks > div > div:first-child { flex-wrap: wrap; gap: 6px 20px; margin-bottom: 10px; }
 
-/* ── 2. League / tournament filter: compact, so the tips are not pushed down the page ────── */
+/* ── 2. League / tournament filter section: compact, so the tips are not pushed down the page ── */
 .tips-page #competition-filter { padding-top: 14px; padding-bottom: 18px; }
-.public-site .tips-page .competition-card-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
-.public-site .tips-page .competition-card {
-  flex-direction: row; align-items: center; gap: 10px; min-height: 64px; padding: 8px 10px;
-  border-color: var(--tp-line); border-radius: 12px; background: var(--tp-surface);
-}
-.public-site .tips-page .competition-card:hover { border-color: var(--tp-mint); }
-/* Selected: fill, underline and brighter name, not colour alone. aria-pressed carries it for assistive technology. */
-.public-site .tips-page .competition-card[aria-pressed=true] {
-  border-color: #609780; background: linear-gradient(120deg, #1b352d, #142621); box-shadow: inset 0 -2px var(--tp-mint);
-}
-.public-site .tips-page .competition-card > span { flex: none; width: 38px; height: 38px; transform: none; }
-.tips-page .competition-card > div { display: flex; flex-wrap: wrap; align-items: center; gap: 1px 8px; min-width: 0; }
-.tips-page .competition-card > div > span:first-child { flex: 0 0 100%; font-size: 13px; font-weight: 650; overflow-wrap: anywhere; }
-.tips-page .competition-card[aria-pressed=true] > div > span:first-child { font-weight: 750; }
-.tips-page .competition-card > div > * { margin-top: 0; }
 
 /* ── 3. Current tips and recent results ───────────────────────────────────────────────────── */
 /* Empty and loading states: a plain statement, left aligned, not a large hollow box. */
@@ -89,10 +76,5 @@
   .tips-page .tips-head-note { text-align: left; }
 }
 @media (max-width: 639px) {
-  /* The phone picker lists the full comparison one league per row once it is opened. */
-  .public-site .tips-page .competition-card-grid { grid-template-columns: minmax(0, 1fr); gap: 6px; }
   .tips-page #competition-record > div > [class~="rounded-2xl"][class~="overflow-hidden"] dd { font-size: 18px; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .tips-page .competition-card { transition: border-color .15s, background-color .15s; }
 }

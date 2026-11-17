@@ -4,6 +4,7 @@ import { useId, useState, type ReactNode } from "react";
 import Image from "next/image";
 import SampleSizeBadge from "@/components/SampleSizeBadge";
 import styles from "./TipsCompetitionPicker.module.css";
+import "./tips-competition-cards.css";
 
 type Competition = { id: string; name: string; logoPath: string; logoClassName?: string };
 
