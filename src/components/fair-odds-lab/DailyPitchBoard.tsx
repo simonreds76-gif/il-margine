@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import PerformanceFilterIcon from "@/components/PerformanceFilterIcon";
 import PageHeading from "@/components/PageHeading";
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { LabIcon, type LabIconKind } from "./LabIcon";
@@ -175,7 +176,7 @@ export function DailyPitchBoard({ initial, boardUrl, asOf, preview = false, high
     ].map(([id, label, caption, icon]) => <a key={id} href={`#${id}`} onClick={event => { event.preventDefault(); openSection(id); history.replaceState(null, "", `#${id}`); }}><LabIcon kind={icon as LabIconKind}/><div><strong>{label}</strong><small>{caption}</small></div></a>)}</nav>
     {preview && <p role="status" className="ip-pennews">Design preview · illustrative prices, not current markets</p>}
     <nav className="ip-leagues" aria-label="Competition">
-      {[["all", "All leagues"], ...leagues].map(([id, name]) => <button key={id} type="button" aria-pressed={league === id} onClick={() => setLeague(id)}>{id === "all" ? <LabIcon kind="leagues"/> : <Image unoptimized src={`/league-logos/${id}.png`} width={26} height={26} alt="" />}<span>{name}</span><span className="ip-count">{board.fixtures.filter(f => inDate(f) && (id === "all" || f.league === id)).length}</span></button>)}
+      {[["all", "All leagues"], ...leagues].map(([id, name]) => <button key={id} type="button" aria-pressed={league === id} onClick={() => setLeague(id)}>{id === "all" ? <PerformanceFilterIcon name="all" className="h-5 w-5 shrink-0" /> : <Image unoptimized src={`/league-logos/${id}.png`} width={26} height={26} alt="" />}<span>{name}</span><span className="ip-count">{board.fixtures.filter(f => inDate(f) && (id === "all" || f.league === id)).length}</span></button>)}
     </nav>
     <label className="ip-search"><span>Find a team or player</span><input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search Adams, Napoli, Marseille…" /></label>
     <div className="ip-controls"><div className="ip-dates" aria-label="Match date"><button type="button" aria-pressed={date === "upcoming"} onClick={() => setDate("upcoming")}>Upcoming<span>All available</span></button>{dates.map(d => <button key={d} type="button" aria-pressed={date === d} onClick={() => setDate(d)}>{dateLabel(d)}<span>{board.fixtures.filter(f => f.date === d && (league === "all" || f.league === league)).length} matches</span></button>)}</div><div className="ip-switch" aria-label="Comparison view">{["pitch", "list"].map(v => <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>{v === "pitch" ? "Pitch" : "List"}</button>)}</div></div>

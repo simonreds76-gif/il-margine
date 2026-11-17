@@ -179,7 +179,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
         <div className="border-t border-slate-800/40 px-4 py-3 text-center">
           <button
             onClick={() => setExpanded(true)}
-            className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+            className="min-h-11 px-3 text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
           >
             Show all {rows.length} months
           </button>
@@ -189,7 +189,7 @@ export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride 
         <div className="border-t border-slate-800/40 px-4 py-2 text-center">
           <button
             onClick={() => setExpanded(false)}
-            className="text-xs text-slate-400 transition-colors hover:text-slate-300"
+            className="min-h-11 px-3 text-sm font-medium text-slate-400 transition-colors hover:text-slate-300"
           >
             Show less
           </button>

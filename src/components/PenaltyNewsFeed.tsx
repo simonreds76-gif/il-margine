@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import PerformanceFilterIcon from "@/components/PerformanceFilterIcon";
 import { newsDate, newsLeagues, outcomeLabel, newsPagePath, NEWS_PAGE_SIZE, type PenaltyArticle } from "@/lib/penalty-news";
 import styles from "./PenaltyNews.module.css";
 
@@ -59,7 +60,7 @@ export default function PenaltyNewsFeed({ articles, page = 1 }: { articles: Pena
   const reset = () => { setLeague("all"); setClub("all"); setOutcome("all"); setVisible(12); };
   return <section aria-label="Penalty reports" id="reports">
     <div className={styles.filters}>
-      <div className={styles.leagueFilters} role="group" aria-label="Filter by league"><button type="button" aria-pressed={league === "all"} onClick={() => {setLeague("all"); setClub("all"); setVisible(12);}}>All leagues</button>{newsLeagues.map(l => <button type="button" key={l.key} aria-pressed={league === l.key} onClick={() => { setLeague(l.key); setClub("all"); setVisible(12); }}><Image src={`/league-logos/${l.key}.png`} alt="" width={22} height={22} unoptimized />{l.label}</button>)}</div>
+      <div className={styles.leagueFilters} role="group" aria-label="Filter by league"><button type="button" aria-pressed={league === "all"} onClick={() => {setLeague("all"); setClub("all"); setVisible(12);}}><PerformanceFilterIcon name="all" className="h-5 w-5 shrink-0" />All leagues</button>{newsLeagues.map(l => <button type="button" key={l.key} aria-pressed={league === l.key} onClick={() => { setLeague(l.key); setClub("all"); setVisible(12); }}><Image src={`/league-logos/${l.key}.png`} alt="" width={22} height={22} unoptimized />{l.label}</button>)}</div>
       <div className={styles.selects}><label>Club<select aria-label="Club" value={club} onChange={e => {setClub(e.target.value); setVisible(12);}}><option value="all">All clubs</option>{clubs.map(c => <option key={c}>{c}</option>)}</select></label><label>Outcome<select aria-label="Outcome" value={outcome} onChange={e => {setOutcome(e.target.value); setVisible(12);}}><option value="all">All penalties</option><option value="scored">Scored</option><option value="not-scored">Not scored</option></select></label>{(league !== "all" || club !== "all" || outcome !== "all") && <button type="button" className={styles.reset} onClick={reset}>Clear filters</button>}</div>
     </div>
     <div className={styles.feedHeading}><h2>{filtering ? "Matching reports" : page === 1 ? "The latest from the spot" : "Earlier penalty reports"}</h2><span role="status">{filtered.length} {filtered.length === 1 ? "report" : "reports"}{!filtering && pageCount > 1 ? ` · Page ${page} of ${pageCount}` : ""}</span></div>

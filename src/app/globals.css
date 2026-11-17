@@ -407,3 +407,19 @@ body {
 @media(max-width:600px) { .public-site .competition-card-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }.public-site .competition-card { flex-direction:column; gap:10px; min-height:145px; padding:14px; }.public-site .monthly-legend { grid-template-columns:repeat(2,1fr); gap:14px; } }
 
 .public-site .competition-card:has(img[src*="challenger-tour"])>span { width:64px; background:#eef3f1; }
+
+/* Public control consistency: compact glyphs retain their optical size even
+   inside route-specific league styles. Large tool illustrations are separate. */
+.public-site .performance-filter-icon { flex-shrink: 0; }
+.public-site .fa-leagues .performance-filter-icon,
+.public-site #im-pitch-lab .ip-leagues .performance-filter-icon { width: 20px; height: 20px; }
+
+@media (max-width: 768px) {
+  /* Prevent route typography from shrinking editable controls below the
+     readable 16px mobile baseline (and triggering iOS focus zoom). */
+  .public-site input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="hidden"]):not([type="color"]):not([type="button"]):not([type="submit"]):not([type="reset"]),
+  .public-site select,
+  .public-site textarea { font-size: 16px !important; }
+  .public-site details > summary,
+  .public-site .penalty-context summary { min-height: 44px; }
+}

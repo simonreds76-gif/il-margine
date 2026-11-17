@@ -51,7 +51,7 @@ export default function PropPerformancePanel({ rows, pending, league, leagues, o
           <svg className={`h-4 w-4 shrink-0 ${active?.key === item.key ? "text-emerald-200" : "text-slate-500 group-hover:text-emerald-200"}`} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d={active?.key === item.key ? "m4 10 4 4 8-8" : "M4 10h12m-5-5 5 5-5 5"} /></svg>
         </span>
         <span className="block min-h-10 text-sm font-medium leading-5 text-slate-100 max-[360px]:text-xs">{item.label}</span>
-        <span className={`mt-1 flex flex-wrap items-baseline gap-x-1.5 font-mono text-2xl font-semibold tracking-tight sm:text-3xl ${tone(item.roi)}`}>{item.roi == null ? "N/A" : `${signed(item.roi, 1)}%`}<span className="font-sans text-[10px] font-medium tracking-wider text-slate-400">ROI</span></span>
+        <span className={`mt-1 flex flex-wrap items-baseline gap-x-1.5 font-mono text-2xl font-semibold tracking-tight sm:text-3xl ${tone(item.roi)}`}>{item.roi == null ? "N/A" : `${signed(item.roi, 1)}%`}<span className="text-[10px] font-medium tracking-wider text-slate-400">ROI</span></span>
         <span className="mt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-slate-700/50 pt-3 text-xs tabular-nums"><span className={tone(item.profit)}>{signed(item.profit)}u</span><span className="text-slate-400">{item.rows.length} {item.rows.length === 1 ? "bet" : "bets"}</span></span>
         <span className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] leading-4 text-slate-400">{item.rows.length < 50 ? "Small sample" : "Settled selections"}{item.pending.length ? <span className="text-amber-200/90">{item.pending.length} pending</span> : null}</span>
       </button>)}

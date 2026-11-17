@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import PerformanceFilterIcon from "@/components/PerformanceFilterIcon";
 import { useState } from "react";
 import { foldNameText } from "@/lib/player-name-matching";
 import PenaltyTakerPortrait from "./PenaltyTakerPortrait";
@@ -41,7 +42,7 @@ export default function PenaltyDirectory({ leagues, initialLeague = "all", board
           {league.logoPath ? <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={league.logoPath} alt="" width="22" height="22" className="h-5 w-5 object-contain" />
-          </span> : <span aria-hidden="true" className="text-xl text-emerald-300">◇</span>}
+          </span> : <PerformanceFilterIcon name="all" className="h-5 w-5 shrink-0" />}
           <span className="min-w-0 flex-1 text-xs sm:text-sm">{league.label}</span>
           <span className="rounded bg-black/20 px-1.5 py-0.5 text-[10px] tabular-nums">{league.teams.length}</span>
         </button>
