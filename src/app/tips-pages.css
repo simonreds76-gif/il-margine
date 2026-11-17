@@ -50,7 +50,7 @@
 .tips-page [data-testid="player-props-match-group"] article > a:hover { border-color: var(--tp-mint); background: #14232b; }
 .tips-page [data-testid="player-props-match-group"] a[aria-label^="Match tips"] { display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; }
 .tips-page [data-testid="older-match-links"] { border-color: var(--tp-line); border-radius: 12px; background: var(--tp-surface); }
-.tips-page [data-testid="older-match-links"] summary { min-height: 28px; }
+.tips-page [data-testid="older-match-links"] summary { min-height: 44px; }
 
 /* Tennis: the table on wide screens, cards on phones. */
 .tips-page :is(#picks, #recent-results) [class~="overflow-hidden"][class~="rounded-lg"] { border-color: var(--tp-line); border-radius: 14px; background: var(--tp-surface); }
