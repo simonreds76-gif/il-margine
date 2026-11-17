@@ -6,10 +6,9 @@ import unittest
 from datetime import datetime, timezone
 from pathlib import Path
 
-scripts = Path(__file__).resolve().parents[1]/'scripts'
-if not scripts.is_dir():
-    scripts = Path('D:/IlMargine/il-margine/scripts')
-sys.path.insert(1,str(scripts))
+scripts = Path(__file__).resolve().parents[1]
+if (scripts/'tennis_ace_compass.py').is_file():
+    sys.path.insert(0,str(scripts))
 import tennis_ace_compass as compass
 import tennis_sisal_5050 as sisal
 from oncourt_nonplayed import FIELDS
@@ -67,6 +66,21 @@ class WalkoverTests(unittest.TestCase):
 
     def test_started_capture(self):
         self.row['registered_at']=self.row['row']['match_start_utc'];self.check(None)
+
+    def test_played_match_uses_correct_player_count(self):
+        self.save('nonplayed-results',FIELDS,[])
+        self.save('games',FIELDS[:6],[dict(self.g,result='6-4 6-4')])
+        keys='svpt fs fsof w1s w1sof w2s w2sof rpw rpwof ace df bpfaced bpsaved bpw'.split()
+        stat={k:self.g[k] for k in FIELDS[:4]}
+        for side,values in [('w',[60,40,60,35,40,13,20,21,60,7,1,1,1,2]),
+                            ('l',[60,40,60,28,40,11,20,12,60,3,2,4,2,0])]:
+            stat.update({side+'_'+k:v for k,v in zip(keys,values)})
+        self.save('stat',stat.keys(),[stat])
+        self.row['best_of']=3
+        for model in [compass,sisal]:
+            outcomes={}
+            model.settle(self.root,[self.row],outcomes,self.now)
+            self.assertEqual((outcomes['x']['status'],outcomes['x']['actual']),('settled',3))
 
 if __name__=='__main__':unittest.main()
 
