@@ -152,6 +152,38 @@ class EvidenceTests(unittest.TestCase):
         self.assertEqual(E.settle(self.root,self.output,later)['new_result_observations'],1)
         self.assertEqual(before,{p:p.read_bytes() for p in before})
 
+    def test_new_book_rules_require_prospective_prices_and_exact_paddy_result(self):
+        quotes = [dict(q, bookmaker=b) for q in self.quotes for b in ('Grosvenor', 'Paddy Power')]
+        self.board(quotes)
+        self.assertEqual(E.collect(self.root, NOW, self.output)['eligible_pairs_this_scan'], 0)
+        path = self.root / 'config/corners-evidence-rules.json'
+        rules = E.read_json(path)
+        for book in ('Grosvenor', 'Paddy Power'):
+            rules['bookmakers'][book]['effective_from_utc'] = NOW.isoformat()
+        E.atomic(path, rules)
+        status = E.collect(self.root, NOW, self.output)
+        self.assertEqual(status['eligible_pairs_by_bookmaker'], {'Grosvenor': 1, 'Paddy Power': 1})
+        later = NOW + timedelta(days=1)
+        fixture = dict(home_team='Arsenal', away_team='Chelsea', home_corners=6,
+                       away_corners=4, total_corners=10, source='football-data', status='ft')
+        E.atomic(self.root/'data/results-snapshot/2026-11-12.json', dict(fetched_at=later.isoformat(),
+                 leagues={'epl': {'fixtures': {'2026-11-12|Arsenal|Chelsea': fixture}}}))
+        settled = E.settle(self.root, self.output, later)
+        self.assertEqual((settled['new_result_observations'], settled['pending']), (1, 1))
+        paddy = next(r for r in self.observations() if r['bookmaker']=='Paddy Power' and r['research_eligible'])
+        ident = dict(bookmaker='Paddy Power', fixture_id=paddy['fixture_id'],
+                     kickoff_utc=paddy['fixture']['kickoff_utc'])
+        proof = dict(ident, status='verified_completed_regulation', regulation_corners=11,
+                     evidence_url='https://www.paddypower.com/example-test-fixture')
+        receipt = self.output/'bookmaker-results'/(E.digest(ident)+'.json')
+        E.atomic(receipt, dict(proof, kickoff_utc=later.isoformat()))
+        self.assertEqual(E.settle(self.root, self.output, later)['pending'], 1)
+        E.atomic(receipt, proof)
+        self.assertEqual(E.settle(self.root, self.output, later)['new_result_observations'], 1)
+        self.assertEqual(E.settle(self.root, self.output, later)['new_result_observations'], 0)
+        results = [E.read_json(p) for p in (self.output/'results').glob('*.json')]
+        self.assertEqual({r['over_won'] for r in results}, {True, False})
+
     def test_unfinished_or_other_date_outcomes_stay_pending(self):
         self.board();E.collect(self.root,NOW,self.output)
         later=NOW+timedelta(days=1)

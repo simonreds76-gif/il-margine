@@ -18,6 +18,7 @@ from collections import Counter, defaultdict
 from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from football_fixture_identity import FixtureIndex
 from football_count_results import count_result_index, exact_result, count
@@ -289,6 +290,7 @@ def collect(root=ROOT, now=None, output=None, publisher_output_dir=None):
     added = 0
     reasons_count = Counter()
     fresh = 0
+    eligible_by_book = Counter()
     for key, pair in groups.items():
         kickoff, league, home, away, line, book = key
         identity = dict(kickoff_utc=kickoff, match_date=kickoff[:10], league=league,
@@ -298,8 +300,13 @@ def collect(root=ROOT, now=None, output=None, publisher_output_dir=None):
         blocked = price_reasons(pair, cutoff)
         if not fixture_id:
             blocked.append('unresolved_fixture_scope')
-        if book not in rules.get('bookmakers', {}):
+        rule = rules.get('bookmakers', {}).get(book)
+        if rule is None:
             blocked.append('bookmaker_rules_unverified')
+        elif rule.get('effective_from_utc') and any(
+                V.PUB.parse_dt(q['captured_at']) < V.PUB.parse_dt(rule['effective_from_utc'])
+                for q in pair.values()):
+            blocked.append('before_bookmaker_rule_registration')
         if context.get('unavailable'):
             blocked.append(context['unavailable'])
         if cutoff < datetime.fromisoformat(registration['registered_at']):
@@ -367,10 +374,13 @@ def collect(root=ROOT, now=None, output=None, publisher_output_dir=None):
             source_observed_at=now.isoformat(), source_availability_before_observation='not inferred')
         added += retain(output / 'observations' / (record_id + '.json'), record)
         fresh += not blocked
+        if not blocked:
+            eligible_by_book[book] += 1
     status = dict(schema_version=1, state='ACTIVE' if fresh else 'NO_ELIGIBLE_NEW_OPPORTUNITIES',
         checked_at=now.isoformat(), publisher_cutoff=cutoff.isoformat(),
         parity_candidates=parity, available_book_line_pairs=len(groups),
         new_observations=added, eligible_pairs_this_scan=fresh,
+        eligible_pairs_by_bookmaker=dict(eligible_by_book),
         exclusions=dict(reasons_count), malformed_quote_counts=malformed,
         latest_quote_at=max((r.get('captured_at', '') for r in raw), default=None),
         real_stake=0, formula_changes=False, requests=0)
@@ -426,6 +436,7 @@ def settle(root, output, now):
     first, latest = first_and_latest(output)
     added = 0
     pending = 0
+    awaiting_bookmaker = set()
     for contract, row in first.items():
         schedule = latest[contract]
         result = exact_result(schedule['fixture'], results, now)
@@ -446,18 +457,43 @@ def settle(root, output, now):
             pending += 1
             continue
         evidence = root / result['evidence_path']
+        bookmaker_evidence = {}
+        if (row.get('bookmaker_rules') or {}).get('settlement_policy') == 'verified_bookmaker_total':
+            # Several lines share one bookmaker result. Bind the evidence to the
+            # verified kickoff as well as the fixture so a reschedule cannot reuse it.
+            fixture = schedule['fixture']
+            identity = dict(bookmaker=row['bookmaker'], fixture_id=row['fixture_id'],
+                            kickoff_utc=fixture['kickoff_utc'])
+            proof_path = output / 'bookmaker-results' / (digest(identity) + '.json')
+            proof = read_json(proof_path, {})
+            verified_total = count(proof.get('regulation_corners'))
+            source = urlsplit(str(proof.get('evidence_url', '')))
+            host = source.hostname or ''
+            if (not all(proof.get(k) == v for k, v in identity.items())
+                    or proof.get('status') != 'verified_completed_regulation'
+                    or source.scheme != 'https'
+                    or not (host == 'paddypower.com' or host.endswith('.paddypower.com'))
+                    or isinstance(proof.get('regulation_corners'), bool)
+                    or verified_total is None):
+                awaiting_bookmaker.add(row['fixture_id'])
+                pending += 1
+                continue
+            bookmaker_evidence = dict(bookmaker_result=proof, bookmaker_result_sha256=file_hash(proof_path),
+                                      ordinary_regulation_corners=total)
+            total = verified_total
         body = dict(contract_id=contract, forecast_record_id=row['record_id'],
             schedule_evidence_record_id=schedule['record_id'], resolved_fixture=schedule['fixture'],
             total_corners=total, over_won=total > row['line'],
             home_corners=result.get('home_corners'), away_corners=result.get('away_corners'),
             match_status=match_status or 'completed_result_source_contract',
             result_source=result['source'], evidence_path=result['evidence_path'],
-            evidence_sha256=file_hash(evidence))
+            evidence_sha256=file_hash(evidence), **bookmaker_evidence)
         # A changed source file or later fetch of the same count is not a new result.
         result_id = digest({k:v for k,v in body.items() if k not in {'evidence_sha256','schedule_evidence_record_id'}})
         added += retain(output / 'results' / (result_id + '.json'),
                         dict(body, observed_at=now.isoformat(), provider_observed_at=result['observed_at']))
     return dict(first_eligible_contracts=len(first), pending=pending, new_result_observations=added,
+                pending_bookmaker_result_fixture_ids=sorted(awaiting_bookmaker),
                 independent_fixtures=len({r['fixture_id'] for r in first.values()}),
                 result_conflicts_policy='multiple differing observations require review; no silent rewrite')
 
