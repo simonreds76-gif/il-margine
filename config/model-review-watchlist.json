@@ -71,7 +71,8 @@
     {
       "id": "gk_saves",
       "report_key": "goalkeeper_saves_v1",
-      "scope": "GK Saves, distinguish shadow from value ladder"
+      "scope": "GK Saves, distinguish shadow from value ladder",
+      "paired_half_adjustment": "First verified named full-match board, including no-bets. Score both keepers at four saves. Compare paired Brier, log loss and 0.5u hypothetical ROI across matchweeks. Frozen at half the matchup adjustment, zero real stake. Review only."
     },
     {
       "id": "goalscorers",

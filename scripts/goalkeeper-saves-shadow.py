@@ -560,6 +560,23 @@ def main() -> None:
         previous = json.loads(prior_report.read_text(encoding="utf-8")) if prior_report.exists() else {}
         payload["keeper_watch"] = {**previous, "status": "BLOCKED", "generated_at": generated_at,
                                     "reason": str(exc)[:240], "actual_stake": 0, "auto_promote": False}
+    from goalkeeper_half_adjustment import run as half_run
+    try:
+        packets = [evidence_folder / "packets" / (key + ".json") for key in input_capture.get("accepted_packets", [])]
+        half = half_run(ROOT, packets)
+        if input_capture.get("status") == "BLOCKED":
+            half = {**half, "status": "INPUT_CAPTURE_BLOCKED"}
+            from football_identity import write as write_paper_report
+            write_paper_report(ROOT / "data/goalkeeper-saves/half-adjustment-v1/report.json",half)
+        payload["half_adjustment"] = half
+    except (OSError, ValueError, TypeError, KeyError, ArithmeticError) as exc:
+        from football_identity import read as read_paper_report
+        prev = read_paper_report(ROOT / "data/goalkeeper-saves/half-adjustment-v1/report.json", {})
+        payload["half_adjustment"] = {**prev, "status": "REVIEW_REQUIRED", "checked_at": generated_at,
+                                      "reason": type(exc).__name__}
+        from football_identity import write as write_paper_report
+        write_paper_report(ROOT/"data/goalkeeper-saves/half-adjustment-v1/report.json", payload["half_adjustment"])
+        print("::warning::Keeper half-adjustment comparison requires review:", type(exc).__name__)
     args.report.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     evidence = payload["evidence"]
     current = payload["current"]

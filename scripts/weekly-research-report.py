@@ -8,6 +8,7 @@ rule has fired. It must not fail just because no research picks exist yet.
 
 from __future__ import annotations
 
+from goalkeeper_half_adjustment import weekly_text as keeper_half_weekly_text
 from goalkeeper_keeper_watch import weekly_text as keeper_watch_weekly_text
 from tennis_match_shape_integrity import report_with_health
 from frozen_paper_common import read_report as frozen_paper_report
@@ -568,6 +569,7 @@ def goalkeeper_saves_research_summary() -> dict[str, Any]:
     return {
         "candidate": "goalkeeper-saves-v1-nb2-confirmed-starter",
         "keeper_watch": prospective.get("keeper_watch") or {},
+        "half_adjustment": load_json(ROOT / "data/goalkeeper-saves/half-adjustment-v1/report.json") or prospective.get("half_adjustment") or {},
         "count_gate": "PASS" if count_pass else "NOT_RUN_OR_FAIL",
         "historical_observations": int(number((evidence.get("target_audit") or {}).get("valid_team_observations"))),
         "model_samples": int(number(evidence.get("model_samples"))),
@@ -1765,6 +1767,7 @@ def render_report(payload: dict[str, Any]) -> str:
         f"- Goalkeeper Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} on {goalkeeper_saves.get('historical_observations', 0):,} observations; discovery {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines); latest capture {goalkeeper_saves.get('capture_status', 'NOT_RUN')} ({goalkeeper_saves.get('capture_events_selected', 0)} events selected / {goalkeeper_saves.get('capture_rows_observed', 0)} rows / {goalkeeper_saves.get('capture_three_way_events', 0)} with 1X2); prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} with {goalkeeper_saves.get('priced_lines', 0)} priced lines, {goalkeeper_saves.get('eligible_lines', 0)} eligible, {goalkeeper_saves.get('provisional_lines', 0)} predicted-XI research rows, {goalkeeper_saves.get('signals', 0)} signals and {goalkeeper_saves.get('settled', 0)} settled; blockers {goalkeeper_saves.get('blocker_counts', {})}; ROI {ratio_pct(goalkeeper_saves.get('roi'))}, CLV {ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)}; promotion BLOCKED.",
         *[line for line in model_watchlist_text(payload).splitlines() if line.startswith(("Calibrated Shots", "Opponent Shots"))],
         keeper_watch_weekly_text(goalkeeper_saves.get("keeper_watch")),
+        keeper_half_weekly_text(goalkeeper_saves.get("half_adjustment")),
         "- New provider fields remain diagnostic-only until source definitions and coverage are accepted.",
         "",
         "## Team Shots V3 EMA20 Research",
@@ -2163,6 +2166,7 @@ def telegram_text(payload: dict[str, Any]) -> str:
         f"GK Saves v1: count {goalkeeper_saves.get('count_gate', 'NOT_RUN')} n={goalkeeper_saves.get('historical_observations', 0)} | discovery {goalkeeper_saves.get('market_status', 'NOT_RUN')} ({goalkeeper_saves.get('over_lines', 0)} probe Over lines) | last scan {goalkeeper_saves.get('capture_status', 'NOT_RUN')} at {goalkeeper_saves.get('capture_checked_at') or 'unknown'} (an empty scan does not erase the ledger) events={goalkeeper_saves.get('capture_events_selected', 0)} rows={goalkeeper_saves.get('capture_rows_observed', 0)} 1X2={goalkeeper_saves.get('capture_three_way_events', 0)} | prospective {goalkeeper_saves.get('prospective_status', 'BLOCKED')} priced={goalkeeper_saves.get('priced_lines', 0)} eligible={goalkeeper_saves.get('eligible_lines', 0)} provisional={goalkeeper_saves.get('provisional_lines', 0)} signals={goalkeeper_saves.get('signals', 0)} settled={goalkeeper_saves.get('settled', 0)} blockers={goalkeeper_saves.get('blocker_counts', {})} ROI={ratio_pct(goalkeeper_saves.get('roi'))} CLV={ratio_pct(goalkeeper_saves.get('clv'))} n={goalkeeper_saves.get('clv_matched', 0)} | promotion BLOCKED",
         *[line for line in model_watchlist_text(payload).splitlines() if line.startswith(("Calibrated Shots", "Opponent Shots"))],
         keeper_watch_weekly_text(goalkeeper_saves.get("keeper_watch")),
+        keeper_half_weekly_text(goalkeeper_saves.get("half_adjustment")),
         f"Goalscorer V2: {goalscorer['ledger']['settled']} settled | {goalscorer['ledger']['pnl_units']:+.2f}u | ROI {pct(goalscorer['ledger']['roi_pct'])} | CLV {goalscorer['matched_closes']}/{goalscorer['signals']} | PUBLIC RESEARCH ONLY",
         f"Goalscorer beta vs raw n={goalscorer['calibration']['n']}: Brier {fixed(goalscorer['calibration']['raw_brier'])}->{fixed(goalscorer['calibration']['beta_brier'])} ({fixed(goalscorer['calibration']['brier_delta'])}) | ECE {ratio_pct(goalscorer['calibration']['raw_ece'], 2)}->{ratio_pct(goalscorer['calibration']['beta_ece'], 2)} | folds {goalscorer['beta_fold_wins']}/{goalscorer['beta_folds']}",
         f"Goalscorer gaps [ZERO-STAKE]: {goalscorer['extreme_gap_quarantine']['settled']}/{goalscorer['extreme_gap_quarantine']['registered']} settled | {goalscorer['extreme_gap_quarantine']['pnl_units']:+.2f}u | ROI {pct(goalscorer['extreme_gap_quarantine']['roi_pct'])} | weekly verdict {goalscorer['decision']} | blockers {', '.join(goalscorer['blockers']) or 'none'}",

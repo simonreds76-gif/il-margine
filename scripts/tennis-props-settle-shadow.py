@@ -481,7 +481,12 @@ def load_sackmann_index(
     return index
 
 
-def load_oncourt_index(
+def load_oncourt_index(oncourt_dir, signals):
+    from tennis_settlement_identity import with_native_aliases
+    return with_native_aliases(oncourt_dir, signals, read_csv, norm_text, pair_key, _load_native_index)
+
+
+def _load_native_index(
     oncourt_dir: Path,
     signals: list[dict[str, str]],
 ) -> dict[tuple[str, int, tuple[str, str]], list[dict[str, str]]]:
@@ -557,6 +562,7 @@ def load_oncourt_index(
             candidate_games.append((game, stat_key, lookup_key))
 
         stats: dict[tuple[str, str, str, str], dict[str, str]] = {}
+        conflicting_stats = set()
         if stat_keys:
             for stat in iter_csv(oncourt_dir / f"stat_{suffix}.csv"):
                 stat_key = (
@@ -566,9 +572,13 @@ def load_oncourt_index(
                     str(stat.get("round_id") or "").strip(),
                 )
                 if stat_key in stat_keys:
-                    stats.setdefault(stat_key, stat)
+                    previous = stats.setdefault(stat_key, stat)
+                    if stat != previous:
+                        conflicting_stats.add(stat_key)
 
         for game, stat_key, lookup_key in candidate_games:
+            if stat_key in conflicting_stats:
+                continue
             stat = stats.get(stat_key)
             if not stat:
                 continue
@@ -580,6 +590,8 @@ def load_oncourt_index(
                     "winner_name": winner_name,
                     "loser_name": loser_name,
                     "tourney_name": tours.get(stat_key[2], stat_key[2]),
+                    "winner_id": stat_key[0],
+                    "loser_id": stat_key[1],
                     "round_id": stat_key[3],
                     "_tour_id": stat_key[2],
                     "_tour_rank": tour_ranks.get(stat_key[2], ""),
@@ -643,6 +655,8 @@ def choose_candidate(signal: dict[str, str], candidates: list[dict[str, str]]) -
         if same_day:
             return None
 
+    # A verified name alias cannot substitute for a missing match date.
+    candidates = [r for r in candidates if not r.get("_verified_native_alias")]
     overlapped = [r for r in candidates if tournament_overlap(tournament, r.get("tourney_name", ""))]
     if overlapped:
         pool = overlapped
@@ -672,7 +686,7 @@ def find_replacement_candidate(
     for candidate in candidates:
         candidate_date = parse_sackmann_date(candidate.get("tourney_date"))
         candidate_pair = pair_key(candidate.get("winner_name"), candidate.get("loser_name"))
-        if candidate_date != signal_date or candidate_pair == original_pair:
+        if candidate_date != signal_date or candidate_pair == original_pair or original_pair in candidate.get("_equivalent_pairs", ()):
             continue
         if not original_participants.intersection(candidate_pair):
             continue

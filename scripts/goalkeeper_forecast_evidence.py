@@ -51,6 +51,7 @@ def archive(folder, candidates, params, before, *, now=None):
         groups[(str(row['event_id']), kickoff.isoformat())].append(row)
     if len(groups) > 60:
         return {**status, 'status': 'BLOCKED', 'reason': 'fixture_budget_exceeded'}
+    accepted = []
     for identity, rows in sorted(groups.items()):
         rows = sorted(rows, key=lambda r: (str(r.get('goalkeeper')), str(r.get('line')), str(r.get('side'))))
         contracts = [(str(r.get('bookmaker')), str(r.get('goalkeeper')), str(r.get('line')), str(r.get('side'))) for r in rows]
@@ -77,5 +78,6 @@ def archive(folder, candidates, params, before, *, now=None):
             counts['offers_saved'] += len(rows)
         except FileExistsError:
             counts['already_saved'] += 1
-    return {**status, 'status': 'CAPTURED' if status['saved'] else 'NO_NEW_ELIGIBLE_INPUTS',
+        accepted.append(path.stem)
+    return {**status, 'accepted_packets': accepted, 'status': 'CAPTURED' if status['saved'] else 'NO_NEW_ELIGIBLE_INPUTS',
             'counts': dict(counts)}

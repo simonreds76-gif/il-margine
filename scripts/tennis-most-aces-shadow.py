@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from functools import lru_cache
 import csv
 import json
 import math
@@ -362,6 +363,19 @@ def same_result_event(row, match):
             and ' - ' in raw and norm_name(raw.rsplit(' - ',1)[1]) == expected)
 
 
+def native_round(round_id, tournament):
+    return _issuer_round()(round_id, tournament)
+
+
+@lru_cache(maxsize=1)
+def _issuer_round():
+    spec = importlib.util.spec_from_file_location("most_aces_board_rounds", ROOT / "scripts/build-tennis-props-board.py")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module.round_label
+
+
 def grosvenor_void_before_first_set(score: str) -> bool:
     """Only the verified no-completed-set case; later retirements stay held.
 
@@ -410,6 +424,13 @@ def settle(ledger: list[dict[str, str]], index: dict[tuple[str, str], list[dict[
             row["settlement_note"] = "ambiguous_exact_fixture"
             continue
         match = min(candidates, key=lambda item: item[0])[1]
+        if pair_key(match.get("winner_name"), match.get("loser_name")) != pair:
+            row["settlement_note"] = "unresolved_player_identity"
+            continue
+        if match.get("_settlement_source") == "oncourt" and row.get("round") and match.get("round_id"):
+            if str(row["round"]).upper() != native_round(match["round_id"], row.get("tournament")):
+                row["settlement_note"] = "native_fixture_round_mismatch"
+                continue
         score = str(match.get("score") or "").upper()
         if row.get("bookmaker") == "Grosvenor" and (not score or any(token in score for token in ("RET", "W/O", "WO", "DEF", "ABD"))):
             if grosvenor_void_before_first_set(score):
