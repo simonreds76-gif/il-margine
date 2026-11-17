@@ -1,0 +1,36 @@
+/*
+ * Track record: second pass. Fable, 17 Nov 2026. PREVIEW.
+ * Imported by TrackRecordClient after track-record.css. Every rule is scoped to .record-page.
+ * Styles only. Every figure, label ("Recorded bets"), note, status line and the method disclosure are
+ * produced in the client and are not touched. The monthly breakdown's rows, order and show-all control are
+ * its own; only its panel surface and type are matched to the rest of the page here.
+ */
+
+/* ── 1. Headline: three figures, no ornament ──────────────────────────────────────────────── */
+/* The small gauge, calculator and book icons in the corners added nothing to three labelled numbers. */
+.record-page .record-headline > .site-card svg { display: none; }
+.record-page .record-headline > .site-card > p { white-space: nowrap; }
+
+/* ── 2. Rhythm: the page read as separate islands with 60-80px between them ───────────────── */
+.public-site .record-page main .site-section { padding-block: 28px; }
+.public-site .record-page main .monthly-showcase { padding-top: 4px; padding-bottom: 32px; }
+
+/* ── 3. Records by sport: the route to the tips is a row, not a banner ────────────────────── */
+/* The link was 88px tall with a 78px emblem, taller than the three figures it sits under. */
+.public-site .record-page article.site-card .sport-cta { gap: 12px; min-height: 52px; padding: 6px 14px; border-color: var(--rp-line); border-radius: 12px; background: #0f1a22; box-shadow: none; }
+.public-site .record-page article.site-card .sport-cta:hover { border-color: var(--rp-mint); background: #14232b; }
+.record-page article.site-card .sport-cta-emblem { width: 46px; height: 34px; padding-right: 12px; border-right-color: var(--rp-rule); }
+.record-page article.site-card .sport-cta-label { font-size: 15px; font-weight: 650; }
+.record-page article.site-card .sport-cta-arrow { width: 20px; height: 20px; }
+.record-page article.site-card dl { margin-bottom: 12px; }
+.record-page article.site-card dd { white-space: nowrap; }
+
+/* ── 4. Monthly breakdown: same panel as the rest of the page ─────────────────────────────── */
+.record-page .monthly-showcase [class~="rounded-2xl"][class~="overflow-hidden"] { border-color: var(--rp-line); border-radius: 14px; background: var(--rp-surface); }
+.record-page .monthly-showcase .font-mono { font-family: inherit; }
+.record-page .monthly-showcase h2 { margin-top: 4px; }
+.record-page .monthly-showcase :is(button, a):focus-visible { outline: 2px solid var(--rp-mint); outline-offset: -2px; }
+
+@media (max-width: 639px) {
+  .public-site .record-page main .site-section { padding-block: 22px; }
+}

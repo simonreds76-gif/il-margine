@@ -20,6 +20,7 @@ import ProfitProgressionPanel, { type CategoryProgressionRow } from "@/component
 import ResultBadge from "@/components/ResultBadge";
 import Footer from "@/components/Footer";
 import "@/app/tips-pages.css";
+import "@/app/tips-pages-refine.css";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import SampleSizeBadge from "@/components/SampleSizeBadge";
 import PublicRecordMetricGrid from "@/components/PublicRecordMetricGrid";
@@ -355,18 +356,18 @@ export default function TennisTips({
                     prefetch={false}
                     className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
                   >
-                    <div className="mb-3 flex items-start gap-3">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center">
+                    <div className="tip-card-head">
+                      <div className="tip-card-badge">
                         <MarketBadge market={pick.market} category={pick.category} event={pick.event} />
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="mb-1 flex items-center justify-between gap-3">
+                      <div className="tip-card-body">
+                        <div className="tip-card-meta">
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
                           <ResultBadge status="pending" size="sm" />
                         </div>
-                        <div className="mb-2 flex items-center gap-2 font-medium text-slate-200 leading-snug"><TipPortraits portraits={pick.artwork} size="compact" /><span className="min-w-0 break-words">{pick.event}</span></div>
-                        <div className="text-sm text-slate-400 leading-snug">
-                          {pick.player && <span>{pick.player} | </span>}
+                        <div className="tip-card-event"><TipPortraits portraits={pick.artwork} size="compact" /><span className="min-w-0 break-words">{pick.event}</span></div>
+                        <div className="tip-card-selection">
+                          {pick.player && <span>{pick.player} · </span>}
                           {pick.selection}
                         </div>
                       </div>
@@ -464,9 +465,9 @@ export default function TennisTips({
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(result.match_date)}</span>
                         </div>
-                        <div className="mb-2 flex items-center gap-2 font-medium text-slate-200"><span className="min-w-0 break-words">{result.event}</span></div>
-                        <div className="text-sm text-slate-400">
-                          {result.player && <span>{result.player} | </span>}
+                        <div className="tip-card-event"><span className="min-w-0 break-words">{result.event}</span></div>
+                        <div className="tip-card-selection">
+                          {result.player && <span>{result.player} · </span>}
                           {result.selection}
                         </div>
                       </div>

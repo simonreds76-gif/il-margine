@@ -9,6 +9,7 @@ import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats
 import { type MarketStats } from "@/lib/supabase";
 import Footer from "@/components/Footer";
 import "./track-record.css";
+import "./track-record-refine.css";
 import PageHeading from "@/components/PageHeading";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 
@@ -257,7 +258,7 @@ export default function TrackRecordClient({ initialStats, initialMonthly }: {
               ["P/L", `${displayStats[key].total_profit > 0 ? "+" : ""}${displayStats[key].total_profit.toFixed(2)}u`],
               ["Recorded bets", formatBetCount(displayStats[key].total_bets)],
             ].map(([label,value]) => <div key={label}><dt className="text-xs text-slate-400">{label}</dt><dd className="mt-1 text-xl font-semibold tabular-nums">{value}</dd></div>)}</dl>
-            <SportCta sport={key === "props" ? "football" : "tennis"} href={href} label="Tips and results" />
+            <SportCta sport={key === "props" ? "football" : "tennis"} href={href} label={key === "props" ? "Football tips and results" : "Tennis tips and results"} />
           </article>)}</div>
         </section>
       </div>

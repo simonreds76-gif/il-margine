@@ -5,6 +5,7 @@ import type { Bookmaker } from "@/lib/supabase";
 import { formatOdds, formatStake } from "@/lib/format";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import PnL from "@/components/PnL";
+import "./bet-strip.css";
 
 interface BetMobileMetaProps {
   odds: number | string;
@@ -49,7 +50,7 @@ export default function BetMobileMeta({
   const profitClassName = isVoid ? "text-slate-400" : profit > 0 ? "text-emerald-400" : "text-red-400";
 
   if (tipsLayout) return <div className="mt-3">
-    <div className="grid grid-cols-3 divide-x divide-slate-700/60 rounded-lg bg-slate-950/60 py-2.5">
+    <div className="bet-strip">
       <div className="min-w-0 px-2.5"><div className="text-[9px] uppercase tracking-wider text-slate-400">Odds</div><div className="mt-1 flex h-8 items-center font-mono text-sm font-semibold text-slate-100">{formatOdds(odds)}</div></div>
       <div className="min-w-0 px-2.5"><div className="text-[9px] uppercase tracking-wider text-slate-400">Stake</div><div className="mt-1 flex h-8 items-center font-mono text-sm font-semibold text-slate-100">{formatStake(stake)}u</div></div>
       <div className="min-w-0 px-2"><div className="text-[9px] uppercase tracking-wider text-slate-400">Bookmaker</div><div className="mt-1 flex h-8 items-center [&>div]:max-w-full [&>div>div]:max-w-full"><BookmakerLogo bookmaker={bookmaker} size="sm" noLink /></div></div>

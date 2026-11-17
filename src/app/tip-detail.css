@@ -1,0 +1,150 @@
+/*
+ * Individual tip pages. Fable, 17 Nov 2026. PREVIEW.
+ * Imported by src/app/tips/[slugId]/page.tsx (.tip-legacy) and src/app/betting-tips/[slugId]/page.tsx (.tip-preview).
+ * Every rule is scoped to .tip-page, the root element both pages now carry, so no other page is affected.
+ * One family with the tips pages: slate surfaces, hairlines, 10-14px corners, mint accent, one inherited
+ * typeface with tabular figures, 11px text floor. This retires the navy panels, the typewriter figures and
+ * the amber eyebrow on these two templates.
+ * Styles only: headings, copy, schema, metadata, dates, odds, stakes, results and links come from the pages.
+ * Parts without a hook are reached by structure and existing class tokens; a rule that misses does nothing.
+ */
+.tip-page {
+  --td-line: #2b3c46; --td-rule: #24333f; --td-surface: #121c24; --td-cell: #122029; --td-inset: #0c1720;
+  --td-mint: #8ce5bd; --td-muted: #a4b5c3;
+}
+
+/* ── 0. Type, contrast, focus ─────────────────────────────────────────────────────────────── */
+.tip-page main .font-mono { font-family: inherit; font-variant-numeric: tabular-nums; }
+.tip-page main :is([class*="text-[9px]"], [class*="text-[10px]"]) { font-size: 11px; }
+.tip-page main .text-slate-500 { color: #9fb0bd; }
+.tip-page main .text-slate-600 { color: #93a5b3; }
+.tip-page main :is(a, button, summary):focus-visible { outline: 2px solid var(--td-mint); outline-offset: 3px; }
+.tip-page main h1 { font-size: 34px; font-weight: 750; line-height: 1.12; letter-spacing: -.035em; }
+
+/* ── 1. Shared facts strip: labelled cells, label above value, left aligned ───────────────── */
+.tip-page .tip-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--td-rule); }
+.tip-page .tip-facts > div { display: block; min-width: 0; margin: 0; border: 0; border-radius: 0; background: var(--td-inset); text-align: left; }
+.tip-page .tip-facts > div > span:first-child { display: block; margin: 0 0 3px; color: var(--td-muted); font-size: 12px; font-weight: 500; line-height: 1.4; letter-spacing: 0; text-transform: none; }
+.tip-page .tip-facts > div > span + span { margin: 0; color: #f2f6f7; font-weight: 750; line-height: 1.2; letter-spacing: -.02em; white-space: nowrap; }
+.tip-page .tip-facts .mx-auto { margin-inline: 0; }
+
+/* ── 2. Onward routes (TipOnward) ─────────────────────────────────────────────────────────── */
+.tip-page .tip-onward-title { margin: 0 0 8px; color: #88dfba; font-size: 11px; font-weight: 750; line-height: 1.4; letter-spacing: .14em; text-transform: uppercase; }
+.tip-page .tip-onward ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+/* Render fix: two routes side by side had different heights when one note wrapped. */
+.tip-page .tip-onward li { display: flex; }
+.tip-page .tip-onward li > a { flex: 1; min-width: 0; }
+.tip-page .tip-onward a { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 8px 14px; border: 1px solid var(--td-line); border-radius: 12px; background: var(--td-surface); color: #f2f6f7; text-decoration: none; }
+.tip-page .tip-onward a:hover { border-color: var(--td-mint); background: #18262f; }
+.tip-page .tip-onward .tip-onward-emblem { flex: none; width: 34px; height: 34px; margin: 0; }
+.tip-page .tip-onward-text { display: block; flex: 1; min-width: 0; }
+.tip-page .tip-onward-text > small { display: block; color: #88dfba; font-size: 11px; font-weight: 700; line-height: 1.4; letter-spacing: .08em; text-transform: uppercase; }
+.tip-page .tip-onward-text > strong { display: block; font-size: 15px; font-weight: 700; line-height: 1.35; }
+.tip-page .tip-onward-text > span { display: block; color: var(--td-muted); font-size: 12px; line-height: 1.45; }
+.tip-page .tip-onward-arrow { flex: none; width: 20px; height: 20px; color: var(--td-mint); }
+
+/* ══ A. Single tip: /tips/[slugId] ═════════════════════════════════════════════════════════ */
+/* Hero: breadcrumb, league + date + status, portrait and name, the tip, the match, the dates. */
+.tip-legacy main > section:first-child { padding: 18px 0 16px; }
+.tip-legacy main > section:first-child > .absolute { display: none; }
+.tip-legacy main > section + section { padding-bottom: 40px; }
+.tip-legacy .tip-crumbs { margin-bottom: 12px; }
+.tip-legacy .tip-crumbs a { display: inline-flex; align-items: center; min-height: 44px; }
+.tip-legacy .tip-crumbs + div { margin-bottom: 12px; }
+.tip-legacy .tip-crumbs + div > span { font-size: 12px; }
+.tip-legacy main section:first-child p.text-emerald-400 { margin: 0 0 4px; color: var(--td-mint); font-size: 20px; font-weight: 700; line-height: 1.3; letter-spacing: -.015em; }
+.tip-legacy main section:first-child p.text-base { color: #c3d4dc; font-size: 15px; }
+.tip-legacy main section:first-child [class~="border-t"] { margin-top: 14px; padding-top: 12px; border-color: var(--td-rule); font-size: 12px; }
+
+/* Facts: recorded odds, stake, bookmaker, then the result in the same card. */
+.tip-legacy .tip-facts-card { border: 1px solid var(--td-line); border-radius: 14px; background: var(--td-cell); }
+.tip-legacy .tip-facts > div { padding: 12px 16px 14px; }
+.tip-legacy .tip-facts > div > span + span { font-size: 24px; }
+.tip-legacy .tip-result { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-top: 1px solid var(--td-rule); }
+.tip-legacy .tip-result-label { color: #c3d4dc; font-size: 13px; font-weight: 600; }
+.tip-legacy .tip-result > span + span { font-size: 22px; font-weight: 750; letter-spacing: -.02em; white-space: nowrap; }
+.tip-legacy .tip-facts-card > div:not(.tip-facts):not(.tip-result) { padding: 12px 16px; border-color: var(--td-rule); }
+.tip-legacy .tip-facts-card > div:not(.tip-facts):not(.tip-result) > span { margin-bottom: 4px; color: var(--td-muted); font-size: 12px; font-weight: 500; letter-spacing: 0; text-transform: none; }
+
+.tip-legacy .tip-onward { margin-top: 20px; }
+.tip-legacy .tip-back { gap: 4px 20px; }
+.tip-legacy .tip-back a { display: inline-flex; align-items: center; min-height: 44px; }
+@media (min-width: 640px) {
+  .tip-legacy .tip-onward ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ══ B. Match page: /betting-tips/[slugId] ═════════════════════════════════════════════════ */
+/* Hero: compact, one quiet mint wash instead of two glows. */
+.tip-preview main > section:first-child { border-color: #263139; }
+.tip-preview main > section:first-child > .absolute { background: radial-gradient(ellipse at 0 0, #23785824, transparent 60%); }
+.tip-preview main > section:first-child > .relative { padding-top: 14px; padding-bottom: 22px; }
+.tip-preview main nav[aria-label="Breadcrumb"] { margin-bottom: 8px; }
+.tip-preview main nav[aria-label="Breadcrumb"] a { display: inline-flex; align-items: center; min-height: 44px; }
+.tip-preview main nav[aria-label="Breadcrumb"] + div { margin-bottom: 12px; }
+.tip-preview main nav[aria-label="Breadcrumb"] + div > span[class*="rounded-full"] { letter-spacing: .12em; }
+.tip-preview main h1 + p { margin-top: 10px; color: #c3d4dc; font-size: 15px; line-height: 1.6; }
+.tip-preview main h1 + p + p { margin-top: 8px; font-size: 13px; line-height: 1.55; }
+.tip-preview main h1[aria-label] { padding-block: 4px; font-size: 28px; }
+.tip-preview main > section:first-child [class~="mt-7"] { margin-top: 14px; }
+/* Larger hit area for the small text link without spreading the line. */
+.tip-preview main > section:first-child [class~="mt-7"] > a { margin-block: -13px; padding-block: 13px; }
+
+/* Body: tighter rhythm, slate panels. */
+.tip-preview main > section + section { padding-top: 22px; padding-bottom: 40px; }
+.tip-page.tip-preview main .space-y-10 { display: grid; gap: 20px; }
+.tip-page.tip-preview main .space-y-10 > * { margin-block: 0; }
+.tip-preview main section h2 { font-size: 20px; font-weight: 750; line-height: 1.25; letter-spacing: -.025em; }
+.tip-preview main p + h2 { margin-top: 4px; }
+/* Eyebrows: one mint style. Amber is kept for the pending status only. */
+.tip-preview main p[class*="tracking-[0.2em]"], .tip-preview main p[class*="tracking-[0.18em]"] { color: #88dfba; font-size: 11px; font-weight: 750; letter-spacing: .14em; }
+.tip-preview main :is(section, article, aside > div)[class*="rounded-2xl"] { border-color: var(--td-line); border-radius: 14px; background: var(--td-surface); }
+.tip-preview main section[class*="rounded-2xl"] { padding: 16px 18px; }
+.tip-preview main section[class*="rounded-2xl"] [class~="text-base"] { margin-top: 10px; font-size: 15px; line-height: 1.7; }
+.tip-preview main section[class*="rounded-2xl"] [class~="leading-7"] { line-height: 1.65; }
+.tip-preview main section[class*="rounded-2xl"] [class~="flex-wrap"] > a { display: inline-flex; align-items: center; min-height: 44px; }
+.tip-preview main section[class*="rounded-2xl"] [class~="mt-5"][class~="flex-wrap"] { margin-top: 6px; row-gap: 0; color: var(--td-mint); }
+
+/* Ledger: one tip per card. Status and competition, portraits and the tip, then the labelled strip. */
+.tip-preview main [aria-labelledby="selections-heading"] > div:first-child { margin-bottom: 12px; }
+.tip-preview main article > div:first-child { gap: 12px; padding: 14px 16px; }
+.tip-preview main article h3 { font-size: 17px; font-weight: 700; line-height: 1.3; letter-spacing: -.015em; }
+.tip-preview .tip-facts { overflow: hidden; border: 1px solid var(--td-rule); border-radius: 10px; }
+.tip-preview .tip-facts > div { padding: 7px 10px 8px; }
+.tip-preview .tip-facts > div > span:first-child { font-size: 11px; }
+.tip-preview .tip-facts > div > span + span { font-size: 18px; }
+.tip-preview main article > :is(details, div) { border-color: var(--td-rule); }
+/* Disclosure: a 44px row with its own plus / minus mark; the native triangle is removed. */
+.tip-preview main article > details { padding: 0 16px; }
+.tip-preview main article > details > summary { display: flex; align-items: center; gap: 8px; min-height: 44px; color: #d9e5eb; list-style: none; }
+.tip-preview main article > details > summary::-webkit-details-marker { display: none; }
+.tip-preview main article > details > summary::before { content: "+"; flex: none; width: 14px; color: var(--td-mint); font-weight: 700; text-align: center; }
+.tip-preview main article > details[open] > summary::before { content: "\2212"; }
+.tip-preview main article > details > p { margin: 0 0 12px; }
+/* Settled result row: always the last row of a settled tip, with its sign and unit on one line. */
+.tip-preview main article > div:last-child:not(:first-child) { padding: 10px 16px; }
+.tip-preview main article > div:last-child:not(:first-child) > span + span { font-size: 16px; white-space: nowrap; }
+
+/* Side column: record policy, the tips page, one research route. */
+.tip-preview main aside > div[class*="rounded-2xl"] { padding: 14px 16px; }
+.tip-preview main aside > div > a { display: flex; align-items: center; min-height: 44px; margin-top: 4px; }
+.tip-preview main aside > div > a[class*="text-lg"] { font-size: 16px; }
+.tip-preview main aside > div > p + p { margin-top: 6px; }
+.tip-preview main aside > div > a + p { margin-top: 0; }
+
+/* ── Phones ───────────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 639px) {
+  .tip-page main h1 { font-size: 28px; }
+  .tip-preview main h1[aria-label] { font-size: 20px; }
+  .tip-legacy .tip-facts > div { padding: 10px 12px 12px; }
+  .tip-legacy .tip-facts > div > span + span { font-size: 21px; }
+  .tip-legacy .tip-result > span + span { font-size: 20px; }
+  .tip-preview main section[class*="rounded-2xl"] { padding: 14px; }
+}
+@media (max-width: 359px) {
+  /* "Recorded odds" needs more than a third of a 288px card. */
+  .tip-legacy .tip-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tip-legacy .tip-facts > div:last-child { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tip-page .tip-onward a { transition: border-color .15s, background-color .15s; }
+}

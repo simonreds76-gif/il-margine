@@ -128,7 +128,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
     <section aria-labelledby="todays-edge-heading" className={styles.edge}>
       <header className={styles.heading}>
         <div>
-          <p className={styles.eyebrow}>Published selections</p>
+          <p className={styles.eyebrow}>Free betting tips</p>
           <h2 id="todays-edge-heading">Today&apos;s Edge</h2>
           {picks.length > 0 && <span className={styles.active}><span aria-hidden="true" />{picks.length} active {picks.length === 1 ? "pick" : "picks"}</span>}
         </div>
@@ -150,7 +150,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
             onClick={() => setActiveFilter(id)}>
             <SportIcon sport={id === "props" ? "football" : id === "tennis" ? "tennis" : "all"} className={styles.filterIcon} />
             <span>{label}</span>
-            <small>{counts[id] ? `${counts[id]} ${counts[id] === 1 ? "pick" : "picks"}` : "No active picks"}</small>
+            <small>{counts[id]}</small>
           </button>
         ))}
       </div>}
@@ -181,7 +181,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
                 <div className={styles.priceRow}>
                   <div><small>Recorded odds</small><strong>{formatOdds(pick.odds)}</strong></div>
                   <div className={styles.stake}><small>Stake</small><strong>{formatStake(pick.stake)}<span>u</span></strong></div>
-                  <div className={styles.bookmaker}><BookmakerLogo bookmaker={pick.bookmaker} size="sm" noLink /></div>
+                  <div className={styles.bookmaker}><small>Bookmaker</small><BookmakerLogo bookmaker={pick.bookmaker} size="sm" noLink /></div>
                 </div>
                 <div className={styles.pickFooter}><time dateTime={pick.posted_at}>{publishedTime(pick.posted_at)}</time><span>View tip →</span></div>
               </TrackedLink>
@@ -196,6 +196,7 @@ export default function TodaysEdge({ picks, lastSettled = null, last7Profit = nu
       </div>
 
       <footer className={styles.footer}>
+        {counts[filter] > visible.length ? <p className={styles.more}>Showing {visible.length} of {counts[filter]} active picks</p> : null}
         <div className={cardRoutes.length > 1 ? styles.cardRoutes : undefined}>
           {cardRoutes.map((route) => <TrackedLink key={route.href} href={route.href}
             eventName={route.href === "/track-record" ? "track_record_click" : "today_edge_open_full_card"}

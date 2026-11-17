@@ -20,6 +20,7 @@ import PublicRecordMetricGrid from "@/components/PublicRecordMetricGrid";
 
 import Footer from "@/components/Footer";
 import "@/app/tips-pages.css";
+import "@/app/tips-pages-refine.css";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import { getDisplayBetCategory, normalizeBetCategory } from "@/lib/bet-category";
 

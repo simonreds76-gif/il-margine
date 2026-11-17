@@ -17,6 +17,8 @@ import { formatMatchDate, formatOdds, formatStake } from "@/lib/format";
 import { fetchSeoTipFixture, type SeoTipBet } from "@/lib/tip-seo-server";
 import { buildTipPageCopy, tipSelectionLabel, priceContext, serializeTipSchema } from "@/lib/tip-page-copy";
 import { resolveTeamLogoPath } from "@/lib/team-logos";
+import TipOnward from "@/components/TipOnward";
+import "@/app/tip-detail.css";
 
 // Admin mutations explicitly invalidate betting-tip pages, so public reads can
 // use a long cache without delaying edits or settlements.
@@ -201,7 +203,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0e14] text-slate-100">
+    <div className="tip-page tip-preview min-h-screen bg-[#0f1117] text-slate-100">
       <TipPageTracker
         betId={fixture.canonicalId}
         market={fixture.seed.market}
@@ -211,7 +213,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeTipSchema(webPageSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeTipSchema(breadcrumbSchema) }} />
 
-      <main>
+      <main id="main-content">
         <section className="relative overflow-hidden border-b border-slate-800/80">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(16,185,129,0.16),transparent_38%),radial-gradient(circle_at_88%_28%,rgba(245,158,11,0.09),transparent_28%)]" />
           <div className="relative mx-auto max-w-5xl px-4 py-10 sm:px-6 md:py-16 lg:px-8">
@@ -303,7 +305,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
                         <div className="flex items-center gap-3"><TipPortraits portraits={getTipArtwork(bet)} /><h3 className="min-w-0 break-words text-lg font-bold text-white">{selectionLabel(bet)}</h3></div>
                       </div>
 
-                      <div className="grid grid-cols-3 gap-2 sm:min-w-[285px]">
+                      <div className="tip-facts sm:min-w-[300px]">
                         <div className="rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2.5">
                           <span className="block text-[9px] uppercase tracking-[0.16em] text-slate-600">Odds</span>
                           <span className="mt-1 block font-mono text-lg font-bold text-white">{formatOdds(bet.odds)}</span>
@@ -313,7 +315,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
                           <span className="mt-1 block font-mono text-lg font-bold text-white">{formatStake(bet.stake)}u</span>
                         </div>
                         <div className="flex min-w-0 items-center justify-center rounded-xl border border-slate-800 bg-slate-950/60 px-2 py-2.5">
-                          <BookmakerLogo bookmaker={bookmakerFor(bet)} size="sm" noLink />
+                          <span className="tip-cell-label">Bookmaker</span><BookmakerLogo bookmaker={bookmakerFor(bet)} size="sm" noLink />
                         </div>
                       </div>
                     </div>
@@ -396,7 +398,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
                 Every selection remains in the public ledger at its original posted odds and stake. Results are added after settlement.
               </p>
               <Link prefetch={false} href="/track-record" className="mt-4 inline-flex text-sm font-semibold text-emerald-300 hover:text-emerald-200">
-                View the full record {"->"}
+                View the full record →
               </Link>
             </div>
             <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
@@ -408,6 +410,7 @@ export default async function BettingPreviewPage({ params }: PageProps) {
                 Current selections, settled results and model-led betting analysis.
               </p>
             </div>
+          <TipOnward market={fixture.seed.market} record={false} />
           </aside>
         </section>
       </main>

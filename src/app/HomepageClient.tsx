@@ -12,6 +12,7 @@ import ResultBadge from "@/components/ResultBadge";
 import TodaysEdge from "@/components/TodaysEdge";
 import ToolEmblem, { emblemForHref } from "@/components/ToolEmblem";
 import "./home-discovery.css";
+import "./home-refine.css";
 import HomePerformanceRecord from "@/components/HomePerformanceRecord";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
@@ -115,11 +116,11 @@ export default function HomepageClient({
 
   const displayStats = combinedStats ?? getBaselineDisplayStats();
   return (
-    <div className="min-h-screen bg-[#0f1117] text-slate-100">
+    <div className="home-page min-h-screen bg-[#0f1117] text-slate-100">
       <main id="main-content">
 
       <section className="home-hero border-b border-slate-800/70 py-7 sm:py-10">
-        <div className="home-lead hf-container">
+        <div className={`home-lead hf-container ${pendingBets.length > 1 ? "home-lead-busy" : "home-lead-light"}`}>
           <div className="home-lead-intro">
             <p className="hf-eyebrow">Il Margine · Football &amp; tennis</p>
             <h1>Data driven betting.<br /><span>Tools for sharper decisions.</span></h1>
@@ -134,7 +135,7 @@ export default function HomepageClient({
       <HomeFixtures />
       <MonthlyBreakdownSection scope="combined" initialPayload={initialMonthly} bySport={initialMonthlyBySport} cards />
       {recentBets.length > 0 ? (
-        <section className="border-b border-slate-800/30 bg-[#0b0e13] py-9 md:py-12">
+        <section className="home-settled border-b border-slate-800/30 bg-[#0b0e13] py-9 md:py-12">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-5 flex flex-col gap-4 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -180,7 +181,7 @@ export default function HomepageClient({
                       </div>
                       <ResultBadge status={bet.status} size="sm" className="ml-3" />
                     </div>
-                    <BetMobileMeta
+                    <BetMobileMeta tipsLayout
                       odds={bet.odds}
                       bookmaker={bet.bookmaker}
                       stake={bet.stake}

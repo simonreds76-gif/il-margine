@@ -1,0 +1,17 @@
+/*
+ * Odds / stake / bookmaker strip. Fable, 17 Nov 2026. PREVIEW.
+ * Imported by BetMobileMeta. Used by its tips layout and by PropSelectionCard, so a tip shows the same three
+ * labelled cells on the homepage, both tips pages and inside a match group.
+ * Every rule is scoped to .bet-strip, a class that exists only on those two elements. Styles only.
+ * Labels are sentence case at 11px: the uppercase, letter-spaced "BOOKMAKER" overflowed its cell at 320px.
+ */
+.bet-strip { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.15fr); gap: 1px; overflow: hidden; padding: 0; border: 1px solid #24333f; border-radius: 10px; background: #24333f; }
+.bet-strip > div { min-width: 0; padding: 7px 10px 6px; border: 0; background: #0c1720; }
+.bet-strip > div > :first-child { color: #a4b5c3; font-size: 11px; font-weight: 500; line-height: 1.4; letter-spacing: 0; text-transform: none; white-space: nowrap; }
+.bet-strip > div > :last-child { margin-top: 1px; font-family: inherit; font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+/* Bookmaker logo: left aligned under its label, like the figures beside it. */
+.bet-strip > div > :last-child .mx-auto { margin-inline: 0; }
+@media (max-width: 359px) {
+  .bet-strip > div { padding-inline: 8px; }
+  .bet-strip > div > :last-child { font-size: 15px; }
+}

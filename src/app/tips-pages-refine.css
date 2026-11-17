@@ -1,0 +1,38 @@
+/*
+ * Football and tennis tips pages: second pass. Fable, 17 Nov 2026. PREVIEW.
+ * Imported by PlayerPropsClient and TennisTipsClient after tips-pages.css. Every rule is scoped to .tips-page.
+ * Styles only: no figure, filter, order, show-more control or link is produced or changed here.
+ * The .tip-card-* classes are new hooks added to the tennis phone card by this packet's patches.
+ */
+
+/* ── 1. Tablet and small desktop: tip cards until the table fits ─────────────────────────────
+ * The tennis tables need 1100px (current tips) and 1180px (results). Below that they scrolled sideways inside
+ * their card, so at 768px the selection, odds, bookmaker and stake were off screen. The existing phone cards
+ * carry the same rows, links and show-more button, so they are used until the table has room. */
+@media (min-width: 768px) and (max-width: 1243px) {
+  .tips-page.tips-tennis :is(#picks, #recent-results) [class~="md:block"] { display: none; }
+  .tips-page.tips-tennis :is(#picks, #recent-results) [class~="md:hidden"] { display: block; }
+}
+
+/* ── 2. Tennis tip card (phones, and tablets by the rule above) ───────────────────────────────
+ * Was: the tour logo squeezed into a 44px box and running under the date.
+ * Now: tour logo, date and status on one line; the match as context; the tip as the headline; then the strip. */
+.tips-page .tip-card-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 6px 10px; margin-bottom: 10px; }
+.tips-page .tip-card-body, .tips-page .tip-card-meta { display: contents; }
+.tips-page .tip-card-badge { display: flex; grid-column: 1; grid-row: 1; align-items: center; min-height: 28px; }
+.tips-page .tip-card-meta > :first-child { grid-column: 2; grid-row: 1; color: #a4b5c3; font-size: 12px; }
+.tips-page .tip-card-meta > :last-child { grid-column: 3; grid-row: 1; justify-self: end; }
+.tips-page .tip-card-head .tip-card-event { grid-column: 1 / -1; grid-row: 2; }
+.tips-page .tip-card-head .tip-card-selection { grid-column: 1 / -1; grid-row: 3; }
+.tips-page .tip-card-event { display: flex; align-items: center; gap: 10px; min-width: 0; margin: 0; color: #b9c9d3; font-size: 13px; font-weight: 600; line-height: 1.4; }
+.tips-page .tip-card-selection { color: #f2f6f7; font-size: 16px; font-weight: 700; line-height: 1.3; letter-spacing: -.015em; overflow-wrap: anywhere; }
+.tips-page.tips-tennis :is(#picks, #recent-results) [class~="md:hidden"] > a { padding: 14px 16px; }
+.tips-page.tips-tennis :is(#picks, #recent-results) [class~="md:hidden"] > a:hover { background: #14232b; }
+
+/* ── 3. Football tip inside a match group: the selection reads as part of the tip, not as a caption ── */
+.tips-page [data-testid="player-props-match-group"] article p + p { color: #d9e5eb; font-weight: 600; }
+
+/* ── 4. One surface family for the remaining panels ───────────────────────────────────────── */
+.tips-page #prop-performance { border-color: var(--tp-line); border-radius: 14px; background: var(--tp-surface); }
+.tips-page .monthly-showcase [class~="rounded-2xl"][class~="overflow-hidden"] { border-color: var(--tp-line); border-radius: 14px; background: var(--tp-surface); }
+.tips-page #competition-record > div > [class~="mb-4"][class~="justify-end"] { margin-bottom: 8px; }

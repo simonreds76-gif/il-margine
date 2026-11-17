@@ -34,7 +34,7 @@ export default function PropSelectionCard({ row, market, href, bookmaker, groupe
     </div>
     {!grouped ? <div className="mt-3 border-t border-slate-700/50 pt-3"><p className="break-words text-xs font-medium leading-5 text-slate-300">{row.event}</p><p className="mt-0.5 text-[11px] text-slate-400">{dateLabel(row.date || row.match_date)}</p></div> : null}
     {grouped ? <div><BetMobileMeta tipsLayout odds={row.odds && row.odds > 1 ? row.odds : "N/A"} stake={row.stake} bookmaker={bookmaker} status={row.status} profitLoss={row.profit_loss} showProfit={settled || voided} /></div> : null}
-    {!grouped ? <dl className="mt-3 grid grid-cols-3 divide-x divide-slate-700/60 rounded-lg bg-slate-950/60 py-2.5">
+    {!grouped ? <dl className="bet-strip mt-3">
       <div className="min-w-0 px-2.5"><dt className="text-[9px] font-medium uppercase tracking-wider text-slate-400">Odds</dt><dd className="mt-1 font-mono text-sm font-semibold tabular-nums text-slate-100">{row.odds && row.odds > 1 ? row.odds.toFixed(2) : "N/A"}</dd></div>
       <div className="min-w-0 px-2.5"><dt className="text-[9px] font-medium uppercase tracking-wider text-slate-400">Stake</dt><dd className="mt-1 font-mono text-sm font-semibold tabular-nums text-slate-100">{row.stake.toFixed(2)}u</dd></div>
       <div className="min-w-0 px-2.5"><dt className="text-[9px] font-medium uppercase tracking-wider text-slate-400">Profit</dt><dd className={`mt-1 font-mono text-sm font-semibold tabular-nums ${tone(settled ? row.profit_loss ?? null : null)}`}>{settled && row.profit_loss != null ? `${signed(row.profit_loss)}u` : voided ? "0.00u" : "Pending"}</dd></div>
