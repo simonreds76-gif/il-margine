@@ -1,11 +1,11 @@
 {
-  "observed_at": "2026-11-16T18:37:52.391244+00:00",
-  "window_start": "2026-10-26T00:00:00+00:00",
+  "observed_at": "2026-11-17T17:41:17.060976+00:00",
+  "window_start": "2026-10-27T00:00:00+00:00",
   "leagues": {
     "epl": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard",
-      "sha256": "63146e26b96ad7d1cf6fe679cfd9e38213e5404bbb82e7fe55336e004a24067c",
+      "sha256": "c0cc0a5ec6dff0abd14e156ac83df831a9830f8a7992c2e34480bc63fbddf121",
       "days": {
         "20261031": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
@@ -668,7 +668,7 @@
     "serie-a": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard",
-      "sha256": "fda5b4ab7f77b595156e4861c30f6b05f816534a45df40a4b7a55996eb99ce98",
+      "sha256": "f85fb885831d304ca7e36462f5af80089f766c5e640bedfe9fa3544f2573c27b",
       "days": {
         "20261027": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
@@ -1600,27 +1600,6 @@
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard",
       "sha256": "b865b53edfafb3b9c13ecf73436cdd9d51916cfbb11cec407def90eacb60c92b",
       "days": {
-        "20261026": {
-          "observed_at": "2026-11-13T16:36:11.995787+00:00",
-          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard?dates=20261026&limit=1000",
-          "sha256": "246163fe234cc3616ca53c6d4b3c1d0cb535031ace9488b92a67bec1318136b4",
-          "complete_day": true,
-          "empty_calendar_day": false,
-          "completed": [
-            {
-              "date": "2026-10-26",
-              "league": "la-liga",
-              "event_id": "401882828",
-              "kickoff": "2026-10-26T20:00:00+00:00",
-              "home_team": "Sevilla",
-              "home_goals": 2,
-              "home_id": "243",
-              "away_team": "Osasuna",
-              "away_goals": 0,
-              "away_id": "97"
-            }
-          ]
-        },
         "20261030": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
           "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard?dates=20261030&limit=1000",
@@ -2291,7 +2270,7 @@
     "bundesliga": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard",
-      "sha256": "60c70471492b58915ca90e96cba34f5486f1a9b8fb07097b98f75fa3390155ec",
+      "sha256": "0f2467d7b94cae0a51cef1ed8632fcd9d61943a34d57569497c8fe32cbca9881",
       "days": {
         "20261030": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
@@ -2894,29 +2873,8 @@
     "ligue-1": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard",
-      "sha256": "c8c0072f594a4f5712daf2c255db870ea98f0d746619f042caf7288367afad68",
+      "sha256": "2b42033c2722c7dd6e78ac3ed45755132c65e3071ed886d7099bd8b220f4688f",
       "days": {
-        "20261026": {
-          "observed_at": "2026-11-13T16:36:11.995787+00:00",
-          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard?dates=20261026&limit=1000",
-          "sha256": "00cc8529bc64cf1eab5e7ab35d74192b528faea71a7287afd82b1e73eb674db6",
-          "complete_day": true,
-          "empty_calendar_day": false,
-          "completed": [
-            {
-              "date": "2026-10-26",
-              "league": "ligue-1",
-              "event_id": "401876422",
-              "kickoff": "2026-10-26T19:30:00+00:00",
-              "home_team": "Paris Saint-Germain",
-              "home_goals": 2,
-              "home_id": "160",
-              "away_team": "Lyon",
-              "away_goals": 0,
-              "away_id": "167"
-            }
-          ]
-        },
         "20261030": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
           "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard?dates=20261030&limit=1000",
