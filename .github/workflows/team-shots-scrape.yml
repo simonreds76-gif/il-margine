@@ -36,6 +36,8 @@ jobs:
           fi
 
       - name: Scrape odds
+        env:
+          MOVIODDS_API_KEY: ${{ secrets.MOVIODDS_API_KEY }}
         run: python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365" --days-ahead 7
 
       - name: Archive odds

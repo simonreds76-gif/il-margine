@@ -278,6 +278,7 @@ jobs:
 
       - name: Upload Fair Odds Lab artifacts to Vercel Blob
         env:
+          MOVIODDS_API_KEY: ${{ secrets.MOVIODDS_API_KEY }}
           BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
         run: |
           if [ -n "${BLOB_READ_WRITE_TOKEN:-}" ]; then
