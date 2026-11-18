@@ -19,16 +19,14 @@
       "unnamed_or_team_lines": 0
     }
   },
-  "capture_errors": [
-    "HTTPError"
-  ],
-  "capture_mode": "close",
+  "capture_errors": [],
+  "capture_mode": "publication",
   "direct_source": {
     "bookmaker": "Grosvenor",
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 208,
+      "current_quotes": 0,
       "mapped_quotes": 0,
       "paper_selections": 0,
       "price_or_status_changes": 0,
@@ -45,8 +43,8 @@
   "events_selected": 0,
   "events_supported": 0,
   "events_with_lines": 0,
-  "generated_at": "2026-11-17T18:44:55Z",
-  "last_publication_at": "2026-11-17T17:42:20Z",
+  "generated_at": "2026-11-18T01:19:37Z",
+  "last_publication_at": "2026-11-18T01:19:37Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 0,
@@ -72,21 +70,35 @@
   "market_inventory_rows_added": 0,
   "market_names_observed": [],
   "moviodds_source": {
-    "errors": [
-      "HTTPError"
-    ],
+    "errors": [],
+    "excluded": {
+      "fixture_not_eligible": 810,
+      "unmatched_or_unsupported_fixture": 271
+    },
+    "goalkeeper_coverage_status": "NO_TARGETS",
+    "goalkeeper_fixture_coverage": [],
+    "goalkeeper_source_hold": "moviodds_gk_contract_price_unverified_20261106",
+    "goalkeeper_verification": {
+      "deferred_by_budget": 0,
+      "fixtures": [],
+      "requests": 0,
+      "verified_quotes": 0,
+      "version": "moviodds_gk_atomic_v1"
+    },
     "market_count": 0,
+    "quote_count": 0,
+    "received_at": "2026-11-18T01:19:38.703686+00:00",
     "requests": 1,
     "source": "moviodds_bet365",
     "source_site": "com",
-    "status": "SOURCE_FAILED"
+    "status": "NO_VERIFIED_MARKETS"
   },
-  "publication_recovery": false,
+  "publication_recovery": true,
   "request_budget": 4,
   "requests_used": 1,
   "rows_added": 0,
   "rows_observed": 0,
   "selected_events": [],
-  "status": "PARTIAL_CAPTURE_FAILURE",
+  "status": "NO_GOALKEEPER_SAVE_LINES",
   "three_way_events": 0
 }
