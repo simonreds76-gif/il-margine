@@ -147,7 +147,8 @@ def morning(read,day,clock=timestamp,history_loader=load_history):
         f"{len(read.log)}/{read.limit} StatsHub reads. Provider coverage is partial; unpriced, unverified and nonstandard contracts are excluded.")
     if notes: summary+="\n"+" · ".join(notes)
     return dict(picks=ordered,fixtures=len(fs),coverage=summary,at=clock(),final=True,
-                completeBoards=(len(league_counts)==5 and coverage["boards"]==len(fs)),delivery="pending")
+                completeBoards=(len(league_counts)==5 and coverage["boards"]==len(fs)
+                    and not any("fixture board partially parsed" in s or "player screen unavailable" in s for s in notes)),delivery="pending")
 
 def note(status,text,**values):
     return dict(status=status,note=text,at=timestamp(),**values)
@@ -228,17 +229,37 @@ def outcome(p,doc):
         hit=won(p,*pair)
     return "win" if hit else "loss"
 
+def csv_outcome(p,history):
+    from statshub_daily_contracts import ALIASES
+    if p["side"]=="player": return None
+    names=[norm(ALIASES.get(p[s],p[s])) for s in ("home","away")]
+    matches=[r for d,r in history if d==p["ko"][:10] and r.get("Time")==p["ko"][11:16]
+        and [norm(r["HomeTeam"]),norm(r["AwayTeam"])]==names]
+    if len(matches)!=1:return None
+    # football-data.co.uk kickoff times use UK local time. The November pilot is on GMT.
+    cols={"shots":("HS","AS"),"shotsOnTarget":("HST","AST"),"corners":("HC","AC"),
+        "fouls":("HF","AF"),"btts":("FTHG","FTAG"),"result":("FTHG","FTAG"),
+        "goals":("FTHG","FTAG"),"handicap":("FTHG","FTAG"),"doubleChance":("FTHG","FTAG")}.get(p["stat"])
+    r=matches[0]
+    if not cols or not all((r.get(k) or "").isdigit() for k in cols):return None
+    return "win" if won(p,*(int(r[k]) for k in cols)) else "loss"
+
 def settle(read,picks,day):
     grouped=defaultdict(list)
     for p in picks:
         if not p.get("result") and p["ko"][:10]<day: grouped[p["matchId"]].append(p)
-    for fid,group in grouped.items():
+    histories={}
+    for fid,group in sorted(grouped.items(),key=lambda item:not any(p["side"]=="player" for p in item[1])):
         doc=read.read("getMatchDetails",dict(matchId=fid,include=["players","teamStats"],allPlayers=True),"ft")
-        if not doc: continue
         for p in group:
-            result=outcome(p,doc["data"])
+            result=outcome(p,doc["data"]) if doc else None
+            source="StatsHub final box score"
+            if not doc and p["side"]!="player":
+                if p["league"] not in histories: histories[p["league"]]=load_history(p["league"],day)
+                result=csv_outcome(p,histories[p["league"]])
+                source="Football-Data league final, both teams and exact kickoff"
             if result:
-                p.update(result=result,settledAt=doc["at"])
+                p.update(result=result,settledAt=doc["at"] if doc else timestamp(),resultSource=source)
                 if p.get("ready"): p["readyResult"]=result
             else:
                 p["settlementNote"]="Awaiting exact final statistic, full participation or bookmaker ruling."
@@ -258,7 +279,7 @@ def digest(day,board):
     header=f"StatsHub Daily · {day}\n{board['fixtures']} upcoming fixtures · {len(board['picks'])} private paper candidates"
     blocks=[header]
     for i,p in enumerate(board["picks"],1):
-        blocks.append(f"{i}. {p['fixture']} · {p['ko'][11:16]} UK\n{p['label']} @ {p['odds']:.2f} {p['book']} (minimum {p['minimum']:.2f})\n{p['why']}\n{p['risk']}")
+        blocks.append(f"{i}. {p['fixture']} · {p['ko'][11:16]} UK\n{p['label']} @ {p['odds']:.2f} {p['book']} (minimum {p['minimum']:.2f})\nChecked {p['at'][11:16]} UK · quote age {p['age']:.0f} min\n{p['why']}\n{p['risk']}")
     if not board["picks"]: blocks.append("No verified candidates from the assessed markets.")
     blocks.append(board["coverage"]+"\nPrice and lineup rechecks: "+LINK)
     parts=[]; current=""
@@ -276,22 +297,28 @@ def run():
     report=store.get(REPORT)
     if not report or report.get("pilot")!=START: raise RuntimeError("Private report unavailable")
     days=report["days"]
-    if day<=LAST and day not in days:
-        days[day]=morning(Reads(store,api,day,"morning",40),day)
+    if day<=LAST and not days.get(day,{}).get("final"):
+        board=morning(Reads(store,api,day,"morning",40),day)
+        old={p["id"]:p for p in days.get(day,{}).get("picks",[])}
+        fresh=[p for p in board["picks"] if p["id"] not in old]
+        board["picks"]=[*old.values(),*fresh]
+        board["final"]=board["completeBoards"] or now.strftime("%H:%M")>="10:40"
+        days[day]=board
         report.update(updated=timestamp(),status="Matchweek in progress")
         store.put(REPORT,report)
     before=json.dumps(report,sort_keys=True)
     all_picks=[p for board in days.values() for p in board["picks"]]
     if day in days:
         recheck(Reads(store,api,day,"recheck",12),days[day]["picks"],now)
-    if any(not p.get("result") and p["ko"][:10]<day for p in all_picks):
+    if report.get("settlementDay")!=day and any(not p.get("result") and p["ko"][:10]<day for p in all_picks):
         settle(Reads(store,api,day,"settle",8),all_picks,day)
+        report["settlementDay"]=day
     report["summary"]=accounting(all_picks)
     if day==CLOSE: report["status"]="Pilot closed · unresolved settlements retained for review"
     if json.dumps(report,sort_keys=True)!=before:
         report["updated"]=timestamp()
         store.put(REPORT,report)
-    if day in days and days[day].get("delivery")!="sent":
+    if day in days and days[day]["final"] and days[day].get("delivery")!="sent":
         send_digest(store,day,digest(day,days[day]))
         days[day]["delivery"]="sent"
         report["updated"]=timestamp()

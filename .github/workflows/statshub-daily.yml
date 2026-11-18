@@ -12,7 +12,9 @@ on:
         default: probe
   schedule:
     - cron: '0 10 20-24 11 *'
-    - cron: '13,28,43,58 10-19 20-23 11 *'
+    - cron: '13,43 10 20-24 11 *'
+    - cron: '13,28,43,58 11-19 21-22 11 *'
+    - cron: '13,28,43,58 18-19 20,23 11 *'
 permissions:
   contents: read
 concurrency:
