@@ -8,7 +8,7 @@ on:
       mode:
         description: Run a private connection test or the due matchweek work
         type: choice
-        options: [probe, due]
+        options: [probe, rehearse, due]
         default: probe
   schedule:
     - cron: '0 10 20-24 11 *'
@@ -31,7 +31,7 @@ jobs:
             /scripts/statshub_daily*.py
       - name: Screen, recheck or settle privately
         env:
-          MODE: ${{ github.event_name == 'push' && 'probe' || inputs.mode || 'due' }}
+          MODE: ${{ github.event_name == 'push' && 'rehearse' || inputs.mode || 'due' }}
           STATSHUB_DAILY_AUTH: ${{ secrets.STATSHUB_DAILY_AUTH }}
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
