@@ -19,6 +19,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
+from moviodds_auth import AccessFailure, check_http_status, request_headers
 from goalkeeper_quote_integrity import MOVIODDS_GK_HOLD, REASON as GK_HOLD_REASON, verified_quote
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -67,16 +68,19 @@ def download(sport, get=None, groups=None, *, site='com'):
             raise ValueError('Unsupported Bet365 site')
         params['site'] = site
     data = download_response(URL, params, get)
+    if data.get('markets') == 'main':
+        raise AccessFailure('MOVIODDS_MAIN_LINES_ONLY',200)
     if site == 'com' and data.get('site') != 'com':
         raise ValueError('Requested Bet365.com board was not confirmed')
     return data
 
 
 def download_response(url, params, get=None):
-    response = (get or requests.get)(url, params=params,
-                                    headers={'Accept-Encoding': 'gzip', 'User-Agent': 'IlMargineResearch/1.0'},
-                                    timeout=(5, 20), stream=True)
+    headers = request_headers(url, params)
+    response = (get or requests.get)(url, params=params, headers=headers,
+                                    timeout=(5, 20), stream=True, allow_redirects=False)
     try:
+        check_http_status(response, 'X-API-Key' in headers)
         response.raise_for_status()
         body = bytearray()
         started = time.monotonic()
@@ -414,6 +418,10 @@ def capture(sport, *, targets=(), days_ahead=3, get=None, raw_path=None, force=F
                 **({'goalkeeper_live_responses':live_responses} if verification else {})}).encode()))
             temp.replace(raw_path)
         return events, receipt
+    except AccessFailure as error:
+        receipt.update(status='SOURCE_FAILED', errors=[error.reason], http_status=error.status,
+                       received_at=datetime.now(timezone.utc).isoformat())
+        return [], receipt
     except (requests.RequestException, OSError, ValueError, TypeError, KeyError, AttributeError) as error:
         receipt.update(status='SOURCE_FAILED', errors=[type(error).__name__])
         return [], receipt

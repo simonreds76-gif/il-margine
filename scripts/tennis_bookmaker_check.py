@@ -45,6 +45,14 @@ def save_receipt(out, config, sources, artifacts, generated_at):
         statuses[book]={'status':source_status(supplied,len(rows)), 'quotes':len(rows),
                         'checked_at':supplied.get('captured_at') or generated_at,
                         'error_types':[str(e) for e in supplied.get('errors',[])][:20]}
+        if book == 'Bet365' and supplied.get('source') == 'moviodds_bet365':
+            if 'http_status' in supplied:
+                statuses[book]['http_status'] = supplied['http_status']
+            statuses[book]['named_ace_milestones_10_plus'] = sum(
+                1 for r in rows if r['_kind']=='props' and r.get('market')=='aces'
+                and r.get('raw_market_name')=='Player Aces'
+                and str(r.get('line','')).replace('.','',1).isdigit()
+                and float(r['line']) >= 9.5)
     payload={'schema_version':1,'generated_at':generated_at,'sources':statuses,'artifacts':files,
              'scope':'Configured tennis props sources only; no assertion of full bookmaker catalogue coverage.',
              'all_sources_checked':all(v['status'] not in {'NOT_CHECKED','MISSING_KEY','DISABLED'} for v in statuses.values())}
