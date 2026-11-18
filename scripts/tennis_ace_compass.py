@@ -61,6 +61,19 @@ def fingerprint(code):return {n:sha(code/'scripts'/n) for n in ('tennis_ace_comp
 def verified_implementation(folder, registration, implementation):
     """A separately installed recorder-only amendment preserves the frozen model."""
     if registration['config'] != CONFIG:raise ValueError('frozen_config_changed')
+    # The base forecaster and its settlement guards remain pinned to their prior hashes.
+    ext = readj(folder/'dispersion-amendment.json', {})
+    if ext and ext.get('after') == implementation:
+        walkover = folder/'walkover-settlement-amendment-20261117.json'
+        before = readj(walkover, {})['after']
+        if (ext.get('before') != before or before == implementation
+                or not all(implementation.get(k) == v for k,v in before.items() if k != 'tennis_ace_compass.py')
+                or ext.get('prior_sha256') != sha(walkover)
+                or ext.get('helper_sha256') != sha(Path(__file__).with_name('ace_compass_tail.py'))
+                or ext.get('policy_hash') != digest(readj(folder/'forward-policy.json',None))):
+            raise ValueError('unregistered_dispersion_comparison')
+        verified_implementation(folder, registration, before)
+        return dict(registration, implementation=implementation)
     if registration['implementation'] == implementation:return registration
     amendment = readj(folder/'recorder-amendment-20261030.json', {})
     old = registration['implementation']
@@ -261,9 +274,24 @@ def run(root,code,comparison=None,settle_only=False):
             except Exception as exc:capture_status=dict(state='BLOCKED',checked_at=now.isoformat(),reason=str(exc),added=0)
             atomic(folder/'capture-status.json',capture_status)
         settle(root,rows,outcomes,now);atomic(folder/'outcomes.json',outcomes)
-        report=summarize(rows,outcomes,reg,capture_status,now);atomic(folder/'report.json',report)
+        report=summarize(rows,outcomes,reg,capture_status,now)
+        tail_error = False
+        if (folder/'dispersion-amendment.json').exists():
+            try:
+                import sys
+                import ace_compass_tail as tail
+                verified_implementation(folder,reg,imp)
+                active = not settle_only and capture_status.get('state') != 'BLOCKED'
+                report['dispersion'] = tail.update(sys.modules[__name__],root,folder,rows,comparison,now,active)
+                if not settle_only and not active:
+                    report['dispersion']['capture'] = dict(state='BLOCKED', reason='parent_capture_blocked',checked_at=now.isoformat())
+            except (OSError, ValueError, KeyError, TypeError, ArithmeticError) as exc:
+                tail_error = True
+                prior = readj(folder/'report.json',{}).get('dispersion',{})
+                report['dispersion'] = dict(prior,capture=dict(state='BLOCKED',reason=str(exc),checked_at=now.isoformat()))
+        atomic(folder/'report.json',report)
         print(weekly_text(report))
-        return 1 if capture_status.get('state')=='BLOCKED' and not settle_only else 0
+        return 1 if tail_error or (capture_status.get('state')=='BLOCKED' and not settle_only) else 0
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--root',type=Path,default=ROOT);p.add_argument('--code-root',type=Path,default=ROOT);p.add_argument('--comparison',type=Path);p.add_argument('--settle-only',action='store_true');a=p.parse_args()
