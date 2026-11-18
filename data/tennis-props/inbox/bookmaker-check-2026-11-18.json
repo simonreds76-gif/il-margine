@@ -1,39 +1,39 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-18T17:21:51Z",
+  "generated_at": "2026-11-18T22:38:08Z",
   "sources": {
     "Bet365": {
       "status": "QUOTES_CAPTURED",
-      "quotes": 78,
-      "checked_at": "2026-11-18T17:21:51Z",
+      "quotes": 52,
+      "checked_at": "2026-11-18T22:38:08Z",
       "error_types": [],
-      "named_ace_milestones_10_plus": 22
+      "named_ace_milestones_10_plus": 16
     },
     "Grosvenor": {
       "status": "QUOTES_CAPTURED",
       "quotes": 4,
-      "checked_at": "2026-11-18T17:21:48.924169+00:00",
+      "checked_at": "2026-11-18T22:38:05.621164+00:00",
       "error_types": []
     },
     "Sisal IT": {
       "status": "QUOTES_CAPTURED",
-      "quotes": 11,
-      "checked_at": "2026-11-18T17:21:51.603830+00:00",
+      "quotes": 10,
+      "checked_at": "2026-11-18T22:38:08.089476+00:00",
       "error_types": []
     }
   },
   "artifacts": {
     "props": {
       "name": "bet365-lines-2026-11-18.csv",
-      "sha256": "b29901fd143f8a313822ac0e01ddce6eba0696c2a0f189c7db856681627b79c1"
+      "sha256": "aca80c9112eb7f0861bb0668b9cca16b868731c161b3f1d61d158b0d89e5cd4f"
     },
     "most_aces": {
       "name": "betmgm-most-aces-1x2-2026-11-18.csv",
-      "sha256": "821e8f28acee8b0473663fce75efac8765dad4b54d55009cf1938b1d0acf2775"
+      "sha256": "f47dcb9540cef429d5daf17abc89e1f52a0517ad6722e03149af5aa3a5a39aac"
     },
     "most_df": {
       "name": "most-df-1x2-2026-11-18.csv",
-      "sha256": "9fbe02cc40698da631fca07aa0b4aecb67f9e8f071fba3af88b1030eef648605"
+      "sha256": "9b3bc69571512ece6c8a60232a38384b5a4dc1fccffec4b40a94ee2a1d68903f"
     }
   },
   "scope": "Configured tennis props sources only; no assertion of full bookmaker catalogue coverage.",
