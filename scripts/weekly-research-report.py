@@ -1551,6 +1551,8 @@ def build_payload() -> dict[str, Any]:
     tennis_props_v3 = tennis_props_v3_snapshot()
     from tennis_opponent_return_reporting import section as opponent_return_section
     tennis_opponent_return = opponent_return_section(ROOT)
+    from tennis_masters_handicap_reporting import section as masters_section
+    tennis_masters_handicap = masters_section(ROOT)
     tennis_ace_compass = load_json(ROOT / "data/tennis-props/shadow/ace-compass-v1/report.json")
     tennis_indoor_expansion = load_json(ROOT / "data/tennis-ml-research/indoor-expansion-v1/report.json")
     tennis_indoor_paper = load_json(ROOT / "data/tennis-ml-research/indoor-scout-v1/report.json")
@@ -1594,6 +1596,7 @@ def build_payload() -> dict[str, Any]:
                 tennis_model_evidence[key] = snapshot_model_evidence[key]
         tennis_input_health = snapshot_sections.get("tennis_input_health") or tennis_input_health
         tennis_opponent_return = snapshot_sections.get("tennis_opponent_return") or tennis_opponent_return
+        tennis_masters_handicap = snapshot_sections.get("tennis_masters_handicap") or tennis_masters_handicap
         tennis_ace_compass = snapshot_sections.get("tennis_ace_compass") or tennis_ace_compass
         tennis_indoor_expansion = snapshot_sections.get("tennis_indoor_expansion") or tennis_indoor_expansion
         tennis_indoor_paper = snapshot_sections.get("tennis_indoor_paper") or tennis_indoor_paper
@@ -1659,6 +1662,7 @@ def build_payload() -> dict[str, Any]:
         "tennis_model_evidence": tennis_model_evidence,
         "tennis_props_v3": tennis_props_v3,
         "tennis_opponent_return": tennis_opponent_return,
+        "tennis_masters_handicap": tennis_masters_handicap,
         "tennis_ace_compass": tennis_ace_compass,
         "tennis_indoor_paper": tennis_indoor_paper,
         "tennis_indoor_expansion": tennis_indoor_expansion,
@@ -1994,6 +1998,8 @@ def render_report(payload: dict[str, Any]) -> str:
     lines.extend(["", breakpoint_c_text(payload.get("tennis_breakpoint_c") or {})])
     from tennis_opponent_return_reporting import weekly_text as opponent_return_text
     lines.extend(["", opponent_return_text(payload.get("tennis_opponent_return") or {})])
+    from tennis_masters_handicap_reporting import weekly_text as masters_text
+    lines.extend(["", masters_text(payload.get("tennis_masters_handicap") or {})])
 
     from match_shape_reporting import weekly_text as match_shape_text
     lines.extend(["", match_shape_text(payload.get("tennis_match_shape") or {})])
@@ -2237,6 +2243,8 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     lines.append(breakpoint_c_text(payload.get("tennis_breakpoint_c") or {}))
     from tennis_opponent_return_reporting import weekly_text as opponent_return_text
     lines.extend(["", opponent_return_text(payload.get("tennis_opponent_return") or {})])
+    from tennis_masters_handicap_reporting import weekly_text as masters_text
+    lines.extend(["", masters_text(payload.get("tennis_masters_handicap") or {})])
 
     from match_shape_reporting import weekly_text as match_shape_text
     lines.append(match_shape_text(payload.get("tennis_match_shape") or {}))
