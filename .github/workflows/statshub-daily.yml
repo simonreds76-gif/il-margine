@@ -42,6 +42,21 @@ jobs:
         run: |
           python -m pip -q install requests cryptography
           python scripts/statshub_daily.py
+      - name: Verify private comparison access
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'probe'
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python scripts/statshub_daily_observations.py --check
+      - name: Retain private matchweek comparison evidence
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'due')
+        continue-on-error: true
+        timeout-minutes: 5
+        env:
+          STATSHUB_DAILY_AUTH: ${{ secrets.STATSHUB_DAILY_AUTH }}
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python scripts/statshub_daily_observations.py
   retire:
     needs: pilot
     if: github.event_name == 'schedule' && github.event.schedule == '0 10 20-24 11 *'
