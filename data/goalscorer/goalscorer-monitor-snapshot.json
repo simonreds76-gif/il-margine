@@ -1,13 +1,13 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-11-18T16:01:33Z",
+  "generated_at": "2026-11-18T17:33:54Z",
   "source_status": {
-    "compared_at": "2026-11-18T16:00:12Z",
+    "compared_at": "2026-11-18T17:31:48Z",
     "hot_live_updated_at": "2026-11-18T01:50:59Z",
-    "expected_refresh_updated_at": "2026-11-18T16:00:12Z",
-    "settlement_updated_at": "2026-11-18T07:37:24Z",
+    "expected_refresh_updated_at": "2026-11-18T17:31:48Z",
+    "settlement_updated_at": "2026-11-18T17:33:53Z",
     "scheduler_heartbeat_at": "2026-11-18T01:50:59Z",
-    "snapshot_generated_at": "2026-11-18T16:01:33Z",
+    "snapshot_generated_at": "2026-11-18T17:33:54Z",
     "live_status_state": "skipped",
     "live_status_message": "Goalscorer live poll skipped: no leagues due in current cadence window."
   },
@@ -18,7 +18,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-11-18T15:59:31Z",
+      "updated_at": "2026-11-18T17:33:27Z",
       "live_rows": 133,
       "public_now": 0,
       "shadow_now": 14,
@@ -49,7 +49,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-11-18T15:59:45Z",
+      "updated_at": "2026-11-18T17:33:31Z",
       "live_rows": 289,
       "public_now": 0,
       "shadow_now": 21,
@@ -80,7 +80,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-11-18T15:59:59Z",
+      "updated_at": "2026-11-18T17:33:36Z",
       "live_rows": 169,
       "public_now": 0,
       "shadow_now": 13,
@@ -111,7 +111,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-11-18T16:00:07Z",
+      "updated_at": "2026-11-18T17:33:39Z",
       "live_rows": 367,
       "public_now": 0,
       "shadow_now": 0,
@@ -142,7 +142,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-11-18T16:00:12Z",
+      "updated_at": "2026-11-18T17:33:43Z",
       "live_rows": 57,
       "public_now": 0,
       "shadow_now": 0,
@@ -6788,7 +6788,7 @@
     }
   ],
   "penalty_watchlist": {
-    "generated_at": "2026-11-18T07:37:24Z",
+    "generated_at": "2026-11-18T17:33:53Z",
     "row_count": 0,
     "rows": []
   },
@@ -8429,12 +8429,12 @@
     "expected_starter_rows": 211,
     "avg_ev_pct": -51.83673536945811,
     "source_feed_gap_leagues": [],
-    "raw_monitor_summary": "=== Serie A | Updated 18/11/2026, 15:59 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-18T15:59:29Z\n\nHistorical Rows          33,711\nOdds Rows                160\nMatched Rows             133\nMissing Player History   39\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           16\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   64\nLow Confidence Rows      69\nPublic High Signals      0\nPublic Caveat Signals    12\nShadow Track Rows        14\nPenalty Transfer Rows    4\nPosition Upgrade Rows    2\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 4\nFixtures Clean           0\nFixtures Degraded        4\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    68\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        65\n\nAverage EV               -0.6061\n\n\n=== Premier League | Updated 18/11/2026, 15:59 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-18T15:59:43Z\n\nHistorical Rows          32,984\nOdds Rows                341\nMatched Rows             289\nMissing Player History   58\nMissing Team Mapping     0\nFallback Rows            3\nQualified Rows           49\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   219\nLow Confidence Rows      70\nPublic High Signals      0\nPublic Caveat Signals    45\nShadow Track Rows        21\nPenalty Transfer Rows    4\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 4\nFixtures Clean           0\nFixtures Degraded        7\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    88\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        43\n\nAverage EV               -0.4114\n\n\n=== La Liga | Updated 18/11/2026, 15:59 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-18T15:59:57Z\n\nHistorical Rows          35,048\nOdds Rows                192\nMatched Rows             169\nMissing Player History   32\nMissing Team Mapping     0\nFallback Rows            4\nQualified Rows           22\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   98\nLow Confidence Rows      71\nPublic High Signals      0\nPublic Caveat Signals    19\nShadow Track Rows        13\nPenalty Transfer Rows    1\nPosition Upgrade Rows    1\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 4\nFixtures Clean           0\nFixtures Degraded        5\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    55\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        47\n\nAverage EV               -0.5659\n\n\n=== Bundesliga | Updated 18/11/2026, 16:00 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-18T16:00:05Z\n\nHistorical Rows          27,248\nOdds Rows                437\nMatched Rows             367\nMissing Player History   70\nMissing Team Mapping     0\nFallback Rows            9\nQualified Rows           25\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   290\nLow Confidence Rows      77\nPublic High Signals      0\nPublic Caveat Signals    21\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        6\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.5555\n\n\n=== Ligue 1 | Updated 18/11/2026, 16:00 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-18T16:00:11Z\n\nHistorical Rows          26,834\nOdds Rows                67\nMatched Rows             57\nMissing Player History   10\nMissing Team Mapping     0\nFallback Rows            4\nQualified Rows           6\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   33\nLow Confidence Rows      24\nPublic High Signals      0\nPublic Caveat Signals    5\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.4756\n"
+    "raw_monitor_summary": "=== Serie A | Updated 18/11/2026, 17:31 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-18T15:59:29Z\n\nHistorical Rows          33,711\nOdds Rows                160\nMatched Rows             133\nMissing Player History   39\nMissing Team Mapping     0\nFallback Rows            0\nQualified Rows           16\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   64\nLow Confidence Rows      69\nPublic High Signals      0\nPublic Caveat Signals    12\nShadow Track Rows        14\nPenalty Transfer Rows    4\nPosition Upgrade Rows    2\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 4\nFixtures Clean           0\nFixtures Degraded        4\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    68\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        65\n\nAverage EV               -0.6061\n\n\n=== Premier League | Updated 18/11/2026, 17:31 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-18T15:59:43Z\n\nHistorical Rows          32,984\nOdds Rows                341\nMatched Rows             289\nMissing Player History   58\nMissing Team Mapping     0\nFallback Rows            3\nQualified Rows           49\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   219\nLow Confidence Rows      70\nPublic High Signals      0\nPublic Caveat Signals    45\nShadow Track Rows        21\nPenalty Transfer Rows    4\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 4\nFixtures Clean           0\nFixtures Degraded        7\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    88\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        43\n\nAverage EV               -0.4114\n\n\n=== La Liga | Updated 18/11/2026, 17:31 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-18T15:59:57Z\n\nHistorical Rows          35,048\nOdds Rows                192\nMatched Rows             169\nMissing Player History   32\nMissing Team Mapping     0\nFallback Rows            4\nQualified Rows           22\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   98\nLow Confidence Rows      71\nPublic High Signals      0\nPublic Caveat Signals    19\nShadow Track Rows        13\nPenalty Transfer Rows    1\nPosition Upgrade Rows    1\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 4\nFixtures Clean           0\nFixtures Degraded        5\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    55\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        47\n\nAverage EV               -0.5659\n\n\n=== Bundesliga | Updated 18/11/2026, 17:31 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-18T16:00:05Z\n\nHistorical Rows          27,248\nOdds Rows                437\nMatched Rows             367\nMissing Player History   70\nMissing Team Mapping     0\nFallback Rows            9\nQualified Rows           25\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   290\nLow Confidence Rows      77\nPublic High Signals      0\nPublic Caveat Signals    21\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        6\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.5555\n\n\n=== Ligue 1 | Updated 18/11/2026, 17:31 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-18T16:00:11Z\n\nHistorical Rows          26,834\nOdds Rows                67\nMatched Rows             57\nMissing Player History   10\nMissing Team Mapping     0\nFallback Rows            4\nQualified Rows           6\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   33\nLow Confidence Rows      24\nPublic High Signals      0\nPublic Caveat Signals    5\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        1\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.4756\n"
   },
   "research_status": {
     "status": "RESEARCH_ONLY",
     "model_variant": "v2_minutes_absolute_share_repair",
-    "updated_at": "2026-11-18T15:57:56Z",
+    "updated_at": "2026-11-18T17:31:48Z",
     "parity": {
       "decision": "PASS",
       "golden_rows": 25,
@@ -8477,5 +8477,5 @@
     }
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "06ef5bbad5594b164a59a567f3db219953a7c21ac98ae990f1cc4ca1be67d5ae"
+  "payload_hash": "73ffcadef3856f2005fb076c2cb793e7efcd9295976e2d8f89b1da9bc0c0764c"
 }
