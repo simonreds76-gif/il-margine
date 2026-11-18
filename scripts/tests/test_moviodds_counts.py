@@ -35,6 +35,14 @@ class CountCaptureTests(unittest.TestCase):
         self.assertTrue(all(r['captured_at']!='WRONG_TIMESTAMP' and r['source']=='moviodds_bet365' for r in rows))
         self.assertTrue(all(r['market']=='MATCH_CORNERS' and r['bookmaker']=='Bet365' for r in rows))
 
+    def test_auth_failure_reported_for_every_league_without_retry(self):
+        with patch.object(source,'download',side_effect=source.AccessFailure('MOVIODDS_ACCESS_DENIED',403)) as get:
+            for expected_requests in (1,0):
+                _, receipt = counts.capture_and_merge([],self.targets)
+                self.assertEqual(receipt['requests'],expected_requests)
+                self.assertEqual((receipt['errors'],receipt['http_status']),(['MOVIODDS_ACCESS_DENIED'],403))
+            self.assertEqual(get.call_count,1)
+
     def test_bad_contracts_cannot_become_team_shots(self):
         raw=copy.deepcopy(self.raw);raw['matches']=[next(m for m in raw['matches'] if m['home']=='Monza')]
         q=next(q for q in raw['matches'][0]['quotes'] if q['group_id']=='50532')

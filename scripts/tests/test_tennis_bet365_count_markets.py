@@ -112,14 +112,16 @@ class VerifiedMarkets(unittest.TestCase):
                          price_captured_at=self.now.isoformat(),bookmaker='Bet365')
         worse = dict(candidate,bookmaker='Grosvenor',selected_odds='2.0',value_player1_pct='9')
         report = {'generated_at':self.now.isoformat(),'matches':[{'model':current.COUNT_MODEL,'prices':[{'candidate':worse},{'candidate':candidate}]}]}
-        self.assertEqual(current.alert_rows(report,self.now),[candidate])
+        compared = [{'bookmaker': r['bookmaker'], 'odds': r['selected_odds'], 'captured_at': r['price_captured_at']}
+                    for r in (worse, candidate)]
+        self.assertEqual(current.alert_rows(report,self.now),[{**candidate, 'compared_prices': compared}])
         state = {'signal_ids':[f"{candidate['date']}|player a|player b|player a|most_aces_1x2|basel"]}
         with patch.object(digest.json,'loads',return_value=report),patch.object(Path,'read_text',return_value='{}'):
             signals=digest.most_aces_signals(candidate['date'],now=self.now)
         self.assertEqual(len(signals),1)
         self.assertEqual(digest.new_signals_since_state(signals,state,candidate['date']),[])
         report['matches'][0]['prices'][1]['candidate']['price_captured_at']=(self.now-timedelta(minutes=31)).isoformat()
-        self.assertEqual(current.alert_rows(report,self.now),[worse])
+        self.assertEqual(current.alert_rows(report,self.now),[{**worse, 'compared_prices': compared[:1]}])
 
 
 class PaperSelection(unittest.TestCase):

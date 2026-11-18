@@ -11,10 +11,11 @@ GROUPS = {'50532':('Team Shots','Total Shots'), '10235':('Corners 2-Way','Corner
 RAW = Path(__file__).resolve().parents[1]/'data/team-shots/moviodds/latest.json.gz'
 _board = None
 _attempted = False
+_board_error = None
 
 
 def capture_and_merge(payload, targets, *, now=None, get=None, raw_path=RAW):
-    global _board, _attempted
+    global _board, _attempted, _board_error
     receipt = dict(source='moviodds_bet365',source_site='com',requests=0,errors=[],team_shots_quotes=0,corners_quotes=0)
     if not targets or not source.enabled('soccer'):
         receipt['status']='NO_TARGETS' if not targets else 'DISABLED'
@@ -23,11 +24,18 @@ def capture_and_merge(payload, targets, *, now=None, get=None, raw_path=RAW):
         if not _attempted:
             _attempted=True
             receipt['requests']=1
-            _board=source.download('soccer',get,groups=GROUPS)
+            _board_error = None
+            try:
+                _board=source.download('soccer',get,groups=GROUPS)
+            except source.AccessFailure as error:
+                _board_error = (error.reason, error.status)
+                raise
             raw_path=Path(raw_path);raw_path.parent.mkdir(parents=True,exist_ok=True)
             temp=raw_path.with_suffix('.tmp')
             temp.write_bytes(gzip.compress(json.dumps(_board).encode()))
             temp.replace(raw_path)
+        if _board_error:
+            raise source.AccessFailure(*_board_error)
         if _board is None: raise ValueError('Unavailable source board')
         events,excluded=source.normalize(_board,'soccer',now or datetime.now(timezone.utc),
                                          targets=targets,days_ahead=7,groups=GROUPS)
@@ -45,6 +53,9 @@ def capture_and_merge(payload, targets, *, now=None, get=None, raw_path=RAW):
                 receipt[key]+=2*len(market['odds'])
         receipt.update(status='OK' if events else 'NO_FRESH_MARKETS',excluded=excluded)
         return list(merged.values()),receipt
+    except source.AccessFailure as error:
+        receipt.update(status='SOURCE_FAILED', errors=[error.reason], http_status=error.status)
+        return payload,receipt
     except (requests.RequestException,OSError,ValueError,TypeError,KeyError) as exc:
         receipt.update(status='SOURCE_FAILED',errors=[type(exc).__name__])
         return payload,receipt

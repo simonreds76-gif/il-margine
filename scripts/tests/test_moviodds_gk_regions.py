@@ -27,7 +27,7 @@ class GoalkeeperRegions(unittest.TestCase):
                        'date':'2026-11-06T19:45:00Z', 'league':{'slug':'italy-serie-a'}}
 
     def response(self, data):
-        r = Mock()
+        r = Mock(status_code=200)
         r.iter_content.return_value = [json.dumps(data).encode()]
         return r
 

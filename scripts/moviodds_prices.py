@@ -1,4 +1,4 @@
-"""Bounded Bet365 price source; no credentials, model changes or inferred prices.
+"""Bounded authenticated Bet365 price reads for existing football and tennis collectors.
 
 Verified 2026-10-28 against the rendered sportsbook. Only named-player full-match
 GK saves / aces / double faults, plus verified named-player headed SOT.
@@ -61,18 +61,13 @@ def enabled(sport):
 
 def download(sport, get=None, groups=None, *, site='com'):
     # Requests transparently decompresses gzip; cap decompressed bytes too.
-    # One request, no retry loop, no account key and no browser bypass.
+    # One bounded request to the selected regional board.
     params = {'sport': sport, 'groups': ','.join(groups or GROUPS[sport]), 'links': '1'}
     if site is not None:
         if site not in {'com', 'com.au'}:
             raise ValueError('Unsupported Bet365 site')
         params['site'] = site
-    data = download_response(URL, params, get)
-    if data.get('markets') == 'main':
-        raise AccessFailure('MOVIODDS_MAIN_LINES_ONLY',200)
-    if site == 'com' and data.get('site') != 'com':
-        raise ValueError('Requested Bet365.com board was not confirmed')
-    return data
+    return download_response(URL, params, get)
 
 
 def download_response(url, params, get=None):
@@ -89,6 +84,10 @@ def download_response(url, params, get=None):
             if len(body) > 8_000_000 or time.monotonic()-started > 25:
                 raise ValueError('MoviOdds response exceeded bounded capture')
         data = json.loads(body)
+        if not isinstance(data, dict):
+            raise ValueError('Invalid MoviOdds response')
+        if data.get('markets') == 'main':
+            raise AccessFailure('MOVIODDS_MAIN_LINES_ONLY', 200)
         # The unqualified endpoint is the Australian board. Never silently
         # accept it when a caller explicitly requests Bet365.com prices.
         if params.get('site') == 'com' and data.get('site') != 'com':
@@ -403,9 +402,15 @@ def capture(sport, *, targets=(), days_ahead=3, get=None, raw_path=None, force=F
                     item['verification_exclusions']=checked.get('excluded',{})
                     if item.get('status')=='CAPTURED' and checked.get('excluded'):
                         item['status']='PARTIALLY_VERIFIED'
+                    if checked.get('error'):
+                        item.update(status='VERIFICATION_FAILED', reason=checked['error'])
+                    elif checked.get('excluded', {}).get('same_provider_cache_no_independent_check'):
+                        item.update(status='INDEPENDENT_CHECK_UNAVAILABLE', reason='same_provider_cache_no_independent_check')
+            failures = [r for r in verified_fixtures.values() if r.get('error')]
+            if failures:
+                receipt['errors'] = sorted({r['error'] for r in failures})
+                receipt['status'] = 'PARTIAL_SOURCE_FAILURE' if events or len(failures) < len(verified_fixtures) else 'SOURCE_FAILED'
             if MOVIODDS_GK_HOLD and not (verification or {}).get('verified_quotes'):
-                for item in coverage:
-                    item.update(status='SOURCE_CONTRACT_QUARANTINED', reason=GK_HOLD_REASON)
                 receipt['goalkeeper_source_hold'] = GK_HOLD_REASON
             receipt['goalkeeper_fixture_coverage'] = coverage
             receipt['goalkeeper_coverage_status'] = ('NO_TARGETS' if not coverage else

@@ -84,6 +84,21 @@ class AtomicGk(unittest.TestCase):
         live['quotes'].pop();q['suspended']=True
         self.assertFalse(any(r['player']=='Nahuel Noll' and r['line']=='3.5' for r in self.rows()[0]))
 
+    def test_identical_provider_cache_cannot_verify_a_keeper_price(self):
+        def cached(url,params,get):
+            return {**self.raw['live'][params['fi']], 'source':'cache'}
+        with patch.object(adapter,'download_response',side_effect=cached):
+            _,receipt,_=verify.verify_board(self.raw['board'],self.targets,now=self.now)
+        self.assertEqual(receipt['verified_quotes'],0)
+        self.assertTrue(all(r['excluded']=={'same_provider_cache_no_independent_check':1} for r in receipt['fixtures']))
+
+    def test_fixture_auth_failure_keeps_reason(self):
+        with patch.object(adapter,'download_response',side_effect=adapter.AccessFailure('MOVIODDS_KEY_REJECTED',401)):
+            _,receipt,_=verify.verify_board(self.raw['board'],self.targets,now=self.now)
+        self.assertEqual(receipt['verified_quotes'],0)
+        self.assertEqual([(r['error'],r['http_status']) for r in receipt['fixtures']],
+                         [('MOVIODDS_KEY_REJECTED',401)]*2)
+
     def test_timeout_keeps_other_fixture_and_original_bookmaker(self):
         data,receipt,_=self.verified()
         def read(url,params,get):

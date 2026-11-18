@@ -12,6 +12,7 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone, timedelta
 from goalkeeper_quote_integrity import VERIFICATION_VERSION
+from moviodds_auth import AccessFailure
 
 MAX_FIXTURES = 30
 
@@ -42,6 +43,8 @@ def reconcile(board_match, live, event_id, now):
     fixture=str(board_match['id']);issues=Counter()
     board_status=(board_match.get('group_status') or {}).get('177703') or {}
     live_status=(live.get('group_status') or {}).get('177703') or {}
+    if live.get('source') == 'cache':
+        return [], {'same_provider_cache_no_independent_check': 1}
     if (live.get('site')!='com' or str(live.get('fixture'))!=fixture or live.get('source')!='live-fetch'
             or not fresh(live.get('server_time'),now)
             or any(s.get('stale') or s.get('suspended') or s.get('removed') or not fresh(s.get('polled_at'),now)
@@ -116,6 +119,9 @@ def verify_board(data, targets, get=None, now=None, days_ahead=3):
                             group_status={'177703':(live.get('group_status') or {}).get('177703')},
                             quotes=[q for q in live.get('quotes') or [] if str(q.get('group_id'))=='177703'])
             return accepted,{'fixture_id':fixture,'event_id':event_id,'accepted':len(accepted),'excluded':issues},evidence
+        except AccessFailure as error:
+            return [], {'fixture_id': fixture, 'event_id': event_id, 'accepted': 0,
+                        'error': error.reason, 'http_status': error.status}, None
         except Exception as error:
             # A failed fixture must not discard the other bookmakers or fixtures.
             return [],{'fixture_id':fixture,'event_id':event_id,'accepted':0,'error':type(error).__name__},None

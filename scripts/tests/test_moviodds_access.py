@@ -11,7 +11,7 @@ class TestMoviOddsAccess(unittest.TestCase):
         response=Mock(status_code=code)
         response.iter_content.return_value=[json.dumps(body or {}).encode()]
         return response
-    def test_auth_goes_only_to_tennis_on_exact_origin_no_redirect(self):
+    def test_auth_reaches_each_collector_only_on_exact_origin_without_redirects(self):
         response=self.request(200,{'site':'com'})
         get=Mock(return_value=response)
         with patch.dict('os.environ',{'MOVIODDS_API_KEY':'dummy-test-key'}):
@@ -19,9 +19,22 @@ class TestMoviOddsAccess(unittest.TestCase):
             self.assertEqual(get.call_args.kwargs['headers']['X-API-Key'],'dummy-test-key')
             self.assertFalse(get.call_args.kwargs['allow_redirects'])
             self.assertNotIn('key',get.call_args.kwargs['params'])
-            self.assertNotIn('X-API-Key',auth.request_headers(prices.URL,{'sport':'soccer'}))
+            prices.download('soccer', get)
+            prices.download_response('https://moviodds.com/quotes', {'site':'com','fi':'123'}, get)
+            for call in get.call_args_list:
+                self.assertEqual(call.kwargs['headers']['X-API-Key'],'dummy-test-key')
+                self.assertFalse(call.kwargs['allow_redirects'])
+                self.assertNotIn('dummy-test-key',str(call.kwargs['params']))
+            for url, params in [
+                (prices.URL, {'sport':'other'}),
+                ('https://moviodds.com/quotes', {'site':'com','fi':'bad'}),
+                ('https://moviodds.com/quotes', {'site':'other','fi':'123'}),
+                ('http://moviodds.com/odds', {'sport':'soccer'}),
+                ('https://moviodds.com.example.org/odds', {'sport':'soccer'})]:
+                with self.subTest(url=url,params=params),self.assertRaises(ValueError):
+                    prices.download_response(url,params,get)
             with self.assertRaises(ValueError):prices.download_response('https://other.invalid/odds',{'sport':'tennis'},get)
-            self.assertEqual(get.call_count,1)
+            self.assertEqual(get.call_count,3)
     def test_auth_plan_and_http_failures_are_distinct(self):
         for code,key,body,expected in [(401,'',{},'MOVIODDS_KEY_REQUIRED'),
                 (401,'dummy',{},'MOVIODDS_KEY_REJECTED'),(403,'dummy',{},'MOVIODDS_ACCESS_DENIED'),

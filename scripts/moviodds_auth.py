@@ -1,5 +1,6 @@
 """Provider-scoped credentials for MoviOdds downloads. Secrets never enter a URL."""
 import os
+import re
 from urllib.parse import urlsplit
 
 CREDENTIAL_TARGET = 'IlMargine/MoviOdds'
@@ -39,8 +40,12 @@ def request_headers(url, params):
             or parsed.query or parsed.fragment):
         raise ValueError('Unrecognised MoviOdds destination')
     base={'Accept-Encoding':'gzip','User-Agent':'IlMargineResearch/1.0'}
-    if parsed.path!='/odds' or params.get('sport')!='tennis':
-        return base
+    if parsed.path == '/odds':
+        supported = params.get('sport') in ('soccer', 'tennis') and params.get('site') in (None, 'com', 'com.au')
+    else:
+        supported = params.get('site') == 'com' and re.fullmatch(r'[1-9][0-9]*', str(params.get('fi', '')))
+    if not supported:
+        raise ValueError('Unrecognised MoviOdds request')
     key=os.environ.get('MOVIODDS_API_KEY') or windows_credential()
     if key:
         base['X-API-Key']=key
