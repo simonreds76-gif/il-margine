@@ -1,3 +1,5 @@
+import { monitorFamilies } from "@/lib/monitor-families";
+import MonitorFragment from "@/components/model-monitor/MonitorFragment";
 import GoalscorerModelCards from "@/components/model-monitor/GoalscorerModelCards";
 import { Suspense } from "react";
 import SkylineModelCards from "@/components/model-monitor/SkylineModelCards";
@@ -43,25 +45,57 @@ export default async function AdminModels({ searchParams }: { searchParams: Prom
   if (!await isAdminSession()) redirect("/admin");
   const data = await readAdminModels();
   const params = await searchParams;
-  const current=data.rows.filter(r=>!r.id.startsWith('props-'));
-  const modelIndex=current.map(r=>[r.id,r.name]);
-  const groups=[...new Set(current.map(r=>r.group))];
+  const families = monitorFamilies(data.rows);
+  const card = (r: ModelRow) => <ModelCard key={r.id} r={r} now={data.checkedAt} history={data.histories[r.id]} />;
+  const panels: Record<string, React.ReactNode> = {
+    shape: <MatchShapePanel value={data.matchShape} />,
+    breaks: data.breakpointC ? <BreakPointPaperPanel value={data.breakpointC} /> : <p>Awaiting a break-point report.</p>,
+    sisal: data.sisal5050 ? <Sisal5050Panel value={data.sisal5050} page={Number(params.sisalPage) || 1} /> : <p>Awaiting a Sisal report.</p>,
+    shots: <ShotsCalibrationPanel />,
+    skyline: <><a href="/model-monitor/skyline" className="inline-flex min-h-11 items-center text-sm text-cyan-200">Open Skyline paper monitor →</a><Suspense fallback={<p>Loading Skyline records…</p>}><SkylineModelCards /></Suspense></>,
+    goals: <Suspense fallback={<p>Loading goalscorer records…</p>}><GoalscorerModelCards /></Suspense>,
+  };
   return <main className="min-h-screen bg-[#0f1117] px-4 py-8 text-slate-100 sm:px-6"><div className="mx-auto max-w-6xl">
     <header className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-widest text-emerald-300">Il Margine · Private</p><h1 className="mt-2 text-3xl font-bold">Model monitor</h1><p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-300">Every running model and active paper comparison in one place. Retired and paused experiments are not listed. Results stay separate; nothing here promotes a model or changes stakes.</p></div><nav aria-label="Monitor actions" className="flex flex-wrap gap-2"><a href="/admin" className="rounded-xl border border-slate-600 px-4 py-3 text-sm hover:bg-slate-800">Back to Admin</a><a href="/admin/penalties" className="rounded-xl border border-slate-600 px-4 py-3 text-sm hover:bg-slate-800">Penalty reviews</a><a href="/admin/models" className="rounded-xl border border-emerald-400/40 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200 hover:bg-emerald-400/20">Refresh records</a></nav></header>
     <a href="/admin/models/signals" className="my-6 inline-flex min-h-12 items-center rounded-xl border border-emerald-400/40 bg-emerald-400/10 px-5 py-3 font-semibold text-emerald-200">Browse signals &amp; results →</a>
     <nav aria-label="Tennis forecasts" className="mb-6 grid gap-3 sm:grid-cols-2"><a href="/admin/models/signals?model=props&view=props-board" className="min-w-0 rounded-xl border border-cyan-400/30 bg-cyan-400/5 p-4"><strong className="text-cyan-100">Aces forecasts</strong><span className="mt-1 block text-sm text-slate-300">Expected aces per player and match total &rarr;</span></a><a href="/admin/models/signals?model=mostaces&view=most-aces-current" className="min-w-0 rounded-xl border border-slate-600 p-4"><strong>Most Aces 1X2</strong><span className="mt-1 block text-sm text-slate-300">Three fair odds, bookmaker prices and paper research &rarr;</span></a></nav>
-    <a href="/model-monitor/skyline" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-cyan-400/30 bg-cyan-400/5 p-5"><span><strong className="text-lg text-cyan-200">Skyline</strong><span className="mt-1 block text-sm text-slate-300">Headed shots on target · Bet365 comparison · Paper ROI</span></span><span className="text-sm text-cyan-200">Open paper monitor →</span></a>
-    <nav aria-label="Running models" className="mb-6 rounded-2xl border border-slate-700 p-4"><h2 className="font-semibold">Find a running model</h2><div className="mt-3 flex flex-wrap gap-2">{modelIndex.map(([id,name])=><a key={id} href={`#model-${id}`} className="inline-flex min-h-11 items-center rounded-lg border border-slate-700 px-3 py-2 text-xs text-emerald-200">{name}</a>)}{[["shots-comparison","Shots · four versions"],["shots-strength","Shots · strength correction"],["match-shape","Match Shape · totals & handicaps"],["match-shape-j1","ATP J1 correction"],["break-point-paper","Break Point C"],["sisal-5050","Sisal 50/50 · both versions"],["skyline","Skyline · four versions"]].map(([id,name])=><a key={id} href={`#${id}`} className="inline-flex min-h-11 items-center rounded-lg border border-slate-700 px-3 py-2 text-xs text-cyan-200">{name}</a>)}</div><p className="mt-3 text-xs text-slate-400">Graphs use saved settlements only. Calibration covers the stated forecast cohort and is not directly comparable across different markets. No settled qualifying bets means ROI is unavailable, not 0%.</p>{!data.activeAvailable&&<p className="mt-3 text-sm text-amber-200">The expanded running-model snapshot has not arrived. Existing results remain visible.</p>}</nav>
+    <MonitorFragment />
+    {!data.activeAvailable && <p className="mb-4 text-sm text-amber-200">The expanded running-model snapshot is unavailable. The latest available records are shown below.</p>}
     {data.activeWarnings.length>0&&<p className="mb-4 rounded-xl border border-amber-700 p-4 text-sm text-amber-200">Model display needs attention: {data.activeWarnings.join(", ")}. Other model records remain available.</p>}
     <p className="mb-6 text-xs leading-relaxed text-slate-400">ROI is profit divided by settled stake. Records remain separate because models can select the same match. A unit is the recorded reference stake.</p>
-    {groups.map((g,i)=><section key={g} id={`group-${i}`} className="mb-9"><h2 className="mb-4 text-xl font-semibold">{g==='Football research'?'Football models':g}</h2><div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{current.filter(r=>r.group===g).map(r=><ModelCard key={r.id} r={r} now={data.checkedAt} history={data.histories[r.id]}/>)}</div>{g==='Tennis props' && <div className="mt-5"><section id="props-breakdowns" className="mb-9" aria-labelledby="props-breakdowns-title"><h2 id="props-breakdowns-title" className="text-xl font-semibold">Aces &amp; double faults · separate records</h2><p className="mt-2 mb-4 max-w-3xl text-sm text-slate-400">By market: aces or double faults. By tour: men or women, including both markets. These are two views of the same record; do not add all four together.</p><div className="grid gap-4 md:grid-cols-2">{data.rows.filter(r=>r.id.startsWith('props-')).map(r=><ModelCard key={r.id} r={r} now={data.checkedAt} history={data.histories[r.id]}/>)}</div></section></div>}</section>)}
-
-    <div className="mb-9"><ShotsCalibrationPanel /></div>
-    <Suspense fallback={<p>Loading Skyline records…</p>}><SkylineModelCards /></Suspense>
-    <Suspense fallback={<p>Loading goalscorer records…</p>}><GoalscorerModelCards /></Suspense>
-    <MatchShapePanel value={data.matchShape} />
-    <BreakPointPaperPanel value={data.breakpointC} />
-    <Sisal5050Panel value={data.sisal5050} page={Number(params.sisalPage) || 1} />
+    {(["Tennis", "Football", "Other"] as const).map(sport => {
+      const items = families.filter(family => family.sport === sport);
+      if (!items.length) return null;
+      return <section key={sport} className="mb-8" aria-label={sport}>
+        <h2 className="mb-3 text-xl font-semibold">{sport}</h2>
+        <div className="space-y-2">{items.map(family => {
+          const breakdowns = family.rows.filter(r => r.id.startsWith("props-"));
+          const cards = family.rows.filter(r => !r.id.startsWith("props-"));
+          const attention = family.rows.filter(r => (r.overdue ?? 0) > 0).length;
+          return <details key={family.id} id={`family-${family.id}`} data-model-family={family.id}
+            open={family.id === "sisal" && Boolean(params.sisalPage) || undefined}
+            className="group/family scroll-mt-24 rounded-xl border border-slate-700/80 bg-slate-900/40">
+            <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-3 rounded-xl px-4 py-3 hover:bg-slate-800/60 focus-visible:outline focus-visible:outline-emerald-300 [&::-webkit-details-marker]:hidden">
+              <span className="min-w-0 font-semibold">{family.label}</span>
+              <span className="flex shrink-0 items-center gap-3">
+                {attention > 0 && <span className="text-xs text-amber-200" title="Model records with overdue settlements">Overdue · {attention}</span>}
+                <span aria-hidden="true" className="inline-block text-lg text-emerald-200 transition-transform group-open/family:rotate-90">›</span>
+              </span>
+            </summary>
+            <div className="min-w-0 border-t border-slate-700/70 p-3 sm:p-4">
+              {family.aliases.map(id => <span key={id} id={id} className="block scroll-mt-24" />)}
+              {cards.length > 0 && <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{cards.map(card)}</div>}
+              {breakdowns.length > 0 && <section id="props-breakdowns" className="mt-5 scroll-mt-24">
+                <h3 className="font-semibold">Aces &amp; double faults · separate records</h3>
+                <p className="mb-3 mt-1 text-sm text-slate-400">Market and tour breakdowns cover overlapping selections.</p>
+                <div className="grid gap-4 md:grid-cols-2">{breakdowns.map(card)}</div>
+              </section>}
+              {panels[family.id]}
+            </div>
+          </details>;
+        })}</div>
+      </section>;
+    })}
     <details className="rounded-2xl border border-slate-700 p-5"><summary className="cursor-pointer text-sm text-slate-300">Data freshness</summary><div className="mt-4 space-y-3">{data.sources.map(s=>{const d=typeof s.date==='string'?s.date:null;return <p key={s.name} className="text-sm text-slate-400">{s.name}: {!s.available?'Unavailable':snapshotAge(d,data.checkedAt)} · {date(d)} UK</p>;})}</div><p className="mt-3 text-xs text-slate-400">A recent report does not confirm every capture or settlement is current.</p></details>
     <aside className="mt-6 text-sm leading-relaxed text-slate-400">This dashboard reads existing private snapshots only. Refreshing it does not run a model or send alerts. Use the existing tennis run control in Admin to queue a forecast; the Windows machine must be awake for local OnCourt processing. Older local diagnostics remain available on your PC.</aside>
   </div></main>;
