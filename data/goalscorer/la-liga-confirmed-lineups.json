@@ -302,26 +302,308 @@
         "Jofre Carreras",
         "Kike García"
       ],
-      "observed_at": "2026-11-18T01:37:57.864837+00:00",
+      "observed_at": "2026-11-18T15:59:53.504791+00:00",
       "changed_at": "2026-11-18T01:37:57.864837+00:00"
     },
     {
       "fotmob_match_id": 5868131,
+      "fotmob_page_url": "/matches/deportivo-coruna-vs-deportivo-alaves/36xz1n#5868131",
+      "home_fotmob_team_id": 9866,
+      "away_fotmob_team_id": 9783,
       "match_date": "2026-11-21",
       "kickoff_utc": "2026-11-21T13:00:00Z",
       "home_team": "Deportivo Alavés",
       "away_team": "Deportivo A Coruña",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-5-2",
+      "away_formation": "4-2-3-1",
+      "home_players": [
+        "Antonio Sivera",
+        "Nahuel Tenaglia",
+        "Ville Koski",
+        "Nicolás Valentini",
+        "Ángel Pérez",
+        "Ander Guevara",
+        "Antonio Blanco",
+        "Pablo Ibáñez",
+        "Youssef Enríquez",
+        "Toni Martínez",
+        "Lucas Boyé"
+      ],
+      "away_players": [
+        "Leo Román",
+        "Adrià Altimira",
+        "Miguel Loureiro",
+        "José Giménez",
+        "Giacomo Quagliata",
+        "Mario Soriano",
+        "Lorenzo Amatucci",
+        "David Mella",
+        "Luismi Cruz",
+        "Yeremay Hernández",
+        "Bil Nsongo"
+      ],
+      "home_starters": [
+        {
+          "name": "Antonio Sivera",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-5-2",
+          "position_id": 11,
+          "player_id": 530468,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Nahuel Tenaglia",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 33,
+          "player_id": 860314,
+          "shirt_number": "14"
+        },
+        {
+          "name": "Ville Koski",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 35,
+          "player_id": 1056461,
+          "shirt_number": "16"
+        },
+        {
+          "name": "Nicolás Valentini",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 37,
+          "player_id": 1249665,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Ángel Pérez",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 71,
+          "player_id": 1563022,
+          "shirt_number": "7"
+        },
+        {
+          "name": "Ander Guevara",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 73,
+          "player_id": 873827,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Antonio Blanco",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 75,
+          "player_id": 845998,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Pablo Ibáñez",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 77,
+          "player_id": 1238154,
+          "shirt_number": "19"
+        },
+        {
+          "name": "Youssef Enríquez",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79,
+          "player_id": 1403692,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Toni Martínez",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 104,
+          "player_id": 640123,
+          "shirt_number": "11"
+        },
+        {
+          "name": "Lucas Boyé",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 106,
+          "player_id": 561164,
+          "shirt_number": "15"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Leo Román",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 1187702,
+          "shirt_number": "13"
+        },
+        {
+          "name": "Adrià Altimira",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 1256478,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Miguel Loureiro",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 800891,
+          "shirt_number": "15"
+        },
+        {
+          "name": "José Giménez",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 474589,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Giacomo Quagliata",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 1077977,
+          "shirt_number": "12"
+        },
+        {
+          "name": "Mario Soriano",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 1050828,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Lorenzo Amatucci",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1425989,
+          "shirt_number": "16"
+        },
+        {
+          "name": "David Mella",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 1368655,
+          "shirt_number": "11"
+        },
+        {
+          "name": "Luismi Cruz",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 1204447,
+          "shirt_number": "19"
+        },
+        {
+          "name": "Yeremay Hernández",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 1319204,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Bil Nsongo",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 1690831,
+          "shirt_number": "32"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-11-18T01:37:57.864837+00:00",
-      "changed_at": "2026-11-18T01:37:57.864837+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Mikel Rodríguez"
+      ],
+      "away_unavailable": [
+        "Bright Ede",
+        "Zakaria Eddahchouri"
+      ],
+      "observed_at": "2026-11-18T15:59:53.504791+00:00",
+      "changed_at": "2026-11-18T15:59:53.504791+00:00"
     },
     {
       "fotmob_match_id": 5868138,
@@ -338,7 +620,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-11-18T01:37:57.864837+00:00",
+      "observed_at": "2026-11-18T15:59:53.504791+00:00",
       "changed_at": "2026-11-18T01:37:57.864837+00:00"
     },
     {
@@ -356,7 +638,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-11-18T01:37:57.864837+00:00",
+      "observed_at": "2026-11-18T15:59:53.504791+00:00",
       "changed_at": "2026-11-18T01:37:57.864837+00:00"
     },
     {
@@ -374,7 +656,7 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-11-18T01:37:57.864837+00:00",
+      "observed_at": "2026-11-18T15:59:53.504791+00:00",
       "changed_at": "2026-11-18T01:37:57.864837+00:00"
     }
   ]
