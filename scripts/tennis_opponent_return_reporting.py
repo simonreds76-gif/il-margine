@@ -52,18 +52,22 @@ def section(root):
         if sum(n for n,p in daily.values()) != summary[name]["settled_units"] or abs(sum(p for n,p in daily.values())-summary[name]["profit_units"]) > 1e-8:
             raise ValueError("opponent-return daily settlements do not reconcile")
     summary["turin"] = []
+    audit_file=folder/"turin-verification.json"
+    audited=forward.read(audit_file).get("fixtures",{}) if audit_file.is_file() else {}
     for key in TURIN:
         if key not in forecasts:
             continue
         r = forecasts[key]
         result = results.get(key, {})
         evidence = stats.get(key, {})
+        audit=audited.get(key,{})
         summary["turin"].append({
             "fixture": key, "players": r["names"], "scheduled": r["quote"]["scheduled_start"],
             "result": result.get("status","pending"), "score": result.get("score"),
             "winner": r["names"][r["players"].index(result["winner_id"])] if result.get("winner_id") else None,
             "serve": {a:r["arms"][a]["serve"] for a in NAMES}, "actual": evidence.get("actual"),
             "verified_at": evidence.get("observed_at") or result.get("observed_at"),
+            "audit":audit.get("state"), "audit_reason":audit.get("reason"),
         })
     return summary
 
@@ -84,6 +88,8 @@ def reliability(arm):
 
 def box(row):
     values = row["actual"]
+    if row.get("audit")=="review_required":
+        return "–".join(row["players"]) + " · native source disagreement, review required"
     if values:
         return ", ".join(f"{name} {s['won']}/{s['total']} ({s['won']/s['total']:.1%})" for name,s in zip(row["players"], values))
     suffix = {"pending":"awaiting result", "settled":"result verified, awaiting service statistics", "void":"void"}[row["result"]]
@@ -102,7 +108,8 @@ def description(report, name):
     if report["settled"] == 0:
         text += "Match Brier, log loss and ROI await settlement. "
     if report["turin"]:
-        text += "Turin service points won/played — " + ". ".join(box(r) for r in report["turin"]) + "."
+        text += "Turin service points won/played — " + ". ".join(
+            f"{box(r)}. Serve forecasts in player order {r['serve'][name][0]:.1%} and {r['serve'][name][1]:.1%}" for r in report["turin"]) + "."
     return text.strip()
 
 
