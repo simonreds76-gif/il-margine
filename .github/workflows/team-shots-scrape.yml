@@ -1,86 +1,36 @@
-name: Team Shots Weekly Scrape
-
-on:
-  workflow_dispatch:
-
+name: Scoped MoviOdds cloud verification
+on: workflow_dispatch
 permissions:
-  contents: write
-
-concurrency:
-  group: golden-with-speed-insights-branch-writes
-  cancel-in-progress: false
-
+  contents: read
 jobs:
-  scrape:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: golden-with-speed-insights
-          token: ${{ github.token }}
-          fetch-depth: 1
-
+          ref: c8228d5de28e924ffd778af7334ee7bc3684c33f
+          persist-credentials: false
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
-
-      - run: pip install requests
-
-      - name: Create .env.local
-        run: |
-          : > .env.local
-          echo "ODDS_API_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
-          echo "ODDS_API_IO_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
-          if [ -n "${{ secrets.THE_ODDS_API_KEY }}" ]; then
-            echo "THE_ODDS_API_KEY=${{ secrets.THE_ODDS_API_KEY }}" >> .env.local
-          fi
-
-      - name: Scrape odds
+          python-version: '3.11'
+      - run: python -m pip install requests
+      - name: Verify scoped key and real responses
         env:
           MOVIODDS_API_KEY: ${{ secrets.MOVIODDS_API_KEY }}
-        run: python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365" --days-ahead 7
-
-      - name: Archive odds
-        run: python scripts/team-shots-odds-archive.py
-
-      - name: Refresh football research pick feeds
         run: |
-          python scripts/publish-football-research-picks.py
-          python scripts/team-shots-v1-clv-monitor.py \
-            --picks data/football-form/team-shots-v3-ema20-published-picks.csv \
-            --output data/football-form/team-shots-v3-ema20-clv-monitor.csv \
-            --report data/football-form/team-shots-v3-ema20-clv-monitor.md \
-            --allowed-config data/football-form/team-shots-v3-ema20-allowed-leagues.json
-          python scripts/corners-v0-clv-monitor.py
-
-      - name: Settle football research lanes before snapshot
-        run: python scripts/settle-football-research-lanes.py
-
-      - name: Generate team-shots snapshot artifact
-        run: python scripts/team-shots-live-snapshot.py
-
-      - name: Upload team-shots hosted snapshot
-        env:
-          ENABLE_SUPABASE_SNAPSHOT_UPLOADS: ${{ vars.ENABLE_SUPABASE_SNAPSHOT_UPLOADS }}
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: |
-          if [ "${ENABLE_SUPABASE_SNAPSHOT_UPLOADS:-0}" = "1" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
-            export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://nuqcgzbagxtbxlqrhtvc.supabase.co}"
-            python scripts/team-shots-live-snapshot.py --supabase
-          else
-            echo "::warning::Supabase snapshot upload disabled or key missing; team-shots hosted snapshot upload skipped."
-          fi
-
-      - name: Commit and push if new data
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/team-shots/
-          git add data/football-form/
-          if git diff --cached --quiet; then
-            echo "No team-shots odds changes to commit."
-            exit 0
-          fi
-          git commit -m "chore: weekly team shots odds scrape"
-          bash scripts/ci-safe-push.sh golden-with-speed-insights
+          PYTHONPATH=scripts python - <<'PY'
+          import os
+          from datetime import datetime, timezone
+          from moviodds_prices import download, download_response, GROUPS, fresh
+          from moviodds_count_prices import GROUPS as counts
+          assert bool(os.environ.get('MOVIODDS_API_KEY'))
+          for sport, groups in [('tennis', GROUPS['tennis']), ('soccer', counts), ('soccer', GROUPS['soccer'])]:
+              board = download(sport, groups=groups)
+              assert board.get('site') == 'com' and isinstance(board['matches'], list) and fresh(board['server_time'],datetime.now(timezone.utc))
+              print(sport, ','.join(groups), board['site'], board['server_time'], len(board['matches']))
+          match=next((m for m in board['matches'] if m.get('in_play') is False and any(str(q['group_id'])=='177703' for q in m.get('quotes',[]))),None)
+          if match:
+              result=download_response('https://moviodds.com/quotes',{'fi':str(match['id']),'site':'com'})
+              assert result.get('site')=='com' and str(result['fixture'])==str(match['id'])
+              print('fixture response',result.get('source'),result.get('server_time'))
+          PY
