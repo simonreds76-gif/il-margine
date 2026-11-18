@@ -87,6 +87,7 @@ jobs:
       - name: Scrape Bet365 tennis player props
         if: ${{ steps.fallback_guard.outputs.skip != 'true' }}
         env:
+          MOVIODDS_API_KEY: ${{ secrets.MOVIODDS_API_KEY }}
           DAYS_AHEAD: ${{ github.event.inputs.days_ahead || '3' }}
           MAX_EVENTS: ${{ github.event.inputs.max_events || '128' }}
           BOOKMAKERS: ${{ github.event.inputs.bookmakers || 'Bet365' }}
