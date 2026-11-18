@@ -1,11 +1,11 @@
 {
-  "observed_at": "2026-11-17T17:41:17.060976+00:00",
-  "window_start": "2026-10-27T00:00:00+00:00",
+  "observed_at": "2026-11-18T17:18:51.942595+00:00",
+  "window_start": "2026-10-28T00:00:00+00:00",
   "leagues": {
     "epl": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard",
-      "sha256": "c0cc0a5ec6dff0abd14e156ac83df831a9830f8a7992c2e34480bc63fbddf121",
+      "sha256": "57630f3a59bed9fb3384dfa48166c35ef6d0554bb82fb45ac7049a69202a2483",
       "days": {
         "20261031": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
@@ -668,53 +668,8 @@
     "serie-a": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard",
-      "sha256": "f85fb885831d304ca7e36462f5af80089f766c5e640bedfe9fa3544f2573c27b",
+      "sha256": "b58d468baf7b18e6d2abe947b4474702a2302856a85a0a009af9f8870774401b",
       "days": {
-        "20261027": {
-          "observed_at": "2026-11-13T16:36:11.995787+00:00",
-          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20261027&limit=1000",
-          "sha256": "d5ee9a93f8f2a9337a350949b740a351904479d11c463d4a94c20503b0fca9f0",
-          "complete_day": true,
-          "empty_calendar_day": false,
-          "completed": [
-            {
-              "date": "2026-10-27",
-              "league": "serie-a",
-              "event_id": "401874980",
-              "kickoff": "2026-10-27T17:30:00+00:00",
-              "home_team": "Sassuolo",
-              "home_goals": 2,
-              "home_id": "3997",
-              "away_team": "Lazio",
-              "away_goals": 6,
-              "away_id": "112"
-            },
-            {
-              "date": "2026-10-27",
-              "league": "serie-a",
-              "event_id": "401874780",
-              "kickoff": "2026-10-27T19:45:00+00:00",
-              "home_team": "AS Roma",
-              "home_goals": 4,
-              "home_id": "104",
-              "away_team": "Cagliari",
-              "away_goals": 2,
-              "away_id": "2925"
-            },
-            {
-              "date": "2026-10-27",
-              "league": "serie-a",
-              "event_id": "401874786",
-              "kickoff": "2026-10-27T19:45:00+00:00",
-              "home_team": "Torino",
-              "home_goals": 1,
-              "home_id": "239",
-              "away_team": "Como",
-              "away_goals": 3,
-              "away_id": "2572"
-            }
-          ]
-        },
         "20261028": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
           "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20261028&limit=1000",
@@ -1598,7 +1553,7 @@
     "la-liga": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard",
-      "sha256": "b865b53edfafb3b9c13ecf73436cdd9d51916cfbb11cec407def90eacb60c92b",
+      "sha256": "881ce934fbce661b46193fd82b0b6fa8a4954524a5eb4054c126b3cb81c35470",
       "days": {
         "20261030": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
@@ -2270,7 +2225,7 @@
     "bundesliga": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard",
-      "sha256": "0f2467d7b94cae0a51cef1ed8632fcd9d61943a34d57569497c8fe32cbca9881",
+      "sha256": "04f7a42e83ffc375e945a962e697493bd224f2d4b43f6d658a645af5ab818011",
       "days": {
         "20261030": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
@@ -2873,7 +2828,7 @@
     "ligue-1": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard",
-      "sha256": "2b42033c2722c7dd6e78ac3ed45755132c65e3071ed886d7099bd8b220f4688f",
+      "sha256": "c77e494484d5412296a8c23a8dc5833f99b9590606c88e63e85aa70b8275479e",
       "days": {
         "20261030": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",

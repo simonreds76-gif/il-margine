@@ -1,15 +1,15 @@
 # Corners CLV Monitor: `corners_v3`
 
-Generated: 2026-11-17T17:43:12Z
+Generated: 2026-11-18T17:21:02Z
 Picks input: `data/football-form/corners-v3-shadow-signals.csv`
 Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
 ## Summary
 
-- Picks: 250
-- Active published picks: 250
+- Picks: 251
+- Active published picks: 251
 - Settled: 227
-- Open/pending: 23
+- Open/pending: 24
 - Settled PnL: -10.22u
 - Picks with close: 164
 - True-close coverage (<=120m): 88/228 (38.6%)
@@ -25,7 +25,7 @@ Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | Over | 56 | 53 | 3 | 18-35-0 | -3.63u | -6.85% | +0.71% (n=31) |
-| Under | 194 | 174 | 20 | 79-95-0 | -6.59u | -3.79% | +1.64% (n=132) |
+| Under | 195 | 174 | 21 | 79-95-0 | -6.59u | -3.79% | +1.64% (n=132) |
 
 ## Active League Breakdown
 
@@ -34,7 +34,7 @@ Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 | bundesliga | 38 | 33 | 5 | 12-21-0 | -7.10u | -21.52% | +0.93% (n=23) |
 | epl | 44 | 35 | 9 | 14-21-0 | -5.85u | -16.71% | +1.10% (n=24) |
 | la-liga | 55 | 50 | 5 | 22-28-0 | +3.19u | +6.38% | +2.32% (n=34) |
-| ligue-1 | 56 | 55 | 1 | 28-27-0 | +2.36u | +4.29% | +2.10% (n=47) |
+| ligue-1 | 57 | 55 | 2 | 28-27-0 | +2.36u | +4.29% | +2.10% (n=47) |
 | serie-a | 57 | 54 | 3 | 21-33-0 | -2.82u | -5.23% | +0.38% (n=35) |
 
 ## Active Side x League Breakdown
@@ -48,7 +48,7 @@ Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 | Under / bundesliga | 38 | 33 | 5 | 12-21-0 | -7.10u | -21.52% | +0.93% (n=23) |
 | Under / epl | 35 | 28 | 7 | 13-15-0 | -0.83u | -2.96% | +1.44% (n=21) |
 | Under / la-liga | 45 | 40 | 5 | 20-20-0 | +4.69u | +11.72% | +2.22% (n=28) |
-| Under / ligue-1 | 53 | 52 | 1 | 27-25-0 | +3.54u | +6.80% | +2.19% (n=45) |
+| Under / ligue-1 | 54 | 52 | 2 | 27-25-0 | +3.54u | +6.80% | +2.19% (n=45) |
 | Under / serie-a | 23 | 21 | 2 | 7-14-0 | -6.89u | -32.80% | +0.30% (n=15) |
 
 ## Required Fields
