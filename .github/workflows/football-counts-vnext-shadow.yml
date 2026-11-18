@@ -71,6 +71,7 @@ jobs:
       - name: Recover goalkeeper capture only
         if: steps.season.outputs.active == 'true' && github.event.inputs.gk_only == 'true'
         env:
+          MOVIODDS_API_KEY: ${{ secrets.MOVIODDS_API_KEY }}
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
           python scripts/goalkeeper-saves-capture.py --days-ahead 2 --max-events 30 --kickoff-within-minutes 1440 --capture-mode publication
@@ -105,6 +106,7 @@ jobs:
       - name: Capture paired market prices
         if: steps.season.outputs.active == 'true' && github.event.inputs.settlement_only != 'true' && github.event.inputs.rebuild_only != 'true' && github.event.inputs.gk_only != 'true'
         env:
+          MOVIODDS_API_KEY: ${{ secrets.MOVIODDS_API_KEY }}
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           ODDS_API_IO_KEY: ${{ secrets.ODDS_API_KEY }}
           BETS_API_KEY: ${{ secrets.BETS_API_KEY }}

@@ -61,6 +61,7 @@ jobs:
 
       - name: Optional upcoming + compare + shadow
         env:
+          MOVIODDS_API_KEY: ${{ secrets.MOVIODDS_API_KEY }}
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           ODDS_API_IO_KEY: ${{ secrets.ODDS_API_KEY }}
           BETS_API_KEY: ${{ secrets.BETS_API_KEY }}
