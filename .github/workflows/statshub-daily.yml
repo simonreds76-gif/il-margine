@@ -1,0 +1,58 @@
+name: Private StatsHub Daily
+on:
+  push:
+    branches: [codex/statshub-cloud-pilot-20261118]
+    paths: ['scripts/statshub_daily*.py', '.github/workflows/statshub-daily.yml']
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Run a private connection test or the due matchweek work
+        type: choice
+        options: [probe, rehearse, due]
+        default: probe
+  schedule:
+    - cron: '0 10 20-24 11 *'
+    - cron: '13,43 10 20-24 11 *'
+    - cron: '13,28,43,58 11-19 21-22 11 *'
+    - cron: '13,28,43,58 18-19 20,23 11 *'
+permissions:
+  contents: read
+concurrency:
+  group: statshub-daily-matchweek-20261120
+  cancel-in-progress: false
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/statshub_daily*.py
+      - name: Screen, recheck or settle privately
+        env:
+          MODE: ${{ github.event_name == 'push' && 'rehearse' || inputs.mode || 'due' }}
+          STATSHUB_DAILY_AUTH: ${{ secrets.STATSHUB_DAILY_AUTH }}
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+        run: |
+          python -m pip -q install requests cryptography
+          python scripts/statshub_daily.py
+  retire:
+    needs: pilot
+    if: github.event_name == 'schedule' && github.event.schedule == '0 10 20-24 11 *'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: End the one-matchweek pilot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [[ "$(date -u +%Y%m%d)" == "20261124" ]]; then
+            gh workflow disable statshub-daily.yml --repo "$GITHUB_REPOSITORY"
+          fi
