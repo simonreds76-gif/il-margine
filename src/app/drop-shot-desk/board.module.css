@@ -355,3 +355,8 @@
 @media (prefers-reduced-motion:no-preference){
   .item,.chip,.tabs a,.ranges button,.scope button{transition:background-color .12s ease,border-color .12s ease,color .12s ease}
 }
+
+.resultsToggle{cursor:pointer;color:var(--ds-ink);font-weight:700}
+.returnGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:1rem;margin-top:.85rem}
+.returnGrid h3{color:var(--ds-ink);font-size:1rem}
+.returnGrid p{color:var(--ds-text);font-size:.875rem;font-variant-numeric:tabular-nums}

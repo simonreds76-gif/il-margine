@@ -8,7 +8,7 @@ import OddsChart, { KeyGlyph, spanText } from "./OddsChart";
 import Roundups from "./Roundups";
 import {
   availability, buildRoundups, cutoffOf, defaultRoundup, delta, dropPct, isOpen, isQualifying, moveKey, outcomeLabel, outcomeOf, paper,
-  percent, price, units, utcClock, utcDate, utcStamp,
+  percent, price, tally, units, utcClock, utcDate, utcStamp,
 } from "./desk";
 import type { DeskFixture, DeskMove } from "./desk";
 
@@ -382,6 +382,17 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
       </svg>
     </div>}
 
+    {!archive && <details className={styles.roundups}>
+      <summary className={styles.resultsToggle}>Alert results by market · {day}</summary>
+      <p className={styles.fine}>Confirmed 4-point alerts on this UTC date. One paper unit at the recorded line and detection price. A push returns the stake. Voids and pending results are excluded from settled stake.</p>
+      <div className={styles.returnGrid}>{[["winner","Match winner"],["spreads","Games handicap"],["totals","Total games"]].map(([key,label])=>{
+        const sum=tally(moves.filter(row=>row.notified && row.market===key));
+        return <section key={key}><h3>{label}</h3>
+          <p>{sum.won}W · {sum.lost}L · {sum.pending} pending{sum.pushed ? " · "+sum.pushed+" push" : ""}{sum.voided ? " · "+sum.voided+" void" : ""}{sum.split ? " · "+sum.split+" split" : ""}</p>
+          <p>{sum.settled}u settled · P/L {sum.settled ? units(sum.net) : "—"} · ROI {sum.roi===null ? "—" : percent(sum.roi)}</p>
+        </section>;
+      })}</div>
+    </details>}
     {!archive && <Roundups roundups={roundups} active={activeRoundup} currentKey={currentKey} now={at} onSelect={selectBatch} onOpen={openFromRoundup} sectionRef={roundupsRef} />}
 
     {fixtures.length > 0 && <details className={styles.fold}>
