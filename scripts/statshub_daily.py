@@ -25,13 +25,14 @@ def probe():
 
 def rehearsal():
     from statshub_daily_board import morning, digest
+    from statshub_daily_focus import FOCUS_LIMIT
     from statshub_daily_contracts import LEAGUES
     class TransientReads:
-        def __init__(self,api):
+        def __init__(self,api,limit=40):
             self.api=api
             self.log=[]
             self.cache={}
-            self.limit=40
+            self.limit=limit
         def read(self,name,args,slot):
             import json
             key=json.dumps([name,args],sort_keys=True)
@@ -43,7 +44,12 @@ def rehearsal():
             return result
     store=Store()
     before=store.get("daily/report.json")
-    board=morning(TransientReads(Provider(store)),"2026-11-20")
+    api=Provider(store)
+    focused=TransientReads(api,FOCUS_LIMIT)
+    board=morning(TransientReads(api),"2026-11-20",focus_read=focused)
+    assert len(focused.log)<=FOCUS_LIMIT and len(board.get("focus",[]))<=3
+    assert "Matchup review incomplete" not in board["coverage"]
+    print(f"Rehearsal: {len(board.get('focus',[]))} focus fixtures, {len(focused.log)} context reads; no picks sent.",flush=True)
     assert board["fixtures"] and board["completeBoards"] and all(k in board["coverage"] for k in LEAGUES)
     messages=digest("2026-11-20",board)
     assert all(len(m.encode("utf-16-le"))<=8192 for m in messages)
