@@ -27,7 +27,7 @@ type Archive = { moves: ArchiveRow[]; summary:{ wins:number; losses:number; void
 
 export async function readArchive() {
   const packet = await read<Archive>("presentation/archive-v1.json");
-  const moves: Move[] = packet.moves.map(m => ({ tour:m.level,league:m.league,player:m.player,opponent:m.opponent,start:m.start,
+  const moves: Move[] = packet.moves.map(m => ({ fixtureRef:m.fixture,tour:m.level,league:m.league,player:m.player,opponent:m.opponent,start:m.start,
     before:m.before,after:m.after,old:m.old,new:m.new,quotes:m.quotes.map(q=>({time:q.time,price:q.price,other:q.other,gap:q.gap})),
     result:m.result.state,score:m.result.score,notified:false,qualifying:m.qualifying }));
   return { moves, summary:packet.summary };
@@ -133,7 +133,7 @@ export async function readDay(day: string) {
     return qs;
   }
   const moves: Move[] = batches.reverse().flatMap(batch=>batch.moves.map(m=>({
-    tour:m.tour,league:m.league,market:m.market,player:m.selection??m.player,opponent:m.opposite??m.opponent,
+    fixtureRef:m.fixture,tour:m.tour,league:m.league,market:m.market,player:m.selection??m.player,opponent:m.opposite??m.opponent,
     fixtureLabel:m.market && m.market!=="winner" ? [m.player,m.opponent].join(" vs "):undefined,
     start:m.start,before:m.before,after:m.after,profit:outcomes[m.move_id]?.profit,
     old:m.old,new:m.new,quotes:historyFor(m),...notified.get(m.move_id),

@@ -10,7 +10,7 @@ import { SETTLING_NOTE, State, VenueFlag, hostOf as placeOf, impliedText, market
 import type { VenueMap } from "./DeskParts";
 import {
   availability, buildRoundups, cutoffOf, defaultRoundup, delta, dropPct, isOpen, isQualifying, moveKey, outcomeLabel, outcomeOf, paper,
-  orderDrops, percent, price, tally, units, utcClock, utcDate, utcStamp,
+  groupDrops, matchKey, orderDrops, percent, price, tally, units, utcClock, utcDate, utcStamp,
 } from "./desk";
 import type { DeskFixture, DeskMove, DropOrder } from "./desk";
 
@@ -56,6 +56,32 @@ function Spark({ move }: { move: DeskMove }) {
   </svg>;
 }
 
+function DropRow({ move: r, selected, archive, at, venue, onChoose }: {
+  move: DeskMove; selected: boolean; archive: boolean; at: number | null;
+  venue?: VenueMap[string]; onChoose: (move: DeskMove) => void;
+}) {
+  const settled = archive ? paper(r) : null;
+  const tag = archive && !r.market ? "" : marketName(r);
+  return (
+    <button type="button" className={styles.item} data-drop="" aria-pressed={selected} onClick={() => onChoose(r)}>
+      <strong className={styles.itemName}>{r.player}</strong>
+      <span className={styles.itemVs}>{r.fixtureLabel ?? ("vs "+r.opponent)}</span>
+      <span className={styles.itemMeta}>
+        <VenueFlag venue={venue} />
+        <span>{[r.tour + (isQualifying(r) ? " qual." : ""), placeOf(r.league), archive ? utcDate(r.start) : ""].filter(Boolean).join(" · ")}</span>
+      </span>
+      <b className={styles.itemGain}>{pointsText(r)}<span className={styles.vh}> implied probability</span></b>
+      <span className={styles.itemOdds}><span>{price(r.old)} → </span>{price(r.new)}</span>
+      <span className={styles.itemWhen}>{tag ? tag + " · " : ""}detected <time dateTime={r.after}>{archive ? utcStamp(r.after, true) : utcClock(r.after, true) + " UTC"}</time></span>
+      <span className={styles.itemState}>
+        <State move={r} now={at} archive={archive} />
+        {settled !== null && <small data-tone={settled > 0 ? "won" : settled < 0 ? "lost" : undefined}>{units(settled)}</small>}
+      </span>
+      <Spark move={r} />
+    </button>
+  );
+}
+
 export default function Board({ moves, fixtures, archive, initialBatchId, day, now, today, venues = NO_VENUES }: {
   moves: DeskMove[];
   fixtures: DeskFixture[];
@@ -81,7 +107,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   const defaultScope: Scope = today && !initialBatchId ? "upcoming" : "all";
   const [scope, setScope] = useState<Scope>(defaultScope);
   // One order per scope: Upcoming keeps its own choice, All recorded keeps its own.
-  const [orders, setOrders] = useState<Record<Scope, DropOrder>>({ upcoming: "largest", all: "newest" });
+  const [orders, setOrders] = useState<Record<Scope, DropOrder>>({ upcoming: "largest", all: "largest" });
   const [scopeDay, setScopeDay] = useState(day);
   const [clock, setClock] = useState<number | null>(now ?? null);
   const [lapsedKey, setLapsedKey] = useState<string | null>(null);
@@ -89,6 +115,8 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   const [tour, setTour] = useState(TOURS[0]);
   const [market,setMarket] = useState("all");
   const [draw, setDraw] = useState(DRAWS[0]);
+  const [alertedOnly, setAlertedOnly] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
   const [query, setQuery] = useState("");
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pickedBatch, setPickedBatch] = useState<string | undefined>(initialBatchId);
@@ -131,16 +159,18 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
 
   const needle = query.trim().toLowerCase();
   const passes = useCallback((r: DeskMove) =>
-    (tour === TOURS[0] || r.tour === tour)
+    (archive || !alertedOnly || r.notified)
+    && (tour === TOURS[0] || r.tour === tour)
     && (market==="all" || (r.market??"winner")===market)
     && (draw === DRAWS[0] || isQualifying(r) === (draw === "Qualifying"))
-    && (!needle || (r.player + " " + r.opponent + " " + (r.fixtureLabel??"") + " " + r.league).toLowerCase().includes(needle)), [tour, draw, needle, market]);
+    && (!needle || (r.player + " " + r.opponent + " " + (r.fixtureLabel??"") + " " + r.league).toLowerCase().includes(needle)), [tour, draw, needle, market, alertedOnly, archive]);
   const matching = useMemo(() => moves.filter(passes), [moves, passes]);
   const upcoming = useMemo(() => (archive ? [] : matching.filter(r => isOpen(r, at))), [archive, matching, at]);
   const sortScope = upcomingOnly ? "upcoming" : "all";
   const order = orders[sortScope];
-  const rows = useMemo(() => archive ? matching : orderDrops(upcomingOnly ? upcoming : matching, order),
+  const groups = useMemo(() => groupDrops(archive ? matching : orderDrops(upcomingOnly ? upcoming : matching, order)),
     [archive, matching, upcoming, upcomingOnly, order]);
+  const rows = useMemo(() => groups.flatMap(group => group.drops), [groups]);
   const index = Math.max(0, rows.findIndex(m => moveKey(m) === selectedKey));
   const m = rows.length ? rows[index] : undefined;
   const currentKey = m ? moveKey(m) : null;
@@ -203,16 +233,29 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   // Keep the selected row visible inside the rail without moving the page.
   useEffect(() => {
     const list = listRef.current;
-    const row = list?.querySelector<HTMLElement>('[aria-pressed="true"]')?.closest("li");
+    const row = list?.querySelector<HTMLElement>('[data-drop][aria-pressed="true"]');
     if (!list || !row) return;
-    const top = row.offsetTop, bottom = top + row.offsetHeight;
+    const top = row.getBoundingClientRect().top - list.getBoundingClientRect().top + list.scrollTop;
+    const bottom = top + row.offsetHeight;
     if (top < list.scrollTop) list.scrollTop = top;
     else if (bottom > list.scrollTop + list.clientHeight) list.scrollTop = bottom - list.clientHeight;
   }, [currentKey, pickerOpen]);
 
-  const choose = (move: DeskMove) => { setSelectedKey(moveKey(move)); setLapsedKey(null); setPickerOpen(false); };
+  const choose = (move: DeskMove) => {
+    setSelectedKey(moveKey(move));
+    setLapsedKey(null);
+    setPickerOpen(false);
+    const key = matchKey(move);
+    if (expandedGroups[key] === false) {
+      setExpandedGroups(previous => {
+        const next = { ...previous };
+        delete next[key];
+        return next;
+      });
+    }
+  };
   const step = (dir: number) => { if (rows.length) choose(rows[(index + dir + rows.length) % rows.length]); };
-  const clearFilters = () => { setTour(TOURS[0]); setDraw(DRAWS[0]); setMarket("all"); setQuery(""); };
+  const clearFilters = () => { setTour(TOURS[0]); setDraw(DRAWS[0]); setMarket("all"); setQuery(""); setAlertedOnly(false); };
   const changeScope = (next: Scope) => { setScope(next); setLapsedKey(null); };
   // A new order starts from its own first entry; pressing the order already in use changes nothing.
   const changeOrder = (value: DropOrder) => {
@@ -257,7 +300,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
     buttons[j].focus();
   };
 
-  const filtered = market!=="all" || tour !== TOURS[0] || draw !== DRAWS[0] || needle !== "";
+  const filtered = (!archive && alertedOnly) || market!=="all" || tour !== TOURS[0] || draw !== DRAWS[0] || needle !== "";
   const lastQuote = m && m.quotes.length ? m.quotes[m.quotes.length - 1] : undefined;
   const latestIsDetection = !!(m && lastQuote && Date.parse(lastQuote.time) === Date.parse(m.after));
   const outcome = m ? outcomeOf(m.result) : "pending";
@@ -279,7 +322,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
     ? (archive ? "No recorded drops are in the replay." : "No price drops were recorded on this date.")
     : upcomingOnly && matching.length
       ? (matching.length === 1 ? "The one recorded drop here is no longer" : "None of the " + matching.length + " recorded drops here is still") + " verified open before its scheduled start."
-      : "No recorded drops match these filters.";
+      : alertedOnly ? "No confirmed Telegram alerts match these filters." : "No recorded drops match these filters.";
 
   return <div className={styles.board} data-archive={archive ? "true" : undefined}>
     {/* One line of controls: what to show, three quiet filters, the search. The order of the list lives on the list. */}
@@ -295,6 +338,10 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
           <select value={draw} onChange={e => setDraw(e.target.value)}>{DRAWS.map(v => <option key={v}>{v}</option>)}</select></label>
         {!archive && <label className={styles.pick} data-on={market !== "all" ? "true" : undefined}><span>Market</span>
           <select value={market} onChange={e=>setMarket(e.target.value)}><option value="all">All markets</option><option value="winner">Match winner</option><option value="totals">Total games</option><option value="spreads">Games handicap</option></select></label>}
+        {!archive && <label className={styles.alertFilter}>
+          <input type="checkbox" checked={alertedOnly} onChange={e => setAlertedOnly(e.target.checked)} />
+          Alerted only
+        </label>}
         {filtered && <button type="button" className={styles.clear} onClick={clearFilters}>Clear filters</button>}
       </div>
       {moves.length > 8 && <label className={`${styles.pick} ${styles.search}`} data-on={needle ? "true" : undefined}><span>Find</span>
@@ -311,7 +358,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
       {/* The ledger: each entry reads who and where on the left, the figures on the right, all on one right edge. */}
       <section className={styles.rail} aria-label={upcomingOnly ? "Upcoming moves" : "Recorded moves"}>
         <div className={styles.railHead}>
-          <h2>{upcomingOnly ? "Upcoming drops" : "Price drops"} <small>{rows.length === moves.length ? rows.length : rows.length + " of " + moves.length}</small></h2>
+          <h2>{upcomingOnly ? "Upcoming drops" : "Price drops"} <small>{plural(groups.length, "match", "matches")} · {plural(rows.length, "drop", "drops")}</small></h2>
           {!archive && <div className={styles.sortRow} role="group" aria-labelledby={sortId} aria-describedby={noteId}>
             <span className={styles.lab} id={sortId}>Sort</span>
             <div className={styles.sort}>
@@ -331,26 +378,26 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
           <span className={styles.pickerCue}>{pickerOpen ? "Close list" : rows.length > 1 ? "Choose from " + rows.length : "Show list"}</span>
         </button>
         <ol id={listId} className={styles.railList} ref={listRef} data-open={pickerOpen ? "true" : "false"} onKeyDown={onListKey}>
-          {rows.map((r, i) => {
-            const settled = archive ? paper(r) : null;
-            const tag = archive && !r.market ? "" : marketName(r);
-            return <li key={moveKey(r) + "/" + i}>
-              <button type="button" className={styles.item} aria-pressed={r === m} onClick={() => choose(r)}>
-                <strong className={styles.itemName}>{r.player}</strong>
-                <span className={styles.itemVs}>{r.fixtureLabel ?? ("vs "+r.opponent)}</span>
-                <span className={styles.itemMeta}>
-                  <VenueFlag venue={venues[venueKey(r.league, r.start, r.tour)]} />
-                  <span>{[r.tour + (isQualifying(r) ? " qual." : ""), placeOf(r.league), archive ? utcDate(r.start) : ""].filter(Boolean).join(" · ")}</span>
-                </span>
-                <b className={styles.itemGain}>{pointsText(r)}<span className={styles.vh}> implied probability</span></b>
-                <span className={styles.itemOdds}><span>{price(r.old)} → </span>{price(r.new)}</span>
-                <span className={styles.itemWhen}>{tag ? tag + " · " : ""}detected {archive ? utcStamp(r.after) : utcClock(r.after) + " UTC"}</span>
-                <span className={styles.itemState}>
-                  <State move={r} now={at} archive={archive} />
-                  {settled !== null && <small data-tone={settled > 0 ? "won" : settled < 0 ? "lost" : undefined}>{units(settled)}</small>}
-                </span>
-                <Spark move={r} />
-              </button>
+          {groups.map(({key, drops}, i) => {
+            const lead = drops[0];
+            const more = drops.length - 1;
+            const expanded = expandedGroups[key] ?? (!!m && m !== lead && drops.includes(m));
+            const linesId = listId + "-lines-" + i;
+            const renderRow = (r: DeskMove) => <DropRow key={moveKey(r)} move={r} selected={r === m} archive={archive}
+              at={at} venue={venues[venueKey(r.league, r.start, r.tour)]} onChoose={choose} />;
+            return <li key={key}>
+              {renderRow(lead)}
+              {more > 0 && <>
+                <button type="button" className={styles.moreDrops} aria-expanded={expanded} aria-controls={linesId}
+                  onClick={() => setExpandedGroups(previous => ({...previous, [key]: !expanded}))}>
+                  <span aria-hidden="true">{expanded ? "−" : "+"}</span>
+                  {expanded ? "Hide" : "Show"} {more} more {more === 1 ? "drop" : "drops"}
+                  <span className={styles.vh}> for {lead.fixtureLabel ?? (lead.player + " vs " + lead.opponent)}</span>
+                </button>
+                <div id={linesId} className={styles.otherDrops} hidden={!expanded}>
+                  {expanded && drops.slice(1).map(renderRow)}
+                </div>
+              </>}
             </li>;
           })}
         </ol>

@@ -93,8 +93,27 @@ export function isQualifying(m: Move) {
 export function selectionKey(m: Move) {
   return [m.fixtureLabel, m.market??"winner", m.player, m.opponent, m.start].join("|");
 }
+// Daily rows carry the collector's own fixture fingerprint. Replay winner records
+// without one use the exact pair, tournament/round and scheduled start.
+export function matchKey(m: Move) {
+  return JSON.stringify([m.tour, m.league, m.start, m.fixtureRef || [m.player, m.opponent].sort()]);
+}
+
+// Input follows the selected sort, so the first drop represents the match and
+// the remaining detections keep their order, including repeat moves on a line.
+export function groupDrops(rows: Move[]) {
+  const groups = new Map<string, Move[]>();
+  for (const row of rows) {
+    const key = matchKey(row);
+    const entries = groups.get(key);
+    if (entries) entries.push(row);
+    else groups.set(key, [row]);
+  }
+  return Array.from(groups, ([key, drops]) => ({ key, drops }));
+}
+
 export function moveKey(m: Move) {
-  return [m.fixtureLabel, m.market??"winner", m.player, m.opponent, m.start, m.after].join("|");
+  return JSON.stringify([matchKey(m), m.market ?? "winner", m.player, m.opponent, m.after]);
 }
 
 export function outcomeOf(result: string | undefined): Outcome {

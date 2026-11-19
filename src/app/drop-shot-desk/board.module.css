@@ -433,3 +433,12 @@
 }
 
 .hostCountry{display:inline-flex;align-items:center;gap:.3em;flex:none;font-size:.88em;font-weight:600;letter-spacing:.035em}
+
+.alertFilter{display:inline-flex;align-items:center;gap:.45rem;min-height:44px;padding:0 .8rem;border:1px solid var(--ds-rule-strong);border-radius:8px;color:var(--ds-text);font-size:.875rem;font-weight:600;cursor:pointer}
+.alertFilter input{margin:0;accent-color:var(--ds-accent)}
+.alertFilter:has(:checked){background:var(--ds-accent-bg);border-color:var(--ds-accent-edge);color:var(--ds-accent)}
+.moreDrops{display:flex;align-items:center;gap:.45rem;min-height:40px;padding:.35rem 1rem;background:none;border:0;color:var(--ds-accent);font-size:.8125rem;font-weight:600;text-align:left}
+.moreDrops:hover{text-decoration:underline}
+.otherDrops{margin-left:.85rem;border-left:2px solid var(--ds-rule-strong)}
+.otherDrops .item{border-top:1px solid var(--ds-hair)}
+@media(max-width:600px){.filters .pick:nth-of-type(3){grid-column:auto}.moreDrops{min-height:44px}}
