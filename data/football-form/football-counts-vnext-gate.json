@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-19T17:27:12Z",
+  "generated_at": "2026-11-19T18:40:12Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -134,17 +134,16 @@
       "dominant_side_share": 0.928571
     },
     "latest_scan": {
-      "state": "ELIGIBLE_CANDIDATES_PRESENT",
-      "explanation": "At least one candidate passed every locked shadow gate. Input cohorts kept separate. Before 30 October 2026: 9 settled, 30 October 2026 to input repair: 20 settled, Prospective repaired inputs: 0 settled. Promotion review uses repaired inputs only; original records remain intact. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-19T17:26:58.546959+00:00. Completed-fixture coverage checked at 2026-11-19T17:25:25.313305+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 196). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
-      "scored_rows": 40,
+      "state": "NO_EDGE_AFTER_UNLOCK",
+      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate. Input cohorts kept separate. Before 30 October 2026: 9 settled, 30 October 2026 to input repair: 20 settled, Prospective repaired inputs: 0 settled. Promotion review uses repaired inputs only; original records remain intact. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-19T18:40:06.786083+00:00. Completed-fixture coverage checked at 2026-11-19T17:25:25.313305+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 196). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
+      "scored_rows": 38,
       "scored_fixtures": 10,
-      "eligible_rows": 2,
-      "eligible_fixtures": 1,
+      "eligible_rows": 0,
+      "eligible_fixtures": 0,
       "blocked_rows": 38,
       "blocker_rows": {
-        "better_fresh_price_available": 2,
-        "edge_below_3pct": 38,
-        "price_not_fresh_10m": 34,
+        "edge_below_3pct": 37,
+        "price_not_fresh_10m": 38,
         "price_older_than_3h": 34
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
@@ -164,15 +163,15 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-19T17:26:51Z",
+      "generated_at": "2026-11-19T18:40:01Z",
       "status": "OK",
       "missing_history": [],
       "scored_fixtures": 10
     },
     "input_integrity": {
       "policy": "shots-input-integrity-20261113-v1",
-      "generated_at": "2026-11-19T17:26:58.546959+00:00",
-      "base_sha256": "353542c1141f3558a527bf8204b0bf97f1234187b9c6c7a2dd0626b0de23d1dd",
+      "generated_at": "2026-11-19T18:40:06.786083+00:00",
+      "base_sha256": "06045cbb32574292278d106a7cb51f8426c0924a1266f9b771183f72ed11547b",
       "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
       "source_rows": 44178,
       "prediction_rows": 44172,
@@ -347,17 +346,16 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "ELIGIBLE_CANDIDATES_PRESENT",
-      "explanation": "At least one candidate passed every locked shadow gate.",
+      "state": "NO_EDGE_AFTER_UNLOCK",
+      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
       "scored_rows": 876,
       "scored_fixtures": 47,
-      "eligible_rows": 70,
-      "eligible_fixtures": 20,
-      "blocked_rows": 806,
+      "eligible_rows": 0,
+      "eligible_fixtures": 0,
+      "blocked_rows": 876,
       "blocker_rows": {
-        "better_fresh_price_available": 200,
         "edge_below_3pct": 768,
-        "price_not_fresh_10m": 130,
+        "price_not_fresh_10m": 876,
         "price_older_than_3h": 130
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
