@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '2,17,32,47 * * * *'
   pull_request:
-    paths: ['scripts/pinnradar_tennis.py', 'scripts/price_drop_watch.py', 'scripts/tests/test_pinnradar_tennis.py', '.github/workflows/pinnradar-tennis.yml']
+    paths: ['scripts/pinnradar_tennis.py', 'scripts/price_drop_watch.py', 'scripts/drop_desk_history.py', 'scripts/tests/test_drop_desk_history.py', 'scripts/tests/test_pinnradar_tennis.py', '.github/workflows/pinnradar-tennis.yml']
   workflow_dispatch:
     inputs:
       scheduled_slot_utc:
@@ -27,13 +27,15 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /scripts/pinnradar_tennis.py
+            /scripts/drop_desk_history.py
+            /scripts/tests/test_drop_desk_history.py
             /scripts/price_drop_watch.py
             /scripts/tests/test_pinnradar_tennis.py
       - name: Install HTTP client
         run: python -m pip install --quiet requests
       - name: Check fixture and price matching
         if: github.event_name != 'schedule'
-        run: python -m unittest discover -s scripts/tests -p 'test_pinnradar_tennis.py'
+        run: python -m unittest discover -s scripts/tests
       - name: Save a private pre-match snapshot
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         env:
@@ -46,3 +48,9 @@ jobs:
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python scripts/pinnradar_tennis.py
+      - name: Update private quote history and settled outcomes
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python scripts/drop_desk_history.py
