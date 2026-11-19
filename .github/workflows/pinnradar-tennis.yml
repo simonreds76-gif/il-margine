@@ -4,8 +4,8 @@ on:
     - cron: '7,22,37,52 * * * *'
   workflow_dispatch:
   push:
-    branches: [codex/pinnradar-tennis-15m-20261119]
-    paths: ['scripts/pinnradar_tennis.py', 'scripts/tests/test_pinnradar_tennis.py', '.github/workflows/pinnradar-tennis.yml']
+    branches: [codex/tennis-drop-roundups-20261119]
+    paths: ['scripts/pinnradar_tennis.py', 'scripts/price_drop_watch.py', 'scripts/tests/test_pinnradar_tennis.py', '.github/workflows/pinnradar-tennis.yml']
 permissions:
   contents: read
 concurrency:
@@ -22,6 +22,7 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /scripts/pinnradar_tennis.py
+            /scripts/price_drop_watch.py
             /scripts/tests/test_pinnradar_tennis.py
       - name: Install HTTP client
         run: python -m pip install --quiet requests
@@ -31,6 +32,9 @@ jobs:
       - name: Save a private pre-match snapshot
         env:
           VERIFY_PRIVATE_SNAPSHOT: ${{ github.event_name != 'schedule' && 'true' || 'false' }}
+          PRIVATE_DROP_DELIVERY: ${{ github.ref == 'refs/heads/main' && 'send' || 'verify' }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
           PINNRADAR_KEY: ${{ secrets.PINNRADAR_KEY }}
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

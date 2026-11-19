@@ -5,6 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import pinnradar_tennis as pilot
+import price_drop_watch as watch
 
 START=pilot.utc("2026-11-19T12:00:00Z")
 
@@ -60,3 +61,66 @@ class MatchWinnerTest(unittest.TestCase):
         self.assertFalse(snap([e],60)["events"])
         state,_=pilot.advance({},snap([event()],40))
         self.assertIs(pilot.advance(state,snap([event()],60))[0],state)
+
+
+class StoreStub:
+    def __init__(self): self.data={}
+    def get(self,key): return self.data.get(key)
+    def put(self,key,value,replace=False):
+        if not replace and key in self.data: return False
+        self.data[key]=value
+        return True
+
+
+class EveryDropTest(unittest.TestCase):
+    def setUp(self):
+        self.t=watch.START+timedelta(hours=1)
+        self.game=event(starts=(self.t+timedelta(hours=10)).isoformat())
+
+    def capture(self,home,away,offset=0,swap=False,**kw):
+        m=dict(self.game)
+        m.update(kw)
+        if swap: m["home"],m["away"]=m["away"],m["home"]
+        m["periods"]={"num_0":{"status":"open","money_line":{"home":home,"away":away}}}
+        return pilot.board_rows({"sport_id":2,"events":[m]}, self.t+timedelta(minutes=offset))
+
+    def test_both_sides_shortened_early_and_no_magnitude_filter(self):
+        prior=self.capture(2.13,1.88)
+        now=self.capture(1.87,2.12,15,swap=True)
+        sample=watch.observe(prior,now)
+        self.assertEqual(sample["compared_pairs"],1)
+        self.assertEqual({(m["player"],m["old"],m["new"]) for m in sample["moves"]},
+                         {("Test Home",2.13,2.12),("Test Away",1.88,1.87)})
+        self.assertTrue(all(m["both_shortened"] for m in sample["moves"]))
+        self.assertEqual(sample,watch.observe(prior,now))
+        self.assertTrue(min(m["move_pp"] for m in sample["moves"])<0)
+
+    def test_baseline_gap_cutoff_and_new_start(self):
+        now=self.capture(2.0,1.9,15)
+        self.assertFalse(watch.observe(None,now)["moves"])
+        self.assertFalse(watch.observe(self.capture(2.2,1.8,-65),now)["moves"])
+        self.assertTrue(watch.observe(self.capture(2.2,1.8,-30),now)["too_far_apart"])
+        self.assertFalse(watch.observe(self.capture(2.2,1.8),self.capture(2,1.9,15,starts=(self.t+timedelta(hours=11)).isoformat()))["moves"])
+        self.assertFalse(watch.observe(self.capture(2.2,1.8),now,blocked={next(iter(now["events"].values()))["fixture"]})["moves"])
+
+    def test_grouped_delivery_no_duplicates(self):
+        batch=watch.observe(self.capture(2.13,1.88),self.capture(2.10,1.80,15))
+        receipt, calls=StoreStub(),[]
+        now=self.t+timedelta(minutes=15)
+        def send(method,args):
+            calls.append((method,args))
+            return {"message_id":19,"date":int(now.timestamp()),"chat":{"id":123}}
+        for expected in ("delivered","already delivered"):
+            self.assertEqual(watch.deliver(batch,receipt,now=now,get_chat=lambda:"123",send=send),expected)
+        self.assertEqual(len(calls),1)
+        self.assertIn("2 observed price drops",calls[0][1]["text"])
+        self.assertEqual(watch.deliver(batch,StoreStub(),now=now+timedelta(minutes=3),get_chat=lambda:"123",send=send),"quiet")
+        self.assertEqual(watch.deliver({**batch,"moves":[]},StoreStub(),now=now,get_chat=lambda:"123",send=send),"quiet")
+
+    def test_uncertain_delivery_is_not_repeated(self):
+        batch=watch.observe(self.capture(2.13,1.88),self.capture(2.01,1.88,15))
+        store=StoreStub()
+        def uncertain(method, args): raise RuntimeError("response lost")
+        for error in ("response lost","Uncertain Telegram receipt"):
+            with self.assertRaisesRegex(RuntimeError,error):
+                watch.deliver(batch,store,now=self.t+timedelta(minutes=15),get_chat=lambda:"123",send=uncertain)
