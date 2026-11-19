@@ -1,14 +1,10 @@
 {
-  "checked_at": "2026-11-19T00:43:57.512905+00:00",
+  "checked_at": "2026-11-19T17:27:51.452473+00:00",
   "actual_stake": 0,
-  "saved": 3,
-  "accepted_packets": [
-    "0e1d8c410227cea7a8589c1ea4b8691ba580a2b4c94aa5b8259e2f4fa310c209",
-    "72a00d44a1138f0a2aaf61b846d2469417e06b785bf1e00f55c8cf2af6bf1fb4",
-    "cad5dc2d565b303047aeb7c83f6290bbb9d8d1368b01c52c58b4439b99d57d01"
-  ],
-  "status": "CAPTURED",
+  "saved": 0,
+  "accepted_packets": [],
+  "status": "NO_NEW_ELIGIBLE_INPUTS",
   "counts": {
-    "offers_saved": 13
+    "not_fresh_prematch": 13
   }
 }
