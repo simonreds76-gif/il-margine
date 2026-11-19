@@ -6,10 +6,10 @@
     "blocker_counts": {},
     "candidate_board_preserved": false,
     "eligible_lines": 0,
-    "priced_lines": 0,
+    "priced_lines": 13,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 0
+    "value_ladder_lines": 2
   },
   "evidence": {
     "clv": 0.047953,
@@ -158,14 +158,20 @@
     "void": 6
   },
   "forecast_input_capture": {
-    "accepted_packets": [],
+    "accepted_packets": [
+      "0e1d8c410227cea7a8589c1ea4b8691ba580a2b4c94aa5b8259e2f4fa310c209",
+      "72a00d44a1138f0a2aaf61b846d2469417e06b785bf1e00f55c8cf2af6bf1fb4",
+      "cad5dc2d565b303047aeb7c83f6290bbb9d8d1368b01c52c58b4439b99d57d01"
+    ],
     "actual_stake": 0,
-    "checked_at": "2026-11-18T18:23:37.922030+00:00",
-    "counts": {},
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "checked_at": "2026-11-19T00:43:57.512905+00:00",
+    "counts": {
+      "offers_saved": 13
+    },
+    "saved": 3,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-11-18T18:23:37Z",
+  "generated_at": "2026-11-19T00:43:57Z",
   "half_adjustment": {
     "actual_stake": 0,
     "arms": {
@@ -203,10 +209,12 @@
       }
     },
     "fixtures": 0,
-    "generated_at": "2026-11-18T18:23:38.050987+00:00",
+    "generated_at": "2026-11-19T00:43:57.655724+00:00",
     "holds": {},
     "paired_settled_fixtures": 0,
-    "scan_exclusions": {},
+    "scan_exclusions": {
+      "ineligible_contract_or_input": 13
+    },
     "start_at": "2026-11-17T18:55:00+00:00",
     "status": "AWAITING_FIRST_VERIFIED_BOARD"
   },
@@ -214,13 +222,15 @@
     "actual_stake": 0,
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
-    "exclusions": {},
-    "forecast_fixtures": 186,
-    "forecast_keepers": 379,
-    "generated_at": "2026-11-18T18:23:37.957131+00:00",
-    "last_capture_at": "2026-11-07T14:58:06.542908+00:00",
+    "exclusions": {
+      "starter_unavailable": 4
+    },
+    "forecast_fixtures": 187,
+    "forecast_keepers": 381,
+    "generated_at": "2026-11-19T00:43:57.553205+00:00",
+    "last_capture_at": "2026-11-19T00:43:57.553205+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 0,
+    "new_forecasts": 2,
     "new_selections": 0,
     "next_review_at": null,
     "paired_scores": {
@@ -1771,6 +1781,7 @@
       }
     ],
     "settlement_reasons": {
+      "awaiting_verified_keeper_result": 2,
       "incomplete_or_conflicting_full_match_count": 24,
       "keeper_identity_unresolved": 4,
       "team_keeper_participation_or_rules_review": 33,

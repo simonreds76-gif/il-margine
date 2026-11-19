@@ -7,10 +7,10 @@
       "unnamed_or_team_lines": 0
     },
     "Grosvenor": {
-      "events_with_save_markets": 0,
+      "events_with_save_markets": 3,
       "named_player_lines": 0,
-      "status": "NO_SAVE_MARKETS",
-      "unnamed_or_team_lines": 0
+      "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
+      "unnamed_or_team_lines": 13
     },
     "Paddy Power": {
       "events_with_save_markets": 0,
@@ -20,85 +20,192 @@
     }
   },
   "capture_errors": [],
-  "capture_mode": "close",
+  "capture_mode": "publication",
   "direct_source": {
     "bookmaker": "Grosvenor",
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 491,
+      "current_quotes": 30,
       "mapped_quotes": 0,
       "paper_selections": 0,
-      "price_or_status_changes": 0,
+      "price_or_status_changes": 7,
       "rules": "unverified"
     },
-    "matched": 0,
+    "matched": 3,
     "missing": [],
-    "requests": 0,
-    "rows": 0
+    "requests": 6,
+    "rows": 236
   },
   "discovery_retries": 0,
-  "event_last_checked": {},
+  "event_last_checked": {
+    "72036308": "2026-11-19T00:43:52Z",
+    "72478708": "2026-11-19T00:43:52Z",
+    "72513310": "2026-11-19T00:43:52Z"
+  },
   "events_deferred_by_budget": 0,
-  "events_selected": 0,
-  "events_supported": 0,
-  "events_with_lines": 0,
-  "generated_at": "2026-11-18T18:23:32Z",
-  "last_publication_at": "2026-11-18T17:20:07Z",
+  "events_selected": 3,
+  "events_supported": 3,
+  "events_with_lines": 3,
+  "generated_at": "2026-11-19T00:43:52Z",
+  "last_publication_at": "2026-11-19T00:43:52Z",
   "league_coverage": {
     "bundesliga": {
-      "selected": 0,
-      "with_prices": 0
+      "selected": 1,
+      "with_prices": 1
     },
     "epl": {
       "selected": 0,
       "with_prices": 0
     },
     "la-liga": {
-      "selected": 0,
-      "with_prices": 0
+      "selected": 1,
+      "with_prices": 1
     },
     "ligue-1": {
-      "selected": 0,
-      "with_prices": 0
+      "selected": 1,
+      "with_prices": 1
     },
     "serie-a": {
       "selected": 0,
       "with_prices": 0
     }
   },
-  "market_inventory_rows_added": 0,
-  "market_names_observed": [],
+  "market_inventory_rows_added": 77,
+  "market_names_observed": [
+    "Anytime Assist",
+    "Anytime Goalscorer",
+    "Both Teams To Score",
+    "Corners Totals",
+    "Corners Totals Away",
+    "Corners Totals Home",
+    "Correct Score",
+    "Double Chance",
+    "Draw No Bet",
+    "European Handicap",
+    "Goalkeeper Saves Away",
+    "Goalkeeper Saves Home",
+    "Half Time / Full Time",
+    "ML",
+    "ML HT",
+    "Player Headed Shots on Target",
+    "Player Shots",
+    "Player Shots on Target",
+    "Player To Assist",
+    "Player To Score or Assist",
+    "Spread",
+    "Total Shots Away",
+    "Total Shots Home",
+    "Totals",
+    "Totals HT"
+  ],
   "moviodds_source": {
     "errors": [],
     "excluded": {
-      "fixture_not_eligible": 1150,
-      "unmatched_or_unsupported_fixture": 276
+      "conflicting_quotes": 0,
+      "fixture_not_eligible": 924,
+      "unmatched_or_unsupported_fixture": 264
     },
-    "goalkeeper_coverage_status": "NO_TARGETS",
-    "goalkeeper_fixture_coverage": [],
+    "goalkeeper_coverage_status": "INCOMPLETE",
+    "goalkeeper_fixture_coverage": [
+      {
+        "away": "1. FC Cologne",
+        "event_id": "72513310",
+        "home": "Bayern Munich",
+        "market_polled_at": "2026-11-19T00:42:32.976173754Z",
+        "quote_count": 0,
+        "reason": "same_provider_cache_no_independent_check",
+        "source_event_id": "203186313",
+        "source_site": "com",
+        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
+        "verification_exclusions": {
+          "same_provider_cache_no_independent_check": 1
+        }
+      },
+      {
+        "away": "Le Havre AC",
+        "event_id": "72036308",
+        "home": "ESTAC Troyes",
+        "quote_count": 0,
+        "source_site": "com",
+        "status": "FIXTURE_NOT_FOUND"
+      },
+      {
+        "away": "Espanyol Barcelona",
+        "event_id": "72478708",
+        "home": "Athletic Bilbao",
+        "market_polled_at": "2026-11-19T00:42:44.557664824Z",
+        "quote_count": 0,
+        "reason": "same_provider_cache_no_independent_check",
+        "source_event_id": "203186591",
+        "source_site": "com",
+        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
+        "verification_exclusions": {
+          "same_provider_cache_no_independent_check": 1
+        }
+      }
+    ],
     "goalkeeper_source_hold": "moviodds_gk_contract_price_unverified_20261106",
     "goalkeeper_verification": {
       "deferred_by_budget": 0,
-      "fixtures": [],
-      "requests": 0,
+      "fixtures": [
+        {
+          "accepted": 0,
+          "event_id": "72513310",
+          "excluded": {
+            "same_provider_cache_no_independent_check": 1
+          },
+          "fixture_id": "203186313"
+        },
+        {
+          "accepted": 0,
+          "event_id": "72478708",
+          "excluded": {
+            "same_provider_cache_no_independent_check": 1
+          },
+          "fixture_id": "203186591"
+        }
+      ],
+      "requests": 2,
       "verified_quotes": 0,
       "version": "moviodds_gk_atomic_v1"
     },
-    "market_count": 0,
-    "quote_count": 0,
-    "received_at": "2026-11-18T18:23:37.294850+00:00",
-    "requests": 1,
+    "market_count": 2,
+    "quote_count": 143,
+    "received_at": "2026-11-19T00:43:56.401872+00:00",
+    "requests": 3,
     "source": "moviodds_bet365",
     "source_site": "com",
-    "status": "NO_VERIFIED_MARKETS"
+    "status": "OK"
   },
-  "publication_recovery": false,
+  "publication_recovery": true,
   "request_budget": 4,
-  "requests_used": 1,
-  "rows_added": 0,
-  "rows_observed": 0,
-  "selected_events": [],
-  "status": "NO_GOALKEEPER_SAVE_LINES",
-  "three_way_events": 0
+  "requests_used": 2,
+  "rows_added": 13,
+  "rows_observed": 13,
+  "selected_events": [
+    {
+      "away": "1. FC Cologne",
+      "competition": "Germany - Bundesliga",
+      "home": "Bayern Munich",
+      "id": 72513310,
+      "kickoff_at": "2026-11-20T19:30:00Z"
+    },
+    {
+      "away": "Le Havre AC",
+      "competition": "France - Ligue 1",
+      "home": "ESTAC Troyes",
+      "id": 72036308,
+      "kickoff_at": "2026-11-20T19:45:00Z"
+    },
+    {
+      "away": "Espanyol Barcelona",
+      "competition": "Spain - LaLiga",
+      "home": "Athletic Bilbao",
+      "id": 72478708,
+      "kickoff_at": "2026-11-20T20:00:00Z"
+    }
+  ],
+  "status": "CAPTURED",
+  "three_way_events": 3
 }
