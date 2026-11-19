@@ -9,7 +9,7 @@ import styles from "./board.module.css";
 
 export const dynamic="force-dynamic";
 export const fetchCache="force-no-store";
-export const metadata={title:"Drop Shot Desk · Tennis odds moves | Il Margine",robots:{index:false,follow:false}};
+export const metadata={title:"Drop Shot Desk · Tennis odds moves",robots:{index:false,follow:false}};
 const route="/drop-shot-desk";
 const firstDay="2026-11-19";
 function validDay(input:string|undefined,today:string) {

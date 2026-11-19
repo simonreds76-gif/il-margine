@@ -19,3 +19,4 @@
 .chart{width:100%;height:auto;display:block}.board details{margin:1rem 0;border-top:1px solid #374151}.board summary{display:list-item;cursor:pointer;padding:.75rem .15rem;min-height:44px;color:#e2e8f0}
 .scroll{overflow:auto}.scroll table{width:100%;border-collapse:collapse;text-align:left;font-variant-numeric:tabular-nums}.scroll :is(th,td){padding:.55rem .4rem;border-bottom:1px solid #354153;font-size:.875rem}.scroll th{color:#cbd5e1}
 @media(max-width:700px){.grid{grid-template-columns:minmax(0,1fr)}.list{max-height:13rem}.pair dt{min-height:2.8em}.page{padding-left:.8rem;padding-right:.8rem}}
+.pair>div{display:grid;grid-template-rows:subgrid;grid-row:span 3;row-gap:.2rem}.pair dt{min-height:0}.chart{height:196px}
