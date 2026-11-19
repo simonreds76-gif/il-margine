@@ -110,7 +110,10 @@ def roundup_text(moves, observed):
         lead = f"{remaining}m" if remaining < 60 else f"{remaining//60}h {remaining%60:02d}m"
         change = 100*(1/m["new"]-1/m["old"])
         late=instant(m["start"]).strftime("%d %b %H:%M UTC")
-        lines.extend([f"{m['player']} vs {m['opponent']}",f"{m['league']} · scheduled {late}",
+        selection = m.get("selection", m["player"])
+        event = f"{m['player']} vs {m['opponent']}"
+        heading = event if m.get("market","winner")=="winner" else f"{event} · {selection}"
+        lines.extend([heading,f"{m['league']} · scheduled {late}",
                       f"Earlier: {m['old']:g} at {instant(m['before']):%d %b %H:%M:%S} UTC",
                       f"Detected: {m['new']:g} at {instant(m['after']):%d %b %H:%M:%S} UTC"+(" · both prices shortened" if m["both_shortened"] else ""),
                       f"Price-implied probability {change:+.2f}pp over {elapsed//60}m {elapsed%60:02d}s · {lead} to scheduled start at detection",""])

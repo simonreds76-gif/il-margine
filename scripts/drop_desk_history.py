@@ -50,6 +50,9 @@ def append_snapshot(tape, filename, snapshot):
         if set(prices) != set(entry["players"]):
             raise ValueError("Price series player identity changed")
         entry["quotes"].append([stamp, *[prices[name] for name in entry["players"]]])
+        for code, pair in row.get("contracts",{}).items():
+            series = tape["series"].setdefault(key(row)+"|"+code, {"players":pair["labels"],"quotes":[]})
+            series["quotes"].append([stamp,*pair["prices"]])
     tape["slots"][filename] = stamp
 
 
@@ -133,11 +136,17 @@ def outcome(ticket, games, schedule, now):
     score = str(row["result"] or "").strip()
     if score.lower() in ("w/o","wo","walkover"):
         return {"result":"Void","score":score}
+    if ticket.get("market") in ("spreads","totals") and re.search(r"\b(?:ret(?:ired)?|abandoned)\b",score,re.I) and not voids:
+        return {"result":"Void","score":score,"settled_stake":0,"profit":0}
     label = normal(ticket["league"])
     slam = any(title in label for title in ("australian open","roland garros","french open","wimbledon","us open"))
     need = 3 if slam and rnd >= 4 else 2
     if voids or not completed_score(score,need):
         return None
+    if ticket.get("market","winner") in ("spreads","totals"):
+        from desk_games import grade
+        sets = [(int(a),int(b)) for a,b in re.findall(r"(\d+)-(\d+)",score)]
+        return {"score":score, **grade(ticket,sets,row["winner_id"]==player)}
     return {"result":"Won" if row["winner_id"] == player else "Lost","score":score}
 
 
@@ -182,7 +191,7 @@ def settle(store, state, now):
             result = outcome(ticket,games,schedule,now)
             ticket["last_check"] = now.isoformat()
             if result:
-                resolved[ticket["after"][:10]][mid] = {**result,"binding":ticket["binding"],
+                resolved[ticket["after"][:10]][mid] = {**result,**{k:ticket[k] for k in ("market","line","side","selection") if k in ticket},"binding":ticket["binding"],
                     "settled_at":now.isoformat(),"alerted_price":ticket["new"],"message_id":ticket["message_id"]}
     for day,changes in resolved.items():
         path = f"presentation/outcomes/{day}.json"
@@ -221,7 +230,7 @@ def project(store, now):
                 batch = store.get("drop-scans-v2/" + object_key(stamp))
                 if batch is None:
                     continue
-                if batch["moves"]:
+                if batch.get("alert_ids",batch["moves"]):
                     receipt = store.get("drop-deliveries-v2/" + object_key(stamp))
                     if not receipt or receipt.get("state") != "sent":
                         continue
@@ -229,6 +238,7 @@ def project(store, now):
                     for m in batch["moves"]:
                         if m["move_id"] in delivered:
                             t = {k:m[k] for k in ("player","opponent","tour","league","start","after","new")}
+                            t.update({k:m[k] for k in ("market","line","side","contract","selection") if k in m})
                             state["pending"].setdefault(m["move_id"],{**t,"message_id":receipt["message_id"]})
             processed[name] = True
         if changed:
