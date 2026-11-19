@@ -300,12 +300,10 @@
       "away_unavailable": [
         "Alieu Fadera",
         "Yerry Mina",
-        "Giuseppe Aurelio",
         "Harry Winks",
-        "Mattia Felici",
-        "M'Bala Nzola"
+        "Mattia Felici"
       ],
-      "observed_at": "2026-11-18T18:49:53.574592+00:00",
+      "observed_at": "2026-11-19T01:10:30.150412+00:00",
       "changed_at": "2026-11-18T15:59:25.169147+00:00"
     },
     {
@@ -603,7 +601,6 @@
         "Adam Marušić",
         "Josip Šutalo",
         "Nuno Tavares",
-        "Davide Frattesi",
         "Albert Guðmundsson"
       ],
       "away_unavailable": [
@@ -612,26 +609,311 @@
         "Medon Berisha",
         "Santiago Pierotti"
       ],
-      "observed_at": "2026-11-18T18:49:53.574592+00:00",
+      "observed_at": "2026-11-19T01:10:30.150412+00:00",
       "changed_at": "2026-11-18T15:59:25.169147+00:00"
     },
     {
       "fotmob_match_id": 5749757,
+      "fotmob_page_url": "/matches/torino-vs-napoli/37am8z#5749757",
+      "home_fotmob_team_id": 9875,
+      "away_fotmob_team_id": 9804,
       "match_date": "2026-11-21",
       "kickoff_utc": "2026-11-21T19:45:00Z",
       "home_team": "Napoli",
       "away_team": "Torino",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-5-2",
+      "away_formation": "3-5-2",
+      "home_players": [
+        "Vanja Milinković-Savić",
+        "Sam Beukema",
+        "Amir Rrahmani",
+        "Rafa Marín",
+        "Antonio Vergara",
+        "Kevin De Bruyne",
+        "Billy Gilmour",
+        "Scott McTominay",
+        "Mathías Olivera",
+        "Rasmus Højlund",
+        "Noa Lang"
+      ],
+      "away_players": [
+        "Lucas Perri",
+        "Saúl Coco",
+        "Ardian Ismajli",
+        "Pietro Comuzzo",
+        "Nathan Patterson",
+        "Emirhan İlkhan",
+        "Daniel Bragança",
+        "Kian Fitz-Jim",
+        "Alessio Cacciamani",
+        "Sandro Kulenović",
+        "Giovanni Simeone"
+      ],
+      "home_starters": [
+        {
+          "name": "Vanja Milinković-Savić",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-5-2",
+          "position_id": 11,
+          "player_id": 543021,
+          "shirt_number": "32"
+        },
+        {
+          "name": "Sam Beukema",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 33,
+          "player_id": 873573,
+          "shirt_number": "31"
+        },
+        {
+          "name": "Amir Rrahmani",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 35,
+          "player_id": 544693,
+          "shirt_number": "13"
+        },
+        {
+          "name": "Rafa Marín",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 37,
+          "player_id": 1313884,
+          "shirt_number": "16"
+        },
+        {
+          "name": "Antonio Vergara",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 71,
+          "player_id": 1320863,
+          "shirt_number": "26"
+        },
+        {
+          "name": "Kevin De Bruyne",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 73,
+          "player_id": 169200,
+          "shirt_number": "11"
+        },
+        {
+          "name": "Billy Gilmour",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 75,
+          "player_id": 942549,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Scott McTominay",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 77,
+          "player_id": 843099,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Mathías Olivera",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79,
+          "player_id": 729093,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Rasmus Højlund",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 104,
+          "player_id": 1199272,
+          "shirt_number": "19"
+        },
+        {
+          "name": "Noa Lang",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 106,
+          "player_id": 837341,
+          "shirt_number": "70"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Lucas Perri",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-5-2",
+          "position_id": 11,
+          "player_id": 637656,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Saúl Coco",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 33,
+          "player_id": 941953,
+          "shirt_number": "23"
+        },
+        {
+          "name": "Ardian Ismajli",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 35,
+          "player_id": 750880,
+          "shirt_number": "44"
+        },
+        {
+          "name": "Pietro Comuzzo",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 37,
+          "player_id": 1529222,
+          "shirt_number": "15"
+        },
+        {
+          "name": "Nathan Patterson",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 71,
+          "player_id": 1112684,
+          "shirt_number": "2"
+        },
+        {
+          "name": "Emirhan İlkhan",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 73,
+          "player_id": 1301633,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Daniel Bragança",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 75,
+          "player_id": 1014980,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Kian Fitz-Jim",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 77,
+          "player_id": 1218556,
+          "shirt_number": "28"
+        },
+        {
+          "name": "Alessio Cacciamani",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79,
+          "player_id": 1746591,
+          "shirt_number": "77"
+        },
+        {
+          "name": "Sandro Kulenović",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 104,
+          "player_id": 823113,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Giovanni Simeone",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 106,
+          "player_id": 469615,
+          "shirt_number": "18"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-11-18T18:49:53.574592+00:00",
-      "changed_at": "2026-11-18T01:37:44.181725+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Giovanni Di Lorenzo",
+        "Benoît Badiashile",
+        "Alessandro Buongiorno",
+        "Alisson Santos",
+        "Stanislav Lobotka"
+      ],
+      "away_unavailable": [
+        "Nikola Vlašić"
+      ],
+      "observed_at": "2026-11-19T01:10:30.150412+00:00",
+      "changed_at": "2026-11-19T01:10:30.150412+00:00"
     },
     {
       "fotmob_match_id": 5749758,
@@ -931,11 +1213,100 @@
       "away_unavailable": [
         "Pierluigi Gollini",
         "Devyne Rensch",
-        "Lorenzo Pellegrini",
-        "Paulo Dybala"
+        "Lorenzo Pellegrini"
       ],
-      "observed_at": "2026-11-18T18:49:53.574592+00:00",
+      "observed_at": "2026-11-19T01:10:30.150412+00:00",
       "changed_at": "2026-11-18T18:49:53.574592+00:00"
+    },
+    {
+      "fotmob_match_id": 5749751,
+      "match_date": "2026-11-22",
+      "kickoff_utc": "2026-11-22T19:45:00Z",
+      "home_team": "Atalanta",
+      "away_team": "Inter",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-19T01:10:30.150412+00:00",
+      "changed_at": "2026-11-19T01:10:30.150412+00:00"
+    },
+    {
+      "fotmob_match_id": 5749752,
+      "match_date": "2026-11-22",
+      "kickoff_utc": "2026-11-22T14:00:00Z",
+      "home_team": "Bologna",
+      "away_team": "Udinese",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-19T01:10:30.150412+00:00",
+      "changed_at": "2026-11-19T01:10:30.150412+00:00"
+    },
+    {
+      "fotmob_match_id": 5749754,
+      "match_date": "2026-11-22",
+      "kickoff_utc": "2026-11-22T11:30:00Z",
+      "home_team": "Juventus",
+      "away_team": "Venezia",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-19T01:10:30.150412+00:00",
+      "changed_at": "2026-11-19T01:10:30.150412+00:00"
+    },
+    {
+      "fotmob_match_id": 5749750,
+      "match_date": "2026-11-22",
+      "kickoff_utc": "2026-11-22T17:00:00Z",
+      "home_team": "Milan",
+      "away_team": "Frosinone",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-19T01:10:30.150412+00:00",
+      "changed_at": "2026-11-19T01:10:30.150412+00:00"
+    },
+    {
+      "fotmob_match_id": 5749759,
+      "match_date": "2026-11-22",
+      "kickoff_utc": "2026-11-22T14:00:00Z",
+      "home_team": "Sassuolo",
+      "away_team": "Genoa",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-19T01:10:30.150412+00:00",
+      "changed_at": "2026-11-19T01:10:30.150412+00:00"
     }
   ]
 }

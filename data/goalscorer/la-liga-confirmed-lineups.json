@@ -303,7 +303,7 @@
         "Jofre Carreras",
         "Kike García"
       ],
-      "observed_at": "2026-11-18T18:50:22.648534+00:00",
+      "observed_at": "2026-11-19T01:11:08.213685+00:00",
       "changed_at": "2026-11-18T01:37:57.864837+00:00"
     },
     {
@@ -597,13 +597,13 @@
       "away_subs": [],
       "away_substitute_entries": [],
       "home_unavailable": [
+        "Facundo Garcés",
         "Mikel Rodríguez"
       ],
       "away_unavailable": [
-        "Bright Ede",
-        "Zakaria Eddahchouri"
+        "Bright Ede"
       ],
-      "observed_at": "2026-11-18T18:50:22.648534+00:00",
+      "observed_at": "2026-11-19T01:11:08.213685+00:00",
       "changed_at": "2026-11-18T15:59:53.504791+00:00"
     },
     {
@@ -621,26 +621,312 @@
       "away_starters": [],
       "home_subs": [],
       "away_subs": [],
-      "observed_at": "2026-11-18T18:50:22.648534+00:00",
+      "observed_at": "2026-11-19T01:11:08.213685+00:00",
       "changed_at": "2026-11-18T01:37:57.864837+00:00"
     },
     {
       "fotmob_match_id": 5868139,
+      "fotmob_page_url": "/matches/real-madrid-vs-celta-vigo/2uda7y#5868139",
+      "home_fotmob_team_id": 8633,
+      "away_fotmob_team_id": 9910,
       "match_date": "2026-11-21",
       "kickoff_utc": "2026-11-21T20:00:00Z",
       "home_team": "Real Madrid",
       "away_team": "Celta Vigo",
-      "home_status": "Lineup Pending",
-      "away_status": "Lineup Pending",
-      "lineup_type": "pending",
-      "home_players": [],
-      "away_players": [],
-      "home_starters": [],
-      "away_starters": [],
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-2-3-1",
+      "away_formation": "3-4-3",
+      "home_players": [
+        "Thibaut Courtois",
+        "Federico Valverde",
+        "Ibrahima Konaté",
+        "Dean Huijsen",
+        "Marc Cucurella",
+        "Thiago Pitarch",
+        "Eduardo Camavinga",
+        "Arda Güler",
+        "Jude Bellingham",
+        "Yan Diomande",
+        "Kylian Mbappé"
+      ],
+      "away_players": [
+        "Ionuț Radu",
+        "Javi Rodríguez",
+        "Sebastián Cáceres",
+        "Marcos Alonso",
+        "Javi Rueda",
+        "Andrés Antañón",
+        "Aleix Febas",
+        "Sergio Carreira",
+        "Iago Aspas",
+        "Pablo Durán",
+        "Couhaib Driouech"
+      ],
+      "home_starters": [
+        {
+          "name": "Thibaut Courtois",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11,
+          "player_id": 170323,
+          "shirt_number": "1"
+        },
+        {
+          "name": "Federico Valverde",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32,
+          "player_id": 743533,
+          "shirt_number": "8"
+        },
+        {
+          "name": "Ibrahima Konaté",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34,
+          "player_id": 820140,
+          "shirt_number": "16"
+        },
+        {
+          "name": "Dean Huijsen",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36,
+          "player_id": 1367619,
+          "shirt_number": "4"
+        },
+        {
+          "name": "Marc Cucurella",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38,
+          "player_id": 873289,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Thiago Pitarch",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64,
+          "player_id": 1796908,
+          "shirt_number": "27"
+        },
+        {
+          "name": "Eduardo Camavinga",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66,
+          "player_id": 1015185,
+          "shirt_number": "6"
+        },
+        {
+          "name": "Arda Güler",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83,
+          "player_id": 1253890,
+          "shirt_number": "15"
+        },
+        {
+          "name": "Jude Bellingham",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85,
+          "player_id": 1077894,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Yan Diomande",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87,
+          "player_id": 1735453,
+          "shirt_number": "25"
+        },
+        {
+          "name": "Kylian Mbappé",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115,
+          "player_id": 701154,
+          "shirt_number": "10"
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Ionuț Radu",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-3",
+          "position_id": 11,
+          "player_id": 681213,
+          "shirt_number": "13"
+        },
+        {
+          "name": "Javi Rodríguez",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 33,
+          "player_id": 1435439,
+          "shirt_number": "20"
+        },
+        {
+          "name": "Sebastián Cáceres",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 35,
+          "player_id": 1020026,
+          "shirt_number": "21"
+        },
+        {
+          "name": "Marcos Alonso",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 37,
+          "player_id": 196169,
+          "shirt_number": "3"
+        },
+        {
+          "name": "Javi Rueda",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 72,
+          "player_id": 1310440,
+          "shirt_number": "17"
+        },
+        {
+          "name": "Andrés Antañón",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 74,
+          "player_id": 1732791,
+          "shirt_number": "28"
+        },
+        {
+          "name": "Aleix Febas",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 76,
+          "player_id": 671686,
+          "shirt_number": "14"
+        },
+        {
+          "name": "Sergio Carreira",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 78,
+          "player_id": 1106742,
+          "shirt_number": "5"
+        },
+        {
+          "name": "Iago Aspas",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 103,
+          "player_id": 174472,
+          "shirt_number": "10"
+        },
+        {
+          "name": "Pablo Durán",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 105,
+          "player_id": 1322858,
+          "shirt_number": "11"
+        },
+        {
+          "name": "Couhaib Driouech",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 107,
+          "player_id": 1184693,
+          "shirt_number": "24"
+        }
+      ],
       "home_subs": [],
+      "home_substitute_entries": [],
       "away_subs": [],
-      "observed_at": "2026-11-18T18:50:22.648534+00:00",
-      "changed_at": "2026-11-18T01:37:57.864837+00:00"
+      "away_substitute_entries": [],
+      "home_unavailable": [
+        "Ferland Mendy",
+        "Raúl Asencio",
+        "Aurélien Tchouaméni",
+        "Bernardo Silva",
+        "Rodrygo"
+      ],
+      "away_unavailable": [
+        "Miguel Román",
+        "Borja Iglesias"
+      ],
+      "observed_at": "2026-11-19T01:11:08.213685+00:00",
+      "changed_at": "2026-11-19T01:11:08.213685+00:00"
     },
     {
       "fotmob_match_id": 5868140,
@@ -935,18 +1221,88 @@
       "home_unavailable": [
         "José Ángel Carmona",
         "Miguel Sierra",
-        "Marcão",
-        "Rubén Vargas"
+        "Marcão"
       ],
       "away_unavailable": [
         "Dani Ceballos",
         "José Antonio Morante",
-        "Diego Llorente",
         "Facundo Bernal",
         "Juan Hernández"
       ],
-      "observed_at": "2026-11-18T18:50:22.648534+00:00",
+      "observed_at": "2026-11-19T01:11:08.213685+00:00",
       "changed_at": "2026-11-18T18:50:22.648534+00:00"
+    },
+    {
+      "fotmob_match_id": 5868133,
+      "match_date": "2026-11-22",
+      "kickoff_utc": "2026-11-22T13:00:00Z",
+      "home_team": "Barcelona",
+      "away_team": "Villarreal",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-19T01:11:08.213685+00:00",
+      "changed_at": "2026-11-19T01:11:08.213685+00:00"
+    },
+    {
+      "fotmob_match_id": 5868134,
+      "match_date": "2026-11-22",
+      "kickoff_utc": "2026-11-22T20:00:00Z",
+      "home_team": "Getafe",
+      "away_team": "Atlético Madrid",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-19T01:11:08.213685+00:00",
+      "changed_at": "2026-11-19T01:11:08.213685+00:00"
+    },
+    {
+      "fotmob_match_id": 5868136,
+      "match_date": "2026-11-22",
+      "kickoff_utc": "2026-11-22T17:30:00Z",
+      "home_team": "Osasuna",
+      "away_team": "Málaga",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-19T01:11:08.213685+00:00",
+      "changed_at": "2026-11-19T01:11:08.213685+00:00"
+    },
+    {
+      "fotmob_match_id": 5868137,
+      "match_date": "2026-11-22",
+      "kickoff_utc": "2026-11-22T15:15:00Z",
+      "home_team": "Racing Santander",
+      "away_team": "Real Sociedad",
+      "home_status": "Lineup Pending",
+      "away_status": "Lineup Pending",
+      "lineup_type": "pending",
+      "home_players": [],
+      "away_players": [],
+      "home_starters": [],
+      "away_starters": [],
+      "home_subs": [],
+      "away_subs": [],
+      "observed_at": "2026-11-19T01:11:08.213685+00:00",
+      "changed_at": "2026-11-19T01:11:08.213685+00:00"
     }
   ]
 }
