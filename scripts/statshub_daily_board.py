@@ -8,6 +8,7 @@ import requests
 
 from statshub_daily_contracts import (LEAGUES, MARKETS, contracts, fixtures, form, identity,
     load_history, norm, player_case, screen_age, team_case, utc, won)
+from statshub_daily_focus import FOCUS_LIMIT, add_focus, opponent_recheck
 from statshub_daily_io import Provider, Store, send_digest, timestamp
 
 START="2026-11-20"
@@ -79,11 +80,11 @@ def player_screen(p,rows):
     if (r.get("hitRateL15") or 0)/100<=1/p["odds"]: return None
     return r
 
-def morning(read,day,clock=timestamp,history_loader=load_history):
+def morning(read,day,clock=timestamp,history_loader=load_history,focus_read=None):
     found={}; notes=[]; coverage=Counter()
     league_counts={}
     for league,(competition,_) in LEAGUES.items():
-        req=read.read("getFixturesByDate",dict(date=day,days=1,timeZone="Europe/London",competitionId=competition,withOdds=True),"am")
+        req=read.read("getFixturesByDate",dict(date=day,days=1,timeZone="Europe/London",competitionId=competition),"am")
         if not req:
             notes.append(league+" fixture board unavailable")
             continue
@@ -146,9 +147,18 @@ def morning(read,day,clock=timestamp,history_loader=load_history):
         f"{coverage['nohistory']} without enough venue history; {coverage['unverified']} player histories unchecked. "
         f"{len(read.log)}/{read.limit} StatsHub reads. Provider coverage is partial; unpriced, unverified and nonstandard contracts are excluded.")
     if notes: summary+="\n"+" · ".join(notes)
-    return dict(picks=ordered,fixtures=len(fs),coverage=summary,at=clock(),final=True,
+    board=dict(picks=ordered,fixtures=len(fs),coverage=summary,at=clock(),final=True,
                 completeBoards=(len(league_counts)==5 and coverage["boards"]==len(fs)
                     and not any("fixture board partially parsed" in s or "player screen unavailable" in s for s in notes)),delivery="pending")
+    if focus_read is not None:
+        try:
+            add_focus(board,focus_read,fs,prices,clock,board_matches)
+        except (ValueError,TypeError,KeyError,RuntimeError,TimeoutError,requests.RequestException) as exc:
+            import traceback
+            frames=[f"{frame.name}@{frame.lineno}" for frame in traceback.extract_tb(exc.__traceback__)]
+            print("Matchup context unavailable", type(exc).__name__, " ".join(frames), flush=True)
+            board["coverage"]+="\nMatchup review incomplete. Existing shortlist and checks available."
+    return board
 
 def note(status,text,**values):
     return dict(status=status,note=text,at=timestamp(),**values)
@@ -200,6 +210,8 @@ def recheck(read,picks,now):
             else:
                 check=note("ready","Official starter and price verified." if p["player"] else "Exact team or match price verified.",odds=q["odds"],book=q["book"])
                 p.setdefault("ready",check)
+            if lineups and p.get("focusOpponent"):
+                check["note"]+=opponent_recheck(p,lineups["data"])
             p["check"]=check
 
 def outcome(p,doc):
@@ -298,7 +310,7 @@ def run():
     if not report or report.get("pilot")!=START: raise RuntimeError("Private report unavailable")
     days=report["days"]
     if day<=LAST and not days.get(day,{}).get("final"):
-        board=morning(Reads(store,api,day,"morning",40),day)
+        board=morning(Reads(store,api,day,"morning",40),day,focus_read=Reads(store,api,day,"matchups",FOCUS_LIMIT))
         old={p["id"]:p for p in days.get(day,{}).get("picks",[])}
         fresh=[p for p in board["picks"] if p["id"] not in old]
         board["picks"]=[*old.values(),*fresh]
@@ -310,6 +322,12 @@ def run():
     all_picks=[p for board in days.values() for p in board["picks"]]
     if day in days:
         recheck(Reads(store,api,day,"recheck",12),days[day]["picks"],now)
+        if days[day].get("focusWatch"):
+            from statshub_daily_focus import recheck_watches
+            try:
+                recheck_watches(days[day],Reads(store,api,day,"watch-recheck",12),now,timestamp,board_matches)
+            except (ValueError,TypeError,KeyError,RuntimeError,TimeoutError,requests.RequestException):
+                days[day]["watchWarning"]="Matchup recheck unavailable."
     if report.get("settlementDay")!=day and any(not p.get("result") and p["ko"][:10]<day for p in all_picks):
         settle(Reads(store,api,day,"settle",8),all_picks,day)
         report["settlementDay"]=day

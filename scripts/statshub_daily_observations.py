@@ -29,8 +29,10 @@ def original_opportunities(store, day, board):
     candidates = []
     stop = utc(board["at"])
     for league, (competition, _) in LEAGUES.items():
-        args = dict(date=day, days=1, timeZone="Europe/London", competitionId=competition, withOdds=True)
+        args = dict(date=day, days=1, timeZone="Europe/London", competitionId=competition)
         envelope = lookup(store, day, "morning", "am", "getFixturesByDate", args)
+        if not envelope:  # Older saved fixture boards also requested summary odds.
+            envelope = lookup(store, day, "morning", "am", "getFixturesByDate", {**args,"withOdds":True})
         if not envelope:
             gaps["missing fixture board"] += 1
             continue
