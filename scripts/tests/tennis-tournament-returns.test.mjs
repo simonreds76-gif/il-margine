@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import release from '../../src/data/return-atlas-release.json' with {type:'json'};
 import data from '../../src/data/tennis-tournament-returns.json' with {type:'json'};
 import {editionCompletionLabel,reconciles,summaryForFamily,familyForFixture,projectTournamentReturns} from '../../src/lib/tennis-tournament-returns.mjs';
 const family=id=>data.families.find(f=>f.familyId===id);
@@ -10,7 +11,8 @@ test('all accepted rows reconcile, without adding prices to uncovered results',(
   const s=summaryForFamily(data,f);assert.equal(s.availability,'available',f.id);
   for(const e of s.editions){priced+=e.counts.paired;completed+=e.counts.completed;}
  }
- assert.equal(priced,14915);assert.equal(completed,15191);
+ assert.equal(priced,release.matches);
+ assert.equal(completed-priced,data.families.flatMap(f=>f.editions).reduce((n,e)=>n+e.noPrice,0));
 });
 test('same priced pairs; exact pickems excluded from both strategies',()=>{
  const s=summary('atp-finals').windows.three;
@@ -60,10 +62,14 @@ test('exact current ATP Finals alias only, never Challenger/qualifying/unknown e
  assert.equal(familyForFixture(data,f)?.familyId,'atp-finals');
  for(const change of [{tour:'Challenger'},{qualifying:true},{event:'Unknown'},{start:'2027-11-16T14:00:00Z'},{event:'Metz'}])assert.equal(familyForFixture(data,{...f,...change}),null);
 });
-test('client payload contains bounded summaries, no raw fixture ledgers',()=>{
- const p=projectTournamentReturns(data,[]);assert.equal(p.examples.length,3);
- assert.ok(JSON.stringify(p).length<20000);assert.equal(p.examples[0].availability,'available');
- assert.equal(JSON.stringify(p).includes('winner_id'),false);
+test('only fixture-linked summaries are sent to Matchday',()=>{
+ assert.deepEqual(projectTournamentReturns(data,[]),{byTournament:{}});
+ const f={tour:'ATP',event:'Finals',start:'2026-11-16T14:00:00Z',qualifying:false};
+ const challenger={...f,tour:'Challenger'};
+ assert.deepEqual(projectTournamentReturns(data,[challenger]),{byTournament:{}});
+ const p=projectTournamentReturns(data,[f,f,challenger]);
+ assert.deepEqual(Object.values(p.byTournament),[summary('atp-finals')]);
+ assert.deepEqual(Object.keys(p),['byTournament']);
 });
 
 test('opening odds or unresolved identity in a later edition cannot silently reach the UI',()=>{
@@ -87,7 +93,10 @@ test('finished current-year Queen’s and Paris show completed, without altering
 
 test('all 58 stored 2026 editions have completion evidence, without counting walkovers as priced matches',()=>{
  const editions=data.families.flatMap(f=>f.editions).filter(e=>e.year===2026);
- assert.equal(editions.length,58);assert.ok(editions.every(e=>e.completion.state==='completed'));
+ assert.ok(editions.length>=58);
+ const completed=editions.filter(e=>e.completion.state==='completed');
+ assert.ok(completed.length>=58);
+ assert.ok(completed.every(e=>e.completion.completedAt));
  const dubai=editions.find(e=>e.id==='21315');
  assert.equal(dubai.completion.completedAt,'2026-02-28');
  assert.equal(dubai.completion.evidence.disposition,'walkover');

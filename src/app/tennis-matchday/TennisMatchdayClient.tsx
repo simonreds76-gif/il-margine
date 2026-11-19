@@ -1,5 +1,5 @@
 'use client';
-import TournamentReturns, { TournamentReturnsPicker } from './TournamentReturns';
+import TournamentReturns from './TournamentReturns';
 import type { ReturnProjection } from '@/lib/tennis-tournament-returns.mjs';
 import { useEffect, useId, useState } from 'react';
 import Link from 'next/link';
@@ -277,7 +277,6 @@ export default function TennisMatchdayClient({ board, renderedAt, tournamentHist
       {!stale && <button type="button" onClick={() => reset(true)}>Show all captured fixtures</button>}
     </div>}
 
-    <TournamentReturnsPicker summaries={tournamentHistory.examples} />
     <details className={styles.about}><summary>About this board</summary>
       <p>Tournament returns cover ATP main draws with audited paired Pinnacle prices. Challenger and qualifying returns are unavailable until comparable price coverage is verified. Historical returns refresh with the existing daily archive update. Each panel shows its source date; these returns are separate from today’s captured odds.</p>
       <p>Men’s ATP and Challenger singles, including qualifying when captured. No WTA or doubles. Times are UK time and provisional. Prices are paired Pinnacle quotes and may have moved; they expire after two hours, and schedules after 24 hours. A dash means no fresh paired price. Started matches leave the list automatically.</p>

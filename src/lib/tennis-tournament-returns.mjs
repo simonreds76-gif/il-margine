@@ -57,7 +57,5 @@ export function projectTournamentReturns(data,fixtures) {
     const family=familyForFixture(data,fixture);
     if(family)byTournament[tournamentOf(fixture).key]=summaryForFamily(data,family);
   }
-  // Bounded preview examples; the full archive never ships to the browser.
-  const examples=['atp-finals','queens','paris-masters'].map(id=>data.families.find(f=>f.familyId===id)).filter(Boolean).map(f=>summaryForFamily(data,f));
-  return {byTournament,examples};
+  return {byTournament};
 }

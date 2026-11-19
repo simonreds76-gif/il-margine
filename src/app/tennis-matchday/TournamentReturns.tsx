@@ -102,12 +102,12 @@ function editionNote(row: EditionRow, pooled: boolean, snapshotYear: number) {
 
 // ---------- component ----------
 
-export default function TournamentReturns({ summary, defaultOpen = false }: { summary: TournamentReturnsSummary; defaultOpen?: boolean }) {
+export default function TournamentReturns({ summary }: { summary: TournamentReturnsSummary }) {
   const [size, setSize] = useState<3 | 5>(3);
   const chevron = <svg className={s.chev} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>;
   const mark = <svg className={s.mark} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true"><path d="M4 19h16M6 15V9m6 6V5m6 10v-7" /></svg>;
 
-  if (summary.availability === 'unavailable') return <details className={s.root} open={defaultOpen || undefined}>
+  if (summary.availability === 'unavailable') return <details className={s.root}>
     <summary className={s.bar}>{mark}<span className={s.barTitle}>Tournament history</span><span className={s.barMeta}>Not available for this event</span>{chevron}</summary>
     <div className={s.body}><p className={s.note}>{summary.reason}</p></div>
   </details>;
@@ -118,7 +118,7 @@ export default function TournamentReturns({ summary, defaultOpen = false }: { su
   const ok = reconciles(win.counts, win.favourite, win.underdog);
   const limited = win.editionIds.length < 3 || win.counts.bettable < 100;
 
-  return <details className={s.root} open={defaultOpen || undefined}>
+  return <details className={s.root}>
     {/* Closed state: what the history is, never a percentage. */}
     <summary className={s.bar}>{mark}<span className={s.barTitle}>Tournament history</span>
       <span className={s.barMeta}>{win.editionIds.length
@@ -189,16 +189,4 @@ export default function TournamentReturns({ summary, defaultOpen = false }: { su
       </p>
     </div>
   </details>;
-}
-
-/** Selected historical examples, separate from the current fixture list. */
-export function TournamentReturnsPicker({ summaries }: { summaries: TournamentReturnsSummary[] }) {
-  const [index, setIndex] = useState(0);
-  if (!summaries.length) return null;
-  const chosen = summaries[Math.min(index, summaries.length - 1)];
-  return <section className={s.picker} aria-label="Explore tournament history" id="tournament-history">
-    <label>Explore tournament history<select value={index} onChange={e => setIndex(Number(e.target.value))}>
-      {summaries.map((item, i) => <option key={`${item.name}:${i}`} value={i}>{item.name}</option>)}</select></label>
-    <div className={s.pickerFrame}><TournamentReturns key={index} summary={chosen} defaultOpen /></div>
-  </section>;
 }
