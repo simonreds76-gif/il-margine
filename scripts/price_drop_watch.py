@@ -112,7 +112,7 @@ def roundup_text(moves, observed):
     return "\n".join(lines)
 
 
-def deliver(batch, store, *, now, get_chat=private_chat, send=telegram):
+def deliver(batch, store, *, now, get_chat=private_chat, send=telegram, dispatch_clock=None):
     stamp=batch["observed"]
     seen=instant(stamp)
     rows=[m for m in batch["moves"] if instant(m["start"])>now]
@@ -125,18 +125,25 @@ def deliver(batch, store, *, now, get_chat=private_chat, send=telegram):
             raise RuntimeError("Uncertain Telegram receipt. Automatic resend suppressed.")
         return "already delivered"
     chat=get_chat()
+    if dispatch_clock is not None:
+        # Cover the reservation write and Telegram request near a scheduled start.
+        now = dispatch_clock()
+        rows = [m for m in rows if instant(m["start"]) > now + timedelta(seconds=40)]
+        if not rows or now < seen or now - seen > timedelta(minutes=2):
+            return "quiet"
     text=roundup_text(rows,stamp)
     intent={"state":"sending","observed":stamp,"attempted_at":now.isoformat(),
             "move_ids":[m["move_id"] for m in rows]}
     if not store.put(key,intent):
         return "reserved"
-    if len(text.encode("utf-16-le"))//2 <= 3900:
+    as_text = len(text.encode("utf-16-le"))//2 <= 3900
+    if as_text:
         message=send("sendMessage",{"chat_id":chat,"text":text,"link_preview_options":{"is_disabled":True}})
     else:
         message=send("sendDocument",{"chat_id":chat,"caption":f"Tennis Price Moves · {len(rows)} price drops. All observations in the attached roundup."},
                      files={"document":("tennis-price-moves.txt",text.encode(),"text/plain")})
     if str(message.get("chat",{}).get("id"))!=chat or not isinstance(message.get("message_id"),int):
         raise RuntimeError("Unable to verify Telegram delivery receipt")
-    store.put(key,{**intent,"state":"sent","message_id":message["message_id"],
+    store.put(key,{**intent,"state":"sent","delivery_kind":"text" if as_text else "document","message_id":message["message_id"],
                    "delivered_at":datetime.fromtimestamp(message["date"],timezone.utc).isoformat()},replace=True)
     return "delivered"
