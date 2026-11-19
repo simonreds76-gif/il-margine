@@ -9,6 +9,7 @@ from datetime import datetime, timedelta, timezone
 from urllib.parse import urlsplit
 
 import requests
+import price_drop_watch as watch
 
 BOOK = "Pinnacle"
 SOURCE = "PinnRadar"
@@ -115,7 +116,7 @@ def detection(previous, current, before, observed):
                 result="Pending", cohort="prospective observation",telegram_sent=False)
 
 
-def advance(state, snap):
+def advance(state, snap, *, track_first=True):
     now=utc(snap["observed"])
     prior_observed=utc(state.get("observed"))
     if prior_observed and now<=prior_observed:
@@ -131,7 +132,7 @@ def advance(state, snap):
         changed=last.get("start") and last["start"]!=row["start"]
         blocked=bool(last.get("blocked") or (changed and now>=utc(last["start"])))
         issued=bool(last.get("issued"))
-        if not blocked and not issued and prior_observed and not changed:
+        if track_first and not blocked and not issued and prior_observed and not changed:
             move=detection(old.get(eid),row,prior_observed,now)
             if move:
                 moves.append((uid,move))
@@ -228,16 +229,42 @@ def run():
         if last_seen is None or last_seen<past+timedelta(minutes=15):
             prior=store.get("snapshots/"+past.strftime("%Y/%m/%d/%H%M.json"))
             if prior and (not last_seen or utc(prior["observed"])>last_seen): backlog.append(prior)
-    new_count=0
     for item in [*backlog,snap]:
-        next_state,moves=advance(last,item)
+        fresh_pilot=utc(item["observed"])>=watch.START
+        next_state,moves=advance(last,item,track_first=not fresh_pilot)
         if next_state is last: continue
+        if fresh_pilot:
+            blocked={k for k,v in next_state["guards"].items() if v["blocked"]}
+            batch=watch.observe(last if last.get("observed") else None,item,blocked)
+            store.put("drop-scans-v2/"+watch.object_key(item["observed"]),batch)
         for fixture,move in moves:
-            if store.put(f"moves/{move['start'][:4]}/{fixture}.json",move): new_count+=1
+            store.put(f"moves/{move['start'][:4]}/{fixture}.json",move)
         store.put("latest.json",next_state,replace=True)
         last=next_state
     counts=Counter(v["tour"] for v in snap["events"].values())
-    print(f"Private capture {snap['observed']}: ATP {counts['ATP']}, Challenger {counts['Challenger']}, new first moves {new_count}.")
+    print(f"Private capture {snap['observed']}: ATP {counts['ATP']}, Challenger {counts['Challenger']}.")
+    if utc(snap["observed"])>=watch.START:
+        key="drop-scans-v2/"+watch.object_key(snap["observed"])
+        batch=store.get(key)
+        if batch is None:
+            # A snapshot may already have been projected by the previous release.
+            # Read only a real earlier slot; never invent a first observation.
+            prior=None
+            for i in (1,2,3):
+                earlier=slot-timedelta(minutes=i*15)
+                prior=store.get("snapshots/"+earlier.strftime("%Y/%m/%d/%H%M.json"))
+                if prior: break
+            blocked={k for k,v in last.get("guards",{}).items() if v["blocked"]}
+            batch=watch.observe(prior,snap,blocked)
+            store.put(key,batch)
+        mode=os.getenv("PRIVATE_DROP_DELIVERY","off")
+        delivery="off"
+        if mode=="verify":
+            watch.private_chat()
+            delivery="private direct chat verified"
+        elif mode=="send":
+            delivery=watch.deliver(batch,store,now=datetime.now(timezone.utc))
+        print(f"Matched fixtures {batch['compared_pairs']}; observed shortenings {len(batch['moves'])}; Telegram {delivery}.")
 
 
 if __name__=="__main__":
