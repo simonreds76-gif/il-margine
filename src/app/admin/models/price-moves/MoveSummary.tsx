@@ -12,6 +12,7 @@ export interface MoveSummaryProps {
   /** Player the price refers to (to win the match). */
   player: string;
   opponent: string;
+  selection?: string;
   /** Tour / event label, e.g. "ATP Challenger · Helsinki". */
   league: string;
   /** Scheduled first serve. ISO 8601 with an explicit `Z` or UTC offset. */
@@ -256,7 +257,7 @@ export function MoveSummary(props: MoveSummaryProps): React.ReactElement {
           </span>
         </MatchHeading>
         <p className={styles.subject}>
-          Decimal price for {player || 'the listed player'} to win
+          {props.selection ? 'Decimal price for ' + props.selection : 'Decimal price for ' + (player || 'the listed player') + ' to win'}
         </p>
       </header>
 
@@ -287,7 +288,7 @@ export function MoveSummary(props: MoveSummaryProps): React.ReactElement {
 
         <div className={`${styles.group} ${styles.chance}`}>
           <dt className={styles.term}>
-            Change in win chance
+            Change in price-implied chance
             <span className={styles.qualifier}>
               price-implied, before margin adjustment
             </span>

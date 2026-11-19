@@ -2,8 +2,8 @@ import "server-only";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import type { MoveSummaryProps } from "./MoveSummary";
 
-type Entry = MoveSummaryProps & { move_id: string; event_id: string; fixture: string };
-type Event = { fixture:string; start:string; home:string; away:string };
+type Entry = MoveSummaryProps & { contract?:string; move_id: string; event_id: string; fixture: string };
+type Event = { contracts?:Record<string,unknown>; fixture:string; start:string; home:string; away:string };
 export type MonitorMove = MoveSummaryProps & { id:string; until:number | null };
 
 export async function getRoundup() {
@@ -35,10 +35,10 @@ export async function getRoundup() {
       const seen=Date.parse(latest.observed);
       const moves:MonitorMove[]=matches.map(m=>{
         const e=latest.events[m.event_id];
-        const same=e?.fixture===m.fixture && e.start===m.start &&
+        const same=(!m.contract || m.contract==='winner' || !!e?.contracts?.[m.contract]) && e?.fixture===m.fixture && e.start===m.start &&
           ((e.home===m.player && e.away===m.opponent)||(e.away===m.player && e.home===m.opponent));
         const cutoff=Math.min(Date.parse(m.start),seen+20*60_000);
-        return {id:m.move_id,player:m.player,opponent:m.opponent,league:m.league,start:m.start,
+        return {id:m.move_id,player:m.player,opponent:m.opponent,selection:m.contract && m.contract!=='winner'?m.selection:undefined,league:m.league,start:m.start,
           before:m.before,after:m.after,old:m.old,new:m.new,until:same&&seen<=now&&cutoff>now?cutoff:null};
       });
       return {sent:receipt.delivered_at,moves,now};
