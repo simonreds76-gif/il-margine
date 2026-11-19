@@ -21,6 +21,8 @@ def eligibility(move, latest, now):
     if item and (item["fixture"] != move["fixture"] or utc(item["start"]) != start or
                  {item["home"],item["away"]} != {move["player"],move["opponent"]}):
         return "closed"
+    if item and move.get("market","winner") != "winner" and move["contract"] not in item.get("contracts",{}):
+        return "unavailable"
     seen = utc(latest.get("observed"))
     if not seen or seen > now or now-seen >= MAX_BOARD_AGE or not item:
         return "unavailable"

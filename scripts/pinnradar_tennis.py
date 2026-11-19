@@ -10,6 +10,7 @@ from urllib.parse import urlsplit
 
 import requests
 import price_drop_watch as watch
+import desk_games
 
 BOOK = "Pinnacle"
 SOURCE = "PinnRadar"
@@ -142,12 +143,9 @@ def board_rows(board, observed):
     for eid in conflicts:
         rows.pop(eid, None)
     counts["ambiguous_event_ids"]=len(conflicts)
-    # Two scheduled pilot snapshots only. No per-match calls and no new alerts.
-    probe = {}
-    audit_start = utc(os.getenv("DROP_SHOT_GAMES_AUDIT_FROM"))
-    if audit_start and audit_start <= observed < audit_start + timedelta(minutes=30):
-        probe["games_market_sample"] = game_market_sample(board, rows, observed)
-    return {**probe,"schema":VERSION,"source":SOURCE,"bookmaker":BOOK,"observed":observed.isoformat(),
+    for eid, sample in game_market_sample(board, rows, observed).items():
+        rows[eid]["contracts"] = desk_games.contracts(sample)
+    return {"schema":VERSION,"source":SOURCE,"bookmaker":BOOK,"observed":observed.isoformat(),
             "events_received":len(board["events"]), "excluded":dict(counts),
             "in_play_fixtures":sorted(in_play_fixtures), "period_status_counts":dict(period_status),"events":rows}
 
@@ -325,7 +323,7 @@ def run():
         if next_state is last: continue
         if fresh_pilot:
             blocked={k for k,v in next_state["guards"].items() if v["blocked"]}
-            batch=watch.observe(last if last.get("observed") else None,item,blocked)
+            batch=desk_games.compare(last,item,next_state,blocked)
             store.put("drop-scans-v2/"+watch.object_key(item["observed"]),batch)
         for fixture,move in moves:
             store.put(f"moves/{move['start'][:4]}/{fixture}.json",move)
@@ -337,23 +335,18 @@ def run():
         key="drop-scans-v2/"+watch.object_key(snap["observed"])
         batch=store.get(key)
         if batch is None:
-            # A snapshot may already have been projected by the previous release.
-            # Read only a real earlier slot; never invent a first observation.
-            prior=None
-            for i in (1,2,3):
-                earlier=slot-timedelta(minutes=i*15)
-                prior=store.get("snapshots/"+earlier.strftime("%Y/%m/%d/%H%M.json"))
-                if prior: break
-            blocked={k for k,v in last.get("guards",{}).items() if v["blocked"]}
-            batch=watch.observe(prior,snap,blocked)
-            store.put(key,batch)
+            raise RuntimeError("Saved scan lacks its committed movement batch; cannot deliver.")
         mode=os.getenv("PRIVATE_DROP_DELIVERY","off")
         delivery="off"
         if mode=="verify":
             watch.private_chat()
             delivery="private direct chat verified"
         elif mode=="send":
-            delivery=watch.deliver(batch,store,now=datetime.now(timezone.utc),dispatch_clock=lambda: datetime.now(timezone.utc))
+            if "alert_ids" not in batch:
+                print("Existing pre-policy snapshot; historical delivery preserved.")
+                return
+            eligible = set(batch["alert_ids"])
+            delivery=watch.deliver({**batch, "moves":[m for m in batch["moves"] if m["move_id"] in eligible]},store,now=datetime.now(timezone.utc),dispatch_clock=lambda: datetime.now(timezone.utc))
         print(f"Matched fixtures {batch['compared_pairs']}; observed shortenings {len(batch['moves'])}; Telegram {delivery}.")
 
 

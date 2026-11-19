@@ -95,14 +95,16 @@ class ExpiryTests(unittest.TestCase):
         period={"number":0,"status":"open","spreads":{"-2.5":{"hdp":-2.5,"home":1.9,"away":2.0}},
             "totals":{"22.5":{"points":22.5,"over":1.91,"under":1.97},"2.5":{"points":2.5,"over":2.2,"under":1.71}}}
         games=event(200,home=match["home"]+" (Games)",away=match["away"]+" (Games)",parent_id=100,periods={"num_0":period})
-        with patch.dict(os.environ,{"DROP_SHOT_GAMES_AUDIT_FROM":when.isoformat()}):
-            snap=lambda events,t=when:p.board_rows({"sport_id":2,"events":events},t)
-            candidate=snap([match,games])["games_market_sample"]["100"]
-            self.assertEqual(candidate["totals"],{"22.5":[1.91,1.97]})
-            self.assertEqual(candidate["spreads"],{"-2.5":[1.9,2.0]})
-            self.assertFalse(snap([match,{**games,"parent_id":999}])["games_market_sample"])
-            self.assertFalse(snap([match,games,games])["games_market_sample"])
-            self.assertNotIn("games_market_sample",snap([match,games],when+timedelta(minutes=30)))
+        def captured(events, t=when):
+            return p.board_rows({"sport_id":2,"events":events},t)["events"]["100"].get("contracts",{})
+        lines=captured([match,games])
+        self.assertEqual(set(lines),{"totals:22.5","spreads:2.5"})
+        self.assertEqual(lines["totals:22.5"]["prices"],[1.91,1.97])
+        self.assertEqual(lines["spreads:2.5"]["prices"],[2.0,1.9])
+        self.assertFalse(captured([match,{**games,"parent_id":999}]))
+        self.assertFalse(captured([match,games,games]))
+        self.assertEqual(lines,captured([match,games],when+timedelta(minutes=30)))
+
     def test_implied_change_and_actual_interval(self):
         from price_drop_watch import roundup_text
         text=roundup_text([self.moves[0]],self.moves[0]["after"])
