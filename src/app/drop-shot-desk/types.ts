@@ -1,5 +1,6 @@
 export type Quote = { time: string; price: number; other: number; gap?: boolean };
 export type Move = {
+  market?:string; fixtureLabel?:string; profit?:number;
   activeUntil?: string; batchId?: string; batchAt?: string; alertedAt?: string;
   tour: string; league: string; player: string; opponent: string; start: string;
   before: string; after: string; old: number; new: number; quotes: Quote[];

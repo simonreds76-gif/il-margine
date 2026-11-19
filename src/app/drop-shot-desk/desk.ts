@@ -24,7 +24,7 @@ export type Roundup = {
   firstSent: Record<string, number>;
 };
 export type Tally = {
-  picks: number; won: number; lost: number; voided: number; pending: number;
+  picks: number; won: number; lost: number; pushed:number; split:number; voided: number; pending: number;
   /** Settled, non-void selections: the ROI denominator. */
   settled: number;
   net: number;
@@ -75,14 +75,16 @@ export function isQualifying(m: Move) {
   return m.qualifying ?? /(?: - Q\d+\b|qualif)/i.test(m.league);
 }
 export function selectionKey(m: Move) {
-  return [m.player, m.opponent, m.start].join("|");
+  return [m.fixtureLabel, m.market??"winner", m.player, m.opponent, m.start].join("|");
 }
 export function moveKey(m: Move) {
-  return [m.player, m.opponent, m.start, m.after].join("|");
+  return [m.fixtureLabel, m.market??"winner", m.player, m.opponent, m.start, m.after].join("|");
 }
 
 export function outcomeOf(result: string | undefined): Outcome {
   const r = (result ?? "").trim().toLowerCase();
+  if (r==="half won") return "won";
+  if (r==="half lost") return "lost";
   if (/^(won|win)\b/.test(r)) return "won";
   if (/^(lost|loss|lose)\b/.test(r)) return "lost";
   if (/void|cancel|walkover|abandon|refund|push|no bet/.test(r)) return "void";
@@ -93,6 +95,7 @@ export function outcomeLabel(m: Move) {
 }
 /** Flat 1u paper result at the locked detection price; null while unsettled. */
 export function paper(m: Move): number | null {
+  if(typeof m.profit==="number")return m.profit;
   const o = outcomeOf(m.result);
   return o === "won" ? m.new - 1 : o === "lost" ? -1 : o === "void" ? 0 : null;
 }
@@ -145,16 +148,18 @@ export function availability(r: Timed, now: number | null, observed?: When): Ava
 }
 
 export function tally(picks: Move[]): Tally {
-  let won = 0, lost = 0, voided = 0, pending = 0, net = 0;
+  let won = 0, lost = 0, voided = 0, pending = 0, net = 0, pushed = 0, split = 0;
   for (const m of picks) {
     const o = outcomeOf(m.result);
+    if(m.result==="Push"){ pushed++; continue; }
+    if(m.result==="Half won" || m.result==="Half lost"){ split++; net+=paper(m)??0; continue; }
     if (o === "won") { won += 1; net += m.new - 1; }
     else if (o === "lost") { lost += 1; net -= 1; }
     else if (o === "void") voided += 1;
     else pending += 1;
   }
-  const settled = won + lost;
-  return { picks: picks.length, won, lost, voided, pending, settled, net, roi: settled ? (net / settled) * 100 : null };
+  const settled = won + lost + pushed + split;
+  return { picks: picks.length, won, lost, pushed, split, voided, pending, settled, net, roi: settled ? (net / settled) * 100 : null };
 }
 
 const firstTime = (values: (string | undefined)[]) => {

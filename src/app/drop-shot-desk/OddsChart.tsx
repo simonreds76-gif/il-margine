@@ -378,7 +378,7 @@ function ExportCard({ svgRef, model, move, view, archive, uid }: {
     </text>
     <text x={W - 48} y="48" textAnchor="end" fontSize="15" letterSpacing="1" fill={C.mute}>{clipText(move.tour + " · " + move.league, 46).toUpperCase()}</text>
     <text x="48" y="104" fontSize={nameSize} fontWeight="700" letterSpacing={r2(-nameSize * 0.03)} fill={C.ink}>{clipText(move.player, 34)}</text>
-    <text x="48" y="136" fontSize="21" fill={C.text}>{clipText("vs " + move.opponent, 40)}</text>
+    <text x="48" y="136" fontSize="21" fill={C.text}>{clipText(move.fixtureLabel ?? ("vs " + move.opponent), 40)}</text>
     <text x={W - 48} y="106" textAnchor="end" fontSize="62" fontWeight="700" fill={C.mint}>
       <tspan fill={C.mute} fontWeight="400">{price(move.old) + " → "}</tspan>{price(move.new)}
     </text>

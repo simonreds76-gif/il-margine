@@ -54,6 +54,8 @@ export default function Roundups({ roundups, active, currentKey, now, onSelect, 
             <div><dt>Selections</dt><dd>{sum.picks}</dd></div>
             <div data-tone="won"><dt>Won</dt><dd>{sum.won}</dd></div>
             <div data-tone="lost"><dt>Lost</dt><dd>{sum.lost}</dd></div>
+            {sum.pushed>0 && <div><dt>Push</dt><dd>{sum.pushed}</dd></div>}
+            {sum.split>0 && <div><dt>Half wins / losses</dt><dd>{sum.split}</dd></div>}
             <div><dt>Void</dt><dd>{sum.voided}</dd></div>
             <div><dt>Pending</dt><dd>{sum.pending}</dd></div>
             <div data-tone={sum.settled ? (sum.net > 0 ? "won" : sum.net < 0 ? "lost" : undefined) : undefined}><dt>Paper P/L</dt><dd>{sum.settled ? units(sum.net) : "—"}</dd></div>
@@ -75,7 +77,7 @@ export default function Roundups({ roundups, active, currentKey, now, onSelect, 
               return <tr role="row" key={moveKey(m)} data-current={moveKey(m) === currentKey ? "true" : undefined}>
                 <td role="cell" className={styles.pickWho}>
                   <button type="button" onClick={() => onOpen(m)} aria-label={"Show the " + (a && a.open ? "" : "recorded ") + "price chart for " + m.player}>{m.player}</button>
-                  <span>vs {m.opponent} · {m.league}</span>
+                  <span>{m.fixtureLabel ?? ("vs "+m.opponent)} · {m.league}</span>
                   {a && <span className={styles.state} data-open={a.open ? "true" : undefined}>{a.label} · {a.reason}</span>}
                   {prior !== undefined && <span className={styles.note}>Price update · first sent in the {utcClock(prior)} UTC roundup</span>}
                 </td>

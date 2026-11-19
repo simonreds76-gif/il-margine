@@ -71,6 +71,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   const [lapsedKey, setLapsedKey] = useState<string | null>(null);
   if (scopeDay !== day) { setScopeDay(day); setScope(defaultScope); setLapsedKey(null); }
   const [tour, setTour] = useState(TOURS[0]);
+  const [market,setMarket] = useState("all");
   const [draw, setDraw] = useState(DRAWS[0]);
   const [query, setQuery] = useState("");
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -100,8 +101,9 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   const needle = query.trim().toLowerCase();
   const passes = useCallback((r: DeskMove) =>
     (tour === TOURS[0] || r.tour === tour)
+    && (market==="all" || (r.market??"winner")===market)
     && (draw === DRAWS[0] || isQualifying(r) === (draw === "Qualifying"))
-    && (!needle || (r.player + " " + r.opponent + " " + r.league).toLowerCase().includes(needle)), [tour, draw, needle]);
+    && (!needle || (r.player + " " + r.opponent + " " + (r.fixtureLabel??"") + " " + r.league).toLowerCase().includes(needle)), [tour, draw, needle, market]);
   const matching = useMemo(() => moves.filter(passes), [moves, passes]);
   const upcoming = useMemo(() => (archive ? [] : matching.filter(r => isOpen(r, at))), [archive, matching, at]);
   const rows = upcomingOnly ? upcoming : matching;
@@ -176,7 +178,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
 
   const choose = (move: DeskMove) => { setSelectedKey(moveKey(move)); setLapsedKey(null); setPickerOpen(false); };
   const step = (dir: number) => { if (rows.length) choose(rows[(index + dir + rows.length) % rows.length]); };
-  const clearFilters = () => { setTour(TOURS[0]); setDraw(DRAWS[0]); setQuery(""); };
+  const clearFilters = () => { setTour(TOURS[0]); setDraw(DRAWS[0]); setMarket("all"); setQuery(""); };
   const changeScope = (next: Scope) => { setScope(next); setLapsedKey(null); };
   const toStage = () => window.requestAnimationFrame(() => stageRef.current?.scrollIntoView({ block: "start" }));
   // A roundup row always opens its chart: a closed selection switches the list to the
@@ -214,7 +216,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
     buttons[j].focus();
   };
 
-  const filtered = tour !== TOURS[0] || draw !== DRAWS[0] || needle !== "";
+  const filtered = market!=="all" || tour !== TOURS[0] || draw !== DRAWS[0] || needle !== "";
   const lastQuote = m && m.quotes.length ? m.quotes[m.quotes.length - 1] : undefined;
   const latestIsDetection = !!(m && lastQuote && Date.parse(lastQuote.time) === Date.parse(m.after));
   const outcome = m ? outcomeOf(m.result) : "pending";
@@ -247,6 +249,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
         </div>
       </div>}
       <label className={styles.field}>Tour <select value={tour} onChange={e => setTour(e.target.value)}>{TOURS.map(v => <option key={v}>{v}</option>)}</select></label>
+      {!archive && <label className={styles.field}>Market <select value={market} onChange={e=>setMarket(e.target.value)}><option value="all">All markets</option><option value="winner">Match winner</option><option value="totals">Total games</option><option value="spreads">Games handicap</option></select></label>}
       <label className={styles.field}>Draw <select value={draw} onChange={e => setDraw(e.target.value)}>{DRAWS.map(v => <option key={v}>{v}</option>)}</select></label>
       {moves.length > 8 && <label className={`${styles.field} ${styles.search}`}>Find a player <input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Name or tournament" autoComplete="off" /></label>}
       {filtered && <button type="button" className={styles.ghost} onClick={clearFilters}>Clear filters</button>}
@@ -272,7 +275,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
           <span className={styles.pickerCue}>{pickerOpen ? "Hide the list" : rows.length > 1 ? "Browse all " + rows.length : "Show the list"}</span>
         </button>
         <div className={styles.cols} data-open={pickerOpen ? "true" : "false"} aria-hidden="true">
-          <span>Shortening player</span><span>Price · drop</span><span>{archive ? "Result" : "Status"}</span>
+          <span>Selection</span><span>Price · drop</span><span>{archive ? "Result" : "Status"}</span>
         </div>
         <ol id={listId} className={styles.railList} ref={listRef} data-open={pickerOpen ? "true" : "false"} onKeyDown={onListKey}>
           {rows.map((r, i) => {
@@ -282,7 +285,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
                 <span className={styles.itemWho}>
                   <small className={styles.lab}>{[r.tour + (isQualifying(r) ? " qual." : ""), placeOf(r.league), utcDate(r.start)].join(" · ")}</small>
                   <strong>{r.player}</strong>
-                  <small className={styles.itemVs}>vs {r.opponent}</small>
+                  <small className={styles.itemVs}>{r.fixtureLabel ?? ("vs "+r.opponent)}</small>
                 </span>
                 <span className={styles.itemMove}>
                   <b><span>{price(r.old)} → </span>{price(r.new)}</b>
@@ -318,7 +321,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
         <div className={styles.hero} data-out={showOut ? "true" : undefined}>
           <div className={styles.heroWho}>
             <h2 id={headId}>{m.player}</h2>
-            <p className={styles.versus}>vs {m.opponent}</p>
+            <p className={styles.versus}>{m.fixtureLabel ?? ("vs "+m.opponent)}</p>
           </div>
           <div className={styles.heroMove}>
             <p className={styles.lab}>Earlier price → price at detection</p>

@@ -14,14 +14,14 @@ async function files(prefix: string) {
   return data.map(row => row.name).filter(name => /^\d{6}-\d{6}\.json$/.test(name));
 }
 type Saved = {
-  fixture: string; event_id: string;
+  fixture: string; event_id: string; contract?:string; market?:string; side?:number; selection?:string; opposite?:string;
   tour: string; league: string; player: string; opponent: string; start: string; before: string; after: string;
   old: number; new: number; old_opponent: number; new_opponent: number; move_id: string;
 };
-type Event = { id: string; fixture: string; tour:string; league:string; start:string; home:string; away:string; home_price:number; away_price:number };
+type Event = { contracts?: Record<string,{labels:[string,string];prices:[number,number]}>; id: string; fixture: string; tour:string; league:string; start:string; home:string; away:string; home_price:number; away_price:number };
 type Scan = { observed: string; moves: Saved[]; compared_pairs: number };
 type Receipt = { state: string; move_ids: string[]; delivered_at: string; observed: string };
-type Outcome = { result:"Won"|"Lost"|"Void"; score:string };
+type Outcome = { result:string; score:string; profit?:number };
 type ArchiveRow = Omit<Saved,"tour"> & { level:string; quotes:Quote[]; qualifying:boolean; result:{state:string; score?:string} };
 type Archive = { moves: ArchiveRow[]; summary:{ wins:number; losses:number; voids:number; settled_stake:number; net_units:number; roi_pct:number } };
 
@@ -63,6 +63,7 @@ function availableUntil(start: string, observed: string, now: number): string | 
 
 function moveCutoff(move: Saved, event: Event | undefined, observed: string, now: number) {
   if (!event || event.fixture !== move.fixture || Date.parse(event.start) !== Date.parse(move.start)) return;
+  if(move.contract && move.contract!=="winner" && !event.contracts?.[move.contract])return;
   const same = event.home === move.player && event.away === move.opponent;
   const reversed = event.away === move.player && event.home === move.opponent;
   if (same || reversed) return availableUntil(event.start, observed, now);
@@ -70,19 +71,24 @@ function moveCutoff(move: Saved, event: Event | undefined, observed: string, now
 
 function quotesFor(m:Saved,tapes:(Tape|null)[],latest:{observed:string;events:Record<string,Event>}):Quote[] {
   const quotes = new Map<string,Quote>();
-  const seriesKey = [m.event_id,m.fixture,m.start].join("|");
+  const games = !!m.contract && m.contract !== "winner";
+  const seriesKey = [m.event_id,m.fixture,m.start,...(games?[m.contract]:[])].join("|");
+  const label = games ? m.selection : m.player, opposite = games ? m.opposite : m.opponent;
   for (const tape of tapes) {
     const series = tape?.series[seriesKey];
     if (!series) continue;
-    const side = series.players.indexOf(m.player);
-    if (side<0 || series.players[1-side]!==m.opponent) continue;
+    const side = series.players.indexOf(label ?? "");
+    if (side<0 || series.players[1-side]!==opposite) continue;
     for (const [time,a,b] of series.quotes)
       if (Date.parse(time)<Date.parse(m.start)) quotes.set(time,{time,price:side?b:a,other:side?a:b});
   }
   const e=latest.events[m.event_id];
   if(e?.fixture===m.fixture && e.start===m.start && Date.parse(latest.observed)<Date.parse(m.start)) {
     const home=e.home===m.player && e.away===m.opponent, away=e.away===m.player && e.home===m.opponent;
-    if(home || away) quotes.set(latest.observed,{time:latest.observed,price:home?e.home_price:e.away_price,other:home?e.away_price:e.home_price});
+    const contract = games && m.contract ? e.contracts?.[m.contract] : undefined;
+    if(contract && m.side !== undefined && contract.labels[m.side]===label)
+      quotes.set(latest.observed,{time:latest.observed,price:contract.prices[m.side],other:contract.prices[1-m.side]});
+    if(!games && (home || away)) quotes.set(latest.observed,{time:latest.observed,price:home?e.home_price:e.away_price,other:home?e.away_price:e.home_price});
   }
   for (const q of [{time:m.before,price:m.old,other:m.old_opponent},{time:m.after,price:m.new,other:m.new_opponent}])
     quotes.set(q.time,q);
@@ -113,9 +119,21 @@ export async function readDay(day: string) {
   }
   const tapes=await readTapes(batches.flatMap(b=>b.moves),latest.observed);
   const now = Date.now();
+  const quoteCache = new Map<string,Quote[]>();
+  function historyFor(m:Saved){
+    const key=[m.event_id,m.fixture,m.start,m.contract??"winner",m.selection??m.player].join("|");
+    let qs=quoteCache.get(key);
+    if(!qs || !qs.some(q=>q.time===m.before) || !qs.some(q=>q.time===m.after)){
+      qs=quotesFor(m,tapes,latest);
+      quoteCache.set(key,qs);
+    }
+    return qs;
+  }
   const moves: Move[] = batches.reverse().flatMap(batch=>batch.moves.map(m=>({
-    tour:m.tour,league:m.league,player:m.player,opponent:m.opponent,start:m.start,before:m.before,after:m.after,
-    old:m.old,new:m.new,quotes:quotesFor(m,tapes,latest),...notified.get(m.move_id),
+    tour:m.tour,league:m.league,market:m.market,player:m.selection??m.player,opponent:m.opposite??m.opponent,
+    fixtureLabel:m.market && m.market!=="winner" ? [m.player,m.opponent].join(" vs "):undefined,
+    start:m.start,before:m.before,after:m.after,profit:outcomes[m.move_id]?.profit,
+    old:m.old,new:m.new,quotes:historyFor(m),...notified.get(m.move_id),
     activeUntil: outcomes[m.move_id] ? undefined : moveCutoff(m,latest.events[m.event_id],latest.observed,now),
     result:outcomes[m.move_id]?.result??"Awaiting verified result",score:outcomes[m.move_id]?.score,notified:notified.has(m.move_id),
   })));

@@ -76,6 +76,6 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
       <div className={styles.brand}><Image src={brand} unoptimized alt="" width={66} height={36} priority/><div><p className={styles.kicker}>Tennis odds moves</p><h1>Drop Shot Desk</h1></div></div>
       <nav aria-label="Price history" className={styles.tabs}><Link aria-current={!archive?"page":undefined} href={route}><DeskIcon name="drop"/>Daily moves</Link><Link aria-current={archive?"page":undefined} href={route+"?view=archive"}><DeskIcon name="replay"/>Historical replay</Link></nav>
     </header>
-    <p className={styles.standfirst}>Follow pre-match price drops in ATP and Challenger singles. See the earlier odds, the price when the drop was detected and the match result.</p>
+    <p className={styles.standfirst}>Follow ATP and Challenger match winners, total games and games handicaps. Telegram flags the first rise of 4 percentage points in implied probability from an earlier high price on the same selection and line, at any time before play.</p>
     {content}</main>;
 }
