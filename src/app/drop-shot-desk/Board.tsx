@@ -8,9 +8,9 @@ import OddsChart, { KeyGlyph, spanText } from "./OddsChart";
 import Roundups from "./Roundups";
 import {
   availability, buildRoundups, cutoffOf, defaultRoundup, delta, dropPct, isOpen, isQualifying, moveKey, outcomeLabel, outcomeOf, paper,
-  percent, price, tally, units, utcClock, utcDate, utcStamp,
+  movementPoints, orderDrops, percent, price, tally, units, utcClock, utcDate, utcStamp,
 } from "./desk";
-import type { DeskFixture, DeskMove } from "./desk";
+import type { DeskFixture, DeskMove, DropOrder } from "./desk";
 
 const TOURS = ["All tours", "ATP", "Challenger"];
 const DRAWS = ["All rounds", "Main draw", "Qualifying"];
@@ -66,6 +66,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   // Today opens on what is still open; past dates and direct roundup links open on the full record.
   const defaultScope: Scope = today && !initialBatchId ? "upcoming" : "all";
   const [scope, setScope] = useState<Scope>(defaultScope);
+  const [orders, setOrders] = useState<Record<Scope, DropOrder>>({ upcoming: "largest", all: "newest" });
   const [scopeDay, setScopeDay] = useState(day);
   const [clock, setClock] = useState<number | null>(now ?? null);
   const [lapsedKey, setLapsedKey] = useState<string | null>(null);
@@ -106,7 +107,10 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
     && (!needle || (r.player + " " + r.opponent + " " + (r.fixtureLabel??"") + " " + r.league).toLowerCase().includes(needle)), [tour, draw, needle, market]);
   const matching = useMemo(() => moves.filter(passes), [moves, passes]);
   const upcoming = useMemo(() => (archive ? [] : matching.filter(r => isOpen(r, at))), [archive, matching, at]);
-  const rows = upcomingOnly ? upcoming : matching;
+  const sortScope = upcomingOnly ? "upcoming" : "all";
+  const order = orders[sortScope];
+  const rows = useMemo(() => archive ? matching : orderDrops(upcomingOnly ? upcoming : matching, order),
+    [archive, matching, upcoming, upcomingOnly, order]);
   const index = Math.max(0, rows.findIndex(m => moveKey(m) === selectedKey));
   const m = rows.length ? rows[index] : undefined;
   const currentKey = m ? moveKey(m) : null;
@@ -251,6 +255,11 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
       <label className={styles.field}>Tour <select value={tour} onChange={e => setTour(e.target.value)}>{TOURS.map(v => <option key={v}>{v}</option>)}</select></label>
       {!archive && <label className={styles.field}>Market <select value={market} onChange={e=>setMarket(e.target.value)}><option value="all">All markets</option><option value="winner">Match winner</option><option value="totals">Total games</option><option value="spreads">Games handicap</option></select></label>}
       <label className={styles.field}>Draw <select value={draw} onChange={e => setDraw(e.target.value)}>{DRAWS.map(v => <option key={v}>{v}</option>)}</select></label>
+      {!archive && <label className={styles.field}>Sort drops <select value={order} onChange={e=>{
+        const value = e.target.value as DropOrder;
+        setOrders(previous => ({ ...previous, [sortScope]: value }));
+        setSelectedKey(null);
+      }}><option value="largest">Biggest drop first (pp)</option><option value="newest">Newest detection first</option><option value="oldest">Oldest detection first</option></select></label>}
       {moves.length > 8 && <label className={`${styles.field} ${styles.search}`}>Find a player <input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Name or tournament" autoComplete="off" /></label>}
       {filtered && <button type="button" className={styles.ghost} onClick={clearFilters}>Clear filters</button>}
       {!archive && roundups.length > 0 && <a className={styles.jump} href="#desk-roundups">Telegram roundups ({roundups.length}) <span aria-hidden="true">↓</span></a>}
@@ -289,7 +298,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
                 </span>
                 <span className={styles.itemMove}>
                   <b><span>{price(r.old)} → </span>{price(r.new)}</b>
-                  <small>{percent(dropPct(r))} · {utcClock(r.after)} UTC</small>
+                  <small>{archive ? percent(dropPct(r)) : "+" + movementPoints(r).toFixed(2) + " pp"} · {utcClock(r.after)} UTC</small>
                   <Spark move={r} />
                 </span>
                 <span className={styles.itemResult}>

@@ -27,7 +27,7 @@ export default function Roundups({ roundups, active, currentKey, now, onSelect, 
       ? <p className={styles.empty} role="status">No Telegram roundup is on record for this date.</p>
       : <>
         <div className={styles.chips} role="group" aria-label="Roundups by time (UTC)">
-          {roundups.map(r => {
+          {[...roundups].reverse().map(r => {
             const t = tally(r.picks);
             return <button key={r.id} type="button" className={styles.chip} aria-pressed={r.id === active.id} onClick={() => onSelect(r.id)}>
               <span className={styles.chipTime}>{utcClock(r.at)} <small>UTC</small></span>

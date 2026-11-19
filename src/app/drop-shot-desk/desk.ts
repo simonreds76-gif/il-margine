@@ -67,6 +67,22 @@ export function delta(n: number) {
 export function dropPct(m: Move) {
   return m.old > 0 ? ((m.new - m.old) / m.old) * 100 : 0;
 }
+export type DropOrder = "largest" | "newest" | "oldest";
+
+export function movementPoints(m: Move) {
+  return 100 * (1 / m.new - 1 / m.old);
+}
+
+export function orderDrops<T extends Move>(rows: T[], order: DropOrder): T[] {
+  return [...rows].sort((a, b) => {
+    if (order === "largest") {
+      const size = movementPoints(b) - movementPoints(a);
+      if (size) return size;
+    }
+    const time = Date.parse(b.after) - Date.parse(a.after);
+    return (order === "oldest" ? -time : time) || moveKey(a).localeCompare(moveKey(b), "en");
+  });
+}
 export function slug(text: string) {
   return text.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "selection";
 }
