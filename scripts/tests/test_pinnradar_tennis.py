@@ -18,6 +18,25 @@ def event(event_id=100, **kw):
 def snap(events,minutes):
     return pilot.board_rows({"sport_id":2,"events":events},START-timedelta(minutes=minutes))
 
+class ClockTest(unittest.TestCase):
+    def test_only_the_requested_utc_quarter_can_run(self):
+        now = pilot.utc("2026-11-19T15:29:59Z")
+        slot = pilot.utc("2026-11-19T15:15:00Z")
+        for requested in (None, "", "2026-11-19T15:15:00Z"):
+            self.assertEqual(pilot.requested_quarter(now, requested), slot)
+        for requested in ("2026-11-19T15:00:00Z", "2026-11-19T15:30:00Z"):
+            self.assertIsNone(pilot.requested_quarter(now, requested))
+        for requested in ("bad", "2026-11-19T15:14:00Z", "2026-11-19T15:15:01Z"):
+            with self.assertRaises(ValueError):
+                pilot.requested_quarter(now, requested)
+
+    def test_expired_dispatch_does_no_io(self):
+        from unittest.mock import patch
+        with patch.dict(pilot.os.environ, DROP_SHOT_SCHEDULED_SLOT="2000-01-01T00:00:00Z"):
+            with patch.object(pilot, "Store", side_effect=AssertionError("unexpected access")):
+                pilot.run()
+
+
 class MatchWinnerTest(unittest.TestCase):
     def test_only_complete_singles(self):
         e=event()

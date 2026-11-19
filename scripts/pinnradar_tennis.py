@@ -198,15 +198,34 @@ class Store:
         print("Private snapshot read-back verified. Anonymous read denied.")
 
 
+def requested_quarter(now, requested):
+    slot = now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0)
+    if not requested:
+        return slot
+    target = utc(requested)
+    if (target is None or target.minute % 15 or
+            target.strftime("%Y-%m-%dT%H:%M:00Z") != requested):
+        raise ValueError("Expected an exact UTC quarter-hour")
+    return slot if target == slot else None
+
+
 def run():
-    # Never expose returned odds or credentials in public Actions logs/artifacts.
-    store=Store()
-    now=datetime.now(timezone.utc)
-    slot=now.replace(minute=now.minute//15*15,second=0,microsecond=0)
+    requested = os.getenv("DROP_SHOT_SCHEDULED_SLOT")
+    now = datetime.now(timezone.utc)
+    slot = requested_quarter(now, requested)
+    if slot is None:
+        print("Skipped delayed clock request outside its quarter-hour.")
+        return
+    store = Store()
     path=slot.strftime("%Y/%m/%d/%H%M.json")
     snap=store.get("snapshots/"+path)
     if snap is None:
-        if not store.put("attempts/"+path,{"utc":now.isoformat()}):
+        attempt = {
+            "utc": now.isoformat(), "slot": slot.isoformat(),
+            "trigger": "hosted_clock" if requested else os.getenv("GITHUB_EVENT_NAME", "local"),
+            "run_id": os.getenv("GITHUB_RUN_ID"),
+        }
+        if not store.put("attempts/"+path, attempt):
             raise RuntimeError("Quarter hour already attempted without a stored snapshot. Next slot can retry.")
         response=requests.get(BASE+"/kit/v1/prematch/fixtures",params={"sport_id":2},
                               headers={"x-portal-apikey":os.environ["PINNRADAR_KEY"]},
