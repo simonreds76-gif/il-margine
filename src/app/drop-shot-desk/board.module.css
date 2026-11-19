@@ -323,7 +323,7 @@
   .timing{grid-template-columns:repeat(2,minmax(0,1fr))}
   .timing dd{font-size:1.15rem}
   .linkish{margin-left:0}
-  .ranges{display:flex;flex-basis:100%}
+  .ranges{display:flex;flex-wrap:wrap;flex-basis:100%;min-width:0;max-width:100%}
   .ranges button{flex:1 1 auto;min-height:40px;padding:0 .5rem}
   .readout{min-height:3.6rem}
   .chips{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -347,6 +347,10 @@
   .item{grid-template-columns:minmax(0,1fr) auto}
   .itemResult{grid-column:1/-1;display:flex;align-items:center;gap:.6rem;text-align:left}
   .itemResult small{margin-top:0}
+  /* Chart range presets: an even two-column grid whose labels may wrap, so nothing runs past the edge at 320px. */
+  .ranges{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ranges button{min-width:0;padding:.25rem .4rem;line-height:1.2;white-space:normal}
+  .ranges button:last-child:nth-child(odd){grid-column:1/-1}
 }
 @media (prefers-reduced-motion:no-preference){
   .item,.chip,.tabs a,.ranges button,.scope button{transition:background-color .12s ease,border-color .12s ease,color .12s ease}

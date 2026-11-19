@@ -9,7 +9,8 @@ import type { Fixture, Move } from "./types";
  */
 export type DeskMove = Move & { batchAt?: string; batchId?: string; alertedAt?: string; activeUntil?: string };
 export type DeskFixture = Fixture & { activeUntil?: string };
-export type Availability = { open: boolean; label: "Open" | "Closed"; reason: string };
+/** `reason` is a short phrase for lists; `detail` is the full-sentence qualification shown beside the selected record. */
+export type Availability = { open: boolean; label: "Open" | "Closed"; reason: string; detail: string };
 export type Outcome = "won" | "lost" | "void" | "pending";
 export type Roundup = {
   id: string;
@@ -111,18 +112,36 @@ export function isOpen(r: Timed, now: number | null) {
   return now !== null && cut !== null && now < cut && outcomeOf(r.result) === "pending";
 }
 /**
- * Open or closed, with a short reason. The start is always worded as the
- * scheduled time: the desk does not track the actual first serve.
+ * Open or closed, with a short reason and a full-sentence detail. Three times are kept apart:
+ * - the recorded observation: when a price was actually seen (`observed`, always in the past);
+ * - the quote freshness cutoff: when the desk stops treating that observation as current.
+ *   It is a limit on the desk's listing, never a statement that the quote was or will be
+ *   verified at that time, and never a guarantee of the price until then;
+ * - the scheduled start: the planned time, not the actual first serve, which the desk does not track.
+ * `observed` is the time of the latest recorded observation, when the caller has one.
  */
-export function availability(r: Timed, now: number | null): Availability {
-  const closed = (reason: string): Availability => ({ open: false, label: "Closed", reason });
+export function availability(r: Timed, now: number | null, observed?: When): Availability {
+  const closed = (reason: string): Availability => ({ open: false, label: "Closed", reason, detail: "Recorded history only, not a live price." });
   if (outcomeOf(r.result) !== "pending") return closed("result recorded");
   if (now === null) return closed("availability not verified");
   const at = (t: number) => (utcDate(t) === utcDate(now) ? "" : utcDate(t) + " · ") + utcClock(t) + " UTC";
   const start = Date.parse(r.start), cut = cutoffOf(r);
-  if (cut !== null && now < cut) return { open: true, label: "Open", reason: cut === start ? "verified to scheduled start " + at(cut) : "quote verified to " + at(cut) };
+  if (cut !== null && now < cut) {
+    // An observation is only ever quoted with its own, past, time.
+    const seen = observed === undefined ? NaN : new Date(observed).getTime();
+    const basis = Number.isFinite(seen) && seen <= now ? "Latest recorded observation " + at(seen) : "Based on the latest recorded observation";
+    if (cut === start) return {
+      open: true, label: "Open", reason: "listed until scheduled start " + at(start),
+      detail: basis + "; the price is not guaranteed after it. That start is the scheduled time, not a confirmed first serve.",
+    };
+    return {
+      open: true, label: "Open", reason: "quote freshness cutoff " + at(cut),
+      detail: basis + "; the desk stops treating it as current at the cutoff, and the price is not guaranteed in between."
+        + (Number.isFinite(start) ? " The match is scheduled for " + at(start) + ", which is not a confirmed first serve." : ""),
+    };
+  }
   if (Number.isFinite(start) && now >= start) return closed("scheduled start " + at(start) + " passed");
-  return closed(cut !== null ? "quote stale since " + at(cut) : "no open pre-match quote in the latest scan");
+  return closed(cut !== null ? "quote freshness cutoff " + at(cut) + " passed" : "no open pre-match quote in the latest scan");
 }
 
 export function tally(picks: Move[]): Tally {

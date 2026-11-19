@@ -220,7 +220,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   const outcome = m ? outcomeOf(m.result) : "pending";
   const pl = m ? paper(m) : null;
   const ownRoundup = m && m.batchId ? roundups.find(r => r.id === m.batchId) : undefined;
-  const status = m && !archive ? availability(m, at) : null;
+  const status = m && !archive ? availability(m, at, lastQuote?.time) : null;
   // The stage figures: the gap between the two captures and the lead before the scheduled start.
   const tBefore = m ? Date.parse(m.before) : NaN, tAfter = m ? Date.parse(m.after) : NaN, tStart = m ? Date.parse(m.start) : NaN;
   const apart = tAfter - tBefore, lead = tStart - tAfter;
@@ -333,7 +333,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
           </div>}
           <div className={styles.statusLine}>
             {status && <p className={styles.avail} data-state={status.open ? "open" : "closed"}>
-              <b>{status.label}</b> · {status.reason}. {status.open ? "That is the scheduled time, not a confirmed first serve." : "Recorded history only, not a live price."}
+              <b>{status.label}</b> · {status.reason}. {status.detail}
             </p>}
             {!showOut && <span className={styles.pill} data-outcome={outcome}>{outcomeLabel(m)}</span>}
             {archive
