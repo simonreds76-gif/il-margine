@@ -104,11 +104,17 @@ def roundup_text(moves, observed):
     noun="price drop" if len(ordered)==1 else "price drops"
     lines=[f"Il Margine · Tennis Price Moves | {stamp}",f"{len(ordered)} observed {noun}",""]
     for m in ordered:
+        start, earlier, detected = (instant(m[key]) for key in ("start", "before", "after"))
+        elapsed = int((detected-earlier).total_seconds())
+        remaining = max(0, int((start-detected).total_seconds())//60)
+        lead = f"{remaining}m" if remaining < 60 else f"{remaining//60}h {remaining%60:02d}m"
+        change = 100*(1/m["new"]-1/m["old"])
         late=instant(m["start"]).strftime("%d %b %H:%M UTC")
-        lines.extend([f"{m['player']} vs {m['opponent']}",f"{m['league']} · {late}",
+        lines.extend([f"{m['player']} vs {m['opponent']}",f"{m['league']} · scheduled {late}",
                       f"Earlier: {m['old']:g} at {instant(m['before']):%d %b %H:%M:%S} UTC",
-                      f"Detected: {m['new']:g} at {instant(m['after']):%d %b %H:%M:%S} UTC"+(" · both prices shortened" if m["both_shortened"] else ""),""])
-    lines.append("Price observations only. The second number was seen at detection. No stake or betting recommendation.")
+                      f"Detected: {m['new']:g} at {instant(m['after']):%d %b %H:%M:%S} UTC"+(" · both prices shortened" if m["both_shortened"] else ""),
+                      f"Price-implied probability {change:+.2f}pp over {elapsed//60}m {elapsed%60:02d}s · {lead} to scheduled start at detection",""])
+    lines.append("Implied change uses the displayed odds before margin adjustment. Prices are observations only.")
     return "\n".join(lines)
 
 

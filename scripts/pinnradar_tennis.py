@@ -35,6 +35,50 @@ def quote(value):
     return price if math.isfinite(price) and price > 1 else None
 
 
+def game_market_sample(board, matches, observed):
+    parents={(m["league"],m["start"],frozenset((m["home"],m["away"]))):m for m in matches.values()}
+    samples={}
+    def odds(value):
+        try: return math.isfinite(float(value)) and float(value)>1
+        except (TypeError,ValueError): return False
+    for event in board["events"]:
+        if not isinstance(event,dict) or event.get("event_type")!="prematch" or str(event.get("sport_id"))!="2" or event.get("is_have_odds") is not True:continue
+        names=[str(event.get(s) or "") for s in ("home","away")]
+        if not all(n.endswith(" (Games)") for n in names):continue
+        names=[n.removesuffix(" (Games)") for n in names]
+        try:
+            stamp=datetime.fromisoformat(event["starts"].replace("Z","+00:00"))
+            if stamp.tzinfo is None or stamp<=observed:continue
+            stamp=stamp.astimezone(timezone.utc).isoformat()
+        except (TypeError,ValueError,KeyError,AttributeError):continue
+        m=parents.get((event.get("league_name"),stamp,frozenset(names)))
+        if not m:continue
+        parent_id=str(event.get("parent_id") or "")
+        if parent_id not in ("","0",m["id"]):continue
+        periods=event.get("periods")
+        p=periods.get("num_0") if isinstance(periods,dict) else None
+        if not isinstance(p,dict) or str(p.get("number",0))!="0" or str(p.get("status","")).lower() not in ("o","open","1"):continue
+        key=m["id"]
+        if key in samples:
+            samples[key]=None
+            continue
+        record={"home":names[0],"away":names[1],"start":m["start"],"tour":m["tour"],"games_id":str(event.get("event_id") or "")}
+        for market,field,first,second in (("spreads","hdp","home","away"),("totals","points","over","under")):
+            lines={}
+            ladder=p.get(market)
+            for k,v in (ladder.items() if isinstance(ladder,dict) else ()):
+                if not isinstance(v,dict) or v.get("is_suspended") or v.get("suspended"):continue
+                try:line=float(v[field])
+                except (ValueError,TypeError,KeyError):continue
+                try: agrees=float(k)==line
+                except (ValueError,TypeError):agrees=False
+                if not agrees or not math.isfinite(line) or (market=="totals" and line<12) or not all(odds(v.get(s)) for s in (first,second)):continue
+                lines[str(line)]=[float(v[first]),float(v[second])]
+            record[market]=lines
+        samples[key]=record
+    return {k:v for k,v in samples.items() if v and (v["spreads"] or v["totals"])}
+
+
 def board_rows(board, observed):
     if not isinstance(board, dict) or str(board.get("sport_id")) != "2" or not isinstance(board.get("events"), list):
         raise ValueError("Missing full tennis board")
@@ -98,7 +142,12 @@ def board_rows(board, observed):
     for eid in conflicts:
         rows.pop(eid, None)
     counts["ambiguous_event_ids"]=len(conflicts)
-    return {"schema":VERSION,"source":SOURCE,"bookmaker":BOOK,"observed":observed.isoformat(),
+    # Two scheduled pilot snapshots only. No per-match calls and no new alerts.
+    probe = {}
+    audit_start = utc(os.getenv("DROP_SHOT_GAMES_AUDIT_FROM"))
+    if audit_start and audit_start <= observed < audit_start + timedelta(minutes=30):
+        probe["games_market_sample"] = game_market_sample(board, rows, observed)
+    return {**probe,"schema":VERSION,"source":SOURCE,"bookmaker":BOOK,"observed":observed.isoformat(),
             "events_received":len(board["events"]), "excluded":dict(counts),
             "in_play_fixtures":sorted(in_play_fixtures), "period_status_counts":dict(period_status),"events":rows}
 

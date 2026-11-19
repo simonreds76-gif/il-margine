@@ -41,6 +41,7 @@ jobs:
       - name: Save a private pre-match snapshot
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         env:
+          DROP_SHOT_GAMES_AUDIT_FROM: ${{ vars.DROP_SHOT_GAMES_AUDIT_FROM }}
           DROP_SHOT_SCHEDULED_SLOT: ${{ inputs.scheduled_slot_utc }}
           VERIFY_PRIVATE_SNAPSHOT: ${{ github.event_name != 'schedule' && 'true' || 'false' }}
           PRIVATE_DROP_DELIVERY: ${{ github.ref == 'refs/heads/main' && 'send' || 'verify' }}
