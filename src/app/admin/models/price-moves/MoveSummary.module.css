@@ -1,0 +1,307 @@
+/*
+ * MoveSummary — dark slate card with a restrained teal accent.
+ * Colours are scoped custom properties on .card, so a parent can remap them
+ * to the site's own tokens without touching this file.
+ */
+
+.card {
+  --ms-surface: #131c24;
+  --ms-raised: #18232d;
+  --ms-border: #263441;
+  --ms-border-strong: #3a4b5a;
+  --ms-text: #e7edf1;
+  --ms-soft: #c8d3db;
+  --ms-muted: #9fb0bd;
+  --ms-accent: #4fb5aa;
+
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 34rem;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--ms-border);
+  border-radius: 8px;
+  background: var(--ms-surface);
+  color: var(--ms-text);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums lining-nums;
+  overflow-wrap: anywhere;
+  text-align: start;
+}
+
+.card *,
+.card *::before,
+.card *::after {
+  box-sizing: border-box;
+}
+
+/* Header ------------------------------------------------------------- */
+
+.header {
+  min-inline-size: 0;
+}
+
+.heading {
+  margin: 0 0 0.625rem;
+  color: var(--ms-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+  margin: 0;
+}
+
+.tag {
+  padding: 0.0625rem 0.5rem;
+  border: 1px solid var(--ms-accent);
+  border-radius: 999px;
+  color: var(--ms-accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.league {
+  color: var(--ms-muted);
+  font-size: 0.8125rem;
+}
+
+.match {
+  margin: 0.375rem 0 0;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.player {
+  color: var(--ms-text);
+}
+
+.versus {
+  color: var(--ms-muted);
+  font-weight: 400;
+}
+
+.opponent {
+  color: var(--ms-soft);
+  font-weight: 500;
+}
+
+.subject {
+  margin: 0.125rem 0 0;
+  color: var(--ms-muted);
+  font-size: 0.8125rem;
+}
+
+/* Figures ------------------------------------------------------------ */
+
+.figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+
+.figures dd {
+  margin: 0;
+}
+
+.group {
+  min-inline-size: 0;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--ms-border);
+  border-radius: 6px;
+  background: var(--ms-raised);
+}
+
+.term {
+  color: var(--ms-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+/* Earlier quote: quiet, clearly the past number. */
+.earlier .price {
+  color: var(--ms-muted);
+  font-size: 1.375rem;
+  font-weight: 500;
+}
+
+/* Detected price: the headline number, marked with the accent. */
+.detected {
+  border-color: var(--ms-border-strong);
+  box-shadow: inset 3px 0 0 var(--ms-accent);
+}
+
+.detected .term {
+  color: var(--ms-accent);
+}
+
+.detected .price {
+  color: var(--ms-text);
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.price {
+  display: flex;
+  align-items: flex-end;
+  min-block-size: 2.25rem;
+  line-height: 1.2;
+}
+
+.when {
+  margin-block-start: 0.25rem;
+  color: var(--ms-muted);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.instantPart {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Win chance: a derived figure, so it sits on the card surface rather than
+   in a filled tile, and always carries its unit. */
+.chance,
+.serve {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.125rem 0.75rem;
+  grid-column: 1 / -1;
+}
+
+.chance {
+  border-style: dashed;
+  border-color: var(--ms-border-strong);
+  background: transparent;
+}
+
+.chance .term,
+.serve .term {
+  flex: 1 0 100%;
+}
+
+.qualifier {
+  display: block;
+  font-weight: 400;
+}
+
+.points {
+  color: var(--ms-text);
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.unit {
+  margin-inline-start: 0.2em;
+  color: var(--ms-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.detail {
+  flex: 1 1 9rem;
+  min-inline-size: 0;
+  color: var(--ms-muted);
+  font-size: 0.8125rem;
+}
+
+.range {
+  color: var(--ms-soft);
+  white-space: nowrap;
+}
+
+.interval {
+  display: inline-block;
+}
+
+.serveValue,
+.serveMissing {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.serveValue {
+  color: var(--ms-text);
+}
+
+.serveMissing {
+  color: var(--ms-muted);
+  font-weight: 400;
+}
+
+.note {
+  display: block;
+}
+
+/* States and footers --------------------------------------------------- */
+
+.missing {
+  color: var(--ms-muted);
+  font-weight: 400;
+}
+
+.notice {
+  margin: 0.625rem 0 0;
+  padding: 0.5rem 0.625rem;
+  border: 1px dashed var(--ms-border-strong);
+  border-radius: 6px;
+  color: var(--ms-text);
+  font-size: 0.8125rem;
+}
+
+.footnote {
+  margin: 0.625rem 0 0;
+  color: var(--ms-muted);
+  font-size: 0.75rem;
+}
+
+.srOnly {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (min-width: 30rem) {
+  .card {
+    padding: 1rem;
+  }
+
+  .group {
+    padding: 0.625rem 0.75rem;
+  }
+}
+
+@media (forced-colors: active) {
+  .detected {
+    border-inline-start-width: 3px;
+    box-shadow: none;
+  }
+}
