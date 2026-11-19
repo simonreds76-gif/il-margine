@@ -1,0 +1,50 @@
+name: Correct the earlier private price notice
+on:
+  push:
+    branches: [codex/price-desk-single-notice-20261119]
+    paths: ['.github/workflows/correct-single-price-notice.yml']
+permissions:
+  contents: read
+jobs:
+  correct:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /scripts/price_drop_watch.py
+      - run: python -m pip install --quiet requests
+      - name: Correct the receipted message in place
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+          STORE: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          READ_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          python - <<'PY'
+          import os, sys, re, requests
+          sys.path.insert(0, 'scripts')
+          from price_drop_watch import private_chat, roundup_text, telegram
+          base=os.environ['STORE'].rstrip('/')
+          assert re.fullmatch(r'https://[a-z0-9]+\.supabase\.co',base)
+          headers={'apikey':os.environ['READ_KEY'],'Authorization':'Bearer '+os.environ['READ_KEY']}
+          suffix='/2026/11/19/124523-688169.json'
+          def read(folder):
+              url=base+'/storage/v1/object/authenticated/tennis-price-moves-private/'+folder+suffix
+              response=requests.get(url,headers=headers,timeout=15,allow_redirects=False)
+              assert response.status_code==200
+              return response.json()
+          batch=read('drop-scans-v2')
+          sent=read('drop-deliveries-v2')
+          assert sent['state']=='sent' and sent['observed']==batch['observed']
+          assert len(sent['move_ids'])==1 and len(batch['moves'])==1 and batch['moves'][0]['move_id']==sent['move_ids'][0]
+          assert isinstance(sent['message_id'],int)
+          chat=private_chat()
+          text=roundup_text(batch['moves'],batch['observed'])
+          assert text.startswith('Il Margine · Tennis Price Moves |')
+          edited=telegram('editMessageText',{'chat_id':chat,'message_id':sent['message_id'],'text':text})
+          assert str(edited['chat']['id'])==chat and edited['message_id']==sent['message_id'] and edited['text']==text
+          print('Verified in-place correction of the single original private receipt.')
+          PY
