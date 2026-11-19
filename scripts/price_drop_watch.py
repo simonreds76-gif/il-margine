@@ -106,7 +106,8 @@ def roundup_text(moves, observed):
     for m in ordered:
         late=instant(m["start"]).strftime("%d %b %H:%M UTC")
         lines.extend([f"{m['player']} vs {m['opponent']}",f"{m['league']} · {late}",
-                      f"{m['player']}: {m['old']:g} → {m['new']:g}"+(" · both prices shortened" if m["both_shortened"] else ""),""])
+                      f"Earlier: {m['old']:g} at {instant(m['before']):%d %b %H:%M:%S} UTC",
+                      f"Detected: {m['new']:g} at {instant(m['after']):%d %b %H:%M:%S} UTC"+(" · both prices shortened" if m["both_shortened"] else ""),""])
     lines.append("Price observations only. The second number was seen at detection. No stake or betting recommendation.")
     return "\n".join(lines)
 
