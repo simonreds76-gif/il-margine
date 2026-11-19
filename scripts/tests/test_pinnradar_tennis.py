@@ -114,6 +114,7 @@ class EveryDropTest(unittest.TestCase):
             self.assertEqual(watch.deliver(batch,receipt,now=now,get_chat=lambda:"123",send=send),expected)
         self.assertEqual(len(calls),1)
         self.assertIn("2 observed price drops",calls[0][1]["text"])
+        self.assertNotRegex(calls[0][1]["text"].lower(),r"pinnacle|pinnradar|oncourt|supabase|https?://")
         self.assertEqual(watch.deliver(batch,StoreStub(),now=now+timedelta(minutes=3),get_chat=lambda:"123",send=send),"quiet")
         self.assertEqual(watch.deliver({**batch,"moves":[]},StoreStub(),now=now,get_chat=lambda:"123",send=send),"quiet")
 
