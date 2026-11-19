@@ -84,7 +84,7 @@ def morning(read,day,clock=timestamp,history_loader=load_history,focus_read=None
     found={}; notes=[]; coverage=Counter()
     league_counts={}
     for league,(competition,_) in LEAGUES.items():
-        req=read.read("getFixturesByDate",dict(date=day,days=1,timeZone="Europe/London",competitionId=competition,withOdds=True),"am")
+        req=read.read("getFixturesByDate",dict(date=day,days=1,timeZone="Europe/London",competitionId=competition),"am")
         if not req:
             notes.append(league+" fixture board unavailable")
             continue
@@ -153,7 +153,10 @@ def morning(read,day,clock=timestamp,history_loader=load_history,focus_read=None
     if focus_read is not None:
         try:
             add_focus(board,focus_read,fs,prices,clock,board_matches)
-        except (ValueError,TypeError,KeyError,RuntimeError,TimeoutError,requests.RequestException):
+        except (ValueError,TypeError,KeyError,RuntimeError,TimeoutError,requests.RequestException) as exc:
+            import traceback
+            frames=[f"{frame.name}@{frame.lineno}" for frame in traceback.extract_tb(exc.__traceback__)]
+            print("Matchup context unavailable", type(exc).__name__, " ".join(frames), flush=True)
             board["coverage"]+="\nMatchup review incomplete. Existing shortlist and checks available."
     return board
 
