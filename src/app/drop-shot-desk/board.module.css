@@ -1,7 +1,8 @@
 /* Drop Shot Desk · price board. Everything is scoped under .page so the global site shell is untouched.
-   Composition from the original price-moves templates: a ledger rail beside one dominant stage, the move
-   in large figures, hairline timing cells and a chart drawn straight on the stage. Colour, radii, weights
-   and controls are Tennis Matchday's (dark neutral panel, restrained mint), not the paper-and-court originals. */
+   Composition: one line of controls, a ledger rail beside one dominant stage, the move in large figures,
+   hairline timing cells and a chart drawn straight on the stage. Colour, radii, weights and controls are
+   Tennis Matchday's (dark neutral panel, restrained mint). Mint is kept for three things only: the price
+   at detection, the probability rise of the entry on stage, and the control that is switched on. */
 
 .page{
   --ds-ink:#eef3f6;--ds-text:#b7c6d0;--ds-soft:#8497a4;
@@ -27,9 +28,11 @@
 .page [hidden]{display:none!important}
 .page :is(a,button,select,input,summary,[tabindex]):focus-visible{outline:2px solid var(--ds-accent);outline-offset:2px;border-radius:6px}
 
-/* The original's small tracked label: every caption, column head and fixture line speaks in it. */
-.lab,.kicker,.kick,.cols,.field,.date label,.facts dt,.timing dt,.stats dt,.pickerLabel,.chartTitle,.table th,.picks th{
+/* The small tracked label: captions, cell heads and the fixture line speak in it. */
+.lab,.kicker,.kick,.market,.date label,.facts dt,.timing dt,.stats dt,.pickerLabel,.chartTitle,.table th,.picks th,.returnGrid h3{
   font-size:.75rem;font-weight:650;letter-spacing:.08em;text-transform:uppercase;line-height:1.35;color:var(--ds-soft)}
+/* Read aloud, never drawn: the words that name a figure for assistive technology. */
+.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 
 /* ---------- page head ---------- */
 .topline{display:flex;align-items:center;justify-content:space-between;gap:.5rem 1rem;flex-wrap:wrap}
@@ -61,7 +64,7 @@
 .net[data-tone=lost] b{color:var(--ds-loss)}
 .date{display:grid;gap:.4rem}
 .dateRow{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
-.date input,.date button,.dayStep,.field select,.field input,.ghost,.save,.steps button,.stepper button{
+.date input,.date button,.dayStep,.ghost,.save,.steps button,.stepper button{
   min-height:44px;background:var(--ds-surface);border:1px solid var(--ds-rule);border-radius:8px;color:var(--ds-ink);color-scheme:dark}
 .date input{padding:.4rem .6rem}
 .date button{padding:0 .9rem;font-size:.875rem;font-weight:600;background:var(--ds-accent-bg);border-color:var(--ds-accent-edge);color:#c9f3e0}
@@ -85,23 +88,40 @@
 .blank .ghost{margin:0 .5rem .5rem 0}
 .court{display:block;width:100%;height:auto}
 
-/* ---------- filters ---------- */
-.tools{display:flex;align-items:flex-end;gap:.75rem 1rem;flex-wrap:wrap;margin:1.25rem 0 1rem}
-.field{display:grid;gap:.3rem}
-.field select,.field input{padding:.4rem .65rem;font-size:.9375rem;font-weight:500;letter-spacing:0;text-transform:none}
-.field input::placeholder{color:var(--ds-soft)}
-.search{flex:1 1 12rem;max-width:18rem}
-.search input{width:100%}
+/* ---------- controls: what to show, three quiet filters, search. One line on a desktop. ---------- */
+.tools{display:flex;align-items:center;gap:.6rem .75rem;flex-wrap:wrap;margin:1.25rem 0 1rem}
+.filters{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;min-width:0}
+/* A filter is one object: its name and its value share a single outline, so three of them read as a
+   sentence ("Tour All tours · Draw Main draw"), not as a form. The control inside is a native select. */
+.pick{display:inline-flex;align-items:center;min-width:0;min-height:44px;padding-left:.8rem;background:var(--ds-surface);border:1px solid var(--ds-rule);border-radius:10px;color:var(--ds-soft);font-size:.8125rem;font-weight:600;line-height:1.2;cursor:pointer}
+.pick>span{flex:none;white-space:nowrap}
+.pick select,.pick input{min-width:0;min-height:42px;background-color:transparent;border:0;border-radius:9px;color:var(--ds-ink);font-size:.9375rem;font-weight:600;color-scheme:dark}
+.pick select{-webkit-appearance:none;appearance:none;padding:0 2rem 0 .45rem;text-overflow:ellipsis;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1.5 1.5 6 6l4.5-4.5' fill='none' stroke='%238497a4' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .7rem center;background-size:.7rem auto}
+.pick option{background:var(--ds-surface);color:var(--ds-ink)}
+.pick input{flex:1;width:100%;padding:0 .8rem 0 .45rem;font-weight:500}
+.pick input::placeholder{color:var(--ds-soft);opacity:1}
+.pick:hover{border-color:var(--ds-rule-strong)}
+/* The ring is drawn on the whole object, so the name and the value are visibly one focus target. */
+.pick:focus-within{border-color:var(--ds-accent);outline:2px solid var(--ds-accent);outline-offset:2px}
+.page .pick :is(select,input):focus-visible{outline:none}
+/* A filter that is narrowing the list is tinted, so it is found again without reading every value. */
+.pick[data-on]{background:var(--ds-accent-bg);border-color:var(--ds-accent-edge);color:#c9f3e0}
+.search{flex:1 1 13rem;max-width:19rem;cursor:text}
+.clear,.linkish{min-height:44px;padding:0 .2rem;background:none;border:0;color:var(--ds-accent);font-size:.875rem;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.linkish{margin-left:auto}
 .ghost{padding:0 .85rem;font-size:.875rem;font-weight:600}
-.ghost:hover,.save:hover,.steps button:hover:not(:disabled),.stepper button:hover:not(:disabled),.field select:hover,.field input:focus{border-color:var(--ds-accent)}
-.jump{display:inline-flex;align-items:center;gap:.35rem;min-height:44px;margin-left:auto;color:var(--ds-accent);font-size:.875rem;font-weight:600;text-decoration:none}
+.ghost:hover,.save:hover,.steps button:hover:not(:disabled),.stepper button:hover:not(:disabled){border-color:var(--ds-accent)}
+.jump{display:inline-flex;align-items:center;gap:.35rem;min-height:44px;margin-left:auto;color:var(--ds-accent);font-size:.875rem;font-weight:600;text-decoration:none;white-space:nowrap}
 .jump:hover{text-decoration:underline}
 
 /* Segmented controls: Matchday's .seg (inset track, mint-tinted pressed segment). */
-.scope,.ranges{display:inline-flex;gap:2px;padding:3px;background:var(--ds-sunk);border:1px solid var(--ds-rule);border-radius:10px}
-.scope button,.ranges button{min-height:38px;padding:0 .9rem;background:none;border:0;border-radius:7px;color:var(--ds-text);font-size:.875rem;font-weight:600;letter-spacing:0;text-transform:none;white-space:nowrap}
-.scope button:hover,.ranges button:hover{color:var(--ds-ink)}
-.scope button[aria-pressed=true],.ranges button[aria-pressed=true]{background:var(--ds-accent-bg);color:#dbf8ea}
+.scope,.ranges,.sort{display:inline-flex;gap:2px;padding:3px;background:var(--ds-sunk);border:1px solid var(--ds-rule);border-radius:10px}
+.scope button,.ranges button,.sort button{min-height:38px;padding:0 .9rem;background:none;border:0;border-radius:7px;color:var(--ds-text);font-size:.875rem;font-weight:600;letter-spacing:0;text-transform:none;white-space:nowrap}
+.scope button{min-height:40px}
+.scope button:hover,.ranges button:hover,.sort button:hover{color:var(--ds-ink)}
+.scope button[aria-pressed=true],.ranges button[aria-pressed=true],.sort button[aria-pressed=true]{background:var(--ds-accent-bg);color:#dbf8ea}
 .scope small{margin-left:.3rem;font-size:.75rem;font-weight:700;color:var(--ds-soft)}
 .scope button[aria-pressed=true] small{color:var(--ds-accent)}
 
@@ -114,39 +134,57 @@
 .state[data-open],.pickWho .state[data-open]{color:var(--ds-sky)}
 .lapsed{display:flex;align-items:center;gap:.25rem 1rem;flex-wrap:wrap;margin-bottom:1rem;padding:.3rem 1rem;background:var(--ds-surface);border:1px solid var(--ds-rule);border-left:3px solid var(--ds-warn);border-radius:8px;font-size:.875rem;color:var(--ds-text)}
 .lapsed b{color:var(--ds-ink)}
-.linkish{min-height:44px;margin-left:auto;padding:0 .2rem;background:none;border:0;color:var(--ds-accent);font-size:.875rem;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+/* Ledger status: a dot and a word. Filled means settled or live, hollow means waiting or shut. */
+.tone{display:inline-flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;letter-spacing:.02em;line-height:1.35;color:var(--ds-soft);white-space:nowrap}
+.tone::before{content:"";flex:none;width:.5rem;height:.5rem;border:1.5px solid currentColor;border-radius:50%}
+.tone[data-tone=open]{color:var(--ds-sky)}
+.tone[data-tone=won]{color:var(--ds-accent)}
+.tone[data-tone=lost]{color:var(--ds-loss)}
+.tone[data-tone=pending]{color:var(--ds-warn)}
+.tone[data-tone=void]{color:var(--ds-text)}
+.tone:is([data-tone=open],[data-tone=won],[data-tone=lost])::before{background:currentColor}
+
+/* Host-country flag: a shipped static file at a fixed 20 × 14, hairline-edged so pale flags hold on the dark panel. */
+.flag{flex:none;display:inline-block;width:20px;height:14px;object-fit:cover;border-radius:2px;box-shadow:0 0 0 1px var(--ds-rule-strong)}
+.venue{display:inline-flex;align-items:center;gap:.45rem}
 
 /* ---------- desk: ledger rail + stage ---------- */
 .desk{display:grid;grid-template-columns:clamp(21rem,33%,27rem) minmax(0,1fr);gap:1.25rem;align-items:start}
-.rail,.stage,.roundups{min-width:0;background:var(--ds-surface);border:1px solid var(--ds-rule);border-radius:12px}
+.rail,.stage,.roundups,.results{min-width:0;background:var(--ds-surface);border:1px solid var(--ds-rule);border-radius:12px}
 .rail{position:sticky;top:var(--ds-top);display:flex;flex-direction:column;max-height:max(24rem,calc(100vh - var(--ds-top) - 1rem));overflow:hidden}
-.railHead{display:flex;align-items:baseline;justify-content:space-between;gap:.25rem .75rem;flex-wrap:wrap;padding:.85rem 1rem .7rem}
-.railHead h2,.roundupsHead h2{font-size:1.125rem;font-weight:700;letter-spacing:-.02em;color:var(--ds-ink)}
-.roundupsHead h2 small{margin-left:.3rem;font-size:.8125rem;font-weight:650;letter-spacing:0;color:var(--ds-soft)}
+.railHead{display:grid;gap:.6rem;padding:.85rem 1rem .75rem}
+.railHead h2,.resultsHead h2{font-size:1.125rem;font-weight:700;letter-spacing:-.02em;color:var(--ds-ink)}
+.railHead h2 small,.resultsHead h2 small{margin-left:.3rem;font-size:.8125rem;font-weight:650;letter-spacing:0;color:var(--ds-soft)}
+/* The order belongs to the list it orders: three segments across the rail, the pressed one in mint. */
+.sortRow{display:flex;align-items:center;gap:.65rem}
+.sort{flex:1;display:flex;min-width:0}
+.sort button{flex:1;min-width:0;padding:0 .5rem}
+.railNote{font-size:.75rem;line-height:1.45;color:var(--ds-soft)}
+.railNote b{color:var(--ds-text)}
 .picker{display:none}
-/* One grid for the column heads and every entry, so the three columns line up down the rail. */
-.cols,.item{display:grid;grid-template-columns:minmax(0,1fr) 7.25rem 4.75rem;gap:.75rem;align-items:center;padding-inline:1rem .9rem}
-.cols{padding-block:.4rem;border-top:1px solid var(--ds-rule);font-size:.6875rem}
-.cols span:last-child{text-align:right}
-.railList{position:relative;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;border-top:1px solid var(--ds-hair)}
+.railList{position:relative;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;border-top:1px solid var(--ds-rule)}
 .railList li+li{border-top:1px solid var(--ds-hair)}
-.item{width:100%;min-height:64px;padding-block:.7rem .75rem;text-align:left;background:transparent;border:0;color:var(--ds-text)}
+/* One grid for every entry: who and where on the left, the figures on one right edge.
+   The probability rise is the lead figure, the two prices sit under it, then time and trace. */
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"meta state" "name gain" "vs odds" "when spark";gap:.2rem .75rem;align-items:baseline;
+  width:100%;min-height:64px;padding:.7rem 1rem .8rem;text-align:left;background:transparent;border:0;color:var(--ds-text)}
 .item:hover{background:var(--ds-raise)}
 .item[aria-pressed=true]{background:var(--ds-raise);box-shadow:inset 3px 0 0 var(--ds-accent)}
 .page .item:focus-visible{outline-offset:-3px}
-.itemWho,.itemMove,.itemResult{display:block;min-width:0}
-.itemWho small,.itemWho strong,.itemMove b,.itemMove small,.itemResult small{display:block}
-.itemWho .lab{font-size:.6875rem;overflow-wrap:anywhere}
-.itemWho strong{margin:.1rem 0;font-size:1rem;font-weight:650;line-height:1.25;color:var(--ds-ink);overflow-wrap:anywhere}
-.itemVs{font-size:.8125rem;color:var(--ds-text);overflow-wrap:anywhere}
-.itemMove b{font-size:.9375rem;font-weight:700;line-height:1.2;color:var(--ds-ink);white-space:nowrap}
-.itemMove b span{font-weight:400;color:var(--ds-soft)}
-.itemMove small{margin-top:.1rem;font-size:.75rem;font-weight:600;color:var(--ds-soft);white-space:nowrap}
-.spark{display:block;max-width:100%;margin-top:.3rem}
-.itemResult{text-align:right}
-.itemResult small{margin-top:.25rem;font-size:.8125rem;font-weight:700;color:var(--ds-text)}
-.itemResult small[data-tone=won]{color:var(--ds-accent)}
-.itemResult small[data-tone=lost]{color:var(--ds-loss)}
+.item>*{min-width:0}
+.itemMeta{grid-area:meta;align-self:center;display:flex;align-items:center;gap:.45rem;font-size:.75rem;font-weight:600;line-height:1.35;color:var(--ds-soft);overflow-wrap:anywhere}
+.itemState{grid-area:state;align-self:center;justify-self:end;display:inline-flex;align-items:center;gap:.5rem}
+.itemState small{font-size:.75rem;font-weight:700;color:var(--ds-text);white-space:nowrap}
+.itemState small[data-tone=won]{color:var(--ds-accent)}
+.itemState small[data-tone=lost]{color:var(--ds-loss)}
+.itemName{grid-area:name;font-size:1rem;font-weight:650;line-height:1.25;color:var(--ds-ink);overflow-wrap:anywhere}
+.itemGain{grid-area:gain;justify-self:end;font-size:1.0625rem;font-weight:750;letter-spacing:-.01em;line-height:1.25;color:var(--ds-ink);white-space:nowrap}
+.item[aria-pressed=true] .itemGain{color:var(--ds-accent)}
+.itemVs{grid-area:vs;font-size:.8125rem;line-height:1.4;color:var(--ds-text);overflow-wrap:anywhere}
+.itemOdds{grid-area:odds;justify-self:end;font-size:.875rem;font-weight:650;line-height:1.4;color:var(--ds-ink);white-space:nowrap}
+.itemOdds span{font-weight:400;color:var(--ds-soft)}
+.itemWhen{grid-area:when;align-self:center;font-size:.75rem;line-height:1.4;color:var(--ds-soft)}
+.spark{grid-area:spark;align-self:center;justify-self:end;display:block;width:5.5rem;height:auto;max-width:100%}
 
 /* Result pills as in the original: won and lost are filled, everything unsettled is an outline. */
 .pill{display:inline-flex;align-items:center;padding:.1rem .5rem;border:1px solid var(--ds-rule-strong);border-radius:999px;background:transparent;color:var(--ds-text);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.5;white-space:nowrap}
@@ -155,26 +193,31 @@
 .pill[data-outcome=pending]{border-color:#6f5c33;color:var(--ds-warn)}
 .pill[data-state=open]{border-color:#3c6289;color:var(--ds-sky)}
 
-.stage{padding:1rem clamp(1rem,2.2vw,1.75rem) 1.4rem;border-top:3px solid var(--ds-mode);scroll-margin-top:var(--ds-top)}
+.stage{padding:1rem clamp(1rem,2.2vw,1.75rem) 1.4rem;scroll-margin-top:var(--ds-top)}
 .stageTop{display:flex;align-items:center;justify-content:space-between;gap:.5rem 1rem}
 .kick{display:flex;align-items:center;gap:.3rem .6rem;flex-wrap:wrap;min-width:0}
-.kick b{font-weight:inherit;color:var(--ds-accent)}
+.kick b{font-weight:inherit;color:var(--ds-ink)}
 .tagMode{padding:.05rem .45rem;border:1px solid #6f5c33;border-radius:4px;color:var(--ds-warn);white-space:nowrap}
 .stepper{display:inline-flex;align-items:center;gap:.5rem;flex:none;font-size:.8125rem;font-weight:600;color:var(--ds-text);white-space:nowrap}
 .stepper button{width:44px;padding:0;font-size:1.35rem;line-height:1}
 
-/* The hero: the name on the left, the move in the largest figures on the page on the right. */
-.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.6rem 2rem;align-items:end;margin:.5rem 0 .9rem}
+/* The hero: the selection on the left, the move in the largest figures on the page on the right. */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.6rem 2rem;align-items:end;margin:.6rem 0 .9rem}
 .hero[data-out] .heroWho{grid-column:1/-1}
 .heroWho,.heroMove{min-width:0}
+.market{margin-bottom:.3rem;color:var(--ds-text)}
 .heroWho h2{font-size:clamp(1.75rem,3.1vw,2.6rem);font-weight:750;letter-spacing:-.04em;line-height:1.05;color:var(--ds-ink);overflow-wrap:anywhere}
 .versus{margin-top:.3rem;font-size:.9375rem;color:var(--ds-text);overflow-wrap:anywhere}
 .movement{margin-top:.3rem;font-size:clamp(2.4rem,4.4vw,3.6rem);font-weight:750;letter-spacing:-.04em;line-height:1;color:var(--ds-ink);white-space:nowrap}
 .was,.arrow{font-weight:400;color:var(--ds-soft)}
 .arrow{font-size:.6em;vertical-align:.14em}
 .now{color:var(--ds-accent)}
-.shift{margin-top:.45rem;font-size:.8125rem;color:var(--ds-text)}
-.shift b{font-size:.9375rem;font-weight:700;color:var(--ds-ink)}
+/* Two magnitudes, each with its noun: probability in points leads, price in percent follows. */
+.gain{margin-top:.5rem;font-size:.875rem;line-height:1.3;color:var(--ds-text)}
+.gain b{margin-right:.2rem;font-size:1.3rem;font-weight:750;letter-spacing:-.02em;color:var(--ds-accent)}
+.gain span{margin-left:.45rem;color:var(--ds-soft);white-space:nowrap}
+.shift{margin-top:.2rem;font-size:.8125rem;color:var(--ds-text)}
+.shift b{font-weight:700;color:var(--ds-ink)}
 .heroOut{text-align:right}
 .settled{display:flex;justify-content:flex-end;align-items:center;gap:.6rem;font-size:1.6rem;font-weight:750;letter-spacing:-.02em;line-height:1;color:var(--ds-text)}
 .settled b{padding:.35rem .7rem;border-radius:4px;box-shadow:inset 0 0 0 1.5px currentColor;font-size:1.0625rem;letter-spacing:.07em;text-transform:uppercase}
@@ -232,18 +275,37 @@
 .table b{color:var(--ds-ink)}
 .table tr[data-key=earlier] td{color:var(--ds-ink);font-weight:650}
 .table tr[data-key=detected] td{color:var(--ds-accent);font-weight:700}
+.fine{max-width:72ch;margin-top:.75rem;font-size:.8125rem;line-height:1.55;color:var(--ds-soft)}
 
-/* ---------- Telegram roundups ---------- */
-.roundups{margin-top:1.25rem;padding:1rem clamp(1rem,2.2vw,1.75rem) 1.15rem;scroll-margin-top:var(--ds-top)}
-.roundupsHead{display:flex;align-items:baseline;gap:.25rem 1.25rem;flex-wrap:wrap}
-.roundupsHead p{font-size:.875rem;color:var(--ds-text)}
-.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(9.75rem,1fr));gap:.5rem;margin:.85rem 0 1rem}
-.chip{display:grid;gap:.05rem;min-height:56px;padding:.5rem .75rem;text-align:left;background:transparent;border:1px solid var(--ds-rule);border-radius:8px;color:var(--ds-text)}
-.chip:hover{border-color:var(--ds-accent)}
-.chip[aria-pressed=true]{background:var(--ds-accent-bg);border-color:var(--ds-accent);color:#fff}
-.chipTime{font-size:1.2rem;font-weight:750;letter-spacing:-.02em;line-height:1.25;color:var(--ds-ink)}
-.chipTime small{font-size:.6875rem;font-weight:650;letter-spacing:.08em;color:var(--ds-soft)}
-.chipMeta{font-size:.8125rem;color:var(--ds-text)}
+/* ---------- alert results of the day: three ruled cells, always in view ---------- */
+.results{margin-top:1.25rem;padding:1rem clamp(1rem,2.2vw,1.75rem) .25rem}
+.resultsHead{display:flex;align-items:baseline;gap:.25rem 1.25rem;flex-wrap:wrap}
+.resultsHead p{font-size:.875rem;color:var(--ds-text)}
+.returnGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:.9rem}
+.returnGrid section{min-width:0;padding:0 1.1rem;border-left:1px solid var(--ds-rule)}
+.returnGrid section:first-child{padding-left:0;border-left:0}
+.returnGrid p{font-size:.875rem;color:var(--ds-text)}
+.returnGrid .returnNet{margin:.1rem 0 .2rem;font-size:1.6rem;font-weight:750;letter-spacing:-.03em;line-height:1.15;color:var(--ds-ink)}
+.returnNet small{font-size:.75rem;font-weight:600;letter-spacing:0;color:var(--ds-soft)}
+.returnNet[data-tone=won]{color:var(--ds-accent)}
+.returnNet[data-tone=lost]{color:var(--ds-loss)}
+.results .fine{margin:0 0 .9rem}
+
+/* ---------- Telegram roundups: delivery receipts, folded until asked for ---------- */
+.roundups{margin-top:1.25rem;scroll-margin-top:var(--ds-top)}
+.roundupsTitle{font-size:1rem;font-weight:400}
+.roundupsTitle button{display:flex;align-items:center;gap:.15rem 1rem;flex-wrap:wrap;width:100%;min-height:56px;padding:.7rem clamp(1rem,2.2vw,1.75rem);text-align:left;background:none;border:0;border-radius:11px;color:var(--ds-text)}
+.roundupsTitle button:hover span{color:var(--ds-accent)}
+.roundupsTitle span{font-size:1.125rem;font-weight:700;letter-spacing:-.02em;color:var(--ds-ink)}
+.roundupsTitle small{font-size:.875rem;color:var(--ds-text)}
+.roundupsTitle button::after{content:"";flex:none;width:.55rem;height:.55rem;margin:0 .25rem .2rem auto;border-right:2px solid var(--ds-accent);border-bottom:2px solid var(--ds-accent);transform:rotate(45deg)}
+.roundupsTitle button[aria-expanded=true]::after{margin-bottom:-.2rem;transform:rotate(-135deg)}
+.roundupsBody{padding:0 clamp(1rem,2.2vw,1.75rem) 1.15rem}
+.roundupsNote{max-width:72ch;font-size:.875rem;color:var(--ds-text)}
+/* One picker for every past send, latest first, with a step either way. */
+.sendBar{display:flex;align-items:center;gap:.5rem 1rem;flex-wrap:wrap;margin:.8rem 0 1rem}
+.sendBar .pick{flex:1 1 17rem;max-width:32rem}
+.sendBar .pick select{flex:1;width:100%}
 .roundup{padding-top:1rem;border-top:1px solid var(--ds-rule)}
 .roundupHead{display:flex;align-items:baseline;justify-content:space-between;gap:.25rem 1rem;flex-wrap:wrap}
 .roundupHead h3{font-size:1.125rem;font-weight:700;letter-spacing:-.02em;color:var(--ds-ink)}
@@ -267,29 +329,31 @@
 .pickWho button:hover{color:var(--ds-accent)}
 .pickWho span{font-size:.8125rem;color:var(--ds-text);overflow-wrap:anywhere}
 .pickWho .note{color:var(--ds-warn);font-weight:600}
-.fine{max-width:72ch;margin-top:.75rem;font-size:.8125rem;line-height:1.55;color:var(--ds-soft)}
 
 /* ---------- narrower stages: the name takes its own line above the figures ---------- */
 @media (max-width:1180px){
   .heroWho{grid-column:1/-1}
 }
 
-/* ---------- one column: the selected ledger entry leads, the ledger opens beneath it ---------- */
+/* ---------- one column: a switcher shows the entry on stage, the ledger opens beneath it ---------- */
 @media (max-width:980px){
   .desk{grid-template-columns:minmax(0,1fr);gap:1rem}
   .rail{position:static;max-height:none}
+  /* The switcher is a raised, outlined control with its own action chip; it can never be taken for a ledger entry. */
   .picker{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"label cue" "name cue" "move move";gap:.1rem .75rem;align-items:center;
-    width:100%;padding:.7rem 1rem .8rem;text-align:left;background:var(--ds-raise);border:0;border-top:1px solid var(--ds-rule);box-shadow:inset 3px 0 0 var(--ds-accent);color:var(--ds-text)}
+    width:calc(100% - 1.5rem);margin:0 .75rem .75rem;padding:.65rem .8rem .75rem;text-align:left;background:var(--ds-raise);border:1px solid var(--ds-rule-strong);border-radius:10px;color:var(--ds-text)}
+  .picker:hover,.picker[aria-expanded=true]{border-color:var(--ds-accent-edge)}
   .pickerLabel{grid-area:label}
-  .pickerCue{grid-area:cue;align-self:start;padding:.25rem .65rem;border:1px solid var(--ds-accent-edge);border-radius:8px;background:var(--ds-accent-bg);color:#c9f3e0;font-size:.8125rem;font-weight:600;white-space:nowrap}
-  .pickerCue::after{content:" ▾"}
-  .picker[aria-expanded=true] .pickerCue::after{content:" ▴"}
+  .pickerCue{grid-area:cue;align-self:center;display:inline-flex;align-items:center;min-height:36px;padding:0 .7rem;border:1px solid var(--ds-accent-edge);border-radius:8px;background:var(--ds-accent-bg);color:#c9f3e0;font-size:.8125rem;font-weight:600;white-space:nowrap}
+  .pickerCue::after{content:"";width:.4rem;height:.4rem;margin:0 0 .15rem .5rem;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg)}
+  .picker[aria-expanded=true] .pickerCue::after{margin-bottom:-.2rem;transform:rotate(-135deg)}
   .picker strong{grid-area:name;font-size:1.125rem;font-weight:700;letter-spacing:-.02em;line-height:1.25;color:var(--ds-ink);overflow-wrap:anywhere}
-  .pickerMove{grid-area:move;font-size:.9375rem;font-weight:700;color:var(--ds-ink)}
+  .pickerMove{grid-area:move;margin-top:.15rem;font-size:.875rem;font-weight:650;color:var(--ds-ink)}
+  .pickerMove b{font-weight:750;color:var(--ds-accent)}
   .pickerMove span{font-weight:400;color:var(--ds-soft)}
-  /* Open, the ledger runs at full length as in the original; choosing an entry folds it away again. */
-  .railList{flex:none;overflow:visible}
-  .railList[data-open=false],.cols[data-open=false]{display:none}
+  /* Open, the ledger is a sunk tray at full length under the switcher; choosing an entry folds it away again. */
+  .railList{flex:none;overflow:visible;background:var(--ds-sunk)}
+  .railList[data-open=false]{display:none}
   .dayBar{grid-template-columns:minmax(0,1fr)}
   .facts div:first-child{padding-left:0;border-left:0}
   .jump{margin-left:0}
@@ -307,12 +371,18 @@
   .facts dd{font-size:1.35rem}
   .wl b{font-size:2rem}
   .date input{flex:1 1 9rem;min-width:0}
-  .field{flex:1 1 8rem}
-  .field select{width:100%}
-  .scopeField{flex-basis:100%}
-  .scope{display:flex}
-  .scope button{flex:1;min-height:40px;padding:0 .5rem;white-space:normal}
-  .search{max-width:none;flex-basis:100%}
+  /* Controls: scope across the top, the filters as a two-up grid with the name above the value, search full width.
+     16px in every field keeps iOS from zooming the page on focus. */
+  .scope{display:flex;flex:1 1 100%}
+  .scope button{flex:1;padding:0 .5rem;white-space:normal}
+  .filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));flex:1 1 100%}
+  .filters .pick{flex-direction:column;align-items:stretch;padding:.4rem 0 0}
+  .filters .pick>span{padding:0 .8rem;font-size:.6875rem;letter-spacing:.07em;text-transform:uppercase}
+  .filters .pick select{width:100%;min-height:34px;padding-left:.8rem}
+  .filters .pick:nth-of-type(3){grid-column:1/-1}
+  .filters .clear{grid-column:1/-1;justify-self:start}
+  .pick select,.pick input{font-size:1rem}
+  .search{flex:1 1 100%;max-width:none}
   .blank{grid-template-columns:minmax(0,1fr)}
   .court{max-width:260px}
   .stage{margin-inline:calc(-1 * var(--ds-pad));padding-inline:var(--ds-pad);border-inline:0;border-radius:0}
@@ -326,7 +396,11 @@
   .ranges{display:flex;flex-wrap:wrap;flex-basis:100%;min-width:0;max-width:100%}
   .ranges button{flex:1 1 auto;min-height:40px;padding:0 .5rem}
   .readout{min-height:3.6rem}
-  .chips{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .returnGrid{grid-template-columns:minmax(0,1fr)}
+  .returnGrid section,.returnGrid section:first-child{padding:.7rem 0;border-left:0;border-top:1px solid var(--ds-hair)}
+  .returnGrid section:first-child{padding-top:0;border-top:0}
+  .sendBar .pick{flex-basis:100%;max-width:none}
+  .sendBar .stepper{flex:1;justify-content:space-between}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
   .picks thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
   .picks,.picks tbody{display:block}
@@ -341,22 +415,21 @@
   .table{font-size:.8125rem}
   .table :is(th,td){padding-right:.45rem}
 }
-/* Narrow phones: the result drops under the entry, as the original ledger did below 480px. */
+/* Narrow phones down to 320px: every control keeps its full height, only the spare words go. */
 @media (max-width:420px){
-  .cols{display:none}
-  .item{grid-template-columns:minmax(0,1fr) auto}
-  .itemResult{grid-column:1/-1;display:flex;align-items:center;gap:.6rem;text-align:left}
-  .itemResult small{margin-top:0}
+  /* The three segments already say what they are; "Sort" stays as the group's spoken name. */
+  .sortRow>.lab{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .item{padding-inline:.85rem}
+  .picker{grid-template-areas:"label label" "name name" "move move" "cue cue"}
+  .pickerCue{justify-content:center;min-height:40px;margin-top:.5rem}
   /* Chart range presets: an even two-column grid whose labels may wrap, so nothing runs past the edge at 320px. */
   .ranges{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
   .ranges button{min-width:0;padding:.25rem .4rem;line-height:1.2;white-space:normal}
   .ranges button:last-child:nth-child(odd){grid-column:1/-1}
 }
 @media (prefers-reduced-motion:no-preference){
-  .item,.chip,.tabs a,.ranges button,.scope button{transition:background-color .12s ease,border-color .12s ease,color .12s ease}
+  .item,.pick,.picker,.tabs a,.ranges button,.scope button,.sort button{transition:background-color .12s ease,border-color .12s ease,color .12s ease}
+  .roundupsTitle button::after,.pickerCue::after{transition:transform .15s ease}
 }
 
-.resultsToggle{cursor:pointer;color:var(--ds-ink);font-weight:700}
-.returnGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:1rem;margin-top:.85rem}
-.returnGrid h3{color:var(--ds-ink);font-size:1rem}
-.returnGrid p{color:var(--ds-text);font-size:.875rem;font-variant-numeric:tabular-nums}
+.hostCountry{display:inline-flex;align-items:center;gap:.3em;flex:none;font-size:.88em;font-weight:600;letter-spacing:.035em}

@@ -4,8 +4,11 @@ import { notFound } from "next/navigation";
 import brand from "./drop-shot-mark.png";
 import { DeskIcon } from "./DeskIcon";
 import Board from "./Board";
+import { hostOf, venueKey } from "./DeskParts";
+import type { VenueMap } from "./DeskParts";
 import { readArchive, readDay } from "./reader";
 import styles from "./board.module.css";
+import { countryForTournament } from "@/lib/tennis-tournament-country.mjs";
 
 export const dynamic="force-dynamic";
 export const fetchCache="force-no-store";
@@ -21,6 +24,18 @@ function validDay(input:string|undefined,today:string) {
 }
 function shiftDay(day:string,by:number) {
   return new Date(Date.parse(day+"T00:00:00Z")+by*86400000).toISOString().slice(0,10);
+}
+/** Resolved on the server, so the registry never ships to the browser; the board receives a plain map. */
+function venuesFor(rows: { tour: string; league: string; start: string }[]) {
+  const out: VenueMap = {}, tried = new Set<string>();
+  for (const r of rows) {
+    const key = venueKey(r.league, r.start, r.tour);
+    if (tried.has(key)) continue;
+    tried.add(key);
+    const venue = countryForTournament(hostOf(r.league), r.tour, r.start.slice(0, 10));
+    if (venue) out[key] = venue;
+  }
+  return out;
 }
 export default async function PriceMoves({searchParams}:{searchParams:Promise<{view?:Query;day?:Query;batch?:Query}>}) {
   // The team's deployment protection covers preview URLs. A production build must
@@ -42,7 +57,7 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
             <span className={styles.net} data-tone={s.net_units>0?"won":s.net_units<0?"lost":undefined}><b>{signed(s.net_units)}u</b> on {s.settled_stake}u settled · <b>{signed(s.roi_pct)}%</b> replay ROI · {moves.length} {moves.length===1?"move":"moves"}</span>
           </p>
         </section>
-        <Board moves={moves} fixtures={[]} archive/></>;
+        <Board moves={moves} fixtures={[]} archive venues={venuesFor(moves)}/></>;
     } else {
       // Stamped after the read so the first paint never treats a record as open later than the server saw it.
       const data=await readDay(day),now=Date.now(),seen=Date.parse(data.observed),known=Number.isFinite(seen);
@@ -66,8 +81,8 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
             <div><dt>Watchlist matches</dt><dd>{data.fixtures.length}</dd></div>
           </dl>
         </section>
-        <p className={styles.fresh} role="status" data-late={late?"true":undefined}>{known?<>Latest watchlist at {new Date(seen).toISOString().slice(0,16).replace("T"," ")} UTC{late?" · overdue for a new scan":""}.</>:"No watchlist has been recorded for this date."}</p>
-        <Board moves={data.moves} fixtures={data.fixtures} archive={false} initialBatchId={batch} day={day} now={now} today={day===today}/></>;
+        <p className={styles.fresh} role="status" data-late={late?"true":undefined}>{known?<>Latest watchlist at {new Date(seen).toISOString().slice(0,16).replace("T"," ")} UTC{late?" · overdue for a new scan":day===today?" · the cloud scan runs every 15 minutes":""}.</>:"No watchlist has been recorded for this date."}</p>
+        <Board moves={data.moves} fixtures={data.fixtures} archive={false} initialBatchId={batch} day={day} now={now} today={day===today} venues={venuesFor([...data.moves,...data.fixtures])}/></>;
     }
   }catch{content=<p className={styles.problem} role="status">The private price records could not be loaded. Refresh to try again.</p>}
   return <main className={styles.page} data-mode={archive?"archive":"daily"}>

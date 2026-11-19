@@ -19,7 +19,7 @@ type Saved = {
   old: number; new: number; old_opponent: number; new_opponent: number; move_id: string;
 };
 type Event = { contracts?: Record<string,{labels:[string,string];prices:[number,number]}>; id: string; fixture: string; tour:string; league:string; start:string; home:string; away:string; home_price:number; away_price:number };
-type Scan = { observed: string; moves: Saved[]; compared_pairs: number };
+type Scan = { policy?: string; alert_ids?: string[]; observed: string; moves: Saved[]; compared_pairs: number };
 type Receipt = { state: string; move_ids: string[]; delivered_at: string; observed: string };
 type Outcome = { result:string; score:string; profit?:number };
 type ArchiveRow = Omit<Saved,"tour"> & { level:string; quotes:Quote[]; qualifying:boolean; result:{state:string; score?:string} };
@@ -35,7 +35,7 @@ export async function readArchive() {
 type Tape = { slots: Record<string,string>; series: Record<string, {
   players: [string,string]; quotes: [string,number,number][];
 }> };
-type Delivery = { batchId:string; batchAt:string; alertedAt:string };
+type Delivery = { fourPointAlert: boolean; batchId:string; batchAt:string; alertedAt:string };
 
 async function readTapes(moves:Saved[], observed:string) {
   if (!moves.length) return [];
@@ -111,7 +111,10 @@ export async function readDay(day: string) {
       const [scan,receipt]=await Promise.all([read<Scan>(scans+"/"+name),notices.includes(name)?read<Receipt>(deliveries+"/"+name):undefined]);
       if (receipt?.state==="sent" && receipt.observed===scan.observed) {
         const batchId=name.slice(0,-5);
-        receipt.move_ids.forEach(id=>notified.set(id,{batchId,batchAt:receipt.delivered_at,alertedAt:receipt.delivered_at}));
+        const eligible = new Set(scan.policy === "same-line-4pp-prematch-v1" ? scan.alert_ids : []);
+        for (const id of receipt.move_ids) {
+          notified.set(id, { batchId, batchAt: receipt.delivered_at, alertedAt: receipt.delivered_at, fourPointAlert: eligible.has(id) });
+        }
       }
       return scan;
     }));

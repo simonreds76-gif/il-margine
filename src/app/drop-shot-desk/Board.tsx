@@ -6,22 +6,32 @@ import { useRouter } from "next/navigation";
 import styles from "./board.module.css";
 import OddsChart, { KeyGlyph, spanText } from "./OddsChart";
 import Roundups from "./Roundups";
+import { SETTLING_NOTE, State, VenueFlag, hostOf as placeOf, impliedText, marketName, pointsText, venueKey } from "./DeskParts";
+import type { VenueMap } from "./DeskParts";
 import {
   availability, buildRoundups, cutoffOf, defaultRoundup, delta, dropPct, isOpen, isQualifying, moveKey, outcomeLabel, outcomeOf, paper,
-  movementPoints, orderDrops, percent, price, tally, units, utcClock, utcDate, utcStamp,
+  orderDrops, percent, price, tally, units, utcClock, utcDate, utcStamp,
 } from "./desk";
 import type { DeskFixture, DeskMove, DropOrder } from "./desk";
 
 const TOURS = ["All tours", "ATP", "Challenger"];
 const DRAWS = ["All rounds", "Main draw", "Qualifying"];
 type Scope = "upcoming" | "all";
+/** The three orders, in the words used on the control and in the line that explains the list. */
+const SORTS: { value: DropOrder; label: string; note: string }[] = [
+  { value: "largest", label: "Largest", note: "largest rise first" },
+  { value: "newest", label: "Newest", note: "latest detection first" },
+  { value: "oldest", label: "Oldest", note: "earliest detection first" },
+];
+const NO_VENUES: VenueMap = {};
+const ROUNDUPS_HASH = "#desk-roundups";
 /** Records are re-read at most this often, and only while the page is visible. */
 const REFRESH_MS = 15 * 60_000;
 /** Longest the local clock sleeps between checks; it wakes exactly on the next cutoff anyway. */
 const TICK_MS = 60_000;
 
 /** "ATP Challenger Helsinki - R1" reads as "Helsinki": the tour is already said beside it. */
-const placeOf = (league: string) => league.replace(/^ATP\s+(Challenger\s+)?/i, "").split(" - ")[0].trim() || league;
+
 const roundOf = (league: string) => { const parts = league.split(" - "); return parts.length > 1 ? parts[parts.length - 1].trim() : ""; };
 
 /** Tiny time-true trace of the recorded prices; breaks in capture stay open. */
@@ -46,7 +56,7 @@ function Spark({ move }: { move: DeskMove }) {
   </svg>;
 }
 
-export default function Board({ moves, fixtures, archive, initialBatchId, day, now, today }: {
+export default function Board({ moves, fixtures, archive, initialBatchId, day, now, today, venues = NO_VENUES }: {
   moves: DeskMove[];
   fixtures: DeskFixture[];
   archive: boolean;
@@ -56,16 +66,21 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   now?: number;
   /** True when `day` is the current UTC date. */
   today?: boolean;
+  /** Host-country flags resolved on the server from the shared tournament registry; unknown venues are simply absent. */
+  venues?: VenueMap;
 }) {
   const router = useRouter();
   const listId = useId();
   const headId = useId();
-  const scopeId = useId();
+  const sortId = useId();
+  const noteId = useId();
+  const resultsId = useId();
   // Roundups are built from every recorded move, whatever the list is showing.
   const roundups = useMemo(() => (archive ? [] : buildRoundups(moves)), [moves, archive]);
   // Today opens on what is still open; past dates and direct roundup links open on the full record.
   const defaultScope: Scope = today && !initialBatchId ? "upcoming" : "all";
   const [scope, setScope] = useState<Scope>(defaultScope);
+  // One order per scope: Upcoming keeps its own choice, All recorded keeps its own.
   const [orders, setOrders] = useState<Record<Scope, DropOrder>>({ upcoming: "largest", all: "newest" });
   const [scopeDay, setScopeDay] = useState(day);
   const [clock, setClock] = useState<number | null>(now ?? null);
@@ -77,6 +92,8 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   const [query, setQuery] = useState("");
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pickedBatch, setPickedBatch] = useState<string | undefined>(initialBatchId);
+  // The receipt history is folded away for normal browsing; a direct ?batch= link arrives with it open.
+  const [roundupsOpen, setRoundupsOpen] = useState(!!initialBatchId);
   const [selectedKey, setSelectedKey] = useState<string | null>(() => {
     const linked = initialBatchId ? roundups.find(r => r.id === initialBatchId) : undefined;
     return linked && linked.picks.length ? moveKey(linked.picks[0]) : null;
@@ -86,7 +103,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   const roundupsRef = useRef<HTMLElement>(null);
   const revealed = useRef(false);
 
-  useEffect(() => { setPickedBatch(initialBatchId); }, [initialBatchId]);
+  useEffect(() => { setPickedBatch(initialBatchId); if (initialBatchId) setRoundupsOpen(true); }, [initialBatchId]);
 
   // A direct ?batch= link lands on that roundup.
   useEffect(() => {
@@ -94,6 +111,19 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
     revealed.current = true;
     roundupsRef.current?.scrollIntoView({ block: "start" });
   }, [initialBatchId, roundups]);
+
+  // The plain #desk-roundups anchor, on arrival or later, opens the history and reveals it.
+  useEffect(() => {
+    if (archive) return;
+    const sync = () => {
+      if (window.location.hash !== ROUNDUPS_HASH) return;
+      setRoundupsOpen(true);
+      window.requestAnimationFrame(() => roundupsRef.current?.scrollIntoView({ block: "start" }));
+    };
+    sync();
+    window.addEventListener("hashchange", sync);
+    return () => window.removeEventListener("hashchange", sync);
+  }, [archive]);
 
   // The desk's "now": never earlier than the latest server stamp, and unknown (nothing open) without one.
   const at = archive || clock === null ? null : Math.max(clock, now ?? 0);
@@ -184,6 +214,12 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   const step = (dir: number) => { if (rows.length) choose(rows[(index + dir + rows.length) % rows.length]); };
   const clearFilters = () => { setTour(TOURS[0]); setDraw(DRAWS[0]); setMarket("all"); setQuery(""); };
   const changeScope = (next: Scope) => { setScope(next); setLapsedKey(null); };
+  // A new order starts from its own first entry; pressing the order already in use changes nothing.
+  const changeOrder = (value: DropOrder) => {
+    if (value === order) return;
+    setOrders(previous => ({ ...previous, [sortScope]: value }));
+    setSelectedKey(null);
+  };
   const toStage = () => window.requestAnimationFrame(() => stageRef.current?.scrollIntoView({ block: "start" }));
   // A roundup row always opens its chart: a closed selection switches the list to the
   // full record, and the filters are only cleared when they would hide that selection.
@@ -208,6 +244,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   };
   const toRoundup = (id: string) => {
     selectBatch(id);
+    setRoundupsOpen(true);
     window.requestAnimationFrame(() => roundupsRef.current?.scrollIntoView({ block: "start" }));
   };
   // As in the original ledger: up, down, Home and End move focus between entries.
@@ -237,6 +274,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   const openFixtures = dayFixtures.filter(f => isOpen(f, at));
   const shownFixtures = upcomingOnly ? openFixtures : dayFixtures;
   const plural = (n: number, one: string, many: string) => n + " " + (n === 1 ? one : many);
+  const sortNote = SORTS.find(s => s.value === order)?.note ?? "";
   const blank = !moves.length
     ? (archive ? "No recorded drops are in the replay." : "No price drops were recorded on this date.")
     : upcomingOnly && matching.length
@@ -244,25 +282,24 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
       : "No recorded drops match these filters.";
 
   return <div className={styles.board} data-archive={archive ? "true" : undefined}>
+    {/* One line of controls: what to show, three quiet filters, the search. The order of the list lives on the list. */}
     <div className={styles.tools}>
-      {!archive && <div className={`${styles.field} ${styles.scopeField}`} role="group" aria-labelledby={scopeId}>
-        <span id={scopeId}>Show</span>
-        <div className={styles.scope}>
-          <button type="button" aria-pressed={scope === "upcoming"} onClick={() => changeScope("upcoming")}>Upcoming only <small>{upcoming.length}</small></button>
-          <button type="button" aria-pressed={scope === "all"} onClick={() => changeScope("all")}>All recorded <small>{matching.length}</small></button>
-        </div>
+      {!archive && <div className={styles.scope} role="group" aria-label="Show drops">
+        <button type="button" aria-pressed={scope === "upcoming"} onClick={() => changeScope("upcoming")}>Upcoming <small>{upcoming.length}</small></button>
+        <button type="button" aria-pressed={scope === "all"} onClick={() => changeScope("all")}>All recorded <small>{matching.length}</small></button>
       </div>}
-      <label className={styles.field}>Tour <select value={tour} onChange={e => setTour(e.target.value)}>{TOURS.map(v => <option key={v}>{v}</option>)}</select></label>
-      {!archive && <label className={styles.field}>Market <select value={market} onChange={e=>setMarket(e.target.value)}><option value="all">All markets</option><option value="winner">Match winner</option><option value="totals">Total games</option><option value="spreads">Games handicap</option></select></label>}
-      <label className={styles.field}>Draw <select value={draw} onChange={e => setDraw(e.target.value)}>{DRAWS.map(v => <option key={v}>{v}</option>)}</select></label>
-      {!archive && <label className={styles.field}>Sort drops <select value={order} onChange={e=>{
-        const value = e.target.value as DropOrder;
-        setOrders(previous => ({ ...previous, [sortScope]: value }));
-        setSelectedKey(null);
-      }}><option value="largest">Biggest drop first (pp)</option><option value="newest">Newest detection first</option><option value="oldest">Oldest detection first</option></select></label>}
-      {moves.length > 8 && <label className={`${styles.field} ${styles.search}`}>Find a player <input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Name or tournament" autoComplete="off" /></label>}
-      {filtered && <button type="button" className={styles.ghost} onClick={clearFilters}>Clear filters</button>}
-      {!archive && roundups.length > 0 && <a className={styles.jump} href="#desk-roundups">Telegram roundups ({roundups.length}) <span aria-hidden="true">↓</span></a>}
+      <div className={styles.filters} role="group" aria-label="Filter drops">
+        <label className={styles.pick} data-on={tour !== TOURS[0] ? "true" : undefined}><span>Tour</span>
+          <select value={tour} onChange={e => setTour(e.target.value)}>{TOURS.map(v => <option key={v}>{v}</option>)}</select></label>
+        <label className={styles.pick} data-on={draw !== DRAWS[0] ? "true" : undefined}><span>Draw</span>
+          <select value={draw} onChange={e => setDraw(e.target.value)}>{DRAWS.map(v => <option key={v}>{v}</option>)}</select></label>
+        {!archive && <label className={styles.pick} data-on={market !== "all" ? "true" : undefined}><span>Market</span>
+          <select value={market} onChange={e=>setMarket(e.target.value)}><option value="all">All markets</option><option value="winner">Match winner</option><option value="totals">Total games</option><option value="spreads">Games handicap</option></select></label>}
+        {filtered && <button type="button" className={styles.clear} onClick={clearFilters}>Clear filters</button>}
+      </div>
+      {moves.length > 8 && <label className={`${styles.pick} ${styles.search}`} data-on={needle ? "true" : undefined}><span>Find</span>
+        <input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Player or tournament" aria-label="Find a player or tournament" autoComplete="off" /></label>}
+      {!archive && roundups.length > 0 && <a className={styles.jump} href={ROUNDUPS_HASH} onClick={() => setRoundupsOpen(true)}>Telegram roundups ({roundups.length}) <span aria-hidden="true">↓</span></a>}
     </div>
 
     {lapsed && <p className={styles.lapsed} role="status">
@@ -271,52 +308,59 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
     </p>}
 
     {m ? <div className={styles.desk}>
-      {/* The ledger: one row per drop in three columns (who, price and drop, result), as in the original rail. */}
+      {/* The ledger: each entry reads who and where on the left, the figures on the right, all on one right edge. */}
       <section className={styles.rail} aria-label={upcomingOnly ? "Upcoming moves" : "Recorded moves"}>
         <div className={styles.railHead}>
-          <h2>{upcomingOnly ? "Upcoming drops" : "Price drops"}</h2>
-          <span className={styles.lab}>{rows.length === moves.length ? plural(rows.length, "drop", "drops") : rows.length + " of " + moves.length}</span>
+          <h2>{upcomingOnly ? "Upcoming drops" : "Price drops"} <small>{rows.length === moves.length ? rows.length : rows.length + " of " + moves.length}</small></h2>
+          {!archive && <div className={styles.sortRow} role="group" aria-labelledby={sortId} aria-describedby={noteId}>
+            <span className={styles.lab} id={sortId}>Sort</span>
+            <div className={styles.sort}>
+              {SORTS.map(s => <button key={s.value} type="button" aria-pressed={order === s.value} onClick={() => changeOrder(s.value)}>{s.label}</button>)}
+            </div>
+          </div>}
+          <p className={styles.railNote} id={noteId}>
+            <b>pp</b> is the rise in implied probability (1 ÷ price) from the earlier price to detection.
+            {!archive && <> {upcomingOnly ? "Upcoming" : "All recorded"}: {sortNote}.</>}
+          </p>
         </div>
+        {/* Phones and tablets: the entry on stage is a switcher; the ledger opens beneath it and folds away on choice. */}
         <button type="button" className={styles.picker} aria-expanded={pickerOpen} aria-controls={listId} onClick={() => setPickerOpen(open => !open)}>
-          <span className={styles.pickerLabel}>Selected drop · {index + 1} of {rows.length}</span>
+          <span className={styles.pickerLabel}>Showing {index + 1} of {rows.length}</span>
           <strong>{m.player}</strong>
-          <span className={styles.pickerMove}><span>{price(m.old)} → </span>{price(m.new)} · {percent(dropPct(m))}</span>
-          <span className={styles.pickerCue}>{pickerOpen ? "Hide the list" : rows.length > 1 ? "Browse all " + rows.length : "Show the list"}</span>
+          <span className={styles.pickerMove}><b>{pointsText(m)}</b> implied probability · <span>{price(m.old)} → </span>{price(m.new)}</span>
+          <span className={styles.pickerCue}>{pickerOpen ? "Close list" : rows.length > 1 ? "Choose from " + rows.length : "Show list"}</span>
         </button>
-        <div className={styles.cols} data-open={pickerOpen ? "true" : "false"} aria-hidden="true">
-          <span>Selection</span><span>Price · drop</span><span>{archive ? "Result" : "Status"}</span>
-        </div>
         <ol id={listId} className={styles.railList} ref={listRef} data-open={pickerOpen ? "true" : "false"} onKeyDown={onListKey}>
           {rows.map((r, i) => {
             const settled = archive ? paper(r) : null;
+            const tag = archive && !r.market ? "" : marketName(r);
             return <li key={moveKey(r) + "/" + i}>
               <button type="button" className={styles.item} aria-pressed={r === m} onClick={() => choose(r)}>
-                <span className={styles.itemWho}>
-                  <small className={styles.lab}>{[r.tour + (isQualifying(r) ? " qual." : ""), placeOf(r.league), utcDate(r.start)].join(" · ")}</small>
-                  <strong>{r.player}</strong>
-                  <small className={styles.itemVs}>{r.fixtureLabel ?? ("vs "+r.opponent)}</small>
+                <strong className={styles.itemName}>{r.player}</strong>
+                <span className={styles.itemVs}>{r.fixtureLabel ?? ("vs "+r.opponent)}</span>
+                <span className={styles.itemMeta}>
+                  <VenueFlag venue={venues[venueKey(r.league, r.start, r.tour)]} />
+                  <span>{[r.tour + (isQualifying(r) ? " qual." : ""), placeOf(r.league), archive ? utcDate(r.start) : ""].filter(Boolean).join(" · ")}</span>
                 </span>
-                <span className={styles.itemMove}>
-                  <b><span>{price(r.old)} → </span>{price(r.new)}</b>
-                  <small>{archive ? percent(dropPct(r)) : "+" + movementPoints(r).toFixed(2) + " pp"} · {utcClock(r.after)} UTC</small>
-                  <Spark move={r} />
-                </span>
-                <span className={styles.itemResult}>
-                  {archive || outcomeOf(r.result) !== "pending"
-                    ? <span className={styles.pill} data-outcome={outcomeOf(r.result)}>{outcomeLabel(r)}</span>
-                    : isOpen(r, at) ? <span className={styles.pill} data-state="open">Open</span> : <span className={styles.pill} data-state="closed">Closed</span>}
+                <b className={styles.itemGain}>{pointsText(r)}<span className={styles.vh}> implied probability</span></b>
+                <span className={styles.itemOdds}><span>{price(r.old)} → </span>{price(r.new)}</span>
+                <span className={styles.itemWhen}>{tag ? tag + " · " : ""}detected {archive ? utcStamp(r.after) : utcClock(r.after) + " UTC"}</span>
+                <span className={styles.itemState}>
+                  <State move={r} now={at} archive={archive} />
                   {settled !== null && <small data-tone={settled > 0 ? "won" : settled < 0 ? "lost" : undefined}>{units(settled)}</small>}
                 </span>
+                <Spark move={r} />
               </button>
             </li>;
           })}
         </ol>
       </section>
 
-      {/* The stage: fixture line and stepper, the name against the move in large figures, status, timing, then the chart. */}
+      {/* The stage: host tournament and stepper, the selection against the move in large figures, status, timing, then the chart. */}
       <article className={styles.stage} ref={stageRef} aria-labelledby={headId}>
         <div className={styles.stageTop}>
           <p className={styles.kick}>
+            <VenueFlag venue={venues[venueKey(m.league, m.start, m.tour)]} />
             <span><b>{m.tour}</b> · {kick}</span>
             {archive && <span className={styles.tagMode}>Historical replay</span>}
           </p>
@@ -329,6 +373,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
 
         <div className={styles.hero} data-out={showOut ? "true" : undefined}>
           <div className={styles.heroWho}>
+            {marketName(m) && <p className={styles.market}>{marketName(m)}</p>}
             <h2 id={headId}>{m.player}</h2>
             <p className={styles.versus}>{m.fixtureLabel ?? ("vs "+m.opponent)}</p>
           </div>
@@ -337,6 +382,8 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
             <p className={styles.movement}>
               <span className={styles.was} title="Earlier price">{price(m.old)}</span><span className={styles.arrow}> → </span><span className={styles.now} title="Price at detection">{price(m.new)}</span>
             </p>
+            {/* The two magnitudes are never left bare: probability in points first, price in percent second. */}
+            <p className={styles.gain}><b>{pointsText(m)}</b> implied probability <span>{impliedText(m.old)} → {impliedText(m.new)}</span></p>
             <p className={styles.shift}>Price <b>{delta(m.new - m.old)} ({percent(dropPct(m))})</b>{Number.isFinite(apart) && apart > 0 ? " · captures " + spanText(apart) + " apart" : ""}</p>
           </div>
           {showOut && <div className={styles.heroOut}>
@@ -347,7 +394,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
             {status && <p className={styles.avail} data-state={status.open ? "open" : "closed"}>
               <b>{status.label}</b> · {status.reason}. {status.detail}
             </p>}
-            {!showOut && <span className={styles.pill} data-outcome={outcome}>{outcomeLabel(m)}</span>}
+            {!showOut && m.notified && <span className={styles.pill} data-outcome={outcome}>{outcomeLabel(m)}</span>}
             {archive
               ? <span>{pl === null ? "Not settled in the replay" : "Historical replay · 1u at the price at detection"}</span>
               : <span>{m.notified || m.alertedAt ? "Private alert delivered" : "Observed drop"}{m.alertedAt ? " · sent " + utcClock(m.alertedAt, true) + " UTC" : ""}</span>}
@@ -391,18 +438,26 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
       </svg>
     </div>}
 
-    {!archive && <details className={styles.roundups}>
-      <summary className={styles.resultsToggle}>Alert results by market · {day}</summary>
-      <p className={styles.fine}>Confirmed 4-point alerts on this UTC date. One paper unit at the recorded line and detection price. A push returns the stake. Voids and pending results are excluded from settled stake.</p>
+    {/* The day's alert results stay in the open: three ruled cells, one per market, the same tallies as before. */}
+    {!archive && <section className={styles.results} aria-labelledby={resultsId}>
+      <header className={styles.resultsHead}>
+        <h2 id={resultsId}>Alert results <small>{day} UTC</small></h2>
+        <p>Sent alerts under the 4 pp rule. Each selection is tracked at 1u using its alerted line and price.</p>
+      </header>
       <div className={styles.returnGrid}>{[["winner","Match winner"],["spreads","Games handicap"],["totals","Total games"]].map(([key,label])=>{
-        const sum=tally(moves.filter(row=>row.notified && row.market===key));
+        const sum=tally(moves.filter(row=>row.fourPointAlert && (row.market ?? "winner") === key));
         return <section key={key}><h3>{label}</h3>
+          <p className={styles.returnNet} data-tone={sum.settled ? (sum.net > 0 ? "won" : sum.net < 0 ? "lost" : undefined) : undefined}>{sum.settled ? units(sum.net) : "—"} <small>paper P/L</small></p>
           <p>{sum.won}W · {sum.lost}L · {sum.pending} pending{sum.pushed ? " · "+sum.pushed+" push" : ""}{sum.voided ? " · "+sum.voided+" void" : ""}{sum.split ? " · "+sum.split+" split" : ""}</p>
-          <p>{sum.settled}u settled · P/L {sum.settled ? units(sum.net) : "—"} · ROI {sum.roi===null ? "—" : percent(sum.roi)}</p>
+          <p>{sum.settled}u settled · ROI {sum.roi===null ? "—" : percent(sum.roi)}</p>
         </section>;
       })}</div>
-    </details>}
-    {!archive && <Roundups roundups={roundups} active={activeRoundup} currentKey={currentKey} now={at} onSelect={selectBatch} onOpen={openFromRoundup} sectionRef={roundupsRef} />}
+      <details className={styles.fold}>
+        <summary>How results are settled</summary>
+        <p className={styles.fine}>{SETTLING_NOTE} A push returns the stake. Voids and pending selections are left out of settled stake.</p>
+      </details>
+    </section>}
+    {!archive && <Roundups roundups={roundups} active={activeRoundup} currentKey={currentKey} now={at} open={roundupsOpen} onToggle={() => setRoundupsOpen(open => !open)} onSelect={selectBatch} onOpen={openFromRoundup} sectionRef={roundupsRef} />}
 
     {fixtures.length > 0 && <details className={styles.fold}>
       <summary>{upcomingOnly
@@ -415,7 +470,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
             const a = availability(f, at);
             return <tr key={[f.home, f.away, f.start].join("/")}>
               <td>{f.home} <b>{price(f.homePrice)}</b><br />{f.away} <b>{price(f.awayPrice)}</b></td>
-              <td>{f.league}</td>
+              <td><span className={styles.venue}><VenueFlag venue={venues[venueKey(f.league, f.start, f.tour)]} /><span>{f.league}</span></span></td>
               <td>{utcStamp(f.start)}<br /><span className={styles.state} data-open={a.open ? "true" : undefined}>{a.label} · {a.reason}</span></td>
             </tr>;
           })}</tbody>
