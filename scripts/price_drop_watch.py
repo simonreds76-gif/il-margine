@@ -101,7 +101,8 @@ def private_chat():
 def roundup_text(moves, observed):
     stamp=instant(observed).strftime("%d %b %H:%M UTC")
     ordered=sorted(moves,key=lambda m:(m["start"],m["league"],m["event_id"],m["player"]))
-    lines=[f"Tennis Price Moves | {stamp}",f"{len(ordered)} observed price drops · PinnRadar / Pinnacle",""]
+    noun="price drop" if len(ordered)==1 else "price drops"
+    lines=[f"Il Margine · Tennis Price Moves | {stamp}",f"{len(ordered)} observed {noun}",""]
     for m in ordered:
         late=instant(m["start"]).strftime("%d %b %H:%M UTC")
         lines.extend([f"{m['player']} vs {m['opponent']}",f"{m['league']} · {late}",
