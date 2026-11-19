@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '2,17,32,47 * * * *'
   pull_request:
-    paths: ['scripts/pinnradar_tennis.py', 'scripts/price_drop_watch.py', 'scripts/drop_desk_history.py', 'scripts/tests/test_drop_desk_history.py', 'scripts/tests/test_pinnradar_tennis.py', '.github/workflows/pinnradar-tennis.yml']
+    paths: ['scripts/pinnradar_tennis.py', 'scripts/price_drop_watch.py', 'scripts/drop_desk_history.py', 'scripts/drop_desk_expiry.py', 'scripts/tests/test_drop_desk_expiry.py', 'scripts/tests/test_drop_desk_history.py', 'scripts/tests/test_pinnradar_tennis.py', '.github/workflows/pinnradar-tennis.yml']
   workflow_dispatch:
     inputs:
       scheduled_slot_utc:
@@ -13,11 +13,11 @@ on:
         type: string
 permissions:
   contents: read
-concurrency:
-  group: ${{ github.event_name == 'pull_request' && format('drop-shot-tests-{0}', github.run_id) || 'pinnradar-tennis-private' }}
-  cancel-in-progress: false
 jobs:
   snapshot:
+    concurrency:
+      group: ${{ github.event_name == 'pull_request' && format('drop-shot-tests-{0}', github.run_id) || 'pinnradar-tennis-private' }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 4
     steps:
@@ -27,6 +27,8 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /scripts/pinnradar_tennis.py
+            /scripts/drop_desk_expiry.py
+            /scripts/tests/test_drop_desk_expiry.py
             /scripts/drop_desk_history.py
             /scripts/tests/test_drop_desk_history.py
             /scripts/price_drop_watch.py
@@ -54,3 +56,29 @@ jobs:
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python scripts/drop_desk_history.py
+
+  expire-alerts:
+    needs: snapshot
+    if: always() && github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && !cancelled()
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: drop-shot-private-message-edits
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/drop_desk_expiry.py
+            /scripts/pinnradar_tennis.py
+            /scripts/price_drop_watch.py
+      - run: python -m pip install --quiet requests
+      - name: Retire entries in their original private roundup
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python scripts/drop_desk_expiry.py

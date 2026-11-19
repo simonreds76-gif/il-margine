@@ -40,9 +40,15 @@ def board_rows(board, observed):
         raise ValueError("Missing full tennis board")
     rows, counts, conflicts, fixtures = {}, Counter(), set(), {}
     period_status = Counter()
+    explicit_live_ids, explicit_live_pairs = set(), set()
     for event in board["events"]:
         if not isinstance(event, dict):
             raise ValueError("Invalid board event")
+        if str(event.get("sport_id")) == "2" and event.get("event_type") == "live":
+            sides = tuple(sorted(str(event.get(k) or "").strip().casefold() for k in ("home", "away")))
+            if all(sides) and sides[0] != sides[1]:
+                explicit_live_pairs.add((str(event.get("league_name") or "").strip().casefold(), sides))
+                if event.get("event_id"): explicit_live_ids.add(str(event["event_id"]))
         league = str(event.get("league_name") or "").strip()
         if not re.match(r"^ATP(?:\s|$)", league, re.I):
             counts["other_tour"] += 1
@@ -79,12 +85,22 @@ def board_rows(board, observed):
             conflicts.update((event_id, fixtures[uid]))
         fixtures[uid]=event_id
         rows[event_id]=row
+    in_play_fixtures = {
+        hashlib.sha256(json.dumps([league, *pair], ensure_ascii=False).encode()).hexdigest()[:32]
+        for league, pair in explicit_live_pairs
+    }
+    for eid, row in list(rows.items()):
+        pair = tuple(sorted((row["home"].casefold(),row["away"].casefold())))
+        if eid in explicit_live_ids or (row["league"].casefold(),pair) in explicit_live_pairs:
+            in_play_fixtures.add(row["fixture"])
+            del rows[eid]
+            counts["confirmed_in_play"] += 1
     for eid in conflicts:
         rows.pop(eid, None)
     counts["ambiguous_event_ids"]=len(conflicts)
     return {"schema":VERSION,"source":SOURCE,"bookmaker":BOOK,"observed":observed.isoformat(),
             "events_received":len(board["events"]), "excluded":dict(counts),
-            "period_status_counts":dict(period_status),"events":rows}
+            "in_play_fixtures":sorted(in_play_fixtures), "period_status_counts":dict(period_status),"events":rows}
 
 
 def detection(previous, current, before, observed):
@@ -125,12 +141,18 @@ def advance(state, snap, *, track_first=True):
     # Keep continuity evidence even across temporarily missing events. Prices can
     # only be compared when the event was present on both consecutive boards.
     guards={k:v for k,v in state.get("guards",{}).items() if utc(v["start"])+timedelta(days=7)>now}
+    for uid in snap.get("in_play_fixtures", []):
+        guard = guards.get(uid, {"start":snap["observed"], "issued":False})
+        guards[uid] = {**guard, "blocked":True}
     moves=[]
+    open_rows = {}
     for eid,row in snap["events"].items():
         uid=row["fixture"]
         last=guards.get(uid,{})
         changed=last.get("start") and last["start"]!=row["start"]
         blocked=bool(last.get("blocked") or (changed and now>=utc(last["start"])))
+        if not blocked:
+            open_rows[eid]=row
         issued=bool(last.get("issued"))
         if track_first and not blocked and not issued and prior_observed and not changed:
             move=detection(old.get(eid),row,prior_observed,now)
@@ -139,7 +161,7 @@ def advance(state, snap, *, track_first=True):
                 issued=True
         guards[uid]=dict(start=row["start"],blocked=blocked,issued=issued)
     return dict(schema=VERSION,observed=snap["observed"],source=SOURCE,bookmaker=BOOK,
-                events=snap["events"],guards=guards),moves
+                events=open_rows,guards=guards),moves
 
 
 class Store:
@@ -282,7 +304,7 @@ def run():
             watch.private_chat()
             delivery="private direct chat verified"
         elif mode=="send":
-            delivery=watch.deliver(batch,store,now=datetime.now(timezone.utc))
+            delivery=watch.deliver(batch,store,now=datetime.now(timezone.utc),dispatch_clock=lambda: datetime.now(timezone.utc))
         print(f"Matched fixtures {batch['compared_pairs']}; observed shortenings {len(batch['moves'])}; Telegram {delivery}.")
 
 

@@ -41,7 +41,7 @@ class MatchWinnerTest(unittest.TestCase):
     def test_only_complete_singles(self):
         e=event()
         wrong=[event(101,home="Test Home (Games)"),event(102,league_name="ATP Finals Doubles"),
-               event(103,event_type="live"),event(104,home="Qualifier"),event(105,league_name="ITF X"),
+               event(103,home="Another Home",event_type="live"),event(104,home="Qualifier"),event(105,league_name="ITF X"),
                event(106,periods={"num_0":{"status":"suspended","money_line":{"home":2,"away":2}}}),
                event(107,home="L. One / T. Two"),event(108,is_have_odds=False),event(109,home="B",away="B"),
                event(110,home="C",periods={"num_0":{"status":"open","money_line":{"home":2,"away":None}}})]
