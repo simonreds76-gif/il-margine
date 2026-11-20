@@ -290,7 +290,7 @@ def extract_rows(
     return rows
 
 
-def save_market_coverage(payload: list[dict[str, Any]], bookmakers: str) -> dict[str, Any]:
+def save_market_coverage(payload: list[dict[str, Any]], bookmakers: str, bet365_health=None) -> dict[str, Any]:
     """Distinguish a missing feed from prices we cannot identify as player bets."""
     coverage = {}
     for name in dict.fromkeys(x.strip() for x in bookmakers.split(",") if x.strip()):
@@ -313,6 +313,14 @@ def save_market_coverage(payload: list[dict[str, Any]], bookmakers: str) -> dict
         coverage[name] = {"events_with_save_markets": len(fixtures), "named_player_lines": named,
                           "unnamed_or_team_lines": unnamed,
                           "status": "NAMED_PLAYER_LINES" if named else "UNNAMED_OR_TEAM_CONTRACTS_ONLY" if unnamed else "NO_SAVE_MARKETS"}
+    book = coverage.get("Bet365")
+    health = bet365_health or {}
+    if book and book["status"] == "NO_SAVE_MARKETS":
+        observed = sum(bool(row.get("market_polled_at")) for row in health.get("goalkeeper_fixture_coverage", []))
+        if observed:
+            book.update(status="SAVE_MARKETS_SEEN_NO_VERIFIED_PRICES", events_with_observed_save_markets=observed)
+        elif health.get("status") in {"SOURCE_FAILED", "PARTIAL_SOURCE_FAILURE"}:
+            book["status"] = "SOURCE_CHECK_INCOMPLETE"
     return coverage
 
 
@@ -515,7 +523,7 @@ def main() -> None:
         "rows_added": added,
         "market_inventory_rows_added": inventory_added,
         "market_names_observed": market_names,
-        "bookmaker_coverage": save_market_coverage(payload, args.bookmaker),
+        "bookmaker_coverage": save_market_coverage(payload, args.bookmaker, moviodds_health),
         "capture_mode": capture_mode,
         "publication_recovery": publication_recovery,
         "last_publication_at": captured_at if capture_mode == "publication" else previous.get("last_publication_at"),

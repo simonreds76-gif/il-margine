@@ -130,10 +130,37 @@ def claim(rows, state, token, now, offers=None):
         state.setdefault('preparation_checks', {})['keeper_watch' if rows[0].get('alert_model') == 'keeper_watch_v1' else 'current'] = dict(checked_at=now.isoformat(), added=added, suppressed=rejected)
     return added
 
-def message(row):
-    e = lambda k: html.escape(str(row.get(k) or ''))
+def comparison_note(row, coverage, now):
     comparison = row.get('price_comparison') or []
-    price_note = ('Latest captured comparison: ' + ' | '.join(f"{html.escape(str(q['bookmaker']))} {q['odds']:.2f}" for q in comparison) + '\n') if comparison else ''
+    books = {q['bookmaker'].casefold() for q in comparison}
+    prices = ' | '.join(f"{html.escape(q['bookmaker'])} {q['odds']:.2f}" for q in comparison)
+    label = 'Verified prices' if len(books) > 1 else 'Only verified price'
+    parts = [f'{label}: {prices}'] if prices else []
+    if 'bet365' not in (books or {str(row.get('bookmaker') or '').casefold()}):
+        reason = 'no verified price for this keeper and line'
+        checked = stamp(coverage.get('generated_at'))
+        event = str(row.get('event_id') or '')
+        kickoff = stamp(row.get('kickoff_at'))
+        fixture_matches = event and kickoff and any(str(f.get('id')) == event and stamp(f.get('kickoff_at')) == kickoff
+                              for f in coverage.get('selected_events', []))
+        if fixture_matches and checked and timedelta(0) <= now-checked <= timedelta(minutes=10):
+            matches = [f for f in (coverage.get('moviodds_source') or {}).get('goalkeeper_fixture_coverage', [])
+                       if str(f.get('event_id')) == event]
+            if len(matches) == 1:
+                reason = {
+                    'INDEPENDENT_CHECK_UNAVAILABLE': 'market found; price could not be independently verified',
+                    'FIXTURE_NOT_FOUND': 'fixture could not be matched',
+                    'AMBIGUOUS_FIXTURE': 'fixture match was ambiguous',
+                    'STALE_OR_MISSING_GK_POLL': 'no fresh saves quote',
+                    'NO_GK_MARKET_IN_FEED': 'no saves market returned for this fixture',
+                }.get(matches[0].get('status'), reason)
+        parts.append(f'Bet365: {reason}.')
+    return ''.join(part+'\n' for part in parts)
+
+
+def message(row, coverage=None, now=None):
+    e = lambda k: html.escape(str(row.get(k) or ''))
+    price_note = comparison_note(row, coverage if isinstance(coverage, dict) else {}, now or datetime.now(timezone.utc))
     if row.get('alert_model') == 'keeper_watch_v1':
         scope = str(row.get('contract_scope') or '')
         note = ('Team goalkeeper contract; model uses the named predicted starter. Check the official XI.\n'
@@ -154,7 +181,7 @@ def message(row):
     scope = str(row.get('contract_scope') or '')
     team_contract = scope in {'team_goalkeeper_home', 'team_goalkeeper_away'}
     display_keeper = scope.removeprefix('team_goalkeeper_').title() + ' goalkeeper' if team_contract else e('goalkeeper')
-    contract_note = 'Team goalkeeper market. Check the starting keeper and the price at your chosen bookmaker; no Bet365 price is implied.\n' if team_contract else ''
+    contract_note = 'Team goalkeeper market. Check the starting keeper and the price at your chosen bookmaker.\n' if team_contract else ''
     return ('<b>GK saves | New tracked signal</b>\n\n'
         f"<b>{e('home_team')} vs {e('away_team')}</b>\n"
         f"{display_keeper} - {e('side').title()} {e('line')} saves\n"
@@ -184,6 +211,10 @@ def main():
         count=claim(rows,state,token,now,offers)
         watch_count=claim(keeper_watch_rows(a.report,now),state,token,now,offers)
         save();print(f'GK alert claims prepared: current {count}; Keeper Watch paper {watch_count}');return
+    try:
+        coverage = json.loads((a.candidates.parent/'gk-saves-capture-status.json').read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        coverage = {}
     failed=0;sent=0
     for key, item in state['signals'].items():
         if item.get('status')!='claimed' or item.get('run_token')!=token: continue
@@ -199,7 +230,7 @@ def main():
         # Persist uncertainty before HTTP. A replay cannot assume Telegram rejected it.
         item['status']='delivery_unconfirmed';save()
         try:
-            r=requests.post(f'https://api.telegram.org/bot{bot}/sendMessage',json={'chat_id':chat,'text':message(item['signal']),'parse_mode':'HTML','disable_web_page_preview':True},timeout=20)
+            r=requests.post(f'https://api.telegram.org/bot{bot}/sendMessage',json={'chat_id':chat,'text':message(item['signal'],coverage),'parse_mode':'HTML','disable_web_page_preview':True},timeout=20)
             payload=r.json()
             # A structured rejection confirms that this attempt was not accepted.
             # Never persist the response text or exception URL: either can expose credentials.

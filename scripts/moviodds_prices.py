@@ -101,7 +101,7 @@ def soccer_target_matches(match, target):
     from football_grosvenor import team_key, target_competition
     # Verified on the 6 Nov Sevilla fixture. Source-specific identity alias;
     # still require both oriented teams, exact competition and kickoff.
-    aliases = {'cd alaves': 'alaves'}
+    aliases = {'cd alaves': 'alaves', 'schalke 04': 'schalke'}
     def club(value):
         name = team_key(value)
         return aliases.get(name, name)

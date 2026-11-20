@@ -78,6 +78,24 @@ class NewGkTests(unittest.TestCase):
   response=Mock(ok=True,status_code=200);response.json.return_value={'ok':True,'result':{'message_id':123}}
   result=self.run_delivery(response=response)
   self.assertEqual(result['status'],'sent');self.assertEqual(result['message_id'],123)
+ def test_source_failure_is_not_reported_as_bookmaker_absence(self):
+  source={'goalkeeper_fixture_coverage':[{'market_polled_at':'2026-11-20T00:53:00Z','status':'INDEPENDENT_CHECK_UNAVAILABLE'}]}
+  coverage=capture.save_market_coverage([], 'Bet365,Paddy Power', source)
+  self.assertEqual(coverage['Bet365']['status'],'SAVE_MARKETS_SEEN_NO_VERIFIED_PRICES')
+  self.assertEqual(coverage['Paddy Power']['status'],'NO_SAVE_MARKETS')
+ def test_single_book_discloses_only_current_fixture_check(self):
+  now=datetime.now(timezone.utc)
+  row={**self.row(now),'bookmaker':'Grosvenor','price_comparison':[{'bookmaker':'Grosvenor','odds':2.35}]}
+  source={'generated_at':now.isoformat(),'selected_events':[{'id':row['event_id'],'kickoff_at':row['kickoff_at']}],
+          'moviodds_source':{'goalkeeper_fixture_coverage':[{'event_id':row['event_id'],'status':'INDEPENDENT_CHECK_UNAVAILABLE'}]}}
+  text=alerts.message(row,source,now)
+  self.assertIn('Only verified price: Grosvenor 2.35',text)
+  self.assertIn('market found; price could not be independently verified',text)
+  self.assertNotIn('market found',alerts.message(row,source,now+timedelta(minutes=11)))
+  self.assertNotIn('market found',alerts.message({**row,'event_id':'different'},source,now))
+  row['price_comparison'].append({'bookmaker':'Bet365','odds':2.20})
+  self.assertIn('Verified prices: Grosvenor 2.35 | Bet365 2.20',alerts.message(row,source,now))
+  self.assertNotIn('could not be independently verified',alerts.message(row,source,now))
  def test_explicit_rejection_is_distinct_from_ambiguous_delivery(self):
   response=Mock(ok=False,status_code=404);response.json.return_value={'ok':False,'description':'secret fake-token'}
   result=self.run_delivery(response=response)
