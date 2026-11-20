@@ -101,7 +101,7 @@ def goalkeeper_contract(row: dict[str, str]) -> tuple:
 
 
 def goalkeeper_candidates(rows: list[dict[str, str]], target_day: str,
-                          tracked_rows: list[dict[str, str]] | None = None) -> list[dict[str, object]]:
+                          tracked_rows: list[dict[str, str]] | None = None, *, now=None, sources=None) -> list[dict[str, object]]:
     tracked: dict[tuple, list[dict[str, str]]] = {}
     for original in tracked_rows or []:
         if original.get("status") == "pending" and not original.get("duplicate_of") and not original.get("quarantine_reason"):
@@ -125,6 +125,17 @@ def goalkeeper_candidates(rows: list[dict[str, str]], target_day: str,
         side = str(row.get("side") or "").strip().lower()
         originals = tracked.get(goalkeeper_contract(row), [])
         original = originals[0] if len(originals) == 1 else None
+        comparison = ''
+        if now is not None:
+            from goalkeeper_alert_prices import paired_prices, format_prices
+            from goalkeeper_price_selection import alert_price_check
+            reason, _ = alert_price_check(row, rows, now)
+            if reason:
+                continue
+            pair = paired_prices(row, rows, now, sources)
+            if not pair:
+                continue
+            comparison = format_prices({**row, 'display_prices':pair}, rich=False).rstrip()
         candidates.append(
             {
                 "id": f"gk_saves_v1|{event_id}|{goalkeeper.casefold()}|{line}|{side}",
@@ -139,12 +150,14 @@ def goalkeeper_candidates(rows: list[dict[str, str]], target_day: str,
                 "edge": edge,
                 "captured_at": row.get("captured_at", ""),
                 "original": dict(original) if original else None,
+                "comparison": comparison,
             }
         )
     return sorted(candidates, key=lambda row: (str(row["kickoff"]), str(row["match"]), -float(row["edge"])))
 
 
 def build_candidates(target_day: str) -> dict[str, list[dict[str, object]]]:
+    from goalkeeper_alert_prices import load_sources
     counts = read_csv(COUNTS_BOARD)
     now=datetime.now(timezone.utc)
     return {
@@ -152,7 +165,8 @@ def build_candidates(target_day: str) -> dict[str, list[dict[str, object]]]:
             tracked_rows=read_csv(ROOT/'data/football-form/team-shots-v4-shadow-signals.csv')),
         "CORNERS V3": count_candidates(counts, target_day, "corners_v3",now=now,
             tracked_rows=read_csv(ROOT/'data/football-form/corners-v3-shadow-signals.csv')),
-        "GK SAVES V1": goalkeeper_candidates(read_csv(GK_BOARD), target_day, read_csv(GK_LEDGER)),
+        "GK SAVES V1": goalkeeper_candidates(read_csv(GK_BOARD), target_day, read_csv(GK_LEDGER),
+                                            now=now, sources=load_sources(GK_BOARD.parent)),
     }
 
 
@@ -192,6 +206,8 @@ def candidate_block(row: dict[str, object]) -> str:
             f"{row['selection']} @{odds:.2f}{bookmaker} | fair {fair:.2f} | EV {edge:+.1%}",
     ]
     if row.get("model") == "gk_saves_v1":
+        if row.get('comparison'):
+            lines.append(row['comparison'])
         captured = str(row.get("captured_at") or "")
         lines.append(f"Latest quote: {captured or 'time unavailable'}. Fair odds recalculated for this update.")
         original = row.get("original")
