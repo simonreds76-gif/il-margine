@@ -62,6 +62,7 @@ class NewGkTests(unittest.TestCase):
    candidates=Path(folder)/'candidates.csv'
    with candidates.open('w',newline='') as f:
     w=csv.DictWriter(f,fieldnames=list(self.row(now)));w.writeheader();w.writerow(self.row(now))
+    w.writerow({**self.row(now),'bookmaker':'Grosvenor','odds_decimal':'2.00'})
    env={'OPS_ALERT_TELEGRAM_BOT_TOKEN':'  fake-token\n','OPS_ALERT_TELEGRAM_CHAT_ID':' -123\r\n','GITHUB_RUN_ID':'test','GITHUB_RUN_ATTEMPT':'1'}
    with patch.object(sys,'argv',['alerts','--send','--state',str(path),'--candidates',str(candidates)]),patch.dict(os.environ,env),patch.object(alerts.requests,'post',return_value=response,side_effect=error) as post,redirect_stdout(output):
     if error or response.json.return_value.get('ok') is False:
@@ -72,6 +73,10 @@ class NewGkTests(unittest.TestCase):
     self.assertEqual(post.call_count,1)
     self.assertEqual(post.call_args.args[0],'https://api.telegram.org/botfake-token/sendMessage')
     self.assertEqual(post.call_args.kwargs['json']['chat_id'],'-123')
+    text=post.call_args.kwargs['json']['text']
+    self.assertIn('Bet365 · Keeper · <b>2.20</b> · EV +10.0%',text)
+    self.assertIn('Grosvenor · Keeper · <b>2.00</b> · EV +0.0%',text)
+    self.assertIn('Fair odds at capture: 2.00',text)
    self.assertNotIn('fake-token',output.getvalue());self.assertNotIn('fake-token',json.dumps(result))
    return result
  def test_send_trims_credentials_and_records_confirmed_receipt(self):

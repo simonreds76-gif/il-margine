@@ -16,6 +16,7 @@ from pathlib import Path
 import requests
 from goalkeeper_price_selection import alert_price_check, contract_key, number
 from goalkeeper_quote_integrity import current_quote_issue
+from goalkeeper_alert_prices import format_prices, load_sources, paired_prices
 
 ROOT = Path(__file__).resolve().parents[1]
 FOLDER = ROOT / 'data/goalkeeper-saves'
@@ -106,22 +107,37 @@ def prior_claim(row, entries, own_key=None):
     return False
 
 
-def claim(rows, state, token, now, offers=None):
+def checked_alert_prices(row, offers, now, sources):
+    reason, comparison = alert_price_check(row, offers, now)
+    if sources is None or reason not in (None, 'better_bookmaker_price_available'):
+        return reason, comparison, []
+    display = paired_prices(row, offers, now, sources)
+    if not display:
+        return reason or 'awaiting_fresh_bet365_grosvenor_pair', comparison, []
+    # The locked paper price is still offered. A better current quote leads
+    # the comparison without changing that record or issuing a second pick.
+    return None, comparison, display
+
+
+def claim(rows, state, token, now, offers=None, sources=None):
     entries = state.setdefault('signals', {})
     added = 0
     rejected = {}
     for row in sorted(rows, key=lambda r: -(number(r.get('odds_decimal')) or 0)):
         key = row.get('signal_id','')
-        if key in entries or not eligible(row, now) or added >= 10:
+        if (key in entries and not entries[key].get('retryable_before_http')) or not eligible(row, now) or added >= 10:
             continue
         reason = 'fixture_already_notified_or_claimed' if prior_claim(row, entries) else None
         comparison = []
+        display = []
         if not reason and offers is not None:
-            reason, comparison = alert_price_check(row, offers, now)
+            reason, comparison, display = checked_alert_prices(row, offers, now, sources)
         if reason:
             rejected[reason] = rejected.get(reason, 0) + 1
             continue
         signal = dict(row)
+        if display:
+            signal['display_prices'] = display
         if comparison:
             signal.update(price_comparison=comparison, price_checked_at=now.isoformat())
         entries[key] = {'status':'claimed','run_token':token,'claimed_at':now.isoformat(), 'signal':signal}
@@ -131,6 +147,8 @@ def claim(rows, state, token, now, offers=None):
     return added
 
 def comparison_note(row, coverage, now):
+    if row.get('display_prices'):
+        return format_prices(row)
     comparison = row.get('price_comparison') or []
     books = {q['bookmaker'].casefold() for q in comparison}
     prices = ' | '.join(f"{html.escape(q['bookmaker'])} {q['odds']:.2f}" for q in comparison)
@@ -161,6 +179,20 @@ def comparison_note(row, coverage, now):
 def message(row, coverage=None, now=None):
     e = lambda k: html.escape(str(row.get(k) or ''))
     price_note = comparison_note(row, coverage if isinstance(coverage, dict) else {}, now or datetime.now(timezone.utc))
+    if row.get('display_prices'):
+        watch = row.get('alert_model') == 'keeper_watch_v1'
+        title = 'Keeper Watch v1 | PAPER selection' if watch else 'GK saves | New tracked signal'
+        scope = str(row.get('contract_scope') or '')
+        side = scope.removeprefix('team_goalkeeper_')
+        subject = e(side+'_team')+' keeper' if side in ('home','away') and not watch else e('goalkeeper')
+        monitor = ('\n<a href="https://ilmargine.bet/model-monitor/gk-saves#keeper-watch">Keeper Watch results and ROI (Admin login)</a>'
+                   if watch else '')
+        return (f"<b>{title}</b>\n\n<b>{e('home_team')} vs {e('away_team')}</b>\n"
+                f"{subject} · {e('side').title()} {e('line')} saves\n"
+                f"Fair odds at capture: {float(row['fair_odds']):.2f}\n\n"
+                f"{price_note}\nBet365 lists the likely starters. Each named price applies to that player.\n"
+                f"Kickoff: {e('kickoff_at')}\n"
+                f"Paper record: 0.5u at {float(row['odds_decimal']):.2f} {e('bookmaker')}.{monitor}")
     if row.get('alert_model') == 'keeper_watch_v1':
         scope = str(row.get('contract_scope') or '')
         note = ('Team goalkeeper contract; model uses the named predicted starter. Check the official XI.\n'
@@ -181,7 +213,7 @@ def message(row, coverage=None, now=None):
     scope = str(row.get('contract_scope') or '')
     team_contract = scope in {'team_goalkeeper_home', 'team_goalkeeper_away'}
     display_keeper = scope.removeprefix('team_goalkeeper_').title() + ' goalkeeper' if team_contract else e('goalkeeper')
-    contract_note = 'Team goalkeeper market. Check the starting keeper and the price at your chosen bookmaker.\n' if team_contract else ''
+    contract_note = 'Grosvenor covers the team keeper. Bet365 prices apply to the named player.\n' if team_contract else ''
     return ('<b>GK saves | New tracked signal</b>\n\n'
         f"<b>{e('home_team')} vs {e('away_team')}</b>\n"
         f"{display_keeper} - {e('side').title()} {e('line')} saves\n"
@@ -203,29 +235,39 @@ def main():
     state=json.loads(a.state.read_text(encoding='utf-8')) if a.state.exists() else {'signals':{}}
     with a.candidates.open(encoding='utf-8-sig',newline='') if a.candidates.exists() else io.StringIO('') as f:
         offers=list(csv.DictReader(f))
+    sources = load_sources(a.candidates.parent)
     def save():
         a.state.parent.mkdir(parents=True,exist_ok=True);tmp=a.state.with_suffix('.tmp');tmp.write_text(json.dumps(state,ensure_ascii=False,indent=2)+'\n',encoding='utf-8');tmp.replace(a.state)
     if a.prepare:
         with a.ledger.open(encoding='utf-8-sig',newline='') as f: rows=list(csv.DictReader(f))
         now=datetime.now(timezone.utc)
-        count=claim(rows,state,token,now,offers)
-        watch_count=claim(keeper_watch_rows(a.report,now),state,token,now,offers)
+        count=claim(rows,state,token,now,offers,sources)
+        watch_count=claim(keeper_watch_rows(a.report,now),state,token,now,offers,sources)
         save();print(f'GK alert claims prepared: current {count}; Keeper Watch paper {watch_count}');return
     try:
         coverage = json.loads((a.candidates.parent/'gk-saves-capture-status.json').read_text(encoding='utf-8'))
     except (OSError, ValueError):
         coverage = {}
     failed=0;sent=0
-    for key, item in state['signals'].items():
+    for key, item in list(state['signals'].items()):
         if item.get('status')!='claimed' or item.get('run_token')!=token: continue
         if not eligible(item['signal'],datetime.now(timezone.utc)):
             item['status']='expired_before_send';save();continue
         reason = 'fixture_already_notified_or_claimed' if prior_claim(item['signal'], state['signals'], key) else None
         if not reason:
-            reason, comparison = alert_price_check(item['signal'], offers, datetime.now(timezone.utc))
+            now = datetime.now(timezone.utc)
+            reason, comparison, display = checked_alert_prices(item['signal'], offers, now, sources)
             if not reason:
-                item['signal'].update(price_comparison=comparison, price_checked_at=datetime.now(timezone.utc).isoformat())
+                item['signal'].update(display_prices=display, price_comparison=comparison, price_checked_at=now.isoformat())
+        if reason in ('awaiting_fresh_bet365_grosvenor_pair','current_quote_unavailable'):
+            # Nothing was sent. A later capture may safely retry the locked selection.
+            state['last_deferred_before_send'] = dict(signal_id=key, reason=reason, checked_at=now.isoformat())
+            del state['signals'][key]
+            save()
+            continue
         if reason:
+            if reason == 'better_bookmaker_price_available':
+                item['retryable_before_http'] = True
             item.update(status='suppressed_before_send',suppression_reason=reason);save();continue
         # Persist uncertainty before HTTP. A replay cannot assume Telegram rejected it.
         item['status']='delivery_unconfirmed';save()

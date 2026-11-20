@@ -38,14 +38,15 @@ def identity(q, fixture):
         return None
 
 
-def reconcile(board_match, live, event_id, now):
+def reconcile(board_match, live, event_id, now, *, display_only=False):
     from moviodds_prices import fresh, utc
     fixture=str(board_match['id']);issues=Counter()
     board_status=(board_match.get('group_status') or {}).get('177703') or {}
     live_status=(live.get('group_status') or {}).get('177703') or {}
-    if live.get('source') == 'cache':
+    cached = live.get('source') == 'cache'
+    if cached and not display_only:
         return [], {'same_provider_cache_no_independent_check': 1}
-    if (live.get('site')!='com' or str(live.get('fixture'))!=fixture or live.get('source')!='live-fetch'
+    if (live.get('site')!='com' or str(live.get('fixture'))!=fixture or live.get('source') not in ('live-fetch','cache')
             or not fresh(live.get('server_time'),now)
             or any(s.get('stale') or s.get('suspended') or s.get('removed') or not fresh(s.get('polled_at'),now)
                    for s in (board_status,live_status))):
@@ -77,6 +78,10 @@ def reconcile(board_match, live, event_id, now):
         if any(not utc(x.get('ts')) or utc(x['ts'])>utc(s['polled_at'])+timedelta(seconds=30)
                for x,s in ((q,board_status),(live_quote,live_status))):
             issues['invalid_quote_timestamp']+=1;continue
+        if display_only:
+            # Display evidence cannot be reused as a verified tracking price.
+            accepted.append({k:q[k] for k in ('line','market_id','sel_id','handicap','odds_dec')})
+            continue
         proof={'version':VERIFICATION_VERSION,'site':'com','fixture_id':fixture,'event_id':str(event_id),
                'market_id':ident[0],'sel_id':ident[1],'player':ident[2],'line':ident[3],
                'odds_decimal':round(ident[4],4),'board_polled_at':board_status['polled_at'],
@@ -88,6 +93,15 @@ def reconcile(board_match, live, event_id, now):
         ordered=sorted(ladder,key=lambda q:float(q['handicap']))
         if any(float(a['handicap'])==float(b['handicap']) or float(a['odds_dec'])>=float(b['odds_dec']) for a,b in zip(ordered,ordered[1:])):
             issues['inconsistent_ladder']+=len(ladder);accepted=[q for q in accepted if q['line']!=player]
+        elif cached and display_only:
+            # Main-line selection IDs can move to the next threshold. Require
+            # the two adjacent alternate rungs before displaying a cached main.
+            alternates={float(q['handicap']) for q in ladder if str(q['market_id'])=='177769'}
+            for q in ladder:
+                line=float(q['handicap'])
+                if str(q['market_id'])=='177703' and not {line-1,line+1} <= alternates:
+                    accepted.remove(q)
+                    issues['unbracketed_cached_main_line']+=1
     return accepted,dict(issues)
 
 

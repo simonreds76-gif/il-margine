@@ -104,6 +104,7 @@ class KeeperWatchAlerts(unittest.TestCase):
         quote=self.rows()[0]
         with candidates.open('w',newline='',encoding='utf-8') as f:
             writer=csv.DictWriter(f,fieldnames=list(quote));writer.writeheader();writer.writerow(quote)
+            writer.writerow({**quote, 'bookmaker':'Grosvenor','odds_decimal':2.0})
         state=self.folder/'state.json'
         env={'OPS_ALERT_TELEGRAM_BOT_TOKEN':'fake','OPS_ALERT_TELEGRAM_CHAT_ID':'fake',
              'GITHUB_RUN_ID':'test','GITHUB_RUN_ATTEMPT':'1'}

@@ -39,6 +39,7 @@ def gk_row(**updates):
         "home_team": "Home",
         "away_team": "Away",
         "goalkeeper": "Keeper One",
+        "bookmaker": "Grosvenor",
         "line": "3.5",
         "side": "over",
         "odds_decimal": "2.20",
