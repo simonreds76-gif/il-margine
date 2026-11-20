@@ -200,7 +200,7 @@
     "5749744": "2026-11-16",
     "5749742": "2026-11-15"
   },
-  "updated_at": "2026-11-19T19:08:15.068075+00:00",
+  "updated_at": "2026-11-20T01:14:41.324805+00:00",
   "checked_this_run": 0,
   "errors": [],
   "fixtures": {
@@ -9718,6 +9718,101 @@
       "verified_at": "2026-11-15T21:44:37.909323+00:00",
       "penalty_count": 0,
       "next_attempt": ""
+    },
+    "5868132": {
+      "league": "la-liga",
+      "league_id": 87,
+      "match": {
+        "id": 5868132,
+        "home": {
+          "id": 8315,
+          "score": 0,
+          "name": "Athletic Club"
+        },
+        "away": {
+          "id": 8558,
+          "score": 0,
+          "name": "Espanyol"
+        },
+        "status": {
+          "utcTime": "2026-11-20T20:00:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "20.11.2026 21:00:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-20",
+      "state": "pending",
+      "first_seen": "2026-11-20T01:14:41.324805+00:00",
+      "pending_since": "2026-11-20T01:14:41.324805+00:00"
+    },
+    "5881226": {
+      "league": "bundesliga",
+      "league_id": 54,
+      "match": {
+        "id": 5881226,
+        "home": {
+          "id": 9823,
+          "score": 0,
+          "name": "Bayern München",
+          "shortName": "Bayern München"
+        },
+        "away": {
+          "id": 8722,
+          "score": 0,
+          "name": "1. FC Köln",
+          "shortName": "Köln"
+        },
+        "status": {
+          "utcTime": "2026-11-20T19:30:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "20.11.2026 20:30:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-20",
+      "state": "pending",
+      "first_seen": "2026-11-20T01:14:41.324805+00:00",
+      "pending_since": "2026-11-20T01:14:41.324805+00:00"
+    },
+    "5802999": {
+      "league": "ligue-1",
+      "league_id": 53,
+      "match": {
+        "id": 5802999,
+        "home": {
+          "id": 10242,
+          "score": 0,
+          "name": "Troyes"
+        },
+        "away": {
+          "id": 9746,
+          "score": 0,
+          "name": "Le Havre"
+        },
+        "status": {
+          "utcTime": "2026-11-20T19:45:00.000Z",
+          "halfs": {
+            "firstHalfStarted": "20.11.2026 20:45:00"
+          },
+          "periodLength": 45,
+          "started": false,
+          "cancelled": false,
+          "finished": false
+        }
+      },
+      "date": "2026-11-20",
+      "state": "pending",
+      "first_seen": "2026-11-20T01:14:41.324805+00:00",
+      "pending_since": "2026-11-20T01:14:41.324805+00:00"
     }
   },
   "schema_version": 2,
@@ -10144,7 +10239,7 @@
     },
     "20261115": {
       "ok": true,
-      "checked_at": "2026-11-18T01:50:55.068160+00:00",
+      "checked_at": "2026-11-20T01:14:41.324805+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -10172,16 +10267,27 @@
     },
     "20261119": {
       "ok": true,
-      "checked_at": "2026-11-19T19:08:15.068075+00:00",
+      "checked_at": "2026-11-20T01:14:41.324805+00:00",
       "expected": 0,
       "match_ids": [],
+      "missing_known_ids": []
+    },
+    "20261120": {
+      "ok": true,
+      "checked_at": "2026-11-20T01:14:41.324805+00:00",
+      "expected": 3,
+      "match_ids": [
+        "5802999",
+        "5868132",
+        "5881226"
+      ],
       "missing_known_ids": []
     }
   },
   "coverage": {
-    "expected": 199,
+    "expected": 202,
     "verified": 199,
-    "pending": 0,
+    "pending": 3,
     "reverify": 0,
     "deferred": 0,
     "overdue": 0,
