@@ -1,11 +1,11 @@
 {
-  "observed_at": "2026-11-19T17:25:25.313305+00:00",
-  "window_start": "2026-10-29T00:00:00+00:00",
+  "observed_at": "2026-11-20T17:00:35.673397+00:00",
+  "window_start": "2026-10-30T00:00:00+00:00",
   "leagues": {
     "epl": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard",
-      "sha256": "4e274c1b5c506945e1590f37d5681abecdd8ac95e7d4a173ae66c06111a138b5",
+      "sha256": "2b46db0b6b442a241164a57b4ff78e2a1d506d571d4fc59a6225510c9cafa807",
       "days": {
         "20261031": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
@@ -668,41 +668,8 @@
     "serie-a": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard",
-      "sha256": "83a1fd2c63723c05266bbc3998da8bbf7287139e08ac3a3cd33a6a9d83552e40",
+      "sha256": "d199472d607fbc037f6d3aa76232bbd7463239f5d7948048e420d254e144fc0c",
       "days": {
-        "20261029": {
-          "observed_at": "2026-11-13T16:36:11.995787+00:00",
-          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20261029&limit=1000",
-          "sha256": "b911ea739aaf44ad80ee38e2342ff958f5a6a9e513291b7a3c4c7b339b6bff02",
-          "complete_day": true,
-          "empty_calendar_day": false,
-          "completed": [
-            {
-              "date": "2026-10-29",
-              "league": "serie-a",
-              "event_id": "401874976",
-              "kickoff": "2026-10-29T17:30:00+00:00",
-              "home_team": "Frosinone",
-              "home_goals": 5,
-              "home_id": "4057",
-              "away_team": "Lecce",
-              "away_goals": 1,
-              "away_id": "113"
-            },
-            {
-              "date": "2026-10-29",
-              "league": "serie-a",
-              "event_id": "401874969",
-              "kickoff": "2026-10-29T19:45:00+00:00",
-              "home_team": "Fiorentina",
-              "home_goals": 2,
-              "home_id": "109",
-              "away_team": "Atalanta",
-              "away_goals": 2,
-              "away_id": "105"
-            }
-          ]
-        },
         "20261031": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
           "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20261031&limit=1000",
@@ -1484,7 +1451,7 @@
     "la-liga": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard",
-      "sha256": "416fc0c9e3dcf2b4bb95d18ed873c534024289b2762ce7cb95b10dd0b2e13210",
+      "sha256": "5de27c7eccf094eeaf15b5059addd78741abeb8d25e9dc619fa34e836c2b1bd1",
       "days": {
         "20261030": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
@@ -1788,6 +1755,14 @@
               "away_id": "83"
             }
           ]
+        },
+        "20261120": {
+          "observed_at": "2026-11-20T17:00:35.673397+00:00",
+          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard?dates=20261120&limit=1000",
+          "sha256": "5c1776f900c2f710ed5178cad1be1eadcfeff40032a64381c1a244cabd006112",
+          "complete_day": false,
+          "empty_calendar_day": false,
+          "completed": []
         }
       },
       "completed": [
@@ -2156,7 +2131,7 @@
     "bundesliga": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard",
-      "sha256": "7d8ba69fc211ebb000946c43dee85450f6f6726e879d6cfa9e0d1188f7cc3651",
+      "sha256": "c2fd0e8c7b0ee38c6b055816ef00e2b550782f4d81d96d469e49253e7c6ca8af",
       "days": {
         "20261030": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
@@ -2427,6 +2402,14 @@
               "away_id": "133"
             }
           ]
+        },
+        "20261120": {
+          "observed_at": "2026-11-20T17:00:35.673397+00:00",
+          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard?dates=20261120&limit=1000",
+          "sha256": "36db9a0f91a37068fa72661a4af1f596608fec6e2635b08d21e166c9b2de900a",
+          "complete_day": false,
+          "empty_calendar_day": false,
+          "completed": []
         }
       },
       "completed": [
@@ -2759,7 +2742,7 @@
     "ligue-1": {
       "status": "VERIFIED",
       "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard",
-      "sha256": "c7ff710223e00d5a3e8bbdeadab94f94e7e6166600b91154e4b80b38affdc826",
+      "sha256": "46ac49df2fee17041a0947685239aefb27abdffa9ff48e2293ba1377aa70a316",
       "days": {
         "20261030": {
           "observed_at": "2026-11-13T16:36:11.995787+00:00",
@@ -3039,6 +3022,14 @@
               "away_id": "176"
             }
           ]
+        },
+        "20261120": {
+          "observed_at": "2026-11-20T17:00:35.673397+00:00",
+          "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard?dates=20261120&limit=1000",
+          "sha256": "228a0427990b3f059e7390751d89e3a534b3aea6e7b5da6837d5043fa9d375ac",
+          "complete_day": false,
+          "empty_calendar_day": false,
+          "completed": []
         }
       },
       "completed": [
