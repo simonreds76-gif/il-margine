@@ -35,7 +35,7 @@ export function emblemForHref(href: string): ToolEmblemName {
   if (href.includes("track-record")) return "record";
   if (href.includes("fair-odds-lab")) return "lab";
   if (href.includes("tool=returns")) return "returns";
-  if (href.includes("tool=margin")) return "price";
+  if (href.includes("tool=margin") || href === "/calculator/no-vig") return "price";
   if (href === "/calculator" || href === "/tools") return "tools";
   return "guide";
 }
