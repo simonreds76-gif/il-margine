@@ -3,7 +3,8 @@
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent, PointerEvent, ReactNode, Ref } from "react";
 import styles from "./board.module.css";
-import { DeskIcon } from "./DeskIcon";
+import { DeskIcon, marketIcon } from "./DeskIcon";
+import { marketName } from "./DeskParts";
 import { delta, outcomeLabel, outcomeOf, paper, price, slug, units, utcClock, utcDate, utcStamp } from "./desk";
 import type { DeskMove } from "./desk";
 
@@ -96,8 +97,8 @@ function layout(model: Model, view: [number, number], g: Geo) {
   if (!Number.isFinite(lo) || !Number.isFinite(hi)) { lo = 1; hi = 2; }
   const least = Math.max(0.04, hi * 0.02);
   if (hi - lo < least) { const mid = (hi + lo) / 2; lo = mid - least / 2; hi = mid + least / 2; }
-  // Room above and below the extremes for the labelled price tags.
-  const padY = 30 * g.s;
+  // A little air above and below the extremes, so no mark ever sits on the frame.
+  const padY = 18 * g.s;
   const k = Math.max(1, g.B - g.T - 2 * padY) / (hi - lo);
   const y = (p: number) => g.T + padY + (hi - p) * k;
   const pTop = hi + padY / k, pBot = lo - padY / k;
@@ -121,24 +122,18 @@ function layout(model: Model, view: [number, number], g: Geo) {
 type Lay = ReturnType<typeof layout>;
 
 /**
- * The pair that makes the move shares one colour: a hollow ring for the earlier
- * price, a solid dot inside a soft ring for the price at detection. The latest
- * observation is a plain ringed dot, so it never competes with the pair.
+ * The only marks on the line. The pair that makes the move: a hollow ring in the line's
+ * own colour for the earlier odds, a solid mint dot where the move was observed. The
+ * latest observation, when it is a third point, is a small plain dot at the line's end.
  */
 function mark(role: MarkRole, cx: number, cy: number, s: number): ReactNode {
-  if (role === "earlier") return <circle cx={cx} cy={cy} r={6 * s} fill={C.bg} stroke={C.mint} strokeWidth={2.5 * s} />;
-  if (role === "detected") return <>
-    <circle cx={cx} cy={cy} r={11 * s} fill="none" stroke={C.mint} strokeOpacity={0.45} strokeWidth={1.5 * s} />
-    <circle cx={cx} cy={cy} r={6.5 * s} fill={C.mint} stroke={C.bg} strokeWidth={2 * s} />
-  </>;
-  return <>
-    <circle cx={cx} cy={cy} r={7.5 * s} fill={C.bg} stroke={C.ink} strokeOpacity={0.7} strokeWidth={1.2 * s} />
-    <circle cx={cx} cy={cy} r={3.6 * s} fill={C.ink} />
-  </>;
+  if (role === "earlier") return <circle cx={cx} cy={cy} r={4.6 * s} fill={C.bg} stroke={C.text} strokeWidth={2 * s} />;
+  if (role === "detected") return <circle cx={cx} cy={cy} r={5.4 * s} fill={C.mint} stroke={C.bg} strokeWidth={2 * s} />;
+  return <circle cx={cx} cy={cy} r={3 * s} fill={C.ink} stroke={C.bg} strokeWidth={1.5 * s} />;
 }
 
 function keyMark(kind: KeyKind, cx: number, cy: number, s: number): ReactNode {
-  if (kind === "sample") return <circle cx={cx} cy={cy} r={3.2 * s} fill={C.ink} />;
+  if (kind === "sample") return <circle cx={cx} cy={cy} r={2.6 * s} fill={C.text} />;
   if (kind === "break") return <>
     <rect x={cx - 9 * s} y={cy - 7 * s} width={18 * s} height={14 * s} fill="none" stroke={C.hatch} strokeWidth={s} />
     <path d={`M${cx - 8 * s} ${cy + 2 * s}l${8 * s} ${-8 * s}M${cx - 4 * s} ${cy + 6 * s}l${12 * s} ${-12 * s}M${cx + 2 * s} ${cy + 6 * s}l${6 * s} ${-6 * s}`}
@@ -149,7 +144,7 @@ function keyMark(kind: KeyKind, cx: number, cy: number, s: number): ReactNode {
 
 /** Legend swatch that reuses the exact marks drawn on the chart. */
 export function KeyGlyph({ kind }: { kind: KeyKind }) {
-  return <svg className={styles.glyph} width="22" height="22" viewBox="-13 -13 26 26" aria-hidden="true" focusable="false">
+  return <svg className={styles.glyph} width="18" height="18" viewBox="-10 -10 20 20" aria-hidden="true" focusable="false">
     {keyMark(kind, 0, 0, 1)}
   </svg>;
 }
@@ -177,56 +172,18 @@ function PlotLayer({ model, move, lay, g, uid, annotate, active = null, brush = 
   const kB = key(iB, tB, move.old);
   const kA = key(iA, tA, move.new);
   const kL = iL >= 0 && iL !== iA && iL !== iB ? key(iL, NaN, NaN) : null;
-  const dense = lay.visible > (R - L) / 7;
-  const rDot = (dense ? 2.2 : 3.2) * s;
+  // The line tells the story. A dot is drawn only where the line cannot: a capture that no
+  // segment joins, or a series so short that every observation is a landmark of its own.
+  const lone = (i: number) => (i === 0 || pts[i].gap) && (i === pts.length - 1 || pts[i + 1].gap);
+  const sparse = !!move.chartSummary || pts.length <= 6;
   const segments = 1 + pts.filter((p, i) => i > 0 && p.gap).length;
 
-  // The move itself: a shaded band from the earlier price to the price at detection,
-  // bracketed above the plot with the two times and the gap between them.
+  // The move itself: a faint band between its two captures, closed by a hairline at the later one.
+  // Nothing is written on the plot; times, odds and roles are read under the chart.
   const hasA = Number.isFinite(tA), hasB = Number.isFinite(tB);
   const pair = hasA && hasB && tA > tB;
   const xA = hasA ? x(tA) : NaN, xB = hasB ? x(tB) : NaN;
-  const seenA = hasA && inView(tA), seenB = pair && inView(tB);
   const bandOn = pair && tA >= lay.t0 && tB <= lay.t1;
-  const yb = T - 8 * s;
-  const clock = (t: number) => (model.multiDay ? utcDate(t) + " " : "") + utcClock(t);
-  let note: { text: string; at: number; anchor: "start" | "middle" | "end" } | null = null;
-  if (hasA) {
-    const base = pair
-      ? (small ? "earlier → detected · " + spanText(tA - tB) : "earlier " + clock(tB) + " – detected " + clock(tA) + " UTC · " + spanText(tA - tB) + " apart")
-      : "detected " + clock(tA) + " UTC";
-    if (tA < lay.t0) note = { text: "← " + base, at: L, anchor: "start" };
-    else if ((pair ? tB : tA) > lay.t1) note = { text: base + " →", at: R, anchor: "end" };
-    else {
-      const mid = pair ? (clampX(xB) + clampX(xA)) / 2 : clampX(xA);
-      const half = base.length * 3.3 * s;
-      note = mid + half > R ? { text: base, at: R, anchor: "end" } : mid - half < L ? { text: base, at: L, anchor: "start" } : { text: base, at: mid, anchor: "middle" };
-    }
-  }
-
-  // Labelled price tags beside the key marks: small caps caption, then the price, haloed off the line.
-  const tag = (id: string, cap: string, val: string, k: { x: number; y: number }, above: boolean, fill: string) => {
-    const w = (cap.length * 7.6 + val.length * 10.5 + 8) * s;
-    const anchor = k.x + w / 2 > R ? "end" : k.x - w / 2 < L ? "start" : "middle";
-    const tx = anchor === "end" ? Math.min(R, k.x + 9 * s) : anchor === "start" ? Math.max(L, k.x - 9 * s) : k.x;
-    let ty = above ? k.y - 15 * s : k.y + 27 * s;
-    if (above && ty < T + 14 * s) ty = k.y + 27 * s;
-    else if (!above && ty > B - 3 * s) ty = k.y - 15 * s;
-    return <text key={id} x={r2(tx)} y={r2(ty)} textAnchor={anchor} fontSize={17 * s} fontWeight={700} fill={fill}
-      stroke={C.bg} strokeWidth={4 * s} strokeLinejoin="round" paintOrder="stroke">
-      <tspan fontSize={11 * s} fontWeight={600} letterSpacing={0.6 * s}>{cap}</tspan><tspan dx={5 * s}>{val}</tspan>
-    </text>;
-  };
-  const showB = !!kB && inView(kB.t), showA = !!kA && inView(kA.t), showL = !!kL && inView(kL.t);
-  const up = move.old >= move.new;
-  let latestTag: ReactNode = null;
-  if (kL && showL) {
-    const reach = (small ? 100 : 150) * s;
-    const dy = kA && showA && Math.abs(kL.x - kA.x) < reach ? kL.y - kA.y : NaN;
-    const above = !(dy > 24 * s && dy < 62 * s);
-    const hitsB = !!(above && kB && showB && Math.abs(kL.x - kB.x) < reach && Math.abs(kL.y - kB.y) < 20 * s);
-    if (!hitsB) latestTag = tag("l", "LATEST", price(pts[iL].price), kL, above, C.ink);
-  }
 
   const edgeOnly = lay.xTicks.length < 2;
   const dayStep = lay.stepX >= 1440 * MIN;
@@ -247,10 +204,6 @@ function PlotLayer({ model, move, lay, g, uid, annotate, active = null, brush = 
         <line x1="0" y1="0" x2="0" y2={7 * s} stroke={C.hatch} strokeWidth={2 * s} />
       </pattern>
     </defs>
-
-    <text x={r2(Math.max(2 * s, L - 52 * s))} y={r2(T - 38 * s)} fontSize={10.5 * s} fontWeight={600} letterSpacing={0.8 * s} fill={C.mute}>
-      {"DECIMAL ODDS" + (small ? "" : " · " + clipText(move.player, 32).toUpperCase())}
-    </text>
 
     <g fontSize={fs} fill={C.text}>
       {lay.yTicks.map(v => <g key={v}>
@@ -276,7 +229,7 @@ function PlotLayer({ model, move, lay, g, uid, annotate, active = null, brush = 
     </g>
 
     {startOn && <g {...(annotate ? { "data-role": "scheduled-start", "data-time": move.start } : {})}>
-      <path d={`M${r2(xS)} ${T}V${B + 5 * s}`} stroke={C.text} strokeWidth={1.3 * s} />
+      <path d={`M${r2(xS)} ${T}V${B + 5 * s}`} stroke={C.mute} strokeWidth={s} />
       <text x={r2(startAt)} y={B + 19 * s} textAnchor={startAnchor} fontSize={fs} fill={C.ink}>{small ? "Start" : "Scheduled start"}</text>
       <text x={r2(startAt)} y={B + 33 * s} textAnchor={startAnchor} fontSize={fs * 0.92} fill={C.mute}>{utcClock(tS) + " UTC"}</text>
     </g>}
@@ -286,15 +239,13 @@ function PlotLayer({ model, move, lay, g, uid, annotate, active = null, brush = 
         ? <rect key={"gap" + p.i} x={r2(x(pts[i - 1].t))} y={T} width={r2(Math.max(0, x(p.t) - x(pts[i - 1].t)))} height={B - T} fill={`url(#${hatchId})`}
           {...(annotate ? { "data-role": "capture-break", "data-from": pts[i - 1].time, "data-to": p.time } : {})} />
         : null)}
-      {bandOn && <rect x={r2(clampX(xB))} y={T} width={r2(Math.max(0, clampX(xA) - clampX(xB)))} height={B - T} fill={C.mint} fillOpacity={0.13}
+      {bandOn && <rect x={r2(clampX(xB))} y={T} width={r2(Math.max(0, clampX(xA) - clampX(xB)))} height={B - T} fill={C.mint} fillOpacity={0.09}
         {...(annotate ? { "data-role": "move-interval", "data-from": move.before, "data-to": move.after } : {})} />}
-      {seenB && <path d={`M${r2(xB)} ${T}V${B}`} stroke={C.mint} strokeOpacity={0.75} strokeWidth={s} strokeDasharray={`${3 * s} ${4 * s}`} />}
-      {hasA && <path d={`M${r2(xA)} ${T}V${B}`} stroke={C.mint} strokeOpacity={0.9} strokeWidth={1.2 * s}
+      {hasA && <path d={`M${r2(xA)} ${T}V${B}`} stroke={C.mint} strokeOpacity={0.4} strokeWidth={s}
         {...(annotate ? { "data-role": "detection-line", "data-time": move.after } : {})} />}
-      {kA && <path d={`M${r2(kA.x)} ${r2(kA.y)}H${R}`} stroke={C.mint} strokeOpacity={0.5} strokeWidth={s} strokeDasharray={`${2 * s} ${5 * s}`} />}
-      <path d={seg(0, pts.length - 1)} fill="none" stroke={C.ink} strokeOpacity={0.6} strokeWidth={1.6 * s} strokeLinejoin="round" strokeLinecap="round"
+      <path d={seg(0, pts.length - 1)} fill="none" stroke={C.text} strokeWidth={1.8 * s} strokeLinejoin="round" strokeLinecap="round"
         {...(annotate ? { "data-role": "series", "data-segments": segments, "data-interpolation": move.chartSummary ? "selected-observations" : "straight-between-consecutive-captures" } : {})} />
-      {iB >= 0 && iA > iB && <path d={seg(iB, iA)} fill="none" stroke={C.mint} strokeWidth={3 * s} strokeLinejoin="round" strokeLinecap="round"
+      {iB >= 0 && iA > iB && <path d={seg(iB, iA)} fill="none" stroke={C.mint} strokeWidth={2.6 * s} strokeLinejoin="round" strokeLinecap="round"
         {...(annotate ? { "data-role": "move" } : {})} />}
       {pts.map(p => {
         const roles = [p.i === iB && "earlier", p.i === iA && "detected", p.i === iL && "latest"].filter(Boolean).join(" ") || "sample";
@@ -303,7 +254,10 @@ function PlotLayer({ model, move, lay, g, uid, annotate, active = null, brush = 
           "data-index": p.i, "data-time": p.time, "data-price": p.price, "data-other": p.other, "data-role": roles,
           "data-phase": after ? "after-detection" : "to-detection", "data-gap": p.gap ? "true" : undefined, "data-in-view": String(inView(p.t)),
         } : {};
-        return <circle key={p.i} cx={r2(x(p.t))} cy={r2(y(p.price))} r={rDot} fill={C.ink} stroke={C.bg} strokeWidth={1.2 * s} {...data}>
+        // Every observation stays in the live drawing with its data; only the ones the line cannot show are painted.
+        const shown = sparse || lone(p.i);
+        if (!shown && !annotate) return null;
+        return <circle key={p.i} cx={r2(x(p.t))} cy={r2(y(p.price))} r={2.6 * s} fill={C.text} stroke={C.bg} strokeWidth={1.2 * s} opacity={shown ? 1 : 0} {...data}>
           {annotate && <title>{`${utcStamp(p.t, true)} · ${price(p.price)}`}</title>}
         </circle>;
       })}
@@ -321,85 +275,107 @@ function PlotLayer({ model, move, lay, g, uid, annotate, active = null, brush = 
         : null;
     })}
 
-    {kB && showB && tag("b", small ? "EARLIER" : "EARLIER PRICE", price(move.old), kB, up, C.ink)}
-    {kA && showA && tag("a", small ? "DETECTED" : "PRICE AT DETECTION", price(move.new), kA, !up, C.mint)}
-    {latestTag}
-
-    {bandOn && <path fill="none" stroke={C.mint} strokeWidth={1.5 * s}
-      d={`M${r2(clampX(xB))} ${r2(yb)}H${r2(clampX(xA))}`
-        + (seenB ? `M${r2(xB)} ${r2(yb - 4 * s)}v${8 * s}` : "")
-        + (seenA ? `M${r2(xA)} ${r2(yb - 4 * s)}v${8 * s}` : "")} />}
-    {note && <text x={r2(note.at)} y={r2(yb - 9 * s)} textAnchor={note.anchor} fontSize={11.5 * s} fill={C.mint}>{note.text}</text>}
-
+    {/* The observation in hand: a hairline to the axis and a ring; a plain capture also gets its dot, a marked one keeps its mark. */}
     {hover && <g pointerEvents="none">
-      <path d={`M${r2(x(hover.t))} ${T}V${B}`} stroke={C.ink} strokeOpacity={0.35} strokeWidth={s} />
-      <circle cx={r2(x(hover.t))} cy={r2(y(hover.price))} r={14 * s} fill="none" stroke={C.ink} strokeWidth={1.5 * s} strokeDasharray={`${3 * s} ${3 * s}`} />
+      <path d={`M${r2(x(hover.t))} ${T}V${B}`} stroke={C.ink} strokeOpacity={0.3} strokeWidth={s} />
+      {hover.i !== iA && hover.i !== iB && <circle cx={r2(x(hover.t))} cy={r2(y(hover.price))} r={3.4 * s} fill={C.ink} stroke={C.bg} strokeWidth={1.5 * s} />}
+      <circle cx={r2(x(hover.t))} cy={r2(y(hover.price))} r={9 * s} fill="none" stroke={C.ink} strokeOpacity={0.85} strokeWidth={1.4 * s} />
     </g>}
     {brush && <rect x={r2(Math.min(brush.a, brush.b))} y={T} width={r2(Math.abs(brush.b - brush.a))} height={B - T} fill={C.ink} fillOpacity={0.1} stroke={C.text} strokeWidth={s} pointerEvents="none" />}
   </g>;
 }
 
+/** Rough advance width of UI-sans text; used only to seat a mark beside a right-aligned caption. */
+function textW(text: string, size: number, tracking = 0) {
+  let em = 0;
+  for (let i = 0; i < text.length; i += 1) {
+    const ch = text[i];
+    em += ch >= "0" && ch <= "9" ? 0.56 : ch >= "A" && ch <= "Z" ? 0.66 : ch >= "a" && ch <= "z" ? 0.52 : 0.27;
+  }
+  return em * size + tracking * text.length;
+}
+
 /**
  * The fixed 1200 × 675 share card, rendered only while a download is in progress.
- * One flat panel under a 6 px mode stripe: brand line, the player, the move in
- * large figures, the chart, its key, then the facts and the result.
+ * It stands alone on one grid: a three-row head (caption, figure, detail) with the
+ * selection on the left and one pair of odds, each over its own capture time, on the
+ * right; the plotted line across the full measure; one footer line. The pair carries
+ * the same two marks as the line, so the card needs no key and repeats no figure.
  */
 function ExportCard({ svgRef, model, move, view, archive, uid }: {
   svgRef: Ref<SVGSVGElement>; model: Model; move: DeskMove; view: [number, number]; archive: boolean; uid: string;
 }) {
-  const W = 1200, H = 675;
-  const g: Geo = { L: 120, R: 1150, T: 224, B: 472, s: 1.4 };
+  const W = 1200, H = 675, M = 56;
+  const g: Geo = { L: 112, R: W - M, T: 240, B: 528, s: 1.4 };
   const lay = layout(model, view, g);
-  const latest = model.iL >= 0 ? model.pts[model.iL] : null;
-  const latestDistinct = model.iL >= 0 && model.iL !== model.iA && model.iL !== model.iB;
   const outcome = outcomeOf(move.result), pl = paper(move);
   const tone = outcome === "won" ? C.mint : outcome === "lost" ? C.loss : C.text;
-  const nameSize = move.player.length > 30 ? 32 : move.player.length > 24 ? 38 : 44;
-  const between = model.tA - model.tB, lead = Date.parse(move.start) - model.tA;
-  const facts = ["Detected " + utcStamp(move.after, true)];
-  if (Number.isFinite(lead) && lead >= 0) facts.push(spanText(lead) + " before scheduled start");
-  if (Number.isFinite(between) && between > 0) facts.push("captures " + spanText(between) + " apart");
-  const replayNote = archive && pl !== null ? "Historical replay: 1u at the price at detection" : "";
-  const side = [replayNote, move.score ? clipText(move.score, 40) : ""].filter(Boolean).join(" · ");
+  const label = archive && !move.market ? "" : marketName(move);
+  const icon = label ? marketIcon(move.market) : null;
+  const competition = move.league.toLowerCase().startsWith(move.tour.toLowerCase() + " ")
+    ? move.league : move.tour + " · " + move.league;
+  const nameSize = move.player.length > 30 ? 30 : move.player.length > 24 ? 36 : move.player.length > 18 ? 42 : 46;
 
-  const keys: { kind: KeyKind; label: string; at: number }[] = [];
-  const labels: [KeyKind, string][] = [["earlier", "Earlier price"], ["detected", "Price at detection"]];
-  if (latestDistinct) labels.push(["latest", "Latest observation"]);
-  labels.push(["sample", "Recorded observation"]);
-  if (model.pts.some((p, i) => i > 0 && p.gap)) labels.push(["break", "Break in capture"]);
-  let at = 60;
-  for (const [kind, label] of labels) { keys.push({ kind, label, at }); at += 46 + label.length * 8.6; }
+  // The pair: two right-aligned columns of equal width, sized so the longest price still clears the name.
+  const was = price(move.old), now = price(move.new);
+  const chars = Math.max(was.length, now.length);
+  const big = chars <= 5 ? 64 : chars === 6 ? 56 : 48;
+  const colW = Math.max(150, Math.max(textW(was, big), textW(now, big)) * 1.1);
+  const xNow = W - M, xWas = xNow - colW - big * 1.2, xArrow = xNow - colW - big * 0.6;
+  const yCap = 98, yBig = 158, yDetail = 190;
+  const yArrow = yBig - big * 0.33, arrow = big * 0.26;
+  const capSize = 12.5, capTrack = 1.6;
+  const leg = (role: "earlier" | "detected", cap: string, val: string, when: string, xr: number) => {
+    const strong = role === "detected";
+    return <g>
+      {mark(role, r2(xr - textW(cap, capSize, capTrack) - 13), yCap - 4.5, 1.15)}
+      <text x={xr} y={yCap} textAnchor="end" fontSize={capSize} fontWeight="600" letterSpacing={capTrack} fill={strong ? C.mint : C.mute}>{cap}</text>
+      <text x={xr} y={yBig} textAnchor="end" fontSize={big} fontWeight={strong ? 700 : 400} letterSpacing={r2(-big * 0.03)} fill={strong ? C.mint : C.text}>{val}</text>
+      <text x={xr} y={yDetail} textAnchor="end" fontSize="18" fill={strong ? C.ink : C.text}>{when}</text>
+    </g>;
+  };
+
+  // The footer says only what the drawing cannot: the scheduled start when it falls outside the plot,
+  // a recorded score, the replay stake, and how the line was drawn.
+  const startShown = Number.isFinite(model.tS) && lay.inView(model.tS);
+  const context = [
+    !startShown && Number.isFinite(model.tS) ? "Scheduled start " + utcStamp(move.start) : "",
+    move.score ? clipText(move.score, 40) : "",
+    archive && pl !== null ? "Historical replay: 1u at the odds of the observed move" : "",
+  ].filter(Boolean).join(" · ");
+  const method = move.chartSummary
+    ? "Decimal odds, times in UTC. Selected observations only: earlier, observed move, later low, high and latest. Known gaps are left open."
+    : "Decimal odds, times in UTC. The line joins consecutive recorded captures only; breaks in capture are left open.";
 
   return <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" width={W} height={H} viewBox={`0 0 ${W} ${H}`} fontFamily={FONT}>
     <rect width={W} height={H} fill={C.bg} />
     <rect width={W} height="6" fill={archive ? C.amber : C.mint} />
-    <text x="48" y="48" fontSize="16" fontWeight="700" letterSpacing="2" fill={C.mint}>
-      IL MARGINE<tspan fill={C.mute} fontWeight="400">{" · DROP SHOT DESK · " + (archive ? "HISTORICAL REPLAY" : "DAILY MOVES")}</tspan>
+    <text x={M} y="52" fontSize="14" fontWeight="700" letterSpacing="2.2" fill={C.mint}>
+      IL MARGINE<tspan fill={C.mute} fontWeight="500">{" · DROP SHOT DESK" + (archive ? " · HISTORICAL REPLAY" : "")}</tspan>
     </text>
-    <text x={W - 48} y="48" textAnchor="end" fontSize="15" letterSpacing="1" fill={C.mute}>{clipText(move.tour + " · " + move.league, 46).toUpperCase()}</text>
-    <text x="48" y="104" fontSize={nameSize} fontWeight="700" letterSpacing={r2(-nameSize * 0.03)} fill={C.ink}>{clipText(move.player, 34)}</text>
-    <text x="48" y="136" fontSize="21" fill={C.text}>{clipText(move.fixtureLabel ?? ("vs " + move.opponent), 40)}</text>
-    <text x={W - 48} y="106" textAnchor="end" fontSize="62" fontWeight="700" fill={C.mint}>
-      <tspan fill={C.mute} fontWeight="400">{price(move.old) + " → "}</tspan>{price(move.new)}
-    </text>
-    <text x={W - 48} y="138" textAnchor="end" fontSize="18" fill={C.ink}>
-      {`Decimal odds · earlier ${utcClock(move.before)} → detected ${utcClock(move.after)} UTC · ${utcDate(move.after)}`}
-    </text>
+    <text x={W - M} y="52" textAnchor="end" fontSize="14" letterSpacing="1.2" fill={C.mute}>{clipText(competition, 46).toUpperCase()}</text>
+
+    {label && <>
+      {icon && <DeskIcon name={icon} size={18} x={M} y={yCap - 14} color={C.text} />}
+      <text x={icon ? M + 26 : M} y={yCap} fontSize={capSize} fontWeight="600" letterSpacing={capTrack} fill={C.text}>{label.toUpperCase()}</text>
+    </>}
+    <text x={M} y={yBig} fontSize={nameSize} fontWeight="700" letterSpacing={r2(-nameSize * 0.03)} fill={C.ink}>{clipText(move.player, 34)}</text>
+    <text x={M} y={yDetail} fontSize="18" fill={C.text}>{clipText(move.fixtureLabel ?? ("vs " + move.opponent), 40)}</text>
+
+    {leg("earlier", "EARLIER", was, utcStamp(move.before), xWas)}
+    <path d={`M${r2(xArrow - arrow)} ${r2(yArrow)}H${r2(xArrow + arrow)}M${r2(xArrow + arrow - 7)} ${r2(yArrow - 7)}L${r2(xArrow + arrow)} ${r2(yArrow)}L${r2(xArrow + arrow - 7)} ${r2(yArrow + 7)}`}
+      fill="none" stroke={C.mute} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    {leg("detected", "MOVE OBSERVED", now, utcStamp(move.after), xNow)}
+
+    <rect x={M} y="214" width={W - 2 * M} height="1" fill={C.grid} />
     <PlotLayer model={model} move={move} lay={lay} g={g} uid={uid} annotate={false} />
-    {keys.map(k => <g key={k.kind}>
-      {keyMark(k.kind, k.at, 551, 1.1)}
-      <text x={k.at + 20} y="556" fontSize="15" fill={C.text}>{k.label}</text>
-    </g>)}
-    <rect x="48" y="570" width={W - 96} height="1" fill={C.grid} />
-    <text x="48" y="600" fontSize="18" fill={C.ink}>{facts.join(" · ")}</text>
-    {outcome !== "pending" && <text x={W - 48} y="602" textAnchor="end" fontSize="27" fontWeight="700" letterSpacing="1" fill={tone}>
+    <rect x={M} y="596" width={W - 2 * M} height="1" fill={C.grid} />
+
+    {context && <text x={M} y="622" fontSize="15" fill={C.text}>{context}</text>}
+    <text x={M} y={context ? 645 : 631} fontSize="13.5" fill={C.mute}>{method}</text>
+    {outcome !== "pending" && <text x={W - M} y="634" textAnchor="end" fontSize="24" fontWeight="700" letterSpacing="1" fill={tone}>
       {clipText(outcomeLabel(move), 12).toUpperCase() + (archive && pl !== null ? " " + units(pl) : "")}
     </text>}
-    <text x="48" y="626" fontSize="14" fill={C.text}>
-      {latest ? `Latest observation ${price(latest.price)} at ${utcStamp(latest.t, true)} · scheduled start ${utcStamp(move.start)}` : `Scheduled start ${utcStamp(move.start)}`}
-    </text>
-    {side && <text x={W - 48} y="626" textAnchor="end" fontSize="14" fill={C.text}>{side}</text>}
-    <text x="48" y="650" fontSize="14" fill={C.mute}>{move.chartSummary ? "Selected observations (UTC): earlier, detection, subsequent low, high and latest. Known gaps are left open." : "Decimal odds as recorded at each observation (UTC). Lines join consecutive captures only; breaks are left open."}</text>
   </svg>;
 }
 
@@ -478,10 +454,9 @@ export default function OddsChart({ move, archive }: { move: DeskMove; archive: 
     return () => { live = false; };
   }, [exporting, fileName]);
 
-  // Phones get the taller plot of the original (290–360 px); wide stages keep roughly 2:1.
-  const H = Math.round(W < 480 ? Math.min(360, Math.max(300, W * 0.9)) : Math.min(480, Math.max(300, W * 0.52)));
-  // 52 px of head room holds the axis caption and the earlier → detected bracket.
-  const g: Geo = { L: W < 480 ? 44 : 50, R: W - 10, T: 52, B: H - 42, s: 1 };
+  // Phones get a taller plot; wide stages keep roughly 2:1. Nothing is written above the plot, so it starts at the top.
+  const H = Math.round(W < 480 ? Math.min(330, Math.max(270, W * 0.82)) : Math.min(440, Math.max(280, W * 0.46)));
+  const g: Geo = { L: W < 480 ? 44 : 50, R: W - 10, T: 12, B: H - 42, s: 1 };
   const view: [number, number] = win ? [win.from, win.to] : full;
   const lay = layout(model, view, g);
 
@@ -520,7 +495,7 @@ export default function OddsChart({ move, archive }: { move: DeskMove; archive: 
     }
     if (Number.isFinite(tA) && model.last > tA) {
       const range = clampView(tA - Math.max(MIN, (model.last - tA) * 0.08), model.last);
-      if (range[1] - range[0] < fullSpan - 1) presets.push({ name: "after", label: "Since detection", range });
+      if (range[1] - range[0] < fullSpan - 1) presets.push({ name: "after", label: "Since the move", range });
     }
     // "Final 2 h" only when the axis really ends on the scheduled start; otherwise it is the last 2 h of captures.
     if (fullSpan > 2 * HOUR) presets.push({ name: "2h", label: model.toStart ? "Final 2 h" : "Last 2 h", range: [full[1] - 2 * HOUR, full[1]] });
@@ -536,7 +511,8 @@ export default function OddsChart({ move, archive }: { move: DeskMove; archive: 
     let best: number | null = null, dist = Infinity;
     for (const p of pts) {
       if (!lay.inView(p.t)) continue;
-      const d = Math.abs(lay.x(p.t) - px);
+      // The two captures of the move win a near tie, so they stay reachable where captures crowd (phones, long series).
+      const d = Math.abs(lay.x(p.t) - px) - (p.i === model.iA || p.i === model.iB ? 3 : 0);
       if (d < dist) { dist = d; best = p.i; }
     }
     return best;
@@ -613,37 +589,40 @@ export default function OddsChart({ move, archive }: { move: DeskMove; archive: 
   const latestDistinct = model.iL !== model.iA && model.iL !== model.iB;
   const broken = pts.some((p, i) => i > 0 && p.gap);
   const point = active !== null ? pts[active] : undefined;
-  let pointNote = "";
+  // What the readout says about the observation in hand: its role in the move, or where it sits around it.
+  let role = "", roleKind: MarkRole | null = null;
   if (point) {
-    const roles = [point.i === model.iB && "Earlier price", point.i === model.iA && "Price at detection", point.i === model.iL && "Latest observation"].filter(Boolean);
-    pointNote = roles.length ? roles.join(" · ")
-      : Number.isFinite(model.tA) && point.t > model.tA ? delta(point.price - move.new) + " vs price at detection"
-      : "Before the move";
+    const roles = [point.i === model.iB && "Earlier odds", point.i === model.iA && "Move observed", point.i === model.iL && "Latest odds"].filter(Boolean);
+    roleKind = point.i === model.iA ? "detected" : point.i === model.iB ? "earlier" : point.i === model.iL ? "latest" : null;
+    role = roles.length ? roles.join(" · ")
+      : Number.isFinite(model.tA) && point.t > model.tA ? delta(point.price - move.new) + " since the move"
+      : Number.isFinite(model.tB) && point.t < model.tB ? "Before the move" : "Recorded observation";
+    if (point.gap && point.i > 0) role += " · first capture after a break";
   }
+  const count = pts.length + " recorded " + (pts.length === 1 ? "observation" : "observations");
   const describe = `${pts.length} recorded observations from ${utcStamp(model.first, true)} to ${utcStamp(model.last, true)}. `
-    + `Earlier price ${price(move.old)} at ${utcStamp(move.before, true)}. Price at detection ${price(move.new)} at ${utcStamp(move.after, true)}. `
-    + `Latest observation ${price(latest.price)} at ${utcStamp(latest.t, true)}. Every value is listed in the recorded prices table.`;
+    + `Earlier odds ${price(move.old)} at ${utcStamp(move.before, true)}. Move observed at ${price(move.new)}, ${utcStamp(move.after, true)}. `
+    + `Latest odds ${price(latest.price)} at ${utcStamp(latest.t, true)}. Every value is listed in the recorded odds table.`;
 
   return <figure className={styles.figure}>
-    {/* Original tool row: window segments, the captures-in-view label, then the export on the far right. */}
+    {/* Tool row at first glance: the window segments and the export. Pan and zoom steps join only once the view is zoomed. */}
     <div className={styles.chartBar}>
       {presets.length > 1 && <div className={styles.ranges} role="group" aria-label="Chart range">
         {presets.map(p => <button key={p.name} type="button" aria-pressed={current === p.name} onClick={() => (p.range ? applyView(p.range[0], p.range[1], p.name) : reset())}>{p.label}</button>)}
       </div>}
-      {canZoom && <div className={styles.steps} role="group" aria-label="Zoom and pan">
+      {canZoom && win && <div className={styles.steps} role="group" aria-label="Zoom and pan">
         <button type="button" aria-label="Pan earlier" disabled={!win || view[0] <= full[0] + 1} onClick={() => pan(-1)}><span aria-hidden="true">‹</span></button>
         <button type="button" aria-label="Zoom out" disabled={!win} onClick={() => zoom(2)}><span aria-hidden="true">−</span></button>
         <button type="button" aria-label="Zoom in" disabled={view[1] - view[0] <= minSpan + 1} onClick={() => zoom(0.5)}><span aria-hidden="true">+</span></button>
         <button type="button" aria-label="Pan later" disabled={!win || view[1] >= full[1] - 1} onClick={() => pan(1)}><span aria-hidden="true">›</span></button>
       </div>}
-      <p className={styles.chartTitle}><strong>{move.chartSummary ? "Price highlights" : "Price chart"}</strong><span>{lay.visible} of {pts.length} recorded {pts.length === 1 ? "observation" : "observations"} in view</span></p>
-      <button type="button" className={styles.save} disabled={exporting} onClick={() => { setNote(""); setExporting(true); }}><DeskIcon name="download" />Save chart PNG</button>
+      <button type="button" className={styles.save} disabled={exporting} onClick={() => { setNote(""); setExporting(true); }}><DeskIcon name="download" />Save PNG<span className={styles.vh}> of this chart</span></button>
     </div>
 
     <div className={styles.plot} ref={boxRef} tabIndex={0} role="group" onKeyDown={onKey}
       aria-label="Odds chart explorer. Left and right arrows step through recorded observations, plus and minus zoom, zero shows the full series.">
       <svg ref={svgRef} className={styles.chart} xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${W} ${H}`} width={W} height={H} fontFamily={FONT}
-        role="img" aria-label={move.player + " decimal odds, earlier " + price(move.old) + ", at detection " + price(move.new)} aria-describedby={uid + "-desc"}
+        role="img" aria-label={move.player + " decimal odds, earlier " + price(move.old) + ", " + price(move.new) + " when the move was observed"} aria-describedby={uid + "-desc"}
         data-chart="odds" data-y-direction="higher-price-higher" data-point-count={pts.length}
         data-view-from={new Date(view[0]).toISOString()} data-view-to={new Date(view[1]).toISOString()} data-view={current}
         data-earlier-time={move.before} data-earlier-price={move.old} data-detected-time={move.after} data-detected-price={move.new}
@@ -654,7 +633,7 @@ export default function OddsChart({ move, archive }: { move: DeskMove; archive: 
           style={{ touchAction: "pan-y", cursor: canZoom ? "crosshair" : "default" }}
           onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerLeave={onLeave} onPointerCancel={onCancel} onDoubleClick={reset} />
       </svg>
-      {canZoom && pts.length > 2 && <svg className={styles.nav} viewBox={`0 0 ${W} ${navH}`} width={W} height={navH} aria-hidden="true" focusable="false"
+      {win && canZoom && pts.length > 2 && <svg className={styles.nav} viewBox={`0 0 ${W} ${navH}`} width={W} height={navH} aria-hidden="true" focusable="false"
         style={{ touchAction: win ? "none" : "auto", cursor: win ? "ew-resize" : "default" }}
         onPointerDown={onNav} onPointerMove={e => { if (e.buttons & 1) onNav(e); }}>
         <rect x={g.L} y="2" width={g.R - g.L} height={navH - 4} rx="4" fill="none" stroke={C.grid} />
@@ -666,34 +645,46 @@ export default function OddsChart({ move, archive }: { move: DeskMove; archive: 
       </svg>}
     </div>
 
-    {/* As in the original: one plain line under the plot, the selected player's price in the accent. */}
-    <div className={styles.readout} aria-live="polite" aria-atomic="true">
+    {/* One line under the plot. At rest it only says what is drawn; with an observation in hand
+        (pointer, tap or arrow keys) it reads the actual capture time, the odds and the role. */}
+    <div className={styles.readout} aria-live="polite" aria-atomic="true" data-key={roleKind ?? undefined}>
       {point
-        ? <><strong>{utcStamp(point.t, true)}</strong><span>{move.player} <b>{price(point.price)}</b></span>{point.other !== undefined && <span>{move.opponent} <b>{price(point.other)}</b></span>}<span>{pointNote}</span></>
-        : <><strong>{win ? "Zoomed view" : "Full series"}</strong><span>{utcStamp(view[0])} → {utcStamp(view[1])}</span><span>Hover or tap a dot to read its exact recorded price</span></>}
+        ? <>
+          <time dateTime={point.time}>{utcStamp(point.t, true)}</time>
+          <b>{price(point.price)}</b>
+          <span className={styles.role}>{roleKind && <KeyGlyph kind={roleKind} />}{role}</span>
+          {point.other !== undefined && <span>{move.opponent} {price(point.other)}</span>}
+        </>
+        : <>
+          <span>{count}{win ? " · " + lay.visible + " in view, " + utcStamp(view[0]) + " → " + utcStamp(view[1]) : ""} · decimal odds, UTC</span>
+          <span className={styles.hint}>Point, tap or use ← → to read time, odds and role</span>
+        </>}
     </div>
-
-    <ul className={styles.legend}>
-      <li><KeyGlyph kind="earlier" />Earlier price</li>
-      <li><KeyGlyph kind="detected" />Price at detection</li>
-      {latestDistinct && <li><KeyGlyph kind="latest" />Latest observation</li>}
-      <li><KeyGlyph kind="sample" />Recorded observation</li>
-      {broken && <li><KeyGlyph kind="break" />Break in capture</li>}
-    </ul>
-    <figcaption className={styles.caption}>
-      Decimal odds on a linear axis: a higher price is drawn higher, so a shorter price falls. The shaded band runs from the earlier price to the price at detection.
-      {move.chartSummary ? "The chart connects selected observations of this line: the earlier price, detection, subsequent low, high and latest price. Intermediate quotes are omitted. Known gaps are left open." : "Every dot is one recorded observation, timed in UTC. Lines join consecutive captures only and breaks are left open; prices between dots were not observed."}
-      {canZoom ? " Drag across the chart with a mouse to zoom in, double-click to return to the full series." : ""}
-    </figcaption>
     {note && <p className={styles.status} role="status">{note}</p>}
 
     <details className={styles.fold}>
-      <summary>Recorded prices ({pts.length})</summary>
+      <summary>How to read this chart</summary>
+      <ul className={styles.legend}>
+        <li><KeyGlyph kind="earlier" />Earlier odds</li>
+        <li><KeyGlyph kind="detected" />Move observed</li>
+        {latestDistinct && <li><KeyGlyph kind="latest" />Latest odds</li>}
+        {(broken || !!move.chartSummary || pts.length <= 6) && <li><KeyGlyph kind="sample" />Single recorded observation</li>}
+        {broken && <li><KeyGlyph kind="break" />Break in capture</li>}
+      </ul>
+      <p className={styles.caption}>
+        Decimal odds on a linear axis, times in UTC: higher odds are drawn higher, so shortening odds fall and drifting odds rise. The tinted band spans the two captures that make the move.
+        {move.chartSummary ? " The chart connects selected observations of this line: the earlier odds, the observed move, the later low, high and latest odds. Intermediate quotes are omitted. Known gaps are left open." : " The line joins consecutive recorded captures with straight segments and every reading snaps to an actual capture; nothing between two captures was observed, and breaks in capture are left open."}
+        {canZoom ? " Drag across the chart with a mouse to zoom in, double-click to return to the full series; plus, minus and zero do the same from the keyboard." : ""}
+      </p>
+    </details>
+
+    <details className={styles.fold}>
+      <summary>Recorded odds ({pts.length})</summary>
       <div className={styles.scroll}>
         <table className={styles.table}>
           <thead><tr><th scope="col">Time (UTC)</th><th scope="col">{move.player}</th>{!move.chartSummary && <th scope="col">{move.opponent}</th>}<th scope="col">Note</th></tr></thead>
           <tbody>{pts.map(p => {
-            const notes = [p.i === model.iB && "Earlier price", p.i === model.iA && "Detected", p.i === model.iL && "Latest", p.gap && p.i > 0 && "After a break"].filter(Boolean).join(" · ");
+            const notes = [p.i === model.iB && "Earlier odds", p.i === model.iA && "Move observed", p.i === model.iL && "Latest", p.gap && p.i > 0 && "After a break"].filter(Boolean).join(" · ");
             return <tr key={p.i} data-key={p.i === model.iA ? "detected" : p.i === model.iB ? "earlier" : undefined}>
               <td><time dateTime={p.time}>{utcDate(p.t)} · {utcClock(p.t, true)}</time></td><td>{price(p.price)}</td>{!move.chartSummary && <td>{p.other === undefined ? "—" : price(p.other)}</td>}<td>{notes}</td>
             </tr>;

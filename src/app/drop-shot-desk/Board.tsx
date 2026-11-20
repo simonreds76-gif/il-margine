@@ -5,6 +5,7 @@ import type { KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./board.module.css";
 import OddsChart, { KeyGlyph, spanText } from "./OddsChart";
+import { DeskIcon, marketIcon } from "./DeskIcon";
 import Roundups from "./Roundups";
 import { SETTLING_NOTE, State, VenueFlag, hostOf as placeOf, impliedText, marketName, pointsText, venueKey } from "./DeskParts";
 import type { VenueMap } from "./DeskParts";
@@ -62,6 +63,7 @@ function DropRow({ move: r, selected, archive, at, venue, onChoose }: {
 }) {
   const settled = archive ? paper(r) : null;
   const tag = archive && !r.market ? "" : marketName(r);
+  const sym = tag ? marketIcon(r.market) : null;
   return (
     <button type="button" className={styles.item} data-drop="" aria-pressed={selected} onClick={() => onChoose(r)}>
       <strong className={styles.itemName}>{r.player}</strong>
@@ -72,7 +74,10 @@ function DropRow({ move: r, selected, archive, at, venue, onChoose }: {
       </span>
       <b className={styles.itemGain}>{pointsText(r)}<span className={styles.vh}> implied probability</span></b>
       <span className={styles.itemOdds}><span>{price(r.old)} → </span>{price(r.new)}</span>
-      <span className={styles.itemWhen}>{tag ? tag + " · " : ""}detected <time dateTime={r.after}>{archive ? utcStamp(r.after, true) : utcClock(r.after, true) + " UTC"}</time></span>
+      <span className={styles.itemWhen}>
+        {tag && <span className={styles.mk}>{sym && <DeskIcon name={sym} size={14} />}{tag}</span>}
+        <span>observed <time dateTime={r.after}>{archive ? utcStamp(r.after, true) : utcClock(r.after, true) + " UTC"}</time></span>
+      </span>
       <span className={styles.itemState}>
         <State move={r} now={at} archive={archive} />
         {settled !== null && <small data-tone={settled > 0 ? "won" : settled < 0 ? "lost" : undefined}>{units(settled)}</small>}
@@ -312,6 +317,8 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   const apart = tAfter - tBefore, lead = tStart - tAfter;
   const showOut = !!m && (archive || outcome !== "pending");
   const round = m ? roundOf(m.league) : "";
+  const marketLabel = m ? marketName(m) : "";
+  const marketSym = m && marketLabel ? marketIcon(m.market) : null;
   const kick = m ? [placeOf(m.league), round, isQualifying(m) && !/^q/i.test(round) ? "Qualifying" : "", (archive ? "Start " : "Scheduled start ") + utcStamp(m.start)].filter(Boolean).join(" · ") : "";
   const dayFixtures = fixtures.filter(f => tour === TOURS[0] || tour === f.tour).sort((a, b) => a.start.localeCompare(b.start));
   const openFixtures = dayFixtures.filter(f => isOpen(f, at));
@@ -366,7 +373,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
             </div>
           </div>}
           <p className={styles.railNote} id={noteId}>
-            <b>pp</b> is the rise in implied probability (1 ÷ price) from the earlier price to detection.
+            <b>pp</b> is the rise in implied probability (1 ÷ price) from the earlier odds to the observed move.
             {!archive && <> {upcomingOnly ? "Upcoming" : "All recorded"}: {sortNote}.</>}
           </p>
         </div>
@@ -374,7 +381,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
         <button type="button" className={styles.picker} aria-expanded={pickerOpen} aria-controls={listId} onClick={() => setPickerOpen(open => !open)}>
           <span className={styles.pickerLabel}>Showing {index + 1} of {rows.length}</span>
           <strong>{m.player}</strong>
-          <span className={styles.pickerMove}><b>{pointsText(m)}</b> implied probability · <span>{price(m.old)} → </span>{price(m.new)}</span>
+          <span className={styles.pickerMove}><b>{pointsText(m)}</b> implied probability</span>
           <span className={styles.pickerCue}>{pickerOpen ? "Close list" : rows.length > 1 ? "Choose from " + rows.length : "Show list"}</span>
         </button>
         <ol id={listId} className={styles.railList} ref={listRef} data-open={pickerOpen ? "true" : "false"} onKeyDown={onListKey}>
@@ -403,7 +410,8 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
         </ol>
       </section>
 
-      {/* The stage: host tournament and stepper, the selection against the move in large figures, status, timing, then the chart. */}
+      {/* The stage: host tournament and stepper, the selection against one pair of odds over their capture times,
+          status, a short row of figures that are said nowhere else, then the chart. */}
       <article className={styles.stage} ref={stageRef} aria-labelledby={headId}>
         <div className={styles.stageTop}>
           <p className={styles.kick}>
@@ -420,18 +428,23 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
 
         <div className={styles.hero} data-out={showOut ? "true" : undefined}>
           <div className={styles.heroWho}>
-            {marketName(m) && <p className={styles.market}>{marketName(m)}</p>}
+            {marketLabel && <p className={styles.market}>{marketSym && <DeskIcon name={marketSym} size={16} />}{marketLabel}</p>}
             <h2 id={headId}>{m.player}</h2>
             <p className={styles.versus}>{m.fixtureLabel ?? ("vs "+m.opponent)}</p>
           </div>
-          <div className={styles.heroMove}>
-            <p className={styles.lab}>Earlier price → price at detection</p>
-            <p className={styles.movement}>
-              <span className={styles.was} title="Earlier price">{price(m.old)}</span><span className={styles.arrow}> → </span><span className={styles.now} title="Price at detection">{price(m.new)}</span>
-            </p>
-            {/* The two magnitudes are never left bare: probability in points first, price in percent second. */}
-            <p className={styles.gain}><b>{pointsText(m)}</b> implied probability <span>{impliedText(m.old)} → {impliedText(m.new)}</span></p>
-            <p className={styles.shift}>Price <b>{delta(m.new - m.old)} ({percent(dropPct(m))})</b>{Number.isFinite(apart) && apart > 0 ? " · captures " + spanText(apart) + " apart" : ""}</p>
+          {/* The move, once: each of the two odds under its role and over its own capture time, with the chart's own marks. */}
+          <div className={styles.pair} role="group" aria-label="Observed move in decimal odds">
+            <div className={styles.leg} data-role="earlier">
+              <p className={styles.legCap}><KeyGlyph kind="earlier" />Earlier</p>
+              <p className={styles.legOdds}>{price(m.old)}</p>
+              <p className={styles.legTime}><time dateTime={m.before}>{utcClock(m.before, true)} UTC</time><span>{utcDate(m.before)}</span></p>
+            </div>
+            <span className={styles.arrow} aria-hidden="true">→</span>
+            <div className={styles.leg} data-role="detected">
+              <p className={styles.legCap}><KeyGlyph kind="detected" />Move observed</p>
+              <p className={styles.legOdds}>{price(m.new)}</p>
+              <p className={styles.legTime}><time dateTime={m.after}>{utcClock(m.after, true)} UTC</time><span>{utcDate(m.after)}</span></p>
+            </div>
           </div>
           {showOut && <div className={styles.heroOut}>
             <p className={styles.settled} data-outcome={outcome}><b>{outcomeLabel(m)}</b>{archive && pl !== null && <span>{units(pl)}</span>}</p>
@@ -450,24 +463,24 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
         </div>
 
         <dl className={styles.timing}>
-          <div data-role="earlier">
-            <dt><KeyGlyph kind="earlier" />Earlier capture</dt>
-            <dd><time dateTime={m.before}>{utcClock(m.before, true)} UTC</time><small>{utcDate(m.before)} · price {price(m.old)}</small></dd>
+          {/* The two magnitudes are never left bare: probability in points first, odds in percent second. */}
+          <div data-role="gain">
+            <dt>Implied probability</dt>
+            <dd>{pointsText(m)}<small>{impliedText(m.old)} → {impliedText(m.new)}</small></dd>
           </div>
-          <div data-role="detected">
-            <dt><KeyGlyph kind="detected" />Detection capture</dt>
-            <dd><time dateTime={m.after}>{utcClock(m.after, true)} UTC</time><small>{utcDate(m.after)} · price {price(m.new)}</small></dd>
+          <div data-role="shift">
+            <dt>Odds change</dt>
+            <dd>{delta(m.new - m.old)}<small>{percent(dropPct(m))}{Number.isFinite(apart) && apart > 0 ? " · captures " + spanText(apart) + " apart" : ""}</small></dd>
           </div>
           <div data-role="lead">
-            <dt>Before scheduled start</dt>
-            <dd>{lead >= 0 ? spanText(lead) : "—"}<small>{lead < 0 ? "detected after the scheduled time" : "scheduled " + utcStamp(m.start)}</small></dd>
+            <dt>Lead time</dt>
+            <dd>{lead >= 0 ? spanText(lead) : "—"}<small>{lead >= 0 ? "before the scheduled start" : lead < 0 ? "observed after the scheduled time" : "no scheduled time recorded"}</small></dd>
           </div>
-          <div data-role="latest">
-            <dt><KeyGlyph kind="latest" />Latest observation</dt>
-            <dd>{lastQuote ? price(lastQuote.price) : "—"}<small>{lastQuote
-              ? <><time dateTime={lastQuote.time}>{utcStamp(lastQuote.time, true)}</time>{latestIsDetection ? " · same as detection" : " · " + delta(lastQuote.price - m.new) + " since detection"}</>
-              : "No recorded prices"}</small></dd>
-          </div>
+          {/* A latest observation is a figure of its own only when it is not the move itself. */}
+          {lastQuote && !latestIsDetection && <div data-role="latest">
+            <dt><KeyGlyph kind="latest" />Latest odds</dt>
+            <dd>{price(lastQuote.price)}<small><time dateTime={lastQuote.time}>{utcStamp(lastQuote.time, true)}</time>{" · " + delta(lastQuote.price - m.new) + " since the move"}</small></dd>
+          </div>}
         </dl>
 
         <OddsChart key={currentKey ?? "chart"} move={m} archive={archive} />
