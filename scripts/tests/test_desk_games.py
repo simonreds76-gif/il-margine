@@ -27,12 +27,12 @@ class GamesDesk(unittest.TestCase):
         batch=desk_games.compare(last,snap,state,set())
         return state,batch
 
-    def test_overnight_cumulative_crossing_then_no_repeat(self):
+    def test_overnight_cumulative_crossing_stays_on_board(self):
         state, _=self.scan({},0,2.2)
         state, first=self.scan(state,15,2.13)
         self.assertEqual(first["alert_ids"],[])
         state,batch=self.scan(state,16*60,2.,reverse=True)
-        self.assertEqual(len(set(batch["alert_ids"])),3)
+        self.assertEqual(batch["alert_ids"],[])
         self.assertEqual({(m["selection"],m["old"],m["new"]) for m in batch["moves"]},
                          {("A",2.2,2.),("A -3 games",2.2,2.),("Over 22.5 games",2.2,2.)})
         self.assertTrue(all(m["before"]==self.t.isoformat() for m in batch["moves"]))
@@ -40,6 +40,47 @@ class GamesDesk(unittest.TestCase):
         state,again=self.scan(state,16*60+15,1.92)
         self.assertTrue(again["moves"])
         self.assertFalse(again["alert_ids"])
+
+    def test_final_hour_rebases_after_earlier_move_then_alerts_once(self):
+        start = self.t + timedelta(minutes=90)
+        state, _ = self.scan({}, 0, 2.9, start=start)
+        state, early = self.scan(state, 15, 2.3, start=start)
+        self.assertTrue(early["moves"])
+        self.assertFalse(desk_games.alert_moves(early))
+        state, boundary = self.scan(state, 30, 2.2, start=start)
+        self.assertFalse(boundary["alert_ids"])
+        state, small = self.scan(state, 45, 2.1, start=start)
+        self.assertFalse(small["alert_ids"])
+        state, batch = self.scan(state, 60, 2.0, reverse=True, start=start)
+        alerts = desk_games.alert_moves(batch)
+        self.assertEqual({m["selection"] for m in alerts}, {"A", "A -3 games", "Over 22.5 games"})
+        self.assertTrue(all(m["old"] == 2.2 and m["before"] == boundary["observed"] for m in alerts))
+        self.assertIn("Final-hour", roundup_text(alerts, batch["observed"]))
+        state, repeat = self.scan(state, 75, 1.8, start=start)
+        self.assertTrue(repeat["moves"])
+        self.assertFalse(repeat["alert_ids"])
+        self.assertFalse(desk_games.alert_moves({**batch, "policy":"same-line-4pp-prematch-v1"}))
+        self.assertFalse(desk_games.alert_moves({**batch, "moves":[dict(m, before=early["observed"]) for m in alerts]}))
+
+    def test_line_absence_gap_and_start_reset_late_signal(self):
+        start = self.t + timedelta(hours=1)
+        state, _ = self.scan({},0,2.5,start=start)
+        state, _ = self.scan(state,15,2.5,present=False,start=start)
+        state, batch = self.scan(state,30,2.,start=start)
+        self.assertEqual([m["market"] for m in desk_games.alert_moves(batch)],["winner"])
+        state, batch = self.scan(state,60,1.5,start=start)
+        self.assertFalse(batch["alert_ids"])
+        state, _ = self.scan({},0,2.5,start=start)
+        state, gap = self.scan(state,45,2.,start=start)
+        self.assertFalse(gap["alert_ids"])
+
+    def test_existing_issued_contracts_remain_deduplicated_on_upgrade(self):
+        start = self.t + timedelta(hours=1)
+        state, _ = self.scan({},0,2.5,start=start)
+        state.pop("desk_late_issued")
+        state["desk_issued"]["ab|winner|0"] = start.isoformat()
+        state, batch = self.scan(state,15,2.0,start=start)
+        self.assertEqual({m["market"] for m in desk_games.alert_moves(batch)},{"spreads","totals"})
 
     def test_changed_line_or_start_never_compared(self):
         state,_=self.scan({},0,2.5)

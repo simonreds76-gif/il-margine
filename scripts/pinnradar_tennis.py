@@ -342,11 +342,8 @@ def run():
             watch.private_chat()
             delivery="private direct chat verified"
         elif mode=="send":
-            if "alert_ids" not in batch:
-                print("Existing pre-policy snapshot; historical delivery preserved.")
-                return
-            eligible = set(batch["alert_ids"])
-            delivery=watch.deliver({**batch, "moves":[m for m in batch["moves"] if m["move_id"] in eligible]},store,now=datetime.now(timezone.utc),dispatch_clock=lambda: datetime.now(timezone.utc))
+            delivery=watch.deliver({**batch, "moves":desk_games.alert_moves(batch)},store,
+                                   now=datetime.now(timezone.utc),dispatch_clock=lambda: datetime.now(timezone.utc))
         print(f"Matched fixtures {batch['compared_pairs']}; observed shortenings {len(batch['moves'])}; Telegram {delivery}.")
 
 
