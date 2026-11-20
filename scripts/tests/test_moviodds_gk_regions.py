@@ -43,6 +43,16 @@ class GoalkeeperRegions(unittest.TestCase):
         self.assertEqual(market['source_site'], 'com')
         self.assertIn('&site=com', market['source_url'])
 
+    def test_schalke_alias_requires_opponent_orientation_league_and_kickoff(self):
+        match = dict(home='Schalke', away='VfB Stuttgart', league='Germany Bundesliga I',
+                     kickoff_utc='2026-11-21T17:30:00Z')
+        target = dict(home='Schalke 04', away='VfB Stuttgart', league='germany-bundesliga',
+                      date=match['kickoff_utc'])
+        self.assertTrue(source.soccer_target_matches(match, target))
+        for change in [dict(home='Schalke 04 II'), dict(away='Stuttgart II'), dict(date='2026-11-21T20:30:00Z'),
+                       dict(home='VfB Stuttgart', away='Schalke 04'), dict(league='germany-bundesliga-2')]:
+            self.assertFalse(source.soccer_target_matches(match, {**target, **change}))
+
     def test_verified_alaves_alias_still_requires_exact_fixture(self):
         raw = self.raw['alaves']
         now = datetime.fromisoformat(raw['server_time'].replace('Z', '+00:00'))
