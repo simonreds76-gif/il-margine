@@ -70,6 +70,21 @@ function harness({ fail = false, empty = false, noSquad = false, updateError = f
   return {load,pick,invalidations,paths,counts:()=>({fetches,queries})};
 }
 
+test('stored and newly entered Padeborn spellings resolve the same squad on either fixture side',()=>{
+  const h=harness();
+  const {clubsForPick}=h.load(path.join(root,'src/lib/tip-portrait-resolver.ts'));
+  const {correctFootballClubNames}=h.load(path.join(root,'src/lib/football-club-names.ts'));
+  for(const player of ['Noll','Nahuel Noll','Another Player']){
+    const pair=event=>clubsForPick({market:'props',category:'bundesliga',event,player}).map(c=>c.id);
+    const expected=pair('Bayer Leverkusen vs SC Paderborn 07');
+    assert.equal(new Set(expected).size,2);
+    assert.deepEqual(pair('Bayer Leverkusen vs Padeborn'),expected);
+    assert.deepEqual(pair('SC PADEBORN 07 vs Bayer Leverkusen'),expected.reverse());
+  }
+  assert.equal(correctFootballClubNames('Bayer Leverkusen vs Padeborn'),'Bayer Leverkusen vs Paderborn');
+  assert.equal(correctFootballClubNames('Padeborner'),'Padeborner');
+});
+
 test('new players resolve automatically despite missing opponent data, without a curated player entry',async()=>{
   const responses={};
   for(const [id,team] of Object.entries(independent.teams)) responses[`https://www.fotmob.com/teams/${id}/overview`]={fallback:{['team-'+id]:team}};
