@@ -19,6 +19,8 @@ const C = {
   mint: "#8ce5bd", amber: "#e0bb78", loss: "#ff9e8d",
 } as const;
 const FONT = "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const SHARE_MARGIN = 56;
+const SHARE_ICON_SIZE = 32;
 const MIN = 60000;
 const HOUR = 60 * MIN;
 const X_STEPS = [1, 2, 5, 10, 15, 30, 60, 120, 180, 360, 720, 1440, 2880, 10080].map(v => v * MIN);
@@ -305,7 +307,7 @@ function textW(text: string, size: number, tracking = 0) {
 function ExportCard({ svgRef, model, move, view, archive, uid }: {
   svgRef: Ref<SVGSVGElement>; model: Model; move: DeskMove; view: [number, number]; archive: boolean; uid: string;
 }) {
-  const W = 1200, H = 675, M = 56;
+  const W = 1200, H = 675, M = SHARE_MARGIN;
   const g: Geo = { L: 112, R: W - M, T: 240, B: 528, s: 1.4 };
   const lay = layout(model, view, g);
   const outcome = outcomeOf(move.result), pl = paper(move);
@@ -350,7 +352,7 @@ function ExportCard({ svgRef, model, move, view, archive, uid }: {
   return <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" width={W} height={H} viewBox={`0 0 ${W} ${H}`} fontFamily={FONT}>
     <rect width={W} height={H} fill={C.bg} />
     <rect width={W} height="6" fill={archive ? C.amber : C.mint} />
-    <text x={M} y="52" fontSize="14" fontWeight="700" letterSpacing="2.2" fill={C.mint}>
+    <text x={M + SHARE_ICON_SIZE + 10} y="52" fontSize="14" fontWeight="700" letterSpacing="2.2" fill={C.mint}>
       IL MARGINE<tspan fill={C.mute} fontWeight="500">{" · DROP SHOT DESK" + (archive ? " · HISTORICAL REPLAY" : "")}</tspan>
     </text>
     <text x={W - M} y="52" textAnchor="end" fontSize="14" letterSpacing="1.2" fill={C.mute}>{clipText(competition, 46).toUpperCase()}</text>
@@ -371,8 +373,9 @@ function ExportCard({ svgRef, model, move, view, archive, uid }: {
     <PlotLayer model={model} move={move} lay={lay} g={g} uid={uid} annotate={false} />
     <rect x={M} y="596" width={W - 2 * M} height="1" fill={C.grid} />
 
-    {context && <text x={M} y="622" fontSize="15" fill={C.text}>{context}</text>}
-    <text x={M} y={context ? 645 : 631} fontSize="13.5" fill={C.mute}>{method}</text>
+    {context && <text x={M} y="613" fontSize="15" fill={C.text}>{context}</text>}
+    <text x={M} y={context ? 633 : 617} fontSize="13.5" fill={C.mute}>{method}</text>
+    <text x={M} y="657" fontSize="24" fontWeight="600" fill="#a7d6c3">ilmargine.bet</text>
     {outcome !== "pending" && <text x={W - M} y="634" textAnchor="end" fontSize="24" fontWeight="700" letterSpacing="1" fill={tone}>
       {clipText(outcomeLabel(move), 12).toUpperCase() + (archive && pl !== null ? " " + units(pl) : "")}
     </text>}
@@ -384,17 +387,19 @@ async function savePng(svg: SVGSVGElement, w: number, h: number, name: string) {
   const url = URL.createObjectURL(new Blob([xml], { type: "image/svg+xml;charset=utf-8" }));
   try {
     const image = new Image();
-    await new Promise<void>((done, fail) => {
-      image.onload = () => done();
-      image.onerror = () => fail(new Error("image"));
-      image.src = url;
-    });
+    image.src = url;
+    const brandIcon = new Image();
+    brandIcon.src = "/brand/20260913/icon-128.png";
+    await Promise.all([image.decode(), brandIcon.decode()]);
     const canvas = document.createElement("canvas");
     canvas.width = w * 2;
     canvas.height = h * 2;
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("canvas");
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    ctx.scale(canvas.width / w, canvas.height / h);
+    ctx.drawImage(image, 0, 0, w, h);
+    // Draw the same-origin mark separately: an SVG rendered as an image cannot load external assets.
+    ctx.drawImage(brandIcon, SHARE_MARGIN, 29, SHARE_ICON_SIZE, SHARE_ICON_SIZE);
     const blob = await new Promise<Blob | null>(done => canvas.toBlob(done, "image/png"));
     if (!blob) throw new Error("blob");
     const href = URL.createObjectURL(blob);
