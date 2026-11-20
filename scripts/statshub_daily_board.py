@@ -216,6 +216,17 @@ def morning(read,day,clock=timestamp,focus_read=None):
             add_focus(board,focus_read,fs,list(offers.values()),clock,board_matches)
         except (ValueError,TypeError,KeyError,RuntimeError,TimeoutError,requests.RequestException):
             board["coverage"]+="\nDetailed matchup review unavailable."
+    if focus_read is not None and cases:
+        from statshub_daily_scout import scouting
+        try:
+            research=scouting(focus_read,cases,ordered,clock)
+            board["scouting"]=research
+            board["coverage"]+=f"\nIndividual role, venue and league records verified for {research['checked']} of {research['candidates']} additional lines."
+            if research["leads"]:
+                board["coverage"]+="\nPlayer research for lineup review · zero stake. The odds feed excludes entries older than six hours. Individual update times can be unavailable."
+                for lead in research["leads"]: board["coverage"]+="\n"+lead["text"]
+        except (ValueError,TypeError,KeyError,RuntimeError,TimeoutError,requests.RequestException):
+            board["coverage"]+="\nPlayer-specific odds review incomplete."
     return board
 
 def note(status,text,**values):
@@ -356,9 +367,10 @@ def digest(day,board):
     header=f"StatsHub Daily · {day}\n{board['fixtures']} upcoming fixtures · {len(board['picks'])} individual player props"
     blocks=[header+("\nCorrection: withdraw the earlier match and team selections." if board.get("corrected") else "")]
     for i,p in enumerate(board["picks"],1):
-        blocks.append(f"{i}. {p['fixture']} · {p['ko'][11:16]} UK\n{p['label']} @ {p['odds']:.2f} {p['book']} (minimum {p['minimum']:.2f})\nChecked {p['at'][11:16]} UK · quote age {p['age']:.0f} min\n{p['why']}\n{p['risk']}")
-    if not board["picks"]: blocks.append("No verified candidates from the assessed markets.")
-    blocks.append(board["coverage"]+"\nPrice and lineup rechecks: "+LINK)
+        blocks.append(f"{i}. {p['fixture']} · {p['ko'][11:16]} UK\n{p['label']} @ {p['odds']:.2f} {p['book']} (minimum {p['minimum']:.2f})\nChecked {p['at'][11:16]} UK · odds {p['age']:.0f} min old\n{p['why']}\n{p['risk']}")
+    if not board["picks"]: blocks.append("No selections qualified for paper tracking.")
+    blocks.extend(board["coverage"].splitlines())
+    blocks.append("Odds and lineup rechecks: "+LINK)
     parts=[]; current=""
     for block in blocks:
         if len((current+"\n\n"+block).encode("utf-16-le"))//2>3500 and current:
