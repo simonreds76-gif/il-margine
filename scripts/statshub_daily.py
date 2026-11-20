@@ -26,7 +26,7 @@ def probe():
 def rehearsal():
     from statshub_daily_board import morning, digest
     from statshub_daily_focus import FOCUS_LIMIT
-    from statshub_daily_contracts import LEAGUES
+    from statshub_daily_contracts import LEAGUES, PLAYER_PRICE_MIN, PLAYER_STATS, identity
     class TransientReads:
         def __init__(self,api,limit=40):
             self.api=api
@@ -51,6 +51,11 @@ def rehearsal():
     assert "Matchup review incomplete" not in board["coverage"]
     print(f"Rehearsal: {len(board.get('focus',[]))} focus fixtures, {len(focused.log)} context reads; no picks sent.",flush=True)
     assert board["fixtures"] and board["completeBoards"] and all(k in board["coverage"] for k in LEAGUES)
+    picks=board["picks"]
+    assert all(p["side"]=="player" and p["stat"] in PLAYER_STATS and p["odds"]>=p["minimum"]>=PLAYER_PRICE_MIN
+               and p["starts"]>=10 for p in picks)
+    assert len({(identity(p["matchId"]),identity(p["player"])) for p in picks})==len(picks)
+    assert not board.get("focusWatch")
     messages=digest("2026-11-20",board)
     assert all(len(m.encode("utf-16-le"))<=8192 for m in messages)
     assert store.get("daily/report.json")==before

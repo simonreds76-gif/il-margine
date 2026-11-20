@@ -169,29 +169,12 @@ def add_focus(board, reader, fixtures, prices, clock, board_matches):
     chosen=select_fixtures(fixtures,board["picks"],prices,now)
     if not chosen: return
     focused = []
-    fallback=[f for f in chosen if not any(p.get("player") and p["matchId"]==f["id"] for p in board["picks"])]
-    rows=read_data(reader,"getPropScreener",dict(games=[f["id"] for f in fallback],statTypes=["yellowCards"],
-                   oddsFrom=1.01,oddsTo=100,hitRateFrom=0,hitRateScope="competition",lineupFilterType="predicted",
-                   useSupersub=False,pageSize=40)).get("data",[]) if fallback else []
     for f in chosen:
-        picks=[p for p in board["picks"] if p.get("player") and p["matchId"]==f["id"]]
-        p=picks[0] if picks else None
-        if p is None:
-            quote=reader.read("getMatchOdds",dict(matchId=f["id"],markets=["player to be booked"]),"focus")
-            if quote and board_matches(f,quote["data"]):
-                p=booking_watch([r for r in rows if identity(r.get("matchId"))==identity(f["id"])],quote["data"],utc(clock()),quote["at"])
-        match_name=f['home']+" v "+f['away']
-        if p is None:
-            focused.append(match_name+" — no identifiable, freshly priced player matchup to review.")
-            continue
-        detail=context(reader,f,p)
-        if picks:
-            p["risk"]+=" Matchup review: "+detail
-            focused.append(match_name+" — see "+p["playerName"]+" in the shortlist.")
-        else:
-            comparison=(f' Same-line board average {p["average"]:.2f} across {p["books"]} books.' if "average" in p else "")
-            focused.append(f'{match_name} — watch only: {p["playerName"]} {p["label"]} at {p["odds"]:.2f} {p["book"]} ({p["age"]:g} min old when checked).{comparison} {detail}')
-            board.setdefault("focusWatch",[]).append({**p,"matchId":f["id"],"fixture":f,"observedAt":quote["at"]})
+        pick=next((p for p in board["picks"] if p.get("player") and p["matchId"]==f["id"]),None)
+        if pick is None: continue
+        detail=context(reader,f,pick)
+        pick["risk"]+=" Matchup review: "+detail
+        focused.append(f'{f["home"]} v {f["away"]} — see {pick["playerName"]} in the shortlist.')
     board["focus"]=focused
     board["coverage"]+="\nMatchup review · formation-based, no measured heatmap.\n"+"\n".join(focused)
     board["coverage"]+=f"\n{len(reader.log)}/{reader.limit} matchup reads."

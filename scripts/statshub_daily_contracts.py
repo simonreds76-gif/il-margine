@@ -25,13 +25,17 @@ TEAM_MARKETS = {"Total Corners": ("corners","match"), "Match Shots": ("shots","m
     "Total Fouls": ("fouls","match"), "Match Fouls": ("fouls","match"),
     "Home Team Fouls": ("fouls","home"), "Away Team Fouls": ("fouls","away")}
 PLAYER_MARKETS = {"Player Shots":"shots", "Player Shots On Target":"shotsOnTarget", "Player Assists":"assists",
-    "Player Fouls Committed":"fouls","Player Fouls Won":"foulsWon","Player Tackles":"tackles",
+    "Player Fouls Committed":"fouls","Player Fouls":"fouls","Player Fouls Won":"foulsWon","Player Tackles":"tackles",
     "Player Saves":"saves","Player Passes":"passes","Player Offsides":"offsides",
     "Player Interceptions":"interceptions","Player Goals":"goals",
     "Player Crosses":"crosses","Player Key Passes":"keyPasses","Player Aerials Won":"aerialsWon",
     "Player Duels Won":"duelsWon","Player Passes Completed":"passesCompleted",
     "Player Dispossessions":"timesDispossessed","Player Possession Lost":"possessionLost"}
 MARKETS = list(TEAM_MARKETS) + list(PLAYER_MARKETS)
+PLAYER_STATS = {"shots":"shots", "shotsOnTarget":"shots on target", "tackles":"tackles",
+                "fouls":"fouls committed", "foulsWon":"fouls drawn"}
+PLAYER_PRICE_MIN = 1.70
+PLAYER_POLICY = "player-counts-v1"
 ALIASES = {
     "Manchester United":"Man United","Manchester City":"Man City","Nottingham Forest":"Nott'm Forest",
     "Leeds United":"Leeds","Coventry City":"Coventry","Tottenham Hotspur":"Tottenham","Ipswich Town":"Ipswich",
@@ -220,12 +224,29 @@ def player_case(p,r,history):
     stat=history.get("requestedStat") or {}
     if stat.get("statType")!=p["stat"] or not stat.get("column"): return False
     rows=[dict(zip(history["matchColumns"],v)) for v in history.get("matchRows",[])] if "matchColumns" in history else history.get("matches",[])
-    values=[v[stat["column"]] for v in rows if v.get("date","")<p["ko"][:10] and v.get("date") and
-            norm(v.get("team",""))==norm(r["teamName"]) and isinstance(v.get(stat["column"]),(int,float))]
-    if len(values)<10: return False
-    hits=sum(won(p,value,0) for value in values)
-    floor=price_floor(hits,len(values))
+    teams=(history.get("span") or {}).get("teams") or []
+    sole_team=teams[0] if len(teams)==1 else None
+    samples={}
+    for row in rows:
+        date=row.get("date") or ""
+        count=row.get(stat["column"])
+        minutes=row.get("minutes")
+        key=identity(row.get("matchId"))
+        if (not key or not re.fullmatch(r"\d{4}-\d{2}-\d{2}",date) or date>=p["ko"][:10]
+            or norm(row.get("team") or sole_team or "")!=norm(r["teamName"])
+            or type(count) not in (float,int) or not math.isfinite(count) or count<0
+            or type(minutes) not in (float,int) or not 0<minutes<=130): continue
+        sample=(count,minutes,date)
+        if key in samples and samples[key]!=sample: return False
+        samples[key]=sample
+    n=len(samples)
+    if n<10: return False
+    hits=sum(won(p,count,0) for count,_,_ in samples.values())
+    floor=max(PLAYER_PRICE_MIN,price_floor(hits,n))
     if p["odds"]<floor: return False
-    p.update(minimum=floor,teamId=r["teamId"],why=f"{hits}/{len(values)} earlier league starts for {r['teamName']} hit this line. Break-even is {100/p['odds']:.1f}%. Opponent evidence: {r['matchup']}.",
-             risk="Conditional on starting and retaining the same role. Substitution terms can affect settlement.")
+    avg=sum(count for count,_,_ in samples.values())/n
+    minutes=sum(mins for _,mins,_ in samples.values())/n
+    p.update(minimum=floor,teamId=r["teamId"],hits=hits,starts=n,meanCount=avg,meanMinutes=minutes,
+             why=f"{hits} of {n} previous league starts for {r['teamName']} cleared this selection. Averaged {avg:.1f} {PLAYER_STATS[p['stat']]} and {minutes:.0f} minutes. Break-even at these odds is {100/p['odds']:.1f}%. Opponent: {r['matchup']}.",
+             risk="Expected starter. Check the official XI, role and substitution terms before posting.")
     return True
