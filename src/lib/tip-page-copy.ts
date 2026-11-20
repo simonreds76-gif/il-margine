@@ -5,7 +5,7 @@ type CopyBet = {
 };
 
 export function tipSelectionLabel(bet: Pick<CopyBet, "player" | "selection" | "market">): string {
-  const selection = bet.selection.trim().toUpperCase() === "ML" ? "Match winner" : bet.selection.trim();
+  const selection = bet.selection.trim();
   if (bet.market === "tennis") return [bet.player?.trim(), selection].filter(Boolean).join(" ");
   return bet.player ? `${bet.player} - ${selection}` : selection;
 }
@@ -24,7 +24,9 @@ export function buildTipPageCopy(seed: CopyBet, bets: CopyBet[], dateLabel: stri
   const competition = competitionName(seed.category);
   const selections = bets.slice(0, 3).map(tipSelectionLabel).join("; ");
   const remainder = bets.length > 3 ? `, plus ${bets.length - 3} more selections` : "";
-  const introduction = `Independent ${subject} for ${seed.event} on ${dateLabel}${competition ? ` (${competition})` : ""}. The published card covers ${selections}${remainder}. Compare the recorded odds and stakes below, read any published analysis, and check each result after settlement.`;
+  const glossary = seed.market === "tennis" && bets.some(bet => bet.selection.trim().toUpperCase() === "ML")
+    ? " ML means moneyline, a bet on who wins the match." : "";
+  const introduction = `Independent ${subject} for ${seed.event} on ${dateLabel}${competition ? ` (${competition})` : ""}. The published card covers ${selections}${remainder}.${glossary} Compare the recorded odds and stakes below, read any published analysis, and check each result after settlement.`;
   const pending = bets.filter((bet) => bet.status === "pending").length;
   const statusCopy = pending === 0
     ? "Completed betting record: these selections have been settled. For upcoming matches, use the current picks page."

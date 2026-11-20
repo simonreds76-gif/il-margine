@@ -90,6 +90,11 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
       <div className={styles.brand}><Image src={brand} unoptimized alt="" width={66} height={36} priority/><div><p className={styles.kicker}>Tennis odds moves</p><h1>Drop Shot Desk</h1></div></div>
       <nav aria-label="Price history" className={styles.tabs}><Link aria-current={!archive?"page":undefined} href={route}><DeskIcon name="drop"/>Daily moves</Link><Link aria-current={archive?"page":undefined} href={route+"?view=archive"}><DeskIcon name="replay"/>Historical replay</Link></nav>
     </header>
-    <p className={styles.standfirst}>Follow ATP and Challenger match winners, total games and games handicaps. Telegram flags the first rise of 4 percentage points in implied probability from an earlier high price on the same selection and line, at any time before play.</p>
+    <p className={styles.standfirst}>Spot possible sharp money before the first serve. We check ATP and Challenger odds about every 15 minutes and show which players, game totals and games handicaps are shortening. Open a chart to see when the odds fell and whether they drifted back.</p>
+    <details className={styles.fold}>
+      <summary>What triggers an alert?</summary>
+      <p className={styles.fine}>Say a player shortens from 2.00 to 1.85. That takes the chance implied by the odds from 50% to 54.1%. Telegram flags the first rise of at least four percentage points from an earlier high in the odds, on the same selection and line, any time before play. For each alert we track returns at the odds we saw when we detected the drop.</p>
+      <p className={styles.fine}>A drop can reflect betting pressure or news. Our scans record the odds at each check. Betting volumes and bettor identities are unavailable.</p>
+    </details>
     {content}</main>;
 }

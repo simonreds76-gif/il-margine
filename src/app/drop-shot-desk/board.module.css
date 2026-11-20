@@ -361,7 +361,7 @@
 
 /* ---------- phones (Matchday's 639px break): title first, the stage runs edge to edge ---------- */
 @media (max-width:639px){
-  .standfirst{display:none}
+  .standfirst{margin:.65rem 0;font-size:.875rem;line-height:1.5}
   .mast{align-items:stretch;margin-bottom:1rem}
   .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
   .tabs a{padding:0 .4rem;white-space:normal;text-align:center}

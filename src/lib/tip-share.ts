@@ -7,7 +7,7 @@ export type ShareTip = {
 };
 export function shareSelection(bet: ShareTip): string {
   if (bet.market === "tennis") return tipSelectionLabel(bet);
-  const selection = bet.selection.trim().toUpperCase() === "ML" ? "Match winner" : bet.selection.trim();
+  const selection = bet.selection.trim();
   return bet.player ? `${bet.player} · ${selection}` : selection;
 }
 export function shareDate(value: string): string {

@@ -24,11 +24,15 @@ test('mixed ledger counts pending accurately without implying prices remain avai
   assert.match(copy.statusCopy, /^1 selection is awaiting/);
   assert.match(copy.statusCopy, /does not mean the original odds are still available/);
 });
-test('tennis expands shorthand and long descriptions stay bounded', () => {
+test('published ML stays on the card and its meaning is explained separately', () => {
   const tennis = { ...bet, market: 'tennis', category: 'usopen', event: 'Sinner vs Alcaraz', selection: 'ML', player: 'Sinner' };
   const copy = buildTipPageCopy(tennis, [tennis], '13 September 2026');
   assert.match(copy.introduction, /US Open/);
-  assert.match(copy.introduction, /Sinner Match winner/);
+  assert.match(copy.introduction, /Sinner ML\./);
+  assert.match(copy.introduction, /ML means moneyline/);
+  assert.match(copy.metaDescription, /Sinner ML/);
+  assert.equal(mod.exports.tipSelectionLabel({...tennis, player:'Prizmic'}),'Prizmic ML');
+  assert.equal(mod.exports.tipSelectionLabel({...tennis, selection:'Moneyline'}),'Sinner Moneyline');
   assert.ok(buildTipPageCopy({ ...bet, event: 'Very long team name '.repeat(20) }, [bet], '12 September 2026').metaDescription.length <= 170);
 });
 test('break-even math is not presented as predicted probability; invalid prices are omitted', () => {
