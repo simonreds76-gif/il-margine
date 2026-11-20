@@ -7,7 +7,7 @@ import { BASE_URL } from "@/lib/config";
 
 export const dynamic = "force-static";
 
-const title = "Margin-Free Odds Calculator | Fair Odds and No-Vig Probabilities";
+const title = "Devig Calculator | Remove the Bookmaker’s Margin";
 const description = "Remove the bookmaker’s margin from two-way or three-way decimal odds, or compare Yes and No prediction market prices in cents. See fair odds and estimated probabilities.";
 const url = `${BASE_URL}/calculator/no-vig`;
 
@@ -23,8 +23,8 @@ export default function FairOddsCalculatorPage() {
   return (
     <div className="calc-page">
       <main className="site-container">
-        <PageHeading eyebrow="Betting tools" title="Margin-Free Odds Calculator" icon="price" parent={{ href: "/tools", label: "Betting tools" }}>
-          <p>Estimate fair odds from market prices. Enter all sides of a bookmaker’s market to remove the margin, or compare the cost of buying Yes and No on a prediction market.</p>
+        <PageHeading eyebrow="Betting calculator" title="Devig" icon="price" parent={{ href: "/tools", label: "Betting tools" }}>
+          <p>Remove the bookmaker’s margin to see what chance the market gives each outcome. Enter decimal odds for all sides, or compare Yes and No buy prices on a prediction market.</p>
         </PageHeading>
         <MarginLab />
         <p className="calc-compliance">

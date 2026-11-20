@@ -5,7 +5,7 @@ export const BETTING_TOOL_GROUPS: Array<{
   tools: Array<{ href: string; title: string; description: string; action: string; icon: EditorialIconName; badge: string }>;
 }> = [
   { id: "price", title: "Understand the price", question: "What do these odds really offer?", tools: [
-    { href: "/calculator/no-vig", title: "Margin-Free Odds Calculator", description: "Remove the bookmaker’s margin or compare Yes and No prediction market prices.", action: "Calculate fair odds", icon: "markets", badge: "Calculator" },
+    { href: "/calculator/no-vig", title: "Devig", description: "Remove the bookmaker’s margin to see fair odds, or compare Yes and No prediction market prices.", action: "Calculate fair odds", icon: "markets", badge: "Calculator" },
     { href: "/calculator/football", title: "Double chance & draw no bet", description: "Turn a complete 1X2 market into fair prices, with the draw treated correctly.", action: "Price a football market", icon: "football", badge: "Calculator" },
     { href: "/bookmakers", title: "Mind the Margin", description: "Compare measured bookmaker margins within the same market and see the sample behind each figure.", action: "Compare bookmakers", icon: "compare", badge: "Market comparison" },
   ] },
