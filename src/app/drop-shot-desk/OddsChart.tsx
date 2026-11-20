@@ -673,7 +673,7 @@ export default function OddsChart({ move, archive }: { move: DeskMove; archive: 
       </ul>
       <p className={styles.caption}>
         Decimal odds on a linear axis, times in UTC: higher odds are drawn higher, so shortening odds fall and drifting odds rise. The tinted band spans the two captures that make the move.
-        {move.chartSummary ? " The chart connects selected observations of this line: the earlier odds, the observed move, the later low, high and latest odds. Intermediate quotes are omitted. Known gaps are left open." : " The line joins consecutive recorded captures with straight segments and every reading snaps to an actual capture; nothing between two captures was observed, and breaks in capture are left open."}
+        {move.chartSummary ? " This view connects the earlier odds, the move, the later low and high, and the latest odds. Gaps in recording stay open." : " The line connects consecutive scans. Each reading shows the odds at that scan. Gaps in recording stay open."}
         {canZoom ? " Drag across the chart with a mouse to zoom in, double-click to return to the full series; plus, minus and zero do the same from the keyboard." : ""}
       </p>
     </details>

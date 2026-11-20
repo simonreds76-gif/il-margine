@@ -159,7 +159,7 @@ export function isOpen(r: Timed, now: number | null) {
  * `observed` is the time of the latest recorded observation, when the caller has one.
  */
 export function availability(r: Timed, now: number | null, observed?: When): Availability {
-  const closed = (reason: string): Availability => ({ open: false, label: "Closed", reason, detail: "Recorded history only, not a live price." });
+  const closed = (reason: string): Availability => ({ open: false, label: "Closed", reason, detail: "Saved for reference." });
   if (outcomeOf(r.result) !== "pending") return closed("result recorded");
   if (now === null) return closed("availability not verified");
   const at = (t: number) => (utcDate(t) === utcDate(now) ? "" : utcDate(t) + " · ") + utcClock(t) + " UTC";
@@ -170,16 +170,15 @@ export function availability(r: Timed, now: number | null, observed?: When): Ava
     const basis = Number.isFinite(seen) && seen <= now ? "Latest recorded observation " + at(seen) : "Based on the latest recorded observation";
     if (cut === start) return {
       open: true, label: "Open", reason: "listed until scheduled start " + at(start),
-      detail: basis + "; the price is not guaranteed after it. That start is the scheduled time, not a confirmed first serve.",
+      detail: basis + ". Odds can change before first serve.",
     };
     return {
-      open: true, label: "Open", reason: "quote freshness cutoff " + at(cut),
-      detail: basis + "; the desk stops treating it as current at the cutoff, and the price is not guaranteed in between."
-        + (Number.isFinite(start) ? " The match is scheduled for " + at(start) + ", which is not a confirmed first serve." : ""),
+      open: true, label: "Open", reason: "listing expires at " + at(cut),
+      detail: basis + ". Odds can change between scans.",
     };
   }
   if (Number.isFinite(start) && now >= start) return closed("scheduled start " + at(start) + " passed");
-  return closed(cut !== null ? "quote freshness cutoff " + at(cut) + " passed" : "no open pre-match quote in the latest scan");
+  return closed(cut !== null ? "last odds expired at " + at(cut) : "pre-match odds unavailable in the latest scan");
 }
 
 export function tally(picks: Move[]): Tally {

@@ -462,7 +462,9 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
           </div>
         </div>
 
-        <dl className={styles.timing}>
+        <details className={styles.fold}>
+          <summary>Move details · implied chance {impliedText(m.old)} → {impliedText(m.new)}</summary>
+          <dl className={styles.timing}>
           {/* The two magnitudes are never left bare: probability in points first, odds in percent second. */}
           <div data-role="gain">
             <dt>Implied probability</dt>
@@ -481,7 +483,8 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
             <dt><KeyGlyph kind="latest" />Latest odds</dt>
             <dd>{price(lastQuote.price)}<small><time dateTime={lastQuote.time}>{utcStamp(lastQuote.time, true)}</time>{" · " + delta(lastQuote.price - m.new) + " since the move"}</small></dd>
           </div>}
-        </dl>
+          </dl>
+        </details>
 
         <OddsChart key={currentKey ?? "chart"} move={m} archive={archive} />
       </article>
