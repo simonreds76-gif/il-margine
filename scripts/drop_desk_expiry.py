@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, timezone
 
 import requests
 from pinnradar_tennis import BUCKET, Store, utc
-from price_drop_watch import START, private_chat, roundup_text
+from price_drop_watch import START, private_chat, roundup_text, telegram
 
 CLOCK_PATH = "presentation/desk-active-messages-v1.json"
 MAX_BOARD_AGE = timedelta(minutes=20)
@@ -59,6 +59,13 @@ def edit_message(chat, mid, text, kind):
     return status,"document"
 
 
+def remove_roundup(chat, mid):
+    # Telegram skips absent IDs, so a retry after a successful deletion is safe.
+    confirmed = telegram("deleteMessages", {"chat_id": chat, "message_ids": [mid]})
+    if confirmed is not True:
+        raise RuntimeError("Private roundup removal was not confirmed")
+
+
 def discover(store, state, now):
     day = datetime.fromisoformat(state["day"]).date()
     while day <= now.date():
@@ -79,7 +86,7 @@ def discover(store, state, now):
             if not wanted or len(moves)!=len(wanted):raise ValueError("Confirmed roundup contract mismatch")
             mid=str(receipt["message_id"])
             state["messages"].setdefault(mid,{"observed":scan["observed"],"moves":moves,"visible":[m["move_id"] for m in moves],
-                "closed":[],"kind":receipt.get("delivery_kind","unknown")})
+                "closed":[],"kind":receipt.get("delivery_kind","unknown"),"delivered_at":receipt.get("delivered_at")})
             state["read"][name]=True
         if day < now.date():
             state["day"]=(day+timedelta(days=1)).isoformat()
@@ -87,7 +94,22 @@ def discover(store, state, now):
         day+=timedelta(days=1)
 
 
-def reconcile(store,state,latest,now,*,get_chat=private_chat,edit=edit_message,pause=time.sleep):
+def recover_closed_notices(store, state, now):
+    # The old clock forgot message IDs after replacing them with a closure notice.
+    cutoff = now - timedelta(hours=48)
+    recent = {"day":cutoff.date().isoformat(), "messages":{}, "read":{}}
+    discover(store, recent, now)
+    for mid, entry in recent["messages"].items():
+        if mid in state["messages"]:
+            continue
+        sent_at = utc(entry.get("delivered_at")) or utc(entry["observed"])
+        starts = [utc(move["start"]) for move in entry["moves"]]
+        if cutoff < sent_at <= now and starts and all(t and t <= now for t in starts):
+            state["messages"][mid] = entry
+    state["silent_expiry"] = True
+
+
+def reconcile(store,state,latest,now,*,get_chat=private_chat,edit=edit_message,remove=remove_roundup,pause=time.sleep):
     chat=None
     next_starts=set()
     edits=0
@@ -105,18 +127,26 @@ def reconcile(store,state,latest,now,*,get_chat=private_chat,edit=edit_message,p
                 if status=="upcoming":active.append(m)
         ids=[m["move_id"] for m in active]
         done=len(frozen)==len(entry["moves"])
-        if ids!=entry["visible"] or done:
+        closed_changed = frozen != set(entry["closed"])
+        if ids!=entry["visible"] or done or (not active and closed_changed):
             if chat is None:chat=get_chat()
-            title="Il Margine · Tennis Price Moves | "+utc(entry["observed"]).strftime("%d %b %H:%M UTC")
-            if active:
-                text=roundup_text(active,entry["observed"])+"\nShowing only matches still verified as upcoming."
-            elif done:
-                text=title+"\nRoundup closed. No upcoming selections remain."
-            else:
-                text=title+"\nNo selections currently have a verified open pre-match market."
             if edits:pause(1.05)
             try:
-                status,kind=edit(chat,int(mid),text,entry["kind"])
+                sent_at = utc(entry.get("delivered_at")) or utc(entry["observed"])
+                if done and now - sent_at < timedelta(hours=48):
+                    remove(chat, int(mid))
+                    print(f"Private roundup absent after expiry: {entry['observed']}")
+                    status, kind = "gone", entry["kind"]
+                else:
+                    if active:
+                        text=roundup_text(active,entry["observed"])+"\nShowing only matches still verified as upcoming."
+                    else:
+                        # Retain the actual dated observations if pricing is suspended or
+                        # Telegram's deletion window has passed. Never send a replacement.
+                        retained = [m for m in entry["moves"] if done or m["move_id"] not in frozen]
+                        heading = "Historical prices at detection" if done else "Prices at detection · current quotes unavailable"
+                        text = heading + "\n" + roundup_text(retained, entry["observed"])
+                    status,kind=edit(chat,int(mid),text,entry["kind"])
             except RuntimeError:
                 failed.append(mid)
                 continue
@@ -136,8 +166,10 @@ def run():
     store=Store()
     start=datetime.now(timezone.utc)
     stop=start+timedelta(minutes=15,seconds=15)
-    state=store.get(CLOCK_PATH) or {"day":START.date().isoformat(),"messages":{},"read":{}}
+    state=store.get(CLOCK_PATH) or {"day":START.date().isoformat(),"messages":{},"read":{},"silent_expiry":True}
     discover(store,state,start)
+    if not state.get("silent_expiry"):
+        recover_closed_notices(store,state,start)
     changes=0
     while True:
         latest=store.get("latest.json") or {}
@@ -148,7 +180,7 @@ def run():
         if not due:break
         while (delay:=(min(due)-datetime.now(timezone.utc)).total_seconds())>0:
             time.sleep(min(delay,60))
-    print(f"Private roundup cutoff checked; {changes} in-place edits.")
+    print(f"Private roundup cutoff checked; {changes} message updates.")
     if failed:
         raise RuntimeError(f"{len(failed)} private roundup edits remain for the next scan")
 
