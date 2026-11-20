@@ -4,6 +4,27 @@ import json
 import math
 from datetime import datetime, timedelta
 
+ALERT_POLICY = "same-line-4pp-final-hour-v2"
+FINAL_HOUR = timedelta(hours=1)
+
+
+def crosses_threshold(earlier, later):
+    return 100 * (1 / later - 1 / earlier) >= 4 - 1e-10
+
+
+def alert_moves(batch):
+    """A retry can read a batch created before the Telegram policy changed."""
+    if batch.get("policy") != ALERT_POLICY:
+        return []
+    wanted = set(batch["alert_ids"])
+    moves = []
+    for move in batch["moves"]:
+        if move["move_id"] in wanted:
+            start, before, after = (datetime.fromisoformat(move[key]) for key in ("start", "before", "after"))
+            if start - FINAL_HOUR <= before < after < start and crosses_threshold(move["old"], move["new"]):
+                moves.append(move)
+    return moves
+
 
 def contracts(sample):
     """Canonical player order makes home/away reordering harmless. Lines are signed."""
@@ -38,16 +59,21 @@ def pairs(row):
 
 def compare(last, current, state, blocked):
     """Small moves stay on the board. Alert once per exact contract side at +4pp."""
-    from price_drop_watch import observe
+    from price_drop_watch import MAX_GAP, observe
     batch = observe(None, current)
-    batch.update(before=last.get("observed"), policy="same-line-4pp-prematch-v1", alert_ids=[])
+    batch.update(before=last.get("observed"), policy=ALERT_POLICY, alert_ids=[])
     now = datetime.fromisoformat(current["observed"])
     history = {k:v for k,v in last.get("desk_windows",{}).items() if datetime.fromisoformat(v["start"]) > now}
     # Retain issued identities across gaps, temporary withdrawals and pre-start reschedules.
     issued = {k:t for k,t in last.get("desk_issued",{}).items() if datetime.fromisoformat(t) + timedelta(days=7) > now}
+    # Grandfather existing signals on migration. New early board moves never consume a late alert.
+    late_issued = {k:t for k,t in last.get("desk_late_issued", issued).items()
+                   if datetime.fromisoformat(t) + timedelta(days=7) > now}
     for eid,row in state["events"].items():
         if row["fixture"] in blocked:
             continue
+        start = datetime.fromisoformat(row["start"])
+        in_hour = start - FINAL_HOUR <= now < start
         first, second = sorted((row["home"], row["away"]))
         for code, pair in pairs(row):
             k = "|".join((eid, row["fixture"], row["start"], code))
@@ -59,6 +85,15 @@ def compare(last, current, state, blocked):
                 if prices[side] > peaks[side][side+1]:
                     peaks[side] = point
             history[k] = {"start":row["start"], "last":point, "peaks":peaks}
+            late_refs = None
+            if in_hour:
+                if old and old["last"][0] == last.get("observed"):
+                    previous_time = datetime.fromisoformat(old["last"][0])
+                    if start - FINAL_HOUR <= previous_time < now and now - previous_time <= MAX_GAP:
+                        late_refs = old.get("late_peaks") or [old["last"], old["last"]]
+                history[k]["late_peaks"] = [
+                    late_refs[i] if late_refs and late_refs[i][i+1] > prices[i] else point for i in (0, 1)
+                ]
             if not old:
                 continue
             if code == "winner":
@@ -68,8 +103,13 @@ def compare(last, current, state, blocked):
                     continue
                 contract = "|".join((row["fixture"], code, str(i)))
                 peak = old["peaks"][i]
-                qualifies = contract not in issued and 100*(1/price - 1/peak[1+i]) >= 4-1e-10
-                reference = peak if qualifies else old["last"]
+                board_crossing = contract not in issued and crosses_threshold(peak[1+i], price)
+                if board_crossing:
+                    issued[contract] = row["start"]
+                qualifies = late_refs is not None and contract not in late_issued and crosses_threshold(late_refs[i][1+i], price)
+                reference = peak if board_crossing else old["last"]
+                if qualifies:
+                    reference = late_refs[i]
                 before, old_price, old_other = reference[0], reference[1+i], reference[2-i]
                 p, old_p = prices[1-i]/sum(prices), old_other/(old_price+old_other)
                 mid = hashlib.sha256(json.dumps([k,i,current["observed"]]).encode()).hexdigest()[:32]
@@ -85,9 +125,10 @@ def compare(last, current, state, blocked):
                     move["line"] = -pair["line"] if i and pair["market"]=="spreads" else pair["line"]
                 batch["moves"].append(move)
                 if qualifies:
+                    move["alert_policy"] = ALERT_POLICY
                     batch["alert_ids"].append(mid)
-                    issued[contract] = row["start"]
-    state.update(desk_windows=history, desk_issued=issued)
+                    late_issued[contract] = row["start"]
+    state.update(desk_windows=history, desk_issued=issued, desk_late_issued=late_issued)
     return batch
 
 

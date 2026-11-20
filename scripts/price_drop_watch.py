@@ -102,7 +102,9 @@ def roundup_text(moves, observed):
     stamp=instant(observed).strftime("%d %b %H:%M UTC")
     ordered=sorted(moves,key=lambda m:(m["start"],m["league"],m["event_id"],m["player"]))
     noun="price drop" if len(ordered)==1 else "price drops"
-    lines=[f"Il Margine · Tennis Price Moves | {stamp}",f"{len(ordered)} observed {noun}",""]
+    from desk_games import ALERT_POLICY
+    title = "Final-hour tennis moves" if ordered and all(m.get("alert_policy") == ALERT_POLICY for m in ordered) else "Tennis Price Moves"
+    lines=[f"Il Margine · {title} | {stamp}",f"{len(ordered)} observed {noun}",""]
     for m in ordered:
         start, earlier, detected = (instant(m[key]) for key in ("start", "before", "after"))
         elapsed = int((detected-earlier).total_seconds())
