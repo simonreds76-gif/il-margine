@@ -4,7 +4,8 @@ import json
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
 
-from statshub_daily_board import CLOSE, LAST, REPORT, START, Reads, board_matches, screen_age
+from statshub_daily_board import (CLOSE, LAST, REPORT, START, PLAYER_POLICY, PRICE_FILTERS,
+                                 Reads, board_matches, screen_age, screen_request)
 from statshub_daily_contracts import LEAGUES, MARKETS, contracts, fixtures, identity, norm, utc, won
 from statshub_daily_io import Provider, Store, timestamp
 
@@ -42,21 +43,36 @@ def original_opportunities(store, day, board):
             continue
         args = dict(games=[f["id"] for f in slate], pageSize=40, hitRateFrom=0, oddsFrom=1.01,
                     includeStale=False, hitRateScope="competition", useSupersub=False)
-        screen = lookup(store, day, "morning", "am", "getPropScreener", args)
+        scoped = board.get("policy")==PLAYER_POLICY
+        ids=args["games"]
+        screen = lookup(store, day, "morning", "am", "getPropScreener", screen_request(ids,1) if scoped else args)
         if not screen:
             gaps["missing original player screen"] += 1
             continue
-        if screen["data"].get("pagination", {}).get("hasNextPage"):
+        screens=[screen]
+        if scoped and screen["data"].get("pagination", {}).get("hasNextPage"):
+            second=lookup(store,day,"morning","am","getPropScreener",screen_request(ids,2))
+            if second: screens.append(second)
+        if screens[-1]["data"].get("pagination", {}).get("hasNextPage"):
             gaps["partial league screen"] += 1
         for f in slate:
-            snap = lookup(store, day, "morning", "am", "getMatchOdds", dict(matchId=f["id"], markets=MARKETS))
+            markets=PRICE_FILTERS if scoped else [m for m in MARKETS if m!="Player Fouls"]
+            snap = lookup(store, day, "morning", "am", "getMatchOdds", dict(matchId=f["id"], markets=markets))
             if not snap or not board_matches(f, snap["data"]):
                 gaps["unverified original fixture odds"] += 1
                 continue
-            raw = [r for r in screen["data"].get("data", []) if identity(r.get("matchId"))==identity(f["id"])]
+            raw = []
+            seen=set()
+            for page in screens:
+                for item in page["data"].get("data",[]):
+                    r={**(page["data"].get("everyRow") or {}),**item}
+                    key=(identity(r.get("playerId")),r.get("statType"),r.get("line"),r.get("oddsType"))
+                    if identity(r.get("matchId"))==identity(f["id"]) and key not in seen:
+                        raw.append({**r,"screenAt":page["at"]})
+                        seen.add(key)
             timed = []
-            lag = max(0, (utc(snap["at"])-utc(screen["at"])).total_seconds()/60)
             for r in raw:
+                lag = max(0, (utc(snap["at"])-utc(r["screenAt"])).total_seconds()/60)
                 age = screen_age(r)
                 timed.append({**r, "bestOddsAgeMinutes": age+lag} if age is not None else r)
             age_limit = 60 - max(0, (stop-utc(snap["at"])).total_seconds()/60)
@@ -230,7 +246,7 @@ def freeze(store,api,day,board):
             record.pop("historyProbability",None)
             record["historyStatus"]="late research lock"
     issued=[p for p in board["picks"] if p["stat"]=="tackles"]
-    obj=dict(day=day,lockedAt=at,boardAt=board["at"],coverage=gaps,excluded=excluded,
+    obj=dict(day=day,lockedAt=at,boardAt=board["at"],screenPolicy=board.get("policy","original"),coverage=gaps,excluded=excluded,
              observations=saved,histories=history,issued=issued)
     obj["sha256"]=hashlib.sha256(json.dumps(obj,sort_keys=True,allow_nan=False).encode()).hexdigest()
     store.put(path,obj,replace=False)
