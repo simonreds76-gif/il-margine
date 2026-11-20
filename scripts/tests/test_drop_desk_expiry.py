@@ -16,12 +16,14 @@ class ExpiryTests(unittest.TestCase):
         self.latest={"observed":(self.now-timedelta(minutes=5)).isoformat(),"events":{m["event_id"]:{"fixture":m["fixture"],"start":m["start"],"home":m["player"],"away":m["opponent"]} for m in self.moves}}
         self.state={"messages":{"882":{"observed":self.moves[0]["after"],"moves":self.moves,"visible":["0","1"],"closed":[],"kind":"text"}}}
         self.edits=[]
+        self.removed=[]
         self.store=type("Storage",(),{"put":lambda s,k,v,replace:True})()
     def check(self):
         def edit(chat,mid,text,kind):
             self.edits.append((chat,mid,text))
             return "edited",kind
-        return expiry.reconcile(self.store,self.state,self.latest,self.now,get_chat=lambda:"private",edit=edit,pause=lambda _:None)
+        return expiry.reconcile(self.store,self.state,self.latest,self.now,get_chat=lambda:"private",
+            edit=edit,remove=lambda chat,mid:self.removed.append((chat,mid)),pause=lambda _:None)
     def test_partial_then_closed_in_original_message(self):
         self.check()
         self.assertEqual(len(self.edits),1)
@@ -31,8 +33,9 @@ class ExpiryTests(unittest.TestCase):
         self.assertEqual(len(self.edits),1)
         self.now+=timedelta(hours=1)
         self.check()
-        self.assertIn("Roundup closed",self.edits[1][2])
-        self.assertEqual([row[1] for row in self.edits],[882,882])
+        self.check()
+        self.assertEqual([row[1] for row in self.edits],[882])
+        self.assertEqual(self.removed,[("private",882)])
         self.assertEqual(self.state["messages"],{})
     def test_early_suspension_is_distinct_from_start_and_recovers(self):
         self.now-=timedelta(seconds=1)
@@ -46,12 +49,65 @@ class ExpiryTests(unittest.TestCase):
         self.latest["events"]["1"]["start"]="2026-11-20T18:00:00Z"
         self.check()
         self.assertFalse(self.state["messages"])
-        self.assertIn("Roundup closed",self.edits[0][2])
+        self.assertEqual(self.edits,[])
+        self.assertEqual(self.removed,[("private",882)])
     def test_stale_board_hides_unconfirmed_picks(self):
         self.latest["observed"]=(self.now-timedelta(minutes=20)).isoformat()
         self.check()
-        self.assertIn("No selections currently",self.edits[0][2])
+        self.assertIn("current quotes unavailable",self.edits[0][2])
+        self.assertIn("Player 1",self.edits[0][2])
+        self.assertNotIn("Player 0",self.edits[0][2])
+        self.assertFalse(self.removed)
         self.assertEqual(self.state["messages"]["882"]["closed"],["0"])
+        self.check()
+        self.assertEqual(len(self.edits),1)
+        self.latest["observed"]=self.now.isoformat()
+        self.check()
+        self.assertEqual(self.state["messages"]["882"]["visible"],["1"])
+
+    def test_telegram_removal_uses_only_original_id_and_requires_ack(self):
+        from unittest.mock import patch
+        with patch.object(expiry,"telegram",return_value=True) as api:
+            expiry.remove_roundup("private",882)
+            api.assert_called_once_with("deleteMessages",{"chat_id":"private","message_ids":[882]})
+        with patch.object(expiry,"telegram",return_value=False), self.assertRaises(RuntimeError):
+            expiry.remove_roundup("private",882)
+
+    def test_failed_removal_can_retry_without_sending_or_editing(self):
+        from unittest.mock import Mock
+        self.now+=timedelta(hours=1)
+        _,_,failed=expiry.reconcile(self.store,self.state,self.latest,self.now,get_chat=lambda:"private",
+            edit=Mock(side_effect=AssertionError),remove=Mock(side_effect=RuntimeError))
+        self.assertEqual(failed,["882"])
+        self.check()
+        self.assertEqual(self.removed,[("private",882)])
+        self.assertFalse(self.edits)
+
+    def test_expiry_after_delete_window_keeps_dated_record_in_place(self):
+        self.state["messages"]["882"]["delivered_at"]=(self.now-timedelta(hours=48)).isoformat()
+        self.now+=timedelta(hours=1)
+        self.check()
+        self.assertFalse(self.removed)
+        self.assertIn("Historical prices at detection",self.edits[0][2])
+        self.assertIn("Player 0",self.edits[0][2])
+        self.assertFalse(self.state["messages"])
+
+    def test_migration_recovers_only_recent_fully_started_messages(self):
+        from unittest.mock import patch
+        opened = self.state["messages"]["882"]
+        def discover(store,recent,now):
+            for mid in ("882","901","902","903"):
+                recent["messages"][mid]=deepcopy(opened)
+            for mid in ("901","902"):
+                recent["messages"][mid]["moves"]=[self.moves[0]]
+            recent["messages"]["902"]["delivered_at"]=(now-timedelta(hours=48)).isoformat()
+        with patch.object(expiry,"discover",side_effect=discover):
+            expiry.recover_closed_notices(self.store,self.state,self.now)
+        self.assertTrue(self.state["silent_expiry"])
+        self.assertIs(self.state["messages"]["882"],opened)
+        self.assertEqual(set(self.state["messages"]),{"882","901"})
+        self.check()
+        self.assertEqual(self.removed,[("private",901)])
     def test_explicit_in_play_evidence_overrides_stale_prematch_row(self):
         import pinnradar_tennis as p
         from test_pinnradar_tennis import event,START
