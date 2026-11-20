@@ -32,7 +32,7 @@ export default function FairOddsCalculatorPage() {
           </nav>
           <h1 className="nv-page-title">Devig</h1>
           <p className="nv-page-intro">
-            A bookmaker’s prices add up to more than 100%. <strong>The surplus is the margin.</strong> Remove it to see the chance the market itself gives each outcome. Every figure comes from the prices you enter, not from a forecast of ours.
+            Turn each of a bookmaker’s prices into a chance and the chances usually add up to more than 100%. <strong>The surplus is the margin.</strong> Remove it to see the chance the market itself gives each outcome. Every figure comes from the prices you enter, not from a forecast of ours.
           </p>
         </header>
         <MarginLab standalone />
