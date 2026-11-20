@@ -33,6 +33,14 @@ import {
 
 export const revalidate = 43200;
 
+// Fixed test cohort for the 20 November 2026 Search Console comparison.
+const unbrandedTitlePages = new Set([
+  "epl/newcastle-united",
+  "epl/manchester-city",
+  "bundesliga/vfb-stuttgart",
+  "la-liga/villarreal",
+]);
+
 type PageProps = {
   params: Promise<{
     leagueSlug: string;
@@ -149,7 +157,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const description = buildClubPenaltyDescription(team);
 
   return {
-    title,
+    title: unbrandedTitlePages.has(`${team.leagueKey}/${team.slug}`) ? { absolute: title } : title,
     description,
     alternates: { canonical: team.absoluteUrl },
     keywords: [
