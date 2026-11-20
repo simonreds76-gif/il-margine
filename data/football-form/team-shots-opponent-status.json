@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20T17:02:46Z",
+  "generated_at": "2026-11-20T18:00:53Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -7,9 +7,9 @@
   "promotion_gate": "BLOCKED",
   "live_routing": false,
   "prospective": {
-    "signals": 133,
+    "signals": 135,
     "settled": 124,
-    "pending": 8,
+    "pending": 10,
     "pnl_units": -18.78999999999999,
     "roi": -0.15153225806451603,
     "void": 1,
@@ -19,9 +19,9 @@
     "mean_clv": 0.01458478125
   },
   "latest_scan": {
-    "scored_rows": 78,
-    "scored_fixtures": 20,
-    "explanation": "39 fresh paired contracts; 78 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: outside_capture_window=193, stale_price=235. Input cohorts kept separate. Before 30 October 2026: 98 settled, 30 October 2026 to input repair: 26 settled, Prospective repaired inputs: 0 settled. Promotion review uses repaired inputs only; original records remain intact."
+    "scored_rows": 98,
+    "scored_fixtures": 23,
+    "explanation": "49 fresh paired contracts; 98 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: outside_capture_window=170, stale_price=235. Input cohorts kept separate. Before 30 October 2026: 98 settled, 30 October 2026 to input repair: 26 settled, Prospective repaired inputs: 0 settled. Promotion review uses repaired inputs only; original records remain intact."
   },
   "settled_this_run": 0,
   "result_source": {
@@ -124,10 +124,10 @@
       "roi": -0.20823076923076922
     },
     "repaired_inputs": {
-      "signals": 8,
+      "signals": 10,
       "settled": 0,
       "void": 0,
-      "pending": 8,
+      "pending": 10,
       "wins": 0,
       "losses": 0,
       "pnl_units": 0,
@@ -139,8 +139,8 @@
   "age_days": 68,
   "input_integrity": {
     "policy": "shots-input-integrity-20261113-v1",
-    "generated_at": "2026-11-20T17:02:46.966580+00:00",
-    "base_sha256": "353542c1141f3558a527bf8204b0bf97f1234187b9c6c7a2dd0626b0de23d1dd",
+    "generated_at": "2026-11-20T18:00:53.415539+00:00",
+    "base_sha256": "06045cbb32574292278d106a7cb51f8426c0924a1266f9b771183f72ed11547b",
     "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
     "source_rows": 44178,
     "prediction_rows": 44172,

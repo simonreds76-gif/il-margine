@@ -9,7 +9,7 @@
     "priced_lines": 194,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 11
+    "value_ladder_lines": 10
   },
   "evidence": {
     "clv": 0.047953,
@@ -159,37 +159,40 @@
   },
   "forecast_input_capture": {
     "accepted_packets": [
-      "e691d69913b6de37340abf4a6856a19caf247087703756cb5dc99901af387acf",
-      "cd7c01ade1527f5d47dca793cc05ba52896400490b089b1d700c928f2a2905c7",
-      "4c7feec13e91bf3fbc93bbe1a1a80619eaa853c8b32a9115dfb4b7bbf6cc5628",
-      "7e896724095514921b8321db693906f7ff6acec3e3809482d58247f35a066cc0",
-      "8db469d062a4fe201adc4b68360c28084382ebb23cf08be0131dc2424e92de17",
-      "33e75bcc029e4087fa79e2f7b5c08bd6bb93dada9dbd9fb307eadaaf9a2ba99e",
-      "bf4fc50e10cfe69627666646e573edc419bf49fc032bd72ee286256239e5fde0",
-      "366566775f12c79c41b6bf8fa685b96ff3bb26204ced128ffc903e7e503a6bd5",
-      "4e2d54ff616d0b7ebb4d212fc2d751798e8ab597d03be1a94272f33838164b73",
-      "e9c156f5a8139b41374df07d2ff5d63f8f028566f80fd290cf7a61c130d5db4c",
-      "a8ca8120ae8c9fac418c30767b3fc94b9e0329600ad75a396845e86db17db16d",
-      "31490566db942f89b236ca8fbc795feaaa00ce1e671116fe19e1785b9ee9181a",
-      "1f326e24586e26bd819d772158f24f457571b003a81730aa2f5280072d2eeb4a",
-      "fa810bcca9c5c369d2080848a831a9d75a6c2aa0238bb4573698661f9b898fb5",
-      "99efad0e4b07d1ed56357d7134b9aa232adffff8ab3e9dddf4a085a39d12858c",
-      "791741ee58d11561423c5219267a44c5475b52502208a419d15f9b5ec70ffbc2",
-      "0e517cd55e9f1698cd9d268a39193a24f8670fffda0671d64993108229657253",
-      "294965176f1c7e7469a6c2c9a0501daa994e1ec14cf87dff419df3bdbb0c1a6e",
-      "7d9cd03046020f4e2cc2322450e06c9db59763d0c86b657b8315b64ed674a1b5",
-      "ee643ad1011b678f791059797080aecf046aed6487a7d0821399402978f264c2"
+      "34c34c54941bb9754b7aae67cb9ec252ef0743a95509e3796dbcc0e09b683e8b",
+      "453a6210ea3d2036ca9273b160b12d3019bec0b77e74f47940dff3e9c1ab5bdc",
+      "8d8fac7be5df182031cf0770e15d561f1b64bc61a8d24d09834d2584bc0cf2b8",
+      "4067e011483814989432c193276e5b6fc4d3e3840b65dcff317111992c81984c",
+      "82d566be0949b293e036ab41b59973f9968aed61fa4d7767cbe07da95b3c4c2b",
+      "b6e5dcc3dedad99349bb7b23892ce38903aa5f48455a2f7ef278920390477cda",
+      "2b038825241ace0d915fc8a19bc9d42d145e4eba11d1cddf0ce6ed746ae2a4de",
+      "7667fab082f8ee71709e71c6bd576a89dbd09832b0768dbb9c9a25e075a982dd",
+      "b6f9310a5685913a4054baca28e81d37c2b782dc12f4c68f8d23a7de3184a557",
+      "cb14be3788bac944dd2841b946a92be9d38c44d1400f92b29281dfd6eee52e59",
+      "b075e295d6c8b72d21c6e44dceaa3fbb662803e8a4e20857649d0787f1fdf47a",
+      "2ef2de003e7f7da5138a57c6457fb28805682a24a97431027b62a690917a22f4",
+      "d034e8cd6e53250bdde65d5cce9fa1211497aba8603d0cdd3ed10141720007b6",
+      "9a4ece5472044dec165a618167050d97b5f9031759e4aa6a725f352cc7d2ef1e",
+      "d40dab7c640657fa6036e34efcb929c876e9d2dfe65a85f479b82f0e390bfefd",
+      "8d64b70a8c61109a4d4a1424f18c8cceddc3c759ff4d8eb67fadf0392d26c837",
+      "e0809bc92acccf02039453b96ad978aaf1da77567aec990a4755154b9352adfc",
+      "1267fd0992adac0b559d7089e71e4793ba7ee39e05f1e3e5d70526da918b73ba",
+      "2f3b0169a742fef837acaa9a7d4f31fc48c8b4f19c2563f3d069180e0f7bf85f",
+      "2f2532197177132ff59a14d536f2baa1769ea8e9f4ef3504db848f19469a6fed",
+      "5c9f6847f6556f52eaf939a01fe2454bfeb47bde0178a51259028f943952e169",
+      "d8bbbc3adda0e24e94ad990bd60c8b30f603249888c91007dbcc710b75f52c34",
+      "84b450e22013b9e88d8782f20672a391dbb0b9f644ba8c2311d8efeb828b953f"
     ],
     "actual_stake": 0,
-    "checked_at": "2026-11-20T17:04:26.520347+00:00",
+    "checked_at": "2026-11-20T18:00:42.717166+00:00",
     "counts": {
-      "already_saved": 20,
-      "not_fresh_prematch": 53
+      "not_fresh_prematch": 32,
+      "offers_saved": 162
     },
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "saved": 23,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-11-20T17:04:25Z",
+  "generated_at": "2026-11-20T18:00:42Z",
   "half_adjustment": {
     "actual_stake": 0,
     "arms": {
@@ -227,11 +230,12 @@
       }
     },
     "fixtures": 0,
-    "generated_at": "2026-11-20T17:04:26.755801+00:00",
+    "generated_at": "2026-11-20T18:00:42.892778+00:00",
     "holds": {},
     "paired_settled_fixtures": 0,
     "scan_exclusions": {
-      "ineligible_contract_or_input": 141
+      "ineligible_contract_or_input": 161,
+      "superseded_book_board": 1
     },
     "start_at": "2026-11-17T18:55:00+00:00",
     "status": "AWAITING_FIRST_VERIFIED_BOARD"
@@ -241,12 +245,12 @@
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
-      "not_new_fresh_prematch": 53,
-      "starter_unavailable": 35
+      "not_new_fresh_prematch": 32,
+      "starter_unavailable": 38
     },
     "forecast_fixtures": 202,
     "forecast_keepers": 413,
-    "generated_at": "2026-11-20T17:04:26.568609+00:00",
+    "generated_at": "2026-11-20T18:00:42.788084+00:00",
     "last_capture_at": "2026-11-20T17:02:06.873948+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,

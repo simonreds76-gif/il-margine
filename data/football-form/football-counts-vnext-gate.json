@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20T17:03:07Z",
+  "generated_at": "2026-11-20T18:01:00Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -137,17 +137,17 @@
     },
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
-      "explanation": "At least one candidate passed every locked shadow gate. Input cohorts kept separate. Before 30 October 2026: 9 settled, 30 October 2026 to input repair: 20 settled, Prospective repaired inputs: 0 settled. Promotion review uses repaired inputs only; original records remain intact. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-20T17:02:46.966580+00:00. Completed-fixture coverage checked at 2026-11-20T17:00:35.673397+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 196). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
-      "scored_rows": 232,
+      "explanation": "At least one candidate passed every locked shadow gate. Input cohorts kept separate. Before 30 October 2026: 9 settled, 30 October 2026 to input repair: 20 settled, Prospective repaired inputs: 0 settled. Promotion review uses repaired inputs only; original records remain intact. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-20T18:00:53.415539+00:00. Completed-fixture coverage checked at 2026-11-20T17:00:35.673397+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 196). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
+      "scored_rows": 234,
       "scored_fixtures": 43,
-      "eligible_rows": 12,
-      "eligible_fixtures": 11,
-      "blocked_rows": 220,
+      "eligible_rows": 3,
+      "eligible_fixtures": 3,
+      "blocked_rows": 231,
       "blocker_rows": {
-        "better_fresh_price_available": 48,
-        "edge_below_3pct": 220,
-        "price_not_fresh_10m": 18,
-        "price_older_than_3h": 18
+        "better_fresh_price_available": 44,
+        "edge_below_3pct": 225,
+        "price_not_fresh_10m": 98,
+        "price_older_than_3h": 16
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 10,
@@ -166,15 +166,15 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-20T17:02:38Z",
+      "generated_at": "2026-11-20T18:00:47Z",
       "status": "OK",
       "missing_history": [],
       "scored_fixtures": 43
     },
     "input_integrity": {
       "policy": "shots-input-integrity-20261113-v1",
-      "generated_at": "2026-11-20T17:02:46.966580+00:00",
-      "base_sha256": "353542c1141f3558a527bf8204b0bf97f1234187b9c6c7a2dd0626b0de23d1dd",
+      "generated_at": "2026-11-20T18:00:53.415539+00:00",
+      "base_sha256": "06045cbb32574292278d106a7cb51f8426c0924a1266f9b771183f72ed11547b",
       "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
       "source_rows": 44178,
       "prediction_rows": 44172,
@@ -351,16 +351,16 @@
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
       "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 1226,
+      "scored_rows": 1284,
       "scored_fixtures": 48,
-      "eligible_rows": 87,
-      "eligible_fixtures": 24,
-      "blocked_rows": 1139,
+      "eligible_rows": 74,
+      "eligible_fixtures": 14,
+      "blocked_rows": 1210,
       "blocker_rows": {
-        "better_fresh_price_available": 438,
-        "edge_below_3pct": 1072,
-        "price_not_fresh_10m": 198,
-        "price_older_than_3h": 198
+        "better_fresh_price_available": 248,
+        "edge_below_3pct": 1115,
+        "price_not_fresh_10m": 628,
+        "price_older_than_3h": 70
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 10,
