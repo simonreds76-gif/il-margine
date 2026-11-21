@@ -5,16 +5,16 @@
     "blocked_lines": 0,
     "blocker_counts": {},
     "candidate_board_preserved": false,
-    "eligible_lines": 7,
-    "priced_lines": 194,
+    "eligible_lines": 10,
+    "priced_lines": 296,
     "provisional_lines": 0,
-    "signals_added": 0,
-    "value_ladder_lines": 10
+    "signals_added": 2,
+    "value_ladder_lines": 21
   },
   "evidence": {
     "clv": 0.047953,
     "clv_matched": 36,
-    "pending": 10,
+    "pending": 12,
     "pnl_units": 13.2911,
     "quote_quarantine_records": [
       {
@@ -153,46 +153,53 @@
       "independently_reviewed_named_keeper_count": 2,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 120,
+    "signals": 122,
     "true_close_coverage": 0.346154,
     "void": 6
   },
   "forecast_input_capture": {
     "accepted_packets": [
-      "34c34c54941bb9754b7aae67cb9ec252ef0743a95509e3796dbcc0e09b683e8b",
-      "453a6210ea3d2036ca9273b160b12d3019bec0b77e74f47940dff3e9c1ab5bdc",
-      "8d8fac7be5df182031cf0770e15d561f1b64bc61a8d24d09834d2584bc0cf2b8",
-      "4067e011483814989432c193276e5b6fc4d3e3840b65dcff317111992c81984c",
-      "82d566be0949b293e036ab41b59973f9968aed61fa4d7767cbe07da95b3c4c2b",
-      "b6e5dcc3dedad99349bb7b23892ce38903aa5f48455a2f7ef278920390477cda",
-      "2b038825241ace0d915fc8a19bc9d42d145e4eba11d1cddf0ce6ed746ae2a4de",
-      "7667fab082f8ee71709e71c6bd576a89dbd09832b0768dbb9c9a25e075a982dd",
-      "b6f9310a5685913a4054baca28e81d37c2b782dc12f4c68f8d23a7de3184a557",
-      "cb14be3788bac944dd2841b946a92be9d38c44d1400f92b29281dfd6eee52e59",
-      "b075e295d6c8b72d21c6e44dceaa3fbb662803e8a4e20857649d0787f1fdf47a",
-      "2ef2de003e7f7da5138a57c6457fb28805682a24a97431027b62a690917a22f4",
-      "d034e8cd6e53250bdde65d5cce9fa1211497aba8603d0cdd3ed10141720007b6",
-      "9a4ece5472044dec165a618167050d97b5f9031759e4aa6a725f352cc7d2ef1e",
-      "d40dab7c640657fa6036e34efcb929c876e9d2dfe65a85f479b82f0e390bfefd",
-      "8d64b70a8c61109a4d4a1424f18c8cceddc3c759ff4d8eb67fadf0392d26c837",
-      "e0809bc92acccf02039453b96ad978aaf1da77567aec990a4755154b9352adfc",
-      "1267fd0992adac0b559d7089e71e4793ba7ee39e05f1e3e5d70526da918b73ba",
-      "2f3b0169a742fef837acaa9a7d4f31fc48c8b4f19c2563f3d069180e0f7bf85f",
-      "2f2532197177132ff59a14d536f2baa1769ea8e9f4ef3504db848f19469a6fed",
-      "5c9f6847f6556f52eaf939a01fe2454bfeb47bde0178a51259028f943952e169",
-      "d8bbbc3adda0e24e94ad990bd60c8b30f603249888c91007dbcc710b75f52c34",
-      "84b450e22013b9e88d8782f20672a391dbb0b9f644ba8c2311d8efeb828b953f"
+      "e6337744f15bdd58a73a948e95c554024273bcf47b64c6c8354495c6099861e9",
+      "6173be90186f259760abc770a22a95b996a83a5c9bf3338ee86512c7c3f299df",
+      "6dba47f1cb455d604ac98d454e966228b4bc533c50ea9541e4681092da18a4dc",
+      "10c0618e698dc15bf30b7928a383e67598987c43493a59d32d4ed59ae959332d",
+      "6be0ede0d4ac37b6a28857a62498120dd7615ea9ee2dae654c9ae3ebe08ccbba",
+      "abadd040d7805c831a3cf0ef3bab0f448bb04f9ae3d51b2455cc51acc1305e7e",
+      "e3adb70b38e9a4bde91449740dfd0b47e9f918b2d567b208f5950a7d09a6bc95",
+      "e86611cb55cec3618777b29287bac44c8169b173505972865ba65bce0055dfa2",
+      "28589dd6484608757eb72add096fff91e91c9f2fff2e94a8bbd0937c8547a539",
+      "4b0a501bf6c7e0189502ddcb3fb08e44cefd3eac4f1b28ef74932fc0ecd23944",
+      "b674bb1f726d09b07a0ba19d346abc5ebf50fcd943b2e628211ca0f1dab0d95b",
+      "673752ca310479b6236da1113596318bbc095489e50b57afb344f7d457267923",
+      "015083e3cf85780387704f6b151c3d27feb0b45e9268f4168d471bbc59d3fa60",
+      "39fe3c0a59e3e68aaa7b9bdf58a08d2163039926131a7f625b0c80a7ac79d928",
+      "45cf7a1ae64c0172e436f9bb0b3d177b083930fe4f714288c23eb1e32e0098b8",
+      "1e5c7eff80ef29b04654bd282dd9679c96f4d7fea7d75209192b078343dcbe81",
+      "f69daa916df673dd224ebec006935662ffb385e08b1984c1a0b37d26802fb2ca",
+      "93e801651d6ce05221ffc5168fddbf5c7ec139e0f180f90160906ab890bfe68e",
+      "2510246ed92b8e7cc77e4b6c4cb90603b96976a35e18762be82e7c6ace3ecf74",
+      "be7106de3f86e68b36112c78669735539aa9e910fa0ebaeb44e46e1534febe5b",
+      "ffbfecb8ff618c91096b220ce6744243826091a9356d1f4219bc198308ccc7af",
+      "f7d95dee09f724ef89fe3c1ca09a871da6daf0e7203149710469ce8b1d2aa41b",
+      "85b31465283d6740020485414406ced8e27a7af0cb44a75a16618561848d06d6",
+      "b54ed294c53b399a58dd8e5b409595d5a74c987dd6fd832ce96beb201ba7fb58",
+      "34eab860de3c9a4ccd193b79f91a191ab92748ae109fb983f6acc495bdb57f87",
+      "754c4f179347131f1d69913456088398456ed60806afa55b4610e70141080f4b",
+      "c6b4cef4fa0b49354b6e77f27206bf15c49547da214bdee4a7d3e38406881e63",
+      "6c8085ddeeca2ff9c14c6a0694ac8f6a9e2fe38052920a1c87f3b8cd5b7e394e",
+      "e3146089733252b8259dea7ce1dbf76aa7904ae9ca8d029fc78e6c0f838a1cfe",
+      "c2681f398f147da16208783b32af168de6a83d499a360daeb18aaa47de7bf177"
     ],
     "actual_stake": 0,
-    "checked_at": "2026-11-20T18:00:42.717166+00:00",
+    "checked_at": "2026-11-21T00:13:55.217854+00:00",
     "counts": {
-      "not_fresh_prematch": 32,
-      "offers_saved": 162
+      "not_fresh_prematch": 96,
+      "offers_saved": 200
     },
-    "saved": 23,
+    "saved": 30,
     "status": "CAPTURED"
   },
-  "generated_at": "2026-11-20T18:00:42Z",
+  "generated_at": "2026-11-21T00:13:54Z",
   "half_adjustment": {
     "actual_stake": 0,
     "arms": {
@@ -230,12 +237,11 @@
       }
     },
     "fixtures": 0,
-    "generated_at": "2026-11-20T18:00:42.892778+00:00",
+    "generated_at": "2026-11-21T00:13:55.500969+00:00",
     "holds": {},
     "paired_settled_fixtures": 0,
     "scan_exclusions": {
-      "ineligible_contract_or_input": 161,
-      "superseded_book_board": 1
+      "ineligible_contract_or_input": 200
     },
     "start_at": "2026-11-17T18:55:00+00:00",
     "status": "AWAITING_FIRST_VERIFIED_BOARD"
@@ -245,16 +251,16 @@
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
-      "not_new_fresh_prematch": 32,
-      "starter_unavailable": 38
+      "not_new_fresh_prematch": 96,
+      "starter_unavailable": 43
     },
-    "forecast_fixtures": 202,
-    "forecast_keepers": 413,
-    "generated_at": "2026-11-20T18:00:42.788084+00:00",
-    "last_capture_at": "2026-11-20T17:02:06.873948+00:00",
+    "forecast_fixtures": 213,
+    "forecast_keepers": 435,
+    "generated_at": "2026-11-21T00:13:55.292313+00:00",
+    "last_capture_at": "2026-11-21T00:13:55.292313+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 0,
-    "new_selections": 0,
+    "new_forecasts": 22,
+    "new_selections": 1,
     "next_review_at": null,
     "paired_scores": {
       "current": {
@@ -272,12 +278,12 @@
       "current": {
         "losses": 19,
         "overdue": 9,
-        "pending": 3,
+        "pending": 4,
         "profit": 0.18815000000000015,
         "pushes": 0,
         "review": 9,
         "roi": 0.010452777777777787,
-        "selections": 52,
+        "selections": 53,
         "settled": 36,
         "stake": 18.0,
         "voids": 4,
@@ -333,12 +339,12 @@
         "current": {
           "losses": 3,
           "overdue": 3,
-          "pending": 3,
+          "pending": 4,
           "profit": 0.19000000000000006,
           "pushes": 0,
           "review": 3,
           "roi": 0.054285714285714305,
-          "selections": 13,
+          "selections": 14,
           "settled": 7,
           "stake": 3.5,
           "voids": 0,
@@ -362,6 +368,34 @@
     },
     "review_milestone": 100,
     "selections": [
+      {
+        "away": "Frosinone Calcio",
+        "bookmaker": "Grosvenor",
+        "captured_at": "2026-11-21T00:13:40+00:00",
+        "contract_scope": "team_goalkeeper_away",
+        "edge": 0.10514331631549645,
+        "event_id": "71945416",
+        "fair_odds": 1.7011368319792628,
+        "goalkeeper": "Lorenzo Palmisani",
+        "home": "AC Milan",
+        "identity_basis": "same_fixture_lineup_side",
+        "kickoff_at": "2026-11-22T17:00:00+00:00",
+        "line": 3.5,
+        "lineup_status": "predicted_starter",
+        "match_id": "5749750",
+        "model": "current",
+        "odds": 1.88,
+        "overdue": false,
+        "player_id": "1289655",
+        "profit": 0,
+        "quote_verification": "",
+        "reason": "awaiting_verified_keeper_result",
+        "registered_at": "2026-11-21T00:13:55.292313+00:00",
+        "settlement_policy": "grosvenor_full90_scope_agreement_v1",
+        "side": "over",
+        "status": "pending",
+        "team_id": "9891"
+      },
       {
         "away": "AS Roma",
         "bookmaker": "Grosvenor",
@@ -1888,7 +1922,7 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 34,
+      "awaiting_verified_keeper_result": 56,
       "incomplete_or_conflicting_full_match_count": 24,
       "keeper_identity_unresolved": 4,
       "team_keeper_participation_or_rules_review": 33,
