@@ -11,7 +11,7 @@ import { SETTLING_NOTE, State, VenueFlag, hostOf as placeOf, impliedText, market
 import type { VenueMap } from "./DeskParts";
 import {
   availability, buildRoundups, cutoffOf, defaultRoundup, delta, dropPct, isOpen, isQualifying, moveKey, outcomeLabel, outcomeOf, paper,
-  groupDrops, matchKey, orderDrops, percent, price, tally, units, utcClock, utcDate, utcStamp,
+  displayedLimit, groupDrops, matchKey, orderDrops, percent, price, tally, units, utcClock, utcDate, utcStamp,
 } from "./desk";
 import type { DeskFixture, DeskMove, DropOrder } from "./desk";
 
@@ -58,6 +58,16 @@ function Spark({ move }: { move: DeskMove }) {
   </svg>;
 }
 
+function RowLimit({ move }: { move: DeskMove }) {
+  const earlier = move.beforeLimit;
+  const detected = move.detectionLimit;
+  const changed = earlier && (earlier.amount !== detected?.amount || earlier.currency !== detected?.currency);
+  return <span className={styles.rowLimit} data-role="row-limit">
+    <span>Max stake at detection <strong>{detected ? displayedLimit(detected.amount, detected.currency) : "Unrecorded"}</strong></span>
+    {changed && <span>Earlier {displayedLimit(earlier.amount, earlier.currency)}</span>}
+  </span>;
+}
+
 function DropRow({ move: r, selected, archive, at, venue, onChoose }: {
   move: DeskMove; selected: boolean; archive: boolean; at: number | null;
   venue?: VenueMap[string]; onChoose: (move: DeskMove) => void;
@@ -84,6 +94,7 @@ function DropRow({ move: r, selected, archive, at, venue, onChoose }: {
         {settled !== null && <small data-tone={settled > 0 ? "won" : settled < 0 ? "lost" : undefined}>{units(settled)}</small>}
       </span>
       <Spark move={r} />
+      <RowLimit move={r} />
     </button>
   );
 }
@@ -385,7 +396,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
         <button type="button" className={styles.picker} aria-expanded={pickerOpen} aria-controls={listId} onClick={() => setPickerOpen(open => !open)}>
           <span className={styles.pickerLabel}>Showing {index + 1} of {rows.length}</span>
           <strong>{m.player}</strong>
-          <span className={styles.pickerMove}><b>{pointsText(m)}</b> implied probability</span>
+          <span className={styles.pickerMove}><b>{pointsText(m)}</b> implied probability<RowLimit move={m} /></span>
           <span className={styles.pickerCue}>{pickerOpen ? "Close list" : rows.length > 1 ? "Choose from " + rows.length : "Show list"}</span>
         </button>
         <ol id={listId} className={styles.railList} ref={listRef} data-open={pickerOpen ? "true" : "false"} onKeyDown={onListKey}>

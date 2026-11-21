@@ -1,5 +1,16 @@
 import type { Fixture, Move } from "./types";
 
+/** Keep limit formatting identical on the server, in the list and on exported charts. */
+export function amountText(n: number) {
+  const abs = Math.abs(n);
+  const fixed = Number.isInteger(abs) ? String(abs) : abs.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
+  const [whole, frac] = fixed.split(".");
+  return (n < 0 ? "−" : "") + whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (frac ? "." + frac : "");
+}
+export function displayedLimit(amount: number, currency: string) {
+  return currency === "USD" ? "$" + amountText(amount) : amountText(amount) + " " + currency;
+}
+
 /**
  * Move plus the optional receipt fields. Declared as an intersection so this
  * compiles whether or not the fields have already been added to types.ts.

@@ -187,12 +187,15 @@
 .railList li+li{border-top:1px solid var(--ds-hair)}
 /* One grid for every entry: who and where on the left, the figures on one right edge.
    The probability rise is the lead figure, the two prices sit under it, then time and trace. */
-.item{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"meta state" "name gain" "vs odds" "when spark";gap:.2rem .75rem;align-items:baseline;
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"meta state" "name gain" "vs odds" "when spark" "limit limit";gap:.2rem .75rem;align-items:baseline;
   width:100%;min-height:64px;padding:.7rem 1rem .8rem;text-align:left;background:transparent;border:0;color:var(--ds-text)}
 .item:hover{background:var(--ds-raise)}
 .item[aria-pressed=true]{background:var(--ds-raise);box-shadow:inset 3px 0 0 var(--ds-accent)}
 .page .item:focus-visible{outline-offset:-3px}
 .item>*{min-width:0}
+.rowLimit{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 .75rem;color:var(--ds-soft);font-size:.75rem;line-height:1.4;font-weight:400;font-variant-numeric:tabular-nums}
+.rowLimit strong{color:var(--ds-text);font-weight:650}
+.item>.rowLimit{grid-area:limit}
 .itemMeta{grid-area:meta;align-self:center;display:flex;align-items:center;gap:.45rem;font-size:.75rem;font-weight:600;line-height:1.35;color:var(--ds-soft);overflow-wrap:anywhere}
 .itemState{grid-area:state;align-self:center;justify-self:end;display:inline-flex;align-items:center;gap:.5rem}
 .itemState small{font-size:.75rem;font-weight:700;color:var(--ds-text);white-space:nowrap}

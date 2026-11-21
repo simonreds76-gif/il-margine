@@ -14,6 +14,7 @@ async function files(prefix: string) {
   return data.map(row => row.name).filter(name => /^\d{6}-\d{6}\.json$/.test(name));
 }
 type Saved = {
+  alert_reference_limit?: RawLimit; alert_detection_limit?: RawLimit; reported_market_max_at_detection?: RawLimit;
   fixture: string; event_id: string; contract?:string; market?:string; side?:number; selection?:string; opposite?:string;
   tour: string; league: string; player: string; opponent: string; start: string; before: string; after: string;
   old: number; new: number; old_opponent: number; new_opponent: number; move_id: string;
@@ -166,14 +167,21 @@ export async function readDay(day: string, circuit: Circuit = "ATP") {
     if (!runs) { runs=limitRuns(quotes); runCache.set(quotes,runs); }
     return runs;
   }
-  const moves: Move[] = batches.reverse().flatMap(batch=>batch.moves.map(m=>({
-    fixtureRef:m.fixture,tour:m.tour,league:m.league,market:m.market,player:m.selection??m.player,opponent:m.opposite??m.opponent,
-    fixtureLabel:m.market && m.market!=="winner" ? [m.player,m.opponent].join(" vs "):undefined,
-    start:m.start,before:m.before,after:m.after,profit:outcomes[m.move_id]?.profit,
-    old:m.old,new:m.new,quotes:historyFor(m),limitRuns:limitsFor(historyFor(m)),...notified.get(m.move_id),
-    activeUntil: outcomes[m.move_id] ? undefined : moveCutoff(m,latest.events[m.event_id],latest.observed,now),
-    result:outcomes[m.move_id]?.result??"Awaiting verified result",score:outcomes[m.move_id]?.score,notified:notified.has(m.move_id),
-  })));
+  const moves: Move[] = batches.reverse().flatMap(batch=>batch.moves.map(m=>{
+    const quotes = historyFor(m);
+    // Use the recorded market and observation time. A later limit can belong to a different odds move.
+    const beforeLimit = limitOf(m.alert_reference_limit) ?? quotes.find(q => q.time === m.before)?.limit;
+    const detectionLimit = limitOf(m.reported_market_max_at_detection) ?? limitOf(m.alert_detection_limit)
+      ?? quotes.find(q => q.time === m.after)?.limit;
+    return {
+      fixtureRef:m.fixture,tour:m.tour,league:m.league,market:m.market,player:m.selection??m.player,opponent:m.opposite??m.opponent,
+      fixtureLabel:m.market && m.market!=="winner" ? [m.player,m.opponent].join(" vs "):undefined,
+      start:m.start,before:m.before,after:m.after,profit:outcomes[m.move_id]?.profit,
+      old:m.old,new:m.new,beforeLimit,detectionLimit,quotes,limitRuns:limitsFor(quotes),...notified.get(m.move_id),
+      activeUntil: outcomes[m.move_id] ? undefined : moveCutoff(m,latest.events[m.event_id],latest.observed,now),
+      result:outcomes[m.move_id]?.result??"Awaiting verified result",score:outcomes[m.move_id]?.score,notified:notified.has(m.move_id),
+    };
+  }));
   const fixtures:Fixture[]=Object.values(latest.events).filter(e => inCircuit(e.tour, circuit)).map(e=>({tour:e.tour,league:e.league,start:e.start,home:e.home,away:e.away,homePrice:e.home_price,awayPrice:e.away_price,activeUntil:availableUntil(e.start,latest.observed,now)}));
   return { moves,fixtures,observed:latest.observed,scans:batches.filter(b=>circuit==="ATP" || b.compared_by_circuit !== undefined).length,compared:batches.reduce((n,b)=>n+(b.compared_by_circuit?.[circuit] ?? (circuit==="ATP" ? b.compared_pairs : 0)),0) };
 }

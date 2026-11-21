@@ -6,6 +6,7 @@ export type Limit = { amount:number; currency:string };
 export type LimitRun = Limit & { start:string; end:string; joined:boolean };
 export type Quote = { time: string; price: number; other?: number; gap?: boolean; limit?: Limit };
 export type Move = {
+  beforeLimit?: Limit; detectionLimit?: Limit;
   limitRuns?: LimitRun[]; fixtureRef?: string; market?:string; fixtureLabel?:string; profit?:number;
   activeUntil?: string; batchId?: string; batchAt?: string; alertedAt?: string;
   tour: string; league: string; player: string; opponent: string; start: string;

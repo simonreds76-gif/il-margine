@@ -5,7 +5,7 @@ import type { KeyboardEvent, PointerEvent, ReactNode, Ref } from "react";
 import styles from "./board.module.css";
 import { DeskIcon, marketIcon } from "./DeskIcon";
 import { marketName } from "./DeskParts";
-import { delta, outcomeLabel, outcomeOf, paper, price, slug, units, utcClock, utcDate, utcStamp } from "./desk";
+import { amountText, displayedLimit, delta, outcomeLabel, outcomeOf, paper, price, slug, units, utcClock, utcDate, utcStamp } from "./desk";
 import type { DeskMove } from "./desk";
 import type { LimitRun } from "./types";
 
@@ -64,17 +64,6 @@ export function spanText(ms: number) {
   if (m < 60) return m + " min";
   const h = Math.floor(m / 60), r = m % 60;
   return h < 48 ? h + " h" + (r ? " " + r + " min" : "") : Math.round(h / 24) + " d";
-}
-
-/** A limit exactly as recorded, grouped in threes. Built by hand so server and browser print the same string. */
-function amountText(n: number) {
-  const abs = Math.abs(n);
-  const fixed = Number.isInteger(abs) ? String(abs) : abs.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
-  const [whole, frac] = fixed.split(".");
-  return (n < 0 ? "−" : "") + whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (frac ? "." + frac : "");
-}
-function displayedLimit(amount: number, currency: string) {
-  return currency === "USD" ? "$" + amountText(amount) : amountText(amount) + " " + currency;
 }
 
 /** Gutter form of the same figure: abbreviated only where that loses nothing. */
