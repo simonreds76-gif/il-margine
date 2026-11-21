@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T16:58:19Z",
+  "generated_at": "2026-11-21T22:24:04Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -137,17 +137,17 @@
     },
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
-      "explanation": "At least one candidate passed every locked shadow gate. Input cohorts kept separate. Before 30 October 2026: 9 settled, 30 October 2026 to input repair: 20 settled, Prospective repaired inputs: 1 settled. Promotion review uses repaired inputs only; original records remain intact. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-21T16:58:09.178790+00:00. Completed-fixture coverage checked at 2026-11-21T16:12:37.713253+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 206). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
-      "scored_rows": 168,
-      "scored_fixtures": 26,
-      "eligible_rows": 7,
-      "eligible_fixtures": 7,
-      "blocked_rows": 161,
+      "explanation": "At least one candidate passed every locked shadow gate. Input cohorts kept separate. Before 30 October 2026: 9 settled, 30 October 2026 to input repair: 20 settled, Prospective repaired inputs: 1 settled. Promotion review uses repaired inputs only; original records remain intact. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-21T22:23:54.688913+00:00. Completed-fixture coverage checked at 2026-11-21T16:12:37.713253+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 206). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
+      "scored_rows": 112,
+      "scored_fixtures": 17,
+      "eligible_rows": 6,
+      "eligible_fixtures": 5,
+      "blocked_rows": 106,
       "blocker_rows": {
-        "better_fresh_price_available": 34,
-        "edge_below_3pct": 158,
-        "price_not_fresh_10m": 58,
-        "price_older_than_3h": 34
+        "better_fresh_price_available": 30,
+        "edge_below_3pct": 104,
+        "price_not_fresh_10m": 18,
+        "price_older_than_3h": 18
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 10,
@@ -166,14 +166,14 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-21T16:58:00Z",
+      "generated_at": "2026-11-21T22:23:47Z",
       "status": "OK",
       "missing_history": [],
-      "scored_fixtures": 26
+      "scored_fixtures": 17
     },
     "input_integrity": {
       "policy": "shots-input-integrity-20261113-v1",
-      "generated_at": "2026-11-21T16:58:09.178790+00:00",
+      "generated_at": "2026-11-21T22:23:54.688913+00:00",
       "base_sha256": "7d837e74e8bf574143d84e6440684f2db0b230f09e5a2c5e97a5adde14dab8bf",
       "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
       "source_rows": 44188,
@@ -351,16 +351,16 @@
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
       "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 942,
-      "scored_fixtures": 37,
-      "eligible_rows": 52,
-      "eligible_fixtures": 11,
-      "blocked_rows": 890,
+      "scored_rows": 676,
+      "scored_fixtures": 27,
+      "eligible_rows": 47,
+      "eligible_fixtures": 8,
+      "blocked_rows": 629,
       "blocker_rows": {
-        "better_fresh_price_available": 178,
-        "edge_below_3pct": 845,
-        "price_not_fresh_10m": 430,
-        "price_older_than_3h": 48
+        "better_fresh_price_available": 172,
+        "edge_below_3pct": 594,
+        "price_not_fresh_10m": 234,
+        "price_older_than_3h": 234
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 10,
