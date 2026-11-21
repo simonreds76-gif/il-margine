@@ -74,6 +74,8 @@ def advance_paper(state, snapshot):
                                       player=player, opponent=opponent, selection=pair["labels"][side])
                         if "line" in pair:
                             ticket["line"] = -pair["line"] if side and pair["market"] == "spreads" else pair["line"]
+                        if "reported_market_max" in pair:
+                            ticket["reported_market_max_at_detection"] = pair["reported_market_max"]
                         found.append(ticket)
                 windows[key] = new
     state.update(observed=stamp, guards=open_board["guards"], windows=windows, issued=issued)

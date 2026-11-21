@@ -38,6 +38,25 @@ class ClockTest(unittest.TestCase):
 
 
 class MatchWinnerTest(unittest.TestCase):
+    def test_limits_follow_exact_line_through_reversal_without_period_fallback(self):
+        parent = event(201, home="Zulu", away="Alpha")
+        parent["periods"]["num_0"]["meta"] = {"max_moneyline": 1200}
+        games = event(202, home="Zulu (Games)", away="Alpha (Games)", parent_id=201,
+                      periods={"num_0":{"status":"open","meta":{"max_total":3500},
+                               "spreads":{"-2.5":{"hdp":-2.5,"home":1.9,"away":2,"max":"100"},
+                                          "-1.5":{"hdp":-1.5,"home":1.8,"away":2}},
+                               "totals":{"21.5":{"points":21.5,"over":1.9,"under":2,"max":0,"currency":"USD"}}}})
+        row = snap([parent, games], 30)["events"]["201"]
+        markets = dict(pilot.desk_games.pairs(row))
+        self.assertEqual(markets["spreads:2.5"]["reported_market_max"], {"amount":100})
+        self.assertEqual(markets["totals:21.5"]["reported_market_max"], {"amount":0,"currency":"USD"})
+        self.assertNotIn("reported_market_max", markets["spreads:1.5"])
+        self.assertNotIn("reported_market_max", markets["winner"])
+        self.assertEqual(row["match_period_limits"], {"max_moneyline":1200})
+        self.assertEqual(row["games_period_limits"], {"max_total":3500})
+        for value in (None, -1, "nan", "infinity", True, {}, "unpriced"):
+            self.assertIsNone(pilot.reported_market_max({"max":value}))
+
     def test_wta_and_125_have_separate_labels_and_exact_games_contracts(self):
         parent = event(201,league_name="WTA 125k Colina - SF",home="Player Z",away="Player A")
         games = event(202,league_name=parent["league_name"],home="Player Z (Games)",away="Player A (Games)",

@@ -36,6 +36,44 @@ def quote(value):
     return price if math.isfinite(price) and price > 1 else None
 
 
+def valid_limit_amount(raw):
+    if isinstance(raw, bool):
+        return None
+    try:
+        amount = float(raw)
+    except (TypeError, ValueError, OverflowError):
+        return None
+    if not math.isfinite(amount) or amount < 0:
+        return None
+    return amount
+
+
+def reported_market_max(market):
+    """Only a maximum attached to this exact priced object travels with a selection."""
+    amount = valid_limit_amount(market.get("max"))
+    if amount is None:
+        return None
+    limit = {"amount": amount}
+    currency = market.get("currency")
+    if isinstance(currency, str) and re.fullmatch(r"[A-Z]{3}", currency):
+        limit["currency"] = currency
+    return limit
+
+
+def period_limits(period):
+    """Keep separately named period caps for later verification of their meaning and units."""
+    metadata = period.get("meta")
+    if not isinstance(metadata, dict):
+        return {}
+    limits = {}
+    for field, raw in metadata.items():
+        if field.startswith("max_"):
+            amount = valid_limit_amount(raw)
+            if amount is not None:
+                limits[field] = amount
+    return limits
+
+
 def game_market_sample(board, matches, observed):
     parents={(m["league"],m["start"],frozenset((m["home"],m["away"]))):m for m in matches.values()}
     samples={}
@@ -64,6 +102,9 @@ def game_market_sample(board, matches, observed):
             samples[key]=None
             continue
         record={"home":names[0],"away":names[1],"start":m["start"],"tour":m["tour"],"games_id":str(event.get("event_id") or "")}
+        caps = period_limits(p)
+        if caps:
+            record["period_limits"] = caps
         for market,field,first,second in (("spreads","hdp","home","away"),("totals","points","over","under")):
             lines={}
             ladder=p.get(market)
@@ -75,6 +116,9 @@ def game_market_sample(board, matches, observed):
                 except (ValueError,TypeError):agrees=False
                 if not agrees or not math.isfinite(line) or (market=="totals" and line<12) or not all(odds(v.get(s)) for s in (first,second)):continue
                 lines[str(line)]=[float(v[first]),float(v[second])]
+                limit = reported_market_max(v)
+                if limit is not None:
+                    record.setdefault("limits", {}).setdefault(market, {})[str(line)] = limit
             record[market]=lines
         samples[key]=record
     return {k:v for k,v in samples.items() if v and (v["spreads"] or v["totals"])}
@@ -130,6 +174,12 @@ def board_rows(board, observed):
         row = dict(id=event_id, fixture=uid, league=league, tour=tour,
                    home=names[0], away=names[1], home_price=prices[0], away_price=prices[1],
                    start=start.isoformat(), event_updated_at=event.get("updated_at"))
+        limit = reported_market_max(market)
+        if limit is not None:
+            row["reported_market_max"] = limit
+        caps = period_limits(p0)
+        if caps:
+            row["match_period_limits"] = caps
         if event_id in rows and rows[event_id] != row:
             conflicts.add(event_id)
         if uid in fixtures and fixtures[uid] != event_id:
@@ -151,6 +201,8 @@ def board_rows(board, observed):
     counts["ambiguous_event_ids"]=len(conflicts)
     for eid, sample in game_market_sample(board, rows, observed).items():
         rows[eid]["contracts"] = desk_games.contracts(sample)
+        if "period_limits" in sample:
+            rows[eid]["games_period_limits"] = sample["period_limits"]
     return {"schema":VERSION,"source":SOURCE,"bookmaker":BOOK,"observed":observed.isoformat(),
             "events_received":len(board["events"]), "excluded":dict(counts),
             "in_play_fixtures":sorted(in_play_fixtures), "period_status_counts":dict(period_status),"events":rows}
