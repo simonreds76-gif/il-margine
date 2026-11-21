@@ -43,6 +43,7 @@ export async function PaperReturns({day,circuit}:{day:string;circuit:Circuit}) {
       <details className={styles.fold}><summary>How to read the comparison</summary>
         <p className={styles.fine}>Each rule records 1u at the first qualifying odds for a match, market, line and side. A repeat drop on that same side and line adds no stake. A move on the other player, or a different handicap, can count separately. “Picks” counts those entries and “Matches” counts distinct fixtures. One fixture can drive several wins or losses.</p>
         <p className={styles.fine}>A move can qualify in several rows at different odds. Adding rows would double-count overlapping picks. Both observations must fall inside the final hour for the final-hour rows. ROI uses settled stakes. The Telegram record above counts delivered alerts.</p>
+        <p className={styles.fine}>On retirement or disqualification, moneyline picks settle on the official winner once one full set has been played. Before that, both sides are void. Whole-match games handicaps and totals are void on retirement. A walkover voids all three markets.</p>
         <p className={styles.fine}>The initial replay used saved scans through 21 November 2026 at 10:15 UTC. Later entries use the same rules as new scans arrive.</p>
       </details>
     </>}
