@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
-      - name: Confirm plan and expiry with the provider
+      - name: Read plan and expiry from provider dashboard
         env:
           PINNRADAR_KEY: ${{ secrets.PINNRADAR_KEY }}
         shell: python
@@ -14,43 +14,24 @@ jobs:
           import json, os, re, urllib.error, urllib.request
           from datetime import datetime, timezone
           class NoRedirect(urllib.request.HTTPRedirectHandler):
-              def redirect_request(self, *args): return None
-          opener = urllib.request.build_opener(NoRedirect)
-          key = os.environ["PINNRADAR_KEY"]
-          def call(body):
-              req = urllib.request.Request("https://mcp.pinnradar.com/mcp", data=json.dumps(body).encode(),
-                  headers={"Authorization": "Bearer "+key, "Content-Type":"application/json",
-                           "Accept":"application/json, text/event-stream","MCP-Protocol-Version":"2025-03-26"})
-              try:
-                  with opener.open(req,timeout=15) as response:
-                      raw=response.read(65536).decode()
-              except urllib.error.HTTPError as e:
-                  raise RuntimeError("Account endpoint HTTP "+str(e.code)) from None
-              if raw.lstrip().startswith("{"):
-                  return json.loads(raw)
-              events=[json.loads(s[5:].strip()) for s in raw.splitlines() if s.startswith("data:") and s[5:].strip().startswith("{")]
-              return next((e for e in events if e.get("id")==body["id"]),{})
-          doc=call({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"my_usage","arguments":{}}})
-          result=doc.get("result",{})
-          if "error" in doc or result.get("isError") or not result:
-              raise RuntimeError("Provider did not return account entitlement information")
-          # Emit only plan words, timestamps, and numeric limits. Never print provider response bodies.
-          items={}
-          def visit(v, label="account"):
-              if isinstance(v,dict):
-                  for k, value in v.items():
-                      if re.fullmatch(r"[A-Za-z_]{1,40}",str(k)) and not re.search(r"key|token|mail|user|client|secret|url|billing|identity",str(k),re.I):
-                          visit(value,label+"."+k)
-              elif isinstance(v,list):
-                  for value in v: visit(value,label)
-              elif isinstance(v,str):
-                  if v.lstrip().startswith(("{","[")):
-                      try: visit(json.loads(v),label); return
-                      except ValueError: pass
-                  terms=re.findall(r"\b(?:free|demo|trial|edge|scale|drops|REST)\b",v,re.I)
-                  dates=re.findall(r"\b20\d\d-\d\d-\d\d(?:[ T]\d\d:\d\d(?::\d\d(?:\.\d{1,6})?)?(?:Z|[+-]\d\d:\d\d)?)?",v)
-                  if terms or dates: items[label]=dict(terms=terms,dates=dates)
-              elif isinstance(v,(int,float)) and re.search(r"limit|remaining|requests|usage|demo|expiry|rate",label,re.I):
-                  items[label]=v
-          visit(result)
-          print("ACCOUNT_EVIDENCE "+json.dumps({"observed":datetime.now(timezone.utc).isoformat(),"fields":items}))
+              def redirect_request(self,*args): return None
+          req=urllib.request.Request("https://pinnradar.com/panel/api/me",
+              headers={"x-portal-apikey":os.environ["PINNRADAR_KEY"],"Accept":"application/json"})
+          try:
+              with urllib.request.build_opener(NoRedirect).open(req,timeout=15) as resp:
+                  data=json.load(resp)
+          except urllib.error.HTTPError as exc:
+              raise RuntimeError("Dashboard returned HTTP "+str(exc.code)) from None
+          def iso(v):
+              if isinstance(v,(int,float)) and not isinstance(v,bool) and 1e9 <= v < 1e14:
+                  return datetime.fromtimestamp(v/(1000 if v > 1e11 else 1),timezone.utc).isoformat()
+              if isinstance(v,str) and re.fullmatch(r"20\d\d-\d\d-\d\d(?:T[\d:.+Z-]+)?",v): return v
+              return None
+          plan=data.get("plan") or {}
+          addon=data.get("ws_addon") or {}
+          kind=plan.get("id")
+          receipt={"at":datetime.now(timezone.utc).isoformat(),
+              "plan":kind if kind in ("free","edge","rest","scale","drops","trial","demo","trial_3d","demo_3d") else "other",
+              "limits":{k:v for k,v in (plan.get("limits") or {}).items() if re.fullmatch(r"[a-zA-Z_]{1,25}",k) and type(v) in (int,float)},
+              "planExpires":iso(data.get("plan_expires_at")), "streamActive":addon.get("active") is True, "streamUntil":iso(addon.get("until"))}
+          print("ACCOUNT_EVIDENCE "+json.dumps(receipt))
