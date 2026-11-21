@@ -1,0 +1,1364 @@
+{
+  "bookmaker": "Grosvenor",
+  "captured_at": "2026-11-21T16:14:49+00:00",
+  "events": [
+    {
+      "captured_at": "2026-11-21T16:14:49+00:00",
+      "payload": {
+        "betOffers": [
+          {
+            "betOfferType": {
+              "englishName": "Over/Under",
+              "id": 6,
+              "name": "Over/Under"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Total Games",
+              "id": 1001159891,
+              "label": "Total Games",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720025563,
+            "outcomes": [
+              {
+                "betOfferId": 2720025563,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Over",
+                "id": 4425699123,
+                "label": "Over",
+                "line": 21500,
+                "odds": 1350,
+                "oddsAmerican": "-286",
+                "oddsFractional": "7/20",
+                "status": "OPEN",
+                "type": "OT_OVER"
+              },
+              {
+                "betOfferId": 2720025563,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Under",
+                "id": 4425699124,
+                "label": "Under",
+                "line": 21500,
+                "odds": 3100,
+                "oddsAmerican": "210",
+                "oddsFractional": "21/10",
+                "status": "OPEN",
+                "type": "OT_UNDER"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Handicap",
+              "id": 1,
+              "name": "Handicap"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Game Handicap",
+              "id": 1001427539,
+              "label": "Game Handicap",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720025564,
+            "outcomes": [
+              {
+                "betOfferId": 2720025564,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Alexander Zverev",
+                "id": 4425699125,
+                "label": "Alexander Zverev",
+                "line": -4500,
+                "odds": 4400,
+                "oddsAmerican": "340",
+                "oddsFractional": "17/5",
+                "participant": "Alexander Zverev",
+                "participantId": 1001214598,
+                "status": "OPEN",
+                "type": "OT_ONE"
+              },
+              {
+                "betOfferId": 2720025564,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Daniil Medvedev",
+                "id": 4425699126,
+                "label": "Daniil Medvedev",
+                "line": 4500,
+                "odds": 1190,
+                "oddsAmerican": "-530",
+                "oddsFractional": "2/11",
+                "participant": "Daniil Medvedev",
+                "participantId": 1002170460,
+                "status": "OPEN",
+                "type": "OT_TWO"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Handicap",
+              "id": 1,
+              "name": "Handicap"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Game Handicap",
+              "id": 1001427539,
+              "label": "Game Handicap",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720025565,
+            "outcomes": [
+              {
+                "betOfferId": 2720025565,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:40Z",
+                "displayOrder": 0,
+                "englishLabel": "Alexander Zverev",
+                "id": 4425699127,
+                "label": "Alexander Zverev",
+                "line": -2500,
+                "odds": 2120,
+                "oddsAmerican": "112",
+                "oddsFractional": "11/10",
+                "participant": "Alexander Zverev",
+                "participantId": 1001214598,
+                "status": "OPEN",
+                "type": "OT_ONE"
+              },
+              {
+                "betOfferId": 2720025565,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:40Z",
+                "displayOrder": 1,
+                "englishLabel": "Daniil Medvedev",
+                "id": 4425699128,
+                "label": "Daniil Medvedev",
+                "line": 2500,
+                "odds": 1680,
+                "oddsAmerican": "-148",
+                "oddsFractional": "4/6",
+                "participant": "Daniil Medvedev",
+                "participantId": 1002170460,
+                "status": "OPEN",
+                "type": "OT_TWO"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Handicap",
+              "id": 1,
+              "name": "Handicap"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Game Handicap",
+              "id": 1001427539,
+              "label": "Game Handicap",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720025566,
+            "outcomes": [
+              {
+                "betOfferId": 2720025566,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Alexander Zverev",
+                "id": 4425699129,
+                "label": "Alexander Zverev",
+                "line": -1500,
+                "odds": 1790,
+                "oddsAmerican": "-127",
+                "oddsFractional": "10/13",
+                "participant": "Alexander Zverev",
+                "participantId": 1001214598,
+                "status": "OPEN",
+                "type": "OT_ONE"
+              },
+              {
+                "betOfferId": 2720025566,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Daniil Medvedev",
+                "id": 4425699130,
+                "label": "Daniil Medvedev",
+                "line": 1500,
+                "odds": 1980,
+                "oddsAmerican": "-103",
+                "oddsFractional": "49/50",
+                "participant": "Daniil Medvedev",
+                "participantId": 1002170460,
+                "status": "OPEN",
+                "type": "OT_TWO"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "MAIN_LINE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Handicap",
+              "id": 1,
+              "name": "Handicap"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Game Handicap",
+              "id": 1001427539,
+              "label": "Game Handicap",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720025567,
+            "outcomes": [
+              {
+                "betOfferId": 2720025567,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Alexander Zverev",
+                "id": 4425699131,
+                "label": "Alexander Zverev",
+                "line": 500,
+                "odds": 1530,
+                "oddsAmerican": "-190",
+                "oddsFractional": "13/25",
+                "participant": "Alexander Zverev",
+                "participantId": 1001214598,
+                "status": "OPEN",
+                "type": "OT_ONE"
+              },
+              {
+                "betOfferId": 2720025567,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Daniil Medvedev",
+                "id": 4425699132,
+                "label": "Daniil Medvedev",
+                "line": -500,
+                "odds": 2450,
+                "oddsAmerican": "145",
+                "oddsFractional": "29/20",
+                "participant": "Daniil Medvedev",
+                "participantId": 1002170460,
+                "status": "OPEN",
+                "type": "OT_TWO"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Over/Under",
+              "id": 6,
+              "name": "Over/Under"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Total Games",
+              "id": 1001159891,
+              "label": "Total Games",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720025568,
+            "outcomes": [
+              {
+                "betOfferId": 2720025568,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:40Z",
+                "displayOrder": 0,
+                "englishLabel": "Over",
+                "id": 4425699133,
+                "label": "Over",
+                "line": 27500,
+                "odds": 2380,
+                "oddsAmerican": "138",
+                "oddsFractional": "11/8",
+                "status": "OPEN",
+                "type": "OT_OVER"
+              },
+              {
+                "betOfferId": 2720025568,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:40Z",
+                "displayOrder": 1,
+                "englishLabel": "Under",
+                "id": 4425699134,
+                "label": "Under",
+                "line": 27500,
+                "odds": 1550,
+                "oddsAmerican": "-182",
+                "oddsFractional": "11/20",
+                "status": "OPEN",
+                "type": "OT_UNDER"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Handicap",
+              "id": 1,
+              "name": "Handicap"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Game Handicap",
+              "id": 1001427539,
+              "label": "Game Handicap",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720034259,
+            "outcomes": [
+              {
+                "betOfferId": 2720034259,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Alexander Zverev",
+                "id": 4425681998,
+                "label": "Alexander Zverev",
+                "line": -500,
+                "odds": 1650,
+                "oddsAmerican": "-155",
+                "oddsFractional": "13/20",
+                "participant": "Alexander Zverev",
+                "participantId": 1001214598,
+                "status": "OPEN",
+                "type": "OT_ONE"
+              },
+              {
+                "betOfferId": 2720034259,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Daniil Medvedev",
+                "id": 4425681999,
+                "label": "Daniil Medvedev",
+                "line": 500,
+                "odds": 2180,
+                "oddsAmerican": "118",
+                "oddsFractional": "59/50",
+                "participant": "Daniil Medvedev",
+                "participantId": 1002170460,
+                "status": "OPEN",
+                "type": "OT_TWO"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Over/Under",
+              "id": 6,
+              "name": "Over/Under"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Total Games",
+              "id": 1001159891,
+              "label": "Total Games",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720034260,
+            "outcomes": [
+              {
+                "betOfferId": 2720034260,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Over",
+                "id": 4425682000,
+                "label": "Over",
+                "line": 25500,
+                "odds": 1970,
+                "oddsAmerican": "-104",
+                "oddsFractional": "19/20",
+                "status": "OPEN",
+                "type": "OT_OVER"
+              },
+              {
+                "betOfferId": 2720034260,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Under",
+                "id": 4425682001,
+                "label": "Under",
+                "line": 25500,
+                "odds": 1800,
+                "oddsAmerican": "-125",
+                "oddsFractional": "4/5",
+                "status": "OPEN",
+                "type": "OT_UNDER"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Over/Under",
+              "id": 6,
+              "name": "Over/Under"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Total Games",
+              "id": 1001159891,
+              "label": "Total Games",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720034261,
+            "outcomes": [
+              {
+                "betOfferId": 2720034261,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Over",
+                "id": 4425682002,
+                "label": "Over",
+                "line": 23500,
+                "odds": 1820,
+                "oddsAmerican": "-122",
+                "oddsFractional": "4/5",
+                "status": "OPEN",
+                "type": "OT_OVER"
+              },
+              {
+                "betOfferId": 2720034261,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Under",
+                "id": 4425682003,
+                "label": "Under",
+                "line": 23500,
+                "odds": 1940,
+                "oddsAmerican": "-107",
+                "oddsFractional": "23/25",
+                "status": "OPEN",
+                "type": "OT_UNDER"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "MAIN_LINE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Over/Under",
+              "id": 6,
+              "name": "Over/Under"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Total Games",
+              "id": 1001159891,
+              "label": "Total Games",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720034262,
+            "outcomes": [
+              {
+                "betOfferId": 2720034262,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Over",
+                "id": 4425682004,
+                "label": "Over",
+                "line": 24500,
+                "odds": 1850,
+                "oddsAmerican": "-118",
+                "oddsFractional": "17/20",
+                "status": "OPEN",
+                "type": "OT_OVER"
+              },
+              {
+                "betOfferId": 2720034262,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Under",
+                "id": 4425682005,
+                "label": "Under",
+                "line": 24500,
+                "odds": 1920,
+                "oddsAmerican": "-109",
+                "oddsFractional": "10/11",
+                "status": "OPEN",
+                "type": "OT_UNDER"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Handicap",
+              "id": 1,
+              "name": "Handicap"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Game Handicap",
+              "id": 1001427539,
+              "label": "Game Handicap",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720051546,
+            "outcomes": [
+              {
+                "betOfferId": 2720051546,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Alexander Zverev",
+                "id": 4425670097,
+                "label": "Alexander Zverev",
+                "line": -3500,
+                "odds": 2850,
+                "oddsAmerican": "185",
+                "oddsFractional": "37/20",
+                "participant": "Alexander Zverev",
+                "participantId": 1001214598,
+                "status": "OPEN",
+                "type": "OT_ONE"
+              },
+              {
+                "betOfferId": 2720051546,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Daniil Medvedev",
+                "id": 4425670098,
+                "label": "Daniil Medvedev",
+                "line": 3500,
+                "odds": 1400,
+                "oddsAmerican": "-250",
+                "oddsFractional": "2/5",
+                "participant": "Daniil Medvedev",
+                "participantId": 1002170460,
+                "status": "OPEN",
+                "type": "OT_TWO"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Over/Under",
+              "id": 6,
+              "name": "Over/Under"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Total Games",
+              "id": 1001159891,
+              "label": "Total Games",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720051547,
+            "outcomes": [
+              {
+                "betOfferId": 2720051547,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Over",
+                "id": 4425670099,
+                "label": "Over",
+                "line": 26500,
+                "odds": 2280,
+                "oddsAmerican": "128",
+                "oddsFractional": "5/4",
+                "status": "OPEN",
+                "type": "OT_OVER"
+              },
+              {
+                "betOfferId": 2720051547,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Under",
+                "id": 4425670100,
+                "label": "Under",
+                "line": 26500,
+                "odds": 1600,
+                "oddsAmerican": "-167",
+                "oddsFractional": "3/5",
+                "status": "OPEN",
+                "type": "OT_UNDER"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Handicap",
+              "id": 1,
+              "name": "Handicap"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Game Handicap",
+              "id": 1001427539,
+              "label": "Game Handicap",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720051548,
+            "outcomes": [
+              {
+                "betOfferId": 2720051548,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Alexander Zverev",
+                "id": 4425670101,
+                "label": "Alexander Zverev",
+                "line": 1500,
+                "odds": 1430,
+                "oddsAmerican": "-235",
+                "oddsFractional": "21/50",
+                "participant": "Alexander Zverev",
+                "participantId": 1001214598,
+                "status": "OPEN",
+                "type": "OT_ONE"
+              },
+              {
+                "betOfferId": 2720051548,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Daniil Medvedev",
+                "id": 4425670102,
+                "label": "Daniil Medvedev",
+                "line": -1500,
+                "odds": 2750,
+                "oddsAmerican": "175",
+                "oddsFractional": "7/4",
+                "participant": "Daniil Medvedev",
+                "participantId": 1002170460,
+                "status": "OPEN",
+                "type": "OT_TWO"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Over/Under",
+              "id": 6,
+              "name": "Over/Under"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Total Games",
+              "id": 1001159891,
+              "label": "Total Games",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720051549,
+            "outcomes": [
+              {
+                "betOfferId": 2720051549,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:40Z",
+                "displayOrder": 0,
+                "englishLabel": "Over",
+                "id": 4425670103,
+                "label": "Over",
+                "line": 22500,
+                "odds": 1560,
+                "oddsAmerican": "-180",
+                "oddsFractional": "11/20",
+                "status": "OPEN",
+                "type": "OT_OVER"
+              },
+              {
+                "betOfferId": 2720051549,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:40Z",
+                "displayOrder": 1,
+                "englishLabel": "Under",
+                "id": 4425670104,
+                "label": "Under",
+                "line": 22500,
+                "odds": 2350,
+                "oddsAmerican": "135",
+                "oddsFractional": "27/20",
+                "status": "OPEN",
+                "type": "OT_UNDER"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Over/Under",
+              "id": 6,
+              "name": "Over/Under"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Total Games",
+              "id": 1001159891,
+              "label": "Total Games",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720051806,
+            "outcomes": [
+              {
+                "betOfferId": 2720051806,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:40Z",
+                "displayOrder": 0,
+                "englishLabel": "Over",
+                "id": 4425670856,
+                "label": "Over",
+                "line": 28500,
+                "odds": 2550,
+                "oddsAmerican": "155",
+                "oddsFractional": "31/20",
+                "status": "OPEN",
+                "type": "OT_OVER"
+              },
+              {
+                "betOfferId": 2720051806,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:40Z",
+                "displayOrder": 1,
+                "englishLabel": "Under",
+                "id": 4425670857,
+                "label": "Under",
+                "line": 28500,
+                "odds": 1480,
+                "oddsAmerican": "-210",
+                "oddsFractional": "12/25",
+                "status": "OPEN",
+                "type": "OT_UNDER"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Over/Under",
+              "id": 6,
+              "name": "Over/Under"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Total Games",
+              "id": 1001159891,
+              "label": "Total Games",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720051807,
+            "outcomes": [
+              {
+                "betOfferId": 2720051807,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Over",
+                "id": 4425670858,
+                "label": "Over",
+                "line": 20500,
+                "odds": 1270,
+                "oddsAmerican": "-375",
+                "oddsFractional": "27/100",
+                "status": "OPEN",
+                "type": "OT_OVER"
+              },
+              {
+                "betOfferId": 2720051807,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Under",
+                "id": 4425670859,
+                "label": "Under",
+                "line": 20500,
+                "odds": 3600,
+                "oddsAmerican": "260",
+                "oddsFractional": "13/5",
+                "status": "OPEN",
+                "type": "OT_UNDER"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Handicap",
+              "id": 1,
+              "name": "Handicap"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Game Handicap",
+              "id": 1001427539,
+              "label": "Game Handicap",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720080561,
+            "outcomes": [
+              {
+                "betOfferId": 2720080561,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Alexander Zverev",
+                "id": 4425700007,
+                "label": "Alexander Zverev",
+                "line": 2500,
+                "odds": 1300,
+                "oddsAmerican": "-335",
+                "oddsFractional": "3/10",
+                "participant": "Alexander Zverev",
+                "participantId": 1001214598,
+                "status": "OPEN",
+                "type": "OT_ONE"
+              },
+              {
+                "betOfferId": 2720080561,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Daniil Medvedev",
+                "id": 4425700008,
+                "label": "Daniil Medvedev",
+                "line": -2500,
+                "odds": 3400,
+                "oddsAmerican": "240",
+                "oddsFractional": "12/5",
+                "participant": "Daniil Medvedev",
+                "participantId": 1002170460,
+                "status": "OPEN",
+                "type": "OT_TWO"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Handicap",
+              "id": 1,
+              "name": "Handicap"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Game Handicap",
+              "id": 1001427539,
+              "label": "Game Handicap",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720197649,
+            "outcomes": [
+              {
+                "betOfferId": 2720197649,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:03:52Z",
+                "displayOrder": 0,
+                "englishLabel": "Alexander Zverev",
+                "id": 4426170586,
+                "label": "Alexander Zverev",
+                "line": 3500,
+                "odds": 1170,
+                "oddsAmerican": "-590",
+                "oddsFractional": "1/6",
+                "participant": "Alexander Zverev",
+                "participantId": 1001214598,
+                "status": "OPEN",
+                "type": "OT_ONE"
+              },
+              {
+                "betOfferId": 2720197649,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:03:52Z",
+                "displayOrder": 1,
+                "englishLabel": "Daniil Medvedev",
+                "id": 4426170587,
+                "label": "Daniil Medvedev",
+                "line": -3500,
+                "odds": 4700,
+                "oddsAmerican": "370",
+                "oddsFractional": "18/5",
+                "participant": "Daniil Medvedev",
+                "participantId": 1002170460,
+                "status": "OPEN",
+                "type": "OT_TWO"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Over/Under",
+              "id": 6,
+              "name": "Over/Under"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Total Games",
+              "id": 1001159891,
+              "label": "Total Games",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720197651,
+            "outcomes": [
+              {
+                "betOfferId": 2720197651,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Over",
+                "id": 4426170590,
+                "label": "Over",
+                "line": 29500,
+                "odds": 2800,
+                "oddsAmerican": "180",
+                "oddsFractional": "9/5",
+                "status": "OPEN",
+                "type": "OT_OVER"
+              },
+              {
+                "betOfferId": 2720197651,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Under",
+                "id": 4426170591,
+                "label": "Under",
+                "line": 29500,
+                "odds": 1420,
+                "oddsAmerican": "-240",
+                "oddsFractional": "21/50",
+                "status": "OPEN",
+                "type": "OT_UNDER"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Over/Under",
+              "id": 6,
+              "name": "Over/Under"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Total Games",
+              "id": 1001159891,
+              "label": "Total Games",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720206287,
+            "outcomes": [
+              {
+                "betOfferId": 2720206287,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:40Z",
+                "displayOrder": 0,
+                "englishLabel": "Over",
+                "id": 4426145543,
+                "label": "Over",
+                "line": 31500,
+                "odds": 3650,
+                "oddsAmerican": "265",
+                "oddsFractional": "13/5",
+                "status": "OPEN",
+                "type": "OT_OVER"
+              },
+              {
+                "betOfferId": 2720206287,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:40Z",
+                "displayOrder": 1,
+                "englishLabel": "Under",
+                "id": 4426145544,
+                "label": "Under",
+                "line": 31500,
+                "odds": 1270,
+                "oddsAmerican": "-375",
+                "oddsFractional": "27/100",
+                "status": "OPEN",
+                "type": "OT_UNDER"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Over/Under",
+              "id": 6,
+              "name": "Over/Under"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Total Games",
+              "id": 1001159891,
+              "label": "Total Games",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720214427,
+            "outcomes": [
+              {
+                "betOfferId": 2720214427,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Over",
+                "id": 4426148391,
+                "label": "Over",
+                "line": 30500,
+                "odds": 3100,
+                "oddsAmerican": "210",
+                "oddsFractional": "21/10",
+                "status": "OPEN",
+                "type": "OT_OVER"
+              },
+              {
+                "betOfferId": 2720214427,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Under",
+                "id": 4426148392,
+                "label": "Under",
+                "line": 30500,
+                "odds": 1350,
+                "oddsAmerican": "-286",
+                "oddsFractional": "7/20",
+                "status": "OPEN",
+                "type": "OT_UNDER"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Over/Under",
+              "id": 6,
+              "name": "Over/Under"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Total Games",
+              "id": 1001159891,
+              "label": "Total Games",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720214430,
+            "outcomes": [
+              {
+                "betOfferId": 2720214430,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:40Z",
+                "displayOrder": 0,
+                "englishLabel": "Over",
+                "id": 4426148397,
+                "label": "Over",
+                "line": 19500,
+                "odds": 1170,
+                "oddsAmerican": "-590",
+                "oddsFractional": "1/6",
+                "status": "OPEN",
+                "type": "OT_OVER"
+              },
+              {
+                "betOfferId": 2720214430,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:40Z",
+                "displayOrder": 1,
+                "englishLabel": "Under",
+                "id": 4426148398,
+                "label": "Under",
+                "line": 19500,
+                "odds": 4800,
+                "oddsAmerican": "380",
+                "oddsFractional": "19/5",
+                "status": "OPEN",
+                "type": "OT_UNDER"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER"
+            ]
+          },
+          {
+            "betOfferType": {
+              "englishName": "Match",
+              "id": 2,
+              "name": "Match"
+            },
+            "cashOutStatus": "ENABLED",
+            "criterion": {
+              "englishLabel": "Match Odds",
+              "id": 1001159551,
+              "label": "Match Odds",
+              "order": [
+                1
+              ]
+            },
+            "eventId": 1029939365,
+            "id": 2720051544,
+            "outcomes": [
+              {
+                "betOfferId": 2720051544,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 0,
+                "englishLabel": "Alexander Zverev",
+                "id": 4425670093,
+                "label": "Alexander Zverev",
+                "odds": 1630,
+                "oddsAmerican": "-159",
+                "oddsFractional": "8/13",
+                "participant": "Alexander Zverev",
+                "participantId": 1001214598,
+                "status": "OPEN",
+                "type": "OT_ONE"
+              },
+              {
+                "betOfferId": 2720051544,
+                "cashOutStatus": "ENABLED",
+                "changedDate": "2026-11-21T16:00:39Z",
+                "displayOrder": 1,
+                "englishLabel": "Daniil Medvedev",
+                "id": 4425670094,
+                "label": "Daniil Medvedev",
+                "odds": 2330,
+                "oddsAmerican": "133",
+                "oddsFractional": "13/10",
+                "participant": "Daniil Medvedev",
+                "participantId": 1002170460,
+                "status": "OPEN",
+                "type": "OT_TWO"
+              }
+            ],
+            "tags": [
+              "OFFERED_PREMATCH",
+              "OFFERED_LIVE",
+              "BET_BUILDER",
+              "MAIN"
+            ]
+          }
+        ],
+        "events": [
+          {
+            "awayName": "Daniil Medvedev",
+            "englishName": "Alexander Zverev - Daniil Medvedev",
+            "group": "ATP Finals",
+            "groupId": 2000052329,
+            "groupSortOrder": 7002023000000000000,
+            "homeName": "Alexander Zverev",
+            "id": 1029939365,
+            "name": "Alexander Zverev - Daniil Medvedev",
+            "nameDelimiter": "-",
+            "nonLiveBoCount": 61,
+            "path": [
+              {
+                "englishName": "Tennis",
+                "id": 1000093193,
+                "name": "Tennis",
+                "termKey": "tennis"
+              },
+              {
+                "englishName": "ATP",
+                "id": 1000093324,
+                "name": "ATP",
+                "termKey": "atp"
+              },
+              {
+                "englishName": "ATP Finals",
+                "id": 2000052329,
+                "name": "ATP Finals",
+                "termKey": "atp_finals"
+              }
+            ],
+            "prematchEnd": "2026-11-21T19:30:00Z",
+            "sport": "TENNIS",
+            "start": "2026-11-21T19:30:00Z",
+            "state": "NOT_STARTED",
+            "tags": [
+              "OFFERED_LIVE",
+              "BET_BUILDER",
+              "MATCH"
+            ]
+          }
+        ]
+      },
+      "requested_id": "1029939365"
+    }
+  ],
+  "source": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk"
+}
