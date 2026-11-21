@@ -98,6 +98,13 @@ def private_chat():
     return chat
 
 
+def format_limit(limit):
+    if not limit:
+        return "not recorded"
+    amount = f"{limit['amount']:,.2f}".rstrip("0").rstrip(".")
+    return ("$" + amount) if limit["currency"] == "USD" else (amount + " " + limit["currency"])
+
+
 def roundup_text(moves, observed):
     stamp=instant(observed).strftime("%d %b %H:%M UTC")
     def circuit(move):
@@ -105,7 +112,7 @@ def roundup_text(moves, observed):
     ordered=sorted(moves,key=lambda m:(circuit(m),m["start"],m["league"],m["event_id"],m["player"]))
     noun="price drop" if len(ordered)==1 else "price drops"
     from desk_games import ALERT_POLICY
-    title = "Final-hour tennis moves" if ordered and all(m.get("alert_policy") == ALERT_POLICY for m in ordered) else "Tennis Price Moves"
+    title = "Pre-match tennis moves" if ordered and all(m.get("alert_policy") == ALERT_POLICY for m in ordered) else "Tennis Price Moves"
     lines=[f"Il Margine · {title} | {stamp}",f"{len(ordered)} observed {noun}",""]
     has_wta = any(circuit(m) == "WTA" for m in ordered)
     previous = None
@@ -127,6 +134,11 @@ def roundup_text(moves, observed):
                       f"Earlier: {m['old']:g} at {instant(m['before']):%d %b %H:%M:%S} UTC",
                       f"Detected: {m['new']:g} at {instant(m['after']):%d %b %H:%M:%S} UTC"+(" · both prices shortened" if m["both_shortened"] else ""),
                       f"Price-implied probability {change:+.2f}pp over {elapsed//60}m {elapsed%60:02d}s · {lead} to scheduled start at detection",""])
+        if m.get("alert_policy") == ALERT_POLICY:
+            if m.get("detected_in_final_hour"):
+                lines.insert(-1, "Final hour" if m.get("wholly_in_final_hour") else "Detected in final hour · move began earlier")
+            limits = [format_limit(m.get(k)) for k in ("alert_reference_limit", "alert_detection_limit")]
+            lines.insert(-1, "Market limit: " + " → ".join(limits))
     lines.append("Implied change uses the displayed odds before margin adjustment. Prices are observations only.")
     return "\n".join(lines)
 

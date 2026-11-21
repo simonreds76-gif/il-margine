@@ -2,7 +2,7 @@ import sys
 import unittest
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from desk_paper_returns import advance_paper, apply_retirement_review, summary
+from desk_paper_returns import advance_paper, apply_retirement_review, summary, performance_report
 from datetime import datetime, timezone
 
 
@@ -15,6 +15,21 @@ def scan(stamp, price=2, start="16:00", live=False, events=True, contracts=None)
 
 
 class PaperReturnsTest(unittest.TestCase):
+    def test_month_and_lifetime_use_settled_stakes_and_isolate_circuits(self):
+        def day(stamp, rows):
+            atp = {"coveredScans":1, "rules":{"all4":summary(rows), "late4":summary([])}}
+            wta = {"coveredScans":0, "rules":{"all4":summary([]), "late4":summary([])}}
+            return {"through":stamp, "circuits":{"ATP":atp,"WTA":wta}}
+        def entry(result, stake, profit):
+            return {"fixture":"f", "result":result, "stake":stake, "profit":profit}
+        days = {"2026-11-30":day("2026-11-30",[entry("Won",1,2)]),
+                "2026-12-01":day("2026-12-01",[entry("Lost",1,-1),entry("Lost",1,-1),entry("Pending",0,0)])}
+        report = performance_report(days)["circuits"]
+        self.assertEqual(report["ATP"]["lifetime"]["all4"]["roi"],0)
+        self.assertEqual(report["ATP"]["lifetime"]["all4"]["pending"],1)
+        self.assertEqual(report["ATP"]["months"]["2026-11"]["all4"]["roi"],200)
+        self.assertIsNone(report["WTA"]["lifetime"]["all4"]["roi"])
+
     def test_historical_retirement_correction_is_idempotent_at_original_odds(self):
         t = {"market":"winner","new":1.806,"after":"2026-11-20T12:15:00Z","start":"2026-11-21T07:00:00Z",
              "binding":[2,10,200,201],"league":"ATP Challenger Sydney - SF","result":"Void","stake":0,"profit":0}
