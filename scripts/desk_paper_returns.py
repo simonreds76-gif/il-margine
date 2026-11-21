@@ -216,7 +216,10 @@ def confirmed_moves(receipt, batch):
         if "contract" not in m:  # Original winner-only format.
             side = sorted((m["player"],m["opponent"])).index(m["player"])
             m = dict(m, contract="winner", side=side, selection=m["player"])
-        confirmed.append([selection_key(m), receipt["delivered_at"], m["new"]])
+        selection = {k:m[k] for k in ("fixture","contract","side","tour","selection","player","opponent","league",
+                                      "new","after","start","move_id") if k in m}
+        selection.update(sent=receipt["delivered_at"], message=receipt["message_id"])
+        confirmed.append(selection)
     return confirmed
 
 
@@ -245,7 +248,7 @@ def update_receipts(store, day, saved):
 
 def compact_ticket(t):
     return {k:t[k] for k in ("fixture","contract","side","tour","selection","player","opponent","league",
-                              "new","after","result","stake","profit") if k in t}
+                              "new","after","result","stake","profit","settlement_rule") if k in t}
 
 
 def alert_grade(t, odds):
@@ -261,57 +264,71 @@ def alert_grade(t, odds):
 
 def rolling_report(days, end, through):
     start = (date.fromisoformat(end)-timedelta(days=29)).isoformat()
-    confirmed = {}
-    tickets = {}
+    confirmed, tickets, outcomes = {}, {}, {}
     for day, data in sorted(days.items()):
-        if not start <= day <= end:
-            continue
+        outcomes.update(data.get("outcomes", {}))
         for batch in data["receipts"].values():
-            for key, sent, odds in batch:
-                if utc(sent).date().isoformat() <= end and (key not in confirmed or utc(sent) < utc(confirmed[key][0])):
-                    confirmed[key] = (sent,odds)
+            for sent in batch:
+                key = selection_key(sent)
+                if key not in confirmed or utc(sent["sent"]) < utc(confirmed[key]["sent"]):
+                    confirmed[key] = sent
         for t in data["tickets"]:
             key = selection_key(t)
             if key in tickets:
                 raise ValueError("Duplicate rolling paper contract")
             tickets[key] = t
-    result = {}
+    def row(t, at, odds, sent):
+        return {"selection":t["selection"],"fixture":t["player"]+" vs "+t["opponent"],
+                "league":t["league"],"at":at,"odds":odds,"result":t.get("result","Pending"),"sent":sent}
+    reports = {}
     for tour in ("ATP","WTA"):
-        entries, alerts, public = [], [], []
-        for key,t in sorted(tickets.items(), key=lambda item:item[1]["after"], reverse=True):
-            if circuit(t["tour"]) != tour:
+        paper, alerts, paper_rows, alert_rows = [], [], [], []
+        for key,t in tickets.items():
+            if circuit(t["tour"]) == tour and start <= t["after"][:10] <= end:
+                paper.append(t)
+                paper_rows.append(row(t,t["after"],t["new"],key in confirmed))
+        for key, sent in confirmed.items():
+            if circuit(sent["tour"]) != tour or not start <= sent["sent"][:10] <= end:
                 continue
-            entries.append(t)
-            row = {"selection":t["selection"],"fixture":t["player"]+" vs "+t["opponent"],
-                   "league":t["league"],"at":t["after"],"odds":t["new"],"result":t.get("result","Pending")}
-            if key in confirmed:
-                at, odds = confirmed[key]
-                alerts.append(dict(t, profit=alert_grade(t,odds)))
-                row["sent"] = {"at":at,"odds":odds}
-            public.append(row)
+            verified = outcomes.get(sent["move_id"])
+            paired = tickets.get(key,{})
+            result = paired.get("result")
+            if verified:
+                if verified["message_id"] != sent["message"] or verified["alerted_price"] != sent["new"]:
+                    raise ValueError("Settlement does not match delivered odds and receipt")
+                if result and result != verified["result"] and paired.get("settlement_rule") != RETIREMENT_RULE:
+                    result = None  # A conflict stays visible as pending until resolved.
+                else:
+                    result = result or verified["result"]
+            t = dict(sent,result=result or "Pending")
+            t.update(profit=alert_grade(t,sent["new"]), stake=0 if t["result"] in ("Void","Pending") else 1)
+            alerts.append(t)
+            alert_rows.append(row(t,sent["sent"],sent["new"],True))
         covered = sorted(d for d,v in days.items() if start <= d <= end and v["coverage"].get(tour,0))
-        result[tour] = {"version":1,"tour":tour,"start":start,"end":end,"through":through,
-                        "firstCovered":next(iter(covered),None),"coveredDays":len(covered),
-                        "all":summary(entries),"telegram":summary(alerts),"rows":public}
-    return result
+        reports[tour] = {"version":2,"tour":tour,"start":start,"end":end,"through":through,
+                         "firstCovered":next(iter(covered),None),"coveredDays":len(covered),
+                         "all":summary(paper),"telegram":summary(alerts),
+                         "rows":sorted(paper_rows,key=lambda r:r["at"],reverse=True),
+                         "sentRows":sorted(alert_rows,key=lambda r:r["at"],reverse=True)}
+    return reports
 
 
 def publish_rolling(store, daily, loaded, dirty, now):
     """A private, rebuildable projection; the site reads one summary/row packet per tour."""
     through = max(r["through"] for r in daily.values())
     end = now.date()
-    first = max(date.fromisoformat(FIRST_DAY), end-timedelta(days=29))
-    cache_path = BASE+"/rolling-cache-v1.json"
+    # Include an overlap for exact contracts first sent just before the date boundary.
+    # It also retains any matching paper settlement for these early deliveries.
+    first = max(START.date(), end-timedelta(days=36))
+    cache_path = BASE+"/rolling-cache-v2.json"
     old = store.get(cache_path) or {}
     days = {}
     for offset in range((end-first).days+1):
         day = (first+timedelta(days=offset)).isoformat()
         day_report = daily.get(day)
-        if not day_report:
-            continue
-        data = old.get(day, {"receipts":{}})
+        data = old.get(day, {"receipts":{}, "tickets":[], "coverage":{}})
         revision = hashlib.sha256(json.dumps(day_report,sort_keys=True).encode()).hexdigest()
-        if day in dirty or data.get("revision") != revision:
+        if day_report and (day in dirty or data.get("revision") != revision):
             ledger = loaded.get(day) or store.get(f"{BASE}/ledger/{day}.json")
             if not ledger or ledger["through"] != day_report["through"]:
                 raise ValueError("Rolling view missing its verified daily ledger")
@@ -322,9 +339,19 @@ def publish_rolling(store, daily, loaded, dirty, now):
                 or (date.fromisoformat(day).toordinal()%30 == (now.hour*4 + now.minute//15)%30)):
             update_receipts(store,day,data["receipts"])
             data["checked"] = end.isoformat()
+        if data["receipts"]:
+            # Match by the delivered move ID, including selections absent from the paper ledger.
+            # Re-read pending results and periodically pick up verified corrections.
+            ids = {m["move_id"] for batch in data["receipts"].values() for m in batch}
+            settled = data.get("outcomes",{})
+            if ids - settled.keys() or data.get("gradedDay") != end.isoformat():
+                outcomes = store.get("presentation/outcomes/"+day+".json") or {}
+                data["outcomes"] = {mid:{k:outcomes[mid][k] for k in ("result","message_id","alerted_price")}
+                                    for mid in ids & outcomes.keys()}
+                data["gradedDay"] = end.isoformat()
         days[day] = data
     for tour, report in rolling_report(days,end.isoformat(),through).items():
-        store.put(f"{BASE}/rolling-30/{tour.lower()}.json",report,replace=True)
+        store.put(f"{BASE}/rolling-30-v2/{tour.lower()}.json",report,replace=True)
     store.put(cache_path,days,replace=True)
 
 

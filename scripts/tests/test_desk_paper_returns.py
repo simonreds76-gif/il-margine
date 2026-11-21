@@ -32,15 +32,21 @@ class PaperReturnsTest(unittest.TestCase):
         wta=ticket("Wta","Won",3.0,"WTA 125")
         def day(ts, receipts):
             return dict(tickets=ts,receipts=receipts,coverage={"ATP":1,"WTA":1})
-        rolled=rolling_report({"2026-12-03":day([ticket("Outside","Lost")],{}),
-            "2026-12-04":day([half,loser,pending,void,wta],{"receipt":[
-                [selection_key(half),"2026-12-04T08:00Z",3.0],
-                [selection_key(half),"2026-12-04T09:00Z",5.0],
-                [selection_key(void),"2026-12-04T07:00Z",2.0],
-                [selection_key(pending),"2026-12-04T07:00Z",2.0]]})},end,end+"T12:00Z")
+        def delivered(t,stamp,odds,mid):
+            return dict(t,sent=stamp,new=odds,move_id=mid,message=1)
+        unpaired=ticket("Only sent")
+        last=day([half,loser,pending,void,wta],{"receipt":[
+            delivered(half,"2026-12-04T08:00Z",3.0,"first"),
+            delivered(half,"2026-12-04T09:00Z",5.0,"repeat"),
+            delivered(void,"2026-12-04T07:00Z",2.0,"void"),
+            delivered(pending,"2026-12-04T07:00Z",2.0,"waiting"),
+            delivered(unpaired,"2026-12-04T07:00Z",2.0,"unpaired")]})
+        last["outcomes"]={"unpaired":{"message_id":1,"alerted_price":2.0,"result":"Won"}}
+        outside=dict(ticket("Outside","Lost"),after="2026-12-03T23:59Z")
+        rolled=rolling_report({"2026-12-03":day([outside],{}),"2026-12-04":last},end,end+"T12:00Z")
         a=rolled["ATP"]
         self.assertEqual((a["start"],a["all"]["entries"],a["all"]["roi"]),("2026-12-04",4,-25))
-        self.assertEqual((a["telegram"]["entries"],a["telegram"]["stake"],a["telegram"]["roi"]),(3,1,100))
+        self.assertEqual((a["telegram"]["entries"],a["telegram"]["stake"],a["telegram"]["roi"]),(4,2,100))
         self.assertEqual((a["telegram"]["voids"],a["telegram"]["pending"]),(1,1))
         self.assertEqual((rolled["WTA"]["all"]["won"],rolled["WTA"]["telegram"]["roi"]),(1,None))
         self.assertTrue(all("contract" not in row for row in a["rows"]))
