@@ -38,6 +38,24 @@ class ClockTest(unittest.TestCase):
 
 
 class MatchWinnerTest(unittest.TestCase):
+    def test_wta_and_125_have_separate_labels_and_exact_games_contracts(self):
+        parent = event(201,league_name="WTA 125k Colina - SF",home="Player Z",away="Player A")
+        games = event(202,league_name=parent["league_name"],home="Player Z (Games)",away="Player A (Games)",
+                      parent_id=201, periods={"num_0":{"status":"open",
+                      "spreads":{"-2.5":{"hdp":-2.5,"home":1.87,"away":1.99}},
+                      "totals":{"21.5":{"points":21.5,"over":1.91,"under":1.95}}}})
+        board = snap([parent,games,event(203,league_name="WTA Dubai - SF"),
+                      event(204,league_name="ITF Women Paris"),event(205,league_name="WTA Tokyo Doubles")],35)
+        self.assertEqual(set(board["events"]),{"201","203"})
+        self.assertEqual(board["events"]["201"]["tour"],"WTA 125")
+        self.assertEqual(board["events"]["203"]["tour"],"WTA")
+        markets=board["events"]["201"]["contracts"]
+        self.assertEqual(markets["spreads:2.5"]["labels"],["Player A +2.5 games","Player Z -2.5 games"])
+        self.assertEqual(markets["spreads:2.5"]["prices"],[1.99,1.87])
+        self.assertEqual(markets["totals:21.5"]["prices"],[1.91,1.95])
+        wrong=snap([parent,dict(games,parent_id=999)],35)
+        self.assertNotIn("contracts",wrong["events"]["201"])
+
     def test_only_complete_singles(self):
         e=event()
         wrong=[event(101,home="Test Home (Games)"),event(102,league_name="ATP Finals Doubles"),

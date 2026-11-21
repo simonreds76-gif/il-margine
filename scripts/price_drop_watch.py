@@ -100,12 +100,20 @@ def private_chat():
 
 def roundup_text(moves, observed):
     stamp=instant(observed).strftime("%d %b %H:%M UTC")
-    ordered=sorted(moves,key=lambda m:(m["start"],m["league"],m["event_id"],m["player"]))
+    def circuit(move):
+        return "WTA" if move.get("tour") in ("WTA", "WTA 125") else "ATP"
+    ordered=sorted(moves,key=lambda m:(circuit(m),m["start"],m["league"],m["event_id"],m["player"]))
     noun="price drop" if len(ordered)==1 else "price drops"
     from desk_games import ALERT_POLICY
     title = "Final-hour tennis moves" if ordered and all(m.get("alert_policy") == ALERT_POLICY for m in ordered) else "Tennis Price Moves"
     lines=[f"Il Margine · {title} | {stamp}",f"{len(ordered)} observed {noun}",""]
+    has_wta = any(circuit(m) == "WTA" for m in ordered)
+    previous = None
     for m in ordered:
+        group = circuit(m)
+        if has_wta and group != previous:
+            lines.append(group)
+            previous = group
         start, earlier, detected = (instant(m[key]) for key in ("start", "before", "after"))
         elapsed = int((detected-earlier).total_seconds())
         remaining = max(0, int((start-detected).total_seconds())//60)

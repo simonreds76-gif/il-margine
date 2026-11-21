@@ -15,6 +15,23 @@ class DeskTests(unittest.TestCase):
         self.r = {"tour_id":1,"round_id":5,"date":"2026-11-20","winner_id":8,"loser_id":7,"result":"3-6 6-4 7-5"}
         self.now = datetime(2026,11,21,tzinfo=timezone.utc)
 
+    def test_wta_result_requires_exact_singles_fixture_and_grades_locked_line(self):
+        t={**self.t,"tour":"WTA 125","league":"WTA 125k Colina - SF","market":"totals","side":0,"line":20.5,"new":1.95}
+        athletes=[{"id":"11","winner":True,"athlete":{"displayName":t["player"]},"linescores":[{"value":6},{"value":6}]},
+                  {"id":"12","winner":False,"athlete":{"displayName":t["opponent"]},"linescores":[{"value":3},{"value":4}]}]
+        game={"id":"79","date":t["start"],"venue":{"fullName":"Colina, Chile"},"round":{"displayName":"Semifinal"},
+              "status":{"type":{"state":"post","name":"STATUS_FINAL","completed":True}},"competitors":athletes}
+        group={"grouping":{"slug":"womens-singles"},"competitions":[game]}
+        def result(tick,grp):
+            return history.wta_result(tick,[{"id":"Colina-2026","groupings":[grp]}])
+        self.assertEqual(result(t,group)[1]["result"],"Lost")
+        self.assertEqual(result({**t,"market":"spreads","line":-3.5},group)[1]["profit"],0.95)
+        self.assertEqual(result({**t,"market":"winner"},group)[1]["score"],"6-3 6-4")
+        self.assertIsNone(result(t,{**group,"competitions":[game,game]}))
+        self.assertIsNone(result(t,{**group,"grouping":{"slug":"womens-doubles"}}))
+        self.assertIsNone(result({**t,"league":"WTA 125k Quito - SF"},group))
+        self.assertIsNone(result({**t,"league":"WTA 125k Colina - QF"},group))
+
     def test_exact_round_and_ids_survive_utc_date_change(self):
         names = {7:"liam draxl",8:"daniel milavsky"}
         self.assertEqual(history.bind(self.t,self.tours,[],[self.r],names),[1,5,7,8])

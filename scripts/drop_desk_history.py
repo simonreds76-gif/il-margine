@@ -168,6 +168,78 @@ def event_data(tickets):
     return tours, schedule, games, names
 
 
+def wta_result(ticket, events):
+    """Match a women's singles result to the recorded city/event, round, players and UTC date."""
+    label, _, rnd = ticket["league"].rpartition(" - ")
+    location = normal(re.sub(r"^WTA\s+(?:125k?\s+)?", "", label, flags=re.I))
+    rounds = {"sf":{"semifinal"}, "qf":{"quarterfinal"}, "final":{"final"},
+              "r1":{"first round"}, "r2":{"second round"}, "r3":{"third round"},
+              "qualifiers":{"qualifying first round","qualifying second round","qualifying final"},
+              "q1":{"qualifying first round"}, "groups":{"round robin","group stage"}}
+    expected = rounds.get(rnd.casefold(), set())
+    numbered = re.fullmatch(r"r(16|32|64|128)", rnd.casefold())
+    if numbered:
+        expected = {"round of " + numbered[1]}
+    names = (normal(ticket["player"]), normal(ticket["opponent"]))
+    matches = []
+    for event in events:
+        for group in event.get("groupings", []):
+            if group.get("grouping", {}).get("slug") != "womens-singles":
+                continue
+            for game in group.get("competitions", []):
+                city = normal((game.get("venue") or {}).get("fullName","").split(",")[0])
+                if not location or location not in {city, normal(event.get("name","")), normal(event.get("shortName",""))}:
+                    continue
+                if normal((game.get("round") or {}).get("displayName","")) not in expected:
+                    continue
+                played = utc(game.get("date"))
+                if not played or abs((played.date() - utc(ticket["start"]).date()).days) > 1:
+                    continue
+                sides = game.get("competitors",[])
+                if len(sides) == 2 and {normal((p.get("athlete") or {}).get("displayName","")) for p in sides} == set(names):
+                    matches.append((event["id"],game,sides))
+    if len(matches) != 1:
+        return None
+    edition, game, sides = matches[0]
+    if not game.get("id") or not all(s.get("id") for s in sides) or sides[0]["id"] == sides[1]["id"]:
+        return None
+    binding = ["wta",edition,game["id"],*[s["id"] for s in sides]]
+    status = game.get("status",{}).get("type",{})
+    if not status.get("completed") or status.get("state") != "post":
+        return None
+    state = status.get("name")
+    if state in {"STATUS_WALKOVER","STATUS_WALK_OVER"}:
+        return binding, {"score":"W/O","result":"Void","profit":0,"settled_stake":0}
+    is_games = ticket.get("market") in ("spreads","totals")
+    if state == "STATUS_RETIRED" and is_games:
+        return binding, {"score":"Retired","result":"Void","profit":0,"settled_stake":0}
+    if state != "STATUS_FINAL" or any(s.get("winner") not in (True,False) for s in sides) or sum(s["winner"] for s in sides) != 1:
+        return None
+    winner,loser = sorted(sides,key=lambda p:not p["winner"])
+    w,l = (p.get("linescores",[]) for p in (winner,loser))
+    if len(w)!=len(l) or any(not isinstance(s.get("value"),(int,float)) or not float(s["value"]).is_integer() for s in [*w,*l]):
+        return None
+    sets = [(int(a["value"]),int(b["value"])) for a,b in zip(w,l)]
+    score = " ".join(f"{a}-{b}" for a,b in sets)
+    if not completed_score(score,2):
+        return None
+    picked_winner = normal(winner["athlete"]["displayName"])==names[0]
+    if is_games:
+        from desk_games import grade
+        return binding, {"score":score, **grade(ticket,sets,picked_winner)}
+    return binding, {"score":score,"result":"Won" if picked_winner else "Lost"}
+
+
+def wta_scoreboard(day):
+    response = requests.get("https://site.api.espn.com/apis/site/v2/sports/tennis/wta/scoreboard",
+                            params={"dates":day.replace("-","")}, timeout=12, allow_redirects=False)
+    response.raise_for_status()
+    events = response.json()["events"]
+    if not isinstance(events,list):
+        raise ValueError("Invalid women's singles scoreboard")
+    return events
+
+
 def settle(store, state, now):
     pending = state["pending"]
     due = {}
@@ -179,16 +251,34 @@ def settle(store, state, now):
         interval = timedelta(days=1) if now - start > timedelta(days=7) else timedelta(hours=1)
         if last and now - last < interval:
             continue
-        due.setdefault(ticket["start"][:10],{})[mid] = ticket
+        womens = ticket["tour"] in ("WTA", "WTA 125")
+        if womens and now < start:
+            continue
+        due.setdefault((ticket["start"][:10],womens),{})[mid] = ticket
     if not due:
         return
     resolved = defaultdict(dict)
-    for group in due.values():
-        tours, schedule, games, names = event_data(list(group.values()))
+    for (day,womens), group in due.items():
+        if womens:
+            try:
+                events = wta_scoreboard(day)
+            except (requests.RequestException, KeyError, ValueError) as exc:
+                print(f"WTA score check unavailable for {day}: {type(exc).__name__}.")
+                for ticket in group.values():
+                    ticket["last_check"] = now.isoformat()
+                continue
+        else:
+            tours, schedule, games, names = event_data(list(group.values()))
         for mid,ticket in group.items():
-            if not ticket.get("binding"):
-                ticket["binding"] = bind(ticket,tours,schedule,games,names)
-            result = outcome(ticket,games,schedule,now)
+            if womens:
+                graded = wta_result(ticket,events)
+                result = None
+                if graded:
+                    ticket["binding"], result = graded
+            else:
+                if not ticket.get("binding"):
+                    ticket["binding"] = bind(ticket,tours,schedule,games,names)
+                result = outcome(ticket,games,schedule,now)
             ticket["last_check"] = now.isoformat()
             if result:
                 resolved[ticket["after"][:10]][mid] = {**result,**{k:ticket[k] for k in ("market","line","side","selection") if k in ticket},"binding":ticket["binding"],
