@@ -191,6 +191,145 @@ def performance_report(days):
     return report
 
 
+def selection_key(ticket):
+    return json.dumps([ticket["tour"], ticket["fixture"], ticket["contract"], ticket["side"],
+                       ticket["selection"]], ensure_ascii=True, separators=(",", ":"))
+
+
+def confirmed_moves(receipt, batch):
+    """Only an acknowledged message can supply an alert price. Never infer delivery from eligibility."""
+    if receipt["state"] != "sent":
+        return []
+    if (receipt["observed"] != batch["observed"] or type(receipt["message_id"]) is not int
+            or not utc(receipt["delivered_at"])):
+        raise ValueError("Delivery receipt does not match its scan")
+    wanted = set(receipt["move_ids"])
+    found = [m for m in batch["moves"] if m["move_id"] in wanted]
+    if len(found) != len(wanted) or {m["move_id"] for m in found} != wanted:
+        raise ValueError("Incomplete delivery evidence")
+    confirmed = []
+    for m in found:
+        if not (utc(m["before"]) < utc(m["after"]) < utc(m["start"])) or min(m["new"],m["old"]) <= 1:
+            raise ValueError("Invalid delivered odds or timing")
+        if 100 * (1/m["new"] - 1/m["old"]) < 4 - 1e-10:
+            continue
+        if "contract" not in m:  # Original winner-only format.
+            side = sorted((m["player"],m["opponent"])).index(m["player"])
+            m = dict(m, contract="winner", side=side, selection=m["player"])
+        confirmed.append([selection_key(m), receipt["delivered_at"], m["new"]])
+    return confirmed
+
+
+def update_receipts(store, day, saved):
+    import re
+    from pinnradar_tennis import BUCKET
+    folder = day.replace("-", "/")
+    prefix = "drop-deliveries-v2/" + folder
+    reply = store.request("POST", "/object/list/" + BUCKET, json={
+        "prefix":prefix+"/", "limit":200, "sortBy":{"column":"name","order":"asc"}})
+    store.require(reply)
+    files = reply.json()
+    if len(files) >= 200:
+        raise ValueError("Incomplete receipt listing")
+    for row in files:
+        name = row["name"]
+        if name in saved or not re.fullmatch(r"\d{6}-\d{6}\.json", name):
+            continue
+        receipt = store.get(prefix+"/"+name)
+        if not receipt:
+            raise ValueError("Missing listed receipt")
+        if receipt["state"] == "sent":
+            batch = store.get("drop-scans-v2/"+folder+"/"+name)
+            saved[name] = confirmed_moves(receipt,batch)
+
+
+def compact_ticket(t):
+    return {k:t[k] for k in ("fixture","contract","side","tour","selection","player","opponent","league",
+                              "new","after","result","stake","profit") if k in t}
+
+
+def alert_grade(t, odds):
+    result = t.get("result", "Pending")
+    if result not in ("Pending","Void","Push","Won","Lost","Half won","Half lost"):
+        raise ValueError("Unrecognised paper settlement")
+    if result == "Won":
+        return odds - 1
+    if result == "Half won":
+        return (odds - 1)/2
+    return {"Lost":-1,"Half lost":-.5}.get(result,0)
+
+
+def rolling_report(days, end, through):
+    start = (date.fromisoformat(end)-timedelta(days=29)).isoformat()
+    confirmed = {}
+    tickets = {}
+    for day, data in sorted(days.items()):
+        if not start <= day <= end:
+            continue
+        for batch in data["receipts"].values():
+            for key, sent, odds in batch:
+                if utc(sent).date().isoformat() <= end and (key not in confirmed or utc(sent) < utc(confirmed[key][0])):
+                    confirmed[key] = (sent,odds)
+        for t in data["tickets"]:
+            key = selection_key(t)
+            if key in tickets:
+                raise ValueError("Duplicate rolling paper contract")
+            tickets[key] = t
+    result = {}
+    for tour in ("ATP","WTA"):
+        entries, alerts, public = [], [], []
+        for key,t in sorted(tickets.items(), key=lambda item:item[1]["after"], reverse=True):
+            if circuit(t["tour"]) != tour:
+                continue
+            entries.append(t)
+            row = {"selection":t["selection"],"fixture":t["player"]+" vs "+t["opponent"],
+                   "league":t["league"],"at":t["after"],"odds":t["new"],"result":t.get("result","Pending")}
+            if key in confirmed:
+                at, odds = confirmed[key]
+                alerts.append(dict(t, profit=alert_grade(t,odds)))
+                row["sent"] = {"at":at,"odds":odds}
+            public.append(row)
+        covered = sorted(d for d,v in days.items() if start <= d <= end and v["coverage"].get(tour,0))
+        result[tour] = {"version":1,"tour":tour,"start":start,"end":end,"through":through,
+                        "firstCovered":next(iter(covered),None),"coveredDays":len(covered),
+                        "all":summary(entries),"telegram":summary(alerts),"rows":public}
+    return result
+
+
+def publish_rolling(store, daily, loaded, dirty, now):
+    """A private, rebuildable projection; the site reads one summary/row packet per tour."""
+    through = max(r["through"] for r in daily.values())
+    end = now.date()
+    first = max(date.fromisoformat(FIRST_DAY), end-timedelta(days=29))
+    cache_path = BASE+"/rolling-cache-v1.json"
+    old = store.get(cache_path) or {}
+    days = {}
+    for offset in range((end-first).days+1):
+        day = (first+timedelta(days=offset)).isoformat()
+        day_report = daily.get(day)
+        if not day_report:
+            continue
+        data = old.get(day, {"receipts":{}})
+        revision = hashlib.sha256(json.dumps(day_report,sort_keys=True).encode()).hexdigest()
+        if day in dirty or data.get("revision") != revision:
+            ledger = loaded.get(day) or store.get(f"{BASE}/ledger/{day}.json")
+            if not ledger or ledger["through"] != day_report["through"]:
+                raise ValueError("Rolling view missing its verified daily ledger")
+            data.update(revision=revision, coverage=ledger["covered"],
+                        tickets=[compact_ticket(t) for t in ledger["tickets"].values() if t["rule"]=="all4"])
+        # Retry across midnight, backfill after downtime, and periodically reconcile older receipts.
+        if (data.get("checked","") <= day or day >= (end-timedelta(days=1)).isoformat()
+                or (date.fromisoformat(day).toordinal()%30 == (now.hour*4 + now.minute//15)%30)):
+            update_receipts(store,day,data["receipts"])
+            data["checked"] = end.isoformat()
+        days[day] = data
+    for tour, report in rolling_report(days,end.isoformat(),through).items():
+        store.put(f"{BASE}/rolling-30/{tour.lower()}.json",report,replace=True)
+    store.put(cache_path,days,replace=True)
+
+
+
+
 def project(store, now, limit=6):
     path = BASE + "/state.json"
     state = store.get(path) or {"day":START.date().isoformat(), "pending_days":[]}
@@ -262,6 +401,8 @@ def project(store, now, limit=6):
         store.put(f"{BASE}/performance.json", performance_report(daily), replace=True)
     state["pending_days"] = sorted(pending)
     store.put(path,state,replace=True)
+    if daily:
+        publish_rolling(store, daily, ledgers, dirty, now)
     return used
 
 

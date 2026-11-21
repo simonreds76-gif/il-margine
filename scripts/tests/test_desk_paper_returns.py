@@ -15,6 +15,49 @@ def scan(stamp, price=2, start="16:00", live=False, events=True, contracts=None)
 
 
 class PaperReturnsTest(unittest.TestCase):
+    def test_rolling_window_delivered_odds_and_tour_isolation(self):
+        from desk_paper_returns import rolling_report, selection_key
+        end = "2027-01-02"
+        def ticket(label, outcome=None, price=2.0, tour="ATP"):
+            t = dict(fixture="f", contract="winner", side=0, tour=tour, selection=label,
+                     player=label, opponent="Opponent",league="Event",after="2026-12-04T04:00Z", new=price)
+            if outcome:
+                t.update(result=outcome,stake=0 if outcome=="Void" else 1,
+                         profit={"Half won":.5,"Lost":-1,"Void":0}.get(outcome,price-1))
+            return t
+        half=ticket("Half","Half won")
+        loser=ticket("Loss","Lost")
+        pending=ticket("Waiting")
+        void=ticket("Void","Void")
+        wta=ticket("Wta","Won",3.0,"WTA 125")
+        def day(ts, receipts):
+            return dict(tickets=ts,receipts=receipts,coverage={"ATP":1,"WTA":1})
+        rolled=rolling_report({"2026-12-03":day([ticket("Outside","Lost")],{}),
+            "2026-12-04":day([half,loser,pending,void,wta],{"receipt":[
+                [selection_key(half),"2026-12-04T08:00Z",3.0],
+                [selection_key(half),"2026-12-04T09:00Z",5.0],
+                [selection_key(void),"2026-12-04T07:00Z",2.0],
+                [selection_key(pending),"2026-12-04T07:00Z",2.0]]})},end,end+"T12:00Z")
+        a=rolled["ATP"]
+        self.assertEqual((a["start"],a["all"]["entries"],a["all"]["roi"]),("2026-12-04",4,-25))
+        self.assertEqual((a["telegram"]["entries"],a["telegram"]["stake"],a["telegram"]["roi"]),(3,1,100))
+        self.assertEqual((a["telegram"]["voids"],a["telegram"]["pending"]),(1,1))
+        self.assertEqual((rolled["WTA"]["all"]["won"],rolled["WTA"]["telegram"]["roi"]),(1,None))
+        self.assertTrue(all("contract" not in row for row in a["rows"]))
+
+    def test_only_confirmed_big_moves_in_sent_receipt(self):
+        from desk_paper_returns import confirmed_moves
+        s="2026-11-20T11:15:00Z"
+        m=dict(move_id="a",fixture="f",player="Zulu",opponent="Alpha",tour="ATP",before="2026-11-20T11:00Z",
+               after=s,start="2026-11-20T13:00Z",old=2.0,new=1.8)
+        batch=dict(observed=s,moves=[m,dict(m,move_id="other"),dict(m,move_id="tiny",new=1.99)])
+        r=dict(state="sent",observed=s,delivered_at="2026-11-20T11:15:10Z",message_id=1,move_ids=["a","tiny"])
+        self.assertEqual(confirmed_moves(dict(r,state="sending"),batch),[])
+        self.assertEqual(len(confirmed_moves(r,batch)),1)
+        with self.assertRaises(ValueError):
+            confirmed_moves(dict(r,move_ids=["unknown"]),batch)
+
+
     def test_month_and_lifetime_use_settled_stakes_and_isolate_circuits(self):
         def day(stamp, rows):
             atp = {"coveredScans":1, "rules":{"all4":summary(rows), "late4":summary([])}}
