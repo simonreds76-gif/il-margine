@@ -8,6 +8,7 @@ from datetime import date, datetime, timedelta, timezone
 import requests
 from pinnradar_tennis import BUCKET, Store, utc
 from price_drop_watch import START, object_key
+from desk_games import market_limit, pairs
 
 
 RETIREMENT = re.compile(r"\b(?:ret(?:ired|irement)?|def(?:ault(?:ed)?)?|disqualifi(?:ed|cation)|dsq|dq)\b", re.I)
@@ -69,19 +70,29 @@ def key(row):
 
 def append_snapshot(tape, filename, snapshot):
     stamp = snapshot["observed"]
-    if filename in tape["slots"]:
-        if tape["slots"][filename] != stamp:
-            raise ValueError("A saved scan slot changed identity")
+    exists = filename in tape["slots"]
+    if exists and tape["slots"][filename] != stamp:
+        raise ValueError("A saved scan slot changed identity")
+    if filename in tape.get("limit_slots", {}):
         return
     for row in snapshot["events"].values():
-        entry = tape["series"].setdefault(key(row), {"players": [row["home"],row["away"]], "quotes": []})
-        prices = {row["home"]: row["home_price"], row["away"]: row["away_price"]}
-        if set(prices) != set(entry["players"]):
-            raise ValueError("Price series player identity changed")
-        entry["quotes"].append([stamp, *[prices[name] for name in entry["players"]]])
-        for code, pair in row.get("contracts",{}).items():
-            series = tape["series"].setdefault(key(row)+"|"+code, {"players":pair["labels"],"quotes":[]})
-            series["quotes"].append([stamp,*pair["prices"]])
+        for code, pair in pairs(row):
+            series_key = key(row) if code == "winner" else key(row) + "|" + code
+            series = tape["series"].setdefault(series_key, {"players":pair["labels"], "quotes":[]})
+            prices = dict(zip(pair["labels"], pair["prices"]))
+            if set(prices) != set(series["players"]):
+                raise ValueError("Price series player identity changed")
+            quote = [stamp, *[prices[name] for name in series["players"]]]
+            if exists:
+                saved = next((q for q in series["quotes"] if q[0] == stamp), None)
+                if saved is None or saved[:3] != quote:
+                    raise ValueError("Stored chart odds and snapshot disagree")
+            else:
+                series["quotes"].append(quote)
+            limit = market_limit(row, pair)
+            if limit is not None:
+                series.setdefault("limits", {})[stamp] = limit
+    tape.setdefault("limit_slots", {})[filename] = True
     tape["slots"][filename] = stamp
 
 
@@ -347,14 +358,19 @@ def project(store, now):
         processed = state.setdefault("intake",{})
         changed = False
         for name in rows(store,prefix):
-            if name in processed and name in tape["slots"]:
+            # Limit capture started at the 11:00 UTC slot on 21 November.
+            missing_limits = ((day.isoformat(), name) >= ("2026-11-21", "1100.json")
+                              and name not in tape.get("limit_slots", {}))
+            if name in processed and name in tape["slots"] and not missing_limits:
                 continue
             snap = store.get(prefix + "/" + name)
             if snap is None:
                 raise ValueError("Listed scan missing")
-            if name not in tape["slots"]:
+            if name not in tape["slots"] or missing_limits:
                 append_snapshot(tape,name,snap)
                 changed = True
+            if name in processed:
+                continue
             stamp = snap["observed"]
             if utc(stamp) >= START:
                 batch = store.get("drop-scans-v2/" + object_key(stamp))

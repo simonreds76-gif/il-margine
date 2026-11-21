@@ -14,7 +14,7 @@ from price_drop_watch import roundup_text
 class GamesDesk(unittest.TestCase):
     t = pilot.utc("2026-11-19T19:00:00Z")
 
-    def scan(self, last, minutes, price, line=22.5, reverse=False, present=True, start=None):
+    def scan(self, last, minutes, price, line=22.5, reverse=False, present=True, start=None, cap=3000):
         row = dict(id="1",fixture="ab",home="A",away="B",home_price=price,away_price=2.01,
                    start=(start or self.t+timedelta(days=3)).isoformat(),tour="ATP",league="ATP Test - QF")
         if reverse:
@@ -22,6 +22,10 @@ class GamesDesk(unittest.TestCase):
         if present:
             row["contracts"] = desk_games.contracts(dict(home=row["home"],away=row["away"],
                 totals={str(line):[price,2.01]},spreads={("3" if reverse else "-3"):([2.01,price] if reverse else [price,2.01])}))
+        if cap is not None:
+            row["match_period_limits"] = {"max_money_line": cap}
+            for pair in row.get("contracts", {}).values():
+                pair["reported_market_max"] = {"amount": cap}
         snap={"observed":(self.t+timedelta(minutes=minutes)).isoformat(),"events":{"1":row}}
         state,_=pilot.advance(last,snap,track_first=False)
         batch=desk_games.compare(last,snap,state,set())
@@ -41,26 +45,28 @@ class GamesDesk(unittest.TestCase):
         self.assertTrue(again["moves"])
         self.assertFalse(again["alert_ids"])
 
-    def test_final_hour_rebases_after_earlier_move_then_alerts_once(self):
-        start = self.t + timedelta(minutes=90)
-        state, _ = self.scan({}, 0, 2.9, start=start)
-        state, early = self.scan(state, 15, 2.3, start=start)
-        self.assertTrue(early["moves"])
-        self.assertFalse(desk_games.alert_moves(early))
-        state, boundary = self.scan(state, 30, 2.2, start=start)
-        self.assertFalse(boundary["alert_ids"])
-        state, small = self.scan(state, 45, 2.1, start=start)
-        self.assertFalse(small["alert_ids"])
-        state, batch = self.scan(state, 60, 2.0, reverse=True, start=start)
-        alerts = desk_games.alert_moves(batch)
-        self.assertEqual({m["selection"] for m in alerts}, {"A", "A -3 games", "Over 22.5 games"})
-        self.assertTrue(all(m["old"] == 2.2 and m["before"] == boundary["observed"] for m in alerts))
-        self.assertIn("Final-hour", roundup_text(alerts, batch["observed"]))
-        state, repeat = self.scan(state, 75, 1.8, start=start)
-        self.assertTrue(repeat["moves"])
-        self.assertFalse(repeat["alert_ids"])
-        self.assertFalse(desk_games.alert_moves({**batch, "policy":"same-line-4pp-prematch-v1"}))
-        self.assertFalse(desk_games.alert_moves({**batch, "moves":[dict(m, before=early["observed"]) for m in alerts]}))
+    def test_earlier_alert_is_not_repeated_in_final_hour(self):
+        start = self.t + timedelta(minutes=100)
+        state,_ = self.scan({},0,2.5,start=start)
+        state,b = self.scan(state,15,2.25,start=start)
+        alerts = desk_games.alert_moves(b)
+        self.assertEqual(len(alerts),3)
+        self.assertFalse(any(m["detected_in_final_hour"] for m in alerts))
+        self.assertIn("Pre-match tennis moves",roundup_text(alerts,b["observed"]))
+        for minute, price in [(30,2.2),(45,2.0),(60,1.8)]:
+            state,b = self.scan(state,minute,price,start=start)
+            self.assertFalse(desk_games.alert_moves(b))
+
+    def test_strict_threshold_and_final_hour_context(self):
+        self.assertFalse(desk_games.alert_crossing(6.25,5))
+        self.assertTrue(desk_games.alert_crossing(6.26,5))
+        start = self.t + timedelta(minutes=70)
+        state,_ = self.scan({},0,2.5,start=start)
+        state,b = self.scan(state,15,2.2,start=start)
+        alerts = desk_games.alert_moves(b)
+        self.assertEqual(len(alerts),3)
+        self.assertTrue(all(m["detected_in_final_hour"] and not m["wholly_in_final_hour"] for m in alerts))
+        self.assertFalse(desk_games.alert_moves({**b, "policy":"same-line-4pp-final-hour-v2"}))
 
     def test_line_absence_gap_and_start_reset_late_signal(self):
         start = self.t + timedelta(hours=1)
@@ -81,6 +87,27 @@ class GamesDesk(unittest.TestCase):
         state["desk_issued"]["ab|winner|0"] = start.isoformat()
         state, batch = self.scan(state,15,2.0,start=start)
         self.assertEqual({m["market"] for m in desk_games.alert_moves(batch)},{"spreads","totals"})
+
+    def test_low_missing_or_changed_limits_restart_without_consuming_alert(self):
+        for bad in (0, None, desk_games.MIN_ALERT_LIMIT_USD-1):
+            with self.subTest(bad=bad):
+                start = self.t + timedelta(hours=1)
+                state,_ = self.scan({},0,3.0,start=start)
+                state,thin = self.scan(state,15,2.7,start=start,cap=bad)
+                self.assertTrue(thin["moves"])
+                self.assertFalse(thin["alert_ids"])
+                state,raised = self.scan(state,30,2.4,start=start,cap=desk_games.MIN_ALERT_LIMIT_USD)
+                self.assertFalse(raised["alert_ids"])
+                state,deep = self.scan(state,45,2.1,start=start,cap=desk_games.MIN_ALERT_LIMIT_USD)
+                alerts = desk_games.alert_moves(deep)
+                self.assertEqual(len(alerts), 3)
+                self.assertTrue(all(m["old"] == 2.4 for m in alerts))
+                self.assertIn("Market limit:",roundup_text(alerts,deep["observed"]))
+                alerts[0]["alert_detection_limit"]["currency"]="EUR"
+                self.assertLess(len(desk_games.alert_moves(deep)),3)
+
+    def test_generic_games_cap_never_qualifies_an_alternate_line(self):
+        self.assertIsNone(desk_games.market_limit({"games_period_limits":{"max_total":20000}},{"market":"totals"}))
 
     def test_changed_line_or_start_never_compared(self):
         state,_=self.scan({},0,2.5)

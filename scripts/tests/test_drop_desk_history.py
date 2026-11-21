@@ -83,6 +83,23 @@ class DeskTests(unittest.TestCase):
         data=tape["series"]["1|u|s"]["quotes"]
         self.assertEqual([r[1] for r in data],[5.02,5.25,5.25])
 
+    def test_existing_tape_adds_observed_limits_even_if_odds_stay_flat(self):
+        tape = {"slots":{}, "series":{}}
+        for i, cap in enumerate([500, 1500, 0, None]):
+            slot = f"slot{i}"
+            row = {"id":"1", "fixture":"ab", "start":"start", "home":"A", "away":"B", "home_price":2, "away_price":2}
+            snap = {"observed":str(i), "events":{"1":row}}
+            history.append_snapshot(tape, slot, snap)
+            del tape["limit_slots"][slot]  # Simulate the price-only projection from the old version.
+            if cap is not None:
+                row["match_period_limits"] = {"max_money_line":cap}
+            history.append_snapshot(tape, slot, snap)
+            history.append_snapshot(tape, slot, snap)
+        series = tape["series"]["1|ab|start"]
+        self.assertEqual(len(series["quotes"]),4)
+        self.assertEqual([v["amount"] for v in series["limits"].values()],[500,1500,0])
+        self.assertTrue(all(v["currency"] == "USD" for v in series["limits"].values()))
+
     def test_roundup_contains_both_actual_observation_dates(self):
         row = {**self.t,"event_id":"11","before":"2026-11-18T23:59:21+00:00","after":"2026-11-19T00:13:45+00:00","old":5.1,"new":5.02,"both_shortened":False}
         msg = watch.roundup_text([row],row["after"])

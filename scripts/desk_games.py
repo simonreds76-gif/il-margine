@@ -3,13 +3,45 @@ import hashlib
 import json
 import math
 from datetime import datetime, timedelta
+from decimal import Decimal
 
-ALERT_POLICY = "same-line-4pp-final-hour-v2"
+ALERT_POLICY = "same-line-over4pp-prematch-usd1500-v3"
+MIN_ALERT_LIMIT_USD = 1500
 FINAL_HOUR = timedelta(hours=1)
 
 
 def crosses_threshold(earlier, later):
     return 100 * (1 / later - 1 / earlier) >= 4 - 1e-10
+
+
+def alert_crossing(earlier, later):
+    # Strictly over four probability points, without rounding a boundary into a signal.
+    a, b = Decimal(str(earlier)), Decimal(str(later))
+    return 100 * (a - b) > 4 * a * b
+
+
+def market_limit(row, contract):
+    # Spreads and totals vary by line. Only the match-winner cap applies to both ML sides.
+    limit = contract.get("reported_market_max")
+    if limit is None and contract["market"] == "winner":
+        meta = row.get("match_period_limits", {})
+        amount = meta.get("max_money_line", meta.get("max_moneyline"))
+        limit = {"amount": amount}
+    if not isinstance(limit, dict):
+        return None
+    amount = limit.get("amount")
+    if type(amount) not in (int, float) or not math.isfinite(amount) or amount < 0:
+        return None
+    currency = limit.get("currency", "USD")
+    if not isinstance(currency, str) or len(currency) != 3 or not currency.isascii() or not currency.isalpha() or not currency.isupper():
+        return None
+    return {"amount": amount, "currency": currency}
+
+
+def liquid(limit):
+    return (isinstance(limit, dict) and limit.get("currency") == "USD"
+            and type(limit.get("amount")) in (int, float) and math.isfinite(limit["amount"])
+            and limit["amount"] >= MIN_ALERT_LIMIT_USD)
 
 
 def alert_moves(batch):
@@ -21,7 +53,8 @@ def alert_moves(batch):
     for move in batch["moves"]:
         if move["move_id"] in wanted:
             start, before, after = (datetime.fromisoformat(move[key]) for key in ("start", "before", "after"))
-            if start - FINAL_HOUR <= before < after < start and crosses_threshold(move["old"], move["new"]):
+            if (before < after < start and alert_crossing(move["old"], move["new"])
+                    and liquid(move.get("alert_reference_limit")) and liquid(move.get("alert_detection_limit"))):
                 moves.append(move)
     return moves
 
@@ -65,7 +98,7 @@ def pairs(row):
 
 def compare(last, current, state, blocked):
     """Small moves stay on the board. Alert once per exact contract side at +4pp."""
-    from price_drop_watch import MAX_GAP, observe
+    from price_drop_watch import observe
     batch = observe(None, current)
     batch.update(before=last.get("observed"), policy=ALERT_POLICY, alert_ids=[], compared_by_circuit={"ATP": 0, "WTA": 0})
     now = datetime.fromisoformat(current["observed"])
@@ -73,32 +106,34 @@ def compare(last, current, state, blocked):
     # Retain issued identities across gaps, temporary withdrawals and pre-start reschedules.
     issued = {k:t for k,t in last.get("desk_issued",{}).items() if datetime.fromisoformat(t) + timedelta(days=7) > now}
     # Grandfather existing signals on migration. New early board moves never consume a late alert.
-    late_issued = {k:t for k,t in last.get("desk_late_issued", issued).items()
+    alerted = {k:t for k,t in last.get("desk_late_issued", issued).items()
                    if datetime.fromisoformat(t) + timedelta(days=7) > now}
     for eid,row in state["events"].items():
         if row["fixture"] in blocked:
             continue
         start = datetime.fromisoformat(row["start"])
-        in_hour = start - FINAL_HOUR <= now < start
+        prematch = now < start
         first, second = sorted((row["home"], row["away"]))
         for code, pair in pairs(row):
             k = "|".join((eid, row["fixture"], row["start"], code))
             old = history.get(k)
             prices = pair["prices"]
-            point = [current["observed"], *prices]
+            limit = market_limit(row, pair)
+            point = [current["observed"], *prices, limit]
             peaks = list(old["peaks"]) if old else [point, point]
             for side in (0,1):
                 if prices[side] > peaks[side][side+1]:
                     peaks[side] = point
             history[k] = {"start":row["start"], "last":point, "peaks":peaks}
-            late_refs = None
-            if in_hour:
+            liquid_refs = None
+            if prematch and liquid(limit):
                 if old and old["last"][0] == last.get("observed"):
                     previous_time = datetime.fromisoformat(old["last"][0])
-                    if start - FINAL_HOUR <= previous_time < now and now - previous_time <= MAX_GAP:
-                        late_refs = old.get("late_peaks") or [old["last"], old["last"]]
-                history[k]["late_peaks"] = [
-                    late_refs[i] if late_refs and late_refs[i][i+1] > prices[i] else point for i in (0, 1)
+                    adjacent = int(now.timestamp()) // 900 - int(previous_time.timestamp()) // 900 == 1
+                    if adjacent and timedelta(0) < now - previous_time <= timedelta(minutes=20):
+                        liquid_refs = old.get("liquid_peaks")
+                history[k]["liquid_peaks"] = [
+                    liquid_refs[i] if liquid_refs and liquid_refs[i][i+1] > prices[i] else point for i in (0, 1)
                 ]
             if not old:
                 continue
@@ -114,10 +149,10 @@ def compare(last, current, state, blocked):
                 board_crossing = contract not in issued and crosses_threshold(peak[1+i], price)
                 if board_crossing:
                     issued[contract] = row["start"]
-                qualifies = late_refs is not None and contract not in late_issued and crosses_threshold(late_refs[i][1+i], price)
+                qualifies = liquid_refs is not None and contract not in alerted and alert_crossing(liquid_refs[i][1+i], price)
                 reference = peak if board_crossing else old["last"]
                 if qualifies:
-                    reference = late_refs[i]
+                    reference = liquid_refs[i]
                 before, old_price, old_other = reference[0], reference[1+i], reference[2-i]
                 p, old_p = prices[1-i]/sum(prices), old_other/(old_price+old_other)
                 mid = hashlib.sha256(json.dumps([k,i,current["observed"]]).encode()).hexdigest()[:32]
@@ -135,10 +170,14 @@ def compare(last, current, state, blocked):
                     move["reported_market_max_at_detection"] = pair["reported_market_max"]
                 batch["moves"].append(move)
                 if qualifies:
+                    move["alert_reference_limit"] = reference[3]
+                    move["alert_detection_limit"] = limit
+                    move["detected_in_final_hour"] = start - FINAL_HOUR <= now
+                    move["wholly_in_final_hour"] = start - FINAL_HOUR <= datetime.fromisoformat(before)
                     move["alert_policy"] = ALERT_POLICY
                     batch["alert_ids"].append(mid)
-                    late_issued[contract] = row["start"]
-    state.update(desk_windows=history, desk_issued=issued, desk_late_issued=late_issued)
+                    alerted[contract] = row["start"]
+    state.update(desk_windows=history, desk_issued=issued, desk_late_issued=alerted)
     return batch
 
 
