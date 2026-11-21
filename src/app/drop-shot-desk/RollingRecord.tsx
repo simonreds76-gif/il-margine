@@ -32,8 +32,8 @@ export default function RollingRecord({circuit,sent,onScope,metrics}:{circuit:st
   function select(next:boolean){setPage(1);onScope(next);}
   return <>
     <div className={css.rollingScope} role="group" aria-label="30-day selection filter">
-      <button type="button" aria-pressed={!sent} onClick={()=>select(false)}>All big drops</button>
       <button type="button" aria-pressed={sent} onClick={()=>select(true)}>Sent on Telegram</button>
+      <button type="button" aria-pressed={!sent} onClick={()=>select(false)}>All big drops</button>
     </div>
     {data===undefined ? <p className={css.empty} role="status">Loading the {circuit} record…</p>
       : data===null ? <p className={css.empty} role="status">The rolling record could not be loaded. <button type="button" onClick={()=>{setLoaded(null);retry(n=>n+1);}}>Try again</button></p>
@@ -42,11 +42,11 @@ export default function RollingRecord({circuit,sent,onScope,metrics}:{circuit:st
           <p className={css.span} aria-live="polite"><b>{sent?"Sent on Telegram":"All big drops"}</b> · {day(data.start)} – {day(data.end)}</p>
           <p className={css.stamp}>Odds through <b>{stamp.format(new Date(data.through))} UTC</b></p>
         </div>
+        {metrics(data.summary)}
         <p className={css.note}>{sent
           ? "Each selection counts once on the UTC date of its first confirmed big-drop alert, at the odds sent. Includes alerts from the earlier pilot."
           : (data.firstCovered ? "Odds recorded on "+data.coveredDays+" of 30 days, starting "+day(data.firstCovered)+". " : "No recorded paper coverage for this tour in the window. ")+
             "Each selection counts once on the UTC date of its first qualifying drop, at the odds recorded then."}</p>
-        {metrics(data.summary)}
         <details className={css.fold} key={sent?"sent":"all"}>
           <summary><span>Selections <small>{data.summary.entries}</small></span></summary>
           {data.rows.length===0 ? <p className={css.fine}>{sent?"No confirmed qualifying Telegram alerts in this window.":"No qualifying drops in this window."}</p> : <>
