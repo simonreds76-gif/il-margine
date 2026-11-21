@@ -9,6 +9,7 @@ import { hostOf, venueKey } from "./DeskParts";
 import type { VenueMap } from "./DeskParts";
 import { readArchive, readDay } from "./reader";
 import styles from "./board.module.css";
+import { PaperReturns } from "./PaperReturns";
 import { countryForTournament } from "@/lib/tennis-tournament-country.mjs";
 
 export const dynamic="force-dynamic";
@@ -86,19 +87,22 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
           </dl>
         </section>
         <p className={styles.fresh} role="status" data-late={late?"true":undefined}>{known?<>Latest watchlist at {new Date(seen).toISOString().slice(0,16).replace("T"," ")} UTC{late?" · overdue for a new scan":day===today?" · the cloud scan runs every 15 minutes":""}.</>:"No watchlist has been recorded for this date."}</p>
-        <Board key={circuit} circuit={circuit} moves={fullBoard ? data.moves : data.moves.map(publicMove)} fixtures={fullBoard ? data.fixtures : data.fixtures.map(publicFixture)} archive={false} initialBatchId={batch} day={day} now={now} today={day===today} venues={venuesFor([...data.moves,...data.fixtures])}/></>;
+        {day >= (circuit==="ATP"?"2026-11-20":"2026-11-21") && <a className={styles.back} href="#big-drop-returns">See big-drop paper returns ↓</a>}
+        <Board key={circuit} circuit={circuit} moves={fullBoard ? data.moves : data.moves.map(publicMove)} fixtures={fullBoard ? data.fixtures : data.fixtures.map(publicFixture)} archive={false} initialBatchId={batch} day={day} now={now} today={day===today} venues={venuesFor([...data.moves,...data.fixtures])}/>
+        <PaperReturns day={day} circuit={circuit}/></>;
     }
   }catch{content=<p className={styles.problem} role="status">The price records could not be loaded. Refresh to try again.</p>}
   return <main className={styles.page} data-mode={archive?"archive":"daily"}>
     <div className={styles.topline}><Link className={styles.back} href="/tennis-matchday">← Tennis Matchday</Link><span className={styles.lab}>Unlisted pilot</span></div>
     <header className={styles.mast}>
       <div className={styles.brand}><Image src={brand} unoptimized alt="" width={66} height={36} priority/><div><p className={styles.kicker}>Tennis odds moves</p><h1>Drop Shot Desk</h1></div></div>
-      <nav aria-label="Price history" className={styles.tabs}><Link aria-current={!archive?"page":undefined} href={dailyUrl(circuit)}><DeskIcon name="drop"/>Daily moves</Link><Link aria-current={archive?"page":undefined} href={route+"?view=archive&tour=atp&day="+day}><DeskIcon name="replay"/>Historical replay{circuit==="WTA"?" Â· ATP only":""}</Link></nav>
+      <nav aria-label="Price history" className={styles.tabs}><Link aria-current={!archive?"page":undefined} href={dailyUrl(circuit)}><DeskIcon name="drop"/>Daily moves</Link><Link aria-current={archive?"page":undefined} href={route+"?view=archive&tour=atp&day="+day}><DeskIcon name="replay"/>Historical replay{circuit==="WTA"?" (ATP only)":""}</Link></nav>
     </header>
     <nav className={styles.circuit} aria-label="Tennis tour">
       {(["ATP","WTA"] as const).map(tour=><Link key={tour} prefetch={false} aria-current={circuit===tour?"page":undefined}
         href={archive && tour==="ATP" ? route+"?view=archive&tour=atp&day="+day : dailyUrl(tour)}>
-        <strong>{tour}</strong><small>{tour==="ATP"?"incl. Challenger":"incl. WTA 125"}</small>
+        <span className={styles.tourBadge}><Image unoptimized width={58} height={24} src={tour==="ATP"?"/icons/drop-shot-desk/atp-tour.png":"/icons/drop-shot-desk/wta-tour.svg"} alt={tour}/></span>
+        <small>{tour==="ATP"?"incl. Challenger":"incl. WTA 125"}</small>
       </Link>)}
     </nav>
     <p className={styles.standfirst}>Spot possible sharp money before the first serve. We check {circuit==="ATP"?"ATP and Challenger":"WTA Tour and WTA 125"} odds about every 15 minutes and show which players, game totals and games handicaps are shortening. Open a chart to see when the odds fell and whether they drifted back.</p>

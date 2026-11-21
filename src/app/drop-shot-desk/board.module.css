@@ -47,6 +47,16 @@
 .circuit a{display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:44px;padding:0 .9rem;border:1px solid transparent;border-radius:7px;color:var(--ds-text);text-decoration:none}
 .circuit a[aria-current="page"]{border-color:currentColor;color:var(--ds-mint,#8de2be)}
 .circuit small{font-size:.75rem;color:inherit}
+.tourBadge{display:grid;place-items:center;width:68px;height:32px;flex:none;border-radius:5px;background:#f2f6f7}
+.tourBadge img{width:56px;height:23px;object-fit:contain}
+@media(max-width:380px){.circuit a{flex-direction:column;gap:1px;padding-block:4px}}
+.paperTable{width:100%;border-collapse:collapse;margin:.8rem 0;text-align:right;font-size:.875rem}
+.paperTable :is(th,td){padding:.6rem .4rem;border-bottom:1px solid var(--ds-rule);white-space:nowrap}
+.paperTable th:first-child{text-align:left}
+.paperTable thead{color:var(--ds-soft)}
+.paperTable td[data-positive=true]{color:var(--ds-accent)}
+.paperTable td[data-positive=false]{color:var(--ds-loss)}
+.paperScroll{overflow-x:auto}
 .circuit a:focus-visible{outline:2px solid currentColor;outline-offset:1px}
 @media(max-width:600px){.circuit{display:flex;width:100%;box-sizing:border-box}.circuit a{flex:1;padding:0 .25rem}}
 .tabs{display:inline-flex;gap:2px;padding:3px;background:var(--ds-surface);border:1px solid var(--ds-rule);border-radius:10px}
