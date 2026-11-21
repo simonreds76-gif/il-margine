@@ -41,9 +41,10 @@ export default function RollingRecord({circuit,sent,onScope,metrics}:{circuit:st
           <p className={css.span} aria-live="polite"><b>{sent?"Sent on Telegram":"All big drops"}</b> · {day(data.start)} – {day(data.end)}</p>
           <p className={css.stamp}>Odds through <b>{stamp.format(new Date(data.through))} UTC</b></p>
         </div>
-        <p className={css.note}>{data.firstCovered ? "Odds recorded on "+data.coveredDays+" of 30 days, starting "+day(data.firstCovered)+"." : "No days with recorded odds for this tour in the window."} {sent
-          ? "Each selection counts once at the odds in its first confirmed qualifying Telegram alert."
-          : "Each selection counts once at its first qualifying odds."} The window uses the UTC date of the first qualifying drop.</p>
+        <p className={css.note}>{sent
+          ? "Each selection counts once on the UTC date of its first confirmed big-drop alert, at the odds sent. Includes alerts from the earlier pilot."
+          : (data.firstCovered ? "Odds recorded on "+data.coveredDays+" of 30 days, starting "+day(data.firstCovered)+". " : "No recorded paper coverage for this tour in the window. ")+
+            "Each selection counts once on the UTC date of its first qualifying drop, at the odds recorded then."}</p>
         {metrics(data.summary)}
         <details className={css.fold} key={sent?"sent":"all"}>
           <summary><span>Selections <small>{data.summary.entries}</small></span></summary>
