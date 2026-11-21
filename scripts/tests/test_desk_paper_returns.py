@@ -14,6 +14,18 @@ def scan(stamp, price=2, start="16:00", live=False, events=True, contracts=None)
 
 
 class PaperReturnsTest(unittest.TestCase):
+    def test_limit_belongs_to_the_detection_odds_and_never_carries_forward(self):
+        s = {}
+        for time, price, limit in (("12:00",2,900),("12:15",1.85,350),("12:30",1.82,None)):
+            board = scan(time, price)
+            if limit is not None:
+                board["events"]["a"]["reported_market_max"] = {"amount":limit}
+            tickets = advance_paper(s,board)
+            if time == "12:15":
+                self.assertEqual(tickets[0]["reported_market_max_at_detection"], {"amount":350})
+            if time == "12:30":
+                self.assertNotIn("reported_market_max_at_detection", tickets[0])
+
     def test_first_separate_thresholds_and_exact_odds(self):
         s={}
         self.assertEqual(advance_paper(s,scan("12:00")),[])

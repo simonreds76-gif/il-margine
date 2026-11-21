@@ -45,6 +45,9 @@ def contracts(sample):
                       if market == "spreads" else [f"Over {line:g} games", f"Under {line:g} games"])
             code = f"{market}:{line:g}"
             lines[code] = {"market":market, "line":line, "labels":labels, "prices":prices}
+            limit = sample.get("limits", {}).get(market, {}).get(raw)
+            if limit is not None:
+                lines[code]["reported_market_max"] = limit
     return lines
 
 
@@ -53,7 +56,10 @@ def pairs(row):
     ml = [row["home_price"], row["away_price"]]
     if first != row["home"]:
         ml.reverse()
-    yield "winner", {"market":"winner", "labels":[first, second], "prices":ml}
+    winner = {"market":"winner", "labels":[first, second], "prices":ml}
+    if "reported_market_max" in row:
+        winner["reported_market_max"] = row["reported_market_max"]
+    yield "winner", winner
     yield from row.get("contracts", {}).items()
 
 
@@ -125,6 +131,8 @@ def compare(last, current, state, blocked):
                             selection=pair["labels"][i],opposite=pair["labels"][1-i])
                 if code != "winner":
                     move["line"] = -pair["line"] if i and pair["market"]=="spreads" else pair["line"]
+                if "reported_market_max" in pair:
+                    move["reported_market_max_at_detection"] = pair["reported_market_max"]
                 batch["moves"].append(move)
                 if qualifies:
                     move["alert_policy"] = ALERT_POLICY
