@@ -29,7 +29,7 @@
 .page :is(a,button,select,input,summary,[tabindex]):focus-visible{outline:2px solid var(--ds-accent);outline-offset:2px;border-radius:6px}
 
 /* The small tracked label: captions, cell heads and the fixture line speak in it. */
-.lab,.kicker,.kick,.market,.date label,.facts dt,.timing dt,.stats dt,.pickerLabel,.legCap,.table th,.picks th,.returnGrid h3{
+.lab,.kicker,.kick,.market,.date label,.facts dt,.timing dt,.stats dt,.pickerLabel,.legCap,.table th,.picks th,.returnGrid h3,.paperFigures dt,.paperRef h3{
   font-size:.75rem;font-weight:650;letter-spacing:.08em;text-transform:uppercase;line-height:1.35;color:var(--ds-soft)}
 /* Read aloud, never drawn: the words that name a figure for assistive technology. */
 .vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
@@ -49,6 +49,11 @@
 .circuit small{font-size:.75rem;color:inherit}
 .tourBadge{display:grid;place-items:center;width:68px;height:32px;flex:none;border-radius:5px;background:#f2f6f7}
 .tourBadge img{width:56px;height:23px;object-fit:contain}
+/* Colour is secondary to each tour's wordmark and the selected-link outline. */
+.tourBadge[data-tour="ATP"]{background:#e0efff}
+.tourBadge[data-tour="ATP"] img{filter:brightness(0) saturate(100%) invert(24%) sepia(95%) saturate(2100%) hue-rotate(202deg) brightness(88%)}
+.tourBadge[data-tour="WTA"]{background:#f2e7ff}
+.tourBadge[data-tour="WTA"] img{filter:brightness(0) saturate(100%) invert(19%) sepia(94%) saturate(1900%) hue-rotate(260deg) brightness(85%)}
 @media(max-width:380px){.circuit a{flex-direction:column;gap:1px;padding-block:4px}}
 .paperTable{width:100%;border-collapse:collapse;margin:.8rem 0;text-align:right;font-size:.875rem}
 .paperTable :is(th,td){padding:.6rem .4rem;border-bottom:1px solid var(--ds-rule);white-space:nowrap}
@@ -133,11 +138,11 @@
 .jump:hover{text-decoration:underline}
 
 /* Segmented controls: Matchday's .seg (inset track, mint-tinted pressed segment). */
-.scope,.ranges,.sort{display:inline-flex;gap:2px;padding:3px;background:var(--ds-sunk);border:1px solid var(--ds-rule);border-radius:10px}
-.scope button,.ranges button,.sort button{min-height:38px;padding:0 .9rem;background:none;border:0;border-radius:7px;color:var(--ds-text);font-size:.875rem;font-weight:600;letter-spacing:0;text-transform:none;white-space:nowrap}
-.scope button{min-height:40px}
-.scope button:hover,.ranges button:hover,.sort button:hover{color:var(--ds-ink)}
-.scope button[aria-pressed=true],.ranges button[aria-pressed=true],.sort button[aria-pressed=true]{background:var(--ds-accent-bg);color:#dbf8ea}
+.scope,.ranges,.sort,.period{display:inline-flex;gap:2px;padding:3px;background:var(--ds-sunk);border:1px solid var(--ds-rule);border-radius:10px}
+.scope button,.ranges button,.sort button,.period button{min-height:38px;padding:0 .9rem;background:none;border:0;border-radius:7px;color:var(--ds-text);font-size:.875rem;font-weight:600;letter-spacing:0;text-transform:none;white-space:nowrap}
+.scope button,.period button{min-height:40px}
+.scope button:hover,.ranges button:hover,.sort button:hover,.period button:hover:not(:disabled){color:var(--ds-ink)}
+.scope button[aria-pressed=true],.ranges button[aria-pressed=true],.sort button[aria-pressed=true],.period button[aria-pressed=true]{background:var(--ds-accent-bg);color:#dbf8ea}
 .scope small{margin-left:.3rem;font-size:.75rem;font-weight:700;color:var(--ds-soft)}
 .scope button[aria-pressed=true] small{color:var(--ds-accent)}
 
@@ -268,6 +273,10 @@
 .save{display:inline-flex;align-items:center;gap:.5rem;margin-left:auto;padding:0 .9rem;font-size:.875rem;font-weight:600;background:var(--ds-accent-bg);border-color:var(--ds-accent-edge);color:#c9f3e0}
 .save svg{flex:none}
 .plot{margin-top:.6rem;border-radius:8px}
+/* The limit strip is drawn inside the chart; this is only its hit area and tab stop, laid over the drawing.
+   It is sized in percentages of the drawing, so it stays on the strip at every width. */
+.canvas{position:relative}
+.strip{position:absolute;border-radius:6px;cursor:crosshair;touch-action:pan-y;-webkit-tap-highlight-color:transparent}
 .chart,.nav{display:block;width:100%;height:auto;font-family:inherit;font-variant-numeric:tabular-nums;-webkit-user-select:none;user-select:none}
 .nav{margin-top:.15rem}
 .nav text{font-family:inherit}
@@ -302,6 +311,13 @@
 .table b{color:var(--ds-ink)}
 .table tr[data-key=earlier] td{color:var(--ds-ink);font-weight:650}
 .table tr[data-key=detected] td{color:var(--ds-accent);font-weight:700}
+/* Recorded limits: gaps read quieter than limits, the latest limit reads strongest, and while the chart is
+   zoomed the rows inside the view carry a bar at their left edge (the same fact is also spoken). */
+.table tr[data-kind=gap] td{color:var(--ds-soft)}
+.table tr[data-latest] td{color:var(--ds-ink);font-weight:650}
+.table[data-zoomed] :is(th,td):first-child{padding-left:.65rem}
+.table tr[data-view=in] td:first-child{box-shadow:inset 3px 0 0 var(--ds-text)}
+.figure .fold>.fine{margin:0 0 .6rem}
 .fine{max-width:72ch;margin-top:.75rem;font-size:.8125rem;line-height:1.55;color:var(--ds-soft)}
 
 /* ---------- alert results of the day: three ruled cells, always in view ---------- */
@@ -317,6 +333,34 @@
 .returnNet[data-tone=won]{color:var(--ds-accent)}
 .returnNet[data-tone=lost]{color:var(--ds-loss)}
 .results .fine{margin:0 0 .9rem}
+
+/* ---------- paper record: lifetime, month or day in one compact panel above the board ----------
+   One return is said large (ROI on settled stake), the four counts behind it sit beside it in ruled cells,
+   and the final-hour reference repeats the same five columns small, so the two rows are read down, never added. */
+.paperHead{display:flex;align-items:flex-end;justify-content:space-between;gap:.6rem 1.25rem;flex-wrap:wrap}
+.paperHead h2{font-size:1.125rem;font-weight:700;letter-spacing:-.02em;line-height:1.3;color:var(--ds-ink)}
+.paperHead h2 .lab{display:block;margin-bottom:.1rem}
+.paperSwitch{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.paperSwitch .pick{min-height:48px}
+.period button{min-width:4.5rem}
+.paperSpan{margin-top:.8rem;font-size:.875rem;color:var(--ds-text)}
+.paperSpan b{font-weight:650;color:var(--ds-ink)}
+.paperEmpty{padding:.5rem 0 .2rem;font-size:.9375rem;color:var(--ds-ink)}
+.paperFigures{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(4,minmax(0,1fr));align-items:end;gap:.75rem 0;margin-top:.4rem}
+.paperFigures div{min-width:0;padding:0 1.1rem;border-left:1px solid var(--ds-rule)}
+.paperFigures div:first-child{padding-left:0;border-left:0}
+.paperFigures dd{margin-top:.1rem;font-size:1.6rem;font-weight:750;letter-spacing:-.03em;line-height:1.15;color:var(--ds-ink);white-space:nowrap}
+.paperFigures dd small{display:block;margin-top:.15rem;font-size:.75rem;font-weight:400;letter-spacing:0;line-height:1.4;color:var(--ds-soft);white-space:normal}
+.paperFigures .paperRoi dd{font-size:clamp(2.4rem,5vw,3.2rem);letter-spacing:-.04em;line-height:1}
+.paperFigures [data-tone=won] dd{color:var(--ds-accent)}
+.paperFigures [data-tone=lost] dd{color:var(--ds-loss)}
+.paperRef{margin-top:1rem;padding-top:.7rem;border-top:1px solid var(--ds-rule)}
+.paperRef h3{color:var(--ds-text)}
+.paperRef h3 small{margin-left:.5rem;font-size:.8125rem;font-weight:400;letter-spacing:0;text-transform:none;color:var(--ds-soft)}
+.paperFigures[data-size=ref]{align-items:start;margin-top:.45rem}
+.paperFigures[data-size=ref] dd,.paperFigures[data-size=ref] .paperRoi dd{font-size:1.0625rem;font-weight:700;letter-spacing:-.01em;line-height:1.3}
+.paperNote{max-width:80ch;margin-top:.9rem;font-size:.8125rem;line-height:1.55;color:var(--ds-soft)}
+.paperNote b{font-weight:650;color:var(--ds-text)}
 
 /* ---------- Telegram roundups: delivery receipts, folded until asked for ---------- */
 .roundups{margin-top:1.25rem;scroll-margin-top:var(--ds-top)}
@@ -460,7 +504,7 @@
   .ranges button:last-child:nth-child(odd){grid-column:1/-1}
 }
 @media (prefers-reduced-motion:no-preference){
-  .item,.pick,.picker,.tabs a,.ranges button,.scope button,.sort button{transition:background-color .12s ease,border-color .12s ease,color .12s ease}
+  .item,.pick,.picker,.tabs a,.ranges button,.scope button,.sort button,.period button{transition:background-color .12s ease,border-color .12s ease,color .12s ease}
   .roundupsTitle button::after,.pickerCue::after{transition:transform .15s ease}
 }
 
@@ -474,3 +518,19 @@
 .otherDrops{margin-left:.85rem;border-left:2px solid var(--ds-rule-strong)}
 .otherDrops .item{border-top:1px solid var(--ds-hair)}
 @media(max-width:600px){.filters .pick:nth-of-type(3){grid-column:auto}.moreDrops{min-height:44px}}
+
+/* Paper record on phones: the three periods span the panel, the month list (only when Month is on) sits under them,
+   ROI takes its own line and the four counts fall into two rows of two. */
+@media (max-width:639px){
+  .paperSwitch{flex:1 1 100%}
+  .period{display:flex;flex:1 1 100%}
+  .period button{flex:1;min-width:0;min-height:44px;padding:0 .5rem}
+  .paperSwitch .pick{flex:1 1 100%}
+  .paperSwitch .pick select{flex:1;width:100%}
+  .paperFigures{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .paperFigures div{padding:0 0 0 .75rem}
+  .paperFigures .paperRoi{grid-column:1/-1}
+  .paperFigures div:nth-child(even){padding-left:0;border-left:0}
+  .paperFigures dd{font-size:1.35rem}
+  .paperRef h3 small{display:block;margin:.15rem 0 0}
+}

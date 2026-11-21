@@ -2,6 +2,13 @@ import { resolveTennisPortrait, safeTennisPortraitSource } from './tennis-portra
 // Explicit feed variants of these archive identities; never fuzzy-match opponents.
 const aliases = { 'jaume munar': 'vbt-10698', 'pedro martinez': 'vbt-12525', 'taylor fritz': 'vbt-9023', 'yunchaokete bu': 'vbt-25003', 'igor marcondes': 'vbt-5490', 'felipe meligeni rodrigues alves': 'vbt-16420' };
 const normal = text => String(text ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+// Verify the event itself as older price captures can carry an incorrect men's tour tag.
+function mensSinglesEvent(name) {
+  const label = normal(name);
+  if (/\b(?:wta|women(?:s)?|ladies|girls|billie jean king|bjkc?|fed(?:eration)? cup|doubles|mixed|itf|futures|juniors?|boys|[mw]\d{2,3})\b/.test(label)) return false;
+  return /\b(?:atp|men(?:s)?|davis cup|laver cup)\b|^challenger\b/.test(label);
+}
+
 const identityAliases = { 'tai leonard sach': 'tai sach', 'abdullah shelbayh': 'abedallah shelbayh', 'jason kubler': 'jason murray kubler' };
 const identityKey = text => identityAliases[normal(text)] ?? normal(text);
 const searchNames = name => [normal(name), ...Object.entries(identityAliases).filter(([, canonical]) => canonical === identityKey(name)).map(([alias]) => alias)].join(' ');
@@ -39,7 +46,7 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
   for (const row of rows) {
     const start = Date.parse(row.kickoff_iso);
     if (!['ATP', 'Challenger'].includes(row.league) || !knownPlayer(row.player1_name) || !knownPlayer(row.player2_name)
-      || /doubles|women|\bwta\b/i.test(row.league_name) || !Number.isFinite(start)
+      || !mensSinglesEvent(row.league_name) || !Number.isFinite(start)
       || identityKey(row.player1_name) === identityKey(row.player2_name) || (capturedAt && start <= Date.parse(capturedAt))) { excluded.invalid++; continue; }
     if (start <= now.getTime()) { excluded.started++; continue; }
     if (start > now.getTime() + 72 * 3600000) continue;

@@ -377,7 +377,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
           </div>}
           <p className={styles.railNote} id={noteId}>
             <b>pp</b> is the rise in implied probability (1 ÷ price) from the earlier odds to the observed move.
-            {!archive && <> Paper thresholds: <b>≥4 pp</b> and <b>≥4.5 pp</b>. Each rule counts the first crossing per side and line.</>}
+            {!archive && <> Telegram flags the first move <b>over 4 pp</b> per side and line before play. Each alert shows the observed market limits.</>}
             {!archive && <> {upcomingOnly ? "Upcoming" : "All recorded"}: {sortNote}.</>}
           </p>
         </div>
@@ -422,6 +422,9 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
             <VenueFlag venue={venues[venueKey(m.league, m.start, m.tour)]} />
             <span><b>{m.tour}</b> · {kick}</span>
             {archive && <span className={styles.tagMode}>Historical replay</span>}
+            {!archive && lead > 0 && lead <= 3600000 && <span className={styles.tagMode}>
+              {Date.parse(m.start)-Date.parse(m.before) <= 3600000 ? "Final-hour move" : "Detected in final hour"}
+            </span>}
           </p>
           <div className={styles.stepper} role="group" aria-label="Step through price drops">
             <button type="button" aria-label="Previous price drop" disabled={rows.length < 2} onClick={() => step(-1)}><span aria-hidden="true">‹</span></button>
@@ -509,7 +512,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
     {!archive && <section className={styles.results} aria-labelledby={resultsId}>
       <header className={styles.resultsHead}>
         <h2 id={resultsId}>Alert results <small>{day} UTC</small></h2>
-        <p>Sent alerts under the 4 pp rule. Each selection is tracked at 1u using its alerted line and price.</p>
+        <p>Confirmed Telegram deliveries under the four-point policies in force at the time. Each selection is tracked at 1u using its alerted line and price.</p>
       </header>
       <div className={styles.returnGrid}>{[["winner","Match winner"],["spreads","Games handicap"],["totals","Total games"]].map(([key,label])=>{
         const sum=tally(moves.filter(row=>row.fourPointAlert && (row.market ?? "winner") === key));

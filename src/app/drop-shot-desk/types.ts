@@ -2,9 +2,11 @@ export type Circuit = "ATP" | "WTA";
 export function inCircuit(tour: string, circuit: Circuit) {
   return circuit === "WTA" ? tour === "WTA" || tour === "WTA 125" : tour === "ATP" || tour === "Challenger";
 }
-export type Quote = { time: string; price: number; other?: number; gap?: boolean };
+export type Limit = { amount:number; currency:string };
+export type LimitRun = Limit & { start:string; end:string; joined:boolean };
+export type Quote = { time: string; price: number; other?: number; gap?: boolean; limit?: Limit };
 export type Move = {
-  fixtureRef?: string; market?:string; fixtureLabel?:string; profit?:number;
+  limitRuns?: LimitRun[]; fixtureRef?: string; market?:string; fixtureLabel?:string; profit?:number;
   activeUntil?: string; batchId?: string; batchAt?: string; alertedAt?: string;
   tour: string; league: string; player: string; opponent: string; start: string;
   before: string; after: string; old: number; new: number; quotes: Quote[];

@@ -186,36 +186,25 @@ def _api_get(path: str, retries: int = 3) -> list | dict | None:
 
 # ─── League detection ───────────────────────────────────────────────
 
+_WOMENS_EVENT = re.compile(r"\b(?:wta|women(?:s)?|ladies|girls|billie[\s-]+jean[\s-]+king|bjk(?:c)?|fed(?:eration)?[\s-]+cup)\b", re.I)
+_MENS_EVENT = re.compile(r"\b(?:atp|men(?:s)?|davis[\s-]+cup|laver[\s-]+cup)\b|^challenger\b", re.I)
+_OUTSIDE_SINGLES = re.compile(r"\b(?:doubles|mixed|itf|futures|juniors?|boys|girls|[mw]\d{2,3})\b", re.I)
+
+
 def _classify_league(name: str) -> str:
-    """
-    Classify a Pinnacle league name into our internal league tags.
-    Returns 'ATP', 'Challenger', or 'WTA'.
-    """
-    upper = (name or "").upper()
-    if "CHALLENGER" in upper:
-        return "Challenger"
-    if "WTA" in upper or "WOMEN" in upper:
+    label = (name or "").strip()
+    if _WOMENS_EVENT.search(label):
         return "WTA"
-    return "ATP"
+    if not _MENS_EVENT.search(label):
+        return "Unknown"
+    return "Challenger" if re.search(r"\bchallenger\b", label, re.I) else "ATP"
 
 
 def _should_include_league(name: str) -> bool:
-    """
-    Include men's singles tour-level leagues (ATP/challenger/qualifiers where Pinnacle
-    may omit explicit 'ATP' in league name). Exclude women, ITF/Futures, and low-level Mxx.
-    """
-    upper = (name or "").upper()
-    if "WTA" in upper or "WOMEN" in upper:
-        return bool(INCLUDE_WTA)
-    if "DOUBLES" in upper:
+    if _OUTSIDE_SINGLES.search(name or ""):
         return False
-    if "ITF" in upper or "FUTURES" in upper or "JUNIOR" in upper or "BOYS" in upper or "GIRLS" in upper:
-        return False
-    if re.search(r"\bM\d{2}\b", upper):  # M15, M25, M50 etc.
-        return False
-    # Keep explicit ATP/Challenger; also include remaining men's leagues so
-    # qualifiers like Indian Wells are not missed when naming differs.
-    return True
+    tour = _classify_league(name)
+    return tour in {"ATP", "Challenger"} or (tour == "WTA" and INCLUDE_WTA)
 
 
 def _extract_best_game_total(markets: list[dict] | None) -> dict | None:

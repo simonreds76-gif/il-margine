@@ -1,6 +1,6 @@
 import "server-only";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
-import { inCircuit, type Circuit, type Move, type Fixture, type Quote } from "./types";
+import { inCircuit, type Circuit, type Move, type Fixture, type Quote, type Limit, type LimitRun } from "./types";
 
 const storage = () => getSupabaseAdmin().storage.from("tennis-price-moves-private");
 async function read<T>(path: string): Promise<T> {
@@ -18,7 +18,8 @@ type Saved = {
   tour: string; league: string; player: string; opponent: string; start: string; before: string; after: string;
   old: number; new: number; old_opponent: number; new_opponent: number; move_id: string;
 };
-type Event = { contracts?: Record<string,{labels:[string,string];prices:[number,number]}>; id: string; fixture: string; tour:string; league:string; start:string; home:string; away:string; home_price:number; away_price:number };
+type RawLimit = {amount:number; currency?:string};
+type Event = { reported_market_max?:RawLimit; match_period_limits?:{max_money_line?:number;max_moneyline?:number}; contracts?: Record<string,{reported_market_max?:RawLimit;labels:[string,string];prices:[number,number]}>; id: string; fixture: string; tour:string; league:string; start:string; home:string; away:string; home_price:number; away_price:number };
 type Scan = { policy?: string; alert_ids?: string[]; observed: string; moves: Saved[]; compared_pairs: number; compared_by_circuit?: Partial<Record<Circuit, number>> };
 type Receipt = { state: string; move_ids: string[]; delivered_at: string; observed: string };
 type Outcome = { result:string; score:string; profit?:number };
@@ -33,7 +34,7 @@ export async function readArchive() {
   return { moves, summary:packet.summary };
 }
 type Tape = { slots: Record<string,string>; series: Record<string, {
-  players: [string,string]; quotes: [string,number,number][];
+  players: [string,string]; quotes: [string,number,number][]; limits?:Record<string,RawLimit>;
 }> };
 type Delivery = { fourPointAlert: boolean; batchId:string; batchAt:string; alertedAt:string };
 
@@ -69,6 +70,29 @@ function moveCutoff(move: Saved, event: Event | undefined, observed: string, now
   if (same || reversed) return availableUntil(event.start, observed, now);
 }
 
+function limitOf(raw?: RawLimit): Limit | undefined {
+  if (!raw || !Number.isFinite(raw.amount) || raw.amount < 0) return;
+  const currency = raw.currency ?? "USD";
+  return /^[A-Z]{3}$/.test(currency) ? {amount:raw.amount,currency} : undefined;
+}
+
+function limitRuns(quotes: Quote[]): LimitRun[] {
+  const runs: LimitRun[] = [];
+  let preceding: LimitRun | undefined;
+  for (const q of quotes) {
+    if (!q.limit) { preceding=undefined; continue; }
+    const contiguous = !!preceding && !q.gap;
+    if (contiguous && preceding && preceding.amount===q.limit.amount && preceding.currency===q.limit.currency) {
+      preceding.end = q.time;
+    } else {
+      const next:LimitRun = { ...q.limit, start:q.time, end:q.time, joined:contiguous && preceding?.currency===q.limit.currency };
+      runs.push(next);
+      preceding=next;
+    }
+  }
+  return runs;
+}
+
 function quotesFor(m:Saved,tapes:(Tape|null)[],latest:{observed:string;events:Record<string,Event>}):Quote[] {
   const quotes = new Map<string,Quote>();
   const games = !!m.contract && m.contract !== "winner";
@@ -80,18 +104,22 @@ function quotesFor(m:Saved,tapes:(Tape|null)[],latest:{observed:string;events:Re
     const side = series.players.indexOf(label ?? "");
     if (side<0 || series.players[1-side]!==opposite) continue;
     for (const [time,a,b] of series.quotes)
-      if (Date.parse(time)<Date.parse(m.start)) quotes.set(time,{time,price:side?b:a,other:side?a:b});
+      if (Date.parse(time)<Date.parse(m.start)) quotes.set(time,{time,price:side?b:a,other:side?a:b,limit:limitOf(series.limits?.[time])});
   }
   const e=latest.events[m.event_id];
   if(e?.fixture===m.fixture && e.start===m.start && Date.parse(latest.observed)<Date.parse(m.start)) {
     const home=e.home===m.player && e.away===m.opponent, away=e.away===m.player && e.home===m.opponent;
     const contract = games && m.contract ? e.contracts?.[m.contract] : undefined;
     if(contract && m.side !== undefined && contract.labels[m.side]===label)
-      quotes.set(latest.observed,{time:latest.observed,price:contract.prices[m.side],other:contract.prices[1-m.side]});
-    if(!games && (home || away)) quotes.set(latest.observed,{time:latest.observed,price:home?e.home_price:e.away_price,other:home?e.away_price:e.home_price});
+      quotes.set(latest.observed,{time:latest.observed,price:contract.prices[m.side],other:contract.prices[1-m.side],limit:limitOf(contract.reported_market_max) ?? quotes.get(latest.observed)?.limit});
+    if(!games && (home || away)) {
+      const cap = e.match_period_limits?.max_money_line ?? e.match_period_limits?.max_moneyline;
+      const limit = limitOf(e.reported_market_max ?? (cap === undefined ? undefined : {amount:cap}));
+      quotes.set(latest.observed,{time:latest.observed,price:home?e.home_price:e.away_price,other:home?e.away_price:e.home_price,limit:limit ?? quotes.get(latest.observed)?.limit});
+    }
   }
   for (const q of [{time:m.before,price:m.old,other:m.old_opponent},{time:m.after,price:m.new,other:m.new_opponent}])
-    quotes.set(q.time,q);
+    quotes.set(q.time,{...quotes.get(q.time),...q});
   const sorted=[...quotes.values()].sort((a,b)=>Date.parse(a.time)-Date.parse(b.time));
   return sorted.map((q,i)=>({...q,gap:i>0 && Math.floor(Date.parse(q.time)/900000)-Math.floor(Date.parse(sorted[i-1].time)/900000)>1}));
 }
@@ -132,11 +160,17 @@ export async function readDay(day: string, circuit: Circuit = "ATP") {
     }
     return qs;
   }
+  const runCache = new WeakMap<Quote[],LimitRun[]>();
+  function limitsFor(quotes: Quote[]) {
+    let runs=runCache.get(quotes);
+    if (!runs) { runs=limitRuns(quotes); runCache.set(quotes,runs); }
+    return runs;
+  }
   const moves: Move[] = batches.reverse().flatMap(batch=>batch.moves.map(m=>({
     fixtureRef:m.fixture,tour:m.tour,league:m.league,market:m.market,player:m.selection??m.player,opponent:m.opposite??m.opponent,
     fixtureLabel:m.market && m.market!=="winner" ? [m.player,m.opponent].join(" vs "):undefined,
     start:m.start,before:m.before,after:m.after,profit:outcomes[m.move_id]?.profit,
-    old:m.old,new:m.new,quotes:historyFor(m),...notified.get(m.move_id),
+    old:m.old,new:m.new,quotes:historyFor(m),limitRuns:limitsFor(historyFor(m)),...notified.get(m.move_id),
     activeUntil: outcomes[m.move_id] ? undefined : moveCutoff(m,latest.events[m.event_id],latest.observed,now),
     result:outcomes[m.move_id]?.result??"Awaiting verified result",score:outcomes[m.move_id]?.score,notified:notified.has(m.move_id),
   })));

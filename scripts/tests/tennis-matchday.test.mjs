@@ -109,3 +109,13 @@ test('additional older results count towards H2H while only paired prices count 
  assert.equal(f.meetings,4);assert.equal(f.priced,3);assert.deepEqual(f.wins,[2,2]);
  assert.deepEqual(f.profit,[1.5,0]);assert.deepEqual(f.roi,[50,0]);assert.equal(f.history.length,4);
 });
+
+test('men-only fixtures verify the competition even when the stored tag says ATP', () => {
+  const fixtures = league_name => buildTennisMatchday([{ ...row, league_name }], history, now).fixtures;
+  for (const label of ['Billie Jean King Cup - Playoffs', 'BJK Cup - Qualifiers', 'Fed Cup', 'WTA 125 Challenger', "Women's Singles", 'ATP Mixed Doubles', 'Unclassified Cup']) {
+    assert.equal(fixtures(label).length, 0, label);
+  }
+  for (const label of ['ATP Finals - SF', 'ATP Challenger Helsinki - Qualifiers', 'Davis Cup World', "Men’s Exhibition Laver Cup"]) {
+    assert.equal(fixtures(label).length, 1, label);
+  }
+});
