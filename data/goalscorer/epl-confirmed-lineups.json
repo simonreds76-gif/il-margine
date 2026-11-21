@@ -412,7 +412,7 @@
         "Nicolás Domínguez",
         "Callum Hudson-Odoi"
       ],
-      "observed_at": "2026-11-21T17:27:11.798462+00:00",
+      "observed_at": "2026-11-21T23:10:23.688388+00:00",
       "changed_at": "2026-11-21T14:57:39.168499+00:00"
     },
     {
@@ -829,7 +829,7 @@
         "Brian Brobbey",
         "Romaine Mundle"
       ],
-      "observed_at": "2026-11-21T17:27:11.798462+00:00",
+      "observed_at": "2026-11-21T23:10:23.688388+00:00",
       "changed_at": "2026-11-21T14:57:39.168499+00:00"
     },
     {
@@ -1244,7 +1244,7 @@
       "away_unavailable": [
         "Mateo Joseph"
       ],
-      "observed_at": "2026-11-21T17:27:11.798462+00:00",
+      "observed_at": "2026-11-21T23:10:23.688388+00:00",
       "changed_at": "2026-11-21T14:57:39.168499+00:00"
     },
     {
@@ -1663,7 +1663,7 @@
         "Ismaïla Sarr",
         "Jean-Philippe Mateta"
       ],
-      "observed_at": "2026-11-21T17:27:11.798462+00:00",
+      "observed_at": "2026-11-21T23:10:23.688388+00:00",
       "changed_at": "2026-11-21T17:27:11.798462+00:00"
     },
     {
@@ -2076,7 +2076,7 @@
         "Benjamin Lecomte",
         "Emile Smith Rowe"
       ],
-      "observed_at": "2026-11-21T17:27:11.798462+00:00",
+      "observed_at": "2026-11-21T23:10:23.688388+00:00",
       "changed_at": "2026-11-21T14:57:39.168499+00:00"
     },
     {
@@ -2366,32 +2366,17 @@
         }
       ],
       "home_subs": [
-        "Nick Pope",
-        "Fabian Schär",
-        "Sven Botman",
         "Valentino Livramento",
         "Jacob Ramsey",
-        "Nico González",
         "Anthony Elanga",
-        "Matias Fernandez-Pardo",
-        "Yoane Wissa"
+        "Yoane Wissa",
+        "Sven Botman",
+        "Nick Pope",
+        "Fabian Schär",
+        "Nico González",
+        "Matias Fernandez-Pardo"
       ],
       "home_substitute_entries": [
-        {
-          "name": "Nick Pope",
-          "player_id": "280484",
-          "role_group": "GK"
-        },
-        {
-          "name": "Fabian Schär",
-          "player_id": "189982",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Sven Botman",
-          "player_id": "956682",
-          "role_group": "DEF"
-        },
         {
           "name": "Valentino Livramento",
           "player_id": "1107910",
@@ -2403,42 +2388,77 @@
           "role_group": "MID"
         },
         {
-          "name": "Nico González",
-          "player_id": "1280132",
-          "role_group": "MID"
-        },
-        {
           "name": "Anthony Elanga",
           "player_id": "1050166",
-          "role_group": "FW"
-        },
-        {
-          "name": "Matias Fernandez-Pardo",
-          "player_id": "1444231",
           "role_group": "FW"
         },
         {
           "name": "Yoane Wissa",
           "player_id": "666857",
           "role_group": "FW"
+        },
+        {
+          "name": "Sven Botman",
+          "player_id": "956682",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Nick Pope",
+          "player_id": "280484",
+          "role_group": "GK"
+        },
+        {
+          "name": "Fabian Schär",
+          "player_id": "189982",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Nico González",
+          "player_id": "1280132",
+          "role_group": "MID"
+        },
+        {
+          "name": "Matias Fernandez-Pardo",
+          "player_id": "1444231",
+          "role_group": "FW"
         }
       ],
       "away_subs": [
         "Kepa Arrizabalaga",
+        "Myles Lewis-Skelly",
+        "Christos Tzolis",
+        "Mikel Merino",
+        "Viktor Gyökeres",
         "Ben White",
         "Cristhian Mosquera",
         "Piero Hincapié",
-        "William Saliba",
-        "Mikel Merino",
-        "Myles Lewis-Skelly",
-        "Christos Tzolis",
-        "Viktor Gyökeres"
+        "William Saliba"
       ],
       "away_substitute_entries": [
         {
           "name": "Kepa Arrizabalaga",
           "player_id": "317564",
           "role_group": "GK"
+        },
+        {
+          "name": "Myles Lewis-Skelly",
+          "player_id": "1406436",
+          "role_group": "MID"
+        },
+        {
+          "name": "Christos Tzolis",
+          "player_id": "1157237",
+          "role_group": "FW"
+        },
+        {
+          "name": "Mikel Merino",
+          "player_id": "574645",
+          "role_group": "MID"
+        },
+        {
+          "name": "Viktor Gyökeres",
+          "player_id": "664500",
+          "role_group": "FW"
         },
         {
           "name": "Ben White",
@@ -2459,26 +2479,6 @@
           "name": "William Saliba",
           "player_id": "955406",
           "role_group": "DEF"
-        },
-        {
-          "name": "Mikel Merino",
-          "player_id": "574645",
-          "role_group": "MID"
-        },
-        {
-          "name": "Myles Lewis-Skelly",
-          "player_id": "1406436",
-          "role_group": "MID"
-        },
-        {
-          "name": "Christos Tzolis",
-          "player_id": "1157237",
-          "role_group": "FW"
-        },
-        {
-          "name": "Viktor Gyökeres",
-          "player_id": "664500",
-          "role_group": "FW"
         }
       ],
       "home_unavailable": [
@@ -2490,7 +2490,7 @@
         "Max Dowman",
         "Bukayo Saka"
       ],
-      "observed_at": "2026-11-21T17:27:11.798462+00:00",
+      "observed_at": "2026-11-21T23:10:23.688388+00:00",
       "changed_at": "2026-11-21T17:27:11.798462+00:00"
     },
     {
@@ -2903,7 +2903,7 @@
         "Wilson Odobert"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-11-21T17:27:11.798462+00:00",
+      "observed_at": "2026-11-21T23:10:23.688388+00:00",
       "changed_at": "2026-11-21T14:57:39.168499+00:00"
     },
     {
@@ -3209,7 +3209,7 @@
         "Stefanos Tzimas",
         "Zadok Yohanna"
       ],
-      "observed_at": "2026-11-21T17:27:11.798462+00:00",
+      "observed_at": "2026-11-21T23:10:23.688388+00:00",
       "changed_at": "2026-11-21T14:57:39.168499+00:00"
     },
     {
@@ -3516,7 +3516,7 @@
         "Manuel Ugarte",
         "Benjamin Šeško"
       ],
-      "observed_at": "2026-11-21T17:27:11.798462+00:00",
+      "observed_at": "2026-11-21T23:10:23.688388+00:00",
       "changed_at": "2026-11-21T14:57:39.168499+00:00"
     },
     {
@@ -3818,7 +3818,7 @@
         "Joshua Dasilva"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-11-21T17:27:11.798462+00:00",
+      "observed_at": "2026-11-21T23:10:23.688388+00:00",
       "changed_at": "2026-11-21T00:48:06.040950+00:00"
     }
   ]
