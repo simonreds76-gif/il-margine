@@ -5,8 +5,8 @@ import math
 from datetime import datetime, timedelta
 from decimal import Decimal
 
-ALERT_POLICY = "same-line-over4pp-prematch-usd1500-v3"
-MIN_ALERT_LIMIT_USD = 1500
+ALERT_POLICY = "same-line-over4pp-prematch-usd500-v3"
+MIN_ALERT_LIMIT_USD = 500
 FINAL_HOUR = timedelta(hours=1)
 
 

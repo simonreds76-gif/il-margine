@@ -158,6 +158,37 @@ def publish_day(store, day, ledger):
                                     "rules":{r:summary([t for t in group if t["rule"] == r]) for r,_,_ in RULES}}
     store.put(f"{BASE}/ledger/{day}.json", ledger, replace=True)
     store.put(f"{BASE}/summary/{day}.json", report, replace=True)
+    return report
+
+
+def performance_report(days):
+    """Aggregate the independent paper controls from daily counts and settled units."""
+    report = {"firstDay":FIRST_DAY, "through":max((r["through"] for r in days.values()), default=""), "circuits":{}}
+    fields = ("entries","won","lost","halfWon","halfLost","pushes","voids","pending","stake","net")
+    for circuit_name in ("ATP", "WTA"):
+        def blank():
+            return {rule:{**dict.fromkeys(fields,0), "roi":None} for rule in ("all4","late4")}
+        life, months = blank(), {}
+        first_day = None
+        for day, record in sorted(days.items()):
+            data = record["circuits"][circuit_name]
+            if not data["coveredScans"]:
+                continue
+            if first_day is None:
+                first_day = day
+            month = day[:7]
+            if month not in months:
+                months[month] = blank()
+            for totals in (life,months[month]):
+                for rule, result in totals.items():
+                    for field in fields:
+                        result[field] += data["rules"][rule][field]
+        for period in [life,*months.values()]:
+            for result in period.values():
+                result["net"] = round(result["net"],4)
+                result["roi"] = round(100*result["net"]/result["stake"],2) if result["stake"] else None
+        report["circuits"][circuit_name] = {"firstDay":first_day, "lifetime":life, "months":months}
+    return report
 
 
 def project(store, now, limit=6):
@@ -204,16 +235,31 @@ def project(store, now, limit=6):
                 apply_retirement_review(ledger_for(reviewed_day), items, now)
                 dirty.add(reviewed_day)
             state["retirement_rule"] = RETIREMENT_RULE
+    # Seed once from the existing public-summary projections, including fully settled dates.
+    fresh_performance = "performance_days" not in state
+    daily = state.setdefault("performance_days", {})
+    if fresh_performance:
+        older = date.fromisoformat(FIRST_DAY)
+        while older <= min(day,now.date()):
+            key = older.isoformat()
+            if key not in dirty:
+                existing = store.get(f"{BASE}/summary/{key}.json")
+                if existing:
+                    daily[key] = existing
+            older += timedelta(days=1)
     pending = set(state["pending_days"])
     for d in sorted(pending | dirty):
         ledger = ledger_for(d)
         changed = grade_due(ledger["tickets"].values(),now)
         if changed or d in dirty:
-            publish_day(store,d,ledger)
+            daily[d] = publish_day(store,d,ledger)
+            fresh_performance = True
         if any("result" not in t for t in ledger["tickets"].values()):
             pending.add(d)
         else:
             pending.discard(d)
+    if fresh_performance and daily:
+        store.put(f"{BASE}/performance.json", performance_report(daily), replace=True)
     state["pending_days"] = sorted(pending)
     store.put(path,state,replace=True)
     return used
