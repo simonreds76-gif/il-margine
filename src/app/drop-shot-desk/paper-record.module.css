@@ -1,0 +1,158 @@
+/* Drop Shot Desk · paper record card.
+   Read top to bottom like a results card: which period, then the scoreline (net paper P/L, settled ROI,
+   won–lost), then every entry by result as one proportional bar whose legend carries the exact counts.
+   References and rules fold away underneath. Phone layout is the base; 640px and up widens it.
+   Colours are the board's own tokens (set on .page), with the same values as fallbacks. */
+
+.card{
+  --pr-ink:var(--ds-ink,#eef3f6);--pr-text:var(--ds-text,#b7c6d0);--pr-soft:var(--ds-soft,#8497a4);
+  --pr-surface:var(--ds-surface,#111a22);--pr-sunk:var(--ds-sunk,#0e161d);
+  --pr-rule:var(--ds-rule,#22313b);--pr-hair:var(--ds-hair,#18242d);--pr-strong:var(--ds-rule-strong,#33454f);
+  --pr-mint:var(--ds-accent,#8ce5bd);--pr-mint-bg:var(--ds-accent-bg,#173328);--pr-mint-edge:var(--ds-accent-edge,#2f5546);
+  --pr-loss:var(--ds-loss,#ff9e8d);--pr-warn:var(--ds-warn,#e0bb78);
+  /* Half results are the full colour at 60% over the panel; a void is a grey that still clears 3:1. */
+  --pr-half-won:#5b947f;--pr-half-lost:#a06962;--pr-void:#5d717e;
+  min-width:0;margin-top:1.25rem;padding:1rem clamp(1rem,2.2vw,1.75rem) .25rem;
+  background:var(--pr-surface);border:1px solid var(--pr-rule);border-radius:12px;
+  color:var(--pr-text);line-height:1.5;font-variant-numeric:tabular-nums;scroll-margin-top:var(--ds-top,110px);
+}
+.card *,.card *::before,.card *::after{box-sizing:border-box}
+.card :where(h2,h3,p,dl,dt,dd){margin:0}
+
+/* Read aloud, never drawn. */
+.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+
+/* The small tracked label used for every caption above a figure. */
+.score dt,.split h3,.ref dt{font-size:.75rem;font-weight:650;letter-spacing:.08em;text-transform:uppercase;line-height:1.35;color:var(--pr-soft)}
+
+/* ---------- head: what this is, and which period ---------- */
+.head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:.75rem 1.25rem}
+.title{min-width:0}
+.title h2{font-size:1.125rem;font-weight:700;letter-spacing:-.02em;line-height:1.3;color:var(--pr-ink)}
+.title p{margin-top:.1rem;font-size:.875rem;color:var(--pr-text)}
+.controls{display:flex;flex:1 1 100%;flex-wrap:wrap;align-items:center;gap:.5rem}
+
+.seg{display:flex;flex:1 1 100%;gap:2px;padding:3px;background:var(--pr-sunk);border:1px solid var(--pr-rule);border-radius:10px}
+.seg button{flex:1;min-width:0;min-height:44px;padding:0 .5rem;background:none;border:0;border-radius:7px;
+  font:inherit;font-size:.875rem;font-weight:600;color:var(--pr-text);white-space:nowrap;cursor:pointer}
+.seg button:hover:not(:disabled){color:var(--pr-ink)}
+.seg button[aria-pressed=true]{background:var(--pr-mint-bg);box-shadow:inset 0 0 0 1px var(--pr-mint-edge);color:#dbf8ea}
+.seg button:disabled{opacity:.5;cursor:default}
+.seg button:focus-visible,.fold summary:focus-visible{outline:2px solid var(--pr-mint);outline-offset:2px;border-radius:6px}
+
+/* The month list is one object: its name and its value share an outline and a focus ring. */
+.pick{display:flex;flex:1 1 100%;align-items:center;min-width:0;min-height:48px;padding-left:.8rem;
+  background:var(--pr-surface);border:1px solid var(--pr-rule);border-radius:10px;
+  font-size:.8125rem;font-weight:600;line-height:1.2;color:var(--pr-soft);cursor:pointer}
+.pick>span{flex:none;white-space:nowrap}
+.pick select{flex:1;width:100%;min-width:0;min-height:44px;padding:0 2rem 0 .45rem;-webkit-appearance:none;appearance:none;
+  border:0;border-radius:9px;font:inherit;font-size:1rem;font-weight:600;color:var(--pr-ink);color-scheme:dark;text-overflow:ellipsis;cursor:pointer;
+  background-color:transparent;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1.5 1.5 6 6l4.5-4.5' fill='none' stroke='%238497a4' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .7rem center;background-size:.7rem auto}
+.pick option{background:var(--pr-surface);color:var(--pr-ink)}
+.pick:hover{border-color:var(--pr-strong)}
+.pick:focus-within{border-color:var(--pr-mint);outline:2px solid var(--pr-mint);outline-offset:2px}
+.card .pick select:focus-visible{outline:none}
+
+/* ---------- the period in words, and how fresh the data is ---------- */
+.when{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.1rem 1.25rem;
+  margin-top:.9rem;padding-top:.75rem;border-top:1px solid var(--pr-rule)}
+.span{font-size:.9375rem;color:var(--pr-text)}
+.span b{font-weight:700;color:var(--pr-ink)}
+.stamp{font-size:.8125rem;color:var(--pr-soft)}
+.stamp b{font-weight:600;color:var(--pr-text)}
+
+.empty{margin-top:.8rem;padding:1.1rem 1rem;border:1px dashed var(--pr-strong);border-radius:10px;font-size:.9375rem;color:var(--pr-ink)}
+
+/* ---------- scoreline: a sunk tray of three ruled rows, caption left and figure right ---------- */
+.score{display:grid;margin-top:.8rem;padding:0 .8rem;background:var(--pr-sunk);border:1px solid var(--pr-rule);border-radius:10px}
+.score>div{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"label fig" "sub fig";column-gap:.75rem;align-items:center;
+  min-width:0;padding:.75rem 0;border-top:1px solid var(--pr-rule)}
+.score>div:first-child{border-top:0}
+.score dt{grid-area:label;align-self:end}
+.fig{grid-area:fig;justify-self:end;font-size:clamp(1.75rem,9vw,2.5rem);font-weight:750;letter-spacing:-.04em;line-height:1;color:var(--pr-ink);white-space:nowrap}
+.unit{margin-left:.08em;font-size:.5em;font-weight:650;letter-spacing:0}
+.sub{grid-area:sub;align-self:start;margin-top:.15rem;font-size:.8125rem;line-height:1.4;color:var(--pr-soft)}
+.sub b{font-weight:650;color:var(--pr-text)}
+.score [data-tone=won] .fig,.ref [data-tone=won] dd{color:var(--pr-mint)}
+.score [data-tone=lost] .fig,.ref [data-tone=lost] dd{color:var(--pr-loss)}
+
+/* ---------- every entry by result: wins from the left, losses from the right, the undecided between ---------- */
+.split{margin-top:1rem}
+.split h3 span{font-weight:500;letter-spacing:.04em}
+.bar{display:flex;gap:2px;height:.875rem;margin-top:.5rem;border-radius:3px;overflow:hidden;forced-color-adjust:none}
+.bar span{flex:1 1 0;min-width:5px}
+.bar[data-empty]{border:1px dashed var(--pr-strong)}
+.key{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.1rem 1.25rem;margin-top:.55rem}
+.key div{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;min-width:0;padding:.2rem 0;font-size:.875rem}
+.key dt{display:inline-flex;align-items:center;gap:.45rem;min-width:0;color:var(--pr-text)}
+.key dt::before{content:"";flex:none;width:.7rem;height:.7rem;border-radius:2px;forced-color-adjust:none}
+.key dd{font-weight:700;color:var(--pr-ink)}
+.key [data-zero] dt,.key [data-zero] dd{font-weight:400;color:var(--pr-soft)}
+.key [data-zero] dt::before{opacity:.45}
+.bar [data-kind=won],.key [data-kind=won] dt::before{background:var(--pr-mint)}
+.bar [data-kind=halfWon],.key [data-kind=halfWon] dt::before{background:var(--pr-half-won)}
+.bar [data-kind=pushes],.key [data-kind=pushes] dt::before{background:var(--pr-soft)}
+.bar [data-kind=voids],.key [data-kind=voids] dt::before{background:var(--pr-void)}
+/* Pending is hatched and outlined: it reads as unfilled without relying on its colour. */
+.bar [data-kind=pending],.key [data-kind=pending] dt::before{
+  background:repeating-linear-gradient(135deg,var(--pr-warn) 0 1.5px,transparent 1.5px 4.5px);box-shadow:inset 0 0 0 1px var(--pr-warn)}
+.bar [data-kind=halfLost],.key [data-kind=halfLost] dt::before{background:var(--pr-half-lost)}
+.bar [data-kind=lost],.key [data-kind=lost] dt::before{background:var(--pr-loss)}
+
+.note{max-width:80ch;margin-top:.9rem;font-size:.8125rem;line-height:1.55;color:var(--pr-soft)}
+
+/* ---------- folds: references and rules, stacked on their rules ---------- */
+.folds{margin-top:.9rem}
+.fold{border-top:1px solid var(--pr-rule)}
+.fold summary{display:flex;align-items:center;gap:.6rem;min-height:44px;padding:.5rem 0;list-style:none;
+  font-size:.875rem;font-weight:650;line-height:1.35;color:var(--pr-ink);cursor:pointer}
+.fold summary::-webkit-details-marker{display:none}
+.fold summary::before{content:"+";flex:none;width:.9rem;font-size:1.1rem;font-weight:600;line-height:1;text-align:center;color:var(--pr-mint)}
+.fold[open]>summary::before{content:"−"}
+.fold summary small{margin-left:.35rem;font-size:.8125rem;font-weight:400;color:var(--pr-soft)}
+.foldBody{padding:.1rem 0 1rem}
+.fine{max-width:72ch;font-size:.8125rem;line-height:1.55;color:var(--pr-text)}
+.fine+.ref,.ref+.fine{margin-top:.75rem}
+
+/* A reference line: the same five figures as the scoreline, small, so it is compared and never added. */
+.ref+.ref{margin-top:.85rem;padding-top:.8rem;border-top:1px solid var(--pr-hair)}
+.ref h3{font-size:.875rem;font-weight:650;line-height:1.35;color:var(--pr-ink)}
+.ref dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem .75rem;margin-top:.45rem}
+.ref dl div{min-width:0}
+.ref dt{font-size:.6875rem}
+.ref dd{margin-top:.05rem;font-size:1rem;font-weight:700;letter-spacing:-.01em;line-height:1.3;color:var(--pr-ink);white-space:nowrap}
+.ref p{margin-top:.4rem;font-size:.8125rem;color:var(--pr-soft)}
+
+.rules{display:grid;gap:.75rem;max-width:54rem}
+.rules dt{font-size:.8125rem;font-weight:650;line-height:1.55;color:var(--pr-ink)}
+.rules dd{font-size:.8125rem;line-height:1.55;color:var(--pr-text)}
+
+/* ---------- 640px and up: controls sit beside the title, the scoreline becomes three columns ---------- */
+@media (min-width:640px){
+  .controls{flex:0 1 auto}
+  .seg{display:inline-flex;flex:none}
+  .seg button{flex:none;min-width:4.75rem;min-height:40px;padding:0 .9rem}
+  .pick{display:inline-flex;flex:none}
+  .pick select{flex:none;width:auto;font-size:.9375rem}
+
+  .score{grid-template-columns:minmax(0,1.15fr) minmax(0,1.15fr) minmax(0,1fr);margin-top:.9rem;padding:0}
+  .score>div{display:block;padding:1rem 1.1rem 1.05rem;border-top:0;border-left:1px solid var(--pr-rule)}
+  .score>div:first-child{border-left:0}
+  .fig{margin-top:.35rem;font-size:clamp(2rem,4.4vw,3.25rem)}
+  .sub{margin-top:.5rem}
+
+  .split{margin-top:1.1rem}
+  .key{display:flex;flex-wrap:wrap;gap:.2rem 1.5rem}
+  .key div{justify-content:flex-start;padding:0}
+
+  .foldBody{padding-left:1.5rem}
+  .ref dl{grid-template-columns:repeat(5,minmax(0,8.5rem))}
+  .ref dd{font-size:1.0625rem}
+  .rules div{display:grid;grid-template-columns:9.5rem minmax(0,1fr);column-gap:1.25rem}
+}
+
+@media (prefers-reduced-motion:no-preference){
+  .seg button,.pick{transition:background-color .12s ease,border-color .12s ease,color .12s ease}
+}

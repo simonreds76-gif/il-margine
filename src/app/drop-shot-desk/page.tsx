@@ -53,13 +53,17 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
       content=<p className={styles.empty}>The historical replay covers ATP and Challenger matches. <Link href={dailyUrl("WTA")}>See WTA daily moves</Link></p>;
     } else if(archive){
       const {moves,summary:s}=await readArchive();
+      const lastDetection = moves.reduce((latest, move) => Math.max(latest, Date.parse(move.after) || 0), 0);
       content=<>
         <section className={styles.replay} aria-label="Historical replay record">
-          <p className={styles.replayNote}><span className={styles.replayTag}><DeskIcon name="replay"/>Historical replay</span>22 Oct – 18 Nov 2026 · Historical replay at the price shown at detection. Each settled selection carries 1u.</p>
+          <p className={styles.replayNote}><span className={styles.replayTag}><DeskIcon name="replay"/>Historical replay</span>Archive checked from 22 October to 18 November 2026.{" "}
+            {lastDetection > 0 && <>Last qualifying move on {new Intl.DateTimeFormat("en-GB",{day:"numeric",month:"long",timeZone:"UTC"}).format(lastDetection)}.{" "}</>}
+            <Link href={dailyUrl("ATP",firstDay)}>Daily moves from 19 November →</Link></p>
           <p className={styles.record}>
             <span className={styles.wl}><b>{s.wins}</b> won · <b>{s.losses}</b> lost · <b>{s.voids}</b> void</span>
             <span className={styles.net} data-tone={s.net_units>0?"won":s.net_units<0?"lost":undefined}><b>{signed(s.net_units)}u</b> on {s.settled_stake}u settled · <b>{signed(s.roi_pct)}%</b> replay ROI · {moves.length} {moves.length===1?"move":"moves"}</span>
           </p>
+          <p className={styles.fine}>This replay tracked match winners in the final two hours before play. Each settled selection uses 1u at the odds recorded when the move was detected. The daily board has its own rules and paper record.</p>
         </section>
         <Board moves={fullBoard ? moves : moves.map(publicMove)} fixtures={[]} archive venues={venuesFor(moves)}/></>;
     } else {

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import styles from "./board.module.css";
+import { useState, type KeyboardEvent } from "react";
+import css from "./paper-record.module.css";
 
 export type Result = {
   entries:number; fixtures:number; won:number; lost:number; halfWon:number; halfLost:number;
@@ -16,8 +16,12 @@ export type PaperDay =
 type Period = "life"|"month"|"day";
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-const signed = (v:number) => (v>0?"+":"") + v.toFixed(2);
+// Figures are printed as supplied, to two places. Only the glyphs change: a true minus, and no sign on a zero.
+const isZero = (v:number) => Number(Math.abs(v).toFixed(2))===0;
+const signed = (v:number) => (isZero(v) ? "" : v>0 ? "+" : "−") + Math.abs(v).toFixed(2);
 const plain = (v:number) => String(Math.round(v*100)/100);
+const count = (v:number,one:string,many=one+"s") => v + " " + (v===1 ? one : many);
+const tone = (v:number|null) => (v===null || isZero(v) ? undefined : v>0 ? "won" : "lost");
 // Dates are printed by hand from the stored strings, so the server and the browser always agree.
 function dayText(day:string) {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(day);
@@ -37,21 +41,76 @@ function asOf(through:string) {
   const iso = d && !Number.isNaN(d.getTime()) ? d.toISOString() : m[1] + "T" + m[2] + ":" + m[3];
   return dayText(iso.slice(0,10)) + ", " + iso.slice(11,16) + " UTC";
 }
-const tone = (v:number|null) => (v===null || v===0 ? undefined : v>0 ? "won" : "lost");
 
-/** ROI first, then the four counts behind it. Without settled stake there is no return to state: ROI and net show a dash. */
-function Figures({r,reference}:{r:Result;reference?:boolean}) {
+/** Bar and legend order: wins from the left, losses from the right, everything undecided or returned between. */
+const KINDS = [["won","Won"],["halfWon","Half-won"],["pushes","Pushes"],["voids","Voids"],["pending","Pending"],["halfLost","Half-lost"],["lost","Lost"]] as const;
+
+const Dash = () => <><span aria-hidden="true">—</span><span className={css.vh}>not available</span></>;
+
+/** The scoreline. Net and ROI are the supplied figures; without settled stake there is no return to state, so both show a dash. */
+function Score({r}:{r:Result}) {
   const settled = r.roi!==null;
-  const extra = [r.halfWon && r.halfWon+" half-won", r.halfLost && r.halfLost+" half-lost",
-    r.pushes && r.pushes+(r.pushes===1?" push":" pushes"), r.voids && r.voids+" void"].filter(Boolean).join(" · ");
-  return <dl className={styles.paperFigures} data-size={reference ? "ref" : undefined}>
-    <div className={styles.paperRoi} data-tone={tone(r.roi)}><dt>ROI<span className={styles.vh}> on settled stake</span></dt><dd>{settled ? signed(r.roi as number)+"%" : "—"}</dd></div>
-    <div><dt>W–L</dt><dd>{r.won}–{r.lost}{extra && <small>{extra}</small>}</dd></div>
-    <div><dt>Pending</dt><dd>{r.pending}</dd></div>
-    <div><dt>Stake</dt><dd>{plain(r.stake)}u</dd></div>
-    <div data-tone={settled ? tone(r.net) : undefined}><dt>Net</dt><dd>{settled ? signed(r.net)+"u" : "—"}</dd></div>
+  return <dl className={css.score}>
+    <div data-tone={settled ? tone(r.net) : undefined}>
+      <dt>Net paper P/L</dt>
+      <dd className={css.fig}>{settled ? <>{signed(r.net)}<span className={css.unit}>u</span></> : <Dash />}</dd>
+      <dd className={css.sub}><b>{plain(r.stake)}u</b> settled · 1u per entry</dd>
+    </div>
+    <div data-tone={tone(r.roi)}>
+      <dt>Settled ROI</dt>
+      <dd className={css.fig}>{settled ? <>{signed(r.roi as number)}<span className={css.unit}>%</span></> : <Dash />}</dd>
+      <dd className={css.sub}>{settled ? "Net ÷ settled stake" : "Nothing settled yet"}</dd>
+    </div>
+    <div>
+      <dt>Won–lost</dt>
+      <dd className={css.fig}><span aria-hidden="true">{r.won}–{r.lost}</span><span className={css.vh}>{r.won} won, {r.lost} lost</span></dd>
+      <dd className={css.sub}><b>{count(r.entries,"entry","entries")}</b> · {r.pending ? r.pending+" pending" : "none pending"}</dd>
+    </div>
   </dl>;
 }
+
+/** Every entry by result: one bar in proportion to the real counts, and a legend that states each count exactly. */
+function Breakdown({r}:{r:Result}) {
+  const any = KINDS.some(([k])=>r[k]>0);
+  return <div className={css.split}>
+    <h3>Every entry by result{r.fixtures>0 && <span> · across {count(r.fixtures,"fixture")}</span>}</h3>
+    <div className={css.bar} aria-hidden="true" data-empty={any ? undefined : ""}>
+      {KINDS.map(([k])=>r[k]>0 && <span key={k} data-kind={k} style={{flexGrow:r[k]}} />)}
+    </div>
+    <dl className={css.key}>
+      {KINDS.map(([k,label])=><div key={k} data-kind={k} data-zero={r[k] ? undefined : ""}><dt>{label}</dt><dd>{r[k]}</dd></div>)}
+    </dl>
+  </div>;
+}
+
+/** A reference line, small: for the final-hour subset and the archived ≥4.5 pp rows. */
+function RefRow({label,r}:{label:string;r:Result}) {
+  const settled = r.roi!==null;
+  const extra = [r.halfWon>0 && r.halfWon+" half-won", r.halfLost>0 && r.halfLost+" half-lost",
+    r.pushes>0 && count(r.pushes,"push","pushes"), r.voids>0 && count(r.voids,"void")].filter(Boolean).join(", ");
+  return <div className={css.ref}>
+    <h3>{label}</h3>
+    <dl>
+      <div data-tone={settled ? tone(r.net) : undefined}><dt>Net</dt><dd>{settled ? signed(r.net)+"u" : <Dash />}</dd></div>
+      <div data-tone={tone(r.roi)}><dt>ROI<span className={css.vh}> on settled stake</span></dt><dd>{settled ? signed(r.roi as number)+"%" : <Dash />}</dd></div>
+      <div><dt>W–L</dt><dd>{r.won}–{r.lost}</dd></div>
+      <div><dt>Pending</dt><dd>{r.pending}</dd></div>
+      <div><dt>Stake</dt><dd>{plain(r.stake)}u</dd></div>
+    </dl>
+    {extra && <p>Also {extra}.</p>}
+  </div>;
+}
+
+const RULES:[string,string][] = [
+  ["≥4 pp", "A rise of at least 4 percentage points in implied probability, seen before the match starts."],
+  ["Independent record", "Every pre-match move that large is entered, thin low-limit moves included, whether or not an alert was sent. Delivered Telegram alerts have their own record below."],
+  ["One entry, 1u", "Each entry records 1u at the first qualifying odds for a match, market, line and side. A repeat drop on that same side and line adds no stake. A move on the other player, or a different handicap, can count separately, so one fixture can drive several wins or losses."],
+  ["Net and ROI", "ROI is net result over settled stake across the whole period, so it is weighted by stake and is not an average of daily figures. Pending entries carry no result yet. With no settled stake, net and ROI show a dash."],
+  ["Final hour", "A timing reference. Both observations must fall inside the final hour, and the same move can also sit in the main record at different odds, so adding the two would double-count."],
+  ["Retirements", "On retirement or disqualification, moneyline picks settle on the official winner once one full set has been played. Before that, both sides are void. Whole-match games handicaps and totals are void on retirement. A walkover voids all three markets."],
+  ["Source", "The record was first compiled from saved scans up to 21 November 2026 at 10:15 UTC. Later entries use the same rules as new scans arrive."],
+  ["Historical replay", "The fixed historical replay (22 October to 18 November 2026, last qualifying move 16 November) is a separate product and is not part of this record."],
+];
 
 export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,dayView}:{
   circuit:string; day:string; since:string; through:string;
@@ -62,61 +121,87 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
   const month = months.find(m=>m.key===monthKey) ?? months[0];
   const slice:PaperSlice|null = period==="life" ? lifetime : period==="month" ? month?.slice ?? null : dayView.state==="ok" ? dayView : null;
 
-  const span = period==="life" ? <><b>Lifetime</b> · since {dayText(since)}{through ? ", to "+asOf(through) : ""}</>
-    : period==="month" ? <><b>{month ? monthText(month.key) : "Month"}</b>{month && through.slice(0,7)===month.key ? " · to date" : ""}{month && since.slice(0,7)===month.key ? " · from "+dayText(since) : ""}</>
-    : <><b>{dayText(day)}</b> · UTC day</>;
+  const name = period==="life" ? "Lifetime" : period==="month" ? (month ? monthText(month.key) : "Month") : dayText(day);
+  const range = period==="life" ? (since ? "since "+dayText(since) : "")
+    : period==="month" ? [month && through.slice(0,7)===month.key ? "to date" : "", month && since.slice(0,7)===month.key ? "from "+dayText(since) : ""].filter(Boolean).join(" · ")
+    : "UTC day";
   const empty = period!=="day" ? "This record is awaiting an update."
     : dayView.state==="early" ? "The "+circuit+" paper record starts on "+dayText(since)+"."
     : dayView.state==="none" ? "No "+circuit+" matches with recorded odds on this date."
     : "Paper results for this date are awaiting an update.";
   const stamp = period==="day" ? (dayView.state==="ok" ? dayView.through : "") : through;
+  // The original ≥4.5 pp rows are archived per day and shown for comparison only.
+  const archived:[string,Result][] = [];
+  if (period==="day" && dayView.state==="ok") {
+    if (dayView.all45) archived.push(["All pre-match ≥4.5 pp",dayView.all45]);
+    if (dayView.late45) archived.push(["Final hour ≥4.5 pp",dayView.late45]);
+  }
+
   const tab = (id:Period,label:string,off=false) =>
     <button type="button" aria-pressed={period===id} disabled={off} onClick={()=>setPeriod(id)}>{label}</button>;
+  // Left and right arrows walk the available periods; Enter or Space selects, as on any button.
+  const arrows = (e:KeyboardEvent<HTMLDivElement>) => {
+    const step = e.key==="ArrowRight" ? 1 : e.key==="ArrowLeft" ? -1 : 0;
+    if (!step) return;
+    const on = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>("button:not(:disabled)"));
+    const at = on.indexOf(e.target as HTMLButtonElement);
+    if (at<0 || on.length<2) return;
+    e.preventDefault();
+    on[(at+step+on.length)%on.length]?.focus();
+  };
 
-  return <section className={styles.results} id="big-drop-returns" aria-labelledby="paper-return-title">
-    <header className={styles.paperHead}>
-      <h2 id="paper-return-title"><span className={styles.lab}>{circuit} paper record</span>All pre-match moves ≥4 pp</h2>
-      <div className={styles.paperSwitch}>
-        <div className={styles.period} role="group" aria-label="Period of the paper record">
+  return <section className={css.card} id="big-drop-returns" aria-labelledby="paper-return-title">
+    <header className={css.head}>
+      <div className={css.title}>
+        <h2 id="paper-return-title">{circuit} paper record</h2>
+        <p>{circuit==="ATP" ? "ATP and Challenger" : "WTA and WTA 125"} · every pre-match move ≥4 pp</p>
+      </div>
+      <div className={css.controls}>
+        <div className={css.seg} role="group" aria-label="Period of the paper record" onKeyDown={arrows}>
           {tab("life","Lifetime",!lifetime)}{tab("month","Month",!months.length)}{tab("day","Day")}
         </div>
-        {period==="month" && months.length>1 && <label className={styles.pick}><span>Month</span>
+        {period==="month" && months.length>1 && <label className={css.pick}><span>Month</span>
           <select value={month?.key ?? ""} onChange={e=>setMonthKey(e.target.value)}>
             {months.map(m=><option key={m.key} value={m.key}>{monthText(m.key)}</option>)}
           </select></label>}
       </div>
     </header>
 
-    <p className={styles.paperSpan} aria-live="polite">{span}</p>
-    {!slice ? <p className={styles.paperEmpty}>{empty}</p> : <>
-      <Figures r={slice.all4} />
-      {slice.late4 && <div className={styles.paperRef}>
-        <h3>Final hour ≥4 pp <small>timing reference · overlaps with the all-day record</small></h3>
-        <Figures r={slice.late4} reference />
-      </div>}
+    <div className={css.when}>
+      <p className={css.span} aria-live="polite"><b>{name}</b>{range && " · "+range}</p>
+      {stamp && <p className={css.stamp}>Data as of <b>{asOf(stamp)}</b></p>}
+    </div>
+
+    {!slice ? <p className={css.empty}>{empty}</p> : <>
+      <Score r={slice.all4} />
+      <Breakdown r={slice.all4} />
     </>}
-    <p className={styles.paperNote}>
-      {stamp && <><b>As of {asOf(stamp)}.</b>{" "}</>}{circuit==="ATP" ? "ATP and Challenger." : "WTA and WTA 125."}
-      {" "}Each paper entry uses 1u at the recorded odds, including moves at low limits.
+
+    <p className={css.note}>
+      Each paper entry stakes 1u (one unit) at the recorded odds, low-limit moves included. Every qualifying move counts, whether or not a Telegram alert was sent. Dates are UTC.
     </p>
 
-    <details className={styles.fold}><summary>How to read this record</summary>
-      <p className={styles.fine}>≥4 pp means a rise of at least 4 percentage points in implied probability. The headline row is an independent paper record of every pre-match move that large, thin moves included, whether or not an alert was sent. Delivered Telegram alerts have their own record below.</p>
-      <p className={styles.fine}>Each entry records 1u at the first qualifying odds for a match, market, line and side. A repeat drop on that same side and line adds no stake. A move on the other player, or a different handicap, can count separately, so one fixture can drive several wins or losses.</p>
-      <p className={styles.fine}>The final-hour row is a reference. Both observations must fall inside the final hour, and the same move can also sit in the row above at different odds, so adding the two rows would double-count.</p>
-      <p className={styles.fine}>ROI is net result over settled stake across the whole period, so it is weighted by stake and is not an average of daily figures. Pending entries carry no result yet. With no settled stake, ROI and net show a dash.</p>
-      <p className={styles.fine}>On retirement or disqualification, moneyline picks settle on the official winner once one full set has been played. Before that, both sides are void. Whole-match games handicaps and totals are void on retirement. A walkover voids all three markets.</p>
-      <p className={styles.fine}>The initial replay used saved scans through 21 November 2026 at 10:15 UTC. Later entries use the same rules as new scans arrive.</p>
-      {period==="day" && dayView.state==="ok" && (dayView.all45 || dayView.late45) && <>
-        <p className={styles.fine}>The original ≥4.5 pp rows for {dayText(day)} are kept here for comparison. They overlap the rows above and are not part of the headline record.</p>
-        <div className={styles.paperScroll} role="region" aria-label="Original 4.5 point rows for this day" tabIndex={0}>
-          <table className={styles.paperTable}><thead><tr>{["Move","W–L","Pending","Stake","Net","ROI"].map(s=><th scope="col" key={s}>{s}</th>)}</tr></thead>
-          <tbody>{([["All pre-match ≥4.5 pp",dayView.all45],["Final hour ≥4.5 pp",dayView.late45]] as const).map(([label,r])=>r &&
-            <tr key={label}><th scope="row">{label}</th><td>{r.won}–{r.lost}</td><td>{r.pending}</td><td>{plain(r.stake)}u</td>
-              <td>{r.roi===null ? "—" : signed(r.net)+"u"}</td>
-              <td data-positive={r.roi===null || r.net===0 ? undefined : r.net>0}>{r.roi===null ? "—" : signed(r.roi)+"%"}</td></tr>)}</tbody></table>
+    <div className={css.folds}>
+      {slice?.late4 && <details className={css.fold}>
+        <summary><span>Final hour ≥4 pp<small>timing reference</small></span></summary>
+        <div className={css.foldBody}>
+          <RefRow label={"Final hour ≥4 pp · "+name} r={slice.late4} />
+          <p className={css.fine}>These moves overlap the record above, sometimes at different odds. Read the two side by side and never add them.</p>
         </div>
-      </>}
-    </details>
+      </details>}
+      {archived.length>0 && <details className={css.fold}>
+        <summary><span>Original ≥4.5 pp rows<small>{dayText(day)}, for comparison</small></span></summary>
+        <div className={css.foldBody}>
+          <p className={css.fine}>The original ≥4.5 pp rows for {dayText(day)} are kept here for comparison. They overlap the record above and are not part of it.</p>
+          {archived.map(([label,r])=><RefRow key={label} label={label} r={r} />)}
+        </div>
+      </details>}
+      <details className={css.fold}>
+        <summary><span>How this record works</span></summary>
+        <div className={css.foldBody}>
+          <dl className={css.rules}>{RULES.map(([term,text])=><div key={term}><dt>{term}</dt><dd>{text}</dd></div>)}</dl>
+        </div>
+      </details>
+    </div>
   </section>;
 }
