@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T00:14:21Z",
+  "generated_at": "2026-11-21T16:15:21Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -12,19 +12,19 @@
         "cases": [],
         "historical_records_unchanged": true
       },
-      "signals": 41,
-      "settled": 29,
-      "pending": 12,
-      "pnl_units": -13.939,
-      "roi": -0.480655,
+      "signals": 47,
+      "settled": 30,
+      "pending": 17,
+      "pnl_units": -14.939,
+      "roi": -0.497967,
       "true_close_n": 7,
-      "true_close_coverage": 0.241379,
+      "true_close_coverage": 0.233333,
       "mean_true_close_clv": 0.02219,
       "side_counts": {
-        "under": 29,
-        "over": 12
+        "under": 30,
+        "over": 17
       },
-      "dominant_side_share": 0.707317
+      "dominant_side_share": 0.638298
     },
     "input_cohorts": {
       "before_xg_gap": {
@@ -75,19 +75,19 @@
           "cases": [],
           "historical_records_unchanged": true
         },
-        "signals": 12,
-        "settled": 0,
-        "pending": 12,
-        "pnl_units": 0,
-        "roi": null,
+        "signals": 18,
+        "settled": 1,
+        "pending": 17,
+        "pnl_units": -1.0,
+        "roi": -1.0,
         "true_close_n": 0,
-        "true_close_coverage": null,
+        "true_close_coverage": 0.0,
         "mean_true_close_clv": null,
         "side_counts": {
-          "under": 7,
-          "over": 5
+          "under": 8,
+          "over": 10
         },
-        "dominant_side_share": 0.583333
+        "dominant_side_share": 0.555556
       }
     },
     "input_review_deadline": "2026-11-30T23:59:59Z",
@@ -99,19 +99,19 @@
         "cases": [],
         "historical_records_unchanged": true
       },
-      "signals": 12,
-      "settled": 0,
-      "pending": 12,
-      "pnl_units": 0,
-      "roi": null,
+      "signals": 18,
+      "settled": 1,
+      "pending": 17,
+      "pnl_units": -1.0,
+      "roi": -1.0,
       "true_close_n": 0,
-      "true_close_coverage": null,
+      "true_close_coverage": 0.0,
       "mean_true_close_clv": null,
       "side_counts": {
-        "under": 7,
-        "over": 5
+        "under": 8,
+        "over": 10
       },
-      "dominant_side_share": 0.583333
+      "dominant_side_share": 0.555556
     },
     "promotion_evidence_scope": "repaired_inputs_only; v4 lock window restarts after the prospective input repair",
     "warmup_tracking": {
@@ -137,17 +137,17 @@
     },
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
-      "explanation": "At least one candidate passed every locked shadow gate. Input cohorts kept separate. Before 30 October 2026: 9 settled, 30 October 2026 to input repair: 20 settled, Prospective repaired inputs: 0 settled. Promotion review uses repaired inputs only; original records remain intact. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-21T00:14:09.657852+00:00. Completed-fixture coverage checked at 2026-11-20T17:00:35.673397+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 196). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
-      "scored_rows": 234,
-      "scored_fixtures": 41,
+      "explanation": "At least one candidate passed every locked shadow gate. Input cohorts kept separate. Before 30 October 2026: 9 settled, 30 October 2026 to input repair: 20 settled, Prospective repaired inputs: 1 settled. Promotion review uses repaired inputs only; original records remain intact. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-21T16:15:00.236595+00:00. Completed-fixture coverage checked at 2026-11-21T16:12:37.713253+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 206). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
+      "scored_rows": 167,
+      "scored_fixtures": 27,
       "eligible_rows": 6,
-      "eligible_fixtures": 5,
-      "blocked_rows": 228,
+      "eligible_fixtures": 6,
+      "blocked_rows": 161,
       "blocker_rows": {
-        "better_fresh_price_available": 46,
-        "edge_below_3pct": 225,
-        "price_not_fresh_10m": 84,
-        "price_older_than_3h": 84
+        "better_fresh_price_available": 31,
+        "edge_below_3pct": 157,
+        "price_not_fresh_10m": 52,
+        "price_older_than_3h": 52
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 10,
@@ -166,20 +166,20 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-21T00:14:01Z",
+      "generated_at": "2026-11-21T16:14:51Z",
       "status": "OK",
       "missing_history": [],
-      "scored_fixtures": 41
+      "scored_fixtures": 27
     },
     "input_integrity": {
       "policy": "shots-input-integrity-20261113-v1",
-      "generated_at": "2026-11-21T00:14:09.657852+00:00",
-      "base_sha256": "06045cbb32574292278d106a7cb51f8426c0924a1266f9b771183f72ed11547b",
+      "generated_at": "2026-11-21T16:15:00.236595+00:00",
+      "base_sha256": "e7eaf1576f1d5d4116c840cbfbf1fa3b39117fff19ecbb81720db74e945998a8",
       "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
-      "source_rows": 44178,
-      "prediction_rows": 44172,
-      "latest_result_date": "2026-11-08",
-      "recent_missing_xg_team_rows": 196,
+      "source_rows": 44188,
+      "prediction_rows": 44182,
+      "latest_result_date": "2026-11-21",
+      "recent_missing_xg_team_rows": 206,
       "applied_corrections": [
         {
           "fixture": [
@@ -221,7 +221,7 @@
           "reason": "awarded_match_missing_counts_not_zero"
         }
       ],
-      "check_observed_at": "2026-11-20T17:00:35.673397+00:00",
+      "check_observed_at": "2026-11-21T16:12:37.713253+00:00",
       "blocked_leagues": {},
       "missing_completed": [],
       "historical_records_changed": false,
@@ -278,19 +278,19 @@
         ],
         "historical_records_unchanged": true
       },
-      "signals": 220,
-      "settled": 190,
-      "pending": 30,
-      "pnl_units": -8.519,
-      "roi": -0.044837,
+      "signals": 225,
+      "settled": 192,
+      "pending": 33,
+      "pnl_units": -10.519,
+      "roi": -0.054786,
       "true_close_n": 73,
-      "true_close_coverage": 0.384211,
+      "true_close_coverage": 0.380208,
       "mean_true_close_clv": 0.008838,
       "side_counts": {
         "over": 51,
-        "under": 169
+        "under": 174
       },
-      "dominant_side_share": 0.768182
+      "dominant_side_share": 0.773333
     },
     "warmup_tracking": {
       "reconciliation": {
@@ -351,16 +351,16 @@
     "latest_scan": {
       "state": "ELIGIBLE_CANDIDATES_PRESENT",
       "explanation": "At least one candidate passed every locked shadow gate.",
-      "scored_rows": 1252,
-      "scored_fixtures": 45,
-      "eligible_rows": 67,
-      "eligible_fixtures": 15,
-      "blocked_rows": 1185,
+      "scored_rows": 928,
+      "scored_fixtures": 38,
+      "eligible_rows": 62,
+      "eligible_fixtures": 14,
+      "blocked_rows": 866,
       "blocker_rows": {
-        "better_fresh_price_available": 226,
-        "edge_below_3pct": 1091,
-        "price_not_fresh_10m": 620,
-        "price_older_than_3h": 620
+        "better_fresh_price_available": 294,
+        "edge_below_3pct": 821,
+        "price_not_fresh_10m": 124,
+        "price_older_than_3h": 124
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 10,

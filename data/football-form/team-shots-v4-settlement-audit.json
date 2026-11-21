@@ -1,21 +1,21 @@
 {
-  "run_at": "2026-11-20T17:03:07Z",
+  "run_at": "2026-11-21T16:15:21Z",
   "model": "team-shots-v4-shadow",
-  "total_bets": 55,
-  "settled_this_run": 0,
-  "total_settled": 43,
-  "total_pending": 12,
+  "total_bets": 61,
+  "settled_this_run": 1,
+  "total_settled": 44,
+  "total_pending": 17,
   "pending_breakdown": {
-    "future": 12,
-    "live": 0,
-    "stale": 0,
+    "future": 11,
+    "live": 4,
+    "stale": 2,
     "old_stale": 0,
     "unknown": 0
   },
   "source_freshness": {
     "bundesliga": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 12,
+      "lag_days": 13,
       "football_data_count": 81,
       "fotmob_count": 0,
       "fotmob_latest": null,
@@ -25,42 +25,42 @@
       "api_football_requests_remaining_after_league": 7,
       "api_football_error": null,
       "api_football_max_requests": 10,
-      "snapshot_date": "2026-11-20",
-      "snapshot_path": "data/results-snapshot/2026-11-20.json"
+      "snapshot_date": "2026-11-21",
+      "snapshot_path": "data/results-snapshot/2026-11-21.json"
     },
     "epl": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 12,
+      "lag_days": 13,
       "football_data_count": 100,
-      "fotmob_count": 0,
-      "fotmob_latest": null,
+      "fotmob_count": 1,
+      "fotmob_latest": "2026-11-21",
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 3,
       "api_football_requests_remaining_after_league": 4,
       "api_football_error": null,
       "api_football_max_requests": 7,
-      "snapshot_date": "2026-11-20",
-      "snapshot_path": "data/results-snapshot/2026-11-20.json"
+      "snapshot_date": "2026-11-21",
+      "snapshot_path": "data/results-snapshot/2026-11-21.json"
     },
     "la-liga": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 12,
+      "lag_days": 13,
       "football_data_count": 119,
-      "fotmob_count": 0,
-      "fotmob_latest": null,
+      "fotmob_count": 2,
+      "fotmob_latest": "2026-11-21",
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 3,
       "api_football_requests_remaining_after_league": 1,
       "api_football_error": null,
       "api_football_max_requests": 4,
-      "snapshot_date": "2026-11-20",
-      "snapshot_path": "data/results-snapshot/2026-11-20.json"
+      "snapshot_date": "2026-11-21",
+      "snapshot_path": "data/results-snapshot/2026-11-21.json"
     },
     "ligue-1": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 12,
+      "lag_days": 13,
       "football_data_count": 90,
       "fotmob_count": 0,
       "fotmob_latest": null,
@@ -70,12 +70,12 @@
       "api_football_requests_remaining_after_league": 0,
       "api_football_error": null,
       "api_football_max_requests": 1,
-      "snapshot_date": "2026-11-20",
-      "snapshot_path": "data/results-snapshot/2026-11-20.json"
+      "snapshot_date": "2026-11-21",
+      "snapshot_path": "data/results-snapshot/2026-11-21.json"
     },
     "serie-a": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 12,
+      "lag_days": 13,
       "football_data_count": 110,
       "fotmob_count": 0,
       "fotmob_latest": null,
@@ -85,15 +85,34 @@
       "api_football_requests_remaining_after_league": 0,
       "api_football_error": null,
       "api_football_max_requests": 10,
-      "snapshot_date": "2026-11-20",
-      "snapshot_path": "data/results-snapshot/2026-11-20.json"
+      "snapshot_date": "2026-11-21",
+      "snapshot_path": "data/results-snapshot/2026-11-21.json"
     }
   },
-  "stale_rows": [],
+  "stale_rows": [
+    {
+      "match": "Bayern Munich vs 1. FC Cologne",
+      "league": "bundesliga",
+      "line": "22.5",
+      "side": "under",
+      "kickoff": "2026-11-20T19:30:00Z",
+      "hours_elapsed": 20.76
+    },
+    {
+      "match": "ESTAC Troyes vs Le Havre AC",
+      "league": "ligue-1",
+      "line": "12.5",
+      "side": "over",
+      "kickoff": "2026-11-20T19:45:00Z",
+      "hours_elapsed": 20.51
+    }
+  ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [],
+  "warnings": [
+    "2 stale pending row(s) across 2 fixture(s) (3-48h elapsed)"
+  ],
   "errors": [],
   "exit_code_recommendation": 0
 }

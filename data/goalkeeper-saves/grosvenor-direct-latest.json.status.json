@@ -1,15 +1,20 @@
 {
-  "captured_at": "2026-11-21T00:13:40+00:00",
+  "captured_at": "2026-11-21T16:13:59+00:00",
   "bookmaker": "Grosvenor",
-  "requests": 35,
-  "matched": 30,
-  "rows": 2619,
+  "requests": 23,
+  "matched": 18,
+  "rows": 1592,
   "errors": [],
-  "missing": [],
+  "missing": [
+    {
+      "id": "72036302",
+      "reason": "no_exact_fixture"
+    }
+  ],
   "deferred": [],
   "headed_goal_research": {
-    "price_or_status_changes": 50,
-    "current_quotes": 560,
+    "price_or_status_changes": 14,
+    "current_quotes": 407,
     "mapped_quotes": 0,
     "rules": "unverified",
     "paper_selections": 0

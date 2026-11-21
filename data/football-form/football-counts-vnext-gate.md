@@ -1,6 +1,6 @@
 # Football Counts vNext Gate
 
-- Generated: 2026-11-21T00:14:21Z
+- Generated: 2026-11-21T16:15:21Z
 - This snapshot cannot promote or route bets.
 
 ## Team Shots v4
@@ -8,13 +8,13 @@
 - Prospective status: **AUTHORIZED_SHADOW**
 - Market gate: **BLOCKED_PENDING_2026_27_TRUE_CLOSE_SAMPLE**
 - Promotion gate: **BLOCKED**
-- Before 30 October 2026: 9 settled, -3.33u, ROI -37.0% | 30 October 2026 to input repair: 20 settled, -10.61u, ROI -53.0% | Prospective repaired inputs: 0 settled, +0.00u, ROI awaiting results. Promotion evidence: repaired inputs only.
-- Prospective signals: 41 (29 settled / 12 pending)
+- Before 30 October 2026: 9 settled, -3.33u, ROI -37.0% | 30 October 2026 to input repair: 20 settled, -10.61u, ROI -53.0% | Prospective repaired inputs: 1 settled, -1.00u, ROI -100.0%. Promotion evidence: repaired inputs only.
+- Prospective signals: 47 (30 settled / 17 pending)
 - Warm-up tracking: 14 (14 settled / 0 pending), +0.32u, ROI +2.3%
-- Latest scan: **ELIGIBLE_CANDIDATES_PRESENT**; 234 rows / 41 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
-- Blockers: {'better_fresh_price_available': 46, 'edge_below_3pct': 225, 'price_not_fresh_10m': 84, 'price_older_than_3h': 84}
-- P/L / ROI: -13.94u / -48.1%
-- True-close coverage: 7/29 (24.1%)
+- Latest scan: **ELIGIBLE_CANDIDATES_PRESENT**; 167 rows / 27 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
+- Blockers: {'better_fresh_price_available': 31, 'edge_below_3pct': 157, 'price_not_fresh_10m': 52, 'price_older_than_3h': 52}
+- P/L / ROI: -14.94u / -49.8%
+- True-close coverage: 7/30 (23.3%)
 - Mean true-close CLV: +2.22%
 - Live routing: unchanged / disabled
 
@@ -23,12 +23,12 @@
 - Prospective status: **AUTHORIZED_SHADOW**
 - Market gate: **BLOCKED_PENDING_2026_27_PINNACLE_SAMPLE**
 - Promotion gate: **BLOCKED**
-- Prospective signals: 220 (190 settled / 30 pending)
+- Prospective signals: 225 (192 settled / 33 pending)
 - Warm-up tracking: 36 (36 settled / 0 pending), -2.50u, ROI -7.0%
-- Latest scan: **ELIGIBLE_CANDIDATES_PRESENT**; 1252 rows / 45 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
-- Blockers: {'better_fresh_price_available': 226, 'edge_below_3pct': 1091, 'price_not_fresh_10m': 620, 'price_older_than_3h': 620}
-- P/L / ROI: -8.52u / -4.5%
-- True-close coverage: 73/190 (38.4%)
+- Latest scan: **ELIGIBLE_CANDIDATES_PRESENT**; 928 rows / 38 fixtures scored; 0 fixtures passed edge but were held only by the warm-up lock.
+- Blockers: {'better_fresh_price_available': 294, 'edge_below_3pct': 821, 'price_not_fresh_10m': 124, 'price_older_than_3h': 124}
+- P/L / ROI: -10.52u / -5.5%
+- True-close coverage: 73/192 (38.0%)
 - Mean true-close CLV: +0.88%
-- Side mix: {'over': 51, 'under': 169} (dominant 76.8%)
+- Side mix: {'over': 51, 'under': 174} (dominant 77.3%)
 - Live routing: unchanged / disabled
