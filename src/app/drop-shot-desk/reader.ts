@@ -1,6 +1,6 @@
 import "server-only";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
-import type { Move, Fixture, Quote } from "./types";
+import { inCircuit, type Circuit, type Move, type Fixture, type Quote } from "./types";
 
 const storage = () => getSupabaseAdmin().storage.from("tennis-price-moves-private");
 async function read<T>(path: string): Promise<T> {
@@ -19,7 +19,7 @@ type Saved = {
   old: number; new: number; old_opponent: number; new_opponent: number; move_id: string;
 };
 type Event = { contracts?: Record<string,{labels:[string,string];prices:[number,number]}>; id: string; fixture: string; tour:string; league:string; start:string; home:string; away:string; home_price:number; away_price:number };
-type Scan = { policy?: string; alert_ids?: string[]; observed: string; moves: Saved[]; compared_pairs: number };
+type Scan = { policy?: string; alert_ids?: string[]; observed: string; moves: Saved[]; compared_pairs: number; compared_by_circuit?: Partial<Record<Circuit, number>> };
 type Receipt = { state: string; move_ids: string[]; delivered_at: string; observed: string };
 type Outcome = { result:string; score:string; profit?:number };
 type ArchiveRow = Omit<Saved,"tour"> & { level:string; quotes:Quote[]; qualifying:boolean; result:{state:string; score?:string} };
@@ -96,7 +96,7 @@ function quotesFor(m:Saved,tapes:(Tape|null)[],latest:{observed:string;events:Re
   return sorted.map((q,i)=>({...q,gap:i>0 && Math.floor(Date.parse(q.time)/900000)-Math.floor(Date.parse(sorted[i-1].time)/900000)>1}));
 }
 
-export async function readDay(day: string) {
+export async function readDay(day: string, circuit: Circuit = "ATP") {
   const path = day.replaceAll("-", "/");
   const scans = "drop-scans-v2/" + path, deliveries = "drop-deliveries-v2/" + path;
   const results="presentation/outcomes";
@@ -111,12 +111,12 @@ export async function readDay(day: string) {
       const [scan,receipt]=await Promise.all([read<Scan>(scans+"/"+name),notices.includes(name)?read<Receipt>(deliveries+"/"+name):undefined]);
       if (receipt?.state==="sent" && receipt.observed===scan.observed) {
         const batchId=name.slice(0,-5);
-        const eligible = new Set(scan.policy === "same-line-4pp-prematch-v1" ? scan.alert_ids : []);
+        const eligible = new Set(scan.alert_ids ?? []);
         for (const id of receipt.move_ids) {
           notified.set(id, { batchId, batchAt: receipt.delivered_at, alertedAt: receipt.delivered_at, fourPointAlert: eligible.has(id) });
         }
       }
-      return scan;
+      return { ...scan, moves:scan.moves.filter(m => inCircuit(m.tour, circuit)) };
     }));
     batches.push(...checked);
   }
@@ -140,6 +140,6 @@ export async function readDay(day: string) {
     activeUntil: outcomes[m.move_id] ? undefined : moveCutoff(m,latest.events[m.event_id],latest.observed,now),
     result:outcomes[m.move_id]?.result??"Awaiting verified result",score:outcomes[m.move_id]?.score,notified:notified.has(m.move_id),
   })));
-  const fixtures:Fixture[]=Object.values(latest.events).map(e=>({tour:e.tour,league:e.league,start:e.start,home:e.home,away:e.away,homePrice:e.home_price,awayPrice:e.away_price,activeUntil:availableUntil(e.start,latest.observed,now)}));
-  return { moves,fixtures,observed:latest.observed,scans:names.length,compared:batches.reduce((n,b)=>n+b.compared_pairs,0) };
+  const fixtures:Fixture[]=Object.values(latest.events).filter(e => inCircuit(e.tour, circuit)).map(e=>({tour:e.tour,league:e.league,start:e.start,home:e.home,away:e.away,homePrice:e.home_price,awayPrice:e.away_price,activeUntil:availableUntil(e.start,latest.observed,now)}));
+  return { moves,fixtures,observed:latest.observed,scans:batches.filter(b=>circuit==="ATP" || b.compared_by_circuit !== undefined).length,compared:batches.reduce((n,b)=>n+(b.compared_by_circuit?.[circuit] ?? (circuit==="ATP" ? b.compared_pairs : 0)),0) };
 }

@@ -43,6 +43,12 @@
 .brand img{width:clamp(48px,7vw,66px);height:auto;flex:none}
 .kicker{color:var(--ds-accent)}
 .mast h1{font-size:clamp(1.75rem,4.4vw,2.75rem);font-weight:750;letter-spacing:-.04em;line-height:1.05;color:var(--ds-ink)}
+.circuit{display:inline-flex;align-self:flex-start;gap:3px;padding:3px;border:1px solid var(--ds-rule);border-radius:10px;background:var(--ds-surface);margin:.75rem 0}
+.circuit a{display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:44px;padding:0 .9rem;border:1px solid transparent;border-radius:7px;color:var(--ds-text);text-decoration:none}
+.circuit a[aria-current="page"]{border-color:currentColor;color:var(--ds-mint,#8de2be)}
+.circuit small{font-size:.75rem;color:inherit}
+.circuit a:focus-visible{outline:2px solid currentColor;outline-offset:1px}
+@media(max-width:600px){.circuit{display:flex;width:100%;box-sizing:border-box}.circuit a{flex:1;padding:0 .25rem}}
 .tabs{display:inline-flex;gap:2px;padding:3px;background:var(--ds-surface);border:1px solid var(--ds-rule);border-radius:10px}
 .tabs a{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:40px;padding:0 1rem;border-radius:7px;color:var(--ds-text);font-size:.875rem;font-weight:600;text-decoration:none;white-space:nowrap}
 .tabs a svg{flex:none}

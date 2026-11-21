@@ -38,15 +38,19 @@ function venuesFor(rows: { tour: string; league: string; start: string }[]) {
   }
   return out;
 }
-export default async function PriceMoves({searchParams}:{searchParams:Promise<{view?:Query;day?:Query;batch?:Query}>}) {
+export default async function PriceMoves({searchParams}:{searchParams:Promise<{view?:Query;day?:Query;batch?:Query;tour?:Query}>}) {
   const fullBoard = await isAdminSession();
   const params=await searchParams,archive=one(params.view)==="archive",today=new Date().toISOString().slice(0,10);
   const day=validDay(one(params.day),today);
+  const circuit=one(params.tour)?.toLowerCase()==="wta" ? "WTA" : "ATP";
+  const dailyUrl=(tour: "ATP"|"WTA", date=day)=>route+"?tour="+tour.toLowerCase()+"&day="+date;
   const batchParam=one(params.batch);
   const batch=batchParam&&/^[A-Za-z0-9_-]{1,64}$/.test(batchParam)?batchParam:undefined;
   let content;
   try{
-    if(archive){
+    if(archive && circuit==="WTA"){
+      content=<p className={styles.empty}>The historical replay covers ATP and Challenger matches. <Link href={dailyUrl("WTA")}>See WTA daily moves</Link></p>;
+    } else if(archive){
       const {moves,summary:s}=await readArchive();
       content=<>
         <section className={styles.replay} aria-label="Historical replay record">
@@ -59,17 +63,18 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
         <Board moves={fullBoard ? moves : moves.map(publicMove)} fixtures={[]} archive venues={venuesFor(moves)}/></>;
     } else {
       // Stamped after the read so the first paint never treats a record as open later than the server saw it.
-      const data=await readDay(day),now=Date.now(),seen=Date.parse(data.observed),known=Number.isFinite(seen);
+      const data=await readDay(day,circuit),now=Date.now(),seen=Date.parse(data.observed),known=Number.isFinite(seen);
       const late=known&&day===today&&(now-seen)/60000>40;
       const earlier=day>firstDay?shiftDay(day,-1):null,later=day<today?shiftDay(day,1):null;
       content=<>
         <section className={styles.dayBar} aria-label="Observation date">
           <form className={styles.date} action={route}>
+            <input type="hidden" name="tour" value={circuit.toLowerCase()}/>
             <label htmlFor="desk-day">Observation date (UTC)</label>
             <div className={styles.dateRow}>
-              {earlier?<Link className={styles.dayStep} href={route+"?day="+earlier} aria-label="Previous day"><span aria-hidden="true">‹</span></Link>:<span className={styles.dayStep} aria-hidden="true" data-off="true">‹</span>}
+              {earlier?<Link className={styles.dayStep} href={dailyUrl(circuit,earlier)} aria-label="Previous day"><span aria-hidden="true">‹</span></Link>:<span className={styles.dayStep} aria-hidden="true" data-off="true">‹</span>}
               <input id="desk-day" name="day" type="date" min={firstDay} max={today} defaultValue={day} key={day}/>
-              {later?<Link className={styles.dayStep} href={route+"?day="+later} aria-label="Next day"><span aria-hidden="true">›</span></Link>:<span className={styles.dayStep} aria-hidden="true" data-off="true">›</span>}
+              {later?<Link className={styles.dayStep} href={dailyUrl(circuit,later)} aria-label="Next day"><span aria-hidden="true">›</span></Link>:<span className={styles.dayStep} aria-hidden="true" data-off="true">›</span>}
               <button>Show date</button>
             </div>
           </form>
@@ -81,19 +86,25 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
           </dl>
         </section>
         <p className={styles.fresh} role="status" data-late={late?"true":undefined}>{known?<>Latest watchlist at {new Date(seen).toISOString().slice(0,16).replace("T"," ")} UTC{late?" · overdue for a new scan":day===today?" · the cloud scan runs every 15 minutes":""}.</>:"No watchlist has been recorded for this date."}</p>
-        <Board moves={fullBoard ? data.moves : data.moves.map(publicMove)} fixtures={fullBoard ? data.fixtures : data.fixtures.map(publicFixture)} archive={false} initialBatchId={batch} day={day} now={now} today={day===today} venues={venuesFor([...data.moves,...data.fixtures])}/></>;
+        <Board key={circuit} circuit={circuit} moves={fullBoard ? data.moves : data.moves.map(publicMove)} fixtures={fullBoard ? data.fixtures : data.fixtures.map(publicFixture)} archive={false} initialBatchId={batch} day={day} now={now} today={day===today} venues={venuesFor([...data.moves,...data.fixtures])}/></>;
     }
   }catch{content=<p className={styles.problem} role="status">The price records could not be loaded. Refresh to try again.</p>}
   return <main className={styles.page} data-mode={archive?"archive":"daily"}>
     <div className={styles.topline}><Link className={styles.back} href="/tennis-matchday">← Tennis Matchday</Link><span className={styles.lab}>Unlisted pilot</span></div>
     <header className={styles.mast}>
       <div className={styles.brand}><Image src={brand} unoptimized alt="" width={66} height={36} priority/><div><p className={styles.kicker}>Tennis odds moves</p><h1>Drop Shot Desk</h1></div></div>
-      <nav aria-label="Price history" className={styles.tabs}><Link aria-current={!archive?"page":undefined} href={route}><DeskIcon name="drop"/>Daily moves</Link><Link aria-current={archive?"page":undefined} href={route+"?view=archive"}><DeskIcon name="replay"/>Historical replay</Link></nav>
+      <nav aria-label="Price history" className={styles.tabs}><Link aria-current={!archive?"page":undefined} href={dailyUrl(circuit)}><DeskIcon name="drop"/>Daily moves</Link><Link aria-current={archive?"page":undefined} href={route+"?view=archive&tour=atp&day="+day}><DeskIcon name="replay"/>Historical replay{circuit==="WTA"?" Â· ATP only":""}</Link></nav>
     </header>
-    <p className={styles.standfirst}>Spot possible sharp money before the first serve. We check ATP and Challenger odds about every 15 minutes and show which players, game totals and games handicaps are shortening. Open a chart to see when the odds fell and whether they drifted back.</p>
+    <nav className={styles.circuit} aria-label="Tennis tour">
+      {(["ATP","WTA"] as const).map(tour=><Link key={tour} prefetch={false} aria-current={circuit===tour?"page":undefined}
+        href={archive && tour==="ATP" ? route+"?view=archive&tour=atp&day="+day : dailyUrl(tour)}>
+        <strong>{tour}</strong><small>{tour==="ATP"?"incl. Challenger":"incl. WTA 125"}</small>
+      </Link>)}
+    </nav>
+    <p className={styles.standfirst}>Spot possible sharp money before the first serve. We check {circuit==="ATP"?"ATP and Challenger":"WTA Tour and WTA 125"} odds about every 15 minutes and show which players, game totals and games handicaps are shortening. Open a chart to see when the odds fell and whether they drifted back.</p>
     <details className={styles.fold}>
       <summary>What triggers an alert?</summary>
-      <p className={styles.fine}>Say a player shortens from 2.00 to 1.85. That takes the chance implied by the odds from 50% to 54.1%. Telegram flags the first rise of at least four percentage points from an earlier high in the odds, on the same selection and line, any time before play. For each alert we track returns at the odds we saw when we detected the drop.</p>
+      <p className={styles.fine}>Telegram flags a selection once if its implied probability rises by at least four percentage points in the final hour before the scheduled start. Odds of 2.00 at 45 minutes out and 1.85 at 15 minutes out imply a rise from 50% to 54.1%. Both readings must be for the same selection and line. The board also shows earlier moves. Returns use the odds at detection.</p>
       <p className={styles.fine}>A drop can reflect betting pressure or news. Our scans record the odds at each check. Betting volumes and bettor identities are unavailable.</p>
     </details>
     {content}</main>;

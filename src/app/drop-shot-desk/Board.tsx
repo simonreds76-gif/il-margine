@@ -15,7 +15,8 @@ import {
 } from "./desk";
 import type { DeskFixture, DeskMove, DropOrder } from "./desk";
 
-const TOURS = ["All tours", "ATP", "Challenger"];
+const ATP_LEVELS = ["All levels", "ATP", "Challenger"];
+const WTA_LEVELS = ["All levels", "WTA", "WTA 125"];
 const DRAWS = ["All rounds", "Main draw", "Qualifying"];
 type Scope = "upcoming" | "all";
 /** The three orders, in the words used on the control and in the line that explains the list. */
@@ -87,7 +88,8 @@ function DropRow({ move: r, selected, archive, at, venue, onChoose }: {
   );
 }
 
-export default function Board({ moves, fixtures, archive, initialBatchId, day, now, today, venues = NO_VENUES }: {
+export default function Board({ moves, fixtures, archive, circuit = "ATP", initialBatchId, day, now, today, venues = NO_VENUES }: {
+  circuit?: "ATP" | "WTA";
   moves: DeskMove[];
   fixtures: DeskFixture[];
   archive: boolean;
@@ -117,7 +119,8 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   const [clock, setClock] = useState<number | null>(now ?? null);
   const [lapsedKey, setLapsedKey] = useState<string | null>(null);
   if (scopeDay !== day) { setScopeDay(day); setScope(defaultScope); setLapsedKey(null); }
-  const [tour, setTour] = useState(TOURS[0]);
+  const levels = circuit === "WTA" ? WTA_LEVELS : ATP_LEVELS;
+  const [tour, setTour] = useState(levels[0]);
   const [market,setMarket] = useState("all");
   const [draw, setDraw] = useState(DRAWS[0]);
   const [alertedOnly, setAlertedOnly] = useState(false);
@@ -165,10 +168,10 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   const needle = query.trim().toLowerCase();
   const passes = useCallback((r: DeskMove) =>
     (archive || !alertedOnly || r.notified)
-    && (tour === TOURS[0] || r.tour === tour)
+    && (tour === levels[0] || r.tour === tour)
     && (market==="all" || (r.market??"winner")===market)
     && (draw === DRAWS[0] || isQualifying(r) === (draw === "Qualifying"))
-    && (!needle || (r.player + " " + r.opponent + " " + (r.fixtureLabel??"") + " " + r.league).toLowerCase().includes(needle)), [tour, draw, needle, market, alertedOnly, archive]);
+    && (!needle || (r.player + " " + r.opponent + " " + (r.fixtureLabel??"") + " " + r.league).toLowerCase().includes(needle)), [tour, levels, draw, needle, market, alertedOnly, archive]);
   const matching = useMemo(() => moves.filter(passes), [moves, passes]);
   const upcoming = useMemo(() => (archive ? [] : matching.filter(r => isOpen(r, at))), [archive, matching, at]);
   const sortScope = upcomingOnly ? "upcoming" : "all";
@@ -260,7 +263,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
     }
   };
   const step = (dir: number) => { if (rows.length) choose(rows[(index + dir + rows.length) % rows.length]); };
-  const clearFilters = () => { setTour(TOURS[0]); setDraw(DRAWS[0]); setMarket("all"); setQuery(""); setAlertedOnly(false); };
+  const clearFilters = () => { setTour(levels[0]); setDraw(DRAWS[0]); setMarket("all"); setQuery(""); setAlertedOnly(false); };
   const changeScope = (next: Scope) => { setScope(next); setLapsedKey(null); };
   // A new order starts from its own first entry; pressing the order already in use changes nothing.
   const changeOrder = (value: DropOrder) => {
@@ -305,7 +308,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
     buttons[j].focus();
   };
 
-  const filtered = (!archive && alertedOnly) || market!=="all" || tour !== TOURS[0] || draw !== DRAWS[0] || needle !== "";
+  const filtered = (!archive && alertedOnly) || market!=="all" || tour !== levels[0] || draw !== DRAWS[0] || needle !== "";
   const lastQuote = m && m.quotes.length ? m.quotes[m.quotes.length - 1] : undefined;
   const latestIsDetection = !!(m && lastQuote && Date.parse(lastQuote.time) === Date.parse(m.after));
   const outcome = m ? outcomeOf(m.result) : "pending";
@@ -320,7 +323,7 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
   const marketLabel = m ? marketName(m) : "";
   const marketSym = m && marketLabel ? marketIcon(m.market) : null;
   const kick = m ? [placeOf(m.league), round, isQualifying(m) && !/^q/i.test(round) ? "Qualifying" : "", (archive ? "Start " : "Scheduled start ") + utcStamp(m.start)].filter(Boolean).join(" · ") : "";
-  const dayFixtures = fixtures.filter(f => tour === TOURS[0] || tour === f.tour).sort((a, b) => a.start.localeCompare(b.start));
+  const dayFixtures = fixtures.filter(f => tour === levels[0] || tour === f.tour).sort((a, b) => a.start.localeCompare(b.start));
   const openFixtures = dayFixtures.filter(f => isOpen(f, at));
   const shownFixtures = upcomingOnly ? openFixtures : dayFixtures;
   const plural = (n: number, one: string, many: string) => n + " " + (n === 1 ? one : many);
@@ -339,8 +342,8 @@ export default function Board({ moves, fixtures, archive, initialBatchId, day, n
         <button type="button" aria-pressed={scope === "all"} onClick={() => changeScope("all")}>All recorded <small>{matching.length}</small></button>
       </div>}
       <div className={styles.filters} role="group" aria-label="Filter drops">
-        <label className={styles.pick} data-on={tour !== TOURS[0] ? "true" : undefined}><span>Tour</span>
-          <select value={tour} onChange={e => setTour(e.target.value)}>{TOURS.map(v => <option key={v}>{v}</option>)}</select></label>
+        <label className={styles.pick} data-on={tour !== levels[0] ? "true" : undefined}><span>Level</span>
+          <select value={tour} onChange={e => setTour(e.target.value)}>{levels.map(v => <option key={v}>{v}</option>)}</select></label>
         <label className={styles.pick} data-on={draw !== DRAWS[0] ? "true" : undefined}><span>Draw</span>
           <select value={draw} onChange={e => setDraw(e.target.value)}>{DRAWS.map(v => <option key={v}>{v}</option>)}</select></label>
         {!archive && <label className={styles.pick} data-on={market !== "all" ? "true" : undefined}><span>Market</span>

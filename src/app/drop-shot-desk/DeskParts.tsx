@@ -52,7 +52,7 @@ export type Venue = { code: string; name: string; flag: string };
 export type VenueMap = Record<string, Venue>;
 
 /** The tournament part of a feed string: "ATP Challenger Helsinki - Quarter Finals" -> "Helsinki". */
-export const hostOf = (league: string) => league.replace(/^ATP\s+(Challenger\s+)?/i, "").split(" - ")[0].trim() || league;
+export const hostOf = (league: string) => league.replace(/^(?:ATP(?:\s+Challenger)?|WTA(?:\s+125k?)?)\s+/i, "").split(" - ")[0].trim() || league;
 /** One entry per feed string and start date, so an edition is never reused across dates. */
 export const venueKey = (league: string, start: string, tour: string) => tour + "|" + league + "|" + start.slice(0, 10);
 

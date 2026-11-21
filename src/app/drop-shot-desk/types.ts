@@ -1,3 +1,7 @@
+export type Circuit = "ATP" | "WTA";
+export function inCircuit(tour: string, circuit: Circuit) {
+  return circuit === "WTA" ? tour === "WTA" || tour === "WTA 125" : tour === "ATP" || tour === "Challenger";
+}
 export type Quote = { time: string; price: number; other?: number; gap?: boolean };
 export type Move = {
   fixtureRef?: string; market?:string; fixtureLabel?:string; profit?:number;
