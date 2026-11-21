@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '2,17,32,47 * * * *'
   pull_request:
-    paths: ['scripts/pinnradar_tennis.py', 'scripts/price_drop_watch.py', 'scripts/desk_games.py', 'scripts/tests/test_desk_games.py', 'scripts/drop_desk_history.py', 'scripts/drop_desk_expiry.py', 'scripts/tests/test_drop_desk_expiry.py', 'scripts/tests/test_drop_desk_history.py', 'scripts/tests/test_pinnradar_tennis.py', '.github/workflows/pinnradar-tennis.yml']
+    paths: ['scripts/pinnradar_tennis.py', 'scripts/price_drop_watch.py', 'scripts/desk_games.py', 'scripts/tests/test_desk_games.py', 'scripts/drop_desk_history.py', 'scripts/desk_paper_returns.py', 'scripts/tests/test_desk_paper_returns.py', 'scripts/drop_desk_expiry.py', 'scripts/tests/test_drop_desk_expiry.py', 'scripts/tests/test_drop_desk_history.py', 'scripts/tests/test_pinnradar_tennis.py', '.github/workflows/pinnradar-tennis.yml']
   workflow_dispatch:
     inputs:
       scheduled_slot_utc:
@@ -30,6 +30,8 @@ jobs:
             /scripts/drop_desk_expiry.py
             /scripts/tests/test_drop_desk_expiry.py
             /scripts/drop_desk_history.py
+            /scripts/desk_paper_returns.py
+            /scripts/tests/test_desk_paper_returns.py
             /scripts/tests/test_drop_desk_history.py
             /scripts/price_drop_watch.py
             /scripts/desk_games.py
@@ -58,6 +60,12 @@ jobs:
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python scripts/drop_desk_history.py
+      - name: Update all-day and final-hour paper returns from saved scans
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python scripts/desk_paper_returns.py
 
   expire-alerts:
     needs: snapshot
