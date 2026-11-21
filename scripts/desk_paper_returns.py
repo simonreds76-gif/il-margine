@@ -12,6 +12,7 @@ from price_drop_watch import MAX_GAP, START
 
 BASE = "presentation/drop-paper-v1"
 FIRST_DAY = "2026-11-20"
+RETIREMENT_RULE = "moneyline-first-completed-set-v1"
 RULES = (("all4", 4, False), ("all45", 4.5, False),
          ("late4", 4, True), ("late45", 4.5, True))
 
@@ -82,6 +83,29 @@ def advance_paper(state, snapshot):
     return found
 
 
+def save_grade(ticket, grade):
+    result = grade["result"]
+    unit_profit = ticket["new"]-1 if result == "Won" else -1 if result == "Lost" else 0
+    ticket.update(result=result, score=grade["score"], profit=grade.get("profit", unit_profit),
+                  stake=grade.get("settled_stake", 0 if result == "Void" else 1))
+
+
+def apply_retirement_review(ledger, review, now):
+    """Regrade reviewed moneylines at their original odds inside the single scheduled writer."""
+    for item in review:
+        ticket = ledger["tickets"][item["id"]]
+        if (ticket["market"] != "winner" or ticket.get("binding") != item["binding"]
+                or ticket["new"] != item["odds"] or ticket["after"] != item["detected"]):
+            raise ValueError("Historical retirement review does not match the captured selection")
+        grade = outcome(ticket, [item["official_result"]], [], now)
+        if grade is None or grade["result"] not in ("Won","Lost"):
+            raise ValueError("Retirement needs a verified official winner and completed first set")
+        if ticket.get("result") not in (None,"Void",grade["result"]):
+            raise ValueError("Retirement review conflicts with an existing W/L")
+        save_grade(ticket,grade)
+        ticket.update(settlement_rule=RETIREMENT_RULE,verification_sha256=item["evidence_sha256"])
+
+
 def grade_due(tickets, now):
     by_group = defaultdict(list)
     for t in tickets:
@@ -108,10 +132,7 @@ def grade_due(tickets, now):
                 grade = outcome(t, games, schedule, now)
             t["checked"] = now.isoformat()
             if grade:
-                result = grade["result"]
-                profit = grade.get("profit", t["new"]-1 if result == "Won" else -1 if result == "Lost" else 0)
-                t.update(result=result, score=grade["score"], profit=profit,
-                         stake=grade.get("settled_stake", 0 if result == "Void" else 1))
+                save_grade(t, grade)
     return bool(by_group)
 
 
@@ -176,6 +197,13 @@ def project(store, now, limit=6):
             break
         day += timedelta(days=1)
         state.update(day=day.isoformat(), slot="")
+    if state.get("retirement_rule") != RETIREMENT_RULE:
+        review = store.get(f"{BASE}/reviews/{RETIREMENT_RULE}.json")
+        if review and review.get("rule") == RETIREMENT_RULE:
+            for reviewed_day, items in review["days"].items():
+                apply_retirement_review(ledger_for(reviewed_day), items, now)
+                dirty.add(reviewed_day)
+            state["retirement_rule"] = RETIREMENT_RULE
     pending = set(state["pending_days"])
     for d in sorted(pending | dirty):
         ledger = ledger_for(d)

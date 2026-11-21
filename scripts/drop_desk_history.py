@@ -10,6 +10,35 @@ from pinnradar_tennis import BUCKET, Store, utc
 from price_drop_watch import START, object_key
 
 
+RETIREMENT = re.compile(r"\b(?:ret(?:ired|irement)?|def(?:ault(?:ed)?)?|disqualifi(?:ed|cation)|dsq|dq)\b", re.I)
+WALKOVERS = {"wo", "w/o", "w.o.", "walkover", "walk-over", "withdrawn", "withdrawal", "w/d"}
+
+
+def retirement_grade(ticket, score, selected_won):
+    """A match moneyline needs a verified first set and the officially awarded winner."""
+    if ticket.get("market", "winner") in ("spreads", "totals"):
+        return {"result":"Void", "score":score, "settled_stake":0, "profit":0}
+    raw = RETIREMENT.sub("", score).strip(" .")
+    raw = re.sub(r"\s*\(\.?\)$","",raw).strip()
+    if not re.fullmatch(r"\d+-\d+(?:\(\d+\))?(?:\s+\d+-\d+(?:\(\d+\))?)*", raw):
+        return None
+    sets = [(int(a),int(b)) for a,b in re.findall(r"(\d+)-(\d+)",raw)]
+    short_sets = "next gen" in normal(ticket.get("league","")).replace("nextgen","next gen")
+    target = 4 if short_sets else 6
+    for index,(a,b) in enumerate(sets):
+        hi,lo = max(a,b),min(a,b)
+        complete = ((hi == 4 and lo <= 3) if short_sets else
+                    ((hi == 6 and lo <= 4) or (hi == 7 and lo in (5,6))))
+        partial = hi < target or (not short_sets and hi == 6 and lo in (5,6))
+        if not complete and (not partial or index < len(sets)-1):
+            return None
+        if index == 0:
+            first_complete = complete
+    if not first_complete:
+        return {"result":"Void", "score":score, "settled_stake":0, "profit":0}
+    return {"result":"Won" if selected_won else "Lost", "score":score}
+
+
 def completed_score(score, sets_needed):
     """Canonical winner-first completed sets. Retirements/incomplete scores stay open."""
     if not re.fullmatch(r"\d+-\d+(?:\(\d+\))?(?:\s+\d+-\d+(?:\(\d+\))?)*",score):
@@ -127,21 +156,25 @@ def outcome(ticket, games, schedule, now):
                   and {r["winner_id"],r["loser_id"]} == pair]
     day = date.fromisoformat(ticket["start"][:10])
     voids = [r for r in schedule if r["tour_id"] == tour and r["round_id"] == rnd
-             and {r["player1_id"],r["player2_id"]} == pair and str(r.get("result") or "").lower().strip() in ("w/o","wo","walkover")]
+             and {r["player1_id"],r["player2_id"]} == pair and str(r.get("result") or "").lower().strip() in WALKOVERS]
     if len(candidates) != 1:
         return {"result":"Void","score":"W/O"} if not candidates and len(voids) == 1 else None
     row = candidates[0]
     if not row.get("date") or abs((date.fromisoformat(row["date"][:10]) - day).days) > 1:
         return None
     score = str(row["result"] or "").strip()
-    if score.lower() in ("w/o","wo","walkover"):
+    if score.lower() in WALKOVERS:
         return {"result":"Void","score":score}
-    if ticket.get("market") in ("spreads","totals") and re.search(r"\b(?:ret(?:ired)?|abandoned)\b",score,re.I) and not voids:
+    if voids:
+        return None
+    if RETIREMENT.search(score):
+        return retirement_grade(ticket, score, row["winner_id"] == player)
+    if ticket.get("market") in ("spreads","totals") and re.search(r"\babandoned\b",score,re.I):
         return {"result":"Void","score":score,"settled_stake":0,"profit":0}
     label = normal(ticket["league"])
     slam = any(title in label for title in ("australian open","roland garros","french open","wimbledon","us open"))
     need = 3 if slam and rnd >= 4 else 2
-    if voids or not completed_score(score,need):
+    if not completed_score(score,need):
         return None
     if ticket.get("market","winner") in ("spreads","totals"):
         from desk_games import grade
@@ -211,19 +244,26 @@ def wta_result(ticket, events):
     if state in {"STATUS_WALKOVER","STATUS_WALK_OVER"}:
         return binding, {"score":"W/O","result":"Void","profit":0,"settled_stake":0}
     is_games = ticket.get("market") in ("spreads","totals")
-    if state == "STATUS_RETIRED" and is_games:
+    retired = state in {"STATUS_RETIRED","STATUS_RETIREMENT","STATUS_DISQUALIFIED","STATUS_DEFAULT","STATUS_DEFAULTED"}
+    if retired and is_games:
         return binding, {"score":"Retired","result":"Void","profit":0,"settled_stake":0}
-    if state != "STATUS_FINAL" or any(s.get("winner") not in (True,False) for s in sides) or sum(s["winner"] for s in sides) != 1:
+    if (not retired and state != "STATUS_FINAL") or any(type(s.get("winner")) is not bool for s in sides) or sum(s["winner"] for s in sides) != 1:
         return None
     winner,loser = sorted(sides,key=lambda p:not p["winner"])
     w,l = (p.get("linescores",[]) for p in (winner,loser))
-    if len(w)!=len(l) or any(not isinstance(s.get("value"),(int,float)) or not float(s["value"]).is_integer() for s in [*w,*l]):
+    if not isinstance(w,list) or not isinstance(l,list) or len(w)!=len(l) or any(not isinstance(s,dict) or type(s.get("value")) not in (int,float) or not float(s["value"]).is_integer() for s in [*w,*l]):
         return None
     sets = [(int(a["value"]),int(b["value"])) for a,b in zip(w,l)]
+    if retired:
+        while len(sets) > 1 and sets[-1] == (0,0):
+            sets.pop()
     score = " ".join(f"{a}-{b}" for a,b in sets)
+    picked_winner = normal(winner["athlete"]["displayName"])==names[0]
+    if retired:
+        grade = retirement_grade(ticket, score + " RET", picked_winner)
+        return (binding, grade) if grade else None
     if not completed_score(score,2):
         return None
-    picked_winner = normal(winner["athlete"]["displayName"])==names[0]
     if is_games:
         from desk_games import grade
         return binding, {"score":score, **grade(ticket,sets,picked_winner)}
