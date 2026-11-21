@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-21T17:26:29.846423+00:00",
+  "generated_at": "2026-11-21T23:09:35.476686+00:00",
   "league": "epl",
   "row_count": 1,
   "rows": [
@@ -31,12 +31,12 @@
       "review_type": "primary_held",
       "review_priority": "low",
       "editorial_note": "Dominic Calvert-Lewin took 1 penalty attempt and scored for Leeds United vs Chelsea. Primary pre-match: Dominic Calvert-Lewin (confirmed_starter). Secondary pre-match: Lukas Nmecha (confirmed_bench). Pre-match active slot was primary -> Dominic Calvert-Lewin. No hierarchy change implied from this event.",
-      "context_generated_at": "2026-11-21T14:57:43Z",
+      "context_generated_at": "2026-11-21T17:27:16Z",
       "context_source_path": "data/goalscorer/epl/penalty-duty-context.json",
       "actual_taker_match_status": "Yes - started",
       "primary_on_pitch_at_penalty": "Yes - started",
       "secondary_on_pitch_at_penalty": "No - bench",
-      "tertiary_on_pitch_at_penalty": "No - bench",
+      "tertiary_on_pitch_at_penalty": "No - bench, on 90+1'",
       "actual_taker_on_pitch_at_penalty": "Yes - started",
       "event_evidence": [
         {
@@ -44,19 +44,18 @@
           "source_event_id": "2999372809",
           "match_id": "5795518",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5795518",
-          "observed_at": "2026-11-21T16:23:56+00:00",
+          "observed_at": "2026-11-21T23:09:38+00:00",
           "event_date": "2026-11-21",
           "season": "2026/27",
           "team": "Leeds United",
           "taker": "Dominic Calvert-Lewin",
           "primary": "Dominic Calvert-Lewin",
-          "primary_on_pitch": null,
+          "primary_on_pitch": true,
           "on_pitch_proof": {
             "player": "Dominic Calvert-Lewin",
             "minute": 53,
             "added_time": 0,
-            "method": "live_lineup_timeline",
-            "observed_through_minute": 58,
+            "method": "completed_lineup_timeline",
             "player_id": 612150,
             "bucket": "starters",
             "substitutions": [],
@@ -66,7 +65,7 @@
           "minute": 53,
           "penalty_kind": "in_match",
           "competitive": true,
-          "finished": false,
+          "finished": true,
           "match": "Chelsea vs Leeds United",
           "event_result": "scored"
         }
