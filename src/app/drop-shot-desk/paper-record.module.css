@@ -141,7 +141,7 @@
   .pick{display:inline-flex;flex:none}
   .pick select{flex:none;width:auto;font-size:.9375rem}
 
-  .score{grid-template-columns:minmax(0,1.15fr) minmax(0,1.15fr) minmax(0,1fr);margin-top:.9rem;padding:0}
+  .score{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:.9rem;padding:0}
   .score>div{display:block;padding:1rem 1.1rem 1.05rem;border-top:0;border-left:1px solid var(--pr-rule)}
   .score>div:first-child{border-left:0}
   .fig{margin-top:.35rem;font-size:clamp(2rem,4.4vw,3.25rem)}
@@ -167,6 +167,9 @@
 .rollingScope button[aria-pressed=true]{color:var(--pr-mint);border-color:var(--pr-mint-edge);background:var(--pr-mint-bg)}
 .entries{margin:.5rem 0;padding:0;list-style:none}
 .entries li{display:grid;grid-template-columns:minmax(0,1fr) minmax(6.5rem,auto) minmax(5rem,auto);gap:.25rem .9rem;align-items:baseline;padding:.65rem 0;border-top:1px solid var(--pr-rule);font-size:.875rem}
+.score abbr{text-decoration:none}
+.lineClose{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:baseline;gap:.15rem .65rem;font-size:.78rem;color:var(--pr-soft)}
+.lineClose b{font-weight:600}
 .entries b,.entries small{display:block}.entries b{color:var(--pr-ink)}.entries small{color:var(--pr-text);font-size:.775rem}
 .entries li div:not(:first-child){text-align:right}
 .pager{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin:.5rem 0;color:var(--pr-text);font-size:.8125rem}

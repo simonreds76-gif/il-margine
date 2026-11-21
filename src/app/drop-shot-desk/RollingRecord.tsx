@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import type { ClosingDetail } from "./closing";
 import type { Result } from "./PaperReturnsPanel";
 import css from "./paper-record.module.css";
 
-type Entry = {selection:string;fixture:string;league:string;result:string;at:string;odds:number;sent:boolean};
+type Entry = {selection:string;fixture:string;league:string;result:string;at:string;odds:number;sent:boolean;close:ClosingDetail|null};
 type Packet = {tour:string;start:string;end:string;through:string;firstCovered:string|null;coveredDays:number;
   summary:Result;page:number;pages:number;rows:Entry[]};
 const date = new Intl.DateTimeFormat("en-GB",{day:"numeric",month:"short",year:"numeric",timeZone:"UTC"});
@@ -54,6 +55,11 @@ export default function RollingRecord({circuit,sent,onScope,metrics}:{circuit:st
               <div><b>{r.selection}</b><small>{r.fixture} · {r.league}</small></div>
               <div><b>{odds.format(r.odds)}</b><small>{stamp.format(new Date(r.at))}</small></div>
               <div><b>{r.result}</b>{!sent && r.sent && <small>Telegram ✓</small>}</div>
+              <p className={css.lineClose}>{r.close ? <>
+                <b>{sent?"Telegram odds":"Entry odds"} {odds.format(r.odds)} → {odds.format(r.close.odds)}</b>
+                <span>Last same-line odds · {stamp.format(new Date(r.close.observed))} UTC · {r.close.minutes} min before play</span>
+                <span>{r.close.change==null?"Entry was the last observation":("CLV "+(r.close.change>0?"+":"")+r.close.change.toFixed(2)+"%")}</span>
+              </> : "CLV awaiting verified start or same-line odds"}</p>
             </li>)}</ol>
             {data.pages>1 && <div className={css.pager} aria-label="Selection pages">
               <button type="button" disabled={busy || data.page===1} onClick={()=>setPage(data.page-1)}>Previous</button>

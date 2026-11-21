@@ -1,5 +1,6 @@
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import type { Circuit } from "./types";
+import { loadClosing, summariseClosing } from "./closing";
 import { PaperReturnsPanel } from "./PaperReturnsPanel";
 import type { PaperDay, PaperSlice, Result } from "./PaperReturnsPanel";
 
@@ -42,7 +43,7 @@ export async function PaperReturns({day,circuit}:{day:string;circuit:Circuit}) {
   // Each tour's record has its own first day; a board date before it has no day figures.
   const firstDay = circuit==="WTA" ? "2026-11-21" : "2026-11-20";
   const dayOpen = day>=firstDay;
-  const [perf,report] = await Promise.all([read<Performance>("performance.json"), dayOpen ? read<Report>("summary/"+day+".json") : null]);
+  const [perf,report,closing] = await Promise.all([read<Performance>("performance.json"), dayOpen ? read<Report>("summary/"+day+".json") : null, loadClosing(circuit)]);
 
   const tour = perf?.circuits?.[circuit];
   const lifetime = slice(tour?.lifetime);
@@ -61,6 +62,13 @@ export async function PaperReturns({day,circuit}:{day:string;circuit:Circuit}) {
     : !all4 ? {state:"awaiting"} : {state:"ok", through:typeof report.through==="string" ? report.through : "", all4, late4:result(daily.rules.late4),
       all45:result(daily.rules.all45), late45:result(daily.rules.late45)};
 
+  const measured = closing?.filter(r=>r.group==="all" && perf?.through && Date.parse(r.at)<=Date.parse(perf.through));
+  const withClose=(s:PaperSlice|null, period:string) => {
+    if(s && measured) s.all4.clv=summariseClosing(measured.filter(r=>r.at.startsWith(period)).map(r=>r.close));
+  };
+  withClose(lifetime,"");
+  for(const m of months)withClose(m.slice,m.key);
+  if(dayView.state==="ok")withClose(dayView, day);
   const stated = typeof perf?.firstDay==="string" ? perf.firstDay : "";
   return <PaperReturnsPanel circuit={circuit} day={day} since={stated>firstDay ? stated : firstDay}
     through={typeof perf?.through==="string" ? perf.through : ""} lifetime={lifetime} months={months} dayView={dayView} />;

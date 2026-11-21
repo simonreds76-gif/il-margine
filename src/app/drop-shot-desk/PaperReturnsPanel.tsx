@@ -2,12 +2,13 @@
 
 import { useState, type KeyboardEvent } from "react";
 import { useSearchParams } from "next/navigation";
+import type { ClosingSummary } from "./closing";
 import RollingRecord from "./RollingRecord";
 import css from "./paper-record.module.css";
 
 export type Result = {
   entries:number; fixtures:number; won:number; lost:number; halfWon:number; halfLost:number;
-  pushes:number; voids:number; pending:number; stake:number; net:number; roi:number|null;
+  pushes:number; voids:number; pending:number; stake:number; net:number; roi:number|null; clv?:ClosingSummary|null;
 };
 /** One period of the record: every pre-match move ≥4 pp, and the final-hour subset kept as a reference. */
 export type PaperSlice = { all4:Result; late4:Result|null };
@@ -64,6 +65,11 @@ function Score({r}:{r:Result}) {
       <dd className={css.fig}>{settled ? <>{signed(r.roi as number)}<span className={css.unit}>%</span></> : <><Dash /><UnitSpace /></>}</dd>
       <dd className={css.sub}>{settled ? "Net ÷ settled stake" : "Nothing settled yet"}</dd>
     </div>
+    <div data-tone={tone(r.clv?.mean ?? null)}>
+      <dt><abbr title="Closing line value">CLV</abbr></dt>
+      <dd className={css.fig}>{r.clv?.mean!=null ? <>{signed(r.clv.mean)}<span className={css.unit}>%</span></> : <Dash/>}</dd>
+      <dd className={css.sub}>{r.clv ? <><b>{r.clv.measured} of {r.entries}</b> measured</> : "Coverage unavailable"}</dd>
+    </div>
     <div>
       <dt>Won–lost</dt>
       <dd className={css.fig}><span aria-hidden="true">{r.won}–{r.lost}</span><UnitSpace /><span className={css.vh}>{r.won} won, {r.lost} lost</span></dd>
@@ -109,6 +115,7 @@ const RULES:[string,string][] = [
   ["Independent record", "Every pre-match move that large is entered, thin low-limit moves included, whether or not an alert was sent. In the 30-day view, choose Sent on Telegram to see confirmed alerts at their sent odds."],
   ["One entry, 1u", "Each entry records 1u at the first qualifying odds for a match, market, line and side. A repeat drop on that same side and line adds no stake. A move on the other player, or a different handicap, can count separately, so one fixture can drive several wins or losses."],
   ["Net and ROI", "ROI is net result over settled stake across the whole period, so it is weighted by stake and is not an average of daily figures. Pending entries carry no result yet. With no settled stake, net and ROI show a dash."],
+  ["Closing line value (CLV)", "We compare the entry odds with the last recorded odds on the same selection and line before the verified start. Positive CLV means the entry got better odds. The figure is the average percentage price advantage across entries with a later reading. Open the 30-day selections for odds and minutes before play."],
   ["Final hour", "A timing reference. Both observations must fall inside the final hour, and the same move can also sit in the main record at different odds, so adding the two would double-count."],
   ["Retirements", "On retirement or disqualification, moneyline picks settle on the official winner once one full set has been played. Before that, both sides are void. Whole-match games handicaps and totals are void on retirement. A walkover voids all three markets."],
   ["Source", "The record was first compiled from saved scans up to 21 November 2026 at 10:15 UTC. Later entries use the same rules as new scans arrive."],
