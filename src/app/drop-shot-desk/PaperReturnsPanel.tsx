@@ -126,7 +126,7 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
   circuit:string; day:string; since:string; through:string;
   lifetime:PaperSlice|null; months:{key:string;slice:PaperSlice}[]; dayView:PaperDay;
 }) {
-  const [localPeriod,setLocalPeriod] = useState<Period>(lifetime ? "life" : months.length ? "month" : "day");
+  const [localPeriod,setLocalPeriod] = useState<Period>("rolling");
   const record = useSearchParams().get("record");
   const period = record==="30d" || record==="sent30" ? "rolling" : localPeriod;
   function changeRecord(value:string|null) {
@@ -136,7 +136,7 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
     window.history.replaceState(null,"",url.href);
   }
   function setPeriod(next:Period) {
-    if(next==="rolling") changeRecord(record==="sent30" ? "sent30" : "30d");
+    if(next==="rolling") changeRecord(record==="30d" ? "30d" : "sent30");
     else {setLocalPeriod(next);changeRecord(null);}
   }
   const [monthKey,setMonthKey] = useState(() => (months.find(m=>m.key===day.slice(0,7)) ?? months[0])?.key ?? "");
@@ -176,11 +176,11 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
     <header className={css.head}>
       <div className={css.title}>
         <h2 id="paper-return-title">{circuit} paper record</h2>
-        <p>{circuit==="ATP" ? "ATP and Challenger" : "WTA and WTA 125"} · every pre-match move ≥4&nbsp;pp</p>
+        <p>{circuit==="ATP" ? "ATP and Challenger" : "WTA and WTA 125"} · {period==="rolling" && record!=="30d" ? "Telegram alerts, last 30 days" : "every pre-match move ≥4 pp"}</p>
       </div>
       <div className={css.controls}>
         <div className={css.seg} role="group" aria-label="Period of the paper record" onKeyDown={arrows}>
-          {tab("life","Lifetime",!lifetime)}{tab("rolling","30 days")}{tab("month","Month",!months.length)}{tab("day","Day")}
+          {tab("rolling","30 days")}{tab("life","Lifetime",!lifetime)}{tab("month","Month",!months.length)}{tab("day","Day")}
         </div>
         {period==="month" && months.length>1 && <label className={css.pick}><span>Month</span>
           <select value={month?.key ?? ""} onChange={e=>setMonthKey(e.target.value)}>
@@ -189,7 +189,7 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
       </div>
     </header>
 
-    {period==="rolling" ? <RollingRecord key={circuit} circuit={circuit} sent={record==="sent30"}
+    {period==="rolling" ? <RollingRecord key={circuit} circuit={circuit} sent={record!=="30d"}
       onScope={v=>changeRecord(v?"sent30":"30d")} metrics={r=><><Score r={r}/><Breakdown r={r}/></>} /> : <>
     <div className={css.when}>
       <p className={css.span} aria-live="polite"><b>{name}</b>{range && " · "+range}</p>
