@@ -34,7 +34,8 @@ for attempt in $(seq 1 "${max_attempts}"); do
       exit 1
     fi
     merge_tree="${merge_result%%$'\n'*}"
-    publish_head="$(git log -1 --format=%B | git commit-tree "${merge_tree}" -p "${remote_head}")"
+    # Keep the runner commit as a parent so a later receipt builds on its published claim.
+    publish_head="$(git log -1 --format=%B | git commit-tree "${merge_tree}" -p "${remote_head}" -p HEAD)"
   fi
   if git push "${remote}" "${publish_head}:${branch}"; then
     echo "Safe push completed."

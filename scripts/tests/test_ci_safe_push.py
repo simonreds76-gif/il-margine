@@ -40,7 +40,10 @@ class CiSafePushTests(unittest.TestCase):
     def test_overlapping_conflict_leaves_remote_unchanged(self) -> None:
         self.check_concurrent_push(conflict=True)
 
-    def check_concurrent_push(self, *, crlf=False, conflict=False) -> None:
+    def test_followup_receipt_after_concurrent_evidence_publication(self) -> None:
+        self.check_concurrent_push(followup=True)
+
+    def check_concurrent_push(self, *, crlf=False, conflict=False, followup=False) -> None:
         bash = shutil.which("bash")
         if bash is None:
             git_bash = Path(r"C:\Program Files\Git\bin\bash.exe")
@@ -74,7 +77,11 @@ class CiSafePushTests(unittest.TestCase):
             run("git", "remote", "add", "origin", str(remote), cwd=seed)
             run("git", "push", "-u", "origin", BRANCH, cwd=seed)
 
-            run("git", "clone", "--branch", BRANCH, str(remote), str(runner), cwd=root)
+            if followup:
+                # Actions checks out the publishing branch at depth one.
+                run("git", "clone", "--depth", "1", "--branch", BRANCH, remote.as_uri(), str(runner), cwd=root)
+            else:
+                run("git", "clone", "--branch", BRANCH, str(remote), str(runner), cwd=root)
             run("git", "clone", "--branch", BRANCH, str(remote), str(writer), cwd=root)
             configure(runner)
             configure(writer)
@@ -110,6 +117,15 @@ class CiSafePushTests(unittest.TestCase):
                 self.assertEqual((runner / "leftover.txt").read_text(), "must survive\n")
                 return
             result = run(bash, str(helper_copy), BRANCH, "origin", cwd=runner, env=env)
+            if followup:
+                # The runner records delivery in the same file it just published as claimed.
+                (runner / "evidence.txt").write_text("delivery acknowledged\n", encoding="utf-8")
+                run("git", "add", "evidence.txt", cwd=runner)
+                run("git", "commit", "-m", "delivery receipt", cwd=runner)
+                run(bash, str(helper_copy), BRANCH, "origin", cwd=runner, env=env)
+                first = run("git", "--git-dir", str(remote), "rev-parse", BRANCH, cwd=root).stdout
+                run(bash, str(helper_copy), BRANCH, "origin", cwd=runner, env=env)
+                self.assertEqual(first, run("git", "--git-dir", str(remote), "rev-parse", BRANCH, cwd=root).stdout)
             if crlf:
                 blob = subprocess.check_output(["git", "--git-dir", str(remote), "show", f"{BRANCH}:archive.csv"])
                 self.assertEqual(blob, b"a,b\r\n1,2\r\n")
@@ -119,7 +135,7 @@ class CiSafePushTests(unittest.TestCase):
             self.assertTrue((runner / "untracked.json").exists())
             self.assertEqual(
                 run("git", "--git-dir", str(remote), "show", f"{BRANCH}:evidence.txt", cwd=root).stdout,
-                "new evidence\n",
+                "delivery acknowledged\n" if followup else "new evidence\n",
             )
             self.assertEqual(
                 run("git", "--git-dir", str(remote), "show", f"{BRANCH}:concurrent.txt", cwd=root).stdout,
