@@ -201,11 +201,19 @@
     "5749742": "2026-11-15",
     "5868132": "2026-11-21",
     "5881226": "2026-11-21",
-    "5802999": "2026-11-21"
+    "5802999": "2026-11-21",
+    "5795522": "2026-11-21",
+    "5749753": "2026-11-21",
+    "5749755": "2026-11-21"
   },
-  "updated_at": "2026-11-21T00:56:08.595426+00:00",
-  "checked_this_run": 0,
-  "errors": [],
+  "updated_at": "2026-11-21T17:26:29.846423+00:00",
+  "checked_this_run": 4,
+  "errors": [
+    {
+      "match_id": "5868131",
+      "reason": "unresolved_player_timeline"
+    }
+  ],
   "fixtures": {
     "5749700": {
       "league": "serie-a",
@@ -9871,31 +9879,46 @@
         "id": 5795522,
         "home": {
           "id": 8456,
-          "score": 0,
+          "score": 1,
           "name": "Manchester City",
           "shortName": "Man City"
         },
         "away": {
           "id": 9879,
-          "score": 0,
+          "score": 1,
           "name": "Fulham",
           "shortName": "Fulham"
         },
         "status": {
-          "utcTime": "2026-11-21T12:30:00.000Z",
+          "utcTime": "2026-11-21T12:30:00+00:00",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 13:30:00"
+            "firstHalfStarted": "21.11.2026 13:30:35",
+            "secondHalfStarted": "21.11.2026 14:33:16"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "1 - 1",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-11-21T00:47:24.645440+00:00",
-      "pending_since": "2026-11-21T00:47:24.645440+00:00"
+      "pending_since": "2026-11-21T00:47:24.645440+00:00",
+      "last_attempt": "2026-11-21T17:26:29.846423+00:00",
+      "attempts": 1,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-21T17:26:29.846423+00:00",
+      "penalty_count": 0,
+      "next_attempt": ""
     },
     "5795515": {
       "league": "epl",
@@ -9904,7 +9927,7 @@
         "id": 5795515,
         "home": {
           "id": 8678,
-          "score": 0,
+          "score": 2,
           "name": "AFC Bournemouth",
           "shortName": "Bournemouth"
         },
@@ -9917,12 +9940,21 @@
         "status": {
           "utcTime": "2026-11-21T15:00:00.000Z",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 16:00:00"
+            "firstHalfStarted": "21.11.2026 16:00:11",
+            "secondHalfStarted": "21.11.2026 17:03:56"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "2 - 0",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
@@ -9948,12 +9980,21 @@
         "status": {
           "utcTime": "2026-11-21T15:00:00.000Z",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 16:00:00"
+            "firstHalfStarted": "21.11.2026 16:00:35",
+            "secondHalfStarted": "21.11.2026 17:02:41"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "0 - 0",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
@@ -9968,24 +10009,33 @@
         "id": 5795518,
         "home": {
           "id": 8455,
-          "score": 0,
+          "score": 1,
           "name": "Chelsea"
         },
         "away": {
           "id": 8463,
-          "score": 0,
+          "score": 4,
           "name": "Leeds United",
           "shortName": "Leeds"
         },
         "status": {
           "utcTime": "2026-11-21T15:00:00.000Z",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 16:00:00"
+            "firstHalfStarted": "21.11.2026 16:00:34",
+            "secondHalfStarted": "21.11.2026 17:07:07"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "1 - 4",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
@@ -10000,24 +10050,33 @@
         "id": 5795519,
         "home": {
           "id": 8669,
-          "score": 0,
+          "score": 3,
           "name": "Coventry City",
           "shortName": "Coventry"
         },
         "away": {
           "id": 9826,
-          "score": 0,
+          "score": 2,
           "name": "Crystal Palace"
         },
         "status": {
           "utcTime": "2026-11-21T15:00:00.000Z",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 16:00:00"
+            "firstHalfStarted": "21.11.2026 16:00:23",
+            "secondHalfStarted": "21.11.2026 17:07:23"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "3 - 2",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
@@ -10032,7 +10091,7 @@
         "id": 5795524,
         "home": {
           "id": 8586,
-          "score": 0,
+          "score": 2,
           "name": "Tottenham Hotspur",
           "shortName": "Tottenham"
         },
@@ -10045,12 +10104,21 @@
         "status": {
           "utcTime": "2026-11-21T15:00:00.000Z",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 16:00:00"
+            "firstHalfStarted": "21.11.2026 16:01:09",
+            "secondHalfStarted": "21.11.2026 17:03:50"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "2 - 0",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
@@ -10097,29 +10165,42 @@
         "id": 5868131,
         "home": {
           "id": 9866,
-          "score": 0,
+          "score": 3,
           "name": "Deportivo Alavés"
         },
         "away": {
           "id": 9783,
-          "score": 0,
+          "score": 1,
           "name": "Deportivo A Coruña"
         },
         "status": {
-          "utcTime": "2026-11-21T13:00:00.000Z",
+          "utcTime": "2026-11-21T13:00:00+00:00",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 14:00:00"
+            "firstHalfStarted": "21.11.2026 14:00:38",
+            "secondHalfStarted": "21.11.2026 15:04:15"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "3 - 1",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
       "state": "pending",
       "first_seen": "2026-11-21T00:47:24.645440+00:00",
-      "pending_since": "2026-11-21T00:47:24.645440+00:00"
+      "pending_since": "2026-11-21T00:47:24.645440+00:00",
+      "last_attempt": "2026-11-21T17:26:29.846423+00:00",
+      "attempts": 1,
+      "reason": "unresolved_player_timeline",
+      "next_attempt": "2026-11-21T18:26:29.846423+00:00"
     },
     "5868138": {
       "league": "la-liga",
@@ -10133,18 +10214,27 @@
         },
         "away": {
           "id": 10267,
-          "score": 0,
+          "score": 1,
           "name": "Valencia"
         },
         "status": {
           "utcTime": "2026-11-21T15:15:00.000Z",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 16:15:00"
+            "firstHalfStarted": "21.11.2026 16:17:20",
+            "secondHalfStarted": "21.11.2026 17:20:18"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "0 - 1",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
@@ -10221,7 +10311,7 @@
         "id": 5749753,
         "home": {
           "id": 10171,
-          "score": 0,
+          "score": 2,
           "name": "Como"
         },
         "away": {
@@ -10230,20 +10320,35 @@
           "name": "Cagliari"
         },
         "status": {
-          "utcTime": "2026-11-21T14:00:00.000Z",
+          "utcTime": "2026-11-21T14:00:00+00:00",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 15:00:00"
+            "firstHalfStarted": "21.11.2026 15:02:44",
+            "secondHalfStarted": "21.11.2026 16:07:27"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "2 - 0",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-11-21T00:47:24.645440+00:00",
-      "pending_since": "2026-11-21T00:47:24.645440+00:00"
+      "pending_since": "2026-11-21T00:47:24.645440+00:00",
+      "last_attempt": "2026-11-21T17:26:29.846423+00:00",
+      "attempts": 1,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-21T17:26:29.846423+00:00",
+      "penalty_count": 0,
+      "next_attempt": ""
     },
     "5749755": {
       "league": "serie-a",
@@ -10252,7 +10357,7 @@
         "id": 5749755,
         "home": {
           "id": 8543,
-          "score": 0,
+          "score": 3,
           "name": "Lazio"
         },
         "away": {
@@ -10261,20 +10366,35 @@
           "name": "Lecce"
         },
         "status": {
-          "utcTime": "2026-11-21T14:00:00.000Z",
+          "utcTime": "2026-11-21T14:00:00+00:00",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 15:00:00"
+            "firstHalfStarted": "21.11.2026 15:00:54",
+            "secondHalfStarted": "21.11.2026 16:02:12"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "3 - 0",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
-      "state": "pending",
+      "state": "verified",
       "first_seen": "2026-11-21T00:47:24.645440+00:00",
-      "pending_since": "2026-11-21T00:47:24.645440+00:00"
+      "pending_since": "2026-11-21T00:47:24.645440+00:00",
+      "last_attempt": "2026-11-21T17:26:29.846423+00:00",
+      "attempts": 1,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-21T17:26:29.846423+00:00",
+      "penalty_count": 0,
+      "next_attempt": ""
     },
     "5749758": {
       "league": "serie-a",
@@ -10295,12 +10415,23 @@
         "status": {
           "utcTime": "2026-11-21T17:00:00.000Z",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 18:00:00"
+            "firstHalfStarted": "21.11.2026 18:00:15"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": false,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "ongoing": true,
+          "scoreStr": "0 - 0",
+          "liveTime": {
+            "short": "27‎’‎",
+            "shortKey": "",
+            "long": "26:15",
+            "longKey": "",
+            "maxTime": 45,
+            "basePeriod": 45,
+            "addedTime": 0
+          }
         }
       },
       "date": "2026-11-21",
@@ -10346,7 +10477,7 @@
         "id": 5881225,
         "home": {
           "id": 8178,
-          "score": 0,
+          "score": 4,
           "name": "Bayer Leverkusen",
           "shortName": "Leverkusen"
         },
@@ -10359,12 +10490,21 @@
         "status": {
           "utcTime": "2026-11-21T14:30:00.000Z",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 15:30:00"
+            "firstHalfStarted": "21.11.2026 15:30:09",
+            "secondHalfStarted": "21.11.2026 16:33:50"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "4 - 0",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
@@ -10385,19 +10525,28 @@
         },
         "away": {
           "id": 9789,
-          "score": 0,
+          "score": 1,
           "name": "Borussia Dortmund",
           "shortName": "Dortmund"
         },
         "status": {
           "utcTime": "2026-11-21T14:30:00.000Z",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 15:30:00"
+            "firstHalfStarted": "21.11.2026 15:30:16",
+            "secondHalfStarted": "21.11.2026 16:33:32"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "0 - 1",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
@@ -10412,7 +10561,7 @@
         "id": 5881228,
         "home": {
           "id": 9810,
-          "score": 0,
+          "score": 1,
           "name": "Eintracht Frankfurt",
           "shortName": "Frankfurt"
         },
@@ -10420,17 +10569,28 @@
           "id": 8226,
           "score": 0,
           "name": "Hoffenheim",
+          "redCards": 1,
           "shortName": "Hoffenheim"
         },
         "status": {
           "utcTime": "2026-11-21T14:30:00.000Z",
+          "numberOfAwayRedCards": 1,
           "halfs": {
-            "firstHalfStarted": "21.11.2026 15:30:00"
+            "firstHalfStarted": "21.11.2026 15:30:08",
+            "secondHalfStarted": "21.11.2026 16:34:42"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "1 - 0",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
@@ -10450,19 +10610,28 @@
         },
         "away": {
           "id": 8358,
-          "score": 0,
+          "score": 1,
           "name": "Freiburg",
           "shortName": "Freiburg"
         },
         "status": {
           "utcTime": "2026-11-21T14:30:00.000Z",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 15:30:00"
+            "firstHalfStarted": "21.11.2026 15:30:29",
+            "secondHalfStarted": "21.11.2026 16:33:59"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "0 - 1",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
@@ -10477,25 +10646,34 @@
         "id": 5881231,
         "home": {
           "id": 8149,
-          "score": 0,
+          "score": 1,
           "name": "Union Berlin",
           "shortName": "Union Berlin"
         },
         "away": {
           "id": 178475,
-          "score": 0,
+          "score": 5,
           "name": "RB Leipzig",
           "shortName": "RB Leipzig"
         },
         "status": {
           "utcTime": "2026-11-21T14:30:00.000Z",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 15:30:00"
+            "firstHalfStarted": "21.11.2026 15:30:11",
+            "secondHalfStarted": "21.11.2026 16:37:14"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": true,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "awarded": false,
+          "scoreStr": "1 - 5",
+          "reason": {
+            "short": "FT",
+            "shortKey": "fulltime_short",
+            "long": "Full-Time",
+            "longKey": "finished"
+          }
         }
       },
       "date": "2026-11-21",
@@ -10542,24 +10720,35 @@
         "id": 5802996,
         "home": {
           "id": 9831,
-          "score": 0,
+          "score": 1,
           "name": "Nice"
         },
         "away": {
           "id": 9847,
-          "score": 0,
+          "score": 2,
           "name": "Paris Saint-Germain",
           "shortName": "PSG"
         },
         "status": {
           "utcTime": "2026-11-21T16:15:00.000Z",
           "halfs": {
-            "firstHalfStarted": "21.11.2026 17:15:00"
+            "firstHalfStarted": "21.11.2026 17:15:40"
           },
           "periodLength": 45,
-          "started": false,
+          "finished": false,
+          "started": true,
           "cancelled": false,
-          "finished": false
+          "ongoing": true,
+          "scoreStr": "1 - 2",
+          "liveTime": {
+            "short": "HT",
+            "shortKey": "halftime_short",
+            "long": "Half-Time",
+            "longKey": "pause_match",
+            "maxTime": 45,
+            "basePeriod": 45,
+            "addedTime": 0
+          }
         }
       },
       "date": "2026-11-21",
@@ -11116,7 +11305,7 @@
     },
     "20261115": {
       "ok": true,
-      "checked_at": "2026-11-20T01:14:41.324805+00:00",
+      "checked_at": "2026-11-21T17:26:29.846423+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -11151,7 +11340,7 @@
     },
     "20261120": {
       "ok": true,
-      "checked_at": "2026-11-21T00:56:08.595426+00:00",
+      "checked_at": "2026-11-21T17:26:29.846423+00:00",
       "expected": 3,
       "match_ids": [
         "5802999",
@@ -11162,7 +11351,7 @@
     },
     "20261121": {
       "ok": true,
-      "checked_at": "2026-11-21T00:56:08.595426+00:00",
+      "checked_at": "2026-11-21T17:26:29.846423+00:00",
       "expected": 26,
       "match_ids": [
         "5749753",
@@ -11197,8 +11386,8 @@
   },
   "coverage": {
     "expected": 228,
-    "verified": 202,
-    "pending": 26,
+    "verified": 205,
+    "pending": 23,
     "reverify": 0,
     "deferred": 0,
     "overdue": 0,

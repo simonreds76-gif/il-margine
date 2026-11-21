@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-21T16:24:03Z",
+  "generated_at": "2026-11-21T17:26:29.846423+00:00",
   "league": "la-liga",
   "row_count": 1,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2999118221",
           "match_id": "5868131",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868131",
-          "observed_at": "2026-11-21T16:24:01+00:00",
+          "observed_at": "2026-11-21T17:26:32+00:00",
           "event_date": "2026-11-21",
           "season": "2026/27",
           "team": "Deportivo Alavés",
@@ -85,5 +85,13 @@
       "20261121"
     ],
     "matches_checked": 3
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261121"
+    ],
+    "matches_checked": 1
   }
 }
