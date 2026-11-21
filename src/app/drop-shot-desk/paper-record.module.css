@@ -73,6 +73,10 @@
 .score dt{grid-area:label;align-self:end}
 .fig{grid-area:fig;justify-self:end;font-size:clamp(1.75rem,9vw,2.5rem);font-weight:750;letter-spacing:-.04em;line-height:1;color:var(--pr-ink);white-space:nowrap}
 .unit{margin-left:.08em;font-size:.5em;font-weight:650;letter-spacing:0}
+@media (max-width:639px){
+  .score .fig .unit{display:inline-block;inline-size:1.1em;text-align:start}
+}
+.unitSpacer{display:none}
 .sub{grid-area:sub;align-self:start;margin-top:.15rem;font-size:.8125rem;line-height:1.4;color:var(--pr-soft)}
 .sub b{font-weight:650;color:var(--pr-text)}
 .score [data-tone=won] .fig,.ref [data-tone=won] dd{color:var(--pr-mint)}

@@ -46,6 +46,7 @@ function asOf(through:string) {
 const KINDS = [["won","Won"],["halfWon","Half-won"],["pushes","Pushes"],["voids","Voids"],["pending","Pending"],["halfLost","Half-lost"],["lost","Lost"]] as const;
 
 const Dash = () => <><span aria-hidden="true">—</span><span className={css.vh}>not available</span></>;
+const UnitSpace = () => <span className={`${css.unit} ${css.unitSpacer}`} aria-hidden="true" />;
 
 /** The scoreline. Net and ROI are the supplied figures; without settled stake there is no return to state, so both show a dash. */
 function Score({r}:{r:Result}) {
@@ -53,17 +54,17 @@ function Score({r}:{r:Result}) {
   return <dl className={css.score}>
     <div data-tone={settled ? tone(r.net) : undefined}>
       <dt>Net paper P/L</dt>
-      <dd className={css.fig}>{settled ? <>{signed(r.net)}<span className={css.unit}>u</span></> : <Dash />}</dd>
+      <dd className={css.fig}>{settled ? <>{signed(r.net)}<span className={css.unit}>u</span></> : <><Dash /><UnitSpace /></>}</dd>
       <dd className={css.sub}><b>{plain(r.stake)}u</b> settled · 1u per entry</dd>
     </div>
     <div data-tone={tone(r.roi)}>
       <dt>Settled ROI</dt>
-      <dd className={css.fig}>{settled ? <>{signed(r.roi as number)}<span className={css.unit}>%</span></> : <Dash />}</dd>
+      <dd className={css.fig}>{settled ? <>{signed(r.roi as number)}<span className={css.unit}>%</span></> : <><Dash /><UnitSpace /></>}</dd>
       <dd className={css.sub}>{settled ? "Net ÷ settled stake" : "Nothing settled yet"}</dd>
     </div>
     <div>
       <dt>Won–lost</dt>
-      <dd className={css.fig}><span aria-hidden="true">{r.won}–{r.lost}</span><span className={css.vh}>{r.won} won, {r.lost} lost</span></dd>
+      <dd className={css.fig}><span aria-hidden="true">{r.won}–{r.lost}</span><UnitSpace /><span className={css.vh}>{r.won} won, {r.lost} lost</span></dd>
       <dd className={css.sub}><b>{count(r.entries,"entry","entries")}</b> · {r.pending ? r.pending+" pending" : "none pending"}</dd>
     </div>
   </dl>;
@@ -154,7 +155,7 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
     <header className={css.head}>
       <div className={css.title}>
         <h2 id="paper-return-title">{circuit} paper record</h2>
-        <p>{circuit==="ATP" ? "ATP and Challenger" : "WTA and WTA 125"} · every pre-match move ≥4 pp</p>
+        <p>{circuit==="ATP" ? "ATP and Challenger" : "WTA and WTA 125"} · every pre-match move ≥4&nbsp;pp</p>
       </div>
       <div className={css.controls}>
         <div className={css.seg} role="group" aria-label="Period of the paper record" onKeyDown={arrows}>
@@ -183,7 +184,7 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
 
     <div className={css.folds}>
       {slice?.late4 && <details className={css.fold}>
-        <summary><span>Final hour ≥4 pp<small>timing reference</small></span></summary>
+        <summary><span>Final hour ≥4&nbsp;pp<small>timing reference</small></span></summary>
         <div className={css.foldBody}>
           <RefRow label={"Final hour ≥4 pp · "+name} r={slice.late4} />
           <p className={css.fine}>These moves overlap the record above, sometimes at different odds. Read the two side by side and never add them.</p>

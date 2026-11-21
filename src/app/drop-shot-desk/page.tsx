@@ -63,7 +63,7 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
             <span className={styles.wl}><b>{s.wins}</b> won · <b>{s.losses}</b> lost · <b>{s.voids}</b> void</span>
             <span className={styles.net} data-tone={s.net_units>0?"won":s.net_units<0?"lost":undefined}><b>{signed(s.net_units)}u</b> on {s.settled_stake}u settled · <b>{signed(s.roi_pct)}%</b> replay ROI · {moves.length} {moves.length===1?"move":"moves"}</span>
           </p>
-          <p className={styles.fine}>This replay tracked match winners in the final two hours before play. Each settled selection uses 1u at the odds recorded when the move was detected. The daily board has its own rules and paper record.</p>
+          <p className={styles.fine}>The old rule tracked match winners whose margin-adjusted probability rose by at least 3 percentage points in the final two hours. Each settled selection uses 1u at the odds recorded when the move was detected. The daily paper record starts separately.</p>
         </section>
         <Board moves={fullBoard ? moves : moves.map(publicMove)} fixtures={[]} archive venues={venuesFor(moves)}/></>;
     } else {
@@ -100,7 +100,7 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
     <div className={styles.topline}><Link className={styles.back} href="/tennis-matchday">← Tennis Matchday</Link><span className={styles.lab}>Unlisted pilot</span></div>
     <header className={styles.mast}>
       <div className={styles.brand}><Image src={brand} unoptimized alt="" width={66} height={36} priority/><div><p className={styles.kicker}>Tennis odds moves</p><h1>Drop Shot Desk</h1></div></div>
-      <nav aria-label="Price history" className={styles.tabs}><Link aria-current={!archive?"page":undefined} href={dailyUrl(circuit)}><DeskIcon name="drop"/>Daily moves</Link><Link aria-current={archive?"page":undefined} href={route+"?view=archive&tour=atp&day="+day}><DeskIcon name="replay"/>Historical replay{circuit==="WTA"?" (ATP only)":""}</Link></nav>
+      {archive && <Link className={styles.back} href={dailyUrl(circuit,today)}>← Back to today’s moves</Link>}
     </header>
     <nav className={styles.circuit} aria-label="Tennis tour">
       {(["ATP","WTA"] as const).map(tour=><Link key={tour} prefetch={false} aria-current={circuit===tour?"page":undefined}
@@ -115,5 +115,11 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
       <p className={styles.fine}>Telegram flags the first rise of more than four percentage points in price-implied probability on the same selection and line. A move from 2.00 to 1.85 is a rise from 50% to 54.1%. It can happen at any time before the scheduled start. The alert shows the market limit at both observations, including low limits in qualifying and early rounds. A missing limit is labelled. A break in capture starts a fresh comparison. Moves detected in the final hour carry a timing label.</p>
       <p className={styles.fine}>The market limit is the maximum reported when we checked the odds. The amount actually wagered is unknown. Paper returns use the recorded odds at detection.</p>
     </details>
-    {content}</main>;
+    {content}
+    {!archive && <details className={styles.fold}>
+      <summary>Historical replay · October–November 2026</summary>
+      <p className={styles.fine}>The original ATP and Challenger study found seven qualifying moves across 852 comparable fixtures. It used the old 3-point rule. Daily paper returns and Telegram results are tracked separately.</p>
+      <Link prefetch={false} className={styles.back} href={route+"?view=archive&tour=atp&day="+day}>View the seven replayed moves →</Link>
+    </details>}
+  </main>;
 }
