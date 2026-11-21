@@ -2,7 +2,8 @@ import sys
 import unittest
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from desk_paper_returns import advance_paper, summary
+from desk_paper_returns import advance_paper, apply_retirement_review, summary
+from datetime import datetime, timezone
 
 
 def scan(stamp, price=2, start="16:00", live=False, events=True, contracts=None):
@@ -14,6 +15,19 @@ def scan(stamp, price=2, start="16:00", live=False, events=True, contracts=None)
 
 
 class PaperReturnsTest(unittest.TestCase):
+    def test_historical_retirement_correction_is_idempotent_at_original_odds(self):
+        t = {"market":"winner","new":1.806,"after":"2026-11-20T12:15:00Z","start":"2026-11-21T07:00:00Z",
+             "binding":[2,10,200,201],"league":"ATP Challenger Sydney - SF","result":"Void","stake":0,"profit":0}
+        item = {"id":"abc","binding":t["binding"],"odds":1.806,"detected":t["after"],"evidence_sha256":"abc123",
+                "official_result":{"tour_id":2,"round_id":10,"winner_id":200,"loser_id":201,"date":"2026-11-21","result":"6-2 3-0 RET"}}
+        ledger={"tickets":{"abc":t}}
+        now=datetime(2026,11,21,11,tzinfo=timezone.utc)
+        for _ in range(2):
+            apply_retirement_review(ledger,[item],now)
+            self.assertEqual((t["result"],t["stake"],round(t["profit"],3)),("Won",1,.806))
+        with self.assertRaises(ValueError):
+            apply_retirement_review(ledger,[dict(item, odds=2)],now)
+
     def test_limit_belongs_to_the_detection_odds_and_never_carries_forward(self):
         s = {}
         for time, price, limit in (("12:00",2,900),("12:15",1.85,350),("12:30",1.82,None)):

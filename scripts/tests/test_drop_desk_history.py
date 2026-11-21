@@ -42,10 +42,36 @@ class DeskTests(unittest.TestCase):
 
     def test_void_incomplete_and_set_counts(self):
         self.assertEqual(history.outcome(self.t,[{**self.r,"result":"W/O"}],[],self.now)["result"],"Void")
-        for score in ("6-1 2-0 ret.","6-0","6-2 6-3 0-6 6-1","6-4 5-2"):
+        for score in ("6-0","6-2 6-3 0-6 6-1","6-4 5-2","ret.","5-4 2-0 RET"):
             self.assertIsNone(history.outcome(self.t,[{**self.r,"result":score}],[],self.now))
         self.assertFalse(history.completed_score("6-4 6-4",3))
         self.assertTrue(history.completed_score("6-4 6-4 6-4",3))
+
+    def test_retirement_set_and_official_winner_including_disqualification(self):
+        for score in ("6-2 3-0 RET","4-6 0-1 ret.","7-6(4) DEF.","6-7(5) 3-0 disqualified"):
+            row = {**self.r, "result":score}
+            self.assertEqual(history.outcome(self.t,[row],[],self.now)["result"],"Lost")
+            self.assertEqual(history.outcome({**self.t,"binding":[1,5,8,7]},[row],[],self.now)["result"],"Won")
+            for market in ("spreads","totals"):
+                self.assertEqual(history.outcome({**self.t,"market":market},[row],[],self.now)["settled_stake"],0)
+        for score in ("6-5 RET","6-6 RET","0-0 ret.","5-4 defaulted"):
+            self.assertEqual(history.outcome(self.t,[{**self.r,"result":score}],[],self.now)["result"],"Void")
+        self.assertIsNone(history.outcome(self.t,[{**self.r,"result":"8-1 RET"}],[],self.now))
+        self.assertEqual(history.retirement_grade({"league":"ATP Next Gen Finals"},"3-4 2-1 RET",True)["result"],"Won")
+
+    def test_wta_retirement_with_missing_or_partial_sets(self):
+        t={**self.t,"tour":"WTA","league":"WTA Colina - SF","market":"winner"}
+        game={"id":"79","date":t["start"],"venue":{"fullName":"Colina, Chile"},"round":{"displayName":"Semifinal"},
+              "status":{"type":{"state":"post","name":"STATUS_RETIRED","completed":True}}}
+        def result(first,second,winner=True):
+            game["competitors"]=[{"id":str(i),"winner":won,"athlete":{"displayName":name},
+                                  "linescores":[{"value":n} for n in values]}
+                                 for i,(won,name,values) in enumerate(((winner,t["player"],first),(False,t["opponent"],second)))]
+            return history.wta_result(t,[{"id":"1","groupings":[{"grouping":{"slug":"womens-singles"},"competitions":[game]}]}])
+        self.assertEqual(result([2,0,0],[6,2,0])[1]["result"],"Won")
+        self.assertEqual(result([5],[3])[1]["result"],"Void")
+        self.assertIsNone(result([],[]))
+        self.assertIsNone(result([6],[1],winner=False))
 
     def test_tape_keeps_rebounds_and_unchanged_prices_and_orientation(self):
         tape = {"slots":{},"series":{}}
