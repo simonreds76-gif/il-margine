@@ -9,6 +9,7 @@ import { hostOf, venueKey } from "./DeskParts";
 import type { VenueMap } from "./DeskParts";
 import { readArchive, readDay } from "./reader";
 import styles from "./board.module.css";
+import { TourSwitch } from "./TourSwitch";
 import { PaperReturns } from "./PaperReturns";
 import { countryForTournament } from "@/lib/tennis-tournament-country.mjs";
 
@@ -102,13 +103,7 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
       <div className={styles.brand}><Image src={brand} unoptimized alt="" width={66} height={36} priority/><div><p className={styles.kicker}>Tennis odds moves</p><h1>Drop Shot Desk</h1></div></div>
       {archive && <Link className={styles.back} href={dailyUrl(circuit,today)}>← Back to today’s moves</Link>}
     </header>
-    <nav className={styles.circuit} aria-label="Tennis tour">
-      {(["ATP","WTA"] as const).map(tour=><Link key={tour} prefetch={false} aria-current={circuit===tour?"page":undefined}
-        href={archive && tour==="ATP" ? route+"?view=archive&tour=atp&day="+day : dailyUrl(tour)}>
-        <span className={styles.tourBadge} data-tour={tour}><Image unoptimized width={58} height={24} src={tour==="ATP"?"/icons/drop-shot-desk/atp-tour.png":"/icons/drop-shot-desk/wta-tour.svg"} alt={tour}/></span>
-        <small>{tour==="ATP"?"incl. Challenger":"incl. WTA 125"}</small>
-      </Link>)}
-    </nav>
+    <TourSwitch circuit={circuit} day={day} archive={archive}/>
     <p className={styles.standfirst}>Follow big odds moves before the first serve. We check {circuit==="ATP"?"ATP and Challenger":"WTA Tour and WTA 125"} odds about every 15 minutes and show which players, game totals and games handicaps are shortening. Each chart shows how the odds and the reported market limit changed before play.</p>
     <details className={styles.fold}>
       <summary>What triggers an alert?</summary>

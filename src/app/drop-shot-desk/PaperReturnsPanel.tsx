@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, type KeyboardEvent } from "react";
+import { useSearchParams } from "next/navigation";
+import RollingRecord from "./RollingRecord";
 import css from "./paper-record.module.css";
 
 export type Result = {
@@ -13,7 +15,7 @@ export type PaperSlice = { all4:Result; late4:Result|null };
 export type PaperDay =
   | { state:"ok"; through:string; all4:Result; late4:Result|null; all45:Result|null; late45:Result|null }
   | { state:"early"|"awaiting"|"none" };
-type Period = "life"|"month"|"day";
+type Period = "life"|"rolling"|"month"|"day";
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 // Figures are printed as supplied, to two places. Only the glyphs change: a true minus, and no sign on a zero.
@@ -104,7 +106,7 @@ function RefRow({label,r}:{label:string;r:Result}) {
 
 const RULES:[string,string][] = [
   ["≥4 pp", "A rise of at least 4 percentage points in implied probability, seen before the match starts."],
-  ["Independent record", "Every pre-match move that large is entered, thin low-limit moves included, whether or not an alert was sent. Delivered Telegram alerts have their own record below."],
+  ["Independent record", "Every pre-match move that large is entered, thin low-limit moves included, whether or not an alert was sent. In the 30-day view, choose Sent on Telegram to see confirmed alerts at their sent odds."],
   ["One entry, 1u", "Each entry records 1u at the first qualifying odds for a match, market, line and side. A repeat drop on that same side and line adds no stake. A move on the other player, or a different handicap, can count separately, so one fixture can drive several wins or losses."],
   ["Net and ROI", "ROI is net result over settled stake across the whole period, so it is weighted by stake and is not an average of daily figures. Pending entries carry no result yet. With no settled stake, net and ROI show a dash."],
   ["Final hour", "A timing reference. Both observations must fall inside the final hour, and the same move can also sit in the main record at different odds, so adding the two would double-count."],
@@ -117,7 +119,19 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
   circuit:string; day:string; since:string; through:string;
   lifetime:PaperSlice|null; months:{key:string;slice:PaperSlice}[]; dayView:PaperDay;
 }) {
-  const [period,setPeriod] = useState<Period>(lifetime ? "life" : months.length ? "month" : "day");
+  const [localPeriod,setLocalPeriod] = useState<Period>(lifetime ? "life" : months.length ? "month" : "day");
+  const record = useSearchParams().get("record");
+  const period = record==="30d" || record==="sent30" ? "rolling" : localPeriod;
+  function changeRecord(value:string|null) {
+    const url=new URL(window.location.href);
+    if(value)url.searchParams.set("record",value);
+    else url.searchParams.delete("record");
+    window.history.replaceState(null,"",url.href);
+  }
+  function setPeriod(next:Period) {
+    if(next==="rolling") changeRecord(record==="sent30" ? "sent30" : "30d");
+    else {setLocalPeriod(next);changeRecord(null);}
+  }
   const [monthKey,setMonthKey] = useState(() => (months.find(m=>m.key===day.slice(0,7)) ?? months[0])?.key ?? "");
   const month = months.find(m=>m.key===monthKey) ?? months[0];
   const slice:PaperSlice|null = period==="life" ? lifetime : period==="month" ? month?.slice ?? null : dayView.state==="ok" ? dayView : null;
@@ -159,7 +173,7 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
       </div>
       <div className={css.controls}>
         <div className={css.seg} role="group" aria-label="Period of the paper record" onKeyDown={arrows}>
-          {tab("life","Lifetime",!lifetime)}{tab("month","Month",!months.length)}{tab("day","Day")}
+          {tab("life","Lifetime",!lifetime)}{tab("rolling","30 days")}{tab("month","Month",!months.length)}{tab("day","Day")}
         </div>
         {period==="month" && months.length>1 && <label className={css.pick}><span>Month</span>
           <select value={month?.key ?? ""} onChange={e=>setMonthKey(e.target.value)}>
@@ -168,6 +182,8 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
       </div>
     </header>
 
+    {period==="rolling" ? <RollingRecord key={circuit} circuit={circuit} sent={record==="sent30"}
+      onScope={v=>changeRecord(v?"sent30":"30d")} metrics={r=><><Score r={r}/><Breakdown r={r}/></>} /> : <>
     <div className={css.when}>
       <p className={css.span} aria-live="polite"><b>{name}</b>{range && " · "+range}</p>
       {stamp && <p className={css.stamp}>Data as of <b>{asOf(stamp)}</b></p>}
@@ -182,8 +198,9 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
       Each paper entry stakes 1u (one unit) at the recorded odds, low-limit moves included. Every qualifying move counts, whether or not a Telegram alert was sent. Dates are UTC.
     </p>
 
+    </>}
     <div className={css.folds}>
-      {slice?.late4 && <details className={css.fold}>
+      {period!=="rolling" && slice?.late4 && <details className={css.fold}>
         <summary><span>Final hour ≥4&nbsp;pp<small>timing reference</small></span></summary>
         <div className={css.foldBody}>
           <RefRow label={"Final hour ≥4 pp · "+name} r={slice.late4} />
