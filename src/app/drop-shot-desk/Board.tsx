@@ -377,6 +377,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
           </div>}
           <p className={styles.railNote} id={noteId}>
             <b>pp</b> is the rise in implied probability (1 ÷ price) from the earlier odds to the observed move.
+            {!archive && <> Paper thresholds: <b>≥4 pp</b> and <b>≥4.5 pp</b>. Each rule counts the first crossing per side and line.</>}
             {!archive && <> {upcomingOnly ? "Upcoming" : "All recorded"}: {sortNote}.</>}
           </p>
         </div>
