@@ -95,7 +95,8 @@ def board_rows(board, observed):
                 explicit_live_pairs.add((str(event.get("league_name") or "").strip().casefold(), sides))
                 if event.get("event_id"): explicit_live_ids.add(str(event["event_id"]))
         league = str(event.get("league_name") or "").strip()
-        if not re.match(r"^ATP(?:\s|$)", league, re.I):
+        circuit = re.match(r"^(ATP|WTA)(?:\s|$)", league, re.I)
+        if not circuit:
             counts["other_tour"] += 1
             continue
         names = [str(event.get(side) or "").strip() for side in ("home", "away")]
@@ -121,7 +122,12 @@ def board_rows(board, observed):
             continue
         identity = [league.casefold(), *sorted(n.casefold() for n in names)]
         uid = hashlib.sha256(json.dumps(identity,ensure_ascii=False).encode()).hexdigest()[:32]
-        row = dict(id=event_id, fixture=uid, league=league, tour="Challenger" if "challenger" in league.lower() else "ATP",
+        tour = circuit[1].upper()
+        if tour == "ATP" and "challenger" in league.lower():
+            tour = "Challenger"
+        elif tour == "WTA" and re.match(r"^WTA\s+125k?\b", league, re.I):
+            tour = "WTA 125"
+        row = dict(id=event_id, fixture=uid, league=league, tour=tour,
                    home=names[0], away=names[1], home_price=prices[0], away_price=prices[1],
                    start=start.isoformat(), event_updated_at=event.get("updated_at"))
         if event_id in rows and rows[event_id] != row:
@@ -330,7 +336,7 @@ def run():
         store.put("latest.json",next_state,replace=True)
         last=next_state
     counts=Counter(v["tour"] for v in snap["events"].values())
-    print(f"Private capture {snap['observed']}: ATP {counts['ATP']}, Challenger {counts['Challenger']}.")
+    print(f"Private capture {snap['observed']}: ATP {counts['ATP']}, Challenger {counts['Challenger']}, WTA {counts['WTA']}, WTA 125 {counts['WTA 125']}.")
     if utc(snap["observed"])>=watch.START:
         key="drop-scans-v2/"+watch.object_key(snap["observed"])
         batch=store.get(key)

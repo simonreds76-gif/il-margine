@@ -61,7 +61,7 @@ def compare(last, current, state, blocked):
     """Small moves stay on the board. Alert once per exact contract side at +4pp."""
     from price_drop_watch import MAX_GAP, observe
     batch = observe(None, current)
-    batch.update(before=last.get("observed"), policy=ALERT_POLICY, alert_ids=[])
+    batch.update(before=last.get("observed"), policy=ALERT_POLICY, alert_ids=[], compared_by_circuit={"ATP": 0, "WTA": 0})
     now = datetime.fromisoformat(current["observed"])
     history = {k:v for k,v in last.get("desk_windows",{}).items() if datetime.fromisoformat(v["start"]) > now}
     # Retain issued identities across gaps, temporary withdrawals and pre-start reschedules.
@@ -98,6 +98,8 @@ def compare(last, current, state, blocked):
                 continue
             if code == "winner":
                 batch["compared_pairs"] += 1
+                circuit = "WTA" if row["tour"] in ("WTA", "WTA 125") else "ATP"
+                batch["compared_by_circuit"][circuit] += 1
             for i, price in enumerate(prices):
                 if price >= old["last"][1+i]:
                     continue
