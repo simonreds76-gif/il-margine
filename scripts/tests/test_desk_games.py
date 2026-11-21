@@ -88,23 +88,17 @@ class GamesDesk(unittest.TestCase):
         state, batch = self.scan(state,15,2.0,start=start)
         self.assertEqual({m["market"] for m in desk_games.alert_moves(batch)},{"spreads","totals"})
 
-    def test_low_missing_or_changed_limits_restart_without_consuming_alert(self):
-        for bad in (0, None, desk_games.MIN_ALERT_LIMIT_USD-1):
-            with self.subTest(bad=bad):
-                start = self.t + timedelta(hours=1)
-                state,_ = self.scan({},0,3.0,start=start)
-                state,thin = self.scan(state,15,2.7,start=start,cap=bad)
-                self.assertTrue(thin["moves"])
-                self.assertFalse(thin["alert_ids"])
-                state,raised = self.scan(state,30,2.4,start=start,cap=desk_games.MIN_ALERT_LIMIT_USD)
-                self.assertFalse(raised["alert_ids"])
-                state,deep = self.scan(state,45,2.1,start=start,cap=desk_games.MIN_ALERT_LIMIT_USD)
-                alerts = desk_games.alert_moves(deep)
-                self.assertEqual(len(alerts), 3)
-                self.assertTrue(all(m["old"] == 2.4 for m in alerts))
-                self.assertIn("Market limit:",roundup_text(alerts,deep["observed"]))
-                alerts[0]["alert_detection_limit"]["currency"]="EUR"
-                self.assertLess(len(desk_games.alert_moves(deep)),3)
+    def test_low_zero_or_unreported_limit_never_suppresses_a_move(self):
+        for cap, label in [(None,"not recorded"),(0,"$0"),(125,"$125")]:
+            with self.subTest(cap=cap):
+                start = self.t + timedelta(days=1)
+                state,_ = self.scan({},0,3.0,start=start,cap=cap)
+                state, batch = self.scan(state,15,2.5,start=start,cap=cap)
+                alerts=desk_games.alert_moves(batch)
+                self.assertEqual(len(alerts),3)
+                self.assertIn(f"Market limit: {label} → {label}",roundup_text(alerts,batch["observed"]))
+                _,again = self.scan(state,30,2.1,start=start,cap=5000)
+                self.assertFalse(desk_games.alert_moves(again))
 
     def test_generic_games_cap_never_qualifies_an_alternate_line(self):
         self.assertIsNone(desk_games.market_limit({"games_period_limits":{"max_total":20000}},{"market":"totals"}))
