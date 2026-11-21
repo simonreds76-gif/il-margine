@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-11-21T00:56:41.891906Z",
+  "generated_at": "2026-11-21T14:58:38.356984Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -34,10 +35,10 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 45,
-  "signals_qualifying": 0,
+  "fixtures_evaluated": 36,
+  "signals_qualifying": 1,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 74
+    "incomplete_prediction_roster": 54
   },
   "extreme_gap_quarantine": {
     "eligible_rows": 0,
@@ -45,7 +46,110 @@
     "settlement_policy": "zero_stake_shadow_1u_evaluation",
     "file_pattern": "data/goalscorer/fair-odds-lab-<league>-quarantine.csv"
   },
-  "leagues_covered": [],
-  "featured_signal_id": null,
-  "signals": []
+  "leagues_covered": [
+    "epl"
+  ],
+  "featured_signal_id": "20261121-dominic-calvert-lewin-48cb5136c4",
+  "signals": [
+    {
+      "id": "20261121-dominic-calvert-lewin-48cb5136c4",
+      "match": {
+        "home_team": "Chelsea FC",
+        "away_team": "Leeds United",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-11-21T15:00:00Z",
+        "kickoff_display": "Sat 21 Nov 15:00 UK",
+        "fotmob_match_id": "5795518",
+        "fotmob_page_url": "/matches/chelsea-vs-leeds-united/2d7oy4#5795518",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Dominic Calvert-Lewin",
+        "team": "Leeds",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/leeds.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#facc15",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 43.8,
+        "fair_odds": 2.28
+      },
+      "market_data": {
+        "best_odds": 2.88,
+        "best_book": "Paddy Power",
+        "implied_chance_pct": 34.7
+      },
+      "edge": {
+        "price_gap_pp": 9.1,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 96
+        },
+        "share_of_team_chances_pct": 35,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 35
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-11-07",
+          "xg_for_avg": 1.22,
+          "xg_against_avg": 1.48,
+          "xgd_per90": -0.25,
+          "shots_for_avg": 12.0,
+          "shots_against_avg": 11.8,
+          "sot_for_avg": 3.8,
+          "sot_against_avg": 4.4,
+          "corners_for_avg": 4.2,
+          "corners_against_avg": 3.4
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 48
+        },
+        "opponent_recent_defence": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-11-08",
+          "xg_for_avg": 1.15,
+          "xg_against_avg": 1.08,
+          "xgd_per90": 0.07,
+          "shots_for_avg": 12.8,
+          "shots_against_avg": 10.2,
+          "sot_for_avg": 6.2,
+          "sot_against_avg": 4.0,
+          "corners_for_avg": 4.4,
+          "corners_against_avg": 5.4
+        },
+        "fixture_boost_pct": 6,
+        "projected_minutes": 85,
+        "penalty_role": "Primary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    }
+  ]
 }
