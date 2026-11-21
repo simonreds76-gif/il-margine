@@ -121,9 +121,15 @@ def main():
         return
     snap = recent(store, at)
     if not snap:
-        raise RuntimeError("No recent primary scan for comparison")
+        if rehearsal:
+            raise RuntimeError("No recent primary scan for comparison")
+        status.update(checked=at.isoformat(), primary_at=None, qualifying_count=None,
+                      coverage="primary scan unavailable")
+        store.put(status_file, status, replace=True)
+        return
     targets = available(snap, at, qualifiers=not rehearsal)
-    status.update(checked=at.isoformat(), primary_at=snap["observed"], qualifying_count=len(available(snap, at, True)))
+    status.update(checked=at.isoformat(), primary_at=snap["observed"],
+                  qualifying_count=len(available(snap, at, True)), coverage="fresh primary scan")
     if not targets:
         store.put(status_file, status, replace=True)
         print("No eligible upcoming lines on this scan.")
