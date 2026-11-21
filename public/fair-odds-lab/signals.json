@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T14:58:38.356984Z",
+  "generated_at": "2026-11-21T17:28:26.111321Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -35,10 +35,12 @@
     "post_kickoff_visibility_minutes": 150,
     "completed_fixture_filter": "fotmob_status_with_150_minute_fallback"
   },
-  "fixtures_evaluated": 36,
+  "fixtures_evaluated": 29,
   "signals_qualifying": 1,
   "safety_exclusions": {
-    "incomplete_prediction_roster": 54
+    "incomplete_prediction_roster": 47,
+    "model_probability_below_floor": 1,
+    "lineup_not_public_quality": 1
   },
   "extreme_gap_quarantine": {
     "eligible_rows": 0,
@@ -49,45 +51,45 @@
   "leagues_covered": [
     "epl"
   ],
-  "featured_signal_id": "20261121-dominic-calvert-lewin-48cb5136c4",
+  "featured_signal_id": "20261121-william-osula-4d7e0c57ce",
   "signals": [
     {
-      "id": "20261121-dominic-calvert-lewin-48cb5136c4",
+      "id": "20261121-william-osula-4d7e0c57ce",
       "match": {
-        "home_team": "Chelsea FC",
-        "away_team": "Leeds United",
+        "home_team": "Newcastle United",
+        "away_team": "Arsenal FC",
         "league": "epl",
         "league_display": "Premier League",
         "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "2026-11-21T15:00:00Z",
-        "kickoff_display": "Sat 21 Nov 15:00 UK",
-        "fotmob_match_id": "5795518",
-        "fotmob_page_url": "/matches/chelsea-vs-leeds-united/2d7oy4#5795518",
+        "kickoff_utc": "2026-11-21T17:30:00Z",
+        "kickoff_display": "Sat 21 Nov 17:30 UK",
+        "fotmob_match_id": "5795523",
+        "fotmob_page_url": "/matches/arsenal-vs-newcastle-united/3c42by#5795523",
         "lineup_type": "confirmed",
         "venue": ""
       },
       "player": {
-        "name": "Dominic Calvert-Lewin",
-        "team": "Leeds",
+        "name": "William Osula",
+        "team": "Newcastle United",
         "position": "FW",
         "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/leeds.png",
+        "team_logo_path": "/team-logos/epl/newcastle-united.png",
         "team_primary_color": "#f8fafc",
-        "team_secondary_color": "#facc15",
-        "team_shirt_pattern": "solid"
+        "team_secondary_color": "#111827",
+        "team_shirt_pattern": "vertical-stripes"
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 43.8,
-        "fair_odds": 2.28
+        "scoring_chance_pct": 30.7,
+        "fair_odds": 3.26
       },
       "market_data": {
-        "best_odds": 2.88,
+        "best_odds": 4.33,
         "best_book": "Paddy Power",
-        "implied_chance_pct": 34.7
+        "implied_chance_pct": 23.1
       },
       "edge": {
-        "price_gap_pp": 9.1,
+        "price_gap_pp": 7.6,
         "model_advantage": true
       },
       "metrics": {
@@ -95,49 +97,37 @@
           "tier": "Strong",
           "percentile": 96
         },
-        "share_of_team_chances_pct": 35,
-        "share_of_team_chances_percentile": 98,
+        "share_of_team_chances_pct": 28,
+        "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
-          "tier": "Average",
-          "percentile": 35
+          "tier": "Quiet",
+          "percentile": 11
         },
         "recent_team_form": {
-          "tier": "Average",
+          "tier": "Unknown"
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 3
+        },
+        "opponent_recent_defence": {
+          "tier": "Low",
           "window": 5,
           "matches": 5,
           "through_date": "2026-11-07",
-          "xg_for_avg": 1.22,
-          "xg_against_avg": 1.48,
-          "xgd_per90": -0.25,
-          "shots_for_avg": 12.0,
-          "shots_against_avg": 11.8,
-          "sot_for_avg": 3.8,
-          "sot_against_avg": 4.4,
-          "corners_for_avg": 4.2,
-          "corners_against_avg": 3.4
+          "xg_for_avg": 1.84,
+          "xg_against_avg": 0.89,
+          "xgd_per90": 0.95,
+          "shots_for_avg": 14.6,
+          "shots_against_avg": 11.4,
+          "sot_for_avg": 4.8,
+          "sot_against_avg": 2.4,
+          "corners_for_avg": 6.2,
+          "corners_against_avg": 5.2
         },
-        "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 48
-        },
-        "opponent_recent_defence": {
-          "tier": "Average",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-11-08",
-          "xg_for_avg": 1.15,
-          "xg_against_avg": 1.08,
-          "xgd_per90": 0.07,
-          "shots_for_avg": 12.8,
-          "shots_against_avg": 10.2,
-          "sot_for_avg": 6.2,
-          "sot_against_avg": 4.0,
-          "corners_for_avg": 4.4,
-          "corners_against_avg": 5.4
-        },
-        "fixture_boost_pct": 6,
+        "fixture_boost_pct": -44,
         "projected_minutes": 85,
-        "penalty_role": "Primary",
+        "penalty_role": "Not on penalties",
         "role_adjustment_factor": 1.0,
         "role_adjustment_reason": "",
         "lineup_confidence": "Confirmed starter"
@@ -146,8 +136,7 @@
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Primary penalty role adds a clear scoring route"
+        "Recent chance quality grades as strong"
       ],
       "risk_flags": []
     }
