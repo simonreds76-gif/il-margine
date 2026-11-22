@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-22T20:11:09.451947+00:00",
+  "generated_at": "2026-11-22T23:34:37.777957+00:00",
   "league": "la-liga",
-  "row_count": 4,
+  "row_count": 5,
   "rows": [
     {
       "date": "2026-11-22",
@@ -67,6 +67,79 @@
           "competitive": true,
           "finished": true,
           "match": "Racing Santander vs Real Sociedad",
+          "event_result": "scored"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-22",
+      "league": "la-liga",
+      "review_source": "fotmob_live",
+      "match": "Getafe vs Atlético Madrid",
+      "team": "Atlético Madrid",
+      "opponent": "Getafe",
+      "actual_taker": "Alejandro Grimaldo",
+      "actual_role_pre_match": "secondary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "90",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Julián Álvarez",
+      "secondary_pre_match": "Alejandro Grimaldo",
+      "tertiary_pre_match": "Alexander Sørloth",
+      "primary_lineup_status": "expected_starter",
+      "secondary_lineup_status": "expected_starter",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "Julián Álvarez",
+      "active_slot_pre_match": "primary",
+      "team_lineup_status": "unknown",
+      "review_type": "expected_backup_held",
+      "review_priority": "low",
+      "editorial_note": "Alejandro Grimaldo took 1 penalty attempt and scored for Atlético Madrid vs Getafe. Primary pre-match: Julián Álvarez (expected_starter). Secondary pre-match: Alejandro Grimaldo (expected_starter). Pre-match active slot was primary -> Julián Álvarez. Expected backup took the penalty with every higher-ranked taker confirmed off the pitch. No hierarchy change implied.",
+      "context_generated_at": "2026-11-22T17:47:53Z",
+      "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json",
+      "actual_taker_match_status": "Yes - started",
+      "primary_on_pitch_at_penalty": "No - started, off 75'",
+      "secondary_on_pitch_at_penalty": "Yes - started",
+      "tertiary_on_pitch_at_penalty": "Yes - bench, on 75'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started",
+      "event_evidence": [
+        {
+          "id": "fotmob|la-liga|5868134|3000441459",
+          "source_event_id": "3000441459",
+          "match_id": "5868134",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5868134",
+          "observed_at": "2026-11-22T23:34:42+00:00",
+          "event_date": "2026-11-22",
+          "season": "2026/27",
+          "team": "Atlético Madrid",
+          "taker": "Alejandro Grimaldo",
+          "primary": "Julián Álvarez",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Julián Álvarez",
+            "minute": 90,
+            "added_time": 2,
+            "method": "completed_lineup_timeline",
+            "player_id": 974753,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 75,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 90,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Getafe vs Atlético Madrid",
           "event_result": "scored"
         }
       ]
