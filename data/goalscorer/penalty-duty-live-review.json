@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-22T16:39:26Z",
+  "generated_at": "2026-11-22T17:47:11.869547+00:00",
   "league": "serie-a",
   "row_count": 1,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2999931277",
           "match_id": "5749754",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749754",
-          "observed_at": "2026-11-22T16:39:19+00:00",
+          "observed_at": "2026-11-22T17:47:13+00:00",
           "event_date": "2026-11-22",
           "season": "2026/27",
           "team": "Juventus",
@@ -85,5 +85,13 @@
       "20261122"
     ],
     "matches_checked": 7
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261121"
+    ],
+    "matches_checked": 1
   }
 }
