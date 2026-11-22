@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-11-21T15:15:49+00:00`
+Fetched at UTC: `2026-11-22T15:13:06+00:00`
 
 ## Decision
 
@@ -14,25 +14,25 @@ Overall: **PASS_SOURCE_LAYER**
 ## RotoWire
 
 - Teams with set-piece blocks: `96/96`
-- Player role rows extracted: `766`
+- Player role rows extracted: `777`
 
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
-| bundesliga | 18 | 18 | 123 | 14 |
-| epl | 20 | 20 | 153 | 15 |
-| la-liga | 20 | 20 | 180 | 16 |
-| ligue-1 | 18 | 18 | 145 | 15 |
-| serie-a | 20 | 20 | 165 | 16 |
+| bundesliga | 18 | 18 | 124 | 14 |
+| epl | 20 | 20 | 156 | 15 |
+| la-liga | 20 | 20 | 180 | 17 |
+| ligue-1 | 18 | 18 | 149 | 16 |
+| serie-a | 20 | 20 | 168 | 16 |
 
 ## FPL API
 
 - Status: `PASS`
 - Teams: `20`
-- Players: `672`
-- Players with set-piece role fields: `150`
+- Players: `674`
+- Players with set-piece role fields: `148`
 - Registered season: `2026/27`
 - Exact 20-team roster match: `YES`
-- Snapshot valid until UTC: `2026-11-28T15:15:49+00:00`
+- Snapshot valid until UTC: `2026-11-29T15:13:06+00:00`
 
 ## SetPieceTakers
 
@@ -45,21 +45,21 @@ Overall: **PASS_SOURCE_LAYER**
 
 | League | Team | Player | Last-5 corner share | Season corner share | Corner total |
 |---|---|---|---:|---:|---:|
-| bundesliga | Eintracht Frankfurt | Fares Chaibi | 100.0% | 55.56% | 20 |
+| bundesliga | Eintracht Frankfurt | Fares Chaibi | 100.0% | 61.9% | 26 |
+| ligue-1 | AJ Auxerre | Romain Faivre | 100.0% | 66.67% | 24 |
+| ligue-1 | Lens | Florian Thauvin | 95.65% | 83.54% | 66 |
 | bundesliga | SV 07 Elversberg | Felix Keidel | 94.12% | 96.43% | 27 |
 | serie-a | Como | Luis Milla | 94.12% | 70.97% | 44 |
-| ligue-1 | AJ Auxerre | Romain Faivre | 93.75% | 66.67% | 24 |
-| bundesliga | FSV Mainz 05 | Nadiem Amiri | 93.33% | 96.88% | 31 |
-| bundesliga | Bayer Leverkusen | Aleix Garcia | 91.67% | 91.43% | 64 |
+| bundesliga | FSV Mainz 05 | Nadiem Amiri | 92.31% | 96.88% | 31 |
 | serie-a | Frosinone | Giacomo Calo | 91.18% | 95.16% | 59 |
-| ligue-1 | Brest | Joris Chotard | 90.91% | 91.18% | 31 |
-| ligue-1 | Lens | Florian Thauvin | 84.21% | 81.69% | 58 |
-| ligue-1 | Angers | Branco van den Boomen | 83.33% | 92.73% | 51 |
-| ligue-1 | Paris FC | Pablo Pagis | 78.95% | 64.52% | 20 |
+| ligue-1 | Brest | Joris Chotard | 88.89% | 91.43% | 32 |
+| ligue-1 | Paris FC | Pablo Pagis | 88.89% | 71.05% | 27 |
+| bundesliga | Bayer Leverkusen | Aleix Garcia | 88.46% | 90.28% | 65 |
+| la-liga | Valencia | Javi Guerra | 82.35% | 37.5% | 18 |
 | la-liga | Athletic | Alex Berenguer | 78.95% | 59.38% | 38 |
-| epl | Coventry City | Jack Rudoni | 78.57% | 50.0% | 16 |
 | bundesliga | 1. FC Köln | Borna Sosa | 78.57% | 26.09% | 12 |
-| la-liga | Valencia | Javi Guerra | 75.0% | 30.23% | 13 |
+| ligue-1 | Angers | Branco van den Boomen | 78.57% | 92.73% | 51 |
+| bundesliga | RB Leipzig | David Raum | 76.47% | 92.45% | 49 |
 
 ## Outputs
 
