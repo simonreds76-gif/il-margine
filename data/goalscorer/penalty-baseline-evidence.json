@@ -1,7 +1,24 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-21T16:24:20Z",
+  "generated_at": "2026-11-22T16:39:54Z",
   "league": "serie-a",
-  "row_count": 0,
-  "rows": []
+  "row_count": 1,
+  "rows": [
+    {
+      "team": "Juventus",
+      "team_key": "juventus",
+      "player_name": "Randal Kolo Muani",
+      "player_key": "randal kolo muani",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-11-22"
+    }
+  ]
 }

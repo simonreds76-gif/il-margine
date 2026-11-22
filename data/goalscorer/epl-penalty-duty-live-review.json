@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-22T06:58:40Z",
+  "generated_at": "2026-11-22T16:39:30Z",
   "league": "epl",
   "row_count": 1,
   "rows": [
@@ -22,17 +22,17 @@
       "primary_pre_match": "Dominic Calvert-Lewin",
       "secondary_pre_match": "Lukas Nmecha",
       "tertiary_pre_match": "Harry Wilson",
-      "primary_lineup_status": "confirmed_starter",
-      "secondary_lineup_status": "confirmed_bench",
-      "tertiary_lineup_status": "confirmed_bench",
-      "active_taker_pre_match": "Dominic Calvert-Lewin",
-      "active_slot_pre_match": "primary",
-      "team_lineup_status": "unknown",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
       "review_type": "primary_held",
       "review_priority": "low",
-      "editorial_note": "Dominic Calvert-Lewin took 1 penalty attempt and scored for Leeds United vs Chelsea. Primary pre-match: Dominic Calvert-Lewin (confirmed_starter). Secondary pre-match: Lukas Nmecha (confirmed_bench). Pre-match active slot was primary -> Dominic Calvert-Lewin. No hierarchy change implied from this event.",
-      "context_generated_at": "2026-11-21T23:10:28Z",
-      "context_source_path": "data/goalscorer/epl/penalty-duty-context.json",
+      "editorial_note": "Dominic Calvert-Lewin took 1 penalty attempt and scored for Leeds United vs Chelsea. Primary pre-match: Dominic Calvert-Lewin (unknown). Secondary pre-match: Lukas Nmecha (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/epl-penalty-takers.json",
       "actual_taker_match_status": "Yes - started",
       "primary_on_pitch_at_penalty": "Yes - started",
       "secondary_on_pitch_at_penalty": "No - bench",
@@ -44,7 +44,7 @@
           "source_event_id": "2999372809",
           "match_id": "5795518",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5795518",
-          "observed_at": "2026-11-22T06:58:37+00:00",
+          "observed_at": "2026-11-22T16:39:26+00:00",
           "event_date": "2026-11-21",
           "season": "2026/27",
           "team": "Leeds United",
@@ -76,10 +76,14 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20261116",
+      "20261117",
+      "20261118",
+      "20261119",
       "20261120",
       "20261121",
       "20261122"
     ],
-    "matches_checked": 7
+    "matches_checked": 9
   }
 }

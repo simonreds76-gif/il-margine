@@ -1,17 +1,89 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-22T06:58:36Z",
+  "generated_at": "2026-11-22T16:39:26Z",
   "league": "serie-a",
-  "row_count": 0,
-  "rows": [],
+  "row_count": 1,
+  "rows": [
+    {
+      "date": "2026-11-22",
+      "league": "serie-a",
+      "review_source": "fotmob_live",
+      "match": "Juventus vs Venezia",
+      "team": "Juventus",
+      "opponent": "Venezia",
+      "actual_taker": "Randal Kolo Muani",
+      "actual_role_pre_match": "tertiary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "71",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Manuel Locatelli",
+      "secondary_pre_match": "Kenan Yıldız",
+      "tertiary_pre_match": "Randal Kolo Muani",
+      "primary_lineup_status": "not_in_squad",
+      "secondary_lineup_status": "not_in_squad",
+      "tertiary_lineup_status": "confirmed_starter",
+      "active_taker_pre_match": "Randal Kolo Muani",
+      "active_slot_pre_match": "tertiary",
+      "team_lineup_status": "unknown",
+      "review_type": "expected_backup_held",
+      "review_priority": "low",
+      "editorial_note": "Randal Kolo Muani took 1 penalty attempt and scored for Juventus vs Venezia. Primary pre-match: Manuel Locatelli (not_in_squad). Secondary pre-match: Kenan Yıldız (not_in_squad). Pre-match active slot was tertiary -> Randal Kolo Muani. Expected backup took the penalty with every higher-ranked taker confirmed off the pitch. No hierarchy change implied.",
+      "context_generated_at": "2026-11-22T14:55:30Z",
+      "context_source_path": "data/goalscorer/penalty-duty-context.json",
+      "actual_taker_match_status": "Yes - started, off 84'",
+      "primary_on_pitch_at_penalty": "No - unavailable in match squad",
+      "secondary_on_pitch_at_penalty": "No - unavailable in match squad",
+      "tertiary_on_pitch_at_penalty": "Yes - started, off 84'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 84'",
+      "event_evidence": [
+        {
+          "id": "fotmob|serie-a|5749754|2999931277",
+          "source_event_id": "2999931277",
+          "match_id": "5749754",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749754",
+          "observed_at": "2026-11-22T16:39:19+00:00",
+          "event_date": "2026-11-22",
+          "season": "2026/27",
+          "team": "Juventus",
+          "taker": "Randal Kolo Muani",
+          "primary": "Manuel Locatelli",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Manuel Locatelli",
+            "minute": 71,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 624166,
+            "bucket": "unavailable",
+            "substitutions": [],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 71,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Juventus vs Venezia",
+          "event_result": "scored"
+        }
+      ]
+    }
+  ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
+      "20261116",
+      "20261117",
+      "20261118",
+      "20261119",
       "20261120",
       "20261121",
       "20261122"
     ],
-    "matches_checked": 4
+    "matches_checked": 7
   }
 }
