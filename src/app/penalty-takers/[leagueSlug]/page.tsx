@@ -4,6 +4,8 @@ import PenaltyTakerPortrait from "@/components/PenaltyTakerPortrait";
 import { notFound } from "next/navigation";
 import Footer from "@/components/Footer";
 import ClubPenaltyLatestUpdates from "@/components/ClubPenaltyLatestUpdates";
+import { penaltyNews } from "@/lib/penalty-news-data";
+import { latestDirectoryPenalties } from "@/lib/penalty-growth-pilot";
 import PenaltyDirectory from "@/components/PenaltyDirectory";
 import PageHomeLink from "@/components/PageHomeLink";
 import { BASE_URL } from "@/lib/config";
@@ -19,7 +21,6 @@ import {
   readClubPenaltyData,
   clubPenaltyLeagueUrl,
   getClubPenaltyLeague,
-  getLatestClubPenaltyNews,
   type ClubPenaltyTeam,
 } from "@/lib/club-penalty-takers";
 
@@ -156,7 +157,7 @@ export default async function ClubPenaltyLeaguePage({ params }: PageProps) {
 
   const url = clubPenaltyLeagueUrl(league.key);
   const title = `${league.label} Penalty Takers ${CLUB_PENALTY_SEASON}`;
-  const latestNews = getLatestClubPenaltyNews([league], 6);
+  const latestNews = latestDirectoryPenalties(penaltyNews.articles, penaltyNews.coverageStart, league.key);
   const latestClubReview = league.teams.map(team => team.checkedAt).filter(Boolean).sort().at(-1);
   const fullHierarchyCount = league.teams.filter((team) => team.hierarchyDepth === 3).length;
   const confirmedCount = league.teams.filter((team) => clubPenaltyOrderStatus(team) === "confirmed").length;
@@ -246,8 +247,8 @@ export default async function ClubPenaltyLeaguePage({ params }: PageProps) {
         <div className="mt-12">
           <ClubPenaltyLatestUpdates
             items={latestNews}
-            eyebrow={`${league.label} live evidence`}
-            description={`The latest competitive penalty events reviewed for ${league.label}, linked to each club's current order and evidence file.`}
+            teams={league.teams}
+            eyebrow={`${league.label} penalty evidence`}
           />
         </div>
 

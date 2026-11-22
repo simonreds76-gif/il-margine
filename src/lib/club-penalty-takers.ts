@@ -136,18 +136,6 @@ export type ClubPenaltyEvidenceUpdate = {
   affectsHierarchy: boolean;
 };
 
-export type ClubPenaltyNewsItem = ClubPenaltyEvidenceUpdate & {
-  team: string;
-  leagueKey: string;
-  leagueLabel: string;
-  primary: string;
-  secondary: string;
-  hierarchyStatus: PenaltyHierarchyStatus;
-  logoPath: string;
-  initials: string;
-  relativeUrl: string;
-};
-
 export type ClubPenaltyLeague = ClubLeagueConfig & {
   teams: ClubPenaltyTeam[];
   archivedTeams: ClubPenaltyTeam[];
@@ -547,28 +535,6 @@ export async function readAllClubPenaltyTeams(options: { includeArchived?: boole
   const leagues = await readClubPenaltyData();
   const includeArchived = options.includeArchived ?? true;
   return leagues.flatMap((league) => includeArchived ? [...league.teams, ...league.archivedTeams] : league.teams);
-}
-
-export function getLatestClubPenaltyNews(leagues: ClubPenaltyLeague[], limit = 8): ClubPenaltyNewsItem[] {
-  return leagues
-    .flatMap((league) =>
-      league.teams.flatMap((team) =>
-        team.evidenceUpdates.map((update) => ({
-          ...update,
-          team: team.team,
-          leagueKey: team.leagueKey,
-          leagueLabel: team.leagueLabel,
-          primary: team.primary,
-          secondary: team.secondary,
-          hierarchyStatus: team.hierarchyStatus,
-          logoPath: team.logoPath,
-          initials: team.initials,
-          relativeUrl: team.relativeUrl,
-        })),
-      ),
-    )
-    .sort((left, right) => right.date.localeCompare(left.date) || right.id.localeCompare(left.id))
-    .slice(0, Math.max(limit, 0));
 }
 
 export async function getClubPenaltyLeague(leagueSlug: string): Promise<ClubPenaltyLeague | undefined> {

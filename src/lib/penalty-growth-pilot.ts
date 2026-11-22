@@ -13,17 +13,27 @@ export function isPenaltyGrowthPage(league: string, slug: string, archived = fal
   return !archived && Boolean(slug) && ['epl', 'serie-a', 'la-liga', 'bundesliga', 'ligue-1'].includes(league);
 }
 
-export function recordedClubPenalties(articles: PenaltyArticle[], clubUrl: string, coverageStart: string) {
+export function recordedPenaltyReports(articles: PenaltyArticle[], coverageStart: string) {
   const unique = new Map<string, PenaltyArticle>();
   for (const article of articles) {
-    if (article.clubUrl !== clubUrl || !article.matchId || !article.eventId || !article.slug
+    if (!article.matchId || !article.eventId || !article.slug
       || !Number.isFinite(Date.parse(article.kickoff)) || article.date < coverageStart) continue;
     const key = `${article.matchId}:${article.eventId}`;
     const previous = unique.get(key);
     if (!previous || article.updatedAt > previous.updatedAt) unique.set(key, article);
   }
   return [...unique.values()].sort((a, b) => b.kickoff.localeCompare(a.kickoff)
+    || b.minute.localeCompare(a.minute, 'en', { numeric: true })
     || b.eventId.localeCompare(a.eventId, 'en', { numeric: true }));
+}
+
+export function recordedClubPenalties(articles: PenaltyArticle[], clubUrl: string, coverageStart: string) {
+  return recordedPenaltyReports(articles, coverageStart).filter(article => article.clubUrl === clubUrl);
+}
+
+export function latestDirectoryPenalties(articles: PenaltyArticle[], coverageStart: string, league?: string) {
+  const reports = recordedPenaltyReports(articles, coverageStart);
+  return (league ? reports.filter(article => article.league === league) : reports).slice(0, 6);
 }
 
 export type ClubFixtureLink = {

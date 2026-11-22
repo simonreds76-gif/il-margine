@@ -74,7 +74,7 @@ export default function PenaltyDirectory({ leagues, initialLeague = "all", board
     <nav aria-label="Penalty taker sections" className="penalty-secondary-links grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
       <a href="#penalty-finder" className={`${control} border-emerald-300/30 bg-emerald-300/15 text-emerald-100`}>Find a taker <span aria-hidden="true">⌕</span></a>
       <a href={boardHref} className={`${control} border-white/10 bg-white/5 text-slate-200`}>Full hierarchies <span aria-hidden="true">↓</span></a>
-      {hasUpdates && <a href="#latest-penalty-taker-updates" className={`${control} border-white/10 bg-white/5 text-slate-200`}>Latest changes <span aria-hidden="true">↓</span></a>}
+      {hasUpdates && <a href="#latest-penalty-taker-updates" className={`${control} border-white/10 bg-white/5 text-slate-200`}>Latest penalties <span aria-hidden="true">↓</span></a>}
       <Link prefetch={false} href="/penalty-takers/methodology" className={`${control} border-white/10 bg-white/5 text-slate-200`}>How it works <span aria-hidden="true">↗</span></Link>
     </nav>
   </section>;

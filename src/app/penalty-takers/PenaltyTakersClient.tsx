@@ -5,9 +5,10 @@ import ClubPenaltyLatestUpdates from "@/components/ClubPenaltyLatestUpdates";
 import Footer from "@/components/Footer";
 import PageHeading from "@/components/PageHeading";
 import ToolEmblem from "@/components/ToolEmblem";
-import type { ClubPenaltyLeague, ClubPenaltyNewsItem, ClubPenaltySeason } from "@/lib/club-penalty-takers";
+import type { ClubPenaltyLeague, ClubPenaltySeason } from "@/lib/club-penalty-takers";
+import type { PenaltyArticle } from "@/lib/penalty-news";
 
-type Props = { leagues: ClubPenaltyLeague[]; totalTeams: number; season: ClubPenaltySeason; latestNews: ClubPenaltyNewsItem[] };
+type Props = { leagues: ClubPenaltyLeague[]; totalTeams: number; season: ClubPenaltySeason; latestNews: PenaltyArticle[] };
 
 const FEATURED: Record<string, string[]> = {
   epl: ["Arsenal", "Chelsea", "Liverpool", "Manchester City", "Manchester United"],
@@ -114,7 +115,7 @@ export default function PenaltyTakersClient({ leagues, totalTeams, season, lates
           <span aria-hidden="true" className="ml-auto text-xl text-emerald-200">↗</span>
         </Link>
 
-        <ClubPenaltyLatestUpdates items={latestNews} />
+        <ClubPenaltyLatestUpdates items={latestNews} teams={leagues.flatMap(league => league.teams)} />
 
         <section id="league-guides" className="mt-10 scroll-mt-24">
           <div className="mb-6 max-w-3xl">

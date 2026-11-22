@@ -20,6 +20,31 @@ const newsHelpers = load('src/lib/penalty-news.ts');
 const news = require('../../src/data/penalty-news.json');
 const board = require('../../src/data/atlas-fixtures.json');
 
+test('directory shows new match reports and scopes by league before taking six', () => {
+  const sample = news.articles[0];
+  const future = { ...sample, matchId: 'future', eventId: '1', kickoff: '2099-05-01T14:00:00Z',
+    date: '2099-05-01', updatedAt: '2099-05-01T17:00:00Z', title: 'Test penalty saved', outcome: 'saved', slug: 'test-save' };
+  const olderVersion = { ...future, updatedAt: '2099-05-01T16:00:00Z', title: 'Outdated report' };
+  const input = [olderVersion, ...news.articles, future];
+  for (const league of [undefined, 'epl', 'serie-a', 'la-liga', 'bundesliga', 'ligue-1']) {
+    const rows = helpers.latestDirectoryPenalties(input, news.coverageStart, league);
+    assert.equal(rows.length, Math.min(6, new Set(input.filter(a => !league || a.league === league).map(a => a.matchId + ':' + a.eventId)).size));
+    assert.ok(rows.every(a => !league || a.league === league));
+    if (!league || league === future.league) assert.equal(rows[0].title, future.title);
+    assert.ok(rows.every(a => a.title !== olderVersion.title));
+  }
+  const View = load('src/components/ClubPenaltyLatestUpdates.tsx', {
+    'next/link': ({ children, ...props }) => React.createElement('a', props, children),
+    '@/lib/penalty-news': newsHelpers,
+  }).default;
+  const teams = [{ relativeUrl: sample.clubUrl, hierarchyDepth: 1, primary: 'Reviewed first choice' }];
+  const html = renderToStaticMarkup(React.createElement(View, { items: [future], teams }));
+  assert.ok(html.includes('href="/penalty-news/test-save"') && html.includes('Test penalty saved'));
+  assert.ok(html.includes('Saved') && html.includes('href="' + sample.clubUrl + '"'));
+  assert.ok(html.includes('Reviewed first choice'));
+  assert.equal(renderToStaticMarkup(React.createElement(View, { items: [], teams })), '');
+});
+
 test('shared layout covers current clubs across the five leagues, not archives or other competitions', () => {
   assert.equal(new Set(helpers.PENALTY_GROWTH_PAGES).size, 10);
   assert.equal(helpers.isPenaltyGrowthPage('epl', 'everton'), true);
@@ -81,8 +106,12 @@ test('both clubs can take penalties in one match without leaking into the oppone
 });
 test('existing team IDs bridge different Atlas and penalty crest paths without guessing names', () => {
   const identities = require('../../data/goalscorer/team-logo-map.json');
-  const links = helpers.clubFixtureLinks(board, 'bundesliga', '/team-logos/bundesliga/sv-elversberg.png', identities);
-  assert.ok(links.some(f => f.id === 'fm-5881215' && f.away === 'Elversberg'));
+  // The public board rolls forward. Pin one fixture with two different crest paths.
+  const recorded = { fixtures: [{ id: 'fm-5881229', league: 'bundesliga', kickoff: '2026-11-21T14:30:00Z',
+    home: { name: 'Elversberg', providerId: '8232', crest: '/team-logos/football-atlas/elversberg.png' },
+    away: { name: 'Freiburg', providerId: '8358', crest: '/team-logos/bundesliga/freiburg.png' } }] };
+  const links = helpers.clubFixtureLinks(recorded, 'bundesliga', '/team-logos/bundesliga/sv-elversberg.png', identities);
+  assert.ok(links.some(f => f.id === 'fm-5881229' && f.home === 'Elversberg'));
   assert.equal(helpers.clubFixtureLinks(board, 'epl', '/team-logos/bundesliga/sv-elversberg.png', identities).length, 0);
   const ambiguous = { leagues: { bundesliga: { teams: { a: { logo_path: 'same', fotmob_team_id: 8232 }, b: { logo_path: 'same', fotmob_team_id: 99 } } } } };
   assert.equal(helpers.clubFixtureLinks(board, 'bundesliga', 'same', ambiguous).length, 0);
