@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T17:24:05Z",
+  "generated_at": "2026-11-22T22:47:50Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -7,9 +7,9 @@
   "promotion_gate": "BLOCKED",
   "live_routing": false,
   "prospective": {
-    "signals": 142,
+    "signals": 143,
     "settled": 128,
-    "pending": 13,
+    "pending": 14,
     "pnl_units": -19.062999999999988,
     "roi": -0.1489296874999999,
     "void": 1,
@@ -19,9 +19,9 @@
     "mean_clv": 0.01458478125
   },
   "latest_scan": {
-    "scored_rows": 16,
-    "scored_fixtures": 4,
-    "explanation": "8 fresh paired contracts; 16 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: outside_capture_window=17, stale_price=208. Input cohorts kept separate. Before 30 October 2026: 98 settled, 30 October 2026 to input repair: 26 settled, Prospective repaired inputs: 4 settled. Promotion review uses repaired inputs only; original records remain intact."
+    "scored_rows": 12,
+    "scored_fixtures": 3,
+    "explanation": "6 fresh paired contracts; 12 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: stale_price=72. Input cohorts kept separate. Before 30 October 2026: 98 settled, 30 October 2026 to input repair: 26 settled, Prospective repaired inputs: 4 settled. Promotion review uses repaired inputs only; original records remain intact."
   },
   "settled_this_run": 0,
   "result_source": {
@@ -124,10 +124,10 @@
       "roi": -0.20823076923076922
     },
     "repaired_inputs": {
-      "signals": 17,
+      "signals": 18,
       "settled": 4,
       "void": 0,
-      "pending": 13,
+      "pending": 14,
       "wins": 2,
       "losses": 2,
       "pnl_units": -0.273,
@@ -136,10 +136,10 @@
   },
   "review_status": "COLLECTING_FIXED_POLICY",
   "promotion_evidence_scope": "repaired_inputs_only; earlier records retained separately",
-  "age_days": 70,
+  "age_days": 71,
   "input_integrity": {
     "policy": "shots-input-integrity-20261113-v1",
-    "generated_at": "2026-11-22T17:24:05.536788+00:00",
+    "generated_at": "2026-11-22T22:47:50.365911+00:00",
     "base_sha256": "ab5c97a4ca56bd1a108f874c5557bc402abd30a4b933c894beacecb5f8288abe",
     "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
     "source_rows": 44240,

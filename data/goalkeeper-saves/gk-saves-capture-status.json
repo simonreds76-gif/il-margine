@@ -1,17 +1,17 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_observed_save_markets": 4,
+      "events_with_observed_save_markets": 3,
       "events_with_save_markets": 0,
       "named_player_lines": 0,
       "status": "SAVE_MARKETS_SEEN_NO_VERIFIED_PRICES",
       "unnamed_or_team_lines": 0
     },
     "Grosvenor": {
-      "events_with_save_markets": 4,
+      "events_with_save_markets": 3,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 37
+      "unnamed_or_team_lines": 28
     },
     "Paddy Power": {
       "events_with_save_markets": 0,
@@ -27,29 +27,28 @@
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 117,
+      "current_quotes": 63,
       "mapped_quotes": 0,
       "paper_selections": 0,
       "price_or_status_changes": 0,
       "rules": "unverified"
     },
-    "matched": 4,
+    "matched": 3,
     "missing": [],
-    "requests": 7,
-    "rows": 357
+    "requests": 6,
+    "rows": 306
   },
   "discovery_retries": 0,
   "event_last_checked": {
-    "71945406": "2026-11-22T17:23:43Z",
-    "72036298": "2026-11-22T17:23:43Z",
-    "72478712": "2026-11-22T17:23:43Z",
-    "72478716": "2026-11-22T17:23:43Z"
+    "71945418": "2026-11-22T22:47:35Z",
+    "72221396": "2026-11-22T22:47:35Z",
+    "72478714": "2026-11-22T22:47:35Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 4,
-  "events_supported": 4,
-  "events_with_lines": 4,
-  "generated_at": "2026-11-22T17:23:43Z",
+  "events_selected": 3,
+  "events_supported": 3,
+  "events_with_lines": 3,
+  "generated_at": "2026-11-22T22:47:35Z",
   "last_publication_at": "2026-11-22T16:20:39Z",
   "league_coverage": {
     "bundesliga": {
@@ -57,23 +56,23 @@
       "with_prices": 0
     },
     "epl": {
-      "selected": 0,
-      "with_prices": 0
-    },
-    "la-liga": {
-      "selected": 2,
-      "with_prices": 2
-    },
-    "ligue-1": {
       "selected": 1,
       "with_prices": 1
+    },
+    "la-liga": {
+      "selected": 1,
+      "with_prices": 1
+    },
+    "ligue-1": {
+      "selected": 0,
+      "with_prices": 0
     },
     "serie-a": {
       "selected": 1,
       "with_prices": 1
     }
   },
-  "market_inventory_rows_added": 139,
+  "market_inventory_rows_added": 106,
   "market_names_observed": [
     "Anytime Assist",
     "Anytime Goalscorer",
@@ -112,20 +111,19 @@
     "errors": [],
     "excluded": {
       "conflicting_quotes": 0,
-      "fixture_not_eligible": 517,
-      "stale_or_missing_market_poll": 1,
-      "unmatched_or_unsupported_fixture": 258
+      "fixture_not_eligible": 386,
+      "unmatched_or_unsupported_fixture": 286
     },
     "goalkeeper_coverage_status": "INCOMPLETE",
     "goalkeeper_fixture_coverage": [
       {
-        "away": "Malaga CF",
-        "event_id": "72478716",
-        "home": "CA Osasuna",
-        "market_polled_at": "2026-11-22T17:23:34.822411287Z",
+        "away": "ACF Fiorentina",
+        "event_id": "71945418",
+        "home": "AC Monza",
+        "market_polled_at": "2026-11-22T22:47:12.63891911Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203186611",
+        "source_event_id": "203186432",
         "source_site": "com",
         "status": "INDEPENDENT_CHECK_UNAVAILABLE",
         "verification_exclusions": {
@@ -133,13 +131,13 @@
         }
       },
       {
-        "away": "Inter Milano",
-        "event_id": "71945406",
-        "home": "Atalanta BC",
-        "market_polled_at": "2026-11-22T17:23:48.024568069Z",
+        "away": "Elche CF",
+        "event_id": "72478714",
+        "home": "Levante UD",
+        "market_polled_at": "2026-11-22T22:47:13.439920355Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203186429",
+        "source_event_id": "203186605",
         "source_site": "com",
         "status": "INDEPENDENT_CHECK_UNAVAILABLE",
         "verification_exclusions": {
@@ -147,27 +145,13 @@
         }
       },
       {
-        "away": "Le Mans FC",
-        "event_id": "72036298",
-        "home": "Olympique Marseille",
-        "market_polled_at": "2026-11-22T17:23:47.405663926Z",
+        "away": "Everton FC",
+        "event_id": "72221396",
+        "home": "Brentford FC",
+        "market_polled_at": "2026-11-22T22:47:12.069812606Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203186307",
-        "source_site": "com",
-        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
-        "verification_exclusions": {
-          "same_provider_cache_no_independent_check": 1
-        }
-      },
-      {
-        "away": "Atletico Madrid",
-        "event_id": "72478712",
-        "home": "Getafe CF",
-        "market_polled_at": "2026-11-22T17:23:36.510691277Z",
-        "quote_count": 0,
-        "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "204834847",
+        "source_event_id": "203186268",
         "source_site": "com",
         "status": "INDEPENDENT_CHECK_UNAVAILABLE",
         "verification_exclusions": {
@@ -181,45 +165,37 @@
       "fixtures": [
         {
           "accepted": 0,
-          "event_id": "72478716",
+          "event_id": "71945418",
           "excluded": {
             "same_provider_cache_no_independent_check": 1
           },
-          "fixture_id": "203186611"
+          "fixture_id": "203186432"
         },
         {
           "accepted": 0,
-          "event_id": "72036298",
+          "event_id": "72221396",
           "excluded": {
             "same_provider_cache_no_independent_check": 1
           },
-          "fixture_id": "203186307"
+          "fixture_id": "203186268"
         },
         {
           "accepted": 0,
-          "event_id": "71945406",
+          "event_id": "72478714",
           "excluded": {
             "same_provider_cache_no_independent_check": 1
           },
-          "fixture_id": "203186429"
-        },
-        {
-          "accepted": 0,
-          "event_id": "72478712",
-          "excluded": {
-            "same_provider_cache_no_independent_check": 1
-          },
-          "fixture_id": "204834847"
+          "fixture_id": "203186605"
         }
       ],
-      "requests": 4,
+      "requests": 3,
       "verified_quotes": 0,
       "version": "moviodds_gk_atomic_v1"
     },
     "market_count": 3,
     "quote_count": 224,
-    "received_at": "2026-11-22T17:23:50.231559+00:00",
-    "requests": 5,
+    "received_at": "2026-11-22T22:47:39.478638+00:00",
+    "requests": 4,
     "source": "moviodds_bet365",
     "source_site": "com",
     "status": "OK"
@@ -227,38 +203,31 @@
   "publication_recovery": false,
   "request_budget": 4,
   "requests_used": 2,
-  "rows_added": 37,
-  "rows_observed": 37,
+  "rows_added": 28,
+  "rows_observed": 28,
   "selected_events": [
     {
-      "away": "Malaga CF",
-      "competition": "Spain - LaLiga",
-      "home": "CA Osasuna",
-      "id": 72478716,
-      "kickoff_at": "2026-11-22T17:30:00Z"
-    },
-    {
-      "away": "Inter Milano",
+      "away": "ACF Fiorentina",
       "competition": "Italy - Serie A",
-      "home": "Atalanta BC",
-      "id": 71945406,
-      "kickoff_at": "2026-11-22T19:45:00Z"
+      "home": "AC Monza",
+      "id": 71945418,
+      "kickoff_at": "2026-11-23T19:45:00Z"
     },
     {
-      "away": "Le Mans FC",
-      "competition": "France - Ligue 1",
-      "home": "Olympique Marseille",
-      "id": 72036298,
-      "kickoff_at": "2026-11-22T19:45:00Z"
-    },
-    {
-      "away": "Atletico Madrid",
+      "away": "Elche CF",
       "competition": "Spain - LaLiga",
-      "home": "Getafe CF",
-      "id": 72478712,
-      "kickoff_at": "2026-11-22T20:00:00Z"
+      "home": "Levante UD",
+      "id": 72478714,
+      "kickoff_at": "2026-11-23T20:00:00Z"
+    },
+    {
+      "away": "Everton FC",
+      "competition": "England - Premier League",
+      "home": "Brentford FC",
+      "id": 72221396,
+      "kickoff_at": "2026-11-23T20:00:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 4
+  "three_way_events": 3
 }
