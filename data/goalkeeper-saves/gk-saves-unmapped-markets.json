@@ -1,1332 +1,6 @@
 {
-  "captured_at": "2026-11-22T16:20:39Z",
+  "captured_at": "2026-11-22T17:23:43Z",
   "contracts": [
-    {
-      "event_id": "72221404",
-      "home": "Liverpool FC",
-      "away": "Manchester United",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 3.5,
-            "over": 1.75
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1028072756",
-        "source_offer_id": "2714970497",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072756.json",
-        "updatedAt": "2026-11-22T15:52:01Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2714970497,
-          "closed": "2026-11-22T16:30:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Manchester United (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Manchester United (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1028072756,
-          "outcomes": [
-            {
-              "id": 4409983567,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1750,
-              "line": 3500,
-              "type": "OT_OVER",
-              "betOfferId": 2714970497,
-              "changedDate": "2026-11-22T15:52:01Z",
-              "oddsFractional": "3/4",
-              "oddsAmerican": "-134",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "72221404",
-      "home": "Liverpool FC",
-      "away": "Manchester United",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 2.5,
-            "over": 1.33
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1028072756",
-        "source_offer_id": "2714970498",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072756.json",
-        "updatedAt": "2026-11-22T15:52:01Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2714970498,
-          "closed": "2026-11-22T16:30:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Manchester United (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Manchester United (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1028072756,
-          "outcomes": [
-            {
-              "id": 4409983569,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1330,
-              "line": 2500,
-              "type": "OT_OVER",
-              "betOfferId": 2714970498,
-              "changedDate": "2026-11-22T15:52:01Z",
-              "oddsFractional": "33/100",
-              "oddsAmerican": "-305",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "72221404",
-      "home": "Liverpool FC",
-      "away": "Manchester United",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 1.5,
-            "over": 1.18
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1028072756",
-        "source_offer_id": "2714970504",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072756.json",
-        "updatedAt": "2026-11-22T15:52:02Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2714970504,
-          "closed": "2026-11-22T16:30:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - Liverpool (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Liverpool (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1028072756,
-          "outcomes": [
-            {
-              "id": 4409983581,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1180,
-              "line": 1500,
-              "type": "OT_OVER",
-              "betOfferId": 2714970504,
-              "changedDate": "2026-11-22T15:52:02Z",
-              "oddsFractional": "1/6",
-              "oddsAmerican": "-560",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "MAIN_LINE",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "72221404",
-      "home": "Liverpool FC",
-      "away": "Manchester United",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 4.5,
-            "over": 2.5
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1028072756",
-        "source_offer_id": "2714996566",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072756.json",
-        "updatedAt": "2026-11-22T15:52:01Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2714996566,
-          "closed": "2026-11-22T16:30:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Manchester United (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Manchester United (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1028072756,
-          "outcomes": [
-            {
-              "id": 4409977699,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 2500,
-              "line": 4500,
-              "type": "OT_OVER",
-              "betOfferId": 2714996566,
-              "changedDate": "2026-11-22T15:52:01Z",
-              "oddsFractional": "6/4",
-              "oddsAmerican": "150",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "72221404",
-      "home": "Liverpool FC",
-      "away": "Manchester United",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 6.5,
-            "over": 5.75
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1028072756",
-        "source_offer_id": "2714996568",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072756.json",
-        "updatedAt": "2026-11-22T15:52:01Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2714996568,
-          "closed": "2026-11-22T16:30:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Manchester United (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Manchester United (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1028072756,
-          "outcomes": [
-            {
-              "id": 4409977701,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 5750,
-              "line": 6500,
-              "type": "OT_OVER",
-              "betOfferId": 2714996568,
-              "changedDate": "2026-11-22T15:52:01Z",
-              "oddsFractional": "19/4",
-              "oddsAmerican": "475",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "72221404",
-      "home": "Liverpool FC",
-      "away": "Manchester United",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 4.5,
-            "over": 3.45
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1028072756",
-        "source_offer_id": "2714996576",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072756.json",
-        "updatedAt": "2026-11-22T15:52:02Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2714996576,
-          "closed": "2026-11-22T16:30:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - Liverpool (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Liverpool (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1028072756,
-          "outcomes": [
-            {
-              "id": 4409977719,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 3450,
-              "line": 4500,
-              "type": "OT_OVER",
-              "betOfferId": 2714996576,
-              "changedDate": "2026-11-22T15:52:02Z",
-              "oddsFractional": "49/20",
-              "oddsAmerican": "245",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "72221404",
-      "home": "Liverpool FC",
-      "away": "Manchester United",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 5.5,
-            "over": 3.8
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1028072756",
-        "source_offer_id": "2715022479",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072756.json",
-        "updatedAt": "2026-11-22T15:52:01Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2715022479,
-          "closed": "2026-11-22T16:30:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Manchester United (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Manchester United (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1028072756,
-          "outcomes": [
-            {
-              "id": 4409989163,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 3800,
-              "line": 5500,
-              "type": "OT_OVER",
-              "betOfferId": 2715022479,
-              "changedDate": "2026-11-22T15:52:01Z",
-              "oddsFractional": "14/5",
-              "oddsAmerican": "280",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "MAIN_LINE",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "72221404",
-      "home": "Liverpool FC",
-      "away": "Manchester United",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 3.5,
-            "over": 2.23
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1028072756",
-        "source_offer_id": "2715022489",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072756.json",
-        "updatedAt": "2026-11-22T15:52:02Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2715022489,
-          "closed": "2026-11-22T16:30:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - Liverpool (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Liverpool (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1028072756,
-          "outcomes": [
-            {
-              "id": 4409989183,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 2230,
-              "line": 3500,
-              "type": "OT_OVER",
-              "betOfferId": 2715022489,
-              "changedDate": "2026-11-22T15:52:02Z",
-              "oddsFractional": "6/5",
-              "oddsAmerican": "123",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "72221404",
-      "home": "Liverpool FC",
-      "away": "Manchester United",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 2.5,
-            "over": 1.54
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1028072756",
-        "source_offer_id": "2715022490",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072756.json",
-        "updatedAt": "2026-11-22T15:52:02Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2715022490,
-          "closed": "2026-11-22T16:30:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - Liverpool (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Liverpool (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1028072756,
-          "outcomes": [
-            {
-              "id": 4409989185,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1540,
-              "line": 2500,
-              "type": "OT_OVER",
-              "betOfferId": 2715022490,
-              "changedDate": "2026-11-22T15:52:02Z",
-              "oddsFractional": "8/15",
-              "oddsAmerican": "-186",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "72221404",
-      "home": "Liverpool FC",
-      "away": "Manchester United",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 5.5,
-            "over": 5.4
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1028072756",
-        "source_offer_id": "2720810509",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072756.json",
-        "updatedAt": "2026-11-22T15:52:02Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2720810509,
-          "closed": "2026-11-22T16:30:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - Liverpool (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Liverpool (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1028072756,
-          "outcomes": [
-            {
-              "id": 4428019306,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 5400,
-              "line": 5500,
-              "type": "OT_OVER",
-              "betOfferId": 2720810509,
-              "changedDate": "2026-11-22T15:52:02Z",
-              "oddsFractional": "22/5",
-              "oddsAmerican": "440",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "72513322",
-      "home": "Werder Bremen",
-      "away": "Hamburger SV",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 3.5,
-            "over": 1.68
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1028230559",
-        "source_offer_id": "2715012644",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028230559.json",
-        "updatedAt": "2026-11-22T16:02:12Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2715012644,
-          "closed": "2026-11-22T16:30:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Hamburger SV (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Hamburger SV (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1028230559,
-          "outcomes": [
-            {
-              "id": 4410023773,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1680,
-              "line": 3500,
-              "type": "OT_OVER",
-              "betOfferId": 2715012644,
-              "changedDate": "2026-11-22T16:02:12Z",
-              "oddsFractional": "4/6",
-              "oddsAmerican": "-148",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "MAIN_LINE",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "72513322",
-      "home": "Werder Bremen",
-      "away": "Hamburger SV",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 4.5,
-            "over": 2.38
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1028230559",
-        "source_offer_id": "2715012645",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028230559.json",
-        "updatedAt": "2026-11-22T16:02:12Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2715012645,
-          "closed": "2026-11-22T16:30:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Hamburger SV (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Hamburger SV (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1028230559,
-          "outcomes": [
-            {
-              "id": 4410023775,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 2380,
-              "line": 4500,
-              "type": "OT_OVER",
-              "betOfferId": 2715012645,
-              "changedDate": "2026-11-22T16:02:12Z",
-              "oddsFractional": "11/8",
-              "oddsAmerican": "138",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "72513322",
-      "home": "Werder Bremen",
-      "away": "Hamburger SV",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 2.5,
-            "over": 1.95
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1028230559",
-        "source_offer_id": "2715046790",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028230559.json",
-        "updatedAt": "2026-11-22T16:02:12Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2715046790,
-          "closed": "2026-11-22T16:30:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - Werder Bremen (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Werder Bremen (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1028230559,
-          "outcomes": [
-            {
-              "id": 4410018317,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1950,
-              "line": 2500,
-              "type": "OT_OVER",
-              "betOfferId": 2715046790,
-              "changedDate": "2026-11-22T16:02:12Z",
-              "oddsFractional": "19/20",
-              "oddsAmerican": "-106",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "MAIN_LINE",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945416",
-      "home": "AC Milan",
-      "away": "Frosinone Calcio",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 3.5,
-            "over": 1.93
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911530",
-        "source_offer_id": "2718988631",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911530.json",
-        "updatedAt": "2026-11-22T16:20:03Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2718988631,
-          "closed": "2026-11-22T17:00:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Frosinone (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Frosinone (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911530,
-          "outcomes": [
-            {
-              "id": 4422347512,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1930,
-              "line": 3500,
-              "type": "OT_OVER",
-              "betOfferId": 2718988631,
-              "changedDate": "2026-11-22T16:20:03Z",
-              "oddsFractional": "10/11",
-              "oddsAmerican": "-108",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945416",
-      "home": "AC Milan",
-      "away": "Frosinone Calcio",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 2.5,
-            "over": 1.41
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911530",
-        "source_offer_id": "2718988633",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911530.json",
-        "updatedAt": "2026-11-22T16:20:03Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2718988633,
-          "closed": "2026-11-22T17:00:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Frosinone (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Frosinone (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911530,
-          "outcomes": [
-            {
-              "id": 4422347516,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1410,
-              "line": 2500,
-              "type": "OT_OVER",
-              "betOfferId": 2718988633,
-              "changedDate": "2026-11-22T16:20:03Z",
-              "oddsFractional": "2/5",
-              "oddsAmerican": "-245",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945416",
-      "home": "AC Milan",
-      "away": "Frosinone Calcio",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 1.5,
-            "over": 1.13
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911530",
-        "source_offer_id": "2718988636",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911530.json",
-        "updatedAt": "2026-11-22T16:20:03Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2718988636,
-          "closed": "2026-11-22T17:00:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Frosinone (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Frosinone (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911530,
-          "outcomes": [
-            {
-              "id": 4422347522,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1130,
-              "line": 1500,
-              "type": "OT_OVER",
-              "betOfferId": 2718988636,
-              "changedDate": "2026-11-22T16:20:03Z",
-              "oddsFractional": "1/8",
-              "oddsAmerican": "-770",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945416",
-      "home": "AC Milan",
-      "away": "Frosinone Calcio",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 2.5,
-            "over": 1.72
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911530",
-        "source_offer_id": "2718988637",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911530.json",
-        "updatedAt": "2026-11-22T16:20:03Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2718988637,
-          "closed": "2026-11-22T17:00:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - AC Milan (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - AC Milan (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911530,
-          "outcomes": [
-            {
-              "id": 4422347524,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1720,
-              "line": 2500,
-              "type": "OT_OVER",
-              "betOfferId": 2718988637,
-              "changedDate": "2026-11-22T16:20:03Z",
-              "oddsFractional": "7/10",
-              "oddsAmerican": "-139",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "MAIN_LINE",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945416",
-      "home": "AC Milan",
-      "away": "Frosinone Calcio",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 4.5,
-            "over": 2.9
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911530",
-        "source_offer_id": "2718994445",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911530.json",
-        "updatedAt": "2026-11-22T16:20:03Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2718994445,
-          "closed": "2026-11-22T17:00:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Frosinone (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Frosinone (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911530,
-          "outcomes": [
-            {
-              "id": 4422353253,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 2900,
-              "line": 4500,
-              "type": "OT_OVER",
-              "betOfferId": 2718994445,
-              "changedDate": "2026-11-22T16:20:03Z",
-              "oddsFractional": "19/10",
-              "oddsAmerican": "190",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "MAIN_LINE",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945416",
-      "home": "AC Milan",
-      "away": "Frosinone Calcio",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 4.5,
-            "over": 4.2
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911530",
-        "source_offer_id": "2718994451",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911530.json",
-        "updatedAt": "2026-11-22T16:20:03Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2718994451,
-          "closed": "2026-11-22T17:00:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - AC Milan (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - AC Milan (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911530,
-          "outcomes": [
-            {
-              "id": 4422353265,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 4200,
-              "line": 4500,
-              "type": "OT_OVER",
-              "betOfferId": 2718994451,
-              "changedDate": "2026-11-22T16:20:03Z",
-              "oddsFractional": "16/5",
-              "oddsAmerican": "320",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945416",
-      "home": "AC Milan",
-      "away": "Frosinone Calcio",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Away",
-        "odds": [
-          {
-            "hdp": 5.5,
-            "over": 4.4
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911530",
-        "source_offer_id": "2719023123",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911530.json",
-        "updatedAt": "2026-11-22T16:20:03Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2719023123,
-          "closed": "2026-11-22T17:00:00Z",
-          "criterion": {
-            "id": 2100086017,
-            "label": "Goalkeeper Saves - Frosinone (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - Frosinone (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911530,
-          "outcomes": [
-            {
-              "id": 4422359254,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 4400,
-              "line": 5500,
-              "type": "OT_OVER",
-              "betOfferId": 2719023123,
-              "changedDate": "2026-11-22T16:20:03Z",
-              "oddsFractional": "17/5",
-              "oddsAmerican": "340",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945416",
-      "home": "AC Milan",
-      "away": "Frosinone Calcio",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 3.5,
-            "over": 2.63
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911530",
-        "source_offer_id": "2719023129",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911530.json",
-        "updatedAt": "2026-11-22T16:20:03Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2719023129,
-          "closed": "2026-11-22T17:00:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - AC Milan (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - AC Milan (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911530,
-          "outcomes": [
-            {
-              "id": 4422359266,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 2630,
-              "line": 3500,
-              "type": "OT_OVER",
-              "betOfferId": 2719023129,
-              "changedDate": "2026-11-22T16:20:03Z",
-              "oddsFractional": "13/8",
-              "oddsAmerican": "163",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
-    {
-      "event_id": "71945416",
-      "home": "AC Milan",
-      "away": "Frosinone Calcio",
-      "bookmaker": "Grosvenor",
-      "market": {
-        "name": "Goalkeeper Saves Home",
-        "odds": [
-          {
-            "hdp": 1.5,
-            "over": 1.26
-          }
-        ],
-        "source": "grosvenor_direct",
-        "source_event_id": "1027911530",
-        "source_offer_id": "2719023131",
-        "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911530.json",
-        "updatedAt": "2026-11-22T16:20:03Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
-        "raw_offer": {
-          "id": 2719023131,
-          "closed": "2026-11-22T17:00:00Z",
-          "criterion": {
-            "id": 2100086018,
-            "label": "Goalkeeper Saves - AC Milan (Settled using Opta data)",
-            "englishLabel": "Goalkeeper Saves - AC Milan (Settled using Opta data)",
-            "order": [],
-            "lifetime": "FULL_TIME"
-          },
-          "betOfferType": {
-            "id": 6,
-            "name": "Over/Under",
-            "englishName": "Over/Under"
-          },
-          "eventId": 1027911530,
-          "outcomes": [
-            {
-              "id": 4422359270,
-              "label": "Over",
-              "englishLabel": "Over",
-              "odds": 1260,
-              "line": 1500,
-              "type": "OT_OVER",
-              "betOfferId": 2719023131,
-              "changedDate": "2026-11-22T16:20:03Z",
-              "oddsFractional": "1/4",
-              "oddsAmerican": "-385",
-              "status": "OPEN",
-              "cashOutStatus": "DISABLED",
-              "displayOrder": 0
-            }
-          ],
-          "tags": [
-            "OFFERED_PREMATCH",
-            "BET_BUILDER"
-          ],
-          "cashOutStatus": "ENABLED"
-        }
-      }
-    },
     {
       "event_id": "72478716",
       "home": "CA Osasuna",
@@ -1337,15 +11,15 @@
         "odds": [
           {
             "hdp": 2.5,
-            "over": 1.85
+            "over": 1.84
           }
         ],
         "source": "grosvenor_direct",
         "source_event_id": "1028209205",
         "source_offer_id": "2719020545",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209205.json",
-        "updatedAt": "2026-11-22T16:11:19Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "updatedAt": "2026-11-22T16:35:27Z",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719020545,
           "closed": "2026-11-22T17:30:00Z",
@@ -1367,13 +41,13 @@
               "id": 4422341750,
               "label": "Over",
               "englishLabel": "Over",
-              "odds": 1850,
+              "odds": 1840,
               "line": 2500,
               "type": "OT_OVER",
               "betOfferId": 2719020545,
-              "changedDate": "2026-11-22T16:11:19Z",
-              "oddsFractional": "17/20",
-              "oddsAmerican": "-118",
+              "changedDate": "2026-11-22T16:35:27Z",
+              "oddsFractional": "5/6",
+              "oddsAmerican": "-120",
               "status": "OPEN",
               "cashOutStatus": "DISABLED",
               "displayOrder": 0
@@ -1397,15 +71,15 @@
         "odds": [
           {
             "hdp": 2.5,
-            "over": 1.35
+            "over": 1.34
           }
         ],
         "source": "grosvenor_direct",
         "source_event_id": "1028209205",
         "source_offer_id": "2719020547",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209205.json",
-        "updatedAt": "2026-11-22T16:11:19Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "updatedAt": "2026-11-22T16:35:27Z",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719020547,
           "closed": "2026-11-22T17:30:00Z",
@@ -1427,13 +101,13 @@
               "id": 4422341755,
               "label": "Over",
               "englishLabel": "Over",
-              "odds": 1350,
+              "odds": 1340,
               "line": 2500,
               "type": "OT_OVER",
               "betOfferId": 2719020547,
-              "changedDate": "2026-11-22T16:11:19Z",
-              "oddsFractional": "7/20",
-              "oddsAmerican": "-286",
+              "changedDate": "2026-11-22T16:35:27Z",
+              "oddsFractional": "1/3",
+              "oddsAmerican": "-295",
               "status": "OPEN",
               "cashOutStatus": "DISABLED",
               "displayOrder": 0
@@ -1464,8 +138,8 @@
         "source_event_id": "1028209205",
         "source_offer_id": "2719029144",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209205.json",
-        "updatedAt": "2026-11-22T16:11:19Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "updatedAt": "2026-11-22T16:35:27Z",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719029144,
           "closed": "2026-11-22T17:30:00Z",
@@ -1491,7 +165,7 @@
               "line": 3500,
               "type": "OT_OVER",
               "betOfferId": 2719029144,
-              "changedDate": "2026-11-22T16:11:19Z",
+              "changedDate": "2026-11-22T16:35:27Z",
               "oddsFractional": "19/10",
               "oddsAmerican": "190",
               "status": "OPEN",
@@ -1517,15 +191,15 @@
         "odds": [
           {
             "hdp": 4.5,
-            "over": 4.8
+            "over": 4.7
           }
         ],
         "source": "grosvenor_direct",
         "source_event_id": "1028209205",
         "source_offer_id": "2719029148",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209205.json",
-        "updatedAt": "2026-11-22T16:11:19Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "updatedAt": "2026-11-22T16:35:27Z",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719029148,
           "closed": "2026-11-22T17:30:00Z",
@@ -1547,13 +221,13 @@
               "id": 4422368512,
               "label": "Over",
               "englishLabel": "Over",
-              "odds": 4800,
+              "odds": 4700,
               "line": 4500,
               "type": "OT_OVER",
               "betOfferId": 2719029148,
-              "changedDate": "2026-11-22T16:11:19Z",
-              "oddsFractional": "19/5",
-              "oddsAmerican": "380",
+              "changedDate": "2026-11-22T16:35:27Z",
+              "oddsFractional": "18/5",
+              "oddsAmerican": "370",
               "status": "OPEN",
               "cashOutStatus": "DISABLED",
               "displayOrder": 0
@@ -1585,8 +259,8 @@
         "source_event_id": "1028209205",
         "source_offer_id": "2719029154",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209205.json",
-        "updatedAt": "2026-11-22T16:11:19Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "updatedAt": "2026-11-22T16:35:27Z",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719029154,
           "closed": "2026-11-22T17:30:00Z",
@@ -1612,7 +286,7 @@
               "line": 4500,
               "type": "OT_OVER",
               "betOfferId": 2719029154,
-              "changedDate": "2026-11-22T16:11:19Z",
+              "changedDate": "2026-11-22T16:35:27Z",
               "oddsFractional": "31/20",
               "oddsAmerican": "155",
               "status": "OPEN",
@@ -1645,8 +319,8 @@
         "source_event_id": "1028209205",
         "source_offer_id": "2719032092",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209205.json",
-        "updatedAt": "2026-11-22T16:11:19Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "updatedAt": "2026-11-22T16:35:27Z",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719032092,
           "closed": "2026-11-22T17:30:00Z",
@@ -1672,7 +346,7 @@
               "line": 1500,
               "type": "OT_OVER",
               "betOfferId": 2719032092,
-              "changedDate": "2026-11-22T16:11:19Z",
+              "changedDate": "2026-11-22T16:35:27Z",
               "oddsFractional": "2/7",
               "oddsAmerican": "-345",
               "status": "OPEN",
@@ -1698,15 +372,15 @@
         "odds": [
           {
             "hdp": 5.5,
-            "over": 3.85
+            "over": 3.9
           }
         ],
         "source": "grosvenor_direct",
         "source_event_id": "1028209205",
         "source_offer_id": "2719032094",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209205.json",
-        "updatedAt": "2026-11-22T16:11:19Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "updatedAt": "2026-11-22T16:35:27Z",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719032094,
           "closed": "2026-11-22T17:30:00Z",
@@ -1728,13 +402,13 @@
               "id": 4422356791,
               "label": "Over",
               "englishLabel": "Over",
-              "odds": 3850,
+              "odds": 3900,
               "line": 5500,
               "type": "OT_OVER",
               "betOfferId": 2719032094,
-              "changedDate": "2026-11-22T16:11:19Z",
-              "oddsFractional": "14/5",
-              "oddsAmerican": "285",
+              "changedDate": "2026-11-22T16:35:27Z",
+              "oddsFractional": "29/10",
+              "oddsAmerican": "290",
               "status": "OPEN",
               "cashOutStatus": "DISABLED",
               "displayOrder": 0
@@ -1759,15 +433,15 @@
         "odds": [
           {
             "hdp": 3.5,
-            "over": 1.8
+            "over": 1.78
           }
         ],
         "source": "grosvenor_direct",
         "source_event_id": "1028209205",
         "source_offer_id": "2719032096",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209205.json",
-        "updatedAt": "2026-11-22T16:11:19Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "updatedAt": "2026-11-22T16:35:27Z",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719032096,
           "closed": "2026-11-22T17:30:00Z",
@@ -1789,13 +463,13 @@
               "id": 4422356795,
               "label": "Over",
               "englishLabel": "Over",
-              "odds": 1800,
+              "odds": 1780,
               "line": 3500,
               "type": "OT_OVER",
               "betOfferId": 2719032096,
-              "changedDate": "2026-11-22T16:11:19Z",
-              "oddsFractional": "4/5",
-              "oddsAmerican": "-125",
+              "changedDate": "2026-11-22T16:35:27Z",
+              "oddsFractional": "10/13",
+              "oddsAmerican": "-129",
               "status": "OPEN",
               "cashOutStatus": "DISABLED",
               "displayOrder": 0
@@ -1826,8 +500,8 @@
         "source_event_id": "1028209205",
         "source_offer_id": "2719032097",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209205.json",
-        "updatedAt": "2026-11-22T16:11:19Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "updatedAt": "2026-11-22T16:35:27Z",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719032097,
           "closed": "2026-11-22T17:30:00Z",
@@ -1853,7 +527,7 @@
               "line": 1500,
               "type": "OT_OVER",
               "betOfferId": 2719032097,
-              "changedDate": "2026-11-22T16:11:19Z",
+              "changedDate": "2026-11-22T16:35:27Z",
               "oddsFractional": "1/10",
               "oddsAmerican": "-910",
               "status": "OPEN",
@@ -1887,7 +561,7 @@
         "source_offer_id": "2718734788",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911539.json",
         "updatedAt": "2026-11-22T14:39:51Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718734788,
           "closed": "2026-11-22T19:45:00Z",
@@ -1947,7 +621,7 @@
         "source_offer_id": "2718734789",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911539.json",
         "updatedAt": "2026-11-22T14:39:51Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718734789,
           "closed": "2026-11-22T19:45:00Z",
@@ -2007,7 +681,7 @@
         "source_offer_id": "2718757757",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911539.json",
         "updatedAt": "2026-11-22T14:39:51Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718757757,
           "closed": "2026-11-22T19:45:00Z",
@@ -2067,7 +741,7 @@
         "source_offer_id": "2718757758",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911539.json",
         "updatedAt": "2026-11-22T14:39:51Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718757758,
           "closed": "2026-11-22T19:45:00Z",
@@ -2127,7 +801,7 @@
         "source_offer_id": "2718757761",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911539.json",
         "updatedAt": "2026-11-22T14:39:51Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718757761,
           "closed": "2026-11-22T19:45:00Z",
@@ -2188,7 +862,7 @@
         "source_offer_id": "2718763576",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911539.json",
         "updatedAt": "2026-11-22T14:39:51Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718763576,
           "closed": "2026-11-22T19:45:00Z",
@@ -2248,7 +922,7 @@
         "source_offer_id": "2718763577",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911539.json",
         "updatedAt": "2026-11-22T14:39:51Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718763577,
           "closed": "2026-11-22T19:45:00Z",
@@ -2308,7 +982,7 @@
         "source_offer_id": "2718763578",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911539.json",
         "updatedAt": "2026-11-22T14:39:51Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718763578,
           "closed": "2026-11-22T19:45:00Z",
@@ -2369,7 +1043,7 @@
         "source_offer_id": "2718763583",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911539.json",
         "updatedAt": "2026-11-22T14:39:51Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718763583,
           "closed": "2026-11-22T19:45:00Z",
@@ -2429,7 +1103,7 @@
         "source_offer_id": "2718763584",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911539.json",
         "updatedAt": "2026-11-22T14:39:51Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718763584,
           "closed": "2026-11-22T19:45:00Z",
@@ -2489,7 +1163,7 @@
         "source_offer_id": "2711938376",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027973936.json",
         "updatedAt": "2026-11-22T16:05:27Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2711938376,
           "closed": "2026-11-22T19:45:00Z",
@@ -2550,7 +1224,7 @@
         "source_offer_id": "2711955621",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027973936.json",
         "updatedAt": "2026-11-22T16:05:26Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2711955621,
           "closed": "2026-11-22T19:45:00Z",
@@ -2610,7 +1284,7 @@
         "source_offer_id": "2711972915",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027973936.json",
         "updatedAt": "2026-11-22T16:05:26Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2711972915,
           "closed": "2026-11-22T19:45:00Z",
@@ -2671,7 +1345,7 @@
         "source_offer_id": "2718477101",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027973936.json",
         "updatedAt": "2026-11-22T16:05:27Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718477101,
           "closed": "2026-11-22T19:45:00Z",
@@ -2731,7 +1405,7 @@
         "source_offer_id": "2718477102",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027973936.json",
         "updatedAt": "2026-11-22T16:05:27Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718477102,
           "closed": "2026-11-22T19:45:00Z",
@@ -2791,7 +1465,7 @@
         "source_offer_id": "2718477114",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027973936.json",
         "updatedAt": "2026-11-22T16:05:26Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718477114,
           "closed": "2026-11-22T19:45:00Z",
@@ -2851,7 +1525,7 @@
         "source_offer_id": "2718482557",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027973936.json",
         "updatedAt": "2026-11-22T16:05:26Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718482557,
           "closed": "2026-11-22T19:45:00Z",
@@ -2911,7 +1585,7 @@
         "source_offer_id": "2718491289",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027973936.json",
         "updatedAt": "2026-11-22T16:05:27Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718491289,
           "closed": "2026-11-22T19:45:00Z",
@@ -2971,7 +1645,7 @@
         "source_offer_id": "2718491306",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027973936.json",
         "updatedAt": "2026-11-22T16:05:26Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718491306,
           "closed": "2026-11-22T19:45:00Z",
@@ -3031,7 +1705,7 @@
         "source_offer_id": "2718985800",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209213.json",
         "updatedAt": "2026-11-22T16:18:08Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718985800,
           "closed": "2026-11-22T20:00:00Z",
@@ -3091,7 +1765,7 @@
         "source_offer_id": "2718985802",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209213.json",
         "updatedAt": "2026-11-22T16:18:08Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2718985802,
           "closed": "2026-11-22T20:00:00Z",
@@ -3151,7 +1825,7 @@
         "source_offer_id": "2719011703",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209213.json",
         "updatedAt": "2026-11-22T16:03:22Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719011703,
           "closed": "2026-11-22T20:00:00Z",
@@ -3211,7 +1885,7 @@
         "source_offer_id": "2719011704",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209213.json",
         "updatedAt": "2026-11-22T16:18:08Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719011704,
           "closed": "2026-11-22T20:00:00Z",
@@ -3271,7 +1945,7 @@
         "source_offer_id": "2719011705",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209213.json",
         "updatedAt": "2026-11-22T16:18:08Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719011705,
           "closed": "2026-11-22T20:00:00Z",
@@ -3331,7 +2005,7 @@
         "source_offer_id": "2719011706",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209213.json",
         "updatedAt": "2026-11-22T16:18:08Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719011706,
           "closed": "2026-11-22T20:00:00Z",
@@ -3392,7 +2066,7 @@
         "source_offer_id": "2719017548",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209213.json",
         "updatedAt": "2026-11-22T16:03:22Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719017548,
           "closed": "2026-11-22T20:00:00Z",
@@ -3452,7 +2126,7 @@
         "source_offer_id": "2719017550",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209213.json",
         "updatedAt": "2026-11-22T16:03:22Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719017550,
           "closed": "2026-11-22T20:00:00Z",
@@ -3513,7 +2187,7 @@
         "source_offer_id": "2719261436",
         "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209213.json",
         "updatedAt": "2026-11-22T16:03:22Z",
-        "captured_at": "2026-11-22T16:20:39+00:00",
+        "captured_at": "2026-11-22T17:23:43+00:00",
         "raw_offer": {
           "id": 2719261436,
           "closed": "2026-11-22T20:00:00Z",

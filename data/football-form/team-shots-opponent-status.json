@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T16:21:38Z",
+  "generated_at": "2026-11-22T17:24:05Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -19,11 +19,11 @@
     "mean_clv": 0.01458478125
   },
   "latest_scan": {
-    "scored_rows": 28,
-    "scored_fixtures": 7,
-    "explanation": "14 fresh paired contracts; 28 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: outside_capture_window=17, stale_price=343. Input cohorts kept separate. Before 30 October 2026: 98 settled, 30 October 2026 to input repair: 26 settled, Prospective repaired inputs: 4 settled. Promotion review uses repaired inputs only; original records remain intact."
+    "scored_rows": 16,
+    "scored_fixtures": 4,
+    "explanation": "8 fresh paired contracts; 16 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: outside_capture_window=17, stale_price=208. Input cohorts kept separate. Before 30 October 2026: 98 settled, 30 October 2026 to input repair: 26 settled, Prospective repaired inputs: 4 settled. Promotion review uses repaired inputs only; original records remain intact."
   },
-  "settled_this_run": 4,
+  "settled_this_run": 0,
   "result_source": {
     "bundesliga": {
       "football_data_latest": "2026-11-08",
@@ -139,8 +139,8 @@
   "age_days": 70,
   "input_integrity": {
     "policy": "shots-input-integrity-20261113-v1",
-    "generated_at": "2026-11-22T16:21:38.881759+00:00",
-    "base_sha256": "28d190cb7acd2ab02f33f88f52ecc79a346e6f022e0463652c8118b5d824a26b",
+    "generated_at": "2026-11-22T17:24:05.536788+00:00",
+    "base_sha256": "ab5c97a4ca56bd1a108f874c5557bc402abd30a4b933c894beacecb5f8288abe",
     "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
     "source_rows": 44240,
     "prediction_rows": 44234,

@@ -5,11 +5,11 @@
     "blocked_lines": 0,
     "blocker_counts": {},
     "candidate_board_preserved": false,
-    "eligible_lines": 3,
-    "priced_lines": 91,
+    "eligible_lines": 0,
+    "priced_lines": 65,
     "provisional_lines": 0,
     "signals_added": 0,
-    "value_ladder_lines": 7
+    "value_ladder_lines": 2
   },
   "evidence": {
     "clv": 0.047953,
@@ -159,24 +159,21 @@
   },
   "forecast_input_capture": {
     "accepted_packets": [
-      "3748eca77c4d0eb300668448d7f5dd3b1e1b4e9c2d115324d4f71d4e9c51c0b4",
-      "2580a423b76e912c39a805a1dcf43826edafdbdad4d08d245606e40d25e55361",
-      "1e2982f811e1b95c32ce2603a56deefe3d7147d313cc6a1c042f28967a27179f",
-      "33bda45faf6c0a9035416756070a348090513c87d27b227e872e38a71bf18def",
-      "5134cde6aac0d6a7f0a4d3e4baed5b5e99c0bc29d78f99d60af7d4e16e84a7c0",
-      "21fc7937cea4d021447dc031baa9dcf4198ba0b7f4804054459e7aa02737d3e3",
-      "05530007c04c185cde0deb6b6df808f03ea150dc7c642b59f738f8941a44b9f7"
+      "4b319d029385d323fccfa100152a5ce38f89fb3a2a616d17577082e26cb750b9",
+      "d67bb4d9ccad8a11676d1a561b1162e7e888d572ff874f63f8957fe0e36ac71a",
+      "9ef8d7c6465bc87fb49945b6316bebdaa76493bf1a3f9bfcba30c813e92ab8b6",
+      "2d85d95a2de280f4a841c33833079c51232a50f9f2a175300f56d8a9ca9be4c8"
     ],
     "actual_stake": 0,
-    "checked_at": "2026-11-22T16:22:24.775829+00:00",
+    "checked_at": "2026-11-22T17:23:51.884794+00:00",
     "counts": {
-      "already_saved": 7,
-      "not_fresh_prematch": 32
+      "not_fresh_prematch": 28,
+      "offers_saved": 37
     },
-    "saved": 0,
-    "status": "NO_NEW_ELIGIBLE_INPUTS"
+    "saved": 4,
+    "status": "CAPTURED"
   },
-  "generated_at": "2026-11-22T16:22:24Z",
+  "generated_at": "2026-11-22T17:23:51Z",
   "half_adjustment": {
     "actual_stake": 0,
     "arms": {
@@ -214,11 +211,11 @@
       }
     },
     "fixtures": 0,
-    "generated_at": "2026-11-22T16:22:24.901946+00:00",
+    "generated_at": "2026-11-22T17:23:52.100918+00:00",
     "holds": {},
     "paired_settled_fixtures": 0,
     "scan_exclusions": {
-      "ineligible_contract_or_input": 59
+      "ineligible_contract_or_input": 37
     },
     "start_at": "2026-11-17T18:55:00+00:00",
     "status": "AWAITING_FIRST_VERIFIED_BOARD"
@@ -228,12 +225,12 @@
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
-      "not_new_fresh_prematch": 32,
-      "starter_unavailable": 12
+      "not_new_fresh_prematch": 28,
+      "starter_unavailable": 9
     },
     "forecast_fixtures": 216,
     "forecast_keepers": 442,
-    "generated_at": "2026-11-22T16:22:24.800891+00:00",
+    "generated_at": "2026-11-22T17:23:51.947171+00:00",
     "last_capture_at": "2026-11-22T16:20:46.809892+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
