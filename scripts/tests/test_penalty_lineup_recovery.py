@@ -33,6 +33,19 @@ class RecoveryTests(unittest.TestCase):
         for displayed, full in [('Gabriel','Gabriel Magalhaes'),('Rodri','Rodrigo Hernandez')]:
             self.assertIsNone(r._on_pitch_at(self.timeline(self.team(displayed)),full,40)[0])
 
+    def test_quoted_given_name_needs_one_exact_full_name_on_the_same_team(self):
+        registered = 'Antonio “Toni” Martínez'
+        for shown in ('Toni Martínez', 'Antonio Martínez'):
+            team = self.timeline(self.team(shown, 640123))
+            present, proof = r._on_pitch_at(team, registered, 55)
+            self.assertIs(present, True)
+            self.assertEqual(proof['player_id'], 640123)
+        team = self.team('Toni Martínez', 640123)
+        team['subs'] = [{'id': 999, 'name': 'Antonio Martínez'}]
+        self.assertIsNone(r._on_pitch_at(self.timeline(team), registered, 55)[0])
+        for other in ('Antonio Blanco', 'Toni Martínez García', 'Antonio García Martínez'):
+            self.assertIsNone(r._on_pitch_at(self.timeline(self.team(other)), registered, 55)[0])
+
     def test_alias_is_bound_to_exact_provider_id(self):
         for name,pid,alias in [('Raúl García',1094778,'Raúl García de Haro'),('Jaden Philogene-Bidace',1089645,'Jaden Philogene')]:
             self.assertTrue(r._on_pitch_at(self.timeline(self.team(name,pid)),alias,30)[0])

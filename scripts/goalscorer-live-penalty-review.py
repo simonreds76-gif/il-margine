@@ -218,6 +218,18 @@ def _event_name(value: object) -> str:
     return normalized_player_name(str(value or ""))
 
 
+def _quoted_given_name_forms(name):
+    """Read a nickname explicitly supplied between given name and full surname."""
+    text = str(name or "").translate(str.maketrans({"“": '"', "”": '"', "‘": "'", "’": "'"}))
+    match = re.fullmatch(r"""([^"']+?)\s+(["'])([^"']+)\2\s+(.+)""", text.strip())
+    if not match:
+        return set()
+    given, nickname, surname = (_event_name(match[i]) for i in (1, 3, 4))
+    if not surname or min(len(given), len(nickname)) < 2:
+        return set()
+    return {f"{given} {surname}", f"{nickname} {surname}"}
+
+
 # Exact provider identities: surname extensions must not turn into fuzzy matches.
 # Verified against /api/data/playerData?id=<id> on 2026-10-25.
 PENALTY_PLAYER_IDENTITIES = {
@@ -361,13 +373,15 @@ def _on_pitch_at(team_lineup: dict, player_name: str, minute: int, added_time: i
             return None, dict(proof, reason="missing_or_ambiguous_player")
     found = [(bucket, player) for bucket in ("starters", "subs", "unavailable") for player in team_lineup.get(bucket, []) or []
              if isinstance(player, dict) and known_id and str(player.get("id")) == known_id]
+    quoted_names = _quoted_given_name_forms(player_name)
     if not found:
+        full_names = quoted_names | {_event_name(player_name)}
         found = [(bucket, player) for bucket in ("starters", "subs", "unavailable") for player in team_lineup.get(bucket, []) or []
-             if isinstance(player, dict) and _event_name(player.get("name")) == _event_name(player_name)]
-    if not found:
+             if isinstance(player, dict) and _event_name(player.get("name")) in full_names]
+    if not found and not quoted_names:
         found = [(bucket, player) for bucket in ("starters", "subs", "unavailable") for player in team_lineup.get(bucket, []) or []
                  if isinstance(player, dict) and _explicit_player_alias(player.get("name"), player_name)]
-    if not found:
+    if not found and not quoted_names:
         target = _event_name(player_name).split()
         found = [(bucket, player) for bucket in ("starters", "subs", "unavailable") for player in team_lineup.get(bucket, []) or []
                  if isinstance(player, dict) and len(target) >= 2 and len(_event_name(player.get("name")).split()) >= 2
