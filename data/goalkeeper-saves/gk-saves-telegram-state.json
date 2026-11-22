@@ -4504,16 +4504,90 @@
         ],
         "price_checked_at": "2026-11-21T16:16:24.658544+00:00"
       }
+    },
+    "grosvenor|71945424|justin bijlow|3.5|over": {
+      "status": "claimed",
+      "run_token": "44977039993:1",
+      "claimed_at": "2026-11-22T02:40:27.146664+00:00",
+      "signal": {
+        "signal_id": "grosvenor|71945424|justin bijlow|3.5|over",
+        "created_at": "2026-11-22T02:39:36Z",
+        "event_id": "71945424",
+        "match_date": "2026-11-22",
+        "kickoff_at": "2026-11-22T14:00:00Z",
+        "league": "serie-a",
+        "home_team": "Sassuolo Calcio",
+        "away_team": "Genoa CFC",
+        "team": "Genoa CFC",
+        "opponent": "Sassuolo Calcio",
+        "venue": "away",
+        "goalkeeper": "Justin Bijlow",
+        "bookmaker": "Grosvenor",
+        "line": "3.5",
+        "side": "over",
+        "odds_decimal": "2.4000",
+        "model_mean": "3.4370",
+        "model_probability": "0.439733",
+        "push_probability": "0.000000",
+        "fair_odds": "2.274",
+        "edge": "0.055360",
+        "stake_units": "0.5",
+        "lineup_status": "predicted_starter",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-11-22T02:39:23+00:00",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "team_goalkeeper_away",
+        "identity_basis": "same_fixture_lineup_side",
+        "integrity_status": "",
+        "quarantine_reason": "",
+        "quote_verification": "",
+        "display_prices": [
+          {
+            "bookmaker": "Bet365",
+            "goalkeeper": "Justin Bijlow",
+            "odds": 2.5,
+            "captured_at": "2026-11-22T02:37:52.524782+00:00",
+            "contract_scope": "named_player",
+            "observed_only": true
+          },
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 2.4,
+            "goalkeeper": "",
+            "contract_scope": "team_goalkeeper_away",
+            "captured_at": "2026-11-22T02:39:23+00:00",
+            "observed_only": false
+          }
+        ],
+        "price_comparison": [
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 2.4,
+            "captured_at": "2026-11-22T02:39:23+00:00",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-11-22T02:40:27.146664+00:00"
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-11-21T22:24:46.050193+00:00",
-      "added": 0,
+      "checked_at": "2026-11-22T02:40:27.146664+00:00",
+      "added": 1,
       "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-11-21T22:24:46.050193+00:00",
+      "checked_at": "2026-11-22T02:40:27.146664+00:00",
       "added": 0,
       "suppressed": {}
     }
