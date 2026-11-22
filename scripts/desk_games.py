@@ -5,7 +5,9 @@ import math
 from datetime import datetime, timedelta
 from decimal import Decimal
 
-ALERT_POLICY = "same-line-over4pp-prematch-limits-shown-v3"
+PRIOR_ALL_DAY_POLICY = "same-line-over4pp-prematch-limits-shown-v3"
+ALERT_POLICY = "same-line-over4pp-prematch-min200usd-v4"
+MINIMUM_USD = 200
 FINAL_HOUR = timedelta(hours=1)
 
 
@@ -37,6 +39,13 @@ def market_limit(row, contract):
     return {"amount": amount, "currency": currency}
 
 
+def meets_usd_floor(limit, minimum):
+    if not isinstance(limit, dict) or limit.get("currency") != "USD":
+        return False
+    amount = limit.get("amount")
+    return type(amount) in (int, float) and math.isfinite(amount) and amount >= minimum
+
+
 def alert_moves(batch):
     """A retry can read a batch created before the Telegram policy changed."""
     if batch.get("policy") != ALERT_POLICY:
@@ -44,7 +53,7 @@ def alert_moves(batch):
     wanted = set(batch["alert_ids"])
     moves = []
     for move in batch["moves"]:
-        if move["move_id"] in wanted:
+        if move["move_id"] in wanted and meets_usd_floor(move.get("alert_detection_limit"), MINIMUM_USD):
             start, before, after = (datetime.fromisoformat(move[key]) for key in ("start", "before", "after"))
             if before < after < start and alert_crossing(move["old"], move["new"]):
                 moves.append(move)
@@ -141,7 +150,9 @@ def compare(last, current, state, blocked):
                 board_crossing = contract not in issued and crosses_threshold(peak[1+i], price)
                 if board_crossing:
                     issued[contract] = row["start"]
-                qualifies = alert_refs is not None and contract not in alerted and alert_crossing(alert_refs[i][1+i], price)
+                qualifies = (alert_refs is not None and contract not in alerted
+                             and meets_usd_floor(limit, MINIMUM_USD)
+                             and alert_crossing(alert_refs[i][1+i], price))
                 reference = peak if board_crossing else old["last"]
                 if qualifies:
                     reference = alert_refs[i]
