@@ -388,7 +388,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
           </div>}
           <p className={styles.railNote} id={noteId}>
             <b>pp</b> is the rise in implied probability (1 ÷ price) from the earlier odds to the observed move.
-            {!archive && <> Telegram flags the first move <b>over 4 pp</b> per side and line before play. Each alert shows the observed market limits.</>}
+            {!archive && <> Telegram flags <b>one selection per match</b>. If several lines qualify in the first scan, the largest rise in implied probability gets the alert. All observed moves stay on the board.</>}
             {!archive && <> {upcomingOnly ? "Upcoming" : "All recorded"}: {sortNote}.</>}
           </p>
         </div>

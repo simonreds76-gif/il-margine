@@ -107,7 +107,7 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
     <p className={styles.standfirst}>Follow big odds moves before the first serve. We check {circuit==="ATP"?"ATP and Challenger":"WTA Tour and WTA 125"} odds about every 15 minutes and show which players, game totals and games handicaps are shortening. Each chart shows how the odds and the reported market limit changed before play.</p>
     <details className={styles.fold}>
       <summary>What triggers an alert?</summary>
-      <p className={styles.fine}>Telegram sends one alert when the implied probability rises by more than four percentage points before play and the reported limit on that selection and line is at least $200 at detection. For example, odds shortening from 2.00 to 1.85 imply a rise from 50% to 54.1%. Moves with a smaller or unknown limit still appear on the board. A gap in scans starts a fresh comparison. Final-hour moves carry a timing label.</p>
+      <p className={styles.fine}>Telegram sends one selection per match, on both tours. A line qualifies before play when its implied probability rises by more than four percentage points and its reported limit is at least $200 at detection. If several lines qualify in the same first scan, the largest rise gets the alert and the 1u Telegram paper entry at the odds sent. Every other move stays on the board, including later drops and moves with a smaller or unknown limit. A gap in scans resets the odds comparison. Final-hour moves carry a timing label.</p>
       <p className={styles.fine}>The market limit is the maximum reported when we checked the odds. The amount actually wagered is unknown. Paper returns use the recorded odds at detection.</p>
     </details>
     {content}
