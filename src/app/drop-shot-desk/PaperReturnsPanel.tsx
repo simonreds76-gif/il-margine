@@ -112,13 +112,13 @@ function RefRow({label,r}:{label:string;r:Result}) {
 
 const RULES:[string,string][] = [
   ["≥4 pp", "A rise of at least 4 percentage points in implied probability, seen before the match starts."],
-  ["Independent record", "Every pre-match move that large is entered, thin low-limit moves included, whether or not an alert was sent. In the 30-day view, choose Sent on Telegram to see confirmed alerts at their sent odds."],
+  ["Independent record", "New paper entries require a reported limit of at least $200 on the same selection and line at detection. In the 30-day view, choose Sent on Telegram to see confirmed alerts at their sent odds."],
   ["One entry, 1u", "Each entry records 1u at the first qualifying odds for a match, market, line and side. A repeat drop on that same side and line adds no stake. A move on the other player, or a different handicap, can count separately, so one fixture can drive several wins or losses."],
   ["Net and ROI", "ROI is net result over settled stake across the whole period, so it is weighted by stake and is not an average of daily figures. Pending entries carry no result yet. With no settled stake, net and ROI show a dash."],
   ["Closing line value (CLV)", "We compare the entry odds with the last recorded odds on the same selection and line before the verified start. Positive CLV means the entry got better odds. The figure is the average percentage price advantage across entries with a later reading. Open the 30-day selections for odds and minutes before play."],
   ["Final hour", "A timing reference. Both observations must fall inside the final hour, and the same move can also sit in the main record at different odds, so adding the two would double-count."],
   ["Retirements", "On retirement or disqualification, moneyline picks settle on the official winner once one full set has been played. Before that, both sides are void. Whole-match games handicaps and totals are void on retirement. A walkover voids all three markets."],
-  ["Source", "The record was first compiled from saved scans up to 21 November 2026 at 10:15 UTC. Later entries use the same rules as new scans arrive."],
+  ["Source", "The record was first compiled from saved scans up to 21 November 2026 at 10:15 UTC. The $200 minimum started on 22 November 2026. Earlier entries count under the rules in force when recorded."],
   ["Historical replay", "The fixed historical replay (22 October to 18 November 2026, last qualifying move 16 November) is a separate product and is not part of this record."],
 ];
 
@@ -176,7 +176,7 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
     <header className={css.head}>
       <div className={css.title}>
         <h2 id="paper-return-title">{circuit} paper record</h2>
-        <p>{circuit==="ATP" ? "ATP and Challenger" : "WTA and WTA 125"} · {period==="rolling" && record!=="30d" ? "Telegram alerts, last 30 days" : "every pre-match move ≥4 pp"}</p>
+        <p>{circuit==="ATP" ? "ATP and Challenger" : "WTA and WTA 125"} · {period==="rolling" && record!=="30d" ? "Telegram alerts, last 30 days" : "qualifying pre-match moves ≥4 pp"}</p>
       </div>
       <div className={css.controls}>
         <div className={css.seg} role="group" aria-label="Period of the paper record" onKeyDown={arrows}>
@@ -202,7 +202,7 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
     </>}
 
     <p className={css.note}>
-      Each paper entry stakes 1u (one unit) at the recorded odds, low-limit moves included. Every qualifying move counts, whether or not a Telegram alert was sent. Dates are UTC.
+      Each paper entry stakes 1u at the recorded odds. New entries require a $200 limit or higher. Earlier entries remain in the totals. Dates are UTC.
     </p>
 
     </>}
