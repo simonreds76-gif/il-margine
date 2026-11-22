@@ -48,7 +48,7 @@ export default function Roundups({ roundups, active, currentKey, now, open, onTo
       {!active || !sum
         ? <p className={styles.empty} role="status">No Telegram roundup is on record for this date.</p>
         : <>
-          <p className={styles.roundupsNote}>Each roundup is the receipt of one Telegram message and is tallied on its own: 1u flat per selection at the locked price.</p>
+          <p className={styles.roundupsNote}>Each roundup shows the selections in one Telegram message. Its per-selection tally is separate from the headline paper record, which stakes 1u per match.</p>
           <div className={styles.sendBar}>
             <label className={styles.pick}><span>Sent</span>
               <select value={active.id} onChange={e => onSelect(e.target.value)}>

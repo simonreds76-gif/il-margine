@@ -5,7 +5,7 @@ import type { ClosingDetail } from "./closing";
 import type { Result } from "./PaperReturnsPanel";
 import css from "./paper-record.module.css";
 
-type Entry = {selection:string;fixture:string;league:string;result:string;at:string;odds:number;sent:boolean;close:ClosingDetail|null};
+type Entry = {selection:string;fixture:string;league:string;result:string;at:string;odds:number;sent:boolean;reconstructed:boolean;close:ClosingDetail|null};
 type Packet = {tour:string;start:string;end:string;through:string;firstCovered:string|null;coveredDays:number;
   summary:Result;page:number;pages:number;rows:Entry[]};
 const date = new Intl.DateTimeFormat("en-GB",{day:"numeric",month:"short",year:"numeric",timeZone:"UTC"});
@@ -44,9 +44,9 @@ export default function RollingRecord({circuit,sent,onScope,metrics}:{circuit:st
         </div>
         {metrics(data.summary)}
         <p className={css.note}>{sent
-          ? "Each selection counts once on the UTC date of its first confirmed big-drop alert, at the odds sent. Includes alerts from the earlier pilot."
+          ? "1u per match at the odds sent. If the first alerted scan has several lines, the largest rise in implied probability gets the stake."
           : (data.firstCovered ? "Odds recorded on "+data.coveredDays+" of 30 days, starting "+day(data.firstCovered)+". " : "No recorded paper coverage for this tour in the window. ")+
-            "Each selection counts once on the UTC date of its first qualifying drop, at the odds recorded then."}</p>
+            "1u per match at the odds on its first qualifying scan. The largest rise in implied probability wins a same-scan tie."}</p>
         <details className={css.fold} key={sent?"sent":"all"}>
           <summary><span>Selections <small>{data.summary.entries}</small></span></summary>
           {data.rows.length===0 ? <p className={css.fine}>{sent?"No confirmed qualifying Telegram alerts in this window.":"No qualifying drops in this window."}</p> : <>
@@ -54,7 +54,7 @@ export default function RollingRecord({circuit,sent,onScope,metrics}:{circuit:st
             <ol className={css.entries}>{data.rows.map(r=><li key={[r.fixture,r.league,r.selection,r.at].join("|")}>
               <div><b>{r.selection}</b><small>{r.fixture} · {r.league}</small></div>
               <div><b>{odds.format(r.odds)}</b><small>{stamp.format(new Date(r.at))}</small></div>
-              <div><b>{r.result}</b>{!sent && r.sent && <small>Telegram ✓</small>}</div>
+              <div><b>{r.result}</b>{r.reconstructed && <small>Reconstructed</small>}{!sent && r.sent && <small>Telegram ✓</small>}</div>
               <p className={css.lineClose}>{r.close ? <>
                 <b>{sent?"Telegram odds":"Entry odds"} {odds.format(r.odds)} → {odds.format(r.close.odds)}</b>
                 <span>Last same-line odds · {stamp.format(new Date(r.close.observed))} UTC · {r.close.minutes} min before play</span>
