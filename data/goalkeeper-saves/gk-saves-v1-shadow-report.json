@@ -5,17 +5,17 @@
     "blocked_lines": 0,
     "blocker_counts": {},
     "candidate_board_preserved": false,
-    "eligible_lines": 2,
-    "priced_lines": 151,
+    "eligible_lines": 3,
+    "priced_lines": 91,
     "provisional_lines": 0,
-    "signals_added": 1,
-    "value_ladder_lines": 15
+    "signals_added": 0,
+    "value_ladder_lines": 7
   },
   "evidence": {
     "clv": 0.047953,
     "clv_matched": 36,
-    "pending": 14,
-    "pnl_units": 13.2911,
+    "pending": 12,
+    "pnl_units": 12.2911,
     "quote_quarantine_records": [
       {
         "actual_saves": "",
@@ -145,50 +145,38 @@
       }
     ],
     "quote_quarantined": 3,
-    "roi": 0.255598,
-    "settled": 104,
+    "roi": 0.231908,
+    "settled": 106,
     "settlement_sources": {
       "fotmob_named_keeper_shotmap": 85,
-      "fotmob_team_keeper_shotmap": 14,
+      "fotmob_team_keeper_shotmap": 16,
       "independently_reviewed_named_keeper_count": 2,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
     "signals": 124,
-    "true_close_coverage": 0.346154,
+    "true_close_coverage": 0.339623,
     "void": 6
   },
   "forecast_input_capture": {
     "accepted_packets": [
-      "d6f00c9fa3d3373503dde539ae67a5be6f7bdaa25cd8153d6b10bf6e5e2169b2",
-      "8c28d66f53114c6cada166f7ac1d543989505757fcdf1577edc0cc43461fb520",
-      "cfdf6c83c2298f9463a617520938261c3db3f65a4a47bb6438dc1e333861b595",
-      "bf0cb86ab074f53e2df38090fdf689ab1dcd779786f64edbca34f949218994ac",
-      "86e1fe0628ea9193398dffc3214481f1e196154a8cbe9e03ea57e0162238b36c",
-      "ed16add44a7d247cc15651c8b5b2749739106542f9fbaed3191aeed12f400b5c",
-      "234cab60c6bda60240362da583eace780918a96cab6bffdb9dda5cb5c7148072",
-      "6d3aaf5fdf03f988847cc6f1571b078fd481b1d5e28d2bbec94ff2815a74c45e",
-      "39789d01cd240986913181a9ed3dbec6f8a4f23c231e816fbb60daae8df58383",
-      "4646c82beeb666528c52c6a5a0e439e8e4c035ca4cd39e0b36370ce1f987c9da",
-      "256ecfce1ffbd2b96351066fff954531332c9cd0d2842c9241bb66450f2d50e4",
-      "36ebc6b3a9aa376933aec486571bc544210aee435a2f30bae9f7e6e562e8da82",
-      "cf3a5b734bdc1dc6916aa49d92a9a691a419f6555cb52402d5aa05a189ed9f09",
-      "d6fbce468929f65ceab84d9b8f9e27941b502a5f9cada494df813d42c1216a56",
-      "11f0ab54bc7d06be95443edea4b4d1631cfbc35080aefd137719554541d6d7cb",
-      "d9efe89002e16dac683339f6a1986428cb505eb6a228d3e0e71572851d2047c1",
-      "6e7dc5be8323a1673e577e4cc7a4d97a625c6fec7b51ed7d3a690559912369b0",
-      "025f830544867b7fdb0a5275717f9fa51f35761c69efbc6175ccbc3c747d4006",
-      "51891df5736d6b578d78f6952a80a38a363b0b2d7f8c062930333e3c17f54e35"
+      "3748eca77c4d0eb300668448d7f5dd3b1e1b4e9c2d115324d4f71d4e9c51c0b4",
+      "2580a423b76e912c39a805a1dcf43826edafdbdad4d08d245606e40d25e55361",
+      "1e2982f811e1b95c32ce2603a56deefe3d7147d313cc6a1c042f28967a27179f",
+      "33bda45faf6c0a9035416756070a348090513c87d27b227e872e38a71bf18def",
+      "5134cde6aac0d6a7f0a4d3e4baed5b5e99c0bc29d78f99d60af7d4e16e84a7c0",
+      "21fc7937cea4d021447dc031baa9dcf4198ba0b7f4804054459e7aa02737d3e3",
+      "05530007c04c185cde0deb6b6df808f03ea150dc7c642b59f738f8941a44b9f7"
     ],
     "actual_stake": 0,
-    "checked_at": "2026-11-22T02:39:37.366311+00:00",
+    "checked_at": "2026-11-22T16:22:24.775829+00:00",
     "counts": {
-      "not_fresh_prematch": 3,
-      "offers_saved": 148
+      "already_saved": 7,
+      "not_fresh_prematch": 32
     },
-    "saved": 19,
-    "status": "CAPTURED"
+    "saved": 0,
+    "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-11-22T02:39:36Z",
+  "generated_at": "2026-11-22T16:22:24Z",
   "half_adjustment": {
     "actual_stake": 0,
     "arms": {
@@ -226,11 +214,11 @@
       }
     },
     "fixtures": 0,
-    "generated_at": "2026-11-22T02:39:37.581352+00:00",
+    "generated_at": "2026-11-22T16:22:24.901946+00:00",
     "holds": {},
     "paired_settled_fixtures": 0,
     "scan_exclusions": {
-      "ineligible_contract_or_input": 148
+      "ineligible_contract_or_input": 59
     },
     "start_at": "2026-11-17T18:55:00+00:00",
     "status": "AWAITING_FIRST_VERIFIED_BOARD"
@@ -240,41 +228,41 @@
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
-      "not_new_fresh_prematch": 3,
-      "starter_unavailable": 20
+      "not_new_fresh_prematch": 32,
+      "starter_unavailable": 12
     },
     "forecast_fixtures": 216,
-    "forecast_keepers": 441,
-    "generated_at": "2026-11-22T02:39:37.459025+00:00",
-    "last_capture_at": "2026-11-22T02:39:37.459025+00:00",
+    "forecast_keepers": 442,
+    "generated_at": "2026-11-22T16:22:24.800891+00:00",
+    "last_capture_at": "2026-11-22T16:20:46.809892+00:00",
     "name": "Keeper Watch v1",
-    "new_forecasts": 6,
-    "new_selections": 1,
+    "new_forecasts": 0,
+    "new_selections": 0,
     "next_review_at": null,
     "paired_scores": {
       "current": {
-        "brier": 0.1875572485725322,
-        "log_loss": 0.5540535740406308
+        "brier": 0.18583680895159063,
+        "log_loss": 0.5497071692524818
       },
       "keeper_watch": {
-        "brier": 0.18968498667386066,
-        "log_loss": 0.5641408245286155
+        "brier": 0.18783862999771558,
+        "log_loss": 0.5593498965641291
       }
     },
-    "paired_settled_fixtures": 164,
+    "paired_settled_fixtures": 172,
     "paper_stake": 0.5,
     "records": {
       "current": {
-        "losses": 19,
+        "losses": 21,
         "overdue": 9,
-        "pending": 5,
-        "profit": 0.18815000000000015,
+        "pending": 2,
+        "profit": -0.81185,
         "pushes": 0,
-        "review": 9,
-        "roi": 0.010452777777777787,
+        "review": 10,
+        "roi": -0.042728947368421054,
         "selections": 54,
-        "settled": 36,
-        "stake": 18.0,
+        "settled": 38,
+        "stake": 19.0,
         "voids": 4,
         "wins": 17
       },
@@ -326,16 +314,16 @@
       },
       "Grosvenor": {
         "current": {
-          "losses": 3,
+          "losses": 5,
           "overdue": 3,
-          "pending": 5,
-          "profit": 0.19000000000000006,
+          "pending": 2,
+          "profit": -0.8099999999999999,
           "pushes": 0,
-          "review": 3,
-          "roi": 0.054285714285714305,
+          "review": 4,
+          "roi": -0.18,
           "selections": 15,
-          "settled": 7,
-          "stake": 3.5,
+          "settled": 9,
+          "stake": 4.5,
           "voids": 0,
           "wins": 4
         },
@@ -434,14 +422,15 @@
         "player_id": "1186685",
         "profit": 0,
         "quote_verification": "",
-        "reason": "awaiting_verified_keeper_result",
+        "reason": "team_keeper_participation_or_rules_review",
         "registered_at": "2026-11-20T00:55:24.708384+00:00",
         "settlement_policy": "grosvenor_full90_scope_agreement_v1",
         "side": "over",
-        "status": "pending",
+        "status": "review",
         "team_id": "8686"
       },
       {
+        "actual": 4,
         "away": "Cagliari Calcio",
         "bookmaker": "Grosvenor",
         "captured_at": "2026-11-20T00:55:11+00:00",
@@ -460,16 +449,16 @@
         "odds": 2.2,
         "overdue": false,
         "player_id": "958422",
-        "profit": 0,
+        "profit": -0.5,
         "quote_verification": "",
-        "reason": "awaiting_verified_keeper_result",
         "registered_at": "2026-11-20T00:55:24.708384+00:00",
         "settlement_policy": "grosvenor_full90_scope_agreement_v1",
         "side": "over",
-        "status": "pending",
+        "status": "lost",
         "team_id": "8529"
       },
       {
+        "actual": 3,
         "away": "US Lecce",
         "bookmaker": "Grosvenor",
         "captured_at": "2026-11-20T00:55:11+00:00",
@@ -488,13 +477,12 @@
         "odds": 2.55,
         "overdue": false,
         "player_id": "362200",
-        "profit": 0,
+        "profit": -0.5,
         "quote_verification": "",
-        "reason": "awaiting_verified_keeper_result",
         "registered_at": "2026-11-20T00:55:24.708384+00:00",
         "settlement_policy": "grosvenor_full90_scope_agreement_v1",
         "side": "over",
-        "status": "pending",
+        "status": "lost",
         "team_id": "9888"
       },
       {
@@ -1939,10 +1927,10 @@
       }
     ],
     "settlement_reasons": {
-      "awaiting_verified_keeper_result": 56,
+      "awaiting_verified_keeper_result": 33,
       "incomplete_or_conflicting_full_match_count": 24,
       "keeper_identity_unresolved": 4,
-      "team_keeper_participation_or_rules_review": 33,
+      "team_keeper_participation_or_rules_review": 42,
       "verified_different_starting_keeper": 14
     },
     "source_extension": {

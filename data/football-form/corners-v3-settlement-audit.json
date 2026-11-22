@@ -1,21 +1,21 @@
 {
-  "run_at": "2026-11-21T16:15:21Z",
+  "run_at": "2026-11-22T16:21:51Z",
   "model": "corners-v3-shadow",
-  "total_bets": 262,
-  "settled_this_run": 2,
-  "total_settled": 229,
-  "total_pending": 33,
+  "total_bets": 270,
+  "settled_this_run": 10,
+  "total_settled": 239,
+  "total_pending": 31,
   "pending_breakdown": {
-    "future": 19,
-    "live": 11,
-    "stale": 2,
+    "future": 14,
+    "live": 5,
+    "stale": 11,
     "old_stale": 1,
     "unknown": 0
   },
   "source_freshness": {
     "bundesliga": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 13,
+      "lag_days": 14,
       "football_data_count": 81,
       "fotmob_count": 0,
       "fotmob_latest": null,
@@ -25,42 +25,42 @@
       "api_football_requests_remaining_after_league": 7,
       "api_football_error": null,
       "api_football_max_requests": 10,
-      "snapshot_date": "2026-11-21",
-      "snapshot_path": "data/results-snapshot/2026-11-21.json"
+      "snapshot_date": "2026-11-22",
+      "snapshot_path": "data/results-snapshot/2026-11-22.json"
     },
     "epl": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 13,
+      "lag_days": 14,
       "football_data_count": 100,
-      "fotmob_count": 1,
-      "fotmob_latest": "2026-11-21",
+      "fotmob_count": 7,
+      "fotmob_latest": "2026-11-22",
       "api_football_count": 0,
       "api_football_latest": null,
-      "api_football_requests_used": 3,
-      "api_football_requests_remaining_after_league": 4,
+      "api_football_requests_used": 2,
+      "api_football_requests_remaining_after_league": 5,
       "api_football_error": null,
       "api_football_max_requests": 7,
-      "snapshot_date": "2026-11-21",
-      "snapshot_path": "data/results-snapshot/2026-11-21.json"
+      "snapshot_date": "2026-11-22",
+      "snapshot_path": "data/results-snapshot/2026-11-22.json"
     },
     "la-liga": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 13,
+      "lag_days": 14,
       "football_data_count": 119,
-      "fotmob_count": 2,
-      "fotmob_latest": "2026-11-21",
+      "fotmob_count": 4,
+      "fotmob_latest": "2026-11-22",
       "api_football_count": 0,
       "api_football_latest": null,
-      "api_football_requests_used": 3,
+      "api_football_requests_used": 4,
       "api_football_requests_remaining_after_league": 1,
       "api_football_error": null,
-      "api_football_max_requests": 4,
-      "snapshot_date": "2026-11-21",
-      "snapshot_path": "data/results-snapshot/2026-11-21.json"
+      "api_football_max_requests": 5,
+      "snapshot_date": "2026-11-22",
+      "snapshot_path": "data/results-snapshot/2026-11-22.json"
     },
     "ligue-1": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 13,
+      "lag_days": 14,
       "football_data_count": 90,
       "fotmob_count": 0,
       "fotmob_latest": null,
@@ -70,23 +70,23 @@
       "api_football_requests_remaining_after_league": 0,
       "api_football_error": null,
       "api_football_max_requests": 1,
-      "snapshot_date": "2026-11-21",
-      "snapshot_path": "data/results-snapshot/2026-11-21.json"
+      "snapshot_date": "2026-11-22",
+      "snapshot_path": "data/results-snapshot/2026-11-22.json"
     },
     "serie-a": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 13,
+      "lag_days": 14,
       "football_data_count": 110,
-      "fotmob_count": 0,
-      "fotmob_latest": null,
+      "fotmob_count": 6,
+      "fotmob_latest": "2026-11-22",
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 0,
       "api_football_requests_remaining_after_league": 0,
       "api_football_error": null,
       "api_football_max_requests": 10,
-      "snapshot_date": "2026-11-21",
-      "snapshot_path": "data/results-snapshot/2026-11-21.json"
+      "snapshot_date": "2026-11-22",
+      "snapshot_path": "data/results-snapshot/2026-11-22.json"
     }
   },
   "stale_rows": [
@@ -96,7 +96,7 @@
       "line": "8.5",
       "side": "under",
       "kickoff": "2026-11-20T19:30:00Z",
-      "hours_elapsed": 20.76
+      "hours_elapsed": 44.86
     },
     {
       "match": "ESTAC Troyes vs Le Havre AC",
@@ -104,7 +104,79 @@
       "line": "8.5",
       "side": "over",
       "kickoff": "2026-11-20T19:45:00Z",
-      "hours_elapsed": 20.51
+      "hours_elapsed": 44.61
+    },
+    {
+      "match": "Lazio Rome vs US Lecce",
+      "league": "serie-a",
+      "line": "6.5",
+      "side": "under",
+      "kickoff": "2026-11-21T14:00:00Z",
+      "hours_elapsed": 26.36
+    },
+    {
+      "match": "Eintracht Frankfurt vs TSG Hoffenheim",
+      "league": "bundesliga",
+      "line": "8.5",
+      "side": "under",
+      "kickoff": "2026-11-21T14:30:00Z",
+      "hours_elapsed": 25.86
+    },
+    {
+      "match": "SV 07 Elversberg vs SC Freiburg",
+      "league": "bundesliga",
+      "line": "8.5",
+      "side": "under",
+      "kickoff": "2026-11-21T14:30:00Z",
+      "hours_elapsed": 25.86
+    },
+    {
+      "match": "Bayer Leverkusen vs SC Paderborn 07",
+      "league": "bundesliga",
+      "line": "9.5",
+      "side": "under",
+      "kickoff": "2026-11-21T14:30:00Z",
+      "hours_elapsed": 25.86
+    },
+    {
+      "match": "Union Berlin vs RB Leipzig",
+      "league": "bundesliga",
+      "line": "7.5",
+      "side": "under",
+      "kickoff": "2026-11-21T14:30:00Z",
+      "hours_elapsed": 25.86
+    },
+    {
+      "match": "OGC Nice vs Paris Saint-Germain",
+      "league": "ligue-1",
+      "line": "9.5",
+      "side": "under",
+      "kickoff": "2026-11-21T16:15:00Z",
+      "hours_elapsed": 24.11
+    },
+    {
+      "match": "Racing Club De Lens vs Toulouse FC",
+      "league": "ligue-1",
+      "line": "8.5",
+      "side": "under",
+      "kickoff": "2026-11-21T19:45:00Z",
+      "hours_elapsed": 20.61
+    },
+    {
+      "match": "Lille OSC vs Olympique Lyon",
+      "league": "ligue-1",
+      "line": "9.5",
+      "side": "under",
+      "kickoff": "2026-11-21T19:45:00Z",
+      "hours_elapsed": 20.61
+    },
+    {
+      "match": "AS Monaco vs AJ Auxerre",
+      "league": "ligue-1",
+      "line": "8.5",
+      "side": "under",
+      "kickoff": "2026-11-21T19:45:00Z",
+      "hours_elapsed": 20.61
     }
   ],
   "old_stale_rows": [
@@ -114,16 +186,18 @@
       "line": "9.5",
       "side": "under",
       "kickoff": "2026-10-31T19:45:00Z",
-      "hours_elapsed": 500.51
+      "hours_elapsed": 524.61
     }
   ],
   "unknown_rows": [],
   "overridden_rows": [],
   "warnings": [
-    "2 stale pending row(s) across 2 fixture(s) (3-48h elapsed)"
+    "11 stale pending row(s) across 11 fixture(s) (3-48h elapsed)"
   ],
   "errors": [
-    "1 old stale pending row(s) (>=48h elapsed)"
+    "1 old stale pending row(s) (>=48h elapsed)",
+    "bundesliga: 5 stale fixture(s) across 5 pending row(s)",
+    "ligue-1: 5 stale fixture(s) across 5 pending row(s)"
   ],
   "exit_code_recommendation": 1
 }

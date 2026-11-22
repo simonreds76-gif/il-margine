@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T02:39:48Z",
+  "generated_at": "2026-11-22T16:21:38Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -8,26 +8,26 @@
   "live_routing": false,
   "prospective": {
     "signals": 142,
-    "settled": 124,
-    "pending": 17,
-    "pnl_units": -18.78999999999999,
-    "roi": -0.15153225806451603,
+    "settled": 128,
+    "pending": 13,
+    "pnl_units": -19.062999999999988,
+    "roi": -0.1489296874999999,
     "void": 1,
-    "wins": 56,
-    "losses": 68,
+    "wins": 58,
+    "losses": 70,
     "true_close_count": 32,
     "mean_clv": 0.01458478125
   },
   "latest_scan": {
-    "scored_rows": 62,
-    "scored_fixtures": 16,
-    "explanation": "31 fresh paired contracts; 62 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: stale_price=598. Input cohorts kept separate. Before 30 October 2026: 98 settled, 30 October 2026 to input repair: 26 settled, Prospective repaired inputs: 0 settled. Promotion review uses repaired inputs only; original records remain intact."
+    "scored_rows": 28,
+    "scored_fixtures": 7,
+    "explanation": "14 fresh paired contracts; 28 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: outside_capture_window=17, stale_price=343. Input cohorts kept separate. Before 30 October 2026: 98 settled, 30 October 2026 to input repair: 26 settled, Prospective repaired inputs: 4 settled. Promotion review uses repaired inputs only; original records remain intact."
   },
-  "settled_this_run": 0,
+  "settled_this_run": 4,
   "result_source": {
     "bundesliga": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 13,
+      "lag_days": 14,
       "football_data_count": 81,
       "fotmob_count": 0,
       "fotmob_latest": null,
@@ -37,42 +37,42 @@
       "api_football_requests_remaining_after_league": 7,
       "api_football_error": null,
       "api_football_max_requests": 10,
-      "snapshot_date": "2026-11-21",
-      "snapshot_path": "data/results-snapshot/2026-11-21.json"
+      "snapshot_date": "2026-11-22",
+      "snapshot_path": "data/results-snapshot/2026-11-22.json"
     },
     "epl": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 13,
+      "lag_days": 14,
       "football_data_count": 100,
-      "fotmob_count": 1,
-      "fotmob_latest": "2026-11-21",
+      "fotmob_count": 7,
+      "fotmob_latest": "2026-11-22",
       "api_football_count": 0,
       "api_football_latest": null,
-      "api_football_requests_used": 3,
-      "api_football_requests_remaining_after_league": 4,
+      "api_football_requests_used": 2,
+      "api_football_requests_remaining_after_league": 5,
       "api_football_error": null,
       "api_football_max_requests": 7,
-      "snapshot_date": "2026-11-21",
-      "snapshot_path": "data/results-snapshot/2026-11-21.json"
+      "snapshot_date": "2026-11-22",
+      "snapshot_path": "data/results-snapshot/2026-11-22.json"
     },
     "la-liga": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 13,
+      "lag_days": 14,
       "football_data_count": 119,
-      "fotmob_count": 2,
-      "fotmob_latest": "2026-11-21",
+      "fotmob_count": 4,
+      "fotmob_latest": "2026-11-22",
       "api_football_count": 0,
       "api_football_latest": null,
-      "api_football_requests_used": 3,
+      "api_football_requests_used": 4,
       "api_football_requests_remaining_after_league": 1,
       "api_football_error": null,
-      "api_football_max_requests": 4,
-      "snapshot_date": "2026-11-21",
-      "snapshot_path": "data/results-snapshot/2026-11-21.json"
+      "api_football_max_requests": 5,
+      "snapshot_date": "2026-11-22",
+      "snapshot_path": "data/results-snapshot/2026-11-22.json"
     },
     "ligue-1": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 13,
+      "lag_days": 14,
       "football_data_count": 90,
       "fotmob_count": 0,
       "fotmob_latest": null,
@@ -82,23 +82,23 @@
       "api_football_requests_remaining_after_league": 0,
       "api_football_error": null,
       "api_football_max_requests": 1,
-      "snapshot_date": "2026-11-21",
-      "snapshot_path": "data/results-snapshot/2026-11-21.json"
+      "snapshot_date": "2026-11-22",
+      "snapshot_path": "data/results-snapshot/2026-11-22.json"
     },
     "serie-a": {
       "football_data_latest": "2026-11-08",
-      "lag_days": 13,
+      "lag_days": 14,
       "football_data_count": 110,
-      "fotmob_count": 0,
-      "fotmob_latest": null,
+      "fotmob_count": 6,
+      "fotmob_latest": "2026-11-22",
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 0,
       "api_football_requests_remaining_after_league": 0,
       "api_football_error": null,
       "api_football_max_requests": 10,
-      "snapshot_date": "2026-11-21",
-      "snapshot_path": "data/results-snapshot/2026-11-21.json"
+      "snapshot_date": "2026-11-22",
+      "snapshot_path": "data/results-snapshot/2026-11-22.json"
     }
   },
   "review_policy": "Review after 150 settled fixtures and at least 8 weeks; require positive ROI, at least 70% true closing coverage, positive mean CLV and calibration review. Manual promotion only.",
@@ -125,13 +125,13 @@
     },
     "repaired_inputs": {
       "signals": 17,
-      "settled": 0,
+      "settled": 4,
       "void": 0,
-      "pending": 17,
-      "wins": 0,
-      "losses": 0,
-      "pnl_units": 0,
-      "roi": null
+      "pending": 13,
+      "wins": 2,
+      "losses": 2,
+      "pnl_units": -0.273,
+      "roi": -0.06825
     }
   },
   "review_status": "COLLECTING_FIXED_POLICY",
@@ -139,13 +139,13 @@
   "age_days": 70,
   "input_integrity": {
     "policy": "shots-input-integrity-20261113-v1",
-    "generated_at": "2026-11-22T02:39:48.177693+00:00",
-    "base_sha256": "7d837e74e8bf574143d84e6440684f2db0b230f09e5a2c5e97a5adde14dab8bf",
+    "generated_at": "2026-11-22T16:21:38.881759+00:00",
+    "base_sha256": "28d190cb7acd2ab02f33f88f52ecc79a346e6f022e0463652c8118b5d824a26b",
     "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
-    "source_rows": 44188,
-    "prediction_rows": 44182,
-    "latest_result_date": "2026-11-21",
-    "recent_missing_xg_team_rows": 206,
+    "source_rows": 44240,
+    "prediction_rows": 44234,
+    "latest_result_date": "2026-11-22",
+    "recent_missing_xg_team_rows": 258,
     "applied_corrections": [
       {
         "fixture": [
@@ -187,7 +187,7 @@
         "reason": "awarded_match_missing_counts_not_zero"
       }
     ],
-    "check_observed_at": "2026-11-21T16:12:37.713253+00:00",
+    "check_observed_at": "2026-11-22T16:19:39.019822+00:00",
     "blocked_leagues": {},
     "missing_completed": [],
     "historical_records_changed": false,
