@@ -9,13 +9,13 @@
       "kickoff_utc": "2026-11-22T19:45:00Z",
       "home_team": "Atalanta",
       "away_team": "Inter",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "3-5-2",
       "home_players": [
-        "Marco Carnesecchi",
+        "Marco Sportiello",
         "Raoul Bellanova",
         "Giorgio Scalvini",
         "Sead Kolašinac",
@@ -24,33 +24,33 @@
         "Éderson",
         "Eljif Elmas",
         "Charles De Ketelaere",
-        "Jonathan Rowe",
+        "Nicola Zalewski",
         "Nikola Krstović"
       ],
       "away_players": [
         "Josep Martínez",
         "Benjamin Pavard",
-        "Yann Aurel Bisseck",
         "Alessandro Bastoni",
+        "Carlos Augusto",
         "Djed Spence",
         "Nicolò Barella",
         "Hakan Çalhanoğlu",
-        "Petar Sučić",
+        "Henrikh Mkhitaryan",
         "Federico Dimarco",
         "Francesco Pio Esposito",
         "Marcus Thuram"
       ],
       "home_starters": [
         {
-          "name": "Marco Carnesecchi",
+          "name": "Marco Sportiello",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
           "formation": "4-2-3-1",
           "position_id": 11,
-          "player_id": 1013021,
-          "shirt_number": "29"
+          "player_id": 212630,
+          "shirt_number": "57"
         },
         {
           "name": "Raoul Bellanova",
@@ -141,15 +141,15 @@
           "shirt_number": "17"
         },
         {
-          "name": "Jonathan Rowe",
+          "name": "Nicola Zalewski",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 87,
-          "player_id": 1113694,
-          "shirt_number": "11"
+          "player_id": 1053714,
+          "shirt_number": "59"
         },
         {
           "name": "Nikola Krstović",
@@ -187,26 +187,26 @@
           "shirt_number": "28"
         },
         {
-          "name": "Yann Aurel Bisseck",
-          "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-5-2",
-          "position_id": 35,
-          "player_id": 889535,
-          "shirt_number": "31"
-        },
-        {
           "name": "Alessandro Bastoni",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
           "formation": "3-5-2",
-          "position_id": 37,
+          "position_id": 35,
           "player_id": 805451,
           "shirt_number": "95"
+        },
+        {
+          "name": "Carlos Augusto",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 37,
+          "player_id": 940829,
+          "shirt_number": "30"
         },
         {
           "name": "Djed Spence",
@@ -242,15 +242,15 @@
           "shirt_number": "20"
         },
         {
-          "name": "Petar Sučić",
+          "name": "Henrikh Mkhitaryan",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
           "formation": "3-5-2",
           "position_id": 77,
-          "player_id": 1382000,
-          "shirt_number": "8"
+          "player_id": 73167,
+          "shirt_number": "22"
         },
         {
           "name": "Federico Dimarco",
@@ -286,11 +286,160 @@
           "shirt_number": "9"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
+      "home_subs": [
+        "Mario Pašalić",
+        "Jonathan Rowe",
+        "Giacomo Raspadori",
+        "Lorenzo Bernasconi",
+        "Gianluca Scamacca",
+        "Mattia Sonzogni",
+        "Javison Idele",
+        "Relja Obrić",
+        "Thomas Kristensen",
+        "Gianluca Gaetano",
+        "Kamaldeen Sulemana",
+        "Lazar Samardžić"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Mario Pašalić",
+          "player_id": "446266",
+          "role_group": "MID"
+        },
+        {
+          "name": "Jonathan Rowe",
+          "player_id": "1113694",
+          "role_group": "FW"
+        },
+        {
+          "name": "Giacomo Raspadori",
+          "player_id": "951743",
+          "role_group": "MID"
+        },
+        {
+          "name": "Lorenzo Bernasconi",
+          "player_id": "1191093",
+          "role_group": "MID"
+        },
+        {
+          "name": "Gianluca Scamacca",
+          "player_id": "721089",
+          "role_group": "FW"
+        },
+        {
+          "name": "Mattia Sonzogni",
+          "player_id": "1837500",
+          "role_group": "GK"
+        },
+        {
+          "name": "Javison Idele",
+          "player_id": "1756869",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Relja Obrić",
+          "player_id": "1692456",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Thomas Kristensen",
+          "player_id": "1190029",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Gianluca Gaetano",
+          "player_id": "1012842",
+          "role_group": "MID"
+        },
+        {
+          "name": "Kamaldeen Sulemana",
+          "player_id": "1130691",
+          "role_group": "MID"
+        },
+        {
+          "name": "Lazar Samardžić",
+          "player_id": "1050178",
+          "role_group": "MID"
+        }
+      ],
+      "away_subs": [
+        "Petar Sučić",
+        "Manuel Akanji",
+        "Curtis Jones",
+        "Aleksandar Stanković",
+        "Lautaro Martínez",
+        "Ivan Provedel",
+        "Raffaele Di Gennaro",
+        "John Stones",
+        "Yann Aurel Bisseck",
+        "Andy Diouf",
+        "Luis Henrique",
+        "Matteo Lavelli"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Petar Sučić",
+          "player_id": "1382000",
+          "role_group": "MID"
+        },
+        {
+          "name": "Manuel Akanji",
+          "player_id": "521318",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Curtis Jones",
+          "player_id": "933768",
+          "role_group": "MID"
+        },
+        {
+          "name": "Aleksandar Stanković",
+          "player_id": "1410437",
+          "role_group": "MID"
+        },
+        {
+          "name": "Lautaro Martínez",
+          "player_id": "690230",
+          "role_group": "FW"
+        },
+        {
+          "name": "Ivan Provedel",
+          "player_id": "364822",
+          "role_group": "GK"
+        },
+        {
+          "name": "Raffaele Di Gennaro",
+          "player_id": "417743",
+          "role_group": "GK"
+        },
+        {
+          "name": "John Stones",
+          "player_id": "263653",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Yann Aurel Bisseck",
+          "player_id": "889535",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Andy Diouf",
+          "player_id": "1254297",
+          "role_group": "MID"
+        },
+        {
+          "name": "Luis Henrique",
+          "player_id": "1114635",
+          "role_group": "MID"
+        },
+        {
+          "name": "Matteo Lavelli",
+          "player_id": "1682320",
+          "role_group": "FW"
+        }
+      ],
       "home_unavailable": [
+        "Marco Carnesecchi",
         "Thomas Pompei",
         "Isak Hien",
         "Odilon Kossounou"
@@ -299,8 +448,8 @@
         "Piotr Zieliński",
         "Ange-Yoan Bonny"
       ],
-      "observed_at": "2026-11-22T17:47:27.997109+00:00",
-      "changed_at": "2026-11-22T14:55:24.897491+00:00"
+      "observed_at": "2026-11-22T23:35:04.080385+00:00",
+      "changed_at": "2026-11-22T23:35:04.080385+00:00"
     },
     {
       "fotmob_match_id": 5749752,
@@ -763,7 +912,7 @@
         "Nicolò Bertola",
         "Idrissa Gueye"
       ],
-      "observed_at": "2026-11-22T17:47:27.997109+00:00",
+      "observed_at": "2026-11-22T23:35:04.080385+00:00",
       "changed_at": "2026-11-22T14:55:24.897491+00:00"
     },
     {
@@ -1231,7 +1380,7 @@
         "Marin Šverko",
         "Andrea Adorante"
       ],
-      "observed_at": "2026-11-22T17:47:27.997109+00:00",
+      "observed_at": "2026-11-22T23:35:04.080385+00:00",
       "changed_at": "2026-11-22T14:55:24.897491+00:00"
     },
     {
@@ -1521,18 +1670,43 @@
         }
       ],
       "home_subs": [
+        "Ardon Jashari",
+        "Alphadjo Cissè",
+        "Strahinja Pavlović",
+        "Pervis Estupiñán",
+        "Omari Hutchinson",
         "Lorenzo Torriani",
         "Matteo Pittarella",
         "Filippo Terracciano",
-        "Strahinja Pavlović",
-        "Alphadjo Cissè",
-        "Ardon Jashari",
         "Christian Comotto",
-        "Pervis Estupiñán",
-        "Francesco Camarda",
-        "Omari Hutchinson"
+        "Francesco Camarda"
       ],
       "home_substitute_entries": [
+        {
+          "name": "Ardon Jashari",
+          "player_id": "1163219",
+          "role_group": "MID"
+        },
+        {
+          "name": "Alphadjo Cissè",
+          "player_id": "1445650",
+          "role_group": "MID"
+        },
+        {
+          "name": "Strahinja Pavlović",
+          "player_id": "1048023",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Pervis Estupiñán",
+          "player_id": "688278",
+          "role_group": "MID"
+        },
+        {
+          "name": "Omari Hutchinson",
+          "player_id": "1215652",
+          "role_group": "FW"
+        },
         {
           "name": "Lorenzo Torriani",
           "player_id": "1642393",
@@ -1549,66 +1723,36 @@
           "role_group": "DEF"
         },
         {
-          "name": "Strahinja Pavlović",
-          "player_id": "1048023",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Alphadjo Cissè",
-          "player_id": "1445650",
-          "role_group": "MID"
-        },
-        {
-          "name": "Ardon Jashari",
-          "player_id": "1163219",
-          "role_group": "MID"
-        },
-        {
           "name": "Christian Comotto",
           "player_id": "1787535",
-          "role_group": "MID"
-        },
-        {
-          "name": "Pervis Estupiñán",
-          "player_id": "688278",
           "role_group": "MID"
         },
         {
           "name": "Francesco Camarda",
           "player_id": "1554575",
           "role_group": "FW"
-        },
-        {
-          "name": "Omari Hutchinson",
-          "player_id": "1215652",
-          "role_group": "FW"
         }
       ],
       "away_subs": [
-        "Matteo Pisseri",
-        "Sebastiano Desplanches",
-        "Aleksa Terzić",
-        "Kevin Akpoguma",
-        "Omar Fayed",
         "Wisdom Amey",
+        "Aleksa Terzić",
+        "Daniel Bîrligea",
         "Alessio Zerbin",
         "Anouar El Azzouzi",
+        "Matteo Pisseri",
+        "Sebastiano Desplanches",
+        "Kevin Akpoguma",
+        "Omar Fayed",
         "Luis Hasa",
         "Matteo Cichella",
-        "Daniel Bîrligea",
         "Seydou Fini",
         "Tomás Bobček"
       ],
       "away_substitute_entries": [
         {
-          "name": "Matteo Pisseri",
-          "player_id": "415425",
-          "role_group": "GK"
-        },
-        {
-          "name": "Sebastiano Desplanches",
-          "player_id": "1280112",
-          "role_group": "GK"
+          "name": "Wisdom Amey",
+          "player_id": "1250568",
+          "role_group": "DEF"
         },
         {
           "name": "Aleksa Terzić",
@@ -1616,19 +1760,9 @@
           "role_group": "DEF"
         },
         {
-          "name": "Kevin Akpoguma",
-          "player_id": "353519",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Omar Fayed",
-          "player_id": "1510384",
-          "role_group": "DEF"
-        },
-        {
-          "name": "Wisdom Amey",
-          "player_id": "1250568",
-          "role_group": "DEF"
+          "name": "Daniel Bîrligea",
+          "player_id": "1135820",
+          "role_group": "FW"
         },
         {
           "name": "Alessio Zerbin",
@@ -1641,6 +1775,26 @@
           "role_group": "MID"
         },
         {
+          "name": "Matteo Pisseri",
+          "player_id": "415425",
+          "role_group": "GK"
+        },
+        {
+          "name": "Sebastiano Desplanches",
+          "player_id": "1280112",
+          "role_group": "GK"
+        },
+        {
+          "name": "Kevin Akpoguma",
+          "player_id": "353519",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Omar Fayed",
+          "player_id": "1510384",
+          "role_group": "DEF"
+        },
+        {
           "name": "Luis Hasa",
           "player_id": "1402924",
           "role_group": "MID"
@@ -1649,11 +1803,6 @@
           "name": "Matteo Cichella",
           "player_id": "1670272",
           "role_group": "MID"
-        },
-        {
-          "name": "Daniel Bîrligea",
-          "player_id": "1135820",
-          "role_group": "FW"
         },
         {
           "name": "Seydou Fini",
@@ -1679,7 +1828,7 @@
         "Florian Grillitsch",
         "Antonio Raimondo"
       ],
-      "observed_at": "2026-11-22T17:47:27.997109+00:00",
+      "observed_at": "2026-11-22T23:35:04.080385+00:00",
       "changed_at": "2026-11-22T17:47:27.997109+00:00"
     },
     {
@@ -2151,6 +2300,7 @@
         }
       ],
       "home_unavailable": [
+        "Darryl Bakola",
         "Fedde Leysen",
         "Daniel Boloca",
         "Ismaël Koné",
@@ -2158,7 +2308,7 @@
         "Cristian Volpato"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-11-22T17:47:27.997109+00:00",
+      "observed_at": "2026-11-22T23:35:04.080385+00:00",
       "changed_at": "2026-11-22T14:55:24.897491+00:00"
     },
     {
@@ -2461,7 +2611,7 @@
         "Marin Pongračić",
         "Fabiano Parisi"
       ],
-      "observed_at": "2026-11-22T17:47:27.997109+00:00",
+      "observed_at": "2026-11-22T23:35:04.080385+00:00",
       "changed_at": "2026-11-22T14:55:24.897491+00:00"
     }
   ]
