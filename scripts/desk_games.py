@@ -4,9 +4,11 @@ import json
 import math
 from datetime import datetime, timedelta
 from decimal import Decimal
+from fractions import Fraction
 
 PRIOR_ALL_DAY_POLICY = "same-line-over4pp-prematch-limits-shown-v3"
-ALERT_POLICY = "same-line-over4pp-prematch-min200usd-v4"
+PRIOR_LINE_POLICY = "same-line-over4pp-prematch-min200usd-v4"
+ALERT_POLICY = "first-match-over4pp-prematch-min200usd-v5"
 MINIMUM_USD = 200
 FINAL_HOUR = timedelta(hours=1)
 
@@ -46,18 +48,60 @@ def meets_usd_floor(limit, minimum):
     return type(amount) in (int, float) and math.isfinite(amount) and amount >= minimum
 
 
+def match_rank(move):
+    """Same-scan ranking shared by Telegram and the one-unit match record."""
+    old, new = (Fraction(str(move[k])) for k in ("old", "new"))
+    if not old > new > 1:
+        raise ValueError("Invalid odds for a qualifying move")
+    return (-(1/new - 1/old), move["contract"], move["side"], move.get("sent", ""))
+
+
+def strongest_by_match(moves):
+    chosen = {}
+    for move in moves:
+        fixture = move["fixture"]
+        if fixture not in chosen or match_rank(move) < match_rank(chosen[fixture]):
+            chosen[fixture] = move
+    return list(chosen.values())
+
+
+def seed_match_alerts(last):
+    """Carry over earlier per-line reservations, including uncertain deliveries."""
+    matches = {}
+    for ident,start in last.get("desk_late_issued",last.get("desk_issued",{})).items():
+        fixture = ident.rsplit("|", 2)[0]
+        if fixture not in matches or datetime.fromisoformat(start)>datetime.fromisoformat(matches[fixture]):
+            matches[fixture] = start
+    return matches
+
+
 def alert_moves(batch):
     """A retry can read a batch created before the Telegram policy changed."""
     if batch.get("policy") != ALERT_POLICY:
         return []
+    observed = datetime.fromisoformat(batch["observed"])
     wanted = set(batch["alert_ids"])
     moves = []
     for move in batch["moves"]:
         if move["move_id"] in wanted and meets_usd_floor(move.get("alert_detection_limit"), MINIMUM_USD):
             start, before, after = (datetime.fromisoformat(move[key]) for key in ("start", "before", "after"))
-            if before < after < start and alert_crossing(move["old"], move["new"]):
+            if after == observed and before < after < start and alert_crossing(move["old"], move["new"]):
                 moves.append(move)
-    return moves
+    return strongest_by_match(moves)
+
+
+def dispatch_moves(batch, store):
+    """An old fixture can reappear after a reschedule or a cache rebuild."""
+    winners = alert_moves(batch)
+    if not winners:
+        return []
+    record = store.get("presentation/drop-paper-v1/first-match-v1/state.json")
+    if not record or not isinstance(record.get("locks", {}).get("telegram"), dict):
+        raise RuntimeError("Missing confirmed match record for Telegram deduplication")
+    confirmed = record["locks"]["telegram"]
+    # Let the existing immutable per-scan receipt handle a retry of its own move.
+    return [m for m in winners if m["fixture"] not in confirmed
+            or confirmed[m["fixture"]]["move_id"] == m["move_id"]]
 
 
 def contracts(sample):
@@ -98,7 +142,7 @@ def pairs(row):
 
 
 def compare(last, current, state, blocked):
-    """Small moves stay on the board. Alert once per exact contract side at +4pp."""
+    """Keep every board move; reserve the strongest eligible line on a match's first scan."""
     from price_drop_watch import observe
     batch = observe(None, current)
     batch.update(before=last.get("observed"), policy=ALERT_POLICY, alert_ids=[], compared_by_circuit={"ATP": 0, "WTA": 0})
@@ -109,6 +153,19 @@ def compare(last, current, state, blocked):
     # Grandfather existing signals on migration. New early board moves never consume a late alert.
     alerted = {k:t for k,t in last.get("desk_late_issued", issued).items()
                    if datetime.fromisoformat(t) + timedelta(days=7) > now}
+    # Old per-line reservations also cover deliveries with an uncertain response.
+    # Keep a postponed fixture locked while it is still present on the board.
+    previous_matches = last.get("desk_match_issued")
+    if previous_matches is None:
+        previous_matches = seed_match_alerts(last)
+    match_issued = dict(previous_matches)
+    for row in state["events"].values():
+        fixture = row["fixture"]
+        if fixture in match_issued and datetime.fromisoformat(match_issued[fixture]) + timedelta(days=7) > now:
+            if datetime.fromisoformat(row["start"])>datetime.fromisoformat(match_issued[fixture]):
+                match_issued[fixture] = row["start"]
+    match_issued = {f:s for f,s in match_issued.items() if datetime.fromisoformat(s)+timedelta(days=7)>now}
+    eligible = []
     for eid,row in state["events"].items():
         if row["fixture"] in blocked:
             continue
@@ -178,9 +235,13 @@ def compare(last, current, state, blocked):
                     move["detected_in_final_hour"] = start - FINAL_HOUR <= now
                     move["wholly_in_final_hour"] = start - FINAL_HOUR <= datetime.fromisoformat(before)
                     move["alert_policy"] = ALERT_POLICY
-                    batch["alert_ids"].append(mid)
+                    if row["fixture"] not in match_issued:
+                        eligible.append(move)
                     alerted[contract] = row["start"]
-    state.update(desk_windows=history, desk_issued=issued, desk_late_issued=alerted)
+    for winner in strongest_by_match(eligible):
+        batch["alert_ids"].append(winner["move_id"])
+        match_issued[winner["fixture"]] = winner["start"]
+    state.update(desk_windows=history, desk_issued=issued, desk_late_issued=alerted, desk_match_issued=match_issued)
     return batch
 
 

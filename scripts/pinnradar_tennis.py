@@ -401,7 +401,7 @@ def run():
             watch.private_chat()
             delivery="private direct chat verified"
         elif mode=="send":
-            delivery=watch.deliver({**batch, "moves":desk_games.alert_moves(batch)},store,
+            delivery=watch.deliver({**batch, "moves":desk_games.dispatch_moves(batch,store)},store,
                                    now=datetime.now(timezone.utc),dispatch_clock=lambda: datetime.now(timezone.utc))
         print(f"Matched fixtures {batch['compared_pairs']}; observed shortenings {len(batch['moves'])}; Telegram {delivery}.")
 
