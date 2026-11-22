@@ -104,6 +104,33 @@ class PaperReturnsTest(unittest.TestCase):
             if time == "12:30":
                 self.assertNotIn("reported_market_max_at_detection", tickets[0])
 
+    def test_only_the_exact_detection_limit_funds_new_paper_positions(self):
+        state = {}
+        def capture(stamp, price, caps):
+            contracts = {"totals:22": {"market":"totals", "labels":["Over 22", "Under 22"],
+                                       "line":22, "prices":[price, 2]}}
+            snap = scan(stamp, price, contracts=contracts)
+            snap["paper_minimum_usd"] = 200
+            r = snap["events"]["a"]
+            r["games_period_limits"] = {"max_total": 5000}
+            r["match_period_limits"] = {"max_money_line": caps[0]}
+            if caps[1] is not None:
+                contracts["totals:22"]["reported_market_max"] = caps[1]
+            return advance_paper(state, snap)
+
+        capture("12:00", 3, (500, None))
+        self.assertFalse(capture("12:15", 2.5, (50, {"amount":500,"currency":"EUR"})))
+        self.assertFalse(capture("12:30", 2.55, (200, {"amount":199.99})))
+        ml = capture("12:45", 2.45, (200, None))
+        self.assertEqual({t["market"] for t in ml}, {"winner"})
+        self.assertEqual(len(ml), 2)  # Independent all4 and all45 cohorts.
+        totals = capture("13:00", 2.4, (1200, {"amount":200}))
+        self.assertEqual({t["market"] for t in totals}, {"totals"})
+        for ticket in ml + totals:
+            self.assertEqual(ticket["reported_market_max_at_detection"], {"amount":200, "currency":"USD"})
+            self.assertEqual(ticket["paper_minimum_usd"], 200)
+        self.assertFalse(capture("13:15", 2.3, (1000, {"amount":1000})))
+
     def test_first_separate_thresholds_and_exact_odds(self):
         s={}
         self.assertEqual(advance_paper(s,scan("12:00")),[])

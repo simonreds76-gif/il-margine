@@ -5,7 +5,7 @@ import hashlib
 import json
 import math
 
-from desk_games import FINAL_HOUR, pairs
+from desk_games import FINAL_HOUR, market_limit, meets_usd_floor, pairs
 from drop_desk_history import bind, event_data, outcome, rows, wta_result, wta_scoreboard
 from pinnradar_tennis import Store, advance, utc
 from price_drop_watch import MAX_GAP, START
@@ -33,6 +33,8 @@ def advance_paper(state, snapshot):
     prior = state.get("windows", {}) if continuous else {}
     windows = {}
     issued = {k: v for k, v in state.get("issued", {}).items() if utc(v) + timedelta(days=7) > now}
+    # Immutable snapshots captured before the floor retain their original replay rules.
+    minimum = snapshot.get("paper_minimum_usd")
     found = []
     for event_id, row in open_board["events"].items():
         start = utc(row["start"])
@@ -43,19 +45,28 @@ def advance_paper(state, snapshot):
             prices = pair["prices"]
             if len(prices) != 2 or not all(math.isfinite(p) and p > 1 for p in prices):
                 continue
+            limit = market_limit(row, pair)
+            eligible_limit = minimum is None or meets_usd_floor(limit, minimum)
             for side, price in enumerate(prices):
                 ident = json.dumps([row["fixture"], code, side], ensure_ascii=True)
                 key = json.dumps([event_id, row["start"], ident])
                 old = prior.get(key, {})
                 point = [stamp, price]
-                new = {}
+                # Keep observing low-limit prices as references, without consuming the entry.
+                new = {"last_price": price}
                 for field, allowed in (("all", True), ("late", start - FINAL_HOUR <= now)):
                     if not allowed:
                         continue
                     peak = old.get(field)
                     new[field] = point if not peak or price >= peak[1] else peak
-                    if not peak:
+                    if not peak or not eligible_limit:
                         continue
+                    if minimum is not None:
+                        last_price = old.get("last_price")
+                        if last_price is None and peak[0] == state.get("observed"):
+                            last_price = peak[1]
+                        if last_price is None or price >= last_price:
+                            continue
                     rise = 100 * (1 / price - 1 / peak[1])
                     for rule, threshold, late in RULES:
                         if late != (field == "late") or rise < threshold - 1e-10:
@@ -75,7 +86,10 @@ def advance_paper(state, snapshot):
                                       player=player, opponent=opponent, selection=pair["labels"][side])
                         if "line" in pair:
                             ticket["line"] = -pair["line"] if side and pair["market"] == "spreads" else pair["line"]
-                        if "reported_market_max" in pair:
+                        if minimum is not None:
+                            ticket["paper_minimum_usd"] = minimum
+                            ticket["reported_market_max_at_detection"] = limit
+                        elif "reported_market_max" in pair:
                             ticket["reported_market_max_at_detection"] = pair["reported_market_max"]
                         found.append(ticket)
                 windows[key] = new
