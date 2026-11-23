@@ -15,6 +15,7 @@ from datetime import datetime
 from typing import Dict, Iterable, Optional
 
 import requests
+from football_team_names import football_form_team_key
 from settlement_utils import normalize_team_name
 
 MATCHES_URL = "https://www.fotmob.com/api/data/matches"
@@ -104,14 +105,42 @@ def _extract_stat_pair(stats_payload: dict, key: str) -> Optional[tuple[int, int
 def _fixture_targeted(match: dict, iso_date: str, target_fixtures: Optional[Iterable[dict]]) -> bool:
     if target_fixtures is None:
         return True
-    home = normalize_team_name(str((match.get("home") or {}).get("longName") or (match.get("home") or {}).get("name") or ""))
-    away = normalize_team_name(str((match.get("away") or {}).get("longName") or (match.get("away") or {}).get("name") or ""))
+    names = {
+        side: {football_form_team_key(match[side][field]) for field in ("longName", "name") if (match.get(side) or {}).get(field)}
+        for side in ("home", "away")
+    }
     return any(
         str(target.get("date") or "")[:10] == iso_date
-        and normalize_team_name(str(target.get("home_team") or "")) == home
-        and normalize_team_name(str(target.get("away_team") or "")) == away
+        and all(football_form_team_key(target.get(side + "_team")) in names[side] for side in names)
         for target in target_fixtures
     )
+
+
+def _dated_matches(board: dict, league_id: int):
+    seen = set()
+    for group in board.get("leagues") or []:
+        # Some competitions have a season/group ID and a distinct persistent primaryId.
+        if league_id not in (group.get("id"), group.get("primaryId")):
+            continue
+        for match in group.get("matches") or []:
+            match_id = match.get("id")
+            if match_id and match_id not in seen:
+                seen.add(match_id)
+                yield match
+
+
+def _same_finished_fixture(general: dict, match: dict, day: str, league_id: int) -> bool:
+    if general.get("finished") is not True or str(general.get("matchId")) != str(match["id"]):
+        return False
+    if league_id not in (general.get("leagueId"), general.get("parentLeagueId")):
+        return False
+    if str(general.get("matchTimeUTCDate") or "")[:10] != day:
+        return False
+    for side in ("home", "away"):
+        board_id = (match.get(side) or {}).get("id")
+        if not board_id or str((general.get(side + "Team") or {}).get("id")) != str(board_id):
+            return False
+    return True
 
 
 def fetch_fotmob_recent_results(
@@ -143,16 +172,9 @@ def fetch_fotmob_recent_results(
             print(f"  [WARN] FotMob matches {league_key} {iso_date}: {exc}")
             continue
 
-        league = next(
-            (entry for entry in (matches_payload.get("leagues") or []) if entry.get("id") == config["league_id"]),
-            None,
-        )
-        if not league:
-            continue
-
-        for match in league.get("matches", []) or []:
+        for match in _dated_matches(matches_payload, config["league_id"]):
             status = match.get("status", {}) or {}
-            if not status.get("finished"):
+            if status.get("finished") is not True or status.get("cancelled") or status.get("awarded"):
                 continue
             # A date can contain dozens of matches. Fetching detail pages for
             # every match made targeted settlement unbounded; only request the
@@ -170,6 +192,8 @@ def fetch_fotmob_recent_results(
                 continue
 
             general = page_props.get("general", {}) or {}
+            if not _same_finished_fixture(general, match, iso_date, config["league_id"]):
+                continue
             content = page_props.get("content", {}) or {}
             stats_payload = content.get("stats") or {}
 

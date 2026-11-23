@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-11-22T16:21:51Z",
+  "run_at": "2026-11-23T00:42:54Z",
   "model": "corners-v3-shadow",
   "total_bets": 270,
-  "settled_this_run": 10,
-  "total_settled": 239,
-  "total_pending": 31,
+  "settled_this_run": 20,
+  "total_settled": 259,
+  "total_pending": 11,
   "pending_breakdown": {
-    "future": 14,
-    "live": 5,
-    "stale": 11,
+    "future": 10,
+    "live": 0,
+    "stale": 0,
     "old_stale": 1,
     "unknown": 0
   },
@@ -89,96 +89,7 @@
       "snapshot_path": "data/results-snapshot/2026-11-22.json"
     }
   },
-  "stale_rows": [
-    {
-      "match": "Bayern Munich vs 1. FC Cologne",
-      "league": "bundesliga",
-      "line": "8.5",
-      "side": "under",
-      "kickoff": "2026-11-20T19:30:00Z",
-      "hours_elapsed": 44.86
-    },
-    {
-      "match": "ESTAC Troyes vs Le Havre AC",
-      "league": "ligue-1",
-      "line": "8.5",
-      "side": "over",
-      "kickoff": "2026-11-20T19:45:00Z",
-      "hours_elapsed": 44.61
-    },
-    {
-      "match": "Lazio Rome vs US Lecce",
-      "league": "serie-a",
-      "line": "6.5",
-      "side": "under",
-      "kickoff": "2026-11-21T14:00:00Z",
-      "hours_elapsed": 26.36
-    },
-    {
-      "match": "Eintracht Frankfurt vs TSG Hoffenheim",
-      "league": "bundesliga",
-      "line": "8.5",
-      "side": "under",
-      "kickoff": "2026-11-21T14:30:00Z",
-      "hours_elapsed": 25.86
-    },
-    {
-      "match": "SV 07 Elversberg vs SC Freiburg",
-      "league": "bundesliga",
-      "line": "8.5",
-      "side": "under",
-      "kickoff": "2026-11-21T14:30:00Z",
-      "hours_elapsed": 25.86
-    },
-    {
-      "match": "Bayer Leverkusen vs SC Paderborn 07",
-      "league": "bundesliga",
-      "line": "9.5",
-      "side": "under",
-      "kickoff": "2026-11-21T14:30:00Z",
-      "hours_elapsed": 25.86
-    },
-    {
-      "match": "Union Berlin vs RB Leipzig",
-      "league": "bundesliga",
-      "line": "7.5",
-      "side": "under",
-      "kickoff": "2026-11-21T14:30:00Z",
-      "hours_elapsed": 25.86
-    },
-    {
-      "match": "OGC Nice vs Paris Saint-Germain",
-      "league": "ligue-1",
-      "line": "9.5",
-      "side": "under",
-      "kickoff": "2026-11-21T16:15:00Z",
-      "hours_elapsed": 24.11
-    },
-    {
-      "match": "Racing Club De Lens vs Toulouse FC",
-      "league": "ligue-1",
-      "line": "8.5",
-      "side": "under",
-      "kickoff": "2026-11-21T19:45:00Z",
-      "hours_elapsed": 20.61
-    },
-    {
-      "match": "Lille OSC vs Olympique Lyon",
-      "league": "ligue-1",
-      "line": "9.5",
-      "side": "under",
-      "kickoff": "2026-11-21T19:45:00Z",
-      "hours_elapsed": 20.61
-    },
-    {
-      "match": "AS Monaco vs AJ Auxerre",
-      "league": "ligue-1",
-      "line": "8.5",
-      "side": "under",
-      "kickoff": "2026-11-21T19:45:00Z",
-      "hours_elapsed": 20.61
-    }
-  ],
+  "stale_rows": [],
   "old_stale_rows": [
     {
       "match": "Lyon vs Angers",
@@ -186,18 +97,14 @@
       "line": "9.5",
       "side": "under",
       "kickoff": "2026-10-31T19:45:00Z",
-      "hours_elapsed": 524.61
+      "hours_elapsed": 532.97
     }
   ],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [
-    "11 stale pending row(s) across 11 fixture(s) (3-48h elapsed)"
-  ],
+  "warnings": [],
   "errors": [
-    "1 old stale pending row(s) (>=48h elapsed)",
-    "bundesliga: 5 stale fixture(s) across 5 pending row(s)",
-    "ligue-1: 5 stale fixture(s) across 5 pending row(s)"
+    "1 old stale pending row(s) (>=48h elapsed)"
   ],
   "exit_code_recommendation": 1
 }

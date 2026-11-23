@@ -466,8 +466,8 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, pinnacle_path: P
         f"# Corners CLV Monitor: `{model}`",
         "",
         f"Generated: {fmt_dt(datetime.now(UTC))}",
-        f"Picks input: `{picks_path.relative_to(ROOT) if picks_path.is_absolute() and ROOT in picks_path.parents else picks_path}`",
-        f"Pinnacle input: `{pinnacle_path.relative_to(ROOT) if pinnacle_path.is_absolute() and ROOT in pinnacle_path.parents else pinnacle_path}`",
+        f"Picks input: `{display_path(picks_path)}`",
+        f"Pinnacle input: `{display_path(pinnacle_path)}`",
         "",
         "## Summary",
         "",
@@ -535,6 +535,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--allowed-config", type=Path, default=DEFAULT_ALLOWED_CONFIG)
+    parser.add_argument("--report-only", action="store_true", help="Render the report from the settled ledger.")
     parser.add_argument(
         "--allow-canonical-only",
         action="store_true",
@@ -542,11 +543,18 @@ def main() -> None:
     )
     args = parser.parse_args()
 
+    allowed_config = load_allowed_config(args.allowed_config)
+    if args.report_only:
+        if not args.output.is_file():
+            parser.error("The settled ledger is missing")
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        args.report.write_text(render_report(load_csv(args.output), args.picks, args.pinnacle, allowed_config), encoding="utf-8")
+        return
+
     picks = load_csv(args.picks)
     pinnacle_rows = load_csv(args.pinnacle)
     index = build_pinnacle_index(pinnacle_rows)
     existing_settlements = load_existing_settlements(args.output)
-    allowed_config = load_allowed_config(args.allowed_config)
     allowed_leagues = {str(league).strip().lower() for league in allowed_config.get("allowed_leagues", [])}
     allow_canonical_only = args.allow_canonical_only or bool(allowed_config.get("canonical_only_allowed"))
     rows = [
