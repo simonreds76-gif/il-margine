@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-23T07:48:01Z",
+  "generated_at": "2026-11-23T20:34:05Z",
   "league": "serie-a",
-  "row_count": 3,
+  "row_count": 4,
   "rows": [
     {
       "team": "Atalanta",
@@ -51,6 +51,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-11-22"
+    },
+    {
+      "team": "Monza",
+      "team_key": "monza",
+      "player_name": "Gustavo Varela",
+      "player_key": "gustavo varela",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-11-23"
     }
   ]
 }
