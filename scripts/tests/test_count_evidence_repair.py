@@ -21,6 +21,13 @@ I=load('input_repair_test','refresh-football-count-inputs.py')
 NOW=datetime(2026,10,12,12,tzinfo=timezone.utc)
 
 class EvidenceTests(unittest.TestCase):
+    def test_snapshot_retains_explicit_zero_corners(self):
+        snapshot = load('fetch_results_zero_test', 'fetch-results-snapshot.py')
+        self.assertEqual(snapshot.optional_int(0), 0)
+        self.assertEqual(snapshot.optional_int("0"), 0)
+        self.assertIsNone(snapshot.optional_int(None))
+        self.assertIsNone(snapshot.optional_int(""))
+
     def forecast(self):
         return dict(contract_id='original',match_date='2026-10-11',kickoff_utc='2026-10-11T18:45:00Z',league='ligue-1',home_team='ESTAC Troyes',away_team='Olympique Marseille',team='Olympique Marseille',line=15.5,odds={'over':2.,'under':1.75},models={m:dict(p_over=.6,mean=17,selected_side='over') for m in P.MODELS})
     def evidence(self):

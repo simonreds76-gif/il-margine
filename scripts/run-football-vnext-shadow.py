@@ -31,13 +31,14 @@ def main() -> int:
         "--report", str(FORM / "team-shots-v4-shadow-clv.md"),
         "--allowed-config", str(FORM / "team-shots-v4-shadow-config.json"),
     )
-    run(
+    corners_monitor = (
         str(SCRIPTS / "corners-v0-clv-monitor.py"),
         "--picks", str(FORM / "corners-v3-shadow-signals.csv"),
         "--output", str(FORM / "corners-v3-shadow-clv.csv"),
         "--report", str(FORM / "corners-v3-shadow-clv.md"),
         "--allowed-config", str(FORM / "corners-v3-shadow-config.json"),
     )
+    run(*corners_monitor)
     run(
         str(SCRIPTS / "settle-football-research-lanes.py"),
         "--team-shots", str(FORM / "team-shots-v4-shadow-clv.csv"),
@@ -47,6 +48,7 @@ def main() -> int:
         "--team-model", "team-shots-v4-shadow",
         "--corners-model", "corners-v3-shadow",
     )
+    run(*corners_monitor, "--report-only")
     run(str(SCRIPTS / "football-counts-vnext-gate.py"))
     run(str(SCRIPTS / "refresh-football-count-evidence.py"))
     return 0

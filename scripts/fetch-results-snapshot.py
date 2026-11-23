@@ -48,7 +48,7 @@ DEFAULT_API_FOOTBALL_MAX_REQUESTS = 10
 
 
 def optional_int(value: object) -> int | None:
-    text = str(value or "").strip()
+    text = str(value if value is not None else "").strip()
     if not text:
         return None
     try:
