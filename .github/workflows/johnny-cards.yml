@@ -1,0 +1,72 @@
+name: Johnny daily bookings and fouls
+on:
+  schedule:
+    - cron: '0 11 * * *'
+      timezone: Europe/London
+    - cron: '17 11 * * *'
+      timezone: Europe/London
+  workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [preview, due]
+        default: preview
+      preview_day:
+        description: 'Private rehearsal date (YYYY-MM-DD)'
+        required: false
+  push:
+    branches: [codex/statshub-duel-review-20261123]
+    paths: ['scripts/johnny_cards*.py', 'tests/test_johnny_cards*.py', '.github/workflows/johnny-cards.yml']
+permissions:
+  contents: read
+concurrency:
+  group: johnny-booking-research
+  cancel-in-progress: false
+jobs:
+  scan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+    env:
+      MODE: ${{ github.event_name == 'push' && 'preview' || inputs.mode || 'due' }}
+      PREVIEW_DAY: ${{ inputs.preview_day || (github.event_name == 'push' && '2026-11-27') || '' }}
+      JOHNNY_ENGINE_DIR: ${{ github.workspace }}/../johnny-engine
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/statshub_daily*.py
+            /scripts/johnny_cards*.py
+            /tests/test_johnny_cards*.py
+      - name: Check the evidence and delivery contracts
+        run: |
+          python -m pip -q install requests cryptography
+          python -m unittest discover -s tests -p 'test_johnny_cards*.py'
+      - name: Check today's slate and private delivery receipt
+        id: plan
+        env:
+          STATSHUB_DAILY_AUTH: ${{ secrets.STATSHUB_DAILY_AUTH }}
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python scripts/johnny_cards.py --plan
+      - name: Prepare checksum-verified local inference
+        if: steps.plan.outputs.engine == 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p "$JOHNNY_ENGINE_DIR"
+          cd "$JOHNNY_ENGINE_DIR"
+          curl --fail --silent --show-error --location --retry 2 'https://github.com/ggml-org/llama.cpp/releases/download/b12651/llama-b12651-bin-ubuntu-x64.tar.gz' -o engine.tar.gz
+          echo '17b242259181d5b1b1f7719aba27929700a8b0dab39bfaef1b971a992b397b38  engine.tar.gz' | sha256sum --check --status
+          tar --no-same-owner -xf engine.tar.gz
+          curl --fail --silent --show-error --location --retry 2 'https://huggingface.co/Qwen/Qwen3-4B-GGUF/resolve/bc640142c66e1fdd12af0bd68f40445458f3869b/Qwen3-4B-Q4_K_M.gguf' -o model.gguf
+          echo '7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5  model.gguf' | sha256sum --check --status
+      - name: Apply the original guide privately
+        if: steps.plan.outputs.active == 'true'
+        env:
+          STATSHUB_DAILY_AUTH: ${{ secrets.STATSHUB_DAILY_AUTH }}
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TELEGRAM_CHAT_ID: ${{ env.MODE == 'due' && secrets.OPS_ALERT_TELEGRAM_CHAT_ID || '' }}
+          TELEGRAM_BOT_TOKEN: ${{ env.MODE == 'due' && secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN || '' }}
+        run: python scripts/johnny_cards.py
