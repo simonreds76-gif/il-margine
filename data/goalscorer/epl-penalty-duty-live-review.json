@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-22T23:34:37.777957+00:00",
+  "generated_at": "2026-11-23T07:48:06Z",
   "league": "epl",
   "row_count": 1,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "2999372809",
           "match_id": "5795518",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5795518",
-          "observed_at": "2026-11-22T23:34:44+00:00",
+          "observed_at": "2026-11-23T07:48:01+00:00",
           "event_date": "2026-11-21",
           "season": "2026/27",
           "team": "Leeds United",
@@ -76,22 +76,10 @@
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261116",
-      "20261117",
-      "20261118",
-      "20261119",
-      "20261120",
       "20261121",
-      "20261122"
+      "20261122",
+      "20261123"
     ],
     "matches_checked": 9
-  },
-  "hot_source_health": {
-    "complete": true,
-    "errors": [],
-    "dates_requested": [
-      "20261121"
-    ],
-    "matches_checked": 1
   }
 }
