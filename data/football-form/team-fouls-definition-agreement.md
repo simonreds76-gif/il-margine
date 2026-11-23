@@ -1,6 +1,6 @@
 # Team Fouls v1: M2 Definition Agreement
 
-Generated: 2026-11-22T16:20:20Z
+Generated: 2026-11-23T19:27:11Z
 Status: **WAIT OR FAIL**
 
 - API-Football comparable team values: 0 (required 200).
