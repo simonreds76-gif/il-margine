@@ -85,6 +85,14 @@ def recovery_decision(now, recent, state):
     return 'dispatch'
 
 
+def empty_scope(now, not_before):
+    from tennis_props_empty_scope import verified_empty
+    proof = verified_empty(ROOT, str(now.date()), now=now, not_before=not_before)
+    if proof:
+        print('No eligible props fixtures; all configured sources checked and zero markets returned.')
+    return bool(proof)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check-only', action='store_true')
@@ -97,6 +105,8 @@ def main(argv=None):
     # Check the local capture FIRST: a cloud cooldown/auth failure must not
     # invalidate fresh prices or replace them with an older hosted snapshot.
     count = local_fresh(now, not_before)
+    if not count and empty_scope(now, not_before):
+        return 0
     if args.check_only or count:
         print(f'Fresh upcoming tennis props rows: {count}; no dispatch or sync performed. '
               'Individual bookmaker coverage remains in the capture audit.')
@@ -104,6 +114,8 @@ def main(argv=None):
     sync(now)
     if local_fresh(now, not_before):
         print('Fresh upcoming hosted props prices available; no fallback request.')
+        return 0
+    if empty_scope(datetime.now(timezone.utc), not_before):
         return 0
     recent = runs()
     state = json.loads(STATE.read_text()) if STATE.exists() else {}
@@ -131,7 +143,7 @@ def main(argv=None):
             sync(datetime.now(timezone.utc))
             count = local_fresh(datetime.now(timezone.utc), not_before)
             print(f'Hosted tennis props recovery finished; fresh upcoming rows: {count}')
-            return 0 if count else 2
+            return 0 if count or empty_scope(datetime.now(timezone.utc), not_before) else 2
     print('Hosted capture not ready within the bounded wait; stale prices remain blocked.')
     return 2
 

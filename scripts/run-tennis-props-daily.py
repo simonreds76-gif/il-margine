@@ -18,6 +18,7 @@ import sys
 import tempfile
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from tennis_props_empty_scope import verified_empty
 from model_lifecycle import most_aces_suspended
 from tennis_pairing_consistency import ensure_props_board, verify_derived_board
 
@@ -479,6 +480,21 @@ def comparison_failure(as_of: str, market_file: Path) -> int:
     return 1
 
 
+def finish_empty_scope(as_of: str, *, selections_only: bool = False) -> int:
+    # Pending bets can settle on a day with no new fixtures to price.
+    if not selections_only:
+        for label, script, seconds in (
+            ("shadow_settlement", "tennis-props-settle-shadow.py", 90),
+            ("model_report", "tennis-props-model-report.py", 25),
+        ):
+            code = run([sys.executable, str(ROOT / "scripts" / script)], label, fatal=False, timeout_seconds=seconds)
+            if code:
+                mark_pipeline_blocked(as_of, None, label)
+                return code
+    # The health writer independently rechecks the evidence immediately before publication.
+    return write_pipeline_health(as_of, None, strict=True)
+
+
 def run_monitor_only(as_of: str, *, selections_only: bool = False) -> int:
     """Refresh current forecasts and existing paper lanes, without odds downloads."""
     market_file = None
@@ -488,6 +504,11 @@ def run_monitor_only(as_of: str, *, selections_only: bool = False) -> int:
         step = 'current_pairing_projection_check'
         ensure_props_board(ROOT, as_of, runner=run)
         derived_ready = refresh_current_most_aces(as_of)
+        if verified_empty(ROOT, as_of, require_board=True):
+            if not derived_ready:
+                mark_pipeline_blocked(as_of, None, "current_model_refresh_incomplete")
+                return 1
+            return finish_empty_scope(as_of, selections_only=selections_only)
         market_file = select_market_file(as_of)
         if market_file is None:
             mark_pipeline_blocked(as_of, None, "market_prices_missing")
@@ -631,12 +652,14 @@ def run_comparison_only(
     selections_only: bool = False,
 ) -> int:
     mark_pipeline_blocked(as_of, None, "comparison_refresh", running=True)
-    if not skip_sync:
+    if not skip_sync and not verified_empty(ROOT, as_of):
         sync_hosted_captures(as_of, lookback_days)
     if skip_derived_boards:
         # Manual refresh needs the bounded current board, not slow research lanes.
         return run_monitor_only(as_of, selections_only=selections_only)
     ensure_props_board(ROOT, as_of, runner=run)
+    if verified_empty(ROOT, as_of, require_board=True):
+        return finish_empty_scope(as_of, selections_only=selections_only)
     market_file = select_market_file(as_of)
     if market_file is None:
         print(f"WARNING: no hosted/local Bet365 capture contains {as_of} events.")
@@ -759,6 +782,9 @@ def main() -> int:
         timeout_seconds=120,
     )
     refresh_derived_ace_boards(args.as_of)
+
+    if verified_empty(ROOT, args.as_of, require_board=True, days_ahead=args.days_ahead):
+        return finish_empty_scope(args.as_of)
 
     if not args.skip_hosted_sync:
         sync_hosted_captures(args.as_of, args.hosted_lookback_days)

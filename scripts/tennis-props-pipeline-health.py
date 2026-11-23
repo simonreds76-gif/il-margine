@@ -206,7 +206,13 @@ def build_health(
     from tennis_props_current_history import history_health
     current_history = history_health(ROOT / "data/tennis-props", as_of) if baseline_directory is None else None
     structural_error = False
-    if not line_rows:
+    from tennis_props_empty_scope import verified_empty, STATE as empty_state
+    empty_scope = None
+    if not line_rows and baseline_directory is None and current_history and current_history['state'] == 'CURRENT':
+        empty_scope = verified_empty(ROOT, as_of, now=now_utc, require_board=True)
+    if empty_scope:
+        state = break_state = empty_state
+    elif not line_rows:
         state = "FEED_MISSING"
         structural_error = True
     elif not comparison_path.exists() or not comparison_rows:
@@ -269,6 +275,7 @@ def build_health(
         actionable_shadow = actionable_public = 0
         if break_line_rows: break_state = "PIPELINE_UNHEALTHY"
     return {
+        "empty_scope": empty_scope,
         "player_history": current_history,
         "fixture_quarantine": quarantine,
         "generated_at": now_utc.isoformat(timespec="seconds"),

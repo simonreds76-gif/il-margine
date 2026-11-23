@@ -125,6 +125,12 @@ def prepare(root: Path, now: datetime, previous: dict) -> tuple[list[tuple[str, 
     stats = metrics([r for r in rows if r.get('history_version') == VERSION and r.get('model_sha256') == model_hash], set())
     if stats['invalid_paper']:
         return [], dict(status, state='BLOCKED_DATA_CHECK', warnings=['Some settled v4 selections have incomplete results.'])
+    from tennis_props_empty_scope import STATE, verified_empty
+    if health.get('state') == STATE:
+        proof = verified_empty(root, target_day, now=now, require_board=True)
+        if not proof or proof != health.get('empty_scope'):
+            return [], dict(status, state='BLOCKED_DATA_CHECK', warnings=['Empty-schedule evidence is stale or changed.'])
+        return [], dict(status, state=STATE, empty_scope=proof)
     record = ('Current model record: no settled paper selections yet.' if stats['roi'] is None else
               f"Current model: {stats['wins']}W / {stats['losses']}L / {stats['pushes']} push | {stats['paper_settled']} settled | "
               f"P/L {stats['profit']:+.2f}u | ROI {stats['roi']:+.2f}%")
