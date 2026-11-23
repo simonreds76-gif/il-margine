@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-11-23T20:00:00Z",
       "home_team": "Brentford",
       "away_team": "Everton",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -20,11 +20,11 @@
         "Kristoffer Ajer",
         "Sepp van den Berg",
         "Keane Lewis-Potter",
-        "Mamadou Sangaré",
+        "Yehor Yarmoliuk",
         "Vitaly Janelt",
         "Dango Ouattara",
-        "Mathias Jensen",
-        "Kevin Schade",
+        "Mikkel Damsgaard",
+        "Jaidon Anthony",
         "Callum Wilson"
       ],
       "away_players": [
@@ -97,15 +97,15 @@
           "shirt_number": "23"
         },
         {
-          "name": "Mamadou Sangaré",
+          "name": "Yehor Yarmoliuk",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
           "formation": "4-2-3-1",
           "position_id": 64,
-          "player_id": 1185211,
-          "shirt_number": "18"
+          "player_id": 1157236,
+          "shirt_number": "6"
         },
         {
           "name": "Vitaly Janelt",
@@ -130,26 +130,26 @@
           "shirt_number": "11"
         },
         {
-          "name": "Mathias Jensen",
+          "name": "Mikkel Damsgaard",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 85,
-          "player_id": 650616,
-          "shirt_number": "8"
+          "player_id": 888912,
+          "shirt_number": "24"
         },
         {
-          "name": "Kevin Schade",
+          "name": "Jaidon Anthony",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
           "formation": "4-2-3-1",
           "position_id": 87,
-          "player_id": 1083796,
-          "shirt_number": "7"
+          "player_id": 1171140,
+          "shirt_number": "19"
         },
         {
           "name": "Callum Wilson",
@@ -286,12 +286,123 @@
           "shirt_number": "11"
         }
       ],
-      "home_subs": [],
-      "home_substitute_entries": [],
-      "away_subs": [],
-      "away_substitute_entries": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Kevin Schade",
+        "Malick Diouf",
+        "Mathias Jensen",
         "Fábio Carvalho",
+        "Mamadou Sangaré",
+        "Hákon Rafn Valdimarsson",
+        "Benjamin Fredrick",
+        "Jannik Schuster",
+        "Gustavo Nunes"
+      ],
+      "home_substitute_entries": [
+        {
+          "name": "Kevin Schade",
+          "player_id": "1083796",
+          "role_group": "FW"
+        },
+        {
+          "name": "Malick Diouf",
+          "player_id": "1451265",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Mathias Jensen",
+          "player_id": "650616",
+          "role_group": "MID"
+        },
+        {
+          "name": "Fábio Carvalho",
+          "player_id": "963965",
+          "role_group": "MID"
+        },
+        {
+          "name": "Mamadou Sangaré",
+          "player_id": "1185211",
+          "role_group": "MID"
+        },
+        {
+          "name": "Hákon Rafn Valdimarsson",
+          "player_id": "850962",
+          "role_group": "GK"
+        },
+        {
+          "name": "Benjamin Fredrick",
+          "player_id": "1478706",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Jannik Schuster",
+          "player_id": "1572340",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Gustavo Nunes",
+          "player_id": "1516030",
+          "role_group": "FW"
+        }
+      ],
+      "away_subs": [
+        "Jack Grealish",
+        "Hayden Hackney",
+        "Michael Keane",
+        "Brennan Johnson",
+        "Christian Nørgaard",
+        "Mark Travers",
+        "Ainsley Maitland-Niles",
+        "Charly Alcaraz",
+        "Tyler Dibling"
+      ],
+      "away_substitute_entries": [
+        {
+          "name": "Jack Grealish",
+          "player_id": "312765",
+          "role_group": "FW"
+        },
+        {
+          "name": "Hayden Hackney",
+          "player_id": "982394",
+          "role_group": "MID"
+        },
+        {
+          "name": "Michael Keane",
+          "player_id": "290410",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Brennan Johnson",
+          "player_id": "1076756",
+          "role_group": "MID"
+        },
+        {
+          "name": "Christian Nørgaard",
+          "player_id": "266520",
+          "role_group": "MID"
+        },
+        {
+          "name": "Mark Travers",
+          "player_id": "731855",
+          "role_group": "GK"
+        },
+        {
+          "name": "Ainsley Maitland-Niles",
+          "player_id": "604089",
+          "role_group": "DEF"
+        },
+        {
+          "name": "Charly Alcaraz",
+          "player_id": "1128965",
+          "role_group": "MID"
+        },
+        {
+          "name": "Tyler Dibling",
+          "player_id": "1292833",
+          "role_group": "FW"
+        }
+      ],
+      "home_unavailable": [
         "Joshua Dasilva",
         "Aaron Hickey",
         "Nathan Collins",
@@ -300,8 +411,8 @@
         "Igor Thiago"
       ],
       "away_unavailable": [],
-      "observed_at": "2026-11-23T18:45:59.668374+00:00",
-      "changed_at": "2026-11-22T14:55:37.468281+00:00"
+      "observed_at": "2026-11-23T22:01:35.365845+00:00",
+      "changed_at": "2026-11-23T22:01:35.365845+00:00"
     }
   ]
 }
