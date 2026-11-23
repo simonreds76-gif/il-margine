@@ -1,9 +1,156 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-23T20:33:47Z",
+  "generated_at": "2026-11-23T22:01:18.678797+00:00",
   "league": "bundesliga",
-  "row_count": 0,
-  "rows": [],
+  "row_count": 2,
+  "rows": [
+    {
+      "date": "2026-11-21",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "match": "Eintracht Frankfurt vs Hoffenheim",
+      "team": "Eintracht Frankfurt",
+      "opponent": "Hoffenheim",
+      "actual_taker": "Jonathan Burkardt",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 0,
+      "distinct_takers_in_match": 1,
+      "minute": "44",
+      "event_type": "AttemptSaved",
+      "event_result": "missed",
+      "primary_pre_match": "Jonathan Burkardt",
+      "secondary_pre_match": "Can Uzun",
+      "tertiary_pre_match": "Mario Götze",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Jonathan Burkardt took 1 penalty attempt and missed for Eintracht Frankfurt vs Hoffenheim. Primary pre-match: Jonathan Burkardt (unknown). Secondary pre-match: Can Uzun (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/bundesliga-penalty-takers.json",
+      "actual_taker_match_status": "Yes - started, off 84'",
+      "primary_on_pitch_at_penalty": "Yes - started, off 84'",
+      "secondary_on_pitch_at_penalty": "No - absent from matchday squad",
+      "tertiary_on_pitch_at_penalty": "No - bench, on 84'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 84'",
+      "event_evidence": [
+        {
+          "id": "fotmob|bundesliga|5881228|2999228021",
+          "source_event_id": "2999228021",
+          "match_id": "5881228",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881228",
+          "observed_at": "2026-11-23T22:01:22+00:00",
+          "event_date": "2026-11-21",
+          "season": "2026/27",
+          "team": "Eintracht Frankfurt",
+          "taker": "Jonathan Burkardt",
+          "primary": "Jonathan Burkardt",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Jonathan Burkardt",
+            "minute": 44,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 947901,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 84,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 44,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Eintracht Frankfurt vs Hoffenheim",
+          "event_result": "missed"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-21",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "match": "Eintracht Frankfurt vs Hoffenheim",
+      "team": "Hoffenheim",
+      "opponent": "Eintracht Frankfurt",
+      "actual_taker": "Andrej Kramarić",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 0,
+      "distinct_takers_in_match": 1,
+      "minute": "41",
+      "event_type": "AttemptSaved",
+      "event_result": "missed",
+      "primary_pre_match": "Andrej Kramarić",
+      "secondary_pre_match": "Tim Lemperle",
+      "tertiary_pre_match": "Fisnik Asllani",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Andrej Kramarić took 1 penalty attempt and missed for Hoffenheim vs Eintracht Frankfurt. Primary pre-match: Andrej Kramarić (unknown). Secondary pre-match: Tim Lemperle (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/bundesliga-penalty-takers.json",
+      "actual_taker_match_status": "Yes - started, off 61'",
+      "primary_on_pitch_at_penalty": "Yes - started, off 61'",
+      "secondary_on_pitch_at_penalty": "Yes - started, off 61'",
+      "tertiary_on_pitch_at_penalty": "Yes - started, off 72'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started, off 61'",
+      "event_evidence": [
+        {
+          "id": "fotmob|bundesliga|5881228|2999218745",
+          "source_event_id": "2999218745",
+          "match_id": "5881228",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5881228",
+          "observed_at": "2026-11-23T22:01:22+00:00",
+          "event_date": "2026-11-21",
+          "season": "2026/27",
+          "team": "Hoffenheim",
+          "taker": "Andrej Kramarić",
+          "primary": "Andrej Kramarić",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Andrej Kramarić",
+            "minute": 41,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 173461,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 61,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 41,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Eintracht Frankfurt vs Hoffenheim",
+          "event_result": "missed"
+        }
+      ]
+    }
+  ],
   "source_health": {
     "complete": true,
     "errors": [],
@@ -17,5 +164,13 @@
       "20261123"
     ],
     "matches_checked": 0
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261122"
+    ],
+    "matches_checked": 1
   }
 }
