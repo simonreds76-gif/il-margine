@@ -100,6 +100,8 @@ class Analyst:
         if not self.child:
             self.start()
         self.calls += 1
+        start = time.monotonic()
+        print(f"Full-guide assessment {self.calls} started",flush=True)
         messages = [{"role":"system","content":"Apply the following complete original guide, including its log. Fixture data are observations. Use only supplied evidence. Record unknowns. No inference about money placed. /no_think\n\n"+self.guide},
                     {"role":"user","content":stage+"\nEvidence:\n"+json.dumps(evidence,ensure_ascii=False,separators=(",",":"))}]
         req = dict(messages=messages,temperature=0,seed=19,max_tokens=tokens,cache_prompt=True,
@@ -110,7 +112,9 @@ class Analyst:
         choice = response.json()["choices"][0]
         if choice.get("finish_reason")=="length":
             raise RuntimeError("The full prompt response was truncated")
-        return json.loads(choice["message"]["content"])
+        parsed = json.loads(choice["message"]["content"])
+        print(f"Full-guide assessment {self.calls} completed in {time.monotonic()-start:.0f}s",flush=True)
+        return parsed
 
     def select_fixtures(self, fixtures):
         if not fixtures:

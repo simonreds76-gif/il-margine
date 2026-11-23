@@ -2,16 +2,28 @@
 import os
 import re
 import sys
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 from statshub_daily_board import LINK, REPORT, Reads, board_matches
 from statshub_daily_contracts import LEAGUES, exact_quote, fixtures, identity, norm, utc
 from statshub_daily_focus import flank, number
-from statshub_daily_io import Provider, Store, send_digest, timestamp
+from statshub_daily_io import Provider, Store, http, send_digest, timestamp
 
 LONDON = ZoneInfo("Europe/London")
 FLOOR = 4.0
+
+
+def private_store():
+    # The cloud CPU can spend minutes on the guide before reusing its storage connection.
+    # Retry only safe storage reads. Never automatically replay a claim or a Telegram POST.
+    base = os.environ["SUPABASE_URL"].rstrip("/") + "/storage/v1/"
+    retry = Retry(total=3, read=3, connect=3, status=3, backoff_factor=1,
+                  allowed_methods={"GET","HEAD"}, status_forcelist=(408,429,500,502,503,504))
+    http.mount(base,HTTPAdapter(max_retries=retry))
+    return Store()
 
 
 def data(reader, tool, args):
@@ -323,7 +335,7 @@ def plan():
     preview = os.environ.get("MODE","preview")=="preview"
     now = datetime.now(LONDON)
     day = (os.environ.get("PREVIEW_DAY","").strip() if preview else "") or now.date().isoformat()
-    store = Store()
+    store = private_store()
     sent = not preview and store.get("receipts/johnny-"+day+"-0.json",{}).get("state")=="sent"
     active = not sent and (preview or now.hour>=11)
     needs_engine = False
@@ -343,7 +355,7 @@ def run():
     day = day or now.date().isoformat()
     if not preview and now.hour < 11:
         return
-    store = Store()
+    store = private_store()
     path = "johnny/days/"+day+".json"
     report = None if preview else store.get(path)
     if report is None:
