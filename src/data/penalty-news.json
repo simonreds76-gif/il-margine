@@ -1,11 +1,80 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-23T20:35:26.155837+00:00",
+  "generatedAt": "2026-11-23T22:03:19.671129+00:00",
   "coverageStart": "2026-10-17",
   "checkedThrough": "2026-11-23",
   "captureStatus": "complete",
-  "matchesChecked": 27,
+  "matchesChecked": 3,
   "articles": [
+    {
+      "id": "fotmob:5749756:3000757383",
+      "slug": "2026-11-23-gustavo-varela-5749756-3000757383",
+      "matchId": "5749756",
+      "eventId": "3000757383",
+      "date": "2026-11-23",
+      "kickoff": "2026-11-23T19:45:00.000Z",
+      "league": "serie-a",
+      "leagueLabel": "Serie A",
+      "round": "12",
+      "player": "Gustavo Varela",
+      "playerId": 1585676,
+      "portrait": "https://images.fotmob.com/image_resources/playerimages/1585676.png",
+      "club": "Monza",
+      "clubSlug": "monza",
+      "clubUrl": "/penalty-takers/serie-a/monza",
+      "crest": "/team-logos/serie-a/monza.png",
+      "opponent": "Fiorentina",
+      "home": "Monza",
+      "away": "Fiorentina",
+      "homeScore": 3,
+      "awayScore": 0,
+      "minute": "45",
+      "outcome": "scored",
+      "title": "Gustavo Varela scores from the spot against Fiorentina",
+      "sentences": [
+        "Gustavo Varela converted a penalty for Monza in minute 45 against Fiorentina.",
+        "The match finished Monza 3–0 Fiorentina."
+      ],
+      "cause": "handball",
+      "incident": {
+        "type": "handball",
+        "wonBy": null,
+        "concededBy": "Christ Inao Oulaï",
+        "sentence": "The penalty was awarded for a handball by Christ Inao Oulaï.",
+        "evidenceIds": [
+          "3000756555"
+        ],
+        "method": "structured_commentary"
+      },
+      "stats": {
+        "minutes": 90,
+        "goals": 2,
+        "shots": 4,
+        "onTarget": 2,
+        "chances": 1
+      },
+      "keeper": "David de Gea",
+      "moment": {
+        "before": [
+          0,
+          0
+        ],
+        "after": [
+          1,
+          0
+        ]
+      },
+      "paragraphs": [
+        "Gustavo Varela converted a penalty in the 45th minute of Monza’s 3–0 win over Fiorentina.",
+        "The penalty was awarded for a handball by Christ Inao Oulaï. The goal put the team ahead at 1–0.",
+        "Gustavo Varela finished with 2 goals and 4 shots, including 2 on target, in 90 minutes."
+      ],
+      "sourceUrl": "https://www.fotmob.com/matches/monza-vs-fiorentina/1vc5x3#5749756",
+      "eventHash": "af0d88332e2ce67da48b7159ee45cdeb583ec481e501aefeebe0e060f3fce09d",
+      "sourceHash": "4976209bcfe4ee7cfb0ae3c69c4152588feae8aeb0dc7f0e9120a958ed3eceb6",
+      "publishedAt": "2026-11-23T22:03:19.671129+00:00",
+      "updatedAt": "2026-11-23T22:03:19.671129+00:00"
+    },
     {
       "id": "fotmob:5868134:3000441459",
       "slug": "2026-11-22-alejandro-grimaldo-5868134-3000441459",
