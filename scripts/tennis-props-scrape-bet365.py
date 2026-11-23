@@ -979,6 +979,10 @@ def main() -> None:
             }
         )
 
+    from df_surface_reporting import pair_proof
+    for row in rows:
+        if row.get("market") == "double_faults":
+            row["df_pair_evidence"] = pair_proof(row)
     rows = dedupe_snapshot_rows(rows)
     out = Path(args.out) if args.out else OUT_DIR / f"bet365-lines-{args.date}.csv"
     audit_out = Path(args.audit_out) if args.audit_out else OUT_DIR / f"bet365-tennis-market-audit-{args.date}.csv"
@@ -1020,7 +1024,7 @@ def main() -> None:
         "sample_labels": json.dumps(moviodds_receipt)})
     write_rows(audit_out, audit_rows, AUDIT_FIELDS)
     # An empty current poll must replace yesterday's/earlier prices, not revive them.
-    write_rows(out, rows, OUTPUT_FIELDS)
+    write_rows(out, rows, OUTPUT_FIELDS + ["df_pair_evidence"])
     if rows:
         print(f"Saved lines: {out}")
         history_added = append_history_rows(history_out, rows)
@@ -1035,6 +1039,9 @@ def main() -> None:
         {"props": out, "most_aces": out.parent / f"betmgm-most-aces-1x2-{args.date}.csv",
          "most_df": out.parent / f"most-df-1x2-{args.date}.csv"}, captured_at)
     print(f"Saved audit: {audit_out}")
+    if (ROOT / "data/tennis-props/shadow/df-surface-forward-v1/registration.json").is_file():
+        from df_surface_reporting import observe
+        observe(ROOT, lines=out)
     # The installed Sisal comparison must see fresh quotes even if a later
     # projection build times out, or the caller requested capture-only mode.
     # Hosts without the local frozen model remain capture-only explicitly.

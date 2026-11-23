@@ -283,6 +283,10 @@ def run(code_root, data_root, source, recheck=False):
         from tennis_hardcourt_scout import summarize as summarize_scout, RELATIVE as SCOUT_RELATIVE
         summarize_scout(code_root, folder=data_root/SCOUT_RELATIVE)
         checkpoint('hardcourt_scout')
+    if (data_root/'data/tennis-props/shadow/df-surface-forward-v1/registration.json').is_file():
+        from df_surface_reporting import observe
+        observe(data_root, settlement=True)
+        checkpoint('df_surface_forward')
     if (data_root/'data/tennis-props/shadow/ace-compass-v1/registration.json').exists():
         from tennis_ace_compass import run as settle_ace_compass
         settle_ace_compass(data_root, code_root, settle_only=True)

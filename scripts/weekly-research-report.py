@@ -1415,6 +1415,11 @@ def context_forward_text(payload: dict[str, Any]) -> str:
 
 
 def rate_trend_summary() -> dict[str, Any]:
+    from df_surface_reporting import report as surface_report
+    return dict(_existing_rate_trend_summary(), df_surface_forward=surface_report(ROOT))
+
+
+def _existing_rate_trend_summary() -> dict[str, Any]:
     result = load_json(ROOT / "data/tennis-props/shadow/rate-trend-v1/report.json")
     if not result:
         return {"status": "SOURCE_MISSING", "markets": {}}
@@ -2020,6 +2025,8 @@ def render_report(payload: dict[str, Any]) -> str:
     from most_df_reporting import weekly_text as most_df_text
     lines.extend(["", most_df_text(payload.get("tennis_most_df") or {})])
     lines.extend(["", rate_trend_text(payload)])
+    from df_surface_reporting import weekly as df_surface_weekly
+    lines.append(df_surface_weekly((payload.get("tennis_rate_trend") or {}).get("df_surface_forward")))
     from tennis_hardcourt_scout import weekly_text as hardcourt_scout_text
     lines.extend(["", full_refresh_text(payload), context_forward_text(payload), hardcourt_scout_text(payload.get("tennis_hardcourt_scout") or {})])
     lines.extend(["", model_watchlist_text(payload)])
@@ -2265,6 +2272,8 @@ def tennis_telegram_text(payload: dict[str, Any]) -> str:
     from most_df_reporting import weekly_text as most_df_text
     lines.append(most_df_text(payload.get("tennis_most_df") or {}))
     lines.append(rate_trend_text(payload))
+    from df_surface_reporting import weekly as df_surface_weekly
+    lines.append(df_surface_weekly((payload.get("tennis_rate_trend") or {}).get("df_surface_forward")))
     most = payload.get('tennis_most_aces_forecast') or {}
     paired = most.get('paired_comparison') or {}
     if not most_aces_suspended():

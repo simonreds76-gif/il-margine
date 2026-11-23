@@ -293,6 +293,9 @@ def run_comparison(
             comparison.unlink()
         mark_pipeline_blocked(as_of, market_file, "canonical_comparison")
         return False
+    if (PROPS_DIR / "shadow/df-surface-forward-v1/registration.json").is_file():
+        from df_surface_reporting import observe
+        observe(ROOT, lines=market_file, comparison=comparison)
     if not include_challengers:
         return True
     v3_board = PROPS_DIR / "shadow" / "aces-v3-projection-board.csv"
