@@ -30,6 +30,17 @@ def arr(items):
     return {"type":"array","items":items}
 
 
+def value_range(quote, interval):
+    if not quote or len(interval)!=2:
+        return None
+    low, high=interval
+    if not 0 < low <= high <= 1:
+        return None
+    price=quote["odds"]
+    return dict(low=low, high=high, breakEven=1/price,
+                evLow=low*price-1, evHigh=high*price-1)
+
+
 def exact_choices(indices, values, maximum):
     if len(set(indices)) != len(indices) or len(indices)>maximum:
         raise ValueError("Invalid duplicate or excessive model choices")
@@ -133,11 +144,13 @@ class Analyst:
                  "booking":string(VERDICTS),"fouls":string(VERDICTS),"foulLine":string(["none","0.5","1.5","2.5"]),
                  "gradeReason":string(),"route":string(),"counterargument":string(),
                  "telegramReason":string(),"foulsReason":string(),
+                 "bookingProbabilityRange":arr({"type":"number","minimum":0,"maximum":1}),
+                 "foulsProbabilityRange":arr({"type":"number","minimum":0,"maximum":1}),
                  "probabilityBasis":string(),"missing":string(),
                  "grades":obj({k:string(["0","1","2","3","4","5","U"]) for k in "ABCDEF"})})),
                  "doubleVerdict":string(["PASS","WATCH"]),"doubleReason":string()})
         evidence = {k:f.get(k) for k in ("league","home","away","ko","ref","profiles","teams","conditions","teamNews","initialRationale","cases")}
-        evidence["settlementTerms"] = "Operator-specific betslip rules and actual double offers have not been verified."
+        evidence["settlementTerms"] = "Only offers carrying a rules field have documented standard operator rules. Live betslips, promotional exceptions and offered double prices are unknown. Return [] for any unestimable probability range, else [lower, upper] on a zero-to-one scale for that exact line."
         result = self.ask("Complete Johnny's fixture assessment and fouls companion for EACH registered player (zero-based index in cases). Use the named opponent and comparable exposure. Distinguish booking singles from the offered fouls lines and their separate value cases. Apply the original method's floors only to the appropriate contracts. Return separate verdicts, grades and reasons, the strongest counterargument, probability range and basis (or NOT ESTIMABLE), and missing checks. For telegramReason and foulsReason write one short qualitative sentence each, with no numbers, links or source names. Treat supplied odds ages literally. Player-specific betslip terms and replacement coverage are unverified. No actual tickets have been placed.",evidence,schema,2700)
         decisions = result["cases"]
         if sorted(c["index"] for c in decisions)!=list(range(len(f["cases"]))):
@@ -148,10 +161,15 @@ class Analyst:
             q = c["booking"]
             c["verdict"] = "PASS" if q and q["odds"] < 4 else decision["booking"]
             c["foulsVerdict"] = decision["fouls"]
-            # Bet-specific rules are not verified by this data endpoint. Retain the underlying assessment.
-            if c["verdict"]=="BET":
+            # Validate the exact contract underlying any actionable recommendation.
+            c["bookingRange"] = value_range(q,decision["bookingProbabilityRange"])
+            if c["verdict"]=="BET" and not (q and q.get("rules") and c["lineup"]=="confirmed" and
+                                            c["bookingRange"] and c["bookingRange"]["evLow"]>0):
                 c["verdict"]="WATCH"
-            if c["foulsVerdict"]=="BET":
+            foul = next((q for q in c["offers"] if q["kind"]=="fouls" and str(q["line"])==decision["foulLine"]),None)
+            c["foulsRange"] = value_range(foul,decision["foulsProbabilityRange"])
+            if c["foulsVerdict"]=="BET" and not (foul and foul.get("rules") and c["lineup"]=="confirmed" and
+                                                 c["foulsRange"] and c["foulsRange"]["evLow"]>0):
                 c["foulsVerdict"]="WATCH"
             c["reason"] = "Verify the starting role and the bookmaker's rules before posting."
             if c["verdict"]=="PASS" and q and q["odds"]<4:

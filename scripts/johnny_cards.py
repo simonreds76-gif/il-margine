@@ -174,7 +174,7 @@ def offers(doc, f, case, at, now):
     if not board_matches(f, doc) or utc(f["ko"]) <= now:
         return []
     found = []
-    names = {norm(case["name"]), norm(case["player"]["name"])}
+    names = set(case.get("priceAliases",[norm(case["name"]),norm(case["player"]["name"])]))
     for m in doc.get("markets", []):
         market = m.get("name","").lower()
         if market not in ("player to be booked", "player fouls committed", "player fouls"):
@@ -203,6 +203,12 @@ def investigate(reader, f, clock, analyst):
     if not cases:
         return
     f["teamNews"] = data(reader,"getTeamNews",{"matchId":f["id"]})
+    aliases = {}
+    for c in cases:
+        for name in {norm(c["name"]),norm(c["player"]["name"])}:
+            aliases.setdefault(name,set()).add(identity(c["player"]["id"]))
+    for c in cases:
+        c["priceAliases"] = [n for n in {norm(c["name"]),norm(c["player"]["name"])} if len(aliases[n])==1]
     selected = analyst.select_players(f, cases)
     for c in selected:
         p, side = c["player"], c["side"]
@@ -215,6 +221,14 @@ def investigate(reader, f, clock, analyst):
     packet = reader.read("getMatchOdds", dict(matchId=f["id"], markets=["player to be booked","player fouls"]), "morning") or {}
     for c in f["cases"]:
         c["offers"] = offers(packet.get("data") or {}, f, c, packet["at"], utc(clock())) if packet.get("at") else []
+        for q in c["offers"]:
+            if norm(q["book"])=="bet365":
+                q["rules"] = ("Standard pre-match named player, must start, on-field yellow or red qualifies; "
+                              "yellow-only history understates this broader definition." if q["kind"]=="booking"
+                              else "Standard named-player fouls committed, starter participation; an infringement resulting in a free kick or penalty.")
+                q["rulesReference"] = ("https://help.bet365.com/s/en/sports/how-is-my-bet-settled" if q["kind"]=="booking"
+                                       else "https://help.bet365.com/s/en/sportsrules/soccer/match-statistics")
+                q["rulesChecked"] = "2026-11-23"
         card = max((q for q in c["offers"] if q["kind"]=="booking"),key=lambda q:q["odds"],default=None)
         c["booking"] = card
     analyst.assess(f)
@@ -227,7 +241,12 @@ def scan(reader, day, analyst, clock=timestamp):
     selected = analyst.select_fixtures(eligible)
     for f in selected:
         if utc(f["ko"]) > utc(clock()):
-            investigate(reader, f, clock, analyst)
+            try:
+                investigate(reader, f, clock, analyst)
+            except (ValueError, KeyError, TypeError) as error:
+                f["gap"] = "Full-prompt player assessment incomplete (" + type(error).__name__ + ")"
+                f["cases"] = []
+                reader.errors += 1
     return dict(day=day, at=clock(), calendar=leagues, slate=reviewed, reads=len(reader.log),
                 failures=reader.errors, method="Johnny Poker public combined edition 1.0")
 
@@ -238,7 +257,7 @@ def lines(report):
     result = [f"Booking and fouls scan · {report['day']}", f"{complete}/5 league calendars verified · {len(report['slate'])} upcoming fixtures."]
     for f in sorted(report["slate"], key=lambda x: ("screen" not in x,x["ko"])):
         label = f["home"] + " v " + f["away"]
-        if "screen" not in f:
+        if "screen" not in f or f.get("gap"):
             result.append(label + " · " + f.get("gap","fixture screened; reserve for player research"))
             continue
         result.append(label + " · " + f["screen"])
@@ -253,6 +272,8 @@ def lines(report):
                 row += f" Booked in {sample[0]}/{sample[1]} league starts."
             if own:
                 row += f" Committed {own['total']} fouls in {own['minutes']} min."
+                if all(k in own["hits"] for k in ("1+","2+","3+")):
+                    row += " Reached 1+/2+/3+ in " + "/".join(str(own["hits"][k]) for k in ("1+","2+","3+")) + f" of {own['starts']} starts."
             if opp:
                 row += f" {c['rival']['name']} drew {opp['total']} in {opp['minutes']} min."
             else:
@@ -284,13 +305,17 @@ def publish(store, report):
         raise RuntimeError("Existing report for the day belongs to another policy")
     index["days"][key] = dict(at=report["at"],policy="johnny-bookings",fixtures=len(report["slate"]),
                                picks=[],coverage="\n".join(rows[1:]),final=all(not x["gap"] for x in report["calendar"]))
-    index.update(updated=report["at"],status="Daily booking and player fouls research · 11am London")
+    index.update(updated=report["at"],status="Johnny's daily booking and fouls scan · 11am London",
+                 summary="Morning research. Predicted starters, unverified odds and missing evidence are labelled. No ticket is assumed placed.")
     store.put(REPORT,index)
+    ordered = rows[:2] + [row for row in rows[2:] if row.startswith("BET · ")] + [row for row in rows[2:] if not row.startswith("BET · ")]
     summary = []
-    for row in rows:
+    for row in ordered:
         if sum(len(s)+1 for s in summary) + len(row) > 3650:
             break
         summary.append(row)
+    if len(summary)<len(ordered):
+        summary.append("More cases and coverage notes in the private report.")
     send_digest(store, "johnny-"+key, ["\n".join(summary)+"\nFull private report "+LINK])
 
 

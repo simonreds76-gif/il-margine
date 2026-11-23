@@ -7,7 +7,7 @@ from unittest.mock import Mock, patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
 import johnny_cards as job
-from johnny_cards_review import Analyst, exact_choices
+from johnny_cards_review import Analyst, exact_choices, value_range
 
 class Reader:
     def __init__(self, boards):
@@ -56,6 +56,14 @@ class MethodTests(unittest.TestCase):
     def test_unknown_or_duplicate_model_choice_is_rejected(self):
         for indices in ([1],[0,0],[-1],[False]):
             with self.assertRaises(ValueError):exact_choices(indices,["only player"],4)
+
+    def test_no_probability_from_a_grade_or_an_absent_range(self):
+        self.assertIsNone(value_range({"odds":4},[]))
+        self.assertIsNone(value_range({"odds":4},[0.2,0.1]))
+        self.assertIsNone(value_range(None,[0.28,0.35]))
+        result=value_range({"odds":4},[0.2,0.32])
+        self.assertAlmostEqual(result["evLow"],-0.2)
+        self.assertAlmostEqual(result["breakEven"],0.25)
 
     def test_empty_slate_does_not_invent_players(self):
         analyst=Mock()
