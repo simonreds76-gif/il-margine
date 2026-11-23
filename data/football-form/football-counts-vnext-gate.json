@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T20:20:35Z",
+  "generated_at": "2026-11-23T21:40:16Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -136,8 +136,8 @@
       "dominant_side_share": 0.928571
     },
     "latest_scan": {
-      "state": "POST_UNLOCK_NO_SCORED_CANDIDATES",
-      "explanation": "The peer football-count lane reached matchday 4+, but this lane produced no scored candidates. Check current price capture and fixture joins. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-23T20:20:18.938846+00:00. Completed-fixture coverage checked at 2026-11-23T20:17:57.305420+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 286). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
+      "state": "EXPECTED_EMPTY_CAPTURE_WINDOW",
+      "explanation": "The successful Team Shots scan found no supported fixtures in its capture window. Stored corners rows are outside that window. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-23T21:40:10.354466+00:00. Completed-fixture coverage checked at 2026-11-23T20:17:57.305420+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 286). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
       "scored_rows": 0,
       "scored_fixtures": 0,
       "eligible_rows": 0,
@@ -148,8 +148,22 @@
       "matchday_min": null,
       "matchday_max": null,
       "next_unlock": null,
-      "operational_alert_required": true,
-      "operational_alert_code": "POST_UNLOCK_NO_SCORED_CANDIDATES",
+      "operational_alert_required": false,
+      "operational_alert_code": null,
+      "capture_window_evidence": {
+        "capture_at": "2026-11-23T21:39:55Z",
+        "capture_window_end": "2026-11-24T21:39:55Z",
+        "capture_run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/45271884293",
+        "leagues_checked": [
+          "bundesliga",
+          "epl",
+          "la-liga",
+          "ligue-1",
+          "serie-a"
+        ],
+        "events_found": 0,
+        "peer_rows_outside_window": 476
+      },
       "rule_feasibility": {
         "affected_rows": 0,
         "rows_capable_of_minimum_edge": 0,
@@ -161,15 +175,15 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-23T20:20:12Z",
+      "generated_at": "2026-11-23T21:40:05Z",
       "status": "OK",
       "missing_history": [],
       "scored_fixtures": 0
     },
     "input_integrity": {
       "policy": "shots-input-integrity-20261113-v1",
-      "generated_at": "2026-11-23T20:20:18.938846+00:00",
-      "base_sha256": "f7e3d4adf8d135c27b8782bd20ec509740b060044ba7c32736b78408637f8585",
+      "generated_at": "2026-11-23T21:40:10.354466+00:00",
+      "base_sha256": "6f343a8a3c7f26e8f1e8da6cfca49bfdbc47882243f004db0bf7ebba82458aa5",
       "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
       "source_rows": 44268,
       "prediction_rows": 44262,
@@ -344,15 +358,16 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "ELIGIBLE_CANDIDATES_PRESENT",
-      "explanation": "At least one candidate passed every locked shadow gate.",
+      "state": "NO_EDGE_AFTER_UNLOCK",
+      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
       "scored_rows": 476,
       "scored_fixtures": 30,
-      "eligible_rows": 34,
-      "eligible_fixtures": 6,
-      "blocked_rows": 442,
+      "eligible_rows": 0,
+      "eligible_fixtures": 0,
+      "blocked_rows": 476,
       "blocker_rows": {
-        "edge_below_3pct": 442
+        "edge_below_3pct": 442,
+        "price_not_fresh_10m": 476
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 11,
