@@ -1,6 +1,6 @@
 # Corners CLV Monitor: `corners_v3`
 
-Generated: 2026-11-23T00:45:01Z
+Generated: 2026-11-23T20:20:35Z
 Picks input: `data/football-form/corners-v3-shadow-signals.csv`
 Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
@@ -12,7 +12,7 @@ Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 - Open/pending: 11
 - Settled PnL: -21.66u
 - Picks with close: 164
-- True-close coverage (<=120m): 88/260 (33.8%)
+- True-close coverage (<=120m): 88/262 (33.6%)
 - Average true-close CLV: +1.20% (n=88)
 - Hard-guard blocked: 0
 - Average published-to-close CLV: +1.48%

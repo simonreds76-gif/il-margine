@@ -1,6 +1,6 @@
 {
   "api_errors": [],
-  "deferred_not_due": 3,
+  "deferred_not_due": 0,
   "details": [
     {
       "detail": "fixtures_returned=0",
@@ -33,22 +33,6 @@
       "match_date": "2026-11-08",
       "reason": "fotmob_save_totals_disagree",
       "signal_id": "71945390|mike maignan|2.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Elia Caprile",
-      "match": "Como 1907 vs Cagliari Calcio",
-      "match_date": "2026-11-21",
-      "reason": "settled_fotmob",
-      "signal_id": "grosvenor|71945410|elia caprile|4.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Wladimiro Falcone",
-      "match": "Lazio Rome vs US Lecce",
-      "match_date": "2026-11-21",
-      "reason": "settled_fotmob",
-      "signal_id": "grosvenor|71945414|wladimiro falcone|4.5|over"
     },
     {
       "detail": "fixtures_returned=0",
@@ -85,20 +69,44 @@
     {
       "detail": "fixtures_returned=0",
       "goalkeeper": "Away goalkeeper",
+      "match": "Werder Bremen vs Hamburger SV",
+      "match_date": "2026-11-22",
+      "reason": "fotmob_finished_fixture_not_found",
+      "signal_id": "grosvenor|72513322|away goalkeeper|4.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Lorenzo Palmisani",
+      "match": "AC Milan vs Frosinone Calcio",
+      "match_date": "2026-11-22",
+      "reason": "settled_fotmob",
+      "signal_id": "grosvenor|71945416|lorenzo palmisani|3.5|over"
+    },
+    {
+      "detail": "fixtures_returned=0",
+      "goalkeeper": "Away goalkeeper",
       "match": "Lille OSC vs Olympique Lyon",
       "match_date": "2026-11-21",
       "reason": "fotmob_finished_fixture_not_found",
       "signal_id": "grosvenor|72036294|away goalkeeper|3.5|over"
+    },
+    {
+      "detail": "",
+      "goalkeeper": "Justin Bijlow",
+      "match": "Sassuolo Calcio vs Genoa CFC",
+      "match_date": "2026-11-22",
+      "reason": "settled_fotmob",
+      "signal_id": "grosvenor|71945424|justin bijlow|3.5|over"
     }
   ],
-  "fotmob_requests_used": 8,
-  "generated_at": "2026-11-22T16:22:21Z",
+  "fotmob_requests_used": 9,
+  "generated_at": "2026-11-23T20:21:10Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
-  "pending_due": 9,
-  "pending_total": 12,
+  "pending_due": 10,
+  "pending_total": 10,
   "reason_counts": {
-    "fotmob_finished_fixture_not_found": 7,
+    "fotmob_finished_fixture_not_found": 8,
     "fotmob_goalkeeper_not_found": 1,
     "fotmob_save_totals_disagree": 1,
     "settled_fotmob": 2
@@ -114,21 +122,21 @@
     },
     {
       "appearances": 32,
-      "match_id": 5749753,
-      "status": "saved",
-      "targets_sha256": "8c3a7fa9d568d1f5efd298b2fa124ef999ee935fe05245587c79fb23b9d9f6c2"
-    },
-    {
-      "appearances": 32,
-      "match_id": 5749755,
-      "status": "saved",
-      "targets_sha256": "55b186f865085e28ae2c7077e2b796d82f957f16fb0ce55f6f3f0f3f0c9e0beb"
-    },
-    {
-      "appearances": 32,
       "match_id": 5749758,
-      "status": "saved",
+      "status": "unchanged",
       "targets_sha256": "e6c752672962d803f00b45e760be069387fb524d2b63069cd712cd6de1f373e8"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5749750,
+      "status": "saved",
+      "targets_sha256": "d8584497d7f26e7a90bcbc8a2497caa4b48894803ff3ec08c9b24d89dfe7f756"
+    },
+    {
+      "appearances": 32,
+      "match_id": 5749759,
+      "status": "saved",
+      "targets_sha256": "4d772a93eb0832a9ceef015df7dd26284312bd11d9c9c629c79fe595713ec29c"
     }
   ]
 }

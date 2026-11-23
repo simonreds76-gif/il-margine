@@ -1,17 +1,16 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_observed_save_markets": 3,
       "events_with_save_markets": 0,
       "named_player_lines": 0,
-      "status": "SAVE_MARKETS_SEEN_NO_VERIFIED_PRICES",
+      "status": "NO_SAVE_MARKETS",
       "unnamed_or_team_lines": 0
     },
     "Grosvenor": {
-      "events_with_save_markets": 3,
+      "events_with_save_markets": 0,
       "named_player_lines": 0,
-      "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 28
+      "status": "NO_SAVE_MARKETS",
+      "unnamed_or_team_lines": 0
     },
     "Paddy Power": {
       "events_with_save_markets": 0,
@@ -21,213 +20,85 @@
     }
   },
   "capture_errors": [],
-  "capture_mode": "close",
+  "capture_mode": "publication",
   "direct_source": {
     "bookmaker": "Grosvenor",
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 63,
+      "current_quotes": 535,
       "mapped_quotes": 0,
       "paper_selections": 0,
       "price_or_status_changes": 0,
       "rules": "unverified"
     },
-    "matched": 3,
+    "matched": 0,
     "missing": [],
-    "requests": 6,
-    "rows": 306
+    "requests": 0,
+    "rows": 0
   },
   "discovery_retries": 0,
-  "event_last_checked": {
-    "71945418": "2026-11-22T22:47:35Z",
-    "72221396": "2026-11-22T22:47:35Z",
-    "72478714": "2026-11-22T22:47:35Z"
-  },
+  "event_last_checked": {},
   "events_deferred_by_budget": 0,
-  "events_selected": 3,
-  "events_supported": 3,
-  "events_with_lines": 3,
-  "generated_at": "2026-11-22T22:47:35Z",
-  "last_publication_at": "2026-11-22T16:20:39Z",
+  "events_selected": 0,
+  "events_supported": 0,
+  "events_with_lines": 0,
+  "generated_at": "2026-11-23T20:19:01Z",
+  "last_publication_at": "2026-11-23T20:19:01Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 0,
       "with_prices": 0
     },
     "epl": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 0,
+      "with_prices": 0
     },
     "la-liga": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 0,
+      "with_prices": 0
     },
     "ligue-1": {
       "selected": 0,
       "with_prices": 0
     },
     "serie-a": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 0,
+      "with_prices": 0
     }
   },
-  "market_inventory_rows_added": 106,
-  "market_names_observed": [
-    "Anytime Assist",
-    "Anytime Goalscorer",
-    "Bookings Totals",
-    "Bookings Totals Away",
-    "Bookings Totals Home",
-    "Both Teams To Score",
-    "Corners Totals",
-    "Corners Totals Away",
-    "Corners Totals Home",
-    "Correct Score",
-    "Double Chance",
-    "Draw No Bet",
-    "European Handicap",
-    "First Goalscorer",
-    "Goalkeeper Saves Away",
-    "Goalkeeper Saves Home",
-    "Half Time / Full Time",
-    "ML",
-    "ML HT",
-    "Player Fouls",
-    "Player Headed Shots on Target",
-    "Player Shots",
-    "Player Shots on Target",
-    "Player To Assist",
-    "Player To Be Fouled",
-    "Player To Score or Assist",
-    "Player to be Booked",
-    "Spread",
-    "Total Shots Away",
-    "Total Shots Home",
-    "Totals",
-    "Totals HT"
-  ],
+  "market_inventory_rows_added": 0,
+  "market_names_observed": [],
   "moviodds_source": {
     "errors": [],
     "excluded": {
-      "conflicting_quotes": 0,
-      "fixture_not_eligible": 386,
-      "unmatched_or_unsupported_fixture": 286
+      "fixture_not_eligible": 542,
+      "unmatched_or_unsupported_fixture": 325
     },
-    "goalkeeper_coverage_status": "INCOMPLETE",
-    "goalkeeper_fixture_coverage": [
-      {
-        "away": "ACF Fiorentina",
-        "event_id": "71945418",
-        "home": "AC Monza",
-        "market_polled_at": "2026-11-22T22:47:12.63891911Z",
-        "quote_count": 0,
-        "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203186432",
-        "source_site": "com",
-        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
-        "verification_exclusions": {
-          "same_provider_cache_no_independent_check": 1
-        }
-      },
-      {
-        "away": "Elche CF",
-        "event_id": "72478714",
-        "home": "Levante UD",
-        "market_polled_at": "2026-11-22T22:47:13.439920355Z",
-        "quote_count": 0,
-        "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203186605",
-        "source_site": "com",
-        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
-        "verification_exclusions": {
-          "same_provider_cache_no_independent_check": 1
-        }
-      },
-      {
-        "away": "Everton FC",
-        "event_id": "72221396",
-        "home": "Brentford FC",
-        "market_polled_at": "2026-11-22T22:47:12.069812606Z",
-        "quote_count": 0,
-        "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203186268",
-        "source_site": "com",
-        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
-        "verification_exclusions": {
-          "same_provider_cache_no_independent_check": 1
-        }
-      }
-    ],
+    "goalkeeper_coverage_status": "NO_TARGETS",
+    "goalkeeper_fixture_coverage": [],
     "goalkeeper_source_hold": "moviodds_gk_contract_price_unverified_20261106",
     "goalkeeper_verification": {
       "deferred_by_budget": 0,
-      "fixtures": [
-        {
-          "accepted": 0,
-          "event_id": "71945418",
-          "excluded": {
-            "same_provider_cache_no_independent_check": 1
-          },
-          "fixture_id": "203186432"
-        },
-        {
-          "accepted": 0,
-          "event_id": "72221396",
-          "excluded": {
-            "same_provider_cache_no_independent_check": 1
-          },
-          "fixture_id": "203186268"
-        },
-        {
-          "accepted": 0,
-          "event_id": "72478714",
-          "excluded": {
-            "same_provider_cache_no_independent_check": 1
-          },
-          "fixture_id": "203186605"
-        }
-      ],
-      "requests": 3,
+      "fixtures": [],
+      "requests": 0,
       "verified_quotes": 0,
       "version": "moviodds_gk_atomic_v1"
     },
-    "market_count": 3,
-    "quote_count": 224,
-    "received_at": "2026-11-22T22:47:39.478638+00:00",
-    "requests": 4,
+    "market_count": 0,
+    "quote_count": 0,
+    "received_at": "2026-11-23T20:19:04.594731+00:00",
+    "requests": 1,
     "source": "moviodds_bet365",
     "source_site": "com",
-    "status": "OK"
+    "status": "NO_VERIFIED_MARKETS"
   },
   "publication_recovery": false,
   "request_budget": 4,
-  "requests_used": 2,
-  "rows_added": 28,
-  "rows_observed": 28,
-  "selected_events": [
-    {
-      "away": "ACF Fiorentina",
-      "competition": "Italy - Serie A",
-      "home": "AC Monza",
-      "id": 71945418,
-      "kickoff_at": "2026-11-23T19:45:00Z"
-    },
-    {
-      "away": "Elche CF",
-      "competition": "Spain - LaLiga",
-      "home": "Levante UD",
-      "id": 72478714,
-      "kickoff_at": "2026-11-23T20:00:00Z"
-    },
-    {
-      "away": "Everton FC",
-      "competition": "England - Premier League",
-      "home": "Brentford FC",
-      "id": 72221396,
-      "kickoff_at": "2026-11-23T20:00:00Z"
-    }
-  ],
-  "status": "CAPTURED",
-  "three_way_events": 3
+  "requests_used": 1,
+  "rows_added": 0,
+  "rows_observed": 0,
+  "selected_events": [],
+  "status": "NO_GOALKEEPER_SAVE_LINES",
+  "three_way_events": 0
 }
