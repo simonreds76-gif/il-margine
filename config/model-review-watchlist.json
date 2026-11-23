@@ -22,7 +22,15 @@
     {
       "id": "astra_aces_df",
       "report_key": "tennis_rate_trend",
-      "scope": "Astra Aces and Astra DF, paired baseline/candidate"
+      "scope": "Astra Aces and Astra DF, paired baseline/candidate",
+      "surface_comparison": {
+        "id": "df-surface-forward-v1",
+        "comparison_report": "tennis_rate_trend.df_surface_forward",
+        "forward_report": "data/tennis-props/shadow/df-surface-forward-v1/report.json",
+        "review": "Compare surface-weighted DF, Astra and control on identical fresh two-sided odds. Include no-bets in calibration, and use the recorded odds for 1u paper ROI. Check source coverage, duplicates, settlement, eligibility and time since registration weekly. Review at 200 settled fixtures, at least four editions and 56 days.",
+        "actual_stake": 0,
+        "automatic_promotion": false
+      }
     },
     {
       "id": "tennis_props",
