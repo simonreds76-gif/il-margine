@@ -17,6 +17,10 @@ LONDON = ZoneInfo("Europe/London")
 FLOOR = 4.0
 
 
+def edition_key(day, part):
+    return f"johnny/editions/{day}/{part}.json"
+
+
 def private_store():
     # The cloud CPU can spend minutes on the guide before reusing its storage connection.
     # Retry only safe storage reads. Never automatically replay a claim or a Telegram POST.
@@ -222,28 +226,53 @@ def investigate(reader, f, clock, analyst):
     analyst.assess(f)
 
 
-def scan(reader, day, analyst, clock=timestamp):
-    fs, leagues = calendar(reader, day, utc(clock()))
-    if not any(not window["gap"] for window in leagues) and not fs:
-        raise RuntimeError("Calendar unavailable; a no-picks report would be misleading")
-    reviewed = []
-    for f in fs:
-        if len(reader.log) >= 140:
-            reviewed.append({**f, "gap": "listed; daily allowance reserved for detailed player checks"})
+def scan(reader, day, analyst, clock=timestamp, save=None, previous=None):
+    def checkpoint(stage):
+        report = dict(day=day, at=clock(), calendar=leagues, slate=reviewed, reads=len(reader.log),
+                      failures=reader.errors, stage=stage, guideSHA256=analyst.digest,
+                      method="Johnny Poker public combined edition 1.0")
+        if save:
+            save(report)
+        return report
+
+    if previous and previous.get("day")==day and previous.get("guideSHA256")==analyst.digest and previous.get("stage") in ("ranked","finished"):
+        reviewed, leagues = previous["slate"], previous["calendar"]
+    else:
+        reviewed, leagues = calendar(reader, day, utc(clock()))
+        checkpoint("calendar")
+        if not any(not window["gap"] for window in leagues) and not reviewed:
+            raise RuntimeError("Calendar unavailable; a no-picks report would be misleading")
+        for i, f in enumerate(reviewed):
+            if len(reader.log) >= 140:
+                f["gap"] = "daily allowance reserved for detailed player checks"
+            else:
+                reviewed[i] = triage(reader, f)
+        eligible = [f for f in reviewed if not f.get("gap")]
+        selected = {f["id"]: rank for rank, f in enumerate(analyst.select_fixtures(eligible), start=1)}
+        for f in reviewed:
+            f["reviewState"] = ("unavailable" if f.get("gap") else
+                                "selected" if f["id"] in selected else "reserve")
+            if f["id"] in selected:
+                f["priority"] = selected[f["id"]]
+        checkpoint("ranked")
+    for f in sorted(reviewed, key=lambda item: item.get("priority", 1000)):
+        if f.get("reviewState") != "selected":
+            continue
+        if utc(f["ko"]) <= utc(clock()):
+            f.update(reviewState="unavailable", gap="scheduled kickoff passed")
         else:
-            reviewed.append(triage(reader, f))
-    eligible = [f for f in reviewed if not f.get("gap")]
-    selected = analyst.select_fixtures(eligible)
-    for f in selected:
-        if utc(f["ko"]) > utc(clock()):
             try:
                 investigate(reader, f, clock, analyst)
+                missing = not f.get("screened")
+                f["reviewState"] = "unavailable" if missing else "complete"
+                if missing:
+                    f["gap"] = f.get("screen") or "player evidence unavailable"
             except (ValueError, KeyError, TypeError) as error:
-                f["gap"] = "Full-prompt player assessment incomplete (" + type(error).__name__ + ")"
-                f["cases"] = []
+                f.update(reviewState="unavailable", gap="Player assessment incomplete ("+type(error).__name__+")", cases=[])
                 reader.errors += 1
-    return dict(day=day, at=clock(), calendar=leagues, slate=reviewed, reads=len(reader.log),
-                failures=reader.errors, method="Johnny Poker public combined edition 1.0")
+        f["verdictAt"] = clock()
+        checkpoint("ranked")
+    return checkpoint("finished")
 
 
 def lines(report, as_of=None):
@@ -335,15 +364,16 @@ def plan():
     now = datetime.now(LONDON)
     day = (os.environ.get("PREVIEW_DAY","").strip() if preview else "") or now.date().isoformat()
     store = private_store()
-    sent = not preview and store.get("johnny/confirmed-expanded/"+day+".json",{}).get("reportedAt")
-    active = not sent and (preview or now.hour>=11)
+    prior = {} if preview else store.get(edition_key(day,"research"), {})
+    active = preview or (8 <= now.hour < 11 and prior.get("stage") != "finished")
     needs_engine = False
-    if active and (preview or not store.get("johnny/days-expanded/"+day+".json")):
-        reader = Reads(store,Provider(store),day,"johnny-preview" if preview else "johnny",240)
-        games, windows = calendar(reader, day, now)
-        if not games and any(w["gap"] for w in windows):
-            raise RuntimeError("Incomplete calendar; retry without declaring an empty slate")
-        needs_engine = bool(games) or preview
+    if active:
+        reader = Reads(store,Provider(store),day,"johnny-preview" if preview else "johnny",212)
+        if prior.get("stage") == "ranked":
+            needs_engine = any(f.get("reviewState") == "selected" for f in prior["slate"])
+        else:
+            games, windows = calendar(reader, day, now)
+            needs_engine = bool(games or any(w["gap"] for w in windows)) or preview
     with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as output:
         print("active="+str(active).lower(),file=output)
         print("engine="+str(needs_engine).lower(),file=output)
@@ -354,17 +384,18 @@ def run():
     preview = os.environ.get("MODE","preview")=="preview"
     day = os.environ.get("PREVIEW_DAY","").strip() if preview else ""
     day = day or now.date().isoformat()
-    if not preview and now.hour < 11:
+    if not preview and not 8 <= now.hour < 11:
         return
     store = private_store()
-    path = "johnny/days-expanded/"+day+".json"
-    report = None if preview else store.get(path)
-    if report is None:
+    path = edition_key(day,"research")
+    prior = None if preview else store.get(path)
+    if preview or not prior or prior.get("stage") != "finished":
         phase = "johnny-preview" if preview else "johnny"
-        reader = Reads(store,Provider(store),day,phase,240)
+        reader = Reads(store,Provider(store),day,phase,212)
         from johnny_cards_review import Analyst
         with Analyst(store) as analyst:
-            report = scan(reader,day,analyst)
+            report = scan(reader,day,analyst,previous=prior,
+                          save=None if preview else lambda doc: store.put(path,doc))
             report["guideSHA256"] = analyst.digest
             if preview:
                 test = analyst.ask("Rehearsal only. A fictitious player's standard booking single is 3.00 decimal. The projected opposing winger drew nine fouls in 640 minutes. No fouls odds or operator rules were supplied. Using the full guide, identify the booking decision at this price, and whether a separate profitable fouls bet can already be recommended. Copy only the verified fouls-drawn numerator and minutes.",
@@ -376,11 +407,10 @@ def run():
         if preview:
             store.put("johnny/rehearsals/"+day+".json",report)
         else:
-            store.put(path,report,replace=False)
-            report = store.get(path)
+            store.put(path,report)
+    else:
+        report = prior
     print(f"Calendar windows {sum(not r['gap'] for r in report['calendar'])}/{len(report['calendar'])}; upcoming {len(report['slate'])}; detailed {sum('screen' in f for f in report['slate'])}; reads {report['reads']}; unavailable {report['failures']}; full-prompt calls {report['promptCalls']}; original guide SHA256 {report['guideSHA256']}")
-    if not preview:
-        publish(store,report)
 
 
 if __name__=="__main__":

@@ -15,12 +15,23 @@ permissions:
   contents: read
 jobs:
   snapshot:
+    outputs:
+      booking_mode: ${{ steps.booking.outputs.mode }}
     concurrency:
       group: ${{ github.event_name == 'pull_request' && format('drop-shot-tests-{0}', github.run_id) || 'pinnradar-tennis-private' }}
       cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 6
     steps:
+      - name: Check the bookings clock window
+        id: booking
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || inputs.scheduled_slot_utc != '')
+        run: |
+          minute=$(TZ=Europe/London date +%H%M)
+          case "$minute" in
+            08??|090?|091?|092?) echo "mode=research" >> "$GITHUB_OUTPUT" ;;
+            103[5-9]|104?|105?|110?|111?|112?) echo "mode=digest" >> "$GITHUB_OUTPUT" ;;
+          esac
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
@@ -113,26 +124,24 @@ jobs:
         run: python scripts/davis_matchday.py
 
   booking-clock:
-    if: >-
-      github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' &&
-      (endsWith(inputs.scheduled_slot_utc, 'T10:00:00Z') || endsWith(inputs.scheduled_slot_utc, 'T10:30:00Z') ||
-       endsWith(inputs.scheduled_slot_utc, 'T11:00:00Z') || endsWith(inputs.scheduled_slot_utc, 'T11:30:00Z'))
+    needs: snapshot
+    if: always() && !cancelled() && (needs.snapshot.outputs.booking_mode == 'research' || needs.snapshot.outputs.booking_mode == 'digest')
     runs-on: ubuntu-latest
     permissions:
       actions: write
     timeout-minutes: 2
     steps:
-      - name: Wake the independent 11am London bookings workflow
+      - name: Wake the missing bookings phase
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          MODE: ${{ needs.snapshot.outputs.booking_mode }}
         run: |
           set -euo pipefail
-          [ "$(TZ=Europe/London date +%H)" = 11 ] || exit 0
-          morning=$(date -u -d "$(TZ=Europe/London date '+%F 11:00 %z')" '+%FT%TZ')
+          start=08:00
+          if [ "$MODE" = digest ]; then start=10:35; fi
+          since=$(date -u -d "$(TZ=Europe/London date "+%F $start %z")" '+%FT%TZ')
           runs=$(gh run list --workflow johnny-cards.yml --branch main --limit 30 --json displayTitle,createdAt,status,conclusion)
-          if jq -e --arg since "$morning" 'any(.[]; .displayTitle == "Johnny due" and .createdAt >= $since and
-             (.conclusion == "success" or .status == "in_progress" or .status == "queued"))' <<< "$runs" >/dev/null; then
-            exit 0
-          fi
-          gh workflow run johnny-cards.yml --ref main -f mode=due
+          if jq -e --arg since "$since" --arg title "Johnny $MODE" 'any(.[]; .displayTitle == $title and .createdAt >= $since and
+             (.conclusion == "success" or .status == "in_progress" or .status == "queued"))' <<< "$runs" >/dev/null; then exit 0; fi
+          gh workflow run johnny-cards.yml --ref main -f mode="$MODE"

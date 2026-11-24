@@ -108,7 +108,7 @@ def telegram_private():
         raise RuntimeError("Configured Telegram destination is not a verified direct chat")
     return endpoint,chat
 
-def send_digest(store,day,parts):
+def send_digest(store,day,parts,document_name=None):
     endpoint,chat=telegram_private()
     for i,part in enumerate(parts):
         key=f"receipts/{day}-{i}.json"
@@ -116,10 +116,15 @@ def send_digest(store,day,parts):
             if store.get(key,{}).get("state")!="sent":
                 raise RuntimeError("Delivery uncertain; inspect the receipt before retrying")
             continue
-        r=http.post(endpoint+"/sendMessage",json={"chat_id":chat,"text":part,"link_preview_options":{"is_disabled":True}},timeout=20)
+        def send():
+            if document_name:
+                return http.post(endpoint+"/sendDocument",data={"chat_id":chat,"caption":"Johnny's full daily bookings and fouls digest"},
+                                 files={"document":(document_name,part.encode("utf-8"),"text/plain")},timeout=20)
+            return http.post(endpoint+"/sendMessage",json={"chat_id":chat,"text":part,"link_preview_options":{"is_disabled":True}},timeout=20)
+        r=send()
         if r.status_code==429:
             time.sleep(min(60,r.json().get("parameters",{}).get("retry_after",3)))
-            r=http.post(endpoint+"/sendMessage",json={"chat_id":chat,"text":part,"link_preview_options":{"is_disabled":True}},timeout=20)
+            r=send()
         msg=payload(r)
         if not msg.get("ok"): raise RuntimeError("Telegram did not acknowledge delivery")
         store.put(key,{"state":"sent","at":timestamp(),"message_id":msg["result"]["message_id"]})
