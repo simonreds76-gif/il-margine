@@ -215,6 +215,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   }, [archive, moves, fixtures]);
   const live = !archive && (today === true || moves.some(r => outcomeOf(r.result) === "pending"));
   const refreshed = useRef(0);
+  const rolledDay = useRef("");
 
   // Local clock: it wakes on the next cutoff and whenever the tab comes back, so a
   // record leaves the upcoming list and the watchlist without any network call.
@@ -223,15 +224,21 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   useEffect(() => {
     if (archive || now === undefined) return;
     const wall = Date.now(), mono = performance.now();
+    const midnight = today && day ? Date.parse(day+"T00:00:00Z") + 86_400_000 : Infinity;
     // The later of the device clock and the server stamp plus elapsed time, so a slow device clock cannot keep a record open.
-    const read = () => Math.max(Date.now(), now + Math.max(0, Date.now() - wall, performance.now() - mono));
+    const serverClock = () => now + Math.max(0, Date.now() - wall, performance.now() - mono);
     let timer: number | undefined;
     const tick = () => {
       window.clearTimeout(timer);
       if (document.visibilityState !== "visible") return;
-      const t = read();
+      const serverTime = serverClock(), t = Math.max(Date.now(), serverTime);
       setClock(t);
-      if (live && t - now >= REFRESH_MS && t - refreshed.current >= REFRESH_MS) { refreshed.current = t; router.refresh(); }
+      const rollover = !!day && rolledDay.current !== day && serverTime >= midnight;
+      if (rollover || (live && t - now >= REFRESH_MS && t - refreshed.current >= REFRESH_MS)) {
+        if (rollover && day) rolledDay.current = day;
+        refreshed.current = t;
+        router.refresh();
+      }
       const next = cutoffs.find(c => c > t);
       const untilMinute = TICK_MS - (t % TICK_MS);
       const delay = next === undefined ? untilMinute : Math.min(untilMinute, next - t);
@@ -247,7 +254,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
       window.removeEventListener("pageshow", tick);
       window.removeEventListener("focus", tick);
     };
-  }, [archive, now, cutoffs, live, router]);
+  }, [archive, now, cutoffs, live, router, day, today]);
 
   // Keep the selected row visible inside the rail without moving the page.
   useEffect(() => {

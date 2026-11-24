@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import { isAdminSession } from "@/lib/admin-auth";
 import { publicFixture, publicMove } from "./public-view";
 import brand from "./drop-shot-mark.png";
@@ -10,6 +11,7 @@ import type { VenueMap } from "./DeskParts";
 import { readArchive, readDay } from "./reader";
 import styles from "./board.module.css";
 import { TourSwitch } from "./TourSwitch";
+import { boardUrl } from "./board-url";
 import { PaperReturns } from "./PaperReturns";
 import { countryForTournament } from "@/lib/tennis-tournament-country.mjs";
 
@@ -40,14 +42,22 @@ function venuesFor(rows: { tour: string; league: string; start: string }[]) {
   }
   return out;
 }
-export default async function PriceMoves({searchParams}:{searchParams:Promise<{view?:Query;day?:Query;batch?:Query;tour?:Query}>}) {
+export default async function PriceMoves({searchParams}:{searchParams:Promise<{view?:Query;day?:Query;batch?:Query;tour?:Query;record?:Query}>}) {
   const fullBoard = await isAdminSession();
   const params=await searchParams,archive=one(params.view)==="archive",today=new Date().toISOString().slice(0,10);
   const day=validDay(one(params.day),today);
   const circuit=one(params.tour)?.toLowerCase()==="wta" ? "WTA" : "ATP";
-  const dailyUrl=(tour: "ATP"|"WTA", date=day)=>route+"?tour="+tour.toLowerCase()+"&day="+date;
   const batchParam=one(params.batch);
   const batch=batchParam&&/^[A-Za-z0-9_-]{1,64}$/.test(batchParam)?batchParam:undefined;
+  const historyDay=!archive && day<today ? day : undefined;
+  // Old live tour links carried a date. Only an explicit history view or a dated receipt pins a day.
+  const historyRequested=one(params.view)==="history";
+  if (!archive && !batch && (historyRequested ? !historyDay : params.day !== undefined)) {
+    redirect(boardUrl(circuit, undefined, one(params.record)));
+  }
+  const dailyUrl=(tour: "ATP"|"WTA", date?:string)=>boardUrl(tour,date && date<today ? date : undefined);
+  const yesterday=shiftDay(today,-1);
+  const dateText=new Intl.DateTimeFormat("en-GB",{weekday:"short",day:"numeric",month:"long",timeZone:"UTC"}).format(new Date(day+"T00:00:00Z"));
   let content;
   try{
     if(archive && circuit==="WTA"){
@@ -71,26 +81,13 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
       // Stamped after the read so the first paint never treats a record as open later than the server saw it.
       const data=await readDay(day,circuit),now=Date.now(),seen=Date.parse(data.observed),known=Number.isFinite(seen);
       const late=known&&day===today&&(now-seen)/60000>40;
-      const earlier=day>firstDay?shiftDay(day,-1):null,later=day<today?shiftDay(day,1):null;
       content=<>
-        <section className={styles.dayBar} aria-label="Observation date">
-          <form className={styles.date} action={route}>
-            <input type="hidden" name="tour" value={circuit.toLowerCase()}/>
-            <label htmlFor="desk-day">Observation date (UTC)</label>
-            <div className={styles.dateRow}>
-              {earlier?<Link className={styles.dayStep} href={dailyUrl(circuit,earlier)} aria-label="Previous day"><span aria-hidden="true">‹</span></Link>:<span className={styles.dayStep} aria-hidden="true" data-off="true">‹</span>}
-              <input id="desk-day" name="day" type="date" min={firstDay} max={today} defaultValue={day} key={day}/>
-              {later?<Link className={styles.dayStep} href={dailyUrl(circuit,later)} aria-label="Next day"><span aria-hidden="true">›</span></Link>:<span className={styles.dayStep} aria-hidden="true" data-off="true">›</span>}
-              <button>Show date</button>
-            </div>
-          </form>
-          <dl className={styles.facts}>
+          <dl className={styles.facts} aria-label="Board activity">
             <div><dt>Recorded scans</dt><dd>{data.scans}</dd></div>
             <div><dt>Match comparisons</dt><dd>{data.compared}</dd></div>
             <div><dt>Price drops</dt><dd>{data.moves.length}</dd></div>
             <div><dt>Watchlist matches</dt><dd>{data.fixtures.length}</dd></div>
           </dl>
-        </section>
         <p className={styles.fresh} role="status" data-late={late?"true":undefined}>{known?<>Latest watchlist at {new Date(seen).toISOString().slice(0,16).replace("T"," ")} UTC{late?" · overdue for a new scan":day===today?" · the cloud scan runs every 15 minutes":""}.</>:"No watchlist has been recorded for this date."}</p>
         <PaperReturns day={day} circuit={circuit}/>
         <Board key={circuit} circuit={circuit} moves={fullBoard ? data.moves : data.moves.map(publicMove)} fixtures={fullBoard ? data.fixtures : data.fixtures.map(publicFixture)} archive={false} initialBatchId={batch} day={day} now={now} today={day===today} venues={venuesFor([...data.moves,...data.fixtures])}/>
@@ -103,7 +100,31 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
       <div className={styles.brand}><Image src={brand} unoptimized alt="" width={66} height={36} priority/><div><p className={styles.kicker}>Tennis odds moves</p><h1>Drop Shot Desk</h1></div></div>
       {archive && <Link className={styles.back} href={dailyUrl(circuit,today)}>← Back to today’s moves</Link>}
     </header>
-    <TourSwitch circuit={circuit} day={day} archive={archive}/>
+    <TourSwitch circuit={circuit} historyDay={historyDay} archive={archive}/>
+    {!archive && <section className={styles.dayBar} aria-label="Board date">
+      <div className={styles.dayHeading}>
+        <h2>{historyDay ? "Historical moves" : "Today’s moves"}</h2>
+        <time dateTime={day}>{dateText} · UTC</time>
+      </div>
+      <nav className={styles.dateNav} aria-label="Choose board date">
+        <Link href={dailyUrl(circuit)} prefetch={false} aria-current={day===today?"date":undefined}>Today</Link>
+        {yesterday>=firstDay && <Link href={dailyUrl(circuit,yesterday)} prefetch={false} aria-current={day===yesterday?"date":undefined}>Yesterday</Link>}
+        <details key={day} className={styles.datePicker}>
+          <summary>Choose date</summary>
+          <form className={styles.date} action={route}>
+            <input type="hidden" name="tour" value={circuit.toLowerCase()}/>
+            <input type="hidden" name="view" value="history"/>
+            <label htmlFor="desk-day">Board date (UTC)</label>
+            <div className={styles.dateRow}>
+              {day>firstDay && <Link className={styles.dayStep} prefetch={false} href={dailyUrl(circuit,shiftDay(day,-1))} aria-label="Previous day">‹</Link>}
+              <input id="desk-day" name="day" type="date" min={firstDay} max={today} defaultValue={day} required/>
+              {day<today && <Link className={styles.dayStep} prefetch={false} href={dailyUrl(circuit,shiftDay(day,1))} aria-label="Next day">›</Link>}
+              <button>Show date</button>
+            </div>
+          </form>
+        </details>
+      </nav>
+    </section>}
     <p className={styles.standfirst}>Follow big odds moves before the first serve. We check {circuit==="ATP"?"ATP and Challenger":"WTA Tour and WTA 125"} odds about every 15 minutes and show which players, game totals and games handicaps are shortening. Each chart shows how the odds and the reported market limit changed before play.</p>
     <details className={styles.fold}>
       <summary>What triggers an alert?</summary>
@@ -114,7 +135,7 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
     {!archive && <details className={styles.fold}>
       <summary>Historical replay · October–November 2026</summary>
       <p className={styles.fine}>The original ATP and Challenger study found seven qualifying moves across 852 comparable fixtures. It used the old 3-point rule. Daily paper returns and Telegram results are tracked separately.</p>
-      <Link prefetch={false} className={styles.back} href={route+"?view=archive&tour=atp&day="+day}>View the seven replayed moves →</Link>
+      <Link prefetch={false} className={styles.back} href={route+"?view=archive&tour=atp"}>View the seven replayed moves →</Link>
     </details>}
   </main>;
 }
