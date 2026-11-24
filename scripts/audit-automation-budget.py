@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import re
 import subprocess
 import sys
@@ -13,6 +14,9 @@ from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from urllib.error import URLError
+from urllib.parse import quote
+from urllib.request import Request, urlopen
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -92,14 +96,37 @@ def observe_windows_tasks() -> dict[str, dict[str, str]]:
     return observed
 
 
-def build_report(config: dict[str, Any], workflows_dir: Path = WORKFLOWS) -> dict[str, Any]:
+def github_workflow_state(filename: str) -> str:
+    repo = os.environ.get("GITHUB_REPOSITORY") or "simonreds76-gif/il-margine"
+    url = "https://api.github.com/repos/" + quote(repo, safe="/") + "/actions/workflows/" + quote(filename, safe="")
+    headers = {"Accept": "application/vnd.github+json", "User-Agent": "Il-Margine-schedule-audit"}
+    if os.environ.get("GH_TOKEN"):
+        headers["Authorization"] = "Bearer " + os.environ["GH_TOKEN"]
+    try:
+        with urlopen(Request(url, headers=headers), timeout=12) as response:
+            data = json.load(response)
+        if data.get("path") == ".github/workflows/" + filename:
+            return str(data.get("state") or "unverified")
+    except (URLError, TimeoutError, ValueError, OSError):
+        pass
+    return "unverified"
+
+
+def build_report(config: dict[str, Any], workflows_dir: Path = WORKFLOWS, *, state_for=github_workflow_state) -> dict[str, Any]:
     errors: list[str] = []
     warnings: list[str] = []
     registered_files = {str(row["file"]): row for row in config["github_workflows"]}
     actual_scheduled: dict[str, list[str]] = {}
-    for path in sorted(workflows_dir.glob("*.yml")):
+    disabled = []
+    for path in sorted([*workflows_dir.glob("*.yml"), *workflows_dir.glob("*.yaml")]):
         crons = workflow_crons(path)
         if crons:
+            if path.name in config.get("expected_disabled_workflows", []):
+                state = state_for(path.name)
+                if state == "disabled_manually":
+                    disabled.append(path.name)
+                    continue
+                errors.append(f"{path.name}: expected disabled_manually, GitHub state is {state}")
             actual_scheduled[path.name] = crons
 
     missing_registration = sorted(set(actual_scheduled) - set(registered_files))
@@ -113,6 +140,7 @@ def build_report(config: dict[str, Any], workflows_dir: Path = WORKFLOWS) -> dic
     workflow_rows: list[dict[str, Any]] = []
     db_reads_week = 0
     db_writes_week = 0
+    variable_read_workflows = []
     for file_name, row in registered_files.items():
         declared_crons = [str(item["cron"]) for item in row["schedules"]]
         found_crons = actual_scheduled.get(file_name, [])
@@ -122,6 +150,7 @@ def build_report(config: dict[str, Any], workflows_dir: Path = WORKFLOWS) -> dic
         provider_week: dict[str, int] = defaultdict(int)
         reads = 0
         writes = 0
+        variable_reads = False
         for schedule in row["schedules"]:
             try:
                 slots = expand_week(str(schedule["cron"]))
@@ -129,7 +158,11 @@ def build_report(config: dict[str, Any], workflows_dir: Path = WORKFLOWS) -> dic
                 errors.append(f"{file_name}: {exc}")
                 slots = []
             runs_week += len(slots)
-            reads += int(schedule.get("db_reads_max_per_run", row.get("db_reads_max_per_run", 0)) or 0) * len(slots)
+            reads_per_run = schedule.get("db_reads_max_per_run", row.get("db_reads_max_per_run", 0))
+            if reads_per_run is None:
+                variable_reads = True
+            else:
+                reads += int(reads_per_run) * len(slots)
             writes += int(schedule.get("db_writes_max_per_run", row.get("db_writes_max_per_run", 0)) or 0) * len(slots)
             for provider, cap in (schedule.get("request_caps") or {}).items():
                 cap_value = int(cap)
@@ -137,6 +170,8 @@ def build_report(config: dict[str, Any], workflows_dir: Path = WORKFLOWS) -> dic
                 for slot in slots:
                     provider_slots[provider][slot] += cap_value
         db_reads_week += reads
+        if variable_reads:
+            variable_read_workflows.append(file_name)
         db_writes_week += writes
         workflow_rows.append(
             {
@@ -146,7 +181,7 @@ def build_report(config: dict[str, Any], workflows_dir: Path = WORKFLOWS) -> dic
                 "database_mode": row.get("database_mode") or "unknown",
                 "runs_per_week_max": runs_week,
                 "provider_requests_per_week_max": dict(provider_week),
-                "db_reads_per_week_max": reads,
+                "db_reads_per_week_max": None if variable_reads else reads,
                 "db_writes_per_week_max": writes,
             }
         )
@@ -193,8 +228,11 @@ def build_report(config: dict[str, Any], workflows_dir: Path = WORKFLOWS) -> dic
         "warnings": warnings,
         "providers": provider_summary,
         "github_workflows": workflow_rows,
+        "confirmed_disabled_workflows": disabled,
         "database": {
-            "registered_reads_per_week_max": db_reads_week,
+            "registered_reads_per_week_max": None if variable_read_workflows else db_reads_week,
+            "bounded_reads_per_week_max": db_reads_week,
+            "variable_read_workflows": variable_read_workflows,
             "registered_writes_per_week_max": db_writes_week,
             "note": "Counts are bounded workflow operations, not affected-row counts. Pinnacle history remains append-only.",
         },
@@ -241,7 +279,8 @@ def render_markdown(report: dict[str, Any]) -> str:
             "",
             "## Database Envelope",
             "",
-            f"- Registered read operations/week maximum: {report['database']['registered_reads_per_week_max']}",
+            f"- Bounded read operations/week maximum: {report['database']['bounded_reads_per_week_max']}",
+            f"- Additional variable settlement reads: {', '.join(report['database']['variable_read_workflows']) or 'none'}",
             f"- Registered write operations/week maximum: {report['database']['registered_writes_per_week_max']}",
             f"- {report['database']['note']}",
             "",
@@ -249,6 +288,8 @@ def render_markdown(report: dict[str, Any]) -> str:
             "",
         ]
     )
+    if report["confirmed_disabled_workflows"]:
+        lines.append("- Confirmed disabled on GitHub: " + ", ".join(report["confirmed_disabled_workflows"]))
     for row in report["local_windows_tasks"]:
         lines.append(f"- {row['name']}: {row['schedule']}; {row['database_mode']}; observed {row['observed_status']}.")
     if report["errors"]:
