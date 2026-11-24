@@ -1,29 +1,29 @@
 # Weekly Research Lane Report
 
-- Generated: 2026-11-17T20:01:04Z
+- Generated: 2026-11-24T21:44:47Z
 - Overall read: observe live sample
 
 ## Football Counts vNext
 
 - Team Shots v4: count PASS; prospective AUTHORIZED_SHADOW; promotion BLOCKED.
-- Team Shots v4 evidence: 29 signals, 29 settled, -13.94u, ROI -48.1%, true-close CLV +2.2%.
-- Team Shots v4 input cohorts: Before 30 October 2026: 9 settled, -3.33u, ROI -37.0% | 30 October 2026 to input repair: 20 settled, -10.61u, ROI -53.0% | Prospective repaired inputs: 0 settled, +0.00u, ROI awaiting results. Promotion evidence: repaired inputs only.
+- Team Shots v4 evidence: 50 signals, 50 settled, -8.88u, ROI -17.8%, true-close CLV +1.8%.
+- Team Shots v4 input cohorts: Before 30 October 2026: 9 settled, -3.33u, ROI -37.0% | 30 October 2026 to input repair: 20 settled, -10.61u, ROI -53.0% | Prospective repaired inputs: 21 settled, +5.05u, ROI +24.1%. Promotion evidence: repaired inputs only.
 - Team Shots v4 warm-up tracking (not bets): 14 signals, 14 settled / 0 pending, +0.32u, ROI +2.3%.
 - Team Shots v4 latest scan: EXPECTED_EMPTY_CAPTURE_WINDOW; 0 rows / 0 fixtures scored; 0 fixtures passed edge but were warm-up blocked; blockers -.
 - Corners v3: count PASS; prospective AUTHORIZED_SHADOW; promotion BLOCKED.
-- Corners v3 evidence: 213 signals, 190 settled, -8.52u, ROI -4.5%, true-close CLV +0.9%.
+- Corners v3 evidence: 234 signals, 224 settled, -21.96u, ROI -9.8%, true-close CLV +0.9%.
 - Corners v3 warm-up tracking (not bets): 36 signals, 36 settled / 0 pending, -2.50u, ROI -7.0%.
-- Corners v3 latest scan: NO_EDGE_AFTER_UNLOCK; 630 rows / 39 fixtures scored; 0 fixtures passed edge but were warm-up blocked; blockers {'edge_below_3pct': 546, 'price_not_fresh_10m': 630, 'price_older_than_3h': 128}.
+- Corners v3 latest scan: NO_EDGE_AFTER_UNLOCK; 482 rows / 31 fixtures scored; 0 fixtures passed edge but were warm-up blocked; blockers {'edge_below_3pct': 435, 'price_not_fresh_10m': 482, 'price_older_than_3h': 4}.
 - Corners v4 G0 research: FAIL; 6901/10889 enriched; latest holdout MAE delta -0.0074; real-market Brier delta +0.0090 on n=431; line gates 0/5 passed; failed 7.5, 8.5, 9.5, 10.5, 11.5, 12.5.
 - Neither experiment changes live routing or stakes.
 - API-Football count archive: 0 fixtures; latest -; last run 15/30 requests.
 - Cross-provider agreement: 0/0 API fixtures matched; status no_overlap.
 - Team Fouls: F1 COUNT_GATE_FAIL_MARKET_BLOCKED; F2 COUNT_GATE_FAIL_EXTERNAL_GATES_BLOCKED; M2 WAIT_OR_FAIL; market prices BLOCKED; signals disabled.
-- Goalkeeper Saves v1: count PASS on 42,958 observations; discovery OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED (10 probe Over lines); latest capture PARTIAL_CAPTURE_FAILURE (0 events selected / 0 rows / 0 with 1X2); prospective SIGNALS_COLLECTING with 0 priced lines, 0 eligible, 0 predicted-XI research rows, 114 signals and 104 settled; blockers {}; ROI +25.6%, CLV +4.8% n=36; promotion BLOCKED.
-Calibrated Shots [ZERO-STAKE, retained prospective cohorts]: hypothetical ROI +3.2%, settled 34, pending 0 | WAITING_FOR_FRESH_PAIRED_MARKETS | 174 paired fixtures | version paired-market-offset-20261113-input-v6
-Opponent Shots [SHADOW]: forward 56W/68L, ROI -15.2%, pending 0 | COLLECTING_FIXED_POLICY | scan 2026-11-17T19:56:42Z
+- Goalkeeper Saves v1: count PASS on 42,958 observations; discovery OVER_ONLY_GOALKEEPER_SAVE_PRICES_RETURNED (10 probe Over lines); latest capture NO_GOALKEEPER_SAVE_LINES (0 events selected / 0 rows / 0 with 1X2); prospective SIGNALS_COLLECTING with 0 priced lines, 0 eligible, 0 predicted-XI research rows, 124 signals and 108 settled; blockers {}; ROI +24.9%, CLV +4.6% n=37; promotion BLOCKED.
+Calibrated Shots [ZERO-STAKE, retained prospective cohorts]: hypothetical ROI +3.5%, settled 41, pending 0 | COLLECTING | 222 paired fixtures | version paired-market-offset-20261113-input-v6
+Opponent Shots [SHADOW]: forward 66W/76L, ROI -12.9%, pending 0 | COLLECTING_FIXED_POLICY | scan 2026-11-24T21:40:32Z
 Opponent Shots + frozen strength [RESEARCH]: historical replay ROI unknown, n=? | prospective capture UNKNOWN | review weekly; historical bets are not forward evidence.
-GK paper comparison | TRACKING | Keeper Watch: 1W/3L, -0.50u, ROI -25.0%, pending 0, review 3, overdue 3 | paired current: 17W/19L, +0.19u, ROI +1.0%, pending 0, review 9, overdue 9 | paired fixtures 161; review 100 | no automatic promotion
+GK paper comparison | TRACKING | Keeper Watch: 1W/3L, -0.50u, ROI -25.0%, pending 0, review 3, overdue 3 | paired current: 19W/21L, +0.33u, ROI +1.6%, pending 0, review 10, overdue 10 | paired fixtures 183; review 100 | no automatic promotion
 GK half adjustment · AWAITING_FIRST_VERIFIED_BOARD · 0/0 paired fixtures settled · Current 0W/0L, +0.00u on 0.0u, ROI pending, Brier —, log loss — | Half adjustment 0W/0L, +0.00u on 0.0u, ROI pending, Brier —, log loss —
 - New provider fields remain diagnostic-only until source definitions and coverage are accepted.
 
@@ -65,11 +65,11 @@ GK half adjustment · AWAITING_FIRST_VERIFIED_BOARD · 0/0 paired fixtures settl
 - Held-out calibration (n=63,545): raw -> beta Brier 0.08554 -> 0.08528 (delta -0.00026); log loss 0.30413 -> 0.29885 (delta -0.00528); ECE +2.02% -> +0.81% (delta -1.20%).
 - Mean probability: raw +8.38% | beta +10.43% | actual +10.30%.
 - Beta calibration: 4/4 fold wins | probability gate FAIL | market gate UNAVAILABLE.
-- Real-price CLV coverage: 0/104 (0.0%) | true closes 0.
-- Settled ledger: 99/104 settled, 24W/72L, -16.52u, ROI -16.7%.
+- Real-price CLV coverage: 0/106 (0.0%) | true closes 0.
+- Settled ledger: 101/106 settled, 25W/73L, -15.64u, ROI -15.5%.
 - Extreme-gap quarantine: 0/0 settled, +0.00u at 1u evaluation stakes, ROI -.
 - Extreme-gap by league: no rows registered yet.
-- Evidence freshness: STALE (2026-11-08T15:36:15Z).
+- Evidence freshness: FRESH (2026-11-22T16:39:44Z).
 - Decision: KEEP_RESEARCH | blockers: fifth fold pending, probability gate fail, market ROI gate unavailable, no matched closing prices, no settled extreme-gap rows.
 
 ## Assist Value V1 Research Gate
@@ -79,7 +79,7 @@ GK half adjustment · AWAITING_FIRST_VERIFIED_BOARD · 0/0 paired fixtures settl
 - Settlement gate: FAIL | player-assist agreement 0.00%.
 - Market gate: FAIL | 1305 matched player prices across 8 calendar days.
 - Prospective ledger: 0/0 settled (target 100), +0.00u, ROI -.
-- Evidence freshness: FRESH (2026-11-17T20:00:55Z).
+- Evidence freshness: FRESH (2026-11-24T21:44:38Z).
 - Automation budget: Friday-Sunday 07:10 UTC, August-May; <= 10 Odds-API calls/run and <= 30 calls/week; zero database reads/writes.
 - No public output, staking, database writes or automatic promotion are authorised.
 
@@ -87,7 +87,8 @@ GK half adjustment · AWAITING_FIRST_VERIFIED_BOARD · 0/0 paired fixtures settl
 
 - Registry status: PASS; every scheduled GitHub workflow must be registered.
 - Odds-API.io worst registered hour: 62 / 100 requests.
-- Registered database envelope: 356 reads/week and 1841 writes/week maximum.
+- Weekly reads with a fixed ceiling: 356. Additional variable reads: pinnradar-tennis.yml.
+- Registered database write ceiling: 1841 per week.
 
 ## Tennis ML Gap-Guard Quiet Audit
 
@@ -111,7 +112,7 @@ GK half adjustment · AWAITING_FIRST_VERIFIED_BOARD · 0/0 paired fixtures settl
 
 ## Tennis Props v3 Prospective Evidence
 
-- Snapshot: 2026-11-17T10:31:19Z
+- Snapshot: 2026-11-24T10:35:36Z
 - ATP aces gate: PASS on Clay, Hard
 - Holdout MAE improvement: +3.33%
 - Prospective sample: 50 settled, 0 pending, 49 events
@@ -130,21 +131,21 @@ GK half adjustment · AWAITING_FIRST_VERIFIED_BOARD · 0/0 paired fixtures settl
 ## Tennis Aces/DF Prospective Decision
 
 Tennis Aces/DF Weekly Decision Report
-Generated UTC: 2026-11-17T19:12:19Z
+Generated UTC: 2026-11-24T10:37:10Z
 Status: COLLECTING_EVIDENCE (never auto-promoted)
 
-Sample: 270/305 settled; 4 pending (4 due, 0 future, 0 unknown); 31 void
-Record: 132W/138L/0P
-P/L: -7.12u | ROI: -2.6%
-CLV: +1.85% mean; 28.8% positive; n=163
-Calibration: Brier 0.24703; predicted 59.1%; actual 48.9%; gap 10.3pp; n=270
-Feed: HEALTHY_NO_QUALIFYING_EDGE; matched 9/9; two-way 9; over-only 0; public bettable 0
+Sample: 282/316 settled; 3 pending (3 due, 0 future, 0 unknown); 31 void
+Record: 134W/148L/0P
+P/L: -14.24u | ROI: -5.0%
+CLV: +1.88% mean; 30.2% positive; n=172
+Calibration: Brier 0.248412; predicted 58.9%; actual 47.5%; gap 11.3pp; n=282
+Feed: NO_ELIGIBLE_PROPS_FIXTURES; matched 0/0; two-way 0; over-only 0; public bettable 0
 
 By market:
 - aces: 80/90 settled, -2.63u, ROI -3.3%
-- double_faults: 190/215 settled, -4.48u, ROI -2.4%
+- double_faults: 202/226 settled, -11.61u, ROI -5.8%
 
-Blockers: settled sample 270/300; Slam coverage 1/2; CLV sample 163/300
+Blockers: settled sample 282/300; Slam coverage 1/2; CLV sample 172/300; one-sided price feed (0 two-way rows)
 Promotion gate: Human review only after 300 settled lines across at least two Slams, non-negative ROI, mean CLV >= +1%, positive CLV >= 55%, at least 100 calibrated win/loss rows with Brier <= 0.25 and absolute calibration gap <= 5pp, plus approved price integrity and a healthy pipeline.
 
 Service Breaks v1 [INTERNAL]: OUTCOME_PASS | player ATP/WTA PASS | match ATP/WTA PASS | real price evidence NO_CAPTURE_OR_LEDGER_EVIDENCE | prospective 0 | strict 0 rows/0 settled/+0.00u/ROI - | Bet365-only 0 rows/0 settled/+0.00u/ROI - | count calibration 0/0 settled | NOT SELLABLE
@@ -152,9 +153,9 @@ Service Breaks v1 [INTERNAL]: OUTCOME_PASS | player ATP/WTA PASS | match ATP/WTA
 ## Tennis Props Model vs Bet365
 
 - Status: EVIDENCE_BUILDING
-- Clean main lines: 71 observed, 64 settled, 4 pending.
-- Count MAE: model 2.716; observed Bet365-implied mean 2.794.
-- Brier: model 0.2234; Bet365 0.2299; delta +0.0065 (positive favours the model).
+- Clean main lines: 81 observed, 74 settled, 4 pending.
+- Count MAE: model 2.875; observed Bet365-implied mean 2.782.
+- Brier: model 0.2350; Bet365 0.2308; delta -0.0042 (positive favours the model).
 - No automatic parameter change; 100 settled clean lines triggers a registered challenger review, not promotion.
 
 ## Plain-English Read
@@ -169,15 +170,23 @@ Service Breaks v1 [INTERNAL]: OUTCOME_PASS | player ATP/WTA PASS | match ATP/WTA
 
 
 Ace Compass v1 [PAPER ONLY]
-11W/22L | -4.51u on 33u | ROI -13.66% | 5 pending, 0 void, 3 overdue.
-Predicted ace total bias -10.4% across 118 player matches (negative = underprediction). Capture: NO_NEW_ELIGIBLE_QUOTES. Historical +10.79%/19 bets stays separate. Manual review milestone reached.
+14W/28L | -4.18u on 42u | ROI -9.95% | 0 pending, 3 void, 0 overdue.
+Predicted ace total bias -12.4% across 142 player matches (negative = underprediction). Capture: NO_NEW_ELIGIBLE_QUOTES. Historical +10.79%/19 bets stays separate. Manual review milestone reached.
+Ace Compass · all verified prices | 130 offers, 9 fixtures, 130 graded
+Frozen 4W/4L, +3.04u/8u, ROI 38.0%, Brier 0.086, log loss 0.281; 0 pending, 122 passes, 0 void.
+Compass 2W/5L, +0.73u/7u, ROI 10.4%, Brier 0.088, log loss 0.289; 0 pending, 123 passes, 0 void.
+Control 5W/7L, +0.58u/12u, ROI 4.8%, Brier 0.085, log loss 0.284; 0 pending, 118 passes, 0 void.
+Ace Compass · Bet365 10+ milestones | 66 offers, 9 fixtures, 66 graded
+Frozen 1W/4L, +1.00u/5u, ROI 20.0%, Brier 0.081, log loss 0.264; 0 pending, 61 passes, 0 void.
+Compass 1W/5L, +0.00u/6u, ROI 0.0%, Brier 0.082, log loss 0.265; 0 pending, 60 passes, 0 void.
+Control 1W/7L, -2.00u/8u, ROI -25.0%, Brier 0.078, log loss 0.264; 0 pending, 58 passes, 0 void.
 
 Indoor Scout | indoor Masters, including qualifying | PAPER ONLY
 2W/3L | +1.55u on 5u | +31.00% ROI
-0 pending (0 overdue), 0 void, 0 quarantined. 66 captured fixtures; Brier 0.2448, log loss 0.6861. Core Strict gates; optional overlays not simulated. 1u paper, zero real stake. Capture WAITING_FOR_FRESH_PRICED_FIXTURES at 2026-11-16T22:53:26.226592+00:00. 
+0 pending (0 overdue), 0 void, 0 quarantined. 66 captured fixtures; Brier 0.2448, log loss 0.6861. Core Strict gates; optional overlays not simulated. 1u paper, zero real stake. Capture WAITING_FOR_FRESH_PRICED_FIXTURES at 2026-11-23T22:48:51.965395+00:00. 
 Indoor Scout ATP250/500 | qualifying included | PAPER ONLY
 0W/0L | +0.00u on 0u | ROI awaits settled selections
-0 pending (0 overdue), 0 void, 0 quarantined. 12 captured fixtures; Brier 0.2340, log loss 0.6585 vs market 0.2484/0.6975. Core Strict gates; optional overlays not simulated. 1u paper, zero real stake. Capture WAITING_FOR_FRESH_PRICED_FIXTURES at 2026-11-17T10:15:23.630598+00:00. 
+0 pending (0 overdue), 0 void, 0 quarantined. 12 captured fixtures; Brier 0.2340, log loss 0.6585 vs market 0.2484/0.6975. Core Strict gates; optional overlays not simulated. 1u paper, zero real stake. Capture WAITING_FOR_FRESH_PRICED_FIXTURES at 2026-11-24T10:18:38.353520+00:00. 
 
 ELO REBUILD | retired 6 November; no new captures. Evidence retained; 8 existing fixtures pending exact settlement. Live unchanged.
 PUBLISHED ELO | separate comparison paused with shared collector; dependency review still required.
@@ -198,7 +207,19 @@ Comparison uses the same prices and fixed rules. Earlier full record remains sep
 Comparison exclusions: incomplete_event_evidence: 17
 Ledger checkpoint: 380f4f67816c3f99
 
-BREAK POINT C | 29 settled fixtures | 2W/1L | 3u paper | +0.76u | ROI +25.33% | 0 pending bets | LL C 0.7070 / market 0.6956. No alerts; completed-result research, bookmaker grading unverified.
+BREAK POINT C | 31 settled fixtures | 2W/1L | 3u paper | +0.76u | ROI +25.33% | 0 pending bets | LL C 0.6895 / market 0.6907. No alerts; completed-result research, bookmaker grading unverified.
+
+ATP opponent return · 9 priced, 9 completed, 0 pending, 0 void. Paired service statistics on 9 fixtures.
+Before adjustment · 3W/2L, 5u settled, -0.527u, ROI -10.54%, 4 no-bets. Match Brier 0.0849, log loss 0.3166, model favourites expected 74.9%, won 88.9% (9 matches). Service log loss 0.6283, Brier 0.2189, bias 0.28 pp.
+With opponent adjustment · 3W/1L, 4u settled, +0.116u, ROI +2.90%, 5 no-bets. Match Brier 0.0785, log loss 0.2979, model favourites expected 76.1%, won 88.9% (9 matches). Service log loss 0.6275, Brier 0.2185, bias -3.21 pp.
+Pinnacle no-vig · match Brier 0.0999, log loss 0.3694.
+Turin · Carlos Alcaraz 36/48 (75.0%), Daniil Medvedev 29/47 (61.7%)
+Turin · Flavio Cobolli 38/70 (54.3%), Frances Tiafoe 39/54 (72.2%)
+
+Outdoor hard Masters handicaps · 0 priced, 0 completed, 0 pending, 0 void. Latest forecast contains no outdoor hard Masters singles.
+Current handicap pricing · 0W/0L/0 pushes, 0u settled, +0.00u, ROI pending. 0 pending bets, 0 no-bets. Calibration awaiting non-push results.
+Neutral serving centre · 0W/0L/0 pushes, 0u settled, +0.00u, ROI pending. 0 pending bets, 0 no-bets. Calibration awaiting non-push results.
+Winner-anchored venue control · 0W/0L/0 pushes, 0u settled, +0.00u, ROI pending. 0 pending bets, 0 no-bets. Calibration awaiting non-push results.
 
 Match Shape | ATP BO3 incl. qualifying/indoor | PAPER ONLY | no alerts
 55 fixtures / 110 contracts; 50 independently settled fixtures.
@@ -222,45 +243,54 @@ Opponent, paired cohort: 0W/0L/0P; +0.00u/0u; ROI pending; 0 pending, 0 overdue.
 Opponent + frozen strength: 0W/0L/0P; +0.00u/0u; ROI pending; 0 pending, 0 overdue. calibration pending.
 Capture: NO_NEW_ELIGIBLE_CONTRACTS. Exploratory; no automatic promotion.
 Leakage-safe historical test did not establish improvement. Exploratory future test only; no historical rows counted as forward evidence.
+Challenger qualifying Elo · paper | 49 forecast fixtures, 15 priced, 13 settled.
+Indoor issued: 0W/0L, +0.00u/0u, ROI —, 0 open. awaiting outcomes.
+Indoor native: 0W/0L, +0.00u/0u, ROI —, 0 open. awaiting outcomes.
+Outdoor issued: 0W/1L, -1.00u/1u, ROI -100.0%, 0 open. Brier 0.2001, log loss 0.5853.
+Outdoor native: 0W/1L, -1.00u/1u, ROI -100.0%, 0 open. Brier 0.1672, log loss 0.5164.
 Most Aces fixed-reference comparison | >=2-book forward paper, no extra alerts
-Direct baseline: 0W/3L | 3u | -3.00u | ROI -100.00% | pending 0, overdue 0
-Direct fixed_reference: 0W/3L | 3u | -3.00u | ROI -100.00% | pending 0, overdue 0
-3 paired fixtures; model Brier/LL 0.0923/0.2634, reference 0.0475/0.1903; unchanged probabilities. Added 0, removed 0; paired P/L difference +0.00u.
-Secondary: difference per paired fixture 0.0000u; 0 changed, 1 editions. Descriptive only until at least 30 changed / 10 editions and precision review. Pending fixtures 1, overdue 0.
-Count baseline: 0W/2L | 2u | -2.00u | ROI -100.00% | pending 1, overdue 0
-Count fixed_reference: 0W/2L | 2u | -2.00u | ROI -100.00% | pending 1, overdue 0
-3 paired fixtures; model Brier/LL 0.0642/0.2163, reference 0.0475/0.1903; unchanged probabilities. Added 0, removed 0; paired P/L difference +0.00u.
-Primary: difference per paired fixture 0.0000u; 0 changed, 1 editions. Descriptive only until at least 30 changed / 10 editions and precision review. Pending fixtures 1, overdue 0.
-Capture: CHECKED_NO_NEW_COMPARISONS; {'fewer_than_two_valid_books': 4, 'no_current_price_candidates': 12}. Zero real stake; no promotion.
-Bookmaker checks: Bet365: SOURCE_FAILED; Sisal IT: QUOTES_CAPTURED; Grosvenor: QUOTES_CAPTURED
+Direct baseline: 0W/7L | 7u | -7.00u | ROI -100.00% | pending 0, overdue 0
+Direct fixed_reference: 0W/7L | 7u | -7.00u | ROI -100.00% | pending 0, overdue 0
+12 paired fixtures; model Brier/LL 0.3173/0.5388, reference 0.2821/0.4911; unchanged probabilities. Added 0, removed 0; paired P/L difference +0.00u.
+Secondary: difference per paired fixture 0.0000u; 0 changed, 1 editions. Descriptive only until at least 30 changed / 10 editions and precision review. Pending fixtures 0, overdue 0.
+Count baseline: 3W/7L | 10u | +7.15u | ROI +71.50% | pending 0, overdue 0
+Count fixed_reference: 3W/7L | 10u | +7.15u | ROI +71.50% | pending 0, overdue 0
+13 paired fixtures; model Brier/LL 0.3460/0.5635, reference 0.3597/0.5907; unchanged probabilities. Added 0, removed 0; paired P/L difference +0.00u.
+Primary: difference per paired fixture 0.0000u; 0 changed, 1 editions. Descriptive only until at least 30 changed / 10 editions and precision review. Pending fixtures 0, overdue 0.
+Capture: CHECKED_NO_NEW_COMPARISONS; {}. Zero real stake; no promotion.
+Bookmaker checks: Bet365: NO_VERIFIED_MARKETS; Sisal IT: NO_VERIFIED_MARKETS; Grosvenor: NO_VERIFIED_MARKETS
 Most Aces single-book evidence | current gate, separate from paired comparison
-Direct: 5 captured, 2 selected, 3 no-bets | 0W/1L | 1u | -1.00u | ROI -100.00% | pending bets 1, overdue 0.
-2 settled fixtures, 1 editions; model Brier/LL 0.0611/0.2107, book 0.0740/0.2318. Pending outcomes 3; overdue 0. 3 also in paired view; never add totals. Books {'Bet365': 3, 'Grosvenor': 2}; coverage {'single_quote': 5}.
-Count: 5 captured, 2 selected, 3 no-bets | 0W/0L | 0u | +0.00u | ROI n/a | pending bets 2, overdue 0.
-2 settled fixtures, 1 editions; model Brier/LL 0.0554/0.1973, book 0.0740/0.2318. Pending outcomes 3; overdue 0. 3 also in paired view; never add totals. Books {'Bet365': 3, 'Grosvenor': 2}; coverage {'single_quote': 5}.
-Capture: CAPTURED; {'no_current_price_candidates': 12}. Gate comparison not applicable to single-book rows. Descriptive only; zero real stake, no alerts.
+Direct: 8 captured, 2 selected, 6 no-bets | 0W/2L | 2u | -2.00u | ROI -100.00% | pending bets 0, overdue 0.
+8 settled fixtures, 1 editions; model Brier/LL 0.3268/0.5604, book 0.4021/0.6627. Pending outcomes 0; overdue 0. 6 also in paired view; never add totals. Books {'Bet365': 5, 'Grosvenor': 3}; coverage {'single_quote': 8}.
+Count: 8 captured, 2 selected, 6 no-bets | 2W/0L | 2u | +6.80u | ROI +340.00% | pending bets 0, overdue 0.
+8 settled fixtures, 1 editions; model Brier/LL 0.3129/0.5310, book 0.4021/0.6627. Pending outcomes 0; overdue 0. 6 also in paired view; never add totals. Books {'Bet365': 5, 'Grosvenor': 3}; coverage {'single_quote': 8}.
+Capture: CHECKED_NO_NEW_OBSERVATIONS; {}. Gate comparison not applicable to single-book rows. Descriptive only; zero real stake, no alerts.
 
 Most DF | PAPER OBSERVATION ONLY | 0W/10L | -10.00u on 10u | ROI -100.00% | 0 pending (0 overdue). 15/150 independent settled fixtures. Capture: NO_NEW_ELIGIBLE_QUOTES. No betting alerts; unvalidated independent-count benchmark.
 
-Astra models FULL-BOARD PAPER, including lines blocked by normal signal filters; 1u per selected line | Astra Aces [oncourt-current-history-20261007-v1]: 147 settled fixtures; 0 unresolved quote records (0 older than 48h); baseline ROI -37.4% (79 selected lines), Astra ROI -38.9% (71 selected lines), Astra odds >=5.00: 2W/48L, -28.00u | Astra DF [oncourt-current-history-20261007-v1]: 160 settled fixtures; 10 unresolved quote records (10 older than 48h); baseline ROI -16.6% (184 selected lines), Astra ROI -23.2% (259 selected lines), Astra odds >=5.00: 7W/93L, -30.50u | Astra Aces [oncourt-current-history-20261030-v2]: 10 settled fixtures; 12 unresolved quote records (12 older than 48h); baseline ROI -54.2% (12 selected lines), Astra ROI -50.0% (11 selected lines), Astra odds >=5.00: 0W/5L, -5.00u | Astra DF [oncourt-current-history-20261030-v2]: 4 settled fixtures; 0 unresolved quote records (0 older than 48h); baseline ROI -64.0% (5 selected lines), Astra ROI -70.0% (6 selected lines), Astra odds >=5.00: 0W/1L, -1.00u | Astra Aces [oncourt-current-history-20261104-v3]: 14 settled fixtures; 16 unresolved quote records (0 older than 48h); baseline ROI -70.7% (13 selected lines), Astra ROI -70.7% (13 selected lines), Astra odds >=5.00: 0W/9L, -9.00u | Astra DF [oncourt-current-history-20261104-v3]: 14 settled fixtures; 12 unresolved quote records (0 older than 48h); baseline ROI -100.0% (9 selected lines), Astra ROI -79.0% (11 selected lines), Astra odds >=5.00: 0W/3L, -3.00u | data FRESH; multiple lines per match are correlated. Review floors: 200 fixtures, 8 weeks, 4 tournaments within each input version. Manual review before promotion.
+Astra models FULL-BOARD PAPER, including lines blocked by normal signal filters; 1u per selected line | Astra Aces [oncourt-current-history-20261007-v1]: 147 settled fixtures; 0 unresolved quote records (0 older than 48h); baseline ROI -37.4% (79 selected lines), Astra ROI -38.9% (71 selected lines), Astra odds >=5.00: 2W/48L, -28.00u | Astra DF [oncourt-current-history-20261007-v1]: 160 settled fixtures; 10 unresolved quote records (10 older than 48h); baseline ROI -16.6% (184 selected lines), Astra ROI -23.2% (259 selected lines), Astra odds >=5.00: 7W/93L, -30.50u | Astra Aces [oncourt-current-history-20261030-v2]: 10 settled fixtures; 12 unresolved quote records (12 older than 48h); baseline ROI -54.2% (12 selected lines), Astra ROI -50.0% (11 selected lines), Astra odds >=5.00: 0W/5L, -5.00u | Astra DF [oncourt-current-history-20261030-v2]: 4 settled fixtures; 0 unresolved quote records (0 older than 48h); baseline ROI -64.0% (5 selected lines), Astra ROI -70.0% (6 selected lines), Astra odds >=5.00: 0W/1L, -1.00u | Astra Aces [oncourt-current-history-20261104-v3]: 23 settled fixtures; 0 unresolved quote records (0 older than 48h); baseline ROI -70.2% (26 selected lines), Astra ROI -70.2% (26 selected lines), Astra odds >=5.00: 0W/14L, -14.00u | Astra DF [oncourt-current-history-20261104-v3]: 23 settled fixtures; 0 unresolved quote records (0 older than 48h); baseline ROI -73.3% (51 selected lines), Astra ROI -67.4% (54 selected lines), Astra odds >=5.00: 0W/16L, -16.00u | data FRESH; multiple lines per match are correlated. Review floors: 200 fixtures, 8 weeks, 4 tournaments within each input version. Manual review before promotion.
+Double faults · fresh paired odds | 0 offers, 0 settled matches, 0 pending offers. Last odds check 2026-11-24T10:23:10.312704+00:00.
+Surface-weighted DF | 0W/0L, 0 pushes, 0 void, 0 pending, 0 passes | +0.00u / 0u, ROI — | Brier —, fixture log loss —.
+Astra DF | 0W/0L, 0 pushes, 0 void, 0 pending, 0 passes | +0.00u / 0u, ROI — | Brier —, fixture log loss —.
+DF control | 0W/0L, 0 pushes, 0 void, 0 pending, 0 passes | +0.00u / 0u, ROI — | Brier —, fixture log loss —.
 
 
-Astra Volume PAPER ONLY: 2W/2L, ROI +18.40%, 0 pending (0 overdue). Paired fixtures settled 58; review at 50 and 100. Capture WAITING_FOR_FRESH_ELIGIBLE_FORECAST at 2026-11-17T10:17:22.450136+00:00. No verified closing-price coverage.
+Astra Volume PAPER ONLY: 2W/2L, ROI +18.40%, 0 pending (0 overdue). Paired fixtures settled 58; review at 50 and 100. Capture WAITING_FOR_FRESH_ELIGIBLE_FORECAST at 2026-11-24T10:20:27.972449+00:00. No verified closing-price coverage.
 Hardcourt Scout | Challenger outdoor hard | PAPER ONLY
-1W / 4L | ROI -49.60% | -2.48u on 5u
-0 pending (0 overdue), 1 void, 0 quarantined. 1u hypothetical stakes; zero real stake. Review at 50 and 100 settled selections. Capture WAITING_FOR_ELIGIBLE_FIXTURES at 2026-11-17T10:32:41.763690+00:00. Report 2026-11-17T10:32:54.100231+00:00. Historical +22.65% replay excluded; closing prices unverified.
+2W / 5L | ROI -19.71% | -1.38u on 7u
+0 pending (0 overdue), 1 void, 0 quarantined. 1u hypothetical stakes; zero real stake. Review at 50 and 100 settled selections. Capture WAITING_FOR_ELIGIBLE_FIXTURES at 2026-11-24T10:36:45.930095+00:00. Report 2026-11-24T10:36:54.496178+00:00. Historical +22.65% replay excluded; closing prices unverified.
 Fable correction alongside Scout | same forward cohort | PAPER ONLY
-Scout baseline: 1W/3L, -1.48u/4u, ROI -37.00%; 0 pending, 0 void, 0 quarantined. Brier 0.2641; log loss 0.7240; predicted 49.8% / observed 54.9%.
-Fable frozen: 0W/2L, -2.00u/2u, ROI -100.00%; 0 pending, 0 void, 0 quarantined. Brier 0.2745; log loss 0.7696; predicted 49.5% / observed 54.9%.
-122 paired settled fixtures; 4 history fallbacks, 1 unavailable. Since 2026-10-29T19:45:47.701147+00:00. Capture CAPTURED. Same 50/100 fixture review; no automatic promotion.
+Scout baseline: 2W/4L, -0.38u/6u, ROI -6.33%; 0 pending, 0 void, 0 quarantined. Brier 0.2521; log loss 0.6986; predicted 51.1% / observed 55.1%.
+Fable frozen: 2W/3L, -0.81u/5u, ROI -16.30%; 1 pending, 0 void, 0 quarantined. Brier 0.2629; log loss 0.7427; predicted 51.6% / observed 55.1%.
+187 paired settled fixtures; 9 history fallbacks, 1 unavailable. Since 2026-10-29T19:45:47.701147+00:00. Capture CAPTURED. Same 50/100 fixture review; no automatic promotion.
 
 MODEL REVIEW WATCHLIST
-Calibrated Shots [ZERO-STAKE, retained prospective cohorts]: hypothetical ROI +3.2%, settled 34, pending 0 | WAITING_FOR_FRESH_PAIRED_MARKETS | 174 paired fixtures | version paired-market-offset-20261113-input-v6
-Input cohorts | pre-30 Oct: 24 settled, ROI +14.3%; xG gap: 10 settled, ROI -23.5%; repaired: 0 settled, ROI awaiting results. Review uses repaired inputs only.
+Calibrated Shots [ZERO-STAKE, retained prospective cohorts]: hypothetical ROI +3.5%, settled 41, pending 0 | COLLECTING | 222 paired fixtures | version paired-market-offset-20261113-input-v6
+Input cohorts | pre-30 Oct: 24 settled, ROI +14.3%; xG gap: 10 settled, ROI -23.5%; repaired: 7 settled, ROI +4.9%. Review uses repaired inputs only.
 EMA20 v3 / v4 / Opponent paired comparison [RESEARCH]: historical replay ROI unknown, n=? | prospective capture DAILY_EXISTING_FOOTBALL_COUNTS_WORKFLOW | review weekly; historical bets are not forward evidence.
 Astra Volume [RESEARCH]: historical replay ROI +7.25%, n=69 | prospective capture CONNECTED_FIRST_CAPTURE_VERIFIED | review weekly; historical bets are not forward evidence.
-Opponent Shots [SHADOW]: forward 56W/68L, ROI -15.2%, pending 0 | COLLECTING_FIXED_POLICY | scan 2026-11-17T19:56:42Z
-Input cohorts | pre-30 Oct: 98 settled, ROI -13.6%; xG gap: 26 settled, ROI -20.8%; repaired: 0 settled, ROI awaiting results. Review uses repaired inputs only.
+Opponent Shots [SHADOW]: forward 66W/76L, ROI -12.9%, pending 0 | COLLECTING_FIXED_POLICY | scan 2026-11-24T21:40:32Z
+Input cohorts | pre-30 Oct: 98 settled, ROI -13.6%; xG gap: 26 settled, ROI -20.8%; repaired: 18 settled, ROI +3.0%. Review uses repaired inputs only.
 Astrissimo [PAPER ONLY]: -100.00% ROI; capture WAITING_FOR_FRESH_ELIGIBLE_FORECAST
 Unnamed candidate [RESEARCH]: historical replay ROI unknown, n=? | prospective capture UNKNOWN | review weekly; historical bets are not forward evidence.
 ATP J1 score correction [RESEARCH]: historical replay ROI unknown, n=? | prospective capture UNKNOWN | review weekly; historical bets are not forward evidence.
