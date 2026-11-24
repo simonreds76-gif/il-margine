@@ -61,6 +61,17 @@ export function utcStamp(t: When, seconds = false) {
   return valid(t) ? utcDate(t) + " · " + utcClock(t, seconds) + " UTC" : "—";
 }
 
+export function timeToStart(start: number, now: number) {
+  const remaining = start - now;
+  if (!Number.isFinite(remaining) || remaining <= 0) return null;
+  if (remaining < 60_000) return "under 1 min";
+  const minutes = Math.ceil(remaining / 60_000);
+  if (minutes < 60) return minutes + " min";
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  return hours + "h" + (rest ? " " + rest + "m" : "");
+}
+
 export function price(p: number) {
   return Number.isFinite(p) ? p.toFixed(3).replace(/0$/, "") : "—";
 }

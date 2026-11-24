@@ -11,7 +11,7 @@ import { SETTLING_NOTE, State, VenueFlag, hostOf as placeOf, impliedText, market
 import type { VenueMap } from "./DeskParts";
 import {
   availability, buildRoundups, cutoffOf, defaultRoundup, delta, dropPct, isOpen, isQualifying, moveKey, outcomeLabel, outcomeOf, paper,
-  displayedLimit, groupDrops, matchKey, orderDrops, percent, price, tally, units, utcClock, utcDate, utcStamp,
+  displayedLimit, groupDrops, matchKey, orderDrops, percent, price, tally, timeToStart, units, utcClock, utcDate, utcStamp,
 } from "./desk";
 import type { DeskFixture, DeskMove, DropOrder } from "./desk";
 
@@ -68,6 +68,17 @@ function RowLimit({ move }: { move: DeskMove }) {
   </span>;
 }
 
+function ScheduledStart({ move, at }: { move: DeskMove; at: number | null }) {
+  const start = Date.parse(move.start);
+  if (!Number.isFinite(start)) return <span className={styles.rowStart}>Start time TBC</span>;
+  const countdown = at !== null && isOpen(move, at) ? timeToStart(start, at) : null;
+  const today = at !== null && Math.floor(start / 86_400_000) === Math.floor(at / 86_400_000);
+  return <span className={styles.rowStart}>
+    {countdown && <span className={styles.countdown}>Starts in {countdown}</span>}
+    <span>Scheduled <time dateTime={move.start}>{today ? utcClock(start) + " UTC" : utcStamp(start)}</time></span>
+  </span>;
+}
+
 function DropRow({ move: r, selected, archive, at, venue, onChoose }: {
   move: DeskMove; selected: boolean; archive: boolean; at: number | null;
   venue?: VenueMap[string]; onChoose: (move: DeskMove) => void;
@@ -81,10 +92,11 @@ function DropRow({ move: r, selected, archive, at, venue, onChoose }: {
       <span className={styles.itemVs}>{r.fixtureLabel ?? ("vs "+r.opponent)}</span>
       <span className={styles.itemMeta}>
         <VenueFlag venue={venue} />
-        <span>{[r.tour + (isQualifying(r) ? " qual." : ""), placeOf(r.league), archive ? utcDate(r.start) : ""].filter(Boolean).join(" · ")}</span>
+        <span>{[r.tour + (isQualifying(r) ? " qual." : ""), placeOf(r.league)].filter(Boolean).join(" · ")}</span>
       </span>
       <b className={styles.itemGain}>{pointsText(r)}<span className={styles.vh}> implied probability</span></b>
       <span className={styles.itemOdds}><span>{price(r.old)} → </span>{price(r.new)}</span>
+      <ScheduledStart move={r} at={at} />
       <span className={styles.itemWhen}>
         {tag && <span className={styles.mk}>{sym && <DeskIcon name={sym} size={14} />}{tag}</span>}
         <span>observed <time dateTime={r.after}>{archive ? utcStamp(r.after, true) : utcClock(r.after, true) + " UTC"}</time></span>
@@ -202,7 +214,6 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
     return Array.from(set).sort((a, b) => a - b);
   }, [archive, moves, fixtures]);
   const live = !archive && (today === true || moves.some(r => outcomeOf(r.result) === "pending"));
-  const seen = useRef<number | null>(now ?? null);
   const refreshed = useRef(0);
 
   // Local clock: it wakes on the next cutoff and whenever the tab comes back, so a
@@ -217,12 +228,14 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
     let timer: number | undefined;
     const tick = () => {
       window.clearTimeout(timer);
-      const t = read(), prev = Math.max(seen.current ?? 0, now);
-      if (cutoffs.some(c => c > prev && c <= t)) { seen.current = t; setClock(t); }
       if (document.visibilityState !== "visible") return;
+      const t = read();
+      setClock(t);
       if (live && t - now >= REFRESH_MS && t - refreshed.current >= REFRESH_MS) { refreshed.current = t; router.refresh(); }
       const next = cutoffs.find(c => c > t);
-      timer = window.setTimeout(tick, Math.min(TICK_MS, Math.max(250, next === undefined ? TICK_MS : next - t + 50)));
+      const untilMinute = TICK_MS - (t % TICK_MS);
+      const delay = next === undefined ? untilMinute : Math.min(untilMinute, next - t);
+      timer = window.setTimeout(tick, Math.max(50, delay + 25));
     };
     tick();
     document.addEventListener("visibilitychange", tick);
@@ -374,6 +387,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
         <button type="button" className={styles.picker} aria-expanded={pickerOpen} aria-controls={listId} onClick={() => setPickerOpen(open => !open)}>
           <span className={styles.pickerLabel}>Showing {index + 1} of {rows.length}</span>
           <strong>{m.player}</strong>
+          <ScheduledStart move={m} at={at} />
           <span className={styles.pickerMove}><b>{pointsText(m)}</b> implied probability<RowLimit move={m} /></span>
           <span className={styles.pickerCue}>{pickerOpen ? "Close list" : rows.length > 1 ? "Choose from " + rows.length : "Show list"}</span>
         </button>

@@ -187,7 +187,7 @@
 .railList li+li{border-top:1px solid var(--ds-hair)}
 /* One grid for every entry: who and where on the left, the figures on one right edge.
    The probability rise is the lead figure, the two prices sit under it, then time and trace. */
-.item{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"meta state" "name gain" "vs odds" "when spark" "limit limit";gap:.2rem .75rem;align-items:baseline;
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"meta state" "name gain" "vs odds" "start start" "when spark" "limit limit";gap:.2rem .75rem;align-items:baseline;
   width:100%;min-height:64px;padding:.7rem 1rem .8rem;text-align:left;background:transparent;border:0;color:var(--ds-text)}
 .item:hover{background:var(--ds-raise)}
 .item[aria-pressed=true]{background:var(--ds-raise);box-shadow:inset 3px 0 0 var(--ds-accent)}
@@ -196,6 +196,9 @@
 .rowLimit{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 .75rem;color:var(--ds-soft);font-size:.75rem;line-height:1.4;font-weight:400;font-variant-numeric:tabular-nums}
 .rowLimit strong{color:var(--ds-text);font-weight:650}
 .item>.rowLimit{grid-area:limit}
+.rowStart{grid-area:start;display:flex;flex-wrap:wrap;align-items:baseline;gap:.1rem .6rem;color:var(--ds-soft);font-size:.8125rem;font-weight:400;line-height:1.4;font-variant-numeric:tabular-nums}
+.rowStart time{white-space:nowrap}
+.countdown{color:var(--ds-ink);font-weight:650}
 .itemMeta{grid-area:meta;align-self:center;display:flex;align-items:center;gap:.45rem;font-size:.75rem;font-weight:600;line-height:1.35;color:var(--ds-soft);overflow-wrap:anywhere}
 .itemState{grid-area:state;align-self:center;justify-self:end;display:inline-flex;align-items:center;gap:.5rem}
 .itemState small{font-size:.75rem;font-weight:700;color:var(--ds-text);white-space:nowrap}
@@ -415,7 +418,7 @@
   .desk{grid-template-columns:minmax(0,1fr);gap:1rem}
   .rail{position:static;max-height:none}
   /* The switcher is a raised, outlined control with its own action chip; it can never be taken for a ledger entry. */
-  .picker{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"label cue" "name cue" "move move";gap:.1rem .75rem;align-items:center;
+  .picker{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"label cue" "name cue" "start start" "move move";gap:.1rem .75rem;align-items:center;
     width:calc(100% - 1.5rem);margin:0 .75rem .75rem;padding:.65rem .8rem .75rem;text-align:left;background:var(--ds-raise);border:1px solid var(--ds-rule-strong);border-radius:10px;color:var(--ds-text)}
   .picker:hover,.picker[aria-expanded=true]{border-color:var(--ds-accent-edge)}
   .pickerLabel{grid-area:label}
@@ -499,7 +502,7 @@
   .sortRow>.lab{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
   .item{padding-inline:.85rem}
   .legCap{white-space:normal}
-  .picker{grid-template-areas:"label label" "name name" "move move" "cue cue"}
+  .picker{grid-template-areas:"label label" "name name" "start start" "move move" "cue cue"}
   .pickerCue{justify-content:center;min-height:40px;margin-top:.5rem}
   /* Chart range presets: an even two-column grid whose labels may wrap, so nothing runs past the edge at 320px. */
   .ranges{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
