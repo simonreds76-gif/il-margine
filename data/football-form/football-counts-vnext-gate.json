@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T05:31:12Z",
+  "generated_at": "2026-11-24T19:34:02Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -13,12 +13,12 @@
         "historical_records_unchanged": true
       },
       "signals": 50,
-      "settled": 48,
-      "pending": 2,
-      "pnl_units": -9.084,
-      "roi": -0.18925,
+      "settled": 50,
+      "pending": 0,
+      "pnl_units": -8.884,
+      "roi": -0.17768,
       "true_close_n": 11,
-      "true_close_coverage": 0.229167,
+      "true_close_coverage": 0.22,
       "mean_true_close_clv": 0.018485,
       "side_counts": {
         "under": 32,
@@ -76,12 +76,12 @@
           "historical_records_unchanged": true
         },
         "signals": 21,
-        "settled": 19,
-        "pending": 2,
-        "pnl_units": 4.855,
-        "roi": 0.255526,
+        "settled": 21,
+        "pending": 0,
+        "pnl_units": 5.055,
+        "roi": 0.240714,
         "true_close_n": 4,
-        "true_close_coverage": 0.210526,
+        "true_close_coverage": 0.190476,
         "mean_true_close_clv": 0.012002,
         "side_counts": {
           "under": 10,
@@ -100,12 +100,12 @@
         "historical_records_unchanged": true
       },
       "signals": 21,
-      "settled": 19,
-      "pending": 2,
-      "pnl_units": 4.855,
-      "roi": 0.255526,
+      "settled": 21,
+      "pending": 0,
+      "pnl_units": 5.055,
+      "roi": 0.240714,
       "true_close_n": 4,
-      "true_close_coverage": 0.210526,
+      "true_close_coverage": 0.190476,
       "mean_true_close_clv": 0.012002,
       "side_counts": {
         "under": 10,
@@ -136,8 +136,8 @@
       "dominant_side_share": 0.928571
     },
     "latest_scan": {
-      "state": "EXPECTED_EMPTY_CAPTURE_WINDOW",
-      "explanation": "The successful Team Shots scan found no supported fixtures in its capture window. Stored corners rows are outside that window. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-24T05:31:05.479450+00:00. Completed-fixture coverage checked at 2026-11-23T20:17:57.305420+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 286). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
+      "state": "POST_UNLOCK_NO_SCORED_CANDIDATES",
+      "explanation": "The peer football-count lane reached matchday 4+, but this lane produced no scored candidates. Check current price capture and fixture joins. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-24T19:33:50.254700+00:00. Completed-fixture coverage checked at 2026-11-24T19:32:30.841932+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 292). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
       "scored_rows": 0,
       "scored_fixtures": 0,
       "eligible_rows": 0,
@@ -148,22 +148,8 @@
       "matchday_min": null,
       "matchday_max": null,
       "next_unlock": null,
-      "operational_alert_required": false,
-      "operational_alert_code": null,
-      "capture_window_evidence": {
-        "capture_at": "2026-11-24T05:30:48Z",
-        "capture_window_end": "2026-11-25T05:30:48Z",
-        "capture_run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/45333783829",
-        "leagues_checked": [
-          "bundesliga",
-          "epl",
-          "la-liga",
-          "ligue-1",
-          "serie-a"
-        ],
-        "events_found": 0,
-        "peer_rows_outside_window": 476
-      },
+      "operational_alert_required": true,
+      "operational_alert_code": "POST_UNLOCK_NO_SCORED_CANDIDATES",
       "rule_feasibility": {
         "affected_rows": 0,
         "rows_capable_of_minimum_edge": 0,
@@ -175,20 +161,20 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-24T05:30:59Z",
+      "generated_at": "2026-11-24T19:33:45Z",
       "status": "OK",
       "missing_history": [],
       "scored_fixtures": 0
     },
     "input_integrity": {
       "policy": "shots-input-integrity-20261113-v1",
-      "generated_at": "2026-11-24T05:31:05.479450+00:00",
-      "base_sha256": "6f343a8a3c7f26e8f1e8da6cfca49bfdbc47882243f004db0bf7ebba82458aa5",
+      "generated_at": "2026-11-24T19:33:50.254700+00:00",
+      "base_sha256": "fe6cd9dd7aef5dc73648dec3436bee06dddcc0052c6f7b5f0e80d8728e37a415",
       "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
-      "source_rows": 44268,
-      "prediction_rows": 44262,
-      "latest_result_date": "2026-11-22",
-      "recent_missing_xg_team_rows": 286,
+      "source_rows": 44274,
+      "prediction_rows": 44268,
+      "latest_result_date": "2026-11-23",
+      "recent_missing_xg_team_rows": 292,
       "applied_corrections": [
         {
           "fixture": [
@@ -230,7 +216,7 @@
           "reason": "awarded_match_missing_counts_not_zero"
         }
       ],
-      "check_observed_at": "2026-11-23T20:17:57.305420+00:00",
+      "check_observed_at": "2026-11-24T19:32:30.841932+00:00",
       "blocked_leagues": {},
       "missing_completed": [],
       "historical_records_changed": false,
@@ -287,19 +273,19 @@
         ],
         "historical_records_unchanged": true
       },
-      "signals": 233,
-      "settled": 222,
-      "pending": 11,
-      "pnl_units": -19.956,
-      "roi": -0.089892,
+      "signals": 234,
+      "settled": 224,
+      "pending": 10,
+      "pnl_units": -21.956,
+      "roi": -0.098018,
       "true_close_n": 73,
-      "true_close_coverage": 0.328829,
+      "true_close_coverage": 0.325893,
       "mean_true_close_clv": 0.008838,
       "side_counts": {
         "over": 51,
-        "under": 182
+        "under": 183
       },
-      "dominant_side_share": 0.781116
+      "dominant_side_share": 0.782051
     },
     "warmup_tracking": {
       "reconciliation": {
@@ -358,17 +344,17 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "NO_EDGE_AFTER_UNLOCK",
-      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
-      "scored_rows": 476,
-      "scored_fixtures": 30,
-      "eligible_rows": 0,
-      "eligible_fixtures": 0,
-      "blocked_rows": 476,
+      "state": "ELIGIBLE_CANDIDATES_PRESENT",
+      "explanation": "At least one candidate passed every locked shadow gate.",
+      "scored_rows": 482,
+      "scored_fixtures": 31,
+      "eligible_rows": 46,
+      "eligible_fixtures": 8,
+      "blocked_rows": 436,
       "blocker_rows": {
-        "edge_below_3pct": 442,
-        "price_not_fresh_10m": 476,
-        "price_older_than_3h": 476
+        "edge_below_3pct": 435,
+        "price_not_fresh_10m": 4,
+        "price_older_than_3h": 4
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
       "matchday_min": 11,

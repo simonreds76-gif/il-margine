@@ -75,32 +75,16 @@
       "signal_id": "grosvenor|72513322|away goalkeeper|4.5|over"
     },
     {
-      "detail": "",
-      "goalkeeper": "Lorenzo Palmisani",
-      "match": "AC Milan vs Frosinone Calcio",
-      "match_date": "2026-11-22",
-      "reason": "settled_fotmob",
-      "signal_id": "grosvenor|71945416|lorenzo palmisani|3.5|over"
-    },
-    {
       "detail": "fixtures_returned=0",
       "goalkeeper": "Away goalkeeper",
       "match": "Lille OSC vs Olympique Lyon",
       "match_date": "2026-11-21",
       "reason": "fotmob_finished_fixture_not_found",
       "signal_id": "grosvenor|72036294|away goalkeeper|3.5|over"
-    },
-    {
-      "detail": "",
-      "goalkeeper": "Justin Bijlow",
-      "match": "Sassuolo Calcio vs Genoa CFC",
-      "match_date": "2026-11-22",
-      "reason": "settled_fotmob",
-      "signal_id": "grosvenor|71945424|justin bijlow|3.5|over"
     }
   ],
-  "fotmob_requests_used": 9,
-  "generated_at": "2026-11-23T20:21:10Z",
+  "fotmob_requests_used": 7,
+  "generated_at": "2026-11-24T19:34:28Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
   "pending_due": 10,
@@ -108,12 +92,11 @@
   "reason_counts": {
     "fotmob_finished_fixture_not_found": 8,
     "fotmob_goalkeeper_not_found": 1,
-    "fotmob_save_totals_disagree": 1,
-    "settled_fotmob": 2
+    "fotmob_save_totals_disagree": 1
   },
   "requests_used": 0,
-  "settled": 2,
-  "status": "PARTIAL",
+  "settled": 0,
+  "status": "BLOCKED",
   "verified_player_targets": [
     {
       "match_id": 5749743,
@@ -125,18 +108,6 @@
       "match_id": 5749758,
       "status": "unchanged",
       "targets_sha256": "e6c752672962d803f00b45e760be069387fb524d2b63069cd712cd6de1f373e8"
-    },
-    {
-      "appearances": 32,
-      "match_id": 5749750,
-      "status": "saved",
-      "targets_sha256": "d8584497d7f26e7a90bcbc8a2497caa4b48894803ff3ec08c9b24d89dfe7f756"
-    },
-    {
-      "appearances": 32,
-      "match_id": 5749759,
-      "status": "saved",
-      "targets_sha256": "4d772a93eb0832a9ceef015df7dd26284312bd11d9c9c629c79fe595713ec29c"
     }
   ]
 }
