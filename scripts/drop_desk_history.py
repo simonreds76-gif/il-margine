@@ -108,6 +108,31 @@ def competition(label):
     return " ".join(p for p in text.split() if p not in ("atp", "challenger"))
 
 
+def tournament_labels(name):
+    exact = competition(name)
+    labels = {exact}
+    if "challenger" in normal(name).split():
+        # A price board can omit the edition number on successive weeks in one city.
+        labels.add(re.sub(r" [1-9][0-9]?$", "", exact))
+    return labels
+
+
+# Alternate price-board spellings verified against the singles draws and player IDs.
+PLAYER_ALIASES = {
+    "adam faragcao": (99304, "adam farag cao"),
+    "enzo lima": (85002, "enzo camargo lima"),
+    "herbert jody maginley": (36878, "jody maginley"),
+    "martinez elias sebastian": (134133, "sebastian martinez elias"),
+    "tai leonard sach": (68624, "tai sach"),
+    "yun seong chung": (28742, "yunseong chung"),
+}
+
+
+def same_player(label, player_id, names):
+    registered = names.get(player_id)
+    return label == registered or PLAYER_ALIASES.get(label) == (player_id, registered)
+
+
 def round_ids(label, tour):
     rounds = {"groups":{8},"qf":{9},"sf":{10},"final":{12},"q1":{1},"q2":{2},
               "q3":{3},"qualifiers":{1,2,3},"r1":{4},"r2":{5}}
@@ -138,6 +163,7 @@ def bind(ticket, tours, schedule, games, names):
     day = date.fromisoformat(ticket["start"][:10])
     label, _, round_label = ticket["league"].rpartition(" - ")
     rounds = round_ids(round_label, ticket["tour"])
+    wanted = competition(label)
     matches = set()
     for row in [*schedule, *games]:
         tour = tours.get(row["tour_id"])
@@ -147,13 +173,20 @@ def bind(ticket, tours, schedule, games, names):
             continue
         if not -3 <= (day - date.fromisoformat(tour["date"][:10])).days <= 13:
             continue
-        if competition(tour["name"]) != competition(label):
+        if wanted not in tournament_labels(tour["name"]):
             continue
+        if wanted != competition(tour["name"]):
+            row_day = row.get("date")
+            if row_day:
+                if abs((day - date.fromisoformat(row_day[:10])).days) > 1:
+                    continue
+            elif not -3 <= (day - date.fromisoformat(tour["date"][:10])).days <= 6:
+                continue
         p = row.get("player1_id",row.get("winner_id"))
         q = row.get("player2_id",row.get("loser_id"))
-        if (names.get(q), names.get(p)) == (player, opponent):
+        if same_player(player, q, names) and same_player(opponent, p, names):
             p,q = q,p
-        if (names.get(p), names.get(q)) == (player,opponent) and p != q:
+        if same_player(player, p, names) and same_player(opponent, q, names) and p != q:
             matches.add((row["tour_id"],row["round_id"],p,q))
     return list(matches.pop()) if len(matches) == 1 else None
 
@@ -199,7 +232,7 @@ def event_data(tickets):
     tours = {r["id"]:r for r in api_rows("oncourt_tours","id,date,name",
              **{"and":f"(date.gte.{min(days)-timedelta(days=14)},date.lte.{max(days)+timedelta(days=3)})"})}
     wanted = {competition(t["league"].rpartition(" - ")[0]) for t in tickets}
-    ids = sorted(i for i,r in tours.items() if competition(r["name"]) in wanted)
+    ids = sorted(i for i,r in tours.items() if tournament_labels(r["name"]) & wanted)
     schedule, games, names = [], [], {}
     for start in range(0,len(ids),2):
         sel = in_filter(ids[start:start+2])

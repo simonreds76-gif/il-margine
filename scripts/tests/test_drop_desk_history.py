@@ -47,6 +47,24 @@ class DeskTests(unittest.TestCase):
         self.assertFalse(history.completed_score("6-4 6-4",3))
         self.assertTrue(history.completed_score("6-4 6-4 6-4",3))
 
+    def test_unnumbered_board_does_not_bind_another_week_or_ambiguous_edition(self):
+        t = dict(self.t, league="ATP Challenger Test City - R16")
+        tour = dict(self.tours[1], name="Test City 2 Challenger")
+        names = {7:"liam draxl", 8:"daniel milavsky"}
+        self.assertEqual(history.bind(t,{1:tour},[],[self.r],names),[1,5,7,8])
+        self.assertIsNone(history.bind(dict(t,league="ATP Challenger Test City 3 - R16"),{1:tour},[],[self.r],names))
+        self.assertIsNone(history.bind(t,{1:tour},[],[dict(self.r,date="2026-11-13")],names))
+        self.assertIsNone(history.bind(t,{1:tour,2:tour},[],[self.r,dict(self.r,tour_id=2)],names))
+
+    def test_reviewed_alias_requires_both_players_and_registered_id_and_name(self):
+        t = dict(self.t,player="Herbert Jody Maginley")
+        r = dict(self.r,loser_id=36878)
+        names = {36878:"jody maginley",8:"daniel milavsky"}
+        self.assertEqual(history.bind(t,self.tours,[],[r],names),[1,5,36878,8])
+        self.assertIsNone(history.bind(t,self.tours,[],[dict(r,loser_id=7)],{7:"jody maginley",8:names[8]}))
+        self.assertIsNone(history.bind(t,self.tours,[],[r],{**names,36878:"another player"}))
+        self.assertIsNone(history.bind(dict(t,opponent="Changed Player"),self.tours,[],[r],names))
+
     def test_retirement_set_and_official_winner_including_disqualification(self):
         for score in ("6-2 3-0 RET","4-6 0-1 ret.","7-6(4) DEF.","6-7(5) 3-0 disqualified"):
             row = {**self.r, "result":score}
