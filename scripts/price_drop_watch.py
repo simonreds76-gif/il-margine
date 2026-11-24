@@ -111,8 +111,8 @@ def roundup_text(moves, observed):
         return "WTA" if move.get("tour") in ("WTA", "WTA 125") else "ATP"
     ordered=sorted(moves,key=lambda m:(circuit(m),m["start"],m["league"],m["event_id"],m["player"]))
     noun="price drop" if len(ordered)==1 else "price drops"
-    from desk_games import ALERT_POLICY, PRIOR_ALL_DAY_POLICY, PRIOR_LINE_POLICY
-    all_day_policies = (PRIOR_ALL_DAY_POLICY, PRIOR_LINE_POLICY, ALERT_POLICY)
+    from desk_games import ALERT_POLICY, PRIOR_ALL_DAY_POLICY, PRIOR_LINE_POLICY, PRIOR_MATCH_POLICY
+    all_day_policies = (PRIOR_ALL_DAY_POLICY, PRIOR_LINE_POLICY, PRIOR_MATCH_POLICY, ALERT_POLICY)
     title = "Pre-match tennis moves" if ordered and all(m.get("alert_policy") in all_day_policies for m in ordered) else "Tennis Price Moves"
     lines=[f"Il Margine · {title} | {stamp}",f"{len(ordered)} observed {noun}",""]
     has_wta = any(circuit(m) == "WTA" for m in ordered)

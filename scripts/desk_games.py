@@ -8,8 +8,10 @@ from fractions import Fraction
 
 PRIOR_ALL_DAY_POLICY = "same-line-over4pp-prematch-limits-shown-v3"
 PRIOR_LINE_POLICY = "same-line-over4pp-prematch-min200usd-v4"
-ALERT_POLICY = "first-match-over4pp-prematch-min200usd-v5"
-MINIMUM_USD = 200
+PRIOR_MATCH_POLICY = "first-match-over4pp-prematch-min200usd-v5"
+ALERT_POLICY = "first-match-over4pp-prematch-min500usd-v6"
+ALERT_MINIMUM_USD = 500
+PAPER_MINIMUM_USD = 200
 FINAL_HOUR = timedelta(hours=1)
 
 
@@ -83,7 +85,7 @@ def alert_moves(batch):
     wanted = set(batch["alert_ids"])
     moves = []
     for move in batch["moves"]:
-        if move["move_id"] in wanted and meets_usd_floor(move.get("alert_detection_limit"), MINIMUM_USD):
+        if move["move_id"] in wanted and meets_usd_floor(move.get("alert_detection_limit"), ALERT_MINIMUM_USD):
             start, before, after = (datetime.fromisoformat(move[key]) for key in ("start", "before", "after"))
             if after == observed and before < after < start and alert_crossing(move["old"], move["new"]):
                 moves.append(move)
@@ -208,7 +210,7 @@ def compare(last, current, state, blocked):
                 if board_crossing:
                     issued[contract] = row["start"]
                 qualifies = (alert_refs is not None and contract not in alerted
-                             and meets_usd_floor(limit, MINIMUM_USD)
+                             and meets_usd_floor(limit, ALERT_MINIMUM_USD)
                              and alert_crossing(alert_refs[i][1+i], price))
                 reference = peak if board_crossing else old["last"]
                 if qualifies:

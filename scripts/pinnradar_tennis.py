@@ -204,7 +204,7 @@ def board_rows(board, observed):
         if "period_limits" in sample:
             rows[eid]["games_period_limits"] = sample["period_limits"]
     return {"schema":VERSION,"source":SOURCE,"bookmaker":BOOK,"observed":observed.isoformat(),
-            "paper_minimum_usd":desk_games.MINIMUM_USD,
+            "paper_minimum_usd":desk_games.PAPER_MINIMUM_USD,
             "events_received":len(board["events"]), "excluded":dict(counts),
             "in_play_fixtures":sorted(in_play_fixtures), "period_status_counts":dict(period_status),"events":rows}
 
