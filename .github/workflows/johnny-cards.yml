@@ -1,6 +1,8 @@
 name: Johnny daily bookings and fouls
-run-name: Johnny ${{ github.event_name == 'push' && 'calendar' || inputs.mode || 'due' }}
+run-name: Johnny ${{ github.event_name == 'pull_request' && 'stream-test' || github.event_name == 'push' && 'calendar' || inputs.mode || 'due' }}
 on:
+  pull_request:
+    paths: ['scripts/johnny_cards_review.py', 'scripts/johnny_cards.py', 'tests/test_johnny_cards*.py', '.github/workflows/johnny-cards.yml']
   schedule:
     - cron: '0 11 * * *'
       timezone: Europe/London
@@ -21,14 +23,14 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: johnny-booking-research
+  group: ${{ github.event_name == 'pull_request' && format('johnny-tests-{0}', github.run_id) || 'johnny-booking-research' }}
   cancel-in-progress: false
 jobs:
   scan:
     runs-on: ubuntu-24.04
     timeout-minutes: 100
     env:
-      MODE: ${{ github.event_name == 'push' && 'calendar' || inputs.mode || 'due' }}
+      MODE: ${{ github.event_name == 'pull_request' && 'stream-test' || github.event_name == 'push' && 'calendar' || inputs.mode || 'due' }}
       PREVIEW_DAY: ${{ inputs.preview_day || '' }}
       JOHNNY_ENGINE_DIR: ${{ github.workspace }}/../johnny-engine
     steps:
@@ -45,6 +47,7 @@ jobs:
           python -m pip -q install requests cryptography
           python -m unittest discover -s tests -p 'test_johnny_cards*.py'
       - name: Check today's slate and private delivery receipt
+        if: github.event_name != 'pull_request'
         id: plan
         env:
           STATSHUB_DAILY_AUTH: ${{ secrets.STATSHUB_DAILY_AUTH }}
@@ -57,7 +60,7 @@ jobs:
             python scripts/johnny_cards.py --plan
           fi
       - name: Prepare checksum-verified local inference
-        if: steps.plan.outputs.engine == 'true'
+        if: github.event_name == 'pull_request' || steps.plan.outputs.engine == 'true'
         run: |
           set -euo pipefail
           mkdir -p "$JOHNNY_ENGINE_DIR"
@@ -67,6 +70,9 @@ jobs:
           tar --no-same-owner -xf engine.tar.gz
           curl --fail --silent --show-error --location --retry 2 'https://huggingface.co/Qwen/Qwen3-4B-GGUF/resolve/bc640142c66e1fdd12af0bd68f40445458f3869b/Qwen3-4B-Q4_K_M.gguf' -o model.gguf
           echo '7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5  model.gguf' | sha256sum --check --status
+      - name: Exercise streamed structured output on the pinned local model
+        if: github.event_name == 'pull_request'
+        run: python tests/test_johnny_cards_stream.py --engine-smoke
       - name: Apply the original guide privately
         if: steps.plan.outputs.active == 'true'
         env:

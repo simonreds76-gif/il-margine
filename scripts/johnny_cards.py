@@ -246,13 +246,16 @@ def scan(reader, day, analyst, clock=timestamp):
                 failures=reader.errors, method="Johnny Poker public combined edition 1.0")
 
 
-def lines(report):
+def lines(report, as_of=None):
     calendar = report["calendar"]
     complete = sum(not l["gap"] for l in calendar)
     result = [f"Booking and fouls scan · {report['day']}", f"{len(report['slate'])} upcoming fixtures. Five European leagues, Champions League and covered South American competitions.",
               f"Through 11am London tomorrow. {complete}/{len(calendar)} calendar windows verified."]
     for f in sorted(report["slate"], key=lambda x: ("screen" not in x,x["ko"])):
         label = f["home"] + " v " + f["away"]
+        if as_of is not None and utc(f["ko"]) <= as_of:
+            result.append(label + " · scheduled kickoff passed before delivery.")
+            continue
         if "screen" not in f or f.get("gap"):
             result.append(label + " · " + f.get("gap","fixture screened; reserve for player research"))
             continue
@@ -292,7 +295,7 @@ def lines(report):
 
 def publish(store, report):
     key = report["day"]
-    rows = lines(report)
+    rows = lines(report, as_of=utc(timestamp()))
     index = store.get(REPORT)
     if not isinstance(index, dict) or not isinstance(index.get("days"), dict):
         raise RuntimeError("Private Admin index unavailable")
