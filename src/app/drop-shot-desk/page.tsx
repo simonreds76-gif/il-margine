@@ -6,6 +6,7 @@ import { publicFixture, publicMove } from "./public-view";
 import brand from "./drop-shot-mark.png";
 import { DeskIcon } from "./DeskIcon";
 import Board from "./Board";
+import { RefreshBoard } from "./RefreshBoard";
 import { hostOf, venueKey } from "./DeskParts";
 import type { VenueMap } from "./DeskParts";
 import { readArchive, readDay } from "./reader";
@@ -59,6 +60,8 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
   const yesterday=shiftDay(today,-1);
   const dateText=new Intl.DateTimeFormat("en-GB",{weekday:"short",day:"numeric",month:"long",timeZone:"UTC"}).format(new Date(day+"T00:00:00Z"));
   let content;
+  let scanTime: number | null = null;
+  let loadFailed = false;
   try{
     if(archive && circuit==="WTA"){
       content=<p className={styles.empty}>The historical replay covers ATP and Challenger matches. <Link href={dailyUrl("WTA")}>See WTA daily moves</Link></p>;
@@ -80,7 +83,7 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
     } else {
       // Stamped after the read so the first paint never treats a record as open later than the server saw it.
       const data=await readDay(day,circuit),now=Date.now(),seen=Date.parse(data.observed),known=Number.isFinite(seen);
-      const late=known&&day===today&&(now-seen)/60000>40;
+      scanTime = known ? seen : null;
       content=<>
           <dl className={styles.facts} aria-label="Board activity">
             <div><dt>Recorded scans</dt><dd>{data.scans}</dd></div>
@@ -88,12 +91,14 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
             <div><dt>Price drops</dt><dd>{data.moves.length}</dd></div>
             <div><dt>Watchlist matches</dt><dd>{data.fixtures.length}</dd></div>
           </dl>
-        <p className={styles.fresh} role="status" data-late={late?"true":undefined}>{known?<>Latest watchlist at {new Date(seen).toISOString().slice(0,16).replace("T"," ")} UTC{late?" · overdue for a new scan":day===today?" · the cloud scan runs every 15 minutes":""}.</>:"No watchlist has been recorded for this date."}</p>
         <PaperReturns day={day} circuit={circuit}/>
         <Board key={circuit} circuit={circuit} moves={fullBoard ? data.moves : data.moves.map(publicMove)} fixtures={fullBoard ? data.fixtures : data.fixtures.map(publicFixture)} archive={false} initialBatchId={batch} day={day} now={now} today={day===today} venues={venuesFor([...data.moves,...data.fixtures])}/>
 </>;
     }
-  }catch{content=<p className={styles.problem} role="status">The price records could not be loaded. Refresh to try again.</p>}
+  } catch {
+    loadFailed = true;
+    content = archive ? <p className={styles.problem} role="status">The replay could not be loaded. Reload to try again.</p> : null;
+  }
   return <main className={styles.page} data-mode={archive?"archive":"daily"}>
     <div className={styles.topline}><Link className={styles.back} href="/tennis-matchday">← Tennis Matchday</Link><span className={styles.lab}>Unlisted pilot</span></div>
     <header className={styles.mast}>
@@ -124,6 +129,8 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
           </form>
         </details>
       </nav>
+      <RefreshBoard key={[circuit, day, batch].join("/")} seen={scanTime} loadedAt={Date.now()}
+        liveDay={day === today && !batch ? day : undefined} failed={loadFailed}/>
     </section>}
     <p className={styles.standfirst}>Follow big odds moves before the first serve. We check {circuit==="ATP"?"ATP and Challenger":"WTA Tour and WTA 125"} odds about every 15 minutes and show which players, game totals and games handicaps are shortening. Each chart shows how the odds and the reported market limit changed before play.</p>
     <details className={styles.fold}>

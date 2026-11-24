@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
-import { useRouter } from "next/navigation";
 import styles from "./board.module.css";
 import OddsChart, { KeyGlyph, spanText } from "./OddsChart";
 import { DeskIcon, marketIcon } from "./DeskIcon";
@@ -27,8 +26,6 @@ const SORTS: { value: DropOrder; label: string; note: string }[] = [
 ];
 const NO_VENUES: VenueMap = {};
 const ROUNDUPS_HASH = "#desk-roundups";
-/** Records are re-read at most this often, and only while the page is visible. */
-const REFRESH_MS = 15 * 60_000;
 /** Longest the local clock sleeps between checks; it wakes exactly on the next cutoff anyway. */
 const TICK_MS = 60_000;
 
@@ -125,7 +122,6 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   /** Host-country flags resolved on the server from the shared tournament registry; unknown venues are simply absent. */
   venues?: VenueMap;
 }) {
-  const router = useRouter();
   const listId = useId();
   const headId = useId();
   const sortId = useId();
@@ -213,18 +209,10 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
     for (const f of fixtures) { const c = cutoffOf(f); if (c !== null) set.add(c); }
     return Array.from(set).sort((a, b) => a - b);
   }, [archive, moves, fixtures]);
-  const live = !archive && (today === true || moves.some(r => outcomeOf(r.result) === "pending"));
-  const refreshed = useRef(0);
-  const rolledDay = useRef("");
-
-  // Local clock: it wakes on the next cutoff and whenever the tab comes back, so a
-  // record leaves the upcoming list and the watchlist without any network call.
-  // The records themselves are re-read at most once per quarter hour while visible,
-  // or on return to the tab if they are older than that.
+  // Keep start times and availability current locally, including after the tab wakes.
   useEffect(() => {
     if (archive || now === undefined) return;
     const wall = Date.now(), mono = performance.now();
-    const midnight = today && day ? Date.parse(day+"T00:00:00Z") + 86_400_000 : Infinity;
     // The later of the device clock and the server stamp plus elapsed time, so a slow device clock cannot keep a record open.
     const serverClock = () => now + Math.max(0, Date.now() - wall, performance.now() - mono);
     let timer: number | undefined;
@@ -233,12 +221,6 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
       if (document.visibilityState !== "visible") return;
       const serverTime = serverClock(), t = Math.max(Date.now(), serverTime);
       setClock(t);
-      const rollover = !!day && rolledDay.current !== day && serverTime >= midnight;
-      if (rollover || (live && t - now >= REFRESH_MS && t - refreshed.current >= REFRESH_MS)) {
-        if (rollover && day) rolledDay.current = day;
-        refreshed.current = t;
-        router.refresh();
-      }
       const next = cutoffs.find(c => c > t);
       const untilMinute = TICK_MS - (t % TICK_MS);
       const delay = next === undefined ? untilMinute : Math.min(untilMinute, next - t);
@@ -254,7 +236,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
       window.removeEventListener("pageshow", tick);
       window.removeEventListener("focus", tick);
     };
-  }, [archive, now, cutoffs, live, router, day, today]);
+  }, [archive, now, cutoffs]);
 
   // Keep the selected row visible inside the rail without moving the page.
   useEffect(() => {
