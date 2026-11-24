@@ -4,7 +4,9 @@ from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 import copy
 import os
+import time
 from uuid import uuid4
+import requests
 
 from desk_closing import CLOSE, display, display_key
 from desk_games import match_rank
@@ -23,6 +25,22 @@ class ReportingStore(Store):
         super().__init__()
         self.revision = uuid4().hex
         self.writes = {}
+
+    def request(self,verb,path,headers=None,**kwargs):
+        # Repeating a replace writes the identical report under the scheduled single writer.
+        safe = verb=="GET" or (verb=="POST" and (path.startswith("/object/list/")
+               or (path.startswith("/object/") and (headers or {}).get("x-upsert")=="true")))
+        attempts = 3 if safe else 1
+        for attempt in range(attempts):
+            try:
+                reply = super().request(verb,path,headers=headers,**kwargs)
+                if reply.status_code not in (408,429,500,502,503,504,520,521,522,523,524) or attempt+1==attempts:
+                    return reply
+                reply.close()
+            except (requests.Timeout,requests.ConnectionError):
+                if attempt+1==attempts:
+                    raise
+            time.sleep(2**attempt)
 
     def get(self,path):
         if path in self.writes:

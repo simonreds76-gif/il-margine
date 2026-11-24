@@ -4,7 +4,7 @@ import unittest
 import copy
 from datetime import datetime, timezone
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from desk_match_returns import BASE, CLOSE, ROOT, ReportingStore, build, first_scan, settle, settlement_health
@@ -16,6 +16,17 @@ def item(code, new, minute="00", old=2, **fields):
 
 
 class MatchReturns(unittest.TestCase):
+    def test_storage_520_retries_exact_checkpoint_but_never_repeats_a_claim(self):
+        from pinnradar_tennis import Store
+        store=object.__new__(ReportingStore)
+        with patch("desk_match_returns.time.sleep"),patch.object(Store,"request",side_effect=[
+                Mock(status_code=520),Mock(status_code=200),Mock(status_code=520),Mock(status_code=403)]) as request:
+            self.assertEqual(store.request("POST","/object/bucket/state",headers={"x-upsert":"true"},json={"run":1}).status_code,200)
+            self.assertEqual(request.call_args_list[0],request.call_args_list[1])
+            self.assertEqual(store.request("POST","/object/bucket/claim",headers={"x-upsert":"false"}).status_code,520)
+            self.assertEqual(store.request("GET","/object/bucket/state").status_code,403)
+            self.assertEqual(request.call_count,4)
+
     def test_same_run_reads_written_grades_even_when_remote_still_serves_old_cache(self):
         from pinnradar_tennis import Store
         store=object.__new__(ReportingStore)
