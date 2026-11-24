@@ -15,9 +15,15 @@ http = requests.Session()
 def timestamp():
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
+class RemoteError(RuntimeError):
+    def __init__(self, status_code):
+        super().__init__(f"Remote request failed, HTTP {status_code}")
+        self.status_code = status_code
+
+
 def payload(response):
     if not response.ok:
-        raise RuntimeError("Remote request failed, HTTP "+str(response.status_code))
+        raise RemoteError(response.status_code)
     return response.json()
 
 class Store:

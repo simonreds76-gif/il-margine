@@ -2,6 +2,9 @@
 import os
 import re
 import sys
+import time
+
+from requests.exceptions import ConnectionError, Timeout
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from datetime import datetime, timezone
@@ -11,7 +14,7 @@ from statshub_daily_board import LINK, REPORT, Reads, board_matches
 from statshub_daily_contracts import exact_quote, identity, norm, utc
 from johnny_cards_calendar import calendar
 from statshub_daily_focus import flank, number
-from statshub_daily_io import Provider, Store, http, send_digest, telegram_private, timestamp
+from statshub_daily_io import Provider, RemoteError, Store, http, send_digest, telegram_private, timestamp
 
 LONDON = ZoneInfo("Europe/London")
 FLOOR = 4.0
@@ -21,14 +24,38 @@ def edition_key(day, part):
     return f"johnny/editions/{day}/{part}.json"
 
 
+class JohnnyStore(Store):
+    def put(self, name, value, replace=True):
+        # These objects have a single writer per phase, or use create-if-absent.
+        # Receipts, shared Admin data and OAuth rotation retain their original contracts.
+        if not name.startswith(("johnny/editions/", "johnny/days-expanded/", "johnny/rehearsals/")):
+            return super().put(name, value, replace)
+
+        missing = object()
+        for attempt in range(3):
+            try:
+                return super().put(name, value, replace)
+            except (Timeout, ConnectionError, RemoteError) as error:
+                if isinstance(error, RemoteError) and error.status_code not in (408, 429, 500, 502, 503, 504):
+                    raise
+                saved = self.get(name, missing)
+                if saved == value:
+                    return True
+                if not replace and saved is not missing:
+                    return False
+                if attempt == 2:
+                    raise
+                time.sleep(2 ** attempt)
+
+
 def private_store():
     # The cloud CPU can spend minutes on the guide before reusing its storage connection.
-    # Retry only safe storage reads. Never automatically replay a claim or a Telegram POST.
+    # Transport retries are for storage reads. Checkpoint writes reconcile by object name above.
     base = os.environ["SUPABASE_URL"].rstrip("/") + "/storage/v1/"
     retry = Retry(total=3, read=3, connect=3, status=3, backoff_factor=1,
                   allowed_methods={"GET","HEAD"}, status_forcelist=(408,429,500,502,503,504))
     http.mount(base,HTTPAdapter(max_retries=retry))
-    return Store()
+    return JohnnyStore()
 
 
 def data(reader, tool, args):
