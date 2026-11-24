@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-11-24T02:23:52Z",
+  "sources": {
+    "Bet365": {
+      "status": "NO_VERIFIED_MARKETS",
+      "quotes": 0,
+      "checked_at": "2026-11-24T02:23:52Z",
+      "error_types": [],
+      "named_ace_milestones_10_plus": 0
+    },
+    "Grosvenor": {
+      "status": "NO_VERIFIED_MARKETS",
+      "quotes": 0,
+      "checked_at": "2026-11-24T02:23:51.230456+00:00",
+      "error_types": []
+    },
+    "Sisal IT": {
+      "status": "NO_VERIFIED_MARKETS",
+      "quotes": 0,
+      "checked_at": "2026-11-24T02:23:52.184548+00:00",
+      "error_types": []
+    }
+  },
+  "artifacts": {
+    "props": {
+      "name": "bet365-lines-2026-11-24.csv",
+      "sha256": "dd4bc8242e849b58ba63a09a16bfc96e341e32df3c3df4a8ed63f02fc53cd3a7"
+    },
+    "most_aces": {
+      "name": "betmgm-most-aces-1x2-2026-11-24.csv",
+      "sha256": "5287d54705bb04a69bfc9d32b04353f448b098be1933972834daf033e379077c"
+    },
+    "most_df": {
+      "name": "most-df-1x2-2026-11-24.csv",
+      "sha256": "5287d54705bb04a69bfc9d32b04353f448b098be1933972834daf033e379077c"
+    }
+  },
+  "scope": "Configured tennis props sources only; no assertion of full bookmaker catalogue coverage.",
+  "all_sources_checked": true
+}
