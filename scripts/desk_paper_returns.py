@@ -102,6 +102,8 @@ def save_grade(ticket, grade):
     unit_profit = ticket["new"]-1 if result == "Won" else -1 if result == "Lost" else 0
     ticket.update(result=result, score=grade["score"], profit=grade.get("profit", unit_profit),
                   stake=grade.get("settled_stake", 0 if result == "Void" else 1))
+    if grade.get("draw_sha256"):
+        ticket["draw_sha256"] = grade["draw_sha256"]
 
 
 def apply_retirement_review(ledger, review, now):
@@ -433,6 +435,7 @@ def project(store, now, limit=6):
         changed = grade_due(ledger["tickets"].values(),now)
         if changed or d in dirty:
             daily[d] = publish_day(store,d,ledger)
+            dirty.add(d)
             fresh_performance = True
         if any("result" not in t for t in ledger["tickets"].values()):
             pending.add(d)

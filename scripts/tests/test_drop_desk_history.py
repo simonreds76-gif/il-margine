@@ -9,6 +9,38 @@ import price_drop_watch as watch
 
 
 class DeskTests(unittest.TestCase):
+    def test_registered_draw_grades_only_a_bound_unique_opening_round(self):
+        t={"binding":[17,4,11,12],"player":"Player One","opponent":"Player Two","league":"ATP Challenger Playford - R1",
+           "tour":"Challenger","start":"2026-11-24T05:00:00Z","market":"spreads","line":-3.5,"new":2.25}
+        schedule=[{"tour_id":17,"round_id":4,"player1_id":12,"player2_id":11,"result":""}]
+        now=history.utc("2026-11-24T10:00:00Z")
+        archive=({("player one","player two"):("player one","6-4 6-4")},"hash")
+        with patch("desk_draw_scores.event_ids",return_value={"playford":7586}), patch("desk_draw_scores.load_draw",return_value=archive):
+            grade=history.official_draw_outcome(t,[],schedule,now)
+            self.assertEqual((grade["result"],grade["profit"],grade["draw_sha256"]),("Won",1.25,"hash"))
+            for rejected,rows in ((dict(t,league="ATP Challenger Playford - Q1"),schedule),(dict(t,binding=None),schedule),
+                                  (dict(t,opponent="Someone Else"),schedule),(t,2*schedule),(t,[dict(schedule[0],result="3-2")])):
+                self.assertIsNone(history.official_draw_outcome(rejected,[],rows,now))
+            self.assertIsNone(history.official_draw_outcome(t,[],schedule,history.utc(t["start"])))
+
+    def test_draw_parser_requires_exact_city_week_players_winner_column_and_complete_score(self):
+        from desk_draw_scores import draw_results
+        from datetime import date
+        def block(x,y,right,value): return (x,y,right,y+6,value)
+        blocks=[block(20,20,300,"Playford, Australia\n23 November — 29 November 2026 | Challenger 75"),
+                block(350,50,500,"Main Draw Singles")]
+        for i in range(1,33):
+            name={1:"ONE, Player",2:"TWO, Player"}.get(i,"OTHER, Entrant"+str(i))
+            blocks.append(block(20,80+14*i,150,f"{i}\n{name}\nAUS"))
+        result=[block(160,95,200,"P. One"),block(160,108,199,"63 764")]
+        key=("player one","player two")
+        day=date(2026,11,24)
+        self.assertEqual(draw_results(blocks+result,"playford",day)[key],("player one","6-3 7-6(4)"))
+        for docs,city,when in [(blocks+result,"other",day),(blocks+result,"playford",date(2026,11,30)),
+                              (blocks+[result[0]],"playford",day),(blocks+result+[result[0]],"playford",day),
+                              (blocks+[result[0],block(160,108,199,"63 32")],"playford",day)]:
+            self.assertNotIn(key,draw_results(docs,city,when))
+
     def setUp(self):
         self.t = {"player":"Liam Draxl","opponent":"Daniel Milavsky","league":"ATP Challenger Drummondville - R16",
                   "tour":"Challenger","start":"2026-11-19T23:30:00+00:00","binding":[1,5,7,8]}
