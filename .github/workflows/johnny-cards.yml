@@ -1,18 +1,20 @@
 name: Johnny daily bookings and fouls
-run-name: Johnny ${{ github.event_name == 'pull_request' && 'stream-test' || github.event_name == 'push' && 'calendar' || inputs.mode || 'due' }}
+run-name: Johnny ${{ github.event_name == 'pull_request' && 'stream-test' || github.event_name == 'push' && 'calendar' || (github.event.schedule == '0 8 * * *' || inputs.mode == 'research') && 'research' || inputs.mode == 'preview' && 'preview' || 'digest' }}
 on:
   pull_request:
-    paths: ['scripts/johnny_cards_review.py', 'scripts/johnny_cards.py', 'tests/test_johnny_cards*.py', '.github/workflows/johnny-cards.yml']
+    paths: ['scripts/johnny_cards*.py', 'scripts/statshub_daily_io.py', 'tests/test_johnny_cards*.py', '.github/workflows/johnny-cards.yml']
   schedule:
-    - cron: '0 11 * * *'
+    - cron: '0 8 * * *'
       timezone: Europe/London
-    - cron: '17 11 * * *'
+    - cron: '40 10 * * *'
+      timezone: Europe/London
+    - cron: '55 10 * * *'
       timezone: Europe/London
   workflow_dispatch:
     inputs:
       mode:
         type: choice
-        options: [preview, due]
+        options: [preview, research, digest, due]
         default: preview
       preview_day:
         description: 'Private rehearsal date (YYYY-MM-DD)'
@@ -22,15 +24,18 @@ on:
     paths: ['scripts/johnny_cards*.py', 'tests/test_johnny_cards*.py', '.github/workflows/johnny-cards.yml']
 permissions:
   contents: read
-concurrency:
-  group: ${{ github.event_name == 'pull_request' && format('johnny-tests-{0}', github.run_id) || 'johnny-booking-research' }}
-  cancel-in-progress: false
 jobs:
   scan:
+    if: >-
+      github.event_name == 'pull_request' || github.event_name == 'push' ||
+      inputs.mode == 'preview' || (github.ref == 'refs/heads/main' && (github.event.schedule == '0 8 * * *' || inputs.mode == 'research'))
+    concurrency:
+      group: ${{ (github.event_name == 'pull_request' || github.event_name == 'push' || inputs.mode == 'preview') && format('johnny-tests-{0}', github.run_id) || 'johnny-morning-research' }}
+      cancel-in-progress: false
     runs-on: ubuntu-24.04
-    timeout-minutes: 100
+    timeout-minutes: 165
     env:
-      MODE: ${{ github.event_name == 'pull_request' && 'stream-test' || github.event_name == 'push' && 'calendar' || inputs.mode || 'due' }}
+      MODE: ${{ github.event_name == 'pull_request' && 'stream-test' || github.event_name == 'push' && 'calendar' || (github.event.schedule == '0 8 * * *' || inputs.mode == 'research') && 'research' || inputs.mode == 'preview' && 'preview' || 'digest' }}
       PREVIEW_DAY: ${{ inputs.preview_day || '' }}
       JOHNNY_ENGINE_DIR: ${{ github.workspace }}/../johnny-engine
     steps:
@@ -79,6 +84,85 @@ jobs:
           STATSHUB_DAILY_AUTH: ${{ secrets.STATSHUB_DAILY_AUTH }}
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          TELEGRAM_CHAT_ID: ${{ env.MODE == 'due' && secrets.OPS_ALERT_TELEGRAM_CHAT_ID || '' }}
-          TELEGRAM_BOT_TOKEN: ${{ env.MODE == 'due' && secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN || '' }}
-        run: python scripts/johnny_cards.py
+        run: |
+          if [ "$MODE" != research ]; then exec python scripts/johnny_cards.py; fi
+          cutoff=$(TZ=Europe/London date -d 'today 10:54' +%s)
+          remaining=$((cutoff - $(date +%s)))
+          [ "$remaining" -gt 0 ] || exit 0
+          rc=0
+          timeout -k 5 "$remaining" python scripts/johnny_cards.py || rc=$?
+          if [ "$rc" = 124 ]; then echo "Deadline reached; completed fixture verdicts are saved."; exit 0; fi
+          exit "$rc"
+
+  digest:
+    if: >-
+      github.ref == 'refs/heads/main' && (inputs.mode == 'due' || inputs.mode == 'digest' ||
+      (github.event_name == 'schedule' && github.event.schedule != '0 8 * * *'))
+    concurrency:
+      group: johnny-morning-delivery
+      cancel-in-progress: false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 32
+    steps:
+      - name: Identify this London edition
+        id: clock
+        run: |
+          set -eu
+          export TZ=Europe/London
+          minute=$(date +%H%M)
+          if [[ "$minute" < "1035" || "$minute" > "1130" ]]; then exit 0; fi
+          echo "active=true" >> "$GITHUB_OUTPUT"
+          echo "EDITION_DAY=$(date +%F)" >> "$GITHUB_ENV"
+      - uses: actions/checkout@v4
+        if: steps.clock.outputs.active == 'true'
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/statshub_daily*.py
+            /scripts/johnny_cards*.py
+      - name: Install delivery dependencies
+        if: steps.clock.outputs.active == 'true'
+        run: python -m pip -q install requests cryptography
+      - name: Recheck completed candidates ahead of the cutoff
+        id: verify
+        if: steps.clock.outputs.active == 'true'
+        env:
+          STATSHUB_DAILY_AUTH: ${{ secrets.STATSHUB_DAILY_AUTH }}
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          set -eu
+          rc=0
+          python scripts/johnny_cards_edition.py already-sent || rc=$?
+          case "$rc" in
+            0) exit 0 ;;
+            4) echo "send=true" >> "$GITHUB_OUTPUT"; exit 0 ;;
+            3) ;;
+            *) exit "$rc" ;;
+          esac
+          echo "send=true" >> "$GITHUB_OUTPUT"
+          start=$(TZ=Europe/London date -d 'today 10:46' +%s)
+          wait_for=$((start - $(date +%s)))
+          if [ "$wait_for" -gt 0 ]; then sleep "$wait_for"; fi
+          cutoff=$(TZ=Europe/London date -d 'today 10:54' +%s)
+          remaining=$((cutoff - $(date +%s)))
+          if [ "$remaining" -le 0 ]; then
+            remaining=$(( $(TZ=Europe/London date -d 'today 10:58' +%s) - $(date +%s) ))
+            if [ "$remaining" -lt 0 ] && [ "$(TZ=Europe/London date +%H)" = 11 ]; then remaining=60; fi
+          fi
+          if [ "$remaining" -gt 0 ]; then
+            timeout -k 2 "$remaining" python scripts/johnny_cards_edition.py verify || echo "Using only saved rechecks."
+          fi
+      - name: Deliver one private edition by 11am London
+        if: steps.verify.outputs.send == 'true'
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+        run: |
+          target=$(TZ=Europe/London date -d 'today 10:55' +%s)
+          remaining=$((target - $(date +%s)))
+          if [ "$remaining" -gt 0 ]; then sleep "$remaining"; fi
+          python scripts/johnny_cards_edition.py send

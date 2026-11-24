@@ -1,0 +1,244 @@
+"""Prepare and deliver one private morning edition from completed fixture reviews."""
+import os
+import sys
+import time
+from datetime import datetime, timedelta
+
+from johnny_cards import FLOOR, distinct_opponent, edition_key, offers, private_store
+from johnny_cards_calendar import LONDON
+from statshub_daily_board import LINK, REPORT, Reads
+from statshub_daily_contracts import identity, norm, utc
+from statshub_daily_io import Provider, send_digest, timestamp
+
+
+def candidates(f):
+    decisions = {d["index"]: d for d in (f.get("assessment") or {}).get("cases", [])}
+    for i, case in enumerate(f.get("cases", [])):
+        decision = decisions.get(i, {})
+        for kind, verdict, model, bounds in (
+            ("booking", "verdict", "booking", "bookingRange"),
+            ("fouls", "foulsVerdict", "fouls", "foulsRange"),
+        ):
+            # A model BET held for a predicted XI may qualify once the same role is confirmed.
+            held = case.get(verdict) == "WATCH" and case.get("lineup") == "predicted"
+            if case.get(verdict) != "BET" and not (held and decision.get(model) == "BET"):
+                continue
+            line = "0.5" if kind == "booking" else decision.get("foulLine")
+            old = case.get("booking") if kind == "booking" else next(
+                (o for o in case["offers"] if o["kind"] == kind and str(o["line"]) == line), None)
+            interval = case.get(bounds) or {}
+            if old and old.get("rules") and interval.get("low") and interval.get("evLow", 0) > 0:
+                yield case, kind, old, interval["low"]
+
+
+def confirmed_role(f, case, xi):
+    side = case["side"]
+    own = xi.get(side) or {}
+    if identity(own.get("teamId")) != identity(f["teams"][side]["id"]) or own.get("status") != "confirmed":
+        return False
+    players = [p for p in own.get("players", []) if identity(p.get("id")) == identity(case["player"]["id"])]
+    if len(players) != 1 or players[0].get("position") != case["player"].get("position"):
+        return False
+    if case.get("rival"):
+        opp = "away" if side == "home" else "home"
+        other = xi.get(opp) or {}
+        if other.get("status") != "confirmed" or identity(other.get("teamId")) != identity(f["teams"][opp]["id"]):
+            return False
+        rival = distinct_opponent(players[0], other)
+        return bool(rival and identity(rival.get("id")) == identity(case["rival"]["id"]))
+    return True
+
+
+def recheck(reader, f, now):
+    slot = "edition-" + now.strftime("%H%M")
+    def read(tool, **extra):
+        return reader.read(tool, dict(matchId=f["id"], **extra), slot) or {}
+
+    result = dict(verdictAt=f["verdictAt"], checkedAt=now.isoformat(), picks=[], notes=[])
+    details = ((read("getMatchDetails").get("data") or {}).get("data") or {})
+    match = details.get("matches") or {}
+    if (match.get("status") != "scheduled" or identity(match.get("id")) != identity(f["id"])
+        or match.get("kickoffTimestamp") != int(utc(f["ko"]).timestamp()) or utc(f["ko"]) <= now
+        or identity((details.get("competition") or {}).get("competitionId")) != identity(f["competitionId"])
+        or any(identity((details.get(s+"Team") or {}).get("id")) != identity(f["teams"][s]["id"]) for s in ("home","away"))):
+        result["notes"].append("fixture or scheduled start unverified")
+        return result
+    xi = (read("getLineups").get("data") or {}).get("lineups") or {}
+    if identity(xi.get("matchId")) != identity(f["id"]):
+        result["notes"].append("lineups unavailable")
+        return result
+    eligible = []
+    for case, kind, old, low in candidates(f):
+        if confirmed_role(f, case, xi):
+            eligible.append((case, kind, old, low))
+        else:
+            result["notes"].append("starting role or direct opponent unconfirmed")
+    if eligible:
+        board = read("getMatchOdds", markets=["player to be booked","player fouls"])
+        if not board.get("at"):
+            result["notes"].append("odds unavailable")
+            return result
+        for case, kind, old, low in eligible:
+            fresh = [q for q in offers(board["data"], f, case, board["at"], utc(board["at"]))
+                     if q["kind"] == kind and q["line"] == old["line"] and norm(q["book"]) == norm(old["book"])]
+            if len(fresh) != 1:
+                result["notes"].append("exact bookmaker or line unavailable")
+                continue
+            q = fresh[0]
+            if q["age"] > 60 or (kind == "booking" and q["odds"] < FLOOR) or low*q["odds"] <= 1:
+                result["notes"].append("odds outside the accepted range or age")
+                continue
+            result["picks"].append(dict(player=case["name"], playerId=case["player"]["id"], **q))
+    result["notes"] = sorted(set(result["notes"]))
+    return result
+
+
+def verify(store, day, reader, clock=timestamp):
+    snapshot = store.get(edition_key(day,"research"), {})
+    checks = store.get(edition_key(day,"checks"), {})
+    for f in snapshot.get("slate", []):
+        if f.get("reviewState") != "complete" or not any(candidates(f)):
+            continue
+        now = utc(clock())
+        prior = checks.get(f["id"], {})
+        if prior.get("verdictAt") == f["verdictAt"] and now - utc(prior["checkedAt"]) < timedelta(minutes=20):
+            continue
+        checks[f["id"]] = recheck(reader, f, now)
+        store.put(edition_key(day,"checks"), checks)
+
+
+def make_digest(day, snapshot, checks, now):
+    picks, pending, reserve, unavailable, detail = [], [], [], [], []
+    complete = 0
+    for f in snapshot.get("slate", []):
+        name = f["home"] + " v " + f["away"]
+        state = f.get("reviewState")
+        if state == "reserve":
+            reserve.append(name)
+        elif state == "unavailable":
+            unavailable.append(name + " (" + f.get("gap", "evidence unavailable") + ")")
+        elif state != "complete":
+            pending.append(name)
+        else:
+            complete += 1
+            if utc(f["ko"]) <= now:
+                detail.append(name + " · scheduled kickoff passed")
+                continue
+            if not any(candidates(f)):
+                detail.append(name + " · no qualifying booking or foul")
+                continue
+            check = checks.get(f["id"], {})
+            if (check.get("verdictAt") != f.get("verdictAt") or not check.get("checkedAt") or
+                not timedelta(0) <= now - utc(check["checkedAt"]) <= timedelta(minutes=30)):
+                pending.append(name + " (final check outstanding)")
+                continue
+            for q in check["picks"]:
+                age = (now-utc(q["at"])).total_seconds()/60
+                if not 0 <= age <= 30 or age+q["age"] > 60:
+                    unavailable.append(name + " (odds expired before delivery)")
+                    continue
+                picks.append(dict(fixture=name,matchId=f["id"],kickoff=f["ko"],**q))
+            if check["notes"]:
+                unavailable.append(name + " (" + ", ".join(check["notes"]) + ")")
+    gaps = [w["league"] for w in snapshot.get("calendar", []) if w["gap"]]
+    summary = [f"Johnny · Bookings and fouls · {day}",
+               f"{len(picks)} verified selections · {complete} fixture reviews completed."]
+    if not snapshot or not snapshot.get("calendar"):
+        summary.append("Fixture list unavailable. The scope of the unfinished scan is unknown.")
+    elif gaps:
+        summary.append("Fixture calendar incomplete for " + ", ".join(gaps))
+    if not picks:
+        summary.append("No verified selections available for this edition.")
+    grouped = {}
+    for p in picks:
+        market = "to be booked" if p["kind"]=="booking" else f"over {p['line']:g} fouls"
+        grouped.setdefault(p["fixture"], []).append(f"{p['player']} {market} @ {p['odds']:g} {p['book']}")
+    for name, contracts in grouped.items():
+        summary += [name, *contracts]
+    if pending:
+        summary.append(f"Unfinished ({len(pending)}) · " + ", ".join(pending))
+    if unavailable:
+        summary.append(f"Evidence unavailable ({len(unavailable)}) · " + ", ".join(unavailable))
+    if reserve:
+        summary.append(f"{len(reserve)} fixtures screened and left outside the detailed review.")
+    full = summary + detail + (["Outside detailed review · " + ", ".join(reserve)] if reserve else [])
+    text = "\n".join(summary)
+    footer = "\nFull private report " + LINK
+    budget = 4096 - len(footer.encode("utf-16-le"))//2
+    if len(text.encode("utf-16-le"))//2 > budget:
+        # Preserve the contracts ahead of long lists of outstanding fixture names.
+        text = "\n".join(s for s in summary if not s.startswith(("Unfinished (","Evidence unavailable (")))
+        text += f"\nUnfinished {len(pending)} · evidence unavailable {len(unavailable)}. Names in Admin."
+    message = text+footer
+    return dict(day=day,at=now.isoformat(),fixtures=len(snapshot.get("slate",[])),picks=picks,
+                complete=bool(snapshot.get("calendar")) and not (gaps or pending or unavailable),
+                coverage="\n".join(full),message=message,attach=len(text.encode("utf-16-le"))//2 > budget)
+
+
+
+def deliver(store, day, clock=timestamp):
+    path = edition_key(day,"digest")
+    edition = store.get(path)
+    if edition is None:
+        candidate = make_digest(day, store.get(edition_key(day,"research"), {}),
+                                store.get(edition_key(day,"checks"), {}), utc(clock()))
+        store.put(path, candidate, replace=False)
+        edition = store.get(path)
+    receipt = store.get("receipts/johnny-"+day+"-0.json", {})
+    if receipt and receipt.get("state") != "sent":
+        raise RuntimeError("Delivery uncertain; inspect the original receipt")
+    if not receipt:
+        # The delivery lane is serialized. An unclaimed edition can be refreshed
+        # if its previous attempt stopped before calling Telegram.
+        if utc(clock())-utc(edition["at"]) > timedelta(minutes=2):
+            edition = make_digest(day, store.get(edition_key(day,"research"), {}),
+                                  store.get(edition_key(day,"checks"), {}), utc(clock()))
+            store.put(path, edition)
+        if edition.get("attach"):
+            send_digest(store, "johnny-"+day, [edition["coverage"]+"\n"+LINK],
+                        document_name=f"Johnny-{day}.txt")
+        else:
+            send_digest(store,"johnny-"+day,[edition["message"]])
+    index = store.get(REPORT)
+    if not isinstance(index,dict) or not isinstance(index.get("days"),dict):
+        raise RuntimeError("Private Admin report unavailable")
+    old = index["days"].get(day)
+    if old and old.get("policy") != "johnny-bookings":
+        raise RuntimeError("Another policy owns this day's report")
+    index["days"][day] = dict(at=edition["at"], policy="johnny-bookings", fixtures=edition["fixtures"],
+                              picks=[], coverage=edition["coverage"], final=edition["complete"])
+    index.update(updated=edition["at"],status="Johnny's daily booking and fouls scan · 11am London")
+    store.put(REPORT,index)
+    store.put(edition_key(day,"published"), {"at":edition["at"]})
+
+
+if __name__ == "__main__":
+    store = private_store()
+    now = datetime.now(LONDON)
+    day = os.environ["EDITION_DAY"]
+    if day != now.date().isoformat():
+        sys.exit("Expired edition date")
+    if sys.argv[1] == "already-sent":
+        receipt = store.get("receipts/johnny-"+day+"-0.json", {})
+        if receipt.get("state") == "sent" and receipt.get("message_id"):
+            if not store.get(edition_key(day,"digest")) or store.get(edition_key(day,"published")):
+                sys.exit(0)
+            sys.exit(4)  # Only the Admin index needs recovery.
+        if receipt:
+            sys.exit("Previous delivery is uncertain; inspect existing receipt")
+        sys.exit(3)
+    elif sys.argv[1] == "verify":
+        # Discover additional completed fixtures while time permits. The workflow
+        # independently enforces the cutoff even if a provider request hangs.
+        reader = Reads(store, Provider(store), day, "johnny-edition-verify", 28)
+        while True:
+            verify(store, day, reader)
+            state = store.get(edition_key(day,"research"), {})
+            if state.get("stage") == "finished":
+                verify(store, day, reader)
+                break
+            time.sleep(35)
+    elif sys.argv[1] == "send":
+        deliver(store, day)
+    else:
+        sys.exit("Unknown edition action")
