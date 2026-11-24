@@ -1,10 +1,10 @@
 """One paper unit per match, with independent all-drop and confirmed-alert records."""
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
-from fractions import Fraction
 from functools import lru_cache
 
 from desk_closing import CLOSE, display, display_key
+from desk_games import match_rank
 from desk_paper_returns import BASE, RETIREMENT_RULE, alert_grade, circuit, selection_key, summary
 from pinnradar_tennis import Store, utc
 from price_drop_watch import START
@@ -14,18 +14,11 @@ GROUPS = ("all", "telegram")
 REGISTERED = "2026-11-22T21:54:53.063875+00:00"
 
 
-def strength(move):
-    old, new = (Fraction(str(move[k])) for k in ("old", "new"))
-    if not old > new > 1:
-        raise ValueError("Invalid odds for a qualifying move")
-    return 100 * (1/new - 1/old)
-
-
 def first_scan(candidates, hydrate):
     first = min(utc(c["after"]) for c in candidates)
     simultaneous = [hydrate(c) for c in candidates if utc(c["after"]) == first]
     # The canonical market/line string and side are fixed before observing results.
-    return min(simultaneous, key=lambda c: (-strength(c), c["contract"], c["side"], c.get("sent", "")))
+    return min(simultaneous, key=match_rank)
 
 
 def settle(chosen, paper, verified):

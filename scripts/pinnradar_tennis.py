@@ -204,7 +204,7 @@ def board_rows(board, observed):
         if "period_limits" in sample:
             rows[eid]["games_period_limits"] = sample["period_limits"]
     return {"schema":VERSION,"source":SOURCE,"bookmaker":BOOK,"observed":observed.isoformat(),
-            "paper_minimum_usd":desk_games.MINIMUM_USD,
+            "paper_minimum_usd":desk_games.PAPER_MINIMUM_USD,
             "events_received":len(board["events"]), "excluded":dict(counts),
             "in_play_fixtures":sorted(in_play_fixtures), "period_status_counts":dict(period_status),"events":rows}
 
@@ -401,7 +401,7 @@ def run():
             watch.private_chat()
             delivery="private direct chat verified"
         elif mode=="send":
-            delivery=watch.deliver({**batch, "moves":desk_games.alert_moves(batch)},store,
+            delivery=watch.deliver({**batch, "moves":desk_games.dispatch_moves(batch,store)},store,
                                    now=datetime.now(timezone.utc),dispatch_clock=lambda: datetime.now(timezone.utc))
         print(f"Matched fixtures {batch['compared_pairs']}; observed shortenings {len(batch['moves'])}; Telegram {delivery}.")
 

@@ -14,18 +14,20 @@ from price_drop_watch import roundup_text
 class GamesDesk(unittest.TestCase):
     t = pilot.utc("2026-11-19T19:00:00Z")
 
-    def scan(self, last, minutes, price, line=22.5, reverse=False, present=True, start=None, cap=3000):
+    def scan(self, last, minutes, price, line=22.5, reverse=False, present=True, start=None, cap=3000,
+             tour="ATP", total_odds=None, total_cap=None):
         row = dict(id="1",fixture="ab",home="A",away="B",home_price=price,away_price=2.01,
-                   start=(start or self.t+timedelta(days=3)).isoformat(),tour="ATP",league="ATP Test - QF")
+                   start=(start or self.t+timedelta(days=3)).isoformat(),tour=tour,league=tour+" Test - QF")
         if reverse:
             row.update(home="B",away="A",home_price=2.01,away_price=price)
         if present:
             row["contracts"] = desk_games.contracts(dict(home=row["home"],away=row["away"],
-                totals={str(line):[price,2.01]},spreads={("3" if reverse else "-3"):([2.01,price] if reverse else [price,2.01])}))
+                totals={str(line):[price if total_odds is None else total_odds,2.01]},spreads={("3" if reverse else "-3"):([2.01,price] if reverse else [price,2.01])}))
         if cap is not None:
             row["match_period_limits"] = {"max_money_line": cap}
             for pair in row.get("contracts", {}).values():
-                pair["reported_market_max"] = {"amount": cap}
+                amount = total_cap if pair["market"] == "totals" and total_cap is not None else cap
+                pair["reported_market_max"] = {"amount": amount}
         snap={"observed":(self.t+timedelta(minutes=minutes)).isoformat(),"events":{"1":row}}
         state,_=pilot.advance(last,snap,track_first=False)
         batch=desk_games.compare(last,snap,state,set())
@@ -50,7 +52,7 @@ class GamesDesk(unittest.TestCase):
         state,_ = self.scan({},0,2.5,start=start)
         state,b = self.scan(state,15,2.25,start=start)
         alerts = desk_games.alert_moves(b)
-        self.assertEqual(len(alerts),3)
+        self.assertEqual(len(alerts),1)
         self.assertFalse(any(m["detected_in_final_hour"] for m in alerts))
         self.assertIn("Pre-match tennis moves",roundup_text(alerts,b["observed"]))
         for minute, price in [(30,2.2),(45,2.0),(60,1.8)]:
@@ -64,7 +66,7 @@ class GamesDesk(unittest.TestCase):
         state,_ = self.scan({},0,2.5,start=start)
         state,b = self.scan(state,15,2.2,start=start)
         alerts = desk_games.alert_moves(b)
-        self.assertEqual(len(alerts),3)
+        self.assertEqual(len(alerts),1)
         self.assertTrue(all(m["detected_in_final_hour"] and not m["wholly_in_final_hour"] for m in alerts))
         self.assertFalse(desk_games.alert_moves({**b, "policy":"same-line-4pp-final-hour-v2"}))
 
@@ -84,36 +86,104 @@ class GamesDesk(unittest.TestCase):
         start = self.t + timedelta(hours=1)
         state, _ = self.scan({},0,2.5,start=start)
         state.pop("desk_late_issued")
+        state.pop("desk_match_issued")
         state["desk_issued"]["ab|winner|0"] = start.isoformat()
         state, batch = self.scan(state,15,2.0,start=start)
-        self.assertEqual({m["market"] for m in desk_games.alert_moves(batch)},{"spreads","totals"})
+        self.assertFalse(desk_games.alert_moves(batch))
+        self.assertEqual(len(batch["moves"]),3)
 
     def test_board_includes_low_limits_and_first_eligible_drop_is_sent_once(self):
-        for cap in (None, 0, 50, 199.99):
+        for cap in (None, 0, 50, 200, 499.99):
             with self.subTest(cap=cap):
                 state, _ = self.scan({}, 0, 3.0, cap=1500)
                 state, low = self.scan(state, 15, 2.5, cap=cap)
                 self.assertEqual(len(low["moves"]), 3)
                 self.assertFalse(low["alert_ids"])
-                state, flat = self.scan(state, 30, 2.5, cap=200)
+                state, flat = self.scan(state, 30, 2.5, cap=500)
                 self.assertFalse(desk_games.alert_moves(flat))
-                state, later = self.scan(state, 45, 2.3, cap=200)
-                self.assertEqual(len(desk_games.alert_moves(later)), 3)
+                state, later = self.scan(state, 45, 2.3, cap=500)
+                self.assertEqual(len(desk_games.alert_moves(later)), 1)
                 for m in desk_games.alert_moves(later):
                     self.assertEqual(m["new"], 2.3)
-                    self.assertEqual(m["alert_detection_limit"], {"amount": 200, "currency": "USD"})
+                    self.assertEqual(m["alert_detection_limit"], {"amount": 500, "currency": "USD"})
                 _, again = self.scan(state, 60, 2.1, cap=1000)
                 self.assertFalse(again["alert_ids"])
 
     def test_delivery_rechecks_exact_market_cap_in_saved_batch(self):
         state, _ = self.scan({}, 0, 3, cap=50)
-        _, batch = self.scan(state, 15, 2.5, cap=200)
-        self.assertEqual(len(desk_games.alert_moves(batch)), 3)
+        _, batch = self.scan(state, 15, 2.5, cap=500)
+        selected, = desk_games.alert_moves(batch)
+        self.assertEqual(selected["market"], "spreads")
+        self.assertEqual(len(batch["moves"]),3)
         self.assertFalse(desk_games.alert_moves(dict(batch, policy=desk_games.PRIOR_ALL_DAY_POLICY)))
-        for invalid in (None, {"amount": 199.99, "currency": "USD"},
+        self.assertFalse(desk_games.alert_moves(dict(batch, policy=desk_games.PRIOR_MATCH_POLICY)))
+        for invalid in (None, {"amount": 499.99, "currency": "USD"},
                         {"amount": 500, "currency": "EUR"}, {"amount": float("nan"), "currency": "USD"}):
-            batch["moves"][0]["alert_detection_limit"] = invalid
-            self.assertEqual(len(desk_games.alert_moves(batch)), 2)
+            selected["alert_detection_limit"] = invalid
+            self.assertEqual(desk_games.alert_moves(batch), [])
+
+    def test_larger_low_limit_drop_is_board_only_on_all_tours(self):
+        for tour in ("ATP", "Challenger", "WTA", "WTA 125"):
+            with self.subTest(tour=tour):
+                state, _ = self.scan({}, 0, 2.5, tour=tour)
+                _, batch = self.scan(state, 15, 2.2, cap=500, total_odds=1.95, total_cap=499.99, tour=tour)
+                self.assertEqual(len(batch["moves"]), 3)
+                alert, = desk_games.alert_moves(batch)
+                self.assertEqual(alert["market"], "spreads")
+                total, = [move for move in batch["moves"] if move["market"] == "totals"]
+                self.assertEqual(total["reported_market_max_at_detection"]["amount"], 499.99)
+
+    def test_first_scan_dominates_later_stronger_or_opposite_move_on_either_tour(self):
+        for tour in ("ATP","Challenger","WTA","WTA 125"):
+            with self.subTest(tour=tour):
+                state,_=self.scan({},0,2.5,tour=tour,total_odds=2.5)
+                state,b=self.scan(state,15,2.22,tour=tour,total_odds=2.05)
+                selected, = desk_games.alert_moves(b)
+                self.assertEqual((selected["market"],selected["new"]),("totals",2.05))
+                self.assertEqual(len(b["moves"]),3)
+                for minutes,price,line in ((30,2.2,24),(45,1.65,24)):
+                    state,b=self.scan(state,minutes,price,tour=tour,line=line,reverse=True)
+                    self.assertEqual(desk_games.alert_moves(b),[])
+                self.assertTrue(any(m.get("line")==24 for m in b["moves"]))
+
+    def test_each_fixture_in_group_has_its_own_selection_and_old_batch_cannot_send(self):
+        state,_=self.scan({},0,2.5)
+        _,b=self.scan(state,15,2.2,total_odds=2.1)
+        one, = desk_games.alert_moves(b)
+        other = dict(one,fixture="cd",tour="WTA",move_id="other")
+        combined=dict(b,moves=[*b["moves"],other],alert_ids=[m["move_id"] for m in b["moves"]]+["other"])
+        self.assertEqual([m["move_id"] for m in desk_games.alert_moves(combined)],[one["move_id"],"other"])
+        self.assertEqual(desk_games.alert_moves(dict(combined,policy=desk_games.PRIOR_LINE_POLICY)),[])
+        self.assertEqual(desk_games.alert_moves(dict(combined,observed=self.t.isoformat())),[])
+
+    def test_migrate_receipted_and_reserved_matches_including_reschedule(self):
+        start = self.t+timedelta(days=2)
+        state,_=self.scan({},0,2.5,start=start)
+        state["desk_match_issued"]=desk_games.seed_match_alerts(
+            {"desk_late_issued":{"other|winner|0":start.isoformat(),"ab|totals:23|1":start.isoformat()}})
+        self.assertEqual(set(state["desk_match_issued"]),{"ab","other"})
+        state,b=self.scan(state,15,2.,start=start)
+        self.assertFalse(desk_games.alert_moves(b))
+        postponed=start+timedelta(days=14)
+        state,b=self.scan(state,30,2.3,start=postponed)
+        self.assertEqual(state["desk_match_issued"]["ab"],postponed.isoformat())
+        _,b=self.scan(state,45,1.8,start=postponed)
+        self.assertFalse(desk_games.alert_moves(b))
+
+    def test_dispatch_checks_confirmed_record_after_local_state_loss(self):
+        state,_=self.scan({},0,2.5)
+        _,b=self.scan(state,15,2.2,total_odds=2.1)
+        winner,=desk_games.alert_moves(b)
+        class Memory:
+            def __init__(self,locks):
+                self.locks=locks
+            def get(self,path):
+                return {"locks":{"telegram":self.locks}}
+        self.assertEqual(desk_games.dispatch_moves(b,Memory({})),[winner])
+        self.assertEqual(desk_games.dispatch_moves(b,Memory({"ab":{"move_id":"older"}})),[])
+        self.assertEqual(desk_games.dispatch_moves(b,Memory({"ab":winner})),[winner])
+        with self.assertRaises(RuntimeError):
+            desk_games.dispatch_moves(b,Memory(None))
 
     def test_generic_games_cap_never_qualifies_an_alternate_line(self):
         self.assertIsNone(desk_games.market_limit({"games_period_limits":{"max_total":20000}},{"market":"totals"}))
