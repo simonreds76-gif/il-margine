@@ -7,6 +7,7 @@ from unittest.mock import Mock, patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
 import johnny_cards as job
+from johnny_cards_calendar import competition, only_unrelated_omissions
 from johnny_cards_review import Analyst, exact_choices, value_range
 
 class Reader:
@@ -15,22 +16,38 @@ class Reader:
         self.log=[]
         self.errors=0
     def read(self,name,args,_slot):
-        self.log.append(name)
-        return {"data":self.boards.get(args.get("competitionId"), {"context":"no fixtures · times UTC","listedCount":0,"fixtureCount":0})}
+        self.log.append(args)
+        return {"data":self.boards.get(args["startOfDay"], {"context":"no fixtures · times UTC","listedCount":0,"fixtureCount":0})}
 
 class MethodTests(unittest.TestCase):
     def test_calendar_summer_utc_and_started(self):
-        doc={"context":"times UTC","fixtureCount":2,"listedCount":2,
-             "fixturesSummary":"Premier League [competitionId league.0z9xjh1]:\n- 14:00 A v B (id a.1)\n- 10:30 C 1-0 D, live (id c.2)"}
-        board=Reader({"premier-league.0z9xjh1":doc})
+        start=int(job.utc("2027-05-22T10:00:00Z").timestamp())
+        doc={"context":"times UTC","fixtureCount":3,"listedCount":3,
+             "fixturesSummary":"Premier League (England) [competitionId league.0z9xjh1]:\n- 14:00 A v B (id a.1)\n- 10:30 C 1-0 D, live (id c.2)\nSerie B (Italy) [competitionId serie-b.3]:\n- 18:00 X v Y (id other.3)"}
+        overnight={"context":"times UTC","fixtureCount":1,"listedCount":1,
+                   "fixturesSummary":"Primera A (Colombia) [competitionId col.123]:\n- 01:20 Club A v Club B (id game.4)"}
+        board=Reader({start:doc,start+14*3600:overnight})
         games,coverage=job.calendar(board,"2027-05-22",job.utc("2027-05-22T11:05:00Z"))
-        self.assertEqual([f["ko"] for f in games],["2027-05-22T14:00:00+00:00"])
+        self.assertEqual([f["ko"] for f in games],["2027-05-22T14:00:00+00:00","2027-05-23T01:20:00+00:00"])
+        self.assertEqual(games[1]["competitionId"],"col.123")
         self.assertTrue(all(not l["gap"] for l in coverage))
-        self.assertEqual(len(board.log),5)
+        self.assertEqual(board.log[0]["startOfDay"], start)
+        self.assertEqual(board.log[-1]["endOfDay"],start+86400)
 
-    def test_missing_board_is_reported(self):
-        reader=Reader({"serie-a.17atem7":{"fixtureCount":2,"listedCount":0}})
-        self.assertEqual(job.calendar(reader,"2026-11-24",job.utc("2026-11-24T11:00:00Z"))[1][1]["gap"],"calendar unverified")
+    def test_partial_and_omitted_rows(self):
+        now=job.utc("2026-11-24T11:00:00Z")
+        reader=Reader({int(now.timestamp()):{}})
+        self.assertTrue(any(x["gap"] for x in job.calendar(reader,now.date().isoformat(),now)[1]))
+        d={"notListed":"2 more fixtures in 1 competition: Championship (England) [competitionId c.123] 2; end"}
+        self.assertTrue(only_unrelated_omissions(d,2))
+        self.assertFalse(only_unrelated_omissions(d,3))
+        self.assertFalse(only_unrelated_omissions({"notListed":d["notListed"].replace("(England)","(Brazil)")},2))
+
+    def test_competition_scope(self):
+        for country in ("Brazil","South America","Argentina","Bolivia","Guyana","Suriname","French Guiana"):
+            self.assertIsNotNone(competition("Example",country,"example.123"))
+        self.assertIsNotNone(competition("UEFA Champions League","Europe","ucl.123"))
+        self.assertIsNone(competition("AFC Champions League Elite","Asia","afc.123"))
 
     def test_tie_two_people_does_not_name_opponent(self):
         player={"position":"LB"}
@@ -70,17 +87,29 @@ class MethodTests(unittest.TestCase):
         analyst.select_fixtures.return_value=[]
         board=job.scan(Reader({}),"2026-11-24",analyst,lambda:"2026-11-24T11:00:00Z")
         self.assertEqual(len(board["slate"]),0)
-        self.assertEqual(len(board["calendar"]),5)
+        self.assertEqual(len(board["calendar"]),2)
         analyst.select_players.assert_not_called()
 
     def test_retries_have_same_delivery_key(self):
         report={"day":"2026-11-24","at":"2026-11-24T11:00:00Z","failures":0,
-                "slate":[],"calendar":[{"gap":"","league":l} for l in job.LEAGUES]}
+                "slate":[],"calendar":[{"gap":"","league":l} for l in ["test window"]]}
         store=Mock();store.get.return_value={"days":{"2026-11-20":{"policy":"old"}}}
         with patch.object(job,"send_digest") as deliver:
             job.publish(store,report);job.publish(store,report)
             self.assertEqual([c.args[1] for c in deliver.call_args_list],["johnny-2026-11-24"]*2)
-        self.assertIn("2026-11-20",store.put.call_args.args[1]["days"])
+        self.assertIn("2026-11-20",store.put.call_args_list[0].args[1]["days"])
+
+    def test_recovery_edits_the_acknowledged_message(self):
+        report={"day":"2026-11-24","at":"2026-11-24T17:00:00Z","failures":0,
+                "slate":[],"calendar":[{"gap":"","league":"test window"}]}
+        store=Mock()
+        store.get.side_effect=[{"days":{}},{"state":"sent","message_id":17}]
+        with patch.object(job,"telegram_private",return_value=("https://example.test","chat")), \
+             patch.object(job.http,"post") as post, patch.object(job,"send_digest") as send:
+            job.publish(store,report)
+            self.assertEqual(post.call_args.kwargs["json"]["message_id"],17)
+            self.assertTrue(post.call_args.args[0].endswith("/editMessageText"))
+            send.assert_not_called()
 
 if __name__=="__main__":
     unittest.main()
