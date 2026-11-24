@@ -221,13 +221,17 @@ def native_outcome(ticket, games, schedule, now):
     label = normal(ticket["league"])
     slam = any(title in label for title in ("australian open","roland garros","french open","wimbledon","us open"))
     need = 3 if slam and rnd >= 4 else 2
+    return grade_completed(ticket,score,row["winner_id"]==player,need)
+
+
+def grade_completed(ticket, score, selected_won, need):
     if not completed_score(score,need):
         return None
     if ticket.get("market","winner") in ("spreads","totals"):
         from desk_games import grade
         sets = [(int(a),int(b)) for a,b in re.findall(r"(\d+)-(\d+)",score)]
-        return {"score":score, **grade(ticket,sets,row["winner_id"]==player)}
-    return {"result":"Won" if row["winner_id"] == player else "Lost","score":score}
+        return {"score":score, **grade(ticket,sets,selected_won)}
+    return {"result":"Won" if selected_won else "Lost","score":score}
 
 
 # Reviewed draw snapshot for the November backlog. Only the scheduled single writer grades it.
@@ -245,7 +249,7 @@ def draw_review():
     return {(r["league"], utc(r["start"]), tuple(r["players"])): r for r in packet}
 
 
-def outcome(ticket, games, schedule, now):
+def reviewed_outcome(ticket, games, schedule, now):
     grade = native_outcome(ticket, games, schedule, now)
     if grade or ticket.get("tour") != "Challenger" or not "2026-11-22" <= ticket["start"][:10] <= "2026-11-24":
         return grade
@@ -273,6 +277,45 @@ def outcome(ticket, games, schedule, now):
            {g["winner_id"],g["loser_id"]} == set(binding[2:]) for g in games):
         return None
     return native_outcome(ticket, [row], schedule, now)
+
+
+def official_draw_outcome(ticket, games, schedule, now):
+    from desk_draw_scores import event_ids, load_draw
+    binding = ticket.get("binding")
+    league, _, rnd = ticket["league"].rpartition(" - ")
+    city = competition(league)
+    start = utc(ticket["start"])
+    if (ticket.get("tour") != "Challenger" or not binding or binding[1]!=4 or rnd.lower() not in ("r1","r32")
+            or not start or start >= now or now-start>timedelta(days=14)):
+        return None
+    tour, rnd_id, p, q = binding
+    def pair(row,a,b):
+        return (row["tour_id"],row["round_id"])==(tour,rnd_id) and {row[a],row[b]}=={p,q}
+    if any(pair(r,"winner_id","loser_id") for r in games):
+        return None
+    scheduled = [r for r in schedule if pair(r,"player1_id","player2_id")]
+    if len(scheduled)!=1 or city not in event_ids():
+        return None
+    scores,digest = load_draw(city,start.date())
+    def draw_name(name,player_id):
+        label=normal(name)
+        alias=PLAYER_ALIASES.get(label)
+        return alias[1] if alias and alias[0]==player_id else label
+    player,other = draw_name(ticket["player"],p),draw_name(ticket["opponent"],q)
+    result=scores.get(tuple(sorted((player,other))))
+    if not result or not digest:
+        return None
+    winner,score = result
+    # A conflicting/non-final score in the archive needs a review.
+    saved = str(scheduled[0].get("result") or "").strip()
+    if saved and saved != score:
+        return None
+    grade=grade_completed(ticket,score,winner==player,2)
+    return {**grade,"draw_sha256":digest} if grade else None
+
+
+def outcome(ticket, games, schedule, now):
+    return reviewed_outcome(ticket,games,schedule,now) or official_draw_outcome(ticket,games,schedule,now)
 
 
 def event_data(tickets):

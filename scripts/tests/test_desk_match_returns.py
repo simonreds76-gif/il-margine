@@ -4,9 +4,10 @@ import unittest
 import copy
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from desk_match_returns import BASE, CLOSE, ROOT, build, first_scan, settle
+from desk_match_returns import BASE, CLOSE, ROOT, ReportingStore, build, first_scan, settle, settlement_health
 
 
 def item(code, new, minute="00", old=2, **fields):
@@ -15,6 +16,28 @@ def item(code, new, minute="00", old=2, **fields):
 
 
 class MatchReturns(unittest.TestCase):
+    def test_same_run_reads_written_grades_even_when_remote_still_serves_old_cache(self):
+        from pinnradar_tennis import Store
+        store=object.__new__(ReportingStore)
+        store.writes,store.revision={},"test-revision"
+        cache=BASE+"/rolling-cache-v2.json"
+        data={"day":{"grade":"Won"}}
+        with patch.object(Store,"put",return_value=True),patch.object(Store,"get",return_value={"stale":True}) as get:
+            self.assertTrue(store.put(cache,data,True))
+            data["day"]["grade"]="Pending"
+            self.assertEqual(store.get(cache)["day"]["grade"],"Won")
+            get.assert_not_called()
+            store.get(ROOT+"/state.json")
+            get.assert_called_once_with(ROOT+"/state.json?revision=test-revision")
+        self.assertEqual(settle(item("winner",2,result="Won"),{},None)["result"],"Won")
+
+    def test_overdue_health_counts_unique_fixtures_across_both_records(self):
+        now=datetime(2026,11,24,12,tzinfo=timezone.utc)
+        old=dict(start="2026-11-22T10:00:00Z",tour="Challenger",result="Pending",player="A",opponent="B",league="X")
+        locks={"all":{"old":old,"done":dict(old,result="Won")},"telegram":{"old":old,"recent":dict(old,start="2026-11-24T10:00:00Z")}}
+        rows=settlement_health(locks,now)["overdue"]
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]["groups"],["all","telegram"])
     def test_first_scan_then_largest_unrounded_inverse_odds_move(self):
         # The biggest decimal change loses the simultaneous tie-break. The later 30 pp move is ignored.
         a = item("winner", 5, old=10)

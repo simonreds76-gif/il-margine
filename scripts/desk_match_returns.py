@@ -2,6 +2,9 @@
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from functools import lru_cache
+import copy
+import os
+from uuid import uuid4
 
 from desk_closing import CLOSE, display, display_key
 from desk_games import match_rank
@@ -12,6 +15,40 @@ from price_drop_watch import START
 ROOT = BASE + "/first-match-v1"
 GROUPS = ("all", "telegram")
 REGISTERED = "2026-11-22T21:54:53.063875+00:00"
+
+
+class ReportingStore(Store):
+    """Use the successful writes from this scan when building its downstream reports."""
+    def __init__(self):
+        super().__init__()
+        self.revision = uuid4().hex
+        self.writes = {}
+
+    def get(self,path):
+        if path in self.writes:
+            return copy.deepcopy(self.writes[path])
+        if path.startswith("presentation/"):
+            return super().get(path+"?revision="+self.revision)
+        return super().get(path)
+
+    def put(self,path,data,replace=False):
+        ok = super().put(path,data,replace)
+        if ok and replace and (path.startswith((BASE+"/ledger/","presentation/outcomes/",CLOSE))
+                or path in (BASE+"/rolling-cache-v2.json",BASE+"/rolling-30-v2/atp.json")):
+            self.writes[path] = copy.deepcopy(data)
+        return ok
+
+
+def settlement_health(locks, now):
+    fixtures = {}
+    for group in GROUPS:
+        for key,item in locks[group].items():
+            if item.get("result")!="Pending" or now - utc(item["start"]) < timedelta(hours=24):
+                continue
+            row = fixtures.setdefault(key, {"tour":circuit(item["tour"]), "start":item["start"],
+                "players":[item["player"],item["opponent"]], "event":item["league"], "groups":[]})
+            row["groups"].append(group)
+    return {"checked":now.isoformat(),"overdue":sorted(fixtures.values(),key=lambda t:t["start"])}
 
 
 def first_scan(candidates, hydrate):
@@ -30,6 +67,9 @@ def settle(chosen, paper, verified):
             result = "Pending"
         else:
             result = result or verified["result"]
+    # A cache miss on retry cannot reopen a settled first-scan selection.
+    if not verified and not result:
+        result = chosen.get("result")
     result = result or "Pending"
     return dict(chosen, result=result, profit=alert_grade({"result":result}, chosen["new"]),
                 stake=int(result not in ("Void", "Pending")))
@@ -160,9 +200,28 @@ def build(store, now, write=False):
         for tour, report in reports.items():
             store.put(ROOT+"/"+tour.lower()+".json",report,replace=True)
         store.put(ROOT+"/state.json",dict(through=through,locks=locks,coverage=coverage),replace=True)
+        health = settlement_health(locks,now)
+        store.put(ROOT+"/settlement-health.json",health,replace=True)
+        message = f"{len(health['overdue'])} unique fixtures still need a result at least 24h after their scheduled start."
+        print(message)
+        if os.getenv("GITHUB_STEP_SUMMARY"):
+            with open(os.environ["GITHUB_STEP_SUMMARY"],"a",encoding="utf-8") as summary_file:
+                print("### Drop Shot Desk settlement health\n"+message,file=summary_file)
+                for row in health["overdue"]:
+                    print(f"- {row['tour']} · {row['start']} · {' / '.join(row['groups'])}",file=summary_file)
     return reports
 
 
 if __name__=="__main__":
-    for tour, result in build(Store(),datetime.now(timezone.utc),write=True).items():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--refresh-all",action="store_true")
+    args = parser.parse_args()
+    store,now = ReportingStore(),datetime.now(timezone.utc)
+    if args.refresh_all:
+        import drop_desk_history, desk_paper_returns, desk_closing
+        drop_desk_history.project(store,now)
+        desk_paper_returns.project(store,now)
+        desk_closing.run(store,now)
+    for tour, result in build(store,now,write=True).items():
         print(tour, result["all"]["entries"], "paper matches;", result["telegram"]["entries"], "confirmed")
