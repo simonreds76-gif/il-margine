@@ -1,11 +1,11 @@
 {
-  "version": "f2cd535ce5d1",
-  "indexUrl": "/football-atlas/index-f2cd535ce5d1.json",
-  "checkedAt": "2026-11-12T16:52:52.042720+00:00",
-  "through": "2026-11-08",
+  "version": "682240ac45d2",
+  "indexUrl": "/football-atlas/index-682240ac45d2.json",
+  "checkedAt": "2026-11-24T20:01:12.980417+00:00",
+  "through": "2026-11-23",
   "from": "2012-08-10",
-  "fixtures": 25741,
-  "matches": 25741,
+  "fixtures": 25788,
+  "matches": 25788,
   "teams": 180,
   "seasons": [
     "2012-2013",
@@ -83,8 +83,8 @@
         "priced": 380
       },
       "2026-2027": {
-        "eligible": 100,
-        "priced": 100
+        "eligible": 110,
+        "priced": 110
       }
     },
     "serie-a": {
@@ -145,8 +145,8 @@
         "priced": 380
       },
       "2026-2027": {
-        "eligible": 110,
-        "priced": 110
+        "eligible": 120,
+        "priced": 120
       }
     },
     "la-liga": {
@@ -207,8 +207,8 @@
         "priced": 380
       },
       "2026-2027": {
-        "eligible": 119,
-        "priced": 119
+        "eligible": 129,
+        "priced": 129
       }
     },
     "bundesliga": {
@@ -269,8 +269,8 @@
         "priced": 306
       },
       "2026-2027": {
-        "eligible": 81,
-        "priced": 81
+        "eligible": 90,
+        "priced": 90
       }
     },
     "ligue-1": {
@@ -331,12 +331,26 @@
         "priced": 306
       },
       "2026-2027": {
-        "eligible": 90,
-        "priced": 90
+        "eligible": 98,
+        "priced": 98
       }
     }
   },
   "acquisitionComplete": true,
-  "bytes": 1940799,
-  "previewOnly": false
+  "bytes": 1944263,
+  "previewOnly": false,
+  "historyHolds": {
+    "held": 1,
+    "matches": [
+      {
+        "date": "2026-11-21",
+        "league": "ligue-1",
+        "home": "Lille",
+        "away": "Lyon",
+        "since": "2026-11-24",
+        "state": "held"
+      }
+    ],
+    "completeThrough": "2026-11-20"
+  }
 }
