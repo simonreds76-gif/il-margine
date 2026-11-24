@@ -4,7 +4,7 @@ import type { ReturnProjection } from '@/lib/tennis-tournament-returns.mjs';
 import { useEffect, useId, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { fixturesFor, matchdayQuote, type TennisBoard, type TennisFixture, type FixturePlayer } from '@/lib/tennis-matchday.mjs';
+import { fixturesFor, teamTiesFor, matchdayQuote, type TennisBoard, type TennisFixture, type FixturePlayer } from '@/lib/tennis-matchday.mjs';
 import { atlasResearchHref } from '@/components/return-atlas/research-links.mjs';
 import { tournamentOf, isQualifying, readBrowseState, browseQuery, displayDay, type BrowseState } from '@/lib/tennis-matchday-browse.mjs';
 import { countryForTournament } from '@/lib/tennis-tournament-country.mjs';
@@ -200,7 +200,9 @@ export default function TennisMatchdayClient({ board, renderedAt, tournamentHist
 
   const stale = board.stale || !board.capturedAt || now.getTime() - Date.parse(board.capturedAt) > 86400000;
   const upcoming = stale ? [] : fixturesFor(board.fixtures, 'upcoming', 'all', '', now);
-  const filter = displayDay(state.filter, upcoming.filter(f => tour === 'all' || f.tour === tour), now);
+  const ties = stale || tournament !== 'all' ? [] : teamTiesFor(board.teamTies ?? [], 'upcoming', tour, search, now);
+  const filter = displayDay(state.filter, [...upcoming.filter(f => tour === 'all' || f.tour === tour), ...ties], now);
+  const visibleTies = teamTiesFor(ties, filter, tour, search, now);
   const dated = fixturesFor(upcoming, filter, 'all', search, now).filter(f => qualifying || !isQualifying(f));
   const candidates = dated.filter(f => tour === 'all' || f.tour === tour);
   // Keep event choices across date/search changes; an empty filter never silently switches the event.
@@ -256,6 +258,10 @@ export default function TennisMatchdayClient({ board, renderedAt, tournamentHist
       <span className={styles.wide}>UK time · provisional starts · prices may have moved</span>
     </p>
 
+    {visibleTies.map(tie => <section className={styles.group} key={tie.id} aria-label={tie.event + ' team tie'}>
+      <header className={styles.groupHead}><div><p className={styles.groupMeta}>{tie.event} · Team tie · <time dateTime={tie.start}>{format(tie.start, { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })} UK</time></p>
+        <h3>{tie.teams.join(' v ')}</h3><p className={styles.groupMeta}>Individual singles are listed separately when player pairings reach the schedule.</p></div></header>
+    </section>)}
     {shown.length ? [...days].map(([date, groups]) => <div key={date}>
       <h2 className={styles.dayHead}>{date}</h2>
       {[...groups].map(([key, group]) => <section className={styles.group} key={key} aria-label={`${group.event?.displayName || 'All tournaments'}, ${date}`}>
@@ -271,7 +277,7 @@ export default function TennisMatchdayClient({ board, renderedAt, tournamentHist
         <OddsColumns />
         {group.fixtures.map(f => <FixtureRow fixture={f} now={now} showEvent={order === 'time'} key={f.id} />)}
       </section>)}
-    </div>) : <div className={styles.empty}>
+    </div>) : visibleTies.length ? null : <div className={styles.empty}>
       <h3>{stale ? 'Waiting for a fresh schedule' : 'No upcoming matches in this view'}</h3>
       <p>{stale ? 'The schedule is unavailable or more than 24 hours old. Results and player research remain available.' : `${selectedEvent ? `${selectedEvent.name}: ` : ''}try another date or clear the filters. We show captured fixtures, not a complete tennis calendar.`}</p>
       {!stale && <button type="button" onClick={() => reset(true)}>Show all captured fixtures</button>}

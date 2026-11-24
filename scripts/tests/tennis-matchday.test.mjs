@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildTennisMatchday, fixturesFor, matchdayQuote, QUOTE_MAX_AGE_MS } from '../../src/lib/tennis-matchday.mjs';
+import { buildTennisMatchday, fixturesFor, teamTiesFor, matchdayQuote, QUOTE_MAX_AGE_MS } from '../../src/lib/tennis-matchday.mjs';
 import { readMatchupResearch } from '../../src/components/return-atlas/research-links.mjs';
 
 const now = new Date('2026-10-09T10:00:00Z');
@@ -40,6 +40,21 @@ test('started, doubles and placeholders are excluded; named qualifying remains e
   }
   const f = buildTennisMatchday([{ ...row, league_name: 'ATP Shanghai Qualifying' }], history, now).fixtures[0];
   assert.equal(f.qualifying, true);
+});
+test('a country tie and the individual Davis Cup rubbers can coexist without sharing odds or H2H', () => {
+  const tie = { ...row, league_name: 'Davis Cup - Tie Winner', player1_name: 'Czech Republic', player2_name: 'Canada', odds1: 1.137, odds2: 5.94 };
+  const singles = { ...row, league_name: 'Davis Cup - Singles' };
+  const board = buildTennisMatchday([tie, tie, { ...tie, league_name: 'Davis Cup World' }, singles], history, now);
+  assert.equal(board.teamTies.length, 1);
+  assert.deepEqual(board.teamTies[0].teams, ['Czech Republic', 'Canada']);
+  assert.equal(Object.hasOwn(board.teamTies[0], 'quote'), false);
+  assert.equal(board.fixtures.length, 1);
+  assert.equal(board.fixtures[0].players[0].id, 'one');
+  assert.equal(board.fixtures[0].quote, null);
+  assert.equal(teamTiesFor(board.teamTies, 'today', 'ATP', '', now).length, 0);
+  assert.equal(teamTiesFor(board.teamTies, 'tomorrow', 'ATP', 'canada', now).length, 1);
+  assert.equal(teamTiesFor(board.teamTies, 'upcoming', 'Challenger', '', now).length, 0);
+  assert.equal(buildTennisMatchday([{ ...tie, league_name: 'Billie Jean King Cup - Tie Winner' }], history, now).teamTies.length, 0);
 });
 test('conflicting fixture start times do not produce duplicate or arbitrarily timed cards', () => {
   assert.equal(buildTennisMatchday([row, { ...row, kickoff_iso: '2026-10-10T07:00:00Z' }], history, now).fixtures.length, 0);

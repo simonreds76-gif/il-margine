@@ -7,4 +7,4 @@ export const surfaceNames:Record<string,string>;
 export function readBrowseState(search:string):BrowseState;
 export function browseQuery(state:BrowseState,search?:string):string;
 
-export function displayDay(filter:string, fixtures:TennisFixture[], now:Date):string;
+export function displayDay(filter:string, fixtures:{start:string}[], now:Date):string;

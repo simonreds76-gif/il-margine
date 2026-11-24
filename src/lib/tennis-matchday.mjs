@@ -14,6 +14,8 @@ const identityKey = text => identityAliases[normal(text)] ?? normal(text);
 const searchNames = name => [normal(name), ...Object.entries(identityAliases).filter(([, canonical]) => canonical === identityKey(name)).map(([alias]) => alias)].join(' ');
 
 const knownPlayer = name => name && !/\b(tba|tbd|winner|qualifier|bye)\b|[/&]/i.test(name);
+const teamCompetition = /\b(?:davis cup|laver cup|atp cup|united cup)\b/;
+const tieMarket = /\b(?:tie|team|nation|country|overall) (?:winner|result|moneyline)|\b(?:winner of (?:the )?tie|to win (?:the )?tie|to advance|outrights?)\b/;
 const day = (time, zone) => new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(time);
 
 // A schedule can remain useful for a day; an old quote must not look current.
@@ -42,7 +44,7 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
   const capturedAt = stamps.length === 1 && Number.isFinite(Date.parse(stamps[0])) ? stamps[0] : null;
   const stale = !capturedAt || now.getTime() - Date.parse(capturedAt) > 24 * 3600000 || Date.parse(capturedAt) > now.getTime() + 300000;
   const fixtures = [], excluded = { started: 0, invalid: 0, duplicate: 0 };
-  const pairs = new Map();
+  const pairs = new Map(), teamTies = new Map();
   for (const row of rows) {
     const start = Date.parse(row.kickoff_iso);
     if (!['ATP', 'Challenger'].includes(row.league) || !knownPlayer(row.player1_name) || !knownPlayer(row.player2_name)
@@ -51,6 +53,22 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
     if (start <= now.getTime()) { excluded.started++; continue; }
     if (start > now.getTime() + 72 * 3600000) continue;
     const pairKey = [identityKey(row.player1_name), identityKey(row.player2_name)].sort().join('|');
+    const eventLabel = normal(row.league_name);
+    if (tieMarket.test(eventLabel)) {
+      const competition = eventLabel.match(teamCompetition)?.[0];
+      if (competition && /\btie\b/.test(eventLabel)) {
+        const event = competition.replace(/\b\w/g, c => c.toUpperCase()).replace(/^Atp /, 'ATP ');
+        const id = [competition, pairKey, start].join('|');
+        teamTies.set(id, { id, event, start: new Date(start).toISOString(), teams: [row.player1_name, row.player2_name] });
+      }
+      continue;
+    }
+    // Some team markets omit "Tie Winner". Only named individuals from the player archive
+    // or recent singles results can form a player H2H in a team competition.
+    if (teamCompetition.test(eventLabel) && ![row.player1_name, row.player2_name].every(name => {
+      const key = identityKey(name), recent = history.matchdayRecent;
+      return resolve(name) !== undefined || Boolean(recent?.players?.[recent?.aliases?.[key] ?? key]);
+    })) { excluded.invalid++; continue; }
     if (pairs.has(pairKey)) { pairs.get(pairKey).ambiguous = true; excluded.duplicate++; continue; }
     const a = resolve(row.player1_name), b = resolve(row.player2_name);
     const players = [a, b].map((i, side) => i === undefined ? { id: null, name: side ? row.player2_name : row.player1_name, portrait: null }
@@ -101,7 +119,17 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
     pairs.set(pairKey, fixture); fixtures.push(fixture);
   }
   return { capturedAt, results: history.matchdayResults ?? null, contextVersion: history.contextVersion ?? null, resultsThrough: history.matchdayRecent?.through ?? null, resultsUpdatedAt: history.resultsUpdatedAt ?? null, historyThrough: history.through, historyVersion: history.version, stale, excluded,
+    teamTies: stale ? [] : [...teamTies.values()].sort((a, b) => a.start.localeCompare(b.start)),
     fixtures: stale ? [] : fixtures.filter(f => !f.ambiguous).sort((a, b) => a.start.localeCompare(b.start) || a.event.localeCompare(b.event)) };
+}
+
+export function teamTiesFor(ties, filter, tour, search, now, zone = 'Europe/London') {
+  if (tour !== 'all' && tour !== 'ATP') return [];
+  const today = day(now, zone);
+  const tomorrow = new Date(Date.parse(today + 'T12:00:00Z') + 86400000).toISOString().slice(0,10);
+  return ties.filter(t => Date.parse(t.start) > now.getTime()
+    && (filter === 'upcoming' || day(new Date(t.start), zone) === (filter === 'today' ? today : tomorrow))
+    && normal([t.event, ...t.teams].join(' ')).includes(normal(search)));
 }
 
 export function fixturesFor(fixtures, filter, tour, search, now, zone = 'Europe/London') {
