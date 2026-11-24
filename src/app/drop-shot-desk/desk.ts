@@ -153,7 +153,7 @@ export function cutoffOf(r: Timed): number | null {
   const until = r.activeUntil ? Date.parse(r.activeUntil) : NaN;
   if (!Number.isFinite(until)) return null;
   const start = Date.parse(r.start);
-  return Number.isFinite(start) ? Math.min(until, start) : until;
+  return Number.isFinite(start) ? Math.min(until, start) : null;
 }
 /** Still verified open pre-match at `now` (ms). An unknown clock is never open. */
 export function isOpen(r: Timed, now: number | null) {

@@ -124,12 +124,11 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   // Today opens on what is still open; past dates and direct roundup links open on the full record.
   const defaultScope: Scope = today && !initialBatchId ? "upcoming" : "all";
   const [scope, setScope] = useState<Scope>(defaultScope);
-  // One order per scope: Upcoming keeps its own choice, All recorded keeps its own.
-  const [orders, setOrders] = useState<Record<Scope, DropOrder>>({ upcoming: "largest", all: "largest" });
+  // Largest and Newest are live views. Oldest is the chronological record of the day.
+  const [upcomingOrder, setUpcomingOrder] = useState<Exclude<DropOrder, "oldest">>("largest");
   const [scopeDay, setScopeDay] = useState(day);
   const [clock, setClock] = useState<number | null>(now ?? null);
-  const [lapsedKey, setLapsedKey] = useState<string | null>(null);
-  if (scopeDay !== day) { setScopeDay(day); setScope(defaultScope); setLapsedKey(null); }
+  if (scopeDay !== day) { setScopeDay(day); setScope(defaultScope); }
   const levels = circuit === "WTA" ? WTA_LEVELS : ATP_LEVELS;
   const [tour, setTour] = useState(levels[0]);
   const [market,setMarket] = useState("all");
@@ -185,8 +184,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
     && (!needle || (r.player + " " + r.opponent + " " + (r.fixtureLabel??"") + " " + r.league).toLowerCase().includes(needle)), [tour, levels, draw, needle, market, alertedOnly, archive]);
   const matching = useMemo(() => moves.filter(passes), [moves, passes]);
   const upcoming = useMemo(() => (archive ? [] : matching.filter(r => isOpen(r, at))), [archive, matching, at]);
-  const sortScope = upcomingOnly ? "upcoming" : "all";
-  const order = orders[sortScope];
+  const order = upcomingOnly ? upcomingOrder : "oldest";
   const groups = useMemo(() => groupDrops(archive ? matching : orderDrops(upcomingOnly ? upcoming : matching, order)),
     [archive, matching, upcoming, upcomingOnly, order]);
   const rows = useMemo(() => groups.flatMap(group => group.drops), [groups]);
@@ -238,17 +236,6 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
     };
   }, [archive, now, cutoffs, live, router]);
 
-  // When the drop on stage closes and drops out of the upcoming list, say so instead of swapping silently.
-  const stageKey = useRef<string | null>(null);
-  useEffect(() => {
-    const prev = stageKey.current;
-    stageKey.current = currentKey;
-    if (!upcomingOnly || !prev || prev === currentKey) return;
-    const was = matching.find(r => moveKey(r) === prev);
-    if (was && !isOpen(was, at)) setLapsedKey(prev);
-  }, [currentKey, upcomingOnly, matching, at]);
-  const lapsed = upcomingOnly && lapsedKey ? matching.find(r => moveKey(r) === lapsedKey && !isOpen(r, at)) : undefined;
-
   // Keep the selected row visible inside the rail without moving the page.
   useEffect(() => {
     const list = listRef.current;
@@ -262,7 +249,6 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
 
   const choose = (move: DeskMove) => {
     setSelectedKey(moveKey(move));
-    setLapsedKey(null);
     setPickerOpen(false);
     const key = matchKey(move);
     if (expandedGroups[key] === false) {
@@ -275,12 +261,12 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   };
   const step = (dir: number) => { if (rows.length) choose(rows[(index + dir + rows.length) % rows.length]); };
   const clearFilters = () => { setTour(levels[0]); setDraw(DRAWS[0]); setMarket("all"); setQuery(""); setAlertedOnly(false); };
-  const changeScope = (next: Scope) => { setScope(next); setLapsedKey(null); };
+  const changeScope = (next: Scope) => { setScope(next); setSelectedKey(null); };
   // A new order starts from its own first entry; pressing the order already in use changes nothing.
   const changeOrder = (value: DropOrder) => {
     if (value === order) return;
-    setOrders(previous => ({ ...previous, [sortScope]: value }));
-    setSelectedKey(null);
+    if (value !== "oldest") setUpcomingOrder(value);
+    changeScope(value === "oldest" ? "all" : "upcoming");
   };
   const toStage = () => window.requestAnimationFrame(() => stageRef.current?.scrollIntoView({ block: "start" }));
   // A roundup row always opens its chart: a closed selection switches the list to the
@@ -290,10 +276,6 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
     if (upcomingOnly && !isOpen(move, at)) setScope("all");
     choose(move);
     toStage();
-  };
-  const openLapsed = () => {
-    if (lapsedKey) setSelectedKey(lapsedKey);
-    changeScope("all");
   };
   const selectBatch = (id: string) => {
     setPickedBatch(id);
@@ -345,6 +327,13 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
       ? (matching.length === 1 ? "The one recorded drop here is no longer" : "None of the " + matching.length + " recorded drops here is still") + " verified open before its scheduled start."
       : alertedOnly ? "No confirmed Telegram alerts match these filters." : "No recorded drops match these filters.";
 
+  const sortControls = !archive && <div className={styles.sortRow} role="group" aria-labelledby={sortId}>
+    <span className={styles.lab} id={sortId}>Sort</span>
+    <div className={styles.sort}>
+      {SORTS.map(s => <button key={s.value} type="button" aria-pressed={order === s.value} onClick={() => changeOrder(s.value)}>{s.label}</button>)}
+    </div>
+  </div>;
+
   return <div className={styles.board} data-archive={archive ? "true" : undefined}>
     {/* One line of controls: what to show, three quiet filters, the search. The order of the list lives on the list. */}
     <div className={styles.tools}>
@@ -370,26 +359,15 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
       {!archive && roundups.length > 0 && <a className={styles.jump} href={ROUNDUPS_HASH} onClick={() => setRoundupsOpen(true)}>Telegram roundups ({roundups.length}) <span aria-hidden="true">↓</span></a>}
     </div>
 
-    {lapsed && <p className={styles.lapsed} role="status">
-      <span><b>{lapsed.player}</b> vs {lapsed.opponent} is closed and off the upcoming list · {availability(lapsed, at).reason}.</span>
-      <button type="button" className={styles.linkish} onClick={openLapsed}>See its recorded chart</button>
-    </p>}
-
     {m ? <div className={styles.desk}>
       {/* The ledger: each entry reads who and where on the left, the figures on the right, all on one right edge. */}
       <section className={styles.rail} aria-label={upcomingOnly ? "Upcoming moves" : "Recorded moves"}>
         <div className={styles.railHead}>
           <h2>{upcomingOnly ? "Upcoming drops" : "Price drops"} <small>{plural(groups.length, "match", "matches")} · {plural(rows.length, "drop", "drops")}</small></h2>
-          {!archive && <div className={styles.sortRow} role="group" aria-labelledby={sortId} aria-describedby={noteId}>
-            <span className={styles.lab} id={sortId}>Sort</span>
-            <div className={styles.sort}>
-              {SORTS.map(s => <button key={s.value} type="button" aria-pressed={order === s.value} onClick={() => changeOrder(s.value)}>{s.label}</button>)}
-            </div>
-          </div>}
+          {sortControls}
           <p className={styles.railNote} id={noteId}>
             <b>pp</b> is the rise in implied probability (1 ÷ price) from the earlier odds to the observed move.
-            {!archive && <> Telegram flags the first move <b>over 4 pp</b> per side and line before play. Each alert shows the observed market limits.</>}
-            {!archive && <> {upcomingOnly ? "Upcoming" : "All recorded"}: {sortNote}.</>}
+            {!archive && <> {upcomingOnly ? "Open pre-match drops" : "All recorded drops"}, {sortNote}.</>}
           </p>
         </div>
         {/* Phones and tablets: the entry on stage is a switcher; the ledger opens beneath it and folds away on choice. */}
@@ -511,6 +489,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
       </article>
     </div> : <div className={styles.blank}>
       <div>
+        {sortControls}
         <p role="status">{blank}</p>
         {filtered && moves.length > 0 && <button type="button" className={styles.ghost} onClick={clearFilters}>Clear filters</button>}
         {upcomingOnly && matching.length > 0 && <button type="button" className={styles.ghost} onClick={() => changeScope("all")}>Show all recorded ({matching.length})</button>}
