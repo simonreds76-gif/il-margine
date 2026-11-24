@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-11-23T20:16:47.443419+00:00",
+  "checked_at": "2026-11-24T19:31:32.570890+00:00",
   "scopes": {
     "epl/2026": {
-      "matches": 109,
+      "matches": 110,
       "matched": 0,
-      "missing": 109,
+      "missing": 110,
       "affected_clubs": [
         "Arsenal",
         "Aston Villa",
@@ -681,13 +681,19 @@
           "home": "Liverpool",
           "away": "Man United",
           "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-23",
+          "home": "Brentford",
+          "away": "Everton",
+          "reason": "no_exact_fixture"
         }
       ]
     },
     "serie-a/2026": {
-      "matches": 119,
+      "matches": 120,
       "matched": 0,
-      "missing": 119,
+      "missing": 120,
       "affected_clubs": [
         "Atalanta",
         "Bologna",
@@ -1424,13 +1430,19 @@
           "home": "Atalanta",
           "away": "Inter",
           "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-23",
+          "home": "Monza",
+          "away": "Fiorentina",
+          "reason": "no_exact_fixture"
         }
       ]
     },
     "la-liga/2026": {
-      "matches": 128,
+      "matches": 129,
       "matched": 0,
-      "missing": 128,
+      "missing": 129,
       "affected_clubs": [
         "Alaves",
         "Ath Bilbao",
@@ -2220,6 +2232,12 @@
           "date": "2026-11-22",
           "home": "Getafe",
           "away": "Ath Madrid",
+          "reason": "no_exact_fixture"
+        },
+        {
+          "date": "2026-11-23",
+          "home": "Levante",
+          "away": "Elche",
           "reason": "no_exact_fixture"
         }
       ]
