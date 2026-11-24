@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-23T22:01:32Z",
+  "generated_at": "2026-11-24T05:58:28Z",
   "league": "serie-a",
   "row_count": 0,
   "stats": {
     "historical_rows": 33711,
     "odds_rows": 0,
     "matched_rows": 0,
-    "missing_player_history": 7,
+    "missing_player_history": 0,
     "missing_team_mapping": 0,
     "fallback_rows": 0,
     "qualified_rows": 0,
@@ -21,9 +21,9 @@
     "penalty_transfer_rows": 0,
     "position_upgrade_rows": 0,
     "role_adjusted_rows": 0,
-    "fixtures_with_confirmed_lineups": 1,
+    "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 0,
-    "fixtures_clean": 1,
+    "fixtures_clean": 0,
     "fixtures_degraded": 0,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
@@ -34,215 +34,6 @@
     "not_in_squad_rows": 0,
     "avg_ev": 0.0
   },
-  "fixtures": [
-    {
-      "match_date": "2026-11-23",
-      "home_team": "Monza",
-      "away_team": "Fiorentina",
-      "league": "serie-a",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Demba Thiam",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Eddy Kouadio",
-          "status": "plausible",
-          "known_team_keys": [
-            "monza"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Saba Goglichidze",
-          "status": "plausible",
-          "known_team_keys": [
-            "monza"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Andrea Carboni",
-          "status": "plausible",
-          "known_team_keys": [
-            "monza"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Samuele Birindelli",
-          "status": "plausible",
-          "known_team_keys": [
-            "monza"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ebenezer Akinsanmiro",
-          "status": "plausible",
-          "known_team_keys": [
-            "monza"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Leonardo Colombo",
-          "status": "plausible",
-          "known_team_keys": [
-            "monza"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Matteo Pessina",
-          "status": "plausible",
-          "known_team_keys": [
-            "monza"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Ricardo Mangas",
-          "status": "plausible",
-          "known_team_keys": [
-            "monza"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Gustavo Varela",
-          "status": "plausible",
-          "known_team_keys": [
-            "monza"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jay Robinson",
-          "status": "plausible",
-          "known_team_keys": [
-            "monza"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "David de Gea",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Álex Jiménez",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Radu Drăgușin",
-          "status": "plausible",
-          "known_team_keys": [
-            "fiorentina"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Viery",
-          "status": "plausible",
-          "known_team_keys": [
-            "fiorentina"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "João Mário",
-          "status": "plausible",
-          "known_team_keys": [
-            "fiorentina"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Cher Ndour",
-          "status": "plausible",
-          "known_team_keys": [
-            "fiorentina"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Christ Inao Oulaï",
-          "status": "plausible",
-          "known_team_keys": [
-            "fiorentina"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Franco Mastantuono",
-          "status": "plausible",
-          "known_team_keys": [
-            "fiorentina"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Pote",
-          "status": "plausible",
-          "known_team_keys": [
-            "fiorentina"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Wilfried Gnonto",
-          "status": "plausible",
-          "known_team_keys": [
-            "fiorentina"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Mateo Pellegrino",
-          "status": "plausible",
-          "known_team_keys": [
-            "fiorentina"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    }
-  ],
+  "fixtures": [],
   "rows": []
 }

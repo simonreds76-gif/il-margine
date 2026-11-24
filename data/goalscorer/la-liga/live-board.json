@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-23T22:01:42Z",
+  "generated_at": "2026-11-24T05:58:35Z",
   "league": "la-liga",
   "row_count": 0,
   "stats": {
     "historical_rows": 35048,
     "odds_rows": 0,
     "matched_rows": 0,
-    "missing_player_history": 4,
+    "missing_player_history": 0,
     "missing_team_mapping": 0,
     "fallback_rows": 0,
     "qualified_rows": 0,
@@ -21,9 +21,9 @@
     "penalty_transfer_rows": 0,
     "position_upgrade_rows": 0,
     "role_adjusted_rows": 0,
-    "fixtures_with_confirmed_lineups": 1,
+    "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 0,
-    "fixtures_clean": 1,
+    "fixtures_clean": 0,
     "fixtures_degraded": 0,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
@@ -34,209 +34,6 @@
     "not_in_squad_rows": 0,
     "avg_ev": 0.0
   },
-  "fixtures": [
-    {
-      "match_date": "2026-11-23",
-      "home_team": "Levante",
-      "away_team": "Elche",
-      "league": "la-liga",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Mathew Ryan",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jeremy Toljan",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Aïssa Mandi",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Adrián De La Fuente",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Manuel Sánchez",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Oriol Rey",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Roger Brugué",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Dani Requena",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jon Olasagasti",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Thiago Fernández",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Iván Romero",
-          "status": "plausible",
-          "known_team_keys": [
-            "levante"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Matías Dituro",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Buba Sangaré",
-          "status": "plausible",
-          "known_team_keys": [
-            "elche"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Federico Redondo",
-          "status": "plausible",
-          "known_team_keys": [
-            "elche"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Víctor Chust",
-          "status": "plausible",
-          "known_team_keys": [
-            "elche"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Roy Revivo",
-          "status": "plausible",
-          "known_team_keys": [
-            "elche"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Lucas Cepeda",
-          "status": "plausible",
-          "known_team_keys": [
-            "elche"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Javi Morcillo",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Gonzalo Villar",
-          "status": "plausible",
-          "known_team_keys": [
-            "elche"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Germán Valera",
-          "status": "plausible",
-          "known_team_keys": [
-            "elche"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Abiel Osorio",
-          "status": "plausible",
-          "known_team_keys": [
-            "elche"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Fer Niño",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    }
-  ],
+  "fixtures": [],
   "rows": []
 }

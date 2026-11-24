@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-23T22:01:37Z",
+  "generated_at": "2026-11-24T05:58:32Z",
   "league": "epl",
   "row_count": 0,
   "stats": {
     "historical_rows": 32984,
     "odds_rows": 0,
     "matched_rows": 0,
-    "missing_player_history": 8,
+    "missing_player_history": 0,
     "missing_team_mapping": 0,
     "fallback_rows": 0,
     "qualified_rows": 0,
@@ -21,9 +21,9 @@
     "penalty_transfer_rows": 0,
     "position_upgrade_rows": 0,
     "role_adjusted_rows": 0,
-    "fixtures_with_confirmed_lineups": 1,
+    "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 0,
-    "fixtures_clean": 1,
+    "fixtures_clean": 0,
     "fixtures_degraded": 0,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
@@ -34,213 +34,6 @@
     "not_in_squad_rows": 0,
     "avg_ev": 0.0
   },
-  "fixtures": [
-    {
-      "match_date": "2026-11-23",
-      "home_team": "Brentford",
-      "away_team": "Everton",
-      "league": "epl",
-      "competition": "",
-      "bookmaker": "",
-      "lineup_input": "confirmed_xi",
-      "trust_tier": "T1",
-      "corruption_score": 0.0,
-      "corruption_flags": [],
-      "home_player_checks": [
-        {
-          "name": "Caoimhín Kelleher",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Michael Kayode",
-          "status": "plausible",
-          "known_team_keys": [
-            "brentford"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Kristoffer Ajer",
-          "status": "plausible",
-          "known_team_keys": [
-            "brentford"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Sepp van den Berg",
-          "status": "plausible",
-          "known_team_keys": [
-            "brentford"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Keane Lewis-Potter",
-          "status": "plausible",
-          "known_team_keys": [
-            "brentford"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Yehor Yarmoliuk",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Vitaly Janelt",
-          "status": "plausible",
-          "known_team_keys": [
-            "brentford"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Dango Ouattara",
-          "status": "plausible",
-          "known_team_keys": [
-            "brentford"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Mikkel Damsgaard",
-          "status": "plausible",
-          "known_team_keys": [
-            "brentford"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jaidon Anthony",
-          "status": "plausible",
-          "known_team_keys": [
-            "brentford"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Callum Wilson",
-          "status": "transfer_unverified",
-          "known_team_keys": [
-            "west ham"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ],
-      "away_player_checks": [
-        {
-          "name": "Jordan Pickford",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jake O'Brien",
-          "status": "plausible",
-          "known_team_keys": [
-            "everton"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "James Tarkowski",
-          "status": "plausible",
-          "known_team_keys": [
-            "everton"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Jarrad Branthwaite",
-          "status": "plausible",
-          "known_team_keys": [
-            "everton"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Vitaliy Mykolenko",
-          "status": "untracked",
-          "known_team_keys": [],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Harrison Armstrong",
-          "status": "plausible",
-          "known_team_keys": [
-            "everton"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "James Garner",
-          "status": "plausible",
-          "known_team_keys": [
-            "everton"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Merlin Röhl",
-          "status": "plausible",
-          "known_team_keys": [
-            "everton"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Kiernan Dewsbury-Hall",
-          "status": "plausible",
-          "known_team_keys": [
-            "everton"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Tyrique George",
-          "status": "plausible",
-          "known_team_keys": [
-            "everton"
-          ],
-          "score": 0.0,
-          "flags": []
-        },
-        {
-          "name": "Thierno Barry",
-          "status": "plausible",
-          "known_team_keys": [
-            "everton"
-          ],
-          "score": 0.0,
-          "flags": []
-        }
-      ]
-    }
-  ],
+  "fixtures": [],
   "rows": []
 }
