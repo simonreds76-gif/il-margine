@@ -1,15 +1,16 @@
 import type { FixtureBoard } from '@/components/football-atlas/fixtures/types';
-import type { TennisBoard } from './tennis-matchday.mjs';
+import type { DavisProgramme, TennisBoard } from './tennis-matchday.mjs';
 
 export type HomePerson = { name: string; image: string | null };
 export type HomeHistory = { results: number[] | null; meetings: number | null };
-export type HomeFixture = { id: string; start: string; competition: string; tour?: string; sides: HomePerson[]; history: HomeHistory; href: string | null; managers?: { sides: HomePerson[]; history: HomeHistory; href: string } };
+export type HomeFixture = { id: string; start: string; competition: string; tour?: string; programme?: DavisProgramme; sides: HomePerson[]; history: HomeHistory; href: string | null; managers?: { sides: HomePerson[]; history: HomeHistory; href: string } };
 export type HomeFeed = { checkedAt: string | null; expiresAt: string | null; fixtures: HomeFixture[] };
 export type HomeFixturesData = { football: HomeFeed; tennis: HomeFeed };
 export const londonDay = (time: string | number) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(time));
 export function upcomingHomeFixtures(feed: HomeFeed, now: number, limit = 2) {
-  if (!feed.checkedAt || !feed.expiresAt || !Number.isFinite(Date.parse(feed.expiresAt)) || now >= Date.parse(feed.expiresAt)) return [];
-  return feed.fixtures.filter(f => Date.parse(f.start) > now).sort((a, b) => Date.parse(a.start) - Date.parse(b.start) || a.id.localeCompare(b.id)).slice(0, limit);
+  const fresh = !!feed.checkedAt && !!feed.expiresAt && now < Date.parse(feed.expiresAt);
+  return feed.fixtures.filter(f => f.programme ? f.programme.day >= londonDay(now) : fresh && Date.parse(f.start) > now)
+    .sort((a, b) => Date.parse(a.start) - Date.parse(b.start) || (a.programme?.order ?? 0) - (b.programme?.order ?? 0) || a.id.localeCompare(b.id)).slice(0, limit);
 }
 const leagues: Record<string, string> = { 'premier-league': 'Premier League', 'serie-a': 'Serie A', 'la-liga': 'La Liga', bundesliga: 'Bundesliga', 'ligue-1': 'Ligue 1' };
 export function footballHomeFeed(board: FixtureBoard): HomeFeed {
@@ -20,5 +21,5 @@ export function footballHomeFeed(board: FixtureBoard): HomeFeed {
   }) };
 }
 export function tennisHomeFeed(board: TennisBoard): HomeFeed {
-  return { checkedAt: board.capturedAt, expiresAt: board.capturedAt ? new Date(Date.parse(board.capturedAt) + 86400000).toISOString() : null, fixtures: board.fixtures.map(f => ({ id: f.id, start: f.start, tour: f.tour, competition: `${f.event}${f.qualifying ? ' · Qualifying' : ''}`, sides: f.players.map(p => ({ name: p.name, image: p.portrait })), history: { results: f.wins, meetings: f.meetings }, href: f.href })) };
+  return { checkedAt: board.capturedAt, expiresAt: board.capturedAt ? new Date(Date.parse(board.capturedAt) + 86400000).toISOString() : null, fixtures: board.fixtures.map(f => ({ id: f.id, start: f.start, tour: f.tour, programme: f.programme, competition: `${f.event}${f.qualifying ? ' · Qualifying' : ''}`, sides: f.players.map(p => ({ name: p.name, image: p.portrait })), history: { results: f.wins, meetings: f.meetings }, href: f.href })) };
 }

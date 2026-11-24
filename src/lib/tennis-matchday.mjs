@@ -1,4 +1,5 @@
 import { resolveTennisPortrait, safeTennisPortraitSource } from './tennis-portrait.mjs';
+import { davisCupProgramme } from './davis-cup-programme.mjs';
 // Explicit feed variants of these archive identities; never fuzzy-match opponents.
 const aliases = { 'jaume munar': 'vbt-10698', 'pedro martinez': 'vbt-12525', 'taylor fritz': 'vbt-9023', 'yunchaokete bu': 'vbt-25003', 'igor marcondes': 'vbt-5490', 'felipe meligeni rodrigues alves': 'vbt-16420' };
 const normal = text => String(text ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
@@ -45,12 +46,13 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
   const stale = !capturedAt || now.getTime() - Date.parse(capturedAt) > 24 * 3600000 || Date.parse(capturedAt) > now.getTime() + 300000;
   const fixtures = [], excluded = { started: 0, invalid: 0, duplicate: 0 };
   const pairs = new Map(), teamTies = new Map();
-  for (const row of rows) {
+  const programme = davisCupProgramme(now);
+  for (const row of [...rows, ...programme]) {
     const start = Date.parse(row.kickoff_iso);
     if (!['ATP', 'Challenger'].includes(row.league) || !knownPlayer(row.player1_name) || !knownPlayer(row.player2_name)
       || !mensSinglesEvent(row.league_name) || !Number.isFinite(start)
-      || identityKey(row.player1_name) === identityKey(row.player2_name) || (capturedAt && start <= Date.parse(capturedAt))) { excluded.invalid++; continue; }
-    if (start <= now.getTime()) { excluded.started++; continue; }
+      || identityKey(row.player1_name) === identityKey(row.player2_name) || (!row.programme && capturedAt && start <= Date.parse(capturedAt))) { excluded.invalid++; continue; }
+    if (!row.programme && start <= now.getTime()) { excluded.started++; continue; }
     if (start > now.getTime() + 72 * 3600000) continue;
     const pairKey = [identityKey(row.player1_name), identityKey(row.player2_name)].sort().join('|');
     const eventLabel = normal(row.league_name);
@@ -59,7 +61,9 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
       if (competition && /\btie\b/.test(eventLabel)) {
         const event = competition.replace(/\b\w/g, c => c.toUpperCase()).replace(/^Atp /, 'ATP ');
         const id = [competition, pairKey, start].join('|');
-        teamTies.set(id, { id, event, start: new Date(start).toISOString(), teams: [row.player1_name, row.player2_name] });
+        const covered = programme.some(r => event === 'Davis Cup' && r.programme.day === row.kickoff_iso.slice(0,10)
+          && r.programme.teams.map(identityKey).sort().join('|') === pairKey);
+        if (!covered) teamTies.set(id, { id, event, start: new Date(start).toISOString(), teams: [row.player1_name, row.player2_name] });
       }
       continue;
     }
@@ -69,7 +73,14 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
       const key = identityKey(name), recent = history.matchdayRecent;
       return resolve(name) !== undefined || Boolean(recent?.players?.[recent?.aliases?.[key] ?? key]);
     })) { excluded.invalid++; continue; }
-    if (pairs.has(pairKey)) { pairs.get(pairKey).ambiguous = true; excluded.duplicate++; continue; }
+    const prior = pairs.get(pairKey);
+    if (row.programme && prior && !prior.ambiguous && !stale && /\bdavis cup\b/.test(normal(prior.event))
+        && prior.start.slice(0,10) === row.programme.day) {
+      prior.programme = row.programme;
+      prior.event = row.league_name;
+      continue;
+    }
+    if (prior && !row.programme) { prior.ambiguous = true; excluded.duplicate++; continue; }
     const a = resolve(row.player1_name), b = resolve(row.player2_name);
     const players = [a, b].map((i, side) => i === undefined ? { id: null, name: side ? row.player2_name : row.player1_name, portrait: null }
       : { id: history.players[i].id, name: history.players[i].name, portrait: history.players[i].portrait });
@@ -116,11 +127,15 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
       quote: capturedAt && [row.odds1, row.odds2].every(p => p !== null && p !== '' && Number.isFinite(Number(p)) && Number(p) > 1)
         ? { capturedAt, bookmaker: 'Pinnacle', odds: [Number(row.odds1), Number(row.odds2)] } : null,
       href: a !== undefined && b !== undefined ? matchdayHref(players[0].id, players[1].id) : null, ambiguous: false };
+    if (row.programme) {
+      fixture.programme = row.programme;
+      fixture.id = 'programme:' + row.programme.day + ':' + pairKey;
+    }
     pairs.set(pairKey, fixture); fixtures.push(fixture);
   }
   return { capturedAt, results: history.matchdayResults ?? null, contextVersion: history.contextVersion ?? null, resultsThrough: history.matchdayRecent?.through ?? null, resultsUpdatedAt: history.resultsUpdatedAt ?? null, historyThrough: history.through, historyVersion: history.version, stale, excluded,
     teamTies: stale ? [] : [...teamTies.values()].sort((a, b) => a.start.localeCompare(b.start)),
-    fixtures: stale ? [] : fixtures.filter(f => !f.ambiguous).sort((a, b) => a.start.localeCompare(b.start) || a.event.localeCompare(b.event)) };
+    fixtures: fixtures.filter(f => !f.ambiguous && (!stale || f.programme)).sort((a, b) => a.start.localeCompare(b.start) || (a.programme?.order ?? 0) - (b.programme?.order ?? 0) || a.event.localeCompare(b.event)) };
 }
 
 export function teamTiesFor(ties, filter, tour, search, now, zone = 'Europe/London') {
@@ -136,7 +151,7 @@ export function fixturesFor(fixtures, filter, tour, search, now, zone = 'Europe/
   const today = day(now, zone);
   // Calendar tomorrow, including the 25-hour day when British Summer Time ends.
   const tomorrow = new Date(Date.parse(`${today}T12:00:00Z`) + 24 * 3600000).toISOString().slice(0, 10);
-  return fixtures.filter(f => Date.parse(f.start) > now.getTime() && (tour === 'all' || f.tour === tour)
+  return fixtures.filter(f => (f.programme ? f.programme.day >= today : Date.parse(f.start) > now.getTime()) && (tour === 'all' || f.tour === tour)
     && (filter === 'upcoming' || day(new Date(f.start), zone) === (filter === 'today' ? today : tomorrow))
-    && `${normal(f.event)} ${f.players.map(p => searchNames(p.name)).join(' ')}`.includes(normal(search)));
+    && `${[normal(f.event), normal(f.programme?.tie), ...f.players.map(p => searchNames(p.name))].filter(Boolean).join(' ')}`.includes(normal(search)));
 }

@@ -23,7 +23,7 @@ const percent = (n: number | null) => n === null ? 'Not available' : `${n > 0 ? 
 const surname = (name: string) => name.split(' ').slice(-1).join(' ');
 const price = (n: number | null) => n !== null && Number.isFinite(n) && n > 1 ? n.toFixed(3).replace(/0$/, '') : 'Unavailable';
 const units = (n: number) => `${n < 0 ? '−' : '+'}${Math.abs(n).toFixed(2)}u`;
-const countryOf = (f: TennisFixture): Country => countryForTournament(tournamentOf(f).label, f.tour, f.start.slice(0, 10)) as Country;
+const countryOf = (f: TennisFixture): Country => f.programme?.country ?? countryForTournament(tournamentOf(f).label, f.tour, f.start.slice(0, 10)) as Country;
 
 // Played matches from the last 366 days only; a walkover is not form.
 function recentForm(player: FixturePlayer) {
@@ -147,7 +147,8 @@ function FixtureRow({ fixture: f, now, showEvent }: { fixture: TennisFixture; no
   const formText = f.players.map(p => { const form = recentForm(p); return form.length ? `${p.name}: ${form.filter(m => m.winner).length} won of last ${form.length}.` : ''; }).join(' ');
   return <div className={styles.row} data-fixture={f.id}>
     <button className={styles.rowBtn} type="button" aria-expanded={open} aria-controls={detailId} onClick={() => setOpen(!open)}>
-      <span className={styles.when}><time dateTime={f.start}>{format(f.start, { hour: '2-digit', minute: '2-digit' })}</time>{!showEvent && round && <small>{round}</small>}</span>
+      <span className={styles.when}>{f.programme ? <>{f.programme.order === 1 ? '1st' : '2nd'}<small>singles</small></>
+        : <><time dateTime={f.start}>{format(f.start, { hour: '2-digit', minute: '2-digit' })}</time>{!showEvent && round && <small>{round}</small>}</>}</span>
       <span className={styles.players}>
         {f.players.map((p, i) => <span key={i} className={styles.line}><span className={styles.name}>{p.name}</span><FormDots player={p} /><DecimalPrice value={quote?.odds[i]} /></span>)}
         {showEvent && <span className={styles.eventLine}><Flag country={countryOf(f)} /><span>{event.displayName}{round ? ` · ${round}` : ''}</span><Surface surface={event.surface} /></span>}
@@ -199,7 +200,7 @@ export default function TennisMatchdayClient({ board, renderedAt, tournamentHist
   </section>;
 
   const stale = board.stale || !board.capturedAt || now.getTime() - Date.parse(board.capturedAt) > 86400000;
-  const upcoming = stale ? [] : fixturesFor(board.fixtures, 'upcoming', 'all', '', now);
+  const upcoming = fixturesFor(stale ? board.fixtures.filter(f => f.programme) : board.fixtures, 'upcoming', 'all', '', now);
   const ties = stale || tournament !== 'all' ? [] : teamTiesFor(board.teamTies ?? [], 'upcoming', tour, search, now);
   const filter = displayDay(state.filter, [...upcoming.filter(f => tour === 'all' || f.tour === tour), ...ties], now);
   const visibleTies = teamTiesFor(ties, filter, tour, search, now);
@@ -273,6 +274,8 @@ export default function TennisMatchdayClient({ board, renderedAt, tournamentHist
               <span className={styles.groupCount}>{group.fixtures.length}<span className="sr-only"> matches</span></span>
             </header>
           : <header className={styles.groupHead}><div><h3>All tournaments</h3><p className={styles.groupMeta}>In start order</p></div><span className={styles.groupCount}>{group.fixtures.length}</span></header>}
+        {[...new Set(group.fixtures.flatMap(f => f.programme ? [f.programme.tie] : []))].map(tie =>
+          <p key={tie} className={styles.status}>{tie} · Singles order of play. The second match follows the first.</p>)}
         {group.event?.tour === 'ATP' && group.fixtures.some(f => !isQualifying(f)) && <TournamentReturns summary={tournamentHistory.byTournament[group.event.key] || { availability: 'unavailable', name: group.event.displayName, reason: 'No audited price history is linked to this tournament edition and surface yet.' }} />}
         <OddsColumns />
         {group.fixtures.map(f => <FixtureRow fixture={f} now={now} showEvent={order === 'time'} key={f.id} />)}

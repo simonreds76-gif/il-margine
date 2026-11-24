@@ -4,6 +4,21 @@ import { buildTennisMatchday, fixturesFor, teamTiesFor, matchdayQuote, QUOTE_MAX
 import { readMatchupResearch } from '../../src/components/return-atlas/research-links.mjs';
 
 const now = new Date('2026-10-09T10:00:00Z');
+test('a confirmed day programme survives the tie start and a missing feed, with no team price or duplicate player bets', () => {
+  const clock = new Date('2026-11-24T16:00:00Z');
+  const players = ['Tomas Machac','Liam Draxl','Jiri Lehecka','Felix Auger Aliassime'].map((name,index) => ({name,id:String(index+1)}));
+  const h = { ...history, players, matches:[] };
+  const board = buildTennisMatchday([], h, clock);
+  assert.equal(board.stale,true);
+  assert.deepEqual(fixturesFor(board.fixtures,'today','ATP','canada',clock).map(f=>f.programme.order),[1,2]);
+  assert.ok(board.fixtures.every(f=>f.href && f.quote===null));
+  assert.equal(fixturesFor(board.fixtures,'upcoming','Challenger','',clock).length,0);
+  assert.equal(fixturesFor(board.fixtures,'upcoming','ATP','',new Date('2026-11-25T00:01:00Z')).length,0);
+  const named = {...row,captured_at:'2026-11-24T15:50:00Z',league_name:'Davis Cup',kickoff_iso:'2026-11-24T17:00:00Z',player1_name:players[2].name,player2_name:players[3].name,odds1:1.8,odds2:2.1};
+  const withOdds = buildTennisMatchday([named],h,clock);
+  assert.equal(withOdds.fixtures.length,2);
+  assert.deepEqual(withOdds.fixtures.find(f=>f.programme.order===2).quote.odds,[1.8,2.1]);
+});
 const row = { captured_at: '2026-10-09T09:00:00Z', league: 'ATP', league_name: 'ATP Shanghai', player1_name: 'Player One', player2_name: 'Player Two', kickoff_iso: '2026-10-10T05:00:00Z' };
 const history = { asOf: '2026-10-09', through: '2026-10-08', version: 'test',
   players: [{ id: 'one', name: 'Player One' }, { id: 'two', name: 'Player Two' }],

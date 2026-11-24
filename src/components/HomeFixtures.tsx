@@ -22,13 +22,14 @@ function Fixture({ fixture: f, tennis, now }: { fixture: HomeFixture; tennis: bo
   const day = londonDay(f.start) === londonDay(now) ? 'Today' : new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', weekday: 'short', day: 'numeric', month: 'short' }).format(date);
   const time = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit' }).format(date);
   const competition = tennis ? tennisCompetition(f.competition) : { label: f.competition, country: null };
-  const logo = tennis ? '/icons/markets/atp-logo-small-v1.webp' : homeLeagueLogos[f.competition];
+  const country = f.programme?.country ?? competition.country;
+  const logo = f.programme ? null : tennis ? '/icons/markets/atp-logo-small-v1.webp' : homeLeagueLogos[f.competition];
   return <article className={`hf-card ${tennis ? "hf-tennis" : ""}`}>
     <div className="hf-meta"><span className="hf-competition">
       {logo && <Image className={`hf-competition-logo ${tennis ? 'hf-atp-logo' : ''}`} src={logo} width={tennis ? 42 : 28} height={28} alt={tennis ? 'ATP' : ''} unoptimized />}
       <span className="hf-competition-name">{competition.label}</span>
-      {competition.country && <Image className="hf-venue-flag" src={`/flags/${competition.country.code}.png`} width={20} height={14} alt={competition.country.name} title={`Played in ${competition.country.name}`} unoptimized />}
-    </span><time dateTime={f.start}>{day} · {time}</time></div>
+      {country && <Image className="hf-venue-flag" src={`/flags/${country.code}.png`} width={20} height={14} alt={country.name} title={`Played in ${country.name}`} unoptimized />}
+    </span>{f.programme ? <span>{day} · {f.programme.order === 1 ? '1st' : '2nd'} singles</span> : <time dateTime={f.start}>{day} · {time}</time>}</div>
     <div className="hf-opponents">{f.sides.map((s, i) => <div className="hf-side" key={`${f.id}-${i}`}><Portrait key={s.image} src={s.image} person={tennis} /><h4>{s.name}</h4></div>)}<span className="hf-versus" aria-hidden="true">vs</span></div>
     <div className="hf-history"><span className="hf-kicker">{tennis ? 'Player' : 'Club'} head to head</span><Record football={!tennis} history={f.history} names={f.sides.map(s => s.name)} /></div>
     {f.managers && <div className="hf-managers"><span className="hf-kicker">Manager head to head</span><div className="hf-manager-names">{f.managers.sides.map((s, i) => <span key={i}><Portrait key={s.image} src={s.image} person /><span>{s.name}</span></span>)}</div><Record football history={f.managers.history} names={f.managers.sides.map(s => s.name)} /></div>}
@@ -56,7 +57,7 @@ export default function HomeFixtures() {
       const stale = feed?.expiresAt && now && Date.parse(feed.expiresAt) <= now;
       const title = fixtures.length && now && londonDay(fixtures[0].start) === londonDay(now) ? `Today's ${sport}` : sport === 'football' ? 'Next league fixtures' : 'Next tennis matches';
       const href = sport === 'football' ? '/football-atlas/fixtures' : '/tennis-matchday';
-      return <div className="hf-sport" id={`home-${sport}`} key={sport}><div className="hf-sport-heading"><ToolEmblem name={sport === 'football' ? 'matchday' : 'tennis-matchday'} /><div><h3>{title}</h3><span>{sport === 'football' ? 'Five major domestic leagues' : 'ATP player meetings'}</span></div><Link prefetch={false} href={href} aria-label={`All ${sport} fixtures`}>View all ↗</Link></div>
+      return <div className="hf-sport" id={`home-${sport}`} key={sport}><div className="hf-sport-heading"><ToolEmblem name={sport === 'football' ? 'matchday' : 'tennis-matchday'} /><div><h3>{title}</h3><span>{sport === 'football' ? 'Five major domestic leagues' : 'Men’s singles'}</span></div><Link prefetch={false} href={href} aria-label={`All ${sport} fixtures`}>View all ↗</Link></div>
 
         <div className="hf-cards" aria-busy={loading}>{loading ? <><div className="hf-empty hf-skeleton" role="status">Loading upcoming fixtures…</div><div className="hf-empty hf-skeleton" aria-hidden="true" /></> : fixtures.length ? fixtures.map(f => <Fixture key={f.id} fixture={f} tennis={sport === 'tennis'} now={now!} />) : <div className="hf-empty"><ToolEmblem name={sport} /><h4>{failed || stale || !feed?.checkedAt ? 'The schedule needs a refresh' : 'No upcoming matches in this snapshot'}</h4><p>Previous meetings are still available in Return Atlas.</p><Link prefetch={false} href={sport === 'football' ? '/football-atlas' : '/return-atlas'}>Explore historical returns ↗</Link></div>}</div>
         {sport === 'football' && <p className="hf-coverage">League history since 2012/13. {FOOTBALL_ARCHIVE_DETAIL} These are not all-time H2H records.</p>}

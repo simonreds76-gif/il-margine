@@ -9,7 +9,7 @@ export function tournamentOf(f) {
   const found = editions.filter(e => e.tour === f.tour && e.label === label && date >= e.fromDate && date <= e.throughDate);
   const edition = found.length === 1 ? found[0] : null;
   return { key: JSON.stringify([f.tour, label, edition?.edition || date.slice(0,4)]), label, displayName: edition?.displayName || label, tour: f.tour, round,
-    surface: edition?.surface || 'unknown' };
+    surface: edition?.surface || f.programme?.surface || 'unknown' };
 }
 export const surfaceNames = { 'outdoor-hard':'Outdoor hard', 'indoor-hard':'Indoor hard', clay:'Clay', grass:'Grass', unknown:'Surface unverified' };
 export const isQualifying = f => f.qualifying || /\b(?:qualifiers?|qualifying|qualifications?)\b/i.test(f.event);
@@ -32,7 +32,7 @@ export function displayDay(filter, fixtures, now) {
   if (filter !== 'auto') return filter;
   const day = value => new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).format(value);
   const today=day(now), tomorrow=new Date(Date.parse(`${today}T12:00:00Z`)+86400000).toISOString().slice(0,10);
-  if(fixtures.some(f=>Date.parse(f.start)>now.getTime() && day(new Date(f.start))===today))return 'today';
+  if(fixtures.some(f=>f.programme?.day===today || (Date.parse(f.start)>now.getTime() && day(new Date(f.start))===today)))return 'today';
   if(fixtures.some(f=>Date.parse(f.start)>now.getTime() && day(new Date(f.start))===tomorrow))return 'tomorrow';
   return 'upcoming';
 }
