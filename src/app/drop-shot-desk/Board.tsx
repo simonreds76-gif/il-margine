@@ -403,6 +403,8 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
           {groups.map(({key, drops}, i) => {
             const lead = drops[0];
             const more = drops.length - 1;
+            const otherOpen = !archive && !upcomingOnly && !isOpen(lead, at)
+              ? drops.slice(1).filter(drop => isOpen(drop, at)).length : 0;
             const expanded = expandedGroups[key] ?? (!!m && m !== lead && drops.includes(m));
             const linesId = listId + "-lines-" + i;
             const renderRow = (r: DeskMove) => <DropRow key={moveKey(r)} move={r} selected={r === m} archive={archive}
@@ -414,6 +416,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
                   onClick={() => setExpandedGroups(previous => ({...previous, [key]: !expanded}))}>
                   <span aria-hidden="true">{expanded ? "−" : "+"}</span>
                   {expanded ? "Hide" : "Show"} {more} more {more === 1 ? "drop" : "drops"}
+                  {otherOpen > 0 && <span> · {otherOpen} open</span>}
                   <span className={styles.vh}> for {lead.fixtureLabel ?? (lead.player + " vs " + lead.opponent)}</span>
                 </button>
                 <div id={linesId} className={styles.otherDrops} hidden={!expanded}>

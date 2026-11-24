@@ -37,12 +37,13 @@ export const SETTLING_NOTE = "The cloud scan runs every 15 minutes. Pending resu
 
 /* ---------- status: a dot and a word, not a badge ---------- */
 
-/** Same decision as the old ledger pills: a recorded result wins, otherwise open or closed at `now`. */
 export function State({ move, now, archive }: { move: DeskMove; now: number | null; archive: boolean }) {
   const outcome = outcomeOf(move.result);
   if (archive || outcome !== "pending") return <span className={styles.tone} data-tone={outcome}>{outcomeLabel(move)}</span>;
   const open = isOpen(move, now);
-  return <span className={styles.tone} data-tone={open ? "open" : "closed"}>{open ? "Open" : "Closed"}</span>;
+  if (open) return <span className={styles.tone} data-tone="open">Open</span>;
+  const pastStart = now !== null && now >= Date.parse(move.start);
+  return <span className={styles.tone} data-tone="closed">{pastStart ? "Start time passed" : "Odds unavailable"}</span>;
 }
 
 /* ---------- host-country flag ---------- */
