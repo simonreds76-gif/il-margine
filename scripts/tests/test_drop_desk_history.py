@@ -1,5 +1,6 @@
 import sys
 import unittest
+from unittest.mock import patch
 from datetime import datetime, timezone
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
@@ -64,6 +65,29 @@ class DeskTests(unittest.TestCase):
         self.assertIsNone(history.bind(t,self.tours,[],[dict(r,loser_id=7)],{7:"jody maginley",8:names[8]}))
         self.assertIsNone(history.bind(t,self.tours,[],[r],{**names,36878:"another player"}))
         self.assertIsNone(history.bind(dict(t,opponent="Changed Player"),self.tours,[],[r],names))
+
+    def test_private_draw_grades_only_the_verified_pair_after_start(self):
+        t = dict(self.t,start="2026-11-24T01:00:00Z",market="spreads",line=2.5,new=1.9)
+        now = datetime(2026,11,24,10,tzinfo=timezone.utc)
+        key = (t["league"],history.utc(t["start"]),tuple(sorted((t["player"],t["opponent"]))))
+        row = dict(self.r,date="2026-11-24",result="6-3 6-2")
+        with patch.object(history,"draw_review",return_value={key:{"row":row}}):
+            self.assertEqual(history.outcome(t,[],[],now)["result"],"Lost")
+            self.assertIsNone(history.outcome(t,[],[],history.utc(t["start"])))
+            self.assertIsNone(history.outcome(dict(t,binding=[1,5,7,9]),[],[],now))
+            self.assertIsNone(history.outcome(t,[dict(row,result="4-2")],[],now))
+            self.assertIsNone(history.outcome(dict(t,opponent="Other"),[],[],now))
+
+    def test_original_opponent_replaced_requires_verified_replacement_fixture(self):
+        t = dict(self.t,start="2026-11-22T14:00:00Z",binding=None)
+        now = datetime(2026,11,24,10,tzinfo=timezone.utc)
+        key = (t["league"],history.utc(t["start"]),tuple(sorted((t["player"],t["opponent"]))))
+        review = {"replaced":{"tour_id":1,"round_id":5,"player":7,"original":8,"replacement":9}}
+        actual = dict(self.r,winner_id=7,loser_id=9,date="2026-11-22")
+        with patch.object(history,"draw_review",return_value={key:review}):
+            self.assertEqual(history.outcome(t,[actual],[],now)["result"],"Void")
+            self.assertIsNone(history.outcome(t,[],[],now))
+            self.assertIsNone(history.outcome(t,[actual,self.r],[],now))
 
     def test_retirement_set_and_official_winner_including_disqualification(self):
         for score in ("6-2 3-0 RET","4-6 0-1 ret.","7-6(4) DEF.","6-7(5) 3-0 disqualified"):

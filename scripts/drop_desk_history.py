@@ -1,9 +1,12 @@
 """Private price history and result projection from immutable capture and delivery evidence."""
 import os
+import hashlib
+import json
 import re
 import unicodedata
 from collections import defaultdict
 from datetime import date, datetime, timedelta, timezone
+from functools import lru_cache
 
 import requests
 from pinnradar_tennis import BUCKET, Store, utc
@@ -191,7 +194,7 @@ def bind(ticket, tours, schedule, games, names):
     return list(matches.pop()) if len(matches) == 1 else None
 
 
-def outcome(ticket, games, schedule, now):
+def native_outcome(ticket, games, schedule, now):
     if not ticket.get("binding") or utc(ticket["start"]) >= now:
         return None
     tour, rnd, player, other = ticket["binding"]
@@ -225,6 +228,51 @@ def outcome(ticket, games, schedule, now):
         sets = [(int(a),int(b)) for a,b in re.findall(r"(\d+)-(\d+)",score)]
         return {"score":score, **grade(ticket,sets,row["winner_id"]==player)}
     return {"result":"Won" if row["winner_id"] == player else "Lost","score":score}
+
+
+# Reviewed draw snapshot for the November backlog. Only the scheduled single writer grades it.
+DRAW_REVIEW = "f52e8197cb69cda7b9a500b469b7360f34af2e4a29a35d14193a353192367ec5"
+
+
+@lru_cache(maxsize=1)
+def draw_review():
+    packet = Store().get("presentation/result-reviews/" + DRAW_REVIEW + ".json")
+    if packet is None:
+        return {}
+    encoded = json.dumps(packet, sort_keys=True, separators=(",", ":")).encode()
+    if hashlib.sha256(encoded).hexdigest() != DRAW_REVIEW:
+        raise ValueError("Reviewed draw evidence failed its integrity check")
+    return {(r["league"], utc(r["start"]), tuple(r["players"])): r for r in packet}
+
+
+def outcome(ticket, games, schedule, now):
+    grade = native_outcome(ticket, games, schedule, now)
+    if grade or ticket.get("tour") != "Challenger" or not "2026-11-22" <= ticket["start"][:10] <= "2026-11-24":
+        return grade
+    start = utc(ticket["start"])
+    if not start or now <= start:
+        return None
+    key = (ticket["league"], start, tuple(sorted([ticket["player"], ticket["opponent"]])))
+    review = draw_review().get(key)
+    if not review:
+        return None
+    replacement = review.get("replaced")
+    if replacement:
+        # No score from the replacement match can be carried over to the original bet.
+        def recorded(opponent):
+            return [g for g in games if (g["tour_id"],g["round_id"]) == (replacement["tour_id"],replacement["round_id"])
+                    and {g["winner_id"],g["loser_id"]} == {replacement["player"],opponent}]
+        if not ticket.get("binding") and not recorded(replacement["original"]) and len(recorded(replacement["replacement"])) == 1:
+            return {"result":"Void","score":"Opponent replaced before play"}
+        return None
+    row = review["row"]
+    binding = ticket.get("binding")
+    if not binding or list(binding[:2]) != [row["tour_id"],row["round_id"]] or set(binding[2:]) != {row["winner_id"],row["loser_id"]}:
+        return None
+    if any(g["tour_id"] == binding[0] and g["round_id"] == binding[1] and
+           {g["winner_id"],g["loser_id"]} == set(binding[2:]) for g in games):
+        return None
+    return native_outcome(ticket, [row], schedule, now)
 
 
 def event_data(tickets):
