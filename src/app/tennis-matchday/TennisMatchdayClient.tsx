@@ -145,7 +145,7 @@ function FixtureRow({ fixture: f, now, showEvent }: { fixture: TennisFixture; no
   const quote = matchdayQuote(f, now), event = tournamentOf(f);
   const round = event.round || (isQualifying(f) ? 'Qualifying' : '');
   const formText = f.players.map(p => { const form = recentForm(p); return form.length ? `${p.name}: ${form.filter(m => m.winner).length} won of last ${form.length}.` : ''; }).join(' ');
-  return <div className={styles.row} data-fixture={f.id}>
+  return <div className={styles.row} data-fixture={f.id} data-singles-order={f.programme?.order}>
     <button className={styles.rowBtn} type="button" aria-expanded={open} aria-controls={detailId} onClick={() => setOpen(!open)}>
       <span className={styles.when}>{f.programme ? <>{f.programme.order === 1 ? '1st' : '2nd'}<small>singles</small></>
         : <><time dateTime={f.start}>{format(f.start, { hour: '2-digit', minute: '2-digit' })}</time>{!showEvent && round && <small>{round}</small>}</>}</span>
@@ -275,7 +275,7 @@ export default function TennisMatchdayClient({ board, renderedAt, tournamentHist
             </header>
           : <header className={styles.groupHead}><div><h3>All tournaments</h3><p className={styles.groupMeta}>In start order</p></div><span className={styles.groupCount}>{group.fixtures.length}</span></header>}
         {[...new Set(group.fixtures.flatMap(f => f.programme ? [f.programme.tie] : []))].map(tie =>
-          <p key={tie} className={styles.status}>{tie} · Singles order of play. The second match follows the first.</p>)}
+          <p key={tie} className={styles.status}>{tie} · Singles order of play for today.</p>)}
         {group.event?.tour === 'ATP' && group.fixtures.some(f => !isQualifying(f)) && <TournamentReturns summary={tournamentHistory.byTournament[group.event.key] || { availability: 'unavailable', name: group.event.displayName, reason: 'No audited price history is linked to this tournament edition and surface yet.' }} />}
         <OddsColumns />
         {group.fixtures.map(f => <FixtureRow fixture={f} now={now} showEvent={order === 'time'} key={f.id} />)}

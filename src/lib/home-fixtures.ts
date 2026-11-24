@@ -10,7 +10,7 @@ export const londonDay = (time: string | number) => new Intl.DateTimeFormat('en-
 export function upcomingHomeFixtures(feed: HomeFeed, now: number, limit = 2) {
   const fresh = !!feed.checkedAt && !!feed.expiresAt && now < Date.parse(feed.expiresAt);
   return feed.fixtures.filter(f => f.programme ? f.programme.day >= londonDay(now) : fresh && Date.parse(f.start) > now)
-    .sort((a, b) => Date.parse(a.start) - Date.parse(b.start) || (a.programme?.order ?? 0) - (b.programme?.order ?? 0) || a.id.localeCompare(b.id)).slice(0, limit);
+    .sort((a, b) => Number(Boolean(b.programme)) - Number(Boolean(a.programme)) || Date.parse(a.start) - Date.parse(b.start) || (a.programme?.order ?? 0) - (b.programme?.order ?? 0) || a.id.localeCompare(b.id)).slice(0, limit);
 }
 const leagues: Record<string, string> = { 'premier-league': 'Premier League', 'serie-a': 'Serie A', 'la-liga': 'La Liga', bundesliga: 'Bundesliga', 'ligue-1': 'Ligue 1' };
 export function footballHomeFeed(board: FixtureBoard): HomeFeed {

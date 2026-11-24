@@ -2,12 +2,12 @@ export type CompletedResult = { verification?: string; id:string; date:string; e
 export type RecentMatch = { verification?: string; id: string; date: string; event: string; surface: string; round: string; opponent: string; score: string; winner: boolean; status: 'completed' | 'retired' | 'walkover'; competition: string };
 export type FixturePlayer = { id: string | null; name: string; portrait: string | null; recent?: { through: string; name: string; omitted?: number; matches: RecentMatch[] } | null };
 export type MatchdayQuote = { capturedAt: string; bookmaker: string; odds: number[] };
-export type DavisProgramme = { day: string; session: string; tie: string; teams: string[]; order: number; country: {code:string; name:string; flag:string}; surface:string };
+export type DavisProgramme = { day: string; session: string; tie: string; teams: string[]; order: number; country: {code:string; name:string; flag:string} | null; surface:string };
 export type TennisFixture = { programme?: DavisProgramme; h2hStatus?: 'meetings' | 'none' | 'unchecked' | 'unlinked'; resultsOnly?: boolean; coverageThrough?: string; id: string; start: string; tour: string; event: string; qualifying: boolean; players: FixturePlayer[]; wins: number[] | null; meetings: number | null; priced: number; roi: (number | null)[]; profit: number[]; history: { date: string; winner: number; odds: (number | null)[]; surface: string; score: string; event: string; competition?: string | null; priceBasis?: string | null }[]; quote: MatchdayQuote | null; href: string | null; ambiguous: boolean };
 export type TeamTie = { id: string; start: string; event: string; teams: string[] };
 export type TennisBoard = { teamTies?: TeamTie[]; contextVersion?: string | null; results?: {omitted?:number;retained?:number;from:string;before:string;through:string|null;matches:CompletedResult[]} | null; resultsThrough?: string | null; resultsUpdatedAt?: string | null; capturedAt: string | null; historyThrough: string; historyVersion: string; stale: boolean; excluded: Record<string, number>; fixtures: TennisFixture[] };
 export function teamTiesFor(ties: TeamTie[], filter: string, tour: string, search: string, now: Date, zone?: string): TeamTie[];
-export function buildTennisMatchday(rows: Record<string, unknown>[], history: unknown, now?: Date): TennisBoard;
+export function buildTennisMatchday(rows: Record<string, unknown>[], history: unknown, now?: Date, confirmedProgramme?: unknown): TennisBoard;
 export const QUOTE_MAX_AGE_MS: number;
 export function matchdayQuote(fixture: TennisFixture, now?: Date): MatchdayQuote | null;
 export function fixturesFor(fixtures: TennisFixture[], filter: string, tour: string, search: string, now: Date, zone?: string): TennisFixture[];

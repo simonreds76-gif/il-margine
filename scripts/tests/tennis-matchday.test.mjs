@@ -8,14 +8,18 @@ test('a confirmed day programme survives the tie start and a missing feed, with 
   const clock = new Date('2026-11-24T16:00:00Z');
   const players = ['Tomas Machac','Liam Draxl','Jiri Lehecka','Felix Auger Aliassime'].map((name,index) => ({name,id:String(index+1)}));
   const h = { ...history, players, matches:[] };
-  const board = buildTennisMatchday([], h, clock);
+  const document = {version:1, day:'2026-11-24', verifiedAt:'2026-11-24T15:40:00Z', ties:[{
+    teams:['Czechia','Canada'], session:'2026-11-24T15:00:00Z', venue:'Bologna',
+    singles:[[players[0].name,players[1].name],[players[2].name,players[3].name]]}]};
+  assert.equal(buildTennisMatchday([],h,clock).fixtures.length,0);
+  const board = buildTennisMatchday([], h, clock, document);
   assert.equal(board.stale,true);
   assert.deepEqual(fixturesFor(board.fixtures,'today','ATP','canada',clock).map(f=>f.programme.order),[1,2]);
   assert.ok(board.fixtures.every(f=>f.href && f.quote===null));
   assert.equal(fixturesFor(board.fixtures,'upcoming','Challenger','',clock).length,0);
   assert.equal(fixturesFor(board.fixtures,'upcoming','ATP','',new Date('2026-11-25T00:01:00Z')).length,0);
   const named = {...row,captured_at:'2026-11-24T15:50:00Z',league_name:'Davis Cup',kickoff_iso:'2026-11-24T17:00:00Z',player1_name:players[2].name,player2_name:players[3].name,odds1:1.8,odds2:2.1};
-  const withOdds = buildTennisMatchday([named],h,clock);
+  const withOdds = buildTennisMatchday([named],h,clock,document);
   assert.equal(withOdds.fixtures.length,2);
   assert.deepEqual(withOdds.fixtures.find(f=>f.programme.order===2).quote.odds,[1.8,2.1]);
 });

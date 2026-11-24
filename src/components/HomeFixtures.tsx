@@ -24,7 +24,7 @@ function Fixture({ fixture: f, tennis, now }: { fixture: HomeFixture; tennis: bo
   const competition = tennis ? tennisCompetition(f.competition) : { label: f.competition, country: null };
   const country = f.programme?.country ?? competition.country;
   const logo = f.programme ? null : tennis ? '/icons/markets/atp-logo-small-v1.webp' : homeLeagueLogos[f.competition];
-  return <article className={`hf-card ${tennis ? "hf-tennis" : ""}`}>
+  return <article data-singles-order={f.programme?.order} className={`hf-card ${tennis ? "hf-tennis" : ""}`}>
     <div className="hf-meta"><span className="hf-competition">
       {logo && <Image className={`hf-competition-logo ${tennis ? 'hf-atp-logo' : ''}`} src={logo} width={tennis ? 42 : 28} height={28} alt={tennis ? 'ATP' : ''} unoptimized />}
       <span className="hf-competition-name">{competition.label}</span>
@@ -52,7 +52,7 @@ export default function HomeFixtures() {
     <nav className="hf-jump" aria-label="Choose a sport"><a href="#home-football">Football ↓</a><a href="#home-tennis">Tennis ↓</a></nav>
     <div className="hf-sports">{(['football', 'tennis'] as const).map(sport => {
       const feed = data?.[sport];
-      const fixtures = feed && now ? upcomingHomeFixtures(sport === 'tennis' ? { ...feed, fixtures: feed.fixtures.filter(f => f.tour === 'ATP') } : feed, now) : [];
+      const fixtures = feed && now ? upcomingHomeFixtures(sport === 'tennis' ? { ...feed, fixtures: feed.fixtures.filter(f => f.tour === 'ATP') } : feed, now, sport === 'tennis' ? Math.max(2, feed.fixtures.filter(f => f.programme?.day === londonDay(now)).length) : 2) : [];
       const loading = !failed && (!data || !now);
       const stale = feed?.expiresAt && now && Date.parse(feed.expiresAt) <= now;
       const title = fixtures.length && now && londonDay(fixtures[0].start) === londonDay(now) ? `Today's ${sport}` : sport === 'football' ? 'Next league fixtures' : 'Next tennis matches';

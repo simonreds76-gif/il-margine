@@ -21,6 +21,16 @@ export async function getTennisMatchday() {
 
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const now = new Date();
+  const day = new Intl.DateTimeFormat('en-CA', {timeZone:'Europe/London', year:'numeric', month:'2-digit', day:'2-digit'}).format(now);
+  const programme = (async () => {
+    if (!base || !key) return null;
+    const path = '/storage/v1/object/authenticated/tennis-price-moves-private/matchday/davis/' + day + '/programme.json';
+    try {
+      const response = await fetch(new URL(path, base), { headers: { apikey:key, Authorization:'Bearer ' + key }, next:{revalidate:300}, signal:AbortSignal.timeout(5000) });
+      return response.ok ? await response.json() : null;
+    } catch { return null; }
+  })();
   const read = async (params: Record<string, string>) => {
     if (!base || !key) throw new Error('Schedule unavailable');
     const url = new URL('/rest/v1/bookmaker_odds_history', base);
@@ -36,9 +46,9 @@ export async function getTennisMatchday() {
     const rows = await read({ ...common, captured_at: `eq.${latest[0].captured_at}`,
       select: 'captured_at,league,league_name,player1_name,player2_name,match_date,kickoff_iso,odds1,odds2', limit: '250' });
     if (rows.length >= 250 || rows.some(row => row.captured_at !== latest[0].captured_at)) throw new Error('Incomplete schedule');
-    return buildTennisMatchday(rows, matchHistory);
+    return buildTennisMatchday(rows, matchHistory, now, await programme);
   } catch {
     // Do not substitute old fixtures, invented times or example matches for a failed feed.
-    return buildTennisMatchday([], matchHistory);
+    return buildTennisMatchday([], matchHistory, now, await programme);
   }
 }

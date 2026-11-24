@@ -10,12 +10,14 @@ function mensSinglesEvent(name) {
   return /\b(?:atp|men(?:s)?|davis cup|laver cup)\b|^challenger\b/.test(label);
 }
 
-const identityAliases = { 'tai leonard sach': 'tai sach', 'abdullah shelbayh': 'abedallah shelbayh', 'jason kubler': 'jason murray kubler' };
+const identityAliases = { 'tai leonard sach': 'tai sach', 'abdullah shelbayh': 'abedallah shelbayh', 'jason kubler': 'jason murray kubler',
+  'soonwoo kwon': 'soon woo kwon', 'jisung nam': 'ji sung nam' };
 const identityKey = text => identityAliases[normal(text)] ?? normal(text);
 const searchNames = name => [normal(name), ...Object.entries(identityAliases).filter(([, canonical]) => canonical === identityKey(name)).map(([alias]) => alias)].join(' ');
 
 const knownPlayer = name => name && !/\b(tba|tbd|winner|qualifier|bye)\b|[/&]/i.test(name);
 const teamCompetition = /\b(?:davis cup|laver cup|atp cup|united cup)\b/;
+const nationKey = name => ({ 'czech republic':'czechia', 'south korea':'korea', 'republic of korea':'korea', 'korea rep':'korea', 'great britain':'britain', 'united kingdom':'britain' })[normal(name)] ?? normal(name);
 const tieMarket = /\b(?:tie|team|nation|country|overall) (?:winner|result|moneyline)|\b(?:winner of (?:the )?tie|to win (?:the )?tie|to advance|outrights?)\b/;
 const day = (time, zone) => new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(time);
 
@@ -33,7 +35,7 @@ export function matchdayHref(a, b) {
   return '/tennis-matchup?' + new URLSearchParams({ player: a, compare: b, record: 'h2h', history: 'archive' });
 }
 
-export function buildTennisMatchday(rows, history, now = new Date()) {
+export function buildTennisMatchday(rows, history, now = new Date(), confirmedProgramme = null) {
   const names = new Map(), ids = new Map(history.players.map((p, i) => [p.id, i]));
   history.players.forEach((p, i) => names.set(identityKey(p.name), [...(names.get(identityKey(p.name)) ?? []), i]));
   const resolve = name => {
@@ -46,7 +48,7 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
   const stale = !capturedAt || now.getTime() - Date.parse(capturedAt) > 24 * 3600000 || Date.parse(capturedAt) > now.getTime() + 300000;
   const fixtures = [], excluded = { started: 0, invalid: 0, duplicate: 0 };
   const pairs = new Map(), teamTies = new Map();
-  const programme = davisCupProgramme(now);
+  const programme = davisCupProgramme(now, confirmedProgramme);
   for (const row of [...rows, ...programme]) {
     const start = Date.parse(row.kickoff_iso);
     if (!['ATP', 'Challenger'].includes(row.league) || !knownPlayer(row.player1_name) || !knownPlayer(row.player2_name)
@@ -62,17 +64,23 @@ export function buildTennisMatchday(rows, history, now = new Date()) {
         const event = competition.replace(/\b\w/g, c => c.toUpperCase()).replace(/^Atp /, 'ATP ');
         const id = [competition, pairKey, start].join('|');
         const covered = programme.some(r => event === 'Davis Cup' && r.programme.day === row.kickoff_iso.slice(0,10)
-          && r.programme.teams.map(identityKey).sort().join('|') === pairKey);
+          && r.programme.teams.map(nationKey).sort().join('|') === [row.player1_name,row.player2_name].map(nationKey).sort().join('|'));
         if (!covered) teamTies.set(id, { id, event, start: new Date(start).toISOString(), teams: [row.player1_name, row.player2_name] });
       }
       continue;
     }
     // Some team markets omit "Tie Winner". Only named individuals from the player archive
     // or recent singles results can form a player H2H in a team competition.
-    if (teamCompetition.test(eventLabel) && ![row.player1_name, row.player2_name].every(name => {
+    if (!row.programme && teamCompetition.test(eventLabel) && ![row.player1_name, row.player2_name].every(name => {
       const key = identityKey(name), recent = history.matchdayRecent;
       return resolve(name) !== undefined || Boolean(recent?.players?.[recent?.aliases?.[key] ?? key]);
     })) { excluded.invalid++; continue; }
+    if (!row.programme && /\bdavis cup\b/.test(eventLabel)) {
+      const sides = [row.player1_name,row.player2_name].map(identityKey);
+      const sameDay = programme.filter(r => r.programme.day === row.kickoff_iso.slice(0,10));
+      const overlaps = r => [identityKey(r.player1_name), identityKey(r.player2_name)].filter(n => sides.includes(n)).length;
+      if (sameDay.some(r => overlaps(r) === 1) && !sameDay.some(r => overlaps(r) === 2)) continue;
+    }
     const prior = pairs.get(pairKey);
     if (row.programme && prior && !prior.ambiguous && !stale && /\bdavis cup\b/.test(normal(prior.event))
         && prior.start.slice(0,10) === row.programme.day) {
