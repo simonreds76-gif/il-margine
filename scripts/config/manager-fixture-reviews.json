@@ -405,5 +405,118 @@
       "throughVerifiedFixture": "2026-11-08",
       "boundary": "Official 31 October announcement is effective 2 November. Digard suspended from duties, not claimed retired or contractually dismissed."
     }
+  },
+  "papi-id1000002371945420": {
+    "providerMatchId": "5749757",
+    "date": "2026-11-21",
+    "league": "serie-a",
+    "home": "Napoli",
+    "away": "Torino",
+    "hg": 1,
+    "ag": 0,
+    "observedCoaches": [
+      {
+        "id": "1327559",
+        "name": "Marco Landucci"
+      },
+      {
+        "id": "39555",
+        "name": "Ignazio Abate"
+      }
+    ],
+    "coaches": [
+      {
+        "id": "129745",
+        "name": "Massimiliano Allegri"
+      },
+      {
+        "id": "39555",
+        "name": "Ignazio Abate"
+      }
+    ],
+    "evidence": [
+      "https://www.torinofc.it/news/21/11/2026/napoli-torino-1-0_45987",
+      "https://sscnapoli.it/news/match-report-napoli-vs-torino"
+    ],
+    "reviewedAt": "2026-11-24T20:14:23.833374+00:00",
+    "reason": "Both clubs name Allegri and Abate on this exact match sheet. The home provider label Landucci conflicts with the clubs. No stand-in is assigned for this match."
+  },
+  "papi-id1000003472036306": {
+    "providerMatchId": "5802998",
+    "date": "2026-11-21",
+    "league": "ligue-1",
+    "home": "Strasbourg",
+    "away": "Brest",
+    "hg": 0,
+    "ag": 1,
+    "observedCoaches": [
+      {
+        "id": "1791880",
+        "name": "Vítor Matos"
+      },
+      {
+        "id": "46250",
+        "name": "Julien Lachuer"
+      }
+    ],
+    "coaches": [
+      {
+        "id": "1791880",
+        "name": "Vítor Matos"
+      },
+      {
+        "id": "46250",
+        "name": "Julien Lachuer"
+      }
+    ],
+    "evidence": [
+      "https://ligue1.com/fr/articles/l1_article_6081-",
+      "https://www.lefigaro.fr/sports/football/live/ligue-1/2026/2640656/strasbourg-brest"
+    ],
+    "reviewedAt": "2026-11-24T20:14:23.833374+00:00",
+    "reason": "The league confirms Strasbourg appointed Matos ahead of Brest. The completed match sheet identifies both Matos and Lachuer, including a booking for each coach."
+  },
+  "papi-id1000002371945418": {
+    "providerMatchId": "5749756",
+    "date": "2026-11-23",
+    "league": "serie-a",
+    "home": "Monza",
+    "away": "Fiorentina",
+    "hg": 3,
+    "ag": 0,
+    "observedCoaches": [
+      {
+        "id": "40168",
+        "name": "Matteo Paro"
+      },
+      {
+        "id": "42632",
+        "name": "Paolo Vanoli"
+      }
+    ],
+    "coaches": [
+      {
+        "id": "41757",
+        "name": "Ivan Jurić"
+      },
+      {
+        "id": "42632",
+        "name": "Paolo Vanoli"
+      }
+    ],
+    "evidence": [
+      "https://www.acmonza.com/it/news/monza-fiorentina-report-23112026/",
+      "https://www.legaseriea.it/serie-a/news/monza-fiorentina-2026-2027-3-0-cronaca-risultato-gol"
+    ],
+    "reviewedAt": "2026-11-24T20:14:23.833374+00:00",
+    "reason": "Monza confirms Jurić was suspended and assistant Matteo Paro directed the team on the bench. The league credits Jurić and Vanoli with the selections. The Atlas credits the responsible head coach for suspension cover.",
+    "touchlineStandIns": [
+      {
+        "side": "home",
+        "id": "40168",
+        "name": "Matteo Paro",
+        "reason": "Monza explicitly confirms Paro covered Jurić's touchline suspension for this fixture."
+      }
+    ]
   }
 }
