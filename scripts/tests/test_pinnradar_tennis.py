@@ -2,6 +2,7 @@ import sys
 import unittest
 from datetime import timedelta
 from pathlib import Path
+from unittest.mock import Mock, patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import pinnradar_tennis as pilot
@@ -17,6 +18,37 @@ def event(event_id=100, **kw):
 
 def snap(events,minutes):
     return pilot.board_rows({"sport_id":2,"events":events},START-timedelta(minutes=minutes))
+
+class ReportStorageTest(unittest.TestCase):
+    report = "presentation/drop-paper-v1/first-match-v1/state.json"
+
+    def test_transient_report_failure_retries_same_payload_once(self):
+        for first in (Mock(status_code=520), pilot.requests.Timeout()):
+            with self.subTest(first=first), patch.object(pilot.time, "sleep") as sleep:
+                store = pilot.Store.__new__(pilot.Store)
+                store.request = Mock(side_effect=[first, Mock(status_code=200)])
+                self.assertTrue(store.put(self.report, {"through": "09:52"}, replace=True))
+                one, two = store.request.call_args_list
+                self.assertEqual(one, two)
+                sleep.assert_called_once()
+
+    def test_claims_and_permanent_failures_are_not_retried(self):
+        for path, replace, status in (("attempts/test", False, 520), ("drop-deliveries-v2/test", True, 520),
+                                      (self.report, True, 403)):
+            with self.subTest(path=path):
+                store = pilot.Store.__new__(pilot.Store)
+                store.request = Mock(return_value=Mock(status_code=status))
+                with self.assertRaisesRegex(RuntimeError, str(status)):
+                    store.put(path, {}, replace=replace)
+                store.request.assert_called_once()
+
+    def test_persistent_failure_remains_visible(self):
+        store = pilot.Store.__new__(pilot.Store)
+        store.request = Mock(return_value=Mock(status_code=520))
+        with patch.object(pilot.time, "sleep"), self.assertRaisesRegex(RuntimeError, "520"):
+            store.put(self.report, {}, replace=True)
+        self.assertEqual(store.request.call_count, 2)
+
 
 class ClockTest(unittest.TestCase):
     def test_only_the_requested_utc_quarter_can_run(self):

@@ -4,6 +4,7 @@ import json
 import math
 import os
 import re
+import time
 from collections import Counter
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlsplit
@@ -311,7 +312,20 @@ class Store:
         return r.json()
 
     def put(self,path,data,replace=False):
-        r=self.request("POST","/object/"+BUCKET+"/"+path,headers={"x-upsert":str(replace).lower(),"cache-control":"no-store"},json=data)
+        target = "/object/" + BUCKET + "/" + path
+        headers = {"x-upsert": str(replace).lower(), "cache-control": "no-store"}
+        # Only derived reports can replay an identical overwrite. Delivery and scan claims are single-attempt.
+        retry_report = replace and path.startswith("presentation/")
+        try:
+            r = self.request("POST", target, headers=headers, json=data)
+        except (requests.Timeout, requests.ConnectionError):
+            if not retry_report:
+                raise
+        else:
+            retry_report = retry_report and r.status_code in {408, 500, 502, 503, 504, 520, 521, 522, 523, 524}
+        if retry_report:
+            time.sleep(1)
+            r = self.request("POST", target, headers=headers, json=data)
         if not replace and r.status_code in (400,409) and any(s in r.text.lower() for s in ("duplicate","already exists")): return False
         self.require(r)
         return True
