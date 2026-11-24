@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-24T06:21:09.660845+00:00",
+  "generated_at": "2026-11-24T09:59:54Z",
   "league": "serie-a",
   "row_count": 4,
   "rows": [
@@ -22,17 +22,17 @@
       "primary_pre_match": "Gustavo Varela",
       "secondary_pre_match": "Matteo Pessina",
       "tertiary_pre_match": "Patrick Cutrone",
-      "primary_lineup_status": "confirmed_starter",
-      "secondary_lineup_status": "confirmed_starter",
-      "tertiary_lineup_status": "confirmed_bench",
-      "active_taker_pre_match": "Gustavo Varela",
-      "active_slot_pre_match": "primary",
-      "team_lineup_status": "unknown",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
       "review_type": "primary_held",
       "review_priority": "low",
-      "editorial_note": "Gustavo Varela took 1 penalty attempt and scored for Monza vs Fiorentina. Primary pre-match: Gustavo Varela (confirmed_starter). Secondary pre-match: Matteo Pessina (confirmed_starter). Pre-match active slot was primary -> Gustavo Varela. No hierarchy change implied from this event.",
-      "context_generated_at": "2026-11-23T22:01:32Z",
-      "context_source_path": "data/goalscorer/penalty-duty-context.json",
+      "editorial_note": "Gustavo Varela took 1 penalty attempt and scored for Monza vs Fiorentina. Primary pre-match: Gustavo Varela (unknown). Secondary pre-match: Matteo Pessina (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-19",
+      "context_source_path": "data/goalscorer/serie-a-penalty-takers.json",
       "actual_taker_match_status": "Yes - started",
       "primary_on_pitch_at_penalty": "Yes - started",
       "secondary_on_pitch_at_penalty": "Yes - started, off 84'",
@@ -44,7 +44,7 @@
           "source_event_id": "3000757383",
           "match_id": "5749756",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749756",
-          "observed_at": "2026-11-24T05:58:14+00:00",
+          "observed_at": "2026-11-24T09:59:51+00:00",
           "event_date": "2026-11-23",
           "season": "2026/27",
           "team": "Monza",
@@ -111,7 +111,7 @@
           "source_event_id": "2999931277",
           "match_id": "5749754",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749754",
-          "observed_at": "2026-11-23T22:01:23+00:00",
+          "observed_at": "2026-11-24T09:59:51+00:00",
           "event_date": "2026-11-22",
           "season": "2026/27",
           "team": "Juventus",
@@ -134,79 +134,6 @@
           "competitive": true,
           "finished": true,
           "match": "Juventus vs Venezia",
-          "event_result": "scored"
-        }
-      ]
-    },
-    {
-      "date": "2026-11-22",
-      "league": "serie-a",
-      "review_source": "fotmob_live",
-      "match": "Atalanta vs Inter",
-      "team": "Inter",
-      "opponent": "Atalanta",
-      "actual_taker": "Petar Sučić",
-      "actual_role_pre_match": "none",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "76",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Hakan Çalhanoğlu",
-      "secondary_pre_match": "Lautaro Martínez",
-      "tertiary_pre_match": "Piotr Zieliński",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "",
-      "review_type": "unranked_taker",
-      "review_priority": "high",
-      "editorial_note": "Petar Sučić took 1 penalty attempt and scored for Inter vs Atalanta. Primary pre-match: Hakan Çalhanoğlu (unknown). Secondary pre-match: Lautaro Martínez (unknown). Strong review flag: the taker was not in the tracked top three.",
-      "context_generated_at": "2026-09-02",
-      "context_source_path": "data/goalscorer/serie-a-penalty-takers.json",
-      "actual_taker_match_status": "Yes - bench, on 33'",
-      "primary_on_pitch_at_penalty": "No - started, off 33'",
-      "secondary_on_pitch_at_penalty": "No - bench, on 77'",
-      "tertiary_on_pitch_at_penalty": "No - unavailable in match squad",
-      "actual_taker_on_pitch_at_penalty": "Yes - bench, on 33'",
-      "event_evidence": [
-        {
-          "id": "fotmob|serie-a|5749751|3000425725",
-          "source_event_id": "3000425725",
-          "match_id": "5749751",
-          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749751",
-          "observed_at": "2026-11-24T06:21:10+00:00",
-          "event_date": "2026-11-22",
-          "season": "2026/27",
-          "team": "Inter",
-          "taker": "Petar Sučić",
-          "primary": "Hakan Çalhanoğlu",
-          "primary_on_pitch": false,
-          "on_pitch_proof": {
-            "player": "Hakan Çalhanoğlu",
-            "minute": 76,
-            "added_time": 0,
-            "method": "completed_lineup_timeline",
-            "player_id": 304733,
-            "bucket": "starters",
-            "substitutions": [
-              {
-                "type": "subout",
-                "time": 33,
-                "added_time": 0
-              }
-            ],
-            "events": [],
-            "reason": "not_on_pitch"
-          },
-          "minute": 76,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Atalanta vs Inter",
           "event_result": "scored"
         }
       ]
@@ -251,7 +178,7 @@
           "source_event_id": "3000433803",
           "match_id": "5749751",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749751",
-          "observed_at": "2026-11-24T06:21:10+00:00",
+          "observed_at": "2026-11-24T09:59:51+00:00",
           "event_date": "2026-11-22",
           "season": "2026/27",
           "team": "Atalanta",
@@ -277,28 +204,89 @@
           "event_result": "scored"
         }
       ]
+    },
+    {
+      "date": "2026-11-22",
+      "league": "serie-a",
+      "review_source": "fotmob_live",
+      "match": "Atalanta vs Inter",
+      "team": "Inter",
+      "opponent": "Atalanta",
+      "actual_taker": "Petar Sučić",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "76",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Hakan Çalhanoğlu",
+      "secondary_pre_match": "Lautaro Martínez",
+      "tertiary_pre_match": "Piotr Zieliński",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Petar Sučić took 1 penalty attempt and scored for Inter vs Atalanta. Primary pre-match: Hakan Çalhanoğlu (unknown). Secondary pre-match: Lautaro Martínez (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/serie-a-penalty-takers.json",
+      "actual_taker_match_status": "Yes - bench, on 33'",
+      "primary_on_pitch_at_penalty": "No - started, off 33'",
+      "secondary_on_pitch_at_penalty": "No - bench, on 77'",
+      "tertiary_on_pitch_at_penalty": "No - absent from matchday squad",
+      "actual_taker_on_pitch_at_penalty": "Yes - bench, on 33'",
+      "event_evidence": [
+        {
+          "id": "fotmob|serie-a|5749751|3000425725",
+          "source_event_id": "3000425725",
+          "match_id": "5749751",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749751",
+          "observed_at": "2026-11-24T09:59:51+00:00",
+          "event_date": "2026-11-22",
+          "season": "2026/27",
+          "team": "Inter",
+          "taker": "Petar Sučić",
+          "primary": "Hakan Çalhanoğlu",
+          "primary_on_pitch": false,
+          "on_pitch_proof": {
+            "player": "Hakan Çalhanoğlu",
+            "minute": 76,
+            "added_time": 0,
+            "method": "completed_lineup_timeline",
+            "player_id": 304733,
+            "bucket": "starters",
+            "substitutions": [
+              {
+                "type": "subout",
+                "time": 33,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "not_on_pitch"
+          },
+          "minute": 76,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Atalanta vs Inter",
+          "event_result": "scored"
+        }
+      ]
     }
   ],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261117",
-      "20261118",
-      "20261119",
-      "20261120",
-      "20261121",
       "20261122",
-      "20261123"
+      "20261123",
+      "20261124"
     ],
-    "matches_checked": 10
-  },
-  "hot_source_health": {
-    "complete": true,
-    "errors": [],
-    "dates_requested": [
-      "20261122"
-    ],
-    "matches_checked": 1
+    "matches_checked": 6
   }
 }
