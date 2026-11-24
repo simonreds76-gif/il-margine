@@ -189,7 +189,7 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
       </div>
     </header>
 
-    {period==="rolling" ? <RollingRecord key={circuit} circuit={circuit} sent={record!=="30d"}
+    {period==="rolling" ? <RollingRecord key={circuit} circuit={circuit} sent={record!=="30d"} through={through}
       onScope={v=>changeRecord(v?"sent30":"30d")} metrics={r=><><Score r={r}/><Breakdown r={r}/></>} /> : <>
     <div className={css.when}>
       <p className={css.span} aria-live="polite"><b>{name}</b>{range && " · "+range}</p>

@@ -13,20 +13,20 @@ const stamp = new Intl.DateTimeFormat("en-GB",{day:"numeric",month:"short",hour:
 const odds = new Intl.NumberFormat("en-GB",{minimumFractionDigits:2,maximumFractionDigits:4});
 const day = (s:string)=>date.format(new Date(s+"T00:00:00Z"));
 
-export default function RollingRecord({circuit,sent,onScope,metrics}:{circuit:string;sent:boolean;onScope:(v:boolean)=>void;metrics:(r:Result)=>ReactNode}) {
+export default function RollingRecord({circuit,sent,through,onScope,metrics}:{circuit:string;sent:boolean;through:string;onScope:(v:boolean)=>void;metrics:(r:Result)=>ReactNode}) {
   const [page,setPage]=useState(1);
   const [attempt,retry]=useState(0);
   const [loaded,setLoaded]=useState<{url:string;data:Packet|null}|null>(null);
   const url="/api/drop-shot-desk/rolling?tour="+circuit.toLowerCase()+"&group="+(sent?"telegram":"all")+"&page="+page;
   useEffect(()=>{
     const controller=new AbortController();
-    fetch(url,{signal:controller.signal}).then(async r=>{
+    fetch(url,{signal:controller.signal,cache:"no-store"}).then(async r=>{
       if(!r.ok)throw new Error();
       const data:Packet=await r.json();
       if(!controller.signal.aborted)setLoaded({url,data});
     }).catch(()=>{if(!controller.signal.aborted)setLoaded({url,data:null});});
     return ()=>controller.abort();
-  },[url,attempt]);
+  },[url,attempt,through]);
   const data=loaded && (loaded.url===url || (loaded.data && loaded.url.split("&page=")[0]===url.split("&page=")[0])) ? loaded.data : undefined;
   const busy=loaded?.url!==url;
   function select(next:boolean){setPage(1);onScope(next);}
