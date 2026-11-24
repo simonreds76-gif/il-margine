@@ -1,9 +1,12 @@
 """Private price history and result projection from immutable capture and delivery evidence."""
 import os
+import hashlib
+import json
 import re
 import unicodedata
 from collections import defaultdict
 from datetime import date, datetime, timedelta, timezone
+from functools import lru_cache
 
 import requests
 from pinnradar_tennis import BUCKET, Store, utc
@@ -108,6 +111,31 @@ def competition(label):
     return " ".join(p for p in text.split() if p not in ("atp", "challenger"))
 
 
+def tournament_labels(name):
+    exact = competition(name)
+    labels = {exact}
+    if "challenger" in normal(name).split():
+        # A price board can omit the edition number on successive weeks in one city.
+        labels.add(re.sub(r" [1-9][0-9]?$", "", exact))
+    return labels
+
+
+# Alternate price-board spellings verified against the singles draws and player IDs.
+PLAYER_ALIASES = {
+    "adam faragcao": (99304, "adam farag cao"),
+    "enzo lima": (85002, "enzo camargo lima"),
+    "herbert jody maginley": (36878, "jody maginley"),
+    "martinez elias sebastian": (134133, "sebastian martinez elias"),
+    "tai leonard sach": (68624, "tai sach"),
+    "yun seong chung": (28742, "yunseong chung"),
+}
+
+
+def same_player(label, player_id, names):
+    registered = names.get(player_id)
+    return label == registered or PLAYER_ALIASES.get(label) == (player_id, registered)
+
+
 def round_ids(label, tour):
     rounds = {"groups":{8},"qf":{9},"sf":{10},"final":{12},"q1":{1},"q2":{2},
               "q3":{3},"qualifiers":{1,2,3},"r1":{4},"r2":{5}}
@@ -138,6 +166,7 @@ def bind(ticket, tours, schedule, games, names):
     day = date.fromisoformat(ticket["start"][:10])
     label, _, round_label = ticket["league"].rpartition(" - ")
     rounds = round_ids(round_label, ticket["tour"])
+    wanted = competition(label)
     matches = set()
     for row in [*schedule, *games]:
         tour = tours.get(row["tour_id"])
@@ -147,18 +176,25 @@ def bind(ticket, tours, schedule, games, names):
             continue
         if not -3 <= (day - date.fromisoformat(tour["date"][:10])).days <= 13:
             continue
-        if competition(tour["name"]) != competition(label):
+        if wanted not in tournament_labels(tour["name"]):
             continue
+        if wanted != competition(tour["name"]):
+            row_day = row.get("date")
+            if row_day:
+                if abs((day - date.fromisoformat(row_day[:10])).days) > 1:
+                    continue
+            elif not -3 <= (day - date.fromisoformat(tour["date"][:10])).days <= 6:
+                continue
         p = row.get("player1_id",row.get("winner_id"))
         q = row.get("player2_id",row.get("loser_id"))
-        if (names.get(q), names.get(p)) == (player, opponent):
+        if same_player(player, q, names) and same_player(opponent, p, names):
             p,q = q,p
-        if (names.get(p), names.get(q)) == (player,opponent) and p != q:
+        if same_player(player, p, names) and same_player(opponent, q, names) and p != q:
             matches.add((row["tour_id"],row["round_id"],p,q))
     return list(matches.pop()) if len(matches) == 1 else None
 
 
-def outcome(ticket, games, schedule, now):
+def native_outcome(ticket, games, schedule, now):
     if not ticket.get("binding") or utc(ticket["start"]) >= now:
         return None
     tour, rnd, player, other = ticket["binding"]
@@ -194,12 +230,57 @@ def outcome(ticket, games, schedule, now):
     return {"result":"Won" if row["winner_id"] == player else "Lost","score":score}
 
 
+# Reviewed draw snapshot for the November backlog. Only the scheduled single writer grades it.
+DRAW_REVIEW = "f52e8197cb69cda7b9a500b469b7360f34af2e4a29a35d14193a353192367ec5"
+
+
+@lru_cache(maxsize=1)
+def draw_review():
+    packet = Store().get("presentation/result-reviews/" + DRAW_REVIEW + ".json")
+    if packet is None:
+        return {}
+    encoded = json.dumps(packet, sort_keys=True, separators=(",", ":")).encode()
+    if hashlib.sha256(encoded).hexdigest() != DRAW_REVIEW:
+        raise ValueError("Reviewed draw evidence failed its integrity check")
+    return {(r["league"], utc(r["start"]), tuple(r["players"])): r for r in packet}
+
+
+def outcome(ticket, games, schedule, now):
+    grade = native_outcome(ticket, games, schedule, now)
+    if grade or ticket.get("tour") != "Challenger" or not "2026-11-22" <= ticket["start"][:10] <= "2026-11-24":
+        return grade
+    start = utc(ticket["start"])
+    if not start or now <= start:
+        return None
+    key = (ticket["league"], start, tuple(sorted([ticket["player"], ticket["opponent"]])))
+    review = draw_review().get(key)
+    if not review:
+        return None
+    replacement = review.get("replaced")
+    if replacement:
+        # No score from the replacement match can be carried over to the original bet.
+        def recorded(opponent):
+            return [g for g in games if (g["tour_id"],g["round_id"]) == (replacement["tour_id"],replacement["round_id"])
+                    and {g["winner_id"],g["loser_id"]} == {replacement["player"],opponent}]
+        if not ticket.get("binding") and not recorded(replacement["original"]) and len(recorded(replacement["replacement"])) == 1:
+            return {"result":"Void","score":"Opponent replaced before play"}
+        return None
+    row = review["row"]
+    binding = ticket.get("binding")
+    if not binding or list(binding[:2]) != [row["tour_id"],row["round_id"]] or set(binding[2:]) != {row["winner_id"],row["loser_id"]}:
+        return None
+    if any(g["tour_id"] == binding[0] and g["round_id"] == binding[1] and
+           {g["winner_id"],g["loser_id"]} == set(binding[2:]) for g in games):
+        return None
+    return native_outcome(ticket, [row], schedule, now)
+
+
 def event_data(tickets):
     days = [date.fromisoformat(t["start"][:10]) for t in tickets]
     tours = {r["id"]:r for r in api_rows("oncourt_tours","id,date,name",
              **{"and":f"(date.gte.{min(days)-timedelta(days=14)},date.lte.{max(days)+timedelta(days=3)})"})}
     wanted = {competition(t["league"].rpartition(" - ")[0]) for t in tickets}
-    ids = sorted(i for i,r in tours.items() if competition(r["name"]) in wanted)
+    ids = sorted(i for i,r in tours.items() if tournament_labels(r["name"]) & wanted)
     schedule, games, names = [], [], {}
     for start in range(0,len(ids),2):
         sel = in_filter(ids[start:start+2])
