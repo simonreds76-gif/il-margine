@@ -3,7 +3,8 @@ import copy
 from pathlib import Path
 import tempfile
 import unittest
-from test_manager_monthly_preservation import ROOT, MonthlyPreservationTests, read, write
+from collections import Counter
+from test_manager_monthly_preservation import MonthlyPreservationTests, pack, read, write
 
 IDS=['papi-id1000002371945354','papi-id1000002371945374',
      'papi-id1000002371945398','papi-id1000003472036278','papi-id1000003472036280']
@@ -11,6 +12,14 @@ IDS=['papi-id1000002371945354','papi-id1000002371945374',
 class ReviewedInterimTests(unittest.TestCase):
     def tree(self,root):
         helper=MonthlyPreservationTests();before=helper.fixture_tree(root)
+        # Recreate the state before these reviews in the temporary test archive.
+        # The real archive may already contain some or all five verified fixtures.
+        baseline=pack.unpack(before)
+        baseline['fixtures']=[f for f in baseline['fixtures'] if f['id'] not in IDS]
+        baseline['through']=max(f['date'] for f in baseline['fixtures'])
+        baseline['coverage']['basis']=dict(Counter(f['basis'] for f in baseline['fixtures']))
+        _,path=pack.package(baseline,root)
+        before=read(root/path)
         reviews=read(root/'scripts/config/manager-fixture-reviews.json')
         rows=[reviews[fid] for fid in IDS]
         teams=list(dict.fromkeys(t for r in rows for t in (r['home'],r['away'])))
@@ -34,7 +43,7 @@ class ReviewedInterimTests(unittest.TestCase):
     def test_one_conflicting_review_is_held_then_resolves_once(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);helper,before,reviews=self.tree(root)
-            broken=copy.deepcopy(reviews);broken[IDS[2]]['ag']=3
+            broken=copy.deepcopy(reviews);broken[IDS[2]]['ag']+=1
             write(root/'scripts/config/manager-fixture-reviews.json',broken)
             first=helper.run_offline(root)
             self.assertEqual(first['added'],4)
