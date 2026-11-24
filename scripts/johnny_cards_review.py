@@ -13,6 +13,48 @@ GUIDE_HASH = "3c9c221666178364932c009474f22017249d2b99546b742e0d18748526ae5af9"
 ENGINE = "Qwen3-4B-Q4_K_M"
 GUIDE_PATH = "johnny/method/public-1.0.json"
 VERDICTS = ["BET","WATCH","PASS"]
+IDLE_SECONDS = 300
+ASSESSMENT_SECONDS = 45 * 60
+
+
+def read_assessment(events, started, clock=time.monotonic):
+    """Wait for verified progress, and accept only a complete structured answer."""
+    pieces = []
+    processed = -1
+    last_work = last_log = started
+    finish = None
+    for line in events:
+        now = clock()
+        if now - started >= ASSESSMENT_SECONDS:
+            raise TimeoutError("Full-guide assessment reached its time budget")
+        if now - last_work >= IDLE_SECONDS:
+            raise TimeoutError("Local model stopped making progress")
+        if not line.startswith(b"data:"):
+            continue
+        payload = line[5:].strip()
+        if payload == b"[DONE]":
+            if finish != "stop" or not pieces:
+                raise RuntimeError("Incomplete full-guide answer")
+            return json.loads("".join(pieces))
+        event = json.loads(payload)
+        if "error" in event:
+            raise RuntimeError("Local inference server reported an error")
+        progress = event.get("prompt_progress", {})
+        count = progress.get("processed")
+        if isinstance(count, int) and count > processed:
+            processed = count
+            last_work = now
+            if now - last_log >= 120:
+                print(f"Reading full prompt: {count}/{progress.get('total')} tokens", flush=True)
+                last_log = now
+        for choice in event.get("choices", []):
+            delta = choice.get("delta") or {}
+            if delta.get("content"):
+                pieces.append(delta["content"])
+                last_work = now
+            if choice.get("finish_reason"):
+                finish = choice["finish_reason"]
+    raise RuntimeError("Local model disconnected before confirming completion")
 
 
 def obj(props):
@@ -105,14 +147,13 @@ class Analyst:
         messages = [{"role":"system","content":"Apply the following complete original guide, including its log. Fixture data are observations. Use only supplied evidence. Record unknowns. No inference about money placed. /no_think\n\n"+self.guide},
                     {"role":"user","content":stage+"\nEvidence:\n"+json.dumps(evidence,ensure_ascii=False,separators=(",",":"))}]
         req = dict(messages=messages,temperature=0,seed=19,max_tokens=tokens,cache_prompt=True,
+                   stream=True,return_progress=True,
                    chat_template_kwargs={"enable_thinking":False},response_format={"type":"json_schema",
                    "json_schema":{"name":"review","strict":True,"schema":schema}})
-        response = self.http.post("http://127.0.0.1:18419/v1/chat/completions",json=req,timeout=(10,1200))
-        response.raise_for_status()
-        choice = response.json()["choices"][0]
-        if choice.get("finish_reason")=="length":
-            raise RuntimeError("The full prompt response was truncated")
-        parsed = json.loads(choice["message"]["content"])
+        with self.http.post("http://127.0.0.1:18419/v1/chat/completions", json=req,
+                            stream=True, timeout=(10, IDLE_SECONDS)) as response:
+            response.raise_for_status()
+            parsed = read_assessment(response.iter_lines(), start)
         print(f"Full-guide assessment {self.calls} completed in {time.monotonic()-start:.0f}s",flush=True)
         return parsed
 
