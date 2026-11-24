@@ -1,6 +1,11 @@
 name: Weekly Research Report
 
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/*.yml'
+      - '.github/workflows/*.yaml'
   schedule:
     # Run after Tuesday's local 10:05 Europe/London result refresh uploads the
     # compact tennis evidence snapshot. Monday night leaves late US matches pending.
@@ -11,11 +16,43 @@ permissions:
   contents: write
 
 concurrency:
-  group: golden-with-speed-insights-branch-writes
+  group: ${{ github.event_name == 'pull_request' && format('schedule-budget-pr-{0}', github.event.pull_request.number) || 'golden-with-speed-insights-branch-writes' }}
   cancel-in-progress: false
 
 jobs:
+  schedule-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Read proposed workflow files
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          path: proposed
+          sparse-checkout: .github/workflows
+      - name: Read the current report policy
+        uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          path: policy
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/audit-automation-budget.py
+            /config/automation-budget.json
+      - name: Check proposed schedules against the weekly budget
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 policy/scripts/audit-automation-budget.py --workflows-dir proposed/.github/workflows --strict
+
   report:
+    if: github.event_name != 'pull_request'
+    permissions:
+      contents: write
+      actions: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -37,6 +74,11 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
+
+      - name: Validate the schedule budget before any research steps
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/audit-automation-budget.py --workflows-dir .effective-default-branch/.github/workflows --strict
 
       - name: Install Python deps
         run: pip install requests numpy scipy
@@ -102,9 +144,6 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          python scripts/audit-automation-budget.py \
-            --workflows-dir .effective-default-branch/.github/workflows \
-            --strict
           python scripts/football-counts-vnext-gate.py
           python scripts/weekly-research-report.py
 
