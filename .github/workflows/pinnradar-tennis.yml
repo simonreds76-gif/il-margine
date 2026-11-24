@@ -111,3 +111,28 @@ jobs:
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python scripts/davis_matchday.py
+
+  booking-clock:
+    if: >-
+      github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' &&
+      (endsWith(inputs.scheduled_slot_utc, 'T10:00:00Z') || endsWith(inputs.scheduled_slot_utc, 'T10:30:00Z') ||
+       endsWith(inputs.scheduled_slot_utc, 'T11:00:00Z') || endsWith(inputs.scheduled_slot_utc, 'T11:30:00Z'))
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    timeout-minutes: 2
+    steps:
+      - name: Wake the independent 11am London bookings workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          [ "$(TZ=Europe/London date +%H)" = 11 ] || exit 0
+          morning=$(date -u -d "$(TZ=Europe/London date '+%F 11:00 %z')" '+%FT%TZ')
+          runs=$(gh run list --workflow johnny-cards.yml --branch main --limit 30 --json displayTitle,createdAt,status,conclusion)
+          if jq -e --arg since "$morning" 'any(.[]; .displayTitle == "Johnny due" and .createdAt >= $since and
+             (.conclusion == "success" or .status == "in_progress" or .status == "queued"))' <<< "$runs" >/dev/null; then
+            exit 0
+          fi
+          gh workflow run johnny-cards.yml --ref main -f mode=due

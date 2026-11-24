@@ -8,9 +8,10 @@ from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 from statshub_daily_board import LINK, REPORT, Reads, board_matches
-from statshub_daily_contracts import LEAGUES, exact_quote, fixtures, identity, norm, utc
+from statshub_daily_contracts import exact_quote, identity, norm, utc
+from johnny_cards_calendar import calendar
 from statshub_daily_focus import flank, number
-from statshub_daily_io import Provider, Store, http, send_digest, timestamp
+from statshub_daily_io import Provider, Store, http, send_digest, telegram_private, timestamp
 
 LONDON = ZoneInfo("Europe/London")
 FLOOR = 4.0
@@ -31,33 +32,8 @@ def data(reader, tool, args):
     return (packet or {}).get("data") or {}
 
 
-def calendar(reader, day, now):
-    upcoming, coverage = [], []
-    for league, (comp, _) in LEAGUES.items():
-        doc = data(reader, "getFixturesByDate", dict(date=day, days=1, timeZone="Europe/London", competitionId=comp))
-        total = doc.get("fixtureCount")
-        summary = doc.get("fixturesSummary", "")
-        header_ids = re.findall(r"\[competitionId ([\w.-]+)\]", summary)
-        context = doc.get("context", "")
-        if (type(total) is not int or total < 0 or doc.get("listedCount") != total
-            or (total and (not header_ids or any(identity(i) != identity(comp) for i in header_ids)))
-            or (total and "times UTC" not in context)):
-            coverage.append(dict(league=league, total=None, open=0, gap="calendar unverified"))
-            continue
-        listed = fixtures(doc, day, league)
-        other = [line for line in summary.splitlines() if line.startswith("- ")
-                 and re.search(r"\b(live|finished|FT|postponed|cancelled|abandoned|full time)\b", line, re.I)]
-        closed_ids = {m.group(1) for line in other if (m := re.search(r"\(id ([\w.-]+)\)", line))}
-        unique = {f["id"]: f for f in listed}
-        eligible = [f for fid, f in unique.items() if fid not in closed_ids and utc(f["ko"]) > now]
-        gap = "" if len(set(unique) | closed_ids) == total else "unrecognised calendar rows"
-        coverage.append(dict(league=league, total=total, open=len(eligible), gap=gap))
-        upcoming.extend(eligible)
-    return upcoming, coverage
-
-
 def profile(reader, team, fixture, venue):
-    doc = data(reader, "getTeamPerformance", dict(teamId=team["id"], competitionId=LEAGUES[fixture["league"]][0],
+    doc = data(reader, "getTeamPerformance", dict(teamId=team["id"], competitionId=fixture["competitionId"],
                                               venue=venue, limit=10))
     totals = doc.get("totals") or {}
     own = (totals.get("stats") or {}).get("yellowCards") or {}
@@ -72,7 +48,7 @@ def triage(reader, f):
     match = doc.get("matches") or {}
     if (identity(match.get("id")) != identity(f["id"]) or match.get("status") != "scheduled"
         or match.get("kickoffTimestamp") != int(utc(f["ko"]).timestamp())
-        or identity((doc.get("competition") or {}).get("competitionId")) != identity(LEAGUES[f["league"]][0])):
+        or identity((doc.get("competition") or {}).get("competitionId")) != identity(f["competitionId"])):
         return {**f, "gap": "fixture, start or status unverified"}
     t = {**f, "teams": {}, "profiles": {}, "venue": (doc.get("venues") or {}).get("name"), "ref": None}
     for side in ("home", "away"):
@@ -84,7 +60,7 @@ def triage(reader, f):
     ref = doc.get("referees") or {}
     if ref.get("id") and match.get("seasonId"):
         sample = data(reader, "getReferee", dict(refereeId=ref["id"], seasonId=match["seasonId"],
-                      competitionId=LEAGUES[f["league"]][0], recentGames=10))
+                      competitionId=f["competitionId"], recentGames=10))
         figures = (((sample.get("record") or {}).get("recentGames") or {}).get("totals") or {})
         if figures.get("games") and number(figures.get("yellowCardsPerGame")):
             t["ref"] = dict(name=ref.get("name"), games=figures["games"], avg=figures["yellowCardsPerGame"])
@@ -144,7 +120,7 @@ def starting_cases(reader, f):
             if (rep.get("settled") or rep.get("matchStatus") in ("finished","live","cancelled","postponed")
                 or bet.get("statType") != "yellowCards" or bet.get("line") != 0.5
                 or fixture.get("kickoffTimestamp") != int(utc(f["ko"]).timestamp())
-                or identity(fixture.get("competitionId")) != identity(LEAGUES[f["league"]][0])
+                or identity(fixture.get("competitionId")) != identity(f["competitionId"])
                 or any(norm(fixture.get(s,"")) != norm(f[s]) for s in ("home","away"))):
                 continue
             groups = {s["label"]: [s.get("hits"), s.get("starts")] for s in rep.get("samples", [])
@@ -161,7 +137,7 @@ def starting_cases(reader, f):
 
 def stat_sample(reader, f, pid, stat, club):
     doc = data(reader, "getPlayerStats", dict(playerId=pid, statType=stat, appearances="starts", limit=20,
-               competitionId=LEAGUES[f["league"]][0]))
+               competitionId=f["competitionId"]))
     req, span = doc.get("requestedStat") or {}, doc.get("span") or {}
     clubs = span.get("teams") or []
     if (req.get("statType") != stat or len(clubs) != 1 or norm(clubs[0]) not in
@@ -248,7 +224,14 @@ def investigate(reader, f, clock, analyst):
 
 def scan(reader, day, analyst, clock=timestamp):
     fs, leagues = calendar(reader, day, utc(clock()))
-    reviewed = [triage(reader, f) for f in fs]
+    if not any(not window["gap"] for window in leagues) and not fs:
+        raise RuntimeError("Calendar unavailable; a no-picks report would be misleading")
+    reviewed = []
+    for f in fs:
+        if len(reader.log) >= 140:
+            reviewed.append({**f, "gap": "listed; daily allowance reserved for detailed player checks"})
+        else:
+            reviewed.append(triage(reader, f))
     eligible = [f for f in reviewed if not f.get("gap")]
     selected = analyst.select_fixtures(eligible)
     for f in selected:
@@ -266,7 +249,8 @@ def scan(reader, day, analyst, clock=timestamp):
 def lines(report):
     calendar = report["calendar"]
     complete = sum(not l["gap"] for l in calendar)
-    result = [f"Booking and fouls scan · {report['day']}", f"{complete}/5 league calendars verified · {len(report['slate'])} upcoming fixtures."]
+    result = [f"Booking and fouls scan · {report['day']}", f"{len(report['slate'])} upcoming fixtures. Five European leagues, Champions League and covered South American competitions.",
+              f"Through 11am London tomorrow. {complete}/{len(calendar)} calendar windows verified."]
     for f in sorted(report["slate"], key=lambda x: ("screen" not in x,x["ko"])):
         label = f["home"] + " v " + f["away"]
         if "screen" not in f or f.get("gap"):
@@ -296,8 +280,8 @@ def lines(report):
             row += " Fouls verdict " + c["foulsVerdict"] + "."
             row += " " + c["reason"]
             result.append(row)
-    if not report["slate"] and complete==5:
-        result.append("No upcoming matches in the five leagues today.")
+    if not report["slate"] and complete==len(calendar):
+        result.append("No upcoming matches in the covered competitions before the next edition.")
     for l in calendar:
         if l["gap"]:
             result.append(l["league"] + " · " + l["gap"])
@@ -328,7 +312,19 @@ def publish(store, report):
         summary.append(row)
     if len(summary)<len(ordered):
         summary.append("More cases and coverage notes in the private report.")
-    send_digest(store, "johnny-"+key, ["\n".join(summary)+"\nFull private report "+LINK])
+    message = "\n".join(summary)+"\nFull private report "+LINK
+    receipt_key = "receipts/johnny-"+key+"-0.json"
+    receipt = store.get(receipt_key, {})
+    if receipt.get("state") == "sent" and receipt.get("message_id"):
+        endpoint, chat = telegram_private()
+        response = http.post(endpoint+"/editMessageText", json=dict(chat_id=chat,
+                      message_id=receipt["message_id"], text=message,
+                      link_preview_options={"is_disabled":True}), timeout=20)
+        if not response.ok and not (response.status_code==400 and "message is not modified" in response.text.lower()):
+            raise RuntimeError(f"Could not update existing private digest (HTTP {response.status_code})")
+    else:
+        send_digest(store, "johnny-"+key, [message])
+    store.put("johnny/confirmed-expanded/"+key+".json", {"reportedAt":report["at"]})
 
 
 def plan():
@@ -336,12 +332,14 @@ def plan():
     now = datetime.now(LONDON)
     day = (os.environ.get("PREVIEW_DAY","").strip() if preview else "") or now.date().isoformat()
     store = private_store()
-    sent = not preview and store.get("receipts/johnny-"+day+"-0.json",{}).get("state")=="sent"
+    sent = not preview and store.get("johnny/confirmed-expanded/"+day+".json",{}).get("reportedAt")
     active = not sent and (preview or now.hour>=11)
     needs_engine = False
-    if active and (preview or not store.get("johnny/days/"+day+".json")):
+    if active and (preview or not store.get("johnny/days-expanded/"+day+".json")):
         reader = Reads(store,Provider(store),day,"johnny-preview" if preview else "johnny",240)
-        games, _ = calendar(reader, day, now)
+        games, windows = calendar(reader, day, now)
+        if not games and any(w["gap"] for w in windows):
+            raise RuntimeError("Incomplete calendar; retry without declaring an empty slate")
         needs_engine = bool(games) or preview
     with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as output:
         print("active="+str(active).lower(),file=output)
@@ -356,7 +354,7 @@ def run():
     if not preview and now.hour < 11:
         return
     store = private_store()
-    path = "johnny/days/"+day+".json"
+    path = "johnny/days-expanded/"+day+".json"
     report = None if preview else store.get(path)
     if report is None:
         phase = "johnny-preview" if preview else "johnny"
@@ -377,10 +375,25 @@ def run():
         else:
             store.put(path,report,replace=False)
             report = store.get(path)
-    print(f"Calendars {sum(not r['gap'] for r in report['calendar'])}/5; upcoming {len(report['slate'])}; detailed {sum('screen' in f for f in report['slate'])}; reads {report['reads']}; unavailable {report['failures']}; full-prompt calls {report['promptCalls']}; original guide SHA256 {report['guideSHA256']}")
+    print(f"Calendar windows {sum(not r['gap'] for r in report['calendar'])}/{len(report['calendar'])}; upcoming {len(report['slate'])}; detailed {sum('screen' in f for f in report['slate'])}; reads {report['reads']}; unavailable {report['failures']}; full-prompt calls {report['promptCalls']}; original guide SHA256 {report['guideSHA256']}")
     if not preview:
         publish(store,report)
 
 
 if __name__=="__main__":
-    plan() if "--plan" in sys.argv else run()
+    if "--calendar" in sys.argv:
+        now = datetime.now(LONDON)
+        day = now.date().isoformat()
+        store = private_store()
+        reader = Reads(store, Provider(store), day, "johnny-calendar-check", 32)
+        matches, windows = calendar(reader, day, now)
+        print(f"{len(matches)} eligible fixtures; {sum(not w['gap'] for w in windows)}/{len(windows)} calendar windows verified")
+        from collections import Counter
+        for league, count in sorted(Counter(f["league"] for f in matches).items()):
+            print(f"{league}: {count}")
+        if not windows or any(w["gap"] for w in windows):
+            raise RuntimeError("Incomplete fixture calendar rehearsal")
+    elif "--plan" in sys.argv:
+        plan()
+    else:
+        run()

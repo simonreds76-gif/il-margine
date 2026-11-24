@@ -1,4 +1,5 @@
 name: Johnny daily bookings and fouls
+run-name: Johnny ${{ github.event_name == 'push' && 'calendar' || inputs.mode || 'due' }}
 on:
   schedule:
     - cron: '0 11 * * *'
@@ -15,7 +16,7 @@ on:
         description: 'Private rehearsal date (YYYY-MM-DD)'
         required: false
   push:
-    branches: [codex/statshub-duel-review-20261123]
+    branches: [codex/johnny-calendar-clock-20261124]
     paths: ['scripts/johnny_cards*.py', 'tests/test_johnny_cards*.py', '.github/workflows/johnny-cards.yml']
 permissions:
   contents: read
@@ -27,8 +28,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 100
     env:
-      MODE: ${{ github.event_name == 'push' && 'preview' || inputs.mode || 'due' }}
-      PREVIEW_DAY: ${{ inputs.preview_day || (github.event_name == 'push' && '2026-11-27') || '' }}
+      MODE: ${{ github.event_name == 'push' && 'calendar' || inputs.mode || 'due' }}
+      PREVIEW_DAY: ${{ inputs.preview_day || '' }}
       JOHNNY_ENGINE_DIR: ${{ github.workspace }}/../johnny-engine
     steps:
       - uses: actions/checkout@v4
@@ -49,7 +50,12 @@ jobs:
           STATSHUB_DAILY_AUTH: ${{ secrets.STATSHUB_DAILY_AUTH }}
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: python scripts/johnny_cards.py --plan
+        run: |
+          if [ "$MODE" = calendar ]; then
+            python scripts/johnny_cards.py --calendar
+          else
+            python scripts/johnny_cards.py --plan
+          fi
       - name: Prepare checksum-verified local inference
         if: steps.plan.outputs.engine == 'true'
         run: |
