@@ -209,6 +209,7 @@
     "5795519": "2026-11-24",
     "5795524": "2026-11-24",
     "5795523": "2026-11-24",
+    "5868131": "2026-11-25",
     "5868138": "2026-11-24",
     "5868140": "2026-11-24",
     "5868139": "2026-11-24",
@@ -219,6 +220,8 @@
     "5881225": "2026-11-25",
     "5881227": "2026-11-25",
     "5881228": "2026-11-25",
+    "5881229": "2026-11-25",
+    "5881231": "2026-11-25",
     "5881230": "2026-11-24",
     "5802996": "2026-11-24",
     "5802991": "2026-11-24",
@@ -226,22 +229,27 @@
     "5802995": "2026-11-24",
     "5802998": "2026-11-24",
     "5795520": "2026-11-25",
+    "5795521": "2026-11-25",
     "5868133": "2026-11-25",
+    "5868137": "2026-11-25",
     "5868136": "2026-11-24",
     "5868134": "2026-11-24",
     "5749754": "2026-11-25",
     "5749752": "2026-11-25",
     "5749759": "2026-11-25",
+    "5749750": "2026-11-25",
     "5749751": "2026-11-24",
     "5881224": "2026-11-25",
+    "5881232": "2026-11-25",
     "5802997": "2026-11-25",
+    "5802993": "2026-11-25",
     "5802994": "2026-11-24",
     "5795517": "2026-11-24",
     "5868135": "2026-11-24",
     "5749756": "2026-11-24"
   },
-  "updated_at": "2026-11-25T04:08:43.581386+00:00",
-  "checked_this_run": 16,
+  "updated_at": "2026-11-25T04:33:15.149254+00:00",
+  "checked_this_run": 8,
   "errors": [],
   "fixtures": {
     "5749700": {
@@ -10248,7 +10256,7 @@
           "name": "Deportivo A Coruña"
         },
         "status": {
-          "utcTime": "2026-11-21T13:00:00.000Z",
+          "utcTime": "2026-11-21T13:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "21.11.2026 14:00:38",
             "secondHalfStarted": "21.11.2026 15:04:15"
@@ -10268,14 +10276,14 @@
         }
       },
       "date": "2026-11-21",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-21T00:47:24.645440+00:00",
       "pending_since": "2026-11-21T00:47:24.645440+00:00",
-      "last_attempt": "2026-11-23T22:12:21.626807+00:00",
-      "attempts": 5,
-      "reason": "daily_reconciliation",
+      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
+      "attempts": 6,
+      "reason": "penalties_verified",
       "next_attempt": "",
-      "verified_at": "2026-11-23T22:12:21.626807+00:00",
+      "verified_at": "2026-11-25T04:33:15.149254+00:00",
       "penalty_count": 1
     },
     "5868138": {
@@ -10764,7 +10772,7 @@
           "shortName": "Freiburg"
         },
         "status": {
-          "utcTime": "2026-11-21T14:30:00.000Z",
+          "utcTime": "2026-11-21T14:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "21.11.2026 15:30:29",
             "secondHalfStarted": "21.11.2026 16:33:59"
@@ -10784,13 +10792,13 @@
         }
       },
       "date": "2026-11-21",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-21T00:47:24.645440+00:00",
       "pending_since": "2026-11-21T00:47:24.645440+00:00",
-      "last_attempt": "2026-11-23T22:12:21.626807+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-23T22:12:21.626807+00:00",
+      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-25T04:33:15.149254+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -10812,7 +10820,7 @@
           "shortName": "RB Leipzig"
         },
         "status": {
-          "utcTime": "2026-11-21T14:30:00.000Z",
+          "utcTime": "2026-11-21T14:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "21.11.2026 15:30:11",
             "secondHalfStarted": "21.11.2026 16:37:14"
@@ -10832,13 +10840,13 @@
         }
       },
       "date": "2026-11-21",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-21T00:47:24.645440+00:00",
       "pending_since": "2026-11-21T00:47:24.645440+00:00",
-      "last_attempt": "2026-11-23T22:12:21.626807+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-23T22:12:21.626807+00:00",
+      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
+      "attempts": 4,
+      "reason": "penalties_verified",
+      "verified_at": "2026-11-25T04:33:15.149254+00:00",
       "penalty_count": 1,
       "next_attempt": ""
     },
@@ -11209,13 +11217,13 @@
         }
       },
       "date": "2026-11-22",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-22T17:47:11.869547+00:00",
       "pending_since": "2026-11-22T17:47:11.869547+00:00",
-      "last_attempt": "2026-11-23T22:12:21.626807+00:00",
-      "attempts": 2,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-23T22:12:21.626807+00:00",
+      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
+      "attempts": 3,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-25T04:33:15.149254+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -11303,13 +11311,13 @@
         }
       },
       "date": "2026-11-22",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-22T17:47:11.869547+00:00",
       "pending_since": "2026-11-22T17:47:11.869547+00:00",
-      "last_attempt": "2026-11-23T22:12:21.626807+00:00",
-      "attempts": 2,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-23T22:12:21.626807+00:00",
+      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
+      "attempts": 3,
+      "reason": "penalties_verified",
+      "verified_at": "2026-11-25T04:33:15.149254+00:00",
       "penalty_count": 1,
       "next_attempt": ""
     },
@@ -11583,13 +11591,13 @@
         }
       },
       "date": "2026-11-22",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-22T17:47:11.869547+00:00",
       "pending_since": "2026-11-22T17:47:11.869547+00:00",
-      "last_attempt": "2026-11-23T22:12:21.626807+00:00",
-      "attempts": 2,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-23T22:12:21.626807+00:00",
+      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
+      "attempts": 3,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-25T04:33:15.149254+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -11726,13 +11734,13 @@
         }
       },
       "date": "2026-11-22",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-22T17:47:11.869547+00:00",
       "pending_since": "2026-11-22T17:47:11.869547+00:00",
-      "last_attempt": "2026-11-23T22:12:21.626807+00:00",
-      "attempts": 2,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-23T22:12:21.626807+00:00",
+      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
+      "attempts": 3,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-25T04:33:15.149254+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -11820,13 +11828,13 @@
         }
       },
       "date": "2026-11-22",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-22T17:47:11.869547+00:00",
       "pending_since": "2026-11-22T17:47:11.869547+00:00",
-      "last_attempt": "2026-11-23T22:12:21.626807+00:00",
-      "attempts": 2,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-23T22:12:21.626807+00:00",
+      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
+      "attempts": 3,
+      "reason": "penalties_verified",
+      "verified_at": "2026-11-25T04:33:15.149254+00:00",
       "penalty_count": 1,
       "next_attempt": ""
     },
@@ -12469,7 +12477,7 @@
     },
     "20261119": {
       "ok": true,
-      "checked_at": "2026-11-23T22:12:21.626807+00:00",
+      "checked_at": "2026-11-25T04:33:15.149254+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -12556,14 +12564,14 @@
     },
     "20261124": {
       "ok": true,
-      "checked_at": "2026-11-25T04:08:43.581386+00:00",
+      "checked_at": "2026-11-25T04:33:15.149254+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
     },
     "20261125": {
       "ok": true,
-      "checked_at": "2026-11-25T04:08:43.581386+00:00",
+      "checked_at": "2026-11-25T04:33:15.149254+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -12571,9 +12579,9 @@
   },
   "coverage": {
     "expected": 247,
-    "verified": 239,
+    "verified": 247,
     "pending": 0,
-    "reverify": 8,
+    "reverify": 0,
     "deferred": 0,
     "overdue": 0,
     "stalled": 0,
