@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 from statshub_daily_board import LINK, REPORT, Reads, board_matches
+from johnny_cards_review import AssessmentError, ChoiceError
 from statshub_daily_contracts import exact_quote, identity, norm, utc
 from johnny_cards_calendar import calendar
 from statshub_daily_focus import flank, number
@@ -234,12 +235,14 @@ def offers(doc, f, case, at, now):
     return found
 
 
-def investigate(reader, f, clock, analyst):
+def screen_players(reader, f, clock, analyst):
     cases, note = starting_cases(reader, f)
     f["screen"] = note
-    f["screened"] = [dict(name=c["name"], role=c["player"].get("position"), groups=c["groups"]) for c in cases]
+    f["screened"] = [dict(id=c["player"]["id"], name=c["name"], role=c["player"].get("position"),
+                          side=c["side"], lineup=c["lineup"], groups=c["groups"]) for c in cases]
     f["cases"] = []
     if not cases:
+        f.update(reviewState="unavailable", gap=note)
         return
     f["teamNews"] = data(reader,"getTeamNews",{"matchId":f["id"]})
     aliases = {}
@@ -249,14 +252,22 @@ def investigate(reader, f, clock, analyst):
     for c in cases:
         c["priceAliases"] = [n for n in {norm(c["name"]),norm(c["player"]["name"])} if len(aliases[n])==1]
     selected = analyst.select_players(f, cases)
-    for c in selected:
+    f["playerScreen"] = {"at":clock(), "selected":selected}
+
+
+def investigate(reader, f, clock, analyst):
+    f["cases"] = []
+    for selected in f["playerScreen"]["selected"]:
+        c = dict(selected)
         p, side = c["player"], c["side"]
         opp = "away" if side == "home" else "home"
         c["committed"] = stat_sample(reader,f,p["id"],"fouls",f["teams"][side])
         rival = c["rival"]
         c["drawn"] = stat_sample(reader,f,rival["id"],"foulsWon",f["teams"][opp]) if rival else None
         f["cases"].append(c)
-    f["frozenAt"] = clock()
+    f["frozenAt"] = f["playerScreen"]["at"]
+    if not f["cases"]:
+        return
     packet = reader.read("getMatchOdds", dict(matchId=f["id"], markets=["player to be booked","player fouls"]), "morning") or {}
     for c in f["cases"]:
         c["offers"] = offers(packet.get("data") or {}, f, c, packet["at"], utc(clock())) if packet.get("at") else []
@@ -293,11 +304,16 @@ def scan(reader, day, analyst, clock=timestamp, save=None, previous=None):
             if len(reader.log) >= 140:
                 f["gap"] = "daily allowance reserved for detailed player checks"
             else:
-                reviewed[i] = triage(reader, f)
+                try:
+                    reviewed[i] = triage(reader, f)
+                except (ValueError, TypeError, KeyError, IndexError, AttributeError, TimeoutError) as error:
+                    f.update(gap="fixture screening incomplete", reviewStep="fixture screening",
+                             reviewError=type(error).__name__)
+                    reader.errors += 1
         eligible = [f for f in reviewed if not f.get("gap")]
         selected = {f["id"]: rank for rank, f in enumerate(analyst.select_fixtures(eligible), start=1)}
         for f in reviewed:
-            f["reviewState"] = ("unavailable" if f.get("gap") else
+            f["reviewState"] = ("unfinished" if f.get("reviewError") else "unavailable" if f.get("gap") else
                                 "selected" if f["id"] in selected else "reserve")
             if f["id"] in selected:
                 f["priority"] = selected[f["id"]]
@@ -313,15 +329,23 @@ def scan(reader, day, analyst, clock=timestamp, save=None, previous=None):
         if utc(f["ko"]) <= utc(clock()):
             f.update(reviewState="unavailable", gap="scheduled kickoff passed")
         else:
-            try:
-                investigate(reader, f, clock, analyst)
-                missing = not f.get("screened")
-                f["reviewState"] = "unavailable" if missing else "complete"
-                if missing:
-                    f["gap"] = f.get("screen") or "player evidence unavailable"
-            except (ValueError, KeyError, TypeError) as error:
-                f.update(reviewState="unavailable", gap="Player assessment incomplete ("+type(error).__name__+")", cases=[])
-                reader.errors += 1
+            for label, step in (("player selection", screen_players), ("final assessment", investigate)):
+                if step is screen_players and "playerScreen" in f:
+                    continue  # Resume after the saved pre-odds player selection, including an empty one.
+                try:
+                    step(reader, f, clock, analyst)
+                except (AssessmentError, TimeoutError, ValueError, TypeError, KeyError, IndexError, AttributeError) as error:
+                    reason = str(error) if isinstance(error, ChoiceError) else type(error.__cause__ or error).__name__
+                    f.update(reviewState="unfinished", reviewStep=label, reviewError=reason, cases=[])
+                    f.pop("assessment", None)
+                    reader.errors += 1
+                    break
+                if f["reviewState"] == "unavailable":
+                    break
+                if step is screen_players:
+                    checkpoint("ranked")
+                else:
+                    f["reviewState"] = "complete"
         f["verdictAt"] = clock()
         checkpoint("ranked")
     return checkpoint("finished")

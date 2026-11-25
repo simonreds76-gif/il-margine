@@ -3,6 +3,7 @@ import hashlib
 import json
 import os
 import re
+import signal
 from pathlib import Path
 import subprocess
 import time
@@ -13,8 +14,16 @@ GUIDE_HASH = "3c9c221666178364932c009474f22017249d2b99546b742e0d18748526ae5af9"
 ENGINE = "Qwen3-4B-Q4_K_M"
 GUIDE_PATH = "johnny/method/public-1.0.json"
 VERDICTS = ["BET","WATCH","PASS"]
-IDLE_SECONDS = 300
+IDLE_SECONDS = 600  # The 25 Nov worker took over five minutes between prefill updates.
 ASSESSMENT_SECONDS = 45 * 60
+
+
+class AssessmentError(RuntimeError):
+    """One inference failed. The fixture has no usable verdict."""
+
+
+class ChoiceError(ValueError):
+    """Non-sensitive validation reason, suitable for a private checkpoint."""
 
 
 def read_assessment(events, started, clock=time.monotonic):
@@ -27,9 +36,9 @@ def read_assessment(events, started, clock=time.monotonic):
         now = clock()
         if now - started >= ASSESSMENT_SECONDS:
             raise TimeoutError("Full-guide assessment reached its time budget")
-        if now - last_work >= IDLE_SECONDS:
-            raise TimeoutError("Local model stopped making progress")
         if not line.startswith(b"data:"):
+            if now - last_work >= IDLE_SECONDS:
+                raise TimeoutError("Local model stopped making progress")
             continue
         payload = line[5:].strip()
         if payload == b"[DONE]":
@@ -41,7 +50,7 @@ def read_assessment(events, started, clock=time.monotonic):
             raise RuntimeError("Local inference server reported an error")
         progress = event.get("prompt_progress", {})
         count = progress.get("processed")
-        if isinstance(count, int) and count > processed:
+        if type(count) is int and count > processed:
             processed = count
             last_work = now
             if now - last_log >= 120:
@@ -54,6 +63,8 @@ def read_assessment(events, started, clock=time.monotonic):
                 last_work = now
             if choice.get("finish_reason"):
                 finish = choice["finish_reason"]
+        if now - last_work >= IDLE_SECONDS:
+            raise TimeoutError("Local model stopped making progress")
     raise RuntimeError("Local model disconnected before confirming completion")
 
 
@@ -84,11 +95,20 @@ def value_range(quote, interval):
 
 
 def exact_choices(indices, values, maximum):
-    if len(set(indices)) != len(indices) or len(indices)>maximum:
-        raise ValueError("Invalid duplicate or excessive model choices")
+    if not isinstance(indices, list):
+        raise ChoiceError("selection was not a list")
+    if len(indices) > maximum:
+        raise ChoiceError(f"returned {len(indices)} indices for a maximum of {maximum}")
     if any(type(i) is not int or not 0<=i<len(values) for i in indices):
-        raise ValueError("Model choice outside supplied evidence")
+        raise ChoiceError("index outside supplied evidence")
+    if len(set(indices)) != len(indices):
+        raise ChoiceError("duplicate selection index")
     return [values[i] for i in indices]
+
+
+def choice_schema(count, maximum):
+    return {"type":"array", "items":{"type":"integer", "minimum":0, "maximum":count-1},
+            "maxItems":min(count, maximum), "uniqueItems":True}
 
 
 class Analyst:
@@ -110,6 +130,10 @@ class Analyst:
         return self
 
     def __exit__(self, *_):
+        self.stop_engine()
+        self.http.close()
+
+    def stop_engine(self):
         if self.child:
             self.child.terminate()
             try:
@@ -117,14 +141,14 @@ class Analyst:
             except subprocess.TimeoutExpired:
                 self.child.kill()
                 self.child.wait()
-        self.http.close()
+            self.child = None
 
     def start(self):
         root = Path(os.environ["JOHNNY_ENGINE_DIR"])
         server = next(root.rglob("llama-server"))
         model = root/"model.gguf"
         self.child = subprocess.Popen([str(server),"-m",str(model),"--host","127.0.0.1","--port","18419",
-                            "-c","32768","-np","1","-t","4","--jinja","--no-warmup"],
+                            "-c","32768","-np","1","-t","4","-b","512","-ub","256","--jinja","--no-warmup"],
                             env={"PATH":"/usr/bin:/bin","HOME":str(root),"LD_LIBRARY_PATH":str(server.parent)},
                             cwd=root,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
         for _ in range(90):
@@ -139,8 +163,6 @@ class Analyst:
         raise RuntimeError("Private local prompt engine timed out")
 
     def ask(self, stage, evidence, schema, tokens):
-        if not self.child:
-            self.start()
         self.calls += 1
         start = time.monotonic()
         print(f"Full-guide assessment {self.calls} started",flush=True)
@@ -150,10 +172,28 @@ class Analyst:
                    stream=True,return_progress=True,
                    chat_template_kwargs={"enable_thinking":False},response_format={"type":"json_schema",
                    "json_schema":{"name":"review","strict":True,"schema":schema}})
-        with self.http.post("http://127.0.0.1:18419/v1/chat/completions", json=req,
-                            stream=True, timeout=(10, IDLE_SECONDS)) as response:
-            response.raise_for_status()
-            parsed = read_assessment(response.iter_lines(), start)
+        # On the Linux runner this wall timer also interrupts a silent or trickling socket.
+        def expired(*_):
+            raise TimeoutError("Full-guide assessment reached its time budget")
+
+        bounded = hasattr(signal, "SIGALRM")
+        if bounded:
+            previous = signal.signal(signal.SIGALRM, expired)
+            signal.alarm(ASSESSMENT_SECONDS)
+        try:
+            if not self.child:
+                self.start()
+            with self.http.post("http://127.0.0.1:18419/v1/chat/completions", json=req,
+                                stream=True, timeout=(10, IDLE_SECONDS)) as response:
+                response.raise_for_status()
+                parsed = read_assessment(response.iter_lines(chunk_size=1), start)
+        except (requests.RequestException, RuntimeError, ValueError, OSError, KeyError, TypeError, AttributeError) as error:
+            self.stop_engine()
+            raise AssessmentError("model stream or worker did not complete") from error
+        finally:
+            if bounded:
+                signal.alarm(0)
+                signal.signal(signal.SIGALRM, previous)
         print(f"Full-guide assessment {self.calls} completed in {time.monotonic()-start:.0f}s",flush=True)
         return parsed
 
@@ -163,7 +203,7 @@ class Analyst:
         evidence = [dict(index=i,league=f["league"],home=f["home"],away=f["away"],kickoff=f["ko"],
                          referee=f["ref"],teamProfiles=f["profiles"],venue=f["venue"],conditions=f.get("conditions"))
                     for i,f in enumerate(fixtures)]
-        schema = obj({"priority":arr({"type":"integer","minimum":0,"maximum":len(fixtures)-1}),"why":string()})
+        schema = obj({"priority":choice_schema(len(fixtures),5),"why":string()})
         mode = "SMALL: assess every fixture." if len(fixtures)<=4 else "BUSY: prioritise four or five for detailed work."
         result = self.ask("Apply Part A slate triage to every fixture. "+mode+" Use zero-based indices. Explain the evidence or gaps that determined your priorities.", evidence,schema,500)
         selected = exact_choices(result["priority"],fixtures,5)
@@ -176,7 +216,7 @@ class Analyst:
     def select_players(self, fixture, cases):
         evidence = [dict(index=i,name=c["name"],role=c["player"].get("position"),lineup=c["lineup"],
                          rival=c["rival"],bookingSamples=c["groups"],availability=c["availability"]) for i,c in enumerate(cases)]
-        schema = obj({"players":arr({"type":"integer","minimum":0,"maximum":len(cases)-1}),"rationale":string()})
+        schema = obj({"players":choice_schema(len(cases),4),"rationale":string()})
         info = {k:fixture.get(k) for k in ("league","home","away","ko","ref","teams","profiles","conditions","teamNews")}
         result = self.ask("Apply Johnny's player screening. Register up to four candidates for detailed booking AND individual fouls work. Consider the entire supplied lineup, minutes, central players, wide duels, alternatives and availability. Odds have not been supplied to this step. Choose zero-based indices; zero choices are valid.", {"fixture":info,"players":evidence},schema,500)
         fixture["initialRationale"] = result["rationale"]
@@ -198,7 +238,8 @@ class Analyst:
         evidence["settlementTerms"] = "Only offers carrying a rules field have documented standard operator rules. Live betslips, promotional exceptions and offered double prices are unknown. Return [] for any unestimable probability range, else [lower, upper] on a zero-to-one scale for that exact line."
         result = self.ask("An identified expected starter is eligible in this edition. Account for role and minutes uncertainty. Official confirmation is optional. Complete Johnny's fixture assessment and fouls companion for EACH registered player (zero-based index in cases). Use the named opponent and comparable exposure. Distinguish booking singles from the offered fouls lines and their separate value cases. Apply the original method's floors only to the appropriate contracts. Return separate verdicts, grades and reasons, the strongest counterargument, probability range and basis (or NOT ESTIMABLE), and missing checks. For telegramReason and foulsReason write one short qualitative sentence each, with no numbers, links or source names. Treat supplied odds ages literally. Player-specific betslip terms and replacement coverage are unverified. No actual tickets have been placed.",evidence,schema,2700)
         decisions = result["cases"]
-        if sorted(c["index"] for c in decisions)!=list(range(len(f["cases"]))):
+        indices = [c["index"] for c in decisions]
+        if len(exact_choices(indices, f["cases"], len(f["cases"]))) != len(f["cases"]):
             raise ValueError("The prompt omitted or duplicated a registered candidate")
         f["assessment"] = result
         for decision in decisions:

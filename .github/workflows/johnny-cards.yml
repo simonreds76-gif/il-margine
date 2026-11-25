@@ -1,5 +1,5 @@
 name: Johnny daily bookings and fouls
-run-name: Johnny ${{ github.event_name == 'pull_request' && 'stream-test' || github.event_name == 'push' && 'calendar' || inputs.mode == 'repair-lineups' && 'repair-lineups' || (github.event.schedule == '0 8 * * *' || inputs.mode == 'research') && 'research' || inputs.mode == 'preview' && 'preview' || 'digest' }}
+run-name: Johnny ${{ github.event_name == 'pull_request' && 'stream-test' || github.event_name == 'push' && 'calendar' || inputs.mode || github.event.schedule == '0 8 * * *' && 'research' || 'digest' }}
 on:
   pull_request:
     paths: ['scripts/johnny_cards*.py', 'scripts/statshub_daily_io.py', 'tests/test_johnny_cards*.py', '.github/workflows/johnny-cards.yml']
@@ -14,7 +14,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [preview, research, digest, due, repair-lineups]
+        options: [preview, research, digest, due, repair-lineups, amend-saved]
         default: preview
       preview_day:
         description: 'Private rehearsal date (YYYY-MM-DD)'
@@ -28,14 +28,14 @@ jobs:
   scan:
     if: >-
       github.event_name == 'pull_request' || github.event_name == 'push' ||
-      inputs.mode == 'preview' || (github.ref == 'refs/heads/main' && (github.event.schedule == '0 8 * * *' || inputs.mode == 'research' || inputs.mode == 'repair-lineups'))
+      inputs.mode == 'preview' || (github.ref == 'refs/heads/main' && (github.event.schedule == '0 8 * * *' || inputs.mode == 'research' || inputs.mode == 'repair-lineups' || inputs.mode == 'amend-saved'))
     concurrency:
       group: ${{ (github.event_name == 'pull_request' || github.event_name == 'push' || inputs.mode == 'preview') && format('johnny-tests-{0}', github.run_id) || 'johnny-morning-research' }}
       cancel-in-progress: false
     runs-on: ubuntu-24.04
     timeout-minutes: 165
     env:
-      MODE: ${{ github.event_name == 'pull_request' && 'stream-test' || github.event_name == 'push' && 'calendar' || inputs.mode == 'repair-lineups' && 'repair-lineups' || (github.event.schedule == '0 8 * * *' || inputs.mode == 'research') && 'research' || inputs.mode == 'preview' && 'preview' || 'digest' }}
+      MODE: ${{ github.event_name == 'pull_request' && 'stream-test' || github.event_name == 'push' && 'calendar' || inputs.mode || github.event.schedule == '0 8 * * *' && 'research' || 'digest' }}
       PREVIEW_DAY: ${{ inputs.preview_day || '' }}
       JOHNNY_ENGINE_DIR: ${{ github.workspace }}/../johnny-engine
     steps:
@@ -59,12 +59,12 @@ jobs:
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          if [ "$MODE" = repair-lineups ]; then
+          if [[ "$MODE" = repair-lineups || "$MODE" = amend-saved ]]; then
             edition_day=$(TZ=Europe/London date +%F)
             echo "EDITION_DAY=$edition_day" >> "$GITHUB_ENV"
             EDITION_DAY="$edition_day" python -c 'import os,sys; sys.path.insert(0,"scripts"); from johnny_cards_recovery import require_edition,private_store; require_edition(private_store(),os.environ["EDITION_DAY"])'
             echo "active=true" >> "$GITHUB_OUTPUT"
-            echo "engine=true" >> "$GITHUB_OUTPUT"
+            if [ "$MODE" = repair-lineups ]; then echo "engine=true" >> "$GITHUB_OUTPUT"; fi
           elif [ "$MODE" = calendar ]; then
             python scripts/johnny_cards.py --calendar
           else
@@ -85,15 +85,14 @@ jobs:
         if: github.event_name == 'pull_request'
         run: python tests/test_johnny_cards_stream.py --engine-smoke
       - name: Apply the original guide privately
-        if: steps.plan.outputs.active == 'true'
+        if: steps.plan.outputs.active == 'true' && env.MODE != 'amend-saved'
         env:
           STATSHUB_DAILY_AUTH: ${{ secrets.STATSHUB_DAILY_AUTH }}
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           if [ "$MODE" = repair-lineups ]; then
-            python scripts/johnny_cards_recovery.py research
-            exec python scripts/johnny_cards_recovery.py verify
+            exec python scripts/johnny_cards_recovery.py research
           fi
           if [ "$MODE" != research ]; then exec python scripts/johnny_cards.py; fi
           cutoff=$(TZ=Europe/London date -d 'today 10:54' +%s)
@@ -104,8 +103,16 @@ jobs:
           if [ "$rc" = 124 ]; then echo "Deadline reached; completed fixture verdicts are saved."; exit 0; fi
           exit "$rc"
 
+      - name: Verify completed fixtures from the saved repair
+        id: verify_repair
+        if: ${{ !cancelled() && steps.plan.outputs.active == 'true' && github.ref == 'refs/heads/main' && (inputs.mode == 'repair-lineups' || inputs.mode == 'amend-saved') }}
+        env:
+          STATSHUB_DAILY_AUTH: ${{ secrets.STATSHUB_DAILY_AUTH }}
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python scripts/johnny_cards_recovery.py verify
       - name: Amend the existing private digest and verify Admin
-        if: github.ref == 'refs/heads/main' && inputs.mode == 'repair-lineups'
+        if: ${{ !cancelled() && steps.verify_repair.outcome == 'success' }}
         env:
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -181,7 +188,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
         run: |
-          target=$(TZ=Europe/London date -d 'today 10:55' +%s)
+          target=$(TZ=Europe/London date -d 'today 11:00' +%s)
           remaining=$((target - $(date +%s)))
           if [ "$remaining" -gt 0 ]; then sleep "$remaining"; fi
           python scripts/johnny_cards_edition.py send
