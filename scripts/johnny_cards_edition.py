@@ -4,11 +4,11 @@ import sys
 import time
 from datetime import datetime, timedelta
 
-from johnny_cards import FLOOR, distinct_opponent, edition_key, offers, private_store
+from johnny_cards import FLOOR, JohnnyProvider, distinct_opponent, edition_key, offers, private_store
 from johnny_cards_calendar import LONDON
 from statshub_daily_board import LINK, REPORT, Reads
 from statshub_daily_contracts import identity, norm, utc
-from statshub_daily_io import Provider, send_digest, timestamp
+from statshub_daily_io import send_digest, timestamp
 
 
 def candidates(f):
@@ -19,7 +19,7 @@ def candidates(f):
             ("booking", "verdict", "booking", "bookingRange"),
             ("fouls", "foulsVerdict", "fouls", "foulsRange"),
         ):
-            # A model BET held for a predicted XI may qualify once the same role is confirmed.
+            # Older editions recorded an otherwise qualifying expected starter as WATCH.
             held = case.get(verdict) == "WATCH" and case.get("lineup") == "predicted"
             if case.get(verdict) != "BET" and not (held and decision.get(model) == "BET"):
                 continue
@@ -31,22 +31,23 @@ def candidates(f):
                 yield case, kind, old, interval["low"]
 
 
-def confirmed_role(f, case, xi):
+def starting_role(f, case, xi):
     side = case["side"]
     own = xi.get(side) or {}
-    if identity(own.get("teamId")) != identity(f["teams"][side]["id"]) or own.get("status") != "confirmed":
+    if identity(own.get("teamId")) != identity(f["teams"][side]["id"]) or own.get("status") not in ("predicted", "confirmed"):
         return False
     players = [p for p in own.get("players", []) if identity(p.get("id")) == identity(case["player"]["id"])]
-    if len(players) != 1 or players[0].get("position") != case["player"].get("position"):
+    if not case["player"].get("id") or len(players) != 1 or not players[0].get("position") or players[0]["position"] != case["player"].get("position"):
         return False
     if case.get("rival"):
         opp = "away" if side == "home" else "home"
         other = xi.get(opp) or {}
-        if other.get("status") != "confirmed" or identity(other.get("teamId")) != identity(f["teams"][opp]["id"]):
+        if other.get("status") not in ("predicted", "confirmed") or identity(other.get("teamId")) != identity(f["teams"][opp]["id"]):
             return False
         rival = distinct_opponent(players[0], other)
-        return bool(rival and identity(rival.get("id")) == identity(case["rival"]["id"]))
-    return True
+        if not rival or identity(rival.get("id")) != identity(case["rival"]["id"]):
+            return None
+    return (own["status"], (other["status"] if case.get("rival") else None))
 
 
 def recheck(reader, f, now):
@@ -63,22 +64,30 @@ def recheck(reader, f, now):
         or any(identity((details.get(s+"Team") or {}).get("id")) != identity(f["teams"][s]["id"]) for s in ("home","away"))):
         result["notes"].append("fixture or scheduled start unverified")
         return result
-    xi = (read("getLineups").get("data") or {}).get("lineups") or {}
+    packet = read("getLineups")
+    if not packet:
+        result["notes"].append("lineup lookup failed")
+        return result
+    xi = (packet.get("data") or {}).get("lineups") or {}
+    if xi.get("available") is False:
+        result["notes"].append("no expected or confirmed XI published")
+        return result
     if identity(xi.get("matchId")) != identity(f["id"]):
         result["notes"].append("lineups unavailable")
         return result
     eligible = []
     for case, kind, old, low in candidates(f):
-        if confirmed_role(f, case, xi):
-            eligible.append((case, kind, old, low))
+        role = starting_role(f, case, xi)
+        if role:
+            eligible.append((case, kind, old, low, role))
         else:
-            result["notes"].append("starting role or direct opponent unconfirmed")
+            result["notes"].append("player, role or direct opponent has changed or is missing")
     if eligible:
         board = read("getMatchOdds", markets=["player to be booked","player fouls"])
         if not board.get("at"):
             result["notes"].append("odds unavailable")
             return result
-        for case, kind, old, low in eligible:
+        for case, kind, old, low, role in eligible:
             fresh = [q for q in offers(board["data"], f, case, board["at"], utc(board["at"]))
                      if q["kind"] == kind and q["line"] == old["line"] and norm(q["book"]) == norm(old["book"])]
             if len(fresh) != 1:
@@ -88,7 +97,7 @@ def recheck(reader, f, now):
             if q["age"] > 60 or (kind == "booking" and q["odds"] < FLOOR) or low*q["odds"] <= 1:
                 result["notes"].append("odds outside the accepted range or age")
                 continue
-            result["picks"].append(dict(player=case["name"], playerId=case["player"]["id"], **q))
+            result["picks"].append(dict(player=case["name"], playerId=case["player"]["id"], lineup=role[0], opponentLineup=role[1], **q))
     result["notes"] = sorted(set(result["notes"]))
     return result
 
@@ -152,7 +161,10 @@ def make_digest(day, snapshot, checks, now):
     grouped = {}
     for p in picks:
         market = "to be booked" if p["kind"]=="booking" else f"over {p['line']:g} fouls"
-        grouped.setdefault(p["fixture"], []).append(f"{p['player']} {market} @ {p['odds']:g} {p['book']}")
+        status = {"predicted":"expected starter", "confirmed":"confirmed starter"}.get(p.get("lineup"), "starter status unrecorded")
+        if p.get("opponentLineup") == "predicted" and p.get("lineup") == "confirmed":
+            status += ", expected opponent"
+        grouped.setdefault(p["fixture"], []).append(f"{p['player']} {market} @ {p['odds']:g} {p['book']} · {status}")
     for name, contracts in grouped.items():
         summary += [name, *contracts]
     if pending:
@@ -230,7 +242,7 @@ if __name__ == "__main__":
     elif sys.argv[1] == "verify":
         # Discover additional completed fixtures while time permits. The workflow
         # independently enforces the cutoff even if a provider request hangs.
-        reader = Reads(store, Provider(store), day, "johnny-edition-verify", 28)
+        reader = Reads(store, JohnnyProvider(store), day, "johnny-edition-verify", 28)
         while True:
             verify(store, day, reader)
             state = store.get(edition_key(day,"research"), {})

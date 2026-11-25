@@ -89,7 +89,7 @@ class Provider:
         msg={"jsonrpc":"2.0","method":method,"params":params}
         if reply: msg["id"]=self.sequence
         r=http.post(BASE+"/mcp",json=msg,headers=self.headers,timeout=30,allow_redirects=False)
-        if not r.ok: raise RuntimeError("StatsHub returned HTTP "+str(r.status_code))
+        if not r.ok: raise RemoteError(r.status_code)
         if r.headers.get("Mcp-Session-Id"): self.headers["Mcp-Session-Id"]=r.headers["Mcp-Session-Id"]
         if not reply: return
         if "event-stream" in r.headers.get("Content-Type",""):

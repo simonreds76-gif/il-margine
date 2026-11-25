@@ -58,6 +58,19 @@ def private_store():
     return JohnnyStore()
 
 
+class JohnnyProvider(Provider):
+    def read(self, name, arguments):
+        # A full fixture assessment can outlive the remote session. Retry only
+        # read-only calls, once, using the existing refresh grant.
+        try:
+            return super().read(name, arguments)
+        except RemoteError as error:
+            if not self.headers or error.status_code not in (401, 404):
+                raise
+        self.headers = None
+        return super().read(name, arguments)
+
+
 def data(reader, tool, args):
     packet = reader.read(tool, args, "morning")
     return (packet or {}).get("data") or {}
@@ -123,9 +136,14 @@ def distinct_opponent(player, other):
 
 
 def starting_cases(reader, f):
-    xi = data(reader, "getLineups", {"matchId": f["id"]}).get("lineups") or {}
-    if identity(xi.get("matchId")) != identity(f["id"]):
-        return [], "starting elevens unavailable"
+    packet = reader.read("getLineups", {"matchId": f["id"]}, "morning")
+    if not packet:
+        return [], "lineup lookup failed"
+    xi = (packet.get("data") or {}).get("lineups") or {}
+    if not xi.get("matchId") or identity(xi["matchId"]) != identity(f["id"]):
+        return [], "lineup fixture could not be verified"
+    if xi.get("available") is False:
+        return [], "no expected or confirmed XI published"
     players = []
     for side, opposite in (("home", "away"), ("away", "home")):
         team, other = xi.get(side) or {}, xi.get(opposite) or {}
@@ -136,6 +154,8 @@ def starting_cases(reader, f):
             if p.get("id") and p.get("name"):
                 players.append(dict(player=p, side=side, lineup=team["status"],
                                     rival=distinct_opponent(p, other) if rival_ok else None))
+    if not players:
+        return [], "no expected or confirmed starters identified for these teams"
     verified = []
     for i in range(0, len(players), 6):
         group = players[i:i+6]
@@ -282,6 +302,11 @@ def scan(reader, day, analyst, clock=timestamp, save=None, previous=None):
             if f["id"] in selected:
                 f["priority"] = selected[f["id"]]
         checkpoint("ranked")
+    # Read the selected XIs before the first long model assessment. Successful
+    # responses are reused by starting_cases via the existing evidence cache.
+    for f in reviewed:
+        if f.get("reviewState") == "selected" and utc(f["ko"]) > utc(clock()):
+            reader.read("getLineups", {"matchId": f["id"]}, "morning")
     for f in sorted(reviewed, key=lambda item: item.get("priority", 1000)):
         if f.get("reviewState") != "selected":
             continue
@@ -395,7 +420,7 @@ def plan():
     active = preview or (8 <= now.hour < 11 and prior.get("stage") != "finished")
     needs_engine = False
     if active:
-        reader = Reads(store,Provider(store),day,"johnny-preview" if preview else "johnny",212)
+        reader = Reads(store,JohnnyProvider(store),day,"johnny-preview" if preview else "johnny",212)
         if prior.get("stage") == "ranked":
             needs_engine = any(f.get("reviewState") == "selected" for f in prior["slate"])
         else:
@@ -418,7 +443,7 @@ def run():
     prior = None if preview else store.get(path)
     if preview or not prior or prior.get("stage") != "finished":
         phase = "johnny-preview" if preview else "johnny"
-        reader = Reads(store,Provider(store),day,phase,212)
+        reader = Reads(store,JohnnyProvider(store),day,phase,212)
         from johnny_cards_review import Analyst
         with Analyst(store) as analyst:
             report = scan(reader,day,analyst,previous=prior,
@@ -445,7 +470,7 @@ if __name__=="__main__":
         now = datetime.now(LONDON)
         day = now.date().isoformat()
         store = private_store()
-        reader = Reads(store, Provider(store), day, "johnny-calendar-check", 32)
+        reader = Reads(store, JohnnyProvider(store), day, "johnny-calendar-check", 32)
         matches, windows = calendar(reader, day, now)
         print(f"{len(matches)} eligible fixtures; {sum(not w['gap'] for w in windows)}/{len(windows)} calendar windows verified")
         from collections import Counter
