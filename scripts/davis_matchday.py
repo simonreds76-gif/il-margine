@@ -121,8 +121,15 @@ def corroborating_pairs(page, day):
 
 def order_rows(page, day):
     section = page.select_one('section[aria-labelledby="oop-h"]')
-    if not section or "davis cup" not in page.title.get_text(" ", strip=True).lower():
+    if not page.title or "davis cup" not in page.title.get_text(" ", strip=True).lower():
         raise ValueError("Davis Cup order unavailable")
+    if not section:
+        # Between ties the event page can contain only the previous results.
+        results = page.select_one('section[aria-labelledby="res-h"]')
+        if (results and results.select_one('a[href^="/partita/"]')
+                and not page.select_one(".st-scheduled, .st-live")):
+            return []
+        raise ValueError("Unrecognised Davis Cup schedule layout")
     group = section.find(id="u-"+day)
     rows = []
     for row in group.select("ol.ml > li.mr") if group else []:
