@@ -7,9 +7,12 @@ import argparse
 import csv
 import importlib.util
 from collections import defaultdict
+from functools import lru_cache
 from datetime import date, datetime, timezone
 from pathlib import Path
 import math
+import os
+import tempfile
 import re
 import unicodedata
 
@@ -141,6 +144,11 @@ FIELDNAMES = [
 
 
 def norm_text(value: object) -> str:
+    return _norm_string(str(value or ""))
+
+
+@lru_cache(maxsize=8192)
+def _norm_string(value: str) -> str:
     value = fold_name_text(value)
     raw = str(value or "").strip()
     if "," in raw:
@@ -299,13 +307,23 @@ def history_key(row: dict[str, str], *, fallback: bool = False) -> tuple[object,
     )
 
 
-def load_price_history(paths: list[Path]) -> tuple[dict[tuple[object, ...], list[dict[str, str]]], dict[tuple[object, ...], list[dict[str, str]]]]:
+def load_price_history(paths: list[Path], signals: list[dict[str, str]] | None = None) -> tuple[dict[tuple[object, ...], list[dict[str, str]]], dict[tuple[object, ...], list[dict[str, str]]]]:
     by_event: dict[tuple[object, ...], list[dict[str, str]]] = defaultdict(list)
     by_pair: dict[tuple[object, ...], list[dict[str, str]]] = defaultdict(list)
+    # Keep both identities: an event can move dates, and an alternate event ID
+    # can supply the same dated contract when the event lookup has no rows.
+    wanted_events = None if signals is None else {history_key(row) for row in signals}
+    wanted_pairs = None if signals is None else {history_key(row, fallback=True) for row in signals}
+    if wanted_events == set():
+        return by_event, by_pair
     for path in paths:
-        for row in read_csv(path):
-            by_event[history_key(row)].append(row)
-            by_pair[history_key(row, fallback=True)].append(row)
+        for row in iter_csv(path):
+            event_key = history_key(row)
+            if wanted_events is None or event_key in wanted_events:
+                by_event[event_key].append(row)
+            pair = history_key(row, fallback=True)
+            if wanted_pairs is None or pair in wanted_pairs:
+                by_pair[pair].append(row)
     return by_event, by_pair
 
 
@@ -363,11 +381,20 @@ def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     # Settlement owns outcomes, not the forecast's provenance or extension fields.
     fields = list(dict.fromkeys([*FIELDNAMES, *(key for row in rows for key in row)]))
-    with path.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fields)
-        writer.writeheader()
-        for row in rows:
-            writer.writerow({field: row.get(field, "") for field in fields})
+    # A timeout during serialization must leave the previous ledger intact.
+    tmp = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", dir=path.parent, prefix=path.name + ".",
+                                         suffix=".tmp", encoding="utf-8", newline="", delete=False) as f:
+            tmp = Path(f.name)
+            writer = csv.DictWriter(f, fieldnames=fields)
+            writer.writeheader()
+            for row in rows:
+                writer.writerow({field: row.get(field, "") for field in fields})
+        os.replace(tmp, path)
+    finally:
+        if tmp is not None:
+            tmp.unlink(missing_ok=True)
 
 
 def is_void_score(score: object) -> bool:
@@ -471,7 +498,7 @@ def load_sackmann_index(
             continue
         for row in iter_csv(path):
             year = sackmann_year(row.get("tourney_date"))
-            if year is None:
+            if year is None or (wanted and (tour, year) not in wanted):
                 continue
             pair = pair_key(row.get("winner_name"), row.get("loser_name"))
             if wanted and pair not in wanted.get((tour, year), set()):
@@ -804,10 +831,10 @@ def main() -> int:
     pending_rows = [row for row in rows if (row.get("settlement_status") or "pending").lower() in {"", "pending"}]
     history_pattern = Path(args.history_glob)
     history_paths = sorted(history_pattern.parent.glob(history_pattern.name))
-    history_by_event, history_by_pair = load_price_history(history_paths)
+    history_by_event, history_by_pair = load_price_history(history_paths, rows)
     clv_updated = sum(enrich_closing_price(row, history_by_event, history_by_pair) for row in rows)
     oncourt_index = load_oncourt_index(Path(args.oncourt_dir), pending_rows)
-    sackmann_index = load_sackmann_index(Path(args.sackmann_dir), pending_rows)
+    sackmann_index = load_sackmann_index(Path(args.sackmann_dir), pending_rows) if pending_rows else {}
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
     settled_now = 0
     still_pending = 0
