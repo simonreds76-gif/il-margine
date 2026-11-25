@@ -192,10 +192,16 @@
 .railHead{display:grid;gap:.6rem;padding:.85rem 1rem .75rem}
 .railHead h2,.resultsHead h2{font-size:1.125rem;font-weight:700;letter-spacing:-.02em;color:var(--ds-ink)}
 .railHead h2 small,.resultsHead h2 small{margin-left:.3rem;font-size:.8125rem;font-weight:650;letter-spacing:0;color:var(--ds-soft)}
+.rail[data-upcoming] .railHead h2{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem .65rem;font-size:clamp(1.45rem,2vw,1.8rem);line-height:1.12}
+.rail[data-upcoming] .railHead h2 small{margin:0;font-size:.875rem}
+.rail[data-upcoming] .itemName,.rail[data-upcoming] .picker strong{font-size:1.1875rem;line-height:1.25}
+.rail[data-upcoming] .itemGain{font-size:1.1875rem;font-variant-numeric:tabular-nums}
+.rail[data-upcoming] .rowStart{font-size:.875rem}
 /* The order belongs to the list it orders: three segments across the rail, the pressed one in mint. */
 .sortRow{display:flex;align-items:center;gap:.65rem}
 .sort{flex:1;display:flex;min-width:0}
-.sort button{flex:1;min-width:0;padding:0 .5rem}
+.sort button{flex:1;min-width:0;min-height:44px;padding:.3rem .35rem;white-space:normal;line-height:1.15}
+.sort button:last-child{flex:1.45}
 .railNote{font-size:.75rem;line-height:1.45;color:var(--ds-soft)}
 .railNote b{color:var(--ds-text)}
 .picker{display:none}

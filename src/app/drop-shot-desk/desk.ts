@@ -89,7 +89,7 @@ export function delta(n: number) {
 export function dropPct(m: Move) {
   return m.old > 0 ? ((m.new - m.old) / m.old) * 100 : 0;
 }
-export type DropOrder = "largest" | "newest" | "oldest";
+export type DropOrder = "largest" | "newest" | "soonest" | "oldest";
 
 export function movementPoints(m: Move) {
   return 100 * (1 / m.new - 1 / m.old);
@@ -97,7 +97,12 @@ export function movementPoints(m: Move) {
 
 export function orderDrops<T extends Move>(rows: T[], order: DropOrder): T[] {
   return [...rows].sort((a, b) => {
-    if (order === "largest") {
+    if (order === "soonest") {
+      const startA = Date.parse(a.start), startB = Date.parse(b.start);
+      const start = (Number.isFinite(startA) ? startA : Infinity) - (Number.isFinite(startB) ? startB : Infinity);
+      if (start) return start;
+    }
+    if (order === "largest" || order === "soonest") {
       const size = movementPoints(b) - movementPoints(a);
       if (size) return size;
     }

@@ -18,11 +18,11 @@ const ATP_LEVELS = ["All levels", "ATP", "Challenger"];
 const WTA_LEVELS = ["All levels", "WTA", "WTA 125"];
 const DRAWS = ["All rounds", "Main draw", "Qualifying"];
 type Scope = "upcoming" | "all";
-/** The three orders, in the words used on the control and in the line that explains the list. */
-const SORTS: { value: DropOrder; label: string; note: string }[] = [
+/** Upcoming matches can be ranked by the move, its detection or the scheduled start. */
+const SORTS: { value: Exclude<DropOrder, "oldest">; label: string; note: string }[] = [
   { value: "largest", label: "Largest", note: "largest rise first" },
   { value: "newest", label: "Newest", note: "latest detection first" },
-  { value: "oldest", label: "Oldest", note: "earliest detection first" },
+  { value: "soonest", label: "Starting soonest", note: "earliest scheduled match first" },
 ];
 const NO_VENUES: VenueMap = {};
 const ROUNDUPS_HASH = "#desk-roundups";
@@ -132,7 +132,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   // Today opens on what is still open; past dates and direct roundup links open on the full record.
   const defaultScope: Scope = today && !initialBatchId ? "upcoming" : "all";
   const [scope, setScope] = useState<Scope>(defaultScope);
-  // Largest and Newest are live views. Oldest is the chronological record of the day.
+  // All recorded keeps the chronological record, including matches that have started.
   const [upcomingOrder, setUpcomingOrder] = useState<Exclude<DropOrder, "oldest">>("largest");
   const [scopeDay, setScopeDay] = useState(day);
   const [clock, setClock] = useState<number | null>(now ?? null);
@@ -265,10 +265,10 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   const clearFilters = () => { setTour(levels[0]); setDraw(DRAWS[0]); setMarket("all"); setQuery(""); setAlertedOnly(false); };
   const changeScope = (next: Scope) => { setScope(next); setSelectedKey(null); };
   // A new order starts from its own first entry; pressing the order already in use changes nothing.
-  const changeOrder = (value: DropOrder) => {
+  const changeOrder = (value: Exclude<DropOrder, "oldest">) => {
     if (value === order) return;
-    if (value !== "oldest") setUpcomingOrder(value);
-    changeScope(value === "oldest" ? "all" : "upcoming");
+    setUpcomingOrder(value);
+    setSelectedKey(null);
   };
   const toStage = () => window.requestAnimationFrame(() => stageRef.current?.scrollIntoView({ block: "start" }));
   // A roundup row always opens its chart: a closed selection switches the list to the
@@ -322,14 +322,14 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   const openFixtures = dayFixtures.filter(f => isOpen(f, at));
   const shownFixtures = upcomingOnly ? openFixtures : dayFixtures;
   const plural = (n: number, one: string, many: string) => n + " " + (n === 1 ? one : many);
-  const sortNote = SORTS.find(s => s.value === order)?.note ?? "";
+  const sortNote = SORTS.find(s => s.value === order)?.note ?? "earliest detection first";
   const blank = !moves.length
     ? (archive ? "No recorded drops are in the replay." : "No price drops were recorded on this date.")
     : upcomingOnly && matching.length
       ? (matching.length === 1 ? "The one recorded drop here is no longer" : "None of the " + matching.length + " recorded drops here is still") + " verified open before its scheduled start."
       : alertedOnly ? "No confirmed Telegram alerts match these filters." : "No recorded drops match these filters.";
 
-  const sortControls = !archive && <div className={styles.sortRow} role="group" aria-labelledby={sortId}>
+  const sortControls = upcomingOnly && <div className={styles.sortRow} role="group" aria-labelledby={sortId}>
     <span className={styles.lab} id={sortId}>Sort</span>
     <div className={styles.sort}>
       {SORTS.map(s => <button key={s.value} type="button" aria-pressed={order === s.value} onClick={() => changeOrder(s.value)}>{s.label}</button>)}
@@ -363,7 +363,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
 
     {m ? <div className={styles.desk}>
       {/* The ledger: each entry reads who and where on the left, the figures on the right, all on one right edge. */}
-      <section className={styles.rail} aria-label={upcomingOnly ? "Upcoming moves" : "Recorded moves"}>
+      <section className={styles.rail} data-upcoming={upcomingOnly || undefined} aria-label={upcomingOnly ? "Upcoming moves" : "Recorded moves"}>
         <div className={styles.railHead}>
           <h2>{upcomingOnly ? "Upcoming drops" : "Price drops"} <small>{plural(groups.length, "match", "matches")} · {plural(rows.length, "drop", "drops")}</small></h2>
           {sortControls}
@@ -378,7 +378,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
           <strong>{m.player}</strong>
           <ScheduledStart move={m} at={at} />
           <span className={styles.pickerMove}><b>{pointsText(m)}</b> implied probability<RowLimit move={m} /></span>
-          <span className={styles.pickerCue}>{pickerOpen ? "Close list" : rows.length > 1 ? "Choose from " + rows.length : "Show list"}</span>
+          <span className={styles.pickerCue}>{pickerOpen ? "Close list" : "Browse " + plural(groups.length, "match", "matches")}</span>
         </button>
         <ol id={listId} className={styles.railList} ref={listRef} data-open={pickerOpen ? "true" : "false"} onKeyDown={onListKey}>
           {groups.map(({key, drops}, i) => {
