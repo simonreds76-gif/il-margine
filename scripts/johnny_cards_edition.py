@@ -5,7 +5,7 @@ import time
 from datetime import datetime, timedelta
 
 from johnny_cards import FLOOR, JohnnyProvider, distinct_opponent, edition_key, offers, private_store
-from johnny_cards_calendar import LONDON
+from johnny_cards_calendar import LONDON, senior_fixture
 from statshub_daily_board import LINK, REPORT, Reads
 from statshub_daily_contracts import identity, norm, utc
 from statshub_daily_io import send_digest, timestamp
@@ -107,7 +107,7 @@ def verify(store, day, reader, clock=timestamp, *, research_part="research", che
     checks_path = edition_key(day,checks_part)
     checks = store.get(checks_path, {})
     for f in snapshot.get("slate", []):
-        if f.get("reviewState") != "complete" or not any(candidates(f)):
+        if not senior_fixture(f) or f.get("reviewState") != "complete" or not any(candidates(f)):
             continue
         now = utc(clock())
         prior = checks.get(f["id"], {})
@@ -124,7 +124,8 @@ def verify(store, day, reader, clock=timestamp, *, research_part="research", che
 def make_digest(day, snapshot, checks, now):
     picks, pending, reserve, unavailable, detail = [], [], [], [], []
     complete = 0
-    for f in snapshot.get("slate", []):
+    slate = [f for f in snapshot.get("slate", []) if senior_fixture(f)]
+    for f in slate:
         name = f["home"] + " v " + f["away"]
         state = f.get("reviewState")
         if state == "reserve":
@@ -191,7 +192,7 @@ def make_digest(day, snapshot, checks, now):
         text = "\n".join(s for s in summary if not s.startswith(("Unfinished (","Evidence unavailable (")))
         text += f"\nUnfinished {len(pending)} · evidence unavailable {len(unavailable)}. Names in Admin."
     message = text+footer
-    return dict(day=day,at=now.isoformat(),fixtures=len(snapshot.get("slate",[])),picks=picks,
+    return dict(day=day,at=now.isoformat(),fixtures=len(slate),picks=picks,
                 complete=bool(snapshot.get("calendar")) and not (gaps or pending or unavailable),
                 coverage="\n".join(full),message=message,attach=len(text.encode("utf-16-le"))//2 > budget)
 

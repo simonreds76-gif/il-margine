@@ -17,8 +17,22 @@ ID = re.compile(r"\(id ([\w.-]+)\)")
 CLOSED = re.compile(r"\b(live|HT|FT|postponed|cancelled|abandoned|finished|suspended|full time)\b", re.I)
 OMITTED = re.compile(r"(?:^|; )([^;]+?) \(([^()]+)\) \[competitionId ([\w.-]+)\] (\d+)")
 
+# Match explicit competition or squad designations. "Serie B" and "Argentinos Juniors"
+# are senior names, so neither a division letter nor "Juniors" is a competition rule.
+AGE_GROUP = r"\b(?:u|under|sub)[\s-]*(?:1[0-9]|2[0-3])\b"
+DEVELOPMENT_LEAGUE = re.compile(r"\b(?:r[eé]serves?|reservas?|youth|juveniles?)\b|" + AGE_GROUP, re.I)
+DEVELOPMENT_TEAM = re.compile(
+    AGE_GROUP + r"|(?:\s|\()(?:r[eé]serves?|reservas?|res\.?|youth|B|II)\)?$", re.I)
+
+
+def senior_fixture(fixture):
+    return (not DEVELOPMENT_LEAGUE.search(fixture.get("league", ""))
+            and not any(DEVELOPMENT_TEAM.search(fixture[side].strip()) for side in ("home", "away")))
+
 
 def competition(name, country, comp):
+    if DEVELOPMENT_LEAGUE.search(name):
+        return None
     if identity(comp) in DOMESTIC:
         return DOMESTIC[identity(comp)]
     if country.casefold() in SOUTH_AMERICA or (country == "Europe" and name == "UEFA Champions League"):
@@ -85,8 +99,11 @@ def calendar(reader, day, now):
             if ko <= now:
                 continue
             key = identity(row[4])
-            games[key] = dict(home=row[2], away=row[3], id=row[4], ko=ko.isoformat(),
-                              league=league, competitionId=comp)
+            fixture = dict(home=row[2], away=row[3], id=row[4], ko=ko.isoformat(),
+                           league=league, competitionId=comp)
+            if not senior_fixture(fixture):
+                continue
+            games[key] = fixture
             open_ids.add(key)
         gap = "" if parsed and complete_scope and listed == len(seen) else "fixture list incomplete"
         coverage.append(dict(league=label, total=total, open=len(open_ids), gap=gap))

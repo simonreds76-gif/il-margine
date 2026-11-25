@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 from statshub_daily_board import LINK, REPORT, Reads, board_matches
 from johnny_cards_review import AssessmentError, ChoiceError
 from statshub_daily_contracts import exact_quote, identity, norm, utc
-from johnny_cards_calendar import calendar
+from johnny_cards_calendar import calendar, senior_fixture
 from statshub_daily_focus import flank, number
 from statshub_daily_io import Provider, RemoteError, Store, http, send_digest, telegram_private, timestamp
 
@@ -294,7 +294,8 @@ def scan(reader, day, analyst, clock=timestamp, save=None, previous=None):
         return report
 
     if previous and previous.get("day")==day and previous.get("guideSHA256")==analyst.digest and previous.get("stage") in ("ranked","finished"):
-        reviewed, leagues = previous["slate"], previous["calendar"]
+        reviewed = [f for f in previous["slate"] if senior_fixture(f)]
+        leagues = previous["calendar"]
     else:
         reviewed, leagues = calendar(reader, day, utc(clock()))
         checkpoint("calendar")
@@ -446,7 +447,7 @@ def plan():
     if active:
         reader = Reads(store,JohnnyProvider(store),day,"johnny-preview" if preview else "johnny",212)
         if prior.get("stage") == "ranked":
-            needs_engine = any(f.get("reviewState") == "selected" for f in prior["slate"])
+            needs_engine = any(f.get("reviewState") == "selected" and senior_fixture(f) for f in prior["slate"])
         else:
             games, windows = calendar(reader, day, now)
             needs_engine = bool(games or any(w["gap"] for w in windows)) or preview
