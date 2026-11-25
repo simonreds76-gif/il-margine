@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-25T18:51:32Z",
+  "generated_at": "2026-11-25T19:54:09.730004+00:00",
   "league": "serie-a",
   "row_count": 4,
   "rows": [
@@ -44,7 +44,7 @@
           "source_event_id": "3000757383",
           "match_id": "5749756",
           "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749756",
-          "observed_at": "2026-11-25T18:51:26+00:00",
+          "observed_at": "2026-11-25T19:54:14+00:00",
           "event_date": "2026-11-23",
           "season": "2026/27",
           "team": "Monza",
@@ -164,73 +164,6 @@
       "league": "serie-a",
       "review_source": "fotmob_live",
       "match": "Atalanta vs Inter",
-      "team": "Atalanta",
-      "opponent": "Inter",
-      "actual_taker": "Franck Kessié",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "90",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Franck Kessié",
-      "secondary_pre_match": "Éderson",
-      "tertiary_pre_match": "Gianluca Scamacca",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Franck Kessié took 1 penalty attempt and scored for Atalanta vs Inter. Primary pre-match: Franck Kessié (unknown). Secondary pre-match: Éderson (unknown). No hierarchy change implied from this event.",
-      "context_generated_at": "2026-10-25T20:13:18.376Z",
-      "context_source_path": "admin_penalty_state:editorial",
-      "actual_taker_match_status": "Yes - started",
-      "primary_on_pitch_at_penalty": "Yes - started",
-      "secondary_on_pitch_at_penalty": "No - started, off 68'",
-      "tertiary_on_pitch_at_penalty": "Yes - bench, on 88'",
-      "actual_taker_on_pitch_at_penalty": "Yes - started",
-      "event_evidence": [
-        {
-          "id": "fotmob|serie-a|5749751|3000433803",
-          "source_event_id": "3000433803",
-          "match_id": "5749751",
-          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749751",
-          "observed_at": "2026-11-25T18:51:26+00:00",
-          "event_date": "2026-11-22",
-          "season": "2026/27",
-          "team": "Atalanta",
-          "taker": "Franck Kessié",
-          "primary": "Franck Kessié",
-          "primary_on_pitch": true,
-          "on_pitch_proof": {
-            "player": "Franck Kessié",
-            "minute": 90,
-            "added_time": 1,
-            "method": "completed_lineup_timeline",
-            "player_id": 579747,
-            "bucket": "starters",
-            "substitutions": [],
-            "events": [],
-            "reason": "on_pitch"
-          },
-          "minute": 90,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Atalanta vs Inter",
-          "event_result": "scored"
-        }
-      ]
-    },
-    {
-      "date": "2026-11-22",
-      "league": "serie-a",
-      "review_source": "fotmob_live",
-      "match": "Atalanta vs Inter",
       "team": "Inter",
       "opponent": "Atalanta",
       "actual_taker": "Petar Sučić",
@@ -298,6 +231,73 @@
           "event_result": "scored"
         }
       ]
+    },
+    {
+      "date": "2026-11-22",
+      "league": "serie-a",
+      "review_source": "fotmob_live",
+      "match": "Atalanta vs Inter",
+      "team": "Atalanta",
+      "opponent": "Inter",
+      "actual_taker": "Franck Kessié",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "90",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Franck Kessié",
+      "secondary_pre_match": "Éderson",
+      "tertiary_pre_match": "Gianluca Scamacca",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Franck Kessié took 1 penalty attempt and scored for Atalanta vs Inter. Primary pre-match: Franck Kessié (unknown). Secondary pre-match: Éderson (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-10-25T20:13:18.376Z",
+      "context_source_path": "admin_penalty_state:editorial",
+      "actual_taker_match_status": "Yes - started",
+      "primary_on_pitch_at_penalty": "Yes - started",
+      "secondary_on_pitch_at_penalty": "No - started, off 68'",
+      "tertiary_on_pitch_at_penalty": "Yes - bench, on 88'",
+      "actual_taker_on_pitch_at_penalty": "Yes - started",
+      "event_evidence": [
+        {
+          "id": "fotmob|serie-a|5749751|3000433803",
+          "source_event_id": "3000433803",
+          "match_id": "5749751",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5749751",
+          "observed_at": "2026-11-25T18:51:26+00:00",
+          "event_date": "2026-11-22",
+          "season": "2026/27",
+          "team": "Atalanta",
+          "taker": "Franck Kessié",
+          "primary": "Franck Kessié",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Franck Kessié",
+            "minute": 90,
+            "added_time": 1,
+            "method": "completed_lineup_timeline",
+            "player_id": 579747,
+            "bucket": "starters",
+            "substitutions": [],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 90,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Atalanta vs Inter",
+          "event_result": "scored"
+        }
+      ]
     }
   ],
   "source_health": {
@@ -313,5 +313,13 @@
       "20261125"
     ],
     "matches_checked": 10
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261123"
+    ],
+    "matches_checked": 1
   }
 }
