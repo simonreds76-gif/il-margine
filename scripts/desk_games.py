@@ -9,7 +9,9 @@ from fractions import Fraction
 PRIOR_ALL_DAY_POLICY = "same-line-over4pp-prematch-limits-shown-v3"
 PRIOR_LINE_POLICY = "same-line-over4pp-prematch-min200usd-v4"
 PRIOR_MATCH_POLICY = "first-match-over4pp-prematch-min200usd-v5"
-ALERT_POLICY = "first-match-over4pp-prematch-min500usd-v6"
+PRIOR_PREMATCH_500_POLICY = "first-match-over4pp-prematch-min500usd-v6"
+ALERT_POLICY = "first-match-over4pp-final2h-min500usd-v7"
+ALERT_WINDOW = timedelta(hours=2)
 ALERT_MINIMUM_USD = 500
 PAPER_MINIMUM_USD = 200
 FINAL_HOUR = timedelta(hours=1)
@@ -87,7 +89,7 @@ def alert_moves(batch):
     for move in batch["moves"]:
         if move["move_id"] in wanted and meets_usd_floor(move.get("alert_detection_limit"), ALERT_MINIMUM_USD):
             start, before, after = (datetime.fromisoformat(move[key]) for key in ("start", "before", "after"))
-            if after == observed and before < after < start and alert_crossing(move["old"], move["new"]):
+            if after == observed and start - ALERT_WINDOW <= before < after < start and alert_crossing(move["old"], move["new"]):
                 moves.append(move)
     return strongest_by_match(moves)
 
@@ -172,7 +174,7 @@ def compare(last, current, state, blocked):
         if row["fixture"] in blocked:
             continue
         start = datetime.fromisoformat(row["start"])
-        prematch = now < start
+        window_start = start - ALERT_WINDOW
         first, second = sorted((row["home"], row["away"]))
         for code, pair in pairs(row):
             k = "|".join((eid, row["fixture"], row["start"], code))
@@ -186,13 +188,15 @@ def compare(last, current, state, blocked):
                     peaks[side] = point
             history[k] = {"start":row["start"], "last":point, "peaks":peaks}
             alert_refs = None
-            if prematch:
+            if window_start <= now < start:
                 if old and old["last"][0] == last.get("observed"):
                     previous_time = datetime.fromisoformat(old["last"][0])
                     adjacent = int(now.timestamp()) // 900 - int(previous_time.timestamp()) // 900 == 1
-                    if adjacent and timedelta(0) < now - previous_time <= timedelta(minutes=20):
-                        alert_refs = old.get("prematch_peaks")
-                history[k]["prematch_peaks"] = [
+                    if adjacent and window_start <= previous_time < now and now - previous_time <= timedelta(minutes=20):
+                        # On upgrade, only seed from the previous actual observation.
+                        # An all-day high may have been recorded well outside the window.
+                        alert_refs = old.get("final_two_hour_peaks", [old["last"], old["last"]])
+                history[k]["final_two_hour_peaks"] = [
                     alert_refs[i] if alert_refs and alert_refs[i][i+1] > prices[i] else point for i in (0, 1)
                 ]
             if not old:

@@ -15,11 +15,11 @@ class GamesDesk(unittest.TestCase):
     t = pilot.utc("2026-11-19T19:00:00Z")
 
     def scan(self, last, minutes, price, line=22.5, reverse=False, present=True, start=None, cap=3000,
-             tour="ATP", total_odds=None, total_cap=None):
-        row = dict(id="1",fixture="ab",home="A",away="B",home_price=price,away_price=2.01,
-                   start=(start or self.t+timedelta(days=3)).isoformat(),tour=tour,league=tour+" Test - QF")
+             tour="ATP", total_odds=None, total_cap=None, away_price=2.01):
+        row = dict(id="1",fixture="ab",home="A",away="B",home_price=price,away_price=away_price,
+                   start=(start or self.t+timedelta(hours=2)).isoformat(),tour=tour,league=tour+" Test - QF")
         if reverse:
-            row.update(home="B",away="A",home_price=2.01,away_price=price)
+            row.update(home="B",away="A",home_price=away_price,away_price=price)
         if present:
             row["contracts"] = desk_games.contracts(dict(home=row["home"],away=row["away"],
                 totals={str(line):[price if total_odds is None else total_odds,2.01]},spreads={("3" if reverse else "-3"):([2.01,price] if reverse else [price,2.01])}))
@@ -34,16 +34,17 @@ class GamesDesk(unittest.TestCase):
         return state,batch
 
     def test_overnight_cumulative_crossing_stays_on_board(self):
-        state, _=self.scan({},0,2.2)
-        state, first=self.scan(state,15,2.13)
+        start = self.t + timedelta(hours=17)
+        state, _=self.scan({},0,2.2,start=start)
+        state, first=self.scan(state,15,2.13,start=start)
         self.assertEqual(first["alert_ids"],[])
-        state,batch=self.scan(state,16*60,2.,reverse=True)
+        state,batch=self.scan(state,16*60,2.,reverse=True,start=start)
         self.assertEqual(batch["alert_ids"],[])
         self.assertEqual({(m["selection"],m["old"],m["new"]) for m in batch["moves"]},
                          {("A",2.2,2.),("A -3 games",2.2,2.),("Over 22.5 games",2.2,2.)})
         self.assertTrue(all(m["before"]==self.t.isoformat() for m in batch["moves"]))
         self.assertIn("Over 22.5 games",roundup_text(batch["moves"],batch["observed"]))
-        state,again=self.scan(state,16*60+15,1.92)
+        state,again=self.scan(state,16*60+15,1.92,start=start)
         self.assertTrue(again["moves"])
         self.assertFalse(again["alert_ids"])
 
@@ -54,10 +55,55 @@ class GamesDesk(unittest.TestCase):
         alerts = desk_games.alert_moves(b)
         self.assertEqual(len(alerts),1)
         self.assertFalse(any(m["detected_in_final_hour"] for m in alerts))
-        self.assertIn("Pre-match tennis moves",roundup_text(alerts,b["observed"]))
+        self.assertIn("final two hours",roundup_text(alerts,b["observed"]))
         for minute, price in [(30,2.2),(45,2.0),(60,1.8)]:
             state,b = self.scan(state,minute,price,start=start)
             self.assertFalse(desk_games.alert_moves(b))
+
+    def test_early_move_flat_entry_then_opposite_side_qualifies_once(self):
+        start = self.t + timedelta(minutes=150)
+        for tour in ("ATP", "Challenger", "WTA", "WTA 125"):
+            with self.subTest(tour=tour):
+                state, _ = self.scan({}, 0, 2.5, away_price=1.8, start=start, tour=tour)
+                state, early = self.scan(state, 15, 2.0, away_price=2.2, start=start, tour=tour)
+                self.assertTrue(early["moves"])
+                self.assertFalse(early["alert_ids"])
+                state, boundary = self.scan(state, 30, 2.0, away_price=2.2, start=start, tour=tour)
+                self.assertFalse(boundary["alert_ids"])
+                state, small = self.scan(state, 45, 1.99, away_price=2.1, start=start, tour=tour)
+                self.assertFalse(small["alert_ids"])
+                state, reversal = self.scan(state, 60, 2.25, away_price=1.98, start=start, tour=tour)
+                selected, = desk_games.alert_moves(reversal)
+                self.assertEqual((selected["selection"], selected["old"], selected["new"]), ("B", 2.2, 1.98))
+                self.assertEqual(selected["before"], boundary["observed"])
+                state, again = self.scan(state, 75, 1.7, away_price=2.5, start=start, tour=tour)
+                self.assertFalse(again["alert_ids"])
+
+    def test_delivery_rejects_cross_boundary_old_policy_and_post_start(self):
+        start = self.t + timedelta(hours=2)
+        state, _ = self.scan({}, 0, 2.5, start=start)
+        _, batch = self.scan(state, 15, 2.1, start=start)
+        selected, = desk_games.alert_moves(batch)
+        self.assertEqual(selected["before"], self.t.isoformat())
+        self.assertFalse(desk_games.alert_moves(dict(batch, policy=desk_games.PRIOR_PREMATCH_500_POLICY)))
+        for before, after in ((self.t - timedelta(seconds=1), self.t + timedelta(minutes=15)), (self.t, start)):
+            edited = dict(selected, before=before.isoformat(), after=after.isoformat())
+            self.assertFalse(desk_games.alert_moves(dict(batch, moves=[edited], observed=after.isoformat())))
+
+    def test_first_scan_inside_window_cannot_inherit_an_early_peak(self):
+        start = self.t + timedelta(minutes=134)
+        state, _ = self.scan({}, 0, 3.0, start=start)
+        state, cross = self.scan(state, 15, 2.1, start=start)
+        self.assertTrue(cross["moves"])
+        self.assertFalse(cross["alert_ids"])
+        for window in state["desk_windows"].values():
+            window.pop("final_two_hour_peaks")
+            window["prematch_peaks"] = window["peaks"]
+        state, small = self.scan(state, 30, 2.05, start=start)
+        self.assertFalse(small["alert_ids"])
+        _, later = self.scan(state, 45, 1.9, start=start)
+        selected, = desk_games.alert_moves(later)
+        self.assertEqual((selected["old"], selected["before"]), (2.1, cross["observed"]))
 
     def test_strict_threshold_and_final_hour_context(self):
         self.assertFalse(desk_games.alert_crossing(6.25,5))
