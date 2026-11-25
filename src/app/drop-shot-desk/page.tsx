@@ -59,7 +59,9 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
   const dailyUrl=(tour: "ATP"|"WTA", date?:string)=>boardUrl(tour,date && date<today ? date : undefined);
   const yesterday=shiftDay(today,-1);
   const dateText=new Intl.DateTimeFormat("en-GB",{weekday:"short",day:"numeric",month:"long",timeZone:"UTC"}).format(new Date(day+"T00:00:00Z"));
+  const standfirstText = <>Follow big odds moves before the first serve. We check {circuit==="ATP"?"ATP, Challenger and Davis Cup":"WTA Tour and WTA 125"} odds about every 15 minutes. Follow moves on match winners, total games and games handicaps.{circuit==="ATP" && " Davis Cup also includes country tie winners."} Each chart shows how the odds and the reported market limit changed before play.</>;
   let content;
+  let activityFold = null;
   let scanTime: number | null = null;
   let loadedAt = Date.now();
   let loadFailed = false;
@@ -86,16 +88,19 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
       const data=await readDay(day,circuit),now=Date.now(),seen=Date.parse(data.observed),known=Number.isFinite(seen);
       loadedAt = now;
       scanTime = known ? seen : null;
+      activityFold = <details className={styles.fold}>
+        <summary>Board activity · {data.scans} {data.scans===1?"scan":"scans"} · {data.moves.length} {data.moves.length===1?"drop":"drops"}</summary>
+        <dl className={styles.facts} aria-label="Board activity">
+          <div><dt>Recorded scans</dt><dd>{data.scans}</dd></div>
+          <div><dt>Match comparisons</dt><dd>{data.compared}</dd></div>
+          <div><dt>Price drops</dt><dd>{data.moves.length}</dd></div>
+          <div><dt>Watchlist matches</dt><dd>{data.fixtures.length}</dd></div>
+        </dl>
+      </details>;
       content=<>
-          <dl className={styles.facts} aria-label="Board activity">
-            <div><dt>Recorded scans</dt><dd>{data.scans}</dd></div>
-            <div><dt>Match comparisons</dt><dd>{data.compared}</dd></div>
-            <div><dt>Price drops</dt><dd>{data.moves.length}</dd></div>
-            <div><dt>Watchlist matches</dt><dd>{data.fixtures.length}</dd></div>
-          </dl>
         <PaperReturns day={day} circuit={circuit}/>
         <Board key={circuit} circuit={circuit} moves={fullBoard ? data.moves : data.moves.map(publicMove)} fixtures={fullBoard ? data.fixtures : data.fixtures.map(publicFixture)} archive={false} initialBatchId={batch} day={day} now={now} scanSeen={scanTime} today={day===today} venues={venuesFor([...data.moves,...data.fixtures])}/>
-</>;
+      </>;
     }
   } catch {
     loadedAt = Date.now();
@@ -103,50 +108,61 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
     content = <p className={styles.problem} role="status">{archive ? "The replay could not be loaded. Reload to try again." : "The saved board could not be loaded right now. Use Refresh above to try again."}</p>;
   }
   return <main className={styles.page} data-mode={archive?"archive":"daily"}>
-    <div className={styles.topline}><Link className={styles.back} href="/tennis-matchday">← Tennis Matchday</Link><span className={styles.lab}>Unlisted pilot</span></div>
-    <header className={styles.mast}>
-      <div className={styles.brand}><Image src={brand} unoptimized alt="" width={66} height={36} priority/><div><p className={styles.kicker}>Tennis odds moves</p><h1>Drop Shot Desk</h1></div></div>
-      {archive && <Link className={styles.back} href={dailyUrl(circuit,today)}>← Back to today’s moves</Link>}
-    </header>
-    <TourSwitch circuit={circuit} historyDay={historyDay} archive={archive}/>
-    {!archive && <section className={styles.dayBar} aria-label="Board date">
-      <div className={styles.dayHeading}>
-        <h2>{historyDay ? "Historical moves" : "Today’s moves"}</h2>
-        <time dateTime={day}>{dateText} · UTC</time>
+    <header className={styles.deskHeader}>
+      <div className={styles.topline}>
+        <Link className={styles.back} href="/tennis-matchday">← Tennis Matchday</Link>
+        {archive
+          ? <Link className={styles.back} href={dailyUrl(circuit,today)}>← Back to today’s moves</Link>
+          : <span className={styles.lab}>Unlisted pilot</span>}
       </div>
-      <nav className={styles.dateNav} aria-label="Choose board date">
-        <Link href={dailyUrl(circuit)} prefetch={false} aria-current={day===today?"date":undefined}>Today</Link>
-        {yesterday>=firstDay && <Link href={dailyUrl(circuit,yesterday)} prefetch={false} aria-current={day===yesterday?"date":undefined}>Yesterday</Link>}
-        <details key={day} className={styles.datePicker}>
-          <summary>Choose date</summary>
-          <form className={styles.date} action={route}>
-            <input type="hidden" name="tour" value={circuit.toLowerCase()}/>
-            <input type="hidden" name="view" value="history"/>
-            <label htmlFor="desk-day">Board date (UTC)</label>
-            <div className={styles.dateRow}>
-              {day>firstDay && <Link className={styles.dayStep} prefetch={false} href={dailyUrl(circuit,shiftDay(day,-1))} aria-label="Previous day">‹</Link>}
-              <input id="desk-day" name="day" type="date" min={firstDay} max={today} defaultValue={day} required/>
-              {day<today && <Link className={styles.dayStep} prefetch={false} href={dailyUrl(circuit,shiftDay(day,1))} aria-label="Next day">›</Link>}
-              <button>Show date</button>
-            </div>
-          </form>
-        </details>
-      </nav>
-      <RefreshBoard key={[circuit, day, batch].join("/")} seen={scanTime} loadedAt={loadedAt}
-        liveDay={day === today && !batch ? day : undefined} isToday={day === today} failed={loadFailed}
-        jumpHref={day === today && !loadFailed ? "#desk-upcoming" : undefined}/>
-    </section>}
-    <p className={styles.standfirst}>Follow big odds moves before the first serve. We check {circuit==="ATP"?"ATP, Challenger and Davis Cup":"WTA Tour and WTA 125"} odds about every 15 minutes. Follow moves on match winners, total games and games handicaps.{circuit==="ATP" && " Davis Cup also includes country tie winners."} Each chart shows how the odds and the reported market limit changed before play.</p>
-    <details className={styles.fold}>
-      <summary>What triggers an alert?</summary>
-      <p className={styles.fine}>Telegram sends at most one alert per match. The implied probability must rise by more than four percentage points before play. The reported limit on that exact selection and line must be at least $500 when we detect the move. If several lines qualify in the first eligible scan, the largest rise gets the alert. For example, odds shortening from 2.00 to 1.85 imply a rise from 50% to 54.1%. Moves with a smaller or unknown limit still appear on the board. A gap in scans starts a fresh comparison. Final-hour moves carry a timing label.</p>
-      <p className={styles.fine}>The market limit is the maximum reported when we checked the odds. The amount actually wagered is unknown. Paper returns use the recorded odds at detection.</p>
-    </details>
+      <div className={styles.mast}>
+        <div className={styles.brand}><Image src={brand} unoptimized alt="" width={44} height={24} priority/><div><p className={styles.kicker}>Tennis odds moves</p><h1>Drop Shot Desk</h1></div></div>
+        <TourSwitch circuit={circuit} historyDay={historyDay} archive={archive}/>
+      </div>
+      {!archive && <section className={styles.dayBar} aria-label="Board date">
+        <div className={styles.dayRow}>
+          <div className={styles.dayHeading}>
+            <h2>{historyDay ? "Historical moves" : "Today’s moves"}</h2>
+            <time dateTime={day}>{dateText} · UTC</time>
+          </div>
+          <nav className={styles.dateNav} aria-label="Choose board date">
+            <Link href={dailyUrl(circuit)} prefetch={false} aria-current={day===today?"date":undefined}>Today</Link>
+            {yesterday>=firstDay && <Link href={dailyUrl(circuit,yesterday)} prefetch={false} aria-current={day===yesterday?"date":undefined}>Yesterday</Link>}
+            <details key={day} className={styles.datePicker}>
+              <summary>Choose date</summary>
+              <form className={styles.date} action={route}>
+                <input type="hidden" name="tour" value={circuit.toLowerCase()}/>
+                <input type="hidden" name="view" value="history"/>
+                <label htmlFor="desk-day">Board date (UTC)</label>
+                <div className={styles.dateRow}>
+                  {day>firstDay && <Link className={styles.dayStep} prefetch={false} href={dailyUrl(circuit,shiftDay(day,-1))} aria-label="Previous day">‹</Link>}
+                  <input id="desk-day" name="day" type="date" min={firstDay} max={today} defaultValue={day} required/>
+                  {day<today && <Link className={styles.dayStep} prefetch={false} href={dailyUrl(circuit,shiftDay(day,1))} aria-label="Next day">›</Link>}
+                  <button>Show date</button>
+                </div>
+              </form>
+            </details>
+          </nav>
+        </div>
+        <RefreshBoard key={[circuit, day, batch].join("/")} seen={scanTime} loadedAt={loadedAt}
+          liveDay={day === today && !batch ? day : undefined} isToday={day === today} failed={loadFailed}
+          jumpHref={day === today && !loadFailed ? "#desk-upcoming" : undefined}/>
+      </section>}
+    </header>
     {content}
-    {!archive && <details className={styles.fold}>
-      <summary>Historical replay · October–November 2026</summary>
-      <p className={styles.fine}>The original ATP and Challenger study found seven qualifying moves across 852 comparable fixtures. It used the old 3-point rule. Daily paper returns and Telegram results are tracked separately.</p>
-      <Link prefetch={false} className={styles.back} href={route+"?view=archive&tour=atp"}>View the seven replayed moves →</Link>
-    </details>}
+    <section className={styles.deskMeta} aria-label="Desk guide and activity">
+      {activityFold}
+      <details className={styles.fold}>
+        <summary>What triggers an alert?</summary>
+        <p className={styles.standfirst}>{standfirstText}</p>
+        <p className={styles.fine}>Telegram sends at most one alert per match. The implied probability must rise by more than four percentage points before play. The reported limit on that exact selection and line must be at least $500 when we detect the move. If several lines qualify in the first eligible scan, the largest rise gets the alert. For example, odds shortening from 2.00 to 1.85 imply a rise from 50% to 54.1%. Moves with a smaller or unknown limit still appear on the board. A gap in scans starts a fresh comparison. Final-hour moves carry a timing label.</p>
+        <p className={styles.fine}>The market limit is the maximum reported when we checked the odds. The amount actually wagered is unknown. Paper returns use the recorded odds at detection.</p>
+      </details>
+      {!archive && <details className={styles.fold}>
+        <summary>Historical replay · October–November 2026</summary>
+        <p className={styles.fine}>The original ATP and Challenger study found seven qualifying moves across 852 comparable fixtures. It used the old 3-point rule. Daily paper returns and Telegram results are tracked separately.</p>
+        <Link prefetch={false} className={styles.back} href={route+"?view=archive&tour=atp"}>View the seven replayed moves →</Link>
+      </details>}
+    </section>
   </main>;
 }

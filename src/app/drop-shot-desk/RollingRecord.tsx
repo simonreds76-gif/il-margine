@@ -13,7 +13,15 @@ const stamp = new Intl.DateTimeFormat("en-GB",{day:"numeric",month:"short",hour:
 const odds = new Intl.NumberFormat("en-GB",{minimumFractionDigits:2,maximumFractionDigits:4});
 const day = (s:string)=>date.format(new Date(s+"T00:00:00Z"));
 
-export default function RollingRecord({circuit,sent,through,onScope,metrics}:{circuit:string;sent:boolean;through:string;onScope:(v:boolean)=>void;metrics:(r:Result)=>ReactNode}) {
+export type RollingSummaryState =
+  | { tour:string; state:"loading"|"error" }
+  | { tour:string; state:"ready"; summary:Result; sent:boolean };
+
+export default function RollingRecord({circuit,sent,through,onScope,metrics,onSummaryState}:{
+  circuit:string; sent:boolean; through:string;
+  onScope:(v:boolean)=>void; metrics:(r:Result)=>ReactNode;
+  onSummaryState?:(next:RollingSummaryState)=>void;
+}) {
   const [page,setPage]=useState(1);
   const [attempt,retry]=useState(0);
   const [loaded,setLoaded]=useState<{url:string;data:Packet|null}|null>(null);
@@ -29,6 +37,12 @@ export default function RollingRecord({circuit,sent,through,onScope,metrics}:{ci
   },[url,attempt,through]);
   const data=loaded && (loaded.url===url || (loaded.data && loaded.url.split("&page=")[0]===url.split("&page=")[0])) ? loaded.data : undefined;
   const busy=loaded?.url!==url;
+  useEffect(()=>{
+    if(!onSummaryState)return;
+    if(data===undefined)onSummaryState({tour:circuit,state:"loading"});
+    else if(data===null)onSummaryState({tour:circuit,state:"error"});
+    else onSummaryState({tour:circuit,state:"ready",summary:data.summary,sent});
+  },[circuit,data,sent,onSummaryState]);
   function select(next:boolean){setPage(1);onScope(next);}
   return <>
     <div className={css.rollingScope} role="group" aria-label="30-day selection filter">

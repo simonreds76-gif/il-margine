@@ -97,16 +97,16 @@ export function RefreshBoard({ seen, loadedAt, liveDay, isToday, failed, jumpHre
   return <div className={styles.scanBar}>
     <p className={styles.fresh} data-state={state} data-late={stale || failed ? "true" : undefined} role="status">
       {failed ? "Couldn’t load the saved board · scan check failed." : shown
-        ? <>Latest scan <time dateTime={shown}>{shown.slice(0, 16).replace("T", " ")} UTC</time>{stale ? ` · over ${SCAN_VALIDITY_MINUTES} minutes ago — pre-match listings paused` : ""}</>
+        ? <>Latest scan <time dateTime={shown}><span className={currentBoard ? styles.scanDay : undefined}>{shown.slice(0, 10)} </span>{shown.slice(11, 16)} UTC</time>{stale ? ` · over ${SCAN_VALIDITY_MINUTES} minutes ago — pre-match listings paused` : ""}</>
         : (currentBoard ? "No saved scan recorded yet today." : "No saved scan recorded for this date.")}
       {checked && !failed && seen !== null && <span> · {seen === lastCheck.seen ? "No newer scan" : "Updated"}</span>}
     </p>
     <div className={styles.scanActions}>
-      {jumpHref && <a className={styles.upcomingJump} href={jumpHref}>Upcoming matches <span aria-hidden="true">↓</span></a>}
+      {jumpHref && <a className={styles.upcomingJump} href={jumpHref}>Upcoming<span className={styles.jumpWord}> matches</span> <span aria-hidden="true">↓</span></a>}
       <button id="desk-refresh-button" className={styles.refreshButton} type="button" disabled={pending || cooling}
         title={cooling && !pending ? "Available again one minute after your last check" : "Load the latest saved board"}
         onClick={refresh}>
-        <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 4v6h-6M19.3 9a8 8 0 1 0 .1 6"/></svg>
+        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 4v6h-6M19.3 9a8 8 0 1 0 .1 6"/></svg>
         {pending ? "Checking…" : "Refresh"}
       </button>
     </div>
