@@ -631,3 +631,11 @@
   .item,.pick,.picker,.filterToggle,.tabs a,.ranges button,.scope button,.sort button,.period button{transition:background-color .12s ease,border-color .12s ease,color .12s ease}
   .roundupsTitle button::after,.pickerCue::after,.filterToggle::after{transition:transform .15s ease}
 }
+
+/* Keep the compact masthead and the original tap targets on the board controls. */
+.sort button{min-height:44px}
+@media (max-width:980px){
+  .scope button,.filterToggle,.upcomingJump,.refreshButton,.circuit a,.dateNav>a,.datePicker>summary,.jump,.moreDrops,.stepper button{min-height:44px}
+  .stepper button{min-width:44px}
+  .pickerWho{white-space:normal;overflow-wrap:anywhere}
+}

@@ -176,7 +176,7 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
 
   const currentRolling = rollingState.tour===circuit ? rollingState : {tour:circuit,state:"loading" as const};
   const summaryResult:Result|null = period==="rolling"
-    ? (currentRolling.state==="ready" ? currentRolling.summary : null)
+    ? (currentRolling.state==="ready" && currentRolling.sent===(record!=="30d") ? currentRolling.summary : null)
     : (slice?.all4 ?? null);
   const summaryScope = period==="rolling"
     ? (record==="30d" ? "All drops · 30d" : "Telegram · 30d")
