@@ -64,7 +64,10 @@ class EditionTests(unittest.TestCase):
         def check(**args):
             return edition.recheck(provider(f,**args),f,job.utc(STAMP))["picks"]
         self.assertEqual([(q["kind"],q["line"]) for q in check()],[("booking",0.5),("fouls",1.5)])
-        self.assertEqual(check(lineup="predicted"),[])
+        self.assertEqual([(q["kind"],q["lineup"]) for q in check(lineup="predicted")],
+                         [("booking","predicted"),("fouls","predicted")])
+        self.assertTrue(all(q["lineup"]=="confirmed" for q in check()))
+        self.assertEqual(check(lineup="squad"),[])
         self.assertEqual(check(foul_line=2.5,card_price=3.9),[])
         f["cases"][0]["rival"] = {"id":"not-in-xi"}
         self.assertEqual(check(),[])
