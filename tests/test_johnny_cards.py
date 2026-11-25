@@ -7,7 +7,8 @@ from unittest.mock import Mock, patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
 import johnny_cards as job
-from johnny_cards_calendar import competition, only_unrelated_omissions
+from johnny_cards_calendar import competition, only_unrelated_omissions, senior_fixture
+from johnny_cards_edition import make_digest, verify
 from johnny_cards_review import Analyst, exact_choices, value_range
 
 class Reader:
@@ -25,7 +26,7 @@ class MethodTests(unittest.TestCase):
         doc={"context":"times UTC","fixtureCount":3,"listedCount":3,
              "fixturesSummary":"Premier League (England) [competitionId league.0z9xjh1]:\n- 14:00 A v B (id a.1)\n- 10:30 C 1-0 D, live (id c.2)\nSerie B (Italy) [competitionId serie-b.3]:\n- 18:00 X v Y (id other.3)"}
         overnight={"context":"times UTC","fixtureCount":1,"listedCount":1,
-                   "fixturesSummary":"Primera A (Colombia) [competitionId col.123]:\n- 01:20 Club A v Club B (id game.4)"}
+                   "fixturesSummary":"Primera A (Colombia) [competitionId col.123]:\n- 01:20 Atlético Nacional v Independiente Medellín (id game.4)"}
         board=Reader({start:doc,start+14*3600:overnight})
         games,coverage=job.calendar(board,"2027-05-22",job.utc("2027-05-22T11:05:00Z"))
         self.assertEqual([f["ko"] for f in games],["2027-05-22T14:00:00+00:00","2027-05-23T01:20:00+00:00"])
@@ -53,6 +54,53 @@ class MethodTests(unittest.TestCase):
         player={"position":"LB"}
         opponents={"status":"predicted","players":[{"id":"a","position":"RW","name":"A"},{"id":"b","position":"RM","name":"B"}]}
         self.assertIsNone(job.distinct_opponent(player,opponents))
+
+    def test_reserves_excluded_before_triage_without_losing_senior_fixtures(self):
+        now = job.utc("2026-11-25T09:00:00Z")
+        start = int(now.replace(hour=11).timestamp())
+        board = "\n".join([
+            "Campeonato de Reserva de Primera División (Argentina) [competitionId league.r]:",
+            "- 18:00 Lanús v River Plate (id reserve.1)",
+            "Liga Profesional de Fútbol (Argentina) [competitionId league.a]:",
+            "- 19:00 Lanús v Argentinos Juniors (id senior.2)",
+            "- 20:00 Talleres v Estudiantes Caseros Reserves (id reserve.3)",
+            "Serie B (Brazil) [competitionId league.b]:",
+            "- 20:00 Juventude v Sport (id senior.4)",
+            "UEFA Champions League (Europe) [competitionId league.c]:",
+            "- 20:00 Sporting v Manchester United (id senior.5)"])
+        games, windows = job.calendar(Reader({start:dict(context="times UTC", fixtureCount=5, listedCount=5,
+                                                        fixturesSummary=board)}), "2026-11-25", now)
+        self.assertEqual({f["id"] for f in games}, {"senior.2","senior.4","senior.5"})
+        self.assertTrue(all(not w["gap"] for w in windows))
+        omitted={"notListed":"2 more fixtures in 1 competition: Liga de Reservas (Argentina) [competitionId league.r] 2"}
+        self.assertTrue(only_unrelated_omissions(omitted,2))
+
+    def test_squad_marker_on_either_team_and_senior_names(self):
+        for team in ("River Plate Reserve","Lanús (Res.)","Porto B","Club II","Colo-Colo Sub-20","City U21"):
+            for side in ("home","away"):
+                with self.subTest(team=team, side=side):
+                    self.assertFalse(senior_fixture({"home":"Senior","away":"Senior",side:team}))
+        self.assertTrue(senior_fixture({"league":"Primera Nacional B","home":"Boca Juniors","away":"Juventude"}))
+        self.assertIsNone(competition("Copa Libertadores Sub-20","South America","example"))
+
+    def test_old_reserve_checkpoint_cannot_request_players_or_enter_digest(self):
+        day = "2026-11-25"
+        f = {"id":"reserve.1","home":"Lanús Reserve","away":"River Plate Reserve",
+             "reviewState":"selected","priority":2}
+        old = {"stage":"ranked","day":day,"guideSHA256":"hash","calendar":[{"gap":""}],"slate":[f]}
+        reader = Mock(log=[],errors=0)
+        analyst = Mock(digest="hash")
+        self.assertEqual(job.scan(reader,day,analyst,previous=old)["slate"],[])
+        reader.read.assert_not_called()
+        analyst.select_players.assert_not_called()
+        f["reviewState"]="complete"
+        store=Mock()
+        store.get.side_effect=[old,{}]
+        verify(store,day,reader)
+        reader.read.assert_not_called()
+        doc=make_digest(day,old,{},job.utc(day+"T11:00:00Z"))
+        self.assertEqual((doc["fixtures"],doc["picks"]),(0,[]))
+        self.assertNotIn("Lanús",doc["coverage"])
 
     def test_other_player_and_under_are_excluded(self):
         f={"home":"X","away":"Y","ko":"2026-11-24T15:00:00Z"}
