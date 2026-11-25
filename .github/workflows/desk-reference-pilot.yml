@@ -36,6 +36,7 @@ jobs:
           sparse-checkout: |
             /scripts/desk_reference_*.py
             /scripts/tests/test_desk_reference_pilot.py
+            /scripts/desk_davis.py
             /scripts/pinnradar_tennis.py
             /scripts/drop_desk_history.py
             /scripts/desk_paper_returns.py

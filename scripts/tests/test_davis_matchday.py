@@ -41,6 +41,14 @@ class DavisTests(unittest.TestCase):
         self.assertEqual(d.order_rows(page,DAY),[ (["One A.","Three C."],["mr","st-scheduled"]) ])
         self.assertEqual(d.order_rows(page,"2026-11-26"),[])
 
+    def test_previous_results_only_between_ties(self):
+        title = "<title>Davis Cup - World Group</title>"
+        results = '<section aria-labelledby="res-h"><a href="/partita/earlier-rubber">Result</a></section>'
+        self.assertEqual(d.order_rows(BeautifulSoup(title+results, "html.parser"), DAY), [])
+        for html in (title, title+results+'<div class="st-scheduled"></div>', "<title>Unavailable</title>"+results):
+            with self.assertRaises(ValueError):
+                d.order_rows(BeautifulSoup(html,"html.parser"), DAY)
+
     def test_public_verification_needs_both_cards_and_order(self):
         ties,_=d.make_programme(ROWS,ROSTER,REFERENCE,DAY,NOW)
         html=BeautifulSoup('<section aria-label="Davis Cup">'+''.join(f'<div data-singles-order="{i}"><button>'+''.join(f'<span class="x__name">{n}</span>' for n in names)+'</button></div>' for i,(names,_) in enumerate(ROWS,1))+'</section>',"html.parser")

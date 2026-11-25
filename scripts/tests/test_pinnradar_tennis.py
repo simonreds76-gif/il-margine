@@ -75,6 +75,70 @@ class MatchWinnerTest(unittest.TestCase):
         wrong=snap([parent,dict(games,parent_id=999)],35)
         self.assertNotIn("contracts",wrong["events"]["201"])
 
+
+    def test_davis_cup_tie_and_singles_feed_separate_atp_alerts(self):
+        from copy import deepcopy
+        import desk_games
+        league = "Davis Cup - Tie Winner"
+        tie = event(220, league_name=league, home="Italy", away="South Korea")
+        single = event(221, league_name="Davis Cup - QF", home="Jiri Lehecka", away="Felix Auger-Aliassime")
+        children = []
+        for parent in (tie, single):
+            parent["periods"]["num_0"]["money_line"]["max"] = 500
+            children.append(event(parent["event_id"]+10, league_name=parent["league_name"], parent_id=parent["event_id"],
+                home=parent["home"]+" (Games)", away=parent["away"]+" (Games)", periods={"num_0":{"status":"open",
+                "totals":{"21.5":{"points":21.5,"over":1.9,"under":1.95,"max":900}},
+                "spreads":{"-2.5":{"hdp":-2.5,"home":1.88,"away":1.98,"max":750}}}}))
+        wrong = [event(301, league_name=league,home="Player A",away="Player B"),
+                 event(302, league_name="Davis Cup - QF",home="Great Britain",away="South Korea"),
+                 event(303, league_name="ATP Davis Cup - Outright"),
+                 event(304, league_name="Davis Cup Doubles - QF"),
+                 event(305, league_name="Davis Cup - QF",home="Winner of QF",away="Tomas Machac")]
+        rows = [tie,single,*children,*wrong]
+        a = snap(rows,60)
+        self.assertEqual(set(a["events"]),{"220","221"})
+        self.assertTrue(all(e["tour"] == "ATP" for e in a["events"].values()))
+        self.assertNotIn("contracts",a["events"]["220"])
+        self.assertEqual(set(a["events"]["221"]["contracts"]),{"totals:21.5","spreads:2.5"})
+        self.assertNotEqual(a["events"]["220"]["fixture"],a["events"]["221"]["fixture"])
+        state,_ = pilot.advance({},a,track_first=False)
+        desk_games.compare({},a,state,set())
+        newer = deepcopy(rows)
+        for row in newer[:2]:
+            row["periods"]["num_0"]["money_line"]["home"] = 1.75
+        b = snap(newer,45)
+        state2,_ = pilot.advance(state,b,track_first=False)
+        batch = desk_games.compare(state,b,state2,set())
+        alerts = desk_games.alert_moves(batch)
+        self.assertEqual({m["selection"] for m in alerts},{"Italy", "Jiri Lehecka"})
+        self.assertIn(league,watch.roundup_text(alerts,b["observed"]))
+        later = deepcopy(newer)
+        for row in later[:2]:
+            row["periods"]["num_0"]["money_line"]["home"] = 1.50
+        c = snap(later,30)
+        state3,_ = pilot.advance(state2,c,track_first=False)
+        self.assertFalse(desk_games.alert_moves(desk_games.compare(state2,c,state3,set())))
+        self.assertFalse(snap([tie, dict(tie,event_type="live")],30)["events"])
+
+    def test_davis_grades_tie_result_and_rubber_score_independently(self):
+        from drop_desk_history import mens_grade
+        # A country result is in rubbers, an independent singles result is in sets.
+        now = pilot.utc("2025-11-24T00:00:00Z")
+        start = "2025-11-23T14:00:00Z"
+        tours = {21290:{"name":"Davis Cup, World Group, F, ITA-ESP 2-0","date":"2025-11-17"}}
+        games = [{"tour_id":21290,"round_id":13,"winner_id":1,"loser_id":2,"result":"6-3 6-4","date":"2025-11-23"}]
+        ticket = {"tour":"ATP","league":"Davis Cup - Tie Winner","player":"Spain","opponent":"Italy","start":start}
+        self.assertEqual(mens_grade(ticket,tours,[],games,{},now)["result"],"Lost")
+        self.assertEqual(mens_grade(dict(ticket,player="Italy",opponent="Spain"),tours,[],games,{},now)["result"],"Won")
+        for title in ("Davis Cup, World Group, F, ITA-ESP 1-0","Davis Cup, World Group, F, ITA-CZE 2-0"):
+            self.assertIsNone(mens_grade(ticket,{21290:dict(tours[21290],name=title)},[],games,{},now))
+        self.assertIsNone(mens_grade(ticket,tours,[],[],{},now))
+        self.assertIsNone(mens_grade(dict(ticket,market="totals"),tours,[],games,{},now))
+        single = dict(tour="ATP",league="Davis Cup - Final",player="Player One",opponent="Player Two",start=start)
+        grade = mens_grade(single,tours,[],games,{1:"player one",2:"player two"},now)
+        self.assertEqual((grade["result"],grade["score"]),("Won","6-3 6-4"))
+        self.assertFalse(mens_grade(dict(single,binding=None,league="Davis Cup - QF"),tours,[],games,{1:"player one",2:"player two"},now))
+
     def test_only_complete_singles(self):
         e=event()
         wrong=[event(101,home="Test Home (Games)"),event(102,league_name="ATP Finals Doubles"),

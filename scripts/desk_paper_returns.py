@@ -6,7 +6,7 @@ import json
 import math
 
 from desk_games import FINAL_HOUR, market_limit, meets_usd_floor, pairs
-from drop_desk_history import bind, event_data, outcome, rows, wta_result, wta_scoreboard
+from drop_desk_history import mens_grade, event_data, outcome, rows, wta_result, wta_scoreboard
 from pinnradar_tennis import Store, advance, utc
 from price_drop_watch import MAX_GAP, START
 
@@ -144,8 +144,7 @@ def grade_due(tickets, now):
                 if matched:
                     t["binding"], grade = matched
             else:
-                t["binding"] = t.get("binding") or bind(t, tours, schedule, games, names)
-                grade = outcome(t, games, schedule, now)
+                grade = mens_grade(t, tours, schedule, games, names, now)
             t["checked"] = now.isoformat()
             if grade:
                 save_grade(t, grade)
