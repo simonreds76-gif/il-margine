@@ -61,6 +61,7 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
   const dateText=new Intl.DateTimeFormat("en-GB",{weekday:"short",day:"numeric",month:"long",timeZone:"UTC"}).format(new Date(day+"T00:00:00Z"));
   let content;
   let scanTime: number | null = null;
+  let loadedAt = Date.now();
   let loadFailed = false;
   try{
     if(archive && circuit==="WTA"){
@@ -83,6 +84,7 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
     } else {
       // Stamped after the read so the first paint never treats a record as open later than the server saw it.
       const data=await readDay(day,circuit),now=Date.now(),seen=Date.parse(data.observed),known=Number.isFinite(seen);
+      loadedAt = now;
       scanTime = known ? seen : null;
       content=<>
           <dl className={styles.facts} aria-label="Board activity">
@@ -92,12 +94,13 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
             <div><dt>Watchlist matches</dt><dd>{data.fixtures.length}</dd></div>
           </dl>
         <PaperReturns day={day} circuit={circuit}/>
-        <Board key={circuit} circuit={circuit} moves={fullBoard ? data.moves : data.moves.map(publicMove)} fixtures={fullBoard ? data.fixtures : data.fixtures.map(publicFixture)} archive={false} initialBatchId={batch} day={day} now={now} today={day===today} venues={venuesFor([...data.moves,...data.fixtures])}/>
+        <Board key={circuit} circuit={circuit} moves={fullBoard ? data.moves : data.moves.map(publicMove)} fixtures={fullBoard ? data.fixtures : data.fixtures.map(publicFixture)} archive={false} initialBatchId={batch} day={day} now={now} scanSeen={scanTime} today={day===today} venues={venuesFor([...data.moves,...data.fixtures])}/>
 </>;
     }
   } catch {
+    loadedAt = Date.now();
     loadFailed = true;
-    content = archive ? <p className={styles.problem} role="status">The replay could not be loaded. Reload to try again.</p> : null;
+    content = <p className={styles.problem} role="status">{archive ? "The replay could not be loaded. Reload to try again." : "The saved board could not be loaded right now. Use Refresh above to try again."}</p>;
   }
   return <main className={styles.page} data-mode={archive?"archive":"daily"}>
     <div className={styles.topline}><Link className={styles.back} href="/tennis-matchday">← Tennis Matchday</Link><span className={styles.lab}>Unlisted pilot</span></div>
@@ -129,8 +132,9 @@ export default async function PriceMoves({searchParams}:{searchParams:Promise<{v
           </form>
         </details>
       </nav>
-      <RefreshBoard key={[circuit, day, batch].join("/")} seen={scanTime} loadedAt={Date.now()}
-        liveDay={day === today && !batch ? day : undefined} failed={loadFailed}/>
+      <RefreshBoard key={[circuit, day, batch].join("/")} seen={scanTime} loadedAt={loadedAt}
+        liveDay={day === today && !batch ? day : undefined} isToday={day === today} failed={loadFailed}
+        jumpHref={day === today && !loadFailed ? "#desk-upcoming" : undefined}/>
     </section>}
     <p className={styles.standfirst}>Follow big odds moves before the first serve. We check {circuit==="ATP"?"ATP, Challenger and Davis Cup":"WTA Tour and WTA 125"} odds about every 15 minutes. Follow moves on match winners, total games and games handicaps.{circuit==="ATP" && " Davis Cup also includes country tie winners."} Each chart shows how the odds and the reported market limit changed before play.</p>
     <details className={styles.fold}>

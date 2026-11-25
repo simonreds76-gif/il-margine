@@ -8,9 +8,11 @@ import { DeskIcon, marketIcon } from "./DeskIcon";
 import Roundups from "./Roundups";
 import { SETTLING_NOTE, State, VenueFlag, hostOf as placeOf, impliedText, marketName, pointsText, venueKey } from "./DeskParts";
 import type { VenueMap } from "./DeskParts";
+import { DESK_REFRESH_EVENT, DESK_REFRESH_STATE_EVENT } from "./RefreshBoard";
 import {
-  availability, buildRoundups, cutoffOf, defaultRoundup, delta, dropPct, isOpen, isQualifying, moveKey, outcomeLabel, outcomeOf, paper,
-  displayedLimit, groupDrops, matchKey, orderDrops, percent, price, tally, timeToStart, units, utcClock, utcDate, utcStamp,
+  SCAN_VALIDITY_MINUTES, SCAN_VALIDITY_MS, availability, buildRoundups, cutoffOf, defaultRoundup, delta, dropPct, isOpen,
+  isQualifying, moveKey, outcomeLabel, outcomeOf, paper, displayedLimit, groupDrops, matchKey, orderDrops, percent, price,
+  tally, timeToStart, units, utcClock, utcDate, utcStamp,
 } from "./desk";
 import type { DeskFixture, DeskMove, DropOrder } from "./desk";
 
@@ -25,9 +27,27 @@ const SORTS: { value: Exclude<DropOrder, "oldest">; label: string; note: string 
   { value: "soonest", label: "Starting soonest", note: "earliest scheduled match first" },
 ];
 const NO_VENUES: VenueMap = {};
+const UPCOMING_ID = "desk-upcoming";
+const UPCOMING_HASH = "#desk-upcoming";
 const ROUNDUPS_HASH = "#desk-roundups";
 /** Longest the local clock sleeps between checks; it wakes exactly on the next cutoff anyway. */
 const TICK_MS = 60_000;
+
+function latestQuoteOf(move: DeskMove | undefined) {
+  if (!move?.quotes?.length) return undefined;
+  const detection = Date.parse(move.after);
+  let best: DeskMove["quotes"][number] | undefined;
+  let bestTime = -Infinity;
+  for (const quote of move.quotes) {
+    const t = Date.parse(quote.time);
+    if (Number.isFinite(t) && Number.isFinite(quote.price) && t >= bestTime) {
+      best = quote;
+      bestTime = t;
+    }
+  }
+  if (!best || (Number.isFinite(detection) && bestTime < detection)) return undefined;
+  return best;
+}
 
 /** "ATP Challenger Helsinki - R1" reads as "Helsinki": the tour is already said beside it. */
 
@@ -108,7 +128,7 @@ function DropRow({ move: r, selected, archive, at, venue, onChoose }: {
   );
 }
 
-export default function Board({ moves, fixtures, archive, circuit = "ATP", initialBatchId, day, now, today, venues = NO_VENUES }: {
+export default function Board({ moves, fixtures, archive, circuit = "ATP", initialBatchId, day, now, scanSeen, today, venues = NO_VENUES }: {
   circuit?: "ATP" | "WTA";
   moves: DeskMove[];
   fixtures: DeskFixture[];
@@ -117,6 +137,8 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   day?: string;
   /** Server render time in ms. The first paint uses it, so server and browser agree on what is still open. */
   now?: number;
+  /** Latest saved scan timestamp in ms, when known, so the board shares the 20-minute validity boundary. */
+  scanSeen?: number | null;
   /** True when `day` is the current UTC date. */
   today?: boolean;
   /** Host-country flags resolved on the server from the shared tournament registry; unknown venues are simply absent. */
@@ -157,8 +179,71 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   const stageRef = useRef<HTMLElement>(null);
   const roundupsRef = useRef<HTMLElement>(null);
   const revealed = useRef(false);
+  const scopeRef = useRef<Scope>(scope);
+  scopeRef.current = scope;
+  const pendingUpcomingJump = useRef(false);
+  const [refreshState, setRefreshState] = useState<{ pending: boolean; cooling: boolean }>({ pending: false, cooling: false });
 
   useEffect(() => { setPickedBatch(initialBatchId); if (initialBatchId) setRoundupsOpen(true); }, [initialBatchId]);
+
+  useEffect(() => {
+    const onRefreshState = (e: Event) => {
+      const detail = (e as CustomEvent<{ pending?: boolean; cooling?: boolean }>).detail;
+      if (detail) setRefreshState({ pending: Boolean(detail.pending), cooling: Boolean(detail.cooling) });
+    };
+    window.addEventListener(DESK_REFRESH_STATE_EVENT, onRefreshState);
+    return () => window.removeEventListener(DESK_REFRESH_STATE_EVENT, onRefreshState);
+  }, []);
+
+  const scrollUpcomingIntoView = useCallback(() => {
+    window.requestAnimationFrame(() => {
+      const heading = document.getElementById(UPCOMING_ID);
+      if (!heading) return;
+      const container = heading.closest<HTMLElement>("[data-upcoming-container]") ?? heading;
+      container.scrollIntoView({ block: "start" });
+      heading.focus({ preventScroll: true });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (scope === "upcoming" && pendingUpcomingJump.current) {
+      pendingUpcomingJump.current = false;
+      scrollUpcomingIntoView();
+    }
+  }, [scope, scrollUpcomingIntoView]);
+
+  // Jump to upcoming matches from the top date bar, including when viewing All recorded or filtered empty states.
+  useEffect(() => {
+    if (archive || !today) return;
+    const jumpToUpcoming = () => {
+      if (scopeRef.current !== "upcoming") {
+        pendingUpcomingJump.current = true;
+        setScope("upcoming");
+        setSelectedKey(null);
+      } else {
+        scrollUpcomingIntoView();
+      }
+    };
+    const onHash = () => {
+      if (window.location.hash === UPCOMING_HASH) jumpToUpcoming();
+    };
+    const onClick = (e: MouseEvent) => {
+      const link = (e.target as Element | null)?.closest?.(`a[href="${UPCOMING_HASH}"]`);
+      if (!link) return;
+      e.preventDefault();
+      if (window.location.hash !== UPCOMING_HASH) {
+        try { window.history.replaceState(null, "", UPCOMING_HASH); } catch { /* ignore */ }
+      }
+      jumpToUpcoming();
+    };
+    onHash();
+    window.addEventListener("hashchange", onHash);
+    document.addEventListener("click", onClick);
+    return () => {
+      window.removeEventListener("hashchange", onHash);
+      document.removeEventListener("click", onClick);
+    };
+  }, [archive, today, scrollUpcomingIntoView]);
 
   // A direct ?batch= link lands on that roundup.
   useEffect(() => {
@@ -200,16 +285,20 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   const index = Math.max(0, rows.findIndex(m => moveKey(m) === selectedKey));
   const m = rows.length ? rows[index] : undefined;
   const currentKey = m ? moveKey(m) : null;
+  const groupIndex = m ? Math.max(0, groups.findIndex(group => group.drops.includes(m))) : -1;
+  const activeGroup = groupIndex >= 0 ? groups[groupIndex] : undefined;
+  const lineIndex = activeGroup && m ? Math.max(0, activeGroup.drops.indexOf(m)) : 0;
   const activeRoundup = roundups.find(r => r.id === pickedBatch) ?? defaultRoundup(roundups);
 
-  // Every moment at which a move or a watchlist match stops being actionable.
+  // Every moment at which a move, watchlist match, or today's 20-minute scan window stops being actionable.
   const cutoffs = useMemo(() => {
     if (archive) return [];
     const set = new Set<number>();
+    if (today && scanSeen !== undefined && scanSeen !== null) set.add(scanSeen + SCAN_VALIDITY_MS);
     for (const r of moves) { const c = cutoffOf(r); if (c !== null) set.add(c); }
     for (const f of fixtures) { const c = cutoffOf(f); if (c !== null) set.add(c); }
     return Array.from(set).sort((a, b) => a - b);
-  }, [archive, moves, fixtures]);
+  }, [archive, today, scanSeen, moves, fixtures]);
   // Keep start times and availability current locally, including after the tab wakes.
   useEffect(() => {
     if (archive || now === undefined) return;
@@ -266,7 +355,14 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
     choose(move);
     if (pickerOpen && pickerRef.current?.getClientRects().length) pickerRef.current.focus({ preventScroll:true });
   };
-  const step = (dir: number) => { if (rows.length) choose(rows[(index + dir + rows.length) % rows.length]); };
+  const step = (dir: number) => {
+    if (groups.length < 2 || groupIndex < 0) return;
+    const target = groups[(groupIndex + dir + groups.length) % groups.length];
+    if (target?.drops.length) choose(target.drops[0]);
+  };
+  const requestRefresh = () => {
+    window.dispatchEvent(new CustomEvent(DESK_REFRESH_EVENT));
+  };
   const clearFilters = () => { setTour(levels[0]); setDraw(DRAWS[0]); setMarket("all"); setQuery(""); setAlertedOnly(false); };
   const changeScope = (next: Scope) => { setScope(next); setSelectedKey(null); };
   // A new order starts from its own first entry; pressing the order already in use changes nothing.
@@ -315,12 +411,15 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   };
 
   const filtered = (!archive && alertedOnly) || market!=="all" || tour !== levels[0] || draw !== DRAWS[0] || needle !== "";
-  const lastQuote = m && m.quotes.length ? m.quotes[m.quotes.length - 1] : undefined;
-  const latestIsDetection = !!(m && lastQuote && Date.parse(lastQuote.time) === Date.parse(m.after));
+  const lastQuote = latestQuoteOf(m);
+  const latestIsDetection = Boolean(m && lastQuote && Date.parse(lastQuote.time) === Date.parse(m.after));
+  const latestDiff = m && lastQuote ? Number((lastQuote.price - m.new).toFixed(3)) : 0;
   const outcome = m ? outcomeOf(m.result) : "pending";
   const pl = m ? paper(m) : null;
   const ownRoundup = m && m.batchId ? roundups.find(r => r.id === m.batchId) : undefined;
   const status = m && !archive ? availability(m, at, lastQuote?.time) : null;
+  const scanLate = Boolean(!archive && today && scanSeen !== undefined && scanSeen !== null && at !== null && at >= scanSeen + SCAN_VALIDITY_MS);
+  const noScanYet = Boolean(!archive && today && scanSeen === null);
   // The stage figures: the gap between the two captures and the lead before the scheduled start.
   const tBefore = m ? Date.parse(m.before) : NaN, tAfter = m ? Date.parse(m.after) : NaN, tStart = m ? Date.parse(m.start) : NaN;
   const apart = tAfter - tBefore, lead = tStart - tAfter;
@@ -335,9 +434,19 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   const plural = (n: number, one: string, many: string) => n + " " + (n === 1 ? one : many);
   const sortNote = SORTS.find(s => s.value === order)?.note ?? "earliest detection first";
   const blank = !moves.length
-    ? (archive ? "No recorded drops are in the replay." : "No price drops were recorded on this date.")
+    ? (archive
+      ? "No recorded drops are in the replay."
+      : noScanYet
+        ? "No saved scan has been recorded yet today."
+        : scanLate
+          ? `No price drops recorded so far today, and the latest scan is over ${SCAN_VALIDITY_MINUTES} minutes old.`
+          : today
+            ? "No price drops have been recorded yet today."
+            : "No price drops were recorded on this date.")
     : upcomingOnly && matching.length
-      ? (matching.length === 1 ? "The one recorded drop here is no longer" : "None of the " + matching.length + " recorded drops here is still") + " verified open before its scheduled start."
+      ? (scanLate
+        ? `The latest scan is over ${SCAN_VALIDITY_MINUTES} minutes old, so pre-match listings are paused until a newer scan is saved.`
+        : (matching.length === 1 ? "The one recorded drop here has" : "All " + matching.length + " recorded drops here have") + " passed their scheduled start or pre-match cutoff.")
       : alertedOnly ? "No confirmed Telegram alerts match these filters." : "No recorded drops match these filters.";
 
   const sortControls = upcomingOnly && <div className={styles.sortRow} role="group" aria-labelledby={sortId}>
@@ -372,11 +481,13 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
       {!archive && roundups.length > 0 && <a className={styles.jump} href={ROUNDUPS_HASH} onClick={() => setRoundupsOpen(true)}>Telegram roundups ({roundups.length}) <span aria-hidden="true">↓</span></a>}
     </div>
 
-    {m ? <div className={styles.desk}>
+    {m ? <div className={styles.desk} data-upcoming-container="">
       {/* The ledger: each entry reads who and where on the left, the figures on the right, all on one right edge. */}
       <section className={styles.rail} data-upcoming={upcomingOnly || undefined} aria-label={upcomingOnly ? "Upcoming moves" : "Recorded moves"}>
         <div className={styles.railHead}>
-          <h2>{upcomingOnly ? "Upcoming drops" : "Price drops"} <small>{plural(groups.length, "match", "matches")} · {plural(rows.length, "drop", "drops")}</small></h2>
+          <h2 id={!archive && today ? UPCOMING_ID : undefined} tabIndex={!archive && today ? -1 : undefined}>
+            {upcomingOnly ? "Upcoming drops" : "Price drops"} <small>{plural(groups.length, "match", "matches")} · {plural(rows.length, "drop", "drops")}</small>
+          </h2>
           {sortControls}
           <p className={styles.railNote} id={noteId}>
             <b>pp</b> is the rise in implied probability (1 ÷ price) from the earlier odds to the observed move.
@@ -385,7 +496,9 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
         </div>
         {/* Phones and tablets: the entry on stage is a switcher; the ledger opens beneath it and folds away on choice. */}
         <button ref={pickerRef} type="button" className={styles.picker} aria-expanded={pickerOpen} aria-controls={listId} onClick={() => setPickerOpen(open => !open)}>
-          <span className={styles.pickerLabel}>Showing {index + 1} of {rows.length}</span>
+          <span className={styles.pickerLabel}>
+            Match {groupIndex + 1} of {groups.length}{activeGroup && activeGroup.drops.length > 1 ? ` · drop ${lineIndex + 1} of ${activeGroup.drops.length}` : ""}
+          </span>
           <strong>{m.player}</strong>
           <ScheduledStart move={m} at={at} />
           <span className={styles.pickerMove}><b>{pointsText(m)}</b> implied probability<RowLimit move={m} /></span>
@@ -432,10 +545,10 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
               {Date.parse(m.start)-Date.parse(m.before) <= 3600000 ? "Final-hour move" : "Detected in final hour"}
             </span>}
           </p>
-          <div className={styles.stepper} role="group" aria-label="Step through price drops">
-            <button type="button" aria-label="Previous price drop" disabled={rows.length < 2} onClick={() => step(-1)}><span aria-hidden="true">‹</span></button>
-            <span>{index + 1} / {rows.length}</span>
-            <button type="button" aria-label="Next price drop" disabled={rows.length < 2} onClick={() => step(1)}><span aria-hidden="true">›</span></button>
+          <div className={styles.stepper} role="group" aria-label="Step through matches">
+            <button type="button" aria-label="Previous match" disabled={groups.length < 2} onClick={() => step(-1)}><span aria-hidden="true">‹</span></button>
+            <span>Match {groupIndex + 1} / {groups.length}</span>
+            <button type="button" aria-label="Next match" disabled={groups.length < 2} onClick={() => step(1)}><span aria-hidden="true">›</span></button>
           </div>
         </div>
 
@@ -463,6 +576,27 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
             <p className={styles.settled} data-outcome={outcome}><b>{outcomeLabel(m)}</b>{archive && pl !== null && <span>{units(pl)}</span>}</p>
             {m.score ? <p className={styles.score}>{m.score}</p> : null}
           </div>}
+          <div className={styles.heroLatest} data-role="latest" data-state={status?.open ? "fresh" : "historical"}>
+            <span className={styles.latestCap}>
+              <KeyGlyph kind={latestIsDetection ? "detected" : "latest"} />
+              {status?.open ? "Latest recorded" : "Last pre-match"}
+            </span>
+            {lastQuote ? <span className={styles.latestBody}>
+              <strong className={styles.latestOdds}>{price(lastQuote.price)}</strong>
+              <time className={styles.latestTime} dateTime={lastQuote.time}>{utcStamp(lastQuote.time, true)}</time>
+              <span className={styles.latestNote} data-drift={!latestIsDetection ? (latestDiff > 0 ? "rebound" : latestDiff < 0 ? "further" : "same") : undefined}>
+                {latestIsDetection
+                  ? (status?.open ? "Move detection is the latest scan" : "Move detection was the last pre-match scan")
+                  : latestDiff > 0
+                    ? delta(lastQuote.price - m.new) + " rebound since move"
+                    : latestDiff < 0
+                      ? delta(lastQuote.price - m.new) + " further drop since move"
+                      : "Unchanged since move"}
+              </span>
+            </span> : <span className={styles.latestBody}>
+              <span className={styles.latestNote}>No observations recorded for this selection</span>
+            </span>}
+          </div>
           <div className={styles.statusLine}>
             {status && <p className={styles.avail} data-state={status.open ? "open" : "closed"}>
               <b>{status.label}</b> · {status.reason}. {status.detail}
@@ -491,20 +625,21 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
             <dt>Lead time</dt>
             <dd>{lead >= 0 ? spanText(lead) : "—"}<small>{lead >= 0 ? "before the scheduled start" : lead < 0 ? "observed after the scheduled time" : "no scheduled time recorded"}</small></dd>
           </div>
-          {/* A latest observation is a figure of its own only when it is not the move itself. */}
-          {lastQuote && !latestIsDetection && <div data-role="latest">
-            <dt><KeyGlyph kind="latest" />Latest odds</dt>
-            <dd>{price(lastQuote.price)}<small><time dateTime={lastQuote.time}>{utcStamp(lastQuote.time, true)}</time>{" · " + delta(lastQuote.price - m.new) + " since the move"}</small></dd>
-          </div>}
           </dl>
         </details>
 
         <OddsChart key={currentKey ?? "chart"} move={m} archive={archive} />
       </article>
-    </div> : <div className={styles.blank}>
+    </div> : <section className={styles.blank} data-upcoming-container="" aria-label={upcomingOnly ? "Upcoming drops" : "Price drops"}>
       <div>
+        <h2 id={!archive && today ? UPCOMING_ID : undefined} tabIndex={!archive && today ? -1 : undefined} className={styles.blankTitle}>
+          {upcomingOnly ? "Upcoming drops" : "Price drops"}
+        </h2>
         {sortControls}
         <p role="status">{blank}</p>
+        {scanLate && <button type="button" className={styles.ghost} disabled={refreshState.pending || refreshState.cooling} onClick={requestRefresh}>
+          {refreshState.pending ? "Checking…" : "Refresh board"}
+        </button>}
         {filtered && moves.length > 0 && <button type="button" className={styles.ghost} onClick={clearFilters}>Clear filters</button>}
         {upcomingOnly && matching.length > 0 && <button type="button" className={styles.ghost} onClick={() => changeScope("all")}>Show all recorded ({matching.length})</button>}
       </div>
@@ -513,7 +648,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
         <g fill="none" stroke="#33454f" strokeWidth="2"><rect x="2" y="2" width="234" height="108" /><path d="M2 15.5H236M2 96.5H236M56 15.5V96.5M182 15.5V96.5M56 56H182" /></g>
         <path d="M119 0V112" stroke="#8497a4" strokeWidth="2" strokeDasharray="2 4" />
       </svg>
-    </div>}
+    </section>}
 
     {/* The day's alert results stay in the open: three ruled cells, one per market, the same tallies as before. */}
     {!archive && <section className={styles.results} aria-labelledby={resultsId}>
@@ -552,7 +687,11 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
             </tr>;
           })}</tbody>
         </table>
-      </div> : <p className={styles.empty} role="status">{upcomingOnly ? "No watchlist match is still verified open before its scheduled start." : "No watchlist match fits this tour."}</p>}
+      </div> : <p className={styles.empty} role="status">{upcomingOnly
+        ? (scanLate
+          ? `The latest scan is over ${SCAN_VALIDITY_MINUTES} minutes old, so watchlist listings are paused until a newer scan is saved.`
+          : "No watchlist match is still verified open before its scheduled start.")
+        : "No watchlist match fits this tour."}</p>}
     </details>}
   </div>;
 }

@@ -1,5 +1,9 @@
 import type { Fixture, Move } from "./types";
 
+/** Maximum age for which a saved scan corroborates open pre-match availability. */
+export const SCAN_VALIDITY_MINUTES = 20;
+export const SCAN_VALIDITY_MS = SCAN_VALIDITY_MINUTES * 60_000;
+
 /** Keep limit formatting identical on the server, in the list and on exported charts. */
 export function amountText(n: number) {
   const abs = Math.abs(n);

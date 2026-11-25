@@ -294,8 +294,9 @@ function PlotLayer({ model, move, lay, g, uid, annotate, active = null, brush = 
   // Nothing is written on the plot; times, odds and roles are read under the chart.
   const hasA = Number.isFinite(tA), hasB = Number.isFinite(tB);
   const pair = hasA && hasB && tA > tB;
+  const moveBroken = iB >= 0 && iA > iB && pts.slice(iB + 1, iA + 1).some(p => p.gap);
   const xA = hasA ? x(tA) : NaN, xB = hasB ? x(tB) : NaN;
-  const bandOn = pair && tA >= lay.t0 && tB <= lay.t1;
+  const bandOn = pair && !moveBroken && tA >= lay.t0 && tB <= lay.t1;
 
   const edgeOnly = lay.xTicks.length < 2;
   const dayStep = lay.stepX >= 1440 * MIN;
@@ -347,10 +348,13 @@ function PlotLayer({ model, move, lay, g, uid, annotate, active = null, brush = 
     </g>}
 
     <g clipPath={`url(#${clipId})`}>
-      {pts.map((p, i) => i > 0 && p.gap
-        ? <rect key={"gap" + p.i} x={r2(x(pts[i - 1].t))} y={T} width={r2(Math.max(0, x(p.t) - x(pts[i - 1].t)))} height={B - T} fill={`url(#${hatchId})`}
-          {...(annotate ? { "data-role": "capture-break", "data-from": pts[i - 1].time, "data-to": p.time } : {})} />
-        : null)}
+      {pts.map((p, i) => {
+        if (i === 0 || !p.gap) return null;
+        const a = Math.max(L, x(pts[i - 1].t)), b = Math.min(R, x(p.t));
+        if (b <= a) return null;
+        return <rect key={"gap" + p.i} x={r2(a)} y={T} width={r2(b - a)} height={B - T} fill={`url(#${hatchId})`}
+          {...(annotate ? { "data-role": "capture-break", "data-from": pts[i - 1].time, "data-to": p.time } : {})} />;
+      })}
       {bandOn && <rect x={r2(clampX(xB))} y={T} width={r2(Math.max(0, clampX(xA) - clampX(xB)))} height={B - T} fill={C.mint} fillOpacity={0.09}
         {...(annotate ? { "data-role": "move-interval", "data-from": move.before, "data-to": move.after } : {})} />}
       {hasA && <path d={`M${r2(xA)} ${T}V${B}`} stroke={C.mint} strokeOpacity={0.4} strokeWidth={s}
@@ -573,7 +577,7 @@ function ExportCard({ svgRef, model, move, view, archive, uid }: {
       : "Decimal odds, UTC. Lines join consecutive captures; breaks stay open.")
       + ` ${LIMIT_NAME}s show the reported maximum in ${lim.currency}. Actual turnover is unknown.`
     : move.chartSummary
-      ? "Decimal odds, times in UTC. Selected observations only: earlier, observed move, later low, high and latest. Known gaps are left open."
+      ? "Decimal odds, times in UTC. Selected observations only: earlier, observed move, later low, high, break boundaries and latest. Known gaps are left open."
       : "Decimal odds, times in UTC. The line joins consecutive recorded captures only; breaks in capture are left open.";
 
   return <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" width={W} height={H} viewBox={`0 0 ${W} ${H}`} fontFamily={FONT}>
@@ -989,7 +993,7 @@ export default function OddsChart({ move, archive }: { move: DeskMove; archive: 
       </ul>
       <p className={styles.caption}>
         Decimal odds on a linear axis, times in UTC: higher odds are drawn higher, so shortening odds fall and drifting odds rise. The tinted band spans the two captures that make the move.
-        {move.chartSummary ? " This view connects the earlier odds, the move, the later low and high, and the latest odds. Gaps in recording stay open." : " The line connects consecutive scans. Each reading shows the odds at that scan. Gaps in recording stay open."}
+        {move.chartSummary ? " This view connects the earlier odds, the move, the later low and high, any break boundaries, and the latest odds. Gaps in recording stay open." : " The line connects consecutive scans. Each reading shows the odds at that scan. Gaps in recording stay open."}
         {canZoom ? " Drag across the chart with a mouse to zoom in, double-click to return to the full series; plus, minus and zero do the same from the keyboard." : ""}
       </p>
       {lim && <p className={styles.caption}>

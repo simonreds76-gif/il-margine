@@ -1,5 +1,6 @@
 import "server-only";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { SCAN_VALIDITY_MS } from "./desk";
 import { inCircuit, type Circuit, type Move, type Fixture, type Quote, type Limit, type LimitRun } from "./types";
 
 const storage = () => getSupabaseAdmin().storage.from("tennis-price-moves-private");
@@ -59,7 +60,7 @@ async function readTapes(moves:Saved[], observed:string) {
 
 function availableUntil(start: string, observed: string, now: number): string | undefined {
   const seen = Date.parse(observed);
-  const cutoff = Math.min(Date.parse(start), seen + 20 * 60_000);
+  const cutoff = Math.min(Date.parse(start), seen + SCAN_VALIDITY_MS);
   return seen <= now && now < cutoff ? new Date(cutoff).toISOString() : undefined;
 }
 
