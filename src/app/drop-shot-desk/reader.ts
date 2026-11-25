@@ -21,7 +21,7 @@ async function stored<T>(load: () => PromiseLike<{data:T|null;error:unknown}>): 
       console.warn("Drop Shot Desk saved read unavailable", Number.isFinite(status) ? status : "transport or missing data");
       throw new Error("Saved board unavailable");
     }
-    await new Promise(resolve => setTimeout(resolve, 350));
+    await new Promise(resolve => setTimeout(resolve, status === 429 ? 1_500 : 350));
   }
 }
 async function read<T>(path: string): Promise<T> {
@@ -42,6 +42,27 @@ type Saved = {
 type RawLimit = {amount:number; currency?:string};
 type Event = { reported_market_max?:RawLimit; match_period_limits?:{max_money_line?:number;max_moneyline?:number}; contracts?: Record<string,{reported_market_max?:RawLimit;labels:[string,string];prices:[number,number]}>; id: string; fixture: string; tour:string; league:string; start:string; home:string; away:string; home_price:number; away_price:number };
 type Scan = { policy?: string; alert_ids?: string[]; observed: string; moves: Saved[]; compared_pairs: number; compared_by_circuit?: Partial<Record<Circuit, number>> };
+// Both tours use the same timestamped scans. Keep only recent, successful reads
+// in this server instance; indexes, latest odds, results and receipts still refresh.
+const recentScans = new Map<string, {value:Promise<Scan>;expires:number}>();
+function readScan(path: string): Promise<Scan> {
+  const now = Date.now();
+  const existing = recentScans.get(path);
+  if (existing && existing.expires > now) return existing.value;
+  recentScans.delete(path);
+  if (recentScans.size >= 128) {
+    const oldest = recentScans.keys().next();
+    if (!oldest.done) recentScans.delete(oldest.value);
+  }
+  const value: Promise<Scan> = read<Scan>(path).then(scan => ({policy:scan.policy, observed:scan.observed,
+    alert_ids:scan.alert_ids, moves:scan.moves, compared_pairs:scan.compared_pairs, compared_by_circuit:scan.compared_by_circuit
+  })).catch((error:unknown) => {
+    if (recentScans.get(path)?.value === value) recentScans.delete(path);
+    throw error;
+  });
+  recentScans.set(path,{value,expires:now+300_000});
+  return value;
+}
 type Receipt = { state: string; move_ids: string[]; delivered_at: string; observed: string };
 type Outcome = { result:string; score:string; profit?:number };
 type ArchiveRow = Omit<Saved,"tour"> & { level:string; quotes:Quote[]; qualifying:boolean; result:{state:string; score?:string} };
@@ -166,7 +187,7 @@ async function loadDay(day: string, circuit: Circuit) {
   for (let i=0;i<names.length;i+=8) {
     const chunk=names.slice(i,i+8);
     const checked=await Promise.all(chunk.map(async name => {
-      const [scan,receipt]=await Promise.all([read<Scan>(scans+"/"+name),notices.includes(name)?read<Receipt>(deliveries+"/"+name):undefined]);
+      const [scan,receipt]=await Promise.all([readScan(scans+"/"+name),notices.includes(name)?read<Receipt>(deliveries+"/"+name):undefined]);
       if (receipt?.state==="sent" && receipt.observed===scan.observed) {
         const batchId=name.slice(0,-5);
         const eligible = new Set(scan.alert_ids ?? []);
