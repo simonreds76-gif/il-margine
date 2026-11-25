@@ -102,9 +102,10 @@ def recheck(reader, f, now):
     return result
 
 
-def verify(store, day, reader, clock=timestamp):
-    snapshot = store.get(edition_key(day,"research"), {})
-    checks = store.get(edition_key(day,"checks"), {})
+def verify(store, day, reader, clock=timestamp, *, research_part="research", checks_part="checks"):
+    snapshot = store.get(edition_key(day,research_part), {})
+    checks_path = edition_key(day,checks_part)
+    checks = store.get(checks_path, {})
     for f in snapshot.get("slate", []):
         if f.get("reviewState") != "complete" or not any(candidates(f)):
             continue
@@ -112,8 +113,12 @@ def verify(store, day, reader, clock=timestamp):
         prior = checks.get(f["id"], {})
         if prior.get("verdictAt") == f["verdictAt"] and now - utc(prior["checkedAt"]) < timedelta(minutes=20):
             continue
-        checks[f["id"]] = recheck(reader, f, now)
-        store.put(edition_key(day,"checks"), checks)
+        try:
+            checks[f["id"]] = recheck(reader, f, now)
+        except (ValueError, TypeError, KeyError, IndexError, TimeoutError):
+            checks[f["id"]] = dict(verdictAt=f["verdictAt"], checkedAt=now.isoformat(),
+                                   picks=[], notes=["final verification incomplete"])
+        store.put(checks_path, checks)
 
 
 def make_digest(day, snapshot, checks, now):
@@ -124,10 +129,14 @@ def make_digest(day, snapshot, checks, now):
         state = f.get("reviewState")
         if state == "reserve":
             reserve.append(name)
+        elif state == "unfinished" or (state == "unavailable" and
+                str(f.get("gap", "")).startswith("Player assessment incomplete (")):
+            step = f.get("reviewStep") or "player assessment"
+            pending.append(f"{name} ({step} incomplete)")
         elif state == "unavailable":
             unavailable.append(name + " (" + f.get("gap", "evidence unavailable") + ")")
         elif state != "complete":
-            pending.append(name)
+            pending.append(name + (" (player screen saved)" if "playerScreen" in f else ""))
         else:
             complete += 1
             if utc(f["ko"]) <= now:
@@ -151,7 +160,7 @@ def make_digest(day, snapshot, checks, now):
                 unavailable.append(name + " (" + ", ".join(check["notes"]) + ")")
     gaps = [w["league"] for w in snapshot.get("calendar", []) if w["gap"]]
     summary = [f"Johnny · Bookings and fouls · {day}",
-               f"{len(picks)} verified selections · {complete} fixture reviews completed."]
+               f"{len(picks)} verified selections · {complete} fixture review{'s' if complete != 1 else ''} completed."]
     if not snapshot or not snapshot.get("calendar"):
         summary.append("Fixture list unavailable. The scope of the unfinished scan is unknown.")
     elif gaps:

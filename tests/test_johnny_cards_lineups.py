@@ -41,7 +41,8 @@ class ExpectedTeams(unittest.TestCase):
     def test_repair_edits_one_message_and_preserves_original_edition(self):
         store=Memory()
         f=fixture()
-        store.put(job.edition_key(DAY,"lineup-repair-research"),dict(day=DAY,stage="finished",slate=[f],calendar=CAL))
+        pending=dict(f,id="pending.2",home="Unfinished FC",reviewState="selected")
+        store.put(job.edition_key(DAY,"lineup-repair-research"),dict(day=DAY,stage="ranked",slate=[f,pending],calendar=CAL,guideSHA256=recovery.Analyst.digest))
         store.put(job.edition_key(DAY,"lineup-repair-checks"),{f["id"]:edition.recheck(provider(f,lineup="predicted"),f,job.utc(STAMP))})
         store.put(job.edition_key(DAY,"digest"),{"day":DAY,"message":"original"})
         store.data[edition.REPORT]["days"][DAY]={"policy":"johnny-bookings"}
@@ -51,13 +52,15 @@ class ExpectedTeams(unittest.TestCase):
             for _ in range(2):
                 recovery.amend(store,DAY)
             self.assertTrue(all(c.args[0].endswith("/editMessageText") and c.kwargs["json"]["message_id"]==11 for c in post.call_args_list))
-            self.assertEqual(post.call_count,2)
+            self.assertEqual(post.call_count,1)
         self.assertEqual(store.get(job.edition_key(DAY,"digest"))["message"],"original")
         self.assertIn("expected starter",store.get(edition.REPORT)["days"][DAY]["coverage"])
+        self.assertIn("Unfinished FC",store.get(edition.REPORT)["days"][DAY]["coverage"])
 
     def test_only_repair_upcoming_selected_lineup_gaps(self):
         f=dict(fixture(),priority=2,reviewState="unavailable",gap="starting elevens unavailable")
         self.assertTrue(retryable(f,job.utc(STAMP)))
+        self.assertTrue(retryable(dict(f,reviewState="unfinished",playerScreen={"selected":[]}),job.utc(STAMP)))
         for edit in (dict(reviewState="complete"),dict(priority=None),dict(gap="no prices"),dict(ko=STAMP)):
             self.assertFalse(retryable(dict(f,**edit),job.utc(STAMP)))
 

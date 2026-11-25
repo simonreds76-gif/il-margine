@@ -84,13 +84,17 @@ class EditionTests(unittest.TestCase):
             f["screened"] = [{"name":"completed"}]
         def save(doc):
             s.put("snapshot",doc)
-        with patch.object(job,"calendar",return_value=([first,second],CAL)), patch.object(job,"triage",side_effect=lambda r,f:f), patch.object(job,"investigate",side_effect=investigate):
+        def screen(reader,f,*_):
+            f.update(playerScreen={"at":STAMP,"selected":[]}, screened=[{"name":"completed"}])
+        with patch.object(job,"calendar",return_value=([first,second],CAL)), patch.object(job,"triage",side_effect=lambda r,f:f), patch.object(job,"screen_players",side_effect=screen) as screens, patch.object(job,"investigate",side_effect=investigate):
             with self.assertRaisesRegex(RuntimeError,"runner interrupted"):
                 job.scan(reader,DAY,analyst,lambda:STAMP,save=save)
         snap = s.get("snapshot")
         self.assertEqual([f["reviewState"] for f in snap["slate"]],["selected","complete"])
         self.assertEqual(snap["slate"][1]["verdictAt"],STAMP)
-        with patch.object(job,"investigate",side_effect=lambda r,f,*_:f.update(screened=[{}])) as run:
+        self.assertEqual(screens.call_count,2)
+        self.assertIn("playerScreen",snap["slate"][0])
+        with patch.object(job,"screen_players",side_effect=AssertionError("repeated player screen")), patch.object(job,"investigate",side_effect=lambda r,f,*_:f.update(screened=[{}])) as run:
             job.scan(reader,DAY,analyst,lambda:STAMP,save=save,previous=snap)
             self.assertEqual(run.call_count,1)
         self.assertEqual(analyst.select_fixtures.call_count,1)
@@ -119,6 +123,56 @@ class EditionTests(unittest.TestCase):
         self.assertIn("Unfinished (1) · Unfinished FC v Away",doc["message"])
         self.assertIn("older",s.get(edition.REPORT)["days"])
         self.assertFalse(s.get(edition.REPORT)["days"][DAY]["final"])
+
+    def test_rejected_screen_and_stalled_assessment_leave_later_fixture_reviewable(self):
+        from johnny_cards_review import exact_choices
+        matches = [dict(fixture(), id=str(i), home=name, priority=i, reviewState="selected",
+                        cases=[], assessment=None) for i,name in enumerate(("First","Second","Third"),1)]
+        snapshot = dict(day=DAY, guideSHA256="hash", stage="ranked", slate=matches, calendar=CAL)
+        analyst = Mock(digest="hash")
+        # These are simulated fault shapes, not a reconstruction of an unsaved model answer.
+        def select(f, cases):
+            if f["id"] == "1":
+                return exact_choices([0,0],cases,4)
+            return [] if f["id"]=="3" else cases
+        analyst.select_players.side_effect = select
+        analyst.assess.side_effect = TimeoutError("silent worker")
+        case = dict(name="Example", player={"id":"one","name":"Example"}, groups={}, side="home",
+                    lineup="predicted", rival=None)
+        reader = Mock(log=[], errors=0)
+        reader.read.return_value={}
+        states = []
+        with patch.object(job,"starting_cases",return_value=([case],"1 history verified")), patch.object(job,"stat_sample",return_value=None):
+            report=job.scan(reader,DAY,analyst,lambda:STAMP,save=lambda s:states.append(deepcopy(s)),previous=snapshot)
+        first,second,third=report["slate"]
+        self.assertEqual([(f["reviewState"], f.get("reviewStep")) for f in report["slate"]],
+                         [("unfinished","player selection"),("unfinished","final assessment"),("complete",None)])
+        self.assertEqual(first["reviewError"],"duplicate selection index")
+        self.assertNotIn("playerScreen",first)
+        self.assertEqual(second["playerScreen"]["selected"][0]["player"]["id"],"one")
+        self.assertTrue(any(s["slate"][1]["reviewState"]=="selected" and "playerScreen" in s["slate"][1] for s in states))
+        self.assertEqual(third["playerScreen"]["selected"],[])
+        digest=edition.make_digest(DAY,report,{},job.utc(SEND))
+        self.assertIn("Unfinished (2)",digest["message"])
+        self.assertIn("1 fixture review",digest["message"])
+        self.assertEqual(digest["picks"],[])
+
+    def test_timeout_during_recheck_preserves_other_verified_contracts(self):
+        bad = dict(fixture(), id="timeout")
+        good = fixture()
+        s = Memory()
+        s.put(job.edition_key(DAY,"research"), dict(slate=[bad,good],calendar=CAL))
+        reader = provider(good)
+        original = reader.read.side_effect
+        def fetch(name,args,slot):
+            if args["matchId"] == bad["id"]:
+                raise TimeoutError()
+            return original(name,args,slot)
+        reader.read.side_effect = fetch
+        edition.verify(s,DAY,reader,clock=lambda:STAMP)
+        checks=s.get(job.edition_key(DAY,"checks"))
+        self.assertFalse(checks["timeout"]["picks"])
+        self.assertEqual(len(checks[good["id"]]["picks"]),2)
 
     def test_sender_does_not_need_a_running_research_worker_or_a_provider(self):
         f = fixture()

@@ -1,11 +1,12 @@
 """Manual same-day repair of the already delivered edition. Only edit its original message."""
 import os
 import sys
+from time import sleep
 from datetime import datetime, time
 
 from johnny_cards import JohnnyProvider, edition_key, private_store, scan
 from johnny_cards_calendar import LONDON
-from johnny_cards_edition import candidates, make_digest, recheck
+from johnny_cards_edition import make_digest, verify
 from johnny_cards_review import Analyst
 from statshub_daily_board import REPORT, Reads
 from statshub_daily_contracts import utc
@@ -28,24 +29,27 @@ def require_edition(store, day):
 
 
 def retryable(fixture, now):
-    return (fixture.get("reviewState") == "unavailable" and fixture.get("priority")
-            and fixture.get("gap") in GAPS and utc(fixture["ko"]) > now)
+    if not fixture.get("priority") or utc(fixture["ko"]) <= now:
+        return False
+    return (fixture.get("reviewState") == "unfinished" or
+            (fixture.get("reviewState") == "unavailable" and fixture.get("gap") in GAPS))
 
 
 def prepare(store, day):
     require_edition(store, day)
     original = store.get(edition_key(day,"research"), {})
-    if original.get("stage") != "finished" or original.get("guideSHA256") != Analyst.digest:
-        raise ValueError("Completed original research required")
+    if (original.get("day") != day or original.get("stage") not in {"ranked","finished"}
+            or original.get("guideSHA256") != Analyst.digest):
+        raise ValueError("Original ranked research required")
     path = edition_key(day,"lineup-repair-research")
     saved = store.get(path)
-    snapshot = saved or original
-    if not saved:
-        for f in snapshot["slate"]:
-            if retryable(f, utc(timestamp())):
-                f.pop("gap")
-                f["reviewState"] = "selected"
-    if not saved or saved.get("stage") != "finished":
+    snapshot = saved_repair(store, day) if saved else original
+    for f in snapshot["slate"]:
+        if retryable(f, utc(timestamp())):
+            for key in ("gap", "reviewError", "reviewStep"):
+                f.pop(key, None)
+            f["reviewState"] = "selected"
+    if not saved or snapshot.get("stage") != "finished" or any(f.get("reviewState")=="selected" for f in snapshot["slate"]):
         original_calls = store.get(f"evidence/{day}/johnny/calls.json", [])
         reader = Reads(store, JohnnyProvider(store), day, "johnny-lineup-repair", max(0,212-len(original_calls)))
         with Analyst(store) as analyst:
@@ -53,46 +57,56 @@ def prepare(store, day):
     print("Completed fixture reviews:",sum(f.get("reviewState")=="complete" for f in snapshot["slate"]))
 
 
+def saved_repair(store, day):
+    snapshot = store.get(edition_key(day,"lineup-repair-research"), {})
+    if (snapshot.get("day") != day or snapshot.get("guideSHA256") != Analyst.digest
+            or snapshot.get("stage") not in {"ranked", "finished"} or not snapshot.get("calendar")):
+        raise ValueError("No verified repair checkpoint for this edition")
+    return snapshot
+
+
 def verify_repair(store, day):
     require_edition(store, day)
-    snapshot = store.get(edition_key(day,"lineup-repair-research"), {})
-    if snapshot.get("day") != day or snapshot.get("stage") != "finished":
-        raise ValueError("Lineup repair has not finished")
+    saved_repair(store, day)
     reader = Reads(store,JohnnyProvider(store),day,"johnny-edition-verify",28)
-    checks = {}
-    for f in snapshot["slate"]:
-        now = utc(timestamp())
-        if f.get("reviewState") == "complete" and utc(f["ko"]) > now and any(candidates(f)):
-            checks[f["id"]] = recheck(reader, f, now)
-    store.put(edition_key(day,"lineup-repair-checks"),checks)
+    verify(store, day, reader, research_part="lineup-repair-research", checks_part="lineup-repair-checks")
 
 
 def amend(store,day):
     receipt = require_edition(store,day)
-    snapshot = store.get(edition_key(day,"lineup-repair-research"), {})
-    checks = store.get(edition_key(day,"lineup-repair-checks"))
-    if checks is None or snapshot.get("day") != day or snapshot.get("stage") != "finished":
-        raise ValueError("Missing repaired evidence")
+    snapshot = saved_repair(store, day)
+    checks = store.get(edition_key(day,"lineup-repair-checks"), {})
     edition = make_digest(day,snapshot,checks,utc(timestamp()))
     if edition["attach"]:
         raise ValueError("Repaired text exceeds Telegram message limit")
     report = store.get(REPORT)
     if report["days"][day].get("policy") != "johnny-bookings":
         raise ValueError("Another policy owns the Admin report")
-    endpoint, chat = telegram_private()
-    response = http.post(endpoint+"/editMessageText",json=dict(chat_id=chat,message_id=receipt["message_id"],
-                         text=edition["message"],link_preview_options={"is_disabled":True}),timeout=20)
-    if response.ok:
-        ack=response.json()
-        if not ack.get("ok") or (ack.get("result") or {}).get("message_id") != receipt["message_id"]:
-            raise RuntimeError("Edit acknowledgement missing")
-    elif response.status_code != 400 or "message is not modified" not in response.text.lower():
-        raise RuntimeError("Private Telegram edit failed: HTTP "+str(response.status_code))
-    store.put(edition_key(day,"lineup-repair-digest"),edition)
-    report["days"][day].update(at=edition["at"],coverage=edition["coverage"],final=edition["complete"])
-    report["updated"]=edition["at"]
-    store.put(REPORT,report)
-    if store.get(REPORT)["days"][day]["coverage"] != edition["coverage"]:
+    path = edition_key(day,"lineup-repair-digest")
+    previous = store.get(path, {})
+    if previous.get("messageId") != receipt["message_id"] or previous.get("message") != edition["message"]:
+        endpoint, chat = telegram_private()
+        response = http.post(endpoint+"/editMessageText",json=dict(chat_id=chat,message_id=receipt["message_id"],
+                             text=edition["message"],link_preview_options={"is_disabled":True}),timeout=20)
+        if response.ok:
+            ack=response.json()
+            if not ack.get("ok") or (ack.get("result") or {}).get("message_id") != receipt["message_id"]:
+                raise RuntimeError("Edit acknowledgement missing")
+        elif response.status_code != 400 or "message is not modified" not in response.text.lower():
+            raise RuntimeError("Private Telegram edit failed: HTTP "+str(response.status_code))
+        edition["messageId"] = receipt["message_id"]
+        store.put(path,edition)
+    entry = report["days"][day]
+    if entry.get("coverage") != edition["coverage"] or entry.get("final") != edition["complete"]:
+        entry.update(at=edition["at"],coverage=edition["coverage"],final=edition["complete"])
+        report["updated"]=edition["at"]
+        store.put(REPORT,report)
+    for delay in (0, 1, 2, 4, 8):
+        if delay:
+            sleep(delay)
+        if store.get(REPORT)["days"][day]["coverage"] == edition["coverage"]:
+            break
+    else:
         raise RuntimeError("Admin readback did not match")
     print("Existing private message and Admin verified. Qualified selections:",len(edition["picks"]))
 
