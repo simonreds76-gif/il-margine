@@ -1,9 +1,83 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-24T19:43:55Z",
+  "generated_at": "2026-11-25T04:08:43.581386+00:00",
   "league": "ligue-1",
-  "row_count": 0,
-  "rows": [],
+  "row_count": 1,
+  "rows": [
+    {
+      "date": "2026-11-20",
+      "league": "ligue-1",
+      "review_source": "fotmob_live",
+      "match": "Troyes vs Le Havre",
+      "team": "Troyes",
+      "opponent": "Le Havre",
+      "actual_taker": "Renaud Ripart",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "90",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Renaud Ripart",
+      "secondary_pre_match": "Antoine Mille",
+      "tertiary_pre_match": "Mouhamed Diop",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Renaud Ripart took 1 penalty attempt and scored for Troyes vs Le Havre. Primary pre-match: Renaud Ripart (unknown). Secondary pre-match: Antoine Mille (unknown). No hierarchy change implied from this event.",
+      "context_generated_at": "2026-09-02",
+      "context_source_path": "data/goalscorer/ligue-1-penalty-takers.json",
+      "actual_taker_match_status": "Yes - bench, on 78'",
+      "primary_on_pitch_at_penalty": "Yes - bench, on 78'",
+      "secondary_on_pitch_at_penalty": "Yes - started",
+      "tertiary_on_pitch_at_penalty": "No - started, off 87'",
+      "actual_taker_on_pitch_at_penalty": "Yes - bench, on 78'",
+      "event_evidence": [
+        {
+          "id": "fotmob|ligue-1|5802999|2998845685",
+          "source_event_id": "2998845685",
+          "match_id": "5802999",
+          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5802999",
+          "observed_at": "2026-11-25T04:08:47+00:00",
+          "event_date": "2026-11-20",
+          "season": "2026/27",
+          "team": "Troyes",
+          "taker": "Renaud Ripart",
+          "primary": "Renaud Ripart",
+          "primary_on_pitch": true,
+          "on_pitch_proof": {
+            "player": "Renaud Ripart",
+            "minute": 90,
+            "added_time": 8,
+            "method": "completed_lineup_timeline",
+            "player_id": 348420,
+            "bucket": "subs",
+            "substitutions": [
+              {
+                "type": "subin",
+                "time": 78,
+                "added_time": 0
+              }
+            ],
+            "events": [],
+            "reason": "on_pitch"
+          },
+          "minute": 90,
+          "penalty_kind": "in_match",
+          "competitive": true,
+          "finished": true,
+          "match": "Troyes vs Le Havre",
+          "event_result": "scored"
+        }
+      ]
+    }
+  ],
   "source_health": {
     "complete": true,
     "errors": [],
@@ -17,5 +91,13 @@
       "20261124"
     ],
     "matches_checked": 0
+  },
+  "hot_source_health": {
+    "complete": true,
+    "errors": [],
+    "dates_requested": [
+      "20261122"
+    ],
+    "matches_checked": 1
   }
 }
