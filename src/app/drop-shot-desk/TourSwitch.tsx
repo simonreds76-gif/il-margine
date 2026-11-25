@@ -17,7 +17,7 @@ export function TourSwitch({circuit,historyDay,archive}:{circuit:Circuit;history
       return <Link key={tour} prefetch={false} aria-current={circuit===tour?"page":undefined}
         href={href+(showRecord?"#big-drop-returns":"")}>
         <span className={styles.tourBadge} data-tour={tour}><Image unoptimized width={58} height={24} src={tour==="ATP"?"/icons/drop-shot-desk/atp-tour.png":"/icons/drop-shot-desk/wta-tour.svg"} alt={tour}/></span>
-        <small>{tour==="ATP"?"incl. Challenger":"incl. WTA 125"}</small>
+        <small className={styles.tourNote}>{tour==="ATP"?"incl. Challenger":"incl. WTA 125"}</small>
       </Link>;
     })}
   </nav>;

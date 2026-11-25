@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useState, type KeyboardEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import type { ClosingSummary } from "./closing";
-import RollingRecord from "./RollingRecord";
+import RollingRecord, { type RollingSummaryState } from "./RollingRecord";
 import css from "./paper-record.module.css";
 
 export type Result = {
@@ -126,9 +126,24 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
   circuit:string; day:string; since:string; through:string;
   lifetime:PaperSlice|null; months:{key:string;slice:PaperSlice}[]; dayView:PaperDay;
 }) {
+  const bodyId = useId();
   const [localPeriod,setLocalPeriod] = useState<Period>("rolling");
   const record = useSearchParams().get("record");
-  const period = record==="30d" || record==="sent30" ? "rolling" : localPeriod;
+  const hasRecordLink = record==="30d" || record==="sent30";
+  const [open,setOpen] = useState(hasRecordLink);
+  const [rollingState,setRollingState] = useState<RollingSummaryState>({tour:circuit,state:"loading"});
+  const period = hasRecordLink ? "rolling" : localPeriod;
+  useEffect(() => {
+    if (hasRecordLink) setOpen(true);
+  }, [hasRecordLink]);
+  useEffect(() => {
+    const sync = () => {
+      if (window.location.hash === "#big-drop-returns") setOpen(true);
+    };
+    sync();
+    window.addEventListener("hashchange", sync);
+    return () => window.removeEventListener("hashchange", sync);
+  }, []);
   function changeRecord(value:string|null) {
     const url=new URL(window.location.href);
     if(value)url.searchParams.set("record",value);
@@ -159,6 +174,14 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
     if (dayView.late45) archived.push(["Final hour ≥4.5 pp",dayView.late45]);
   }
 
+  const currentRolling = rollingState.tour===circuit ? rollingState : {tour:circuit,state:"loading" as const};
+  const summaryResult:Result|null = period==="rolling"
+    ? (currentRolling.state==="ready" && currentRolling.sent===(record!=="30d") ? currentRolling.summary : null)
+    : (slice?.all4 ?? null);
+  const summaryScope = period==="rolling"
+    ? (record==="30d" ? "All drops · 30d" : "Telegram · 30d")
+    : name;
+
   const tab = (id:Period,label:string,off=false) =>
     <button type="button" aria-pressed={period===id} disabled={off} onClick={()=>setPeriod(id)}>{label}</button>;
   // Left and right arrows walk the available periods; Enter or Space selects, as on any button.
@@ -172,61 +195,81 @@ export function PaperReturnsPanel({circuit,day,since,through,lifetime,months,day
     on[(at+step+on.length)%on.length]?.focus();
   };
 
-  return <section className={css.card} id="big-drop-returns" aria-labelledby="paper-return-title">
-    <header className={css.head}>
-      <div className={css.title}>
-        <h2 id="paper-return-title">{circuit} paper record</h2>
-        <p>{circuit==="ATP" ? "ATP and Challenger" : "WTA and WTA 125"} · {period==="rolling" && record!=="30d" ? "Telegram alerts, last 30 days" : "qualifying pre-match moves ≥4 pp"}</p>
+  return <section className={css.card} data-open={open ? "true" : "false"} id="big-drop-returns" aria-labelledby="paper-return-title">
+    <button type="button" className={css.summaryBar} aria-expanded={open} aria-controls={bodyId} onClick={()=>setOpen(o=>!o)}>
+      <span className={css.summaryHead}>
+        <span id="paper-return-title" className={css.summaryTitle}>{circuit} paper record</span>
+        <span className={css.summaryScope}>{summaryScope}</span>
+      </span>
+      {summaryResult ? <span className={css.summaryStats}>
+        <span data-tone={tone(summaryResult.roi)}><em>ROI</em> <b>{summaryResult.roi!==null ? signed(summaryResult.roi)+"%" : <Dash/>}</b></span>
+        <span data-tone={tone(summaryResult.clv?.mean ?? null)}><em>CLV</em> <b>{summaryResult.clv?.mean!=null ? signed(summaryResult.clv.mean)+"%" : <Dash/>}</b></span>
+        <span data-tone={summaryResult.roi!==null ? tone(summaryResult.net) : undefined}><em>P/L</em> <b>{summaryResult.roi!==null ? signed(summaryResult.net)+"u" : <Dash/>}</b></span>
+        <span><em>W–L</em> <b>{summaryResult.won}–{summaryResult.lost}</b></span>
+      </span> : <span className={css.summaryWait}>
+        {period==="rolling"
+          ? (currentRolling.state==="error" ? "30d record unavailable" : "Loading 30d record…")
+          : empty}
+      </span>}
+      <span className={css.summaryCue}>{open ? "Close" : "Full record"}</span>
+    </button>
+
+    <div id={bodyId} className={css.body} hidden={!open}>
+      <header className={css.head}>
+        <div className={css.title}>
+          <p>{circuit==="ATP" ? "ATP and Challenger" : "WTA and WTA 125"} · {period==="rolling" && record!=="30d" ? "Telegram alerts, last 30 days" : "qualifying pre-match moves ≥4 pp"}</p>
+        </div>
+        <div className={css.controls}>
+          <div className={css.seg} role="group" aria-label="Period of the paper record" onKeyDown={arrows}>
+            {tab("rolling","30 days")}{tab("life","Lifetime",!lifetime)}{tab("month","Month",!months.length)}{tab("day","Day")}
+          </div>
+          {period==="month" && months.length>1 && <label className={css.pick}><span>Month</span>
+            <select value={month?.key ?? ""} onChange={e=>setMonthKey(e.target.value)}>
+              {months.map(m=><option key={m.key} value={m.key}>{monthText(m.key)}</option>)}
+            </select></label>}
+        </div>
+      </header>
+
+      {period==="rolling" ? <RollingRecord key={circuit} circuit={circuit} sent={record!=="30d"} through={through}
+        onScope={v=>changeRecord(v?"sent30":"30d")} onSummaryState={setRollingState}
+        metrics={r=><><Score r={r}/><Breakdown r={r}/></>} /> : <>
+      <div className={css.when}>
+        <p className={css.span} aria-live="polite"><b>{name}</b>{range && " · "+range}</p>
+        {stamp && <p className={css.stamp}>Data as of <b>{asOf(stamp)}</b></p>}
       </div>
-      <div className={css.controls}>
-        <div className={css.seg} role="group" aria-label="Period of the paper record" onKeyDown={arrows}>
-          {tab("rolling","30 days")}{tab("life","Lifetime",!lifetime)}{tab("month","Month",!months.length)}{tab("day","Day")}
-        </div>
-        {period==="month" && months.length>1 && <label className={css.pick}><span>Month</span>
-          <select value={month?.key ?? ""} onChange={e=>setMonthKey(e.target.value)}>
-            {months.map(m=><option key={m.key} value={m.key}>{monthText(m.key)}</option>)}
-          </select></label>}
+
+      {!slice ? <p className={css.empty}>{empty}</p> : <>
+        <Score r={slice.all4} />
+        <Breakdown r={slice.all4} />
+      </>}
+
+      <p className={css.note}>
+        Each match stakes 1u at the odds on the first qualifying scan. New entries require a $200 limit or higher. Earlier entries remain in the totals. Dates are UTC.
+      </p>
+
+      </>}
+      <div className={css.folds}>
+        {period!=="rolling" && slice?.late4 && <details className={css.fold}>
+          <summary><span>Final hour ≥4&nbsp;pp<small>timing reference</small></span></summary>
+          <div className={css.foldBody}>
+            <RefRow label={"Final hour ≥4 pp · "+name} r={slice.late4} />
+            <p className={css.fine}>These matches are already included above at the same odds.</p>
+          </div>
+        </details>}
+        {archived.length>0 && <details className={css.fold}>
+          <summary><span>Original ≥4.5 pp rows<small>{dayText(day)}, for comparison</small></span></summary>
+          <div className={css.foldBody}>
+            <p className={css.fine}>The original ≥4.5 pp rows for {dayText(day)} are kept here for comparison. They overlap the record above and are not part of it.</p>
+            {archived.map(([label,r])=><RefRow key={label} label={label} r={r} />)}
+          </div>
+        </details>}
+        <details className={css.fold}>
+          <summary><span>How this record works</span></summary>
+          <div className={css.foldBody}>
+            <dl className={css.rules}>{RULES.map(([term,text])=><div key={term}><dt>{term}</dt><dd>{text}</dd></div>)}</dl>
+          </div>
+        </details>
       </div>
-    </header>
-
-    {period==="rolling" ? <RollingRecord key={circuit} circuit={circuit} sent={record!=="30d"} through={through}
-      onScope={v=>changeRecord(v?"sent30":"30d")} metrics={r=><><Score r={r}/><Breakdown r={r}/></>} /> : <>
-    <div className={css.when}>
-      <p className={css.span} aria-live="polite"><b>{name}</b>{range && " · "+range}</p>
-      {stamp && <p className={css.stamp}>Data as of <b>{asOf(stamp)}</b></p>}
-    </div>
-
-    {!slice ? <p className={css.empty}>{empty}</p> : <>
-      <Score r={slice.all4} />
-      <Breakdown r={slice.all4} />
-    </>}
-
-    <p className={css.note}>
-      Each match stakes 1u at the odds on the first qualifying scan. New entries require a $200 limit or higher. Earlier entries remain in the totals. Dates are UTC.
-    </p>
-
-    </>}
-    <div className={css.folds}>
-      {period!=="rolling" && slice?.late4 && <details className={css.fold}>
-        <summary><span>Final hour ≥4&nbsp;pp<small>timing reference</small></span></summary>
-        <div className={css.foldBody}>
-          <RefRow label={"Final hour ≥4 pp · "+name} r={slice.late4} />
-          <p className={css.fine}>These matches are already included above at the same odds.</p>
-        </div>
-      </details>}
-      {archived.length>0 && <details className={css.fold}>
-        <summary><span>Original ≥4.5 pp rows<small>{dayText(day)}, for comparison</small></span></summary>
-        <div className={css.foldBody}>
-          <p className={css.fine}>The original ≥4.5 pp rows for {dayText(day)} are kept here for comparison. They overlap the record above and are not part of it.</p>
-          {archived.map(([label,r])=><RefRow key={label} label={label} r={r} />)}
-        </div>
-      </details>}
-      <details className={css.fold}>
-        <summary><span>How this record works</span></summary>
-        <div className={css.foldBody}>
-          <dl className={css.rules}>{RULES.map(([term,text])=><div key={term}><dt>{term}</dt><dd>{text}</dd></div>)}</dl>
-        </div>
-      </details>
     </div>
   </section>;
 }

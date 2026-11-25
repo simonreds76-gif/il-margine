@@ -1,16 +1,36 @@
 import "server-only";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { SCAN_VALIDITY_MS } from "./desk";
 import { inCircuit, type Circuit, type Move, type Fixture, type Quote, type Limit, type LimitRun } from "./types";
 
 const storage = () => getSupabaseAdmin().storage.from("tennis-price-moves-private");
+// A brief transport outage on one saved object must not discard a whole board.
+async function stored<T>(load: () => PromiseLike<{data:T|null;error:unknown}>): Promise<T> {
+  for (let attempt = 0; ; attempt++) {
+    let failure: unknown;
+    try {
+      const {data, error} = await load();
+      if (!error && data !== null) return data;
+      failure = error;
+    } catch (error) { failure = error; }
+    const e = failure as { status?:number; statusCode?:string; message?:string; originalError?:{status?:number;message?:string} } | null;
+    const status = Number(e?.statusCode ?? e?.status ?? e?.originalError?.status);
+    const temporary = status === 408 || status === 429 || status >= 500 ||
+      (!status && /network|fetch failed|failed to fetch|timed? ?out|socket|connection|terminated/i.test([e?.message,e?.originalError?.message].join(" ")));
+    if (attempt || !temporary) {
+      console.warn("Drop Shot Desk saved read unavailable", Number.isFinite(status) ? status : "transport or missing data");
+      throw new Error("Saved board unavailable");
+    }
+    await new Promise(resolve => setTimeout(resolve, status === 429 ? 1_500 : 350));
+  }
+}
 async function read<T>(path: string): Promise<T> {
-  const { data, error } = await storage().download(path);
-  if (!data || error) throw new Error("Private board unavailable");
+  const data = await stored(() => storage().download(path));
   return JSON.parse(await data.text()) as T;
 }
 async function files(prefix: string) {
-  const { data, error } = await storage().list(prefix, { limit: 200, sortBy: { column: "name", order: "asc" } });
-  if (error || !data || data.length === 200) throw new Error("Scan listing incomplete");
+  const data = await stored(() => storage().list(prefix, { limit: 200, sortBy: { column: "name", order: "asc" } }));
+  if (data.length === 200) throw new Error("Scan listing incomplete");
   return data.map(row => row.name).filter(name => /^\d{6}-\d{6}\.json$/.test(name));
 }
 type Saved = {
@@ -22,6 +42,27 @@ type Saved = {
 type RawLimit = {amount:number; currency?:string};
 type Event = { reported_market_max?:RawLimit; match_period_limits?:{max_money_line?:number;max_moneyline?:number}; contracts?: Record<string,{reported_market_max?:RawLimit;labels:[string,string];prices:[number,number]}>; id: string; fixture: string; tour:string; league:string; start:string; home:string; away:string; home_price:number; away_price:number };
 type Scan = { policy?: string; alert_ids?: string[]; observed: string; moves: Saved[]; compared_pairs: number; compared_by_circuit?: Partial<Record<Circuit, number>> };
+// Both tours use the same timestamped scans. Keep only recent, successful reads
+// in this server instance; indexes, latest odds, results and receipts still refresh.
+const recentScans = new Map<string, {value:Promise<Scan>;expires:number}>();
+function readScan(path: string): Promise<Scan> {
+  const now = Date.now();
+  const existing = recentScans.get(path);
+  if (existing && existing.expires > now) return existing.value;
+  recentScans.delete(path);
+  if (recentScans.size >= 128) {
+    const oldest = recentScans.keys().next();
+    if (!oldest.done) recentScans.delete(oldest.value);
+  }
+  const value: Promise<Scan> = read<Scan>(path).then(scan => ({policy:scan.policy, observed:scan.observed,
+    alert_ids:scan.alert_ids, moves:scan.moves, compared_pairs:scan.compared_pairs, compared_by_circuit:scan.compared_by_circuit
+  })).catch((error:unknown) => {
+    if (recentScans.get(path)?.value === value) recentScans.delete(path);
+    throw error;
+  });
+  recentScans.set(path,{value,expires:now+300_000});
+  return value;
+}
 type Receipt = { state: string; move_ids: string[]; delivered_at: string; observed: string };
 type Outcome = { result:string; score:string; profit?:number };
 type ArchiveRow = Omit<Saved,"tour"> & { level:string; quotes:Quote[]; qualifying:boolean; result:{state:string; score?:string} };
@@ -51,15 +92,14 @@ async function readTapes(moves:Saved[], observed:string) {
   }
   return Promise.all([...days].map(async day => {
     const name = day+".json";
-    const listed = await storage().list("presentation/desk-tapes",{search:name,limit:2});
-    if (listed.error) throw new Error("Private chart history unavailable");
-    return listed.data?.some(f=>f.name===name) ? read<Tape>("presentation/desk-tapes/"+name) : null;
+    const listed = await stored(() => storage().list("presentation/desk-tapes",{search:name,limit:2}));
+    return listed.some(f=>f.name===name) ? read<Tape>("presentation/desk-tapes/"+name) : null;
   }));
 }
 
 function availableUntil(start: string, observed: string, now: number): string | undefined {
   const seen = Date.parse(observed);
-  const cutoff = Math.min(Date.parse(start), seen + 20 * 60_000);
+  const cutoff = Math.min(Date.parse(start), seen + SCAN_VALIDITY_MS);
   return seen <= now && now < cutoff ? new Date(cutoff).toISOString() : undefined;
 }
 
@@ -125,19 +165,29 @@ function quotesFor(m:Saved,tapes:(Tape|null)[],latest:{observed:string;events:Re
   return sorted.map((q,i)=>({...q,gap:i>0 && Math.floor(Date.parse(q.time)/900000)-Math.floor(Date.parse(sorted[i-1].time)/900000)>1}));
 }
 
-export async function readDay(day: string, circuit: Circuit = "ATP") {
+// Share simultaneous renders for the same board inside one server instance. Completed
+// reads and failures are evicted so Refresh always starts a new read.
+const inFlight = new Map<string, ReturnType<typeof loadDay>>();
+export function readDay(day: string, circuit: Circuit = "ATP") {
+  const key = circuit + "/" + day;
+  const pending = inFlight.get(key);
+  if (pending) return pending;
+  const next = loadDay(day,circuit).finally(() => { inFlight.delete(key); });
+  inFlight.set(key,next);
+  return next;
+}
+async function loadDay(day: string, circuit: Circuit) {
   const path = day.replaceAll("-", "/");
   const scans = "drop-scans-v2/" + path, deliveries = "drop-deliveries-v2/" + path;
   const results="presentation/outcomes";
-  const [latest, names, notices, listed] = await Promise.all([read<{observed:string; events:Record<string,Event>}>("latest.json"),files(scans),files(deliveries),storage().list(results,{search:day+".json",limit:2})]);
-  if(listed.error)throw new Error("Private results unavailable");
-  const outcomes=listed.data?.some(row=>row.name===day+".json")?await read<Record<string,Outcome>>(results+"/"+day+".json"):{};
+  const [latest, names, notices, listed] = await Promise.all([read<{observed:string; events:Record<string,Event>}>("latest.json"),files(scans),files(deliveries),stored(() => storage().list(results,{search:day+".json",limit:2}))]);
+  const outcomes=listed.some(row=>row.name===day+".json")?await read<Record<string,Outcome>>(results+"/"+day+".json"):{};
   const notified = new Map<string,Delivery>();
   const batches: Scan[] = [];
   for (let i=0;i<names.length;i+=8) {
     const chunk=names.slice(i,i+8);
     const checked=await Promise.all(chunk.map(async name => {
-      const [scan,receipt]=await Promise.all([read<Scan>(scans+"/"+name),notices.includes(name)?read<Receipt>(deliveries+"/"+name):undefined]);
+      const [scan,receipt]=await Promise.all([readScan(scans+"/"+name),notices.includes(name)?read<Receipt>(deliveries+"/"+name):undefined]);
       if (receipt?.state==="sent" && receipt.observed===scan.observed) {
         const batchId=name.slice(0,-5);
         const eligible = new Set(scan.alert_ids ?? []);

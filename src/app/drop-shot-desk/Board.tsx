@@ -8,9 +8,11 @@ import { DeskIcon, marketIcon } from "./DeskIcon";
 import Roundups from "./Roundups";
 import { SETTLING_NOTE, State, VenueFlag, hostOf as placeOf, impliedText, marketName, pointsText, venueKey } from "./DeskParts";
 import type { VenueMap } from "./DeskParts";
+import { DESK_REFRESH_EVENT, DESK_REFRESH_STATE_EVENT } from "./RefreshBoard";
 import {
-  availability, buildRoundups, cutoffOf, defaultRoundup, delta, dropPct, isOpen, isQualifying, moveKey, outcomeLabel, outcomeOf, paper,
-  displayedLimit, groupDrops, matchKey, orderDrops, percent, price, tally, timeToStart, units, utcClock, utcDate, utcStamp,
+  SCAN_VALIDITY_MINUTES, SCAN_VALIDITY_MS, availability, buildRoundups, cutoffOf, defaultRoundup, delta, dropPct, isOpen,
+  isQualifying, moveKey, outcomeLabel, outcomeOf, paper, displayedLimit, groupDrops, matchKey, orderDrops, percent, price,
+  tally, timeToStart, units, utcClock, utcDate, utcStamp,
 } from "./desk";
 import type { DeskFixture, DeskMove, DropOrder } from "./desk";
 
@@ -18,20 +20,39 @@ const ATP_LEVELS = ["All levels", "ATP", "Challenger"];
 const WTA_LEVELS = ["All levels", "WTA", "WTA 125"];
 const DRAWS = ["All rounds", "Main draw", "Qualifying"];
 type Scope = "upcoming" | "all";
-/** The three orders, in the words used on the control and in the line that explains the list. */
-const SORTS: { value: DropOrder; label: string; note: string }[] = [
+/** Upcoming matches can be ranked by the move, its detection or the scheduled start. */
+const SORTS: { value: Exclude<DropOrder, "oldest">; label: string; note: string }[] = [
   { value: "largest", label: "Largest", note: "largest rise first" },
   { value: "newest", label: "Newest", note: "latest detection first" },
-  { value: "oldest", label: "Oldest", note: "earliest detection first" },
+  { value: "soonest", label: "Starting soonest", note: "earliest scheduled match first" },
 ];
 const NO_VENUES: VenueMap = {};
+const UPCOMING_ID = "desk-upcoming";
+const UPCOMING_HASH = "#desk-upcoming";
 const ROUNDUPS_HASH = "#desk-roundups";
 /** Longest the local clock sleeps between checks; it wakes exactly on the next cutoff anyway. */
 const TICK_MS = 60_000;
 
+function latestQuoteOf(move: DeskMove | undefined) {
+  if (!move?.quotes?.length) return undefined;
+  const detection = Date.parse(move.after);
+  let best: DeskMove["quotes"][number] | undefined;
+  let bestTime = -Infinity;
+  for (const quote of move.quotes) {
+    const t = Date.parse(quote.time);
+    if (Number.isFinite(t) && Number.isFinite(quote.price) && t >= bestTime) {
+      best = quote;
+      bestTime = t;
+    }
+  }
+  if (!best || (Number.isFinite(detection) && bestTime < detection)) return undefined;
+  return best;
+}
+
 /** "ATP Challenger Helsinki - R1" reads as "Helsinki": the tour is already said beside it. */
 
 const roundOf = (league: string) => { const parts = league.split(" - "); return parts.length > 1 ? parts[parts.length - 1].trim() : ""; };
+const fixtureTitle = (r: DeskMove) => r.fixtureLabel ?? `${r.player} vs ${r.opponent}`;
 
 /** Tiny time-true trace of the recorded prices; breaks in capture stay open. */
 function Spark({ move }: { move: DeskMove }) {
@@ -85,30 +106,38 @@ function DropRow({ move: r, selected, archive, at, venue, onChoose }: {
   const sym = tag ? marketIcon(r.market) : null;
   return (
     <button type="button" className={styles.item} data-drop="" aria-pressed={selected} onClick={() => onChoose(r)}>
-      <strong className={styles.itemName}>{r.player}</strong>
-      <span className={styles.itemVs}>{r.fixtureLabel ?? ("vs "+r.opponent)}</span>
-      <span className={styles.itemMeta}>
-        <VenueFlag venue={venue} />
-        <span>{[r.tour + (isQualifying(r) ? " qual." : ""), placeOf(r.league)].filter(Boolean).join(" · ")}</span>
+      <span className={styles.itemTop}>
+        <span className={styles.itemMeta}>
+          <VenueFlag venue={venue} />
+          <span>{[r.tour + (isQualifying(r) ? " qual." : ""), placeOf(r.league)].filter(Boolean).join(" · ")}</span>
+        </span>
+        <span className={styles.itemState}>
+          <State move={r} now={at} archive={archive} />
+          {settled !== null && <small data-tone={settled > 0 ? "won" : settled < 0 ? "lost" : undefined}>{units(settled)}</small>}
+        </span>
       </span>
-      <b className={styles.itemGain}>{pointsText(r)}<span className={styles.vh}> implied probability</span></b>
-      <span className={styles.itemOdds}><span>{price(r.old)} → </span>{price(r.new)}</span>
-      <ScheduledStart move={r} at={at} />
-      <span className={styles.itemWhen}>
-        {tag && <span className={styles.mk}>{sym && <DeskIcon name={sym} size={14} />}{tag}</span>}
-        <span>observed <time dateTime={r.after}>{archive ? utcStamp(r.after, true) : utcClock(r.after, true) + " UTC"}</time></span>
+      <span className={styles.itemMatch}>{fixtureTitle(r)}</span>
+      <span className={styles.itemSchedule}>
+        <ScheduledStart move={r} at={at} />
+        {tag && <span className={styles.mk}>{sym && <DeskIcon name={sym} size={13} />}{tag}</span>}
       </span>
-      <span className={styles.itemState}>
-        <State move={r} now={at} archive={archive} />
-        {settled !== null && <small data-tone={settled > 0 ? "won" : settled < 0 ? "lost" : undefined}>{units(settled)}</small>}
+      <span className={styles.itemMain}>
+        <strong className={styles.itemName}>{r.player}</strong>
+        <span className={styles.itemFigures}>
+          <b className={styles.itemGain}>{pointsText(r)}<span className={styles.vh}> implied probability</span></b>
+          <span className={styles.itemOdds}><span>{price(r.old)} → </span>{price(r.new)}</span>
+        </span>
       </span>
-      <Spark move={r} />
+      <span className={styles.itemFoot}>
+        <span className={styles.itemWhen}>observed <time dateTime={r.after}>{archive ? utcStamp(r.after, true) : utcClock(r.after, true) + " UTC"}</time></span>
+        <Spark move={r} />
+      </span>
       <RowLimit move={r} />
     </button>
   );
 }
 
-export default function Board({ moves, fixtures, archive, circuit = "ATP", initialBatchId, day, now, today, venues = NO_VENUES }: {
+export default function Board({ moves, fixtures, archive, circuit = "ATP", initialBatchId, day, now, scanSeen, today, venues = NO_VENUES }: {
   circuit?: "ATP" | "WTA";
   moves: DeskMove[];
   fixtures: DeskFixture[];
@@ -117,6 +146,8 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   day?: string;
   /** Server render time in ms. The first paint uses it, so server and browser agree on what is still open. */
   now?: number;
+  /** Latest saved scan timestamp in ms, when known, so the board shares the 20-minute validity boundary. */
+  scanSeen?: number | null;
   /** True when `day` is the current UTC date. */
   today?: boolean;
   /** Host-country flags resolved on the server from the shared tournament registry; unknown venues are simply absent. */
@@ -127,12 +158,13 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   const sortId = useId();
   const noteId = useId();
   const resultsId = useId();
+  const filterTrayId = useId();
   // Roundups are built from every recorded move, whatever the list is showing.
   const roundups = useMemo(() => (archive ? [] : buildRoundups(moves)), [moves, archive]);
   // Today opens on what is still open; past dates and direct roundup links open on the full record.
   const defaultScope: Scope = today && !initialBatchId ? "upcoming" : "all";
   const [scope, setScope] = useState<Scope>(defaultScope);
-  // Largest and Newest are live views. Oldest is the chronological record of the day.
+  // All recorded keeps the chronological record, including matches that have started.
   const [upcomingOrder, setUpcomingOrder] = useState<Exclude<DropOrder, "oldest">>("largest");
   const [scopeDay, setScopeDay] = useState(day);
   const [clock, setClock] = useState<number | null>(now ?? null);
@@ -142,6 +174,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   const [market,setMarket] = useState("all");
   const [draw, setDraw] = useState(DRAWS[0]);
   const [alertedOnly, setAlertedOnly] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
   const [query, setQuery] = useState("");
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -153,11 +186,75 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
     return linked && linked.picks.length ? moveKey(linked.picks[0]) : null;
   });
   const listRef = useRef<HTMLOListElement>(null);
+  const pickerRef = useRef<HTMLButtonElement>(null);
   const stageRef = useRef<HTMLElement>(null);
   const roundupsRef = useRef<HTMLElement>(null);
   const revealed = useRef(false);
+  const scopeRef = useRef<Scope>(scope);
+  scopeRef.current = scope;
+  const pendingUpcomingJump = useRef(false);
+  const [refreshState, setRefreshState] = useState<{ pending: boolean; cooling: boolean }>({ pending: false, cooling: false });
 
   useEffect(() => { setPickedBatch(initialBatchId); if (initialBatchId) setRoundupsOpen(true); }, [initialBatchId]);
+
+  useEffect(() => {
+    const onRefreshState = (e: Event) => {
+      const detail = (e as CustomEvent<{ pending?: boolean; cooling?: boolean }>).detail;
+      if (detail) setRefreshState({ pending: Boolean(detail.pending), cooling: Boolean(detail.cooling) });
+    };
+    window.addEventListener(DESK_REFRESH_STATE_EVENT, onRefreshState);
+    return () => window.removeEventListener(DESK_REFRESH_STATE_EVENT, onRefreshState);
+  }, []);
+
+  const scrollUpcomingIntoView = useCallback(() => {
+    window.requestAnimationFrame(() => {
+      const heading = document.getElementById(UPCOMING_ID);
+      if (!heading) return;
+      const container = heading.closest<HTMLElement>("[data-upcoming-container]") ?? heading;
+      container.scrollIntoView({ block: "start" });
+      heading.focus({ preventScroll: true });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (scope === "upcoming" && pendingUpcomingJump.current) {
+      pendingUpcomingJump.current = false;
+      scrollUpcomingIntoView();
+    }
+  }, [scope, scrollUpcomingIntoView]);
+
+  // Jump to upcoming matches from the top date bar, including when viewing All recorded or filtered empty states.
+  useEffect(() => {
+    if (archive || !today) return;
+    const jumpToUpcoming = () => {
+      if (scopeRef.current !== "upcoming") {
+        pendingUpcomingJump.current = true;
+        setScope("upcoming");
+        setSelectedKey(null);
+      } else {
+        scrollUpcomingIntoView();
+      }
+    };
+    const onHash = () => {
+      if (window.location.hash === UPCOMING_HASH) jumpToUpcoming();
+    };
+    const onClick = (e: MouseEvent) => {
+      const link = (e.target as Element | null)?.closest?.(`a[href="${UPCOMING_HASH}"]`);
+      if (!link) return;
+      e.preventDefault();
+      if (window.location.hash !== UPCOMING_HASH) {
+        try { window.history.replaceState(null, "", UPCOMING_HASH); } catch { /* ignore */ }
+      }
+      jumpToUpcoming();
+    };
+    onHash();
+    window.addEventListener("hashchange", onHash);
+    document.addEventListener("click", onClick);
+    return () => {
+      window.removeEventListener("hashchange", onHash);
+      document.removeEventListener("click", onClick);
+    };
+  }, [archive, today, scrollUpcomingIntoView]);
 
   // A direct ?batch= link lands on that roundup.
   useEffect(() => {
@@ -199,16 +296,20 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   const index = Math.max(0, rows.findIndex(m => moveKey(m) === selectedKey));
   const m = rows.length ? rows[index] : undefined;
   const currentKey = m ? moveKey(m) : null;
+  const groupIndex = m ? Math.max(0, groups.findIndex(group => group.drops.includes(m))) : -1;
+  const activeGroup = groupIndex >= 0 ? groups[groupIndex] : undefined;
+  const lineIndex = activeGroup && m ? Math.max(0, activeGroup.drops.indexOf(m)) : 0;
   const activeRoundup = roundups.find(r => r.id === pickedBatch) ?? defaultRoundup(roundups);
 
-  // Every moment at which a move or a watchlist match stops being actionable.
+  // Every moment at which a move, watchlist match, or today's 20-minute scan window stops being actionable.
   const cutoffs = useMemo(() => {
     if (archive) return [];
     const set = new Set<number>();
+    if (today && scanSeen !== undefined && scanSeen !== null) set.add(scanSeen + SCAN_VALIDITY_MS);
     for (const r of moves) { const c = cutoffOf(r); if (c !== null) set.add(c); }
     for (const f of fixtures) { const c = cutoffOf(f); if (c !== null) set.add(c); }
     return Array.from(set).sort((a, b) => a - b);
-  }, [archive, moves, fixtures]);
+  }, [archive, today, scanSeen, moves, fixtures]);
   // Keep start times and availability current locally, including after the tab wakes.
   useEffect(() => {
     if (archive || now === undefined) return;
@@ -261,14 +362,25 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
       });
     }
   };
-  const step = (dir: number) => { if (rows.length) choose(rows[(index + dir + rows.length) % rows.length]); };
+  const chooseRow = (move: DeskMove) => {
+    choose(move);
+    if (pickerOpen && pickerRef.current?.getClientRects().length) pickerRef.current.focus({ preventScroll:true });
+  };
+  const step = (dir: number) => {
+    if (groups.length < 2 || groupIndex < 0) return;
+    const target = groups[(groupIndex + dir + groups.length) % groups.length];
+    if (target?.drops.length) choose(target.drops[0]);
+  };
+  const requestRefresh = () => {
+    window.dispatchEvent(new CustomEvent(DESK_REFRESH_EVENT));
+  };
   const clearFilters = () => { setTour(levels[0]); setDraw(DRAWS[0]); setMarket("all"); setQuery(""); setAlertedOnly(false); };
   const changeScope = (next: Scope) => { setScope(next); setSelectedKey(null); };
   // A new order starts from its own first entry; pressing the order already in use changes nothing.
-  const changeOrder = (value: DropOrder) => {
+  const changeOrder = (value: Exclude<DropOrder, "oldest">) => {
     if (value === order) return;
-    if (value !== "oldest") setUpcomingOrder(value);
-    changeScope(value === "oldest" ? "all" : "upcoming");
+    setUpcomingOrder(value);
+    setSelectedKey(null);
   };
   const toStage = () => window.requestAnimationFrame(() => stageRef.current?.scrollIntoView({ block: "start" }));
   // A roundup row always opens its chart: a closed selection switches the list to the
@@ -295,6 +407,12 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   };
   // As in the original ledger: up, down, Home and End move focus between entries.
   const onListKey = (e: KeyboardEvent<HTMLOListElement>) => {
+    if (e.key === "Escape" && pickerOpen && pickerRef.current?.getClientRects().length) {
+      e.preventDefault();
+      setPickerOpen(false);
+      pickerRef.current.focus({ preventScroll:true });
+      return;
+    }
     const buttons = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>("button"));
     const i = buttons.findIndex(b => b === document.activeElement);
     const j = e.key === "ArrowDown" ? i + 1 : e.key === "ArrowUp" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? buttons.length - 1 : -1;
@@ -303,13 +421,17 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
     buttons[j].focus();
   };
 
-  const filtered = (!archive && alertedOnly) || market!=="all" || tour !== levels[0] || draw !== DRAWS[0] || needle !== "";
-  const lastQuote = m && m.quotes.length ? m.quotes[m.quotes.length - 1] : undefined;
-  const latestIsDetection = !!(m && lastQuote && Date.parse(lastQuote.time) === Date.parse(m.after));
+  const activeFilterCount = Number(!archive && alertedOnly) + Number(market !== "all") + Number(tour !== levels[0]) + Number(draw !== DRAWS[0]) + Number(needle !== "");
+  const filtered = activeFilterCount > 0;
+  const lastQuote = latestQuoteOf(m);
+  const latestIsDetection = Boolean(m && lastQuote && Date.parse(lastQuote.time) === Date.parse(m.after));
+  const latestDiff = m && lastQuote ? Number((lastQuote.price - m.new).toFixed(3)) : 0;
   const outcome = m ? outcomeOf(m.result) : "pending";
   const pl = m ? paper(m) : null;
   const ownRoundup = m && m.batchId ? roundups.find(r => r.id === m.batchId) : undefined;
   const status = m && !archive ? availability(m, at, lastQuote?.time) : null;
+  const scanLate = Boolean(!archive && today && scanSeen !== undefined && scanSeen !== null && at !== null && at >= scanSeen + SCAN_VALIDITY_MS);
+  const noScanYet = Boolean(!archive && today && scanSeen === null);
   // The stage figures: the gap between the two captures and the lead before the scheduled start.
   const tBefore = m ? Date.parse(m.before) : NaN, tAfter = m ? Date.parse(m.after) : NaN, tStart = m ? Date.parse(m.start) : NaN;
   const apart = tAfter - tBefore, lead = tStart - tAfter;
@@ -317,19 +439,29 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   const round = m ? roundOf(m.league) : "";
   const marketLabel = m ? marketName(m) : "";
   const marketSym = m && marketLabel ? marketIcon(m.market) : null;
-  const kick = m ? [placeOf(m.league), round, isQualifying(m) && !/^q/i.test(round) ? "Qualifying" : "", (archive ? "Start " : "Scheduled start ") + utcStamp(m.start)].filter(Boolean).join(" · ") : "";
+  const stagePlace = m ? ([placeOf(m.league), round, isQualifying(m) && !/^q/i.test(round) ? "Qualifying" : ""].filter(Boolean).join(" · ") || m.league) : "";
   const dayFixtures = fixtures.filter(f => tour === levels[0] || tour === f.tour).sort((a, b) => a.start.localeCompare(b.start));
   const openFixtures = dayFixtures.filter(f => isOpen(f, at));
   const shownFixtures = upcomingOnly ? openFixtures : dayFixtures;
   const plural = (n: number, one: string, many: string) => n + " " + (n === 1 ? one : many);
-  const sortNote = SORTS.find(s => s.value === order)?.note ?? "";
+  const sortNote = SORTS.find(s => s.value === order)?.note ?? "earliest detection first";
   const blank = !moves.length
-    ? (archive ? "No recorded drops are in the replay." : "No price drops were recorded on this date.")
+    ? (archive
+      ? "No recorded drops are in the replay."
+      : noScanYet
+        ? "No saved scan has been recorded yet today."
+        : scanLate
+          ? `No price drops recorded so far today, and the latest scan is over ${SCAN_VALIDITY_MINUTES} minutes old.`
+          : today
+            ? "No price drops have been recorded yet today."
+            : "No price drops were recorded on this date.")
     : upcomingOnly && matching.length
-      ? (matching.length === 1 ? "The one recorded drop here is no longer" : "None of the " + matching.length + " recorded drops here is still") + " verified open before its scheduled start."
+      ? (scanLate
+        ? `The latest scan is over ${SCAN_VALIDITY_MINUTES} minutes old, so pre-match listings are paused until a newer scan is saved.`
+        : (matching.length === 1 ? "The one recorded drop here has" : "All " + matching.length + " recorded drops here have") + " passed their scheduled start or pre-match cutoff.")
       : alertedOnly ? "No confirmed Telegram alerts match these filters." : "No recorded drops match these filters.";
 
-  const sortControls = !archive && <div className={styles.sortRow} role="group" aria-labelledby={sortId}>
+  const sortControls = upcomingOnly && <div className={styles.sortRow} role="group" aria-labelledby={sortId}>
     <span className={styles.lab} id={sortId}>Sort</span>
     <div className={styles.sort}>
       {SORTS.map(s => <button key={s.value} type="button" aria-pressed={order === s.value} onClick={() => changeOrder(s.value)}>{s.label}</button>)}
@@ -337,48 +469,64 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   </div>;
 
   return <div className={styles.board} data-archive={archive ? "true" : undefined}>
-    {/* One line of controls: what to show, three quiet filters, the search. The order of the list lives on the list. */}
     <div className={styles.tools}>
-      {!archive && <div className={styles.scope} role="group" aria-label="Show drops">
-        <button type="button" aria-pressed={scope === "upcoming"} onClick={() => changeScope("upcoming")}>Upcoming <small>{upcoming.length}</small></button>
-        <button type="button" aria-pressed={scope === "all"} onClick={() => changeScope("all")}>All recorded <small>{matching.length}</small></button>
-      </div>}
-      <div className={styles.filters} role="group" aria-label="Filter drops">
-        <label className={styles.pick} data-on={tour !== levels[0] ? "true" : undefined}><span>Level</span>
-          <select value={tour} onChange={e => setTour(e.target.value)}>{levels.map(v => <option key={v}>{v}</option>)}</select></label>
-        <label className={styles.pick} data-on={draw !== DRAWS[0] ? "true" : undefined}><span>Draw</span>
-          <select value={draw} onChange={e => setDraw(e.target.value)}>{DRAWS.map(v => <option key={v}>{v}</option>)}</select></label>
-        {!archive && <label className={styles.pick} data-on={market !== "all" ? "true" : undefined}><span>Market</span>
-          <select value={market} onChange={e=>setMarket(e.target.value)}><option value="all">All markets</option><option value="winner">Match winner</option><option value="totals">Total games</option><option value="spreads">Games handicap</option></select></label>}
-        {!archive && <label className={styles.alertFilter}>
-          <input type="checkbox" checked={alertedOnly} onChange={e => setAlertedOnly(e.target.checked)} />
-          Alerted only
-        </label>}
-        {filtered && <button type="button" className={styles.clear} onClick={clearFilters}>Clear filters</button>}
+      <div className={styles.toolsBar}>
+        {!archive && <div className={styles.scope} role="group" aria-label="Show drops">
+          <button type="button" aria-pressed={scope === "upcoming"} onClick={() => changeScope("upcoming")}>Upcoming <small>{upcoming.length}</small></button>
+          <button type="button" aria-pressed={scope === "all"} onClick={() => changeScope("all")}>All<span className={styles.scopeExtra}> recorded</span> <small>{matching.length}</small></button>
+        </div>}
+        <button type="button" className={styles.filterToggle} data-on={filtered ? "true" : undefined}
+          aria-expanded={filtersOpen} aria-controls={filterTrayId} onClick={() => setFiltersOpen(open => !open)}>
+          Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+        </button>
+        {filtered && !filtersOpen && <button type="button" className={styles.clearQuick} onClick={clearFilters}>Reset</button>}
+        {!archive && roundups.length > 0 && <a className={styles.jump} href={ROUNDUPS_HASH} onClick={() => setRoundupsOpen(true)}>
+          <span className={styles.jumpLong}>Telegram roundups</span><span className={styles.jumpShort} aria-hidden="true">Receipts</span> ({roundups.length}) <span aria-hidden="true">↓</span>
+        </a>}
       </div>
-      {moves.length > 8 && <label className={`${styles.pick} ${styles.search}`} data-on={needle ? "true" : undefined}><span>Find</span>
-        <input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Player or tournament" aria-label="Find a player or tournament" autoComplete="off" /></label>}
-      {!archive && roundups.length > 0 && <a className={styles.jump} href={ROUNDUPS_HASH} onClick={() => setRoundupsOpen(true)}>Telegram roundups ({roundups.length}) <span aria-hidden="true">↓</span></a>}
+      <div id={filterTrayId} className={styles.filterTray} hidden={!filtersOpen}>
+        <div className={styles.filters} role="group" aria-label="Filter drops">
+          <label className={styles.pick} data-on={tour !== levels[0] ? "true" : undefined}><span>Level</span>
+            <select value={tour} onChange={e => setTour(e.target.value)}>{levels.map(v => <option key={v}>{v}</option>)}</select></label>
+          <label className={styles.pick} data-on={draw !== DRAWS[0] ? "true" : undefined}><span>Draw</span>
+            <select value={draw} onChange={e => setDraw(e.target.value)}>{DRAWS.map(v => <option key={v}>{v}</option>)}</select></label>
+          {!archive && <label className={styles.pick} data-on={market !== "all" ? "true" : undefined}><span>Market</span>
+            <select value={market} onChange={e=>setMarket(e.target.value)}><option value="all">All markets</option><option value="winner">Match winner</option><option value="totals">Total games</option><option value="spreads">Games handicap</option></select></label>}
+          {!archive && <label className={styles.alertFilter}>
+            <input type="checkbox" checked={alertedOnly} onChange={e => setAlertedOnly(e.target.checked)} />
+            Alerted only
+          </label>}
+          {moves.length > 0 && <label className={`${styles.pick} ${styles.search}`} data-on={needle ? "true" : undefined}><span>Find</span>
+            <input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Player or tournament" aria-label="Find a player or tournament" autoComplete="off" /></label>}
+          {filtered && <button type="button" className={styles.clear} onClick={clearFilters}>Clear filters</button>}
+        </div>
+      </div>
     </div>
 
-    {m ? <div className={styles.desk}>
-      {/* The ledger: each entry reads who and where on the left, the figures on the right, all on one right edge. */}
-      <section className={styles.rail} aria-label={upcomingOnly ? "Upcoming moves" : "Recorded moves"}>
+    {m ? <div className={styles.desk} data-upcoming-container="">
+      <section className={styles.rail} data-upcoming={upcomingOnly || undefined} aria-label={upcomingOnly ? "Upcoming moves" : "Recorded moves"}>
         <div className={styles.railHead}>
-          <h2>{upcomingOnly ? "Upcoming drops" : "Price drops"} <small>{plural(groups.length, "match", "matches")} · {plural(rows.length, "drop", "drops")}</small></h2>
+          <h2 id={!archive && today ? UPCOMING_ID : undefined} tabIndex={!archive && today ? -1 : undefined}>
+            {upcomingOnly ? "Upcoming drops" : "Price drops"} <small>{plural(groups.length, "match", "matches")} · {plural(rows.length, "drop", "drops")}</small>
+          </h2>
           {sortControls}
           <p className={styles.railNote} id={noteId}>
-            <b>pp</b> is the rise in implied probability (1 ÷ price) from the earlier odds to the observed move.
-            {!archive && <> {upcomingOnly ? "Open pre-match drops" : "All recorded drops"}, {sortNote}.</>}
+            <b>pp</b> is the rise in implied probability (1 ÷ price){!archive && <> · {upcomingOnly ? "open pre-match drops" : "all recorded drops"}, {sortNote}</>}.
           </p>
         </div>
-        {/* Phones and tablets: the entry on stage is a switcher; the ledger opens beneath it and folds away on choice. */}
-        <button type="button" className={styles.picker} aria-expanded={pickerOpen} aria-controls={listId} onClick={() => setPickerOpen(open => !open)}>
-          <span className={styles.pickerLabel}>Showing {index + 1} of {rows.length}</span>
-          <strong>{m.player}</strong>
-          <ScheduledStart move={m} at={at} />
-          <span className={styles.pickerMove}><b>{pointsText(m)}</b> implied probability<RowLimit move={m} /></span>
-          <span className={styles.pickerCue}>{pickerOpen ? "Close list" : rows.length > 1 ? "Choose from " + rows.length : "Show list"}</span>
+        <button ref={pickerRef} type="button" className={styles.picker} aria-expanded={pickerOpen} aria-controls={listId} onClick={() => setPickerOpen(open => !open)}>
+          <span className={styles.pickerSummary}>
+            <span className={styles.pickerLabel}>
+              Match {groupIndex + 1} of {groups.length}{activeGroup && activeGroup.drops.length > 1 ? ` · drop ${lineIndex + 1} of ${activeGroup.drops.length}` : ""}
+            </span>
+            <span className={styles.pickerWho}>
+              {m.fixtureLabel
+                ? <><strong>{m.fixtureLabel}</strong> · {m.player} </>
+                : <><strong>{m.player}</strong> vs {m.opponent} · </>}
+              <b>{pointsText(m)}</b>
+            </span>
+          </span>
+          <span className={styles.pickerCue}>{pickerOpen ? "Close list" : "Browse " + plural(groups.length, "match", "matches")}</span>
         </button>
         <ol id={listId} className={styles.railList} ref={listRef} data-open={pickerOpen ? "true" : "false"} onKeyDown={onListKey}>
           {groups.map(({key, drops}, i) => {
@@ -389,7 +537,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
             const expanded = expandedGroups[key] ?? (!!m && m !== lead && drops.includes(m));
             const linesId = listId + "-lines-" + i;
             const renderRow = (r: DeskMove) => <DropRow key={moveKey(r)} move={r} selected={r === m} archive={archive}
-              at={at} venue={venues[venueKey(r.league, r.start, r.tour)]} onChoose={choose} />;
+              at={at} venue={venues[venueKey(r.league, r.start, r.tour)]} onChoose={chooseRow} />;
             return <li key={key}>
               {renderRow(lead)}
               {more > 0 && <>
@@ -409,32 +557,37 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
         </ol>
       </section>
 
-      {/* The stage: host tournament and stepper, the selection against one pair of odds over their capture times,
-          status, a short row of figures that are said nowhere else, then the chart. */}
       <article className={styles.stage} ref={stageRef} aria-labelledby={headId}>
         <div className={styles.stageTop}>
           <p className={styles.kick}>
             <VenueFlag venue={venues[venueKey(m.league, m.start, m.tour)]} />
-            <span><b>{m.tour}</b> · {kick}</span>
+            <span><b>{m.tour}</b> · {stagePlace}</span>
             {archive && <span className={styles.tagMode}>Historical replay</span>}
             {!archive && lead > 0 && lead <= 3600000 && <span className={styles.tagMode}>
               {Date.parse(m.start)-Date.parse(m.before) <= 3600000 ? "Final-hour move" : "Detected in final hour"}
             </span>}
           </p>
-          <div className={styles.stepper} role="group" aria-label="Step through price drops">
-            <button type="button" aria-label="Previous price drop" disabled={rows.length < 2} onClick={() => step(-1)}><span aria-hidden="true">‹</span></button>
-            <span>{index + 1} / {rows.length}</span>
-            <button type="button" aria-label="Next price drop" disabled={rows.length < 2} onClick={() => step(1)}><span aria-hidden="true">›</span></button>
+          <div className={styles.stepper} role="group" aria-label="Step through matches">
+            <button type="button" aria-label="Previous match" disabled={groups.length < 2} onClick={() => step(-1)}><span aria-hidden="true">‹</span></button>
+            <span>{groupIndex + 1} / {groups.length}</span>
+            <button type="button" aria-label="Next match" disabled={groups.length < 2} onClick={() => step(1)}><span aria-hidden="true">›</span></button>
           </div>
         </div>
 
         <div className={styles.hero} data-out={showOut ? "true" : undefined}>
           <div className={styles.heroWho}>
-            {marketLabel && <p className={styles.market}>{marketSym && <DeskIcon name={marketSym} size={16} />}{marketLabel}</p>}
-            <h2 id={headId}>{m.player}</h2>
-            <p className={styles.versus}>{m.fixtureLabel ?? ("vs "+m.opponent)}</p>
+            <p className={styles.heroMatch}>{fixtureTitle(m)}</p>
+            <div className={styles.heroSub}>
+              {archive
+                ? <span className={styles.rowStart}>Start <time dateTime={m.start}>{utcStamp(m.start)}</time></span>
+                : <ScheduledStart move={m} at={at} />}
+              {marketLabel && <p className={styles.market}>{marketSym && <DeskIcon name={marketSym} size={15} />}{marketLabel}</p>}
+            </div>
+            <div className={styles.heroPickRow}>
+              <h2 id={headId}>{m.player}</h2>
+              <span className={styles.heroGain}>{pointsText(m)}<small>implied prob.</small></span>
+            </div>
           </div>
-          {/* The move, once: each of the two odds under its role and over its own capture time, with the chart's own marks. */}
           <div className={styles.pair} role="group" aria-label="Observed move in decimal odds">
             <div className={styles.leg} data-role="earlier">
               <p className={styles.legCap}><KeyGlyph kind="earlier" />Earlier</p>
@@ -452,6 +605,28 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
             <p className={styles.settled} data-outcome={outcome}><b>{outcomeLabel(m)}</b>{archive && pl !== null && <span>{units(pl)}</span>}</p>
             {m.score ? <p className={styles.score}>{m.score}</p> : null}
           </div>}
+          <div className={styles.heroLatest} data-role="latest" data-state={status?.open ? "fresh" : "historical"}>
+            <span className={styles.latestCap}>
+              <KeyGlyph kind={latestIsDetection ? "detected" : "latest"} />
+              {status?.open ? "Latest recorded" : "Last pre-match"}
+            </span>
+            {lastQuote ? <span className={styles.latestBody}>
+              <strong className={styles.latestOdds}>{price(lastQuote.price)}</strong>
+              <time className={styles.latestTime} dateTime={lastQuote.time}>{utcStamp(lastQuote.time, true)}</time>
+              <span className={styles.latestNote} data-drift={!latestIsDetection ? (latestDiff > 0 ? "rebound" : latestDiff < 0 ? "further" : "same") : undefined}>
+                {latestIsDetection
+                  ? (status?.open ? "Move detection is the latest scan" : "Move detection was the last pre-match scan")
+                  : latestDiff > 0
+                    ? delta(lastQuote.price - m.new) + " rebound since move"
+                    : latestDiff < 0
+                      ? delta(lastQuote.price - m.new) + " further drop since move"
+                      : "Unchanged since move"}
+              </span>
+            </span> : <span className={styles.latestBody}>
+              <span className={styles.latestNote}>No observations recorded for this selection</span>
+            </span>}
+            <RowLimit move={m} />
+          </div>
           <div className={styles.statusLine}>
             {status && <p className={styles.avail} data-state={status.open ? "open" : "closed"}>
               <b>{status.label}</b> · {status.reason}. {status.detail}
@@ -480,20 +655,21 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
             <dt>Lead time</dt>
             <dd>{lead >= 0 ? spanText(lead) : "—"}<small>{lead >= 0 ? "before the scheduled start" : lead < 0 ? "observed after the scheduled time" : "no scheduled time recorded"}</small></dd>
           </div>
-          {/* A latest observation is a figure of its own only when it is not the move itself. */}
-          {lastQuote && !latestIsDetection && <div data-role="latest">
-            <dt><KeyGlyph kind="latest" />Latest odds</dt>
-            <dd>{price(lastQuote.price)}<small><time dateTime={lastQuote.time}>{utcStamp(lastQuote.time, true)}</time>{" · " + delta(lastQuote.price - m.new) + " since the move"}</small></dd>
-          </div>}
           </dl>
         </details>
 
         <OddsChart key={currentKey ?? "chart"} move={m} archive={archive} />
       </article>
-    </div> : <div className={styles.blank}>
+    </div> : <section className={styles.blank} data-upcoming-container="" aria-label={upcomingOnly ? "Upcoming drops" : "Price drops"}>
       <div>
+        <h2 id={!archive && today ? UPCOMING_ID : undefined} tabIndex={!archive && today ? -1 : undefined} className={styles.blankTitle}>
+          {upcomingOnly ? "Upcoming drops" : "Price drops"}
+        </h2>
         {sortControls}
         <p role="status">{blank}</p>
+        {scanLate && <button type="button" className={styles.ghost} disabled={refreshState.pending || refreshState.cooling} onClick={requestRefresh}>
+          {refreshState.pending ? "Checking…" : "Refresh board"}
+        </button>}
         {filtered && moves.length > 0 && <button type="button" className={styles.ghost} onClick={clearFilters}>Clear filters</button>}
         {upcomingOnly && matching.length > 0 && <button type="button" className={styles.ghost} onClick={() => changeScope("all")}>Show all recorded ({matching.length})</button>}
       </div>
@@ -502,7 +678,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
         <g fill="none" stroke="#33454f" strokeWidth="2"><rect x="2" y="2" width="234" height="108" /><path d="M2 15.5H236M2 96.5H236M56 15.5V96.5M182 15.5V96.5M56 56H182" /></g>
         <path d="M119 0V112" stroke="#8497a4" strokeWidth="2" strokeDasharray="2 4" />
       </svg>
-    </div>}
+    </section>}
 
     {/* The day's alert results stay in the open: three ruled cells, one per market, the same tallies as before. */}
     {!archive && <section className={styles.results} aria-labelledby={resultsId}>
@@ -541,7 +717,11 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
             </tr>;
           })}</tbody>
         </table>
-      </div> : <p className={styles.empty} role="status">{upcomingOnly ? "No watchlist match is still verified open before its scheduled start." : "No watchlist match fits this tour."}</p>}
+      </div> : <p className={styles.empty} role="status">{upcomingOnly
+        ? (scanLate
+          ? `The latest scan is over ${SCAN_VALIDITY_MINUTES} minutes old, so watchlist listings are paused until a newer scan is saved.`
+          : "No watchlist match is still verified open before its scheduled start.")
+        : "No watchlist match fits this tour."}</p>}
     </details>}
   </div>;
 }

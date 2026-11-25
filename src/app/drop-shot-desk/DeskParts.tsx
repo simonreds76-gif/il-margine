@@ -30,7 +30,13 @@ export function impliedText(p: number) {
 
 const MARKET_NAMES: Record<string, string> = { winner: "Match winner", totals: "Total games", spreads: "Games handicap" };
 /** Records without a market are match-winner records; an unknown market is left unnamed rather than guessed. */
-export const marketName = (m: { market?: string }) => MARKET_NAMES[m.market ?? "winner"] ?? "";
+export function marketName(m: { market?: string; league?: string }) {
+  const market = m.market ?? "winner";
+  if (market === "winner" && /^(?:ATP\s+)?Davis Cup\b.*\btie winner$/i.test(m.league?.trim() ?? "")) {
+    return "Country tie winner";
+  }
+  return MARKET_NAMES[market] ?? "";
+}
 
 /** One wording for how results arrive, used by the daily results and the roundup receipts. */
 export const SETTLING_NOTE = "The cloud scan runs every 15 minutes. Pending results from the last seven days are rechecked roughly hourly once the scheduled start has passed, older ones once a day. A result is recorded only when a final score is available and matches the fixture; until then the selection stays pending.";

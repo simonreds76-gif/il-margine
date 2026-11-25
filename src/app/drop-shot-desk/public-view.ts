@@ -16,14 +16,21 @@ export function publicMove(move: Move): Move {
     if (high < 0 || quote.price > quotes[high].price) high = i;
   }
   for (const i of [low, high, quotes.length - 1]) if (i >= 0) landmarks.add(i);
+  if (landmarks.size > 0) {
+    const first = Math.min(...landmarks);
+    const last = Math.max(...landmarks);
+    for (let i = first + 1; i <= last; i += 1) {
+      if (quotes[i].gap === true) {
+        landmarks.add(i - 1);
+        landmarks.add(i);
+      }
+    }
+  }
 
   const chart: Quote[] = [];
-  let gap = false;
   for (const [i, quote] of quotes.entries()) {
-    gap ||= quote.gap === true;
     if (!landmarks.has(i)) continue;
-    chart.push({ time:quote.time, price:quote.price, gap:chart.length > 0 && gap });
-    gap = false;
+    chart.push({ time:quote.time, price:quote.price, gap:chart.length > 0 && quote.gap === true });
   }
   return { ...move, quotes:chart, chartSummary:true };
 }

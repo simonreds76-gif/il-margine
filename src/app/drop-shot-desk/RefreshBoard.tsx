@@ -1,16 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { SCAN_VALIDITY_MINUTES, SCAN_VALIDITY_MS } from "./desk";
 import styles from "./board.module.css";
 
 const minute = 60_000;
+export const DESK_REFRESH_EVENT = "desk:manual-refresh";
+export const DESK_REFRESH_STATE_EVENT = "desk:refresh-state";
 
-export function RefreshBoard({ seen, loadedAt, liveDay, failed }: {
+export function RefreshBoard({ seen, loadedAt, liveDay, isToday, failed, jumpHref }: {
   seen: number | null;
   loadedAt: number;
   liveDay?: string;
+  isToday?: boolean;
   failed: boolean;
+  jumpHref?: string;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -19,6 +24,7 @@ export function RefreshBoard({ seen, loadedAt, liveDay, failed }: {
   const nextClick = useRef(0);
   const rolledDay = useRef<string | null>(null);
   const [expiredScan, setExpiredScan] = useState<number | null>(null);
+  const currentBoard = isToday ?? Boolean(liveDay);
 
   useEffect(() => {
     if (!cooling) return;
@@ -29,60 +35,80 @@ export function RefreshBoard({ seen, loadedAt, liveDay, failed }: {
   // Only the UTC date change can refresh an unattended visible board. Returning
   // from sleep also checks the date; the age indicator itself never fetches.
   useEffect(() => {
-    if (!liveDay) return;
-    const midnight = Date.parse(liveDay + "T00:00:00Z") + 86_400_000;
-    const expires = seen === null ? Infinity : seen + 40 * minute;
+    if (!currentBoard && !liveDay) return;
+    const midnight = liveDay ? Date.parse(liveDay + "T00:00:00Z") + 86_400_000 : Infinity;
+    const expires = currentBoard && seen !== null ? seen + SCAN_VALIDITY_MS : Infinity;
     const wall = Date.now(), mono = performance.now();
     let timer: number | undefined;
     function check() {
       window.clearTimeout(timer);
       if (document.visibilityState !== "visible") return;
-      const now = loadedAt + Math.max(0, Date.now() - wall, performance.now() - mono);
-      if (now >= expires) setExpiredScan(seen);
-      if (now >= midnight) {
+      const serverTime = loadedAt + Math.max(0, Date.now() - wall, performance.now() - mono);
+      const now = Math.max(Date.now(), serverTime);
+      if (now >= expires && seen !== null) setExpiredScan(seen);
+      if (liveDay && serverTime >= midnight) {
         if (rolledDay.current !== liveDay) {
           const wait = nextClick.current - Date.now();
           if (wait > 0) { timer = window.setTimeout(check, wait + 25); return; }
-          rolledDay.current = liveDay ?? null;
+          rolledDay.current = liveDay;
           startTransition(() => router.refresh());
         }
         return;
       }
-      timer = window.setTimeout(check, Math.min(midnight, expires > now ? expires : Infinity) - now + 25);
+      const untilExpiry = expires > now ? expires - now : Infinity;
+      const untilMidnight = liveDay && midnight > serverTime ? midnight - serverTime : Infinity;
+      const nextDelay = Math.min(untilExpiry, untilMidnight);
+      if (Number.isFinite(nextDelay)) timer = window.setTimeout(check, Math.max(50, nextDelay + 25));
     }
     check();
     document.addEventListener("visibilitychange", check);
     window.addEventListener("pageshow", check);
+    window.addEventListener("focus", check);
     return () => {
       window.clearTimeout(timer);
       document.removeEventListener("visibilitychange", check);
       window.removeEventListener("pageshow", check);
+      window.removeEventListener("focus", check);
     };
-  }, [liveDay, seen, loadedAt, router]);
+  }, [currentBoard, liveDay, seen, loadedAt, router]);
 
-  function refresh() {
+  const refresh = useCallback(() => {
     if (pending || Date.now() < nextClick.current) return;
     nextClick.current = Date.now() + minute;
     setLastCheck({ seen, loadedAt });
     setCooling(true);
     startTransition(() => router.refresh());
-  }
+  }, [pending, seen, loadedAt, router]);
 
-  const stale = liveDay && seen !== null && (loadedAt >= seen + 40 * minute || expiredScan === seen);
+  useEffect(() => {
+    const onRequest = () => refresh();
+    window.addEventListener(DESK_REFRESH_EVENT, onRequest);
+    return () => window.removeEventListener(DESK_REFRESH_EVENT, onRequest);
+  }, [refresh]);
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent(DESK_REFRESH_STATE_EVENT, { detail: { pending, cooling } }));
+  }, [pending, cooling]);
+
+  const stale = currentBoard && !failed && seen !== null && (loadedAt >= seen + SCAN_VALIDITY_MS || expiredScan === seen);
   const checked = lastCheck && !pending && loadedAt !== lastCheck.loadedAt;
   const shown = seen === null ? "" : new Date(seen).toISOString();
+  const state = failed ? "failed" : seen === null ? "empty" : stale ? "late" : "fresh";
   return <div className={styles.scanBar}>
-    <p className={styles.fresh} data-late={stale || failed ? "true" : undefined} role="status">
-      {failed ? "Couldn’t load the saved scan." : shown
-        ? <>Latest scan <time dateTime={shown}>{shown.slice(0, 16).replace("T", " ")} UTC</time>{stale ? " · over 40 minutes ago" : ""}</>
-        : "No scan available."}
+    <p className={styles.fresh} data-state={state} data-late={stale || failed ? "true" : undefined} role="status">
+      {failed ? "Couldn’t load the saved board · scan check failed." : shown
+        ? <>Latest scan <time dateTime={shown}><span className={currentBoard ? styles.scanDay : undefined}>{shown.slice(0, 10)} </span>{shown.slice(11, 16)} UTC</time>{stale ? ` · over ${SCAN_VALIDITY_MINUTES} minutes ago — pre-match listings paused` : ""}</>
+        : (currentBoard ? "No saved scan recorded yet today." : "No saved scan recorded for this date.")}
       {checked && !failed && seen !== null && <span> · {seen === lastCheck.seen ? "No newer scan" : "Updated"}</span>}
     </p>
-    <button className={styles.refreshButton} type="button" disabled={pending || cooling}
-      title={cooling && !pending ? "Available again one minute after your last check" : "Load the latest saved board"}
-      onClick={refresh}>
-      <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 4v6h-6M19.3 9a8 8 0 1 0 .1 6"/></svg>
-      {pending ? "Checking…" : "Refresh"}
-    </button>
+    <div className={styles.scanActions}>
+      {jumpHref && <a className={styles.upcomingJump} href={jumpHref}>Upcoming<span className={styles.jumpWord}> matches</span> <span aria-hidden="true">↓</span></a>}
+      <button id="desk-refresh-button" className={styles.refreshButton} type="button" disabled={pending || cooling}
+        title={cooling && !pending ? "Available again one minute after your last check" : "Load the latest saved board"}
+        onClick={refresh}>
+        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 4v6h-6M19.3 9a8 8 0 1 0 .1 6"/></svg>
+        {pending ? "Checking…" : "Refresh"}
+      </button>
+    </div>
   </div>;
 }
