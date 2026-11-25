@@ -4,6 +4,7 @@ import hashlib
 import json
 import re
 import unicodedata
+import desk_davis
 from collections import defaultdict
 from datetime import date, datetime, timedelta, timezone
 from functools import lru_cache
@@ -114,6 +115,8 @@ def competition(label):
 def tournament_labels(name):
     exact = competition(name)
     labels = {exact}
+    if desk_davis.ARCHIVE.fullmatch(name):
+        labels.add("davis cup")
     if "challenger" in normal(name).split():
         # A price board can omit the edition number on successive weeks in one city.
         labels.add(re.sub(r" [1-9][0-9]?$", "", exact))
@@ -166,11 +169,17 @@ def bind(ticket, tours, schedule, games, names):
     day = date.fromisoformat(ticket["start"][:10])
     label, _, round_label = ticket["league"].rpartition(" - ")
     rounds = round_ids(round_label, ticket["tour"])
-    wanted = competition(label)
+    davis_singles = desk_davis.market(ticket["league"]) == "singles"
+    wanted = "davis cup" if davis_singles else competition(label)
     matches = set()
     for row in [*schedule, *games]:
         tour = tours.get(row["tour_id"])
-        if not tour or row["round_id"] not in rounds:
+        if not tour:
+            continue
+        if davis_singles:
+            if not desk_davis.singles_round(ticket["league"], tour["name"]) or row["round_id"] not in {13,14,15,16}:
+                continue
+        elif row["round_id"] not in rounds:
             continue
         if ("challenger" in tour["name"].casefold()) != (ticket["tour"] == "Challenger"):
             continue
@@ -318,11 +327,23 @@ def outcome(ticket, games, schedule, now):
     return reviewed_outcome(ticket,games,schedule,now) or official_draw_outcome(ticket,games,schedule,now)
 
 
+def mens_grade(ticket, tours, schedule, games, names, now):
+    if desk_davis.market(ticket["league"]) == "tie":
+        matched = desk_davis.tie_result(ticket, tours, games, now)
+        if matched:
+            ticket["binding"], grade = matched
+            return grade
+        return None
+    ticket["binding"] = ticket.get("binding") or bind(ticket, tours, schedule, games, names)
+    return outcome(ticket, games, schedule, now)
+
+
 def event_data(tickets):
     days = [date.fromisoformat(t["start"][:10]) for t in tickets]
     tours = {r["id"]:r for r in api_rows("oncourt_tours","id,date,name",
              **{"and":f"(date.gte.{min(days)-timedelta(days=14)},date.lte.{max(days)+timedelta(days=3)})"})}
-    wanted = {competition(t["league"].rpartition(" - ")[0]) for t in tickets}
+    wanted = {"davis cup" if desk_davis.market(t["league"]) else competition(t["league"].rpartition(" - ")[0])
+              for t in tickets}
     ids = sorted(i for i,r in tours.items() if tournament_labels(r["name"]) & wanted)
     schedule, games, names = [], [], {}
     for start in range(0,len(ids),2):
@@ -451,9 +472,7 @@ def settle(store, state, now):
                 if graded:
                     ticket["binding"], result = graded
             else:
-                if not ticket.get("binding"):
-                    ticket["binding"] = bind(ticket,tours,schedule,games,names)
-                result = outcome(ticket,games,schedule,now)
+                result = mens_grade(ticket, tours, schedule, games, names, now)
             ticket["last_check"] = now.isoformat()
             if result:
                 resolved[ticket["after"][:10]][mid] = {**result,**{k:ticket[k] for k in ("market","line","side","selection") if k in ticket},"binding":ticket["binding"],

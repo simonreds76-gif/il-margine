@@ -11,6 +11,7 @@ from urllib.parse import urlsplit
 import requests
 import price_drop_watch as watch
 import desk_games
+import desk_davis
 
 BOOK = "Pinnacle"
 SOURCE = "PinnRadar"
@@ -75,7 +76,8 @@ def period_limits(period):
 
 
 def game_market_sample(board, matches, observed):
-    parents={(m["league"],m["start"],frozenset((m["home"],m["away"]))):m for m in matches.values()}
+    parents={(m["league"],m["start"],frozenset((m["home"],m["away"]))):m for m in matches.values()
+             if desk_davis.market(m["league"]) != "tie"}
     samples={}
     def odds(value):
         try: return math.isfinite(float(value)) and float(value)>1
@@ -140,12 +142,17 @@ def board_rows(board, observed):
                 if event.get("event_id"): explicit_live_ids.add(str(event["event_id"]))
         league = str(event.get("league_name") or "").strip()
         circuit = re.match(r"^(ATP|WTA)(?:\s|$)", league, re.I)
-        if not circuit:
+        davis = desk_davis.market(league)
+        if (desk_davis.DAVIS.match(league) and not davis) or (not circuit and not davis):
             counts["other_tour"] += 1
             continue
         names = [str(event.get(side) or "").strip() for side in ("home", "away")]
+        if davis and not desk_davis.valid_sides(davis, names):
+            counts["davis_unverified_sides"] += 1
+            continue
         if (len(set(n.casefold() for n in names)) != 2 or not all(names)
-                or re.search(r"doubles|outright|special|\(games\)|\(sets\)|/| & |\btbd\b|winner of|^qualifier$", " ".join([league, *names]), re.I)
+                or re.search(r"doubles|outright|special|\(games\)|\(sets\)|/|\btbd\b|winner of|^qualifier$", " ".join([league, *names]), re.I)
+                or (davis != "tie" and any(" & " in n for n in [league, *names]))
                 or any(re.fullmatch(r"(?:qualifier|bye|q\d?|-)", n, re.I) for n in names)):
             counts["non_match_winner_or_placeholder"] += 1
             continue
@@ -166,7 +173,7 @@ def board_rows(board, observed):
             continue
         identity = [league.casefold(), *sorted(n.casefold() for n in names)]
         uid = hashlib.sha256(json.dumps(identity,ensure_ascii=False).encode()).hexdigest()[:32]
-        tour = circuit[1].upper()
+        tour = "ATP" if davis else circuit[1].upper()
         if tour == "ATP" and "challenger" in league.lower():
             tour = "Challenger"
         elif tour == "WTA" and re.match(r"^WTA\s+125k?\b", league, re.I):
@@ -390,6 +397,8 @@ def run():
         last=next_state
     counts=Counter(v["tour"] for v in snap["events"].values())
     print(f"Private capture {snap['observed']}: ATP {counts['ATP']}, Challenger {counts['Challenger']}, WTA {counts['WTA']}, WTA 125 {counts['WTA 125']}.")
+    davis_counts = Counter(desk_davis.market(row["league"]) for row in snap["events"].values())
+    print(f"Davis Cup captured: {davis_counts['tie']} country ties, {davis_counts['singles']} singles.")
     if utc(snap["observed"])>=watch.START:
         key="drop-scans-v2/"+watch.object_key(snap["observed"])
         batch=store.get(key)

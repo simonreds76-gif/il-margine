@@ -10,6 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 from drop_desk_history import normal, wta_result, wta_scoreboard
 from pinnradar_tennis import utc
+import desk_davis
 
 ROUNDS={"sf":"semifinal","qf":"quarterfinal","final":"final","groups":"round robin",
         "q1":"qualifying first round","q2":"qualifying second round","q3":"qualifying final"}
@@ -88,6 +89,9 @@ def refresh_clocks(tickets, config, saved, now):
         return wta_scoreboard(day)
     due={}
     for t in tickets:
+        # Individual first-point directories cannot establish a country tie start.
+        if desk_davis.market(t.get("league", "")) == "tie":
+            continue
         key=t["fixture"]
         scheduled=utc(t["start"])
         if key in saved["clocks"] or key in config["clocks"] or not scheduled<=now<scheduled+timedelta(days=14):

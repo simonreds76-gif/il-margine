@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '2,17,32,47 * * * *'
   pull_request:
-    paths: ['scripts/davis_matchday.py', 'scripts/tests/test_davis_matchday.py', 'scripts/desk_draw_scores.py', 'scripts/desk_match_returns.py', 'scripts/tests/test_desk_match_returns.py', 'scripts/desk_closing.py', 'scripts/desk_start_clocks.py', 'scripts/tests/test_desk_closing.py', 'scripts/pinnradar_tennis.py', 'scripts/price_drop_watch.py', 'scripts/desk_games.py', 'scripts/tests/test_desk_games.py', 'scripts/drop_desk_history.py', 'scripts/desk_paper_returns.py', 'scripts/tests/test_desk_paper_returns.py', 'scripts/drop_desk_expiry.py', 'scripts/tests/test_drop_desk_expiry.py', 'scripts/tests/test_drop_desk_history.py', 'scripts/tests/test_pinnradar_tennis.py', '.github/workflows/pinnradar-tennis.yml']
+    paths: ['scripts/desk_davis.py', 'scripts/davis_matchday.py', 'scripts/tests/test_davis_matchday.py', 'scripts/desk_draw_scores.py', 'scripts/desk_match_returns.py', 'scripts/tests/test_desk_match_returns.py', 'scripts/desk_closing.py', 'scripts/desk_start_clocks.py', 'scripts/tests/test_desk_closing.py', 'scripts/pinnradar_tennis.py', 'scripts/price_drop_watch.py', 'scripts/desk_games.py', 'scripts/tests/test_desk_games.py', 'scripts/drop_desk_history.py', 'scripts/desk_paper_returns.py', 'scripts/tests/test_desk_paper_returns.py', 'scripts/drop_desk_expiry.py', 'scripts/tests/test_drop_desk_expiry.py', 'scripts/tests/test_drop_desk_history.py', 'scripts/tests/test_pinnradar_tennis.py', '.github/workflows/pinnradar-tennis.yml']
   workflow_dispatch:
     inputs:
       scheduled_slot_utc:
@@ -37,6 +37,7 @@ jobs:
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
+            /scripts/desk_davis.py
             /scripts/pinnradar_tennis.py
             /scripts/drop_desk_expiry.py
             /scripts/tests/test_drop_desk_expiry.py
@@ -103,6 +104,7 @@ jobs:
           sparse-checkout: |
             /scripts/drop_desk_expiry.py
             /scripts/davis_matchday.py
+            /scripts/desk_davis.py
             /scripts/pinnradar_tennis.py
             /scripts/price_drop_watch.py
             /scripts/desk_games.py
