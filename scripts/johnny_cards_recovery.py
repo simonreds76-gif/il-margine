@@ -101,14 +101,20 @@ def amend(store,day):
         entry.update(at=edition["at"],coverage=edition["coverage"],final=edition["complete"])
         report["updated"]=edition["at"]
         store.put(REPORT,report)
-    for delay in (0, 1, 2, 4, 8):
+    verify_published_coverage(store, day, edition)
+    print("Existing private message and Admin verified. Qualified selections:",len(edition["picks"]))
+
+
+def verify_published_coverage(store, day, edition):
+    # A successful write on 25 Nov still served the previous report after 15 seconds.
+    # Await visibility on the same read path Admin uses. Polling must never edit or upload again.
+    for delay in (0, 2, 4, 8, 16, 30, 30, 30):
         if delay:
             sleep(delay)
-        if store.get(REPORT)["days"][day]["coverage"] == edition["coverage"]:
-            break
-    else:
-        raise RuntimeError("Admin readback did not match")
-    print("Existing private message and Admin verified. Qualified selections:",len(edition["picks"]))
+        observed = store.get(REPORT)["days"][day]
+        if observed.get("coverage") == edition["coverage"] and observed.get("final") == edition["complete"]:
+            return
+    raise RuntimeError("Telegram edit acknowledged; private Admin readback still differs after two minutes")
 
 
 if __name__=="__main__":

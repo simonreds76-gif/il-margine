@@ -64,6 +64,22 @@ class ExpectedTeams(unittest.TestCase):
         for edit in (dict(reviewState="complete"),dict(priority=None),dict(gap="no prices"),dict(ko=STAMP)):
             self.assertFalse(retryable(dict(f,**edit),job.utc(STAMP)))
 
+    def test_admin_propagation_polls_without_republishing_or_sending(self):
+        draft={"coverage":"new coverage", "complete":False}
+        old={"days":{DAY:{"coverage":"old coverage","final":False}}}
+        new={"days":{DAY:{"coverage":"new coverage","final":False}}}
+        store=Mock()
+        store.get.side_effect=[old]*5+[new]
+        with patch.object(recovery,"sleep") as wait, patch.object(recovery,"telegram_private") as telegram:
+            recovery.verify_published_coverage(store, DAY, draft)
+        self.assertGreater(sum(c.args[0] for c in wait.call_args_list), 15)
+        store.put.assert_not_called()
+        telegram.assert_not_called()
+        store.get.side_effect=None
+        store.get.return_value=old
+        with patch.object(recovery,"sleep"), self.assertRaisesRegex(RuntimeError,"readback still differs"):
+            recovery.verify_published_coverage(store, DAY, draft)
+
     def test_expired_session_renews_once_and_does_not_retry_quota(self):
         api=job.JohnnyProvider(Mock())
         api.headers={"session":"active"}
