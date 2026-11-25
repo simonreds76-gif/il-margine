@@ -153,6 +153,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
     return linked && linked.picks.length ? moveKey(linked.picks[0]) : null;
   });
   const listRef = useRef<HTMLOListElement>(null);
+  const pickerRef = useRef<HTMLButtonElement>(null);
   const stageRef = useRef<HTMLElement>(null);
   const roundupsRef = useRef<HTMLElement>(null);
   const revealed = useRef(false);
@@ -261,6 +262,10 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
       });
     }
   };
+  const chooseRow = (move: DeskMove) => {
+    choose(move);
+    if (pickerOpen && pickerRef.current?.getClientRects().length) pickerRef.current.focus({ preventScroll:true });
+  };
   const step = (dir: number) => { if (rows.length) choose(rows[(index + dir + rows.length) % rows.length]); };
   const clearFilters = () => { setTour(levels[0]); setDraw(DRAWS[0]); setMarket("all"); setQuery(""); setAlertedOnly(false); };
   const changeScope = (next: Scope) => { setScope(next); setSelectedKey(null); };
@@ -295,6 +300,12 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
   };
   // As in the original ledger: up, down, Home and End move focus between entries.
   const onListKey = (e: KeyboardEvent<HTMLOListElement>) => {
+    if (e.key === "Escape" && pickerOpen && pickerRef.current?.getClientRects().length) {
+      e.preventDefault();
+      setPickerOpen(false);
+      pickerRef.current.focus({ preventScroll:true });
+      return;
+    }
     const buttons = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>("button"));
     const i = buttons.findIndex(b => b === document.activeElement);
     const j = e.key === "ArrowDown" ? i + 1 : e.key === "ArrowUp" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? buttons.length - 1 : -1;
@@ -373,7 +384,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
           </p>
         </div>
         {/* Phones and tablets: the entry on stage is a switcher; the ledger opens beneath it and folds away on choice. */}
-        <button type="button" className={styles.picker} aria-expanded={pickerOpen} aria-controls={listId} onClick={() => setPickerOpen(open => !open)}>
+        <button ref={pickerRef} type="button" className={styles.picker} aria-expanded={pickerOpen} aria-controls={listId} onClick={() => setPickerOpen(open => !open)}>
           <span className={styles.pickerLabel}>Showing {index + 1} of {rows.length}</span>
           <strong>{m.player}</strong>
           <ScheduledStart move={m} at={at} />
@@ -389,7 +400,7 @@ export default function Board({ moves, fixtures, archive, circuit = "ATP", initi
             const expanded = expandedGroups[key] ?? (!!m && m !== lead && drops.includes(m));
             const linesId = listId + "-lines-" + i;
             const renderRow = (r: DeskMove) => <DropRow key={moveKey(r)} move={r} selected={r === m} archive={archive}
-              at={at} venue={venues[venueKey(r.league, r.start, r.tour)]} onChoose={choose} />;
+              at={at} venue={venues[venueKey(r.league, r.start, r.tour)]} onChoose={chooseRow} />;
             return <li key={key}>
               {renderRow(lead)}
               {more > 0 && <>
