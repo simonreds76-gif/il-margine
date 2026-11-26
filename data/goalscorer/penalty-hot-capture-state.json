@@ -209,6 +209,7 @@
     "5795519": "2026-11-25",
     "5795524": "2026-11-25",
     "5795523": "2026-11-25",
+    "5868131": "2026-11-26",
     "5868138": "2026-11-25",
     "5868140": "2026-11-25",
     "5868139": "2026-11-25",
@@ -219,6 +220,8 @@
     "5881225": "2026-11-26",
     "5881227": "2026-11-26",
     "5881228": "2026-11-26",
+    "5881229": "2026-11-26",
+    "5881231": "2026-11-26",
     "5881230": "2026-11-25",
     "5802996": "2026-11-25",
     "5802991": "2026-11-25",
@@ -226,23 +229,32 @@
     "5802995": "2026-11-25",
     "5802998": "2026-11-25",
     "5795520": "2026-11-26",
+    "5795521": "2026-11-26",
     "5868133": "2026-11-26",
     "5868136": "2026-11-25",
     "5868134": "2026-11-25",
     "5749754": "2026-11-26",
     "5749752": "2026-11-26",
     "5749759": "2026-11-26",
+    "5749750": "2026-11-26",
     "5749751": "2026-11-25",
     "5881224": "2026-11-26",
+    "5881232": "2026-11-26",
     "5802997": "2026-11-26",
+    "5802993": "2026-11-26",
     "5802994": "2026-11-25",
     "5795517": "2026-11-25",
     "5868135": "2026-11-25",
     "5749756": "2026-11-25"
   },
-  "updated_at": "2026-11-26T19:35:30.915760+00:00",
-  "checked_this_run": 16,
-  "errors": [],
+  "updated_at": "2026-11-26T19:48:03.362672+00:00",
+  "checked_this_run": 8,
+  "errors": [
+    {
+      "match_id": "5868137",
+      "reason": "unresolved_player_timeline"
+    }
+  ],
   "fixtures": {
     "5749700": {
       "league": "serie-a",
@@ -10248,7 +10260,7 @@
           "name": "Deportivo A Coruña"
         },
         "status": {
-          "utcTime": "2026-11-21T13:00:00.000Z",
+          "utcTime": "2026-11-21T13:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "21.11.2026 14:00:38",
             "secondHalfStarted": "21.11.2026 15:04:15"
@@ -10268,14 +10280,14 @@
         }
       },
       "date": "2026-11-21",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-21T00:47:24.645440+00:00",
       "pending_since": "2026-11-21T00:47:24.645440+00:00",
-      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
-      "attempts": 6,
-      "reason": "daily_reconciliation",
+      "last_attempt": "2026-11-26T19:48:03.362672+00:00",
+      "attempts": 7,
+      "reason": "penalties_verified",
       "next_attempt": "",
-      "verified_at": "2026-11-25T04:33:15.149254+00:00",
+      "verified_at": "2026-11-26T19:48:03.362672+00:00",
       "penalty_count": 1
     },
     "5868138": {
@@ -10764,7 +10776,7 @@
           "shortName": "Freiburg"
         },
         "status": {
-          "utcTime": "2026-11-21T14:30:00.000Z",
+          "utcTime": "2026-11-21T14:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "21.11.2026 15:30:29",
             "secondHalfStarted": "21.11.2026 16:33:59"
@@ -10784,13 +10796,13 @@
         }
       },
       "date": "2026-11-21",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-21T00:47:24.645440+00:00",
       "pending_since": "2026-11-21T00:47:24.645440+00:00",
-      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
-      "attempts": 4,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-25T04:33:15.149254+00:00",
+      "last_attempt": "2026-11-26T19:48:03.362672+00:00",
+      "attempts": 5,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-26T19:48:03.362672+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -10812,7 +10824,7 @@
           "shortName": "RB Leipzig"
         },
         "status": {
-          "utcTime": "2026-11-21T14:30:00.000Z",
+          "utcTime": "2026-11-21T14:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "21.11.2026 15:30:11",
             "secondHalfStarted": "21.11.2026 16:37:14"
@@ -10832,13 +10844,13 @@
         }
       },
       "date": "2026-11-21",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-21T00:47:24.645440+00:00",
       "pending_since": "2026-11-21T00:47:24.645440+00:00",
-      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
-      "attempts": 4,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-25T04:33:15.149254+00:00",
+      "last_attempt": "2026-11-26T19:48:03.362672+00:00",
+      "attempts": 5,
+      "reason": "penalties_verified",
+      "verified_at": "2026-11-26T19:48:03.362672+00:00",
       "penalty_count": 1,
       "next_attempt": ""
     },
@@ -11188,7 +11200,7 @@
           "shortName": "Man United"
         },
         "status": {
-          "utcTime": "2026-11-22T16:30:00.000Z",
+          "utcTime": "2026-11-22T16:30:00+00:00",
           "numberOfAwayRedCards": 1,
           "halfs": {
             "firstHalfStarted": "22.11.2026 17:30:11",
@@ -11209,13 +11221,13 @@
         }
       },
       "date": "2026-11-22",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-22T17:47:11.869547+00:00",
       "pending_since": "2026-11-22T17:47:11.869547+00:00",
-      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-25T04:33:15.149254+00:00",
+      "last_attempt": "2026-11-26T19:48:03.362672+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-26T19:48:03.362672+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -11283,7 +11295,7 @@
           "name": "Real Sociedad"
         },
         "status": {
-          "utcTime": "2026-11-22T15:15:00.000Z",
+          "utcTime": "2026-11-22T15:15:00+00:00",
           "halfs": {
             "firstHalfStarted": "22.11.2026 16:16:05",
             "secondHalfStarted": "22.11.2026 17:19:54"
@@ -11303,15 +11315,15 @@
         }
       },
       "date": "2026-11-22",
-      "state": "reverify",
+      "state": "pending",
       "first_seen": "2026-11-22T17:47:11.869547+00:00",
-      "pending_since": "2026-11-22T17:47:11.869547+00:00",
-      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
+      "pending_since": "2026-11-26T19:48:03.362672+00:00",
+      "last_attempt": "2026-11-26T19:48:03.362672+00:00",
+      "attempts": 4,
+      "reason": "unresolved_player_timeline",
       "verified_at": "2026-11-25T04:33:15.149254+00:00",
       "penalty_count": 1,
-      "next_attempt": ""
+      "next_attempt": "2026-11-26T20:48:03.362672+00:00"
     },
     "5868136": {
       "league": "la-liga",
@@ -11563,7 +11575,7 @@
           "name": "Frosinone"
         },
         "status": {
-          "utcTime": "2026-11-22T17:00:00.000Z",
+          "utcTime": "2026-11-22T17:00:00+00:00",
           "halfs": {
             "firstHalfStarted": "22.11.2026 18:01:39",
             "secondHalfStarted": "22.11.2026 19:04:59"
@@ -11583,13 +11595,13 @@
         }
       },
       "date": "2026-11-22",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-22T17:47:11.869547+00:00",
       "pending_since": "2026-11-22T17:47:11.869547+00:00",
-      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-25T04:33:15.149254+00:00",
+      "last_attempt": "2026-11-26T19:48:03.362672+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-26T19:48:03.362672+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -11706,7 +11718,7 @@
           "name": "Hamburger SV"
         },
         "status": {
-          "utcTime": "2026-11-22T16:30:00.000Z",
+          "utcTime": "2026-11-22T16:30:00+00:00",
           "halfs": {
             "firstHalfStarted": "22.11.2026 17:31:43",
             "secondHalfStarted": "22.11.2026 18:41:01"
@@ -11726,13 +11738,13 @@
         }
       },
       "date": "2026-11-22",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-22T17:47:11.869547+00:00",
       "pending_since": "2026-11-22T17:47:11.869547+00:00",
-      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-25T04:33:15.149254+00:00",
+      "last_attempt": "2026-11-26T19:48:03.362672+00:00",
+      "attempts": 4,
+      "reason": "verified_no_penalty",
+      "verified_at": "2026-11-26T19:48:03.362672+00:00",
       "penalty_count": 0,
       "next_attempt": ""
     },
@@ -11799,7 +11811,7 @@
           "redCards": 1
         },
         "status": {
-          "utcTime": "2026-11-22T16:15:00.000Z",
+          "utcTime": "2026-11-22T16:15:00+00:00",
           "numberOfAwayRedCards": 1,
           "halfs": {
             "firstHalfStarted": "22.11.2026 17:15:54",
@@ -11820,13 +11832,13 @@
         }
       },
       "date": "2026-11-22",
-      "state": "reverify",
+      "state": "verified",
       "first_seen": "2026-11-22T17:47:11.869547+00:00",
       "pending_since": "2026-11-22T17:47:11.869547+00:00",
-      "last_attempt": "2026-11-25T04:33:15.149254+00:00",
-      "attempts": 3,
-      "reason": "daily_reconciliation",
-      "verified_at": "2026-11-25T04:33:15.149254+00:00",
+      "last_attempt": "2026-11-26T19:48:03.362672+00:00",
+      "attempts": 4,
+      "reason": "penalties_verified",
+      "verified_at": "2026-11-26T19:48:03.362672+00:00",
       "penalty_count": 1,
       "next_attempt": ""
     },
@@ -12469,7 +12481,7 @@
     },
     "20261119": {
       "ok": true,
-      "checked_at": "2026-11-25T04:33:15.149254+00:00",
+      "checked_at": "2026-11-26T19:48:03.362672+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -12563,14 +12575,14 @@
     },
     "20261125": {
       "ok": true,
-      "checked_at": "2026-11-26T19:35:30.915760+00:00",
+      "checked_at": "2026-11-26T19:48:03.362672+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
     },
     "20261126": {
       "ok": true,
-      "checked_at": "2026-11-26T19:35:30.915760+00:00",
+      "checked_at": "2026-11-26T19:48:03.362672+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -12578,11 +12590,11 @@
   },
   "coverage": {
     "expected": 247,
-    "verified": 239,
-    "pending": 0,
-    "reverify": 8,
+    "verified": 246,
+    "pending": 1,
+    "reverify": 0,
     "deferred": 0,
-    "overdue": 0,
+    "overdue": 1,
     "stalled": 0,
     "excluded": 0,
     "failed_discovery_days": []
