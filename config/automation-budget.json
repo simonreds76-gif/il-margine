@@ -28,21 +28,8 @@
       "source": "repository hard cap"
     }
   },
-  "expected_disabled_workflows": ["statshub-daily.yml"],
+  "expected_disabled_workflows": ["statshub-daily.yml", "johnny-cards.yml"],
   "github_workflows": [
-    {
-      "file": "johnny-cards.yml",
-      "models": ["bookings_and_fouls"],
-      "season_gate": "London daily research and two digest opportunities; saved edition prevents duplicate delivery",
-      "database_mode": "private object storage; no application database queries",
-      "db_reads_max_per_run": 0,
-      "db_writes_max_per_run": 0,
-      "schedules": [
-        {"cron": "0 8 * * *", "request_caps": {"football_research": 212}},
-        {"cron": "40 10 * * *", "request_caps": {"football_research": 28}},
-        {"cron": "55 10 * * *", "request_caps": {"football_research": 28}}
-      ]
-    },
     {
       "file": "pinnradar-tennis.yml",
       "models": ["drop_shot_desk"],
