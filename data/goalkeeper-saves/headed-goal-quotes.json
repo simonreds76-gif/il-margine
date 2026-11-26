@@ -6007,84 +6007,6 @@
       "payload_sha256": "025179c27e8e2f053ae15d262cab31e6f8a841c48e4fe190da8a78c70fc91174",
       "last_price_fingerprint": "ba931e48f3530b818751713ad24ffb375f197f85f9e8ea49c020ee13a939a0a5"
     },
-    "Grosvenor:1028230554:2715000729:4410052582": {
-      "key": "Grosvenor:1028230554:2715000729:4410052582",
-      "bookmaker": "Grosvenor",
-      "platform": "Kambi",
-      "event_id": "72513310",
-      "source_event_id": "1028230554",
-      "source_offer_id": "2715000729",
-      "source_outcome_id": "4410052582",
-      "source_participant_id": "1003354038",
-      "source_team_reference": 1000000114,
-      "home": "Bayern Munich",
-      "away": "1. FC Cologne",
-      "kickoff": "2026-11-20T19:30:00Z",
-      "player": "Alphonso Davies",
-      "market": "1+ headed goal",
-      "settlement_rules": "unverified",
-      "status": "NOT_OBSERVED",
-      "odds": 9.5,
-      "source_updated_at": "2026-11-18T11:47:00Z",
-      "captured_at": "2026-11-19T00:43:52+00:00",
-      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028230554.json",
-      "raw_offer": {
-        "id": 2715000729,
-        "closed": "2026-11-20T19:30:00Z",
-        "criterion": {
-          "id": 1001159730,
-          "label": "To score from a header",
-          "englishLabel": "To score from a header",
-          "shortLabel": "Header",
-          "shortEnglishLabel": "Header",
-          "order": [
-            1
-          ],
-          "lifetime": "FULL_TIME"
-        },
-        "betOfferType": {
-          "id": 127,
-          "name": "Player Occurrence Line",
-          "englishName": "Player Occurrence Line"
-        },
-        "eventId": 1028230554,
-        "outcomes": [
-          {
-            "id": 4410052582,
-            "label": "Yes",
-            "englishLabel": "Yes",
-            "odds": 9500,
-            "line": 1000,
-            "participant": "Alphonso Davies",
-            "type": "OT_YES",
-            "betOfferId": 2715000729,
-            "changedDate": "2026-11-18T11:47:00Z",
-            "participantId": 1003354038,
-            "oddsFractional": "17/2",
-            "oddsAmerican": "850",
-            "status": "OPEN",
-            "cashOutStatus": "DISABLED",
-            "eventParticipantId": 1000000114,
-            "displayOrder": 0
-          }
-        ],
-        "tags": [
-          "OFFERED_PREMATCH"
-        ],
-        "cashOutStatus": "ENABLED"
-      },
-      "rejection_reasons": [],
-      "mapping_status": "no_roster",
-      "player_id": null,
-      "team_id": null,
-      "lineup_status": "unknown",
-      "lineup_observed_at": null,
-      "first_seen_at": "2026-11-14T15:09:34.531583+00:00",
-      "last_seen_at": "2026-11-19T00:43:52+00:00",
-      "last_checked_at": "2026-11-20T18:00:32+00:00",
-      "payload_sha256": "1524b70b992de8e12649c6fcea0e384be8e771be2b54c9182a3914747d133d3c",
-      "last_price_fingerprint": "ba931e48f3530b818751713ad24ffb375f197f85f9e8ea49c020ee13a939a0a5"
-    },
     "Grosvenor:1028230554:2715034981:4410026915": {
       "key": "Grosvenor:1028230554:2715034981:4410026915",
       "bookmaker": "Grosvenor",
@@ -55166,7 +55088,7 @@
       "status": "OPEN",
       "odds": 14.0,
       "source_updated_at": "2026-11-25T02:21:07Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721054402,
@@ -55220,9 +55142,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "2f08b94ca994b5fb5c95d990bd02d3804da7f3731e0e2e863893e92ef71f8324"
     },
     "Grosvenor:1028072679:2721054405:4428867373": {
@@ -55244,7 +55166,7 @@
       "status": "OPEN",
       "odds": 13.0,
       "source_updated_at": "2026-11-25T02:21:07Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721054405,
@@ -55298,9 +55220,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "0005fb66fba9e900f3201da2e77950e541918550c0610a820cae62bde7852805"
     },
     "Grosvenor:1028072679:2721065914:4428873314": {
@@ -55322,7 +55244,7 @@
       "status": "OPEN",
       "odds": 13.0,
       "source_updated_at": "2026-11-25T02:21:08Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721065914,
@@ -55376,9 +55298,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "0005fb66fba9e900f3201da2e77950e541918550c0610a820cae62bde7852805"
     },
     "Grosvenor:1028072679:2721065915:4428873316": {
@@ -55400,7 +55322,7 @@
       "status": "OPEN",
       "odds": 13.0,
       "source_updated_at": "2026-11-25T12:52:29Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721065915,
@@ -55454,9 +55376,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "0005fb66fba9e900f3201da2e77950e541918550c0610a820cae62bde7852805"
     },
     "Grosvenor:1028072679:2721065918:4428873322": {
@@ -55478,7 +55400,7 @@
       "status": "OPEN",
       "odds": 15.0,
       "source_updated_at": "2026-11-25T02:21:08Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721065918,
@@ -55532,9 +55454,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "7a962e7f7935fa825d4d23adbf20752a2a5775e60e112a07dcd5419cafc0c872"
     },
     "Grosvenor:1028072679:2721065921:4428873328": {
@@ -55556,7 +55478,7 @@
       "status": "OPEN",
       "odds": 10.0,
       "source_updated_at": "2026-11-25T02:21:07Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721065921,
@@ -55610,9 +55532,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "3bdc8f35f9dd73a3c47954673c644e727590afbe8bf1cd54a68dc5cbdc17f1ea"
     },
     "Grosvenor:1028072679:2721065922:4428873330": {
@@ -55634,7 +55556,7 @@
       "status": "OPEN",
       "odds": 14.0,
       "source_updated_at": "2026-11-25T02:21:08Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721065922,
@@ -55688,9 +55610,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "2f08b94ca994b5fb5c95d990bd02d3804da7f3731e0e2e863893e92ef71f8324"
     },
     "Grosvenor:1028072679:2721074296:4428854511": {
@@ -55712,7 +55634,7 @@
       "status": "OPEN",
       "odds": 11.5,
       "source_updated_at": "2026-11-25T12:52:29Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721074296,
@@ -55766,9 +55688,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "b2fdead9d31a07845e9986f184fa72959fed257288e23a43ab819d02e7da6217"
     },
     "Grosvenor:1028072679:2721074302:4428854523": {
@@ -55790,7 +55712,7 @@
       "status": "OPEN",
       "odds": 11.0,
       "source_updated_at": "2026-11-23T08:35:05Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721074302,
@@ -55844,9 +55766,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "699e441771d7867824a104a7bf3e5903d5e95dd20846df1ff03a878cae26ac77"
     },
     "Grosvenor:1028072679:2721074303:4428854525": {
@@ -55868,7 +55790,7 @@
       "status": "OPEN",
       "odds": 12.0,
       "source_updated_at": "2026-11-25T02:21:07Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721074303,
@@ -55922,9 +55844,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "15e6f8aa080cebcb2a53c886402737275038509ed6084a89c2976551c6e58f14"
     },
     "Grosvenor:1028072679:2721074305:4428854529": {
@@ -55946,7 +55868,7 @@
       "status": "OPEN",
       "odds": 10.5,
       "source_updated_at": "2026-11-25T12:52:29Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721074305,
@@ -56000,9 +55922,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "4963ec823b047adcac5a3c0f1e0561246fda50b205361c7b2ad2592e08320d0f"
     },
     "Grosvenor:1028072679:2721074306:4428854531": {
@@ -56024,7 +55946,7 @@
       "status": "OPEN",
       "odds": 13.0,
       "source_updated_at": "2026-11-25T02:21:08Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721074306,
@@ -56078,9 +56000,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "0005fb66fba9e900f3201da2e77950e541918550c0610a820cae62bde7852805"
     },
     "Grosvenor:1028072679:2721074308:4428854535": {
@@ -56157,7 +56079,7 @@
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
       "last_seen_at": "2026-11-24T19:33:02.304178+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
       "payload_sha256": "bfb39b2398132b3e424e7277c2006b220514d8fa4df4385e8535dec1bffe10ef",
       "last_price_fingerprint": "7a962e7f7935fa825d4d23adbf20752a2a5775e60e112a07dcd5419cafc0c872"
     },
@@ -56180,7 +56102,7 @@
       "status": "OPEN",
       "odds": 15.0,
       "source_updated_at": "2026-11-25T12:52:29Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721102843,
@@ -56234,9 +56156,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "7a962e7f7935fa825d4d23adbf20752a2a5775e60e112a07dcd5419cafc0c872"
     },
     "Grosvenor:1028072679:2721102849:4428867393": {
@@ -56258,7 +56180,7 @@
       "status": "OPEN",
       "odds": 7.5,
       "source_updated_at": "2026-11-25T14:48:54Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721102849,
@@ -56312,9 +56234,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "abe393a0cb6bd1f5c8e87b53dd52f541a9b689d93b5aafa6c757560f47f21fde"
     },
     "Grosvenor:1028072679:2721102855:4428867405": {
@@ -56336,7 +56258,7 @@
       "status": "OPEN",
       "odds": 12.0,
       "source_updated_at": "2026-11-23T08:35:06Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721102855,
@@ -56390,9 +56312,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "15e6f8aa080cebcb2a53c886402737275038509ed6084a89c2976551c6e58f14"
     },
     "Grosvenor:1028072679:2721102857:4428867409": {
@@ -56414,7 +56336,7 @@
       "status": "OPEN",
       "odds": 6.0,
       "source_updated_at": "2026-11-25T02:21:07Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721102857,
@@ -56468,9 +56390,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:41.037756+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "5de1983feb8dd40d42a6209aae016e5a6310f2ab76119bbf0f69b4ea539d37e6"
     },
     "Grosvenor:1028072676:2721062669:4428890044": {
@@ -68426,7 +68348,7 @@
       "status": "OPEN",
       "odds": 14.0,
       "source_updated_at": "2026-11-23T07:19:59Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721041719,
@@ -68480,9 +68402,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "2f08b94ca994b5fb5c95d990bd02d3804da7f3731e0e2e863893e92ef71f8324"
     },
     "Grosvenor:1027911718:2721041721:4428807490": {
@@ -68504,7 +68426,7 @@
       "status": "OPEN",
       "odds": 15.0,
       "source_updated_at": "2026-11-23T07:19:59Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721041721,
@@ -68558,9 +68480,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "7a962e7f7935fa825d4d23adbf20752a2a5775e60e112a07dcd5419cafc0c872"
     },
     "Grosvenor:1027911718:2721041729:4428807506": {
@@ -68582,7 +68504,7 @@
       "status": "OPEN",
       "odds": 10.0,
       "source_updated_at": "2026-11-23T07:19:59Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721041729,
@@ -68636,9 +68558,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "3bdc8f35f9dd73a3c47954673c644e727590afbe8bf1cd54a68dc5cbdc17f1ea"
     },
     "Grosvenor:1027911718:2721041741:4428807530": {
@@ -68660,7 +68582,7 @@
       "status": "OPEN",
       "odds": 14.0,
       "source_updated_at": "2026-11-23T07:20:00Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721041741,
@@ -68714,9 +68636,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "2f08b94ca994b5fb5c95d990bd02d3804da7f3731e0e2e863893e92ef71f8324"
     },
     "Grosvenor:1027911718:2721041756:4428807560": {
@@ -68738,7 +68660,7 @@
       "status": "OPEN",
       "odds": 8.5,
       "source_updated_at": "2026-11-23T07:20:01Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721041756,
@@ -68792,9 +68714,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "030899ec42c59613958d7d0a2bc2eaaf373aaa0b9cafd28f81bd7e0e3f9ef584"
     },
     "Grosvenor:1027911718:2721041759:4428807566": {
@@ -68816,7 +68738,7 @@
       "status": "OPEN",
       "odds": 13.0,
       "source_updated_at": "2026-11-23T07:20:01Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721041759,
@@ -68870,9 +68792,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "0005fb66fba9e900f3201da2e77950e541918550c0610a820cae62bde7852805"
     },
     "Grosvenor:1027911718:2721041773:4428807594": {
@@ -68894,7 +68816,7 @@
       "status": "OPEN",
       "odds": 11.0,
       "source_updated_at": "2026-11-23T07:20:02Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721041773,
@@ -68948,9 +68870,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "699e441771d7867824a104a7bf3e5903d5e95dd20846df1ff03a878cae26ac77"
     },
     "Grosvenor:1027911718:2721041784:4428807616": {
@@ -68972,7 +68894,7 @@
       "status": "OPEN",
       "odds": 12.0,
       "source_updated_at": "2026-11-23T07:20:02Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721041784,
@@ -69026,9 +68948,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "15e6f8aa080cebcb2a53c886402737275038509ed6084a89c2976551c6e58f14"
     },
     "Grosvenor:1027911718:2721061723:4428791833": {
@@ -69050,7 +68972,7 @@
       "status": "OPEN",
       "odds": 6.5,
       "source_updated_at": "2026-11-23T07:19:59Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721061723,
@@ -69104,9 +69026,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "c1786124e46f327a02a943929930d627acaf2712f5e7f1a50bd6877654f991b5"
     },
     "Grosvenor:1027911718:2721061725:4428791837": {
@@ -69128,7 +69050,7 @@
       "status": "OPEN",
       "odds": 16.0,
       "source_updated_at": "2026-11-23T07:19:59Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721061725,
@@ -69182,9 +69104,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "761650fa16c8c13ef1b465d9e6f6eae8bc4b207a48fc45e504bd73293a026e5b"
     },
     "Grosvenor:1027911718:2721061728:4428791843": {
@@ -69206,7 +69128,7 @@
       "status": "OPEN",
       "odds": 7.0,
       "source_updated_at": "2026-11-23T07:20:00Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721061728,
@@ -69260,9 +69182,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "27ab2b923dd3ad52b98526365d79e0d43be8aeefe4b3eff2180932f32cacfe2b"
     },
     "Grosvenor:1027911718:2721061740:4428831039": {
@@ -69284,7 +69206,7 @@
       "status": "OPEN",
       "odds": 9.0,
       "source_updated_at": "2026-11-23T07:20:01Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721061740,
@@ -69338,9 +69260,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "3dcaeb41f22361965d19c8a6f23c3e270c42265e453439f33819ba3866fadd4d"
     },
     "Grosvenor:1027911718:2721061744:4428831047": {
@@ -69362,7 +69284,7 @@
       "status": "OPEN",
       "odds": 12.0,
       "source_updated_at": "2026-11-23T07:20:01Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721061744,
@@ -69416,9 +69338,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "15e6f8aa080cebcb2a53c886402737275038509ed6084a89c2976551c6e58f14"
     },
     "Grosvenor:1027911718:2721081663:4428802268": {
@@ -69440,7 +69362,7 @@
       "status": "OPEN",
       "odds": 12.0,
       "source_updated_at": "2026-11-23T07:20:01Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721081663,
@@ -69494,9 +69416,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "15e6f8aa080cebcb2a53c886402737275038509ed6084a89c2976551c6e58f14"
     },
     "Grosvenor:1027911718:2721081667:4428802276": {
@@ -69518,7 +69440,7 @@
       "status": "OPEN",
       "odds": 13.0,
       "source_updated_at": "2026-11-23T07:20:01Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721081667,
@@ -69572,9 +69494,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "0005fb66fba9e900f3201da2e77950e541918550c0610a820cae62bde7852805"
     },
     "Grosvenor:1027911718:2721081687:4428802316": {
@@ -69596,7 +69518,7 @@
       "status": "OPEN",
       "odds": 11.0,
       "source_updated_at": "2026-11-23T07:20:02Z",
-      "captured_at": "2026-11-25T18:42:23.970860+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027911718.json",
       "raw_offer": {
         "id": 2721081687,
@@ -69650,9 +69572,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:46.995818+00:00",
-      "last_seen_at": "2026-11-25T18:42:23.970860+00:00",
-      "last_checked_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "last_price_fingerprint": "699e441771d7867824a104a7bf3e5903d5e95dd20846df1ff03a878cae26ac77"
     },
     "Grosvenor:1027911660:2721053230:4428810915": {
@@ -81296,7 +81218,7 @@
       "status": "OPEN",
       "odds": 7.0,
       "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721151187,
@@ -81350,9 +81272,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "27ab2b923dd3ad52b98526365d79e0d43be8aeefe4b3eff2180932f32cacfe2b"
     },
     "Grosvenor:1028209172:2721151190:4429170884": {
@@ -81374,7 +81296,7 @@
       "status": "OPEN",
       "odds": 13.0,
       "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721151190,
@@ -81428,9 +81350,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "0005fb66fba9e900f3201da2e77950e541918550c0610a820cae62bde7852805"
     },
     "Grosvenor:1028209172:2721151192:4429170888": {
@@ -81452,7 +81374,7 @@
       "status": "OPEN",
       "odds": 14.0,
       "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721151192,
@@ -81506,9 +81428,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "2f08b94ca994b5fb5c95d990bd02d3804da7f3731e0e2e863893e92ef71f8324"
     },
     "Grosvenor:1028209172:2721151195:4429170894": {
@@ -81530,7 +81452,7 @@
       "status": "OPEN",
       "odds": 10.5,
       "source_updated_at": "2026-11-23T13:51:11Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721151195,
@@ -81584,9 +81506,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "4963ec823b047adcac5a3c0f1e0561246fda50b205361c7b2ad2592e08320d0f"
     },
     "Grosvenor:1028209172:2721159718:4429167672": {
@@ -81608,7 +81530,7 @@
       "status": "OPEN",
       "odds": 9.5,
       "source_updated_at": "2026-11-23T13:51:09Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721159718,
@@ -81662,9 +81584,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "ba931e48f3530b818751713ad24ffb375f197f85f9e8ea49c020ee13a939a0a5"
     },
     "Grosvenor:1028209172:2721159722:4429167680": {
@@ -81686,7 +81608,7 @@
       "status": "OPEN",
       "odds": 7.0,
       "source_updated_at": "2026-11-23T13:51:09Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721159722,
@@ -81740,9 +81662,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "27ab2b923dd3ad52b98526365d79e0d43be8aeefe4b3eff2180932f32cacfe2b"
     },
     "Grosvenor:1028209172:2721159730:4429167696": {
@@ -81764,7 +81686,7 @@
       "status": "OPEN",
       "odds": 8.0,
       "source_updated_at": "2026-11-23T13:51:09Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721159730,
@@ -81818,9 +81740,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "0dc588be56b88a26a388e2cd08b8f3048513003f37885de3ca5e5eaa21b5a589"
     },
     "Grosvenor:1028209172:2721159735:4429167706": {
@@ -81842,7 +81764,7 @@
       "status": "OPEN",
       "odds": 10.5,
       "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721159735,
@@ -81896,9 +81818,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "4963ec823b047adcac5a3c0f1e0561246fda50b205361c7b2ad2592e08320d0f"
     },
     "Grosvenor:1028209172:2721159737:4429167710": {
@@ -81920,7 +81842,7 @@
       "status": "OPEN",
       "odds": 5.5,
       "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721159737,
@@ -81974,9 +81896,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "b4228e0872b99fb98777a08bcb2ab9e79c5dcc21635f3a61d22c3baefb5b1ba1"
     },
     "Grosvenor:1028209172:2721159739:4429167714": {
@@ -81998,7 +81920,7 @@
       "status": "OPEN",
       "odds": 9.0,
       "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721159739,
@@ -82052,9 +81974,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "3dcaeb41f22361965d19c8a6f23c3e270c42265e453439f33819ba3866fadd4d"
     },
     "Grosvenor:1028209172:2721159745:4429167726": {
@@ -82076,7 +81998,7 @@
       "status": "OPEN",
       "odds": 15.0,
       "source_updated_at": "2026-11-23T13:51:11Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721159745,
@@ -82130,9 +82052,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "7a962e7f7935fa825d4d23adbf20752a2a5775e60e112a07dcd5419cafc0c872"
     },
     "Grosvenor:1028209172:2721159750:4429167736": {
@@ -82154,7 +82076,7 @@
       "status": "OPEN",
       "odds": 16.0,
       "source_updated_at": "2026-11-23T13:51:11Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721159750,
@@ -82208,9 +82130,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "761650fa16c8c13ef1b465d9e6f6eae8bc4b207a48fc45e504bd73293a026e5b"
     },
     "Grosvenor:1028209172:2721159751:4429167738": {
@@ -82232,7 +82154,7 @@
       "status": "OPEN",
       "odds": 9.5,
       "source_updated_at": "2026-11-23T13:51:11Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721159751,
@@ -82286,9 +82208,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "ba931e48f3530b818751713ad24ffb375f197f85f9e8ea49c020ee13a939a0a5"
     },
     "Grosvenor:1028209172:2721159755:4429167746": {
@@ -82310,7 +82232,7 @@
       "status": "OPEN",
       "odds": 10.5,
       "source_updated_at": "2026-11-23T13:51:11Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721159755,
@@ -82364,9 +82286,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "4963ec823b047adcac5a3c0f1e0561246fda50b205361c7b2ad2592e08320d0f"
     },
     "Grosvenor:1028209172:2721171746:4429138752": {
@@ -82388,7 +82310,7 @@
       "status": "OPEN",
       "odds": 8.5,
       "source_updated_at": "2026-11-23T13:51:09Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721171746,
@@ -82442,9 +82364,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "030899ec42c59613958d7d0a2bc2eaaf373aaa0b9cafd28f81bd7e0e3f9ef584"
     },
     "Grosvenor:1028209172:2721171755:4429138770": {
@@ -82466,7 +82388,7 @@
       "status": "OPEN",
       "odds": 16.0,
       "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721171755,
@@ -82520,9 +82442,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "761650fa16c8c13ef1b465d9e6f6eae8bc4b207a48fc45e504bd73293a026e5b"
     },
     "Grosvenor:1028209172:2721171756:4429138772": {
@@ -82544,7 +82466,7 @@
       "status": "OPEN",
       "odds": 6.5,
       "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721171756,
@@ -82598,9 +82520,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "c1786124e46f327a02a943929930d627acaf2712f5e7f1a50bd6877654f991b5"
     },
     "Grosvenor:1028209172:2721171757:4429138774": {
@@ -82622,7 +82544,7 @@
       "status": "OPEN",
       "odds": 16.0,
       "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721171757,
@@ -82676,9 +82598,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "761650fa16c8c13ef1b465d9e6f6eae8bc4b207a48fc45e504bd73293a026e5b"
     },
     "Grosvenor:1028209172:2721171759:4429138778": {
@@ -82700,7 +82622,7 @@
       "status": "OPEN",
       "odds": 16.0,
       "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721171759,
@@ -82754,9 +82676,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "761650fa16c8c13ef1b465d9e6f6eae8bc4b207a48fc45e504bd73293a026e5b"
     },
     "Grosvenor:1028209172:2721171761:4429138782": {
@@ -82778,7 +82700,7 @@
       "status": "OPEN",
       "odds": 12.0,
       "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721171761,
@@ -82832,9 +82754,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "15e6f8aa080cebcb2a53c886402737275038509ed6084a89c2976551c6e58f14"
     },
     "Grosvenor:1028209172:2721171764:4429138788": {
@@ -82856,7 +82778,7 @@
       "status": "OPEN",
       "odds": 11.0,
       "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721171764,
@@ -82910,9 +82832,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "699e441771d7867824a104a7bf3e5903d5e95dd20846df1ff03a878cae26ac77"
     },
     "Grosvenor:1028209172:2721171765:4429138790": {
@@ -82934,7 +82856,7 @@
       "status": "OPEN",
       "odds": 9.0,
       "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721171765,
@@ -82988,9 +82910,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "3dcaeb41f22361965d19c8a6f23c3e270c42265e453439f33819ba3866fadd4d"
     },
     "Grosvenor:1028209172:2721171767:4429138794": {
@@ -83011,8 +82933,8 @@
       "settlement_rules": "unverified",
       "status": "OPEN",
       "odds": 8.0,
-      "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "source_updated_at": "2026-11-25T22:09:09Z",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721171767,
@@ -83044,7 +82966,7 @@
             "participant": "Yassir Zabiri",
             "type": "OT_YES",
             "betOfferId": 2721171767,
-            "changedDate": "2026-11-23T13:51:10Z",
+            "changedDate": "2026-11-25T22:09:09Z",
             "participantId": 1030256541,
             "oddsFractional": "7/1",
             "oddsAmerican": "700",
@@ -83066,9 +82988,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "0dc588be56b88a26a388e2cd08b8f3048513003f37885de3ca5e5eaa21b5a589"
     },
     "Grosvenor:1028209172:2721171768:4429138796": {
@@ -83090,7 +83012,7 @@
       "status": "OPEN",
       "odds": 8.5,
       "source_updated_at": "2026-11-23T13:51:10Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721171768,
@@ -83144,9 +83066,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "030899ec42c59613958d7d0a2bc2eaaf373aaa0b9cafd28f81bd7e0e3f9ef584"
     },
     "Grosvenor:1028209172:2721171772:4429138804": {
@@ -83168,7 +83090,7 @@
       "status": "OPEN",
       "odds": 10.0,
       "source_updated_at": "2026-11-23T13:51:11Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721171772,
@@ -83222,9 +83144,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "3bdc8f35f9dd73a3c47954673c644e727590afbe8bf1cd54a68dc5cbdc17f1ea"
     },
     "Grosvenor:1028209172:2721171777:4429138814": {
@@ -83246,7 +83168,7 @@
       "status": "OPEN",
       "odds": 12.0,
       "source_updated_at": "2026-11-23T13:51:11Z",
-      "captured_at": "2026-11-25T18:42:28.442486+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028209172.json",
       "raw_offer": {
         "id": 2721171777,
@@ -83300,9 +83222,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-23T20:18:51.542300+00:00",
-      "last_seen_at": "2026-11-25T18:42:28.442486+00:00",
-      "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "last_price_fingerprint": "15e6f8aa080cebcb2a53c886402737275038509ed6084a89c2976551c6e58f14"
     },
     "Grosvenor:1028209187:2721151013:4429170514": {
@@ -96896,7 +96818,7 @@
       "status": "OPEN",
       "odds": 16.0,
       "source_updated_at": "2026-11-25T12:52:35Z",
-      "captured_at": "2026-11-25T18:42:17.136826+00:00",
+      "captured_at": "2026-11-26T02:26:49+00:00",
       "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028072679.json",
       "raw_offer": {
         "id": 2721950742,
@@ -96950,9 +96872,9 @@
       "lineup_status": "unknown",
       "lineup_observed_at": null,
       "first_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_seen_at": "2026-11-25T18:42:17.136826+00:00",
-      "last_checked_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "last_price_fingerprint": "761650fa16c8c13ef1b465d9e6f6eae8bc4b207a48fc45e504bd73293a026e5b"
     },
     "Grosvenor:1028072770:2721823180:4431252691": {
@@ -97500,6 +97422,864 @@
       "last_checked_at": "2026-11-25T18:42:28.442486+00:00",
       "payload_sha256": "0bd202bed0555dd9ef6bdeac2bb3c491cee6fc32626093222d14ab07b60c2d2f",
       "last_price_fingerprint": "ba931e48f3530b818751713ad24ffb375f197f85f9e8ea49c020ee13a939a0a5"
+    },
+    "Grosvenor:1028230620:2718696174:4421500815": {
+      "key": "Grosvenor:1028230620:2718696174:4421500815",
+      "bookmaker": "Grosvenor",
+      "platform": "Kambi",
+      "event_id": "72513342",
+      "source_event_id": "1028230620",
+      "source_offer_id": "2718696174",
+      "source_outcome_id": "4421500815",
+      "source_participant_id": "1004102321",
+      "source_team_reference": 1000000112,
+      "home": "Werder Bremen",
+      "away": "Borussia Monchengladbach",
+      "kickoff": "2026-11-27T19:30:00Z",
+      "player": "Cedric Itten",
+      "market": "1+ headed goal",
+      "settlement_rules": "unverified",
+      "status": "OPEN",
+      "odds": 9.0,
+      "source_updated_at": "2026-11-21T14:29:47Z",
+      "captured_at": "2026-11-26T02:26:49+00:00",
+      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028230620.json",
+      "raw_offer": {
+        "id": 2718696174,
+        "closed": "2026-11-27T19:30:00Z",
+        "criterion": {
+          "id": 1001159730,
+          "label": "To score from a header",
+          "englishLabel": "To score from a header",
+          "shortLabel": "Header",
+          "shortEnglishLabel": "Header",
+          "order": [
+            1
+          ],
+          "lifetime": "FULL_TIME"
+        },
+        "betOfferType": {
+          "id": 127,
+          "name": "Player Occurrence Line",
+          "englishName": "Player Occurrence Line"
+        },
+        "eventId": 1028230620,
+        "outcomes": [
+          {
+            "id": 4421500815,
+            "label": "Yes",
+            "englishLabel": "Yes",
+            "odds": 9000,
+            "line": 1000,
+            "participant": "Cedric Itten",
+            "type": "OT_YES",
+            "betOfferId": 2718696174,
+            "changedDate": "2026-11-21T14:29:47Z",
+            "participantId": 1004102321,
+            "oddsFractional": "8/1",
+            "oddsAmerican": "800",
+            "status": "OPEN",
+            "cashOutStatus": "DISABLED",
+            "eventParticipantId": 1000000112,
+            "displayOrder": 0
+          }
+        ],
+        "tags": [
+          "OFFERED_PREMATCH"
+        ],
+        "cashOutStatus": "ENABLED"
+      },
+      "rejection_reasons": [],
+      "mapping_status": "no_roster",
+      "player_id": null,
+      "team_id": null,
+      "lineup_status": "unknown",
+      "lineup_observed_at": null,
+      "first_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "d0a41ec45cd061cc5601e45ab74b5b5bb0c65a071c8a1e35995fb53788a72dd9",
+      "last_price_fingerprint": "3dcaeb41f22361965d19c8a6f23c3e270c42265e453439f33819ba3866fadd4d"
+    },
+    "Grosvenor:1028230620:2718696203:4421500873": {
+      "key": "Grosvenor:1028230620:2718696203:4421500873",
+      "bookmaker": "Grosvenor",
+      "platform": "Kambi",
+      "event_id": "72513342",
+      "source_event_id": "1028230620",
+      "source_offer_id": "2718696203",
+      "source_outcome_id": "4421500873",
+      "source_participant_id": "1028384040",
+      "source_team_reference": 1000000112,
+      "home": "Werder Bremen",
+      "away": "Borussia Monchengladbach",
+      "kickoff": "2026-11-27T19:30:00Z",
+      "player": "Arthur de Matos Soares",
+      "market": "1+ headed goal",
+      "settlement_rules": "unverified",
+      "status": "OPEN",
+      "odds": 9.0,
+      "source_updated_at": "2026-11-17T20:04:02Z",
+      "captured_at": "2026-11-26T02:26:49+00:00",
+      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028230620.json",
+      "raw_offer": {
+        "id": 2718696203,
+        "closed": "2026-11-27T19:30:00Z",
+        "criterion": {
+          "id": 1001159730,
+          "label": "To score from a header",
+          "englishLabel": "To score from a header",
+          "shortLabel": "Header",
+          "shortEnglishLabel": "Header",
+          "order": [
+            1
+          ],
+          "lifetime": "FULL_TIME"
+        },
+        "betOfferType": {
+          "id": 127,
+          "name": "Player Occurrence Line",
+          "englishName": "Player Occurrence Line"
+        },
+        "eventId": 1028230620,
+        "outcomes": [
+          {
+            "id": 4421500873,
+            "label": "Yes",
+            "englishLabel": "Yes",
+            "odds": 9000,
+            "line": 1000,
+            "participant": "Arthur de Matos Soares",
+            "type": "OT_YES",
+            "betOfferId": 2718696203,
+            "changedDate": "2026-11-17T20:04:02Z",
+            "participantId": 1028384040,
+            "oddsFractional": "8/1",
+            "oddsAmerican": "800",
+            "status": "OPEN",
+            "cashOutStatus": "DISABLED",
+            "eventParticipantId": 1000000112,
+            "displayOrder": 0
+          }
+        ],
+        "tags": [
+          "OFFERED_PREMATCH"
+        ],
+        "cashOutStatus": "ENABLED"
+      },
+      "rejection_reasons": [],
+      "mapping_status": "no_roster",
+      "player_id": null,
+      "team_id": null,
+      "lineup_status": "unknown",
+      "lineup_observed_at": null,
+      "first_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "d0a41ec45cd061cc5601e45ab74b5b5bb0c65a071c8a1e35995fb53788a72dd9",
+      "last_price_fingerprint": "3dcaeb41f22361965d19c8a6f23c3e270c42265e453439f33819ba3866fadd4d"
+    },
+    "Grosvenor:1028230620:2718705025:4421552465": {
+      "key": "Grosvenor:1028230620:2718705025:4421552465",
+      "bookmaker": "Grosvenor",
+      "platform": "Kambi",
+      "event_id": "72513342",
+      "source_event_id": "1028230620",
+      "source_offer_id": "2718705025",
+      "source_outcome_id": "4421552465",
+      "source_participant_id": "1002746538",
+      "source_team_reference": 1000000273,
+      "home": "Werder Bremen",
+      "away": "Borussia Monchengladbach",
+      "kickoff": "2026-11-27T19:30:00Z",
+      "player": "Isac Lidberg",
+      "market": "1+ headed goal",
+      "settlement_rules": "unverified",
+      "status": "OPEN",
+      "odds": 7.0,
+      "source_updated_at": "2026-11-17T19:32:13Z",
+      "captured_at": "2026-11-26T02:26:49+00:00",
+      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028230620.json",
+      "raw_offer": {
+        "id": 2718705025,
+        "closed": "2026-11-27T19:30:00Z",
+        "criterion": {
+          "id": 1001159730,
+          "label": "To score from a header",
+          "englishLabel": "To score from a header",
+          "shortLabel": "Header",
+          "shortEnglishLabel": "Header",
+          "order": [
+            1
+          ],
+          "lifetime": "FULL_TIME"
+        },
+        "betOfferType": {
+          "id": 127,
+          "name": "Player Occurrence Line",
+          "englishName": "Player Occurrence Line"
+        },
+        "eventId": 1028230620,
+        "outcomes": [
+          {
+            "id": 4421552465,
+            "label": "Yes",
+            "englishLabel": "Yes",
+            "odds": 7000,
+            "line": 1000,
+            "participant": "Isac Lidberg",
+            "type": "OT_YES",
+            "betOfferId": 2718705025,
+            "changedDate": "2026-11-17T19:32:13Z",
+            "participantId": 1002746538,
+            "oddsFractional": "6/1",
+            "oddsAmerican": "600",
+            "status": "OPEN",
+            "cashOutStatus": "DISABLED",
+            "eventParticipantId": 1000000273,
+            "displayOrder": 0
+          }
+        ],
+        "tags": [
+          "OFFERED_PREMATCH"
+        ],
+        "cashOutStatus": "ENABLED"
+      },
+      "rejection_reasons": [],
+      "mapping_status": "no_roster",
+      "player_id": null,
+      "team_id": null,
+      "lineup_status": "unknown",
+      "lineup_observed_at": null,
+      "first_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "d0a41ec45cd061cc5601e45ab74b5b5bb0c65a071c8a1e35995fb53788a72dd9",
+      "last_price_fingerprint": "27ab2b923dd3ad52b98526365d79e0d43be8aeefe4b3eff2180932f32cacfe2b"
+    },
+    "Grosvenor:1028230620:2718705050:4421552515": {
+      "key": "Grosvenor:1028230620:2718705050:4421552515",
+      "bookmaker": "Grosvenor",
+      "platform": "Kambi",
+      "event_id": "72513342",
+      "source_event_id": "1028230620",
+      "source_offer_id": "2718705050",
+      "source_outcome_id": "4421552515",
+      "source_participant_id": "1001225239",
+      "source_team_reference": 1000000112,
+      "home": "Werder Bremen",
+      "away": "Borussia Monchengladbach",
+      "kickoff": "2026-11-27T19:30:00Z",
+      "player": "Niclas Füllkrug",
+      "market": "1+ headed goal",
+      "settlement_rules": "unverified",
+      "status": "OPEN",
+      "odds": 4.5,
+      "source_updated_at": "2026-11-17T20:04:02Z",
+      "captured_at": "2026-11-26T02:26:49+00:00",
+      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028230620.json",
+      "raw_offer": {
+        "id": 2718705050,
+        "closed": "2026-11-27T19:30:00Z",
+        "criterion": {
+          "id": 1001159730,
+          "label": "To score from a header",
+          "englishLabel": "To score from a header",
+          "shortLabel": "Header",
+          "shortEnglishLabel": "Header",
+          "order": [
+            1
+          ],
+          "lifetime": "FULL_TIME"
+        },
+        "betOfferType": {
+          "id": 127,
+          "name": "Player Occurrence Line",
+          "englishName": "Player Occurrence Line"
+        },
+        "eventId": 1028230620,
+        "outcomes": [
+          {
+            "id": 4421552515,
+            "label": "Yes",
+            "englishLabel": "Yes",
+            "odds": 4500,
+            "line": 1000,
+            "participant": "Niclas Füllkrug",
+            "type": "OT_YES",
+            "betOfferId": 2718705050,
+            "changedDate": "2026-11-17T20:04:02Z",
+            "participantId": 1001225239,
+            "oddsFractional": "7/2",
+            "oddsAmerican": "350",
+            "status": "OPEN",
+            "cashOutStatus": "DISABLED",
+            "eventParticipantId": 1000000112,
+            "displayOrder": 0
+          }
+        ],
+        "tags": [
+          "OFFERED_PREMATCH"
+        ],
+        "cashOutStatus": "ENABLED"
+      },
+      "rejection_reasons": [],
+      "mapping_status": "no_roster",
+      "player_id": null,
+      "team_id": null,
+      "lineup_status": "unknown",
+      "lineup_observed_at": null,
+      "first_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "d0a41ec45cd061cc5601e45ab74b5b5bb0c65a071c8a1e35995fb53788a72dd9",
+      "last_price_fingerprint": "21c0e510b4b4ebf9d5ab43a6c38cf548bdd3f809b8f84180811f2189d44fb5dc"
+    },
+    "Grosvenor:1028230620:2718705056:4421552527": {
+      "key": "Grosvenor:1028230620:2718705056:4421552527",
+      "bookmaker": "Grosvenor",
+      "platform": "Kambi",
+      "event_id": "72513342",
+      "source_event_id": "1028230620",
+      "source_offer_id": "2718705056",
+      "source_outcome_id": "4421552527",
+      "source_participant_id": "1028361037",
+      "source_team_reference": 1000000112,
+      "home": "Werder Bremen",
+      "away": "Borussia Monchengladbach",
+      "kickoff": "2026-11-27T19:30:00Z",
+      "player": "Justin Njinmah",
+      "market": "1+ headed goal",
+      "settlement_rules": "unverified",
+      "status": "OPEN",
+      "odds": 8.5,
+      "source_updated_at": "2026-11-24T10:45:03Z",
+      "captured_at": "2026-11-26T02:26:49+00:00",
+      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028230620.json",
+      "raw_offer": {
+        "id": 2718705056,
+        "closed": "2026-11-27T19:30:00Z",
+        "criterion": {
+          "id": 1001159730,
+          "label": "To score from a header",
+          "englishLabel": "To score from a header",
+          "shortLabel": "Header",
+          "shortEnglishLabel": "Header",
+          "order": [
+            1
+          ],
+          "lifetime": "FULL_TIME"
+        },
+        "betOfferType": {
+          "id": 127,
+          "name": "Player Occurrence Line",
+          "englishName": "Player Occurrence Line"
+        },
+        "eventId": 1028230620,
+        "outcomes": [
+          {
+            "id": 4421552527,
+            "label": "Yes",
+            "englishLabel": "Yes",
+            "odds": 8500,
+            "line": 1000,
+            "participant": "Justin Njinmah",
+            "type": "OT_YES",
+            "betOfferId": 2718705056,
+            "changedDate": "2026-11-24T10:45:03Z",
+            "participantId": 1028361037,
+            "oddsFractional": "15/2",
+            "oddsAmerican": "750",
+            "status": "OPEN",
+            "cashOutStatus": "DISABLED",
+            "eventParticipantId": 1000000112,
+            "displayOrder": 0
+          }
+        ],
+        "tags": [
+          "OFFERED_PREMATCH"
+        ],
+        "cashOutStatus": "ENABLED"
+      },
+      "rejection_reasons": [],
+      "mapping_status": "no_roster",
+      "player_id": null,
+      "team_id": null,
+      "lineup_status": "unknown",
+      "lineup_observed_at": null,
+      "first_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "d0a41ec45cd061cc5601e45ab74b5b5bb0c65a071c8a1e35995fb53788a72dd9",
+      "last_price_fingerprint": "030899ec42c59613958d7d0a2bc2eaaf373aaa0b9cafd28f81bd7e0e3f9ef584"
+    },
+    "Grosvenor:1028230620:2718705057:4421552529": {
+      "key": "Grosvenor:1028230620:2718705057:4421552529",
+      "bookmaker": "Grosvenor",
+      "platform": "Kambi",
+      "event_id": "72513342",
+      "source_event_id": "1028230620",
+      "source_offer_id": "2718705057",
+      "source_outcome_id": "4421552529",
+      "source_participant_id": "1007225998",
+      "source_team_reference": 1000000112,
+      "home": "Werder Bremen",
+      "away": "Borussia Monchengladbach",
+      "kickoff": "2026-11-27T19:30:00Z",
+      "player": "Eren Dinkçi",
+      "market": "1+ headed goal",
+      "settlement_rules": "unverified",
+      "status": "OPEN",
+      "odds": 7.0,
+      "source_updated_at": "2026-11-21T14:29:47Z",
+      "captured_at": "2026-11-26T02:26:49+00:00",
+      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028230620.json",
+      "raw_offer": {
+        "id": 2718705057,
+        "closed": "2026-11-27T19:30:00Z",
+        "criterion": {
+          "id": 1001159730,
+          "label": "To score from a header",
+          "englishLabel": "To score from a header",
+          "shortLabel": "Header",
+          "shortEnglishLabel": "Header",
+          "order": [
+            1
+          ],
+          "lifetime": "FULL_TIME"
+        },
+        "betOfferType": {
+          "id": 127,
+          "name": "Player Occurrence Line",
+          "englishName": "Player Occurrence Line"
+        },
+        "eventId": 1028230620,
+        "outcomes": [
+          {
+            "id": 4421552529,
+            "label": "Yes",
+            "englishLabel": "Yes",
+            "odds": 7000,
+            "line": 1000,
+            "participant": "Eren Dinkçi",
+            "type": "OT_YES",
+            "betOfferId": 2718705057,
+            "changedDate": "2026-11-21T14:29:47Z",
+            "participantId": 1007225998,
+            "oddsFractional": "6/1",
+            "oddsAmerican": "600",
+            "status": "OPEN",
+            "cashOutStatus": "DISABLED",
+            "eventParticipantId": 1000000112,
+            "displayOrder": 0
+          }
+        ],
+        "tags": [
+          "OFFERED_PREMATCH"
+        ],
+        "cashOutStatus": "ENABLED"
+      },
+      "rejection_reasons": [],
+      "mapping_status": "no_roster",
+      "player_id": null,
+      "team_id": null,
+      "lineup_status": "unknown",
+      "lineup_observed_at": null,
+      "first_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "d0a41ec45cd061cc5601e45ab74b5b5bb0c65a071c8a1e35995fb53788a72dd9",
+      "last_price_fingerprint": "27ab2b923dd3ad52b98526365d79e0d43be8aeefe4b3eff2180932f32cacfe2b"
+    },
+    "Grosvenor:1028230620:2718733897:4421491886": {
+      "key": "Grosvenor:1028230620:2718733897:4421491886",
+      "bookmaker": "Grosvenor",
+      "platform": "Kambi",
+      "event_id": "72513342",
+      "source_event_id": "1028230620",
+      "source_offer_id": "2718733897",
+      "source_outcome_id": "4421491886",
+      "source_participant_id": "1004857447",
+      "source_team_reference": 1000000112,
+      "home": "Werder Bremen",
+      "away": "Borussia Monchengladbach",
+      "kickoff": "2026-11-27T19:30:00Z",
+      "player": "Amos Pieper",
+      "market": "1+ headed goal",
+      "settlement_rules": "unverified",
+      "status": "OPEN",
+      "odds": 9.0,
+      "source_updated_at": "2026-11-17T20:04:02Z",
+      "captured_at": "2026-11-26T02:26:49+00:00",
+      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028230620.json",
+      "raw_offer": {
+        "id": 2718733897,
+        "closed": "2026-11-27T19:30:00Z",
+        "criterion": {
+          "id": 1001159730,
+          "label": "To score from a header",
+          "englishLabel": "To score from a header",
+          "shortLabel": "Header",
+          "shortEnglishLabel": "Header",
+          "order": [
+            1
+          ],
+          "lifetime": "FULL_TIME"
+        },
+        "betOfferType": {
+          "id": 127,
+          "name": "Player Occurrence Line",
+          "englishName": "Player Occurrence Line"
+        },
+        "eventId": 1028230620,
+        "outcomes": [
+          {
+            "id": 4421491886,
+            "label": "Yes",
+            "englishLabel": "Yes",
+            "odds": 9000,
+            "line": 1000,
+            "participant": "Amos Pieper",
+            "type": "OT_YES",
+            "betOfferId": 2718733897,
+            "changedDate": "2026-11-17T20:04:02Z",
+            "participantId": 1004857447,
+            "oddsFractional": "8/1",
+            "oddsAmerican": "800",
+            "status": "OPEN",
+            "cashOutStatus": "DISABLED",
+            "eventParticipantId": 1000000112,
+            "displayOrder": 0
+          }
+        ],
+        "tags": [
+          "OFFERED_PREMATCH"
+        ],
+        "cashOutStatus": "ENABLED"
+      },
+      "rejection_reasons": [],
+      "mapping_status": "no_roster",
+      "player_id": null,
+      "team_id": null,
+      "lineup_status": "unknown",
+      "lineup_observed_at": null,
+      "first_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "d0a41ec45cd061cc5601e45ab74b5b5bb0c65a071c8a1e35995fb53788a72dd9",
+      "last_price_fingerprint": "3dcaeb41f22361965d19c8a6f23c3e270c42265e453439f33819ba3866fadd4d"
+    },
+    "Grosvenor:1028230620:2718734664:4421557629": {
+      "key": "Grosvenor:1028230620:2718734664:4421557629",
+      "bookmaker": "Grosvenor",
+      "platform": "Kambi",
+      "event_id": "72513342",
+      "source_event_id": "1028230620",
+      "source_offer_id": "2718734664",
+      "source_outcome_id": "4421557629",
+      "source_participant_id": "1030169166",
+      "source_team_reference": 1000000112,
+      "home": "Werder Bremen",
+      "away": "Borussia Monchengladbach",
+      "kickoff": "2026-11-27T19:30:00Z",
+      "player": "Ivan Cantalejo",
+      "market": "1+ headed goal",
+      "settlement_rules": "unverified",
+      "status": "OPEN",
+      "odds": 10.0,
+      "source_updated_at": "2026-11-17T20:04:03Z",
+      "captured_at": "2026-11-26T02:26:49+00:00",
+      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1028230620.json",
+      "raw_offer": {
+        "id": 2718734664,
+        "closed": "2026-11-27T19:30:00Z",
+        "criterion": {
+          "id": 1001159730,
+          "label": "To score from a header",
+          "englishLabel": "To score from a header",
+          "shortLabel": "Header",
+          "shortEnglishLabel": "Header",
+          "order": [
+            1
+          ],
+          "lifetime": "FULL_TIME"
+        },
+        "betOfferType": {
+          "id": 127,
+          "name": "Player Occurrence Line",
+          "englishName": "Player Occurrence Line"
+        },
+        "eventId": 1028230620,
+        "outcomes": [
+          {
+            "id": 4421557629,
+            "label": "Yes",
+            "englishLabel": "Yes",
+            "odds": 10000,
+            "line": 1000,
+            "participant": "Ivan Cantalejo",
+            "type": "OT_YES",
+            "betOfferId": 2718734664,
+            "changedDate": "2026-11-17T20:04:03Z",
+            "participantId": 1030169166,
+            "oddsFractional": "9/1",
+            "oddsAmerican": "900",
+            "status": "OPEN",
+            "cashOutStatus": "DISABLED",
+            "eventParticipantId": 1000000112,
+            "displayOrder": 0
+          }
+        ],
+        "tags": [
+          "OFFERED_PREMATCH"
+        ],
+        "cashOutStatus": "ENABLED"
+      },
+      "rejection_reasons": [],
+      "mapping_status": "no_roster",
+      "player_id": null,
+      "team_id": null,
+      "lineup_status": "unknown",
+      "lineup_observed_at": null,
+      "first_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "d0a41ec45cd061cc5601e45ab74b5b5bb0c65a071c8a1e35995fb53788a72dd9",
+      "last_price_fingerprint": "3bdc8f35f9dd73a3c47954673c644e727590afbe8bf1cd54a68dc5cbdc17f1ea"
+    },
+    "Grosvenor:1027973908:2718118825:4419695015": {
+      "key": "Grosvenor:1027973908:2718118825:4419695015",
+      "bookmaker": "Grosvenor",
+      "platform": "Kambi",
+      "event_id": "72036314",
+      "source_event_id": "1027973908",
+      "source_offer_id": "2718118825",
+      "source_outcome_id": "4419695015",
+      "source_participant_id": "1028269068",
+      "source_team_reference": 1000040223,
+      "home": "Stade Brest 29",
+      "away": "Paris FC",
+      "kickoff": "2026-11-27T19:45:00Z",
+      "player": "Lassine Sinayoko",
+      "market": "1+ headed goal",
+      "settlement_rules": "unverified",
+      "status": "OPEN",
+      "odds": 6.5,
+      "source_updated_at": "2026-11-25T02:23:45Z",
+      "captured_at": "2026-11-26T02:26:49+00:00",
+      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027973908.json",
+      "raw_offer": {
+        "id": 2718118825,
+        "closed": "2026-11-27T19:45:00Z",
+        "criterion": {
+          "id": 1001159730,
+          "label": "To score from a header",
+          "englishLabel": "To score from a header",
+          "shortLabel": "Header",
+          "shortEnglishLabel": "Header",
+          "order": [
+            1
+          ],
+          "lifetime": "FULL_TIME"
+        },
+        "betOfferType": {
+          "id": 127,
+          "name": "Player Occurrence Line",
+          "englishName": "Player Occurrence Line"
+        },
+        "eventId": 1027973908,
+        "outcomes": [
+          {
+            "id": 4419695015,
+            "label": "Yes",
+            "englishLabel": "Yes",
+            "odds": 6500,
+            "line": 1000,
+            "participant": "Lassine Sinayoko",
+            "type": "OT_YES",
+            "betOfferId": 2718118825,
+            "changedDate": "2026-11-25T02:23:45Z",
+            "participantId": 1028269068,
+            "oddsFractional": "11/2",
+            "oddsAmerican": "550",
+            "status": "OPEN",
+            "cashOutStatus": "DISABLED",
+            "eventParticipantId": 1000040223,
+            "displayOrder": 0
+          }
+        ],
+        "tags": [
+          "OFFERED_PREMATCH"
+        ],
+        "cashOutStatus": "ENABLED"
+      },
+      "rejection_reasons": [],
+      "mapping_status": "no_roster",
+      "player_id": null,
+      "team_id": null,
+      "lineup_status": "unknown",
+      "lineup_observed_at": null,
+      "first_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "abee522d11db57e90fcdc39d5da94a4b6f2e11ca309202e1a540503f761621a5",
+      "last_price_fingerprint": "c1786124e46f327a02a943929930d627acaf2712f5e7f1a50bd6877654f991b5"
+    },
+    "Grosvenor:1027973908:2718155931:4419680247": {
+      "key": "Grosvenor:1027973908:2718155931:4419680247",
+      "bookmaker": "Grosvenor",
+      "platform": "Kambi",
+      "event_id": "72036314",
+      "source_event_id": "1027973908",
+      "source_offer_id": "2718155931",
+      "source_outcome_id": "4419680247",
+      "source_participant_id": "1007990320",
+      "source_team_reference": 1000040223,
+      "home": "Stade Brest 29",
+      "away": "Paris FC",
+      "kickoff": "2026-11-27T19:45:00Z",
+      "player": "Ilan Kebbal",
+      "market": "1+ headed goal",
+      "settlement_rules": "unverified",
+      "status": "OPEN",
+      "odds": 10.0,
+      "source_updated_at": "2026-11-25T02:23:44Z",
+      "captured_at": "2026-11-26T02:26:49+00:00",
+      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027973908.json",
+      "raw_offer": {
+        "id": 2718155931,
+        "closed": "2026-11-27T19:45:00Z",
+        "criterion": {
+          "id": 1001159730,
+          "label": "To score from a header",
+          "englishLabel": "To score from a header",
+          "shortLabel": "Header",
+          "shortEnglishLabel": "Header",
+          "order": [
+            1
+          ],
+          "lifetime": "FULL_TIME"
+        },
+        "betOfferType": {
+          "id": 127,
+          "name": "Player Occurrence Line",
+          "englishName": "Player Occurrence Line"
+        },
+        "eventId": 1027973908,
+        "outcomes": [
+          {
+            "id": 4419680247,
+            "label": "Yes",
+            "englishLabel": "Yes",
+            "odds": 10000,
+            "line": 1000,
+            "participant": "Ilan Kebbal",
+            "type": "OT_YES",
+            "betOfferId": 2718155931,
+            "changedDate": "2026-11-25T02:23:44Z",
+            "participantId": 1007990320,
+            "oddsFractional": "9/1",
+            "oddsAmerican": "900",
+            "status": "OPEN",
+            "cashOutStatus": "DISABLED",
+            "eventParticipantId": 1000040223,
+            "displayOrder": 0
+          }
+        ],
+        "tags": [
+          "OFFERED_PREMATCH"
+        ],
+        "cashOutStatus": "ENABLED"
+      },
+      "rejection_reasons": [],
+      "mapping_status": "no_roster",
+      "player_id": null,
+      "team_id": null,
+      "lineup_status": "unknown",
+      "lineup_observed_at": null,
+      "first_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "abee522d11db57e90fcdc39d5da94a4b6f2e11ca309202e1a540503f761621a5",
+      "last_price_fingerprint": "3bdc8f35f9dd73a3c47954673c644e727590afbe8bf1cd54a68dc5cbdc17f1ea"
+    },
+    "Grosvenor:1027973908:2718156039:4419680493": {
+      "key": "Grosvenor:1027973908:2718156039:4419680493",
+      "bookmaker": "Grosvenor",
+      "platform": "Kambi",
+      "event_id": "72036314",
+      "source_event_id": "1027973908",
+      "source_offer_id": "2718156039",
+      "source_outcome_id": "4419680493",
+      "source_participant_id": "1002755358",
+      "source_team_reference": 1000008577,
+      "home": "Stade Brest 29",
+      "away": "Paris FC",
+      "kickoff": "2026-11-27T19:45:00Z",
+      "player": "Ludovic Ajorque",
+      "market": "1+ headed goal",
+      "settlement_rules": "unverified",
+      "status": "OPEN",
+      "odds": 7.0,
+      "source_updated_at": "2026-11-24T22:40:24Z",
+      "captured_at": "2026-11-26T02:26:49+00:00",
+      "source_url": "https://eu-offering-api.kambicdn.com/offering/v2018/gruk/betoffer/event/1027973908.json",
+      "raw_offer": {
+        "id": 2718156039,
+        "closed": "2026-11-27T19:45:00Z",
+        "criterion": {
+          "id": 1001159730,
+          "label": "To score from a header",
+          "englishLabel": "To score from a header",
+          "shortLabel": "Header",
+          "shortEnglishLabel": "Header",
+          "order": [
+            1
+          ],
+          "lifetime": "FULL_TIME"
+        },
+        "betOfferType": {
+          "id": 127,
+          "name": "Player Occurrence Line",
+          "englishName": "Player Occurrence Line"
+        },
+        "eventId": 1027973908,
+        "outcomes": [
+          {
+            "id": 4419680493,
+            "label": "Yes",
+            "englishLabel": "Yes",
+            "odds": 7000,
+            "line": 1000,
+            "participant": "Ludovic Ajorque",
+            "type": "OT_YES",
+            "betOfferId": 2718156039,
+            "changedDate": "2026-11-24T22:40:24Z",
+            "participantId": 1002755358,
+            "oddsFractional": "6/1",
+            "oddsAmerican": "600",
+            "status": "OPEN",
+            "cashOutStatus": "DISABLED",
+            "eventParticipantId": 1000008577,
+            "displayOrder": 0
+          }
+        ],
+        "tags": [
+          "OFFERED_PREMATCH"
+        ],
+        "cashOutStatus": "ENABLED"
+      },
+      "rejection_reasons": [],
+      "mapping_status": "no_roster",
+      "player_id": null,
+      "team_id": null,
+      "lineup_status": "unknown",
+      "lineup_observed_at": null,
+      "first_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_seen_at": "2026-11-26T02:26:49+00:00",
+      "last_checked_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "abee522d11db57e90fcdc39d5da94a4b6f2e11ca309202e1a540503f761621a5",
+      "last_price_fingerprint": "27ab2b923dd3ad52b98526365d79e0d43be8aeefe4b3eff2180932f32cacfe2b"
     }
   },
   "events": {
@@ -98501,8 +99281,8 @@
     },
     "Grosvenor:1028072679": {
       "event_id": "72221428",
-      "observed_at": "2026-11-25T18:42:17.136826+00:00",
-      "payload_sha256": "368759f94798fbdea4bd883afa70383f5cefd13c300adfd69367cc85943a45f2",
+      "observed_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0ec28ad8c157515ceeedddab7fc1cd0bda637283fad648bab30236b9381d4113",
       "seen_contract_ids": [
         "Grosvenor:1028072679:2721054402:4428867367",
         "Grosvenor:1028072679:2721054405:4428867373",
@@ -98574,8 +99354,8 @@
     },
     "Grosvenor:1027911718": {
       "event_id": "71945444",
-      "observed_at": "2026-11-25T18:42:23.970860+00:00",
-      "payload_sha256": "2732f12571ec96c81a54301df0c78d704e42bde1a09ba9447a349c983dd1c079",
+      "observed_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "0708d84680465d0de8b809bbc152bce8f2bd9c36d1bd04a2bff7a5a84e6aff6a",
       "seen_contract_ids": [
         "Grosvenor:1027911718:2721041719:4428807486",
         "Grosvenor:1027911718:2721041721:4428807490",
@@ -98624,8 +99404,8 @@
     },
     "Grosvenor:1028209172": {
       "event_id": "72478736",
-      "observed_at": "2026-11-25T18:42:28.442486+00:00",
-      "payload_sha256": "b8f92cbdc0f1134aafd1d6fd46095890feac7a403d2d74857d84b17e8886ad3a",
+      "observed_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "ee38e95e13ae9d0d5c0aa063c5a2d387327fcf31e02ca0c774e6b11c6f74cf15",
       "seen_contract_ids": [
         "Grosvenor:1028209172:2721151187:4429170878",
         "Grosvenor:1028209172:2721151190:4429170884",
@@ -99269,9 +100049,36 @@
       "payload_sha256": "5426b1987038e926e4114162826a866f1cc7d3b96948fe1d028bf25689f08c52",
       "seen_contract_ids": [],
       "issues": []
+    },
+    "Grosvenor:1028230620": {
+      "event_id": "72513342",
+      "observed_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "d0a41ec45cd061cc5601e45ab74b5b5bb0c65a071c8a1e35995fb53788a72dd9",
+      "seen_contract_ids": [
+        "Grosvenor:1028230620:2718696174:4421500815",
+        "Grosvenor:1028230620:2718696203:4421500873",
+        "Grosvenor:1028230620:2718705025:4421552465",
+        "Grosvenor:1028230620:2718705050:4421552515",
+        "Grosvenor:1028230620:2718705056:4421552527",
+        "Grosvenor:1028230620:2718705057:4421552529",
+        "Grosvenor:1028230620:2718733897:4421491886",
+        "Grosvenor:1028230620:2718734664:4421557629"
+      ],
+      "issues": []
+    },
+    "Grosvenor:1027973908": {
+      "event_id": "72036314",
+      "observed_at": "2026-11-26T02:26:49+00:00",
+      "payload_sha256": "abee522d11db57e90fcdc39d5da94a4b6f2e11ca309202e1a540503f761621a5",
+      "seen_contract_ids": [
+        "Grosvenor:1027973908:2718118825:4419695015",
+        "Grosvenor:1027973908:2718155931:4419680247",
+        "Grosvenor:1027973908:2718156039:4419680493"
+      ],
+      "issues": []
     }
   },
   "player_registry": {},
-  "generated_at": "2026-11-25T18:42:28.442486+00:00",
+  "generated_at": "2026-11-26T02:26:49+00:00",
   "purpose": "Headed goal quotes only; NOT headed shot on target. Settlement rules unverified. No model, bets or alerts."
 }

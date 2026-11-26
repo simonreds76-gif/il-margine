@@ -4580,16 +4580,92 @@
       },
       "message_id": 937,
       "sent_at": "2026-11-22T02:40:36.344409+00:00"
+    },
+    "grosvenor|72513342|away goalkeeper|3.5|over": {
+      "status": "claimed",
+      "run_token": "45742430582:1",
+      "claimed_at": "2026-11-26T02:28:05.132783+00:00",
+      "signal": {
+        "signal_id": "grosvenor|72513342|away goalkeeper|3.5|over",
+        "created_at": "2026-11-26T02:26:55Z",
+        "event_id": "72513342",
+        "match_date": "2026-11-27",
+        "kickoff_at": "2026-11-27T19:30:00Z",
+        "league": "bundesliga",
+        "home_team": "Werder Bremen",
+        "away_team": "Borussia Monchengladbach",
+        "team": "Borussia Monchengladbach",
+        "opponent": "Werder Bremen",
+        "venue": "away",
+        "goalkeeper": "Away goalkeeper",
+        "bookmaker": "Grosvenor",
+        "line": "3.5",
+        "side": "over",
+        "odds_decimal": "1.8700",
+        "model_mean": "4.4792",
+        "model_probability": "0.621781",
+        "push_probability": "0.000000",
+        "fair_odds": "1.608",
+        "edge": "0.162730",
+        "stake_units": "0.5",
+        "lineup_status": "team_contract_name_unconfirmed",
+        "lineup_source": "",
+        "capture_mode": "publication",
+        "captured_at": "2026-11-26T02:26:49+00:00",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "team_goalkeeper_away",
+        "identity_basis": "bookmaker_team_side",
+        "integrity_status": "",
+        "quarantine_reason": "",
+        "quote_verification": "",
+        "display_prices": [
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 1.87,
+            "goalkeeper": "",
+            "contract_scope": "team_goalkeeper_away",
+            "captured_at": "2026-11-26T02:26:49+00:00",
+            "observed_only": false
+          },
+          {
+            "bookmaker": "Bet365",
+            "goalkeeper": "Daniel Batz",
+            "odds": 1.6666666666666665,
+            "captured_at": "2026-11-26T02:25:43.531282+00:00",
+            "contract_scope": "named_player",
+            "observed_only": true
+          }
+        ],
+        "price_comparison": [
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 1.87,
+            "captured_at": "2026-11-26T02:26:49+00:00",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-11-26T02:28:05.132783+00:00"
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-11-25T19:36:12.332599+00:00",
-      "added": 0,
-      "suppressed": {}
+      "checked_at": "2026-11-26T02:28:05.132783+00:00",
+      "added": 1,
+      "suppressed": {
+        "awaiting_fresh_bet365_grosvenor_pair": 1
+      }
     },
     "keeper_watch": {
-      "checked_at": "2026-11-25T19:36:12.332599+00:00",
+      "checked_at": "2026-11-26T02:28:05.132783+00:00",
       "added": 0,
       "suppressed": {}
     }

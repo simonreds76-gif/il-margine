@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T19:35:36Z",
+  "generated_at": "2026-11-26T02:27:11Z",
   "activated_at": "2026-09-12T21:09:03.018654+00:00",
   "status": "ACTIVE_SHADOW",
   "count_gate": "FIXED CANDIDATE",
@@ -21,7 +21,7 @@
   "latest_scan": {
     "scored_rows": 0,
     "scored_fixtures": 0,
-    "explanation": "0 fresh paired contracts; 0 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: outside_capture_window=61. Input cohorts kept separate. Before 30 October 2026: 98 settled, 30 October 2026 to input repair: 26 settled, Prospective repaired inputs: 18 settled. Promotion review uses repaired inputs only; original records remain intact."
+    "explanation": "0 fresh paired contracts; 0 sides scored. One fixed 1u hypothetical selection per fixture; real stake 0. Excluded archive rows: stale_price=61. Input cohorts kept separate. Before 30 October 2026: 98 settled, 30 October 2026 to input repair: 26 settled, Prospective repaired inputs: 18 settled. Promotion review uses repaired inputs only; original records remain intact."
   },
   "settled_this_run": 0,
   "result_source": {
@@ -136,16 +136,16 @@
   },
   "review_status": "COLLECTING_FIXED_POLICY",
   "promotion_evidence_scope": "repaired_inputs_only; earlier records retained separately",
-  "age_days": 73,
+  "age_days": 74,
   "input_integrity": {
     "policy": "shots-input-integrity-20261113-v1",
-    "generated_at": "2026-11-25T19:35:36.901256+00:00",
+    "generated_at": "2026-11-26T02:27:11.587792+00:00",
     "base_sha256": "8ef65035d25e1902e46a2b8602d8eb296c5463c1eb31f1546cff9721bf295ec6",
     "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
     "source_rows": 44274,
     "prediction_rows": 44268,
     "latest_result_date": "2026-11-23",
-    "recent_missing_xg_team_rows": 290,
+    "recent_missing_xg_team_rows": 288,
     "applied_corrections": [
       {
         "fixture": [

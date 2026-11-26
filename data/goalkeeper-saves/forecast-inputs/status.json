@@ -1,8 +1,16 @@
 {
-  "checked_at": "2026-11-25T19:35:25.611783+00:00",
+  "checked_at": "2026-11-26T02:26:56.225662+00:00",
   "actual_stake": 0,
-  "saved": 0,
-  "accepted_packets": [],
-  "status": "NO_NEW_ELIGIBLE_INPUTS",
-  "counts": {}
+  "saved": 5,
+  "accepted_packets": [
+    "6c530ce43cefb3818420266df46b9ad62f8c0f503feffa8d176c06b19ce07176",
+    "597169f870bd60313dcea0c680fd1419887a9ba67b7552ccdb6dc0bb47f77cb5",
+    "cf72a4e9dc6d48fa5fd7edd5e5ee37bc2788fbf886b6a39c198817fdef04cd9d",
+    "dc8d13b7c07a77e1c42ed8f1ceedb558e3aaabe5be86db34c5d23783db18ae5b",
+    "0bccca7cbfdc83d45261c6e70b32decd59513a48c9b41b01a2290c09a5455164"
+  ],
+  "status": "CAPTURED",
+  "counts": {
+    "offers_saved": 32
+  }
 }
