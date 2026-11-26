@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T18:29:52Z",
+  "generated_at": "2026-11-26T19:17:18Z",
   "team_shots_v4": {
     "count_gate": "PASS",
     "prospective_status": "AUTHORIZED_SHADOW",
@@ -136,17 +136,16 @@
       "dominant_side_share": 0.928571
     },
     "latest_scan": {
-      "state": "ELIGIBLE_CANDIDATES_PRESENT",
-      "explanation": "At least one candidate passed every locked shadow gate. Input cohorts kept separate. Before 30 October 2026: 9 settled, 30 October 2026 to input repair: 20 settled, Prospective repaired inputs: 21 settled. Promotion review uses repaired inputs only; original records remain intact. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-26T18:29:41.107169+00:00. Completed-fixture coverage checked at 2026-11-26T18:28:14.687996+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 288). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
-      "scored_rows": 182,
+      "state": "NO_EDGE_AFTER_UNLOCK",
+      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate. Input cohorts kept separate. Before 30 October 2026: 9 settled, 30 October 2026 to input repair: 20 settled, Prospective repaired inputs: 21 settled. Promotion review uses repaired inputs only; original records remain intact. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-26T19:17:08.864177+00:00. Completed-fixture coverage checked at 2026-11-26T18:28:14.687996+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 288). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
+      "scored_rows": 156,
       "scored_fixtures": 37,
-      "eligible_rows": 7,
-      "eligible_fixtures": 7,
-      "blocked_rows": 175,
+      "eligible_rows": 0,
+      "eligible_fixtures": 0,
+      "blocked_rows": 156,
       "blocker_rows": {
-        "better_fresh_price_available": 26,
-        "edge_below_3pct": 174,
-        "price_not_fresh_10m": 14,
+        "edge_below_3pct": 149,
+        "price_not_fresh_10m": 156,
         "price_older_than_3h": 14
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,
@@ -166,15 +165,15 @@
     },
     "promotion_gate": "BLOCKED",
     "input_health": {
-      "generated_at": "2026-11-26T18:29:34Z",
+      "generated_at": "2026-11-26T19:16:59Z",
       "status": "OK",
       "missing_history": [],
       "scored_fixtures": 37
     },
     "input_integrity": {
       "policy": "shots-input-integrity-20261113-v1",
-      "generated_at": "2026-11-26T18:29:41.107169+00:00",
-      "base_sha256": "fe6cd9dd7aef5dc73648dec3436bee06dddcc0052c6f7b5f0e80d8728e37a415",
+      "generated_at": "2026-11-26T19:17:08.864177+00:00",
+      "base_sha256": "8ef65035d25e1902e46a2b8602d8eb296c5463c1eb31f1546cff9721bf295ec6",
       "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
       "source_rows": 44274,
       "prediction_rows": 44268,
@@ -349,17 +348,16 @@
       "dominant_side_share": 0.777778
     },
     "latest_scan": {
-      "state": "ELIGIBLE_CANDIDATES_PRESENT",
-      "explanation": "At least one candidate passed every locked shadow gate.",
+      "state": "NO_EDGE_AFTER_UNLOCK",
+      "explanation": "Current market rows were scored after the warm-up window, but no candidate passed every selection gate.",
       "scored_rows": 1030,
       "scored_fixtures": 55,
-      "eligible_rows": 63,
-      "eligible_fixtures": 18,
-      "blocked_rows": 967,
+      "eligible_rows": 0,
+      "eligible_fixtures": 0,
+      "blocked_rows": 1030,
       "blocker_rows": {
-        "better_fresh_price_available": 266,
         "edge_below_3pct": 937,
-        "price_not_fresh_10m": 150,
+        "price_not_fresh_10m": 1030,
         "price_older_than_3h": 150
       },
       "edge_pass_but_warmup_blocked_fixtures": 0,

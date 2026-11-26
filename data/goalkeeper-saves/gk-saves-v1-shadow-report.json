@@ -161,14 +161,14 @@
   "forecast_input_capture": {
     "accepted_packets": [],
     "actual_stake": 0,
-    "checked_at": "2026-11-26T18:30:29.213142+00:00",
+    "checked_at": "2026-11-26T19:16:53.049336+00:00",
     "counts": {
       "not_fresh_prematch": 32
     },
     "saved": 0,
     "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-11-26T18:30:28Z",
+  "generated_at": "2026-11-26T19:16:52Z",
   "half_adjustment": {
     "actual_stake": 0,
     "arms": {
@@ -206,7 +206,7 @@
       }
     },
     "fixtures": 0,
-    "generated_at": "2026-11-26T18:30:29.325307+00:00",
+    "generated_at": "2026-11-26T19:16:53.287601+00:00",
     "holds": {},
     "paired_settled_fixtures": 0,
     "scan_exclusions": {},
@@ -222,7 +222,7 @@
     },
     "forecast_fixtures": 216,
     "forecast_keepers": 442,
-    "generated_at": "2026-11-26T18:30:29.228507+00:00",
+    "generated_at": "2026-11-26T19:16:53.096325+00:00",
     "last_capture_at": "2026-11-22T16:20:46.809892+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
@@ -1940,6 +1940,5 @@
   },
   "selection_rule": "compare the latest fixture capture across bookmakers first; retain the highest price per keeper/line/side, then track one starting goalkeeper line per fixture with edge >=5%, price 1.70-3.00, closest to even money; no second bookmaker bet for an already tracked fixture",
   "sellable": false,
-  "settlement_reviewed_at": "2026-11-26T18:53:51+00:00",
   "status": "SIGNALS_COLLECTING"
 }
