@@ -11,6 +11,8 @@ SOUTH_AMERICA = {
     "paraguay", "peru", "suriname", "uruguay", "venezuela", "french guiana", "south america",
 }
 DOMESTIC = {identity(comp): name for name, (comp, _) in LEAGUES.items()}
+UEFA_CLUB = {"uefa champions league", "uefa europa league", "uefa conference league",
+             "uefa europa conference league"}
 HEADER = re.compile(r"^(.+?) \(([^()]+)\) \[competitionId ([\w.-]+)\]:$")
 ROW = re.compile(r"^- (?:(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun) )?(\d\d:\d\d) (.+?) v (.+?) \(id ([\w.-]+)\)")
 ID = re.compile(r"\(id ([\w.-]+)\)")
@@ -35,7 +37,7 @@ def competition(name, country, comp):
         return None
     if identity(comp) in DOMESTIC:
         return DOMESTIC[identity(comp)]
-    if country.casefold() in SOUTH_AMERICA or (country == "Europe" and name == "UEFA Champions League"):
+    if country.casefold() in SOUTH_AMERICA or (country.casefold() == "europe" and name.casefold() in UEFA_CLUB):
         return f"{name} ({country})"
     return None
 

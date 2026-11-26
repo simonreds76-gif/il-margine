@@ -88,7 +88,7 @@ def profile(reader, team, fixture, venue):
     return None
 
 
-def triage(reader, f):
+def triage(reader, f, max_reads=4):
     doc = data(reader, "getMatchDetails", {"matchId": f["id"]}).get("data") or {}
     match = doc.get("matches") or {}
     if (identity(match.get("id")) != identity(f["id"]) or match.get("status") != "scheduled"
@@ -101,9 +101,9 @@ def triage(reader, f):
         if not team.get("id") or norm(team.get("name", "")) != norm(f[side]):
             return {**f, "gap": "team identity unverified"}
         t["teams"][side] = team
-        t["profiles"][side] = profile(reader, team, f, side)
+        t["profiles"][side] = profile(reader, team, f, side) if max_reads >= 3 else None
     ref = doc.get("referees") or {}
-    if ref.get("id") and match.get("seasonId"):
+    if max_reads >= 4 and ref.get("id") and match.get("seasonId"):
         sample = data(reader, "getReferee", dict(refereeId=ref["id"], seasonId=match["seasonId"],
                       competitionId=f["competitionId"], recentGames=10))
         figures = (((sample.get("record") or {}).get("recentGames") or {}).get("totals") or {})
@@ -284,7 +284,8 @@ def investigate(reader, f, clock, analyst):
     analyst.assess(f)
 
 
-def scan(reader, day, analyst, clock=timestamp, save=None, previous=None):
+def scan(reader, day, analyst, clock=timestamp, save=None, previous=None, additional_calendar=None,
+         triage_limit=140):
     def checkpoint(stage):
         report = dict(day=day, at=clock(), calendar=leagues, slate=reviewed, reads=len(reader.log),
                       failures=reader.errors, stage=stage, guideSHA256=analyst.digest,
@@ -293,27 +294,45 @@ def scan(reader, day, analyst, clock=timestamp, save=None, previous=None):
             save(report)
         return report
 
-    if previous and previous.get("day")==day and previous.get("guideSHA256")==analyst.digest and previous.get("stage") in ("ranked","finished"):
+    resuming = (previous and previous.get("day")==day and previous.get("guideSHA256")==analyst.digest
+                and previous.get("stage") in ("ranked","finished"))
+    if resuming:
         reviewed = [f for f in previous["slate"] if senior_fixture(f)]
         leagues = previous["calendar"]
+        if additional_calendar is not None:
+            fixtures, leagues = additional_calendar
+            known = {identity(f["id"]) for f in reviewed}
+            reviewed.extend(f for f in fixtures if identity(f["id"]) not in known)
+            checkpoint("ranked")
     else:
         reviewed, leagues = calendar(reader, day, utc(clock()))
         checkpoint("calendar")
         if not any(not window["gap"] for window in leagues) and not reviewed:
             raise RuntimeError("Calendar unavailable; a no-picks report would be misleading")
-        for i, f in enumerate(reviewed):
-            if len(reader.log) >= 140:
+    unranked = [i for i,f in enumerate(reviewed) if not resuming or not f.get("reviewState")]
+    if unranked:
+        for position, i in enumerate(unranked):
+            f = reviewed[i]
+            # Leave room for later fixtures to get team evidence and for the detailed player checks.
+            allocation = (triage_limit - len(reader.log)) // (len(unranked) - position)
+            if utc(f["ko"]) <= utc(clock()):
+                f["gap"] = "scheduled kickoff passed"
+            elif allocation <= 0:
                 f["gap"] = "daily allowance reserved for detailed player checks"
             else:
                 try:
-                    reviewed[i] = triage(reader, f)
+                    reviewed[i] = triage(reader, f) if allocation >= 4 else triage(reader, f, allocation)
                 except (ValueError, TypeError, KeyError, IndexError, AttributeError, TimeoutError) as error:
                     f.update(gap="fixture screening incomplete", reviewStep="fixture screening",
                              reviewError=type(error).__name__)
                     reader.errors += 1
-        eligible = [f for f in reviewed if not f.get("gap")]
-        selected = {f["id"]: rank for rank, f in enumerate(analyst.select_fixtures(eligible), start=1)}
-        for f in reviewed:
+        fresh = [reviewed[i] for i in unranked]
+        eligible = [f for f in fresh if not f.get("gap")]
+        existing = sum(bool(f.get("priority")) for f in reviewed) if resuming else 0
+        slots = max(0, 5 - existing)
+        choices = analyst.select_fixtures(eligible)[:slots] if eligible and slots else []
+        selected = {f["id"]: rank for rank, f in enumerate(choices, start=existing + 1)}
+        for f in fresh:
             f["reviewState"] = ("unfinished" if f.get("reviewError") else "unavailable" if f.get("gap") else
                                 "selected" if f["id"] in selected else "reserve")
             if f["id"] in selected:
@@ -355,7 +374,7 @@ def scan(reader, day, analyst, clock=timestamp, save=None, previous=None):
 def lines(report, as_of=None):
     calendar = report["calendar"]
     complete = sum(not l["gap"] for l in calendar)
-    result = [f"Booking and fouls scan · {report['day']}", f"{len(report['slate'])} upcoming fixtures. Five European leagues, Champions League and covered South American competitions.",
+    result = [f"Booking and fouls scan · {report['day']}", f"{len(report['slate'])} upcoming fixtures. Five European domestic leagues, Champions League, Europa League, Conference League and covered senior South American competitions.",
               f"Through 11am London tomorrow. {complete}/{len(calendar)} calendar windows verified."]
     for f in sorted(report["slate"], key=lambda x: ("screen" not in x,x["ko"])):
         label = f["home"] + " v " + f["away"]

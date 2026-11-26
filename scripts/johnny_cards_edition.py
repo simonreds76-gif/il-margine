@@ -160,14 +160,15 @@ def make_digest(day, snapshot, checks, now):
             if check["notes"]:
                 unavailable.append(name + " (" + ", ".join(check["notes"]) + ")")
     gaps = [w["league"] for w in snapshot.get("calendar", []) if w["gap"]]
+    screened = sum(bool(f.get("teams")) or f.get("reviewState") in {"reserve", "selected", "complete"}
+                   for f in slate)
     summary = [f"Johnny · Bookings and fouls · {day}",
-               f"{len(picks)} verified selections · {complete} fixture review{'s' if complete != 1 else ''} completed."]
+               f"{len(slate)} fixtures found · {screened} screened · {complete} fixture review{'s' if complete != 1 else ''} completed.",
+               f"{len(picks)} verified selections."]
     if not snapshot or not snapshot.get("calendar"):
         summary.append("Fixture list unavailable. The scope of the unfinished scan is unknown.")
     elif gaps:
         summary.append("Fixture calendar incomplete for " + ", ".join(gaps))
-    if not picks:
-        summary.append("No verified selections available for this edition.")
     grouped = {}
     for p in picks:
         market = "to be booked" if p["kind"]=="booking" else f"over {p['line']:g} fouls"
@@ -183,7 +184,13 @@ def make_digest(day, snapshot, checks, now):
         summary.append(f"Evidence unavailable ({len(unavailable)}) · " + ", ".join(unavailable))
     if reserve:
         summary.append(f"{len(reserve)} fixtures screened and left outside the detailed review.")
-    full = summary + detail + (["Outside detailed review · " + ", ".join(reserve)] if reserve else [])
+    counts = {}
+    for f in slate:
+        league = f.get("league")
+        if league:
+            counts[league] = counts.get(league, 0) + 1
+    by_league = ["Fixtures by competition · " + ", ".join(f"{k} ({v})" for k,v in sorted(counts.items()))] if counts else []
+    full = summary + by_league + detail + (["Outside detailed review · " + ", ".join(reserve)] if reserve else [])
     text = "\n".join(summary)
     footer = "\nFull private report " + LINK
     budget = 4096 - len(footer.encode("utf-16-le"))//2
