@@ -1,17 +1,16 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_observed_save_markets": 4,
       "events_with_save_markets": 0,
       "named_player_lines": 0,
-      "status": "SAVE_MARKETS_SEEN_NO_VERIFIED_PRICES",
+      "status": "NO_SAVE_MARKETS",
       "unnamed_or_team_lines": 0
     },
     "Grosvenor": {
-      "events_with_save_markets": 5,
+      "events_with_save_markets": 0,
       "named_player_lines": 0,
-      "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 32
+      "status": "NO_SAVE_MARKETS",
+      "unnamed_or_team_lines": 0
     },
     "Paddy Power": {
       "events_with_save_markets": 0,
@@ -27,256 +26,79 @@
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 70,
+      "current_quotes": 328,
       "mapped_quotes": 0,
       "paper_selections": 0,
-      "price_or_status_changes": 11,
+      "price_or_status_changes": 0,
       "rules": "unverified"
     },
-    "matched": 5,
+    "matched": 0,
     "missing": [],
-    "requests": 10,
-    "rows": 418
+    "requests": 0,
+    "rows": 0
   },
   "discovery_retries": 0,
-  "event_last_checked": {
-    "71945444": "2026-11-26T02:26:49Z",
-    "72036314": "2026-11-26T02:26:49Z",
-    "72221428": "2026-11-26T02:26:49Z",
-    "72478736": "2026-11-26T02:26:49Z",
-    "72513342": "2026-11-26T02:26:49Z"
-  },
+  "event_last_checked": {},
   "events_deferred_by_budget": 0,
-  "events_selected": 5,
-  "events_supported": 5,
-  "events_with_lines": 5,
-  "generated_at": "2026-11-26T02:26:49Z",
-  "last_publication_at": "2026-11-26T02:26:49Z",
+  "events_selected": 0,
+  "events_supported": 0,
+  "events_with_lines": 0,
+  "generated_at": "2026-11-26T18:29:08Z",
+  "last_publication_at": "2026-11-26T18:29:08Z",
   "league_coverage": {
     "bundesliga": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 0,
+      "with_prices": 0
     },
     "epl": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 0,
+      "with_prices": 0
     },
     "la-liga": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 0,
+      "with_prices": 0
     },
     "ligue-1": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 0,
+      "with_prices": 0
     },
     "serie-a": {
-      "selected": 1,
-      "with_prices": 1
+      "selected": 0,
+      "with_prices": 0
     }
   },
-  "market_inventory_rows_added": 158,
-  "market_names_observed": [
-    "Anytime Assist",
-    "Anytime Goalscorer",
-    "Bookings Totals",
-    "Bookings Totals Away",
-    "Bookings Totals Home",
-    "Both Teams To Score",
-    "Corners Totals",
-    "Corners Totals Away",
-    "Corners Totals Home",
-    "Correct Score",
-    "Double Chance",
-    "Draw No Bet",
-    "European Handicap",
-    "First Goalscorer",
-    "Goalkeeper Saves Away",
-    "Goalkeeper Saves Home",
-    "Half Time / Full Time",
-    "ML",
-    "ML HT",
-    "Player Fouls",
-    "Player Headed Shots on Target",
-    "Player Shots",
-    "Player Shots on Target",
-    "Player To Assist",
-    "Player To Be Fouled",
-    "Player To Score or Assist",
-    "Player to be Booked",
-    "Spread",
-    "Total Shots Away",
-    "Total Shots Home",
-    "Totals",
-    "Totals HT"
-  ],
+  "market_inventory_rows_added": 0,
+  "market_names_observed": [],
   "moviodds_source": {
     "errors": [],
     "excluded": {
-      "conflicting_quotes": 0,
-      "fixture_not_eligible": 856,
-      "stale_or_missing_market_poll": 2,
-      "unmatched_or_unsupported_fixture": 332
+      "fixture_not_eligible": 634,
+      "unmatched_or_unsupported_fixture": 922
     },
-    "goalkeeper_coverage_status": "INCOMPLETE",
-    "goalkeeper_fixture_coverage": [
-      {
-        "away": "Borussia Monchengladbach",
-        "event_id": "72513342",
-        "home": "Werder Bremen",
-        "market_polled_at": "2026-11-26T02:25:43.53128226Z",
-        "quote_count": 0,
-        "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203559533",
-        "source_site": "com",
-        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
-        "verification_exclusions": {
-          "same_provider_cache_no_independent_check": 1
-        }
-      },
-      {
-        "away": "Paris FC",
-        "event_id": "72036314",
-        "home": "Stade Brest 29",
-        "market_polled_at": null,
-        "quote_count": 0,
-        "source_event_id": "203559388",
-        "source_site": "com",
-        "status": "NO_GK_MARKET_IN_FEED"
-      },
-      {
-        "away": "Bologna FC",
-        "event_id": "71945444",
-        "home": "Venezia FC",
-        "market_polled_at": "2026-11-26T02:25:45.264334522Z",
-        "quote_count": 0,
-        "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203560055",
-        "source_site": "com",
-        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
-        "verification_exclusions": {
-          "same_provider_cache_no_independent_check": 1
-        }
-      },
-      {
-        "away": "Chelsea FC",
-        "event_id": "72221428",
-        "home": "Nottingham Forest",
-        "market_polled_at": "2026-11-26T02:25:41.98127414Z",
-        "quote_count": 0,
-        "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203559280",
-        "source_site": "com",
-        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
-        "verification_exclusions": {
-          "same_provider_cache_no_independent_check": 1
-        }
-      },
-      {
-        "away": "Racing Santander",
-        "event_id": "72478736",
-        "home": "Levante UD",
-        "market_polled_at": "2026-11-26T02:25:47.692592166Z",
-        "quote_count": 0,
-        "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203561169",
-        "source_site": "com",
-        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
-        "verification_exclusions": {
-          "same_provider_cache_no_independent_check": 1
-        }
-      }
-    ],
+    "goalkeeper_coverage_status": "NO_TARGETS",
+    "goalkeeper_fixture_coverage": [],
     "goalkeeper_source_hold": "moviodds_gk_contract_price_unverified_20261106",
     "goalkeeper_verification": {
       "deferred_by_budget": 0,
-      "fixtures": [
-        {
-          "accepted": 0,
-          "event_id": "72513342",
-          "excluded": {
-            "same_provider_cache_no_independent_check": 1
-          },
-          "fixture_id": "203559533"
-        },
-        {
-          "accepted": 0,
-          "event_id": "71945444",
-          "excluded": {
-            "same_provider_cache_no_independent_check": 1
-          },
-          "fixture_id": "203560055"
-        },
-        {
-          "accepted": 0,
-          "event_id": "72221428",
-          "excluded": {
-            "same_provider_cache_no_independent_check": 1
-          },
-          "fixture_id": "203559280"
-        },
-        {
-          "accepted": 0,
-          "event_id": "72478736",
-          "excluded": {
-            "same_provider_cache_no_independent_check": 1
-          },
-          "fixture_id": "203561169"
-        }
-      ],
-      "requests": 4,
+      "fixtures": [],
+      "requests": 0,
       "verified_quotes": 0,
       "version": "moviodds_gk_atomic_v1"
     },
-    "market_count": 4,
-    "quote_count": 294,
-    "received_at": "2026-11-26T02:26:54.309757+00:00",
-    "requests": 5,
+    "market_count": 0,
+    "quote_count": 0,
+    "received_at": "2026-11-26T18:29:09.739162+00:00",
+    "requests": 1,
     "source": "moviodds_bet365",
     "source_site": "com",
-    "status": "OK"
+    "status": "NO_VERIFIED_MARKETS"
   },
-  "publication_recovery": true,
+  "publication_recovery": false,
   "request_budget": 4,
-  "requests_used": 2,
-  "rows_added": 32,
-  "rows_observed": 32,
-  "selected_events": [
-    {
-      "away": "Borussia Monchengladbach",
-      "competition": "Germany - Bundesliga",
-      "home": "Werder Bremen",
-      "id": 72513342,
-      "kickoff_at": "2026-11-27T19:30:00Z"
-    },
-    {
-      "away": "Paris FC",
-      "competition": "France - Ligue 1",
-      "home": "Stade Brest 29",
-      "id": 72036314,
-      "kickoff_at": "2026-11-27T19:45:00Z"
-    },
-    {
-      "away": "Bologna FC",
-      "competition": "Italy - Serie A",
-      "home": "Venezia FC",
-      "id": 71945444,
-      "kickoff_at": "2026-11-27T19:45:00Z"
-    },
-    {
-      "away": "Chelsea FC",
-      "competition": "England - Premier League",
-      "home": "Nottingham Forest",
-      "id": 72221428,
-      "kickoff_at": "2026-11-27T20:00:00Z"
-    },
-    {
-      "away": "Racing Santander",
-      "competition": "Spain - LaLiga",
-      "home": "Levante UD",
-      "id": 72478736,
-      "kickoff_at": "2026-11-27T20:00:00Z"
-    }
-  ],
-  "status": "CAPTURED",
-  "three_way_events": 5
+  "requests_used": 1,
+  "rows_added": 0,
+  "rows_observed": 0,
+  "selected_events": [],
+  "status": "NO_GOALKEEPER_SAVE_LINES",
+  "three_way_events": 0
 }
