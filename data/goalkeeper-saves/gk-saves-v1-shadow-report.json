@@ -14,8 +14,8 @@
   "evidence": {
     "clv": 0.045956,
     "clv_matched": 37,
-    "pending": 12,
-    "pnl_units": 13.4311,
+    "pending": 11,
+    "pnl_units": 13.9811,
     "quote_quarantine_records": [
       {
         "actual_saves": "",
@@ -145,16 +145,17 @@
       }
     ],
     "quote_quarantined": 3,
-    "roi": 0.248724,
-    "settled": 108,
+    "roi": 0.256534,
+    "settled": 109,
     "settlement_sources": {
       "fotmob_named_keeper_shotmap": 85,
       "fotmob_team_keeper_shotmap": 18,
       "independently_reviewed_named_keeper_count": 2,
+      "reviewed_full_match_keeper_count": 1,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
     "signals": 126,
-    "true_close_coverage": 0.342593,
+    "true_close_coverage": 0.33945,
     "void": 6
   },
   "forecast_input_capture": {
@@ -1939,5 +1940,6 @@
   },
   "selection_rule": "compare the latest fixture capture across bookmakers first; retain the highest price per keeper/line/side, then track one starting goalkeeper line per fixture with edge >=5%, price 1.70-3.00, closest to even money; no second bookmaker bet for an already tracked fixture",
   "sellable": false,
+  "settlement_reviewed_at": "2026-11-26T18:53:51+00:00",
   "status": "SIGNALS_COLLECTING"
 }

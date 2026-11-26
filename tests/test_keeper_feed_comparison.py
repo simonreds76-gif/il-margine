@@ -140,6 +140,22 @@ class KeeperComparisonTest(unittest.TestCase):
                 self.config['reviewed_published_counts']=[{**original,field:value}]
                 self.assertEqual(self.result()['status'],'quarantined')
 
+    def test_private_review_survives_refresh_only_with_matching_evidence(self):
+        self.reviewed_conflict()
+        previous = self.result()
+        self.assertEqual(previous['status'], 'reviewed_agreement')
+        self.config.pop('reviewed_published_counts')
+        config = collector.config_for_fixture(self.config, [previous, previous], self.ref)
+        self.assertEqual(len(config['reviewed_published_counts']), 1)
+        self.config = config
+        self.assertEqual(self.result()['status'], 'reviewed_agreement')
+        self.gs['data']['players']['home'][0]['saves'] = '4'
+        self.assertEqual(self.result()['status'], 'quarantined')
+        self.gs['data']['players']['home'][0]['saves'] = '3'
+        self.ref['source_sha256'] = 'revised'
+        self.assertEqual(self.result()['status'], 'quarantined')
+        self.assertEqual(collector.config_for_fixture({}, [previous], self.ref)['reviewed_published_counts'], [])
+
     def test_review_does_not_release_provider_disagreement_or_team_conflict(self):
         self.reviewed_conflict();self.gs['data']['players']['home'][0]['saves']='4'
         self.assertEqual(self.result()['status'],'quarantined')
