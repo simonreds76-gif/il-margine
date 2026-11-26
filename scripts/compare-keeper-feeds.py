@@ -39,17 +39,38 @@ class Client:
         headers = {'Accept': 'application/json', 'User-Agent': 'IlMargine-private-source-comparison/1.0'}
         if source == 'goal':
             headers['Authorization'] = 'Bearer ' + self.goal_key
-        self.used[source] += 1
-        # Redirects are rejected so credentials never leave the authorized host.
-        try:
-            response = requests.get(base+path, params=params, headers=headers, timeout=min(20, max(1, self.deadline-time.monotonic())), allow_redirects=False)
-        except requests.RequestException:
-            raise RuntimeError(source + '_transport_error') from None
-        receipt = {'source': source, 'url': base+path, 'params': params,
-                   'http_status': response.status_code, 'observed_at': datetime.now(timezone.utc).isoformat()}
-        self.receipts.append(receipt)
-        if response.status_code != 200:
-            raise RuntimeError(source + '_http_' + str(response.status_code))
+        reason = 'request_or_time_budget_exhausted'
+        for attempt in (1, 2):
+            remaining = self.deadline - time.monotonic()
+            if remaining <= 0:
+                if attempt == 1:
+                    raise BudgetError(reason)
+                raise RuntimeError(reason)
+            self.used[source] += 1
+            receipt = {'source': source, 'url': base+path, 'params': params, 'attempt': attempt,
+                       'observed_at': datetime.now(timezone.utc).isoformat(), 'http_status': None}
+            self.receipts.append(receipt)
+            try:
+                response = requests.get(base+path, params=params, headers=headers,
+                                        timeout=min(20, remaining), allow_redirects=False)
+            except requests.RequestException as error:
+                receipt['transport'] = type(error).__name__
+                reason = source + '_transport_error'
+                retryable = isinstance(error, (requests.Timeout, requests.ConnectionError,
+                                               requests.exceptions.ChunkedEncodingError))
+                if isinstance(error, requests.exceptions.SSLError):
+                    retryable = False
+            else:
+                receipt['http_status'] = response.status_code
+                if response.status_code == 200:
+                    break
+                reason = source + '_http_' + str(response.status_code)
+                retryable = (response.status_code in (408, 500, 502, 503, 504, 520, 522, 524)
+                             and 'Retry-After' not in response.headers)
+            if (attempt == 2 or not retryable or self.used[source] >= self.caps[source]
+                    or self.deadline - time.monotonic() <= 1):
+                raise RuntimeError(reason) from None
+            time.sleep(1)
         try:
             body = response.json()
         except ValueError:

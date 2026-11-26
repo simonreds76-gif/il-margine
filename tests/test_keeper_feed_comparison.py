@@ -8,7 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
@@ -193,6 +193,38 @@ class KeeperComparisonTest(unittest.TestCase):
             with self.assertRaises(collector.BudgetError): client.get('goal', '/other')
             self.assertEqual(get.call_count, 1)
             self.assertNotIn('secret', json.dumps(client.receipts))
+
+    def test_transient_retry_is_counted_and_success_is_cached(self):
+        for failure in (collector.requests.Timeout('private exception text'), Mock(status_code=503, headers={})):
+            client = collector.Client('secret', 2, 1)
+            success = Mock(status_code=200)
+            success.json.return_value = {'data': []}
+            with patch.object(collector.requests, 'get', side_effect=[failure, success]) as get, patch.object(collector.time, 'sleep') as sleep:
+                for _ in range(2):
+                    self.assertEqual(client.get('goal', '/fixtures'), {'data': []})
+                self.assertEqual(get.call_count, 2)
+                sleep.assert_called_once_with(1)
+                self.assertEqual(client.used['goal'], 2)
+                self.assertEqual([r['attempt'] for r in client.receipts], [1, 2])
+                self.assertEqual(client.receipts[-1]['sha256'], digest({'data': []}))
+                self.assertNotIn('private exception text', json.dumps(client.receipts))
+                self.assertNotIn('secret', json.dumps(client.receipts))
+
+    def test_retry_preserves_real_failures_within_call_and_time_limits(self):
+        reset = collector.requests.ConnectionError('connection lost')
+        cases = [(reset, 1, 240, 1), (reset, 2, 0.5, 1), (reset, 5, 240, 2),
+                 (collector.requests.exceptions.SSLError('certificate'), 5, 240, 1),
+                 (Mock(status_code=429, headers={}), 5, 240, 1),
+                 (Mock(status_code=503, headers={'Retry-After': '120'}), 5, 240, 1)]
+        for failure, cap, seconds, expected_calls in cases:
+            with self.subTest(cap=cap, seconds=seconds, failure=type(failure).__name__):
+                client = collector.Client('', 0, cap, seconds=seconds)
+                with patch.object(collector.requests, 'get', side_effect=[failure]*2) as get, patch.object(collector.time, 'sleep'):
+                    with self.assertRaisesRegex(RuntimeError, 'espn_(http_|transport_error)'):
+                        client.get('espn', '/summary')
+                    self.assertEqual(get.call_count, expected_calls)
+                    self.assertEqual(client.used['espn'], expected_calls)
+                    self.assertNotIn('connection lost', json.dumps(client.receipts))
 
     def test_missing_auth_makes_no_request(self):
         client = collector.Client('', 2, 2)
