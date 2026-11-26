@@ -167,6 +167,20 @@ def report(archive, state, config, now, requests_used, receipts, considered):
                             'No forecasts, stakes, alerts, historical settlements or model inputs modified.']}
 
 
+def config_for_fixture(config, versions, ref):
+    # Private adjudications stay with the archived evidence. compare() revalidates
+    # the identity, counts and full-match participation against every fresh read.
+    reviews = {digest(r): r for r in config.get('reviewed_published_counts', [])}
+    for version in versions:
+        if version.get('source_hashes', {}).get('reference') != ref['source_sha256']:
+            continue
+        for keeper in version['keepers']:
+            review = keeper.get('published_count_review')
+            if review and str(review['match_id']) == str(ref['match_id']):
+                reviews[digest(review)] = review
+    return {**config, 'reviewed_published_counts': list(reviews.values())}
+
+
 def run(root, config, replay=None, output=None, max_matches=None, fixture_ids=None):
     dest = output or root / DEST
     now = datetime.now(timezone.utc)
@@ -216,7 +230,8 @@ def run(root, config, replay=None, output=None, max_matches=None, fixture_ids=No
                 gs = client.get('goal', f'/fixtures/{gf["id"]}/statistics')
                 ep = find_espn(client, ref, config)
                 observed = datetime.now(timezone.utc).isoformat()
-            record = compare(root, ref, gf, gs, ep, config, observed)
+            versions = archive.get('fixtures', {}).get(mid, [])
+            record = compare(root, ref, gf, gs, ep, config_for_fixture(config, versions, ref), observed)
             record['cohort'] = 'installation_replay' if replay else ('forward_collection' if instant(ref['kickoff']) >= instant(config['activated_at']) else 'historical_backfill')
             append_record(archive, record)
             status = record['status']
