@@ -248,7 +248,7 @@
     "5868135": "2026-11-25",
     "5749756": "2026-11-25"
   },
-  "updated_at": "2026-11-26T02:47:43.122665+00:00",
+  "updated_at": "2026-11-26T03:03:14.048389+00:00",
   "checked_this_run": 0,
   "errors": [],
   "fixtures": {
@@ -11901,7 +11901,7 @@
           "redCards": 1
         },
         "status": {
-          "utcTime": "2026-11-23T20:00:00+00:00",
+          "utcTime": "2026-11-23T20:00:00.000Z",
           "numberOfAwayRedCards": 1,
           "halfs": {
             "firstHalfStarted": "23.11.2026 21:00:19",
@@ -11948,7 +11948,7 @@
           "name": "Elche"
         },
         "status": {
-          "utcTime": "2026-11-23T20:00:00+00:00",
+          "utcTime": "2026-11-23T20:00:00.000Z",
           "halfs": {
             "firstHalfStarted": "23.11.2026 21:01:37",
             "secondHalfStarted": "23.11.2026 22:04:11"
@@ -11994,7 +11994,7 @@
           "name": "Fiorentina"
         },
         "status": {
-          "utcTime": "2026-11-23T19:45:00+00:00",
+          "utcTime": "2026-11-23T19:45:00.000Z",
           "halfs": {
             "firstHalfStarted": "23.11.2026 20:46:07",
             "secondHalfStarted": "23.11.2026 21:50:30"
@@ -12553,7 +12553,7 @@
     },
     "20261123": {
       "ok": true,
-      "checked_at": "2026-11-24T20:51:26.308664+00:00",
+      "checked_at": "2026-11-26T03:03:14.048389+00:00",
       "expected": 3,
       "match_ids": [
         "5749756",
@@ -12571,14 +12571,14 @@
     },
     "20261125": {
       "ok": true,
-      "checked_at": "2026-11-26T02:47:43.122665+00:00",
+      "checked_at": "2026-11-26T03:03:14.048389+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
     },
     "20261126": {
       "ok": true,
-      "checked_at": "2026-11-26T02:47:43.122665+00:00",
+      "checked_at": "2026-11-26T03:03:14.048389+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
