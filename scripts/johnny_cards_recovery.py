@@ -2,10 +2,11 @@
 import os
 import sys
 from time import sleep
-from datetime import datetime, time
+from datetime import datetime
 
 from johnny_cards import JohnnyProvider, edition_key, private_store, scan
-from johnny_cards_calendar import LONDON
+from johnny_cards_calendar import LONDON, calendar
+from statshub_daily_contracts import identity
 from johnny_cards_edition import make_digest, verify
 from johnny_cards_review import Analyst
 from statshub_daily_board import REPORT, Reads
@@ -18,8 +19,8 @@ GAPS = {"starting elevens unavailable", "lineup lookup failed", "no expected or 
 
 def require_edition(store, day):
     now = datetime.now(LONDON)
-    if now.date().isoformat() != day or now.time() < time(11,31):
-        raise ValueError("Manual lineup repair needs today's delivered edition after the morning window")
+    if now.date().isoformat() != day or not store.get(edition_key(day, "published")):
+        raise ValueError("Manual repair needs today's published edition")
     receipt = store.get(f"receipts/johnny-{day}-0.json", {})
     original = store.get(edition_key(day, "digest"), {})
     if (receipt.get("state") != "sent" or not receipt.get("message_id")
@@ -44,16 +45,27 @@ def prepare(store, day):
     path = edition_key(day,"lineup-repair-research")
     saved = store.get(path)
     snapshot = saved_repair(store, day) if saved else original
+    # Replay the same morning calendar under today's competition rules. Its cached
+    # pages share the original daily read budget, even when a missing page needs fetching.
+    api = JohnnyProvider(store)
+    repair_calls = store.get(f"evidence/{day}/johnny-lineup-repair/calls.json", [])
+    morning = Reads(store, api, day, "johnny", max(0, 212 - len(repair_calls)))
+    discovered, windows = calendar(morning, day, utc(day+"T00:00:00Z"))
+    known = {identity(f["id"]) for f in snapshot["slate"]}
+    additions = [f for f in discovered if identity(f["id"]) not in known]
+    if any(w["gap"] for w in windows):
+        raise RuntimeError("Cannot reconcile an incomplete morning calendar")
     for f in snapshot["slate"]:
         if retryable(f, utc(timestamp())):
             for key in ("gap", "reviewError", "reviewStep"):
                 f.pop(key, None)
             f["reviewState"] = "selected"
-    if not saved or snapshot.get("stage") != "finished" or any(f.get("reviewState")=="selected" for f in snapshot["slate"]):
-        original_calls = store.get(f"evidence/{day}/johnny/calls.json", [])
-        reader = Reads(store, JohnnyProvider(store), day, "johnny-lineup-repair", max(0,212-len(original_calls)))
+    if not saved or additions or snapshot.get("stage") != "finished" or any(f.get("reviewState")=="selected" for f in snapshot["slate"]):
+        used = len(morning.log)
+        reader = Reads(store, api, day, "johnny-lineup-repair", max(0,212-used))
         with Analyst(store) as analyst:
-            snapshot = scan(reader,day,analyst,previous=snapshot,save=lambda doc: store.put(path,doc))
+            snapshot = scan(reader,day,analyst,previous=snapshot,save=lambda doc: store.put(path,doc),
+                            additional_calendar=(additions,windows),triage_limit=max(0,140-used))
     print("Completed fixture reviews:",sum(f.get("reviewState")=="complete" for f in snapshot["slate"]))
 
 
@@ -97,8 +109,9 @@ def amend(store,day):
         edition["messageId"] = receipt["message_id"]
         store.put(path,edition)
     entry = report["days"][day]
-    if entry.get("coverage") != edition["coverage"] or entry.get("final") != edition["complete"]:
-        entry.update(at=edition["at"],coverage=edition["coverage"],final=edition["complete"])
+    if (entry.get("coverage") != edition["coverage"] or entry.get("final") != edition["complete"]
+            or entry.get("fixtures") != edition["fixtures"]):
+        entry.update(at=edition["at"],coverage=edition["coverage"],final=edition["complete"],fixtures=edition["fixtures"])
         report["updated"]=edition["at"]
         store.put(REPORT,report)
     verify_published_coverage(store, day, edition)

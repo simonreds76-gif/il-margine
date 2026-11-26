@@ -50,6 +50,46 @@ class MethodTests(unittest.TestCase):
         self.assertIsNotNone(competition("UEFA Champions League","Europe","ucl.123"))
         self.assertIsNone(competition("AFC Champions League Elite","Asia","afc.123"))
 
+    def test_thursday_calendar_includes_both_european_cups_and_omitted_cup_rows(self):
+        day = "2026-11-26"
+        start = int(job.utc(day+"T11:00:00Z").timestamp())
+        groups = [("UEFA Europa League", "Europe", 18), ("UEFA Conference League", "Europe", 18),
+                  ("Brasileirão Série A", "Brazil", 1), ("UEFA Youth League", "Europe", 2)]
+        lines = []
+        for index,(league, region, count) in enumerate(groups):
+            lines.append(f"{league} ({region}) [competitionId comp.{index}]:")
+            lines.extend(f"- 18:00 Home {j} v Away {j} (id game.{100*index+j})" for j in range(count))
+        reader = Reader({start:dict(context="times UTC",fixtureCount=39,listedCount=39,fixturesSummary="\n".join(lines))})
+        games, windows = job.calendar(reader,day,job.utc(day+"T08:00:00Z"))
+        self.assertTrue(all(not w["gap"] for w in windows))
+        self.assertEqual(len({f["id"] for f in games}),37)
+        for name in ("UEFA Europa League","UEFA Conference League","UEFA Europa Conference League"):
+            self.assertFalse(only_unrelated_omissions({"notListed":f"1 more fixture: {name} (Europe) [competitionId a.1] 1"},1))
+
+    def test_scope_repair_only_ranks_new_fixtures_and_respects_existing_verdict(self):
+        day = "2026-11-26"
+        base = dict(home="Home",away="Away",league="league",ko=day+"T19:00:00Z")
+        done = dict(base,id="game.0",reviewState="complete",priority=1,verdictAt="original")
+        fresh = [dict(base,id=f"game.{i}") for i in range(1,8)]
+        windows = [dict(gap="",league="morning")]
+        saved = dict(day=day, guideSHA256="hash",stage="finished",slate=[done],calendar=windows)
+        analyst = Mock(digest="hash")
+        analyst.select_fixtures.side_effect = lambda rows:rows[:5]
+        reader = Mock(log=[],errors=0)
+        with patch.object(job,"triage",side_effect=lambda r,f:f) as screened, patch.object(job,"screen_players"), patch.object(job,"investigate") as detailed:
+            output = job.scan(reader,day,analyst,lambda:day+"T11:30:00Z",previous=saved,
+                              additional_calendar=([dict(base,id="game.0"),*fresh],windows))
+            self.assertEqual(screened.call_count,7)
+            self.assertEqual(detailed.call_count,4)
+            self.assertEqual(output["slate"][0],done)
+            again = job.scan(reader,day,analyst,lambda:day+"T11:45:00Z",previous=output,additional_calendar=(fresh,windows))
+            self.assertEqual(again["slate"],output["slate"])
+            self.assertEqual(screened.call_count,7)
+            self.assertEqual(detailed.call_count,4)
+        message = make_digest(day,output,{},job.utc(day+"T12:00:00Z"))["message"]
+        self.assertIn("8 fixtures found · 8 screened · 5 fixture reviews completed",message)
+        self.assertIn("3 fixtures screened and left outside",message)
+
     def test_tie_two_people_does_not_name_opponent(self):
         player={"position":"LB"}
         opponents={"status":"predicted","players":[{"id":"a","position":"RW","name":"A"},{"id":"b","position":"RM","name":"B"}]}
