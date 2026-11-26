@@ -1,5 +1,6 @@
 import sys
 import unittest
+from unittest.mock import Mock, patch
 from datetime import timedelta
 from pathlib import Path
 
@@ -35,6 +36,59 @@ class ClockTest(unittest.TestCase):
         with patch.dict(pilot.os.environ, DROP_SHOT_SCHEDULED_SLOT="2000-01-01T00:00:00Z"):
             with patch.object(pilot, "Store", side_effect=AssertionError("unexpected access")):
                 pilot.run()
+
+
+class LatestSnapshotStorageTest(unittest.TestCase):
+    previous = {"observed":"2026-11-26T13:22:00Z","guards":{}}
+    current = {"observed":"2026-11-26T13:37:13Z","guards":{"example":{"issued":True}}}
+
+    def setUp(self):
+        self.store = pilot.Store.__new__(pilot.Store)
+        self.store.request = Mock()
+        sleeper = patch.object(pilot.time, "sleep")
+        sleeper.start()
+        self.addCleanup(sleeper.stop)
+
+    def test_gateway_error_after_commit_checks_exact_payload_without_rewriting(self):
+        stored = Mock(status_code=200)
+        stored.json.return_value = self.current
+        self.store.request.side_effect = [Mock(status_code=520), stored]
+        self.store.save_latest(self.previous,self.current)
+        post, read = self.store.request.call_args_list
+        self.assertEqual((post.args[0],read.args[0]),("POST","GET"))
+        self.assertEqual(post.kwargs["json"],self.current)
+        self.assertEqual(read.kwargs["headers"]["Cache-Control"],"no-cache")
+        self.assertTrue(read.kwargs["params"]["verify"])
+
+    def test_timeout_before_commit_retries_only_identical_latest_write(self):
+        stored = Mock(status_code=200)
+        stored.json.return_value = self.previous
+        self.store.request.side_effect = [pilot.requests.Timeout(), Mock(status_code=503), stored, Mock(status_code=200)]
+        self.store.save_latest(self.previous,self.current)
+        calls = self.store.request.call_args_list
+        self.assertEqual([c.args[0] for c in calls],["POST","GET","GET","POST"])
+        self.assertEqual(calls[0],calls[-1])
+
+    def test_conflicting_checkpoint_and_permanent_errors_are_not_overwritten(self):
+        conflict = Mock(status_code=200)
+        conflict.json.return_value = dict(self.current,guards={})
+        self.store.request.side_effect = [Mock(status_code=520),conflict]
+        with self.assertRaisesRegex(RuntimeError,"changed during recovery"):
+            self.store.save_latest(self.previous,self.current)
+        self.assertEqual(self.store.request.call_count,2)
+        self.store.request.reset_mock()
+        self.store.request.side_effect = [Mock(status_code=403)]
+        with self.assertRaisesRegex(RuntimeError,"403"):
+            self.store.save_latest(self.previous,self.current)
+        self.assertEqual(self.store.request.call_count,1)
+
+    def test_persistent_failure_is_bounded_and_reads_after_last_write(self):
+        prior = Mock(status_code=200)
+        prior.json.return_value = self.previous
+        self.store.request.side_effect = [Mock(status_code=520),prior]*3
+        with self.assertRaisesRegex(pilot.TemporaryStorageError,"after retries"):
+            self.store.save_latest(self.previous,self.current)
+        self.assertEqual([c.args[0] for c in self.store.request.call_args_list],["POST","GET"]*3)
 
 
 class MatchWinnerTest(unittest.TestCase):

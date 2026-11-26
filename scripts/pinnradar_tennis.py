@@ -4,9 +4,11 @@ import json
 import math
 import os
 import re
+import time
 from collections import Counter
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlsplit
+from uuid import uuid4
 
 import requests
 import price_drop_watch as watch
@@ -277,6 +279,13 @@ def advance(state, snap, *, track_first=True):
                 events=open_rows,guards=guards),moves
 
 
+class TemporaryStorageError(RuntimeError):
+    pass
+
+
+RETRYABLE_STORAGE = (TemporaryStorageError, requests.Timeout, requests.ConnectionError)
+
+
 class Store:
     def __init__(self):
         url=os.environ["SUPABASE_URL"].rstrip("/")
@@ -302,6 +311,8 @@ class Store:
 
     @staticmethod
     def require(r):
+        if r.status_code in (408, 500, 502, 503, 504, 520, 521, 522, 523, 524):
+            raise TemporaryStorageError(f"Private storage HTTP {r.status_code}")
         if not 200<=r.status_code<300: raise RuntimeError(f"Private storage HTTP {r.status_code}")
 
     @staticmethod
@@ -311,8 +322,9 @@ class Store:
         except ValueError: return False
         return str(obj.get("statusCode"))=="404" or obj.get("error") in {"not_found","NoSuchKey","NoSuchBucket"} or str(obj.get("message","")).lower() in {"object not found","bucket not found"}
 
-    def get(self,path):
-        r=self.request("GET","/object/authenticated/"+BUCKET+"/"+path)
+    def get(self,path,*,fresh=False):
+        options = {"params":{"verify":uuid4().hex}, "headers":{"Cache-Control":"no-cache"}} if fresh else {}
+        r=self.request("GET","/object/authenticated/"+BUCKET+"/"+path,**options)
         if self.missing(r): return None
         self.require(r)
         return r.json()
@@ -322,6 +334,30 @@ class Store:
         if not replace and r.status_code in (400,409) and any(s in r.text.lower() for s in ("duplicate","already exists")): return False
         self.require(r)
         return True
+
+    def save_latest(self, previous, updated):
+        # The snapshot job is serialized. A gateway error can arrive after a successful write.
+        try:
+            self.put("latest.json", updated, replace=True)
+            return
+        except RETRYABLE_STORAGE:
+            pass
+        delays = (1, 3, 6)
+        for attempt, delay in enumerate(delays, start=1):
+            time.sleep(delay)
+            try:
+                saved = self.get("latest.json", fresh=True)
+                if saved == updated:
+                    return
+                if ({} if saved is None else saved) != previous:
+                    raise RuntimeError("Latest snapshot state changed during recovery")
+                if attempt < len(delays):
+                    self.put("latest.json", updated, replace=True)
+                    return
+            except RETRYABLE_STORAGE:
+                if attempt == len(delays):
+                    raise
+        raise TemporaryStorageError("Latest snapshot state still at previous capture after retries")
 
     def verify_snapshot(self, path, snap):
         if self.get(path) != snap:
@@ -393,7 +429,7 @@ def run():
             store.put("drop-scans-v2/"+watch.object_key(item["observed"]),batch)
         for fixture,move in moves:
             store.put(f"moves/{move['start'][:4]}/{fixture}.json",move)
-        store.put("latest.json",next_state,replace=True)
+        store.save_latest(last,next_state)
         last=next_state
     counts=Counter(v["tour"] for v in snap["events"].values())
     print(f"Private capture {snap['observed']}: ATP {counts['ATP']}, Challenger {counts['Challenger']}, WTA {counts['WTA']}, WTA 125 {counts['WTA 125']}.")
