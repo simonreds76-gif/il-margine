@@ -1,6 +1,6 @@
 {
   "api_errors": [],
-  "deferred_not_due": 2,
+  "deferred_not_due": 5,
   "details": [
     {
       "detail": "fixtures_returned=0",
@@ -33,14 +33,6 @@
       "match_date": "2026-11-08",
       "reason": "fotmob_save_totals_disagree",
       "signal_id": "71945390|mike maignan|2.5|over"
-    },
-    {
-      "detail": "fixtures_returned=0",
-      "goalkeeper": "Away goalkeeper",
-      "match": "Bayer Leverkusen vs SC Paderborn 07",
-      "match_date": "2026-11-21",
-      "reason": "fotmob_finished_fixture_not_found",
-      "signal_id": "grosvenor|72513312|away goalkeeper|4.5|over"
     },
     {
       "detail": "fixtures_returned=0",
@@ -84,13 +76,13 @@
     }
   ],
   "fotmob_requests_used": 7,
-  "generated_at": "2026-11-26T18:30:25Z",
+  "generated_at": "2026-11-27T18:18:47Z",
   "max_fotmob_requests": 50,
   "max_requests": 10,
-  "pending_due": 10,
-  "pending_total": 12,
+  "pending_due": 9,
+  "pending_total": 14,
   "reason_counts": {
-    "fotmob_finished_fixture_not_found": 8,
+    "fotmob_finished_fixture_not_found": 7,
     "fotmob_goalkeeper_not_found": 1,
     "fotmob_save_totals_disagree": 1
   },

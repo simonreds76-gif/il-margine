@@ -4656,18 +4656,164 @@
       },
       "message_id": 1051,
       "sent_at": "2026-11-26T02:28:14.266542+00:00"
+    },
+    "grosvenor|72513344|away goalkeeper|3.5|over": {
+      "status": "claimed",
+      "run_token": "46047789539:1",
+      "claimed_at": "2026-11-27T18:18:52.899154+00:00",
+      "signal": {
+        "signal_id": "grosvenor|72513344|away goalkeeper|3.5|over",
+        "created_at": "2026-11-27T18:16:20Z",
+        "event_id": "72513344",
+        "match_date": "2026-11-28",
+        "kickoff_at": "2026-11-28T14:30:00Z",
+        "league": "bundesliga",
+        "home_team": "SC Paderborn 07",
+        "away_team": "Schalke 04",
+        "team": "Schalke 04",
+        "opponent": "SC Paderborn 07",
+        "venue": "away",
+        "goalkeeper": "Away goalkeeper",
+        "bookmaker": "Grosvenor",
+        "line": "3.5",
+        "side": "over",
+        "odds_decimal": "1.9800",
+        "model_mean": "3.9324",
+        "model_probability": "0.531947",
+        "push_probability": "0.000000",
+        "fair_odds": "1.880",
+        "edge": "0.053255",
+        "stake_units": "0.5",
+        "lineup_status": "team_contract_name_unconfirmed",
+        "lineup_source": "",
+        "capture_mode": "publication",
+        "captured_at": "2026-11-27T18:16:06+00:00",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "team_goalkeeper_away",
+        "identity_basis": "bookmaker_team_side",
+        "integrity_status": "",
+        "quarantine_reason": "",
+        "quote_verification": "",
+        "display_prices": [
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 1.98,
+            "goalkeeper": "",
+            "contract_scope": "team_goalkeeper_away",
+            "captured_at": "2026-11-27T18:16:06+00:00",
+            "observed_only": false
+          },
+          {
+            "bookmaker": "Bet365",
+            "goalkeeper": "Loris Karius",
+            "odds": 1.8333333333333335,
+            "captured_at": "2026-11-27T18:13:36.988657+00:00",
+            "contract_scope": "named_player",
+            "observed_only": true
+          }
+        ],
+        "price_comparison": [
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 1.98,
+            "captured_at": "2026-11-27T18:16:06+00:00",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-11-27T18:18:52.899154+00:00"
+      }
+    },
+    "grosvenor|71945440|away goalkeeper|2.5|over": {
+      "status": "claimed",
+      "run_token": "46047789539:1",
+      "claimed_at": "2026-11-27T18:18:52.899154+00:00",
+      "signal": {
+        "signal_id": "grosvenor|71945440|away goalkeeper|2.5|over",
+        "created_at": "2026-11-27T18:16:20Z",
+        "event_id": "71945440",
+        "match_date": "2026-11-28",
+        "kickoff_at": "2026-11-28T17:00:00Z",
+        "league": "serie-a",
+        "home_team": "Torino FC",
+        "away_team": "Lazio Rome",
+        "team": "Lazio Rome",
+        "opponent": "Torino FC",
+        "venue": "away",
+        "goalkeeper": "Away goalkeeper",
+        "bookmaker": "Grosvenor",
+        "line": "2.5",
+        "side": "over",
+        "odds_decimal": "1.8900",
+        "model_mean": "3.1477",
+        "model_probability": "0.586067",
+        "push_probability": "0.000000",
+        "fair_odds": "1.706",
+        "edge": "0.107666",
+        "stake_units": "0.5",
+        "lineup_status": "team_contract_name_unconfirmed",
+        "lineup_source": "fotmob_confirmed_lineups",
+        "capture_mode": "publication",
+        "captured_at": "2026-11-27T18:16:06+00:00",
+        "status": "pending",
+        "result": "",
+        "actual_saves": "",
+        "pnl_units": "",
+        "settled_at": "",
+        "settlement_source": "",
+        "close_odds": "",
+        "clv": "",
+        "selection_policy": "near_even_value_v2",
+        "contract_scope": "team_goalkeeper_away",
+        "identity_basis": "bookmaker_team_side",
+        "integrity_status": "",
+        "quarantine_reason": "",
+        "quote_verification": "",
+        "display_prices": [
+          {
+            "bookmaker": "Bet365",
+            "goalkeeper": "Christos Mandas",
+            "odds": 2.1,
+            "captured_at": "2026-11-27T18:13:32.689383+00:00",
+            "contract_scope": "named_player",
+            "observed_only": true
+          },
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 1.89,
+            "goalkeeper": "",
+            "contract_scope": "team_goalkeeper_away",
+            "captured_at": "2026-11-27T18:16:06+00:00",
+            "observed_only": false
+          }
+        ],
+        "price_comparison": [
+          {
+            "bookmaker": "Grosvenor",
+            "odds": 1.89,
+            "captured_at": "2026-11-27T18:16:06+00:00",
+            "contract_scope": "team_goalkeeper_away"
+          }
+        ],
+        "price_checked_at": "2026-11-27T18:18:52.899154+00:00"
+      }
     }
   },
   "preparation_checks": {
     "current": {
-      "checked_at": "2026-11-27T02:25:44.573189+00:00",
-      "added": 0,
-      "suppressed": {
-        "awaiting_fresh_bet365_grosvenor_pair": 1
-      }
+      "checked_at": "2026-11-27T18:18:52.899154+00:00",
+      "added": 2,
+      "suppressed": {}
     },
     "keeper_watch": {
-      "checked_at": "2026-11-27T02:25:44.573189+00:00",
+      "checked_at": "2026-11-27T18:18:52.899154+00:00",
       "added": 0,
       "suppressed": {}
     }

@@ -5,16 +5,16 @@
     "blocked_lines": 0,
     "blocker_counts": {},
     "candidate_board_preserved": false,
-    "eligible_lines": 4,
+    "eligible_lines": 5,
     "priced_lines": 156,
     "provisional_lines": 0,
-    "signals_added": 1,
-    "value_ladder_lines": 6
+    "signals_added": 0,
+    "value_ladder_lines": 8
   },
   "evidence": {
     "clv": 0.045956,
     "clv_matched": 37,
-    "pending": 12,
+    "pending": 14,
     "pnl_units": 13.9811,
     "quote_quarantine_records": [
       {
@@ -154,47 +154,42 @@
       "reviewed_full_match_keeper_count": 1,
       "sofascore_published_keeper_total_verified_20261003": 3
     },
-    "signals": 127,
+    "signals": 129,
     "true_close_coverage": 0.33945,
     "void": 6
   },
   "forecast_input_capture": {
     "accepted_packets": [
-      "6e8a0634a9bcd81bc805af824d88c1aaf83c0361e8d6b5b28af76ab5b08e52d7",
-      "7a65100ba9774eab51dc406ac419c67c23607f421ac33c16548fd85fa043ec61",
-      "ae34a74117b581a14449b69e59eedb19e594842bfbd10cf0a390aaffa605c6d4",
-      "9106e564d0d5d8f155167de4becdfbb84a532c79334d6e605015103134b0ea14",
-      "7a0cb40d128abb913fa4ea99be2c38292ecc7bf14c99719b0200c33fa864185e",
-      "0e8a836734875d674937dc5d62a68c1f9a3f14daeab830d2e60c0484aa9a1f8f",
-      "5159918c75b8b53a78e715e67f42ec0b94bc73fc209353b5a8a9896453aad011",
-      "2420f1492d4dcb85c63e04c71ced850cceed37106750cb057d0fdab092adacd8",
-      "667f91334404abbf039982811485e71a1cecda9441eb8a381edc143ca6aa9bd7",
-      "e77007d1b5b7ffec14e2e2a11597f560161523a3fd72c71b6b99e5858a819762",
-      "b5f8851d1c1f216034d57b2d55ac11a7c9009100cea2afe7f9a0790e4d53e97d",
-      "827438dee3091f90e2d9cc5322fa80537692b2e4b651940cd8fec5f82c563217",
-      "9fc111afe14ec6d1f52c00af81bccee8e92b1c470746f69e8cd8ec10fed7336b",
-      "72de311310f1d0f047a2782b6b7170b9711610a4140384e76666bf6801765801",
-      "301994e05412e7d231777a1ce152664b7fbb2edfba52f175c3e9b1a32b3e702a",
-      "27aa02c58828f5bf5d98561a98f2731797dd96f36d532538727a02462261bc2b",
-      "874bf5357903437ca405a0a74b098e6544cd330b8dd5794292f7db85c37b9319",
-      "c61f151849392a7c6af3c32323bf233fca85975631f8f6e589aa021a5e762d2d",
-      "e96ba3867db8165e522c02d57f199210ba99976e30675e05511f7e74819f2de0",
-      "44c08f2bb0ccde610c52263a36739c4f8fab2061437b4d4a76c0a9267201883b",
-      "d49a03e163538a620f1409a59bd2317253968a7307248b27c7b13befd00a2496",
-      "49322c375905c9b9e53b921280ab1f9ed55411db834aa01c0373542ffd4fcde4",
-      "7754e24dd75e4b7e45b5f1f0561e39d6c1b0ef01809a9a361a3acffe3a358878",
-      "b8d8400e7bc61d4d58e18023aac1c73681ccadf5d32e3b2e7eac68f9fef1435b",
-      "a9f1813430aa689120ba54e13c403e124c7394fa19b2283ddf7262809bfa35f3"
+      "1f438e5a14e4d6f1b520fd097895fc68aeaa3005877bf5416baed2e985144850",
+      "918246211fbf415024327c5e271b5d3ed3702ce45f3d6605e4445939a5af5d2e",
+      "103ab8a34c639d20a4c1a18a5c49c7680bae55edcfef700a8713e78166e338fc",
+      "185d9afbe7e8327b9d0a3e4871d78b2b84e4b0ca636ff92fb36a800238adb396",
+      "eedfc540265f726cff8a80372e92e364ad61f95f33db40d485689f2b439fbb1e",
+      "51713260b9e01d44a4034aa206c619a23bb58f5c5039f9995e11b6ec29ab8d73",
+      "11df8c4736614738bb6f19836c6394554315c069d0641c4fe9023f1dc1571406",
+      "7436bac591978ea9cad09b183c0ef852d1f3e868f58a39b3c240803c71edc8e7",
+      "84309961287943cfc4d682574510f62d70f000c7d5a0724d7bdd848617aba43c",
+      "cd4e276904fb9ac39e438144f81b01d4b5dc0957834e071066359942180b297e",
+      "7d818ce4eb20aa8277b593767541fd98580e290c83f47fe6d701b0c3e0f57d4a",
+      "746099ffcf5af8993be54c345448c30c54451a38cfb66fcb1690884031d3a711",
+      "d73af3131bcd68f60ea39ba54e0dc2618340943faa61cfb296cdb4fd6581092e",
+      "b4f2a2735379444321812111f17dc557994757767f3a340da852825a3d74cb6a",
+      "7f99bcb34539318a8a3eff17d543c9b31c5a45ff571d9400f14271ea41adac85",
+      "6387ff3eef54900fd9dc2c9689cfdd638f80dee6079089bd5cf3512260525e78",
+      "5916f41702f71eb22ec2afc6cd0e3835dfc9c76622fde6742fa7a84292e56e77",
+      "f87538b5d528c22e5feffdd7f71e386c97f4c71fa96e6f116ed6f5d9dd27daf0",
+      "b3cad7289219318c32a5f6cf6f52bd5bffa9dfce0eb7ab1b0f28ecf43b2970e2"
     ],
     "actual_stake": 0,
-    "checked_at": "2026-11-27T02:24:24.449266+00:00",
+    "checked_at": "2026-11-27T18:18:51.637485+00:00",
     "counts": {
-      "offers_saved": 156
+      "already_saved": 19,
+      "not_fresh_prematch": 36
     },
-    "saved": 25,
-    "status": "CAPTURED"
+    "saved": 0,
+    "status": "NO_NEW_ELIGIBLE_INPUTS"
   },
-  "generated_at": "2026-11-27T02:24:23Z",
+  "generated_at": "2026-11-27T18:18:50Z",
   "half_adjustment": {
     "actual_stake": 0,
     "arms": {
@@ -232,11 +227,11 @@
       }
     },
     "fixtures": 0,
-    "generated_at": "2026-11-27T02:24:24.876015+00:00",
+    "generated_at": "2026-11-27T18:18:51.857240+00:00",
     "holds": {},
     "paired_settled_fixtures": 0,
     "scan_exclusions": {
-      "ineligible_contract_or_input": 156
+      "ineligible_contract_or_input": 120
     },
     "start_at": "2026-11-17T18:55:00+00:00",
     "status": "AWAITING_FIRST_VERIFIED_BOARD"
@@ -246,11 +241,12 @@
     "auto_promote": false,
     "coverage": "Captured Bet365 named-player lines and Grosvenor team-goalkeeper lines from 28 October 2026. Grosvenor results require the registered keeper to play the full 90 minutes with agreeing counts; exceptions stay under review. No historical replay.",
     "exclusions": {
-      "starter_unavailable": 156
+      "not_new_fresh_prematch": 36,
+      "starter_unavailable": 120
     },
     "forecast_fixtures": 216,
     "forecast_keepers": 442,
-    "generated_at": "2026-11-27T02:24:24.735048+00:00",
+    "generated_at": "2026-11-27T18:18:51.671858+00:00",
     "last_capture_at": "2026-11-22T16:20:46.809892+00:00",
     "name": "Keeper Watch v1",
     "new_forecasts": 0,
