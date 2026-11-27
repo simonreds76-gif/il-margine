@@ -1,115 +1,37 @@
-name: Private tennis price moves
-run-name: ${{ inputs.scheduled_slot_utc && format('Drop Shot Desk clock {0}', inputs.scheduled_slot_utc) || 'Drop Shot Desk scan' }}
-on:
-  schedule:
-    - cron: '2,17,32,47 * * * *'
-  pull_request:
-    paths: ['scripts/desk_davis.py', 'scripts/davis_matchday.py', 'scripts/tests/test_davis_matchday.py', 'scripts/desk_draw_scores.py', 'scripts/desk_match_returns.py', 'scripts/tests/test_desk_match_returns.py', 'scripts/desk_closing.py', 'scripts/desk_start_clocks.py', 'scripts/tests/test_desk_closing.py', 'scripts/pinnradar_tennis.py', 'scripts/price_drop_watch.py', 'scripts/desk_games.py', 'scripts/tests/test_desk_games.py', 'scripts/drop_desk_history.py', 'scripts/desk_paper_returns.py', 'scripts/tests/test_desk_paper_returns.py', 'scripts/drop_desk_expiry.py', 'scripts/tests/test_drop_desk_expiry.py', 'scripts/tests/test_drop_desk_history.py', 'scripts/tests/test_pinnradar_tennis.py', '.github/workflows/pinnradar-tennis.yml']
-  workflow_dispatch:
-    inputs:
-      scheduled_slot_utc:
-        description: 'Current UTC quarter-hour (hosted fallback only)'
-        required: false
-        type: string
-permissions:
-  contents: read
+name: Private tennis REST diagnostic
+on: workflow_dispatch
+permissions: {}
 jobs:
-  snapshot:
-    concurrency:
-      group: ${{ github.event_name == 'pull_request' && format('drop-shot-tests-{0}', github.run_id) || 'pinnradar-tennis-private' }}
-      cancel-in-progress: false
+  read:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /scripts/desk_davis.py
-            /scripts/pinnradar_tennis.py
-            /scripts/drop_desk_expiry.py
-            /scripts/tests/test_drop_desk_expiry.py
-            /scripts/davis_matchday.py
-            /scripts/tests/test_davis_matchday.py
-            /scripts/desk_draw_scores.py
-            /scripts/drop_desk_history.py
-            /scripts/desk_closing.py
-            /scripts/desk_match_returns.py
-            /scripts/tests/test_desk_match_returns.py
-            /scripts/desk_start_clocks.py
-            /scripts/tests/test_desk_closing.py
-            /scripts/desk_paper_returns.py
-            /scripts/tests/test_desk_paper_returns.py
-            /scripts/tests/test_drop_desk_history.py
-            /scripts/price_drop_watch.py
-            /scripts/desk_games.py
-            /scripts/tests/test_pinnradar_tennis.py
-            /scripts/tests/test_desk_games.py
-      - name: Install HTTP client
-        run: python -m pip install --quiet requests beautifulsoup4
-      - name: Check fixture and price matching
-        if: github.event_name != 'schedule'
-        run: python -m unittest discover -s scripts/tests
-      - name: Rehearse the Davis Cup lineup read without storage or notifications
-        if: github.event_name == 'pull_request'
-        run: python scripts/davis_matchday.py --dry-run
-      - name: Save a private pre-match snapshot
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+      - run: python -m pip install --quiet requests
+      - name: Check one tennis response without storing odds
         env:
-          DROP_SHOT_SCHEDULED_SLOT: ${{ inputs.scheduled_slot_utc }}
-          VERIFY_PRIVATE_SNAPSHOT: ${{ github.event_name != 'schedule' && 'true' || 'false' }}
-          PRIVATE_DROP_DELIVERY: ${{ github.ref == 'refs/heads/main' && 'send' || 'verify' }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
-          PINNRADAR_KEY: ${{ secrets.PINNRADAR_KEY }}
-          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: python scripts/pinnradar_tennis.py
-      - name: Install optional draw reader
-        continue-on-error: true
-        run: >-
-          python -m pip install --quiet --only-binary=:all: --retries 1 --timeout 6 pymupdf==1.27.2.3
-      - name: Reconcile private history, paper returns, CLV and one-unit match records
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-        env:
-          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: python scripts/desk_match_returns.py --refresh-all
+          TENNIS_KEY: ${{ secrets.PINNRADAR_KEY }}
+        shell: python
+        run: |
+          import json
+          import os
+          import requests
 
-  expire-alerts:
-    needs: snapshot
-    if: always() && github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && !cancelled()
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    concurrency:
-      group: drop-shot-private-message-edits
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /scripts/drop_desk_expiry.py
-            /scripts/davis_matchday.py
-            /scripts/desk_davis.py
-            /scripts/pinnradar_tennis.py
-            /scripts/price_drop_watch.py
-            /scripts/desk_games.py
-      - run: python -m pip install --quiet requests beautifulsoup4
-      - name: Retire entries in their original private roundup
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
-          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: python scripts/drop_desk_expiry.py
-      - name: Refresh and verify the confirmed Davis Cup singles on both public pages
-        if: ${{ !cancelled() }}
-        continue-on-error: true
-        timeout-minutes: 2
-        env:
-          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: python scripts/davis_matchday.py
+          key = os.environ["TENNIS_KEY"]
+          if not key:
+              raise SystemExit("Repository secret unavailable")
+          with requests.get("https://pinnradar.com/kit/v1/prematch/fixtures", params={"sport_id": 2},
+                            headers={"x-portal-apikey": key}, allow_redirects=False, timeout=25) as response:
+              print("Tennis REST HTTP", response.status_code, flush=True)
+              if response.status_code == 200:
+                  data = response.json()
+                  events = data.get("events")
+                  print("Returned events:", len(events) if isinstance(events, list) else "invalid shape")
+              else:
+                  raw = response.content[:8192].decode("utf-8", "replace").lower()
+                  labels = ("missing_key", "invalid_key", "invalid api key", "unknown key", "disabled", "expired",
+                            "suspended", "revoked", "quota", "rate_limit", "unauthorized", "forbidden",
+                            "verify", "blocked", "subscription", "ip address", "access denied", "cloudflare",
+                            "inactive", "trial", "limit reached", "payment", "free plan")
+                  print("Recognised response labels:", [label for label in labels if label in raw])
+                  print("JSON response:", "json" in response.headers.get("Content-Type", ""))
+              print("Diagnostic complete; no production state or messages written")
